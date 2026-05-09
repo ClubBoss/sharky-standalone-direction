@@ -1,0 +1,16 @@
+{
+  "id": "review_initiative_hero_keeps_pressure",
+  "kind": "initiative_aggressor_choice_v1",
+  "intent_v1": "world2_initiative_bridge",
+  "prompt": "Review: Hero raised and villain called. Who is more likely to keep the pressure on the flop?",
+  "street_v1": "flop",
+  "pressure_owner_v1": "hero",
+  "initiative_policy_shape_v1": "pressure_owner",
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "initiative_aggressor_choice_mismatch",
+  "why_v1": "The player who raised last preflop usually keeps initiative and is more likely to apply the first pressure on the flop.",
+  "feedback_correct_v1": "Correct. Hero raised last, so hero keeps the initiative and is more likely to keep betting pressure on the flop.",
+  "feedback_incorrect_v1": "Incorrect. Hero was the last aggressor preflop, so hero is still the player more likely to apply pressure first on the flop."
+}

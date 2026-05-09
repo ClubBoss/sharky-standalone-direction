@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_freq_control",
+  "kind": "action_choice",
+  "prompt": "When exploit pressure is justified, choose raise.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when the player read and context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because this frequency band still supports pressure before the line becomes too wide.",
+  "feedback_incorrect_v1": "Incorrect. Raise because this frequency band still supports applying pressure."
+}

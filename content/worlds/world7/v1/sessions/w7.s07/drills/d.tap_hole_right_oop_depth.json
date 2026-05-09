@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_oop_depth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card before final out-of-position choice.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. The right hole card is the anchor because its blocker or playability value decides whether the hand can survive acting first.",
+  "feedback_incorrect_v1": "Incorrect. The right hole card is the right anchor here because that blocker or playability card decides whether the hand can survive acting first."
+}

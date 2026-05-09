@@ -1,0 +1,31 @@
+nodes:
+  - type: stage
+    stageId: push_fold_cash
+    next: [openfold_3bb_cash]
+  - type: stage
+    stageId: openfold_3bb_cash
+    next: [openfold_btn_vs_utg_cash]
+  - type: stage
+    stageId: openfold_btn_vs_utg_cash
+    next: [openfold_co_vs_hj_cash]
+  - type: stage
+    stageId: openfold_co_vs_hj_cash
+    next: [openfold_hj_vs_utg_cash]
+  - type: stage
+    stageId: openfold_hj_vs_utg_cash
+    next: [threebet_btn_vs_co_cash]
+  - type: stage
+    stageId: threebet_btn_vs_co_cash
+    next: [threebet_co_vs_hj_cash]
+  - type: stage
+    stageId: threebet_co_vs_hj_cash
+    next: [threebet_hj_vs_utg_cash]
+  - type: stage
+    stageId: threebet_hj_vs_utg_cash
+    next: [defend_utg_vs_hj_3bet_cash]
+  # UTG choice: defend or fold versus Hijack 3-bet
+  - type: stage
+    stageId: defend_utg_vs_hj_3bet_cash
+    next: [postflop_utg_call_vs_hj_3bet_cash]
+  - type: stage
+    stageId: postflop_utg_call_vs_hj_3bet_cash

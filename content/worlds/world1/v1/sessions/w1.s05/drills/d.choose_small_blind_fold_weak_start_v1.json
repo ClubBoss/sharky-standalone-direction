@@ -1,0 +1,18 @@
+{
+  "id": "choose_small_blind_fold_weak_start_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the small blind with Q6o and nobody has entered the pot. Which simple action best protects clean start quality?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A weak offsuit hand from the small blind is not a clean enough start to continue.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Q6o from the small blind is still too weak to start the pot out of position, so the clean answer is to fold."
+}

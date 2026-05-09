@@ -1,0 +1,21 @@
+# What to do
+Name the pressure tier (low, mid, high) suggested by the range versus range snapshot.
+
+# Input
+Range A: top-end continuity, capped mid-band, few loose bluffs. Range B: weaker top-end, denser mid-range, double-barrel aggression.
+
+# Expected reasoning
+# Expected reasoning
+Range A’s capped mid-band and light aggression keep pressure low despite its continuity.
+Range B’s density and aggression reach mid pressure but cannot climb without top-end leverage.
+High tier needs aggression and blockers; here the cap and middles keep it low.
+
+# Correct answer
+Low pressure tier: Range A’s cap forces cautious lines while Range B’s density never reaches high leverage.
+
+# Common mistakes
+- Confusing B’s aggression with high pressure.
+- Overweighting Range A’s top-end as a signal to blast.
+- Flattening the mid-tier and calling it mid pressure.
+- Ignoring the capping effect on Range A’s node.
+- Assuming top-end strength always creates pressure.

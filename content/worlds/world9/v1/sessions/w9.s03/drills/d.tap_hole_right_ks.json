@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_right_ks",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap the king of spades.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the exact king before you decide if this hand can keep pressing.",
+  "feedback_correct_v1": "Correct. Use the king of spades because this hand strength read still depends on that card.",
+  "feedback_incorrect_v1": "Incorrect. Tap the king of spades because that exact card helps decide whether this hand is strong enough."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_bubble",
+  "kind": "board_tap",
+  "prompt": "Bubble board cue: tap flop left.",
+  "intent_v1": "bubble_intuition",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_left is the board anchor, so the tournament read starts from the first card that frames the flop texture.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the target board card because the bubble board read starts from that first street cue."
+}

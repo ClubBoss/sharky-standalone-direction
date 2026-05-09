@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_adjust",
+  "kind": "action_choice",
+  "prompt": "One lever adjustment proxy: choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when the player read and context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because one clear exploit lever is strong enough to turn the profile read into pressure.",
+  "feedback_incorrect_v1": "Incorrect. Raise because one clear exploit lever supports applying pressure here."
+}

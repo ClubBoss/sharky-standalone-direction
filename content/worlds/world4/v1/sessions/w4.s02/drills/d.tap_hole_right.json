@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap the right hole card before the next decision.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Hole-card anchor keeps hero context fixed for this sequence.",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The right hole card is the hero cue this denial rep keys off, so tapping it first keeps the sequence anchored to the correct hand context.",
+  "feedback_incorrect_v1": "Incorrect. This denial rep keys off the right hero hole card, so lock that card before continuing."
+}

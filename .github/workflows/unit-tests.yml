@@ -1,0 +1,23 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Unit Tests (compact, non-blocking)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # non-blocking
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(join(github.event.pull_request.labels.*.name), 'run-content-ci') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - name: Run unit tests (lib/test only)
+        run: |
+          dart test -r expanded test

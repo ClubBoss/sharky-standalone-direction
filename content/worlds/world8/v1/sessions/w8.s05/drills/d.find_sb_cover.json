@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_cover",
+  "kind": "seat_tap",
+  "prompt": "Tap small blind seat before covering-versus-covered action.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "role": "sb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The small blind is the right seat anchor, so the tournament read stays tied to the out-of-position blind who feels the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the target seat anchor because this covered-pressure branch must stay tied to the partly committed blind seat."
+}

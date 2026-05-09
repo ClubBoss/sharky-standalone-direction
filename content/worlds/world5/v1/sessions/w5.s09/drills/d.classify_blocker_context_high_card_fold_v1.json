@@ -1,0 +1,13 @@
+{
+  "id": "classify_blocker_context_high_card_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board is high-card heavy and blocker context does not rescue a weak pressure story. Choose the best action.",
+  "intent_v1": "texture_high_card",
+  "board_texture_v1": "high_card",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "High-card boards still need a clean board story first; when that story is weak, blocker context should not force a continue.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The weak high-card texture points to a fold.",
+  "feedback_incorrect_v1": "Incorrect. Start from the high-card texture before using blocker context."
+}

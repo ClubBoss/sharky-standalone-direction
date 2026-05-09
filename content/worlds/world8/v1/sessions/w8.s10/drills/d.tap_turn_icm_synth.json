@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_icm_synth",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot before final ICM-synthesis action.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor, so the tournament read updates on the street where pressure often changes shape.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn anchor because the second board change can add or remove pressure, which shifts whether the hand should control risk or press harder."
+}

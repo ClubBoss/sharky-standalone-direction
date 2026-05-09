@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_board_filter",
+  "kind": "board_tap",
+  "prompt": "Tap the right flop card.",
+  "intent_v1": "one_lever_adjustment",
+  "why_v1": "Use the full flop before you decide if the board is good enough.",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the right flop card because it completes the board you are judging.",
+  "feedback_incorrect_v1": "Incorrect. Use the right flop card because the full flop tells you whether the board is good enough."
+}

@@ -1,0 +1,14 @@
+{
+  "id": "choose_raise_late_position_leverage_v1",
+  "kind": "action_choice",
+  "prompt": "In a 6-max unopened pot, hero is on the button with KJo. Which compact preflop action fits best when late position does the heavy lifting?",
+  "intent_v1": "world3_position_sensitive_raise_late_position",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "On the button in an unopened 6-max pot, KJo gains enough late-position leverage to become a clean raise.",
+  "feedback_correct_v1": "Correct. On the button in an unopened 6-max pot, KJo picks up enough late-position leverage to become a clean raise.",
+  "feedback_incorrect_v1": "Incorrect. On the button in an unopened 6-max pot, KJo gets enough late-position leverage to become a clean raise."
+}

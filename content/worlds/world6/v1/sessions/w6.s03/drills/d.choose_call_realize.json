@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_realize",
+  "kind": "action_choice",
+  "prompt": "Realization proxy: choose the best action.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits because the range still has live equity without enough edge to force a bigger pot.",
+  "feedback_incorrect_v1": "Incorrect. Call is stronger when your range still has live equity but not enough edge to start building a bigger pot. The controlled continue keeps realization intact without turning a medium-strength range into forced aggression."
+}

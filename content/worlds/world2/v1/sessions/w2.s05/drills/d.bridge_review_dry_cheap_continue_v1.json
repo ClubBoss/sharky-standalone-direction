@@ -1,0 +1,16 @@
+{
+  "id": "bridge_review_dry_cheap_continue_v1",
+  "kind": "action_choice",
+  "prompt": "Dry rainbow flop, cheap continue price, and two streets still to play: choose action.",
+  "intent_v1": "world2_authored_bridge",
+  "why_v1": "A calmer board plus a cheap price makes continuing reasonable before future streets add real pressure.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The board stays calm enough and the price is cheap enough to continue.",
+  "feedback_incorrect_v1": "Incorrect. A dry rainbow board and cheap price leave enough room to continue before later streets add real pressure.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_depth_synth",
+  "kind": "action_choice",
+  "prompt": "When depth synthesis removes pressure edge, choose fold.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold preserves chips when stack depth and pressure no longer justify continuing.",
+  "feedback_correct_v1": "Correct. Folding fits when the depth synthesis says the leverage edge is gone and preserving chips wins.",
+  "feedback_incorrect_v1": "Incorrect. Fold is better when the depth synthesis removes your leverage and the remaining stack no longer supports a profitable continue. Once the edge is thin and future pressure is gone, preserving chips beats stretching the hand."
+}

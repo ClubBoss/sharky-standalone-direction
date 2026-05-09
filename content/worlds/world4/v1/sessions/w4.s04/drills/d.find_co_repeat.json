@@ -1,0 +1,13 @@
+{
+  "id": "find_co_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the cutoff seat before final action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Cutoff anchor confirms late-order context for this rep.",
+  "expected": {
+    "role": "co"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The cutoff keeps the earlier value seat clear, so the repeat stays tied to the range that can bet before later seats react.",
+  "feedback_incorrect_v1": "Incorrect. Late-position context runs through the cutoff here, so tap the cutoff seat before the final choice."
+}

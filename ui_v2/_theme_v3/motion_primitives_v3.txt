@@ -1,0 +1,31 @@
+motion.component.card        = motion.emphasis.1
+motion.component.panel       = motion.emphasis.2
+motion.component.section     = motion.emphasis.3
+motion.component.summary     = motion.tempo.1
+motion.component.button      = motion.tempo.2
+motion.component.chip        = motion.tempo.3
+motion.fadeIn07
+motion.fadeIn08
+motion.fadeOut01
+motion.fadeOut02
+motion.fadeOut03
+motion.fadeOut04
+motion.fadeOut05
+motion.fadeOut06
+motion.fadeOut07
+motion.fadeOut08
+motion.emphasisPulse01
+motion.emphasisPulse02
+motion.emphasisPulse03
+motion.emphasisPulse04
+motion.emphasisPulse05
+motion.emphasisPulse06
+motion.tempoRise01
+motion.tempoRise02
+motion.tempoRise03
+motion.tempoFall01
+motion.tempoFall02
+motion.tempoFall03
+motion.tempoPulse01
+motion.tempoPulse02
+motion.tempoPulse03

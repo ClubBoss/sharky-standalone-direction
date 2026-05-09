@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_late_icm",
+  "kind": "seat_tap",
+  "prompt": "Late-street ICM closure setup: tap BTN.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before ICM decisions.",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the tournament read stays tied to the late-acting seat that controls the pressure window.",
+  "feedback_incorrect_v1": "Incorrect. The button is the target seat anchor because late-street ICM closure depends on the late-acting seat."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "tap_flop_right",
+  "kind": "board_tap",
+  "prompt": "Tap the right flop card slot.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "board_slot_confusion"
+}

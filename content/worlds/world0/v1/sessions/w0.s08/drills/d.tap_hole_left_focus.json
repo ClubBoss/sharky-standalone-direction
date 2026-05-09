@@ -1,0 +1,12 @@
+{
+  "id": "tap_hole_left_focus",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your left hole card.",
+  "why_v1": "This drill keeps the left hole-card anchor stable while the layout shifts from the big blind side.",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "hole_card_slot_confusion",
+  "feedback_correct_v1": "Correct. This drill keeps the left hole-card anchor stable while the layout shifts from the big blind side.",
+  "feedback_incorrect_v1": "Incorrect. Use the left hole card here so the read stays tied to the correct hole-card anchor for this rep."
+}

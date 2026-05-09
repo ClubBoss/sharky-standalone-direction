@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_repeat",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot before acting.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Turn anchor confirms street context for protection action.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The turn is where extra equity appears, so the repeat stays tied to the street where protection gets more urgent.",
+  "feedback_incorrect_v1": "Incorrect. This protection repeat is anchored on the turn card, so confirm the turn slot before acting."
+}

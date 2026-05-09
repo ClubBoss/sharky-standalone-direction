@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_flop_sequence_start",
+  "kind": "action_choice",
+  "prompt": "Approved flop sequence start node: choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "On a flop where the line starts by applying pressure, raising starts by taking initiative now instead of giving a free card with a passive call.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling avoids a major mistake, but this flop wants a stronger start because raising takes initiative now instead of giving a free card.",
+  "feedback_correct_v1": "Correct. This flop line starts by taking initiative, so raising is stronger than giving a free card with a passive call.",
+  "feedback_incorrect_v1": "Incorrect. Starting with a call gives up the initiative, but this flop is the spot to apply pressure first with a raise.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

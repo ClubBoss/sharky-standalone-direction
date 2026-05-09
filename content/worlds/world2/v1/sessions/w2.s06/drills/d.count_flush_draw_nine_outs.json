@@ -1,0 +1,18 @@
+{
+  "id": "count_flush_draw_nine_outs",
+  "kind": "outs_count_choice_v1",
+  "intent_v1": "world2_outs_bridge",
+  "prompt": "Hero has AhQh on Kc7h2h. How many outs improve hero to a flush on the turn?",
+  "intro_v1": "Count the improving cards you can see a path to. Start from the cards and board, not from abstract math.",
+  "street_v1": "flop",
+  "hero_hole_cards_v1": ["Ah", "Qh"],
+  "board_cards_v1": ["Kc", "7h", "2h"],
+  "available_actions_v1": ["4", "8", "9", "15"],
+  "expected": {
+    "actionId": "9"
+  },
+  "error_class": "outs_count_choice_mismatch",
+  "why_v1": "With four hearts visible, 9 unseen hearts still improve hero to a flush.",
+  "feedback_correct_v1": "Correct. Four hearts are already visible, so 9 unseen hearts still make the flush.",
+  "feedback_incorrect_v1": "Incorrect. This flush draw has 9 outs because four hearts are already visible."
+}

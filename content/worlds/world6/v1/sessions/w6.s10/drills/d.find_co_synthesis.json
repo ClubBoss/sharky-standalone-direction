@@ -1,0 +1,13 @@
+{
+  "id": "find_co_synthesis",
+  "kind": "seat_tap",
+  "prompt": "Tap the cutoff.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Start with the cutoff because that player shapes the spot you are judging.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at the cutoff because that player shapes the spot you are judging.",
+  "feedback_incorrect_v1": "Incorrect. Tap the cutoff because that player shapes the spot you are judging."
+}

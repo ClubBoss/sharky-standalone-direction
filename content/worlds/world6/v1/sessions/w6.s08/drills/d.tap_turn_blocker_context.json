@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_blocker_context",
+  "kind": "board_tap",
+  "prompt": "Tap turn to refresh blocker-adjusted range.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor because the second board change shows whether the blocker keeps adding leverage or loses value.",
+  "feedback_incorrect_v1": "Incorrect. Tap the turn because the second board change shows whether the blocker keeps adding leverage or loses value."
+}

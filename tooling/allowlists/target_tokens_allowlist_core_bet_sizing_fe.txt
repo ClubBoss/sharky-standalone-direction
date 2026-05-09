@@ -1,0 +1,7 @@
+big_bet_75
+call
+double_barrel_good
+fold
+half_pot_50
+protect_check_range
+small_cbet_33

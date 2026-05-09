@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_c3_river_value_clear",
+  "kind": "action_choice",
+  "prompt": "Clear river value node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Clear value nodes use raise branch on river.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Clear value node expects raise.",
+  "feedback_incorrect_v1": "Incorrect. This value node should bet.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

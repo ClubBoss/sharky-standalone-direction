@@ -1,0 +1,10 @@
+{
+  "id": "find_seat_s3_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S3.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "seatId": "S3"
+  },
+  "error_class": "seat_id_confusion"
+}

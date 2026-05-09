@@ -1,0 +1,4 @@
+{"id":"tl_v1_1","scenario":"range","exercise":"PLACEHOLDER_EXERCISE_1","link":"range_overview","weight":1}
+{"id":"tl_v1_2","scenario":"texture","exercise":"PLACEHOLDER_EXERCISE_2","link":"texture_groups","weight":1}
+{"id":"tl_v1_3","scenario":"action","exercise":"PLACEHOLDER_EXERCISE_3","link":"action_patterns","weight":2}
+{"id":"tl_v1_4","scenario":"icm","exercise":"PLACEHOLDER_EXERCISE_4","link":"icm_basics","weight":2}

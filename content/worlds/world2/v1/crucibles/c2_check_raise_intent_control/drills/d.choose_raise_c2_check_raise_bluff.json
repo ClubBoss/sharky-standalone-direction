@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_c2_check_raise_bluff",
+  "kind": "action_choice",
+  "prompt": "Approved bluff check-raise node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Raise now as the bluff line. You create fold equity instead of letting hands see the next card for free.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Approved bluff node expects raise.",
+  "feedback_incorrect_v1": "Incorrect. This bluff-intent node should raise.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

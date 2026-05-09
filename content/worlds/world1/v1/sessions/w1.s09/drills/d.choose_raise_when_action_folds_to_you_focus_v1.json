@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_when_action_folds_to_you_focus_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff folded, button folded, and hero is in the small blind with ATs. Which simple action fits best when the action folds to you?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Once everyone folds, a clean first-in spot with a playable hand should raise.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the action folds to the small blind, ATs is still a strong clean first-in raise rather than a passive continue."
+}

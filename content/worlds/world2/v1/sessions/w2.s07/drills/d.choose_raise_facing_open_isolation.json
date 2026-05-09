@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_facing_open_isolation",
+  "kind": "action_choice",
+  "prompt": "Approved isolation node facing open: choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Facing one open, raising isolates weaker continues better than flat-calling when the hand is strong enough to fight back now.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling keeps the hand in play, but raising wins more here by isolating weaker continues right away.",
+  "feedback_correct_v1": "Correct. Raising here isolates weaker ranges and applies pressure better than a flat call.",
+  "feedback_incorrect_v1": "Incorrect. This pressure spot fights back best with a raise, which isolates and pressures weaker ranges better than a flat call.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

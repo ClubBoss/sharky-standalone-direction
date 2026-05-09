@@ -1,0 +1,11 @@
+{
+  "id": "core_equity_realization",
+  "title": "Equity Realization",
+  "description": "Learn why position, initiative, and board texture determine how much equity you convert into actual results.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_equity_realization",
+  "reasoning": "Turns the concept of equity realization into practical decisions about position, initiative, and pot control.",
+  "availability": "available"
+}

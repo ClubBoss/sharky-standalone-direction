@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_bluff",
+  "kind": "action_choice",
+  "prompt": "With blockers and fold pressure available, choose action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Raise as a bluff when your blockers improve fold pressure.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is expected in this bluff spot.",
+  "feedback_incorrect_v1": "Incorrect. When blockers improve fold pressure, raising is the bluff action that makes opponents pay to continue."
+}

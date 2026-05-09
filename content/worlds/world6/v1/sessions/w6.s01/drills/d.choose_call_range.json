@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_range",
+  "kind": "action_choice",
+  "prompt": "Range proxy: choose the best action, not a single-hand snap raise.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits when the range edge is real but not strong enough to build a bigger pot cleanly.",
+  "feedback_incorrect_v1": "Incorrect. When the range edge is real but not strong enough to press, this spot should stay controlled with a call."
+}

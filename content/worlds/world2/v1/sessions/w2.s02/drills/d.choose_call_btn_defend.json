@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_btn_defend",
+  "kind": "action_choice",
+  "prompt": "Button facing one open with playable price: choose the defined response.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "This specific defend spot keeps a call response in range.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "unnecessary_passive_action",
+  "feedback_correct_v1": "Correct. Call is the defined defend response in this spot.",
+  "feedback_incorrect_v1": "Incorrect. Facing one open on the button with a playable price, the defined defend is call rather than forcing a raise."
+}

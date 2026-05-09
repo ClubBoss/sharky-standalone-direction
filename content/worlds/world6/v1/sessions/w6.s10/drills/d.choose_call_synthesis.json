@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_synthesis",
+  "kind": "action_choice",
+  "prompt": "Mixed picture: choose call.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call when the full picture is mixed and a raise would be too thin.",
+  "feedback_correct_v1": "Correct. Call fits because the full picture is still mixed, so a raise would force too much.",
+  "feedback_incorrect_v1": "Incorrect. Call fits when the full picture is still mixed and a raise would be too thin."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_freq_control",
+  "kind": "seat_tap",
+  "prompt": "Tap small blind seat before frequency-control exploit action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "sb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before player-based exploit decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Small blind is the seat anchor because that seat is the pressure source this frequency-control read is measuring.",
+  "feedback_incorrect_v1": "Incorrect. Tap the small blind because that seat defines the pressure source in this frequency-control spot."
+}

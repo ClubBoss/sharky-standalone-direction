@@ -1,0 +1,11 @@
+{
+  "id": "choose_fold_repeat",
+  "kind": "action_choice",
+  "prompt": "Choose fold.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "action_selection",
+  "feedback_correct_v1": "Correct. Fold is the right action button in this rep, so keep the choice anchored on that exact button before guessing.",
+  "feedback_incorrect_v1": "Incorrect. This rep is teaching the fold button, so choose fold instead of guessing between the action labels."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_adjust",
+  "kind": "action_choice",
+  "prompt": "Depth bucket first: this stack is not shallow enough to force aggression and not deep enough to invite leverage. Choose the action that fits the middle bucket.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call matches the medium-depth read. The stack leaves room to continue, but not enough leverage to justify forcing the spot with a raise.",
+  "feedback_correct_v1": "Correct. Medium-depth pressure points to a continue line, not a shove-style or deep-leverage raise.",
+  "feedback_incorrect_v1": "Incorrect. This depth bucket supports controlled continuation more than forced aggression."
+}

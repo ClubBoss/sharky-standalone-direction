@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s5_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S5 before continuing.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Seat anchor confirms the acting seat in this bluff rep.",
+  "expected": {
+    "seatId": "S5"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S5 fixes the acting player, so the bluff rep stays attached to the exact range that is pressuring now.",
+  "feedback_incorrect_v1": "Incorrect. This bluff rep is pinned to seat S5, so lock S5 before moving forward."
+}

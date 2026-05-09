@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_mtt_pressure",
+  "kind": "action_choice",
+  "prompt": "In this spot, choose the best action from the cues.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Choose the action that matches your track plan and current pressure.",
+  "feedback_correct_v1": "Correct. Folding fits the cue set, so the line avoids paying off when the pressure story is working against you.",
+  "feedback_incorrect_v1": "Incorrect. Folding works better because tournament pressure makes survival worth more than chasing a hand that cannot continue profitably."
+}

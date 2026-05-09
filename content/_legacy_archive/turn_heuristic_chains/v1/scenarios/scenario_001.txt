@@ -1,0 +1,22 @@
+# Scenario
+IP opened with a small flop advantage, and the turn card nudged the top-end density upward without blowing the range. Pressure climbs from low to mid/high as you choose between a small follow-up or a larger bet that forces folds. Defender loses some strong combos, mid-band softens, and reactions bifurcate: one sizing branch drift fold-heavy while the other keeps calling.
+
+# Snapshot
+Flop left you slightly ahead with layered tops. Turn adds more toppers and tightens mids. Small bets hold moderate pressure; larger bets elevate the tier. Defender fragility rises, yet part of the range tolerates pressure, keeping call-heavy lines alive while another portion dims toward folding.
+
+# Player task
+Name the main turn heuristic chain and choose whether timing-window, fold-window, or thin-value-pressure is the primary plan.
+
+# Expected reasoning
+Structure keeps advantage while density grows modestly. Mid/high pressure tier means aggressive sizing must respect fragility. Reaction layers split: bigger bets push defenders toward folds, small bets leave them calling. That duality matches a fold-window chain triggered by the larger sizing once fragility opens.
+
+# Correct line
+Fold-window chain tied to the larger sizing; smaller bets keep the timing window warm until the defender leans toward folding.
+
+# Common misreads
+- Treating all reactions as call-heavy and missing the fold-heavy branch.
+- Confusing flop pressure with the new turn tier.
+- Overvaluing blockers instead of watching fragility.
+- Ignoring fragility and betting too meekly.
+- Forcing thin-value pressure when the fold window needs the larger sizing.
+- Calling it full advantage instead of a controlled density edge.

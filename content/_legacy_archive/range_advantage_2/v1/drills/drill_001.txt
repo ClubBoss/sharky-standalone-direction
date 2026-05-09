@@ -1,0 +1,18 @@
+# What to do
+Classify the range advantage state and explain which exploitation lane becomes viable.
+
+# Input
+Attacker keeps stronger top-end combos and cohesive mids while the defender is semi-capped with fragile mid combos and limited aggression.
+
+# Expected reasoning
+Density edge sits at the top and mid bands, giving leverage while fragility zones warn against overcommitment. Pressure cues point toward mid/high tiers yet defender reactions stay call-heavy, so layering protects the mid band. Advantage grows slowly as fragility persists, opening thin-value or timing-pressure lanes before the defender yields.
+
+# Correct answer
+Controlled advantage: thin-value or timing-pressure lane is viable once the defender yields.
+
+# Common mistakes
+- Overreading the density edge as blanket dominance.
+- Ignoring fragility before launching bluffs.
+- Forcing aggression into the low-pressure node because it looks good.
+- Confusing thin-value with stab pressure.
+- Treating advantage as static and ignoring reaction shifts.

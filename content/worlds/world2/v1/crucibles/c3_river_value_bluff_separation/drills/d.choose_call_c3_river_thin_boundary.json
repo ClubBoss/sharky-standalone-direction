@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_c3_river_thin_boundary",
+  "kind": "action_choice",
+  "prompt": "Thin-value boundary river node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Call at this thin boundary to control risk. A raise is too thin to earn enough value.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Thin boundary node checks back.",
+  "feedback_incorrect_v1": "Incorrect. This thin boundary node should not force bet.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

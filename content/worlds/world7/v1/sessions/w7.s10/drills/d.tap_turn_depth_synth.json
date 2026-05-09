@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_depth_synth",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot before final depth-synthesis action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the next board anchor because the middle street is where the depth leverage picture can strengthen, flatten, or disappear.",
+  "feedback_incorrect_v1": "Incorrect. The turn matters because it updates how much leverage deep stacks still create before the river. You need that second board change to know whether the pressure edge is building, flattening, or disappearing."
+}

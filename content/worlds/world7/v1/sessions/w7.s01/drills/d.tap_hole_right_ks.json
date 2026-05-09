@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_right_ks",
+  "kind": "hole_cards_tap",
+  "prompt": "Deep-playability cue: tap right hole card (Ks).",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before depth action.",
+  "feedback_correct_v1": "Correct. Ks matters because that king makes the hand more playable when stacks are awkward.",
+  "feedback_incorrect_v1": "Incorrect. The king of spades is the right hole-card anchor here because that right-hole-card cue carries the deep-playability detail."
+}

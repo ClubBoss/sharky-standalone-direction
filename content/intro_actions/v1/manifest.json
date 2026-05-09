@@ -1,0 +1,11 @@
+{
+  "id": "intro_actions",
+  "order": 5,
+  "title": "Actions",
+  "description": "Check, Bet, Call, Fold.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_actions",
+  "reasoning": "Defines available player actions and when they occur.",
+  "availability": "available"
+}

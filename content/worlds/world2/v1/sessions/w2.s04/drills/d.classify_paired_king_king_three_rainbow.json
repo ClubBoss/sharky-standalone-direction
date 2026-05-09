@@ -1,0 +1,16 @@
+{
+  "id": "classify_paired_king_king_three_rainbow",
+  "kind": "board_texture_classifier_v1",
+  "intent_v1": "texture_pressure_building",
+  "prompt": "Flop K-K-3 rainbow. Choose CALL for the calmer board or RAISE for the more pressure-building board.",
+  "street_v1": "flop",
+  "board_cards_v1": ["Kh", "Kd", "3c"],
+  "board_texture_v1": "paired",
+  "available_actions_v1": ["call", "raise"],
+  "expected_action": "call",
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A paired rainbow board usually stays calmer because fewer straight and flush draws are available.",
+  "feedback_correct_v1": "Correct. A paired rainbow flop usually stays calmer because fewer draw paths open up.",
+  "feedback_incorrect_v1": "Incorrect. This flop is calmer because the paired texture limits immediate draw pressure.",
+  "recap_v1": "Dry or paired boards usually stay calmer. Connected draw-heavy boards build more pressure and change future decisions faster."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_utg_open",
+  "kind": "action_choice",
+  "prompt": "Early-seat weak opener candidate: choose the safer default.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Early-seat weak opens are removed by fold discipline.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "range_mismatch",
+  "feedback_correct_v1": "Correct. Fold is the defined early-seat discipline action.",
+  "feedback_incorrect_v1": "Incorrect. A weak early-position opener candidate should be released, so fold is the safer default."
+}

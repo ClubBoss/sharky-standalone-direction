@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat in the action-order ring.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Blind roles define preflop order and opening pressure.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "action_order_mismatch",
+  "feedback_correct_v1": "Correct. Small blind is identified in the order ring.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the first forced blind in the order ring, so anchor it first. That seat acts before the big blind preflop and marks who faces the earliest pressure."
+}

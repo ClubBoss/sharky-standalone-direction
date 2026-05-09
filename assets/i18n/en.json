@@ -1,0 +1,14 @@
+{
+  "app_title": "Poker Analyzer",
+  "welcome_message": "Welcome back",
+  "cta_start": "Start Session",
+  "player_profile_mastery_title": "Mastery & Traits",
+  "player_profile_traits_section": "Traits",
+  "player_profile_tutorial_title": "How mastery works",
+  "player_profile_tutorial_body": "Gain XP by completing drills and quizzes. Each mastery level unlocks new ranks and better trait odds. Traits provide temporary bonuses and map to the stat and trait engines.",
+  "player_profile_close": "Close",
+  "player_profile_rank_label": "Rank",
+  "player_profile_progress_label": "Progress",
+  "player_profile_level_label": "Level",
+  "player_profile_xp_label": "XP"
+}

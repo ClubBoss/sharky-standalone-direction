@@ -1,0 +1,14 @@
+{
+  "id": "choose_one_third_pot_probe_bluff_followthrough",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the probing bluff size when full pressure is unnecessary but the bluff should stay active.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "One third pot works as a lighter probing bluff when the goal is pressure without full commitment.",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

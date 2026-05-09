@@ -1,0 +1,18 @@
+{
+  "id": "choose_button_fold_in_position_discipline_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is on the button with 94o. Which simple action fits best if position does not rescue a weak hand?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Even in position, a weak offsuit hand should still fold once pressure reaches you.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Position helps playable hands continue, but 94o is still too weak to defend honestly here, so the right response is to fold."
+}

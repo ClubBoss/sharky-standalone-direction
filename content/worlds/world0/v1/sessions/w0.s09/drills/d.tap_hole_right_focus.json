@@ -1,0 +1,12 @@
+{
+  "id": "tap_hole_right_focus",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your right hole card.",
+  "why_v1": "This drill keeps the right hole-card anchor visible while the learner re-anchors from the small blind side.",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "hole_card_slot_confusion",
+  "feedback_correct_v1": "Correct. This drill keeps the right hole-card anchor visible while the learner re-anchors from the small blind side.",
+  "feedback_incorrect_v1": "Incorrect. Use the right hole card here so the read stays tied to the correct hole-card anchor for this rep."
+}

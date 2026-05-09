@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_river_sequence_value",
+  "kind": "action_choice",
+  "prompt": "Value finish branch on river: choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "By the river, this hand is strong enough to value bet, so checking would leave money behind from worse calls.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_acceptable_v1": "Acceptable. Checking avoids spewing, but this river is strong enough to value bet and wins more from worse calls.",
+  "feedback_correct_v1": "Correct. This river is strong enough to value bet, so checking would leave money behind from worse calls.",
+  "feedback_incorrect_v1": "Incorrect. Checking leaves value behind, but this river is strong enough to bet and get paid by worse hands.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

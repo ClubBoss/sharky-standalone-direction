@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_facing_open_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is on the button with KJs. Which simple action fits best at the checkpoint when pressure reaches you?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Once the pot is opened in front of you, a playable hand like KJs continues most cleanly by calling rather than acting first-in.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KJs on the button is no longer a clean first-in raise, so the simple continue is call."
+}

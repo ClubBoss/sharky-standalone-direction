@@ -1,0 +1,101 @@
+name: L3 Weights Contract
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'lib/**'
+      - 'tool/**'
+      - 'test/l3_cli_runner_weights_parse_test.dart'
+      - 'test/fixtures/l3/weights/**'
+      - 'test/smoke/**'
+      - '.github/workflows/l3-contract.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'lib/**'
+      - 'tool/**'
+      - 'test/l3_cli_runner_weights_parse_test.dart'
+      - 'test/fixtures/l3/weights/**'
+      - 'test/smoke/**'
+      - '.github/workflows/l3-contract.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect contract test
+        id: contract_test
+        run: |
+          echo "PWD=$(pwd)"
+          ls -la test | head -n 50
+          if [[ -f test/l3_cli_runner_weights_parse_test.dart ]]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Contract test found."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Missing test/l3_cli_runner_weights_parse_test.dart. Skipping contract job.";
+          fi
+      - name: Set up Flutter
+        if: steps.contract_test.outputs.exists == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Set up Flutter
+        if: steps.contract_test.outputs.exists == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - uses: subosito/flutter-action@v2
+        if: steps.contract_test.outputs.exists == 'true'
+        with:
+          channel: stable
+          flutter-version: '3.35.1'  # Dart 3.9.x
+          cache: true
+
+      - if: steps.contract_test.outputs.exists == 'true'
+        run: flutter --version
+      - if: steps.contract_test.outputs.exists == 'true'
+        run: dart --version
+
+      - name: Cache Pub dependencies
+        if: steps.contract_test.outputs.exists == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - if: steps.contract_test.outputs.exists == 'true'
+        run: flutter pub get
+
+      - name: Precommit sanity
+        if: steps.contract_test.outputs.exists == 'true'
+        run: bash tool/dev/precommit_sanity.sh
+
+      # Контрактный тест (pure-Dart)
+      - name: Run contract tests
+        if: steps.contract_test.outputs.exists == 'true'
+        run: |
+          if [ -f test/l3_cli_runner_weights_parse_test.dart ]; then
+            dart test test/l3_cli_runner_weights_parse_test.dart -r expanded
+          else
+            echo "SKIP: test/l3_cli_runner_weights_parse_test.dart not present"
+          fi
+
+      # Flutter smoke отдельно через flutter test
+      - name: Run Flutter smoke tests
+        if: steps.contract_test.outputs.exists == 'true'
+        run: |
+          if [ -f test/smoke/win_overlays_smoke_test.dart ]; then
+            flutter test test/smoke/win_overlays_smoke_test.dart -r expanded
+          else
+            echo "SKIP: test/smoke/win_overlays_smoke_test.dart not present"
+          fi

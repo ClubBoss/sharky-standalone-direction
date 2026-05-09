@@ -1,0 +1,23 @@
+# What it is
+<placeholder>
+
+# Why it matters
+<placeholder>
+
+# Rules of thumb
+- <placeholder>
+
+# Mini example
+<placeholder>
+
+# Common mistakes
+- <placeholder>
+
+# Workflow
+- <placeholder>
+
+# Mini-glossary
+- <TERM> : <meaning>
+
+# EV
+<placeholder>

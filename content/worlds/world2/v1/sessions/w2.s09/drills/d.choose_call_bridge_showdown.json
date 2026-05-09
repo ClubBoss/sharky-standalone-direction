@@ -1,0 +1,20 @@
+{
+  "id": "choose_call_bridge_showdown",
+  "kind": "action_choice",
+  "prompt": "Bridge showdown-intent node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "A medium-strength hand that already reaches showdown often enough should check instead of turning itself into a thin bluff.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. This hand already reaches showdown often enough and has enough showdown value, so checking is cleaner than turning it into a bluff or a thin bluff.",
+  "feedback_incorrect_by_action_v1": {
+    "fold": "Incorrect. Folding gives up a medium-strength hand that already reaches showdown often enough, so checking preserves the cheaper showdown path.",
+    "raise": "Incorrect. Raising turns this medium-strength hand into a thin bluff, so checking is cleaner and preserves showdown value."
+  },
+  "feedback_incorrect_v1": "Incorrect. Bluffing spends a medium-strength hand that already reaches showdown often enough and has enough showdown value, so checking keeps the cheaper value path intact and is cleaner than bluffing.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

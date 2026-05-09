@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_turn_sequence_control",
+  "kind": "action_choice",
+  "prompt": "Control branch on turn sequence node: choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "On the turn, this hand prefers pot control, so checking is cleaner than forcing extra pressure.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "missed_checkback_spot",
+  "feedback_correct_v1": "Correct. This turn is a pot-control spot, so checking keeps the pressure manageable instead of forcing another bet.",
+  "feedback_incorrect_v1": "Incorrect. Betting here pushes past the hand's control value, but checking keeps the pot manageable on the turn.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

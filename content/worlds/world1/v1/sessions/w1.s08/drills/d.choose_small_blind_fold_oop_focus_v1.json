@@ -1,0 +1,18 @@
+{
+  "id": "choose_small_blind_fold_oop_focus_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the small blind with J6o and nobody has entered the pot. Which simple action fits best when acting out of position?",
+  "intent_v1": "dominated_aces",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Out of position from the small blind, a weak offsuit hand should still release.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. From the small blind with J6o, the hand is too weak to force action out of position, so the honest action is to fold."
+}

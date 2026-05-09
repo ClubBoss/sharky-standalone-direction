@@ -1,0 +1,61 @@
+{
+  "id": "chain_preflop_category_reuse_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s02_preflop_category_reuse_v1",
+  "prompt": "Play this short World 3 preflop category-reuse chain.",
+  "intent_v1": "action_sequence",
+  "why_v1": "World 3 reuses the same action sequence while the hand bucket and preflop frame shift underneath it.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with KJs and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Ks", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A solid suited broadway hand on the button is strong enough to open when nobody entered the pot yet.",
+      "feedback_incorrect_v1": "Incorrect. KJs on the button is strong enough to open when nobody entered yet, so raising uses both hand quality and late position.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Category first: a stronger playable hand in position should usually open when the pot is still unopened."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Keep the same hand and seats, but now the cutoff opened first. Which simple action fits better for hero on the button?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Ks", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The open changed the frame, so calling is the cleaner preflop default for this same hand in position.",
+      "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KJs still has enough value to continue, but calling is cleaner than replaying it like an unopened-pot raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same hand category can prefer a different first action once the action gets to you in a different preflop frame."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is still on the button, but now the hand is A8o and the cutoff opened first. Which compact action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Ah", "8c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A weaker offsuit hand should not keep going just because the button has position.",
+      "feedback_incorrect_v1": "Incorrect. A8o may have an ace, but against an open it is still a weak offsuit continue, so folding is better than leaning too hard on button position.",
+      "recap_v1": "World 3 gets cleaner when the learner reuses the same simple habit: identify the hand bucket, then let the preflop frame decide whether the hand wants raise, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position matters, but hand quality still decides whether continuing is disciplined or just hopeful."
+    }
+  ]
+}

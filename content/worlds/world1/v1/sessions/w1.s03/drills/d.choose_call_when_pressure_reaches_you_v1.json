@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_when_pressure_reaches_you_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened first and hero is on the button with KQs. Which simple action fits best when the pressure reaches you?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Once an open reaches you, the hand can still continue, but the cleaner response is a call rather than treating it like a first-in raise.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KQs on the button is no longer a clean first-in raise, so the simpler continue is call."
+}

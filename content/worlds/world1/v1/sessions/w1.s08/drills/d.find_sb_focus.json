@@ -1,0 +1,11 @@
+{
+  "id": "find_sb_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the sb seat.",
+  "intent_v1": "dominated_aces",
+  "why_v1": "This drill checks seat context before action selection.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "seat_role_confusion"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "find_btn_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the dealer button seat.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "seat_role_confusion"
+}

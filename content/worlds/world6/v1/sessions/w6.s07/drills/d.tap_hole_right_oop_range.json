@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_oop_range",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card before final oop defense.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. Right hole card anchored before the final out-of-position defense.",
+  "feedback_incorrect_v1": "Incorrect. The right hole card is the proper anchor because that private-card cue shows what real hand strength the out-of-position defense is relying on."
+}

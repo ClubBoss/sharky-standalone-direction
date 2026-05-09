@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left",
+  "kind": "board_tap",
+  "prompt": "Stack-to-pot cue on board flow: tap flop left.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "feedback_correct_v1": "Correct. Start from the left flop card because that first board cue shows whether betting is safe.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the right board anchor here because the original texture cue sets the stack-to-pot picture."
+}

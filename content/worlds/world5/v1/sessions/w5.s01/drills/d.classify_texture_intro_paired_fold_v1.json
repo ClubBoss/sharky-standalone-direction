@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_intro_paired_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Read the board first: the texture is paired and your improvement paths are weak. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "paired",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "A paired board can narrow clean improvement paths, so weak holdings often release early.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Weak improvement on a paired texture points to fold.",
+  "feedback_incorrect_v1": "Incorrect. Start from the paired texture and respect the poor improvement outlook."
+}

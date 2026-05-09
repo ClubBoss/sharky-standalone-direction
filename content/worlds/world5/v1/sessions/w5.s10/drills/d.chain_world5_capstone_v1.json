@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_capstone_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s10_capstone_v1",
+  "prompt": "Play this short World 5 capstone chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Texture and draw pressure stay connected, but the secondary cues keep the edge mixed. Which simple action fits best?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. Mixed connected pressure still supports the more controlled line.",
+      "feedback_incorrect_v1": "Incorrect. Start from the connected texture before you let the mixed secondary cues refine the choice.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Connected pressure does not always justify aggression when the rest of the board story stays mixed."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: Texture, draw structure, and secondary cues all agree on a clean dry-board pressure story. Which simple action fits best?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. When the whole dry-board read agrees, the stronger pressure line fits.",
+      "feedback_incorrect_v1": "Incorrect. Let the full dry-board synthesis lead the action.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Dry textures can become especially clean when every secondary cue reinforces the same story."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: Texture, draws, and secondary cues all confirm heavy wet-board pressure against a weak improvement path. Which simple action fits best?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Full wet-board pressure against weak improvement still ends in a disciplined fold.",
+      "feedback_incorrect_v1": "Incorrect. Start from the full wet-board synthesis before choosing action.",
+      "recap_v1": "World 5 should now feel coherent as one board-reading world: read texture first, use secondary cues only to sharpen the story, then choose the simplest action that fits that board state.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The capstone goal is not more action variety. It is proving that the board state stays primary even when the cues become mixed."
+    }
+  ]
+}

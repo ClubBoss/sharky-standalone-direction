@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_merged",
+  "kind": "action_choice",
+  "prompt": "Merged ending under pressure: choose fold.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when range strength does not justify continuing.",
+  "feedback_correct_v1": "Correct. Folding fits because a merged river without a clean edge should preserve chips instead of paying off.",
+  "feedback_incorrect_v1": "Incorrect. Fold is better when the river stays merged and your range no longer has the clean strength to keep paying or forcing action. A merged ending without a real edge should release chips instead of stretching a thin continue."
+}

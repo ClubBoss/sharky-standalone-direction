@@ -1,0 +1,11 @@
+{
+  "id": "intro_success_signals",
+  "order": 11,
+  "title": "Signal Awareness",
+  "description": "Recognize completion and retry cues.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_success_signals",
+  "reasoning": "Keeps telemetry/feedback visible while staying schema-compliant.",
+  "availability": "available"
+}

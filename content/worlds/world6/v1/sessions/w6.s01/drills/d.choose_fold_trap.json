@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: single strong card is not enough alone here, choose fold.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when range strength does not justify continuing.",
+  "feedback_correct_v1": "Correct. Folding fits when one strong card is not enough to keep the whole range profitable.",
+  "feedback_incorrect_v1": "Incorrect. A single strong card is not enough here, so this trap spot should release with a fold instead of forcing a continue."
+}

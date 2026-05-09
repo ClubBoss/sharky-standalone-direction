@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s6",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6 to mark the early-position anchor.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Early seats act with less information than late seats.",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "action_order_mismatch",
+  "feedback_correct_v1": "Correct. S6 marks an early-position decision context.",
+  "feedback_incorrect_v1": "Incorrect. Early-position anchor is S6 in this table map."
+}

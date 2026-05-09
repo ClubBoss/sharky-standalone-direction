@@ -1,0 +1,11 @@
+{
+  "id": "tap_hole_left_as",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap the ace of spades hole card.",
+  "intent_v1": "dominated_aces",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "hole_card_identity_confusion"
+}

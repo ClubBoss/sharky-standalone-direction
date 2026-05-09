@@ -1,0 +1,13 @@
+{
+  "id": "fold",
+  "kind": "action_choice",
+  "prompt": "In this tournament preflop spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects your stack when tournament life is at risk.",
+  "feedback_correct_v1": "Correct. Folding fits the track cue set, so the line avoids paying off when the pressure story is working against you.",
+  "feedback_incorrect_v1": "Incorrect. Fold because risk premium still makes this preflop continue too expensive when elimination pressure is real."
+}

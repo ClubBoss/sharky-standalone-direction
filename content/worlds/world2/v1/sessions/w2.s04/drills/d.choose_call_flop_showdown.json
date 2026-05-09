@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_flop_showdown",
+  "kind": "action_choice",
+  "prompt": "Marginal showdown-value flop spot: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Showdown-value retention uses checkback in this template.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "missed_value_spot",
+  "feedback_correct_v1": "Correct. Checkback preserves showdown value here.",
+  "feedback_incorrect_v1": "Incorrect. When the hand already carries showdown value, forcing a flop bet only bloats the pot without enough upside.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

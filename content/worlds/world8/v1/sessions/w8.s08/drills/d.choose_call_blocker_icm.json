@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_blocker_icm",
+  "kind": "action_choice",
+  "prompt": "With blocker but high ICM pressure, choose call.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when tournament pressure does not force fold or raise.",
+  "feedback_correct_v1": "Correct. Calling fits the tournament cue set, so the line preserves equity without risking more than this pressure read can justify.",
+  "feedback_incorrect_v1": "Incorrect. Calling is better here because blocker value helps, but the ICM pressure is still high enough to prefer control over a forced raise."
+}

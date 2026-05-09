@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_river_polar",
+  "kind": "seat_tap",
+  "prompt": "Tap small blind seat before river polarization action.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "sb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Small blind is the seat anchor here because the earlier defending range is the one the polarized river line is attacking.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right seat anchor here because the polarized river read has to stay tied to that earlier defending range."
+}

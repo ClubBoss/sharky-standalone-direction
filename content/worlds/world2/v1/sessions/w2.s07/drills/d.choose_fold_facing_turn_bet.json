@@ -1,0 +1,16 @@
+{
+  "id": "choose_fold_facing_turn_bet",
+  "kind": "action_choice",
+  "prompt": "Turn pressure with poor price: choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Once the turn price gets too poor, folding beats paying to continue with too little value.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "overfold_pattern",
+  "feedback_correct_v1": "Correct. At this turn price, the hand no longer earns a continue, so folding is the disciplined choice.",
+  "feedback_incorrect_v1": "Incorrect. Calling pays too much once the turn price gets this poor, and raising stretches a hand that should simply release.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

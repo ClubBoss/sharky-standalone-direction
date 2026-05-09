@@ -1,0 +1,9 @@
+/content/<module>/v1/
+├── theory.md
+├── drills.jsonl
+├── demos.jsonl
+├── allowlist.txt
+├── quiz.jsonl
+├── recap.md
+├── labels.txt
+├── paths.txt

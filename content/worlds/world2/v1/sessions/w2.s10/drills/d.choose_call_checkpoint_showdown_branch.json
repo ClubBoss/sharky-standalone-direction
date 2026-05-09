@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_checkpoint_showdown_branch",
+  "kind": "action_choice",
+  "prompt": "Checkpoint showdown-intent node: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "A medium-strength hand that already reaches showdown often enough should call instead of bluffing thinly, because raising turns it into a thin bluff.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Calling keeps this medium-strength hand in showdown shape instead of turning it into a thin bluff.",
+  "feedback_incorrect_v1": "Incorrect. Raising turns this medium-strength hand into a thin bluff, but calling keeps its showdown value intact on the cheaper value path."
+}

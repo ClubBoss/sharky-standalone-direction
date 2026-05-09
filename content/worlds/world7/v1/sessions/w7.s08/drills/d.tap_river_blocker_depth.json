@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_blocker_depth",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to finalize blocker-depth read.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor because the final card decides whether the blocker still supports pressure or should settle for showdown.",
+  "feedback_incorrect_v1": "Incorrect. The river is the right anchor here because the final card decides whether the blocker still supports pressure or the hand should settle for showdown value."
+}

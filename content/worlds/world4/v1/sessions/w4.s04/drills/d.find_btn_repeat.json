@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before choosing action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Button anchor confirms late position before value action.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button keeps the late-position edge visible, so the repeat stays tied to the seat that can value bet with the most information.",
+  "feedback_incorrect_v1": "Incorrect. This value repeat is anchored on the button, so confirm the button seat before acting."
+}

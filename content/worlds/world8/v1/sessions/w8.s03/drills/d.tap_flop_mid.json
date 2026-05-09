@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_mid",
+  "kind": "board_tap",
+  "prompt": "Tournament context board cue: tap flop middle.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor, so the tournament read stays centered on the card that shapes the flop texture.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card is the target board card because that card helps complete the tournament-pressure board read before you act."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_advantage",
+  "kind": "seat_tap",
+  "prompt": "Tap big blind seat before range-advantage action.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "role": "bb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Big blind is the seat anchor here because the forced defender defines how wide the advantage battle can stay.",
+  "feedback_incorrect_v1": "Incorrect. Start with the big blind so you know who defends from the forced seat and how wide that range can be. That seat anchor is what makes the later range-advantage read mean something."
+}

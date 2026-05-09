@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_sequence_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap turn anchor before updating sequence line.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Turn anchor prevents random line switching.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Turn anchor is identified.",
+  "feedback_incorrect_v1": "Incorrect. The turn changes draws and pressure, so read that card first before deciding how the board development shifts the action."
+}

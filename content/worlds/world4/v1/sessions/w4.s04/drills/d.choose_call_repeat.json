@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_repeat",
+  "kind": "action_choice",
+  "prompt": "With medium strength and fair price, choose action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Call controls risk when raising is too thin.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_incorrect_v1": "Incorrect. Medium strength with a fair price prefers a controlled call over a thinner raise."
+}

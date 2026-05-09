@@ -1,0 +1,13 @@
+{
+  "id": "find_btn",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before choosing intent.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Button anchor confirms late position before you commit chips.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button is the late-position seat in this value setup, so anchoring it first explains why the action can stay assertive.",
+  "feedback_incorrect_v1": "Incorrect. This value setup is anchored on the button, so tap the button seat before choosing the action."
+}

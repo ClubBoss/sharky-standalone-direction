@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_synthesis",
+  "kind": "board_tap",
+  "prompt": "Tap the right flop card.",
+  "intent_v1": "range_vs_hand",
+  "why_v1": "Use the full flop before deciding whether the board still helps you.",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the right flop card because it completes the board you have to judge.",
+  "feedback_incorrect_v1": "Incorrect. Use the right flop card because it completes the board you have to judge."
+}

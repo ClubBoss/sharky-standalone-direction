@@ -1,0 +1,13 @@
+{
+  "id": "find_role_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap hj as the position anchor before acting.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "hj"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep order and pressure reads stable.",
+  "feedback_correct_v1": "Correct. The hijack is the right seat anchor, so the read stays tied to the earlier late-position seat that starts the pressure line.",
+  "feedback_incorrect_v1": "Incorrect. The hijack is the right anchor here because the late-street cash read stays tied to the earlier late-position role setting the pressure."
+}

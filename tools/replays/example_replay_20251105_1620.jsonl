@@ -1,0 +1,7 @@
+{"timestamp":"2025-11-05T16:20:00.000Z","type":"round_start","seat_index":0}
+{"timestamp":"2025-11-05T16:20:00.100Z","type":"action","seat_index":1,"action":"PlayerAction.post","amount":10}
+{"timestamp":"2025-11-05T16:20:00.200Z","type":"action","seat_index":0,"action":"PlayerAction.post","amount":20}
+{"timestamp":"2025-11-05T16:20:00.300Z","type":"street_change","seat_index":0,"street":"SimulationStreet.preFlop"}
+{"timestamp":"2025-11-05T16:20:00.400Z","type":"pot_update","seat_index":0,"pot":30}
+{"timestamp":"2025-11-05T16:20:01.000Z","type":"action","seat_index":0,"action":"PlayerAction.fold"}
+{"timestamp":"2025-11-05T16:20:01.100Z","type":"round_end","seat_index":1,"pot":30}

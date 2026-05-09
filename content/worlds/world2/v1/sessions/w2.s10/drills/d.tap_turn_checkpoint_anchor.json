@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_checkpoint_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot before pressure checkpoint branch.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Turn anchor prevents branch confusion in checkpoint reps.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Turn context is identified.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the fourth board card, so read it first. That street decides whether the draw pressure still fits before you continue the review line."
+}

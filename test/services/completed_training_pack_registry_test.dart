@@ -1,0 +1,53 @@
+import 'package:poker_analyzer/testing/test_shims.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
+import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
+import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
+import 'package:poker_analyzer/services/completed_training_pack_registry.dart';
+import 'package:poker_analyzer/services/training_pack_fingerprint_generator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test/test.dart';
+
+void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  TrainingPackTemplate buildPack(String id) {
+    return TrainingPackTemplate(
+      id: id,
+      name: 'Pack $id',
+      trainingType: TrainingType.quiz,
+      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())),
+      spotCount: 1,
+    );
+  }
+
+  test('store and retrieve completed pack data', () async {
+    final registry = CompletedTrainingPackRegistry();
+    final pack = buildPack('p1');
+    final completedAt = DateTime.utc(2024, 1, 1);
+    await registry.storeCompletedPack(
+      pack,
+      completedAt: completedAt,
+      accuracy: 0.85,
+      duration: Duration(seconds: 30),
+    );
+
+    final fp = TrainingPackFingerprintGenerator().generateFromTemplate(pack);
+    final data = await registry.getCompletedPackData(fp);
+    expect(data, isNotNull);
+    expect(data!['yaml'], equals(pack.toYamlString()));
+    expect(DateTime.parse(data['timestamp') as String], completedAt);
+    expect(data['type'], equals('quiz'));
+    expect((data['accuracy'] as num).toDouble(), closeTo(0.85, 1e-9));
+    expect(data['durationMs'], 30000);
+
+    final all = await registry.listCompletedFingerprints();
+    expect(all, contains(fp));
+
+    await registry.deleteCompletedPack(fp);
+    final afterDelete = await registry.getCompletedPackData(fp);
+    expect(afterDelete, isNull);
+  });
+}

@@ -1,0 +1,14 @@
+{
+  "id": "choose_call_oop_range",
+  "kind": "action_choice",
+  "prompt": "Out of position with a stabilizing equity share, pick the control line.",
+  "intent_v1": "equity_realization",
+  "available_actions_v1": ["fold", "call"],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Call keeps the out-of-position hand in while controlling risk.",
+  "feedback_incorrect_v1": "Incorrect. Call fits this out-of-position spot because the equity is stable enough to continue but not strong enough to push harder."
+}

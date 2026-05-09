@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_mid_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the middle flop slot before action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Flop anchor confirms board context for denial pressure.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The middle flop card completes the texture read, so the denial bet stays tied to the board cue that keeps draws alive.",
+  "feedback_incorrect_v1": "Incorrect. This final denial rep starts from the middle flop card, so tap that slot before acting."
+}

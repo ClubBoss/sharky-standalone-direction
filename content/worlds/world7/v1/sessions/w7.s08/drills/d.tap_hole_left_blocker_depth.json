@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_blocker_depth",
+  "kind": "hole_cards_tap",
+  "prompt": "Blocker-depth setup: tap left hole card (As).",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. As is the hole-card anchor because that exact blocker removes strong continues and gives the pressure line real leverage.",
+  "feedback_incorrect_v1": "Incorrect. The ace of spades is the right anchor here because that exact blocker removes strong continuing hands and decides whether the pressure line has real blocker value."
+}

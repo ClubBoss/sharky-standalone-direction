@@ -1,0 +1,18 @@
+{
+  "id": "choose_big_blind_call_oop_defend_focus_v1",
+  "kind": "action_choice",
+  "prompt": "Button opened and hero is in the big blind with QTo. Which simple action fits best for a clean out-of-position defend?",
+  "intent_v1": "dominated_aces",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "From the big blind, a playable broadway hand can still continue by calling even without position.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. QTo is playable enough to defend from the big blind, but out of position the cleaner continue is call, not a loose raise."
+}

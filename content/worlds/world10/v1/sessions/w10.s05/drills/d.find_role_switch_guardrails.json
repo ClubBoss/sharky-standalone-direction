@@ -1,0 +1,13 @@
+{
+  "id": "find_role_switch_guardrails",
+  "kind": "seat_tap",
+  "prompt": "Tap bb as the position anchor before acting.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep action order clear before a track-specific action.",
+  "feedback_correct_v1": "Correct. The big blind is the right seat anchor, so the cue read stays tied to the forced defender the line is testing.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the right position anchor because guardrail decisions depend on knowing who is under the most pressure and who still has leverage."
+}

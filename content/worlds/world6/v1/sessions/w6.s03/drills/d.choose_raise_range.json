@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_range",
+  "kind": "action_choice",
+  "prompt": "Range-first proxy: choose the best action.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because your range owns the cleaner advantage and can pressure weaker continues out.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when your range owns the cleaner advantage and can pressure weaker continues out of the pot. This is the kind of spot where range edge should push the action instead of settling for a passive line."
+}

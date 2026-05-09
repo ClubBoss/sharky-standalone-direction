@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_deep",
+  "kind": "action_choice",
+  "prompt": "Deep stack proxy: choose the best action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when depth edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Call fits because deeper stacks keep the hand playable without forcing a thin raise.",
+  "feedback_incorrect_v1": "Incorrect. Call is better here because deep stacks still leave room to maneuver after the flop, while your edge is too marginal to force a raise right now. A controlled continue keeps playability without bloating the pot before you own a clearer pressure advantage."
+}

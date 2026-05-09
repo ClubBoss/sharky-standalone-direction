@@ -1,0 +1,56 @@
+name: R5 release gate
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: r5-release-gate-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  r5-release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Repo readiness preflight (quick)
+        run: ./tools/check_repo_ready_r5_v1.sh --quick
+
+      - name: Run R5 release gate
+        run: |
+          set -o pipefail
+          mkdir -p out/ci
+          ./tools/run_release_gate_r5_v1.sh 2>&1 | tee out/ci/r5_release_gate.log
+
+      - name: Upload R5 gate failure artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: r5-release-gate-log
+          path: out/ci/r5_release_gate.log
+
+      - name: R5 gate failure summary
+        if: ${{ failure() }}
+        run: |
+          failed_line="$(grep -E '\\[r5-gate\\] FAIL ' out/ci/r5_release_gate.log | tail -n 1 || true)"
+          if [[ -z "$failed_line" ]]; then
+            failed_line="unknown failure before gate step marker"
+          fi
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## R5 release gate failed
+          - Failing step: \`$failed_line\`
+          - Artifact: \`r5-release-gate-log\`
+          - Reproduce locally:
+            - \`flutter pub get\`
+            - \`./tools/run_release_gate_r5_v1.sh\`
+          EOF

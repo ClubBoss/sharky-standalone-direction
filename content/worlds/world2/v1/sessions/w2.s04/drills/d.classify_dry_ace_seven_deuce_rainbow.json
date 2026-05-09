@@ -1,0 +1,18 @@
+{
+  "id": "classify_dry_ace_seven_deuce_rainbow",
+  "kind": "board_texture_classifier_v1",
+  "intent_v1": "texture_pressure_building",
+  "prompt": "Flop A-7-2 rainbow. Choose CALL for the calmer board or RAISE for the more pressure-building board.",
+  "intro_v1": "Read the real board first. Dry flops usually keep pressure lower because fewer turn cards change the picture fast.",
+  "street_v1": "flop",
+  "board_cards_v1": ["As", "7d", "2c"],
+  "board_texture_v1": "dry",
+  "board_texture_policy_shape_v1": "pressure_level",
+  "board_texture_policy_target_v1": "calmer",
+  "available_actions_v1": ["call", "raise"],
+  "expected_action": "call",
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A-7-2 rainbow is dry, so fewer draws and turn shifts build pressure right away.",
+  "feedback_correct_v1": "Correct. This flop stays calmer because it does not create many immediate draw paths.",
+  "feedback_incorrect_v1": "Incorrect. This flop is the calmer board because the texture stays dry and stable."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_mid_mtt_deepening",
+  "kind": "board_tap",
+  "prompt": "Tap flop_mid to confirm the first board anchor.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchors keep your adjustment stable across streets.",
+  "feedback_correct_v1": "Correct. flop_mid is the first board anchor, so the texture read stays centered on the card that shapes the flop pattern.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card matters because the first flop texture read shows whether deep tournament pressure is credible or too risky to force."
+}

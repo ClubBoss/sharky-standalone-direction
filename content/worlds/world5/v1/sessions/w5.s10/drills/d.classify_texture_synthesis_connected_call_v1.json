@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_synthesis_connected_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Texture and draw pressure stay connected, but secondary cues keep the edge mixed. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "When the full synthesis stays connected but mixed, control remains better than forcing thin aggression.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The connected synthesis read points to a call.",
+  "feedback_incorrect_v1": "Incorrect. Let the mixed connected synthesis lead the choice."
+}

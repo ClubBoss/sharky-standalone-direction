@@ -1,0 +1,10 @@
+{
+  "id": "tap_flop_left_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the flop_left card slot.",
+  "intent_v1": "trash_hands",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "board_slot_confusion"
+}

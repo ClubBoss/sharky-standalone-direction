@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_medium",
+  "kind": "board_tap",
+  "prompt": "Tap flop left to anchor medium-stack context.",
+  "intent_v1": "tournament_context_shift",
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_left is the board anchor, so the tournament read starts from the first card that frames the flop texture.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the target board card because the medium-stack context begins from that first board cue."
+}

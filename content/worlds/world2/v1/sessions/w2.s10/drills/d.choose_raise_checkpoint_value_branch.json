@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_checkpoint_value_branch",
+  "kind": "action_choice",
+  "prompt": "Checkpoint value-intent node: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "A value-heavy hand in position should raise rather than pass up money against weaker continues.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Position plus value make raising the clearest money-winning line here.",
+  "feedback_incorrect_v1": "Incorrect. Calling leaves value behind here, but a value-heavy hand in position should raise because raising is the clearer line and wins more from weaker continues."
+}

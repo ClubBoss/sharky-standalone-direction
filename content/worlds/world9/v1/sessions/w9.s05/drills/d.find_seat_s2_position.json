@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s2_position",
+  "kind": "seat_tap",
+  "prompt": "Position exploit setup: tap seat S2.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "seatId": "S2"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before player-based exploit decisions.",
+  "feedback_correct_v1": "Correct. Seat S2 is the seat anchor here because that exact player profile is the target of the position exploit.",
+  "feedback_incorrect_v1": "Incorrect. Seat S2 is the correct seat anchor here because the exploit read has to stay tied to the exact player you are targeting."
+}

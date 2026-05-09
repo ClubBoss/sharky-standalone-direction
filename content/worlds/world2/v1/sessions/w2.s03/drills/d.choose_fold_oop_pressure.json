@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_oop_pressure",
+  "kind": "action_choice",
+  "prompt": "From small blind facing pressure with weak quality, choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Weak out-of-position pressure spots collapse to fold.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "overfold_pattern",
+  "feedback_correct_v1": "Correct. Fold is the defined weak OOP response.",
+  "feedback_incorrect_v1": "Incorrect. Weak out-of-position pressure has pushed this hand past a clean continue, so folding is the disciplined response."
+}

@@ -1,0 +1,14 @@
+{
+  "id": "call",
+  "kind": "action_choice",
+  "prompt": "Late-street cash spot: pick the lower-variance continue.",
+  "intent_v1": "one_lever_adjustment",
+  "available_actions_v1": ["fold", "call"],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call captures value when price and showdown value align.",
+  "feedback_correct_v1": "Correct. Call keeps the price aligned with the showdown value in this late-street cash spot.",
+  "feedback_incorrect_v1": "Incorrect. Call is best here because the price and showdown value still justify continuing."
+}

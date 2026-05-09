@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_late_icm",
+  "kind": "board_tap",
+  "prompt": "Tap turn to compare pre-river closure context.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor, so the tournament read updates on the street where pressure often changes shape.",
+  "feedback_incorrect_v1": "Incorrect. The turn card is the target board card because that street shows the pre-river ICM state you are comparing against."
+}

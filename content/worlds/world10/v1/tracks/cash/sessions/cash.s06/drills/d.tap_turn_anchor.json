@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap turn before choosing the next action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Turn anchors prevent rushed actions.",
+  "feedback_correct_v1": "Correct. Turn card anchored before the late-street cash action choice.",
+  "feedback_incorrect_v1": "Incorrect. The turn card is the right street anchor here because the fourth board card is where this late-street cash line can change."
+}

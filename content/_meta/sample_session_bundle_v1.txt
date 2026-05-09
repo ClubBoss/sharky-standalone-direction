@@ -1,0 +1,21 @@
+=== SESSION w0.s01 ===
+--- session.md ---
+# Session w0.s01
+
+## Objective
+TODO
+
+## Scenario
+TODO
+
+## Decision
+TODO
+
+## Explanation
+TODO
+--- notes.md ---
+# Notes
+- TODO sample bundle notes
+--- drills/index.md ---
+# Drills
+- TODO sample bundle drills

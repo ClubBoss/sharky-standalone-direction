@@ -1,0 +1,11 @@
+{
+  "id": "intro_session_basics",
+  "order": 10,
+  "title": "Session Basics",
+  "description": "Key steps of a training session.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_session_basics",
+  "reasoning": "Keeps the First 5 Minutes baseline visible while describing the session loop.",
+  "availability": "available"
+}

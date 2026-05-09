@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_late_icm",
+  "kind": "board_tap",
+  "prompt": "Tap river to lock late-street ICM state.",
+  "intent_v1": "survival_pressure",
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor, so the tournament read closes on the last street that decides the final pressure state.",
+  "feedback_incorrect_v1": "Incorrect. The river card is the target board card because late-street ICM closure is only final once the last street is anchored."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_sequence_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap river anchor before final sequence action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Final-street anchor is required for consistent finish.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The river decides whether the line ends in value, showdown, or release, so the last action stays tied to the final card.",
+  "feedback_incorrect_v1": "Incorrect. The river finalizes whether the hand is mostly value, showdown, or release, so read that card first before taking the last action."
+}

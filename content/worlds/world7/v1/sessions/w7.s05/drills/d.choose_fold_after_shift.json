@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_after_shift",
+  "kind": "action_choice",
+  "prompt": "Spot turns bad: choose fold.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold when the spot turns bad and continuing would cost too much.",
+  "feedback_correct_v1": "Correct. Fold fits because the spot turns bad and there is not enough upside to keep going.",
+  "feedback_incorrect_v1": "Incorrect. Fold fits when the spot turns bad and continuing would cost too much."
+}

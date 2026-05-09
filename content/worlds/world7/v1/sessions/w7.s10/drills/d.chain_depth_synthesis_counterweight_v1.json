@@ -1,0 +1,43 @@
+{
+  "id": "chain_depth_synthesis_counterweight_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w7_s10_depth_synthesis_counterweight_v1",
+  "prompt": "Play this short three-step World 7 depth counterweight chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: Shallow depth and weak leverage should keep this line disciplined. Choose action.",
+      "intent_v1": "stack_depth_adjustment",
+      "available_actions_v1": ["fold", "call"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This shallow-leverage flop step should fold.",
+      "feedback_incorrect_v1": "Incorrect. With shallow depth stripping away future leverage, this flop should fold instead of stretching for a thin continue.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When shallow depth removes future leverage and the edge is thin, disciplined release is cleaner than forcing continuation."
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: Medium depth restores enough flexibility for a controlled continue. Choose action.",
+      "intent_v1": "stack_to_pot_awareness",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This medium-depth turn step prefers call.",
+      "feedback_incorrect_v1": "Incorrect. Once the stack depth restores some flexibility without creating a big pressure edge, this turn should keep the line controlled with a call.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When depth is no longer collapsing the line but still does not justify maximum pressure, controlled continuation remains the stable choice."
+    },
+    {
+      "street": "river",
+      "prompt": "River: Deep closure and positional leverage now support a stronger finish. Choose action.",
+      "intent_v1": "deep_stack_playability",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This deep-closure river step supports raise.",
+      "feedback_incorrect_v1": "Incorrect. When deep stacks and late-street position finally create real leverage, this river should finish with the stronger raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When depth and position both improve late-street leverage, the learner should convert the edge into pressure instead of staying passive."
+    }
+  ]
+}

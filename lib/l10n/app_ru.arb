@@ -1,0 +1,510 @@
+{
+  "@@locale": "ru",
+  "favorites": "Избранное",
+  "recommended": "Рекомендовано",
+  "starterPacks": "Стартовые паки",
+  "builtInPacks": "Встроенные паки",
+  "yourPacks": "Ваши паки",
+  "recentPacks": "Недавняя практика",
+  "popularPacks": "\ud83d\udd25 \u041f\u043e\u043f\u0443\u043b\u044f\u0440\u043d\u043e\u0435",
+  "newPacks": "\ud83c\udd95 \u041d\u043e\u0432\u044b\u0435"
+  ,"starterBadge": "\u0421\u0442\u0430\u0440\u0442\u0435\u0440"
+  ,"newBadge": "\u041d\u043e\u0432\u043e\u0435"
+  ,"masteredBadge": "\u2705 \u041e\u0441\u0432\u043e\u0435\u043d\u043e"
+  ,"hands": "\u0440\u0443\u043a"
+  ,"packCatalogTitle": "Pack catalog"
+  ,"packCatalogSubtitle": "Browse curated packs"
+  ,"difficultyAdvanced": "Advanced"
+  ,"difficultyIntermediate": "Intermediate"
+  ,"difficultyBeginner": "Beginner"
+  ,"packStatusComingSoon": "Coming soon"
+  ,"packStatusLocked": "Locked"
+  ,"startTraining": "\u041d\u0430\u0447\u0430\u0442\u044c \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443"
+  ,"lastTrained": "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u044f\u044f \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430"
+  ,"needsPractice": "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u043f\u0440\u0430\u043a\u0442\u0438\u043a\u0438"
+  ,"reviewMistakes": "\u0420\u0430\u0437\u0431\u043e\u0440 \u043e\u0448\u0438\u0431\u043e\u043a"
+  ,"reviewMistakesOnly": "\u0422\u043e\u043b\u044c\u043a\u043e \u043e\u0448\u0438\u0431\u043a\u0438"
+  ,"percentLabel": "{value} %"
+  ,"starter_packs_title": "\u0421\u0442\u0430\u0440\u0442\u043e\u0432\u044b\u0439 \u043f\u0430\u043a"
+  ,"starter_packs_subtitle": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443 \u043e\u0434\u043d\u0438\u043c \u043d\u0430\u0436\u0430\u0442\u0438\u0435\u043c"
+  ,"starter_packs_start": "\u041d\u0430\u0447\u0430\u0442\u044c"
+  ,"starter_packs_continue": "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c"
+  ,"starter_packs_choose": "\u0412\u044b\u0431\u0440\u0430\u0442\u044c \u043f\u0430\u043a"
+  ,"accuracySemantics": "\u0422\u043e\u0447\u043d\u043e\u0441\u0442\u044c {value} \u043f\u0440\u043e\u0446\u0435\u043d\u0442\u043e\u0432"
+  ,"sortProgress": "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441"
+  ,"sortNewest": "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043d\u043e\u0432\u044b\u0435"
+  ,"sortMostHands": "\u0411\u043e\u043b\u044c\u0448\u0435 \u0432\u0441\u0435\u0433\u043e \u0440\u0443\u043a"
+  ,"sortName": "\u0418\u043c\u044f A\u2013\u042f"
+  ,"noMistakesLeft": "\u0412\u0441\u0435 \u043e\u0448\u0438\u0431\u043a\u0438 \u0443\u0436\u0435 \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u044b!"
+  ,"filterMistakes": "\u041e\u0448\u0438\u0431\u043a\u0438"
+  ,"sortInProgress": "\u0412 \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u0435"
+  ,"packPushFold12": "\u041f\u0443\u0448/\u0424\u043e\u043b\u0434 12\u0411\u0411 (\u0431\u0435\u0437 \u0430\u043d\u0442\u0435)",
+  "packPushFold15": "Пуш/Фолд 15ББ (без анте)",
+  "packPushFold10": "Пуш/Фолд 10ББ (без анте)"
+  ,"packPushFold20": "Пуш/Фолд 20ББ (без анте)",
+  "presetBtn10bb": "BTN 10BB Push/Fold",
+  "presetBtn11bb": "BTN 11BB Push/Fold",
+  "presetBtn12bb": "BTN 12BB Push/Fold",
+  "presetBtn13bb": "BTN 13BB Push/Fold",
+  "presetBtn14bb": "BTN 14BB Push/Fold",
+  "presetBtn15bb": "BTN 15BB Push/Fold",
+  "presetBtn16bb": "BTN 16BB Push/Fold",
+  "presetBtn17bb": "BTN 17BB Push/Fold",
+  "presetBtn18bb": "BTN 18BB Push/Fold",
+  "presetBtn19bb": "BTN 19BB Push/Fold",
+  "presetBtn20bb": "BTN 20BB Push/Fold",
+  "presetSb10bb": "SB 10BB Push/Fold",
+  "presetSb11bb": "SB 11BB Push/Fold",
+  "presetSb12bb": "SB 12BB Push/Fold",
+  "presetSb13bb": "SB 13BB Push/Fold",
+  "presetSb14bb": "SB 14BB Push/Fold",
+  "presetSb15bb": "SB 15BB Push/Fold",
+  "presetSb16bb": "SB 16BB Push/Fold",
+  "presetSb17bb": "SB 17BB Push/Fold",
+  "presetSb18bb": "SB 18BB Push/Fold",
+  "presetSb19bb": "SB 19BB Push/Fold",
+  "presetSb20bb": "SB 20BB Push/Fold"
+  ,"generateSpots": "Сгенерировать раздачи"
+  ,"noContent": "Нет контента"
+  ,"unsupportedSpot": "Неподдерживаемая раздача"
+  ,"startTrainingSessionPrompt": "Начать тренировку сейчас?"
+  ,"trainingSummary": "Результаты тренировки"
+  ,"noMistakes": "Ошибок нет"
+  ,"repeatMistakes": "Повторить ошибки"
+  ,"backToLibrary": "Назад в библиотеку"
+  ,"recommendedPacks": "Рекомендуемые паки"
+  ,"recommendedForYou": "Рекомендовано для вас"
+  ,"masteredPacks": "✅ Вы уже освоили"
+  ,"dailyGoals": "Daily Goals"
+  ,"sessions": "Sessions"
+  ,"accuracyPercent": "Accuracy %"
+  ,"ev": "EV"
+  ,"icm": "ICM"
+  ,"spotDetails": "Spot Details"
+  ,"heroPosition": "Hero position: {pos}"
+  ,"heroCards": "Hero cards: {cards}"
+  ,"boardLabel": "Board: {cards}"
+  ,"yourAction": "Your action: {action}"
+  ,"evIcm": "EV {ev}  ICM {icm}"
+  ,"packCreated": "Pack \"{name}\" created"
+  ,"resetPackPrompt": "Reset progress for '{name}'?"
+  ,"resetStagePrompt": "Reset stage '{name}'?"
+  ,"resetStage": "Сбросить стадию"
+  ,"cancel": "Отмена"
+  ,"reset": "Reset"
+  ,"settingsResetTitle": "Reset Settings"
+  ,"settingsResetConfirmation": "Are you sure you want to reset all settings to defaults?"
+  ,"settingsResetSuccess": "Settings reset to defaults"
+  ,"settingsResetButton": "Reset to Defaults"
+  ,"settingsCurrentLanguageLabel": "Current Language"
+  ,"languageChangedSnackbar": "Language changed to {language}"
+  ,"languageSelectorTitle": "Select Language"
+  ,"languageSelectorDescription": "Choose your preferred language. The app will update instantly."
+  ,"settingsLegalEntryTitle": "Legal & Compliance"
+  ,"settingsLegalEntrySubtitle": "Privacy, terms, and data controls"
+  ,"legalScreenTitle": "Legal & Compliance"
+  ,"legalPoliciesSectionTitle": "Policies"
+  ,"legalDataSectionTitle": "Data"
+  ,"privacyPolicy": "Privacy Policy"
+  ,"privacyPolicySubtitle": "View how we handle player data"
+  ,"termsOfUse": "Terms of Use"
+  ,"termsOfUseSubtitle": "Read the governing terms"
+  ,"legalDeleteDataTitle": "Delete Data / Account"
+  ,"legalDeleteDataSubtitle": "Wipe local learning progress, snapshots, and session history"
+  ,"legalDeleteConfirmationTitle": "Delete local data?"
+  ,"legalDeleteConfirmationBody": "This will remove learning progress, snapshots, and session fingerprints from this device. This cannot be undone."
+  ,"legalDeleteSuccess": "Local data cleared"
+  ,"legalDeleteFailure": "Failed to clear local data"
+  ,"playerType": "Player Type"
+  ,"selectAction": "Select Action"
+  ,"fold": "Fold"
+  ,"call": "Call"
+  ,"raise": "Raise"
+  ,"push": "Push"
+  ,"amount": "Amount"
+  ,"confirm": "Confirm"
+  ,"clear": "Очистить"
+  ,"ok": "OK"
+  ,"entrants": "Entrants"
+  ,"gameType": "Game Type"
+  ,"holdemNl": "Hold'em NL"
+  ,"omahaPl": "Omaha PL"
+  ,"otherGameType": "Other"
+  ,"spotsLabel": "Spots: {value}"
+  ,"accuracyLabel": "Accuracy: {value}%"
+  ,"evBb": "EV: {value} BB"
+  ,"icmLabel": "ICM: {value}"
+  ,"exportWeaknessReport": "Экспортировать отчёт о слабых местах"
+  ,"packsShown": "Показано {count} паков"
+  ,"noResults": "Нет результатов"
+  ,"resetFilters": "Сбросить фильтры"
+  ,"sortLabel": "Сортировка:"
+  ,"sortPopular": "Сначала популярные"
+  ,"sortRating": "Rating (High \u2192 Low)"
+  ,"sortCoverage": "Coverage (High \u2192 Low)"
+  ,"filtersSelected": "\u0424\u0438\u043b\u044c\u0442\u0440\u044b: {count} \u0432\u044b\u0431\u0440\u0430\u043d\u043e"
+  ,"filtersNone": "\u0424\u0438\u043b\u044c\u0442\u0440\u044b: \u043d\u0435\u0442"
+  ,"progress": "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441"
+  ,"packsCompleted": "\u041f\u0430\u043a\u043e\u0432 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e"
+  ,"averageAccuracy": "\u0421\u0440\u0435\u0434\u043d\u044f\u044f \u0442\u043e\u0447\u043d\u043e\u0441\u0442\u044c"
+  ,"averageEv": "\u0421\u0440\u0435\u0434\u043d\u0438\u0439 EV"
+  ,"dailyStreak": "\u0421\u0442\u0440\u0438\u043a"
+  ,"best": "\u0420\u0435\u043a\u043e\u0440\u0434"
+  ,"pinnedPacks": "\ud83d\udccc \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u044b\u0435 \u0448\u0430\u0431\u043b\u043e\u043d\u044b"
+  ,"weakAreas": "\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u044b\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438"
+  ,"packOfDay": "\ud83c\udfb2 \u041f\u0430\u043a \u0434\u043d\u044f"
+  ,"streakChipLabel": "Streak: {count}"
+  ,"dailyHandLabel": "Daily Hand #{index}"
+  ,"levelGoalTitle": "\u0426\u0435\u043b\u044c \u0443\u0440\u043e\u0432\u043d\u044f"
+  ,"samplePreviewHint": "\u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0441\u043d\u0430\u0447\u0430\u043b\u0430 \u043e\u0431\u0440\u0430\u0437\u0435\u0446 \u043f\u0430\u043a\u0430"
+  ,"samplePreviewPrompt": "This pack is large. Preview a quick sample first?"
+  ,"previewSample": "Preview Sample"
+  ,"autoSampleToast": "Quick preview launched automatically for faster start."
+  ,"plannerBadge": "{count} \u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c"
+  ,"unfinishedSession": "\u0423 \u0432\u0430\u0441 \u0435\u0441\u0442\u044c \u043d\u0435\u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d\u043d\u0430\u044f \u0441\u0435\u0441\u0441\u0438\u044f"
+  ,"resume": "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c"
+  ,"mistakeBoosterReinforced": "\u0423\u043a\u0440\u0435\u043f\u043b\u0435\u043d\u043e \u0442\u0435\u0433\u043e\u0432: {count}"
+  ,"mistakeBoosterRecovered": "\u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0442\u0435\u0433\u043e\u0432: {count}"
+  ,"quickstartL3": "\u0411\u044b\u0441\u0442\u0440\u044b\u0439 \u0441\u0442\u0430\u0440\u0442 L3"
+  ,"run": "\u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c"
+  ,"openReport": "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043e\u0442\u0447\u0435\u0442"
+  ,"viewLogs": "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440 \u043b\u043e\u0433\u043e\u0432"
+  ,"retry": "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c"
+  ,"presetWillBeUsed": "\u0411\u0443\u0434\u0435\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d \u043f\u0440\u0435\u0441\u0435\u0442"
+  ,"reportEmpty": "\u041e\u0442\u0447\u0435\u0442 \u043f\u0443\u0441\u0442"
+  ,"abDiff": "A/B \u0441\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435"
+  ,"export": "\u042d\u043a\u0441\u043f\u043e\u0440\u0442"
+  ,"weightsPreset": "\u041f\u0440\u0435\u0441\u0435\u0442 \u0432\u0435\u0441\u043e\u0432"
+  ,"weightsJson": "JSON \u0432\u0435\u0441\u043e\u0432"
+  ,"invalidJson": "\u041d\u0435\u043a\u043e\u0440\u0440\u0435\u043a\u0442\u043d\u044b\u0439 JSON"
+  ,"desktopOnly": "\u0422\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u0435"
+  ,"recentRuns": "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0438"
+  ,"open": "\u041e\u0442\u043a\u0440\u044b\u0442\u044c"
+  ,"logs": "\u041b\u043e\u0433\u0438"
+  ,"folder": "\u041f\u0430\u043f\u043a\u0430"
+  ,"copyPath": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043f\u0443\u0442\u044c"
+  ,"reRun": "\u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0441\u043d\u043e\u0432\u0430"
+  ,"pickTwoRuns": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0432\u0430 \u0437\u0430\u043f\u0443\u0441\u043a\u0430"
+  ,"compare": "\u0421\u0440\u0430\u0432\u043d\u0438\u0442\u044c"
+  ,"noSelection": "\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d\u043e"
+  ,"rootKeys": "\u041a\u043e\u0440\u043d\u0435\u0432\u044b\u0435 \u043a\u043b\u044e\u0447\u0438"
+  ,"arrayLengths": "\u0414\u043b\u0438\u043d\u044b \u043c\u0430\u0441\u0441\u0438\u0432\u043e\u0432"
+  ,"clearHistory": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0438\u0441\u0442\u043e\u0440\u0438\u044e"
+  ,"confirmClear": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0441\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0438? \u042d\u0442\u043e \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043d\u0435\u043b\u044c\u0437\u044f \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u044c."
+  ,"deleted": "\u0423\u0434\u0430\u043b\u0435\u043d\u043e"
+  ,"copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e"
+  ,"exportCsv": "\u042d\u043a\u0441\u043f\u043e\u0440\u0442 CSV"
+  ,"reveal": "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0432 \u043f\u0430\u043f\u043a\u0435"
+  ,"csvSaved": "CSV \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d"
+  ,"delta": "\u0394"
+  ,"args": "\u0410\u0440\u0433\u0443\u043c\u0435\u043d\u0442\u044b"
+  ,"shopInsufficientFunds": "Недостаточно монет"
+  ,"shopPurchased": "Куплено: {name}"
+  ,"shopCoinsBalance": "Монеты: {balance}"
+  ,"shopPrice": "Цена: {price}"
+  ,"shopAvailableItems": "Доступные товары"
+  ,"shopScreenLabel": "Экран магазина"
+  ,"shopYourBalance": "Ваш баланс: {balance} монет"
+  ,"onboardingStepProgress": "Шаг {current} из {total}"
+  ,"onboardingCongratulations": "Поздравляем!"
+  ,"onboardingFirstTrainingCompleteWithRepeat": "Вы завершили первую тренировку!\n\nТеперь давайте закрепим материал."
+  ,"onboardingFirstTrainingComplete": "Вы завершили первую тренировку!"
+  ,"onboardingContinue": "Продолжить"
+  ,"onboardingFinish": "Завершить"
+  ,"onboardingMistakeSystemTitle": "Система повторения ошибок"
+  ,"onboardingHowItWorksTitle": "Как это работает"
+  ,"onboardingHowItWorksDescription": "Когда вы делаете ошибку в раздаче, она автоматически помечается для повторения. Система отслеживает все ваши промахи."
+  ,"onboardingWhenRepeatsTitle": "Когда повторяются раздачи"
+  ,"onboardingWhenRepeatsDescription": "Вы получите эту раздачу снова завтра. Если ошибётесь повторно — через 3 дня. Если решите правильно — она исчезнет из повторений."
+  ,"onboardingWhyNeededTitle": "Зачем это нужно"
+  ,"onboardingWhyNeededDescription": "Повторение — ключ к запоминанию. Возвращаясь к сложным раздачам, вы укрепляете понимание и превращаете слабые места в сильные."
+  ,"onboardingDontWorry": "Не переживайте! Ошибки — это нормально. Главное — учиться на них."
+  ,"onboardingRepeatMistakes": "Повторить ошибки"
+  ,"onboardingSkip": "Пропустить"
+  ,"onboardingMistakesReviewed": "Ошибки проработаны"
+  ,"onboardingCompletedMessage": "Вы завершили вводное обучение!\n\nТеперь вы готовы к полноценным тренировкам."
+  ,"onboardingStartTraining": "Начать тренировки"
+  ,"onboardingWelcome": "Добро пожаловать в Poker Analyzer!"
+  ,"onboardingWelcomeSubtitle": "Изучай покер через готовые раздачи"
+  ,"onboardingStart": "Начать"
+  ,"xpTabsTitle": "Прогресс"
+  ,"xpHistoryTab": "История"
+  ,"xpJournalTab": "Журнал"
+  ,"xpEvalTab": "Самооценка"
+  ,"xpMilestonesTab": "Этапы"
+  ,"xpLeagueTab": "Лига"
+  ,"xpShareTab": "Поделиться"
+  ,"xpDashboardTitle": "История XP"
+  ,"xpDashboardEmptyTitle": "Пока нет XP"
+  ,"xpDashboardEmptyMessage": "Выполняйте упражнения, изучайте теорию или завершайте модули\\nчтобы начать зарабатывать XP!"
+  ,"xpDashboardStreakTitle": "Серия активности"
+  ,"xpDashboardStreakTooltip": "Зарабатывайте XP каждый день, чтобы удерживать серию!"
+  ,"xpDashboardCurrentStreakLabel": "Текущая"
+  ,"xpDashboardNoStreak": "Серии пока нет"
+  ,"xpDashboardBestStreakLabel": "Лучшая"
+  ,"xpDashboardLast30Days": "Последние 30 дней"
+  ,"xpDashboardTrendsTitle": "XP-тренды (за 7 дней)"
+  ,"xpDashboardTotalXpLabel": "Всего XP"
+  ,"xpDashboardDrillsLabel": "Дриллы"
+  ,"xpDashboardModulesLabel": "Модули"
+  ,"xpDashboardTheoryLabel": "Теория"
+  ,"xpEventDrillCompleted": "Дрилл завершён"
+  ,"xpEventModuleCompleted": "Модуль завершён"
+  ,"xpEventTheoryViewed": "Теория просмотрена"
+  ,"xpEventGeneric": "Получено XP"
+  ,"xpRelativeTodayAt": "Сегодня в {time}"
+  ,"@xpRelativeTodayAt": {
+    "placeholders": {
+      "time": {}
+    }
+  }
+  ,"xpRelativeYesterdayAt": "Вчера в {time}"
+  ,"@xpRelativeYesterdayAt": {
+    "placeholders": {
+      "time": {}
+    }
+  }
+  ,"xpRelativeWeekdayAt": "{weekday} в {time}"
+  ,"@xpRelativeWeekdayAt": {
+    "placeholders": {
+      "weekday": {},
+      "time": {}
+    }
+  }
+  ,"xpRelativeDateTime": "{date} • {time}"
+  ,"@xpRelativeDateTime": {
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  }
+  ,"xpDashboardLauncherTitle": "Ваш прогресс"
+  ,"xpDashboardLauncherSubtitle": "XP, история, самооценка"
+  ,"xpJournalTitle": "XP-журнал"
+  ,"xpJournalEmptyTitle": "XP-событий пока нет"
+  ,"xpJournalEmptyMessage": "Выполните активность, чтобы добавить запись"
+  ,"xpJournalReflectionLabel": "Рефлексия"
+  ,"xpJournalReflectionHint": "Что вы узнали? Что можно улучшить?"
+  ,"xpSelfEvalTitle": "Самооценка"
+  ,"xpSelfEvalResetTooltip": "Сбросить всё"
+  ,"xpSelfEvalResetConfirmation": "Чеклист сброшен"
+  ,"xpSelfEvalProgressHeader": "Прогресс"
+  ,"xpSelfEvalSkillsCompleted": "{completed} из {total} навыков освоено"
+  ,"@xpSelfEvalSkillsCompleted": {
+    "placeholders": {
+      "completed": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  }
+  ,"xpSelfEvalItemPushCall": "Я уверенно пушу и каллирую по чартам в SRP"
+  ,"xpSelfEvalItemBubblePush": "Я понимаю диапазоны пуша на бабле"
+  ,"xpSelfEvalItemIcmAwareness": "Я различаю ICM-споты и ChipEV-споты"
+  ,"xpSelfEvalItemAdjustCharts": "Я корректно адаптирую чарты под структуру турнира"
+  ,"xpSelfEvalItemStackAwareness": "Я учитываю стек оппонентов при принятии решений"
+  ,"xpSelfEvalItemReviewMistakes": "Я анализирую свои ошибки после каждой сессии"
+  ,"xpSelfEvalItemDeviateCharts": "Я понимаю, когда девиировать от базовых чартов"
+  ,"xpSelfEvalResetButton": "Сбросить чеклист"
+  ,"xpMilestoneTitle": "XP-этапы"
+  ,"xpMilestoneHeaderTitle": "Ваш XP-прогресс"
+  ,"xpMilestoneTotalXp": "Всего XP: {xp}"
+  ,"@xpMilestoneTotalXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "120"
+      }
+    }
+  }
+  ,"xpMilestoneUnlockHint": "Зарабатывайте XP в дриллах, модулях и теории, чтобы открывать этапы!"
+  ,"xpMilestoneClaimedMessage": "Получен этап {xp} XP! 🎉"
+  ,"@xpMilestoneClaimedMessage": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpMilestoneClaimButton": "Забрать"
+  ,"xpMilestoneLockedLabel": "Закрыто"
+  ,"xpMilestoneUnlockedLabel": "Нажмите, чтобы забрать"
+  ,"xpMilestoneClaimedLabel": "Забрано"
+  ,"xpShareTitle": "Поделиться успехами"
+  ,"xpShareLoadError": "Не удалось загрузить данные"
+  ,"xpShareSaveSuccess": "Сохранено в галерею"
+  ,"xpShareSaveError": "Не удалось сохранить изображение"
+  ,"xpShareShareError": "Не удалось поделиться"
+  ,"xpShareCaptionBeast": "XP-монстр! 🔥"
+  ,"xpShareCaptionSummit": "На вершине! 💪"
+  ,"xpShareCaptionGreat": "Отлично! 🎯"
+  ,"xpShareCaptionKeepGoing": "Продолжай! 🚀"
+  ,"xpShareCaptionLetsGo": "Вперёд! ⚡"
+  ,"xpShareCaptionGettingStarted": "Начало пути! 🌟"
+  ,"xpShareStreakLabel": "Серия"
+  ,"xpShareMilestonesLabel": "Этапы"
+  ,"xpShareGeneratedFooter": "Создано в Poker Analyzer"
+  ,"xpShareSaveButton": "Сохранить"
+  ,"xpShareShareButton": "Поделиться"
+  ,"xpShareShareText": "Мой прогресс в Poker Analyzer!\\n\\nXP: {xp}\\nСерия: {streak}\\nПозиция в лиге: #{rank}"
+  ,"@xpShareShareText": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "420"
+      },
+      "streak": {
+        "example": "5 дней"
+      },
+      "rank": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  }
+  ,"xpShareLeagueGold": "Золотая лига"
+  ,"xpShareLeagueSilver": "Серебряная лига"
+  ,"xpShareLeagueBronze": "Бронзовая лига"
+  ,"xpShareLeagueRookie": "Лига новичков"
+  ,"xpLeagueDefaultName": "Серебряная лига"
+  ,"xpLeagueWeekSubtitle": "Неделя {week} • Обновление: {date}"
+  ,"@xpLeagueWeekSubtitle": {
+    "placeholders": {
+      "week": {
+        "type": "int",
+        "example": "12"
+      },
+      "date": {
+        "example": "21 апр"
+      }
+    }
+  }
+  ,"xpLeagueYourRank": "Ваша позиция"
+  ,"xpLeagueYourXp": "Ваш XP"
+  ,"xpLeaguePromotionZone": "Зона повышения (1-10)"
+  ,"xpLeagueSafeZone": "Безопасная зона (11-40)"
+  ,"xpLeagueDemotionZone": "Зона понижения (41-50)"
+  ,"xpHistoryAchievementsTitle": "История достижений"
+  ,"xpHistoryEmptyTitle": "Нет достижений"
+  ,"xpHistoryEmptyMessage": "Продолжайте тренироваться и зарабатывать XP, чтобы открыть новые достижения!"
+  ,"xpHistoryStreaksSection": "Серии"
+  ,"xpHistoryMilestonesSection": "XP-этапы"
+  ,"xpHistoryStreakLabel": "Серия {value}"
+  ,"@xpHistoryStreakLabel": {
+    "placeholders": {
+      "value": {
+        "example": "5 дней"
+      }
+    }
+  }
+  ,"xpProfileStreakSummary": "🔥 Серия: {current} (Рекорд: {best})"
+  ,"@xpProfileStreakSummary": {
+    "placeholders": {
+      "current": {
+        "example": "5 дней"
+      },
+      "best": {
+        "example": "14 дней"
+      }
+    }
+  }
+  ,"xpProfileNoStreak": "Нет текущей серии"
+  ,"xpWeeklyProgressLabel": "Прогресс недели: {current} / {goal} XP"
+  ,"@xpWeeklyProgressLabel": {
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "example": "40"
+      },
+      "goal": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  }
+  ,"xpWeeklyGoalComplete": "Цель достигнута!"
+  ,"xpDaysCount": "{count, plural, one {{count} день} few {{count} дня} many {{count} дней} other {{count} дня}}"
+  ,"@xpDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  }
+  ,"xpRecapTitle": "Обзор XP"
+  ,"xpRecapRecentEventsTitle": "Последние события"
+  ,"xpRecapNoRecentEvents": "Нет последних событий"
+  ,"xpRecapWeeklyGoalTitle": "Цель недели"
+  ,"xpRecapMilestonesTitle": "Этапы"
+  ,"xpRecapNextMilestone": "До следующего этапа: {xp} XP"
+  ,"@xpRecapNextMilestone": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpRecapMilestoneAvailable": "Доступен этап: {xp} XP — можно забрать"
+  ,"@xpRecapMilestoneAvailable": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "100"
+      }
+    }
+  }
+  ,"xpRecapNextMilestoneLabel": "Следующий этап: {xp} XP"
+  ,"@xpRecapNextMilestoneLabel": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpRecapRemainingXp": "Осталось: {xp} XP"
+  ,"@xpRecapRemainingXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  }
+  ,"xpRecapAllMilestonesAchieved": "Все этапы достигнуты"
+  ,"xpRecapTabSummary": "Сводка"
+  ,"xpRecapTabHistory": "История"
+  ,"xpRecapTabGoals": "Цели"
+  ,"xpExportTitle": "Настройки экспорта XP"
+  ,"xpExportMethodSave": "Сохранить"
+  ,"xpExportMethodShare": "Поделиться"
+  ,"xpExportMethodLabel": "Метод"
+  ,"xpExportCaptionLabel": "Подпись"
+  ,"rewardShopTitle": "Магазин наград"
+  ,"rewardShopBalanceLabel": "Баланс фишек"
+  ,"rewardShopChipCount": "{count} фишек"
+  ,"rewardShopRefresh": "Обновить"
+  ,"rewardShopConfirmTitle": "Подтверждение покупки"
+  ,"rewardShopConfirmBody": "Потратить {cost} фишек на {name}?"
+  ,"rewardShopCancel": "Отмена"
+  ,"rewardShopPurchase": "Купить"
+  ,"rewardShopUnlocked": "{name} разблокирован!"
+  ,"rewardShopInsufficient": "Недостаточно фишек для {name}.",
+  "feedbackExportDiagnostics": "Export diagnostics file",
+  "feedbackExportSuccess": "Diagnostics exported",
+  "feedbackExportFailure": "Failed to export diagnostics",
+  "settingsReportProblemTitle": "Report a problem",
+  "settingsReportProblemSubtitle": "Share diagnostics with support",
+  "feedbackSheetTitle": "Report a problem",
+  "feedbackSheetSubtitle": "Copy diagnostics for support",
+  "feedbackDiagnosticsHeader": "Diagnostics payload",
+  "feedbackCopyDiagnostics": "Copy diagnostics to clipboard",
+  "feedbackCopySuccess": "Diagnostics copied to clipboard"
+}

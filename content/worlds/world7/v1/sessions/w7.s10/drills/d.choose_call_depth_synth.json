@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_depth_synth",
+  "kind": "action_choice",
+  "prompt": "After multi-signal depth check, choose call.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when stack depth does not support a raise.",
+  "feedback_correct_v1": "Correct. Calling fits when depth still leaves flexibility but not enough leverage to build a bigger pot cleanly.",
+  "feedback_incorrect_v1": "Incorrect. Call is better when the stack depth still leaves room to maneuver later but not enough clean leverage to justify a bigger pot now. The controlled continue keeps your equity playable without turning a medium-pressure spot into forced aggression."
+}

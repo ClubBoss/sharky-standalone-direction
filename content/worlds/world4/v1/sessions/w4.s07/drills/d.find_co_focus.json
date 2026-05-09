@@ -1,0 +1,13 @@
+{
+  "id": "find_co_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the cutoff seat in the anchor chain.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Cutoff anchor verifies seat order before choosing action.",
+  "expected": {
+    "role": "co"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The cutoff fixes the earlier value seat, so the line stays tied to the range that can bet before the button acts.",
+  "feedback_incorrect_v1": "Incorrect. The anchor chain uses the cutoff here, so confirm the cutoff seat before the value action."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_c3_river_bluff_approved",
+  "kind": "action_choice",
+  "prompt": "Approved river bluff node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Raise because this river bluff has the right blockers. Calling misses the chance to make better hands fold.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Approved bluff node expects raise.",
+  "feedback_incorrect_v1": "Incorrect. This bluff node should use raise branch.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

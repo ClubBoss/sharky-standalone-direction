@@ -1,0 +1,16 @@
+{
+  "id": "choose_raise_flop_value",
+  "kind": "action_choice",
+  "prompt": "Clear value c-bet spot on flop: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Strong value and initiative map to the bet branch.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "missed_value_spot",
+  "feedback_correct_v1": "Correct. Value c-bet is the expected flop line.",
+  "feedback_incorrect_v1": "Incorrect. This flop is strong enough to bet for value, so checking misses chips from worse hands that can still continue.",
+  "acceptable_actions": [
+    "raise"
+  ]
+}

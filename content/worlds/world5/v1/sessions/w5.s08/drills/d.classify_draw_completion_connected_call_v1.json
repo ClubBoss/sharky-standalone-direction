@@ -1,0 +1,13 @@
+{
+  "id": "classify_draw_completion_connected_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board stays connected and some draw paths complete while others still miss. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Mixed completion on connected boards often favors control because the draw story is real but not fully clean.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The mixed connected completion points to a call.",
+  "feedback_incorrect_v1": "Incorrect. Start from the mixed connected completion before deciding."
+}

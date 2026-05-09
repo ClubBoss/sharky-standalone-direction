@@ -1,0 +1,14 @@
+{
+  "id": "choose_min_raise_denial_reopen",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the smallest legal raise that still reopens pressure and denies a free continue.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Min raise reopens the action and denies a free continue without committing as much as a bigger raise.",
+  "expected": {
+    "presetId": "min_raise"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

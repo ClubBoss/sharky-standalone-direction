@@ -1,0 +1,13 @@
+{
+  "id": "call",
+  "kind": "action_choice",
+  "prompt": "In this mixed late-street spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call when the price is fair and your hand can win enough.",
+  "feedback_correct_v1": "Correct. Calling fits the track cue set, so the line keeps the controlled continue this spot is actually rewarding.",
+  "feedback_incorrect_v1": "Incorrect. Call is right here because the mixed late-street line can still continue while the price and hand quality remain workable."
+}

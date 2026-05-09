@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_oop_depth",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to close out-of-position depth sequence.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor because the last card decides whether the out-of-position line ends as value, bluff catcher, or fold.",
+  "feedback_incorrect_v1": "Incorrect. The river is the right anchor here because the final card decides whether the out-of-position line ends as value, a bluff catcher, or a fold."
+}

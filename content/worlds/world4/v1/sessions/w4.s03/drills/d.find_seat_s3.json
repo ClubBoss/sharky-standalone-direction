@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s3",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S3 to lock seat context.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Seat S3 keeps this mixed checkpoint tied to one seat context.",
+  "expected": {
+    "seatId": "S3"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S3 anchor is locked.",
+  "feedback_incorrect_v1": "Incorrect. This rep stays tied to seat S3, so lock S3 before moving on."
+}

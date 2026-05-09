@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_loose",
+  "kind": "board_tap",
+  "prompt": "Tap the middle flop card.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "why_v1": "Start with the flop because the board tells you how much pressure makes sense.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the middle flop card because the flop tells you how hard you can press.",
+  "feedback_incorrect_v1": "Incorrect. Use the middle flop card because the full flop shows whether pressure is still good."
+}

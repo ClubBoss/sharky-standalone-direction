@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_short_threshold",
+  "kind": "action_choice",
+  "prompt": "Below push threshold, choose fold.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects tournament life when pressure and risk premium are too high.",
+  "feedback_correct_v1": "Correct. Folding fits the tournament cue set, so the line protects tournament life when the pressure and payout cost are against you.",
+  "feedback_incorrect_v1": "Incorrect. Folding is better here because you are still below the push threshold and should protect tournament life instead of forcing chips in early."
+}

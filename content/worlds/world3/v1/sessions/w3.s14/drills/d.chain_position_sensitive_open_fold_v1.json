@@ -1,0 +1,59 @@
+{
+  "id": "chain_position_sensitive_open_fold_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s14_position_sensitive_open_fold_v1",
+  "prompt": "Play this short World 3 position-sensitive unopened-pot chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button and villain is in the hijack. Who will be in position after the flop?",
+      "player_count_v1": 6,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": ["hj", "co", "btn", "sb", "bb"],
+      "empty_seats_v1": ["utg"],
+      "available_actions_v1": ["hero", "villain"],
+      "expected_action": "hero",
+      "feedback_correct_v1": "Correct. The button acts after the hijack postflop, so hero keeps position.",
+      "feedback_incorrect_v1": "Incorrect. The button acts after the hijack postflop, so hero is in position here.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position changes how much freedom a hand gets before and after the flop."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Keep the same seats. Hero holds KJo on the button and the pot is unopened. Which simple preflop action fits better now?",
+      "player_count_v1": 6,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": ["hj", "co", "btn", "sb", "bb"],
+      "empty_seats_v1": ["utg"],
+      "hero_hole_cards_v1": ["Kh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. The same middling broadway hand becomes a clear open when hero gets late position and an unopened pot.",
+      "feedback_incorrect_v1": "Incorrect. In this late-position unopened frame, KJo is strong enough to open rather than pass.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Late position lets middling broadway hands attack an unopened pot more profitably."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Now keep the same KJo, but move hero to the hijack in an unopened pot with villain on the button behind. Which simple preflop action fits better?",
+      "player_count_v1": 6,
+      "hero_seat_v1": "hj",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": ["hj", "co", "btn", "sb", "bb"],
+      "empty_seats_v1": ["utg"],
+      "hero_hole_cards_v1": ["Kh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. The hand did not change, but the earlier seat did. Without late-position leverage, this is a disciplined fold.",
+      "feedback_incorrect_v1": "Incorrect. The same hand does not keep the same value when hero loses late position in the unopened pot.",
+      "recap_v1": "World 3 keeps getting more practical: the same hand can open comfortably late and still fold earlier when position stops doing the heavy lifting.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Preflop hand value comes from both the cards and the seat that has to use them."
+    }
+  ]
+}

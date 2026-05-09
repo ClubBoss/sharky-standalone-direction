@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "sessions": {
+    "w1.s01": {
+      "drill_ids": [
+        "*"
+      ],
+      "shared": {
+        "player_count_v1": 6,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Ah",
+          "7d",
+          "2c",
+          "4s",
+          "9h"
+        ],
+        "hero_hole_cards_v1": [
+          "Ks",
+          "Qc"
+        ]
+      }
+    },
+    "w1.s05": {
+      "drill_ids": [
+        "*"
+      ],
+      "shared": {
+        "player_count_v1": 6,
+        "hero_seat_v1": "co",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Kd",
+          "8c",
+          "3h",
+          "2s",
+          "7d"
+        ],
+        "hero_hole_cards_v1": [
+          "As",
+          "Td"
+        ]
+      }
+    },
+    "w1.s10": {
+      "drill_ids": [
+        "*"
+      ],
+      "shared": {
+        "player_count_v1": 6,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Qs",
+          "9d",
+          "4c",
+          "2h",
+          "8s"
+        ],
+        "hero_hole_cards_v1": [
+          "Ad",
+          "Qd"
+        ]
+      }
+    }
+  }
+}

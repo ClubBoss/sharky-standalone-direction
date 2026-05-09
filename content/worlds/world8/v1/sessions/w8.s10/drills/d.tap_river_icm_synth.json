@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_icm_synth",
+  "kind": "board_tap",
+  "prompt": "Tap river to finalize synthesis context.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "feedback_correct_v1": "Correct. river is the board anchor, so the tournament read closes on the last street that decides the final pressure state.",
+  "feedback_incorrect_v1": "Incorrect. Use the river anchor because the last card finalizes the ICM picture, showing whether value, pressure, or survival should close the hand."
+}

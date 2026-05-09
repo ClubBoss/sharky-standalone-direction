@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_max_pressure_draw_charge",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the size that makes the continue as expensive as possible right now.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Pot creates the biggest immediate price and the strongest protection pressure.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

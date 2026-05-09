@@ -1,0 +1,61 @@
+{
+  "id": "chain_preflop_framework_intro_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s01_preflop_framework_intro_v1",
+  "prompt": "Play this short World 3 preflop framework intro chain.",
+  "intent_v1": "action_sequence",
+  "why_v1": "World 3 starts by turning simple preflop frames into a clean raise, call, or fold sequence.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with AKo and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["As", "Kd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A premium broadway hand in an unopened pot should start by raising.",
+      "feedback_incorrect_v1": "Incorrect. AKo on the button in an unopened pot is a premium hand that should raise for value and initiative, not drift into a passive start.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The first World 3 habit is simple: stronger hand buckets in clean unopened spots should usually open."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is still on the button with QJs, but now the cutoff opened first. Which compact action fits better?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This hand is playable, but the open changed the frame, so a call is the cleaner first response.",
+      "feedback_incorrect_v1": "Incorrect. With QJs on the button after a cutoff open, calling keeps a playable hand in position without inflating the pot into a marginal raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same preflop framework must react to the action frame, not just the hand in isolation."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the big blind with T6o after the cutoff opened first. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Td", "6c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A weaker offsuit hand out of position should usually fold instead of forcing a continue.",
+      "feedback_incorrect_v1": "Incorrect. T6o in the big blind is weak and out of position against an opener, so folding is cleaner than forcing a loose defense.",
+      "recap_v1": "World 3 begins with one usable map: identify the hand bucket, notice the basic frame, and choose the clearest open, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The simplest preflop framework is not memorizing charts. It is knowing when a hand bucket should raise, call, or get out."
+    }
+  ]
+}

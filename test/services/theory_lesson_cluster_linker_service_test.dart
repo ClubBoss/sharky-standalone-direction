@@ -1,0 +1,150 @@
+import 'package:poker_analyzer/testing/test_shims.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import 'package:poker_analyzer/models/theory_suggestion_engagement_event.dart';
+import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
+import 'package:poker_analyzer/services/theory_lesson_cluster_linker_service.dart';
+import 'package:poker_analyzer/services/theory_suggestion_engagement_tracker_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakeLibrary implements MiniLessonLibraryService {
+  final List<TheoryMiniLessonNode> lessons;
+  _FakeLibrary(this.lessons);
+
+  @override
+  List<TheoryMiniLessonNode> get all => lessons;
+
+  @override
+  TheoryMiniLessonNode? getById(String id) =>
+      lessons.firstWhere((e) => e.id == id, orElse: () => null);
+
+  @override
+  Future<void> loadAll() async {}
+
+  @override
+  Future<void> reload() async {}
+
+  @override
+  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [
+    for (final t in tags) ...lessons.where((l) => l.tags.contains(t)),
+  ];
+
+  @override
+  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
+      findByTags[tags.toList[]];
+
+  @override
+  List<String> linkedPacksFor[String lessonId] =>
+      getById(lessonId)?.linkedPackIds ?? [];
+}
+
+class _FakeTracker implements TheorySuggestionEngagementTrackerService {
+  final List<TheorySuggestionEngagementEvent> events;
+  _FakeTracker(this.events);
+
+  @override
+  Future<void> lessonSuggested(String lessonId) async {}
+
+  @override
+  Future<void> lessonExpanded(String lessonId) async {}
+
+  @override
+  Future<void> lessonOpened(String lessonId) async {}
+
+  @override
+  Future<Map<String, int>> countByAction(String action) async => {};
+
+  @override
+  Future<List<TheorySuggestionEngagementEvent>> eventsByAction(
+    String action,
+  ) async => events.where((e) => e.action == action).toList();
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
+
+  test('clusters lessons by tags, packs and co-suggestions', () async {
+    final lessons = [
+      TheoryMiniLessonNode(
+        id: 'l1',
+        title: 'L1',
+        content: '',
+        tags: ['x'],
+        linkedPackIds: ['p1'],
+      ),
+      TheoryMiniLessonNode(id: 'l2', title: 'L2', content: '', tags: ['x']),
+      TheoryMiniLessonNode(
+        id: 'l3',
+        title: 'L3',
+        content: '',
+        tags: ['y'],
+        linkedPackIds: ['p1'],
+      ),
+      TheoryMiniLessonNode(id: 'l4', title: 'L4', content: '', tags: ['z']),
+      TheoryMiniLessonNode(id: 'l5', title: 'L5', content: '', tags: ['w']),
+    ];
+
+    final now = DateTime(2023, 1, 1);
+    final events = <TheorySuggestionEngagementEvent>[];
+    for (var i = 0; i < 3; i++) {
+      final t = now.add(Duration(minutes: i));
+      events.add(
+        TheorySuggestionEngagementEvent(
+          lessonId: 'l4',
+          action: 'suggested',
+          timestamp: t,
+        ),
+      );
+      events.add(
+        TheorySuggestionEngagementEvent(
+          lessonId: 'l5',
+          action: 'suggested',
+          timestamp: t,
+        ),
+      );
+    }
+
+    final library = _FakeLibrary(lessons);
+    final tracker = _FakeTracker(events);
+    final service = TheoryLessonClusterLinkerService(
+      library: library,
+      tracker: tracker,
+    );
+
+    final clusters = await service.clusters();
+    expect(clusters.length, 2);
+
+    final idsCluster1 = clusters[0].lessons.map((e) => e.id).toSet();
+    final idsCluster2 = clusters[1].lessons.map((e) => e.id).toSet();
+
+    expect(idsCluster1, containsAll(['l1', 'l2', 'l3']));
+    expect(idsCluster2, containsAll(['l4', 'l5']));
+
+    final cluster = await service.getCluster('l5');
+    expect(cluster, isNotNull);
+    expect(cluster!.lessons.map((e) => e.id).toSet(), {'l4', 'l5'});
+  });
+
+  test('loads clusters from cache when available', () async {
+    final lessons = [
+      TheoryMiniLessonNode(id: 'a', title: 'A', content: '', tags: ['x']),
+      TheoryMiniLessonNode(id: 'b', title: 'B', content: '', tags: ['x']),
+    ];
+
+    final tracker = _FakeTracker([]);
+    final service = TheoryLessonClusterLinkerService(
+      library: _FakeLibrary(lessons),
+      tracker: tracker,
+    );
+    final first = await service.clusters();
+    expect(first.length, 1);
+
+    final emptyService = TheoryLessonClusterLinkerService(
+      library: _FakeLibrary([]),
+      tracker: tracker,
+    );
+    final cached = await emptyService.clusters();
+    expect(cached.length, 1);
+  });
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tap_hole_left",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your left hole card.",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "hole_card_slot_confusion",
+  "feedback_correct_v1": "Correct. The left hole card is the right hole-card anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the left hole card here so the read stays tied to the correct hole-card anchor for this rep."
+}

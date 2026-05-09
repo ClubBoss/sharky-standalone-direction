@@ -1,0 +1,21 @@
+# Scenario
+IP uses steady mid-pressure; OOP must read density, caps, and fragility to pick the dominant reaction layer.
+
+# Snapshot
+Attacker: continuous mid/top density, layered high cards. Defender: caps on the mid band, fragile middles, defensive posture. Pressure marker: compact aggression, no big swings.
+
+# Player task
+Determine if the reaction layer is fold-heavy, call-heavy, or raise-heavy and explain why.
+
+# Expected reasoning
+Compact aggression keeps the defender honest, so they hesitate to raise; their caps and fragile middles favor defensive calls or folds. The density continuity means IP can keep pressure on without overbetting, nudging reactions toward calls rather than raises. Folding only happens when caps get too heavy, but here they just resist slightly, so call-heavy fits. The attacker keeps the pot modest to exploit the call-heavy layer.
+
+# Correct line
+Call-heavy reaction layer: defender caps resist raises yet still calls the steady pressure.
+
+# Why not the alternatives
+- Fold-heavy: would require caps to fold outright, which they do not.
+- Raise-heavy: defender does not have leverage to amplify raises under mid pressure.
+- Polar: misreads calls as fold signals.
+- Passive: ignores the attacker’s compact aggression.
+- Collapse: overvalues fragility instead of actual reaction.

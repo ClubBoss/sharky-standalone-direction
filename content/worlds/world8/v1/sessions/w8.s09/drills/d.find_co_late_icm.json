@@ -1,0 +1,13 @@
+{
+  "id": "find_co_late_icm",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before late-street ICM closure action.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before ICM decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The cutoff is the right seat anchor, so the tournament read stays tied to the last pressure seat before the button takes over.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the target seat anchor because this late-ICM closure branch starts from the earlier late-position seat."
+}

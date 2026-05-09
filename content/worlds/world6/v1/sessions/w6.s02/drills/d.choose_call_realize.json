@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_realize",
+  "kind": "action_choice",
+  "prompt": "Realization proxy: choose the best action.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits because your edge still realizes equity cleanly without inflating the pot from a medium-strength continue.",
+  "feedback_incorrect_v1": "Incorrect. Call is better when your edge is real but not strong enough to build a bigger pot. You keep the hand playable, realize equity, and avoid turning a medium-strength continue into an unnecessary raise."
+}

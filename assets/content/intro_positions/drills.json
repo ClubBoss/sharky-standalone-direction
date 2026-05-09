@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pos_01",
+    "heroHand": "7s,2h",
+    "position": "UTG",
+    "action": "fold",
+    "explanation": "Under the Gun (First to act) with 7-2? Easy fold. Don't even think about it.",
+    "entryFee": 0
+  },
+  {
+    "id": "pos_02",
+    "heroHand": "Js,Tc",
+    "position": "BTN",
+    "action": "push",
+    "explanation": "On the Button! Everyone folded to you. Steal the blinds with this decent hand.",
+    "entryFee": 0
+  },
+  {
+    "id": "pos_03",
+    "heroHand": "9h,4c",
+    "position": "SB",
+    "action": "fold",
+    "explanation": "Small Blind. Worst position in the game. You act first post-flop. Fold trash.",
+    "entryFee": 0
+  },
+  {
+    "id": "pos_04",
+    "heroHand": "As,Kd",
+    "position": "UTG",
+    "action": "push",
+    "explanation": "Even in Early Position, Ace-King is a monster. Raise for value.",
+    "entryFee": 0
+  },
+  {
+    "id": "pos_05",
+    "heroHand": "Qd,2s",
+    "position": "BTN",
+    "action": "fold",
+    "explanation": "Button is powerful, but Queen-Two is unplayable garbage. Fold.",
+    "entryFee": 0
+  }
+]

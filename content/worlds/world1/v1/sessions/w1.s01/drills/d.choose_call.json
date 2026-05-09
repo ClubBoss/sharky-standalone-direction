@@ -1,0 +1,10 @@
+{
+  "id": "choose_call",
+  "kind": "action_choice",
+  "prompt": "Choose the best action.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "action_selection"
+}

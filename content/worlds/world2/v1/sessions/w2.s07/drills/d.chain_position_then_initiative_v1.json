@@ -1,0 +1,46 @@
+{
+  "id": "chain_position_then_initiative_v1",
+  "kind": "hand_chain_v1",
+  "intent_v1": "world2_authored_bridge",
+  "chain_id": "w2_s07_position_then_initiative_v1",
+  "prompt": "Play this short two-step World 2 scenario chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button and villain is in the big blind. Who is in position?",
+      "expected_action": "hero",
+      "available_actions_v1": ["hero", "villain"],
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "bb",
+      "question_shape_v1": "in_position",
+      "active_seats_v1": ["btn", "bb"],
+      "folded_seats_v1": ["co"],
+      "empty_seats_v1": ["sb"],
+      "feedback_correct_v1": "Correct. The button acts later after the flop.",
+      "feedback_incorrect_v1": "Incorrect. Button versus big blind means hero acts last after the flop, so hero has position and can react after seeing the blind's choice.",
+      "error_class": "position_thinking_choice_mismatch",
+      "why_v1": "Position means you act later and see the other player act first."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: Keep the same seats. Hero opened from the button and villain called. Who has initiative now?",
+      "expected_action": "hero",
+      "available_actions_v1": ["hero", "villain"],
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "bb"],
+      "folded_seats_v1": ["co"],
+      "empty_seats_v1": ["sb"],
+      "last_aggressor_v1": "hero",
+      "initiative_owner_v1": "hero",
+      "feedback_correct_v1": "Correct. The last aggressor keeps initiative until the line changes.",
+      "feedback_incorrect_v1": "Incorrect. Hero made the last aggressive action preflop, so initiative stays with hero until villain takes it back with new aggression.",
+      "error_class": "initiative_aggressor_choice_mismatch",
+      "why_v1": "Initiative stays with the player who made the last aggressive action."
+    }
+  ]
+}

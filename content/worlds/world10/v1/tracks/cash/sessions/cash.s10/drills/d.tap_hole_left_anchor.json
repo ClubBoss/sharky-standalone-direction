@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_anchor",
+  "kind": "card_tap",
+  "prompt": "Tap hole_left before committing chips.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "cardSlot": "hole_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Card anchors keep your action tied to hand strength.",
+  "feedback_correct_v1": "Correct. hole_left is the private-card anchor, so the line stays tied to the first hand cue that decides how much pressure this track can carry.",
+  "feedback_incorrect_v1": "Incorrect. Start from the left hole card: that first private-card cue is what tells you whether this cash hand is strong enough to justify an assertive preflop start."
+}

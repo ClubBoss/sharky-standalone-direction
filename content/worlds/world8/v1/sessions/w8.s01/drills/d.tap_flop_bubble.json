@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_bubble",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle slot to anchor bubble-pressure context.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor, so the tournament read stays centered on the card that shapes the flop texture.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card is the right anchor because it completes the first board read and tells you whether the texture supports caution or pressure under bubble dynamics. Miss that card and you miss how connected or static the flop really is."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_trap",
+  "kind": "board_tap",
+  "prompt": "Trap: do not stop at turn, tap river.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. river is the board anchor here because the last card locks in whether the trap line ends in value, bluff, or showdown control.",
+  "feedback_incorrect_v1": "Incorrect. The river is the final anchor because it ends the draw story and locks in whether the hand can value bet, bluff, or simply show down. Stopping early misses the card that actually decides the finished equity picture."
+}

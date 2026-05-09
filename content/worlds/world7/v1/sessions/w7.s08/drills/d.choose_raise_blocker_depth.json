@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_blocker_depth",
+  "kind": "action_choice",
+  "prompt": "When blocker and depth align, choose raise.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the blocker and stack depth align to make your pressure more credible and harder to continue against.",
+  "feedback_incorrect_v1": "Incorrect. Raise is stronger here because the blocker and the stack depth align to make your pressure more credible. When key strong hands are partially removed and the depth still supports fold equity, aggression gains more than a passive line."
+}

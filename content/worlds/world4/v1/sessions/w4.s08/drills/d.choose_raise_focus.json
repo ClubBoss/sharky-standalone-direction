@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_focus",
+  "kind": "action_choice",
+  "prompt": "With vulnerable made hand, choose action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Raise protects equity by charging draws and weak continues.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is expected for protection intent.",
+  "feedback_incorrect_v1": "Incorrect. A vulnerable made hand wants protection now, so raise is the line that charges draws and weaker continues."
+}

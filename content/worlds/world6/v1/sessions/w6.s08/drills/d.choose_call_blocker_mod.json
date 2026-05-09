@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_blocker_mod",
+  "kind": "action_choice",
+  "prompt": "Range first, blocker second: the blocker helps, but it only trims frequencies. Choose the best action for the full range picture.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "The blocker helps a little, but not enough to turn this range-based call into a raise.",
+  "feedback_correct_v1": "Correct. The blocker refines the range read, but it does not override it into aggression.",
+  "feedback_incorrect_v1": "Incorrect. This blocker is a secondary cue, not a license to ignore the broader range context."
+}

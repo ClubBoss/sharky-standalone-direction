@@ -1,0 +1,13 @@
+{
+  "id": "find_role_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap btn as the position anchor before acting.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep order and pressure reads stable.",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the read stays tied to the late-acting seat controlling the pressure window.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right anchor here because the flop cash read starts from the player acting last with the clearest positional edge."
+}

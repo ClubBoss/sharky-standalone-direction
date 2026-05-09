@@ -1,0 +1,16 @@
+{
+  "id": "size_half_pot_value",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Value spot on flop. Choose the best preset size.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Half pot builds value while keeping worse hands in range.",
+  "feedback_correct_v1": "Correct. This preset matches the value plan.",
+  "feedback_incorrect_v1": "Incorrect. This is the value-building preset: half pot grows the pot while still keeping worse hands in range, so the smaller control size undershoots the spot."
+}

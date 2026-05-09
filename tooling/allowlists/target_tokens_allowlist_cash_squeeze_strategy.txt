@@ -1,0 +1,9 @@
+3bet_ip_9bb
+3bet_oop_12bb
+big_bet_75
+call
+fold
+half_pot_50
+probe_turns
+size_down_dry
+small_cbet_33

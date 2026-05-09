@@ -1,0 +1,7 @@
+flutter: PHASE1_DECK: {"run_id":"run123","scenario_id":"pf_btn_02","seed":123456,"top":"As,Ks,Qh"}
+flutter: PHASE1_SUMMARY: {"run_id":"run123","scenario_id":"pf_btn_02","seed":123456,"passA":{"label":"Pass A","descriptor":"Original","attempts":6,"correct":6,"avg_correct_time_ms":420,"error_count":0},"passB":{"label":"Pass B","descriptor":"Mirror","attempts":6,"correct":6,"avg_correct_time_ms":415,"error_count":0},"error_class_reduction":0}
+flutter: PHASE1_LOG: [{"run_id":"run123","event":"session_start"},{"run_id":"run123","event":"session_end"}]
+flutter: PHASE2_SESSION_START: {"run_id":"run123","timestamp":"2025-12-30T00:42:56Z"}
+flutter: PHASE2_AHA: {"run_id":"run123","aha_type":"value_realization","timestamp":"2025-12-30T00:43:01Z"}
+flutter: PHASE3_RETURN_SIGNAL: {"run_id":"run123","signal_type":"engagement_return","timestamp":"2025-12-30T00:43:20Z"}
+flutter: PHASE3_FLOW_END: {"run_id":"run123","result":"signaled","timestamp":"2025-12-30T00:43:25Z"}

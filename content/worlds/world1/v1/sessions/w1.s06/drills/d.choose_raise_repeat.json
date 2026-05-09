@@ -1,0 +1,11 @@
+{
+  "id": "choose_raise_repeat",
+  "kind": "action_choice",
+  "prompt": "Choose the best action.",
+  "intent_v1": "dominated_aces",
+  "why_v1": "Raise only when range edge is clear from position.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "action_selection"
+}

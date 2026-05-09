@@ -1,0 +1,11 @@
+{
+  "id": "tap_river_repeat",
+  "kind": "board_tap",
+  "prompt": "Tap the river card.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "board_slot_confusion",
+  "feedback_correct_v1": "Correct. The river card is the right board anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the river card here so the read stays tied to the correct board anchor for this rep."
+}

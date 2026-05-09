@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat in the action-order ring.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Big blind context changes call and fold thresholds.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "action_order_mismatch",
+  "feedback_correct_v1": "Correct. Big blind context is locked.",
+  "feedback_incorrect_v1": "Incorrect. The big blind closes the blind pair, so anchor it first. That seat acts after the small blind preflop and faces the cleanest defend-or-fold decision once the open reaches it."
+}

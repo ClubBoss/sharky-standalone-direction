@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_consistent",
+  "kind": "action_choice",
+  "prompt": "Thin read: choose call.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call when the read is too thin for a bigger pot.",
+  "feedback_correct_v1": "Correct. Call fits because the read is too thin to force more money in.",
+  "feedback_incorrect_v1": "Incorrect. Call fits when the read is thin, so keep the pot small."
+}

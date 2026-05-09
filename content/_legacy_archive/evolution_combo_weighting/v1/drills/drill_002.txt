@@ -1,0 +1,20 @@
+# What to do
+Slot each combo group into value, bluff, protection, or merge weightings for a mixed cluster with uneven equity and blockers.
+
+# Input
+Cluster: strong top pairs, mid suited connectors, weak offsuit broadways, plus blocker-heavy combos that deny high cards.
+
+# Expected reasoning
+Top pairs anchor value at full weight.
+Blocker-heavy combos work as partial bluffs because they reduce opponent nuts.
+Mid suited connectors require protection weight to shield fragile equity.
+Weak offsuit broadways fill merge or thin value roles depending on density pressure.
+
+# Correct answer
+Value: top pairs full; bluff: blocker combos partial; protection: mid connectors medium; merge: weak offsuit broadways light.
+
+# Common mistakes
+- Weighting every bluff the same instead of favoring blockers.
+- Shifting mid connectors into merge before protection.
+- Flattening merge combos into value without checking density.
+- Starving protection to feed marginal bluffs.

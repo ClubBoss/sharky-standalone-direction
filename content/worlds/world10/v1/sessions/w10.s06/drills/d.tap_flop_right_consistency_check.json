@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_right_consistency_check",
+  "kind": "board_tap",
+  "prompt": "Tap flop_right to confirm the first board anchor.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchors keep your adjustment stable across streets.",
+  "feedback_correct_v1": "Correct. flop_right is the first board anchor, so the texture read completes the flop pattern before the pressure line moves on.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card matters because the first flop texture read is part of the baseline you are supposed to repeat consistently."
+}

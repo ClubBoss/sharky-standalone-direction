@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_position_texture_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s07_position_texture_checkpoint_v1",
+  "prompt": "Play this short World 5 position-and-texture chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: In position, the board stays dry and the pressure path is clean. Which simple action fits best?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In position on a clean dry texture, the assertive line fits best.",
+      "feedback_incorrect_v1": "Incorrect. Start from the dry board first, then notice how position keeps the pressure path cleaner.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 5 still reads the board first, but position can sharpen a clean texture story."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: Out of position on a dry board, the texture is stable but the edge is not clean enough to force. Which simple action fits best?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The dry board stays stable, but out of position the controlled line fits better.",
+      "feedback_incorrect_v1": "Incorrect. Start from the board texture, then respect how position changes how hard you can press.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position should refine the texture story, not replace it."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: Out of position on a wet board, draw pressure stays high and your improvement path is thin. Which simple action fits best?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Wet pressure plus weak improvement out of position should still release.",
+      "feedback_incorrect_v1": "Incorrect. Let the wet-board pressure stay primary before you consider position details.",
+      "recap_v1": "World 5 position checkpoints should now feel ordered: read the board first, then let position refine how strongly that texture story can actually act.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The board stays primary in World 5, but position can make the same texture easier to pressure or easier to control."
+    }
+  ]
+}

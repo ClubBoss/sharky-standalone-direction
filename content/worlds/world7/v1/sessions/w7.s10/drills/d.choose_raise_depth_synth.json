@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_depth_synth",
+  "kind": "action_choice",
+  "prompt": "When synthesis confirms pressure edge, choose raise.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits when depth, price, and playability line up to create a real pressure edge.",
+  "feedback_incorrect_v1": "Incorrect. Raise is stronger when depth, price, and playability all point in the same direction and create a real pressure edge. When stacks are deep enough to punish capped continues, the aggressive line earns more than a passive one."
+}

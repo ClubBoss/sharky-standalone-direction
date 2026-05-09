@@ -1,0 +1,13 @@
+{
+  "id": "find_role_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap utg as the position anchor before acting.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "utg"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep order and pressure reads stable.",
+  "feedback_correct_v1": "Correct. Under the gun is the right seat anchor, so the read stays tied to the earliest seat that has to act without late-position cover.",
+  "feedback_incorrect_v1": "Incorrect. Under the gun is the correct anchor because this tournament preflop decision starts from the earliest position."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "world1_act0_action_literacy",
+  "order": 2,
+  "title": "Act 0: Action Literacy",
+  "description": "Fold, check, and call choices without shame.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "act0_action_literacy",
+  "reasoning": "Keeps first action choices simple so mistakes feel recoverable and clear.",
+  "availability": "available"
+}

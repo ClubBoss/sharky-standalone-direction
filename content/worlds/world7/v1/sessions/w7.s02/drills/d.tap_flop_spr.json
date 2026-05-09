@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_spr",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle slot before SPR pressure decision.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor because the original board texture sets how much deep-stack pressure the spot can really support.",
+  "feedback_incorrect_v1": "Incorrect. Use the flop anchor first because the original board texture sets how much deep-stack pressure the spot can really support."
+}

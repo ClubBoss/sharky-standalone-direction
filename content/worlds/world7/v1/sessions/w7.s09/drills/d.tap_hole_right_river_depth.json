@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_river_depth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card before final river closure action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. Right hole card is the hole-card anchor because the final river action still has to stay tied to the real hand cue.",
+  "feedback_incorrect_v1": "Incorrect. The right hole card is the right hole-card anchor here because it keeps the final river-depth action tied to the real hand cue."
+}

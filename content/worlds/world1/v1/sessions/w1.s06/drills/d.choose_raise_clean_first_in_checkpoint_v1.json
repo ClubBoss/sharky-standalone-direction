@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_clean_first_in_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the cutoff with AJs and everyone folded so far. Which simple action fits best at the checkpoint?",
+  "intent_v1": "dominated_aces",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A strong suited broadway hand in a clean unopened spot should still raise at the checkpoint.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. With folds to the cutoff, AJs is still a strong clean start, so the right simple action is to raise."
+}

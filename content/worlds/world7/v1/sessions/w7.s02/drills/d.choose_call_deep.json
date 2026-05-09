@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_deep",
+  "kind": "action_choice",
+  "prompt": "Deep stack proxy: choose the best action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when depth edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits because deep stacks keep both ranges playable, so control matters more than forcing a marginal edge.",
+  "feedback_incorrect_v1": "Incorrect. Call is better when deep stacks keep both ranges playable, because a controlled continue preserves maneuverability instead of inflating the pot on a marginal edge."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "classify_in_position_dry_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "In position, the board stays dry and your pressure path is clean. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "dry",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "Dry textures in position make it easier to press value before later cards add noise.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. In-position dry texture supports a raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the dry board and in-position edge first."
+}

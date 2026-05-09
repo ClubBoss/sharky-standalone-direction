@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_blocker_depth",
+  "kind": "board_tap",
+  "prompt": "Tap turn to refresh blocker-depth context.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor because the second board change shows whether the blocker is gaining leverage or losing value.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right anchor here because the second board change tells you whether the blocker is gaining leverage or losing value."
+}

@@ -1,0 +1,90 @@
+analyzer:
+  exclude:
+    - legacy/**
+    - legacy_tests/**
+    - build/**
+    - scripts/**
+    - dart-project/**
+    - .dart_tool/**
+    - tools/**
+    - lib/tools/**
+    - lib/tests_v2_editor/**
+    - lib/shop/**
+    - lib/onboarding/**
+    - lib/poker_analyzer/**
+    - tooling/**
+    - lib/widgets/**
+    - lib/screens/poker_analyzer/**
+    - lib/screens/dev_menu/**
+    - lib/screens/v2/editor/**
+    - lib/screens/v2/training_pack_loader.dart
+    - lib/screens/**/training_pack*.dart
+    - lib/screens/**/skill_tree*.dart
+    - lib/screens/**/learning_path*.dart
+    - lib/screens/decay_analytics_screen.dart
+    - lib/screens/hand_history_review_screen.dart
+    - lib/screens/library_screen.dart
+    - lib/screens/pack_bundle_viewer_screen.dart
+    - lib/screens/pack_review_summary_screen.dart
+    - lib/screens/pinned_hub_screen.dart
+    - lib/screens/progress_history_screen.dart
+    - lib/screens/spot_of_the_day_history_screen.dart
+    - lib/screens/spot_solve_screen.dart
+    - lib/screens/tag_management_screen.dart
+    - lib/screens/template_preview_dialog.dart
+    - lib/screens/training_template_detail_screen.dart
+    - lib/screens/learning_path_runner_screen.dart
+    - lib/screens/skill_tree_learning_map_screen.dart
+    - lib/screens/training_pack_template_editor_screen.dart
+    - lib/screens/training_packs_screen.dart
+    - lib/screens/**
+    - lib/plugins/**
+    - lib/ui/settings/**
+    - lib/ui/**
+    - poker_backup/**
+    - poker_clean_backup/**
+    - your_repo_root/**
+    - tool/**
+    - bin/**
+    - design/components/**
+    - design/screenshots/**
+  errors:
+    missing_return: error
+    dead_code: error
+    unused_import: ignore
+    const_with_non_const: ignore
+    argument_type_not_assignable: warning
+    undefined_named_parameter: warning
+    undefined_getter: warning
+    undefined_method: warning
+    unused_local_variable: ignore
+    unused_element: ignore
+    unused_field: ignore
+    unnecessary_cast: ignore
+    unnecessary_null_comparison: ignore
+    unnecessary_null_checks: ignore
+    unnecessary_type_check: ignore
+    deprecated_member_use: ignore
+    prefer_final_locals: ignore
+    avoid_types_on_closure_parameters: ignore
+    unnecessary_import: ignore
+  language:
+    strict-casts: false
+    strict-inference: false
+    strict-raw-types: false
+
+linter:
+  rules:
+    - always_declare_return_types
+    # - avoid_print  # Disabled to reduce noise in tool/ scripts
+    - avoid_types_on_closure_parameters
+    # - prefer_const_constructors  # Disabled - causes too many issues
+    - prefer_final_locals
+    # - prefer_const_literals_to_create_immutables  # Disabled
+    # - prefer_expression_function_bodies  # Disabled - too opinionated
+    - unnecessary_this
+    - use_key_in_widget_constructors
+    - await_only_futures
+    - unnecessary_lambdas
+    - unnecessary_null_checks
+    - unnecessary_brace_in_string_interps

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "pt_q1",
+    "questionText": "Which hand wins?",
+    "options": ["High Card (Ace High)", "One Pair (Pair of 2s)"],
+    "correctOptionIndex": 1,
+    "explanation": "A Pair always beats a High Card.",
+    "xpReward": 10,
+    "entryFee": 0
+  },
+  {
+    "id": "pt_q2",
+    "questionText": "Which is stronger?",
+    "options": ["Flush (5 cards of same suit)", "Straight (5 cards in a row)"],
+    "correctOptionIndex": 0,
+    "explanation": "A Flush beats a Straight.",
+    "xpReward": 10,
+    "entryFee": 0
+  },
+  {
+    "id": "pt_q3",
+    "questionText": "Who acts last post-flop?",
+    "options": ["The Button (Dealer)", "The Small Blind"],
+    "correctOptionIndex": 0,
+    "explanation": "The Button acts last. Position is power.",
+    "xpReward": 15,
+    "entryFee": 0
+  },
+  {
+    "id": "pt_q4",
+    "questionText": "Pot is 1000. Call is 1. Do you call?",
+    "options": ["Yes (Good Odds)", "No (Too Risky)"],
+    "correctOptionIndex": 0,
+    "explanation": "Yes. The reward is huge for a tiny price.",
+    "xpReward": 20,
+    "entryFee": 0
+  },
+  {
+    "id": "pt_q5",
+    "questionText": "You have the Nuts (Best Hand). Opponent goes All-in. Action?",
+    "options": ["Fold", "Call"],
+    "correctOptionIndex": 1,
+    "explanation": "Call. Never fold the winning hand.",
+    "xpReward": 25,
+    "entryFee": 0
+  }
+]

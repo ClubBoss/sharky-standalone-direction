@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_board_filter",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Start with the big blind because that is the player under pressure here.",
+  "feedback_correct_v1": "Correct. Start at the big blind because that is the player under pressure here.",
+  "feedback_incorrect_v1": "Incorrect. Tap the big blind because that is the player under pressure here."
+}

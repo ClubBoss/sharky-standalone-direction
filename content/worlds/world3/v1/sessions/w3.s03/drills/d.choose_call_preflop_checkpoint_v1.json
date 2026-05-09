@@ -1,0 +1,14 @@
+{
+  "id": "choose_call_preflop_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is on the button with KQo. Which compact preflop action fits best for the first World 3 checkpoint?",
+  "intent_v1": "world3_preflop_checkpoint_call_facing_open",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Facing a cutoff open, KQo on the button keeps enough value to continue by calling in position.",
+  "feedback_correct_v1": "Correct. Facing a cutoff open, KQo plays well enough to continue, and calling keeps position without bloating the pot.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KQo plays better as an in-position call: you keep a playable broadway hand in the pot without bloating it into a thin raise against stronger opening ranges."
+}

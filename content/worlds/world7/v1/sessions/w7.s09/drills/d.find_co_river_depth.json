@@ -1,0 +1,13 @@
+{
+  "id": "find_co_river_depth",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before river-depth closure action.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because the earlier late-position seat frames the closure decision before the button takes over.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the right seat anchor here because that earlier late-position seat frames the river-depth closure choice."
+}

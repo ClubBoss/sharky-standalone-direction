@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_short",
+  "kind": "seat_tap",
+  "prompt": "Short-stack push-fold setup: tap BTN.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the tournament read stays tied to the late-acting seat that controls the pressure window.",
+  "feedback_incorrect_v1": "Incorrect. The button is the target seat anchor because short-stack push-fold pressure plays best from the late-acting seat."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "classify_oop_connected_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Out of position on a connected board, several draws stay live but raising would overstate your edge. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Connected boards out of position often favor controlled calls when multiple draw paths keep the spot volatile.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The connected out-of-position read supports a call.",
+  "feedback_incorrect_v1": "Incorrect. Start from the connected-board volatility: out of position with several live draws, calling controls the risk better than overstating the edge with a raise."
+}

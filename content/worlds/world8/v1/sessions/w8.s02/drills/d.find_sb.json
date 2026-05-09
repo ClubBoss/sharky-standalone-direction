@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "ICM pressure setup: tap SB.",
+  "intent_v1": "bubble_intuition",
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The small blind is the right seat anchor, so the tournament read stays tied to the out-of-position blind who feels the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the target seat because it is partly committed, out of position, and especially sensitive to ICM pressure. Anchoring a different seat misses where leverage and survival constraints are most distorted."
+}

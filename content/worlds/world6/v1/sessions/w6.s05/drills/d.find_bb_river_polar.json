@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_river_polar",
+  "kind": "seat_tap",
+  "prompt": "River polarization setup: tap BB.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "feedback_correct_v1": "Correct. Big blind is the seat anchor here because the forced defender closes the river action with a capped bluff-catching range.",
+  "feedback_incorrect_v1": "Incorrect. Start with the big blind so you know which forced defender is closing the action on the river. That seat anchor matters because polarization decisions change when the defending range is capped and has to face the final bet."
+}

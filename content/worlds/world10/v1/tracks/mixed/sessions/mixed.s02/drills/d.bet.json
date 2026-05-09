@@ -1,0 +1,13 @@
+{
+  "id": "bet",
+  "kind": "action_choice",
+  "prompt": "In this mixed flop spot, choose bet.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "bet"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Bet when fold pressure and value both support action.",
+  "feedback_correct_v1": "Correct. Betting fits the track cue set, so the line presses value or denial before a passive check gives the edge away.",
+  "feedback_incorrect_v1": "Incorrect. Bet is right here because the mixed flop cues support both fold pressure and value instead of giving a free card."
+}

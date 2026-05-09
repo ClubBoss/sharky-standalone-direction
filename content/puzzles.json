@@ -1,0 +1,29 @@
+[
+  {
+    "id": "puzzle_top_pair",
+    "heroCards": ["Ah", "Kh"],
+    "boardCards": ["Ad", "7h", "2c", "Js", "9d"],
+    "villainAction": "Villain bets 400 into 1200 and looks confident.",
+    "potSize": 1200,
+    "correctAction": "fold",
+    "explanation": "Villain is polarized to strong Ax or better; your weak top pair should release here."
+  },
+  {
+    "id": "puzzle_drawing_live",
+    "heroCards": ["9h", "8h"],
+    "boardCards": ["Ah", "7h", "6h", "4c", "2d"],
+    "villainAction": "Villain shoves 1200 over a 500 pot.",
+    "potSize": 500,
+    "correctAction": "call",
+    "explanation": "You are drawing nearly 3-to-1 in chips with the nuts; folding throws away the best draw."
+  },
+  {
+    "id": "puzzle_bluff", 
+    "heroCards": ["Qs", "Qc"],
+    "boardCards": ["Ts", "Tc", "2h", "7d", "5s"],
+    "villainAction": "Villain bets 2000 into 3000 after leading into you.",
+    "potSize": 3000,
+    "correctAction": "raise",
+    "explanation": "Your full house dominates their likely bluffing line; raising maximizes value and folds out better draws."
+  }
+]

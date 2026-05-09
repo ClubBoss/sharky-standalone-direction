@@ -1,0 +1,10 @@
+{
+  "id": "tap_river",
+  "kind": "board_tap",
+  "prompt": "Tap the river card slot.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "board_slot_confusion"
+}

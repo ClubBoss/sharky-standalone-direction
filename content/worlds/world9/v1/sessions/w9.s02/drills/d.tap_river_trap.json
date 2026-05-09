@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_trap",
+  "kind": "board_tap",
+  "prompt": "Tap the river before the trap decision.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Wait for the last card before deciding if the trap is real.",
+  "feedback_correct_v1": "Correct. Use the river because the last card tells you whether the trap is still there.",
+  "feedback_incorrect_v1": "Incorrect. Use the river because the last card decides whether this trap is real or too thin."
+}

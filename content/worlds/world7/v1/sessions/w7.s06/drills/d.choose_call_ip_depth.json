@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_ip_depth",
+  "kind": "action_choice",
+  "prompt": "At medium depth in position, choose call.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when depth edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits because position still lets you realize medium-depth equity without inflating a pot before the edge is clean.",
+  "feedback_incorrect_v1": "Incorrect. Call is better here because playing in position at this depth still lets you realize equity without forcing an oversized pot. A controlled continue keeps the hand flexible while your edge is not yet strong enough to turn into an immediate raise."
+}

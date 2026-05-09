@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_synthesis",
+  "kind": "seat_tap",
+  "prompt": "Tap the button.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Start with the button because acting last makes this spot easier to press.",
+  "feedback_correct_v1": "Correct. Start at the button because acting last makes the strong line easier to use.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because acting last matters in this spot."
+}

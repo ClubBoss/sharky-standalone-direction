@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_river_bluff",
+  "kind": "action_choice",
+  "prompt": "Approved river bluff branch with blocker cue: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Raise as a river bluff with this blocker profile. Calling keeps the pot small and gives up fold pressure.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Bluff line is active in this river spot.",
+  "feedback_incorrect_v1": "Incorrect. The blocker cue matters here, so betting the river applies fold pressure better than checking.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

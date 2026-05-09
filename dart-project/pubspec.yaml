@@ -1,0 +1,16 @@
+name: dart_project
+description: A Dart project that automatically manages asset registration.
+version: 1.0.0
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    # The content assets will be updated automatically by the script in tool/update_assets.dart.

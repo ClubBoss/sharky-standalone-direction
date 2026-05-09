@@ -1,0 +1,14 @@
+{
+  "id": "choose_call_ip_range",
+  "kind": "action_choice",
+  "prompt": "In position with a moderate edge, pick the lower-variance line.",
+  "intent_v1": "equity_realization",
+  "available_actions_v1": ["call", "raise"],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Call keeps the in-position edge while controlling the pot.",
+  "feedback_incorrect_v1": "Incorrect. Call fits this in-position spot because the edge is real but not strong enough to turn into a raise."
+}

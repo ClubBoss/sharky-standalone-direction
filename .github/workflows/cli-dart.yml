@@ -1,0 +1,100 @@
+name: dart-cli (CLI-only)
+
+on:
+  pull_request:
+    paths:
+      - "bin/**"
+      - "ev/**"
+      - "test/ev/**"
+      - "test/content_audit_smoke_test.dart"
+      - "tooling/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - ".github/workflows/cli-dart.yml"
+  push:
+    branches: [ main ]
+    paths:
+      - "bin/**"
+      - "ev/**"
+      - "test/ev/**"
+      - "test/content_audit_smoke_test.dart"
+      - "tooling/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - ".github/workflows/cli-dart.yml"
+
+jobs:
+  dart-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+        with: { fetch-depth: 0 }
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with: { sdk: "3.9.0" }
+
+      - run: dart --version
+
+      - name: Cache Pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Format check (CLI only)
+        run: dart format --output=none --set-exit-if-changed bin test/ev tooling
+
+      - name: Analyze (CLI only)
+        run: flutter analyze bin test/ev tooling
+
+      # Только pure-Dart тесты, исключаем quarantine и Flutter smoke
+      - name: Unit tests (CLI only)
+        run: |
+          if [ -d test/ev ]; then
+            dart test test/ev -x quarantine -r expanded
+          else
+            echo "SKIP: test/ev not present"
+          fi
+          if [ -f test/content_audit_smoke_test.dart ]; then
+            dart test test/content_audit_smoke_test.dart -r expanded
+          else
+            echo "SKIP: test/content_audit_smoke_test.dart not present"
+          fi
+
+      # Аудит контента только при изменениях в content/**
+      - name: content audit (only if content changed)
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep '^content/' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "No content changes; skipping audit."
+            exit 0
+          fi
+          if [ ! -f tooling/content_audit.dart ]; then
+            echo "SKIP: tooling/content_audit.dart not present"
+            exit 0
+          fi
+          MODULES=$(echo "$CHANGED" | awk -F/ '{print $2}' | sort -u)
+          for m in $MODULES; do
+            echo "Auditing $m"
+            dart run tooling/content_audit.dart "$m"
+          done

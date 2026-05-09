@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_risk_premium",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to confirm risk-premium context.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor, so the tournament read updates on the street where pressure often changes shape.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right anchor because it is the second board change and often decides whether risk premium should keep the line cautious or let pressure grow. If you miss the turn, you miss the street that reshapes the tournament decision before the river."
+}

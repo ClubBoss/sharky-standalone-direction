@@ -1,0 +1,21 @@
+# Scenario
+IP applies balanced pressure after the flop; OOP must synthesize shape, caps, pressure tier, reaction, and window cues into one coherent node read.
+
+# Snapshot
+Attacker: even top/mid density with layered continuity. Defender: partial caps, thinning mid-band, calling down reluctantly. Pressure tier: mid. Reaction shift: leaning call-heavy under stress. Window potential: timing or fold.
+
+# Player task
+Combine the structural clues to name the correct synthesis read (structure + pressure + reaction + window).
+
+# Expected reasoning
+The attacker’s even density keeps mid pressure honest, while layered continuity prevents overextension. Defender caps respond by calling down but resist raising, so reactions stay call-heavy. Mid pressure tier with a call-heavy reaction pushes toward a timing window rather than immediate fold or stab. Synthesis says: keep the structure, respect the mid tier, ride the call-heavy layer, and exploit the timing window before caps adjust.
+
+# Correct line
+Balanced structure + mid pressure + call-heavy reaction → timing window: apply controlled probes before caps respond.
+
+# Why not the alternatives
+- Folding only: ignores call-heavy reactions and the timing opportunity. 
+- Stab: misreads the defender as ready to fold. 
+- Thin-value: misses the need to sequence pressure through the timing window. 
+- Separate cues: any single cue fails without the full chain. 
+- Polar: assumes caps fold when they actually call.

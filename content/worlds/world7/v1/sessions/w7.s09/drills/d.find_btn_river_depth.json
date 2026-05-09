@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_river_depth",
+  "kind": "seat_tap",
+  "prompt": "River closure setup: tap BTN.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because acting last gives the clearest read on whether river-depth pressure should close the hand.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right seat anchor here because acting last gives the clearest river-closure leverage read."
+}

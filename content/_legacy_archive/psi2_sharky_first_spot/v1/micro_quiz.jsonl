@@ -1,0 +1,14 @@
+{"id":"cxx:micro:01","type":"mc","prompt":"Tier-A reads?","options":["Passive signals","Hole cards"],"answer":0,"explanation":"Tier-A scans passive emotion inputs."}
+{"id":"cxx:micro:02","type":"mc","prompt":"ESM outputs?","options":["States","Stacks"],"answer":0,"explanation":"ESM delivers states like momentum or struggle."}
+{"id":"cxx:micro:03","type":"mc","prompt":"AT tracks?","options":["Attention/tone","Chip EV"],"answer":0,"explanation":"AT models attention and tone."}
+{"id":"cxx:micro:04","type":"mc","prompt":"Default Psi-2 action?","options":["cbet_small","Jam"],"answer":0,"explanation":"Baseline line is small cbet on dry board."}
+{"id":"cxx:micro:05","type":"mc","prompt":"Alternate line?","options":["check_back","All-in"],"answer":0,"explanation":"Check back is the safe comparison."}
+{"id":"cxx:micro:06","type":"mc","prompt":"Sharky tone?","options":["Professional","Cartoon"],"answer":0,"explanation":"Sharky guides in a professional voice."}
+{"id":"cxx:micro:07","type":"mc","prompt":"V4 visuals?","options":["Toggleable","Fixed"],"answer":0,"explanation":"V4 can be toggled; default on."}
+{"id":"cxx:micro:08","type":"mc","prompt":"Tooltips come from?","options":["Inline binder","Random"],"answer":0,"explanation":"Help icons use inline explanations."}
+{"id":"cxx:micro:09","type":"mc","prompt":"Cohesion checks?","options":["Background","Manual"],"answer":0,"explanation":"Consistency checks run automatically."}
+{"id":"cxx:micro:10","type":"mc","prompt":"First spot positions?","options":["BTN/BB","UTG/SB"],"answer":0,"explanation":"Psi-2 uses BTN vs BB."}
+{"id":"cxx:micro:11","type":"mc","prompt":"Coaching pacing?","options":["Short cycles","Long scripts"],"answer":0,"explanation":"Onboarding uses short act/read cycles."}
+{"id":"cxx:micro:12","type":"mc","prompt":"Spot type?","options":["SRP dry","Multiway wet"],"answer":0,"explanation":"Simple SRP dry flop spot."}
+{"id":"cxx:micro:13","type":"mc","prompt":"Next path?","options":["Psi-3","End"],"answer":0,"explanation":"Psi-3 follows with more textures."}
+{"id":"cxx:micro:14","type":"mc","prompt":"Exploit note?","options":["Overfold idea","Backdoor math"],"answer":0,"explanation":"Small cbet exploits possible BB overfolding."}

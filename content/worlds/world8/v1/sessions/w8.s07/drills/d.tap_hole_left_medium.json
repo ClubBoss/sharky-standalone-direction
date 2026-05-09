@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_medium",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card before final medium-stack action.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before ICM action.",
+  "feedback_correct_v1": "Correct. The left hole card is the anchor, so the tournament read stays tied to the private-card cue this decision is built around first.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the target hole card because the final medium-stack action must stay tied to the correct hand reference."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "check",
+  "kind": "action_choice",
+  "prompt": "In this tournament flop spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "check"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Check keeps variance lower when equity is unclear.",
+  "feedback_correct_v1": "Correct. Checking fits the track cue set, so the line keeps the pot controlled when the pressure edge is not strong enough to fire.",
+  "feedback_incorrect_v1": "Incorrect. Check because a survival-first flop should keep variance lower when the equity picture is still unclear."
+}

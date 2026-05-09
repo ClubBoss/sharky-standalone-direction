@@ -1,0 +1,96 @@
+{
+  "id": "chain_world1_in_position_focus_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s07_in_position_focus_v1",
+  "prompt": "Play this short World 1 in-position focus chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with KJo and everyone folded so far. Which simple action fits best when position is clearly in your favor?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Kh",
+        "Jd"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. On the button in a clean first-in spot, a playable broadway hand should still raise.",
+      "feedback_incorrect_v1": "Incorrect. In-position focus starts with the clean button raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This focused tail should make late-position control feel usable, not abstract."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hijack opened and hero is in the cutoff with QJs. Which simple action fits best when position still lets you continue cleanly?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": [
+        "hj",
+        "co",
+        "btn",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qh",
+        "Js"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. With position and a playable suited broadway hand, the clean response is a call.",
+      "feedback_incorrect_v1": "Incorrect. Existing pressure changes this into a cleaner call, not a first-in raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "In-position comfort should help the learner continue honestly, not force aggression every time."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Cutoff opened and hero is on the button with 94o. Which simple action fits best if position does not rescue a weak hand?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "9d",
+        "4c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Even in position, a weak offsuit hand should still fold once pressure reaches you.",
+      "feedback_incorrect_v1": "Incorrect. Position helps good continues, but it does not rescue weak junk.",
+      "recap_v1": "World 1 in-position focus should now feel honest: raise the clean button spot, call the playable in-position continue, and still fold the weak hand when pressure reaches you.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The point of position is cleaner decisions, not looser excuses."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before selecting action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Button anchor confirms position before denial sizing.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button keeps the late-position edge in view, so the denial size stays tied to the seat that can apply pressure last.",
+  "feedback_incorrect_v1": "Incorrect. Position is anchored on the button in this capstone rep, so confirm the button seat first."
+}

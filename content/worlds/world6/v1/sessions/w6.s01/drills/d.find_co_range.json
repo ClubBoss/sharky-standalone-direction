@@ -1,0 +1,13 @@
+{
+  "id": "find_co_range",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before range-bucket action.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because this earlier late-position seat frames whose range is applying pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the correct anchor because the earlier late-position seat frames whose range is applying pressure before the bucket choice."
+}

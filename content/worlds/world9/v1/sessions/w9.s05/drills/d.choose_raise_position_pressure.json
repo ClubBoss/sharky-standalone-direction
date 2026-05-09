@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_position_pressure",
+  "kind": "action_choice",
+  "prompt": "With position edge against profile leak, choose raise.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when the player read and context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the position edge lets you pressure the profile leak before it can realize cleanly.",
+  "feedback_incorrect_v1": "Incorrect. Raise because the position edge lets you pressure the profile leak immediately."
+}

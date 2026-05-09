@@ -1,0 +1,73 @@
+name: CI Trigger All
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason"
+        required: false
+        default: "bulk-run"
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: List workflows
+        id: list
+        run: |
+          ls .github/workflows | grep -E '\.ya?ml$' > wf.txt
+          grep -v -E 'ci-trigger-all\.ya?ml' wf.txt > wf_run.txt
+          echo "count=$(wc -l < wf_run.txt)" >> $GITHUB_OUTPUT
+      - name: Trigger all via API
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+        run: |
+          while read WF; do
+            echo "Dispatch $WF"
+            gh api repos/${{ github.repository }}/actions/workflows/$WF/dispatches \
+              -X POST -F ref=${{ github.ref_name }} -F inputs[reason]="${{ github.event.inputs.reason || 'bulk-run' }}"
+          done < wf_run.txt
+      - name: Wait and collect results
+        id: collect
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+        run: |
+          repo="${{ github.repository }}"
+          branch="${{ github.ref_name }}"
+          sleep 10
+          deadlines=$((SECONDS+1800))
+          declare -A status
+          while read WF; do status[$WF]=queued; done < wf_run.txt
+          while [ $SECONDS -lt $deadlines ]; do
+            done_all=true
+            while read WF; do
+              if [ "${status[$WF]}" = "queued" ] || [ "${status[$WF]}" = "in_progress" ]; then
+                run=$(gh api repos/$repo/actions/workflows/$WF/runs --jq '.workflow_runs[] | select(.head_branch=="'"$branch"'") | .id' | head -n1)
+                if [ -n "$run" ]; then
+                  st=$(gh api repos/$repo/actions/runs/$run --jq .status)
+                  concl=$(gh api repos/$repo/actions/runs/$run --jq .conclusion)
+                  if [ "$st" = "completed" ]; then status[$WF]=$concl; else status[$WF]=$st; done_all=false; fi
+                else
+                  done_all=false
+                fi
+              fi
+            done < wf_run.txt
+            $done_all && break
+            sleep 20
+          done
+          {
+            echo "| Workflow | Result |"
+            echo "|---|---|"
+            while read WF; do
+              echo "| $WF | ${status[$WF]} |"
+            done < wf_run.txt
+          } > summary.md
+      - name: Post summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('summary.md','utf8');
+            core.summary.addRaw(body, true).write()

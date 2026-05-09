@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "sessions": {
+    "tournament.s01": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s02": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s03": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s04": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s05": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s06": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s07": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s08": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s09": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    },
+    "tournament.s10": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "small_blind_seat_v1": "sb",
+        "big_blind_seat_v1": "bb",
+        "small_blind_amount_v1": 50,
+        "big_blind_amount_v1": 100,
+        "ante_amount_v1": 10,
+        "board_cards_v1": ["Qc", "9h", "4d", "2c", "7s"],
+        "hero_hole_cards_v1": ["Ah", "Ks"]
+      }
+    }
+  }
+}

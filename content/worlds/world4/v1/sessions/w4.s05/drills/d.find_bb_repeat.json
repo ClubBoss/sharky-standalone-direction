@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat before the final action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Big blind anchor confirms blind context before protecting equity.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The big blind fixes the forced defender, so the repeat stays tied to the range that protection bets against first.",
+  "feedback_incorrect_v1": "Incorrect. This protection rep starts from the big blind, so tap the big blind seat before choosing the line."
+}

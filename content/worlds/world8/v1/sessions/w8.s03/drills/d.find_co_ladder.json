@@ -1,0 +1,13 @@
+{
+  "id": "find_co_ladder",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before ladder-pressure action.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The cutoff is the right seat anchor, so the tournament read stays tied to the last pressure seat before the button takes over.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the target seat anchor because this ladder branch starts from the earlier late-position seat, not from the button."
+}

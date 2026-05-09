@@ -1,0 +1,11 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat.",
+  "intent_v1": "hand_discipline_fold",
+  "why_v1": "This cue trains hand discipline before action.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "seat_role_confusion"
+}

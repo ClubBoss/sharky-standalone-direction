@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_pressure_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap button anchor before choosing a pressure response.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Position anchor is required before resolving toCall pressure.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Button anchor is locked for this pressure node.",
+  "feedback_incorrect_v1": "Incorrect. The button is the late-acting seat here, so anchor it first. That player has the most information before applying pressure, and that positional edge is what makes this branch work."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_switch_guardrails",
+  "kind": "action_choice",
+  "prompt": "When the second cue appears, choose the best action.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Action should change only when the read and board cues support it.",
+  "feedback_correct_v1": "Correct. Calling fits the cue set, so the line keeps the controlled continue this spot is actually rewarding.",
+  "feedback_incorrect_v1": "Incorrect. Calling works better because the guardrail read still supports a disciplined continue instead of forcing action before the edge is proven."
+}

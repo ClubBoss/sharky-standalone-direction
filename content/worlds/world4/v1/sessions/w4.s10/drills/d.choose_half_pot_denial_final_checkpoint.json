@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_denial_final_checkpoint",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the standard denial size when a free continue would be too comfortable.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Half pot applies a clear denial tax without jumping straight to the biggest pressure line.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

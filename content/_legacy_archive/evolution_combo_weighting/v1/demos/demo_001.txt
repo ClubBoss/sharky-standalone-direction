@@ -1,0 +1,21 @@
+# Scenario
+IP fires a small stab on the turn; defender must weight value/bluff/protection/merge before reacting to the aggression.
+
+# Snapshot
+Value density: solid top pairs, consistent mid coverage. Bluff candidates: blocker-rich weak combos. Protection: fragile mid connectors with thin equity. Merge: weak offsuit combos that can convert with blocker support.
+
+# Player task
+Explain how to distribute weights across value, bluff, protection, and merge given the density spread.
+
+# Expected reasoning
+Value density remains heavy because top pairs anchor the line and the mid coverage keeps pressure steady. Blocker-rich weak combos offer the best bluff weight since they deny nuts while staying low equity. Mid connectors are fragile, so they sit in protection to guard the equity without overcommitting. Thin merge combos require light weight, combining blocker leverage with the possibility to convert if opponent becomes more passive.
+
+# Correct line
+Value heavy, bluffs from blocker combos, protection from fragile mids, merge weighted lightly.
+
+# Why not the alternatives
+- Equal weight: ignores the necessity to support top-end value and thin merges differently.
+- Bluff heavy: overexposes mid connectors that lack equity.
+- Protection overweight: starves the merge that can punish passivity.
+- Merge heavy: dilutes value pressure and misuses blockers.
+- No bluffs: fails to leverage the weak blocker combos that deny the nuts.

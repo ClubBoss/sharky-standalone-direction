@@ -1,0 +1,16 @@
+{
+  "id": "bridge_review_paired_fair_price_continue_v1",
+  "kind": "action_choice",
+  "prompt": "Paired board, fair continue price, and only one street left to navigate: choose action.",
+  "intent_v1": "world2_authored_bridge",
+  "why_v1": "Paired boards usually stay calmer, and a fair price with limited future-street risk supports continuing.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. This calmer board and fair price support a continue.",
+  "feedback_incorrect_v1": "Incorrect. A paired board and fair price keep this spot stable enough to continue instead of releasing too early.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

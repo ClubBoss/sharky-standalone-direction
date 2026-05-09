@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "sessions": {
+    "cash.s01": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s02": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s03": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s04": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s05": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s06": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s07": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s08": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s09": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "cash.s10": {
+      "drill_ids": ["*"],
+      "shared": {
+        "player_count_v1": 10,
+        "hero_seat_v1": "utg1",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "utg1", "mp1", "mp", "sb", "bb"],
+        "board_cards_v1": ["Kh", "8d", "3c", "2s", "7h"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    }
+  }
+}

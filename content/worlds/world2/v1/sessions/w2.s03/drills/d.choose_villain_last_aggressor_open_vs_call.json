@@ -1,0 +1,21 @@
+{
+  "id": "choose_villain_last_aggressor_open_vs_call",
+  "kind": "initiative_aggressor_choice_v1",
+  "intent_v1": "world2_initiative_bridge",
+  "prompt": "Villain raised preflop and hero called. Who was the last aggressor?",
+  "player_count_v1": 2,
+  "hero_seat_v1": "bb",
+  "villain_seat_v1": "btn",
+  "active_seats_v1": ["btn", "bb"],
+  "street_v1": "flop",
+  "last_aggressor_v1": "villain",
+  "initiative_owner_v1": "villain",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "villain"
+  },
+  "error_class": "initiative_aggressor_choice_mismatch",
+  "why_v1": "Villain made the last raise, so villain was the last aggressor.",
+  "feedback_correct_v1": "Correct. Villain was the last aggressor because villain made the raise.",
+  "feedback_incorrect_v1": "Incorrect. Villain was the last aggressor here because villain made the raise."
+}

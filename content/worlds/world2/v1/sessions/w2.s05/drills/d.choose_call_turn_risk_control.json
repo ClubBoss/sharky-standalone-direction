@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_turn_risk_control",
+  "kind": "action_choice",
+  "prompt": "Turn node where barrel risk exceeds gain: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Call to control turn risk and keep the pot manageable. Raising here overcommits with limited upside.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "overbluff_pattern",
+  "feedback_correct_v1": "Correct. Checkback controls risk in this turn node.",
+  "feedback_incorrect_v1": "Incorrect. When the turn barrel risks more than it wins, checking back keeps the pot manageable and avoids overcommitting.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_blocker_context",
+  "kind": "seat_tap",
+  "prompt": "Tap BTN before blocker-adjusted action.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because acting last shows who can press the blocker-adjusted edge with the most information.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because acting last tells you who can apply blocker-adjusted pressure with the most information."
+}

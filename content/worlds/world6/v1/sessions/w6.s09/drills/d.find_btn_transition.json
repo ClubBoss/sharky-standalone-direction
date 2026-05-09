@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_transition",
+  "kind": "seat_tap",
+  "prompt": "Tap the button.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Start with the button because acting last makes this spot easier to play.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at the button because acting last makes the pressure line easier to use.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because acting last matters in this spot."
+}

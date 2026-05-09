@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_risk_premium",
+  "kind": "action_choice",
+  "prompt": "Risk premium proxy: choose the best action.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when survival pressure does not require a fold or raise.",
+  "feedback_correct_v1": "Correct. Calling fits the tournament cue set, so the line preserves equity without risking more than this pressure read can justify.",
+  "feedback_incorrect_v1": "Incorrect. Calling works better when risk premium is real but your hand still realizes enough equity to continue without forcing a thin stack-off. This is a controlled continue that protects tournament life better than turning a marginal edge into an oversized commitment."
+}

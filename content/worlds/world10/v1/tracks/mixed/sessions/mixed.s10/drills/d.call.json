@@ -1,0 +1,13 @@
+{
+  "id": "call",
+  "kind": "action_choice",
+  "prompt": "In this mixed spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call keeps flexible lines open across both formats.",
+  "feedback_correct_v1": "Correct. Calling fits the track cue set, so the line keeps the controlled continue this spot is actually rewarding.",
+  "feedback_incorrect_v1": "Incorrect. Call fits this mixed spot because it keeps both format cues playable instead of forcing a bigger swing too early."
+}

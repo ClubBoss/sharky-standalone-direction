@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_value_checkpoint: pick the value size that still keeps worse hands in.
+- choose_one_third_pot_keep_price_checkpoint: pick the smaller size that keeps the price easy for weaker continues.
+- choose_pot_bluff_checkpoint: pick the size that applies the most immediate bluff pressure.
+- choose_min_raise_reopen_checkpoint: pick the smallest legal raise that reopens action without bloating the pot.
+- find_bb: tap the big blind seat before choosing intent.
+- find_seat_s3: tap seat S3 to confirm the acting seat.
+- choose_raise_value: with clear value edge, choose action.
+- choose_call_trap: with medium bluff leverage and good price, choose action.
+- choose_raise_bluff: with clear fold equity, choose action.
+- choose_fold_release: with weak denial value, choose action.
+- tap_flop_right: tap the right flop card to confirm board context.
+- tap_river: tap the river slot to confirm street context.

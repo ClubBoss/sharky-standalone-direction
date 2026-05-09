@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_turn_checkback",
+  "kind": "action_choice",
+  "prompt": "Marginal pressure turn spot: choose checkback line.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Marginal turn pressure defaults to checkback in this set.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "missed_checkback_spot",
+  "feedback_correct_v1": "Correct. Checkback is expected in this marginal turn spot.",
+  "feedback_incorrect_v1": "Incorrect. With only marginal turn pressure value here, checking back keeps the pot under control better than forcing a thin barrel.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

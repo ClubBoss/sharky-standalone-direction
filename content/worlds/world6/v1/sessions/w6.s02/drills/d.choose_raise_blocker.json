@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_blocker",
+  "kind": "action_choice",
+  "prompt": "Blocker proxy spot: choose the best action.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the Ks blocker removes strong continues and gives this pressure line real fold equity.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better here because the blocker removes some strong continues from villain's range and makes fold equity more believable. With pressure plus that card-removal edge, aggression earns more than a passive line."
+}

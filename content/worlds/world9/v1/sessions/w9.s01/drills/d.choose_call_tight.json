@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_tight",
+  "kind": "action_choice",
+  "prompt": "Tight profile proxy: choose the best action.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when the read does not justify extra pressure.",
+  "feedback_correct_v1": "Correct. Calling fits because the tight profile is not giving away enough to justify building a bigger pot.",
+  "feedback_incorrect_v1": "Incorrect. Call because the tight-profile read does not justify building a bigger pot."
+}

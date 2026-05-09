@@ -1,0 +1,58 @@
+{
+  "id": "chain_world1_final_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s10_final_checkpoint_v1",
+  "prompt": "Play this short World 1 final checkpoint chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hijack folded, cutoff folded, and hero is on the button with AQs. Which simple action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["As", "Qd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. With position, no prior open, and a strong starting hand, World 1 still wants a raise.",
+      "feedback_incorrect_v1": "Incorrect. This clean first-in button spot should stay aggressive.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 1 starts by rewarding clean first-in spots from good seats."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Cutoff opened and hero is on the button with KQs. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Qs"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. Facing an open with a playable hand in position, the stable World 1 continue is a call.",
+      "feedback_incorrect_v1": "Incorrect. The open changed the frame, so this is no longer the same as an unopened raise spot.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same good seat can shift from raise to call once pressure reaches you first."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hijack opened and hero is in the big blind with T6o. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": ["hj", "co", "btn", "bb"],
+      "hero_hole_cards_v1": ["Td", "6c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Out of position against pressure with a weak offsuit hand, the disciplined World 1 answer is to fold.",
+      "feedback_incorrect_v1": "Incorrect. A comfortable-looking seat does not rescue a weak offsuit hand once pressure is already asking too much.",
+      "recap_v1": "World 1 closes with one honest map: read the seat, notice the pressure, and let hand quality decide whether to raise, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 1 is not just labels. It is learning when position helps, when pressure changes the frame, and when discipline still means letting go."
+    }
+  ]
+}

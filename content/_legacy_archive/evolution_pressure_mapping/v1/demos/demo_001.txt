@@ -1,0 +1,21 @@
+# Scenario
+IP applies a light pressure stab; OOP must read the density, caps, and continuity to decide if the node is low, mid, or high pressure.
+
+# Snapshot
+Attacker: steady top/mid continuity, moderate density. Defender: partial caps, thin middles, defensive posture. Pressure signal: muted aggression, resistance to large polar bets.
+
+# Player task
+Determine the correct pressure tier (low, mid, or high) and justify with the density and cap cues.
+
+# Expected reasoning
+Steady continuity with muted aggression points away from high pressure. Defender caps keep raises in check, so the node lacks destructive force. The middles are thin, but the attacker still controls enough of the top/mid through continuity, meaning pressure is more than low. Mid pressure fits because the node has enough aggression to ask questions but not to blow up, while caps keep it contained.
+
+# Correct line
+Mid pressure: continuity pushes action but caps keep aggression contained.
+
+# Why not the alternatives
+- Low pressure: ignores how continuity keeps the node honest. 
+- High pressure: misreads the caps as folds-in-waiting. 
+- No pressure: understates the active continuity. 
+- Polar: assumes aggression beyond the muted signal. 
+- Collapse: overreacts to thin mids instead of seeing the capped resistance.

@@ -1,0 +1,13 @@
+{
+  "id": "tap_river",
+  "kind": "board_tap",
+  "prompt": "Tap the river slot before the final decision.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "River anchor confirms final-street context before acting.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The river card is the final-street cue in this rep, so tapping it first makes the last decision respond to the right board context.",
+  "feedback_incorrect_v1": "Incorrect. This mixed rep ends on the river card, so tap the river slot before the final choice."
+}

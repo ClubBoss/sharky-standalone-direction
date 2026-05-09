@@ -1,0 +1,94 @@
+{
+  "id": "chain_world1_first_in_vs_pressure_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s09_first_in_vs_pressure_v1",
+  "prompt": "Play this short World 1 first-in-versus-pressure chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Cutoff folded, button folded, and hero is in the small blind with ATs. Which simple action fits best when the action folds to you?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "As",
+        "Td"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Once everyone folds, a clean first-in spot with a playable hand should raise.",
+      "feedback_incorrect_v1": "Incorrect. This opening step is still the clean first-in raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The bridge habit starts by noticing when the action is still unopened."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Cutoff opened and hero is on the button with KTs. Which simple action fits best once the open reaches you?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Kh",
+        "Ts"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. When the pot is already opened, a playable hand like KTs continues most cleanly with a call.",
+      "feedback_incorrect_v1": "Incorrect. This is no longer a first-in raise spot once the open arrives first.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same seat comfort should now teach a cleaner call instead of automatic aggression."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hijack opened and hero is in the big blind with T5o. Which simple action fits best when pressure and position both work against you?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": [
+        "hj",
+        "co",
+        "btn",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Td",
+        "5c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Under pressure and out of position with a weak offsuit hand, the disciplined response is still to fold.",
+      "feedback_incorrect_v1": "Incorrect. This final step shows how quickly the honest continue disappears once pressure and bad position stack together.",
+      "recap_v1": "World 1 should now separate the frame cleanly: raise when action folds to you, call the playable pressure continue, and fold when pressure plus bad position strip the hand of safety.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The aha is feeling how the action frame changes the answer before the learner ever needs more advanced strategy."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_position",
+  "kind": "board_tap",
+  "prompt": "Tap flop left for position-specific context.",
+  "intent_v1": "one_lever_adjustment",
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_left is the board anchor here because the first flop card starts the position-based exploit texture.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the correct board cue here because the position-based read starts from that first public texture signal."
+}

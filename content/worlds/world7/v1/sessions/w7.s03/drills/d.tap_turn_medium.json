@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_medium",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to update medium-stack pressure read.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card shows whether you should keep betting or slow down.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right anchor here because the second board change updates the medium-stack pressure picture before the final action choice."
+}

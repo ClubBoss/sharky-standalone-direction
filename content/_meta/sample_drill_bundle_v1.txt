@@ -1,0 +1,15 @@
+=== SESSION w0.s01 ===
+--- drills/index.md ---
+# Drills
+- find_sb: seat_tap TODO
+- choose_fold: action_choice TODO
+- tap_flop_left: board_tap TODO
+- tap_hole_left: hole_cards_tap TODO
+--- drills/d.find_sb.json ---
+{"id":"find_sb","kind":"seat_tap","prompt":"Tap the small blind seat.","expected":{"role":"sb"},"error_class":"seat_role_confusion"}
+--- drills/d.choose_fold.json ---
+{"id":"choose_fold","kind":"action_choice","prompt":"Choose fold.","expected":{"actionId":"fold"},"error_class":"action_selection"}
+--- drills/d.tap_flop_left.json ---
+{"id":"tap_flop_left","kind":"board_tap","prompt":"Tap the left flop card slot.","expected":{"boardSlot":"flop_left"},"error_class":"board_slot_confusion"}
+--- drills/d.tap_hole_left.json ---
+{"id":"tap_hole_left","kind":"hole_cards_tap","prompt":"Tap your left hole card.","expected":{"cardSlot":"p0"},"error_class":"hole_card_slot_confusion"}

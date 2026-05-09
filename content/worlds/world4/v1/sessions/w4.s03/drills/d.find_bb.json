@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat before choosing action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Big blind anchor confirms blind order before mixed decisions.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The big blind is the seat under pressure in this mixed rep, so anchoring it first explains why the action is judged from the defender's position.",
+  "feedback_incorrect_v1": "Incorrect. This mixed rep is anchored on the big blind, so tap the big blind seat before choosing the action."
+}

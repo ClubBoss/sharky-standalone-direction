@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat before facing-open response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Big blind has different defend thresholds than other seats.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Anchoring the big blind first frames this spot from the forced defender's seat, which is why the facing-open response changes.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the forced defender here, so anchor it first. That seat defends wider and must act first after the flop, which changes the facing-open response."
+}

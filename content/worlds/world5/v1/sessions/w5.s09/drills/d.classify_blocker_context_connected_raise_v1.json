@@ -1,0 +1,13 @@
+{
+  "id": "classify_blocker_context_connected_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board is connected and blocker context sharpens an already strong pressure story. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "Blockers should refine the read only after the connected-board pressure is already strong enough to support a raise.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The connected texture plus helpful blocker context supports a raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the board texture first, then use blockers to refine the choice."
+}

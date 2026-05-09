@@ -1,0 +1,21 @@
+# Scenario
+IP continues lightly on the turn; OOP must parse which bands deserve weight before responding to the pressure.
+
+# Snapshot
+Value: light top pairs plus a few high suited connectors. Bluffs: expanded blocker-rich weak combinations. Protection: fragile mid connectors with low equity. Merge: narrow convertibles near the top band.
+
+# Player task
+Assign heavy or light weights for value, bluffs, protection, and merge given the density spread.
+
+# Expected reasoning
+Value stays light because only a handful of top combos support thin aggression. Blocker-rich weak combos supply the bulk of bluff weight, denying the nuts while keeping equity low. Fragile mid connectors need protection weight to shield the range without sending them into bloated pots. Merge opportunities are narrow, so they stay light but present to shift if opponents back down. The distribution keeps pressure alive while guarding the vulnerable mid zone.
+
+# Correct line
+Value light, bluffs heavier via blockers, protection medium, merge light but present.
+
+# Why not the alternatives
+- Heavy value: overreads the limited top combos.
+- No bluffs: wastes blocker coverage.
+- Protection heavy: starves the bluff band when pressure is needed.
+- Merge heavy: dilutes the thin value that remains.
+- Flat weights: ignores fragility and blocker leverage.

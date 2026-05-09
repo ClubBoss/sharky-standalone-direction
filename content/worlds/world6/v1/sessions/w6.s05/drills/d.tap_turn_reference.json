@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_reference",
+  "kind": "board_tap",
+  "prompt": "Tap turn to compare pre-river structure.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor here because the river shape grows out of how the board tightened or stretched one street earlier.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the turn first because the river decision grows out of how the board tightened or stretched one street earlier. That turn reference tells you whether the final river shape is becoming compressed, merged, or truly polarized."
+}

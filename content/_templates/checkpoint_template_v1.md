@@ -1,0 +1,13 @@
+# Checkpoint
+
+## What You Should Know
+- ...
+
+## Self-Assessment
+- ...
+
+## Quick Scenario (1–2 lines)
+- ...
+
+## Reflection
+- ...

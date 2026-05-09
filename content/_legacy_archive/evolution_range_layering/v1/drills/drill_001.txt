@@ -1,0 +1,18 @@
+# What to do
+Identify how the provided range divides into top, middle, and bottom layers and explain what each layer contributes to aggression or defense.
+
+# Input
+Range snapshot: top layer includes AA, KK, QQ, AK, AQ; middle layer carries JT, QJ, KJ, T9, 98, 87, 76; bottom layer adds 55, 44, 33, 22 and occasional K9, Q8 for defenders.
+
+# Expected reasoning
+A three-layer structure keeps top-end pressure, mid-band connection, and low-band protection separated. Top layer anchors aggression with strong combos; middle layer adds cohesion, coverage, and merge potential. Bottom layer contains low-equity hands meant for protection and candidate bluffs, so its density indicates how much the range can transition toward defense. Look for gap between top and bottom weight to confirm layering rather than mixing everything linearly.
+
+# Correct answer
+This is a clear three-layer structure: heavy value at the top, a cohesive middle band for coverage, and a protected low band, so treat each layer as distinct rather than merging them.
+
+# Common mistakes
+- Flattening onto a single layer and ignoring the low-band protection.
+- Reading the range as polar because of the mid connectors.
+- Mistaking the bottom pairs for bluff filler rather than defense.
+- Ignoring the mid-band density and labeling it as linear-only.
+- Overemphasizing the top-end and missing the role of the weak layer.

@@ -1,0 +1,13 @@
+{
+  "id": "find_role_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff before you read the cash value line.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "co"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep order and pressure reads stable.",
+  "feedback_correct_v1": "Correct. Cutoff anchor confirmed before the cash value decision.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the right anchor here because this cash value read starts from the in-position seat building the pot."
+}

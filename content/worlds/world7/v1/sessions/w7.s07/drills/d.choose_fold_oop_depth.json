@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_oop_depth",
+  "kind": "action_choice",
+  "prompt": "High exposure out of position: choose fold.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when stack depth and price do not support continuing.",
+  "feedback_correct_v1": "Correct. Folding fits because acting first with this much exposure makes weak continues too expensive once the depth edge is gone.",
+  "feedback_incorrect_v1": "Incorrect. Fold is stronger here because high exposure out of position makes weak continues expensive once depth and price stop supporting leverage. Preserving chips matters more than defending a spot where you will have to act first without enough real edge."
+}

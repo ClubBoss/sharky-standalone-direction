@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "Range structure setup: tap SB.",
+  "intent_v1": "think_in_ranges",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Small blind is the seat anchor here because that pressured in-between seat narrows the range structure.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right seat anchor here because that pressured in-between seat is what keeps the range structure grounded."
+}

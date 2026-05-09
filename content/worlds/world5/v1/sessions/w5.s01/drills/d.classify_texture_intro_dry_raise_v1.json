@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_intro_dry_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Read the board first: this texture is dry and the value edge is clean. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "dry",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "Dry boards leave fewer immediate draw paths, so raising for value stays clean.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Dry texture with a clean edge points to raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the dry texture and choose the cleaner value action."
+}

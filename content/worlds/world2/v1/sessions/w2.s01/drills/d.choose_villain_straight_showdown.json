@@ -1,0 +1,19 @@
+{
+  "id": "choose_villain_straight_showdown",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "world2_showdown_bridge",
+  "prompt": "Showdown check: Villain makes a straight. Hero only has two pair. Who wins?",
+  "intent_v1": "world2_showdown_bridge",
+  "street_v1": "river",
+  "hero_hole_cards_v1": ["Jh", "9c"],
+  "villain_hole_cards_v1": ["Qs", "8d"],
+  "board_cards_v1": ["Tc", "7h", "6s", "Jd", "9d"],
+  "available_actions_v1": ["hero", "villain", "board_plays"],
+  "why_v1": "Straight beats two pair in the fixed hand ladder.",
+  "expected": {
+    "actionId": "villain"
+  },
+  "error_class": "showdown_winner_choice_mismatch",
+  "feedback_correct_v1": "Correct. Villain wins with the straight.",
+  "feedback_incorrect_v1": "Incorrect. Q8 completes the T-7-6-J-9 straight, and that five-card hand outranks two pair on this board."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "find_sb_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "seat_role_confusion"
+}

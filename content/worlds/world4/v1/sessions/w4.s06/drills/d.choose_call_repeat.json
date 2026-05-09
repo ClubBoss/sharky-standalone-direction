@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_repeat",
+  "kind": "action_choice",
+  "prompt": "With fair price and manageable risk, choose action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Call controls risk when a raise adds too much variance.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_incorrect_v1": "Incorrect. Fair price with manageable risk supports a controlled call instead of adding unnecessary variance."
+}

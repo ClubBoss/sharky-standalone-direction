@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_position_control",
+  "kind": "action_choice",
+  "prompt": "In controlled position exploit spot, choose call.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when the read does not justify extra pressure.",
+  "feedback_correct_v1": "Correct. Calling fits because controlled position play keeps the exploit efficient without forcing extra variance.",
+  "feedback_incorrect_v1": "Incorrect. Call because controlled position play keeps the exploit efficient without forcing extra variance."
+}

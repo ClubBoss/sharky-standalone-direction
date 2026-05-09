@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_facing_bet",
+  "kind": "action_choice",
+  "prompt": "toCall is positive and price is poor: choose legal response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Poor price under toCall pressure resolves to fold.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. Fold is the legal default at this price.",
+  "feedback_incorrect_v1": "Incorrect. When the price to continue is too poor for this hand, folding is cleaner than paying for a loose continue."
+}

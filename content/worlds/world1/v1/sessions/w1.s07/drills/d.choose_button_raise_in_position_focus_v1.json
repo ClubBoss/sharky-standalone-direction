@@ -1,0 +1,18 @@
+{
+  "id": "choose_button_raise_in_position_focus_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is on the button with KJo and everyone folded so far. Which simple action fits best when position is clearly in your favor?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "On the button in a clean first-in spot, a playable broadway hand should still raise.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. On the button with KJo and no prior open, position turns this into a clean first-in raise rather than a passive or fearful response."
+}

@@ -1,0 +1,11 @@
+# Drills
+- find_btn: seat_tap anchor for the dealer button so the learner reads position before acting.
+- find_seat_s3: seat_tap repeat for seat-location recognition on the same table map.
+- choose_fold: action_choice basic release rep after reading seat and action order.
+- tap_flop_right: board_tap orientation rep for where shared board cards appear.
+- tap_hole_left: hole_cards_tap orientation rep for where the learner's own cards sit.
+- choose_call: action_choice simple continue rep after the table map is understood.
+- choose_half_pot_value: bet_sizing_choice_v1 brief size-label preview for a medium value button; not the main bet-sizing lesson home.
+- choose_one_third_pot_keep_price: bet_sizing_choice_v1 brief preview of the smaller pricing button that keeps the cost easy.
+- choose_pot_pressure: bet_sizing_choice_v1 brief preview of the largest standard pressure button.
+- choose_min_raise_reopen: bet_sizing_choice_v1 brief preview of the smallest legal raise button that reopens action.

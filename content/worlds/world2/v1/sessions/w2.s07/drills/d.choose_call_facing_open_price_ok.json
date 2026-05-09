@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_facing_open_price_ok",
+  "kind": "action_choice",
+  "prompt": "Facing one open with acceptable price, choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Facing one open with a playable hand and a fair price, calling continues cleanly without forcing extra aggression.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Folding avoids a bigger mistake, but this price is good enough that calling keeps more value in play.",
+  "feedback_correct_v1": "Correct. Facing one open with a fair price, calling keeps the hand in play without forcing extra aggression.",
+  "feedback_incorrect_v1": "Incorrect. With a playable hand and a fair price facing the open, calling is the cleaner continue than forcing extra aggression.",
+  "acceptable_actions": [
+    "call",
+    "fold"
+  ]
+}

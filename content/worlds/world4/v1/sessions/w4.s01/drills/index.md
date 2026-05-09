@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_value: pick the value size that still keeps worse hands in.
+- choose_one_third_pot_keep_price: pick the smaller size that still keeps the price easy for weaker hands.
+- choose_pot_pressure: pick the size that puts the most pressure on hands that want a cheap call.
+- choose_min_raise_reopen: pick the smallest legal raise that reopens the action without bloating the pot.
+- find_btn: tap the button seat before choosing intent.
+- find_seat_s1: tap seat S1 to confirm the acting seat.
+- choose_raise_value: with clear value edge, choose action.
+- choose_call_trap: with medium value and price control, choose action.
+- choose_raise_protection: with a vulnerable made hand, choose action.
+- choose_fold_release: with weak pressure value, choose action.
+- tap_flop_left: tap the left flop card to confirm board context.
+- tap_hole_left_as: tap the left hole card, Ace of spades.

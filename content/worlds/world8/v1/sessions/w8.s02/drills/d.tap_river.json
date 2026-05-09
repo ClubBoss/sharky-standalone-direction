@@ -1,0 +1,13 @@
+{
+  "id": "tap_river",
+  "kind": "board_tap",
+  "prompt": "Payout ladder context cue: tap river.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "feedback_correct_v1": "Correct. river is the board anchor, so the tournament read closes on the last street that decides the final pressure state.",
+  "feedback_incorrect_v1": "Incorrect. The river is the correct board anchor because it finishes the payout-ladder story and shows whether value, bluffing, or survival is actually justified. Missing that final card breaks the final tournament-pressure read."
+}

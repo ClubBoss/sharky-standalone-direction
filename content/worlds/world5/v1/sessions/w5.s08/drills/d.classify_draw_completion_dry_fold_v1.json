@@ -1,0 +1,13 @@
+{
+  "id": "classify_draw_completion_dry_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board closes dry and your improvement never materializes. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "dry",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "When draw completion never arrives on a dry finish, continuing usually overstates how much pressure the board really supports.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The dry missed-completion read points to a fold.",
+  "feedback_incorrect_v1": "Incorrect. Let the dry finish and missed improvement drive the choice."
+}

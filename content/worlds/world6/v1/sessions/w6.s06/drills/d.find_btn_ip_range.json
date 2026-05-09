@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_ip_range",
+  "kind": "seat_tap",
+  "prompt": "In-position range setup: tap BTN.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "feedback_correct_v1": "Correct. Button anchor confirmed for the in-position range setup.",
+  "feedback_incorrect_v1": "Incorrect. The button is the correct anchor because this in-position range line only makes sense once the late-acting seat is fixed."
+}

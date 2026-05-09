@@ -1,0 +1,53 @@
+{
+  "id": "chain_cash_late_street_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "world10_cash_s03_late_street_recap_v1",
+  "prompt": "Play this short cash late-street recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The cash line is near closure, but price and showdown value still support a controlled continue. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This cash recap begins with the stable continue.",
+      "feedback_incorrect_v1": "Incorrect. When the price still works, the cash line should not give up too early.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Cash late-street practice should reinforce controlled continuation when the hand and price still align."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The pot is developed, but the edge has become too thin to keep paying only for curiosity. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This is the disciplined cash release.",
+      "feedback_incorrect_v1": "Incorrect. The recap should fold once the late-street cash price stops being good enough.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The applied cash habit is not endless bluff-catching. It is paying only when the price and hand stay connected."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The final street restores a clean enough price and value picture for one more controlled continue. Which simple action fits best now?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The cash close returns to the disciplined continue.",
+      "feedback_incorrect_v1": "Incorrect. This final cash step should return to the cleaner price-driven continue.",
+      "recap_v1": "World 10 cash late-street discipline should now feel stable: continue when price and value still align, release when the edge turns thin, and return only to measured continuation when the final street restores a real cash-EV reason to stay in.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This recap preserves the applied-practice cash identity by reinforcing practical price discipline instead of abstract theory."
+    }
+  ]
+}

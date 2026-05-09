@@ -1,0 +1,96 @@
+{
+  "id": "chain_world1_blind_button_intro_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s02_blind_button_intro_v1",
+  "prompt": "Play this short World 1 blind-and-button chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with KTs and nobody has entered the pot. Which simple action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Kh",
+        "Ts"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Late position plus a playable broadway hand gives a clean first-in raise.",
+      "feedback_incorrect_v1": "Incorrect. This first step is still the clean button open.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The blind-and-button bridge begins by feeling how much easier clean opens are from late position."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: The button opened first and hero is in the big blind with QJs. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qh",
+        "Js"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. A stronger broadway hand can continue from the big blind, but the clean response is a call.",
+      "feedback_incorrect_v1": "Incorrect. This is a defend-by-calling spot, not a fresh first-in raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same world should already distinguish the clean button open from the cleaner big blind defend."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the small blind with J7o and nobody has entered the pot. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Jd",
+        "7c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Out of position from the small blind, a weak offsuit hand should release.",
+      "feedback_incorrect_v1": "Incorrect. This final step closes by showing that blind caution still matters more than hopeful guessing.",
+      "recap_v1": "World 1 blind-and-button basics should now feel stable: raise the clean button open, call the playable big blind defend, and fold the weak small blind start.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Seat changes the frame. The button invites cleaner aggression, the big blind can defend some pressure, and the small blind should stay tighter."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_c2_turn_control_release",
+  "kind": "action_choice",
+  "prompt": "Turn control-release node after check-raise threat: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Control-release nodes remain passive when pressure is unsupported.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Control-release node expects checkback branch.",
+  "feedback_incorrect_v1": "Incorrect. This node should not force aggression.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

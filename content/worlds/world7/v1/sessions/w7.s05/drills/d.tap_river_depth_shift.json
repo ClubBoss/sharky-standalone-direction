@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_depth_shift",
+  "kind": "board_tap",
+  "prompt": "Tap the river.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Use the river because the last card tells you whether to keep betting or slow down.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the river because the last card decides whether pressure still works or if you should let the hand go.",
+  "feedback_incorrect_v1": "Incorrect. Use the river because the last card decides whether pressure still works or if you should slow down."
+}

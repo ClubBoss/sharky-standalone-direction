@@ -1,0 +1,18 @@
+# What to do
+Decide whether this scenario signals full advantage, controlled advantage, or only a density edge.
+
+# Input
+Attacker shows a stronger top-end but the defender keeps cohesive mid combinations and minimal fragility.
+
+# Expected reasoning
+Top-end strength gives leverage, but defender cohesion prevents pressure from running away. Density edge exists, yet fragility zones remain closed, so pressure tier stays mid-level. Reaction layer leans call-heavy with occasional checks, so true advantage cannot manifest. Stability in the mids keeps thin-value lines tentative and timing windows narrow until the defender cracks.
+
+# Correct answer
+Density edge only: no full advantage until the defender’s mids decay.
+
+# Common mistakes
+- Overvaluing the top-end as full advantage.
+- Ignoring defender cohesion and assuming fragility.
+- Inflating pressure tier despite the mid-level resistance.
+- Misreading the call-heavy reaction layer as a fold shift.
+- Mistaking a density edge for a timing-window trigger.

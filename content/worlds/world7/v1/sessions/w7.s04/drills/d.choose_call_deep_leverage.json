@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_deep_leverage",
+  "kind": "action_choice",
+  "prompt": "Deep-stack leverage spot: more money and more streets stay behind. Choose the line that keeps leverage available instead of burning it early.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Calling keeps deep-stack leverage alive; an early raise spends that extra maneuvering room too soon.",
+  "feedback_correct_v1": "Correct. The deep-stack edge comes from preserving leverage, not cashing it out immediately.",
+  "feedback_incorrect_v1": "Incorrect. This deeper stack wants to keep future pressure available instead of spending it on an early raise."
+}

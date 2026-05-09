@@ -1,0 +1,318 @@
+{
+  "@@locale": "fr",
+  "favorites": "Favoris",
+  "recommended": "Recommandé",
+  "starterPacks": "Packs de démarrage",
+  "builtInPacks": "Packs intégrés",
+  "yourPacks": "Vos packs",
+  "recentPacks": "Pratiqué récemment",
+  "popularPacks": "\ud83d\udd25 Populaire",
+  "newPacks": "\ud83c\udd95 Nouveau",
+  "starterBadge": "Débutant",
+  "newBadge": "Nouveau",
+  "masteredBadge": "\u2705 Ma\u00eetris\u00e9",
+  "hands": "mains",
+  "packCatalogTitle": "Pack catalog",
+  "packCatalogSubtitle": "Browse curated packs",
+  "difficultyAdvanced": "Advanced",
+  "difficultyIntermediate": "Intermediate",
+  "difficultyBeginner": "Beginner",
+  "packStatusComingSoon": "Coming soon",
+  "packStatusLocked": "Locked",
+  "startTraining": "Commencer l'entraînement",
+  "lastTrained": "Dernier entraînement",
+  "needsPractice": "Nécessite de la pratique",
+  "reviewMistakes": "Revoir les erreurs",
+  "reviewMistakesOnly": "Seulement les erreurs",
+  "percentLabel": "{value} %",
+  "starter_packs_title": "Pack de démarrage",
+  "starter_packs_subtitle": "Commencez l'entraînement en un clic",
+  "starter_packs_start": "Démarrer",
+  "starter_packs_continue": "Continuer",
+  "starter_packs_choose": "Choisir le pack",
+  "accuracySemantics": "Précision {value} pour cent",
+  "sortProgress": "Progression",
+  "sortNewest": "Le plus récent",
+  "sortMostHands": "Le plus de mains",
+  "sortName": "Nom A-Z",
+  "noMistakesLeft": "Toutes les erreurs sont déjà corrigées !",
+  "filterMistakes": "Erreurs",
+  "sortInProgress": "En cours",
+  "packPushFold12": "Push/Fold 12BB (Sans Ante)",
+  "packPushFold15": "Push/Fold 15BB (Sans Ante)",
+  "packPushFold10": "Push/Fold 10BB (Sans Ante)",
+  "packPushFold20": "Push/Fold 20BB (Sans Ante)",
+  "presetBtn10bb": "BTN 10BB Push/Fold",
+  "presetBtn11bb": "BTN 11BB Push/Fold",
+  "presetBtn12bb": "BTN 12BB Push/Fold",
+  "presetBtn13bb": "BTN 13BB Push/Fold",
+  "presetBtn14bb": "BTN 14BB Push/Fold",
+  "presetBtn15bb": "BTN 15BB Push/Fold",
+  "presetBtn16bb": "BTN 16BB Push/Fold",
+  "presetBtn17bb": "BTN 17BB Push/Fold",
+  "presetBtn18bb": "BTN 18BB Push/Fold",
+  "presetBtn19bb": "BTN 19BB Push/Fold",
+  "presetBtn20bb": "BTN 20BB Push/Fold",
+  "presetSb10bb": "SB 10BB Push/Fold",
+  "presetSb11bb": "SB 11BB Push/Fold",
+  "presetSb12bb": "SB 12BB Push/Fold",
+  "presetSb13bb": "SB 13BB Push/Fold",
+  "presetSb14bb": "SB 14BB Push/Fold",
+  "presetSb15bb": "SB 15BB Push/Fold",
+  "presetSb16bb": "SB 16BB Push/Fold",
+  "presetSb17bb": "SB 17BB Push/Fold",
+  "presetSb18bb": "SB 18BB Push/Fold",
+  "presetSb19bb": "SB 19BB Push/Fold",
+  "presetSb20bb": "SB 20BB Push/Fold",
+  "generateSpots": "Générer des spots",
+  "noContent": "Pas de contenu",
+  "unsupportedSpot": "Situation non prise en charge",
+  "startTrainingSessionPrompt": "Commencer la session d'entraînement maintenant ?",
+  "trainingSummary": "Résumé d'entraînement",
+  "noMistakes": "Aucune erreur",
+  "repeatMistakes": "Répéter les erreurs",
+  "backToLibrary": "Retour à la bibliothèque",
+ "recommendedPacks": "Packs recommandés"
+ ,"recommendedForYou": "Recommandé pour vous"
+  ,"masteredPacks": "Packs maîtrisés"
+  ,"dailyGoals": "Daily Goals"
+  ,"sessions": "Sessions"
+  ,"accuracyPercent": "Accuracy %"
+  ,"ev": "EV"
+  ,"icm": "ICM"
+  ,"spotDetails": "Spot Details"
+  ,"heroPosition": "Hero position: {pos}"
+  ,"heroCards": "Hero cards: {cards}"
+  ,"boardLabel": "Board: {cards}"
+  ,"yourAction": "Your action: {action}"
+  ,"evIcm": "EV {ev}  ICM {icm}"
+  ,"packCreated": "Pack \"{name}\" created"
+  ,"resetPackPrompt": "Reset progress for '{name}'?"
+  ,"resetStagePrompt": "Reset stage '{name}'?"
+  ,"resetStage": "Reset Stage"
+  ,"reset": "Reset"
+  ,"settingsResetTitle": "Reset Settings"
+  ,"settingsResetConfirmation": "Are you sure you want to reset all settings to defaults?"
+  ,"settingsResetSuccess": "Settings reset to defaults"
+  ,"settingsResetButton": "Reset to Defaults"
+  ,"settingsCurrentLanguageLabel": "Current Language"
+  ,"languageChangedSnackbar": "Language changed to {language}"
+  ,"languageSelectorTitle": "Select Language"
+  ,"languageSelectorDescription": "Choose your preferred language. The app will update instantly."
+  ,"settingsLegalEntryTitle": "Legal & Compliance"
+  ,"settingsLegalEntrySubtitle": "Privacy, terms, and data controls"
+  ,"legalScreenTitle": "Legal & Compliance"
+  ,"legalPoliciesSectionTitle": "Policies"
+  ,"legalDataSectionTitle": "Data"
+  ,"privacyPolicy": "Privacy Policy"
+  ,"privacyPolicySubtitle": "View how we handle player data"
+  ,"termsOfUse": "Terms of Use"
+  ,"termsOfUseSubtitle": "Read the governing terms"
+  ,"legalDeleteDataTitle": "Delete Data / Account"
+  ,"legalDeleteDataSubtitle": "Wipe local learning progress, snapshots, and session history"
+  ,"legalDeleteConfirmationTitle": "Delete local data?"
+  ,"legalDeleteConfirmationBody": "This will remove learning progress, snapshots, and session fingerprints from this device. This cannot be undone."
+  ,"legalDeleteSuccess": "Local data cleared"
+  ,"legalDeleteFailure": "Failed to clear local data"
+  ,"playerType": "Player Type"
+  ,"selectAction": "Select Action"
+  ,"fold": "Fold"
+  ,"call": "Call"
+  ,"raise": "Raise"
+  ,"push": "Push"
+  ,"amount": "Amount"
+  ,"confirm": "Confirm"
+  ,"ok": "OK"
+  ,"entrants": "Entrants"
+  ,"gameType": "Game Type"
+  ,"holdemNl": "Hold'em NL"
+  ,"omahaPl": "Omaha PL"
+  ,"otherGameType": "Other"
+  ,"spotsLabel": "Spots: {value}"
+  ,"accuracyLabel": "Accuracy: {value}%"
+  ,"evBb": "EV: {value} BB"
+  ,"icmLabel": "ICM: {value}"
+  ,"exportWeaknessReport": "Export Weakness Report"
+  ,"packsShown": "Shown {count} packs"
+  ,"noResults": "No results"
+  ,"resetFilters": "Reset filters"
+  ,"sortLabel": "Tri :"
+  ,"sortPopular": "Populaires d'abord"
+  ,"sortRating": "Rating (High \u2192 Low)"
+  ,"sortCoverage": "Coverage (High \u2192 Low)"
+  ,"filtersSelected": "Filters: {count} selected"
+  ,"filtersNone": "Filters: none"
+  ,"progress": "Progress"
+  ,"packsCompleted": "Packs Completed"
+  ,"averageAccuracy": "Avg Accuracy"
+  ,"averageEv": "Avg EV"
+  ,"pinnedPacks": "\ud83d\udccc Pinned Templates"
+  ,"dailyStreak": "Streak"
+  ,"best": "Best"
+  ,"weakAreas": "Weak Areas"
+  ,"packOfDay": "\ud83c\udfb2 Pack du Jour"
+  ,"streakChipLabel": "Streak: {count}"
+  ,"dailyHandLabel": "Daily Hand #{index}"
+  ,"levelGoalTitle": "Level Goal"
+  ,"samplePreviewHint": "Try a sample first to explore this pack!"
+  ,"samplePreviewPrompt": "This pack is large. Preview a quick sample first?"
+  ,"previewSample": "Preview Sample"
+  ,"autoSampleToast": "Quick preview launched automatically for faster start."
+  ,"unfinishedSession": "You have an unfinished session"
+  ,"resume": "Resume"
+  ,"mistakeBoosterReinforced": "Reinforced: {count} tags"
+  ,"mistakeBoosterRecovered": "Recovered: {count} tags"
+  ,"desktopOnly": "Ordinateur uniquement"
+  ,"recentRuns": "Recent runs"
+  ,"open": "Open"
+  ,"logs": "Logs"
+  ,"folder": "Folder"
+  ,"copyPath": "Copy path"
+  ,"reRun": "Re-run"
+  ,"pickTwoRuns": "Pick two runs"
+  ,"compare": "Compare"
+  ,"noSelection": "No selection"
+  ,"rootKeys": "Root keys"
+  ,"arrayLengths": "Array lengths"
+  ,"clearHistory": "Clear history"
+  ,"confirmClear": "Clear all runs? This action cannot be undone."
+  ,"deleted": "Deleted"
+  ,"copied": "Copied"
+  ,"exportCsv": "Export CSV"
+  ,"reveal": "Reveal"
+  ,"csvSaved": "CSV saved"
+  ,"delta": "Δ"
+  ,"args": "Args"
+  ,"xpTabsTitle": ""
+  ,"xpHistoryTab": ""
+  ,"xpJournalTab": ""
+  ,"xpEvalTab": ""
+  ,"xpMilestonesTab": ""
+  ,"xpLeagueTab": ""
+  ,"xpShareTab": ""
+  ,"xpDashboardTitle": ""
+  ,"xpDashboardEmptyTitle": ""
+  ,"xpDashboardEmptyMessage": ""
+  ,"xpDashboardStreakTitle": ""
+  ,"xpDashboardStreakTooltip": ""
+  ,"xpDashboardCurrentStreakLabel": ""
+  ,"xpDashboardNoStreak": ""
+  ,"xpDashboardBestStreakLabel": ""
+  ,"xpDashboardLast30Days": ""
+  ,"xpDashboardTrendsTitle": ""
+  ,"xpDashboardTotalXpLabel": ""
+  ,"xpDashboardDrillsLabel": ""
+  ,"xpDashboardModulesLabel": ""
+  ,"xpDashboardTheoryLabel": ""
+  ,"xpEventDrillCompleted": ""
+  ,"xpEventModuleCompleted": ""
+  ,"xpEventTheoryViewed": ""
+  ,"xpEventGeneric": ""
+  ,"xpRelativeTodayAt": ""
+  ,"xpRelativeYesterdayAt": ""
+  ,"xpRelativeWeekdayAt": ""
+  ,"xpRelativeDateTime": ""
+  ,"xpDashboardLauncherTitle": ""
+  ,"xpDashboardLauncherSubtitle": ""
+  ,"xpJournalTitle": ""
+  ,"xpJournalEmptyTitle": ""
+  ,"xpJournalEmptyMessage": ""
+  ,"xpJournalReflectionLabel": ""
+  ,"xpJournalReflectionHint": ""
+  ,"xpSelfEvalTitle": ""
+  ,"xpSelfEvalResetTooltip": ""
+  ,"xpSelfEvalResetConfirmation": ""
+  ,"xpSelfEvalProgressHeader": ""
+  ,"xpSelfEvalSkillsCompleted": ""
+  ,"xpSelfEvalItemPushCall": ""
+  ,"xpSelfEvalItemBubblePush": ""
+  ,"xpSelfEvalItemIcmAwareness": ""
+  ,"xpSelfEvalItemAdjustCharts": ""
+  ,"xpSelfEvalItemStackAwareness": ""
+  ,"xpSelfEvalItemReviewMistakes": ""
+  ,"xpSelfEvalItemDeviateCharts": ""
+  ,"xpSelfEvalResetButton": ""
+  ,"xpMilestoneTitle": ""
+  ,"xpMilestoneHeaderTitle": ""
+  ,"xpMilestoneTotalXp": ""
+  ,"xpMilestoneUnlockHint": ""
+  ,"xpMilestoneClaimedMessage": ""
+  ,"xpMilestoneClaimButton": ""
+  ,"xpMilestoneLockedLabel": ""
+  ,"xpMilestoneUnlockedLabel": ""
+  ,"xpMilestoneClaimedLabel": ""
+  ,"xpShareTitle": ""
+  ,"xpShareLoadError": ""
+  ,"xpShareSaveSuccess": ""
+  ,"xpShareSaveError": ""
+  ,"xpShareShareError": ""
+  ,"xpShareCaptionBeast": ""
+  ,"xpShareCaptionSummit": ""
+  ,"xpShareCaptionGreat": ""
+  ,"xpShareCaptionKeepGoing": ""
+  ,"xpShareCaptionLetsGo": ""
+  ,"xpShareCaptionGettingStarted": ""
+  ,"xpShareStreakLabel": ""
+  ,"xpShareMilestonesLabel": ""
+  ,"xpShareGeneratedFooter": ""
+  ,"xpShareSaveButton": ""
+  ,"xpShareShareButton": ""
+  ,"xpShareShareText": ""
+  ,"xpShareLeagueGold": ""
+  ,"xpShareLeagueSilver": ""
+  ,"xpShareLeagueBronze": ""
+  ,"xpShareLeagueRookie": ""
+  ,"xpLeagueDefaultName": ""
+  ,"xpLeagueWeekSubtitle": ""
+  ,"xpLeagueYourRank": ""
+  ,"xpLeagueYourXp": ""
+  ,"xpLeaguePromotionZone": ""
+  ,"xpLeagueSafeZone": ""
+  ,"xpLeagueDemotionZone": ""
+  ,"xpHistoryAchievementsTitle": ""
+  ,"xpHistoryEmptyTitle": ""
+  ,"xpHistoryEmptyMessage": ""
+  ,"xpHistoryStreaksSection": ""
+  ,"xpHistoryMilestonesSection": ""
+  ,"xpHistoryStreakLabel": ""
+  ,"xpProfileStreakSummary": ""
+  ,"xpProfileNoStreak": ""
+  ,"xpWeeklyProgressLabel": ""
+  ,"xpWeeklyGoalComplete": ""
+  ,"xpDaysCount": ""
+  ,"xpRecapTitle": ""
+  ,"xpRecapRecentEventsTitle": ""
+  ,"xpRecapNoRecentEvents": ""
+  ,"xpRecapWeeklyGoalTitle": ""
+  ,"xpRecapMilestonesTitle": ""
+  ,"xpRecapNextMilestone": ""
+  ,"xpRecapMilestoneAvailable": ""
+  ,"xpRecapNextMilestoneLabel": ""
+  ,"xpRecapRemainingXp": ""
+  ,"xpRecapAllMilestonesAchieved": ""
+  ,"xpExportTitle": "XP Recap Export Settings"
+  ,"xpExportMethodSave": "Save"
+  ,"xpExportMethodShare": "Share"
+  ,"xpExportMethodLabel": "Method"
+  ,"xpExportCaptionLabel": "Caption"
+  ,"rewardShopTitle": "Boutique des récompenses"
+  ,"rewardShopBalanceLabel": "Solde de jetons"
+  ,"rewardShopChipCount": "{count} jetons"
+  ,"rewardShopRefresh": "Actualiser"
+  ,"rewardShopConfirmTitle": "Confirmer l'achat"
+  ,"rewardShopConfirmBody": "Dépenser {cost} jetons pour {name} ?"
+  ,"rewardShopCancel": "Annuler"
+  ,"rewardShopPurchase": "Acheter"
+  ,"rewardShopUnlocked": "{name} débloqué !"
+  ,"rewardShopInsufficient": "Pas assez de jetons pour {name}.",
+  "feedbackExportDiagnostics": "Export diagnostics file",
+  "feedbackExportSuccess": "Diagnostics exported",
+  "feedbackExportFailure": "Failed to export diagnostics",
+  "settingsReportProblemTitle": "Report a problem",
+  "settingsReportProblemSubtitle": "Share diagnostics with support",
+  "feedbackSheetTitle": "Report a problem",
+  "feedbackSheetSubtitle": "Copy diagnostics for support",
+  "feedbackDiagnosticsHeader": "Diagnostics payload",
+  "feedbackCopyDiagnostics": "Copy diagnostics to clipboard",
+  "feedbackCopySuccess": "Diagnostics copied to clipboard"
+}

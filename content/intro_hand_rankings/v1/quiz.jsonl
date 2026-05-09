@@ -1,0 +1,2 @@
+{"id":"intro_hand_rankings_quiz_001","type":"mc","prompt":"Which category is higher?","options":["Flush","Straight"],"answer":0,"explanation":"Ranking order is fixed."}
+{"id":"intro_hand_rankings_quiz_002","type":"mc","prompt":"Which category is higher?","options":["Full house","Flush"],"answer":0,"explanation":"Full house ranks above flush."}

@@ -1,0 +1,1 @@
+enum TrainingType { pushFold }

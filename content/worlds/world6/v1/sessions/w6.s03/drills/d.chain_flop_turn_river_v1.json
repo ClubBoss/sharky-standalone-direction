@@ -1,0 +1,40 @@
+{
+  "id": "chain_flop_turn_river_v1",
+  "kind": "hand_chain_v1",
+  "intent_v1": "range_vs_hand",
+  "chain_id": "w6_s03_chain_flop_turn_river_v1",
+  "prompt": "Play this three-step range chain.",
+  "expected": {},
+  "error_class": "expected_action_mismatch",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: pressure spot with live equity. Choose action.",
+      "expected_action": "call",
+      "why_v1": "Call keeps the pot manageable while your equity is still live.",
+      "feedback_correct_v1": "Correct. Call is expected on this flop step.",
+      "feedback_incorrect_v1": "Incorrect. With live equity but no need to bloat the pot yet, this flop should stay controlled with a call.",
+      "error_class": "expected_action_mismatch"
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: value and pressure both improve. Choose action.",
+      "expected_preset_id": "half_pot",
+      "acceptable_preset_ids": ["one_third_pot"],
+      "why_v1": "Half pot builds value while still keeping weaker hands in.",
+      "feedback_correct_v1": "Correct. Half pot is expected on this turn step.",
+      "feedback_incorrect_v1": "Incorrect. Once turn value improves without wanting to blow weaker hands out, this spot should use the half-pot size.",
+      "error_class": "expected_action_mismatch"
+    },
+    {
+      "street": "river",
+      "prompt": "River: value edge remains and bluff catchers can pay. Choose action.",
+      "expected_action": "raise",
+      "acceptable_actions": ["call"],
+      "why_v1": "Raise for value when worse bluff catchers can still continue.",
+      "feedback_correct_v1": "Correct. Raise is expected on this river step.",
+      "feedback_incorrect_v1": "Incorrect. When worse bluff catchers can still pay on the river, this line should finish with the value raise.",
+      "error_class": "expected_action_mismatch"
+    }
+  ]
+}

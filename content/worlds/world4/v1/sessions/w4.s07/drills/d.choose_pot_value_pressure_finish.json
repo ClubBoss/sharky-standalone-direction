@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_value_pressure_finish",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the value size that applies the strongest immediate charge in this rep.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Pot is right when the value line can support the biggest immediate price without losing its purpose.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

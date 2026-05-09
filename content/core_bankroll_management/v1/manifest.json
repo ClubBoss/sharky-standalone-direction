@@ -1,0 +1,11 @@
+{
+  "id": "core_bankroll_management",
+  "title": "Bankroll Management",
+  "description": "Use stake rules, stop-loss limits, and lineup selection to protect your poker roll.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_bankroll_management",
+  "reasoning": "Defines bankroll rules that keep variance from forcing poor stake and session decisions.",
+  "availability": "available"
+}

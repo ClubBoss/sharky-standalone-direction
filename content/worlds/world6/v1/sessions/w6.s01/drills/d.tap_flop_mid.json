@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_mid",
+  "kind": "board_tap",
+  "prompt": "Board context matters for ranges: tap flop middle.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor because that texture cue tells you whether the range story stays connected or starts to miss.",
+  "feedback_incorrect_v1": "Incorrect. flop_mid is the correct board cue because that texture anchor tells you whether the range story stays connected or starts to miss."
+}

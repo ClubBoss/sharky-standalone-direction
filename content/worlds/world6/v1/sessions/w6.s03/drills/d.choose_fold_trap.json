@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: single-hand attachment loses to range logic here, choose fold.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when range strength does not justify continuing.",
+  "feedback_correct_v1": "Correct. Folding fits because the full range picture is too thin to keep paying for one tempting hand fragment.",
+  "feedback_incorrect_v1": "Incorrect. Fold is better because the full range picture is too thin to keep paying just for one tempting hand fragment. When your range loses the pressure story, preserving chips beats chasing a weak continue."
+}

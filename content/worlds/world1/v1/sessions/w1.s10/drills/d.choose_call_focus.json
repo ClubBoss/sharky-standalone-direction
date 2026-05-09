@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_focus",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is on the button with KQs. Which simple action fits best for the final World 1 checkpoint?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Facing an open with a playable hand in position, the stable World 1 checkpoint response is to continue by calling.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, this spot shifts from clean first-in aggression to a calmer in-position continue, so call fits best."
+}

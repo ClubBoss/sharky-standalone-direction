@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_oop_isolation",
+  "kind": "action_choice",
+  "prompt": "Facing one open with isolation candidate, choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Isolation line is encoded as raise_to in this response class.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is the defined isolation response.",
+  "feedback_incorrect_v1": "Incorrect. This hand is strong enough to isolate now, and raising pressures weaker continues better than a passive line."
+}

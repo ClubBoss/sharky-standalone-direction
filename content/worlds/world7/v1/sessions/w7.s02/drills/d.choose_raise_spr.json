@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_spr",
+  "kind": "action_choice",
+  "prompt": "SPR pressure proxy: choose the best action.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the stack-to-pot ratio creates enough leverage to pressure capped continues.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when the stack-to-pot ratio creates real pressure leverage, because depth and price now let aggression attack capped continues instead of staying passive."
+}

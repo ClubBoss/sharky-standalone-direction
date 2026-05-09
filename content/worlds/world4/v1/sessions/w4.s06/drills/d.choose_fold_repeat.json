@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_repeat",
+  "kind": "action_choice",
+  "prompt": "With poor continue value under pressure, choose action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Fold when denial pressure is not worth the extra cost.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is expected in this release spot.",
+  "feedback_incorrect_v1": "Incorrect. When denial pressure is not worth the extra cost, fold is the disciplined choice."
+}

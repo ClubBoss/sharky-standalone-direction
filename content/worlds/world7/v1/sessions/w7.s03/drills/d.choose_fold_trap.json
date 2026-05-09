@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: stack pressure can narrow options, choose fold.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when stack depth and price do not support continuing.",
+  "feedback_correct_v1": "Correct. Fold fits because this trap spot gets dangerous fast when the stack is short.",
+  "feedback_incorrect_v1": "Incorrect. Fold is stronger here because the trap setup leaves you with shallow-stack pressure and too little room to recover after a weak continue. Preserving chips matters more than forcing action when stack depth and price do not give you enough leverage."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_co_depth_synth",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before depth-synthesis checkpoint action.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because this depth read starts from the earlier late-position range before the button takes over.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff anchor comes before the button here because this depth read is measuring the earlier late-position range. That anchor tells you whose leverage is actually being tested before the final action."
+}

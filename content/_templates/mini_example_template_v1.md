@@ -1,0 +1,13 @@
+# Mini-Example
+
+## Scenario (1–2 lines)
+- ...
+
+## Thought Process
+- ...
+
+## Correct Decision
+- ...
+
+## Why This Matters
+- ...

@@ -1,0 +1,14 @@
+{
+  "id": "choose_one_third_pot_thin_value_stability",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the thinner value size that still gets called by many weaker hands.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "One third pot keeps the price easy enough that weaker hands can still continue.",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

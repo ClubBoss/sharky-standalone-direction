@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_consistency_check",
+  "kind": "action_choice",
+  "prompt": "In this spot, choose the best action from the cues.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Choose the action that matches your track plan and current pressure.",
+  "feedback_correct_v1": "Correct. Calling fits the cue set, so the line keeps the controlled continue this spot is actually rewarding.",
+  "feedback_incorrect_v1": "Incorrect. Calling works better because the same cue set still points to a controlled continue, and drifting away from that profitable baseline only adds inconsistency."
+}

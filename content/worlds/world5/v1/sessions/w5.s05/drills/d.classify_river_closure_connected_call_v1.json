@@ -1,0 +1,13 @@
+{
+  "id": "classify_river_closure_connected_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The river closes a connected board but value remains thin. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Connected river closures can keep pressure live while still favoring control when your edge is not fully clean.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The connected closure points to a controlled call.",
+  "feedback_incorrect_v1": "Incorrect. Start from the connected river closure before deciding."
+}

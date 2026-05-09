@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-11-03T18:25:29.469263",
+  "total_jsonl_files": 190,
+  "total_valid_lines": 1794,
+  "total_unique_ids": 1794,
+  "total_issues": 2459,
+  "issues_by_type": {
+    "invalid_id_format": 665,
+    "missing_key": 1794
+  },
+  "global_duplicate_count": 0,
+  "tag_collision_count": 0,
+  "global_duplicates": [],
+  "tag_collisions": []
+}

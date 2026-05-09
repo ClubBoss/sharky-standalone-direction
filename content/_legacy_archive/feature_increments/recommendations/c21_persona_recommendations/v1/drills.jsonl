@@ -1,0 +1,16 @@
+{"id":"c21:drill:01","prompt":"Calm persona, SRP IP dry A85r; reinforce default.","target_action":"cbet_small","rationale":"Range edge; calm state supports standard small cbet."}
+{"id":"c21:drill:02","prompt":"Focus persona, 3BP OOP T98ss; stay disciplined.","target_action":"cbet_big","rationale":"Dynamic board; use bigger size only with equity per plan."}
+{"id":"c21:drill:03","prompt":"Tension persona, SRP IP KQ5r; avoid spew.","target_action":"check_back","rationale":"Pot control to regain confidence before harder lines."}
+{"id":"c21:drill:04","prompt":"Assertive persona vs undersized cbet AQ5r.","target_action":"raise","rationale":"Exploit capped sizing; assertive profile fits pressure line."}
+{"id":"c21:drill:05","prompt":"Cautious persona, paired 774r SRP IP.","target_action":"check_back","rationale":"Paired board reduces bluff success; keep pot small."}
+{"id":"c21:drill:06","prompt":"Calm persona, CO SRP IP 985ss after checks.","target_action":"probe_bet","rationale":"Take initiative; calm state handles turn lead."}
+{"id":"c21:drill:07","prompt":"Focus persona, BB defend vs cbet_small K62r.","target_action":"raise","rationale":"Exploit small size; scheduled for fast recall."}
+{"id":"c21:drill:08","prompt":"Tension persona, MP 3BP OOP AQTr vs barrels.","target_action":"fold","rationale":"Avoid overcalling without blockers; reduce stress."}
+{"id":"c21:drill:09","prompt":"Calm persona, BTN SRP QJ4r; turn K completes.","target_action":"cbet_small","rationale":"Second small barrel maintains plan with control."}
+{"id":"c21:drill:10","prompt":"Focus persona, SB 3BP OOP AJ2r; turn 5 blank.","target_action":"cbet_big","rationale":"Nut edge; reinforce confident pressure."}
+{"id":"c21:drill:11","prompt":"Cautious persona, BB 662r river overbet bluff.","target_action":"call","rationale":"Tagged overbluff node; call with bluff-catchers."}
+{"id":"c21:drill:12","prompt":"Assertive persona, UTG SRP IP K75r; turn 2 low.","target_action":"check_back","rationale":"Even assertive profile slows on low card helping BB."}
+{"id":"c21:drill:13","prompt":"Calm persona, MP SRP IP T87ss river brick.","target_action":"cbet_big","rationale":"Polarize river; calm state supports sharper sizing."}
+{"id":"c21:drill:14","prompt":"Focus persona, CO 3BP OOP QQ4r vs call.","target_action":"cbet_small","rationale":"Range crush; quick value rep maintains accuracy streak."}
+{"id":"c21:drill:15","prompt":"Tension persona, BTN SRP 943r turn barrel spot.","target_action":"raise","rationale":"Prepared semi-bluff raise only if confident; scheduled early."}
+{"id":"c21:drill:16","prompt":"Calm persona, BB J95r after BTN checks flop.","target_action":"probe_bet","rationale":"Lead turn; calm state allows initiative with plan."}

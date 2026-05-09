@@ -1,0 +1,12 @@
+{
+  "id": "find_btn_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the dealer button seat.",
+  "why_v1": "This drill anchors the dealer button seat inside the final World 0 checkpoint set.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. This drill anchors the dealer button seat inside the final World 0 checkpoint set.",
+  "feedback_incorrect_v1": "Incorrect. Use the dealer button seat here so the read stays tied to the correct seat anchor for this rep."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "sizing_by_texture_basics",
+  "order": 11,
+  "name": "Sizing by Texture - 1/3 vs 2/3",
+  "title": "Sizing by Texture - 1/3 vs 2/3",
+  "description": "Balance your sizing choice based on dry vs wet texture.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "sizings"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "sizings"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-18T14:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

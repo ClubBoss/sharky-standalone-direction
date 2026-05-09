@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_polar",
+  "kind": "board_tap",
+  "prompt": "Tap river to lock final range shape.",
+  "intent_v1": "equity_realization",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor here because the last card is what finally sharpens the line into merged or polarized pressure.",
+  "feedback_incorrect_v1": "Incorrect. The river is the key anchor because it is the card that finally sharpens the range into a merged or polarized ending. Without the last card, you cannot judge whether the line should apply pressure or let the hand go."
+}

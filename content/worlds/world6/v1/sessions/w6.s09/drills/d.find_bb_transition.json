@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_transition",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Start with the big blind because that player is stuck defending here.",
+  "feedback_correct_v1": "Correct. Start at the big blind because that player is the defender in this spot.",
+  "feedback_incorrect_v1": "Incorrect. Tap the big blind because that player is the defender in this spot."
+}

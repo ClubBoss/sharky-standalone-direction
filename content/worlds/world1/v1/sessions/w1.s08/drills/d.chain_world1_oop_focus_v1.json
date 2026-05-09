@@ -1,0 +1,94 @@
+{
+  "id": "chain_world1_oop_focus_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s08_oop_focus_v1",
+  "prompt": "Play this short World 1 out-of-position focus chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is in the small blind with AQs and everyone folded so far. Which simple action fits best if the start is strong enough despite being out of position?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "As",
+        "Qd"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A strong hand in a clean unopened spot can still raise first in from the small blind.",
+      "feedback_incorrect_v1": "Incorrect. Out of position does not erase clearly strong clean starts.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The out-of-position block should feel tighter, not automatically passive."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Button opened and hero is in the big blind with QTo. Which simple action fits best for a clean out-of-position defend?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qh",
+        "Td"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. From the big blind, a playable broadway hand can still continue by calling.",
+      "feedback_incorrect_v1": "Incorrect. This is the restrained out-of-position continue, not a hopeful raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Out of position can still continue, but the clean response usually gets more restrained."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the small blind with J6o and nobody has entered the pot. Which simple action fits best when acting out of position?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Jd",
+        "6c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Out of position from the small blind, a weak offsuit hand should still release.",
+      "feedback_incorrect_v1": "Incorrect. This final step keeps the out-of-position block honest by folding the weak hand.",
+      "recap_v1": "World 1 out-of-position focus should now feel tighter: raise only the clearly strong clean start, call the playable defend, and fold the weak offsuit leak.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Without position comfort, the honest response should become more disciplined, not more optimistic."
+    }
+  ]
+}

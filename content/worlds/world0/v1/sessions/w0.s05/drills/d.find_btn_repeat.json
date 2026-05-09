@@ -1,0 +1,11 @@
+{
+  "id": "find_btn_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the dealer button seat.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. The dealer button seat is the right seat anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the dealer button seat here so the read stays tied to the correct seat anchor for this rep."
+}

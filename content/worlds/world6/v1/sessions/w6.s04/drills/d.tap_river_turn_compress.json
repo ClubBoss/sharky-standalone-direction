@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_turn_compress",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to complete turn-compression line.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor here because the last card shows whether the compressed line stayed close or finally split apart.",
+  "feedback_incorrect_v1": "Incorrect. The river completes the compression line because it shows whether the narrowed ranges stayed close or one side pulled clearly ahead again. Without the final card, you cannot judge how the turn pressure story actually resolves."
+}

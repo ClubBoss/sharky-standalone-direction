@@ -1,0 +1,14 @@
+{
+  "id": "raise",
+  "kind": "action_choice",
+  "prompt": "Cash value spot: pick the value-building line.",
+  "intent_v1": "one_lever_adjustment",
+  "available_actions_v1": ["call", "raise"],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise builds value when you likely get called by worse.",
+  "feedback_correct_v1": "Correct. Raise builds value when worse hands can still continue.",
+  "feedback_incorrect_v1": "Incorrect. Raise is best here because worse hands can still pay you while the pot grows."
+}

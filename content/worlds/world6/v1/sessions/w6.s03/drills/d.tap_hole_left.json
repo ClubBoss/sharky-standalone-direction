@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left",
+  "kind": "hole_cards_tap",
+  "prompt": "Hole-card cue only: tap left hole card.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. Left hole card is the hole-card anchor here because the exact blocker or showdown piece decides whether the pressure is backed by a real hand edge.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the right hand cue here because that exact blocker or showdown piece tells you whether the range pressure is real."
+}

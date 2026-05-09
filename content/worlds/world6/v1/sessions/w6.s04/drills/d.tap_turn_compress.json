@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_compress",
+  "kind": "board_tap",
+  "prompt": "Tap turn where range compression appears.",
+  "intent_v1": "equity_realization",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor here because this is the street that compresses the ranges and changes how much clean pressure remains.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the key anchor here because it is the card that compresses the range interaction and changes how much clean pressure remains. You need that new street before deciding whether the spot still wants aggression or control."
+}

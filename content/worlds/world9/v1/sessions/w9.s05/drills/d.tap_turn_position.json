@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_position",
+  "kind": "board_tap",
+  "prompt": "Tap turn to verify exploit remains position-valid.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor here because the fourth board card shows whether the exploit still holds before river closure.",
+  "feedback_incorrect_v1": "Incorrect. Tap the turn card because the exploit must stay valid once the fourth board card arrives."
+}

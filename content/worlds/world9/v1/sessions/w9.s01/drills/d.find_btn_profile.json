@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_profile",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before profile-based exploit action.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before player-based exploit decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because the in-position seat owns the clearest read on how far this exploit should go.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because that seat anchors the in-position profile read before the exploit decision."
+}

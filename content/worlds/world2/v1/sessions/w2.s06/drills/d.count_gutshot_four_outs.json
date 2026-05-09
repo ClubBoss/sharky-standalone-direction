@@ -1,0 +1,18 @@
+{
+  "id": "count_gutshot_four_outs",
+  "kind": "outs_count_choice_v1",
+  "intent_v1": "world2_outs_bridge",
+  "prompt": "Hero has QcJd on AhsTc2d. How many outs improve hero to a straight on the turn?",
+  "street_v1": "flop",
+  "hero_hole_cards_v1": ["Qc", "Jd"],
+  "board_cards_v1": ["Ah", "Tc", "2d"],
+  "available_actions_v1": ["4", "8", "9", "15"],
+  "expected": {
+    "actionId": "4"
+  },
+  "error_class": "outs_count_choice_mismatch",
+  "why_v1": "Only a king completes this gutshot straight draw, so there are 4 clean outs.",
+  "feedback_correct_v1": "Correct. Only a king finishes this gutshot, so there are 4 outs.",
+  "feedback_incorrect_v1": "Incorrect. This gutshot has only 4 outs because just one rank completes the straight.",
+  "recap_v1": "Flush draws usually have 9 outs, open-ended straight draws usually have 8, and gutshots usually have 4."
+}

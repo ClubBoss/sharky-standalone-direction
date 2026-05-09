@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_c3_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap river anchor before value or bluff decision.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Final-street intent requires explicit river context.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. River anchor is set for this node.",
+  "feedback_incorrect_v1": "Incorrect. Set river anchor before choosing intent."
+}

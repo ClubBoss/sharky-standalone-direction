@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left",
+  "kind": "board_tap",
+  "prompt": "Consistency cue: tap flop left.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "feedback_correct_v1": "Correct. flop_left is the board anchor because the first flop cue starts the texture read that the exploit adjustment is following.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the correct board cue because the exploit texture read starts from that first public card."
+}

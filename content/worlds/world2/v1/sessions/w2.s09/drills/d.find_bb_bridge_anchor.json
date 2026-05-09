@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_bridge_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap big blind anchor before bridge decision.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Bridge nodes start from explicit seat context.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Anchoring the big blind first keeps this bridge spot in the forced defender's lane instead of drifting into a late-position aggressor view.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the forced defender's view in this bridge spot, so anchor it first. Otherwise the lesson drifts toward the easier late-position aggressor view."
+}

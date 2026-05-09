@@ -1,0 +1,23 @@
+[
+  {
+    "id": "hr_drill_01",
+    "image": "assets/images/ranks/royal_flush.png",
+    "question": "What is the name of this hand?",
+    "rationale": "The Royal Flush, the best possible hand.",
+    "target": "royal_flush"
+  },
+  {
+    "id": "hr_drill_02",
+    "image": "assets/images/ranks/flush.png",
+    "question": "Is this a Flush or a Straight?",
+    "rationale": "It is a Flush (same suit).",
+    "target": "flush"
+  },
+  {
+    "id": "hr_drill_03",
+    "image": "assets/images/ranks/straight.png",
+    "question": "Name this hand.",
+    "rationale": "It is a Straight (five in a row).",
+    "target": "straight"
+  }
+]

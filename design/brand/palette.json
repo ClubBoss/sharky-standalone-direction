@@ -1,0 +1,22 @@
+{
+  "brandName": "Poker Analyzer",
+  "primaryBrand": "#00B894",
+  "accentSuccess": "#2ECC71",
+  "accentWarning": "#F1C40F",
+  "neutralBackground": "#121212",
+  "surface": "#1E1E1E",
+  "surfaceVariant": "#232325",
+  "textPrimary": "#FFFFFF",
+  "textSecondary": "#B3B3B3",
+  "radius": 12,
+  "spacing": {
+    "small": 8,
+    "medium": 16,
+    "large": 24
+  },
+  "shadows": {
+    "elevation_low": "0 1 2 0 rgba(0,0,0,0.24)",
+    "elevation_med": "0 4 8 0 rgba(0,0,0,0.28)",
+    "hud_toast": "0 12 32 0 rgba(0,0,0,0.35)"
+  }
+}

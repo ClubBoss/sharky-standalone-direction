@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the left flop slot before action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Flop anchor confirms board context for value pressure.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The left flop card starts the board read, so the value bet stays tied to the first texture cue that weaker hands keep calling.",
+  "feedback_incorrect_v1": "Incorrect. This value focus rep starts from the left flop card, so anchor that slot first."
+}

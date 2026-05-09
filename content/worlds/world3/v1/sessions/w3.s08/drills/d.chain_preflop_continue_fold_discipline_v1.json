@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_continue_fold_discipline_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s08_preflop_continue_fold_discipline_v1",
+  "prompt": "Play this short World 3 facing-open continue or fold chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with QTs after the cutoff opened first. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Ts"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This is a disciplined in-position continue after the open.",
+      "feedback_incorrect_v1": "Incorrect. QTs on the button after a cutoff open is a playable in-position continue, so calling is cleaner than forcing aggression or giving up too much equity.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Facing an open does not erase playability, but it often changes the best first action from raise to call."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is in the big blind with K9o after the button opened first. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kd", "9c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This weaker offsuit hand should not continue just because action is available.",
+      "feedback_incorrect_v1": "Incorrect. K9o in the big blind is a weak offsuit hand facing a button open, so folding is better than defending out of position with dominated strength.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 3 discipline includes saying no to marginal-looking hands when the position and frame are poor."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is on the button with AJs after the cutoff opened first. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["As", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This stronger hand still continues, but the clean facing-open action is a call.",
+      "feedback_incorrect_v1": "Incorrect. AJs is strong enough to continue against a cutoff open, but calling preserves position and hand quality without needlessly inflating the pot.",
+      "recap_v1": "Facing-open discipline gets clearer when the learner separates hands that can continue cleanly from hands that should simply fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The preflop framework should keep stronger continues available without turning every playable hand into aggression."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_consistency_check",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card to keep your read and action aligned.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "9h"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Card anchors keep your decision process consistent.",
+  "feedback_correct_v1": "Correct. 9h is the anchor card, so the read stays tied to the exact hole-card cue this line is built on.",
+  "feedback_incorrect_v1": "Incorrect. The nine of hearts matters because that card is part of the repeated hand read that keeps the line consistent instead of guessy."
+}

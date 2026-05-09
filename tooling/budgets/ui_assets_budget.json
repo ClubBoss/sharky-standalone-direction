@@ -1,0 +1,14 @@
+{
+  "total_max_bytes": 250000,
+  "files": {
+    "badges.json": 4000,
+    "i18n/en.json": 2000,
+    "i18n/ru.json": 3000,
+    "lesson_flow.json": 12000,
+    "review_plan.json": 6000,
+    "search_index.json": 80000,
+    "see_also.json": 160000,
+    "telemetry_schema.json": 5000
+  }
+}
+

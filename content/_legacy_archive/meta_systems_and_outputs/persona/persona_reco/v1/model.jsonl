@@ -1,0 +1,4 @@
+{"id":"pr_v1_1","persona":"neutral","hint":"PLACEHOLDER_HINT_1","trigger":"baseline","weight":1}
+{"id":"pr_v1_2","persona":"aggressive","hint":"PLACEHOLDER_HINT_2","trigger":"overbluff","weight":2}
+{"id":"pr_v1_3","persona":"passive","hint":"PLACEHOLDER_HINT_3","trigger":"underbluff","weight":2}
+{"id":"pr_v1_4","persona":"balanced","hint":"PLACEHOLDER_HINT_4","trigger":"mixed","weight":1}

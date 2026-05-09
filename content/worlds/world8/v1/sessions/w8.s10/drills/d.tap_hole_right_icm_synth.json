@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_right_icm_synth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card (Ks) for tournament-pressure balance input.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "A second hole-card anchor keeps the tournament read stable before the final action.",
+  "feedback_correct_v1": "Correct. Ks is the hole-card anchor, so the tournament read stays tied to the high-card cue that keeps the hand's pressure balance honest.",
+  "feedback_incorrect_v1": "Incorrect. Tap the king of spades because the second high card completes the hand's tournament-pressure balance and shows whether the hand still has enough playability to continue."
+}

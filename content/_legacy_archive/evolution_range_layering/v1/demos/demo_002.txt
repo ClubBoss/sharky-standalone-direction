@@ -1,0 +1,21 @@
+# Scenario
+IP bets a small continuation bet; OOP must decode the attacker’s three-layer structure before choosing the right defense.
+
+# Snapshot
+Top: modest pairs and broadway combinations; Mid: stretched coverage with extra suited connectors; Bottom: thinned filler combinations.
+
+# Player task
+Decide whether the layering reads as balanced, compressed, or stretched and justify the call using density cues.
+
+# Expected reasoning
+Stretched mid coverage with only modest top-end signals the attacker extends into the mid layer to widen pressure on the defender. The thinned bottom suggests they are not over-investing in weak combos, so it is not fully balanced. The mid layer stretches the range, making it less about tight compression and more about layering to threaten multiple streets. OOP should respect the stretched mid band when deciding to defend or fold, since it holds enough combinations to continue.
+
+# Correct line
+Stretched layering: modest top, extended mid layer, trimmed bottom.
+
+# Why not the alternatives
+- Balanced: would show more uniform density across bands, but the mid layer is clearly stretched.
+- Compressed: would trim the mid layer, not stretch it.
+- Polar: implies a sharper thin-value vs bluff split, which the stretched mid won’t support.
+- Aggressive stretched: lacks the modest top-end that keeps pressure anchored.
+- Passive: ignores the stretched mid’s initiative on the middle street.

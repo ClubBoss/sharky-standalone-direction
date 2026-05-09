@@ -1,0 +1,10 @@
+# Run only smoke tests on pure Dart VM
+paths:
+  - test/guard_single_site_test.dart
+  - test/mvs_player_smoke_test.dart
+  - test/spotkind_integrity_smoke_test.dart
+  - test/smoke/export_smoke_test.dart
+platforms:
+  - vm
+reporter: expanded
+concurrency: 1

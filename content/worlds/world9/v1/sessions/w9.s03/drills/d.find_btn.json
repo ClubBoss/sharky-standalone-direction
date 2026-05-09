@@ -1,0 +1,13 @@
+{
+  "id": "find_btn",
+  "kind": "seat_tap",
+  "prompt": "Tap the button.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "why_v1": "Start at the button because acting last makes this pressure line easier.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at the button because acting last lets you keep the pressure on.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because acting last is what makes this line work."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_board_filter",
+  "kind": "board_tap",
+  "prompt": "Tap the river.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Use the river because the last card says whether the pressure line survives.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the river because the last card tells you if the pressure spot is still there.",
+  "feedback_incorrect_v1": "Incorrect. Use the river because the last card decides whether the pressure spot survives."
+}

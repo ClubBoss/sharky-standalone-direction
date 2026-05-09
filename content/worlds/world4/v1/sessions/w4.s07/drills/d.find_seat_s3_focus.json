@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s3_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S3 before continuing.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Seat anchor locks the acting position for this value rep.",
+  "expected": {
+    "seatId": "S3"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S3 fixes the acting player, so the value rep stays attached to the exact range that is betting now.",
+  "feedback_incorrect_v1": "Incorrect. This value rep is attached to seat S3, so lock S3 before moving on."
+}

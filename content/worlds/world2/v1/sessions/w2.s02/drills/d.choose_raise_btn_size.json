@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_btn_size",
+  "kind": "action_choice",
+  "prompt": "Button open with standard sizing intent: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Sizing intent is represented by the raise action in this drill.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "unnecessary_passive_action",
+  "feedback_correct_v1": "Correct. Raise maps to the standard sizing-intent open.",
+  "feedback_incorrect_v1": "Incorrect. This spot is still an open, and the standard sizing intent is represented by raise."
+}

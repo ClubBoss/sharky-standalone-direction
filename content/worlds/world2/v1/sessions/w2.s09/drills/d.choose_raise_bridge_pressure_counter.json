@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_bridge_pressure_counter",
+  "kind": "action_choice",
+  "prompt": "Approved bridge pressure counter node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the best response to pressure is to push back now, raising is stronger than drifting into a passive line.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. To push back now is the stronger response to pressure, so raising beats drifting into a passive line.",
+  "feedback_acceptable_v1": "Acceptable. Calling keeps the hand in play, but raising is the stronger counter because it pushes back now instead of just absorbing pressure.",
+  "feedback_incorrect_v1": "Incorrect. A passive response just absorbs pressure here, while raising pushes back now and applies the stronger counter.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

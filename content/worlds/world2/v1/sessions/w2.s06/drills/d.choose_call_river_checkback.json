@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_river_checkback",
+  "kind": "action_choice",
+  "prompt": "Thin-value boundary on river: choose checkback line.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Boundary thin-value nodes check in this mastery-feeder set.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Checkback is expected at this thin boundary.",
+  "feedback_incorrect_v1": "Incorrect. At this thin river boundary, checking back keeps worse hands in and avoids betting into a spot that rarely gets called by worse.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

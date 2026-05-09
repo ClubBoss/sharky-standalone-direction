@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_same_hand_different_action_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s09_preflop_same_hand_different_action_v1",
+  "prompt": "Play this short World 3 same-hand different-action chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with QJo and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In position with the pot unopened, this hand is good enough to open.",
+      "feedback_incorrect_v1": "Incorrect. With QJo on the button and nobody in yet, raising wins the initiative and uses late position, so passing up the open gives away the best value line.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same hand can still be a clean open when the learner has late position and nobody entered the pot yet."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Keep the same QJo, but now the cutoff opened first and hero is on the button. Which compact action fits better?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The same hand now continues more cautiously because the frame changed.",
+      "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, QJo is no longer starting the betting, so calling keeps position without inflating the pot into a marginal raise spot.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "A stable framework changes the action when the context changes, not just when the cards change."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Keep the same QJo again, but now hero is in the cutoff and the pot is unopened. Which compact action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Earlier position makes this same hand a fold instead of a comfortable open.",
+      "feedback_incorrect_v1": "Incorrect. The same QJo becomes a fold from the cutoff because earlier position leaves more players behind and removes the button advantage that made the unopened raise profitable.",
+      "recap_v1": "World 3 gets more useful when the learner can explain why the same hand sometimes opens, sometimes calls, and sometimes folds.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The point is not memorizing one answer for each hand. It is learning how position and the action frame reshape the first decision."
+    }
+  ]
+}

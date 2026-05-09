@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot before action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Turn anchor confirms current street for protection sizing.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The turn shows whether draws gained real equity, so the protection size stays tied to the street where free cards become more expensive.",
+  "feedback_incorrect_v1": "Incorrect. This protection focus rep is keyed to the turn card, so confirm the turn slot first."
+}

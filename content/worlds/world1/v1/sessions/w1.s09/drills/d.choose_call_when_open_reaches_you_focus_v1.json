@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_when_open_reaches_you_focus_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is on the button with KTs. Which simple action fits best once the open reaches you?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "When the pot is already opened, a playable hand like KTs continues most cleanly with a call.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KTs on the button is no longer a clean first-in raise, so the simple continue is call."
+}

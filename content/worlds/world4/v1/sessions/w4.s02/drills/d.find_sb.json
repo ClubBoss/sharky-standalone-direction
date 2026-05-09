@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat before choosing intent.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Small blind anchor confirms early-order pressure context.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The small blind is the pressured early-order seat here, so anchoring it first explains why this spot is framed as a bluff setup.",
+  "feedback_incorrect_v1": "Incorrect. This bluff setup is anchored on the small blind, so confirm that seat before acting."
+}

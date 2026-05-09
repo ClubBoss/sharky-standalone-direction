@@ -1,0 +1,18 @@
+{
+  "id": "choose_fold_oop_pressure_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "Button opened and hero is in the big blind with J4o. Which simple action fits best at the checkpoint under out-of-position pressure?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Out of position with a weak offsuit hand, the disciplined checkpoint answer is still to fold.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Facing a button open from the big blind, J4o is too weak to continue out of position, so the disciplined answer is to fold."
+}

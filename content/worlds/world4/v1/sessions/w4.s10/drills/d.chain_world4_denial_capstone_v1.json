@@ -1,0 +1,64 @@
+{
+  "id": "chain_world4_denial_capstone_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w4_s10_denial_capstone_v1",
+  "prompt": "Play this short World 4 denial capstone chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Equity denial is the priority, so the line should stay assertive before you choose the size. Which simple action fits best?",
+      "available_actions_v1": [
+        "call",
+        "fold",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "acceptable_actions": [
+        "call"
+      ],
+      "feedback_correct_v1": "Correct. The denial capstone still starts by choosing the assertive action when equity denial is primary.",
+      "feedback_incorrect_v1": "Incorrect. This capstone begins by confirming the assertive line before moving to the preset.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 4 closes by connecting intent first, then the preset that matches that intent."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: Denial should stay active but controlled. Which preset fits best when you want the standard denial size?",
+      "expected_preset_id": "half_pot",
+      "acceptable_preset_ids": [
+        "one_third_pot"
+      ],
+      "feedback_correct_v1": "Correct. Half pot is the standard denial size in the capstone mix.",
+      "feedback_incorrect_v1": "Incorrect. This capstone step expects the standard controlled denial preset.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Once the assertive line is chosen, half pot is the clearest standard denial size."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 3: Denial still matters, but you only need the lighter gate that makes realization less free. Which preset fits best?",
+      "expected_preset_id": "one_third_pot",
+      "acceptable_preset_ids": [
+        "half_pot"
+      ],
+      "feedback_correct_v1": "Correct. One third pot is the lighter denial gate.",
+      "feedback_incorrect_v1": "Incorrect. This step asks for the lighter denial gate, not the standard size.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The capstone should feel flexible enough to move from standard denial to a lighter price gate when that is all the spot needs."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 4: Denial now needs the strongest immediate lockout cost. Which preset fits best?",
+      "expected_preset_id": "pot",
+      "acceptable_preset_ids": [
+        "half_pot"
+      ],
+      "feedback_correct_v1": "Correct. Pot is the strongest immediate denial lockout preset in the final checkpoint.",
+      "feedback_incorrect_v1": "Incorrect. This final capstone step expects the biggest immediate denial cost.",
+      "recap_v1": "World 4 recap chains should now feel reusable: confirm the intent first, then choose the preset that matches whether denial should be lighter, standard, reopening, or fully punishing.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This capstone closes the reinforcement pattern by tying action intent and denial preset selection into one bounded read."
+    }
+  ]
+}

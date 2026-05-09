@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_switch_guardrails",
+  "kind": "board_tap",
+  "prompt": "Tap turn before the next track-based action.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Street anchors reduce drift when pressure changes.",
+  "feedback_correct_v1": "Correct. turn is the next board anchor, so the read updates before late-street pressure gets exaggerated.",
+  "feedback_incorrect_v1": "Incorrect. The turn card matters because the turn is where many thin continues break the guardrails and become losing commitments."
+}

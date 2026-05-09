@@ -1,0 +1,13 @@
+{
+  "id": "classify_turn_shift_connected_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The turn shift makes the board more connected and your pressure cleaner. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "A connected turn shift can create cleaner pressure when more strong draws and value paths line up.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The connected turn shift supports a raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from how the turn increased connectivity before choosing action."
+}

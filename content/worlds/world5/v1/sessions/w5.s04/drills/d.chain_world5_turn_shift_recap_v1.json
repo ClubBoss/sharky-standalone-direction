@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_turn_shift_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s04_turn_shift_recap_v1",
+  "prompt": "Play this short World 5 turn-shift recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "turn",
+      "prompt": "Step 1: The turn shift makes the board more connected and your pressure story cleaner. Which simple action fits best?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A stronger connected turn shift supports the assertive line.",
+      "feedback_incorrect_v1": "Incorrect. Start from how the turn sharpened the connected pressure story.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Turn-shift recap should reinforce that later cards can make a pressure story cleaner, not just different."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The turn adds wet pressure and several new draw paths, but the volatility keeps the edge mixed. Which simple action fits best?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. Wetter turn pressure often keeps the line controlled.",
+      "feedback_incorrect_v1": "Incorrect. Let the wetter turn texture push the decision toward control first.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Wet turn shifts increase volatility, so World 5 often keeps the action more controlled unless the pressure story is fully clean."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 3: The turn shift pairs the board and weakens your clean improvement path. Which simple action fits best now?",
+      "intent_v1": "texture_pairing",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. The paired turn shift points to a disciplined fold.",
+      "feedback_incorrect_v1": "Incorrect. Start from the paired turn shift: pairing the board weakens the clean improvement path, so this recap step is about disciplined folding rather than forcing pressure.",
+      "recap_v1": "World 5 turn-shift recap should now feel tiered: connected turn shifts can press, wetter shifts often control, and paired shifts can collapse the pressure story entirely.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The recap pattern here is that street changes matter only because they reshape the board story that World 5 is reading."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+name: firebase_storage
+version: 1.0.0
+publish_to: none
+description: Stub implementation of firebase_storage for analysis/build
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'

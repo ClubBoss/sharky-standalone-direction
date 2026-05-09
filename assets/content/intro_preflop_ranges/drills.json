@@ -1,0 +1,47 @@
+[
+  {
+    "id": "rng_01",
+    "questionText": "Position: UTG\nHand: 7h, 2d",
+    "heroHand": "7h,2d",
+    "position": "UTG",
+    "action": "fold",
+    "explanation": "This hand is never in a 'Tight Range'. Fold it.",
+    "entryFee": 0
+  },
+  {
+    "id": "rng_02",
+    "questionText": "Position: BTN\nHand: As, Ad",
+    "heroHand": "As,Ad",
+    "position": "BTN",
+    "action": "push",
+    "explanation": "Aces are always in your range. Always play them.",
+    "entryFee": 0
+  },
+  {
+    "id": "rng_03",
+    "questionText": "Position: BTN\nHand: Js, Ts",
+    "heroHand": "Js,Ts",
+    "position": "BTN",
+    "action": "push",
+    "explanation": "Suited connectors (JTs) are in a 'Wide Range'. On the button, play them.",
+    "entryFee": 0
+  },
+  {
+    "id": "rng_04",
+    "questionText": "Position: SB\nHand: 9c, 4d",
+    "heroHand": "9c,4d",
+    "position": "SB",
+    "action": "fold",
+    "explanation": "Trash. Remove this from your range immediately.",
+    "entryFee": 0
+  },
+  {
+    "id": "rng_05",
+    "questionText": "Position: UTG\nHand: Kc, Ks",
+    "heroHand": "Kc,Ks",
+    "position": "UTG",
+    "action": "push",
+    "explanation": "Kings are the top of your range. Monster hand.",
+    "entryFee": 0
+  }
+]

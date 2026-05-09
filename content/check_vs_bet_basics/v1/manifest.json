@@ -1,0 +1,24 @@
+{
+  "id": "check_vs_bet_basics",
+  "order": 8,
+  "title": "Check vs Bet: Pot movement",
+  "description": "See how checks leave the pot unchanged while bets grow it.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "betting"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "betting"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-20T00:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_facing_turn_pressure",
+  "kind": "action_choice",
+  "prompt": "Approved turn pressure counter node: choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Counter-pressure branch is encoded as raise_to here.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling remains legal, but raising back now is the stronger counter because it applies pressure instead of just absorbing it.",
+  "feedback_correct_v1": "Correct. Raise is the approved pressure counter here.",
+  "feedback_incorrect_v1": "Incorrect. This turn pressure spot improves by raising back now; calling just absorbs pressure without pushing weaker continues or fold equity.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

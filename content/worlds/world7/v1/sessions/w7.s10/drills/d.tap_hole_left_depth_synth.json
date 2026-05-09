@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_depth_synth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card (As) for blocker-depth input.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. As is the first hole-card anchor because that blocker is the private-card cue that makes deep pressure more credible.",
+  "feedback_incorrect_v1": "Incorrect. The correct private-card cue is As because the ace blocker is the first hole-card anchor in this depth read. That card tells you whether your pressure still looks credible."
+}

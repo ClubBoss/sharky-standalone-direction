@@ -1,0 +1,14 @@
+{
+  "id": "choose_min_raise_protection_followthrough",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the smallest legal reopen when you still want the line to protect and stay controlled.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Min raise keeps the protection line alive without adding more inflation than necessary.",
+  "expected": {
+    "presetId": "min_raise"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

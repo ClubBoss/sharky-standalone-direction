@@ -1,0 +1,18 @@
+{
+  "id": "review_showdown_hero_top_pair",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "world2_showdown_bridge",
+  "prompt": "Review: Hero has top pair and villain has an underpair. Who wins?",
+  "street_v1": "river",
+  "hero_hole_cards_v1": ["Ah", "Qd"],
+  "villain_hole_cards_v1": ["7c", "7s"],
+  "board_cards_v1": ["Ad", "Kc", "9h", "4s", "2d"],
+  "available_actions_v1": ["hero", "villain", "board_plays"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "showdown_winner_choice_mismatch",
+  "why_v1": "Top pair still beats an underpair here before kicker detail matters.",
+  "feedback_correct_v1": "Correct. Hero still wins with the stronger pair.",
+  "feedback_incorrect_v1": "Incorrect. The ace on the board still pairs hero's hand, while pocket sevens still sit below that pair, so the stronger made hand remains ahead."
+}

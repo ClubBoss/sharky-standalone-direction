@@ -1,0 +1,56 @@
+{
+  "id": "chain_world6_range_synthesis_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w6_s10_range_synthesis_recap_v1",
+  "prompt": "Play this short World 6 range-synthesis recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Range width, board help, and blocker input still leave the overall picture mixed. Which simple action fits best?",
+      "intent_v1": "equity_realization",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. A mixed synthesis picture still points to the controlled line.",
+      "feedback_incorrect_v1": "Incorrect. Start from the full multi-signal read before choosing action.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 6 synthesis should not force aggression when the combined range story stays only medium strength."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: Position, range density, and street development now agree on a clean pressure edge. Which simple action fits best?",
+      "intent_v1": "think_in_ranges",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. When the whole synthesis picture aligns, the assertive line fits.",
+      "feedback_incorrect_v1": "Incorrect. Let the aligned multi-signal edge lead the decision.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The point of World 6 synthesis is to act more strongly only when several range signals point the same way."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: One signal still looks tempting, but the rest of the range picture stays too thin to keep pushing. Which simple action fits best now?",
+      "intent_v1": "range_vs_hand",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A thin full-picture read should still release even when one cue looks attractive.",
+      "feedback_incorrect_v1": "Incorrect. This final recap step is about trusting the whole range picture over one seductive detail.",
+      "recap_v1": "World 6 synthesis recap should now feel coherent: call when the range picture is mixed, raise when the signals align cleanly, and fold when one attractive cue cannot rescue a thin overall read.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The reusable World 6 capstone habit is to synthesize the full range picture before falling back on any single signal."
+    }
+  ]
+}

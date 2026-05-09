@@ -1,0 +1,30 @@
+[
+  {
+    "id": "placement_drill_01",
+    "question": "What term describes 9♣ 9♦ before the flop?",
+    "rationale": "[[Pocket Pair]]: both hole cards share the same rank.",
+    "target": "pocket_pair",
+    "entryFee": 0
+  },
+  {
+    "id": "placement_drill_02",
+    "question": "Your chips add up to 2,400. What is that pile called?",
+    "rationale": "That is your [[Stack]], the chips you can bet with.",
+    "target": "stack",
+    "entryFee": 0
+  },
+  {
+    "id": "placement_drill_03",
+    "question": "Two players have Pair of Queens. You win because your unmatched card is an Ace. What do we call that Ace?",
+    "rationale": "The Ace is the [[Kicker]], the unmatched card that breaks ties.",
+    "target": "kicker",
+    "entryFee": 0
+  },
+  {
+    "id": "placement_drill_04",
+    "question": "What nickname do players use for Ace-King?",
+    "rationale": "[[Big Slick]] is the flashy name for Ace-King (AK).",
+    "target": "big_slick",
+    "entryFee": 0
+  }
+]

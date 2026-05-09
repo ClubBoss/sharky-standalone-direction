@@ -1,0 +1,11 @@
+{
+  "id": "world1_act0_street_flow",
+  "order": 3,
+  "title": "Act 0: Street Flow",
+  "description": "Learn the hand timeline from preflop to river.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "act0_street_flow",
+  "reasoning": "Gives beginners one stable timeline so table decisions feel predictable.",
+  "availability": "available"
+}

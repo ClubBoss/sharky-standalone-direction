@@ -1,0 +1,15 @@
+{
+  "id": "classify_missed_fold",
+  "kind": "range_bucket_classifier_v1",
+  "prompt": "Range bucket is missed and pressure is high. Choose action.",
+  "intent_v1": "range_vs_hand",
+  "range_bucket_v1": "missed",
+  "expected_action": "fold",
+  "acceptable_actions": [
+    "call"
+  ],
+  "why_v1": "Fold protects chips when the missed bucket lacks clean equity.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold fits this missed bucket because a weak range under pressure should stop paying for thin hope.",
+  "feedback_incorrect_v1": "Incorrect. Fold fits this missed bucket because a weak range under pressure has too little clean equity to keep paying."
+}

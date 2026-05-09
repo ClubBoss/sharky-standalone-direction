@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_oop_defend",
+  "kind": "action_choice",
+  "prompt": "From big blind facing one open at playable price, choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Priced defend spots can keep call as the stable response.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is the defined defend action here.",
+  "feedback_incorrect_v1": "Incorrect. With a defendable hand and a manageable price out of position, calling is the cleanest way to continue."
+}

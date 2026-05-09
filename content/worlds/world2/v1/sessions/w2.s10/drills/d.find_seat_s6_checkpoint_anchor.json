@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s6_checkpoint_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6 before checkpoint branch selection.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Early-seat anchor changes default action quality.",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Early-seat anchor is identified.",
+  "feedback_incorrect_v1": "Incorrect. This branch compares the button against an early-position opener, so you need the early seat first before the decision makes sense."
+}

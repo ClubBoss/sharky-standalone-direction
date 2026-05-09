@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_river_polar",
+  "kind": "board_tap",
+  "prompt": "Tap flop right slot to anchor river polarization setup.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_right is the board anchor here because the last flop card completes the texture that later grows into a polarized river.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the flop first because river polarization only makes sense if you remember how the board story started. The original flop texture is what tells you whether this final pressure line grew naturally or never had enough support."
+}

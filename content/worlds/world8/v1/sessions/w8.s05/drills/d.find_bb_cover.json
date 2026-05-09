@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_cover",
+  "kind": "seat_tap",
+  "prompt": "Covering-versus-covered setup: tap BB.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "feedback_correct_v1": "Correct. The big blind is the right seat anchor, so the tournament read stays tied to the forced defender who has to absorb the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the target seat anchor because the covering-versus-covered read changes once the forced defender is identified."
+}

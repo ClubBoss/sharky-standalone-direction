@@ -1,0 +1,56 @@
+{
+  "id": "chain_world6_blocker_modifier_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w6_s08_blocker_modifier_recap_v1",
+  "prompt": "Play this short World 6 blocker-modifier recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The blocker helps a little, but the broader range picture is still only mixed. Which simple action fits best?",
+      "intent_v1": "blockers_basics",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. A blocker that only trims frequencies should usually keep the line controlled.",
+      "feedback_incorrect_v1": "Incorrect. Start from the full range picture before letting the blocker refine it.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 6 blockers are modifiers, not standalone action engines."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The range edge is already clean and the blocker now sharpens that strong story. Which simple action fits best?",
+      "intent_v1": "blockers_basics",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A blocker can upgrade the line once the primary range edge is already there.",
+      "feedback_incorrect_v1": "Incorrect. The blocker only earns aggression here because the range story was strong first.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The blocker should sharpen a strong primary read, not create one out of nothing."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The blocker looks attractive, but the full range picture still does not justify forcing the pot. Which simple action fits best now?",
+      "intent_v1": "blockers_basics",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The blocker stays secondary, so the controlled line still fits.",
+      "feedback_incorrect_v1": "Incorrect. This recap closes by refusing to let the blocker overrule the broader range read.",
+      "recap_v1": "World 6 blocker recap should now feel disciplined: use blockers to trim or sharpen a range story, but never let them replace the primary range read.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The reusable blocker lesson is that secondary cues can refine the edge, but they should not dictate the whole decision by themselves."
+    }
+  ]
+}

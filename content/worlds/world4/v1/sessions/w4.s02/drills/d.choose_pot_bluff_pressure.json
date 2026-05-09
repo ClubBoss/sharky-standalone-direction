@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_bluff_pressure",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the size that creates the most immediate fold pressure.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Pot makes the continue expensive and applies the strongest immediate bluff pressure.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

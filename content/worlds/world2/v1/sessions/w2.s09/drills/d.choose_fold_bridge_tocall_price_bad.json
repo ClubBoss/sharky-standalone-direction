@@ -1,0 +1,20 @@
+{
+  "id": "choose_fold_bridge_tocall_price_bad",
+  "kind": "action_choice",
+  "prompt": "Bridge node with positive toCall and poor price: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the price is too poor to continue, folding is cleaner than paying for a bad call.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. The price is too poor to continue, so folding saves chips instead of paying for a bad call.",
+  "feedback_incorrect_by_action_v1": {
+    "call": "Incorrect. Calling pays a bad price to keep going, so folding is cleaner once the continue price gets this poor.",
+    "raise": "Incorrect. Raising stretches an already bad-price continue into a bigger leak, so the cleaner choice is to fold."
+  },
+  "feedback_incorrect_v1": "Incorrect. When the price is too poor to continue, folding is cleaner than paying for a bad call.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

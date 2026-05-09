@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_deep",
+  "kind": "seat_tap",
+  "prompt": "Deep-stack setup: tap BTN.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "feedback_correct_v1": "Correct. Start from the button because acting last is what makes deep pressure stronger.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right seat anchor here because acting last gives you the cleanest deep-stack leverage edge."
+}

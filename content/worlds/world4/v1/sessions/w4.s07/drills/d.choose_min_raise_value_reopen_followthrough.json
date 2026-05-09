@@ -1,0 +1,14 @@
+{
+  "id": "choose_min_raise_value_reopen_followthrough",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the smallest legal reopen when value should stay present but controlled.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Min raise reopens the action while keeping the value line from inflating more than necessary.",
+  "expected": {
+    "presetId": "min_raise"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_bubble",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before bubble-pressure action.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the tournament read stays tied to the late-acting seat that controls the pressure window.",
+  "feedback_incorrect_v1": "Incorrect. The button is the target seat because acting last creates the strongest information edge, and that leverage matters even more under bubble pressure. Choosing another seat misses who can pressure capped ranges with the most control."
+}

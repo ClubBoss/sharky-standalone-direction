@@ -1,0 +1,15 @@
+single_column
+dual_column
+split_view
+stacked_panels
+card_stream
+center_focus
+side_docked
+bottom_sheet_flow
+modal_flow
+table_layout
+training_flow
+simulation_flow
+practice_flow
+drill_flow
+demo_flow

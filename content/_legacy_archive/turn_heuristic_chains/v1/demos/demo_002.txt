@@ -1,0 +1,22 @@
+# Scenario
+OOP checks the turn, the attacker probes, and you must decide whether the sequence favors a timing-window chain or a thin-value-pressure push.
+
+# Snapshot
+Advantage stays mild, density edge across the mid band is narrow, the pressure tier remains mid-range, fragility is limited, and defender reactions stay call-heavy.
+
+# Player task
+Decide whether these cues indicate a timing-window chain or a thin-value-pressure chain.
+
+# Expected reasoning
+Structure still carries slight leverage while the density gap stays narrow. Mid-tier pressure allows probing but not explosive aggression, keeping the tempo measured. Call-heavy reactions show the defender still defends, so fold windows remain closed for now. Limited fragility prevents collapse, so thin-value pressure lacks an open path. The chain therefore points to a timing window that waits for the defender to soften before deeper pressure. Stay calm and watch if the chain opens up further before committing.
+
+# Correct line
+Timing-window chain: the defender keeps calling and fragility remains limited.
+
+# Why not the alternatives
+- Misreading call-heavy cues as fold-heavy. 
+- Treating mid pressure as though it were high. 
+- Forcing thin value when the density edge is so narrow. 
+- Overvaluing blockers instead of fragility cues. 
+- Ignoring how limited fragility keeps pressure capped. 
+- Projecting flop-level reads onto this turn.

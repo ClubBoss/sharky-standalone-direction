@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_btn",
+  "kind": "action_choice",
+  "prompt": "From button first-in, choose the default open action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Late position supports the aggressive default open.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is the defined button first-in default.",
+  "feedback_incorrect_v1": "Incorrect. When action folds to the button, late position supports the standard first-in raise."
+}

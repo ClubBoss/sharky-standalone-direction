@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_right_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the right flop slot to confirm board context.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Flop anchor confirms board texture before choosing pressure.",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The right flop card finishes the first texture read, so the bluff stays tied to the board cue that can still push weaker hands out.",
+  "feedback_incorrect_v1": "Incorrect. This bluff focus rep starts from the right flop card, so tap that slot before choosing pressure."
+}

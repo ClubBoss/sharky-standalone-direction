@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_value_checkpoint",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the value size that still keeps worse hands in.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Half pot balances value and price so weaker continues still stay available.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

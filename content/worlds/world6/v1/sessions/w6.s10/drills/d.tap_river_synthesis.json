@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_synthesis",
+  "kind": "board_tap",
+  "prompt": "Tap the river.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the river because the last card decides whether to value bet, keep betting, or slow down.",
+  "feedback_correct_v1": "Correct. Use the river because the last card decides whether to value bet, keep betting, or slow down.",
+  "feedback_incorrect_v1": "Incorrect. Use the river because the last card decides whether to value bet, keep betting, or slow down."
+}

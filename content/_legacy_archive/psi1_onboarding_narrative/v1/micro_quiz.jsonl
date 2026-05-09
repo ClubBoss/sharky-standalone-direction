@@ -1,0 +1,14 @@
+{"id":"psi1:micro:01","type":"mc","prompt":"Tier-A reads?","options":["Passive signals","Chip count"],"answer":0,"explanation":"Tier-A scans passive emotion inputs."}
+{"id":"psi1:micro:02","type":"mc","prompt":"ESM outputs?","options":["States","Cards"],"answer":0,"explanation":"ESM returns states like momentum or struggle."}
+{"id":"psi1:micro:03","type":"mc","prompt":"ATM tracks?","options":["Attention/tone","Stack depth"],"answer":0,"explanation":"ATM models attention level and tone."}
+{"id":"psi1:micro:04","type":"mc","prompt":"V4 visuals?","options":["Toggleable","Mandatory"],"answer":0,"explanation":"You can toggle V4 runtime."}
+{"id":"psi1:micro:05","type":"mc","prompt":"First spot?","options":["BTN vs BB","ICM shove"],"answer":0,"explanation":"Psi-2 uses BTN vs BB dry flop."}
+{"id":"psi1:micro:06","type":"mc","prompt":"Sharky tone?","options":["Professional","Cartoon"],"answer":0,"explanation":"Sharky speaks plainly as an expert."}
+{"id":"psi1:micro:07","type":"mc","prompt":"Hook trigger?","options":["Non-normal hint","Every action"],"answer":0,"explanation":"Hooks appear when hints shift."}
+{"id":"psi1:micro:08","type":"mc","prompt":"Surface tips source?","options":["Inline binder","Random"],"answer":0,"explanation":"Tooltips come from inline explanation binder."}
+{"id":"psi1:micro:09","type":"mc","prompt":"Cohesion checks?","options":["Background","Manual"],"answer":0,"explanation":"Consistency checks run automatically."}
+{"id":"psi1:micro:10","type":"mc","prompt":"XP info in onboarding?","options":["Yes","No"],"answer":0,"explanation":"User sees concise XP/Reward info."}
+{"id":"psi1:micro:11","type":"mc","prompt":"Persona UX keys?","options":["title/short/hints","avatars"],"answer":0,"explanation":"Persona UX bundle uses title, short, hints."}
+{"id":"psi1:micro:12","type":"mc","prompt":"Safety focus spot?","options":["Paired boards","All-in pots"],"answer":0,"explanation":"Onboarding uses low-risk paired/dry boards."}
+{"id":"psi1:micro:13","type":"mc","prompt":"Coaching pacing?","options":["Short cycles","Long scripts"],"answer":0,"explanation":"Onboarding uses short act-and-read cycles."}
+{"id":"psi1:micro:14","type":"mc","prompt":"Next module?","options":["Psi-2 spot","End state"],"answer":0,"explanation":"Psi-2 is the next interactive spot."}

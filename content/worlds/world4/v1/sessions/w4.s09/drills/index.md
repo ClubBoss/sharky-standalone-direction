@@ -1,0 +1,13 @@
+# Drills
+- choose_pot_bluff_followthrough: choose the size that creates the strongest immediate fold pressure.
+- choose_half_pot_bluff_pressure_tradeoff: keep strong bluff pressure without always jumping to the maximum preset.
+- choose_one_third_pot_probe_bluff_followthrough: use the smaller probing bluff size when full pressure is unnecessary.
+- choose_min_raise_bluff_reopen_tradeoff: reopen with the smallest legal raise when the bluff line should stay controlled.
+- find_bb_focus: tap the big blind seat before selecting action.
+- find_utg_focus: tap the under-the-gun seat before selecting action.
+- find_seat_s5_focus: tap seat S5 to confirm the acting seat.
+- choose_raise_focus: with strong fold equity, choose action.
+- choose_call_focus: with limited fold equity and fair price, choose action.
+- choose_fold_focus: with weak bluff leverage, choose action.
+- tap_flop_right_focus: tap the right flop card to confirm board context.
+- tap_river_focus: tap the river slot to confirm street context.

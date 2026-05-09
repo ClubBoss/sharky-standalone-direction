@@ -1,0 +1,21 @@
+# What to do
+Identify the synthesis read combining structure, pressure, reaction, and window for this full-spectrum snapshot.
+
+# Input
+Attacker: tight top density with layered mid guards, pressure tier sits mid-high. Defender: capped mids, call-heavy reaction, mid-range density light but steady. Current pressure tier: mid.
+
+# Expected reasoning
+Attacker’s layered top/mid keeps mid pressure alive.
+Mid pressure forces defender caps into call-heavy reactions.
+That reaction opens a timing window before the caps stiffen.
+Synthesizing structure → pressure → reaction → window keeps the line coherent.
+
+# Correct answer
+Mid pressure + call-heavy layer → timing window: attack before caps stiffen while maintaining structure.
+
+# Common mistakes
+- Treating structure in isolation and skipping pressure flow.
+- Reading the reaction as fold-heavy despite caps.
+- Ignoring how mid pressure supports the call-heavy layer.
+- Flattening the window choices into generic aggression.
+- Overlooking readiness to shift windows if pressure drops.

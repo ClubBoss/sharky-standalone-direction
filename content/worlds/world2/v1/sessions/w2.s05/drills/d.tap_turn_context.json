@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_context",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot before deciding second barrel or checkback.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Turn context must be locked before continuation choice.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Turn context is identified.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the fourth board card, so read it first. It can add draws, pair the board, or brick out, and that is what changes whether a second barrel or checkback fits."
+}

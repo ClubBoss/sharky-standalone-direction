@@ -1,0 +1,172 @@
+import 'package:poker_analyzer/testing/test_shims.dart';
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
+import 'package:poker_analyzer/services/adaptive_plan_executor.dart';
+import 'package:poker_analyzer/services/learning_path_store.dart';
+import 'package:poker_analyzer/services/targeted_pack_booster_engine.dart';
+import 'package:poker_analyzer/services/auto_format_selector.dart';
+import 'package:poker_analyzer/services/pack_quality_gatekeeper_service.dart';
+import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
+import 'package:poker_analyzer/models/injected_path_module.dart';
+
+class _FakeBoosterEngine extends TargetedPackBoosterEngine {
+  @override
+  Future<List<TrainingPackTemplate>> generateClusterBoosterPacks({
+    required List<SkillTagCluster> clusters,
+    String triggerReason = 'cluster',
+  }) async {
+    final c = clusters.first;
+    final id = 'boost_${c.clusterId}_${c.tags.join()}';
+    return [
+      TrainingPackTemplate(
+        id: id,
+        name: id,
+        trainingType: TrainingType.booster,
+        tags: c.tags,
+        spots: [
+          TrainingPackSpot(id: '${id}s', tags: c.tags, board: ['As']),
+        ],
+        spotCount: 4,
+        meta: {'qualityScore': 1.0},
+      ),
+    ];
+  }
+}
+
+class _FakeFormatSelector extends AutoFormatSelector {
+  @override
+  FormatMeta effectiveFormat({String? audience}) =>
+      FormatMeta(spotsPerPack: 4, streets: 1, theoryRatio: 0.5);
+}
+
+class _PassGatekeeper extends PackQualityGatekeeperService {
+  _PassGatekeeper();
+  @override
+  bool isQualityAcceptable(pack, {double minScore = 0.7, seedIssues = {}}) {
+    return true;
+  }
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late Directory tempDir;
+  late LearningPathStore store;
+  late AdaptivePlanExecutor exec;
+
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({'planner.budgetPaddingMins': 0});
+    tempDir = await Directory.systemTemp.createTemp('idem');
+    store = LearningPathStore(rootDir: tempDir.path);
+    exec = AdaptivePlanExecutor(
+      boosterEngine: _FakeBoosterEngine(),
+      formatSelector: _FakeFormatSelector(),
+      gatekeeper: _PassGatekeeper(),
+      store: store,
+    );
+  });
+
+  tearDown(() async {
+    await tempDir.delete(recursive: true);
+  });
+
+  test('identical plan within window is skipped', () async {
+    final cluster = SkillTagCluster(
+      tags: ['a'],
+      clusterId: 'c1',
+      themeName: 'T',
+    );
+    final plan = AdaptivePlan(
+      clusters: [cluster],
+      estMins: 0,
+      tagWeights: {'a': 1.0},
+      mix: {'theory': 0, 'booster': 1, 'assessment': 1},
+    );
+    final first = await exec.execute(
+      userId: 'u1',
+      plan: plan,
+      budgetMinutes: 20,
+      sig: 'sig1',
+    );
+    expect(first, hasLength(1));
+    final second = await exec.execute(
+      userId: 'u1',
+      plan: plan,
+      budgetMinutes: 20,
+      sig: 'sig1',
+    );
+    expect(second, isEmpty);
+  });
+
+  test('creates module when tags change or window elapsed', () async {
+    final cluster = SkillTagCluster(
+      tags: ['a'],
+      clusterId: 'c1',
+      themeName: 'T',
+    );
+    final plan = AdaptivePlan(
+      clusters: [cluster],
+      estMins: 0,
+      tagWeights: {'a': 1.0},
+      mix: {'theory': 0, 'booster': 1, 'assessment': 1},
+    );
+    await exec.execute(
+      userId: 'u1',
+      plan: plan,
+      budgetMinutes: 20,
+      sig: 'sig1',
+    );
+    final changed = AdaptivePlan(
+      clusters: [
+        SkillTagCluster(tags: ['a', 'b'], clusterId: 'c1', themeName: 'T'),
+      ],
+      estMins: 0,
+      tagWeights: {'a': 1.0, 'b': 1.0},
+      mix: {'theory': 0, 'booster': 2, 'assessment': 1},
+    );
+    final res1 = await exec.execute(
+      userId: 'u1',
+      plan: changed,
+      budgetMinutes: 20,
+      sig: 'sig2',
+    );
+    expect(res1, hasLength(1));
+
+    final modules = await store.listModules('u1');
+    final aged = modules
+        .map(
+          (m) => InjectedPathModule(
+            moduleId: m.moduleId,
+            clusterId: m.clusterId,
+            themeName: m.themeName,
+            theoryIds: m.theoryIds,
+            boosterPackIds: m.boosterPackIds,
+            assessmentPackId: m.assessmentPackId,
+            createdAt: m.createdAt.subtract(Duration(days: 15)),
+            triggerReason: m.triggerReason,
+            status: m.status,
+            metrics: m.metrics,
+            itemsDurations: m.itemsDurations,
+          ),
+        )
+        .toList();
+    for (final m in modules) {
+      await store.removeModule('u1', m.moduleId);
+    }
+    for (final m in aged) {
+      await store.upsertModule('u1', m);
+    }
+    final res2 = await exec.execute(
+      userId: 'u1',
+      plan: plan,
+      budgetMinutes: 20,
+      sig: 'sig3',
+    );
+    expect(res2, hasLength(1));
+  });
+}

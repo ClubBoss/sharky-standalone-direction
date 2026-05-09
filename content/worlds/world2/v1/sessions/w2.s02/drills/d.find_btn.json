@@ -1,0 +1,13 @@
+{
+  "id": "find_btn",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before selecting the in-position default.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "In-position advantage starts from the button anchor.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Button confirms in-position context.",
+  "feedback_incorrect_v1": "Incorrect. The button acts last after the flop, so anchor that seat first. That in-position edge is what gives this player the cleaner default and the last look at the action."
+}

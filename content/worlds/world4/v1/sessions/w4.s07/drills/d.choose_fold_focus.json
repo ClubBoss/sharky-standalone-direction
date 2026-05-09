@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_focus",
+  "kind": "action_choice",
+  "prompt": "With weak value and poor price, choose action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Fold releases weak value candidates when the price is not justified.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is expected in this release spot.",
+  "feedback_incorrect_v1": "Incorrect. Weak value and poor price do not support continuing, so fold is the disciplined choice."
+}

@@ -1,0 +1,16 @@
+# What to do
+Describe whether the provided preflop snapshot looks like a linear, polar, or merged range and justify your read in terms of density and coverage.
+
+# Input
+Button opens 2.5bb; Big Blind defends 3.0bb. Range samples: AA, KK, QQ, JJ, AJs, KQs, AQo, KJo, 98s, 76s, 54s, J9s, QJo, T8s, 65s, 43s.
+
+# Expected reasoning
+Linear ranges favor connected high-card combos with minimal long-tailed bluffs, so top-end density should dominate. Polar ranges include both value and low-equity bluffs, often with blockers. Merged structures sit between polar and linear, mixing medium-strength connectivity and occasional bluffs near the mid-band. Evaluate whether this defense leans heavy on top pairs with some connected combos for coverage or whether it splits between top value and remote air.
+
+# Correct answer
+The defense is largely linear: premium value plus connected broadways and suited one-gappers, with no wide low equity or blocker-driven bluffing, so treat it as a top-heavy, coverage-focused range.
+
+# Common mistakes
+- Calling it polar because of the suited connectors.
+- Overweighting the low cards and calling it a bluff-heavy set.
+- Missing the lack of blockers and calling it merge.

@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_position",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to close position-based exploit context.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor here because the finished board decides whether the position edge still converts into value or pressure.",
+  "feedback_incorrect_v1": "Incorrect. Tap the river card because the finished board decides whether the position edge still converts."
+}

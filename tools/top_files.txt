@@ -1,0 +1,15 @@
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/widgets/player_zone/player_zone_core.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/v2/training_pack_template_list_core.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/services/saved_hand_export_service.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/widgets/saved_hand_list_view.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/widgets/analyzer/stack_display.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/ui/coverage/coverage_dashboard.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/training_session_summary_screen.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/services/training_session_service.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/services/training_pack_template_service.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/v2/training_pack_result_screen.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/template_preview_dialog.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/session_stats_screen.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/cloud_training_session_details_screen.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/screens/all_sessions_screen.dart
+/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/lib/models/yaml_coverage_report.dart

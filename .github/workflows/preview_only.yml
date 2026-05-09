@@ -1,0 +1,44 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Preview (UI)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Dart
+        uses: subosito/flutter-action@v2
+        with:
+          sdk: stable
+      - name: Versions
+        run: dart --version
+      - name: Pub get (tooling only)
+        continue-on-error: true
+        working-directory: tooling
+        run: dart pub get
+      - name: Derive allowlists
+        run: dart run tooling/derive_allowlists.dart
+      - name: Compute unlocks
+        run: dart run tooling/compute_unlocks.dart
+      - name: Build search index (JSON)
+        run: dart run tooling/build_search_index.dart
+      - name: Build see-also (JSON)
+        run: dart run tooling/build_see_also.dart
+
+      - name: Export UI assets
+        run: |
+          set -e
+          mkdir -p build/ui_assets
+          dart run tooling/export_ui_assets.dart --out build/ui_assets --recompute
+      - name: Export UI preview (local HTML)
+        run: dart run tooling/export_ui_preview.dart --out build/ui_preview.html
+      - name: Upload UI preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-preview
+          path: build/ui_preview.html
+          if-no-files-found: error

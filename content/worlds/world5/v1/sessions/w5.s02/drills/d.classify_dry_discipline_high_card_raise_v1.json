@@ -1,0 +1,13 @@
+{
+  "id": "classify_dry_discipline_high_card_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "This is a high-card board with limited draw pressure. Choose the best action.",
+  "intent_v1": "texture_high_card",
+  "board_texture_v1": "high_card",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "High-card textures let strong value hands press before later cards create noise.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. High-card texture supports a value raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the high-card texture: with limited draw pressure and a clean value edge, this spot leans toward a raise before later cards muddy the story."
+}

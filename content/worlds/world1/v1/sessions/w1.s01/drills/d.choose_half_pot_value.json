@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_value",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the value size that still keeps worse hands in.",
+  "intent_v1": "hand_discipline_fold",
+  "why_v1": "Half pot builds value without pushing marginal hands out as often.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

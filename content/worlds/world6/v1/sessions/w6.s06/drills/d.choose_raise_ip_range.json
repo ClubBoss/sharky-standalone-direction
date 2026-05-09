@@ -1,0 +1,14 @@
+{
+  "id": "choose_raise_ip_range",
+  "kind": "action_choice",
+  "prompt": "In position with a clear edge, pick the pressure-building line.",
+  "intent_v1": "think_in_ranges",
+  "available_actions_v1": ["call", "raise"],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raise uses the in-position range edge to apply pressure.",
+  "feedback_incorrect_v1": "Incorrect. Raise is best here because the in-position edge is strong enough to push pressure now."
+}

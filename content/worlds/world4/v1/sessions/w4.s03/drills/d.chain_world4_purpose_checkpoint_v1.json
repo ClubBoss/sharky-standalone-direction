@@ -1,0 +1,47 @@
+{
+  "id": "chain_world4_purpose_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w4_s03_purpose_checkpoint_v1",
+  "prompt": "Play this short World 4 purpose checkpoint chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: You want the smaller size that still keeps the price easy for weaker continues. Which preset fits best?",
+      "expected_preset_id": "one_third_pot",
+      "acceptable_preset_ids": [
+        "half_pot"
+      ],
+      "feedback_correct_v1": "Correct. One third pot is the light price-keeping preset.",
+      "feedback_incorrect_v1": "Incorrect. This spot wants the lighter preset that still keeps the price comfortable for weaker continues.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 4 starts by matching the preset to the purpose, not by memorizing button names in isolation."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: You want the value size that still keeps worse hands in. Which preset fits best?",
+      "expected_preset_id": "half_pot",
+      "acceptable_preset_ids": [
+        "one_third_pot"
+      ],
+      "feedback_correct_v1": "Correct. Half pot is the standard value size in this World 4 checkpoint frame.",
+      "feedback_incorrect_v1": "Incorrect. This spot wants the value size that still keeps worse hands in, which points to half pot.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Half pot is the clean value checkpoint size when you still want worse hands to continue."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: You want the size that applies the most immediate bluff pressure. Which preset fits best?",
+      "expected_preset_id": "pot",
+      "acceptable_preset_ids": [
+        "half_pot"
+      ],
+      "feedback_correct_v1": "Correct. Pot is the highest immediate pressure preset in this checkpoint mix.",
+      "feedback_incorrect_v1": "Incorrect. This spot wants the size that applies the most immediate bluff pressure, which is pot.",
+      "recap_v1": "World 4 purpose checkpoints should now feel ordered: lighter price keepers first, standard value in the middle, and the biggest immediate pressure size when the goal is strongest bluff pressure.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The first World 4 recap pattern is to connect each preset to the job it is actually trying to do."
+    }
+  ]
+}

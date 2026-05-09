@@ -1,0 +1,30 @@
+{
+  "id": "chain_flop_turn_pressure",
+  "kind": "hand_chain_v1",
+  "intent_v1": "range_vs_hand",
+  "chain_id": "w6_s03_chain_flop_turn_pressure_v1",
+  "prompt": "Play this two-step range chain.",
+  "expected": {},
+  "error_class": "expected_action_mismatch",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: your bucket is draw and equity is live. Choose action.",
+      "range_bucket_v1": "draw",
+      "why_v1": "A draw bucket can keep pressure while still having outs.",
+      "feedback_correct_v1": "Correct. Draw bucket identified for this chain step.",
+      "feedback_incorrect_v1": "Incorrect. With live equity and enough outs to keep pressuring later streets, this flop starts from the draw bucket rather than a made-hand label.",
+      "error_class": "expected_action_mismatch"
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: pressure spot continues. Choose action.",
+      "expected_action": "raise",
+      "acceptable_actions": ["call"],
+      "why_v1": "Raise applies pressure when the turn keeps your leverage.",
+      "feedback_correct_v1": "Correct. Raise fits this turn pressure step.",
+      "feedback_incorrect_v1": "Incorrect. When the turn keeps your leverage intact, this pressure line should continue with a raise instead of backing off.",
+      "error_class": "expected_action_mismatch"
+    }
+  ]
+}

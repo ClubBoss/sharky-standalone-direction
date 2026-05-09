@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "sessions": {
+    "w4.s01": {
+      "drill_ids": [
+        "choose_half_pot_value",
+        "choose_one_third_pot_keep_price",
+        "choose_pot_pressure",
+        "choose_min_raise_reopen",
+        "find_btn",
+        "find_seat_s1",
+        "choose_raise_value",
+        "choose_call_trap",
+        "choose_fold_release",
+        "choose_raise_protection",
+        "tap_flop_left",
+        "tap_hole_left_as"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Kh", "7d", "2c"],
+        "hero_hole_cards_v1": ["As", "Kd"]
+      }
+    },
+    "w4.s02": {
+      "drill_ids": [
+        "choose_pot_bluff_pressure",
+        "choose_half_pot_denial_charge",
+        "choose_one_third_pot_bluff_probe",
+        "choose_min_raise_denial_reopen",
+        "find_sb",
+        "find_seat_s2",
+        "choose_raise_denial",
+        "choose_call_control",
+        "choose_fold_trap",
+        "choose_raise_bluff",
+        "tap_hole_right",
+        "tap_turn"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Qc", "8d", "4s", "2h"],
+        "hero_hole_cards_v1": ["Ah", "Kd"]
+      }
+    },
+    "w4.s03": {
+      "drill_ids": [
+        "choose_half_pot_value_checkpoint",
+        "choose_one_third_pot_keep_price_checkpoint",
+        "choose_pot_bluff_checkpoint",
+        "choose_min_raise_reopen_checkpoint",
+        "find_bb",
+        "find_seat_s3",
+        "choose_raise_value",
+        "choose_call_trap",
+        "choose_raise_bluff",
+        "choose_fold_release",
+        "tap_flop_right",
+        "tap_river"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Ad", "9c", "4h", "2s", "7d"],
+        "hero_hole_cards_v1": ["Qs", "Jc"]
+      }
+    },
+    "w4.s04": {
+      "drill_ids": [
+        "choose_half_pot_value_stability",
+        "choose_one_third_pot_thin_value_stability",
+        "choose_pot_overpressure_value_check",
+        "choose_min_raise_controlled_value_reopen",
+        "find_btn_repeat",
+        "find_co_repeat",
+        "find_seat_s1_repeat",
+        "choose_raise_repeat",
+        "choose_call_repeat",
+        "choose_fold_repeat",
+        "tap_flop_left_repeat",
+        "tap_hole_left_repeat"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Qh", "8d", "3c"],
+        "hero_hole_cards_v1": ["Ah", "Kd"]
+      }
+    },
+    "w4.s05": {
+      "drill_ids": [
+        "choose_half_pot_protection_charge",
+        "choose_pot_max_pressure_draw_charge",
+        "choose_one_third_pot_block_cheap_realization",
+        "choose_min_raise_protection_reopen",
+        "find_bb_repeat",
+        "find_sb_repeat",
+        "find_seat_s2_repeat",
+        "choose_raise_repeat",
+        "choose_call_repeat",
+        "choose_fold_repeat",
+        "tap_hole_right_repeat",
+        "tap_turn_repeat"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Js", "7c", "4d", "2h"],
+        "hero_hole_cards_v1": ["Ac", "9d"]
+      }
+    },
+    "w4.s06": {
+      "drill_ids": [
+        "choose_half_pot_denial_checkpoint",
+        "choose_one_third_pot_denial_price_keep_checkpoint",
+        "choose_pot_denial_pressure_checkpoint",
+        "choose_min_raise_denial_reopen_checkpoint",
+        "find_bb_repeat",
+        "find_btn_repeat",
+        "find_seat_s3_repeat",
+        "choose_raise_repeat",
+        "choose_call_repeat",
+        "choose_fold_repeat",
+        "tap_flop_mid_repeat",
+        "tap_river_repeat"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Kc", "9s", "4d", "2h", "7c"],
+        "hero_hole_cards_v1": ["Ad", "Tc"]
+      }
+    },
+    "w4.s07": {
+      "drill_ids": [
+        "choose_half_pot_value_followthrough",
+        "choose_one_third_pot_keep_value_flow",
+        "choose_pot_value_pressure_finish",
+        "choose_min_raise_value_reopen_followthrough",
+        "find_btn_focus",
+        "find_co_focus",
+        "find_seat_s3_focus",
+        "choose_raise_focus",
+        "choose_call_focus",
+        "choose_fold_focus",
+        "tap_flop_left_focus",
+        "tap_turn_focus"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["As", "Jd", "5c", "2h"],
+        "hero_hole_cards_v1": ["Kh", "Qc"]
+      }
+    },
+    "w4.s08": {
+      "drill_ids": [
+        "choose_half_pot_protection_followthrough",
+        "choose_pot_protection_crank_pressure",
+        "choose_one_third_pot_light_protection_keepout",
+        "choose_min_raise_protection_followthrough",
+        "find_hj_focus",
+        "find_sb_focus",
+        "find_seat_s4_focus",
+        "choose_raise_focus",
+        "choose_call_focus",
+        "choose_fold_focus",
+        "tap_river_focus",
+        "tap_turn_focus"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Ts", "8d", "4c", "2h", "9s"],
+        "hero_hole_cards_v1": ["Ah", "7h"]
+      }
+    },
+    "w4.s09": {
+      "drill_ids": [
+        "choose_pot_bluff_followthrough",
+        "choose_half_pot_bluff_pressure_tradeoff",
+        "choose_one_third_pot_probe_bluff_followthrough",
+        "choose_min_raise_bluff_reopen_tradeoff",
+        "find_bb_focus",
+        "find_seat_s5_focus",
+        "find_utg_focus",
+        "choose_raise_focus",
+        "choose_call_focus",
+        "choose_fold_focus",
+        "tap_flop_right_focus",
+        "tap_river_focus"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Kd", "9c", "6s", "3h", "2d"],
+        "hero_hole_cards_v1": ["Qs", "Jc"]
+      }
+    },
+    "w4.s10": {
+      "drill_ids": [
+        "choose_half_pot_denial_final_checkpoint",
+        "choose_one_third_pot_denial_price_gate_final",
+        "choose_pot_denial_lockout_final",
+        "choose_min_raise_denial_reopen_final",
+        "find_bb_focus",
+        "find_btn_focus",
+        "find_seat_s6_focus",
+        "choose_raise_focus",
+        "choose_call_focus",
+        "choose_fold_focus",
+        "tap_flop_mid_focus",
+        "tap_river_focus"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "btn",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": ["btn", "co", "hj", "lj", "utg", "sb", "bb"],
+        "board_cards_v1": ["Ad", "Tc", "6h", "3s", "2c"],
+        "hero_hole_cards_v1": ["Kh", "Qh"]
+      }
+    }
+  }
+}

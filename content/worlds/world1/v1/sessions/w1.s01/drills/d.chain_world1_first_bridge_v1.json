@@ -1,0 +1,93 @@
+{
+  "id": "chain_world1_first_bridge_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s01_first_bridge_v1",
+  "prompt": "Play this short World 1 first-bridge chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Cutoff opened and hero is on the button with QJs. Which simple action fits best when position makes the continue cleaner?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qs",
+        "Jh"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. World 1 starts by noticing when position makes a continue easier to manage.",
+      "feedback_incorrect_v1": "Incorrect. With QJs on the button after a cutoff open, calling keeps position and lets a playable hand continue without bloating the pot into a marginal raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The first World 1 habit is that position can make a playable continue feel cleaner."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Button opened and hero is in the small blind with T6o. Which simple action fits best when position and hand quality both work against you?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": [
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "co"
+      ],
+      "hero_hole_cards_v1": [
+        "Td",
+        "6c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Weak offsuit starts out of position should still release cleanly in this first bridge.",
+      "feedback_incorrect_v1": "Incorrect. T6o in the small blind is weak and out of position against a button open, so folding saves chips instead of chasing a bad continue.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 1 should quickly feel that bad seat plus weak hand quality makes folding easier, not harder."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: Flop size preview. Which size label still keeps the price easy for weaker hands?",
+      "expected_preset_id": "one_third_pot",
+      "acceptable_preset_ids": [
+        "half_pot"
+      ],
+      "feedback_correct_v1": "Correct. One third pot is the smaller size label from the World 1 preview.",
+      "feedback_incorrect_v1": "Incorrect. One-third pot is the smaller flop size, so it keeps the price cheap for weaker hands and draws that might otherwise fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 1 only previews sizing vocabulary here. One third pot is the compact keep-the-price-easy size."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 4: Flop size preview. Which value size label still keeps worse hands in more often?",
+      "expected_preset_id": "half_pot",
+      "acceptable_preset_ids": [
+        "one_third_pot"
+      ],
+      "feedback_correct_v1": "Correct. Half pot is the value size label that still keeps many worse hands in.",
+      "feedback_incorrect_v1": "Incorrect. Half pot is the clearer value size because it still gets called by worse hands without looking oversized.",
+      "recap_v1": "The first World 1 bridge should now feel stable: position can make a continue cleaner, weak out-of-position starts should release, and the first size labels only need to be recognized as vocabulary.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This closes the bridge by turning the sizing preview into simple recognition, not deeper strategy."
+    }
+  ]
+}

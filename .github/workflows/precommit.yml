@@ -1,0 +1,25 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Precommit Mirror
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why trigger"
+        required: false
+        default: "bulk-run"
+
+jobs:
+  precommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          sdk: "stable"
+      - name: Dart version
+        run: dart --version
+      - name: Pub get
+        run: cd tooling && dart pub get
+      - name: Run precommit
+        run: dart run tool/precommit.dart

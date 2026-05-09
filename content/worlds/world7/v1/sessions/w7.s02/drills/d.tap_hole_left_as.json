@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_as",
+  "kind": "hole_cards_tap",
+  "prompt": "Adjustment cue: tap left hole card (As).",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before depth action.",
+  "feedback_correct_v1": "Correct. As is the hole-card anchor because that blocker changes how credible the pressure line is and how much playability the hand keeps.",
+  "feedback_incorrect_v1": "Incorrect. Tap the ace of spades because that blocker changes how credible your pressure line is and how much playability the hand keeps at depth."
+}

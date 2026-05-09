@@ -1,0 +1,11 @@
+{
+  "id": "intro_game_types",
+  "order": 2,
+  "title": "Cash vs Tournaments",
+  "description": "Choose your path.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_game_types",
+  "reasoning": "Lists supported poker variants and their structural differences.",
+  "availability": "available"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "intro_how_to_win",
+  "order": 6,
+  "title": "How to Win",
+  "description": "Showdown vs Aggression.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_how_to_win",
+  "reasoning": "Clarifies the objective of winning a pot and showdown facts.",
+  "availability": "available"
+}

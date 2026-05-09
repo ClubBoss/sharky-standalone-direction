@@ -1,0 +1,10 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Tap the turn card slot.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "board_slot_confusion"
+}

@@ -1,0 +1,1 @@
+{"id":"signal_quiz_01","type":"mc","prompt":"Which event signals success?","options":["session_end","session_abort"],"answer":0,"explanation":"session_end fires once the pack completes.","goal":"Which event signals success?","reaction_text":"session_end records a completed pack."}

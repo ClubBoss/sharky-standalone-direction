@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: avoid leveling wars, choose fold.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold avoids over-leveling when the exploit lane is not clear.",
+  "feedback_correct_v1": "Correct. Folding fits because the trap line punishes leveling yourself into chips without a clean exploit edge.",
+  "feedback_incorrect_v1": "Incorrect. Fold because this trap spot punishes leveling yourself into extra chips."
+}

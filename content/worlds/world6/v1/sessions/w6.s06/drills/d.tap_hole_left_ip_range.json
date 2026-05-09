@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_ip_range",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card before final in-position action.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. Left hole card anchored before the final in-position action.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the right anchor because that private-card cue tells the in-position range what real hand support it is applying pressure with."
+}

@@ -1,0 +1,53 @@
+{
+  "id": "chain_tournament_late_street_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "world10_tournament_s03_late_street_recap_v1",
+  "prompt": "Play this short tournament late-street recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The late-street tournament spot starts with survival cost still too high for a loose continue. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. The tournament recap begins with discipline.",
+      "feedback_incorrect_v1": "Incorrect. This first tournament step should respect survival cost before anything else.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Tournament applied practice should reinforce that late-street mistakes cost more when stack life is still exposed."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The pressure picture softens just enough that a controlled continue is still practical. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This is the controlled tournament continue.",
+      "feedback_incorrect_v1": "Incorrect. Once the survival threshold relaxes, the tournament line can continue carefully.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The tournament habit is not pure fear. It is adjusting the line as survival pressure tightens or relaxes."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The final street restores a stricter survival threshold and the practical finish should tighten again. Which simple action fits best now?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. The tournament close returns to the disciplined fold.",
+      "feedback_incorrect_v1": "Incorrect. This final tournament step should tighten back up once survival cost rises again.",
+      "recap_v1": "World 10 tournament late-street discipline should now feel practical: fold when survival pressure is too expensive, continue only when the threshold softens enough to allow control, and tighten again when elimination cost returns at the end.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This recap preserves the applied tournament-track identity by making survival cost the structural reason the line changes."
+    }
+  ]
+}

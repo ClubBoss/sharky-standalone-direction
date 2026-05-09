@@ -1,0 +1,42 @@
+[
+  {
+    "id": "odds_01",
+    "questionText": "Pot is $30. Opponent bets $10. Total pot is $40. You must call $10.",
+    "options": ["20%", "25%", "33%"],
+    "correctOptionIndex": 0,
+    "explanation": "You call $10. Total pot becomes $30 + $10 + $10 = $50. Your share is 10/50 = 1/5 = 20%.",
+    "entryFee": 0
+  },
+  {
+    "id": "odds_02",
+    "questionText": "Pot is $100. Opponent bets $100 (Pot Sized Bet).",
+    "options": ["25%", "33%", "50%"],
+    "correctOptionIndex": 1,
+    "explanation": "Call $100. Total pot will be $100 (start) + $100 (bet) + $100 (call) = $300. You pay 100/300 = 33%.",
+    "entryFee": 0
+  },
+  {
+    "id": "odds_03",
+    "questionText": "Pot is $1000. Opponent goes All-in for $1. Do you call?",
+    "options": ["Yes (Great Odds)", "No (Suspicious)"],
+    "correctOptionIndex": 0,
+    "explanation": "MATH doesn't care about suspicion. You pay $1 to win $1001. That is ~0.1% odds. Call with anything.",
+    "entryFee": 0
+  },
+  {
+    "id": "odds_04",
+    "questionText": "Why do we calculate Pot Odds?",
+    "options": ["To impress friends", "To compare with Equity"],
+    "correctOptionIndex": 1,
+    "explanation": "Pot Odds give us the 'Price'. Equity gives us the 'Value'. If Value > Price, we buy (Call).",
+    "entryFee": 0
+  },
+  {
+    "id": "odds_05",
+    "questionText": "Opponent bets $50 into $100. You need 25% equity. You have a Flush Draw (36% equity). Call or Fold?",
+    "options": ["Call", "Fold"],
+    "correctOptionIndex": 0,
+    "explanation": "36% (Equity) > 25% (Price). This is a profitable call. You print money in the long run.",
+    "entryFee": 0
+  }
+]

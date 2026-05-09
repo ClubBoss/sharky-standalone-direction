@@ -1,0 +1,13 @@
+{
+  "id": "classify_oop_wet_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Out of position on a wet board, draw pressure stays high and your improvement path is thin. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "wet",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "Wet boards out of position create too much pressure when you cannot improve cleanly enough to continue.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The wet out-of-position pressure points to a fold.",
+  "feedback_incorrect_v1": "Incorrect. Let the wet-board pressure drive the choice: out of position with thin improvement and heavy draw pressure, this spot folds rather than drifting into a weak continue."
+}

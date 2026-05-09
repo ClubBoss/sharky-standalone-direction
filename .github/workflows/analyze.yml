@@ -1,0 +1,88 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Analyze
+on:
+  push:
+    branches: [main, fix/content-ci-structure, chore/**]
+  workflow_dispatch:
+concurrency:
+  group: analyze-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+      - name: Unshallow (fallback)
+        run: git fetch --prune --unshallow --tags || true
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: stable
+          cache: true
+
+      - name: Ensure runner is executable
+        run: chmod +x ./tools/run_table_first_tiers.sh
+
+      - name: Cache pub (Linux)
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Trust all git dirs (CI)
+        run: git config --global --add safe.directory '*'
+
+      - name: Guard (stray dirs)
+        run: |
+          chmod +x tools/guard_stray_dirs.sh || true
+          [ -x tools/guard_stray_dirs.sh ] && tools/guard_stray_dirs.sh || echo "guard script not present, skipping"
+      - name: Tier 0 (format + analyze)
+        run: bash ./tools/run_table_first_tiers.sh 0
+
+      - name: Tier 1 (guard tests)
+        run: bash ./tools/run_table_first_tiers.sh 1
+
+      - name: CI job summary
+        if: ${{ always() }}
+        run: |
+          cat <<'EOF' >> $GITHUB_STEP_SUMMARY
+## Tiered verification summary
+- **Tier 0**: `./tools/run_table_first_tiers.sh 0`
+- **Tier 1**: `./tools/run_table_first_tiers.sh 1` (guards: `test/table_first_order_guard_test.dart`, `test/theory_session_routing_test.dart`, `test/lesson_numeric_invariant_test.dart`)
+- **Manual Tier 2**: `TIER2_TIMEOUT=300 ./tools/run_table_first_tiers.sh 2`
+- **Docs**: See `docs/table_first_lessons.md` → “Table-first Verification Workflow”
+- **Manifest**: `./tools/tier_coverage_manifest.json` defines the Tier 1 guard list
+EOF
+
+  tier2-checkpoint:
+    name: Tier 2 Checkpoint (manual)
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+      - name: Ensure runner is executable
+        run: chmod +x ./tools/run_table_first_tiers.sh
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: stable
+          cache: true
+      - name: Tier 2 (checkpoint)
+        run: TIER2_TIMEOUT=300 bash ./tools/run_table_first_tiers.sh 2

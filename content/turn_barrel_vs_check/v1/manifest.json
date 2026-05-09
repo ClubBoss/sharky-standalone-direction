@@ -1,0 +1,25 @@
+{
+  "id": "turn_barrel_vs_check",
+  "order": 7,
+  "name": "Turn Heuristics - Barrel vs Check",
+  "title": "Turn Heuristics - Barrel vs Check",
+  "description": "Learn when a dry brick turn invites a barrel and when a wet turn deserves a check.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "turn"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "turn"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-17T12:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_shallow",
+  "kind": "action_choice",
+  "prompt": "Shallow stack pressure proxy: choose the best action.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raise fits because the short stack still gives you enough pressure to win folds now.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when shallow-stack pressure and price both support aggression, because the stack depth still gives you leverage to push folds."
+}

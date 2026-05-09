@@ -1,0 +1,59 @@
+name: R5 Tier2 checkpoint
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: r5-tier2-checkpoint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tier2-checkpoint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.3"
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Ensure Tier runner is executable
+        run: chmod +x ./tools/run_table_first_tiers.sh
+
+      - name: Run Tier2 checkpoint suite
+        run: |
+          set -o pipefail
+          mkdir -p out/ci
+          TIER2_TIMEOUT=300 bash ./tools/run_table_first_tiers.sh 2 2>&1 | tee out/ci/r5_tier2_checkpoint.log
+
+      - name: Upload Tier2 failure artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: r5-tier2-checkpoint-log
+          path: out/ci/r5_tier2_checkpoint.log
+
+      - name: Tier2 failure summary
+        if: ${{ failure() }}
+        run: |
+          cat <<EOF >> "$GITHUB_STEP_SUMMARY"
+          ## R5 Tier2 checkpoint failed
+          - Failing step: \`TIER2_TIMEOUT=300 bash ./tools/run_table_first_tiers.sh 2\`
+          - Artifact: \`r5-tier2-checkpoint-log\`
+          - Reproduce locally:
+            - \`flutter pub get\`
+            - \`TIER2_TIMEOUT=300 bash ./tools/run_table_first_tiers.sh 2\`
+          EOF

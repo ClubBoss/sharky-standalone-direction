@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "This trap spot is not a bluff raise, choose action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Fold when bluff conditions are missing and pressure is too high.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is expected in this trap spot.",
+  "feedback_incorrect_v1": "Incorrect. If the bluff raise is not credible and the pressure is already high, folding is cleaner than forcing a bad bluff."
+}

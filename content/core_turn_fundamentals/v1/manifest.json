@@ -1,0 +1,11 @@
+{
+  "id": "core_turn_fundamentals",
+  "title": "Turn Fundamentals",
+  "description": "Learn practical turn decisions based on board change, position, and pot-size planning.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_turn_fundamentals",
+  "reasoning": "Explains how turn cards shift pressure and how to choose clear bet-size plans with one card to come.",
+  "availability": "available"
+}

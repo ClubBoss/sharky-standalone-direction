@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_deep",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to complete deep-stack leverage line.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the river because the last card decides whether you should keep betting or take the safe finish.",
+  "feedback_incorrect_v1": "Incorrect. The river is the right board anchor here because the final card closes the deep-stack leverage story."
+}

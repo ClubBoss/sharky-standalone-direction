@@ -1,0 +1,13 @@
+{
+  "id": "find_co_station",
+  "kind": "seat_tap",
+  "prompt": "Tap the cutoff.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Start with the calling station so you know who keeps calling too wide.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at the cutoff because that is the calling station in this hand.",
+  "feedback_incorrect_v1": "Incorrect. Tap the cutoff because that is the player who keeps calling too wide."
+}

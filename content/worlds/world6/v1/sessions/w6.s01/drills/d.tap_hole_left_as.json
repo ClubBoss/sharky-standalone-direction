@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_as",
+  "kind": "hole_cards_tap",
+  "prompt": "Single hand cue only: tap left hole card (As).",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. As is the hole-card anchor because that blocker cue can upgrade or weaken the range read.",
+  "feedback_incorrect_v1": "Incorrect. As is the correct hole-card cue because that blocker can upgrade or weaken the range read."
+}

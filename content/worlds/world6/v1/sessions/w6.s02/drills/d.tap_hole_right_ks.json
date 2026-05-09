@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_right_ks",
+  "kind": "hole_cards_tap",
+  "prompt": "Blocker cue: tap right hole card (Ks).",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. Ks is the hole-card anchor here because that blocker strips out strong continues and makes the raise story credible.",
+  "feedback_incorrect_v1": "Incorrect. Ks is the correct hole-card cue here because that blocker removes strong continues and decides whether the raise can apply real pressure."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_protection",
+  "kind": "action_choice",
+  "prompt": "With vulnerable equity to protect, choose action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Raise now to deny free cards to overcards and draws.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is expected for protection intent.",
+  "feedback_incorrect_v1": "Incorrect. Raising now charges overcards and draws instead of letting them realize equity too cheaply."
+}

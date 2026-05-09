@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_depth",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to confirm depth-adjusted line.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card shows whether the pressure is still good or getting worse.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right board anchor here because the second board change updates the depth-adjusted pressure line."
+}

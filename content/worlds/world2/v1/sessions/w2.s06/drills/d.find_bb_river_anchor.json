@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_river_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap big blind anchor before selecting river line.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "River response uses seat role context with final-street intent.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The big blind remains the out-of-position defender on the river, so anchoring it first explains the more careful final-street line.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is still the forced defender on the river, so anchor it first. Acting without position changes how careful that final-street choice should be."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_shift_turn",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Start with the small blind because that seat is stuck acting first.",
+  "feedback_correct_v1": "Correct. Start at the small blind because that seat has to act first in a tougher spot.",
+  "feedback_incorrect_v1": "Incorrect. Start with the small blind. That seat has to act first, so the tougher spot shows up there fastest."
+}

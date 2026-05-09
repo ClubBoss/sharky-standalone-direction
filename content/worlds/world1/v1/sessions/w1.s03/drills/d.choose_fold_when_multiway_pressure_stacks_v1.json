@@ -1,0 +1,18 @@
+{
+  "id": "choose_fold_when_multiway_pressure_stacks_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened, button called, and hero is in the big blind with T7o. Which simple action fits best now?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "When pressure stacks from multiple players, a weak offsuit hand should release instead of guessing.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. With an open and a call already in front of you, T7o in the big blind is too weak to continue honestly, so this stacked-pressure spot should fold."
+}

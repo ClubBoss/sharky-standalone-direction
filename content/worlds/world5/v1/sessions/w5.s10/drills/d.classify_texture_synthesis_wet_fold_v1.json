@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_synthesis_wet_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Texture, draws, and secondary cues all confirm heavy wet-board pressure against a weak improvement path. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "wet",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "When every cue reinforces wet-board pressure and your improvement path stays weak, folding is the disciplined synthesis result.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The wet synthesis read points to a fold.",
+  "feedback_incorrect_v1": "Incorrect. Start from the full wet-board synthesis before deciding."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_turn",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card before final turn-compression choice.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before range action.",
+  "feedback_correct_v1": "Correct. Left hole card is the hole-card anchor here because the exact blocker or pair piece tells you whether the compressed turn can still pressure.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the right hand cue here because that blocker or pair component decides whether the compressed turn should pressure or stay controlled."
+}

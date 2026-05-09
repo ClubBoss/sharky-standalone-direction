@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_to_facing_bet",
+  "kind": "action_choice",
+  "prompt": "Facing one open with clear aggression trigger, choose legal response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Aggression branch is represented by raise_to in this spot.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. Raise is the legal aggression response here.",
+  "feedback_incorrect_v1": "Incorrect. This response works by raising back now, not by drifting into a flat call."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "choose_raise_btn_open",
+  "kind": "action_choice",
+  "prompt": "Button first-in spot: choose the open default.",
+  "player_count_v1": 2,
+  "hero_seat_v1": "btn",
+  "villain_seat_v1": "bb",
+  "active_seats_v1": ["btn", "bb"],
+  "street_v1": "flop",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Button first-in defaults to raise for value and initiative.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is the button open default.",
+  "feedback_incorrect_v1": "Incorrect. First in on the button, you want the initiative, so raise is the default open.",
+  "recap_v1": "Position turns into action here: when the button is first in, the default stays aggressive because acting later gives you the cleaner edge."
+}

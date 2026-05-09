@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_bridge_value",
+  "kind": "action_choice",
+  "prompt": "Bridge value-intent node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "A value-heavy hand in position wins more by raising now than by settling for a passive line.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. This value-heavy hand is strong enough to bet now and wins more by raising now than by settling for a passive line.",
+  "feedback_acceptable_v1": "Acceptable. Calling keeps the hand in play, but this value-heavy hand wins more by raising now against weaker continues.",
+  "feedback_incorrect_v1": "Incorrect. This value-heavy hand is strong enough to bet, so a passive line leaves value behind and gives up value while raising now wins more from weaker continues.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_deep_leverage",
+  "kind": "action_choice",
+  "prompt": "When deep leverage supports pressure, choose raise.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raise fits because the deeper stack is now strong enough to keep pressing.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when deep-stack leverage supports pressure, because the stack depth leaves room to press capped continues."
+}

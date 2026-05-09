@@ -1,0 +1,18 @@
+{
+  "id": "choose_button_open_clean_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is on the button with KTs and nobody has entered the pot. Which simple action fits best?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Late position plus a playable broadway hand gives a clean first-in open.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. On the button with KTs and no one in yet, this is a clean late-position open, so the right World 1 action is to raise."
+}

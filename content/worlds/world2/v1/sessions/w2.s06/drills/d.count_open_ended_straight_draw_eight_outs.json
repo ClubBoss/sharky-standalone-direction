@@ -1,0 +1,17 @@
+{
+  "id": "count_open_ended_straight_draw_eight_outs",
+  "kind": "outs_count_choice_v1",
+  "intent_v1": "world2_outs_bridge",
+  "prompt": "Hero has 8c7d on 9s6h2c. How many outs improve hero to a straight on the turn?",
+  "street_v1": "flop",
+  "hero_hole_cards_v1": ["8c", "7d"],
+  "board_cards_v1": ["9s", "6h", "2c"],
+  "available_actions_v1": ["4", "8", "9", "15"],
+  "expected": {
+    "actionId": "8"
+  },
+  "error_class": "outs_count_choice_mismatch",
+  "why_v1": "Any 5 or T completes the straight, which gives 8 clean outs.",
+  "feedback_correct_v1": "Correct. Any 5 or T completes the straight, so this open-ended draw has 8 outs.",
+  "feedback_incorrect_v1": "Incorrect. This open-ended straight draw has 8 outs because both ends of the straight can complete."
+}

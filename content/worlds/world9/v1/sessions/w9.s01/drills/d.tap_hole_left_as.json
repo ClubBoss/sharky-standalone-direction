@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_as",
+  "kind": "hole_cards_tap",
+  "prompt": "Pressure adaptation cue: tap left hole card (As).",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before exploit action.",
+  "feedback_correct_v1": "Correct. As is the hole-card anchor because the ace blocker is what makes the pressure adjustment credible.",
+  "feedback_incorrect_v1": "Incorrect. Tap the ace of spades because the left hole card is the blocker behind this pressure adjustment."
+}

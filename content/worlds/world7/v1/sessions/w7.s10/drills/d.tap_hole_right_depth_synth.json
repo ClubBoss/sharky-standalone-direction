@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_right_depth_synth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card (Ks) for depth-pressure balance input.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "A second hole-card anchor keeps the full depth picture stable before the final action.",
+  "feedback_correct_v1": "Correct. Ks is the second hole-card anchor because the full two-card structure decides whether the pressure line has real playability behind it.",
+  "feedback_incorrect_v1": "Incorrect. The correct second card is Ks because the king completes the hole-card anchor for this depth read. That extra card tells you whether the pressure line is backed by real playability instead of one blocker alone."
+}

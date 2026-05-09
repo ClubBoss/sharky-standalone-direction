@@ -1,0 +1,42 @@
+[
+  {
+    "id": "type_q1",
+    "questionText": "In Texas Hold'em, how many hole cards do you get?",
+    "options": ["2", "4"],
+    "correctOptionIndex": 0,
+    "explanation": "Two cards in Hold'em. Four cards in Omaha.",
+    "entryFee": 0
+  },
+  {
+    "id": "type_q2",
+    "questionText": "What does 'No-Limit' mean?",
+    "options": ["You can't bet properly", "You can bet ALL your chips at any time"],
+    "correctOptionIndex": 1,
+    "explanation": "No-Limit means exactly that. The only limit is your stack.",
+    "entryFee": 0
+  },
+  {
+    "id": "type_q3",
+    "questionText": "In a Tournament, what happens if you lose all your chips?",
+    "options": ["You are eliminated", "You reach into your pocket for more cash"],
+    "correctOptionIndex": 0,
+    "explanation": "In a standard Freezeout Tournament, once you bust, you are out.",
+    "entryFee": 0
+  },
+  {
+    "id": "type_q4",
+    "questionText": "Which game gives you 4 hole cards?",
+    "options": ["Texas Hold'em", "Omaha"],
+    "correctOptionIndex": 1,
+    "explanation": "Omaha gives you 4 cards, but you MUST use exactly 2 of them.",
+    "entryFee": 0
+  },
+  {
+    "id": "type_q5",
+    "questionText": "Where can you stand up and leave with your money at any time?",
+    "options": ["Tournament", "Cash Game"],
+    "correctOptionIndex": 1,
+    "explanation": "Cash Games are flexible. Play for 10 minutes or 10 hours.",
+    "entryFee": 0
+  }
+]

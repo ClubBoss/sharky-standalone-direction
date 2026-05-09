@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_oop_depth",
+  "kind": "seat_tap",
+  "prompt": "Out-of-position depth setup: tap BB.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "feedback_correct_v1": "Correct. Big blind is the seat anchor because the forced defender carries the widest and most pressured range in this out-of-position spot.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the right anchor here because the forced defender carries the widest, most pressured range in this out-of-position spot."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_flop_pot_control",
+  "kind": "action_choice",
+  "prompt": "Flop pot-control spot with medium strength: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Medium-strength control lines check instead of inflating pot.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "unnecessary_bet",
+  "feedback_correct_v1": "Correct. Checkback controls pot size in this rep.",
+  "feedback_incorrect_v1": "Incorrect. With medium-strength value, checking back controls the pot better than building one that gets awkward on later streets.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

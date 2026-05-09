@@ -1,0 +1,75 @@
+name: Public Demo Gate
+
+on:
+  push:
+    branches:
+      - 'release/**'
+      - 'demo/**'
+  workflow_dispatch:
+    inputs:
+      seeded_logs:
+        description: 'Have Phase 1 logs been seeded?'
+        required: true
+        default: 'no'
+        type: choice
+        options: ['yes', 'no']
+
+jobs:
+  demo-gate:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ github.event_name != 'workflow_dispatch' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Verify Flutter/Dart
+        shell: bash
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          flutter pub get
+
+      - name: Run public demo gate
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "::warning::Push-triggered run; failures are informational while logs seed."
+          else
+            echo "Manual dispatch run – this is the authoritative gate."
+            echo "Seeded logs: ${{ github.event.inputs.seeded_logs }}"
+            if [ "${{ github.event.inputs.seeded_logs }}" != "yes" ]; then
+              echo "::warning::Logs not confirmed seeded; gate may fail until Phase 1 runs complete."
+            fi
+          fi
+        shell: bash
+      - name: Execute gate
+        shell: bash
+        run: bash ./public_demo_gate.sh
+      - name: Stdout-clean test status
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.seeded_logs }}" = "yes" ]; then
+            echo "RUNNING stdout-clean test (PUBLIC_DEMO_SEEDED=1, seeded_logs=${{ github.event.inputs.seeded_logs }})"
+          else
+            echo "SKIPPED stdout-clean test (seeded logs not confirmed)"
+          fi
+      - name: Validate gate stdout cleanliness
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.seeded_logs == 'yes' }}
+        env:
+          PUBLIC_DEMO_SEEDED: '1'
+        shell: bash
+        run: |
+          if [ -f test/smoke/public_demo_stdout_clean_test.sh ]; then
+            bash ./test/smoke/public_demo_stdout_clean_test.sh
+          else
+            echo "SKIP: test/smoke/public_demo_stdout_clean_test.sh not present"
+          fi

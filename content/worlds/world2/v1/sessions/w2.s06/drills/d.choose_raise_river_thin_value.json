@@ -1,0 +1,16 @@
+{
+  "id": "choose_raise_river_thin_value",
+  "kind": "action_choice",
+  "prompt": "Approved thin-value target on river: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "This target supports thin value betting branch.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Thin value bet is expected here.",
+  "feedback_incorrect_v1": "Incorrect. This hand is strong enough for a thin river value bet, so checking misses value from worse calls.",
+  "acceptable_actions": [
+    "raise"
+  ]
+}

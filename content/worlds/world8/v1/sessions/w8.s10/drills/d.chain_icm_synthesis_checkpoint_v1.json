@@ -1,0 +1,43 @@
+{
+  "id": "chain_icm_synthesis_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w8_s10_icm_synthesis_checkpoint_v1",
+  "prompt": "Play this short three-step World 8 ICM synthesis chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: Medium tournament pressure and a live stack should keep the line controlled. Choose action.",
+      "intent_v1": "survival_pressure",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This medium-pressure flop step prefers call.",
+      "feedback_incorrect_v1": "Incorrect. With medium tournament pressure still leaving room to maneuver, this flop should stay on the controlled call instead of escalating early.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When tournament pressure is present but not yet forcing collapse, controlled continuation preserves flexibility better than early escalation."
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: Covering pressure and risk-premium leverage now support a stronger line. Choose action.",
+      "intent_v1": "risk_premium_intuition",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This leverage-heavy turn step supports raise.",
+      "feedback_incorrect_v1": "Incorrect. Once covering pressure and risk-premium leverage both swing in your favor, this turn should press with a raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When the learner is applying pressure while covering the opponent, tournament leverage can justify a stronger line than raw chip EV alone."
+    },
+    {
+      "street": "river",
+      "prompt": "River: Covered pressure and tournament survival cost should close the line. Choose action.",
+      "intent_v1": "bubble_intuition",
+      "available_actions_v1": ["fold", "call"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This covered river step should fold.",
+      "feedback_incorrect_v1": "Incorrect. When tournament survival cost dominates and you are the one under the covered pressure, this river should fold instead of paying off thinly.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When survival cost dominates and the learner is the one under tournament pressure, disciplined release is cleaner than forcing a thin continue."
+    }
+  ]
+}

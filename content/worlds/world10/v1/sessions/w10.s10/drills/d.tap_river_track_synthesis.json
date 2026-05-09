@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_track_synthesis",
+  "kind": "board_tap",
+  "prompt": "Tap river to finalize the track context.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Final board anchor prevents over-thinking late decisions.",
+  "feedback_correct_v1": "Correct. river is the final board anchor, so the line closes with the last card that decides the full texture.",
+  "feedback_incorrect_v1": "Incorrect. The river card matters because the river finishes the strategic picture and tells you whether the hand lands as value, bluff-catching, or shutdown."
+}

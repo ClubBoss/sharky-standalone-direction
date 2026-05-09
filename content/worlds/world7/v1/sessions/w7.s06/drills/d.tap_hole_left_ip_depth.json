@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_ip_depth",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card before final in-position action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before depth action.",
+  "feedback_correct_v1": "Correct. The left hole card is the anchor because its blocker or playability value decides whether the pressure line has real support.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the right anchor here because that card adds the blocker value or playability that decides whether pressure is backed by real hand quality."
+}

@@ -1,0 +1,18 @@
+{
+  "id": "choose_button_open_repeat_stability_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is on the button with QJs and nobody has entered the pot. Which simple action fits best if position discipline stays stable?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Late position with a playable suited broadway hand should keep the same clean first-in raise habit.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. On the button with QJs and no prior action, position stability means keeping the same clean first-in raise."
+}

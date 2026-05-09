@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap flop_left to lock the first board cue.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchors keep your plan consistent across streets.",
+  "feedback_correct_v1": "Correct. flop_left is the first board anchor, so the line starts from the first public cue before later streets change the pressure story.",
+  "feedback_incorrect_v1": "Incorrect. Start from the left flop card: that first public cue tells you whether the preflop cash edge is still intact before later streets add extra noise."
+}

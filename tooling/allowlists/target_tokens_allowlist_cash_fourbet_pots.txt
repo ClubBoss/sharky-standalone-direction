@@ -1,0 +1,10 @@
+4bet_ip_21bb
+4bet_oop_24bb
+big_bet_75
+call
+delay_turn
+fold
+half_pot_50
+size_down_dry
+size_up_wet
+small_cbet_33

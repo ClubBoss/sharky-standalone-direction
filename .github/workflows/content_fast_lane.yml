@@ -1,0 +1,25 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Content Fast Lane
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why trigger"
+        required: false
+        default: "bulk-run"
+
+jobs:
+  fast-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Dart
+        uses: subosito/flutter-action@v2
+        with:
+          sdk: stable
+      - name: Pub get
+        run: cd tooling && dart pub get
+      - name: Run fast content check
+        run: dart run tool/fast_content_check.dart

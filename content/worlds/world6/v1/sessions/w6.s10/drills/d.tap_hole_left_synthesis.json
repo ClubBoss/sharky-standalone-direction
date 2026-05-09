@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_synthesis",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap the ace of spades.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the ace of spades because that blocker can make the pressure line stronger.",
+  "feedback_correct_v1": "Correct. Use the ace of spades because that blocker can make the pressure line stronger.",
+  "feedback_incorrect_v1": "Incorrect. Use the ace of spades because that blocker can make the pressure line stronger."
+}

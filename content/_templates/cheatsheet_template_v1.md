@@ -1,0 +1,13 @@
+# Cheatsheet
+
+## Key Rules
+- ...
+
+## Fast Heuristics
+- ...
+
+## Quick Numbers
+- ...
+
+## Examples (1–2 lines)
+- ...

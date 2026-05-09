@@ -1,0 +1,20 @@
+{
+  "id": "review_position_villain_acts_later_btn_vs_co",
+  "kind": "position_thinking_choice_v1",
+  "question_shape_v1": "acts_later",
+  "prompt": "Review: Hero is in the cutoff and villain is on the button. Who acts later after the flop?",
+  "player_count_v1": 2,
+  "hero_seat_v1": "co",
+  "villain_seat_v1": "btn",
+  "active_seats_v1": ["co", "btn"],
+  "street_v1": "flop",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "villain"
+  },
+  "error_class": "position_thinking_choice_mismatch",
+  "why_v1": "The button still has position over the cutoff and acts later after the flop.",
+  "feedback_correct_v1": "Correct. Villain still acts later because the button has position over the cutoff.",
+  "feedback_incorrect_v1": "Incorrect. Villain still acts later here because the button is in position over the cutoff.",
+  "recap_v1": "In position means acting later after the flop. Out of position means acting first, which matters because later action gives more information."
+}

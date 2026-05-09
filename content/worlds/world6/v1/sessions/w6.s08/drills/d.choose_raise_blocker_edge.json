@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_blocker_edge",
+  "kind": "action_choice",
+  "prompt": "When blocker plus range edge align, choose raise.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the blocker and range edge line up well enough to pressure capped continues.",
+  "feedback_incorrect_v1": "Incorrect. Raise because the blocker and the stronger range story align, so aggression can pressure capped continues instead of just calling."
+}

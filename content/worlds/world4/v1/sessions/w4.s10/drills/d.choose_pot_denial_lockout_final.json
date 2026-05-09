@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_denial_lockout_final",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the denial size that creates the strongest immediate lockout cost.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Pot creates the sharpest immediate price when denial needs to do the heaviest work.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

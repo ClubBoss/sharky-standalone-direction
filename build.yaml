@@ -1,0 +1,6 @@
+targets:
+  demo:
+    sources:
+      include:
+        - main.dart
+        - lib/**

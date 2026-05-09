@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_blocker_depth",
+  "kind": "action_choice",
+  "prompt": "Blocker cue at neutral depth: choose call.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when stack depth does not support a raise.",
+  "feedback_correct_v1": "Correct. Calling fits because the blocker adds protection, but not enough edge to justify forcing a bigger pot at this depth.",
+  "feedback_incorrect_v1": "Incorrect. Call is better here because the blocker gives the hand some protection, but not enough edge to force a bigger pot at this depth. A controlled continue keeps your equity realization intact while the pressure line is still too thin."
+}

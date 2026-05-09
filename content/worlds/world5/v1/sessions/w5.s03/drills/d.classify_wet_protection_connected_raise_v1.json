@@ -1,0 +1,13 @@
+{
+  "id": "classify_wet_protection_connected_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board is connected, but your hand blocks enough improvement and can still pressure weaker continues. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "Connected boards do not always force passivity; when your edge is strong enough, raising still protects value.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. This connected-board read still supports a protection raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the connected texture, then notice when the edge is strong enough to raise."
+}

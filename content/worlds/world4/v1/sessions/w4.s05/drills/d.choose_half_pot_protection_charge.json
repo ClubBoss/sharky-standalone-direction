@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_protection_charge",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the protection size that charges draws without immediately maxing pressure.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Half pot charges vulnerable equity while staying below the most forceful price jump.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

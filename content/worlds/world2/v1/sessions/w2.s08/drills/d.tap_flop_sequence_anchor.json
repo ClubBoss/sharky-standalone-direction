@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_sequence_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap flop anchor before the sequence starts.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Street sequence begins with explicit flop context.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The flop gives the first texture read, so the sequence starts from the pressure already on board.",
+  "feedback_incorrect_v1": "Incorrect. The flop is your first board read, so lock that card first before deciding what texture and pressure the hand starts with."
+}

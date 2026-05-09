@@ -1,0 +1,78 @@
+name: Theory Integrity
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: theory-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Гейтим дальнейшие шаги: срабатываем только если менялась "теория"
+      - name: Detect theory changes (git diff)
+        id: filter
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            BASE_SHA="origin/${{ github.base_ref }}"
+            HEAD_SHA="${{ github.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+          git diff --name-only "$BASE_SHA...$HEAD_SHA" > changed.txt
+          has_theory=0
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if echo "$file" | grep -Eq '^(theory/|content/theory/|theory_index\.json$|packs/.*\.yaml$|training_packs/.*\.yaml$|assets/.*/theory/|assets/theory_index\.json$|assets/packs/.*\.yaml$)'; then
+              has_theory=1
+              break
+            fi
+          done < changed.txt
+          if [[ "$has_theory" -eq 1 ]]; then
+            echo "theory_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "theory_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip verification (no theory changes)
+        if: steps.filter.outputs.theory_changed != 'true'
+        run: echo "No theory-related changes detected. Skipping verification."
+
+      - name: Set up Flutter
+        if: steps.filter.outputs.theory_changed == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        if: steps.filter.outputs.theory_changed == 'true'
+        run: flutter pub get
+
+      - name: Strict verify
+        if: steps.filter.outputs.theory_changed == 'true'
+        env:
+          MODE: strict
+        run: |
+          echo "mode=$MODE"
+          bash tool/theory_verify.sh

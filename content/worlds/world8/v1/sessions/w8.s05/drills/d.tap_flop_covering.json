@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_covering",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle to check coverage context.",
+  "intent_v1": "tournament_context_shift",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor, so the tournament read stays centered on the card that shapes the flop texture.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card is the target board card because the coverage context depends on the full board read, not a guessed street label."
+}

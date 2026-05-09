@@ -1,0 +1,13 @@
+{
+  "id": "find_btn",
+  "kind": "seat_tap",
+  "prompt": "Deep-stack playability setup: tap BTN.",
+  "intent_v1": "deep_stack_playability",
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because acting last shapes whether the deep-stack hand should stay controlled or press harder.",
+  "feedback_incorrect_v1": "Incorrect. Find the button because acting last is the key positional edge in deep-stack spots, and that edge shapes whether the hand should stay controlled or press harder."
+}

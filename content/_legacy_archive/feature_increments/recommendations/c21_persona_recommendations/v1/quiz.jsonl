@@ -1,0 +1,7 @@
+{"id":"c21:quiz:01","type":"mc","prompt":"Why link emotion state to recommendations?","options":["Adjust load","Add randomness","Ignore mood"],"answer":0,"explanation":"Emotion signals guide difficulty and session length."}
+{"id":"c21:quiz:02","type":"tf","prompt":"Calm state allows longer, harder drills.","answer":true,"explanation":"Higher stability supports deeper practice."}
+{"id":"c21:quiz:03","type":"mc","prompt":"Accuracy below 70% should trigger?","options":["Easier reps","Harder spots","No change"],"answer":0,"explanation":"Drop difficulty until streaks recover."}
+{"id":"c21:quiz:04","type":"tf","prompt":"Tension personas need shorter blocks.","answer":true,"explanation":"Short sessions reduce overload and rebuild confidence."}
+{"id":"c21:quiz:05","type":"mc","prompt":"Which tag signals capped fear bet?","options":["undersized_cbet","overbluff","overcall"],"answer":0,"explanation":"Small sizing in pressure is usually capped."}
+{"id":"c21:quiz:06","type":"mc","prompt":"How should high accuracy affect spacing?","options":["Stretch windows","Reset items","Stop review"],"answer":0,"explanation":"Clean runs allow longer intervals like 7-14d."}
+{"id":"c21:quiz:07","type":"tf","prompt":"C13-C20 results should inform persona queues.","answer":true,"explanation":"Past performance guides future recommendations."}

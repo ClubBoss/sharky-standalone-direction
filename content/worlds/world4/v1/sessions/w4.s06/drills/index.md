@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_denial_checkpoint: pick the standard denial size when the continue should feel clearly less comfortable.
+- choose_one_third_pot_denial_price_keep_checkpoint: keep the denial line lighter while still taxing realization and keeping the price from staying too easy.
+- choose_pot_denial_pressure_checkpoint: choose maximum pressure when the denial goal needs the strongest immediate cost.
+- choose_min_raise_denial_reopen_checkpoint: reopen with the smallest legal raise when denial and control need to stay balanced.
+- find_bb_repeat: tap the big blind seat to anchor the checkpoint rep.
+- find_btn_repeat: tap the button seat to anchor the checkpoint rep.
+- find_seat_s3_repeat: tap seat S3 to confirm the acting seat in the checkpoint rep.
+- choose_raise_repeat: with clear denial edge, choose action in the checkpoint rep.
+- choose_call_repeat: with medium denial value, choose action in the checkpoint rep.
+- choose_fold_repeat: with weak denial value, choose action in the checkpoint rep.
+- tap_flop_mid_repeat: tap the middle flop card to confirm board context in the checkpoint rep.
+- tap_river_repeat: tap the river slot to confirm street context in the checkpoint rep.

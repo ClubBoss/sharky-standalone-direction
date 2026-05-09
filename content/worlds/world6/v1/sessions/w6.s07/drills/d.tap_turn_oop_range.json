@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_oop_range",
+  "kind": "board_tap",
+  "prompt": "Tap turn to confirm pressure persistence.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. Turn card anchored before the pressure-persistence check.",
+  "feedback_incorrect_v1": "Incorrect. The turn card is the correct anchor because the fourth board card is where the out-of-position range checks whether pressure is still survivable."
+}

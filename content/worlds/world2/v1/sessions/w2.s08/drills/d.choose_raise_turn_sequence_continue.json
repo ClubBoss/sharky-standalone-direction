@@ -1,0 +1,18 @@
+{
+  "id": "choose_raise_turn_sequence_continue",
+  "kind": "action_choice",
+  "prompt": "Pressure branch continue node on turn: choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "When the turn still favors pressure, betting again keeps weaker continues under strain instead of backing off too early.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Checking does not collapse the line, but this turn still favors pressure and wins more by betting again.",
+  "feedback_correct_v1": "Correct. The turn still favors pressure, so betting again keeps weaker continues under strain.",
+  "feedback_incorrect_v1": "Incorrect. Checking backs off too early, but this turn still wants another bet to keep weaker continues under strain.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

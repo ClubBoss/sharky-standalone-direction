@@ -1,0 +1,15 @@
+{
+  "id": "classify_coordinated_jack_ten_nine_two_tone",
+  "kind": "board_texture_classifier_v1",
+  "intent_v1": "texture_pressure_building",
+  "prompt": "Flop J-T-9 with two hearts. Choose CALL for the calmer board or RAISE for the more pressure-building board.",
+  "street_v1": "flop",
+  "board_cards_v1": ["Jh", "Ts", "9h"],
+  "board_texture_v1": "connected",
+  "available_actions_v1": ["call", "raise"],
+  "expected_action": "raise",
+  "error_class": "expected_action_mismatch",
+  "why_v1": "J-T-9 two-tone is coordinated and draw-heavy, so it builds pressure quickly.",
+  "feedback_correct_v1": "Correct. This board builds pressure fast because many draws and strong turn cards are live.",
+  "feedback_incorrect_v1": "Incorrect. This board is the pressure-building one because the texture is highly coordinated."
+}

@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_value_followthrough: keep the main value line strong without overpressuring.
+- choose_one_third_pot_keep_value_flow: use the lighter value size that still keeps weaker hands interested.
+- choose_pot_value_pressure_finish: choose the strongest value size when the spot can support maximum immediate charge.
+- choose_min_raise_value_reopen_followthrough: reopen with the smallest legal raise when value should stay controlled.
+- find_btn_focus: tap the button seat before selecting action.
+- find_co_focus: tap the cutoff seat before selecting action.
+- find_seat_s3_focus: tap seat S3 to confirm the acting seat.
+- choose_raise_focus: with strong value edge, choose action.
+- choose_call_focus: with medium value and price control, choose action.
+- choose_fold_focus: with weak value edge, choose action.
+- tap_flop_left_focus: tap the left flop card to confirm board context.
+- tap_turn_focus: tap the turn slot to confirm street context.

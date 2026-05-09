@@ -1,0 +1,21 @@
+# Scenario
+IP ramps pressure; defender is semi-capped with mixed mid-band density and must synthesize structure, pressure, reaction, and window clues.
+
+# Snapshot
+Attacker: strong continuity and high cards, aggressive sizing. Defender: partial caps, mid-band spread with fragile combos, stress indicators, pressure cue: rising bets, reaction shifting toward fold-heavy. Window hint: caps cracking slowly.
+
+# Player task
+Offer the unified read linking pressure, reaction, and window.
+
+# Expected reasoning
+Strong continuity keeps pressure high while the mid band weakens under aggression. The partial caps resist immediate folds but cannot raise, creating a fold-heavy reaction under the high tier. This opens a fold window: keep pressing until caps crack, then fold the defender out. Synthesis demands acknowledging the continuous pressure, reading the fold-heavy tendency, and timing the fold window before density rebuilds.
+
+# Correct line
+High pressure + fold-heavy reaction → fold window: press until caps collapse.
+
+# Why not the alternatives
+- Thin-value: defender still resists, so thin bets fail. 
+- Timing: needs more controlled relief before folding. 
+- Stab: assumes cap lines open for raises. 
+- Mid pressure: understates the high-tier aggression. 
+- Reaction-only read: misses the window timing.

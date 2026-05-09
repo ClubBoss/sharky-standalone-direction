@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_premium_strong_reps_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s04_preflop_premium_strong_reps_v1",
+  "prompt": "Play this short World 3 premium and strong-hand reps chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is in the cutoff with QQ and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Qc"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A premium pair in an unopened pot should start by raising.",
+      "feedback_incorrect_v1": "Incorrect. This premium hand bucket wants an open, not hesitation.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Premium hands should look stable in the simplest preflop frame: unopened pots still point to an immediate raise."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is on the button with AJs after the cutoff opened first. Which compact action fits better?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Ah", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. A strong suited broadway hand can continue cleanly in position after the open.",
+      "feedback_incorrect_v1": "Incorrect. This is no longer an unopened raise spot, so the cleaner default is a call.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Strong hands still continue, but the first action can change once someone opened before you."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the big blind with KTo after the button opened first. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kd", "Tc"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Even after stronger reps, discipline still matters when a weaker offsuit hand is out of position.",
+      "feedback_incorrect_v1": "Incorrect. This spot is not strong enough to continue just because the hand contains one big card.",
+      "recap_v1": "Premium and strong-hand reps get cleaner when the learner keeps one stable habit: stronger buckets open more often, but the frame still decides whether continuing means raise, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Category stability is not just about finding raises. It is also about folding when the frame and hand quality no longer support a continue."
+    }
+  ]
+}

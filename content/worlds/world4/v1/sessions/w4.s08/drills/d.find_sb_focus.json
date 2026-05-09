@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat before selecting action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Small blind anchor confirms early position before protection action.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The small blind keeps the out-of-position defender in view, so the protection bet stays tied to charging overcards and draws first.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the key anchor in this rep, so confirm that seat before choosing the protection line."
+}

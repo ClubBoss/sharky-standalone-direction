@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Tap the turn.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the turn because the fourth card can change how much pressure is worth.",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card can make the pressure line better or worse.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn because the fourth card can change whether pressure is still good."
+}

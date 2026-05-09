@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap the left flop card before reading the cash value texture.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchors keep your plan consistent across streets.",
+  "feedback_correct_v1": "Correct. Left flop card anchored before the cash value texture read.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is the right board anchor here because the value line still starts from the first flop cue."
+}

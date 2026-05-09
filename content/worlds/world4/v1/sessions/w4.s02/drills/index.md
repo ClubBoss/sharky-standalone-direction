@@ -1,0 +1,13 @@
+# Drills
+- choose_pot_bluff_pressure: pick the size that creates the most immediate fold pressure.
+- choose_half_pot_denial_charge: pick the size that charges overcards and draws without overextending.
+- choose_one_third_pot_bluff_probe: pick the smaller bluff size that still pressures weak ranges cheaply.
+- choose_min_raise_denial_reopen: pick the smallest legal raise that still reopens pressure and denies a free continue.
+- find_sb: tap the small blind seat before choosing intent.
+- find_seat_s2: tap seat S2 to confirm the acting seat.
+- choose_raise_bluff: with clear fold equity, choose action.
+- choose_fold_trap: with weak bluff leverage, choose action.
+- choose_raise_denial: with clear denial edge, choose action.
+- choose_call_control: with moderate denial value, choose action.
+- tap_turn: tap the turn slot to confirm street context.
+- tap_hole_right: tap the right hole card to confirm hand context.

@@ -1,0 +1,12 @@
+{
+  "id": "core_positions_and_initiative",
+  "order": 8,
+  "title": "Positions & Initiative",
+  "description": "Understand IP vs OOP and why position is king.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_positions",
+  "reasoning": "States seat names and their responsibilities regarding action order.",
+  "availability": "available"
+}

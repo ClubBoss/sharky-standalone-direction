@@ -1,0 +1,13 @@
+{
+  "id": "find_utg_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the under-the-gun seat in the anchor chain.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "UTG anchor confirms early position before pressure decisions.",
+  "expected": {
+    "role": "utg"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Under the gun keeps the earliest seat in view, so the bluff line stays tied to the range acting without late-position safety.",
+  "feedback_incorrect_v1": "Incorrect. Early-position context matters here, so confirm the under-the-gun seat before the bluff decision."
+}

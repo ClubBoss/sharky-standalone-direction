@@ -1,0 +1,36 @@
+{
+  "id": "chain_texture_then_outs_v1",
+  "kind": "hand_chain_v1",
+  "intent_v1": "world2_authored_bridge",
+  "chain_id": "w2_s08_texture_then_outs_v1",
+  "prompt": "Play this short board-context chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: On this flop, which action matches the more pressure-building texture?",
+      "intent_v1": "texture_pressure_building",
+      "board_texture_v1": "coordinated_two_tone",
+      "board_cards_v1": ["Jh", "Th", "9c"],
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Connected two-tone boards build more pressure fast.",
+      "feedback_incorrect_v1": "Incorrect. This connected two-tone flop builds more pressure than a dry board.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "More straight and flush paths make the board feel more dynamic and pressure-building."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: Keep the same flop. Hero holds Qh 8h. How many outs improve hero to a flush?",
+      "board_cards_v1": ["Jh", "Th", "9c"],
+      "hero_hole_cards_v1": ["Qh", "8h"],
+      "available_actions_v1": ["4", "8", "9", "15"],
+      "expected_action": "9",
+      "feedback_correct_v1": "Correct. With four hearts visible, nine unseen hearts remain.",
+      "feedback_incorrect_v1": "Incorrect. Two hearts in hand plus two on board leave nine flush outs.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Count the unseen hearts that complete the flush, not every improving card."
+    }
+  ]
+}

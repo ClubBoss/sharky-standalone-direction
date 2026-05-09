@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_early",
+  "kind": "action_choice",
+  "prompt": "From early seat with weak hand quality, choose the default action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Early-position weakness is resolved by a fold default.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is the defined early-seat default here.",
+  "feedback_incorrect_v1": "Incorrect. From early position with weak hand quality, the disciplined default is to fold rather than enter the pot."
+}

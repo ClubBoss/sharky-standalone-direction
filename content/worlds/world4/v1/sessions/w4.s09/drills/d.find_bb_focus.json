@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat before selecting action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Big blind anchor confirms preflop order before bluff pressure.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The big blind fixes the defending seat, so the bluff line stays tied to the range that can still fold under late pressure.",
+  "feedback_incorrect_v1": "Incorrect. This bluff setup is built from the big blind, so tap the big blind seat before choosing the pressure line."
+}

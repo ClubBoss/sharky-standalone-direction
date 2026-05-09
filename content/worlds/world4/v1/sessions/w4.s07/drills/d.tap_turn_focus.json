@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot to confirm street context.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Turn anchor confirms the next street before final action.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The turn shows whether value is still ahead, so the next bet stays tied to the street where the hand keeps charging worse continues.",
+  "feedback_incorrect_v1": "Incorrect. This value focus rep keys off the turn card, so tap the turn slot before choosing the line."
+}

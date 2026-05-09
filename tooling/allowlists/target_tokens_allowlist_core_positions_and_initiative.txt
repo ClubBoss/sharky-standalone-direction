@@ -1,0 +1,7 @@
+IP
+OOP
+call
+delay_turn
+fold
+raise
+small_cbet_33

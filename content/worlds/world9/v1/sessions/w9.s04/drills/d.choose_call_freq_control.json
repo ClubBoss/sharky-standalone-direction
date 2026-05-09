@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_freq_control",
+  "kind": "action_choice",
+  "prompt": "When frequency should stay moderate, choose call.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when the read does not justify extra pressure.",
+  "feedback_correct_v1": "Correct. Calling fits because moderate frequency control keeps this exploit from drifting into overpressure.",
+  "feedback_incorrect_v1": "Incorrect. Call because moderate frequency control keeps this exploit from becoming overaggressive."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_hj_turn_compress",
+  "kind": "seat_tap",
+  "prompt": "Tap hijack seat before turn-compression action.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "hj"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Hijack is the seat anchor here because the earlier late-position range is the one being squeezed by the compressed turn.",
+  "feedback_incorrect_v1": "Incorrect. The hijack is the right seat anchor here because that earlier late-position range is the one the compressed turn is squeezing."
+}

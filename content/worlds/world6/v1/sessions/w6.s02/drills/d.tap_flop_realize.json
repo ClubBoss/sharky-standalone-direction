@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_realize",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle slot to anchor realization context.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor here because the middle flop card tells you whether the texture really supports clean realization.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the flop first because it gives the first real read on texture, draw pressure, and who benefits from the board. Without that flop context, the realization decision is detached from what the board is actually doing."
+}

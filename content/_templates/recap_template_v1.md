@@ -1,0 +1,13 @@
+# Recap
+
+## Key Ideas
+- ...
+
+## Common Mistakes
+- ...
+
+## Quick Checks
+- ...
+
+## Mini-Exercise (1–2 lines)
+- ...

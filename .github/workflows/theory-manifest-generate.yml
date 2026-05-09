@@ -1,0 +1,36 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Theory Manifest – Generate baseline
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+jobs:
+  generate-baseline:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(join(github.event.pull_request.labels.*.name), 'run-content-ci') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: stable
+          cache: true
+      - run: flutter --version
+      - uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+      - run: flutter pub get
+      - run: dart --version
+      - name: Trust all git dirs (CI)
+        run: git config --global --add safe.directory '*'
+      - name: Content next (baseline)
+        run: dart run tooling/content_next.dart

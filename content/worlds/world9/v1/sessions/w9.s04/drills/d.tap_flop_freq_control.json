@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_freq_control",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle to anchor aggression frequency context.",
+  "intent_v1": "one_lever_adjustment",
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor because the central flop texture is what starts the frequency-control read.",
+  "feedback_incorrect_v1": "Incorrect. Tap the middle flop card because the frequency read depends on the full central flop texture."
+}

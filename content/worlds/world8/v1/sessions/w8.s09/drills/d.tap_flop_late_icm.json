@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_late_icm",
+  "kind": "board_tap",
+  "prompt": "Tap flop right slot to anchor late-street ICM closure context.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "why_v1": "Board anchor keeps street context stable before ICM action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_right is the board anchor, so the tournament read completes the flop texture before the pressure line moves on.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card is the target board card because late-street ICM closure still starts from the correct flop anchor."
+}

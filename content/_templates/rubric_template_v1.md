@@ -1,0 +1,13 @@
+# Rubric
+
+## Accuracy
+- ...
+
+## Reasoning Quality
+- ...
+
+## Strategy Alignment
+- ...
+
+## Red Flags
+- ...

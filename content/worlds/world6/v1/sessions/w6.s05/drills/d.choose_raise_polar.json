@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_polar",
+  "kind": "action_choice",
+  "prompt": "Polarized pressure spot: choose raise.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the river shape is polarized enough for strong hands or credible bluffs to pressure bluff catchers.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when the river shape becomes clearly polarized and your strong hands or credible bluffs can pressure bluff catchers. Once the range splits that sharply, aggression earns more than a passive finish."
+}

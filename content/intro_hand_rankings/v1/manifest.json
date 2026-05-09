@@ -1,0 +1,11 @@
+{
+  "id": "intro_hand_rankings",
+  "order": 3,
+  "title": "Hand Rankings",
+  "description": "What beats what?",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_hand_rankings",
+  "reasoning": "Enumerates hand rankings from high card to royal flush.",
+  "availability": "available"
+}

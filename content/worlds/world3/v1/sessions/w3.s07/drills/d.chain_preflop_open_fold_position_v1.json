@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_open_fold_position_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s07_preflop_open_fold_position_v1",
+  "prompt": "Play this short World 3 unopened-pot open or fold chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with KJo and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In position with the pot unopened, this hand is strong enough to open.",
+      "feedback_incorrect_v1": "Incorrect. KJo on the button is good enough to open when the pot is unopened, so raising captures late-position value before the blinds act.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The learner should recognize when position and hand quality together create a straightforward unopened-pot open."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is now in the cutoff with the same KJo and the pot is still unopened. Which compact action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Earlier position makes this hand less attractive as an unopened open.",
+      "feedback_incorrect_v1": "Incorrect. The same KJo loses value from the cutoff because more players remain behind, so folding is tighter than opening too loose from earlier position.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position can change the first action even when the hand looks similar on paper."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is on the button with 86o and the pot is unopened. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["8c", "6d"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Position helps, but a weak offsuit hand should still fold unopened.",
+      "feedback_incorrect_v1": "Incorrect. 86o stays a fold even on the button because late position does not turn a weak offsuit hand into a profitable open.",
+      "recap_v1": "Unopened-pot discipline gets cleaner when the learner uses both hand bucket and position: some hands open late, some fold earlier, and some should fold everywhere.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The world 3 framework is not a seat drill. It is a preflop habit that ties hand quality to position."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_focus",
+  "kind": "action_choice",
+  "prompt": "With fold pressure available, choose action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Raise maximizes fold pressure when value hands are capped.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is expected for bluff pressure.",
+  "feedback_incorrect_v1": "Incorrect. When fold pressure is available, raise is the bluff action that puts the opponent to the harder decision."
+}

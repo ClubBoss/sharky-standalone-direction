@@ -1,0 +1,18 @@
+{
+  "id": "choose_button_call_playable_pressure_v1",
+  "kind": "action_choice",
+  "prompt": "Hijack opened and hero is on the button with QTs. Which simple action fits best once pressure is already on?",
+  "intent_v1": "trash_hands",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Once an open reaches the button, a playable suited broadway hand can continue cleanly by calling.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the hijack opens first, QTs on the button is no longer a clean first-in raise, so the simple continue is call."
+}

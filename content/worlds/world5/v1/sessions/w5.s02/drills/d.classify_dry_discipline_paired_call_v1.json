@@ -1,0 +1,13 @@
+{
+  "id": "classify_dry_discipline_paired_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board is paired and the pressure is thinner than it first looked. Choose the best action.",
+  "intent_v1": "texture_pairing",
+  "board_texture_v1": "paired",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Paired textures often shrink clean raise value, so calling keeps control.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Paired texture points to control through call.",
+  "feedback_incorrect_v1": "Incorrect. The paired-board read should keep the line more controlled."
+}

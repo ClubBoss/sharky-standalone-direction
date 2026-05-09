@@ -1,0 +1,16 @@
+{
+  "id": "choose_raise_turn_denial",
+  "kind": "action_choice",
+  "prompt": "Turn denial spot with vulnerable equity: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Denial nodes on turn continue via the bet branch.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "overbluff_pattern",
+  "feedback_correct_v1": "Correct. Denial line is active in this turn spot.",
+  "feedback_incorrect_v1": "Incorrect. Vulnerable equity wants protection now, so betting the turn is better than giving a free card.",
+  "acceptable_actions": [
+    "raise"
+  ]
+}

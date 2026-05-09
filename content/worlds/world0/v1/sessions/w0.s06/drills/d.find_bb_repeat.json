@@ -1,0 +1,11 @@
+{
+  "id": "find_bb_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. The big blind seat is the right seat anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the big blind seat here so the read stays tied to the correct seat anchor for this rep."
+}

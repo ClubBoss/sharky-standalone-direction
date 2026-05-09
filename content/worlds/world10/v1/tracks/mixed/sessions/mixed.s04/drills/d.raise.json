@@ -1,0 +1,13 @@
+{
+  "id": "raise",
+  "kind": "action_choice",
+  "prompt": "In this mixed spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise when pressure gain is clear and risk is controlled.",
+  "feedback_correct_v1": "Correct. Raising fits the track cue set, so the line applies pressure only when the read gives you a real leverage edge.",
+  "feedback_incorrect_v1": "Incorrect. Raise is the right mixed choice only when the pressure edge is clear, so do not leave value on the table with a timid line."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s1_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S1 to lock seat context.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Seat S1 keeps this repeat tied to one fixed context.",
+  "expected": {
+    "seatId": "S1"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S1 anchor is locked.",
+  "feedback_incorrect_v1": "Incorrect. This repeat is pinned to seat S1, so lock S1 before continuing."
+}

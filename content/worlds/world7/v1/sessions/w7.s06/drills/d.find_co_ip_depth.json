@@ -1,0 +1,13 @@
+{
+  "id": "find_co_ip_depth",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before in-position depth action.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because that earlier late-position range is what the in-position depth plan is measured against.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the right anchor here because the earlier late-position seat defines which in-position range is actually being measured."
+}

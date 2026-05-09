@@ -1,0 +1,13 @@
+{
+  "id": "classify_wet_protection_wet_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "This board is wet, pressure is rising, and your improvement paths are weak. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "wet",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "Wet textures with weak improvement support are often release spots, not pressure spots.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Wet pressure with weak improvement points to fold.",
+  "feedback_incorrect_v1": "Incorrect. Read the wet board first and respect the poor improvement outlook."
+}

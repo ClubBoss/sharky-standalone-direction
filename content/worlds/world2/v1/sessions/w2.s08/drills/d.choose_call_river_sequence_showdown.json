@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_river_sequence_showdown",
+  "kind": "action_choice",
+  "prompt": "Showdown finish branch on river: choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "By the river, this hand has reached showdown value, so checking is cleaner than turning it into a bluff.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. This river finish has showdown value, so checking is cleaner than bluffing.",
+  "feedback_incorrect_v1": "Incorrect. Betting turns showdown value into a bluff, but this river is better finished by checking.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

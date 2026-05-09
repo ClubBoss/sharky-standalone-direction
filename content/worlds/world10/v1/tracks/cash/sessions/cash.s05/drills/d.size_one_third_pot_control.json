@@ -1,0 +1,16 @@
+{
+  "id": "size_one_third_pot_control",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Thin value and control spot. Choose the best preset size.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "expected_action_mismatch",
+  "why_v1": "One third pot keeps risk controlled and still applies pressure.",
+  "feedback_correct_v1": "Correct. This preset keeps pressure with lower risk.",
+  "feedback_incorrect_v1": "Incorrect. This is the thin-value control spot: one-third pot keeps pressure on while managing risk better than the heavier half-pot sizing."
+}

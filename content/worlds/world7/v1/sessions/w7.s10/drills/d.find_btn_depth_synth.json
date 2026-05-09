@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_depth_synth",
+  "kind": "seat_tap",
+  "prompt": "Depth synthesis setup: tap BTN.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because the last acting seat converts deep-stack information into the clearest pressure edge.",
+  "feedback_incorrect_v1": "Incorrect. Start with the button so you know who acts last and can use depth with the biggest informational edge. That seat anchor matters because deep-stack pressure is much stronger when the late-position player controls the final decision."
+}

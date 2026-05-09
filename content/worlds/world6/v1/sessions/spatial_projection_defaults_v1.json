@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "sessions": {
+    "w6.s01": {
+      "drill_ids": [
+        "find_btn",
+        "find_co_range",
+        "tap_hole_left_as",
+        "tap_flop_mid",
+        "tap_turn_range",
+        "choose_call_range",
+        "choose_raise_range",
+        "classify_strong_raise",
+        "classify_missed_fold",
+        "choose_fold_trap"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Kh",
+          "8d",
+          "3c",
+          "2s"
+        ],
+        "hero_hole_cards_v1": [
+          "As",
+          "Kd"
+        ]
+      }
+    },
+    "w6.s02": {
+      "drill_ids": [
+        "find_bb",
+        "find_btn_realize",
+        "tap_hole_right_ks",
+        "tap_flop_realize",
+        "tap_turn",
+        "tap_river_trap",
+        "choose_call_realize",
+        "choose_raise_blocker"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Qc",
+          "9h",
+          "4d",
+          "2c",
+          "7s"
+        ],
+        "hero_hole_cards_v1": [
+          "Ah",
+          "Ks"
+        ]
+      }
+    },
+    "w6.s03": {
+      "drill_ids": [
+        "find_sb",
+        "find_bb_advantage",
+        "tap_hole_left",
+        "tap_flop_left",
+        "tap_turn_advantage",
+        "choose_call_realize",
+        "choose_raise_range",
+        "choose_fold_trap",
+        "chain_flop_turn_pressure",
+        "chain_flop_turn_river_v1"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Jd",
+          "7c",
+          "3h",
+          "2s"
+        ],
+        "hero_hole_cards_v1": [
+          "Qs",
+          "Tc"
+        ]
+      }
+    },
+    "w6.s04": {
+      "drill_ids": [
+        "find_btn_turn_compress",
+        "find_hj_turn_compress",
+        "tap_flop_reference",
+        "tap_turn_compress",
+        "tap_river_turn_compress",
+        "tap_hole_left_turn",
+        "choose_call_turn_compress",
+        "choose_raise_turn_edge"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Ad",
+          "9c",
+          "5h",
+          "2d",
+          "8s"
+        ],
+        "hero_hole_cards_v1": [
+          "Ac",
+          "Jd"
+        ]
+      }
+    },
+    "w6.s05": {
+      "drill_ids": [
+        "find_bb_river_polar",
+        "find_sb_river_polar",
+        "tap_flop_river_polar",
+        "tap_turn_reference",
+        "tap_river_polar",
+        "tap_hole_right_polar",
+        "choose_fold_merged",
+        "choose_raise_polar"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Ks",
+          "Td",
+          "6c",
+          "3h",
+          "2d"
+        ],
+        "hero_hole_cards_v1": [
+          "Qh",
+          "9s"
+        ]
+      }
+    },
+    "w6.s06": {
+      "drill_ids": [
+        "find_btn_ip_range",
+        "find_co_ip_range",
+        "tap_flop_ip_range",
+        "tap_turn_ip_range",
+        "tap_river_ip_range",
+        "tap_hole_left_ip_range",
+        "choose_call_ip_range",
+        "choose_raise_ip_range"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Ah",
+          "Jc",
+          "7d",
+          "4s",
+          "2c"
+        ],
+        "hero_hole_cards_v1": [
+          "As",
+          "Qd"
+        ]
+      }
+    },
+    "w6.s07": {
+      "drill_ids": [
+        "find_sb_oop_range",
+        "find_bb_oop_range",
+        "tap_flop_oop_range",
+        "tap_turn_oop_range",
+        "tap_river_oop_range",
+        "tap_hole_right_oop_range",
+        "choose_fold_oop_range",
+        "choose_call_oop_range"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "btn",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Kd",
+          "8s",
+          "5c",
+          "3d",
+          "2h"
+        ],
+        "hero_hole_cards_v1": [
+          "Jh",
+          "Ks"
+        ]
+      }
+    },
+    "w6.s08": {
+      "drill_ids": [
+        "find_btn_blocker_context",
+        "find_co_blocker_context",
+        "tap_flop_blocker_context",
+        "tap_turn_blocker_context",
+        "tap_river_blocker_context",
+        "tap_hole_left_blocker",
+        "choose_call_blocker_mod",
+        "choose_raise_blocker_edge"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Qs",
+          "Tc",
+          "6d",
+          "4h",
+          "2s"
+        ],
+        "hero_hole_cards_v1": [
+          "As",
+          "9c"
+        ]
+      }
+    },
+    "w6.s09": {
+      "drill_ids": [
+        "find_bb_transition",
+        "find_btn_transition",
+        "tap_flop_transition",
+        "tap_turn_transition",
+        "tap_river_transition",
+        "tap_hole_right_transition",
+        "choose_call_flop_transition",
+        "choose_raise_river_transition"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "Jh",
+          "8c",
+          "5s",
+          "3d",
+          "2c"
+        ],
+        "hero_hole_cards_v1": [
+          "Ah",
+          "Qh"
+        ]
+      }
+    },
+    "w6.s10": {
+      "drill_ids": [
+        "find_btn_synthesis",
+        "find_co_synthesis",
+        "tap_flop_synthesis",
+        "tap_turn_synthesis",
+        "tap_river_synthesis",
+        "tap_hole_left_synthesis",
+        "choose_call_synthesis",
+        "choose_raise_synthesis"
+      ],
+      "shared": {
+        "player_count_v1": 7,
+        "hero_seat_v1": "utg",
+        "villain_seat_v1": "bb",
+        "active_seats_v1": [
+          "btn",
+          "co",
+          "hj",
+          "lj",
+          "utg",
+          "sb",
+          "bb"
+        ],
+        "board_cards_v1": [
+          "As",
+          "Td",
+          "7c",
+          "4h",
+          "2d"
+        ],
+        "hero_hole_cards_v1": [
+          "As",
+          "Kc"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s6_c1_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6 before 4bet pressure branch.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Early-seat anchor changes valid preflop responses.",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Seat S6 anchor is identified.",
+  "feedback_incorrect_v1": "Incorrect. This node requires seat S6 context."
+}

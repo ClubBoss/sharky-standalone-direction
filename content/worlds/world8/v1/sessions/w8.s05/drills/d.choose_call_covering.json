@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_covering",
+  "kind": "action_choice",
+  "prompt": "When covering under moderate pressure, choose call.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when survival pressure does not require a fold or raise.",
+  "feedback_correct_v1": "Correct. Calling fits the tournament cue set, so the line preserves equity without risking more than this pressure read can justify.",
+  "feedback_incorrect_v1": "Incorrect. Calling is better here because a covering stack can stay controlled when pressure is moderate instead of overplaying a marginal edge."
+}

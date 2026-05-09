@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Stack-to-pot awareness check: tap turn.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor because the second board change can grow or shrink SPR pressure before the final decision.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn anchor because the second board change can grow or shrink SPR pressure before the final decision."
+}

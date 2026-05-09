@@ -1,0 +1,13 @@
+{
+  "id": "find_co_blocker_context",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before blocker-context action.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because that earlier late-position seat shows whose range is being refined before the blocker changes the line.",
+  "feedback_incorrect_v1": "Incorrect. Tap the cutoff because that earlier late-position seat shows whose range is being refined before the blocker changes the line."
+}

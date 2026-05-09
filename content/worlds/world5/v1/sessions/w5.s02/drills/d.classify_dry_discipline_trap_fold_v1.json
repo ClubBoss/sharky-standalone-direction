@@ -1,0 +1,13 @@
+{
+  "id": "classify_dry_discipline_trap_fold_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board still looks dry, but your hand has poor improvement and little clean pressure. Choose the best action.",
+  "intent_v1": "texture_high_card",
+  "board_texture_v1": "dry",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "Even on dry boards, weak improvement and poor pressure support can make folding best.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Dry texture does not force aggression when the improvement outlook is weak.",
+  "feedback_incorrect_v1": "Incorrect. Start from the board, then notice the weak improvement outlook."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_freq_control",
+  "kind": "seat_tap",
+  "prompt": "Exploit frequency setup: tap BTN.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before player-based exploit decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because the acting role with position best controls how often this exploit should fire.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because the frequency-control read is anchored to that acting role."
+}

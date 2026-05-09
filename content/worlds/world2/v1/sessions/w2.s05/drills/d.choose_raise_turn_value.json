@@ -1,0 +1,16 @@
+{
+  "id": "choose_raise_turn_value",
+  "kind": "action_choice",
+  "prompt": "Clear value turn spot after flop check-through: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Value turn nodes continue with the bet branch.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Value turn line is bet here.",
+  "feedback_incorrect_v1": "Incorrect. After the flop checks through, this turn is strong enough to bet for value instead of checking back again.",
+  "acceptable_actions": [
+    "raise"
+  ]
+}

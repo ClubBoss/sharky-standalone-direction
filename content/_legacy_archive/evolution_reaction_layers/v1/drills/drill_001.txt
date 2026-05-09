@@ -1,0 +1,20 @@
+# What to do
+Identify the dominant reaction layer (fold-heavy, call-heavy, or raise-heavy) suggested by the snapshot.
+
+# Input
+Range A applies moderate pressure with top-end continuity and blocker probes. Range B shows mixed density: capped tight pairs, loose middles that tend to call through pressure.
+
+# Expected reasoning
+A’s pressure compresses B’s capped zone, nudging it toward defensive reactions.
+B’s loose middles still prefer calling, so the stabilizer layer leans call-heavy.
+Raise-heavy only works if blockers back aggression; here the capped zone resists full raises.
+
+# Correct answer
+Call-heavy reaction layer: pressure keeps the capped area flat while the middle density calls through, resisting raises.
+
+# Common mistakes
+- Labeling the capped zone as raise-heavy.
+- Flattening the mixed density into a purely fold-heavy reaction.
+- Forcing raises because of A’s pressure alone.
+- Ignoring how B’s middles stabilize via calls.
+- Equating continuity with unchecked aggression.

@@ -1,0 +1,11 @@
+### C16 MTT Expansion Recap
+
+The C16 Exploit Plan Builder is a depth-aware, stage-aware checklist for tournaments. It starts by reading stack depth and position, since leverage at 60bb differs from 15bb. At deeper stacks you can float and pressure later streets; at 25bb you keep plans simple; below 15bb you convert marginal calls into folds or jams. Positions stay explicit: UTG and MP tighten under ICM, while CO, BTN, and SB gain more steal spots when blinds overfold.
+
+ICM pressure is the defining tournament edge. Near payjumps, population players often overfold early and middle positions, undersize cbets, or avoid thin value. Your counter-plan is to widen steals from BTN and SB, keep cbet_small pressure on dry boards, and raise undersized cbets that reveal capped ranges. Against overcalling blinds, swap in value-heavy raise lines and cbet_big on wet textures to tax draws. Where overbluffing appears, reduce bluff frequency and pick bluff-catch calls that match pot odds.
+
+Exploit triggers are the cues that flip you from baseline to attack: repeated 30% pot cbets, HUD spikes in fold-to-steal, or showdowns proving overbluff. Once seen, apply action conversion: check_back becomes probe_bet, call becomes raise, fold becomes call when fields overfold. Each conversion respects stack depth and whether you hold blockers that cut value combos. A single trigger is enough for a short burst; sustain it only if data stays consistent.
+
+Stage plans keep the builder repeatable. Early stages favor information gathering with modest cbet_small lines. Mid stages with 30-40bb reward pressure versus overfolding blinds and late-position steals. Bubble and final-table play are ICM-first: trim thin bluff-catches, attack medium stacks with raise lines that threaten survival, and avoid spew versus chip leaders. After each orbit, reassess stack ladders and whether population leaks still apply.
+
+A GTO line seeks balance; this builder intentionally biases toward the leak to capture chips before conditions change. By sticking to ASCII-only checklists-stack, position, trigger, conversion, sizing-you gain a deterministic routine. Apply it, track showdowns to confirm the read, then reset when the field adjusts. This keeps your MTT exploitation sharp, fast, and controlled across changing depths and payjump pressure.

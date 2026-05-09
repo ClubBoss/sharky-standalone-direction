@@ -1,0 +1,11 @@
+3bet_ip_9bb
+3bet_oop_12bb
+4bet_ip_21bb
+big_bet_75
+call
+delay_turn
+fold
+half_pot_50
+probe_turns
+small_cbet_33
+triple_barrel_scare

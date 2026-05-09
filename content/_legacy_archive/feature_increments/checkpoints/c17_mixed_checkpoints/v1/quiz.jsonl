@@ -1,0 +1,7 @@
+{"id":"c17:quiz:01","type":"mc","prompt":"Why use smaller cbets on dry high boards?","options":["Range edge high","No fold equity","Stacks shallow"],"answer":0,"explanation":"Dry boards favor the preflop aggressor; small size captures folds efficiently."}
+{"id":"c17:quiz:02","type":"tf","prompt":"Paired boards reduce bluff success.","answer":true,"explanation":"Fewer unpaired combos fold; value rises while bluffs shrink."}
+{"id":"c17:quiz:03","type":"mc","prompt":"OOP in 3BP on wet flop should often?","options":["Check more","Always jam","Min-bet"],"answer":0,"explanation":"Checking controls pot and keeps range protected when equity swings."}
+{"id":"c17:quiz:04","type":"tf","prompt":"Overbluffing regs in 3BP should be met with more check-calls.","answer":true,"explanation":"Calling retains bluffs and avoids folding too tight versus aggression."}
+{"id":"c17:quiz:05","type":"mc","prompt":"When turn bricks after small flop cbet?","options":["Second small barrel","Always check","Overbet"],"answer":0,"explanation":"Repeat small size folds ace-high and weak pairs without overinvesting."}
+{"id":"c17:quiz:06","type":"mc","prompt":"ICM fear plus undersized cbet signals?","options":["Capped range","Max strength","Random bluff"],"answer":0,"explanation":"Small sizing under pressure often caps range; raise or float then pressure."}
+{"id":"c17:quiz:07","type":"tf","prompt":"River thin value works best versus overcalling pools.","answer":true,"explanation":"When villains call too wide, thin value bets gain chips."}

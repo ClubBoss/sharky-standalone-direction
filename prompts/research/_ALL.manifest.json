@@ -1,0 +1,22 @@
+{
+  "id_source": "curriculum_ids.dart",
+  "module_ids": [
+    "core_rules_and_setup",
+    "core_positions_and_initiative",
+    "core_pot_odds_equity",
+    "core_starting_hands",
+    "core_flop_fundamentals",
+    "core_turn_fundamentals"
+  ],
+  "research_path": "prompts/research/_ALL.prompts.txt",
+  "dispatcher_path": "prompts/dispatcher/_ALL.txt",
+  "bytes": {
+    "research": 23082,
+    "dispatcher": 1968
+  },
+  "line_count": {
+    "research": 464,
+    "dispatcher": 104
+  },
+  "generated_at": "2025-08-31T06:13:49"
+}

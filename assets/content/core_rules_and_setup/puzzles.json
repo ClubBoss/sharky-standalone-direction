@@ -1,0 +1,62 @@
+[
+  {
+    "id": "crs_p1",
+    "heroCards": [
+      "Ad",
+      "Kd"
+    ],
+    "boardCards": [],
+    "villainAction": "Everyone folds to you in the big blind",
+    "potSize": 3,
+    "correctAction": "check",
+    "explanation": "You win the pot for free with a check. Walk and save chips."
+  },
+  {
+    "id": "crs_p2",
+    "heroCards": [
+      "7h",
+      "6h"
+    ],
+    "boardCards": [],
+    "villainAction": "Button closes action with no raises",
+    "potSize": 2,
+    "correctAction": "raise",
+    "explanation": "Button acts last preflop. Steal the blinds with a raise."
+  },
+  {
+    "id": "crs_p3",
+    "heroCards": [
+      "9c",
+      "2d"
+    ],
+    "boardCards": [],
+    "villainAction": "Big Blind calls after you limp from the small blind",
+    "potSize": 3,
+    "correctAction": "fold",
+    "explanation": "Out of position and dominated. Fold and stay ready for better spots."
+  },
+  {
+    "id": "crs_p4",
+    "heroCards": [
+      "Qh",
+      "Js"
+    ],
+    "boardCards": [],
+    "villainAction": "Action folds to you on the button",
+    "potSize": 2,
+    "correctAction": "raise",
+    "explanation": "Button has positional advantage. Open-raise to pressure the blinds."
+  },
+  {
+    "id": "crs_p5",
+    "heroCards": [
+      "5s",
+      "5d"
+    ],
+    "boardCards": [],
+    "villainAction": "You are in the big blind and everyone folds",
+    "potSize": 2,
+    "correctAction": "check",
+    "explanation": "You already invested half a blind. Check and see a free flop."
+  }
+]

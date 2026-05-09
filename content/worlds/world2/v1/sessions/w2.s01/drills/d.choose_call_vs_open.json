@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_vs_open",
+  "kind": "action_choice",
+  "prompt": "Facing one open with playable price, choose the legal continue.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "When toCall is positive and price is acceptable, call is legal and stable.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "illegal_action_selection",
+  "feedback_correct_v1": "Correct. Call is the legal continue at this price.",
+  "feedback_incorrect_v1": "Incorrect. Facing one open with a playable price, call is the clean legal continue here."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_consistency_check",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6 to anchor this track decision.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchors keep your track choice tied to the right player.",
+  "feedback_correct_v1": "Correct. Seat S6 is the right player anchor, so the cue read stays tied to the exact seat this plan is built around.",
+  "feedback_incorrect_v1": "Incorrect. Seat S6 is the live player anchor because consistency disappears as soon as the decision is attached to the wrong stack or range."
+}

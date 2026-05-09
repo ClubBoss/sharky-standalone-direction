@@ -1,0 +1,13 @@
+{
+  "id": "find_co_ip_range",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before in-position range pressure action.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff anchor confirmed before the in-position pressure decision.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the right seat because that earlier in-position anchor defines which pressure range is being measured before the action choice."
+}

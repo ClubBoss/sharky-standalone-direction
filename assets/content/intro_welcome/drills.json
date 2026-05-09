@@ -1,0 +1,14 @@
+[
+  {
+    "id": "w_drill_01",
+    "question": "Who is your true enemy at the poker table?",
+    "rationale": "The other players. The casino is just the host.",
+    "target": "players"
+  },
+  {
+    "id": "w_drill_03",
+    "question": "What is 'The Long Run'?",
+    "rationale": "A large sample of hands where skill cancels out luck.",
+    "target": "sample"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s4",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S4.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "why_v1": "Mark the other player before you decide how much pressure to use.",
+  "expected": {
+    "seatId": "S4"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at S4 because you need the right player before you act.",
+  "feedback_incorrect_v1": "Incorrect. Tap seat S4 because that player sets up the read."
+}

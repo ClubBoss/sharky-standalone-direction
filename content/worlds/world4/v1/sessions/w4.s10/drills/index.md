@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_denial_final_checkpoint: use the standard denial size when the continue should feel clearly less comfortable.
+- choose_one_third_pot_denial_price_gate_final: keep the denial line lighter while still taxing realization and preventing an easy continue.
+- choose_pot_denial_lockout_final: use the strongest preset when denial needs maximum immediate cost.
+- choose_min_raise_denial_reopen_final: reopen with the smallest legal raise when denial should remain controlled.
+- find_bb_focus: tap the big blind seat before selecting action.
+- find_btn_focus: tap the button seat before selecting action.
+- find_seat_s6_focus: tap seat S6 to confirm the acting seat.
+- choose_raise_focus: with strong denial edge, choose action.
+- choose_call_focus: with moderate equity and stable price, choose action.
+- choose_fold_focus: with weak denial edge, choose action.
+- tap_flop_mid_focus: tap the middle flop card to confirm board context.
+- tap_river_focus: tap the river slot to confirm street context.

@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_short",
+  "kind": "board_tap",
+  "prompt": "Tap turn to confirm short-stack threshold context.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor, so the tournament read updates on the street where pressure often changes shape.",
+  "feedback_incorrect_v1": "Incorrect. The turn card is the target board card because that street confirms whether the stack has really crossed into push territory."
+}

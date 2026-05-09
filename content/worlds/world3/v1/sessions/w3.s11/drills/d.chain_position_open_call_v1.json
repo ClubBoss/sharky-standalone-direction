@@ -1,0 +1,59 @@
+{
+  "id": "chain_position_open_call_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s11_position_open_call_v1",
+  "prompt": "Play this short World 3 preflop framework chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button and villain is in the cutoff. Who will be in position after the flop?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "available_actions_v1": ["hero", "villain"],
+      "expected_action": "hero",
+      "feedback_correct_v1": "Correct. The button acts later than the cutoff after the flop, so hero is in position.",
+      "feedback_incorrect_v1": "Incorrect. Hero is in position here because the button acts after the cutoff postflop.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position tells you who gets more information before making the next decision."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Keep the same seats. Hero holds KQo and the pot is unopened. Which simple preflop action fits better now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Qd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In position with a solid broadway hand, opening is better than passing up the spot.",
+      "feedback_incorrect_v1": "Incorrect. This is a good in-position opening hand, so the simple preflop frame is raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Unopened pots reward strong in-position hands for taking the initiative."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Keep the same hand and seats, but now villain opened first from the cutoff. Which simple action fits better for hero on the button?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Qd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The open changed the frame, so calling in position is a cleaner default than treating it like an unopened raise spot.",
+      "feedback_incorrect_v1": "Incorrect. Once villain opened first, this spot is no longer the same as an unopened pot. Calling is the simpler in-position response.",
+      "recap_v1": "World 3 starts with one habit: read position first, then let the action frame decide whether the hand wants raise, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The same hand can prefer different actions when the action gets to you in a different frame."
+    }
+  ]
+}

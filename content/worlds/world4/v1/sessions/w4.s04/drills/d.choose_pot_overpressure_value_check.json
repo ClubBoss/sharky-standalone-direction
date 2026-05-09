@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_overpressure_value_check",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the better value size when pot would add more pressure than the value goal needs.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Half pot keeps value pressure practical without turning the hand into maximum-force pricing.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

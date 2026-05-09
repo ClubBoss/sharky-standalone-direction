@@ -1,0 +1,3 @@
+check
+no
+weak_hand

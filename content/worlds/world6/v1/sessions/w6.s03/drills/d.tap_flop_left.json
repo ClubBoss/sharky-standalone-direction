@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left",
+  "kind": "board_tap",
+  "prompt": "Range context first: tap flop left.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. flop_left is the board anchor here because the first flop card starts the texture read that tells you who owns the pressure.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the left flop card first because it helps define whether this board favors your range or the other side's. The first board card is part of the texture read that tells you if pressure is really yours to apply."
+}

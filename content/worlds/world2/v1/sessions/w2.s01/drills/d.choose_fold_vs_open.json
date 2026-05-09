@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_vs_open",
+  "kind": "action_choice",
+  "prompt": "Facing one open with weak price and weak hand quality, choose action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Poor price and weak quality collapse to fold.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "illegal_action_selection",
+  "feedback_correct_v1": "Correct. Fold is the legal default under weak price pressure.",
+  "feedback_incorrect_v1": "Incorrect. Weak price plus weak hand quality does not justify continuing, so fold is the clean response."
+}

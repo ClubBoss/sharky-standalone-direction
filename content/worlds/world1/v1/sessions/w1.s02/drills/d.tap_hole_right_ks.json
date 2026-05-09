@@ -1,0 +1,11 @@
+{
+  "id": "tap_hole_right_ks",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap the king of spades hole card.",
+  "intent_v1": "trash_hands",
+  "expected": {
+    "cardSlot": "p1",
+    "cardId": "Ks"
+  },
+  "error_class": "hole_card_identity_confusion"
+}

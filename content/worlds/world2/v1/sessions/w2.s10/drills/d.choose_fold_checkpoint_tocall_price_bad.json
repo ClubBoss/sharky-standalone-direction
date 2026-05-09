@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_checkpoint_tocall_price_bad",
+  "kind": "action_choice",
+  "prompt": "Checkpoint pressure node with poor toCall price: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the price is too poor, folding beats paying to continue a losing pressure spot.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "overfold_pattern",
+  "feedback_correct_v1": "Correct. Once the price gets too poor, folding is cleaner than paying off anyway.",
+  "feedback_incorrect_v1": "Incorrect. Calling pays too much once the price gets too poor, and raising stretches a spot that should simply release with a fold."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "world1_act0_table_literacy",
+  "order": 1,
+  "title": "Act 0: Table Literacy",
+  "description": "Fast seat anchors for your first clean table read.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "act0_table_literacy",
+  "reasoning": "Builds confidence by locking BTN-SB-BB orientation before deeper decisions.",
+  "availability": "available"
+}

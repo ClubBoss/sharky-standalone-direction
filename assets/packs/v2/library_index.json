@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "cbet_ip",
+    "name": "CBet IP",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 40,
+    "spotCount": 6,
+    "positions": [
+      "btn",
+      "bb"
+    ],
+    "tags": [
+      "postflop",
+      "cbet"
+    ]
+  },
+  {
+    "id": "check_raise_oop",
+    "name": "Check-Raise OOP",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 50,
+    "spotCount": 1,
+    "positions": [
+      "bb",
+      "btn"
+    ],
+    "tags": [
+      "postflop",
+      "check-raise"
+    ],
+    "unlockRules": {
+      "requiredPacks": [
+        "cbet_ip"
+      ]
+    }
+  },
+  {
+    "id": "float_turn",
+    "name": "Turn Float IP",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 50,
+    "spotCount": 1,
+    "positions": [
+      "btn",
+      "sb"
+    ],
+    "tags": [
+      "postflop",
+      "float"
+    ]
+  },
+  {
+    "id": "donk_bet_flop",
+    "name": "Donk Bet Flop",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 30,
+    "spotCount": 1,
+    "positions": [
+      "bb",
+      "btn"
+    ],
+    "tags": [
+      "postflop",
+      "donk"
+    ]
+  },
+  {
+    "id": "river_bluffcatch",
+    "name": "River Bluffcatch",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 40,
+    "spotCount": 1,
+    "positions": [
+      "bb",
+      "btn"
+    ],
+    "tags": [
+      "postflop",
+      "bluffcatch"
+    ]
+  },
+  {
+    "id": "open_fold_early_mtt",
+    "name": "Open/Fold Early MTT",
+    "description": "Decide to open or fold from early position",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 30,
+    "spotCount": 2,
+    "positions": [
+      "utg",
+      "utg1"
+    ],
+    "tags": [
+      "mtt",
+      "open-fold",
+      "early"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "open_fold_utg_mtt",
+    "name": "UTG Open/Fold MTT",
+    "description": "UTG opens or folds 15-25bb",
+    "type": "openingMTT",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": [
+      "utg"
+    ],
+    "tags": [
+      "level2",
+      "mtt",
+      "utg",
+      "openfold"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "open_fold_lj_mtt",
+    "name": "LJ Open/Fold MTT",
+    "description": "LJ opens or folds 25bb",
+    "type": "openingMTT",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": [
+      "lj"
+    ],
+    "tags": [
+      "level2",
+      "mtt",
+      "lj",
+      "openfold"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "threebet_push_mid_mtt",
+    "name": "3bet Push Mid MTT",
+    "description": "Shove over opens from middle position",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": [
+      "co",
+      "btn"
+    ],
+    "tags": [
+      "mtt",
+      "3bet-push"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "push_fold_cash",
+    "name": "Push/Fold Cash",
+    "description": "Short stack push/fold spots from the small blind",
+    "type": "cash",
+    "gameType": "cash",
+    "bb": 15,
+    "spotCount": 2,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "cash",
+      "push-fold"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "cash"
+    }
+  },
+  {
+    "id": "push_fold_btn_cash",
+    "name": "BTN Push/Fold Cash 10bb",
+    "description": "Short stack BTN shove or fold decisions",
+    "type": "cash",
+    "gameType": "cash",
+    "bb": 10,
+    "spotCount": 8,
+    "positions": [
+      "btn"
+    ],
+    "tags": [
+      "pushFold",
+      "btn",
+      "cash",
+      "beginner"
+    ],
+    "meta": {
+      "icon": "cash"
+    }
+  },
+  {
+    "id": "open_fold_mid_cash",
+    "name": "Open/Fold Mid Cash",
+    "description": "Open or fold from LJ, HJ and CO in cash games",
+    "type": "cash",
+    "gameType": "cash",
+    "bb": 100,
+    "spotCount": 2,
+    "positions": [
+      "lj",
+      "hj",
+      "co"
+    ],
+    "tags": [
+      "cash",
+      "open-fold"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "cash"
+    },
+    "unlockRules": {
+      "requiredPacks": [
+        "push_fold_cash"
+      ]
+    }
+  },
+  {
+    "id": "threebet_push_late_cash",
+    "name": "3bet Push Late Cash",
+    "description": "Shove over BTN opens from the small blind",
+    "type": "cash",
+    "gameType": "cash",
+    "bb": 50,
+    "spotCount": 2,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "cash",
+      "3bet-push",
+      "shortstack"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "cash"
+    },
+    "unlockRules": {
+      "requiredPacks": [
+        "push_fold_cash",
+        "open_fold_mid_cash"
+      ]
+    }
+  },
+  {
+    "id": "3bet_push_btn_vs_co",
+    "name": "3bet Push BTN vs CO",
+    "description": "BTN shoves 25bb over CO open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 4,
+    "positions": [
+      "btn"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "btn",
+      "co",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_btn_vs_lj",
+    "name": "3bet Push BTN vs LJ",
+    "description": "BTN shoves 25bb over LJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "btn"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "btn",
+      "lj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_btn_vs_hj",
+    "name": "3bet Push BTN vs HJ",
+    "description": "BTN shoves 25bb over HJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "btn"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "btn",
+      "hj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_btn_vs_sb",
+    "name": "3bet Push BTN vs SB",
+    "description": "BTN shoves 25bb over SB open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "btn"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "btn",
+      "sb",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_co_vs_btn",
+    "name": "3bet Push CO vs BTN",
+    "description": "CO shoves 25bb over BTN open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "co"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "co",
+      "btn",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_co_vs_lj",
+    "name": "3bet Push CO vs LJ",
+    "description": "CO shoves 25bb over LJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "co"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "co",
+      "lj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_sb_vs_btn",
+    "name": "3bet Push SB vs BTN",
+    "description": "SB shoves 25bb over BTN open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "sb",
+      "btn",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_sb_vs_co",
+    "name": "3bet Push SB vs CO",
+    "description": "SB shoves 25bb over CO open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "sb",
+      "co",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_sb_vs_lj",
+    "name": "3bet Push SB vs LJ",
+    "description": "SB shoves 25bb over LJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "sb",
+      "lj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_sb_vs_hj",
+    "name": "3bet Push SB vs HJ",
+    "description": "SB shoves 25bb over HJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "sb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "sb",
+      "hj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_bb_vs_btn",
+    "name": "3bet Push BB vs BTN",
+    "description": "BB shoves 25bb over BTN open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": [
+      "bb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "bb",
+      "btn",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_bb_vs_lj",
+    "name": "3bet Push BB vs LJ",
+    "description": "BB shoves 25bb over LJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "bb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "bb",
+      "lj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_bb_vs_hj",
+    "name": "3bet Push BB vs HJ",
+    "description": "BB shoves 25bb over HJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "bb"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "bb",
+      "hj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "3bet_push_hj_vs_lj",
+    "name": "3bet Push HJ vs LJ",
+    "description": "HJ shoves 25bb over LJ open",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 6,
+    "positions": [
+      "hj"
+    ],
+    "tags": [
+      "level2",
+      "3bet-push",
+      "hj",
+      "lj",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "open_fold_btn_co_lj",
+    "name": "Open/Fold BTN-CO-LJ",
+    "description": "Open or fold decisions 15-25bb",
+    "type": "openingMTT",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 3,
+    "positions": [
+      "btn",
+      "co",
+      "lj"
+    ],
+    "tags": [
+      "intermediate",
+      "openfold",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "bb_defense_vs_minraise",
+    "name": "BB Defense vs Minraise",
+    "description": "Defend big blind versus minraises",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": [
+      "bb"
+    ],
+    "tags": [
+      "intermediate",
+      "defense",
+      "bb",
+      "minraise"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "pan_tool"
+    }
+  },
+  {
+    "id": "threebet_push_vs_steal",
+    "name": "3bet Push vs Steal",
+    "description": "Shove over steal attempts",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 3,
+    "positions": [
+      "bb",
+      "co"
+    ],
+    "tags": [
+      "intermediate",
+      "3bet-push",
+      "steal",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "limp_call_fold",
+    "name": "Limp Call/Fold",
+    "description": "SB and BTN limp pots",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 15,
+    "spotCount": 2,
+    "positions": [
+      "sb",
+      "btn"
+    ],
+    "tags": [
+      "intermediate",
+      "limp",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "bvb_push_call_adjustments",
+    "name": "BvB Push/Call Adjustments",
+    "description": "Blind versus blind shoving and calling",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": [
+      "sb",
+      "bb"
+    ],
+    "tags": [
+      "intermediate",
+      "bvb",
+      "push-fold",
+      "mtt"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "threebet_push_vs_open_low",
+    "name": "3bet Push vs Open (12-20bb)",
+    "description": "Short-stack shove over opens",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 18,
+    "spotCount": 3,
+    "positions": [
+      "sb",
+      "co",
+      "bb"
+    ],
+    "tags": [
+      "intermediate",
+      "preflop-advanced",
+      "tournament"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "call_open_vs_isopush",
+    "name": "Call Open vs Iso-Push",
+    "description": "Facing squeezes after calling",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 17,
+    "spotCount": 3,
+    "positions": [
+      "co",
+      "btn",
+      "bb"
+    ],
+    "tags": [
+      "intermediate",
+      "preflop-advanced",
+      "tournament"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "sb_limp_repush",
+    "name": "SB Limp Re-Push",
+    "description": "Limp then shove over BB raise",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 16,
+    "spotCount": 2,
+    "positions": [
+      "sb",
+      "bb"
+    ],
+    "tags": [
+      "intermediate",
+      "preflop-advanced",
+      "tournament"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "north"
+    }
+  },
+  {
+    "id": "bb_vs_limp_raise",
+    "name": "BB vs Limp-Raise",
+    "description": "Big blind response to limp-raise",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 15,
+    "spotCount": 2,
+    "positions": [
+      "bb",
+      "sb",
+      "btn"
+    ],
+    "tags": [
+      "intermediate",
+      "preflop-advanced",
+      "tournament"
+    ],
+    "meta": {
+      "recommended": true,
+      "icon": "schedule"
+    }
+  },
+  {
+    "id": "flop_draw_shove_check",
+    "name": "Flop Draw Shove or Check",
+    "description": "Postflop jam decision with draws",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": ["btn", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "overpair_vs_aggression",
+    "name": "Overpair vs Aggression",
+    "description": "Handle overpairs facing aggression",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 30,
+    "spotCount": 2,
+    "positions": ["co", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "double_barrel_jam",
+    "name": "Turn Barrel Jam",
+    "description": "2-barrel shove after flop cbet",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": ["btn", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "delayed_shove_vs_missed_cbet",
+    "name": "Delayed Shove vs Missed CBet",
+    "description": "Jam after opponent skips c-bet",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": ["sb", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  }
+  ,{
+    "id": "draw_or_shove_flop",
+    "name": "Draw or Shove Flop",
+    "description": "Push or fold with strong draws on flop",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": ["btn", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "overpair_vs_late_aggression",
+    "name": "Overpair vs Late Aggression",
+    "description": "Handle overpairs facing turn/river pressure",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": ["co", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "barrel_jam_drawy",
+    "name": "Barrel Jam Drawy Boards",
+    "description": "Jam multi-barrel on draw heavy boards",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 2,
+    "positions": ["btn", "bb"],
+    "tags": ["advanced", "postflop-jam", "tournament"]
+  },
+  {
+    "id": "btn_open_bb_call_sb_shove",
+    "name": "BTN Open BB Call -> SB Shove",
+    "description": "Multiway shove from SB after open and call",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 15,
+    "spotCount": 2,
+    "positions": ["sb", "btn", "bb"],
+    "tags": ["advanced", "icm", "multiway", "tournament"]
+  },
+  {
+    "id": "limp_limp_hero_bb",
+    "name": "Limp Limp Hero BB",
+    "description": "BB decision after two limpers",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 10,
+    "spotCount": 2,
+    "positions": ["bb", "utg", "mp"],
+    "tags": ["advanced", "icm", "multiway", "tournament"]
+  },
+  {
+    "id": "icm_final6_sb_vs_bb_reshove",
+    "name": "ICM Final 6 SB vs BB Reshove",
+    "description": "Call or fold facing BB reshove",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": ["sb", "bb"],
+    "tags": ["advanced", "icm", "multiway", "tournament"]
+  },
+  {
+    "id": "icm_btn_shove_bb",
+    "name": "ICM BTN Shove vs BB",
+    "description": "BB decision vs BTN shove",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 12,
+    "spotCount": 2,
+    "positions": ["bb", "btn"],
+    "tags": ["advanced", "icm", "multiway", "tournament"]
+  },
+  {
+    "id": "river_bluffcatch_overbet",
+    "name": "River Bluffcatch vs Overbet",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 40,
+    "spotCount": 2,
+    "positions": ["co", "btn"],
+    "tags": ["bluffcatch", "hero-call", "advanced", "tournament"]
+  },
+  {
+    "id": "turn_xcall_vs_barrel",
+    "name": "Turn X-Call vs Barrel",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 30,
+    "spotCount": 2,
+    "positions": ["bb", "btn"],
+    "tags": ["bluffcatch", "hero-call", "advanced", "tournament"]
+  },
+  {
+    "id": "marginal_bluffcatch_shove",
+    "name": "Facing Shove with Marginal Bluffcatcher",
+    "description": "Postflop training pack",
+    "type": "postflop",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 2,
+    "positions": ["btn", "bb"],
+    "tags": ["bluffcatch", "hero-call", "advanced", "tournament"]
+  },
+  {
+    "id": "btn_vs_co_20bb_call_push_fold",
+    "name": "BTN vs CO — 20bb (Call / Push / Fold)",
+    "description": "",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 20,
+    "positions": ["btn"],
+    "tags": ["btn", "co", "vsOpen", "3betPush", "callVsOpen", "foldVsOpen", "20bb", "mtt"],
+    "meta": {"audience": "Advanced", "icon": "north"}
+  },
+  {
+    "id": "sb_vs_btn_20bb_call_push_fold",
+    "name": "SB vs BTN — 20bb (Call / Push / Fold)",
+    "description": "",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 20,
+    "spotCount": 22,
+    "positions": ["sb"],
+    "tags": ["sb", "btn", "vsOpen", "3betPush", "callVsOpen", "foldVsOpen", "20bb", "mtt"],
+    "meta": {"audience": "Advanced", "icon": "north"}
+  },
+  {
+    "id": "bb_vs_btn_25bb_call_push_fold",
+    "name": "BB vs BTN — 25bb (Call / Push / Fold)",
+    "description": "",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 24,
+    "positions": ["bb"],
+    "tags": ["bb", "btn", "vsOpen", "3betPush", "callVsOpen", "foldVsOpen", "25bb", "mtt"],
+    "meta": {"audience": "Advanced", "icon": "north"}
+  },
+  {
+    "id": "bb_vs_sb_25bb_call_push_fold",
+    "name": "BB vs SB — 25bb (Call / Push / Fold)",
+    "description": "",
+    "type": "mtt",
+    "gameType": "tournament",
+    "bb": 25,
+    "spotCount": 22,
+    "positions": ["bb"],
+    "tags": ["bb", "sb", "vsOpen", "3betPush", "callVsOpen", "foldVsOpen", "25bb", "mtt"],
+    "meta": {"audience": "Advanced", "icon": "north"}
+  }
+]

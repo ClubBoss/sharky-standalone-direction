@@ -1,0 +1,12 @@
+{
+  "id": "find_sb_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat.",
+  "why_v1": "This drill anchors the small blind seat before the learner reads the turn card and action buttons.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. This drill anchors the small blind seat before the learner reads the turn card and action buttons.",
+  "feedback_incorrect_v1": "Incorrect. Use the small blind seat here so the read stays tied to the correct seat anchor for this rep."
+}

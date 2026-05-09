@@ -1,0 +1,7 @@
+{"id":"cxx:quiz:01","type":"mc","prompt":"Sharky's role in Psi-2?","options":["Guide first decision","Control bets","Hide data"],"answer":0,"explanation":"Sharky guides and explains the first action."}
+{"id":"cxx:quiz:02","type":"tf","prompt":"Tier-A feeds into ESM before coaching.","answer":true,"explanation":"Tier-A outputs are refined by ESM for coaching."}
+{"id":"cxx:quiz:03","type":"mc","prompt":"Default flop action in BTN vs BB dry spot?","options":["cbet_small","all-in","check_fold"],"answer":0,"explanation":"Baseline onboarding line is small cbet."}
+{"id":"cxx:quiz:04","type":"tf","prompt":"V4 visuals can be toggled off.","answer":true,"explanation":"V4 is on by default but toggleable."}
+{"id":"cxx:quiz:05","type":"mc","prompt":"AT model tracks?","options":["Attention/tone","Card suits","Seat number"],"answer":0,"explanation":"AT focuses on attention level and tone."}
+{"id":"cxx:quiz:06","type":"mc","prompt":"What does a check_back show?","options":["Safety pacing","Maximum pressure","Random play"],"answer":0,"explanation":"Check back is the safe comparison line."}
+{"id":"cxx:quiz:07","type":"tf","prompt":"Cohesion checks run before advice shows.","answer":true,"explanation":"Consistency gate prevents conflicting outputs."}

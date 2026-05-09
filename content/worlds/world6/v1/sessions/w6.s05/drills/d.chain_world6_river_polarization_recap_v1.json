@@ -1,0 +1,56 @@
+{
+  "id": "chain_world6_river_polarization_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w6_s05_river_polarization_recap_v1",
+  "prompt": "Play this short World 6 river-polarization recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "turn",
+      "prompt": "Step 1: Turn compression keeps the edge real but not clean enough to force the pot. Which simple action fits best?",
+      "intent_v1": "equity_realization",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. Compression often points to the more controlled continue.",
+      "feedback_incorrect_v1": "Incorrect. Let the compressed range picture keep the line controlled first.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Range compression matters because it can flatten the edge before the river resolves the shape."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 2: The river ending stays merged and your likely range no longer wants to force a thin continue. Which simple action fits best now?",
+      "intent_v1": "range_vs_hand",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Merged pressure without a clean edge should release.",
+      "feedback_incorrect_v1": "Incorrect. Start from the merged ending before you choose action.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Merged endings often fail to justify strong pressure when the full range picture stays ordinary."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The river ending is now clearly polarized and the range edge is strong enough to punish bluff catchers. Which simple action fits best?",
+      "intent_v1": "think_in_ranges",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A clean polarized ending supports the stronger pressure line.",
+      "feedback_incorrect_v1": "Incorrect. Let the polarized range ending lead the action.",
+      "recap_v1": "World 6 river-polarization recap should now feel tiered: compressed turns often control, merged river endings can fold, and truly polarized endings can press hard.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The recap pattern here is that the learner should follow how the full range shape sharpens from turn to river instead of freezing on one stale read."
+    }
+  ]
+}

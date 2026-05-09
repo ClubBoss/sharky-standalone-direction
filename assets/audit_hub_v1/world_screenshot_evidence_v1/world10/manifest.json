@@ -1,0 +1,21 @@
+{
+  "world_id": "W10",
+  "artifact_dir": "assets/audit_hub_v1/world_screenshot_evidence_v1/world10",
+  "entries": [
+    {
+      "session_id": "cash.s01",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world10/cash.s01.png",
+      "bytes": 2236761
+    },
+    {
+      "session_id": "tournament.s05",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world10/tournament.s05.png",
+      "bytes": 2238605
+    },
+    {
+      "session_id": "mixed.s10",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world10/mixed.s10.png",
+      "bytes": 2238530
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_oop_depth",
+  "kind": "action_choice",
+  "prompt": "When exposure stabilizes, choose call.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when stack depth does not support a raise.",
+  "feedback_correct_v1": "Correct. Calling fits because the depth still lets you realize equity out of position without forcing a pot your hand cannot own.",
+  "feedback_incorrect_v1": "Incorrect. Call is better here because even out of position you still have enough depth to realize equity without forcing a pot that your hand cannot dominate. A controlled continue keeps the range intact while the edge is not clean enough to justify immediate aggression."
+}

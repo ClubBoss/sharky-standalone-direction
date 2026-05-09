@@ -1,0 +1,8 @@
+{
+  "id": "placement_test",
+  "order": 0,
+  "title": "Placement Test",
+  "type": "intro",
+  "description": "A quick check on poker terminology before you start.",
+  "version": "v1"
+}

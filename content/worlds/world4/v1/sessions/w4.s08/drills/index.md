@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_protection_followthrough: use the firmer protection line when you want the continue to feel meaningfully harder without jumping to maximum force.
+- choose_pot_protection_crank_pressure: use the strongest preset when the continue must be made expensive immediately.
+- choose_one_third_pot_light_protection_keepout: keep the protection line lighter while still taxing realization and preventing an easy continue.
+- choose_min_raise_protection_followthrough: reopen with the smallest legal raise when protection and control need to stay balanced.
+- find_hj_focus: tap the hijack seat before selecting action.
+- find_sb_focus: tap the small blind seat before selecting action.
+- find_seat_s4_focus: tap seat S4 to confirm the acting seat.
+- choose_raise_focus: with strong protection edge, choose action.
+- choose_call_focus: with stable showdown value, choose action.
+- choose_fold_focus: with weak protection edge, choose action.
+- tap_turn_focus: tap the turn slot to confirm street context.
+- tap_river_focus: tap the river slot to confirm street context.

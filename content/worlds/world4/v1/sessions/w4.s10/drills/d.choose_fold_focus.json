@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_focus",
+  "kind": "action_choice",
+  "prompt": "With weak equity and poor price, choose action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Fold when denial value is gone and price is unfavorable.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is expected in this release spot.",
+  "feedback_incorrect_v1": "Incorrect. Weak equity plus poor price is a clean fold because continuing will not deny enough to justify the cost."
+}

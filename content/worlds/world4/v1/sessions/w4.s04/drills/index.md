@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_value_stability: repeat the stable half-pot value line.
+- choose_one_third_pot_thin_value_stability: use a smaller value size when the goal is still to keep worse hands in.
+- choose_pot_overpressure_value_check: avoid turning a value spot into unnecessary maximum pressure.
+- choose_min_raise_controlled_value_reopen: use the smallest legal reopen when the value goal is control, not inflation.
+- find_btn_repeat: tap the button seat to anchor the repeat rep.
+- find_co_repeat: tap the cutoff seat to anchor the repeat rep.
+- find_seat_s1_repeat: tap seat S1 to confirm the acting seat in the repeat rep.
+- choose_raise_repeat: with clear value edge, choose action in the repeat rep.
+- choose_call_repeat: with controlled value, choose action in the repeat rep.
+- choose_fold_repeat: with weak value edge, choose action in the repeat rep.
+- tap_flop_left_repeat: tap the left flop card to confirm board context in the repeat rep.
+- tap_hole_left_repeat: tap the left hole card to confirm hand context in the repeat rep.

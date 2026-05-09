@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_consistency_check",
+  "kind": "action_choice",
+  "prompt": "When the second cue appears, choose the best action.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Action should change only when the read and board cues support it.",
+  "feedback_correct_v1": "Correct. Raising fits the cue set, so the line applies pressure only when the read is strong enough to push the edge.",
+  "feedback_incorrect_v1": "Incorrect. Raising works better because the cue set lines up behind aggression here, so the consistent line is to press the edge instead of underplaying it."
+}

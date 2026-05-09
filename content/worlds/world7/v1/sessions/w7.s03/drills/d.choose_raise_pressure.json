@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_pressure",
+  "kind": "action_choice",
+  "prompt": "Shallow stack adjustment proxy: choose the best action.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raise fits because the stack is still strong enough to put real pressure on weaker hands.",
+  "feedback_incorrect_v1": "Incorrect. Raise is the better line when the shallow-stack pressure setup gives you enough leverage to make weaker continues uncomfortable. This is the spot to attack because price and depth now support aggression instead of another passive decision."
+}

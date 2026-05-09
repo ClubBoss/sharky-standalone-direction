@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_blocker_context",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to finalize blocker-context read.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. river is the board anchor because the last card decides whether the blocker story still supports pressure or only a controlled finish.",
+  "feedback_incorrect_v1": "Incorrect. Tap the river because the final card decides whether the blocker story still supports pressure or only a controlled finish."
+}

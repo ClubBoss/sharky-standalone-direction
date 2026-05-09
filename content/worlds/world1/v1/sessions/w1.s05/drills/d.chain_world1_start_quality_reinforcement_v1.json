@@ -1,0 +1,94 @@
+{
+  "id": "chain_world1_start_quality_reinforcement_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s05_start_quality_reinforcement_v1",
+  "prompt": "Play this short World 1 start-quality reinforcement chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is in the cutoff with ATs and everyone folded to them. Which simple action fits best if the start is still clean?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "As",
+        "Td"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A clean first-in spot with a playable suited ace should still raise.",
+      "feedback_incorrect_v1": "Incorrect. This reinforcement starts with the honest clean-start raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Start-quality discipline should reward the clearly playable hand before pressure shows up."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hijack opened and hero is on the button with QTs. Which simple action fits best once pressure is already on?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "hj",
+      "active_seats_v1": [
+        "hj",
+        "co",
+        "btn",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qh",
+        "Ts"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. A playable suited broadway hand can continue cleanly by calling once an open reaches the button.",
+      "feedback_incorrect_v1": "Incorrect. Pressure changes this from a first-in raise into a cleaner call.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Reinforcement should keep showing that not every playable hand starts the same way."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the small blind with Q6o and nobody has entered the pot. Which simple action best protects clean start quality?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "Qd",
+        "6c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A weak offsuit hand from the small blind is not a clean enough start to continue.",
+      "feedback_incorrect_v1": "Incorrect. This final step reinforces that tempting but weak starts should still release.",
+      "recap_v1": "World 1 start-quality reinforcement should now feel simple: raise the clean playable start, call the playable pressure continue, and fold the weak offsuit trap.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The aha is learning that start quality keeps the whole preflop decision honest."
+    }
+  ]
+}

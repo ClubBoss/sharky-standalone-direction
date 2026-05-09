@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_freq_control",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card (As) before final frequency choice.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "As"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before exploit action.",
+  "feedback_correct_v1": "Correct. As is the hole-card anchor because the ace blocker is what keeps the final frequency choice tied to the real hand.",
+  "feedback_incorrect_v1": "Incorrect. Tap the ace of spades because the left hole card anchors the final frequency decision."
+}

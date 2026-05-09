@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_turn_compress",
+  "kind": "seat_tap",
+  "prompt": "Range update setup: tap BTN.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor here because the last-acting seat keeps the clearest information edge after the turn compresses ranges.",
+  "feedback_incorrect_v1": "Incorrect. Start with the button so you know who keeps the last word after the turn changes the range picture. That positional anchor matters because compression spots play differently when one side can act with full information."
+}

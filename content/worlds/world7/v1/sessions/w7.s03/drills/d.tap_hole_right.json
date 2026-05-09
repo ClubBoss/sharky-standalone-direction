@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right",
+  "kind": "hole_cards_tap",
+  "prompt": "Deep playability cue: tap right hole card.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before depth action.",
+  "feedback_correct_v1": "Correct. Use the right hole card because it helps decide whether the hand is still playable.",
+  "feedback_incorrect_v1": "Incorrect. The right hole card is the right anchor here because it adds the playability and blocker value that decide whether the hand can keep maneuvering."
+}

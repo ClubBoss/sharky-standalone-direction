@@ -1,0 +1,20 @@
+{
+  "id": "choose_fold_bridge_pressure_release",
+  "kind": "action_choice",
+  "prompt": "Bridge release node where counter line is unsupported: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the pressure line runs out of room to continue, folding is cleaner than forcing more money into a losing spot.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. This pressure line has run out of room, so folding is cleaner than forcing more money into a losing spot.",
+  "feedback_incorrect_by_action_v1": {
+    "call": "Incorrect. Calling pays to continue a pressure line that has already run out of room, so folding is the cleaner release.",
+    "raise": "Incorrect. Raising forces even more money into a pressure line that has already run out of room, so this spot should just release."
+  },
+  "feedback_incorrect_v1": "Incorrect. Continuing here forces more money into a pressure line that has already run out of room, so folding is cleaner and the cleaner release.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

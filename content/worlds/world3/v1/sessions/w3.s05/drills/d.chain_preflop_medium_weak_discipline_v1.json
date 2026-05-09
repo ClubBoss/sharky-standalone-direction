@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_medium_weak_discipline_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s05_preflop_medium_weak_discipline_v1",
+  "prompt": "Play this short World 3 medium and weak-hand discipline chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with 99 and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["9h", "9c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A medium pair on the button still wants to open when nobody entered the pot yet.",
+      "feedback_incorrect_v1": "Incorrect. This kind of medium hand should not drift into passivity in the cleanest frame.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Medium hands still need discipline, but unopened in-position spots remain good places to raise."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is on the button with 77 after the cutoff opened first. Which compact action fits better now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["7s", "7d"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This is the kind of middling hand that can continue more cautiously once the pot is already opened.",
+      "feedback_incorrect_v1": "Incorrect. The frame changed, so a disciplined continue is a call rather than treating the hand like an unopened raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Medium hands often stay playable, but their best first action becomes more cautious when someone opened before you."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the big blind with Q8o after the button opened first. Which compact action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "btn",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qd", "8c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A weaker offsuit hand should not overstay just because action is available.",
+      "feedback_incorrect_v1": "Incorrect. Discipline still means letting weaker offsuit hands go in this frame.",
+      "recap_v1": "Medium and weak-hand discipline gets cleaner when the learner avoids forcing continues: some medium hands still play, but weaker offsuit hands should fold without regret.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The goal is not to defend everything. It is to know when a hand is still playable and when it should simply fold."
+    }
+  ]
+}

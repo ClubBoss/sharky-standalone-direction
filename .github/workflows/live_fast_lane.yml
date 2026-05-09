@@ -1,0 +1,25 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Live Fast Lane
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why trigger"
+        required: false
+        default: "bulk-run"
+
+jobs:
+  fast-live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          sdk: "stable"
+      - name: Dart version
+        run: dart --version
+      - name: Pub get
+        run: cd tooling && dart pub get
+      - name: Run fast live checks
+        run: dart run tool/fast_live_check.dart

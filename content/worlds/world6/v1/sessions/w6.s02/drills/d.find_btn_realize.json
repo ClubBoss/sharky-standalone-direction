@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_realize",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before realization decision.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Button is the seat anchor here because the last-acting range owns the cleanest realization edge.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right seat anchor here because the last-acting range can see every earlier decision before committing more chips."
+}

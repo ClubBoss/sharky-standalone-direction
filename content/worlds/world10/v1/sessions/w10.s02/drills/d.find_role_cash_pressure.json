@@ -1,0 +1,13 @@
+{
+  "id": "find_role_cash_pressure",
+  "kind": "seat_tap",
+  "prompt": "Tap co as the position anchor before acting.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "co"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep action order clear before a track-specific action.",
+  "feedback_correct_v1": "Correct. The cutoff is the right seat anchor, so the cue read stays tied to the last pressure seat before the button takes over.",
+  "feedback_incorrect_v1": "Incorrect. The cutoff is the right position anchor because late-position cash pressure changes once you know who can apply pressure with the informational edge."
+}

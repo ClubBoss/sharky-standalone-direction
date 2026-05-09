@@ -1,0 +1,81 @@
+import 'package:poker_analyzer/testing/test_shims.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
+import 'package:poker_analyzer/services/theory_lesson_cluster_linker_service.dart';
+import 'package:poker_analyzer/services/theory_lesson_navigator_service.dart';
+import 'package:poker_analyzer/services/theory_suggestion_engagement_tracker_service.dart';
+import 'package:poker_analyzer/models/theory_suggestion_engagement_event.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakeLibrary implements MiniLessonLibraryService {
+  final List<TheoryMiniLessonNode> lessons;
+  _FakeLibrary(this.lessons);
+
+  @override
+  List<TheoryMiniLessonNode> get all => lessons;
+
+  @override
+  TheoryMiniLessonNode? getById(String id) =>
+      lessons.firstWhere((e) => e.id == id, orElse: () => null);
+
+  @override
+  Future<void> loadAll() async {}
+
+  @override
+  Future<void> reload() async {}
+
+  @override
+  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+
+  @override
+  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [];
+
+  @override
+  List<String> linkedPacksFor[String lessonId] => [];
+}
+
+class _FakeTracker implements TheorySuggestionEngagementTrackerService {
+  @override
+  Future<void> lessonSuggested(String lessonId) async {}
+
+  @override
+  Future<void> lessonExpanded(String lessonId) async {}
+
+  @override
+  Future<void> lessonOpened(String lessonId) async {}
+
+  @override
+  Future<Map<String, int>> countByAction(String action) async => {};
+
+  @override
+  Future<List<TheorySuggestionEngagementEvent>> eventsByAction(
+    String action,
+  ) async => [];
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
+
+  test('navigates within cluster alphabetically', () async {
+    final lessons = [
+      TheoryMiniLessonNode(id: 'a', title: 'Alpha', content: '', tags: ['x']),
+      TheoryMiniLessonNode(id: 'b', title: 'Beta', content: '', tags: ['x']),
+      TheoryMiniLessonNode(id: 'c', title: 'Gamma', content: '', tags: ['x']),
+      TheoryMiniLessonNode(id: 'd', title: 'Delta', content: '', tags: ['y']),
+    ];
+    final linker = TheoryLessonClusterLinkerService(
+      library: _FakeLibrary(lessons),
+      tracker: _FakeTracker(),
+    );
+    final nav = TheoryLessonNavigatorService(linker: linker);
+
+    expect(await nav.getNextLessonId('a'), 'b');
+    expect(await nav.getPreviousLessonId('a'), isNull);
+    expect(await nav.getNextLessonId('b'), 'c');
+    expect(await nav.getPreviousLessonId('c'), 'b');
+    expect(await nav.getNextLessonId('c'), isNull);
+    expect(await nav.getNextLessonId('d'), isNull);
+  });
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: tournament context can reduce raise frequency; use pressure cues to choose the best action.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when risk premium and stack context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits the tournament cue set, so the line uses pressure only when the read gives you a real leverage edge.",
+  "feedback_incorrect_v1": "Incorrect. Raising works better when bubble pressure, stack context, and fold equity line up to punish capped continues. A passive line leaves too much leverage unused, while the raise turns your tournament pressure into immediate folds or a cleaner value path."
+}

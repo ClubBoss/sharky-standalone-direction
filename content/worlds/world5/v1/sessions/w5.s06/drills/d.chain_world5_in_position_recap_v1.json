@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_in_position_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s06_in_position_recap_v1",
+  "prompt": "Play this short World 5 in-position recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: In position, the board stays dry and your pressure path is clean. Which simple action fits best?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In-position dry texture supports the assertive line.",
+      "feedback_incorrect_v1": "Incorrect. Start from the dry board first, then let position sharpen the pressure story.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 5 still reads the board first, but position can make a clean dry story easier to press."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: In position, the board is wet and several draw paths stay live. Which simple action fits best when pressure is not clean enough to force?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The wetter texture still points to a controlled call.",
+      "feedback_incorrect_v1": "Incorrect. Let the wet board keep the line more controlled before you use position to refine it.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position helps, but it should not overrule a board story that stays too volatile for clean aggression."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: In position, the board is connected and your improvement pressure is strong. Which simple action fits best now?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Strong connected pressure in position supports the raise.",
+      "feedback_incorrect_v1": "Incorrect. Start from the connected texture and strong improvement path before acting.",
+      "recap_v1": "World 5 in-position recap should now feel ordered: dry clean stories can press, wet volatility often controls, and connected pressure can press again when the improvement path is strong.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The reusable lesson is that position refines a board-first read rather than replacing it."
+    }
+  ]
+}

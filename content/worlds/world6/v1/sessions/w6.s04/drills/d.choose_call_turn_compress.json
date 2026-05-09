@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_turn_compress",
+  "kind": "action_choice",
+  "prompt": "After range compression, choose call.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
+  "feedback_correct_v1": "Correct. Calling fits because the compressed turn keeps your edge alive without leaving a clean reason to bloat the pot.",
+  "feedback_incorrect_v1": "Incorrect. Call is better when the turn compresses both ranges enough that your edge can continue but not cleanly enough to force a bigger pot. The controlled line keeps weaker hands in and realizes equity without overplaying a narrowing advantage."
+}

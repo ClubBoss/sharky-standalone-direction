@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_reference",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle to compare pre-turn density.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor here because the turn only makes sense relative to the original flop texture.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the flop first because the turn only makes sense relative to the original texture. You need that flop reference to judge whether the board is really compressing both ranges or still favoring one side."
+}

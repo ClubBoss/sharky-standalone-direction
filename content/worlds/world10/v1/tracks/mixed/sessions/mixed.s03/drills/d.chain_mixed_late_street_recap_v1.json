@@ -1,0 +1,53 @@
+{
+  "id": "chain_mixed_late_street_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "world10_mixed_s03_late_street_recap_v1",
+  "prompt": "Play this short mixed-track late-street recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The spot still looks playable, and neither the cash cue nor the tournament cue is forcing a hard release yet. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The mixed recap starts from balanced control.",
+      "feedback_incorrect_v1": "Incorrect. This first mixed step should stay playable before the pressure picture hardens.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Mixed practice should reinforce calm baseline decisions when neither cash value nor tournament caution fully dominates."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The pressure picture shifts and the tournament-style caution now outweighs the cash-style continue. Which simple action fits best?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This is the mixed-track release point.",
+      "feedback_incorrect_v1": "Incorrect. Once survival-style pressure takes over, the mixed line should tighten.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The mixed identity is about switching cleanly between cash and tournament logic instead of getting trapped in one default."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The final street relaxes enough that the line can return to a controlled continue without overcommitting. Which simple action fits best now?",
+      "intent_v1": "one_lever_adjustment",
+      "available_actions_v1": [
+        "call",
+        "fold"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The mixed close returns to measured balance.",
+      "feedback_incorrect_v1": "Incorrect. This final mixed step should return to control once the pressure picture softens.",
+      "recap_v1": "World 10 mixed late-street discipline should now feel flexible: continue when the spot stays balanced, fold when survival-style caution becomes the better cue, and return only to controlled continuation when the final street relaxes enough to justify it again.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This recap preserves the applied mixed-track identity by making context switching, not one fixed rule, the core learner habit."
+    }
+  ]
+}

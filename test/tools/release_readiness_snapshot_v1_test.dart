@@ -1,0 +1,77 @@
+import 'package:test/test.dart';
+
+import '../../tools/release_readiness_snapshot_v1.dart';
+
+void main() {
+  test('release readiness snapshot is deterministic', () {
+    final snapshot = buildReleaseReadinessSnapshot();
+    expect(
+      snapshot,
+      equals({
+        'version': 'v1',
+        'confidenceScope': 'bounded_multi_surface_release_confidence',
+        'goVerdict': 'not_a_go_verdict',
+        'guards': {
+          'store_assets': 'skipped_by_default',
+          'store_docs': 'present',
+          'execution_rules': 'present',
+          'telemetry': 'present',
+          'content_meaningful': 'skipped_by_default',
+        },
+        'enforcement': {
+          'STORE_PACKAGE_GUARD': 'documented',
+          'RELEASE_CONTENT_GUARD': 'documented',
+        },
+        'baselineDocPresent': true,
+        'baselineDocSaysNotGo': true,
+        'baselineDocSaysBoundedScope': true,
+        'fullProductChecklistPresent': true,
+        'fullProductChecklistSaysCurrentMain': true,
+        'fullProductChecklistSaysNotGo': true,
+        'boundedSmokeBaselinePresent': true,
+        'boundedSmokeBaselineSaysNotFullCoverage': true,
+        'goNoGoArtifactPresent': true,
+        'goNoGoStateIsHold': true,
+        'rollbackArtifactPresent': true,
+        'rollbackTruthSaysUnresolved': true,
+        'humanReviewOwnerPresent': true,
+        'humanReviewStatePending': true,
+        'rollbackOwnershipOwnerPresent': true,
+        'rollbackOwnershipSaysUnresolvedButOwned': true,
+        'operationalConfidenceBaselinePresent': true,
+        'operationalConfidenceSaysBounded': true,
+        'operationalReviewCadencePresent': true,
+        'operationalDecisionLoopPresent': true,
+        'operationalDashboardTruthPresent': true,
+        'operationalDashboardTruthSaysNoCanonicalDashboard': true,
+        'releaseReadmeHistoricalOnly': true,
+        'operationalReviewPacketOwnerPresent': true,
+        'operationalReviewPacketRunnerPresent': true,
+        'operationalReviewPacketJsonPresent': true,
+        'operationalReviewPacketMarkdownPresent': true,
+        'telemetryReleaseCriticalIntegrityPresent': true,
+        'releaseTelemetryGuardPresent': true,
+        'telemetryLogPresent': true,
+        'lowOpsProofPresent': true,
+        'storeAssetsPresent': true,
+        'releaseContentDirsPresent': true,
+        'releaseDryRunGateScriptPresent': true,
+        'releaseSmokeBaselineScriptPresent': true,
+        'world1ReleaseGateScriptPresent': true,
+        'branchProgressionSurfacePresent': true,
+        'personalizationFocusSeamPresent': true,
+        'firstWinContractPresent': true,
+        'intakePlanPresent': true,
+        'intakeContractPresent': true,
+        'sessionResultContinuationPresent': true,
+        'moduleLauncherBoundaryContractPresent': true,
+        'todayEntitlementTruthPresent': true,
+        'premiumHubAccessStatePresent': true,
+        'premiumTargetGatingPresent': true,
+        'legalSurfacePresencePresent': true,
+        'executionRulesPresent': true,
+        'fullProductSmokePathPresent': true,
+      }),
+    );
+  });
+}

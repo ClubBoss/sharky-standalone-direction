@@ -1,0 +1,11 @@
+{
+  "id": "core_flop_fundamentals",
+  "title": "Flop Fundamentals",
+  "description": "Use board texture and range interaction to choose stable flop sizing and action plans.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_flop_fundamentals",
+  "reasoning": "Builds clear defaults for dry versus wet flops and turn planning from those choices.",
+  "availability": "available"
+}

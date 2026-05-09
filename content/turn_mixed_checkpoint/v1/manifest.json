@@ -1,0 +1,19 @@
+{
+  "id": "turn_mixed_checkpoint",
+  "name": "Turn Mixed Checkpoint",
+  "title": "Turn Mixed Checkpoint",
+  "order": 19,
+  "description": "Consolidate turn concepts: barrels, sizing, blockers, plans, and exploitation.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": ["turn","checkpoint"],
+  "telemetry_tags": ["turn","checkpoint"],
+  "version": "1.0.0",
+  "created": "2025-12-29T08:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

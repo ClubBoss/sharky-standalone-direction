@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_right",
+  "kind": "board_tap",
+  "prompt": "Board-flow cue for stack plan: tap flop right.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "feedback_correct_v1": "Correct. Use the right flop card because that last flop cue tells you if the board is safe to attack.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card is the right anchor here because it finishes the first board read and shows whether the texture supports stack pressure or caution."
+}

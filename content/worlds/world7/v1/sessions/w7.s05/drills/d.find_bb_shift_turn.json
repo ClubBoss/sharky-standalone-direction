@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_shift_turn",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "role": "bb"
+  },
+  "why_v1": "Start with the big blind because that player is the forced defender here.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at the big blind because that player feels the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. Tap the big blind because that player is the forced defender here."
+}

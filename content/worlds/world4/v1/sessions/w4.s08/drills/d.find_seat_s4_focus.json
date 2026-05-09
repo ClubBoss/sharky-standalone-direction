@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s4_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S4 before continuing.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Seat anchor locks acting position before protection intent.",
+  "expected": {
+    "seatId": "S4"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S4 fixes the acting player, so the protection rep stays attached to the exact range that is betting for denial now.",
+  "feedback_incorrect_v1": "Incorrect. This focus rep stays tied to seat S4, so lock S4 before continuing."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_bubble",
+  "kind": "action_choice",
+  "prompt": "Bubble pressure proxy: choose the best action.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects tournament life when pressure and risk premium are too high.",
+  "feedback_correct_v1": "Correct. Folding fits the tournament cue set, so the line protects tournament life when the pressure and payout cost are against you.",
+  "feedback_incorrect_v1": "Incorrect. Folding is stronger here because bubble pressure creates a real risk premium, so preserving tournament life matters more than chasing a thin chip gain. If the hand cannot continue comfortably through pressure, releasing it is better than paying off with a marginal stack-off."
+}

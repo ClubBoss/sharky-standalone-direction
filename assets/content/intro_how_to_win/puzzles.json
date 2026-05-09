@@ -1,0 +1,82 @@
+[
+  {
+    "id": "htw_p1",
+    "heroCards": [
+      "As",
+      "Ad"
+    ],
+    "boardCards": [
+      "Ah",
+      "7d",
+      "2s"
+    ],
+    "villainAction": "Villain bets 50 after the flop",
+    "potSize": 150,
+    "correctAction": "raise",
+    "explanation": "Top set dominates the board. Raise for value and isolate the weaker hands."
+  },
+  {
+    "id": "htw_p2",
+    "heroCards": [
+      "2c",
+      "2d"
+    ],
+    "boardCards": [
+      "Ah",
+      "Kh",
+      "Qd"
+    ],
+    "villainAction": "Villain shoves all-in",
+    "potSize": 200,
+    "correctAction": "fold",
+    "explanation": "Your little pair is dead against the overpair. Folding saves chips for a better spot."
+  },
+  {
+    "id": "htw_p3",
+    "heroCards": [
+      "Kh",
+      "Kc"
+    ],
+    "boardCards": [
+      "Kh",
+      "5d",
+      "2s"
+    ],
+    "villainAction": "Villain bets 60 into 120",
+    "potSize": 120,
+    "correctAction": "raise",
+    "explanation": "You flopped top set. Build the pot while villain still has streets to chase."
+  },
+  {
+    "id": "htw_p4",
+    "heroCards": [
+      "9h",
+      "9s"
+    ],
+    "boardCards": [
+      "9d",
+      "8c",
+      "3s"
+    ],
+    "villainAction": "Villain checks behind",
+    "potSize": 90,
+    "correctAction": "raise",
+    "explanation": "Board is dry and you have the best hand. Raise to extract value."
+  },
+  {
+    "id": "htw_p5",
+    "heroCards": [
+      "Ah",
+      "Kd"
+    ],
+    "boardCards": [
+      "Ad",
+      "Kd",
+      "Qc"
+    ],
+    "villainAction": "Villain bets 70",
+    "potSize": 180,
+    "correctAction": "raise",
+    "explanation": "You flopped top two pair. Raise to protect against straight draws and get value."
+  }
+]

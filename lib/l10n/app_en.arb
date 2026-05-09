@@ -1,0 +1,541 @@
+{
+  "@@locale": "en",
+  "favorites": "Favorites",
+  "recommended": "Recommended",
+  "starterPacks": "Starter Packs",
+  "builtInPacks": "Built-in Packs",
+  "yourPacks": "Your Packs",
+  "recentPacks": "Recently Practised",
+  "popularPacks": "\ud83d\udd25 Popular",
+  "newPacks": "\ud83c\udd95 New",
+  "starterBadge": "Starter",
+  "newBadge": "New",
+  "masteredBadge": "✅ Mastered",
+  "hands": "hands"
+  ,"packCatalogTitle": "Pack catalog"
+  ,"packCatalogSubtitle": "Browse curated packs"
+  ,"difficultyAdvanced": "Advanced"
+  ,"difficultyIntermediate": "Intermediate"
+  ,"difficultyBeginner": "Beginner"
+  ,"packStatusComingSoon": "Coming soon"
+  ,"packStatusLocked": "Locked"
+  ,"startTraining": "Start training"
+  ,"lastTrained": "Last trained"
+  ,"needsPractice": "Needs Practice"
+  ,"reviewMistakes": "Review Mistakes"
+  ,"reviewMistakesOnly": "Review Mistakes Only"
+  ,"percentLabel": "{value} %"
+  ,"starter_packs_title": "Starter pack"
+  ,"starter_packs_subtitle": "Start training instantly"
+  ,"starter_packs_start": "Start"
+  ,"starter_packs_continue": "Continue"
+  ,"starter_packs_choose": "Choose pack"
+  ,"accuracySemantics": "Accuracy {value} percent"
+  ,"sortProgress": "Progress"
+  ,"sortNewest": "Newest"
+  ,"sortMostHands": "Most Hands"
+  ,"sortName": "Name A-Z"
+  ,"noMistakesLeft": "All mistakes already fixed!"
+  ,"filterMistakes": "Mistakes"
+  ,"sortInProgress": "In Progress"
+  ,"packPushFold12": "Push/Fold 12BB (No Ante)"
+  ,"packPushFold15": "Push/Fold 15BB (No Ante)"
+  ,"packPushFold10": "Push/Fold 10BB (No Ante)"
+  ,"packPushFold20": "Push/Fold 20BB (No Ante)",
+  "presetBtn10bb": "BTN 10BB Push/Fold",
+  "presetBtn11bb": "BTN 11BB Push/Fold",
+  "presetBtn12bb": "BTN 12BB Push/Fold",
+  "presetBtn13bb": "BTN 13BB Push/Fold",
+  "presetBtn14bb": "BTN 14BB Push/Fold",
+  "presetBtn15bb": "BTN 15BB Push/Fold",
+  "presetBtn16bb": "BTN 16BB Push/Fold",
+  "presetBtn17bb": "BTN 17BB Push/Fold",
+  "presetBtn18bb": "BTN 18BB Push/Fold",
+  "presetBtn19bb": "BTN 19BB Push/Fold",
+  "presetBtn20bb": "BTN 20BB Push/Fold",
+  "presetSb10bb": "SB 10BB Push/Fold",
+  "presetSb11bb": "SB 11BB Push/Fold",
+  "presetSb12bb": "SB 12BB Push/Fold",
+  "presetSb13bb": "SB 13BB Push/Fold",
+  "presetSb14bb": "SB 14BB Push/Fold",
+  "presetSb15bb": "SB 15BB Push/Fold",
+  "presetSb16bb": "SB 16BB Push/Fold",
+  "presetSb17bb": "SB 17BB Push/Fold",
+  "presetSb18bb": "SB 18BB Push/Fold",
+  "presetSb19bb": "SB 19BB Push/Fold",
+  "presetSb20bb": "SB 20BB Push/Fold"
+  ,"generateSpots": "Generate spots"
+  ,"noContent": "No content"
+  ,"unsupportedSpot": "Unsupported spot"
+  ,"startTrainingSessionPrompt": "Start training session now?"
+  ,"trainingSummary": "Training Summary"
+  ,"noMistakes": "No mistakes"
+  ,"repeatMistakes": "Repeat Mistakes"
+  ,"backToLibrary": "Back to Library"
+  ,"recommendedPacks": "Recommended packs"
+  ,"recommendedForYou": "Recommended for you"
+  ,"masteredPacks": "Mastered packs"
+  ,"dailyGoals": "Daily Goals"
+  ,"sessions": "Sessions"
+  ,"accuracyPercent": "Accuracy %"
+  ,"ev": "EV"
+  ,"icm": "ICM"
+  ,"spotDetails": "Spot Details"
+  ,"heroPosition": "Hero position: {pos}"
+  ,"heroCards": "Hero cards: {cards}"
+  ,"boardLabel": "Board: {cards}"
+  ,"yourAction": "Your action: {action}"
+  ,"evIcm": "EV {ev}  ICM {icm}"
+  ,"packCreated": "Pack \"{name}\" created"
+  ,"resetPackPrompt": "Reset progress for '{name}'?"
+  ,"resetStagePrompt": "Reset stage '{name}'?"
+  ,"resetStage": "Reset Stage"
+  ,"cancel": "Cancel"
+  ,"reset": "Reset"
+  ,"settingsResetTitle": "Reset Settings"
+  ,"settingsResetConfirmation": "Are you sure you want to reset all settings to defaults?"
+  ,"settingsResetSuccess": "Settings reset to defaults"
+  ,"settingsResetButton": "Reset to Defaults"
+  ,"settingsCurrentLanguageLabel": "Current Language"
+  ,"languageChangedSnackbar": "Language changed to {language}"
+  ,"languageSelectorTitle": "Select Language"
+  ,"languageSelectorDescription": "Choose your preferred language. The app will update instantly."
+  ,"settingsLegalEntryTitle": "Legal & Compliance"
+  ,"settingsLegalEntrySubtitle": "Privacy, terms, and data controls"
+  ,"legalScreenTitle": "Legal & Compliance"
+  ,"legalPoliciesSectionTitle": "Policies"
+  ,"legalDataSectionTitle": "Data"
+  ,"privacyPolicy": "Privacy Policy"
+  ,"privacyPolicySubtitle": "View how we handle player data"
+  ,"termsOfUse": "Terms of Use"
+  ,"termsOfUseSubtitle": "Read the governing terms"
+  ,"legalDeleteDataTitle": "Delete Data / Account"
+  ,"legalDeleteDataSubtitle": "Wipe local learning progress, snapshots, and session history"
+  ,"legalDeleteConfirmationTitle": "Delete local data?"
+  ,"legalDeleteConfirmationBody": "This will remove learning progress, snapshots, and session fingerprints from this device. This cannot be undone."
+  ,"legalDeleteSuccess": "Local data cleared"
+  ,"legalDeleteFailure": "Failed to clear local data"
+  ,"playerType": "Player Type"
+  ,"selectAction": "Select Action"
+  ,"fold": "Fold"
+  ,"call": "Call"
+  ,"raise": "Raise"
+  ,"push": "Push"
+  ,"amount": "Amount"
+  ,"confirm": "Confirm"
+  ,"clear": "Clear"
+  ,"ok": "OK"
+  ,"entrants": "Entrants"
+  ,"gameType": "Game Type"
+  ,"holdemNl": "Hold'em NL"
+  ,"omahaPl": "Omaha PL"
+  ,"otherGameType": "Other"
+  ,"spotsLabel": "Spots: {value}"
+  ,"accuracyLabel": "Accuracy: {value}%"
+  ,"evBb": "EV: {value} BB"
+  ,"icmLabel": "ICM: {value}"
+  ,"exportWeaknessReport": "Export Weakness Report"
+  ,"packsShown": "Shown {count} packs"
+  ,"noResults": "No results"
+  ,"resetFilters": "Reset filters"
+  ,"sortLabel": "Sorting:"
+  ,"sortPopular": "Popular first"
+  ,"sortRating": "Rating (High \u2192 Low)"
+  ,"sortCoverage": "Coverage (High \u2192 Low)"
+  ,"filtersSelected": "Filters: {count} selected"
+  ,"filtersNone": "Filters: none"
+  ,"progress": "Progress"
+  ,"packsCompleted": "Packs Completed"
+  ,"averageAccuracy": "Avg Accuracy"
+  ,"averageEv": "Avg EV"
+  ,"pinnedPacks": "\ud83d\udccc Pinned Templates"
+  ,"dailyStreak": "Streak"
+  ,"best": "Best"
+  ,"weakAreas": "Weak Areas"
+  ,"packOfDay": "\ud83c\udfb2 Pack of the Day"
+  ,"streakChipLabel": "Streak: {count}"
+  ,"dailyHandLabel": "Daily Hand #{index}"
+  ,"levelGoalTitle": "Level Goal"
+  ,"samplePreviewHint": "Try a sample first to explore this pack!"
+  ,"samplePreviewPrompt": "This pack is large. Preview a quick sample first?"
+  ,"previewSample": "Preview Sample"
+  ,"autoSampleToast": "Quick preview launched automatically for faster start."
+  ,"plannerBadge": "{count} left"
+  ,"unfinishedSession": "You have an unfinished session"
+  ,"resume": "Resume"
+  ,"mistakeBoosterReinforced": "Reinforced: {count} tags"
+  ,"mistakeBoosterRecovered": "Recovered: {count} tags"
+  ,"quickstartL3": "Quickstart L3"
+  ,"desktopOnly": "Desktop only"
+  ,"run": "Run"
+  ,"openReport": "Open report"
+  ,"viewLogs": "View logs"
+  ,"retry": "Retry"
+  ,"presetWillBeUsed": "Preset will be used"
+  ,"reportEmpty": "Report is empty"
+  ,"abDiff": "A/B diff"
+  ,"export": "Export"
+  ,"weightsPreset": "Weights preset"
+  ,"weightsJson": "Weights JSON"
+  ,"invalidJson": "Invalid JSON"
+  ,"recentRuns": "Recent runs"
+  ,"open": "Open"
+  ,"logs": "Logs"
+  ,"folder": "Folder"
+  ,"copyPath": "Copy path"
+  ,"reRun": "Re-run"
+  ,"pickTwoRuns": "Pick two runs"
+  ,"compare": "Compare"
+  ,"noSelection": "No selection"
+  ,"rootKeys": "Root keys"
+  ,"arrayLengths": "Array lengths"
+  ,"clearHistory": "Clear history"
+  ,"confirmClear": "Clear all runs? This action cannot be undone."
+  ,"deleted": "Deleted"
+  ,"copied": "Copied"
+  ,"exportCsv": "Export CSV"
+  ,"reveal": "Reveal"
+  ,"csvSaved": "CSV saved"
+  ,"delta": "Δ"
+  ,"args": "Args"
+  ,"shopInsufficientFunds": "Insufficient coins"
+  ,"shopPurchased": "Purchased: {name}"
+  ,"shopCoinsBalance": "Coins: {balance}"
+  ,"shopPrice": "Price: {price}"
+  ,"shopAvailableItems": "Available Items"
+  ,"shopScreenLabel": "Shop screen"
+  ,"shopYourBalance": "Your balance: {balance} coins"
+  ,"onboardingStepProgress": "Step {current} of {total}"
+  ,"onboardingCongratulations": "Congratulations!"
+  ,"onboardingFirstTrainingCompleteWithRepeat": "You completed your first training session!\n\nNow let's reinforce what you've learned."
+  ,"onboardingFirstTrainingComplete": "You completed your first training session!"
+  ,"onboardingContinue": "Continue"
+  ,"onboardingFinish": "Finish"
+  ,"onboardingMistakeSystemTitle": "Mistake Repetition System"
+  ,"onboardingHowItWorksTitle": "How It Works"
+  ,"onboardingHowItWorksDescription": "When you make a mistake in a hand, it's automatically marked for review. The system tracks all your errors."
+  ,"onboardingWhenRepeatsTitle": "When Hands Repeat"
+  ,"onboardingWhenRepeatsDescription": "You'll see this hand again tomorrow. If you make another mistake, it will return in 3 days. If you solve it correctly, it will be removed from reviews."
+  ,"onboardingWhyNeededTitle": "Why This Matters"
+  ,"onboardingWhyNeededDescription": "Repetition is the key to memory. By revisiting challenging hands, you strengthen your understanding and turn weaknesses into strengths."
+  ,"onboardingDontWorry": "Don't worry! Mistakes are normal. The important thing is to learn from them."
+  ,"onboardingRepeatMistakes": "Review Mistakes"
+  ,"onboardingSkip": "Skip"
+  ,"onboardingMistakesReviewed": "Mistakes Reviewed"
+  ,"onboardingCompletedMessage": "You've completed the onboarding!\n\nYou're now ready for full training sessions."
+  ,"onboardingStartTraining": "Start Training"
+  ,"onboardingWelcome": "Welcome to Poker Analyzer!"
+  ,"onboardingWelcomeSubtitle": "Learn poker through ready-made hands"
+  ,"onboardingStart": "Start"
+  ,"xpAwardLabel": "+{xp} XP"
+  ,"@xpAwardLabel": {
+    "description": "Label displayed when awarding experience points",
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  }
+  ,"xpTabsTitle": "Progress"
+  ,"xpHistoryTab": "History"
+  ,"xpJournalTab": "Journal"
+  ,"xpEvalTab": "Self-Eval"
+  ,"xpMilestonesTab": "Milestones"
+  ,"xpLeagueTab": "League"
+  ,"xpShareTab": "Share"
+  ,"xpDashboardTitle": "XP History"
+  ,"xpDashboardEmptyTitle": "No XP activity yet"
+  ,"xpDashboardEmptyMessage": "Complete drills, view theory, or finish modules\\nto start earning XP!"
+  ,"xpDashboardStreakTitle": "Activity streak"
+  ,"xpDashboardStreakTooltip": "Earn XP every day to keep your streak alive!"
+  ,"xpDashboardCurrentStreakLabel": "Current"
+  ,"xpDashboardNoStreak": "No streak yet"
+  ,"xpDashboardBestStreakLabel": "Best"
+  ,"xpDashboardLast30Days": "Last 30 days"
+  ,"xpDashboardTrendsTitle": "XP trends (last 7 days)"
+  ,"xpDashboardTotalXpLabel": "Total XP"
+  ,"xpDashboardDrillsLabel": "Drills"
+  ,"xpDashboardModulesLabel": "Modules"
+  ,"xpDashboardTheoryLabel": "Theory"
+  ,"xpEventDrillCompleted": "Drill completed"
+  ,"xpEventModuleCompleted": "Module completed"
+  ,"xpEventTheoryViewed": "Theory viewed"
+  ,"xpEventGeneric": "XP earned"
+  ,"xpRelativeTodayAt": "Today at {time}"
+  ,"@xpRelativeTodayAt": {
+    "placeholders": {
+      "time": {}
+    }
+  }
+  ,"xpRelativeYesterdayAt": "Yesterday at {time}"
+  ,"@xpRelativeYesterdayAt": {
+    "placeholders": {
+      "time": {}
+    }
+  }
+  ,"xpRelativeWeekdayAt": "{weekday} at {time}"
+  ,"@xpRelativeWeekdayAt": {
+    "placeholders": {
+      "weekday": {},
+      "time": {}
+    }
+  }
+  ,"xpRelativeDateTime": "{date} • {time}"
+  ,"@xpRelativeDateTime": {
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  }
+  ,"xpDashboardLauncherTitle": "Your progress"
+  ,"xpDashboardLauncherSubtitle": "XP, history, self-eval"
+  ,"xpJournalTitle": "XP Journal"
+  ,"xpJournalEmptyTitle": "No XP events yet"
+  ,"xpJournalEmptyMessage": "Complete activities to start journaling"
+  ,"xpJournalReflectionLabel": "Reflection"
+  ,"xpJournalReflectionHint": "What did you learn? What could improve?"
+  ,"xpSelfEvalTitle": "Self-evaluation"
+  ,"xpSelfEvalResetTooltip": "Reset all"
+  ,"xpSelfEvalResetConfirmation": "Checklist reset"
+  ,"xpSelfEvalProgressHeader": "Progress"
+  ,"xpSelfEvalSkillsCompleted": "{completed} of {total} skills complete"
+  ,"@xpSelfEvalSkillsCompleted": {
+    "placeholders": {
+      "completed": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  }
+  ,"xpSelfEvalItemPushCall": "I confidently push/call charts in SRP"
+  ,"xpSelfEvalItemBubblePush": "I understand bubble push ranges"
+  ,"xpSelfEvalItemIcmAwareness": "I can tell ICM spots from ChipEV spots"
+  ,"xpSelfEvalItemAdjustCharts": "I adjust charts for tournament structures"
+  ,"xpSelfEvalItemStackAwareness": "I consider opponent stacks when deciding"
+  ,"xpSelfEvalItemReviewMistakes": "I review my mistakes after every session"
+  ,"xpSelfEvalItemDeviateCharts": "I know when to deviate from baseline charts"
+  ,"xpSelfEvalResetButton": "Reset checklist"
+  ,"xpMilestoneTitle": "XP milestones"
+  ,"xpMilestoneHeaderTitle": "Your XP progress"
+  ,"xpMilestoneTotalXp": "Total XP: {xp}"
+  ,"@xpMilestoneTotalXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "120"
+      }
+    }
+  }
+  ,"xpMilestoneUnlockHint": "Unlock milestones by earning XP through drills, modules, and theory!"
+  ,"xpMilestoneClaimedMessage": "Claimed the {xp} XP milestone! 🎉"
+  ,"@xpMilestoneClaimedMessage": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpMilestoneClaimButton": "Claim"
+  ,"xpMilestoneLockedLabel": "Locked"
+  ,"xpMilestoneUnlockedLabel": "Tap to claim!"
+  ,"xpMilestoneClaimedLabel": "Claimed"
+  ,"xpShareTitle": "Share your progress"
+  ,"xpShareLoadError": "Couldn't load data"
+  ,"xpShareSaveSuccess": "Saved to gallery"
+  ,"xpShareSaveError": "Couldn't save image"
+  ,"xpShareShareError": "Couldn't share card"
+  ,"xpShareCaptionBeast": "XP Beast! 🔥"
+  ,"xpShareCaptionSummit": "On top! 💪"
+  ,"xpShareCaptionGreat": "Great job! 🎯"
+  ,"xpShareCaptionKeepGoing": "Keep going! 🚀"
+  ,"xpShareCaptionLetsGo": "Let's go! ⚡"
+  ,"xpShareCaptionGettingStarted": "Just getting started! 🌟"
+  ,"xpShareStreakLabel": "Streak"
+  ,"xpShareMilestonesLabel": "Milestones"
+  ,"xpShareGeneratedFooter": "Generated in Poker Analyzer"
+  ,"xpShareSaveButton": "Save"
+  ,"xpShareShareButton": "Share"
+  ,"xpShareShareText": "My Poker Analyzer progress!\\n\\nXP: {xp}\\nStreak: {streak}\\nLeague position: #{rank}"
+  ,"@xpShareShareText": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "420"
+      },
+      "streak": {
+        "example": "5 days"
+      },
+      "rank": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  }
+  ,"xpShareLeagueGold": "Gold League"
+  ,"xpShareLeagueSilver": "Silver League"
+  ,"xpShareLeagueBronze": "Bronze League"
+  ,"xpShareLeagueRookie": "Rookie League"
+  ,"xpLeagueDefaultName": "Silver League"
+  ,"xpLeagueWeekSubtitle": "Week {week} • Resets: {date}"
+  ,"@xpLeagueWeekSubtitle": {
+    "placeholders": {
+      "week": {
+        "type": "int",
+        "example": "12"
+      },
+      "date": {
+        "example": "Apr 21"
+      }
+    }
+  }
+  ,"xpLeagueYourRank": "Your rank"
+  ,"xpLeagueYourXp": "Your XP"
+  ,"xpLeaguePromotionZone": "Promotion zone (1-10)"
+  ,"xpLeagueSafeZone": "Safe zone (11-40)"
+  ,"xpLeagueDemotionZone": "Relegation zone (41-50)"
+  ,"xpHistoryAchievementsTitle": "Achievement history"
+  ,"xpHistoryEmptyTitle": "No achievements yet"
+  ,"xpHistoryEmptyMessage": "Keep training and earning XP to unlock more achievements!"
+  ,"xpHistoryStreaksSection": "Streaks"
+  ,"xpHistoryMilestonesSection": "XP milestones"
+  ,"xpHistoryStreakLabel": "Streak {value}"
+  ,"@xpHistoryStreakLabel": {
+    "placeholders": {
+      "value": {
+        "example": "5 days"
+      }
+    }
+  }
+  ,"xpProfileStreakSummary": "🔥 Streak: {current} (Best: {best})"
+  ,"@xpProfileStreakSummary": {
+    "placeholders": {
+      "current": {
+        "example": "5 days"
+      },
+      "best": {
+        "example": "14 days"
+      }
+    }
+  }
+  ,"xpProfileNoStreak": "No current streak"
+  ,"xpWeeklyProgressLabel": "Weekly progress: {current} / {goal} XP"
+  ,"@xpWeeklyProgressLabel": {
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "example": "40"
+      },
+      "goal": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  }
+  ,"xpWeeklyGoalComplete": "Goal completed!"
+  ,"xpDaysCount": "{count, plural, one {{count} day} other {{count} days}}"
+  ,"@xpDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  }
+  ,"xpRecapTitle": "XP Overview"
+  ,"xpRecapRecentEventsTitle": "Recent events"
+  ,"xpRecapNoRecentEvents": "No recent events"
+  ,"xpRecapWeeklyGoalTitle": "Weekly goal"
+  ,"xpRecapMilestonesTitle": "Milestones"
+  ,"xpRecapNextMilestone": "To next milestone: {xp} XP"
+  ,"@xpRecapNextMilestone": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpRecapMilestoneAvailable": "Milestone available: {xp} XP — tap to claim"
+  ,"@xpRecapMilestoneAvailable": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "100"
+      }
+    }
+  }
+  ,"xpRecapNextMilestoneLabel": "Next milestone: {xp} XP"
+  ,"@xpRecapNextMilestoneLabel": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "250"
+      }
+    }
+  }
+  ,"xpRecapRemainingXp": "Remaining: {xp} XP"
+  ,"@xpRecapRemainingXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  }
+  ,"xpRecapAllMilestonesAchieved": "All milestones achieved"
+  ,"xpRecapTabSummary": "Summary"
+  ,"xpRecapTabHistory": "History"
+  ,"xpRecapTabGoals": "Goals"
+  ,"xpExportTitle": "XP Recap Export Settings"
+  ,"xpExportMethodSave": "Save"
+  ,"xpExportMethodShare": "Share"
+  ,"xpExportMethodLabel": "Method"
+  ,"xpExportCaptionLabel": "Caption"
+  ,"rewardShopTitle": "Reward Shop"
+  ,"rewardShopBalanceLabel": "Chip Balance"
+  ,"rewardShopChipCount": "{count} chips"
+  ,"@rewardShopChipCount": {
+    "placeholders": {
+      "count": {}
+    }
+  }
+  ,"rewardShopRefresh": "Refresh"
+  ,"rewardShopConfirmTitle": "Confirm Purchase"
+  ,"rewardShopConfirmBody": "Spend {cost} chips for {name}?"
+  ,"@rewardShopConfirmBody": {
+    "placeholders": {
+      "cost": {},
+      "name": {}
+    }
+  }
+  ,"rewardShopCancel": "Cancel"
+  ,"rewardShopPurchase": "Purchase"
+  ,"rewardShopUnlocked": "{name} unlocked!"
+  ,"@rewardShopUnlocked": {
+    "placeholders": {
+      "name": {}
+    }
+  }
+  ,"rewardShopInsufficient": "Not enough chips for {name}."
+  ,"@rewardShopInsufficient": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "feedbackExportDiagnostics": "Export diagnostics file",
+  "feedbackExportSuccess": "Diagnostics exported",
+  "feedbackExportFailure": "Failed to export diagnostics",
+  "settingsReportProblemTitle": "Report a problem",
+  "settingsReportProblemSubtitle": "Share diagnostics with support",
+  "feedbackSheetTitle": "Report a problem",
+  "feedbackSheetSubtitle": "Copy diagnostics for support",
+  "feedbackDiagnosticsHeader": "Diagnostics payload",
+  "feedbackCopyDiagnostics": "Copy diagnostics to clipboard",
+  "feedbackCopySuccess": "Diagnostics copied to clipboard"
+}

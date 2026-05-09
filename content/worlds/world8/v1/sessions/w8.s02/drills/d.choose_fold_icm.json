@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_icm",
+  "kind": "action_choice",
+  "prompt": "ICM pressure proxy: choose the best action.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects tournament life when pressure and risk premium are too high.",
+  "feedback_correct_v1": "Correct. Folding fits the tournament cue set, so the line protects tournament life when the pressure and payout cost are against you.",
+  "feedback_incorrect_v1": "Incorrect. Folding is stronger here because ICM pressure raises the cost of busting, so survival matters more than chasing a thin chip gain. When the hand cannot continue profitably through that risk premium, preserving tournament life is the better trade."
+}

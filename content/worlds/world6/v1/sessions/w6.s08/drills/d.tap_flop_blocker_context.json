@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_blocker_context",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle to anchor blocker in range context.",
+  "intent_v1": "think_in_ranges",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor because the central flop card starts the blocker-adjusted texture read between both ranges.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card is the correct board cue because the blocker-adjusted texture read starts from the board card that sits between both ranges."
+}

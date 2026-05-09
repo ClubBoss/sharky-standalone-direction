@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../models/training_pack.dart';
+
+class TrainingPackOverlay extends StatelessWidget {
+  final TrainingPack pack;
+
+  TrainingPackOverlay({super.key, required this.pack});
+
+  Widget _buildFab(String heroTag, IconData icon, VoidCallback onPressed) =>
+      FloatingActionButton(
+        heroTag: heroTag,
+        onPressed: onPressed,
+        child: Icon(icon),
+      );
+
+  Future<void> _export(BuildContext context) async {
+    // Export functionality is not yet implemented; show a placeholder message.
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Export is unavailable')));
+  }
+
+  Future<void> _share(BuildContext context) async {
+    await Share.share('Training pack: ${pack.name}');
+  }
+
+  Future<void> _print(BuildContext context) async {
+    // Printing is currently unsupported; notify the user.
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Print is unavailable')));
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      _buildFab('export', Icons.save, () => _export(context)),
+      const SizedBox(height: 8),
+      _buildFab('share', Icons.share, () => _share(context)),
+      const SizedBox(height: 8),
+      _buildFab('print', Icons.print, () => _print(context)),
+    ],
+  );
+}

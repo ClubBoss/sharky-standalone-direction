@@ -1,0 +1,36 @@
+name: ci-nightly
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+      - run: flutter pub get
+      - run: bash scripts/prepush_ci.sh
+      - name: Validate research outputs
+        if: ${{ hashFiles('tooling/validate_research_outputs.dart') != '' }}
+        run: dart run tooling/validate_research_outputs.dart
+      - name: Content gap report
+        if: ${{ hashFiles('tooling/content_gap_report.dart') != '' }}
+        run: dart run tooling/content_gap_report.dart

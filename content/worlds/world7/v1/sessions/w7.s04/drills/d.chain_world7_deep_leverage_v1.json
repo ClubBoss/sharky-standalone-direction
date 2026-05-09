@@ -1,0 +1,53 @@
+{
+  "id": "chain_world7_deep_leverage_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w7_s04_deep_leverage_v1",
+  "prompt": "Play this short World 7 deep-leverage chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Deep stacks keep future-street leverage alive, but the edge is not clean enough to cash out immediately. Which simple action fits best?",
+      "intent_v1": "deep_stack_playability",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This deep-stack opener should preserve leverage first.",
+      "feedback_incorrect_v1": "Incorrect. Start by keeping the deeper-stack maneuvering room alive.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 7 should feel different because deep stacks create room to delay commitment instead of forcing immediate pressure."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The turn keeps that deep-stack room intact and position now makes the pressure edge cleaner. Which simple action fits best?",
+      "intent_v1": "stack_depth_adjustment",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This is the point where deep leverage should convert into pressure.",
+      "feedback_incorrect_v1": "Incorrect. Once depth and position align, the stronger line should appear.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The World 7 habit is to spend leverage only when the later-street edge actually sharpens."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The river still leaves enough depth-driven leverage to punish capped resistance instead of settling. Which simple action fits best now?",
+      "intent_v1": "deep_stack_playability",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Deep leverage still supports the stronger finish.",
+      "feedback_incorrect_v1": "Incorrect. This final step should still lean on the remaining depth edge.",
+      "recap_v1": "World 7 deep leverage should now feel ordered: preserve depth when the edge is mixed, then turn that extra room into pressure once later-street leverage becomes clean enough to spend.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This chain differentiates World 7 by making depth itself the structural reason the line changes across streets."
+    }
+  ]
+}

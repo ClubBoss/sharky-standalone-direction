@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_facing_turn_bet",
+  "kind": "action_choice",
+  "prompt": "Turn pressure with acceptable price: choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the turn price is still acceptable, calling continues without overstretching into a raise.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Folding stays disciplined, but this turn price still supports a call and keeps the line alive.",
+  "feedback_correct_v1": "Correct. This turn bet is still worth continuing against, and calling keeps the line alive without overstretching into a raise.",
+  "feedback_incorrect_v1": "Incorrect. Folding gives up too much at this turn price, and raising overstates a hand that plays better as a call.",
+  "acceptable_actions": [
+    "call",
+    "fold"
+  ]
+}

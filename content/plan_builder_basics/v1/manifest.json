@@ -1,0 +1,25 @@
+{
+  "id": "plan_builder_basics",
+  "order": 10,
+  "name": "Plan Builder Basics - Build a Line (Flop->Turn->River)",
+  "title": "Plan Builder Basics - Build a Line (Flop->Turn->River)",
+  "description": "Learn to choose a coherent flop->turn->river plan based on texture and tendencies.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "plan"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "plan"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-18T12:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

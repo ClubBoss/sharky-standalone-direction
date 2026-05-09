@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_icm_synth",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before ICM-synthesis checkpoint action.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before ICM decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the tournament read stays tied to the late-acting seat that controls the pressure window.",
+  "feedback_incorrect_v1": "Incorrect. Find the button because that seat acts last, and the late-position edge matters when you judge how much ICM pressure you can apply."
+}

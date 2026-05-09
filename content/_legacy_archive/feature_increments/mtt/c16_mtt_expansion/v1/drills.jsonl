@@ -1,0 +1,16 @@
+{"id":"c16:drill:01","prompt":"UTG 60bb opens, BB overfolds flops. Flop dry K72r.","target_action":"cbet_small","rationale":"Small cbet prints vs overfolding BB; low risk, maintains range edge."}
+{"id":"c16:drill:02","prompt":"MP 40bb vs BTN float heavy, board J86ss.","target_action":"cbet_big","rationale":"Larger size extracts from floats and charges draws at mid depth."}
+{"id":"c16:drill:03","prompt":"CO 28bb vs SB calls wide, flop T42r.","target_action":"cbet_small","rationale":"Cheap denial versus wide range; preserves stack when called."}
+{"id":"c16:drill:04","prompt":"BTN 25bb vs BB overbluff turns after check.","target_action":"check_back","rationale":"Check back marginal pairs to induce bluffs you can call later."}
+{"id":"c16:drill:05","prompt":"SB 18bb shove stack behind; BB sticky caller.","target_action":"fold","rationale":"ICM pressure makes marginal defend poor; preserve stack."}
+{"id":"c16:drill:06","prompt":"BB 20bb faces CO 30% pot cbet on AQ5r.","target_action":"raise","rationale":"Undersized cbet signals weakness; raise folds out air and weak pairs."}
+{"id":"c16:drill:07","prompt":"MP 35bb vs BB probe-happy on missed cbets.","target_action":"check_back","rationale":"Pot control with medium strength; call probes instead of bloating pot."}
+{"id":"c16:drill:08","prompt":"CO 32bb vs BTN overcall river after missed draws.","target_action":"raise","rationale":"Use thin value raise against overcalling ranges with bluff-catch bias."}
+{"id":"c16:drill:09","prompt":"BTN 22bb vs SB limp-call range, flop 653r.","target_action":"cbet_big","rationale":"Pressure medium pairs and random overs; gain fold equity at shallow depth."}
+{"id":"c16:drill:10","prompt":"BB 15bb facing BTN min-raise, population overfolds shove.","target_action":"raise","rationale":"Jam suited broadways to exploit fold-to-jam frequency."}
+{"id":"c16:drill:11","prompt":"SB 25bb completes, BB stabs too often.","target_action":"probe_bet","rationale":"Lead paired or dry boards to deny auto-stabs and take initiative."}
+{"id":"c16:drill:12","prompt":"UTG 45bb vs BB calls wide, flop 993r.","target_action":"cbet_small","rationale":"Range and board advantage allow cheap cbet; folds out ace-high floats."}
+{"id":"c16:drill:13","prompt":"CO 30bb vs MP overfolds to turn barrels.","target_action":"raise","rationale":"Semi-bluff raises pressure mid-strength hands that want to reach showdown."}
+{"id":"c16:drill:14","prompt":"BTN 18bb vs BB hero-calls river too often.","target_action":"check_back","rationale":"Reduce bluffs; value-bet clearer spots, avoid spew versus sticky player."}
+{"id":"c16:drill:15","prompt":"BB 28bb vs CO small flop cbet on wet board.","target_action":"raise","rationale":"Punish small sizing; fold equity plus equity denial on draws."}
+{"id":"c16:drill:16","prompt":"SB 20bb vs BB overfolds to flop pressure.","target_action":"cbet_small","rationale":"Frequent small cbets capture folds while limiting risk at shallow stacks."}

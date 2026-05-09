@@ -1,0 +1,13 @@
+{
+  "id": "find_co_spr",
+  "kind": "seat_tap",
+  "prompt": "Tap cutoff seat before SPR-based action.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "role": "co"
+  },
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Cutoff is the seat anchor because that earlier late-position seat defines the range the SPR pressure is aimed at.",
+  "feedback_incorrect_v1": "Incorrect. Find the cutoff because that earlier late-position seat defines the opponent range you are pressuring, and the SPR read changes if you anchor the wrong player."
+}

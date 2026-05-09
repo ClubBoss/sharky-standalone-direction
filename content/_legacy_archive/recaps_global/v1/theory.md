@@ -1,0 +1,29 @@
+# Global Recaps — Theory (v1)
+
+## 1. Purpose
+PLACEHOLDER_PURPOSE
+
+## 2. Recap Methodology
+- PLACEHOLDER_METHOD_1
+- PLACEHOLDER_METHOD_2
+- PLACEHOLDER_METHOD_3
+
+## 3. Cross-Module Integration
+### 3.1 Core → Cash
+PLACEHOLDER_CORE_CASH
+
+### 3.2 Cash → MTT
+PLACEHOLDER_CASH_MTT
+
+### 3.3 MTT → Mixed
+PLACEHOLDER_MTT_MIXED
+
+### 3.4 Mixed → Final Exam
+PLACEHOLDER_MIXED_FINAL
+
+## 4. Common Knowledge Gaps
+- PLACEHOLDER_GAP_1
+- PLACEHOLDER_GAP_2
+
+## 5. Summary
+PLACEHOLDER_SUMMARY

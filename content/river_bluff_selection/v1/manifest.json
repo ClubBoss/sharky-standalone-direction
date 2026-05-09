@@ -1,0 +1,19 @@
+{
+  "id": "river_bluff_selection",
+  "name": "River Bluff Selection",
+  "title": "River Bluff Selection",
+  "order": 14,
+  "description": "Choose bluffs when blockers help or fall back to thin value otherwise.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": ["river", "bluff", "discipline"],
+  "telemetry_tags": ["river", "bluff", "discipline"],
+  "version": "1.0.0",
+  "created": "2025-12-24T08:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_oop_range",
+  "kind": "seat_tap",
+  "prompt": "Out-of-position range setup: tap SB.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "feedback_correct_v1": "Correct. Small blind anchor confirmed before the out-of-position range read.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right seat because that partly committed anchor sets the out-of-position range story before any defensive action is chosen."
+}

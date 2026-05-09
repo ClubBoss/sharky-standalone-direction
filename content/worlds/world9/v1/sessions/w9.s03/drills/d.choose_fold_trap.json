@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap spot: choose fold.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold when the hand is too thin and the trap is not worth fighting.",
+  "feedback_correct_v1": "Correct. Fold fits because this is the kind of trap that gets expensive fast.",
+  "feedback_incorrect_v1": "Incorrect. Fold fits when the trap is too costly to fight."
+}

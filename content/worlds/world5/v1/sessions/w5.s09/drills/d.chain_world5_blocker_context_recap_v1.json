@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_blocker_context_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s09_blocker_context_recap_v1",
+  "prompt": "Play this short World 5 blocker-context recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The board is connected and blocker context sharpens an already strong pressure story. Which simple action fits best?",
+      "intent_v1": "texture_connectivity",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Helpful blocker context can sharpen a connected-board raise when the texture is already strong.",
+      "feedback_incorrect_v1": "Incorrect. Start from the connected texture first, then let blockers refine the line.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 5 blocker recap should reinforce that blockers only matter after the board story is strong enough to carry them."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: The board is paired and blocker context reduces clean pressure rather than creating it. Which simple action fits best?",
+      "intent_v1": "texture_pairing",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The paired texture with softer blocker value points to a controlled call.",
+      "feedback_incorrect_v1": "Incorrect. Keep the paired-board read primary over the blocker details.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Paired boards often keep pressure less clean, so blockers should soften the action rather than invent aggression."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: The board is high-card heavy and blocker context still does not rescue a weak pressure story. Which simple action fits best now?",
+      "intent_v1": "texture_high_card",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Weak high-card pressure should still release even when blockers are present.",
+      "feedback_incorrect_v1": "Incorrect. Start from the weak high-card texture before using blocker context.",
+      "recap_v1": "World 5 blocker-context recap should now feel disciplined: read the board first, let blockers sharpen a strong story, soften a marginal one, and never let them rescue a broken texture read.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The reusable blocker lesson in World 5 is that secondary cues refine the board story but do not replace it."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: ICM can punish aggression, but this spot still supports pressure.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when risk premium and stack context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits the tournament cue set, so the line uses pressure only when the read gives you a real leverage edge.",
+  "feedback_incorrect_v1": "Incorrect. Raising fits better when ICM pressure, fold equity, and stack context all support aggression against capped continues. A passive line wastes that leverage, while the raise converts tournament pressure into immediate folds or a cleaner value path."
+}

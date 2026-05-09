@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_profile",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to confirm profile-adjusted exploit context.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before exploit action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor because the fourth card shows whether the profile-based exploit should keep pressing or slow down.",
+  "feedback_incorrect_v1": "Incorrect. Tap the turn card because the profile-adjusted exploit has to account for the fourth board card."
+}

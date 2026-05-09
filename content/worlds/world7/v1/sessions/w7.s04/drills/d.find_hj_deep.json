@@ -1,0 +1,13 @@
+{
+  "id": "find_hj_deep",
+  "kind": "seat_tap",
+  "prompt": "Tap hijack seat before deep-stack leverage action.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "role": "hj"
+  },
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start from the hijack because that earlier seat is the range you are pressing on.",
+  "feedback_incorrect_v1": "Incorrect. The hijack is the right seat anchor here because that earlier late-position seat starts the deep-stack leverage decision."
+}

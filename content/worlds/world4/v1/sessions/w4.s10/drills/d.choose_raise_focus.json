@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_focus",
+  "kind": "action_choice",
+  "prompt": "With equity denial priority, choose action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Raise denies equity by charging weak draws and overcards.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is expected for denial intent.",
+  "feedback_incorrect_v1": "Incorrect. When denying equity is the priority, raise now to charge overcards and weak draws."
+}

@@ -1,0 +1,15 @@
+{
+  "id": "review_texture_dry_board_stays_calmer",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Review: Flop A-7-2 rainbow. Choose CALL for the calmer board or RAISE for the more pressure-building board.",
+  "street_v1": "flop",
+  "board_cards_v1": ["As", "7d", "2c"],
+  "board_texture_v1": "dry",
+  "board_texture_policy_shape_v1": "pressure_level",
+  "board_texture_policy_target_v1": "calmer",
+  "expected_action": "call",
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A-7-2 rainbow stays calmer because the board is dry and does not create many immediate draw paths.",
+  "feedback_correct_v1": "Correct. A-7-2 rainbow stays calmer because the flop does not create many immediate draw paths.",
+  "feedback_incorrect_v1": "Incorrect. A-7-2 rainbow is still the calmer board because the texture stays dry and stable."
+}

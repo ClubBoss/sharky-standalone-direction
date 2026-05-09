@@ -1,0 +1,11 @@
+### Psi-1 Onboarding Recap
+
+Poker Analyzer onboarding stays concise and professional. Sharky, your guide, introduces the layout, V4 visuals, and tooltips from the inline explanation binder. You see action buttons, bet sizing, hole cards, and table surface with consistent colors and spacing. V4 can be toggled, but onboarding keeps it on for clarity so you learn with the final runtime.
+
+Persona stack overview: Tier-A reads passive signals; ESM converts them into states like momentum or struggle; ATM tracks attention and tone. These feed behavioral fusion, dynamics, persona-driven signals, and the coaching decision layer. Coaching produces advice, explanations, heuristics, and hooks. Multi-stage recommendations cover immediate, mid, and long suggestions; surface integration shows tips inline with the UI. Cohesion, token, and consistency checks run quietly to prevent conflicting outputs and keep V4 visuals aligned.
+
+XP/Reward gating and persona modifiers remain simple: values are ASCII-only, ranges are bounded, and the regression gate audits structure before exposure. Visual polish tokens, normalized keys, and cohesion reports ensure snapshots stay consistent. Persona UX relies on title, short, and hints; if any part is missing, the system flags it before you see advice.
+
+The first interactive spot, delivered in Psi-2, is a BTN vs BB single-raised pot on a dry flop. You practice a small cbet and can compare with a check path. Coaching tone and pacing respond without animations or distractions. Safety-first examples include paired boards and pot control lines to keep risk low while you learn the system. Short cycles—act, read a tip, adjust—replace long scripts. You can replay the spot to watch how coaching reacts as Tier-A and ESM update.
+
+Data stays ASCII-only and deterministic: persona UX uses title, short, and hints; visual snapshots and tokens ensure V4 is coherent; XP/Reward info remains simple and bounded. If V4 is off, the flow falls back without changing coaching. By the end of Psi-1, you know how visuals, persona engines, and coaching connect, and you are ready for Psi-2 with clear expectations and minimal friction. The narrative emphasizes control, transparency, and confident first steps so your early sessions build trust and momentum.

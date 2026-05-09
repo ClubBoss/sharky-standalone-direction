@@ -1,0 +1,35 @@
+[
+  {
+    "id": "dec_01",
+    "title": "Easy Flush Call",
+    "heroCards": ["As", "Ks"],
+    "boardCards": ["2s", "7s", "Td"],
+    "villainAction": "Villain bets $20 on the flop",
+    "potSize": 100,
+    "correctAction": "call",
+    "explanation": "You have a Flush Draw (9 outs ~ 36%). The bet is tiny ($20 into $100). The price is ~16%. 36% > 16%. Easy Call.",
+    "entryFee": 0
+  },
+  {
+    "id": "dec_02",
+    "title": "Expensive Gutshot",
+    "heroCards": ["5d", "6c"],
+    "boardCards": ["8h", "2d", "Ks"],
+    "villainAction": "Villain pots it for $100",
+    "potSize": 100,
+    "correctAction": "fold",
+    "explanation": "You have a Gutshot (4 outs ~ 16%). Opponent bet huge (Pot Sized). Price is 33%. 16% < 33%. Fold immediately.",
+    "entryFee": 0
+  },
+  {
+    "id": "dec_03",
+    "title": "OESD vs Min-Bet",
+    "heroCards": ["5d", "6c"],
+    "boardCards": ["7s", "8h", "2d"],
+    "villainAction": "Villain min-bets $10",
+    "potSize": 200,
+    "correctAction": "raise",
+    "explanation": "You have a massive draw (8 outs). The bet is tiny. You can Call, but RAISING is better here to pressure them.",
+    "entryFee": 0
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s1",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S1 before applying position-based default.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Small seat shifts change whether open or fold is preferred.",
+  "expected": {
+    "seatId": "S1"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Seat S1 is the acting seat here, so anchoring it first keeps the position-based default tied to the right player.",
+  "feedback_incorrect_v1": "Incorrect. This rep requires seat S1 as context anchor."
+}

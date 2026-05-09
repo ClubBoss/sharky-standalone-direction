@@ -1,0 +1,14 @@
+{
+  "id": "fold",
+  "kind": "action_choice",
+  "prompt": "Late-street cash spot: pick the chip-saving line.",
+  "intent_v1": "one_lever_adjustment",
+  "available_actions_v1": ["fold", "call"],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold saves chips when price is poor and value is thin.",
+  "feedback_correct_v1": "Correct. Fold protects chips when the late-street price no longer justifies continuing.",
+  "feedback_incorrect_v1": "Incorrect. Fold is best here because the price is too poor to keep paying with thin value."
+}

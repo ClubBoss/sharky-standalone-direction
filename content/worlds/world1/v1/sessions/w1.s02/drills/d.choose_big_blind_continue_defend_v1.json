@@ -1,0 +1,18 @@
+{
+  "id": "choose_big_blind_continue_defend_v1",
+  "kind": "action_choice",
+  "prompt": "The button opened first and hero is in the big blind with QJs. Which simple action fits best?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A stronger broadway hand can continue from the big blind, but the clean response to late-position pressure is a call.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. After the button opens first, QJs in the big blind is a defend-by-calling spot, not a fresh first-in raise or a scared fold."
+}

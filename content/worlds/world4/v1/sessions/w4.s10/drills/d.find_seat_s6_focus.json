@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s6_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6 before continuing.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Seat anchor confirms acting position for denial decisions.",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Seat S6 fixes the acting player, so the denial rep stays attached to the exact range applying the pressure.",
+  "feedback_incorrect_v1": "Incorrect. This capstone rep stays attached to seat S6, so lock S6 before continuing."
+}

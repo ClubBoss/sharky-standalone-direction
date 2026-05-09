@@ -1,0 +1,32 @@
+[
+  {
+    "id": "w_quiz_new_01",
+    "prompt": "Is Poker 100% luck like Roulette?",
+    "options": [
+      "Yes, it's gambling",
+      "No, skill wins over time"
+    ],
+    "answer": 1,
+    "explanation": "Poker is a game of skill played with cards. Roulette is pure chance."
+  },
+  {
+    "id": "w_quiz_01",
+    "prompt": "You lose with Aces (AA). Is the game rigged?",
+    "options": [
+      "Yes!",
+      "No, that's just variance"
+    ],
+    "answer": 1,
+    "explanation": "Even the best hand loses sometimes in the short term. That is variance."
+  },
+  {
+    "id": "w_quiz_02",
+    "prompt": "What is the Golden Rule of Bankroll?",
+    "options": [
+      "Bet it all",
+      "Never bet what you can't lose"
+    ],
+    "answer": 1,
+    "explanation": "Protect your life funds first. Treat poker as an investment."
+  }
+]

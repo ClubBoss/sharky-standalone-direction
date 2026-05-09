@@ -1,0 +1,53 @@
+{
+  "id": "chain_world8_short_stack_threshold_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w8_s06_short_stack_threshold_v1",
+  "prompt": "Play this short World 8 short-stack threshold chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Survival pressure is heavy and the short stack is still below a clean urgency threshold. Which simple action fits best?",
+      "intent_v1": "survival_pressure",
+      "available_actions_v1": [
+        "fold",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This short-stack spot should still respect the survival cost.",
+      "feedback_incorrect_v1": "Incorrect. Start from the short-stack pressure before forcing urgency.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 8 should feel distinct because tournament pressure can keep a short stack cautious even when the stack is uncomfortable."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: The stack has crossed into a cleaner urgency band and waiting costs more than pushing now. Which simple action fits best?",
+      "intent_v1": "risk_premium_intuition",
+      "available_actions_v1": [
+        "fold",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This is the cleaner short-stack urgency point.",
+      "feedback_incorrect_v1": "Incorrect. Once the threshold is crossed, the stronger line should take over.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The World 8 lesson is that short-stack pressure is about thresholds, not automatic panic aggression."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: Survival pressure stays high, but the threshold is no longer clean enough to justify one more forced attack. Which simple action fits best now?",
+      "intent_v1": "survival_pressure",
+      "available_actions_v1": [
+        "fold",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This final short-stack step returns to discipline.",
+      "feedback_incorrect_v1": "Incorrect. The threshold is no longer clean enough to keep forcing pressure.",
+      "recap_v1": "World 8 short-stack pressure should now feel tiered: fold when survival cost dominates, raise only when urgency crosses a real threshold, and return to caution when that threshold is no longer clean.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This chain differentiates World 8 by making tournament urgency thresholds, not generic aggression, the structural driver of action."
+    }
+  ]
+}

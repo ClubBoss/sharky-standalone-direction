@@ -1,0 +1,12 @@
+{
+  "id": "find_btn_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the dealer button seat.",
+  "why_v1": "This drill keeps the dealer button seat clear before the learner speeds up acting-seat reads.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. This drill keeps the dealer button seat clear before the learner speeds up acting-seat reads.",
+  "feedback_incorrect_v1": "Incorrect. Use the dealer button seat here so the read stays tied to the correct seat anchor for this rep."
+}

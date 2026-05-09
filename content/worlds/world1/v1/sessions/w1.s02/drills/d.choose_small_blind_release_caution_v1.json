@@ -1,0 +1,18 @@
+{
+  "id": "choose_small_blind_release_caution_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the small blind with J7o and nobody has entered the pot. Which simple action fits best?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Out of position from the small blind, a weak offsuit hand should release instead of forcing a continue.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. From the small blind with J7o, the hand is too weak to force action out of position, so the disciplined action is to fold."
+}

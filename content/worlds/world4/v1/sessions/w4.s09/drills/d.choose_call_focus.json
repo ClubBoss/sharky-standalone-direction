@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_focus",
+  "kind": "action_choice",
+  "prompt": "With limited fold equity and fair price, choose action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Call keeps the line alive when raise pressure is weak.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control bluff spot.",
+  "feedback_incorrect_v1": "Incorrect. Limited fold equity with a fair price makes call the cleaner bluff-control line."
+}

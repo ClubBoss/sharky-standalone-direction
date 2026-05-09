@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_trap",
+  "kind": "action_choice",
+  "prompt": "Trap: shallow pressure can force fold, choose fold.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when stack depth and price do not support continuing.",
+  "feedback_correct_v1": "Correct. Fold fits because this short-stack trap is too dangerous to defend without a stronger hand.",
+  "feedback_incorrect_v1": "Incorrect. Fold is better when shallow-stack pressure makes continuing too expensive, because preserving chips matters more than chasing a thin continue."
+}

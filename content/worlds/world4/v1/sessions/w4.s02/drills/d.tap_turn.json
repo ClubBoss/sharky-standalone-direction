@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Tap the turn slot before acting.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Turn anchor confirms street context for denial decisions.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The turn card is the street cue for this denial decision, so tapping it first locks the action to the right point in the hand.",
+  "feedback_incorrect_v1": "Incorrect. This bluff rep is keyed to the turn card, so lock the turn slot before acting."
+}

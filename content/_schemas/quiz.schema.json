@@ -1,0 +1,11 @@
+{
+  "file": "quiz.jsonl",
+  "type": "jsonl",
+  "ascii_only": true,
+  "required_fields": {
+    "id": "string",
+    "question": "string",
+    "choices": "array",
+    "answer": "number"
+  }
+}

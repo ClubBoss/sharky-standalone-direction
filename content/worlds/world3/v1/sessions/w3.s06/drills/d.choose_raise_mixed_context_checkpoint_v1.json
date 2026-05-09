@@ -1,0 +1,14 @@
+{
+  "id": "choose_raise_mixed_context_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "The pot is unopened and hero is on the button with ATo. Which compact preflop action fits best for this mixed-context checkpoint?",
+  "intent_v1": "world3_mixed_context_checkpoint_raise_unopened",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "On the button in an unopened pot, ATo is strong enough to open and take the initiative.",
+  "feedback_correct_v1": "Correct. On the button in an unopened pot, ATo is strong enough to open and take the initiative.",
+  "feedback_incorrect_v1": "Incorrect. On the button with ATo and no open in front, this is still a clean in-position start, so the right compact action is to raise."
+}

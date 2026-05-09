@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_focus",
+  "kind": "action_choice",
+  "prompt": "With stable showdown value, choose action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Call controls pot size when protection raise is too thin.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_incorrect_v1": "Incorrect. Stable showdown value prefers pot control here, so call is cleaner than overprotecting with a raise."
+}

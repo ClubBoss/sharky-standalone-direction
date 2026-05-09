@@ -1,0 +1,12 @@
+{
+  "id": "find_bb_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the big blind seat.",
+  "why_v1": "This drill anchors the big blind seat before the learner checks the shifted acting seat.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. This drill anchors the big blind seat before the learner checks the shifted acting seat.",
+  "feedback_incorrect_v1": "Incorrect. Use the big blind seat here so the read stays tied to the correct seat anchor for this rep."
+}

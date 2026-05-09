@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_deep",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card before final deep-stack choice.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before depth action.",
+  "feedback_correct_v1": "Correct. Use the left hole card because it tells you if the hand is playable enough to keep pushing.",
+  "feedback_incorrect_v1": "Incorrect. The left hole card is the right hole-card anchor here because it keeps the deep-stack playability read tied to the actual hand."
+}

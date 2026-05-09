@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_trap",
+  "kind": "action_choice",
+  "prompt": "This trap spot is not a raise, choose action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Call keeps the pot under control when bluff pressure is weak.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this trap spot.",
+  "feedback_incorrect_v1": "Incorrect. With weak bluff pressure, call keeps the pot under control better than turning this into a raise."
+}

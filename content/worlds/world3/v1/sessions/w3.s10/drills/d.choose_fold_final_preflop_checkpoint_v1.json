@@ -1,0 +1,14 @@
+{
+  "id": "choose_fold_final_preflop_checkpoint_v1",
+  "kind": "action_choice",
+  "prompt": "The pot is unopened and hero is in the cutoff with J8o. Which compact preflop action fits best for the final World 3 checkpoint?",
+  "intent_v1": "world3_final_checkpoint_fold_earlier_position",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "J8o in the cutoff is too weak to open profitably with players behind, so folding stays disciplined.",
+  "feedback_correct_v1": "Correct. J8o in the cutoff is too weak to open with players behind, so disciplined preflop play is to fold.",
+  "feedback_incorrect_v1": "Incorrect. In the cutoff with J8o and no open in front, the hand is still too weak to start the pot, so the disciplined compact action is to fold."
+}

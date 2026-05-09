@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_turn_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before selecting turn line.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Position anchor remains relevant on turn continuation.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The button stays last to act on the turn, so anchoring that seat first keeps the turn-line choice tied to position advantage.",
+  "feedback_incorrect_v1": "Incorrect. The button still acts last on the turn, so anchor that seat first. That position edge is what tells you whether betting again or checking back makes sense."
+}

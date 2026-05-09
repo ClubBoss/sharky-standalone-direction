@@ -1,0 +1,42 @@
+[
+  {
+    "id": "act_q1",
+    "questionText": "Your opponent bets $50. You want to stay in the hand. What do you do?",
+    "options": ["Check", "Call"],
+    "correctOptionIndex": 1,
+    "explanation": "You cannot 'Check' if someone has bet. You must 'Call' (match the $50) to see the next card.",
+    "entryFee": 0
+  },
+  {
+    "id": "act_q2",
+    "questionText": "No one has bet yet. You don't want to put money in, but you want to keep your cards.",
+    "options": ["Fold", "Check"],
+    "correctOptionIndex": 1,
+    "explanation": "Check! It's free. Never fold if you can check for free.",
+    "entryFee": 0
+  },
+  {
+    "id": "act_q3",
+    "questionText": "You have a terrible hand and your opponent bets huge.",
+    "options": ["Fold", "Call"],
+    "correctOptionIndex": 0,
+    "explanation": "Fold. Live to fight another day. Save your chips.",
+    "entryFee": 0
+  },
+  {
+    "id": "act_q4",
+    "questionText": "You have the best hand and want to grow the pot.",
+    "options": ["Call", "Raise"],
+    "correctOptionIndex": 1,
+    "explanation": "Raise! Force them to pay more to see your cards.",
+    "entryFee": 0
+  },
+  {
+    "id": "act_q5",
+    "questionText": "What does 'All-in' mean?",
+    "options": ["Betting half your stack", "Betting everything you have"],
+    "correctOptionIndex": 1,
+    "explanation": "All-in means pushing every single chip into the middle. The ultimate move.",
+    "entryFee": 0
+  }
+]

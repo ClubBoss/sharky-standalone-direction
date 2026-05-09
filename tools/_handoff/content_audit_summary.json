@@ -1,0 +1,780 @@
+{
+  "totals": {
+    "files": 190,
+    "lines": 1794,
+    "valid": 0,
+    "invalid": 1794,
+    "duplicates": 0,
+    "broken": 2459,
+    "collisions": 0
+  },
+  "per_pack": [
+    {
+      "pack": "bankroll_and_variance_management",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_3bet_oop_playbook",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_blind_defense",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_blind_defense_vs_btn_co",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_blind_vs_blind",
+      "files": 2,
+      "lines": 15,
+      "ids": 15,
+      "invalid": 15,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_delayed_cbet_and_probe_systems",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_fourbet_pots",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_isolation_raises",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_limp_pots_systems",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_multiway_3bet_pots",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_multiway_pots",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_overbets_and_blocker_bets",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_population_exploits",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_rake_and_stakes",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_short_handed",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_single_raised_pots",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_squeeze_strategy",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_threebet_pots",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "cash_turn_river_barreling",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_bankroll_management",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_bet_sizing_fe",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_board_textures",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_check_raise_systems",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_equity_realization",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_flop_fundamentals",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_gto_vs_exploit",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_mental_game",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_note_taking",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_positions_and_initiative",
+      "files": 2,
+      "lines": 17,
+      "ids": 17,
+      "invalid": 17,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_pot_odds_equity",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_river_fundamentals",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_rules_and_setup",
+      "files": 2,
+      "lines": 18,
+      "ids": 18,
+      "invalid": 18,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_starting_hands",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "core_turn_fundamentals",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "database_leakfinder_playbook",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "donk_bets_and_leads",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "exploit_advanced",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hand_review_and_annotation_standards",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_exploit_adv",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_postflop",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_postflop_play",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_preflop",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_preflop_strategy",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_river_play",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "hu_turn_play",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "icm_bubble_blind_vs_blind",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "icm_final_table_hu",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "icm_mid_ladder_decisions",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_chip_handling_and_bet_declares",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_etiquette_and_procedures",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_floor_calls_and_dispute_resolution",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_full_ring_adjustments",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_rake_structures_and_tips",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_security_and_game_integrity",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_session_log_and_review",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_special_formats_straddle_bomb_ante",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_speech_timing_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_table_selection_and_seat_change",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "live_tells_and_dynamics",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_combo_blockers",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_ev_calculations",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_icm_advanced",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_icm_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_intro_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_pot_odds_equity",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "math_solver_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mental_game_and_routines",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_antes_phases",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_day2_bagging_and_reentry_ev",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_deep_stack",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_final_table_playbooks",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_icm_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_icm_endgame_advanced",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_late_reg_strategy",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_mid_stack",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_pko_advanced_bounty_routing",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_pko_strategy",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_satellite_strategy",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "mtt_short_stack",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_economics_rakeback_promos",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_fastfold_pool_dynamics",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_hud_and_db_review",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_hudless_strategy_and_note_coding",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_notes_and_exploit_tracker",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_population_exploits_playbook",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_table_selection_and_multitabling",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "online_tells_and_dynamics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "program_catalog",
+      "files": 2,
+      "lines": 15,
+      "ids": 15,
+      "invalid": 15,
+      "duplicates": 0
+    },
+    {
+      "pack": "rake_and_ante_economics",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "review_workflow_and_study_routines",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "solver_node_locking_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 19,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "spr_advanced",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "spr_basics",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "spr_commitment_checklists",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    },
+    {
+      "pack": "study_review_handlab",
+      "files": 2,
+      "lines": 19,
+      "ids": 0,
+      "invalid": 19,
+      "duplicates": 0
+    }
+  ],
+  "collisions": [],
+  "issue_breakdown": {
+    "malformed_json": 0,
+    "missing_keys": 1794,
+    "invalid_id": 665,
+    "invalid_allowlist_token": 0
+  }
+}

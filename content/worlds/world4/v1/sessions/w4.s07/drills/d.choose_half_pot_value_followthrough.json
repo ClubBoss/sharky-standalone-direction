@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_value_followthrough",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the value size that stays strong without immediately maxing pressure.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Half pot keeps the value line practical and still invites enough weaker continues.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

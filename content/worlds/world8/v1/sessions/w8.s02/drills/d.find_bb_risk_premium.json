@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_risk_premium",
+  "kind": "seat_tap",
+  "prompt": "Tap big blind seat before risk-premium action.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "role": "bb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The big blind is the right seat anchor, so the tournament read stays tied to the forced defender who has to absorb the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the right seat anchor because it is the forced defender with the widest range once risk premium starts shaping decisions. If you choose the wrong seat, you lose the key context for where tournament pressure hits hardest."
+}

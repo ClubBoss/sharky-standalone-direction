@@ -1,0 +1,14 @@
+{
+  "id": "choose_one_third_pot_keep_value_flow",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the lighter value size that still keeps many weaker hands continuing.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "One third pot keeps the value flow lighter while still offering enough room for weaker calls.",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

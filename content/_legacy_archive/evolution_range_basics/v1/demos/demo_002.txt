@@ -1,0 +1,21 @@
+# Scenario
+IP applies a small pressure stab on a wet board, leaving OOP to gauge whether the attacker is building linear calls, polar barks, or a mixed plan before deciding on a reactive line.
+
+# Snapshot
+Attacker: modest top-end, stronger mids, thinned bottom combination. Defender: tight but waiting for clarity, knows top/mid density controls pot.
+
+# Player task
+Determine whether the attacker’s spread is linear, polar, or mixed, and explain how the density profile guides that classification.
+
+# Expected reasoning
+Mid cohesion with only modest top-end means attacker keeps enough strength to continue value while still pursuing some thin coverage. The thinned bottom suggests the attacker resists watering down into pure bluffs. Linear structure would keep consistent density across bands, but the weaker top-end shifts incentives toward a mixed shape where mids guard and top combos keep pressure steady. This supports continued multiple-street plans instead of one-off bluffs.
+
+# Correct line
+Mixed structure: mid coverage anchors value while the modest top-end and thin bottom keep the range balanced.
+
+# Why not the alternatives
+- Linear: would demand uniform density, yet the top-end is weaker than the mids.
+- Polar: needs a clear bluff/value divide, which the consistent mid coverage denies.
+- Aggressive polar: would show thinner mids, but here they guard rather than fold.
+- Pure bluff line: contradicts the middling top-end and the fact that the attacker still values the mid band.
+- Passive linear: ignores the incentive to keep pressing with mid coverage and a supported top band.

@@ -1,0 +1,12 @@
+[
+  {"id": "pf_utg_01", "hand": "72o", "position": "UTG", "action": "fold", "explanation": "UTG (Red Light). Garbage hand."},
+  {"id": "pf_utg_02", "hand": "AA", "position": "UTG", "action": "push", "explanation": "UTG (Red Light). Aces are always a play."},
+  {"id": "pf_utg_03", "hand": "KJo", "position": "UTG", "action": "fold", "explanation": "UTG (Red Light). K-J offsuit is a trap in early position. Fold."},
+  {"id": "pf_utg_04", "hand": "AQs", "position": "UTG", "action": "push", "explanation": "UTG (Red Light). AQ suited is strong enough to open."},
+  {"id": "pf_mp_01", "hand": "JJ", "position": "MP", "action": "push", "explanation": "MP (Yellow Light). Jacks are strong enough."},
+  {"id": "pf_mp_02", "hand": "A9o", "position": "MP", "action": "fold", "explanation": "MP (Yellow Light). Ace-Nine offsuit is still too weak."},
+  {"id": "pf_btn_01", "hand": "78s", "position": "BTN", "action": "push", "explanation": "BTN (Green Light). Suited connectors are great for stealing blinds."},
+  {"id": "pf_btn_02", "hand": "22", "position": "BTN", "action": "push", "explanation": "BTN (Green Light). Any pair is playable from the Button to steal."},
+  {"id": "pf_btn_03", "hand": "Q4o", "position": "BTN", "action": "fold", "explanation": "BTN (Green Light). But don't go crazy. Q-4 is still trash."},
+  {"id": "pf_bb_01", "hand": "KK", "position": "BB", "action": "push", "explanation": "Monsters are always played, even from the blinds."}
+]

@@ -1,0 +1,13 @@
+{
+  "id": "call",
+  "kind": "action_choice",
+  "prompt": "In this late-street cash spot, choose the best action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call captures value when price and showdown value align.",
+  "feedback_correct_v1": "Correct. Calling fits the track cue set, so the line keeps the controlled continue this spot is actually rewarding.",
+  "feedback_incorrect_v1": "Incorrect. Call because turn-and-river control keeps this cash pot manageable when the hand is strong enough to continue but not force."
+}

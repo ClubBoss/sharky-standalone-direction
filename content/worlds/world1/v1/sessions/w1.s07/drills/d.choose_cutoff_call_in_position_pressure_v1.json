@@ -1,0 +1,18 @@
+{
+  "id": "choose_cutoff_call_in_position_pressure_v1",
+  "kind": "action_choice",
+  "prompt": "Hijack opened and hero is in the cutoff with QJs. Which simple action fits best when position still lets you continue cleanly?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "With position and a playable suited broadway hand, the clean response to existing pressure is a call.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Once the hijack opens first, QJs in the cutoff becomes an in-position continue spot, so the cleaner action is call."
+}

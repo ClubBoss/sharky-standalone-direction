@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_turn_edge",
+  "kind": "action_choice",
+  "prompt": "When compression still supports pressure, choose raise.",
+  "intent_v1": "think_in_ranges",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when range and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because the turn still leaves your range with the clearer pressure edge against capped continues.",
+  "feedback_incorrect_v1": "Incorrect. Raise is stronger when the turn still leaves your range with the clearer pressure edge and enough strength to push weaker continues back. This is the kind of compressed board where aggression earns value by making capped hands pay or fold."
+}

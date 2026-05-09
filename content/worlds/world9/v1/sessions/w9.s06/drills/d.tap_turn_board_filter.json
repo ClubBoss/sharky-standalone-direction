@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_board_filter",
+  "kind": "board_tap",
+  "prompt": "Tap the turn.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the turn because the fourth card can open or close the pressure spot.",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card can open the spot or shut it down.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn because the fourth card can open the spot or shut it down."
+}

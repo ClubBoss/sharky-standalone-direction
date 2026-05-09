@@ -1,0 +1,20 @@
+{
+  "id": "choose_hero_out_of_position_bb_vs_btn",
+  "kind": "position_thinking_choice_v1",
+  "intent_v1": "position_oop_pain",
+  "question_shape_v1": "out_of_position",
+  "prompt": "Hero is in the big blind and villain is on the button. Who is out of position after the flop?",
+  "player_count_v1": 2,
+  "hero_seat_v1": "bb",
+  "villain_seat_v1": "btn",
+  "active_seats_v1": ["btn", "bb"],
+  "street_v1": "flop",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "position_thinking_choice_mismatch",
+  "why_v1": "The big blind acts first after the flop against the button, so hero is out of position.",
+  "feedback_correct_v1": "Correct. Hero is out of position because the big blind has to act before the button.",
+  "feedback_incorrect_v1": "Incorrect. Hero is out of position here because the big blind acts first after the flop."
+}

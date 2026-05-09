@@ -1,0 +1,131 @@
+name: Health
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Show SDK versions
+        run: |
+          dart --version
+          flutter --version
+
+      - name: Pub get
+        run: dart pub get
+
+      - name: Detect PR changes (git diff)
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            BASE_SHA="origin/${{ github.base_ref }}"
+            HEAD_SHA="${{ github.sha }}"
+            git diff --name-only "$BASE_SHA...$HEAD_SHA" > changed.txt
+            has_content=0
+            has_ui=0
+            has_code=0
+            while IFS= read -r file; do
+              [[ -z "$file" ]] && continue
+              if echo "$file" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/)'; then
+                has_content=1
+              fi
+              if echo "$file" | grep -Eq '^(lib/ui/|lib/ui_v2/|lib/screens/|lib/widgets/|test/ui/|test/ui_v2/)'; then
+                has_ui=1
+              fi
+              if echo "$file" | grep -Eq '^(lib/|test/)'; then
+                has_code=1
+              fi
+            done < changed.txt
+            if [[ "$has_content" -eq 0 ]]; then
+              echo "HEALTH_SKIP_CONTENT=1" >> "$GITHUB_ENV"
+              echo "CI_HAS_CONTENT_CHANGES=0" >> "$GITHUB_ENV"
+            else
+              echo "CI_HAS_CONTENT_CHANGES=1" >> "$GITHUB_ENV"
+            fi
+            echo "HEALTH_SKIP_CONTENT=1" >> "$GITHUB_ENV"
+            echo "HEALTH_SKIP_UI=1" >> "$GITHUB_ENV"
+            echo "HEALTH_SKIP_COVERAGE=1" >> "$GITHUB_ENV"
+            echo "HEALTH_PR_MODE=1" >> "$GITHUB_ENV"
+            {
+              echo "CI_CHANGED_FILES<<EOF"
+              cat changed.txt
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          else
+            echo "CI_HAS_CONTENT_CHANGES=1" >> "$GITHUB_ENV"
+            echo "HEALTH_PR_MODE=0" >> "$GITHUB_ENV"
+          fi
+
+      - name: PR-safe mode notice
+        if: github.event_name == 'pull_request'
+        run: echo "PR context detected. Skipping content-heavy health checks."
+
+      - name: SDK Self-Check
+        run: |
+          if [ -f tools/sdk_selfcheck.dart ]; then
+            dart run tools/sdk_selfcheck.dart
+          else
+            echo "SKIP: tools/sdk_selfcheck.dart not present"
+          fi
+
+      - name: Export UI Metrics
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -f tools/export_ui_metrics.dart ]; then
+            dart run tools/export_ui_metrics.dart
+          else
+            echo "SKIP: tools/export_ui_metrics.dart not present"
+          fi
+
+      - name: Health Dashboard (CI)
+        if: github.event_name != 'pull_request'
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [ -f tools/health_dashboard.dart ]; then
+              dart run tools/health_dashboard.dart --ci --fast
+            else
+              echo "SKIP: tools/health_dashboard.dart not present"
+            fi
+            exit 0
+          fi
+          BASE=origin/main
+          git fetch --no-tags --prune --depth=1 origin main
+          CHANGED=$(git diff --name-only "$BASE...HEAD")
+          if echo "$CHANGED" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/|tooling/allowlists/|tooling/pre_release_check\.dart|tools/health_dashboard\.dart)'; then
+            if [ -f tools/health_dashboard.dart ]; then
+              dart run tools/health_dashboard.dart --ci
+            else
+              echo "SKIP: tools/health_dashboard.dart not present"
+            fi
+          else
+            echo "SKIP: no relevant diff for health_dashboard"
+          fi
+
+      - name: Health Dashboard (PR-safe)
+        if: github.event_name == 'pull_request'
+        run: echo "PR-safe mode: skipping health dashboard (content-heavy checks disabled)."
+
+      - name: Upload Baseline Report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: RELEASE_BASELINE_REPORT
+          path: RELEASE_BASELINE_REPORT.md

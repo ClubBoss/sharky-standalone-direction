@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_icm_synth",
+  "kind": "action_choice",
+  "prompt": "When synthesis confirms pressure edge, choose raise.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when risk premium and stack context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits the tournament cue set, so the line uses pressure only when the read gives you a real leverage edge.",
+  "feedback_incorrect_v1": "Incorrect. Raise is better when the ICM synthesis read gives you the pressure edge, because covering leverage and fold equity let you attack instead of taking a passive line."
+}

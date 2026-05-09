@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_flop_checkback",
+  "kind": "action_choice",
+  "prompt": "Thin-value flop boundary: choose checkback line.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Thin-value boundary spots default to checkback here.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "unnecessary_bet",
+  "feedback_correct_v1": "Correct. Checkback is expected in this thin-value spot.",
+  "feedback_incorrect_v1": "Incorrect. This flop does not need extra pressure, so checking back keeps the pot calmer than betting for no clear gain.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

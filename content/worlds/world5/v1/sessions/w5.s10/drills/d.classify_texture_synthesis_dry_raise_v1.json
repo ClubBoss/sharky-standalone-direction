@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_synthesis_dry_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Texture, draw structure, and secondary cues all agree on a clean dry-board pressure story. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "dry",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "When all cues align on a dry board, the clean texture story should lead to a raise.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The dry synthesis read supports a raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the full dry-board synthesis: when texture, draw structure, and secondary cues all stay clean, the line should convert that clarity into a raise."
+}

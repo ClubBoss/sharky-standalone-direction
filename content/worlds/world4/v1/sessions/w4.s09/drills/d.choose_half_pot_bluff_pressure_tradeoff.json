@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_bluff_pressure_tradeoff",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the bluff size that keeps strong pressure without always going to maximum force.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "Half pot keeps the bluff credible and pressuring while avoiding a full maximum-price line.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

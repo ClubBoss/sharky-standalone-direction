@@ -1,0 +1,24 @@
+{
+  "id": "choose_hero_more_likely_to_continue_pressure",
+  "kind": "initiative_aggressor_choice_v1",
+  "intent_v1": "world2_initiative_bridge",
+  "prompt": "Hero raised and villain called. Who is more likely to continue pressure on the flop?",
+  "player_count_v1": 2,
+  "hero_seat_v1": "co",
+  "villain_seat_v1": "btn",
+  "active_seats_v1": ["co", "btn"],
+  "street_v1": "flop",
+  "last_aggressor_v1": "hero",
+  "initiative_owner_v1": "hero",
+  "pressure_owner_v1": "hero",
+  "initiative_policy_shape_v1": "pressure_owner",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "initiative_aggressor_choice_mismatch",
+  "why_v1": "The last aggressor usually keeps initiative and is more likely to continue pressure first.",
+  "feedback_correct_v1": "Correct. Hero is more likely to keep pressure because hero raised last and has initiative.",
+  "feedback_incorrect_v1": "Incorrect. Hero is more likely to continue pressure here because hero raised last.",
+  "recap_v1": "The player who made the last aggressive action usually keeps initiative and is more likely to keep pressure on the next street."
+}

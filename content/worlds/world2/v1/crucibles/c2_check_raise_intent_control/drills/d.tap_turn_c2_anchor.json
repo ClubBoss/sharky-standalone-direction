@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_c2_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap turn anchor before turn check-raise intent decision.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Turn anchor controls valid pressure and control branches.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Turn anchor is identified.",
+  "feedback_incorrect_v1": "Incorrect. This node starts with turn anchor."
+}

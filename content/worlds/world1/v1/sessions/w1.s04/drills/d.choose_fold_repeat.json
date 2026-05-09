@@ -1,0 +1,11 @@
+{
+  "id": "choose_fold_repeat",
+  "kind": "action_choice",
+  "prompt": "Choose the best action.",
+  "intent_v1": "hand_discipline_fold",
+  "why_v1": "Fold preserves chips when hand quality is weak.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "action_selection"
+}

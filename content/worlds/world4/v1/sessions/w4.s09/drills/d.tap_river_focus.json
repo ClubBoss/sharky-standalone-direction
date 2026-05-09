@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_focus",
+  "kind": "board_tap",
+  "prompt": "Tap the river slot before action.",
+  "intent_v1": "bet_as_bluff",
+  "why_v1": "River anchor confirms final street for bluff pressure.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The river is the last pressure street, so the bluff stays tied to whether better hands still call and weaker hands can still fold.",
+  "feedback_incorrect_v1": "Incorrect. This bluff focus rep finishes from the river card, so lock the river slot before continuing."
+}

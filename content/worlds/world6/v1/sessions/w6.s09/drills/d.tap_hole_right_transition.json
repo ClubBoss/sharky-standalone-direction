@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_transition",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your right hole card.",
+  "intent_v1": "blockers_basics",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the full hand before deciding whether the spot is still good enough.",
+  "feedback_correct_v1": "Correct. Use the right hole card because your full hand decides whether you can keep betting.",
+  "feedback_incorrect_v1": "Incorrect. Use the right hole card because your full hand decides whether you can keep betting."
+}

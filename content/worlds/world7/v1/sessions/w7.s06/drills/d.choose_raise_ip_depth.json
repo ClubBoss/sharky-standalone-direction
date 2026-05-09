@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_ip_depth",
+  "kind": "action_choice",
+  "prompt": "With confirmed edge in position, choose raise.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when stack depth and price support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits because position plus depth gives you enough leverage to pressure capped continues before equity slips away.",
+  "feedback_incorrect_v1": "Incorrect. Raise is stronger here because the in-position depth setup gives you both leverage and room to pressure capped continues. With position and a clean edge working together, aggression wins more than a passive line."
+}

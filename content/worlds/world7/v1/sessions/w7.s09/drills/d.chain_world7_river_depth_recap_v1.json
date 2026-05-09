@@ -1,0 +1,53 @@
+{
+  "id": "chain_world7_river_depth_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w7_s09_river_depth_recap_v1",
+  "prompt": "Play this short World 7 river-depth recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The hand is nearing closure, but stack depth still leaves enough room to avoid cashing out too early. Which simple action fits best?",
+      "intent_v1": "stack_to_pot_awareness",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This first closure step should stay controlled.",
+      "feedback_incorrect_v1": "Incorrect. The recap starts by preserving depth instead of spending it immediately.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 7 recap should reinforce that late-street depth still matters when closure pressure is not fully clean."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: River closure is approaching and the depth edge now sharpens enough to punish the capped line. Which simple action fits best?",
+      "intent_v1": "deep_stack_playability",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This is where depth should convert into pressure.",
+      "feedback_incorrect_v1": "Incorrect. Once the closure threshold favors leverage, the line should push harder.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The recap should keep World 7 depth-specific by making late pressure a result of stack leverage, not generic aggression."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The river still offers enough depth-conditioned pressure to finish assertively instead of settling. Which simple action fits best now?",
+      "intent_v1": "stack_depth_adjustment",
+      "available_actions_v1": [
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. The late closure still leans on the stronger depth-driven finish.",
+      "feedback_incorrect_v1": "Incorrect. The final recap step should still spend the remaining depth edge.",
+      "recap_v1": "World 7 river-depth closure should now feel stable: keep control while the leverage edge is mixed, then turn that remaining depth into pressure once late-street closure becomes clean enough to press.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This recap reinforces World 7 by making depth and leverage, not just river aggression, the reason the line hardens."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+# What to do
+Determine whether the mid-layer described is compressed or expanded and explain how that affects the overall range structure.
+
+# Input
+Top combinations: AK, AQ, KQ, AJs. Mid combinations: JT, T9, 98, 87, 76, J8. Bottom combinations: 55, 44, 33, 22. The mid-layer includes both suited connectors and one-gappers but lacks a broad set of weak hands.
+
+# Expected reasoning
+A compressed mid-layer concentrates mid-strength combos and tightens coverage, keeping a clear gap between top and bottom. An expanded mid-layer spreads density, inviting merge or bluff options. Mid-layer density shifts reveal whether the range is closing around top value or opening defensive/merge angles. Carefully read the presence of connectors versus broader weak holdings to decide how the mid-layer behaves.
+
+# Correct answer
+The mid-layer is compressed: it contains just connected mid combos without extra weak hands, so the structure keeps a tight gap between the top and bottom layers.
+
+# Common mistakes
+- Calling it expanded because of multiple suited connectors.
+- Ignoring the absence of weak fill-ins and labeling it mixed.
+- Flattening the mid-layer and losing the distinction between top and bottom.
+- Equating compression with polar hints instead of coverage.
+- Missing the density implications and calling it similar to the previous drill.

@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Equity realization setup: tap BB.",
+  "intent_v1": "equity_realization",
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Big blind is the seat anchor here because the forced defender closes the action and sets the realization pressure.",
+  "feedback_incorrect_v1": "Incorrect. Start with the big blind so you know who closes the action and how much positional pressure the hand faces. That seat anchor is what tells you how carefully this realization spot should be played."
+}

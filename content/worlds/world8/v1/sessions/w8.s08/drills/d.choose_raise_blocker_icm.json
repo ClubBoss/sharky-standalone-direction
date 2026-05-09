@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_blocker_icm",
+  "kind": "action_choice",
+  "prompt": "When blocker and ICM pressure align, choose raise.",
+  "intent_v1": "risk_premium_intuition",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise applies pressure when risk premium and stack context support aggression.",
+  "feedback_correct_v1": "Correct. Raising fits the tournament cue set, so the line uses pressure only when the read gives you a real leverage edge.",
+  "feedback_incorrect_v1": "Incorrect. Raising is better here because the blocker and the ICM window align well enough to justify pressure."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "choose_call_focus",
+  "kind": "action_choice",
+  "prompt": "Choose the best action.",
+  "intent_v1": "dominated_aces",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "action_selection"
+}

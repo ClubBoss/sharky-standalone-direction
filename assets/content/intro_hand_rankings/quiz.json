@@ -1,0 +1,24 @@
+[
+  {
+    "id": "hr_quiz_01",
+    "prompt": "Which hand wins?",
+    "image": "assets/images/ranks/full_house_vs_flush.png",
+    "options": [
+      "Full House",
+      "Flush"
+    ],
+    "answer": 1,
+    "explanation": "Flush beats Full House."
+  },
+  {
+    "id": "hr_quiz_02",
+    "prompt": "The strongest possible hand is:",
+    "options": [
+      "Four Aces",
+      "Royal Flush",
+      "Full House"
+    ],
+    "answer": 1,
+    "explanation": "The Royal Flush is the unbeatable Apex Predator."
+  }
+]

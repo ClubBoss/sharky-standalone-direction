@@ -1,0 +1,20 @@
+# What to do
+Decide whether the snapshot creates mid or high pressure based on top-end density and continuity.
+
+# Input
+Range A: uncapped, strong top-end continuity, high card blockers, thin mid density. Range B: capped mid-band, weaker top-end, wide blockers with low aggression.
+
+# Expected reasoning
+Range A’s uncapped top-end and continuity suggest high pressure, yet thin mids cap it.
+Range B’s capped mid-band lacks continuity and cannot push high tiers.
+Mid pressure wins because A forces action while B caps escalation.
+
+# Correct answer
+Mid pressure tier: uncapped top-end forces action but capped mid-band keeps the overall pressure from reaching high.
+
+# Common mistakes
+- Confusing uncapped top-end with automatic high pressure.
+- Overlooking continuity and betting for high tier.
+- Misreading capped mids as high aggression zones.
+- Flattening the snapshot to low pressure.
+- Ignoring how blockers mute density.

@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_medium",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before medium-stack flexibility action.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start from the button because acting last keeps a medium-stack spot easier to play.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right anchor here because the medium-stack decision belongs to the player acting last with the positional edge."
+}

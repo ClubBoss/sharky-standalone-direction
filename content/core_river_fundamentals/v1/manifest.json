@@ -1,0 +1,11 @@
+{
+  "id": "core_river_fundamentals",
+  "title": "River Fundamentals",
+  "description": "Learn clear river decisions for value, bluffs, and bluff-catches when no cards remain.",
+  "tier": "A",
+  "version": "v1",
+  "difficulty_tier": 2,
+  "error_class": "core_river_fundamentals",
+  "reasoning": "Provides practical final-street decision rules using hand strength, sizing, and opponent tendencies.",
+  "availability": "available"
+}

@@ -1,0 +1,38 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: validate
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  allowlists:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(join(github.event.pull_request.labels.*.name), 'run-content-ci') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Detect relevant diff
+        id: diff
+        run: |
+          set -euo pipefail
+          BASE=origin/main
+          git fetch --no-tags --prune --depth=1 origin main
+          CHANGED=$(git diff --name-only "$BASE...HEAD")
+          if echo "$CHANGED" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/|tooling/allowlists/|tooling/pre_release_check\.dart|tools/health_dashboard\.dart)'; then
+            echo "relevant_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Allowlists check
+        if: steps.diff.outputs.relevant_changed == 'true'
+        run: |
+          if [ -f tools/allowlists_sync.py ]; then
+            python3 tools/allowlists_sync.py --check
+          else
+            echo "SKIP: tools/allowlists_sync.py not present"
+          fi
+      - name: Skip allowlists check
+        if: steps.diff.outputs.relevant_changed != 'true'
+        run: 'echo "SKIP: no relevant diff for allowlists"'

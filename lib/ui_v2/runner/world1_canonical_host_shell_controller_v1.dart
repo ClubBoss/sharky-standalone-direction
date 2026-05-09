@@ -1,0 +1,5 @@
+import 'package:poker_analyzer/ui_v2/runner/canonical_launch_boundary_signal_contract_v1.dart';
+
+typedef World1CanonicalHostShellSignalV1 = CanonicalLaunchBoundaryShellSignalV1;
+typedef World1CanonicalHostShellControllerV1 =
+    CanonicalLaunchBoundaryShellControllerV1;

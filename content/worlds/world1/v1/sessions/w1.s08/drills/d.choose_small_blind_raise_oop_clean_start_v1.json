@@ -1,0 +1,18 @@
+{
+  "id": "choose_small_blind_raise_oop_clean_start_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the small blind with AQs and everyone folded so far. Which simple action fits best if the start is strong enough despite being out of position?",
+  "intent_v1": "dominated_aces",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A strong hand in a clean unopened spot can still raise first in, even from the small blind.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. Being out of position does not cancel a strong clean start, so AQs in the small blind should still open with a raise."
+}

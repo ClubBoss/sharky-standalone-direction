@@ -1,0 +1,43 @@
+{
+  "id": "chain_icm_synthesis_counterweight_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w8_s10_icm_synthesis_counterweight_v1",
+  "prompt": "Play this short three-step World 8 ICM counterweight chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: Covered tournament pressure and survival cost should keep this line closed. Choose action.",
+      "intent_v1": "bubble_intuition",
+      "available_actions_v1": ["fold", "call"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This covered-pressure flop step should fold.",
+      "feedback_incorrect_v1": "Incorrect. When the survival cost is already high and you are covered, this flop should fold rather than continue on a thin edge.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When the learner is the one carrying the survival cost, tournament pressure can make disciplined release better than a thin continue."
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: Balanced pressure and a live stack still support controlled continuation. Choose action.",
+      "intent_v1": "survival_pressure",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This balanced-pressure turn step prefers call.",
+      "feedback_incorrect_v1": "Incorrect. With pressure still meaningful but not yet decisive, this turn should stay balanced and continue with a call.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When tournament pressure remains meaningful but not decisive, keeping the line controlled preserves flexibility better than forcing aggression."
+    },
+    {
+      "street": "river",
+      "prompt": "River: Covering leverage and cleaner ICM pressure now justify a stronger close. Choose action.",
+      "intent_v1": "risk_premium_intuition",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This leverage-clean river step supports raise.",
+      "feedback_incorrect_v1": "Incorrect. Once the line closes cleanly and you still hold the covering leverage, this river should convert that edge into a raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When the learner is applying pressure while covering the opponent and the line closes cleanly, tournament leverage can justify the stronger finish."
+    }
+  ]
+}

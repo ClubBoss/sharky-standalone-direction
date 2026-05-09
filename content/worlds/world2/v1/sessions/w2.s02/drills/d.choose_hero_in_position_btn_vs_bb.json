@@ -1,0 +1,23 @@
+{
+  "id": "choose_hero_in_position_btn_vs_bb",
+  "kind": "position_thinking_choice_v1",
+  "intent_v1": "position_ip_advantage",
+  "question_shape_v1": "in_position",
+  "prompt": "Hero is on the button and villain is in the big blind. Who is in position after the flop?",
+  "intro_v1": "Read the seat relationship first. Position means acting later after the flop, not just sitting somewhere else.",
+  "player_count_v1": 4,
+  "hero_seat_v1": "btn",
+  "villain_seat_v1": "bb",
+  "active_seats_v1": ["btn", "bb"],
+  "folded_seats_v1": ["co"],
+  "empty_seats_v1": ["sb"],
+  "street_v1": "flop",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "position_thinking_choice_mismatch",
+  "why_v1": "The button acts later after the flop, so hero keeps position.",
+  "feedback_correct_v1": "Correct. Hero is in position because the button acts later after the flop.",
+  "feedback_incorrect_v1": "Incorrect. Hero is in position here because the button acts after the big blind."
+}

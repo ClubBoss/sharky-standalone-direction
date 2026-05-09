@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_station",
+  "kind": "board_tap",
+  "prompt": "Tap the turn.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Use the turn because the fourth card can change how much a calling station will keep paying.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card can make the station easier or harder to charge.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn because the fourth card changes whether you should keep charging the station."
+}

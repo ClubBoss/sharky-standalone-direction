@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_short",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card before final push-fold action.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before tournament-pressure action.",
+  "feedback_correct_v1": "Correct. The right hole card is the anchor, so the tournament read stays tied to the private-card cue that completes the tournament-pressure read.",
+  "feedback_incorrect_v1": "Incorrect. The right hole card is the target hole card because the final push-fold choice has to stay tied to the correct hand reference."
+}

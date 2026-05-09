@@ -1,0 +1,16 @@
+{
+  "id": "choose_fold_facing_open_price_bad",
+  "kind": "action_choice",
+  "prompt": "Facing one open with poor price, choose response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Unpriced pressure spots resolve to fold.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "overfold_pattern",
+  "feedback_correct_v1": "Correct. Fold is the defined response for this price.",
+  "feedback_incorrect_v1": "Incorrect. The price is too poor for this continue, so folding is cleaner than paying to see more pressure.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

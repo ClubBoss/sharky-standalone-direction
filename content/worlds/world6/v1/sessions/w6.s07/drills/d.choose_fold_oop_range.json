@@ -1,0 +1,14 @@
+{
+  "id": "choose_fold_oop_range",
+  "kind": "action_choice",
+  "prompt": "Out of position with thin equity, pick the chip-saving line.",
+  "intent_v1": "range_vs_hand",
+  "available_actions_v1": ["fold", "call"],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold protects chips when range strength does not justify continuing.",
+  "feedback_correct_v1": "Correct. Fold protects chips when the out-of-position equity is too thin.",
+  "feedback_incorrect_v1": "Incorrect. Fold is best here because the out-of-position equity is too thin to justify continuing."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap turn before choosing the next action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Turn anchors prevent rushed actions.",
+  "feedback_correct_v1": "Correct. turn is the next board anchor, so the line updates once the middle street can change which pressure plan still fits.",
+  "feedback_incorrect_v1": "Incorrect. Tap the turn card because the fourth board card can raise tournament pressure before the river ever arrives."
+}

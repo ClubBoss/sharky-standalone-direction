@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200" role="img" aria-label="Poker shark idle pose">
+  <defs>
+    <linearGradient id="bodyIdle" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4cc5ff" />
+      <stop offset="100%" stop-color="#2a7fbf" />
+    </linearGradient>
+    <linearGradient id="bellyIdle" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#cfe2ff" stop-opacity="0.85" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="200" rx="16" fill="#051d34" />
+  <ellipse cx="160" cy="150" rx="120" ry="25" fill="#04203d" opacity="0.6" />
+  <path d="M40 120c40-60 120-90 210-60 9 3 22 16 22 28 0 10-9 18-18 23 7 5 12 12 12 22 0 9-7 18-17 20-70 16-128 9-167-2-16-5-30-12-42-25-5-6-5-15 0-21z" fill="url(#bodyIdle)" />
+  <path d="M108 90c32-10 87-8 118 12 9 5 16 12 16 20 0 9-8 16-18 17-32 4-86-2-123-14-10-3-17-10-18-19-0.6-7 3-14 9-16z" fill="url(#bellyIdle)" />
+  <path d="M69 126c-6-7-6-19 1-26 13 11 20 16 39 22-10 11-28 13-40 4z" fill="#3c96d1" />
+  <circle cx="208" cy="92" r="14" fill="#fff" />
+  <circle cx="211" cy="94" r="7" fill="#07192b" />
+  <circle cx="214" cy="92" r="3" fill="#fff" />
+  <path d="M170 118c10 12 26 18 45 19 5 0 9 4 9 9v1c-20 6-52 5-64-13l10-16z" fill="#0c2b46" opacity="0.35" />
+  <path d="M196 127c-18 5-32 5-46-6 13 1 27 0 41-4 6-2 12 5 5 10z" fill="#f6ffff" opacity="0.5" />
+  <path d="M110 137c15 10 46 16 79 16 16 0 32-2 47-6l-11 8c-11 7-23 11-36 12-27 2-56-5-81-18z" fill="#082442" opacity="0.45" />
+</svg>

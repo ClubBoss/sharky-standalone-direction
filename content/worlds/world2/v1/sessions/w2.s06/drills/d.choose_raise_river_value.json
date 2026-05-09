@@ -1,0 +1,16 @@
+{
+  "id": "choose_raise_river_value",
+  "kind": "action_choice",
+  "prompt": "Clear river value target: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Clear value nodes use the bet branch on river.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Value bet is expected in this river node.",
+  "feedback_incorrect_v1": "Incorrect. This river spot is strong enough to bet for value instead of letting a checkback leave chips behind.",
+  "acceptable_actions": [
+    "raise"
+  ]
+}

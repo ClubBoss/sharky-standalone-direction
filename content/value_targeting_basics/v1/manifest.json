@@ -1,0 +1,25 @@
+{
+  "id": "value_targeting_basics",
+  "order": 13,
+  "name": "Value Targeting Basics - What Calls You?",
+  "title": "Value Targeting Basics - What Calls You?",
+  "description": "Focus your value bets on the worse hands that still call.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "value"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "value"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-18T18:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_river_depth",
+  "kind": "board_tap",
+  "prompt": "Tap flop right slot to anchor river-depth closure context.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_right is the board anchor because the original texture still frames how much river-depth pressure the line can carry.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card is the right board anchor here because the original board texture still frames the river-depth closeout."
+}

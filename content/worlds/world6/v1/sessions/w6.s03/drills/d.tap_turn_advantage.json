@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_advantage",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to update flop range-advantage read.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor here because the new street shows whether the flop advantage still holds or breaks down.",
+  "feedback_incorrect_v1": "Incorrect. The turn matters because it can strengthen your pressure edge, add new equity, or shut off the clean raise story from the flop. You need that turn card before deciding whether the range advantage actually holds."
+}

@@ -1,0 +1,18 @@
+{
+  "id": "choose_small_blind_fold_repeat_stability_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the small blind with T6o and nobody has entered the pot. Which simple action fits best if the release habit stays stable?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "From the small blind, a weak offsuit hand should still release instead of forcing a continue.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. From the small blind with T6o, the hand is still too weak to force action out of position, so the stable answer is to fold."
+}

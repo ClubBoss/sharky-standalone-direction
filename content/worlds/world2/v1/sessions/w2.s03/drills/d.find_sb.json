@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "Tap the small blind seat before facing-open response.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Small blind context drives out-of-position pressure decisions.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Small blind context is identified.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is partly committed and still out of position, so anchor that seat first. Those two facts make its facing-open choices tighter than a freer late-position seat."
+}

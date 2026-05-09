@@ -1,0 +1,2 @@
+{"id":"gf_quiz_01","type":"mc","prompt":"The dealer burns a card and deals the 4th community card. What street is this?","options":["Flop","Turn","River"],"answer":1,"explanation":"The turn is the fourth card."}
+{"id":"gf_quiz_02","type":"mc","prompt":"You are preflop. Nobody has raised yet. What is the minimum bet to stay in?","options":["Zero","The Big Blind","All-in"],"answer":1,"explanation":"You must at least match the big blind to see the flop."}

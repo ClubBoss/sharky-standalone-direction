@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_c3_river_thin_value",
+  "kind": "action_choice",
+  "prompt": "Approved thin-value river node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Approved thin-value nodes use raise branch.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "thin_value_miss",
+  "feedback_correct_v1": "Correct. Thin-value node expects raise.",
+  "feedback_incorrect_v1": "Incorrect. This node should bet for thin value.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

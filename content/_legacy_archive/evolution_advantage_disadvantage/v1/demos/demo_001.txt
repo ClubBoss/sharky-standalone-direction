@@ -1,0 +1,21 @@
+# Scenario
+IP fires a small probe on a wet board, forcing OOP to judge who owns the structural advantage based on nut density and mid-band strength.
+
+# Snapshot
+Attacker: high top density with strong nut pairs, steady mid cohesion. Defender: lean mid-band, fewer high cards, but a few layered mix-ins for protection.
+
+# Player task
+Decide which side holds the range advantage and explain how top density and mid-band cohesion support that read.
+
+# Expected reasoning
+Attacker’s dense top-end keeps nut advantage, especially when mid cohesion lets them continue with confidence. Defender lacks matching top density and leans on a thinner mid layer, so they cannot respond with the same pressure. Cohesion favors the attacker because their bands connect, reducing the need to over-bluff. Defender’s protection mix is reactive, giving the attacker room to keep initiative.
+
+# Correct line
+Attacker has advantage: nut density plus cohesive mid band keeps initiatives.
+
+# Why not the alternatives
+- Defender advantage: ignores the top-denisty gap.
+- Even: downgrades the cohesion that keeps the attacker aggressive.
+- Defender initiative: misreads thin mid protections as control.
+- Attacker lag: assumes the defender’s protection is proactive when it is reactive.
+- Mid-band tie: overlooks how the attacker’s cohesion pressure keeps defender compressed.

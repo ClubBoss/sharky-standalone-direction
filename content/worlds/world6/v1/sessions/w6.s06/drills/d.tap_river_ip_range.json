@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_ip_range",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to finish in-position range sequence.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. River card anchored to finish the in-position range sequence.",
+  "feedback_incorrect_v1": "Incorrect. The river card is the correct anchor because the completed board decides whether the in-position range can finish the line profitably."
+}

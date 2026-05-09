@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_shift",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your right hole card.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the full hand because this card helps decide if the spot is still strong enough.",
+  "feedback_correct_v1": "Correct. Use the right hole card because that card helps decide if you can still keep pressure on.",
+  "feedback_incorrect_v1": "Incorrect. Use the right hole card because that card helps decide if the spot is still strong enough."
+}

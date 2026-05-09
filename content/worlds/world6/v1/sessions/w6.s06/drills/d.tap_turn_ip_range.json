@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_ip_range",
+  "kind": "board_tap",
+  "prompt": "Tap turn to verify pressure upgrade.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. Turn card anchored before the pressure-upgrade check.",
+  "feedback_incorrect_v1": "Incorrect. The turn card is the right anchor because the fourth board card is where the in-position range checks whether the pressure upgrade still holds."
+}

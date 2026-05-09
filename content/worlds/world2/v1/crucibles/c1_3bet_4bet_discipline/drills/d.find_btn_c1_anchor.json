@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_c1_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap button anchor before 3bet decision.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Position anchor is required before preflop aggression branch.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Button anchor is set for this node.",
+  "feedback_incorrect_v1": "Incorrect. Set position anchor before 3bet action."
+}

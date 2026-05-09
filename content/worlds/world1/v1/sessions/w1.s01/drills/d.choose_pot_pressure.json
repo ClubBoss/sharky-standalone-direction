@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_pressure",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the size that puts the most pressure on hands that want a cheap call.",
+  "intent_v1": "hand_discipline_fold",
+  "why_v1": "Pot makes the call expensive and creates the most pressure.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

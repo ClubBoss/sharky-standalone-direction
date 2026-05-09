@@ -1,0 +1,14 @@
+{
+  "app_title": "Покер Анализатор",
+  "welcome_message": "С возвращением",
+  "cta_start": "Начать сессию",
+  "player_profile_mastery_title": "Мастерство и черты",
+  "player_profile_traits_section": "Черты",
+  "player_profile_tutorial_title": "Как работает мастерство",
+  "player_profile_tutorial_body": "Получайте опыт, проходя упражнения и квизы. Каждый уровень мастерства открывает новые звания и повышает шанс редких черт. Черты дают временные бонусы и связаны со слоями статистики и синергий.",
+  "player_profile_close": "Закрыть",
+  "player_profile_rank_label": "Звание",
+  "player_profile_progress_label": "Прогресс",
+  "player_profile_level_label": "Уровень",
+  "player_profile_xp_label": "Опыт"
+}

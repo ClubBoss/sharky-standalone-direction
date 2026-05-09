@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_s0",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S0 before evaluating open or fold.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Seat identity prevents autopilot action selection.",
+  "expected": {
+    "seatId": "S0"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Seat S0 is identified for this rep.",
+  "feedback_incorrect_v1": "Incorrect. seat S0 is the exact player this rep is about, so anchor that seat first. The open-or-fold answer changes once the lesson is attached to the wrong player."
+}

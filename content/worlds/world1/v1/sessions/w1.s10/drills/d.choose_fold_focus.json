@@ -1,0 +1,18 @@
+{
+  "id": "choose_fold_focus",
+  "kind": "action_choice",
+  "prompt": "Hijack opened and hero is in the big blind with T6o. Which simple action fits best for the final World 1 checkpoint?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Out of position against pressure with a weak offsuit hand, the disciplined World 1 checkpoint answer is to fold.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. The big blind can look tempting, but T6o is still too weak to defend cleanly here, so fold is the disciplined action."
+}

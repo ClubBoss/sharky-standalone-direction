@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_oop_range",
+  "kind": "seat_tap",
+  "prompt": "Tap big blind seat before out-of-position range defense.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "role": "bb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before range decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Big blind anchor confirmed for the out-of-position defense setup.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the correct anchor because this out-of-position defense starts from the forced defender carrying the widest pressured range."
+}

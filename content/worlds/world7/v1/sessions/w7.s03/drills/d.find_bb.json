@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Pressure setup: tap BB.",
+  "intent_v1": "shallow_stack_pressure",
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start from the big blind because the forced defender is under the most pressure.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the right anchor here because shallow-stack pressure starts from the forced defender who has to respond first."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_context",
+  "kind": "board_tap",
+  "prompt": "Tap the left flop slot before choosing c-bet or check.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Board context is required before flop action selection.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Flop context is locked before action.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card is part of the board texture, so read that card first before deciding whether this flop supports a c-bet or a check."
+}

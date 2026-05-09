@@ -1,0 +1,13 @@
+{
+  "id": "classify_blocker_context_paired_call_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "The board is paired and blocker context reduces clean pressure rather than creating it. Choose the best action.",
+  "intent_v1": "texture_pairing",
+  "board_texture_v1": "paired",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Paired boards often keep pressure less clean, so blocker context may justify a controlled call rather than aggression.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The paired texture with softer blocker value points to a call.",
+  "feedback_incorrect_v1": "Incorrect. The paired-board read should stay primary over blocker details."
+}

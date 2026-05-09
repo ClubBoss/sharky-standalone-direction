@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_depth_synth",
+  "kind": "board_tap",
+  "prompt": "Tap river to finalize synthesis state.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "feedback_correct_v1": "Correct. river is the final board anchor because the last street decides whether the finished leverage picture still supports pressure.",
+  "feedback_incorrect_v1": "Incorrect. The river is the final anchor because it shows whether the stack depth still leaves room to pressure or whether the line has closed down. Without the last card, the synthesis is missing the street that decides the finished leverage picture."
+}

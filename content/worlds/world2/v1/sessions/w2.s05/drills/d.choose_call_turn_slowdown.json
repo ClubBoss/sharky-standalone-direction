@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_turn_slowdown",
+  "kind": "action_choice",
+  "prompt": "Showdown-ready turn hand with low fold equity: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Low-fold-equity turn nodes use checkback control.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "missed_checkback_spot",
+  "feedback_correct_v1": "Correct. Checkback is the control line in this node.",
+  "feedback_incorrect_v1": "Incorrect. Showdown value with low fold equity wants a checkback here, not a forced barrel that only grows the pot.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

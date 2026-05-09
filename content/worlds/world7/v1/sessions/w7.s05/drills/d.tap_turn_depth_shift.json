@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_depth_shift",
+  "kind": "board_tap",
+  "prompt": "Tap the turn.",
+  "intent_v1": "stack_depth_adjustment",
+  "why_v1": "Use the turn because the fourth card shows if the spot is getting better or worse.",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the turn because that card shows when the pressure spot changes.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn because that card shows when the pressure spot changes."
+}

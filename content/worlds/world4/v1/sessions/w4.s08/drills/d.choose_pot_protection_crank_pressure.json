@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_protection_crank_pressure",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the protection size that makes the continue most expensive right away.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Pot creates the strongest immediate cost and best supports maximum protection pressure.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

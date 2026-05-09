@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_trap",
+  "kind": "board_tap",
+  "prompt": "Trap: depth changes street plan, tap river.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "feedback_correct_v1": "Correct. river is the board anchor because the final card can turn a deep-stack trap into thin value, a bluff, or a disciplined release.",
+  "feedback_incorrect_v1": "Incorrect. Use the river anchor because the final card can turn a deep-stack trap into thin value, a bluff, or a disciplined release."
+}

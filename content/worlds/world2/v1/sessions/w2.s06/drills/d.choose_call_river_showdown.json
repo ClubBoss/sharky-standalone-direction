@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_river_showdown",
+  "kind": "action_choice",
+  "prompt": "River showdown-value hold with low bluff gain: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Showdown-value nodes stay in checkback branch here.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Checkback preserves showdown value in this node.",
+  "feedback_incorrect_v1": "Incorrect. With showdown value already in hand, checking back is cleaner than turning it into a bluff on the river.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "river_overbet_vs_standard",
+  "name": "River Overbet vs Standard",
+  "title": "River Overbet vs Standard",
+  "order": 16,
+  "description": "Know when an overbet polarizes and when standard sizing keeps value tight.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": ["river","overbet","value"],
+  "telemetry_tags": ["river","overbet","value"],
+  "version": "1.0.0",
+  "created": "2025-12-26T08:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

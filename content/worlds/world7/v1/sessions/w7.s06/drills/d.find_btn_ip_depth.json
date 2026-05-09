@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_ip_depth",
+  "kind": "seat_tap",
+  "prompt": "In-position depth setup: tap BTN.",
+  "intent_v1": "deep_stack_playability",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "feedback_correct_v1": "Correct. Button is the seat anchor because acting last is what turns the depth edge into controlled pressure.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right anchor here because the player acting last owns the informational edge at this depth."
+}

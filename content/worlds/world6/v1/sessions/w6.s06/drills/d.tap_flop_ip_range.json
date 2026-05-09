@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_ip_range",
+  "kind": "board_tap",
+  "prompt": "Tap flop right for in-position range check.",
+  "intent_v1": "range_vs_hand",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Right flop card anchored for the in-position range check.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card is the correct anchor because it completes the texture read that tells the in-position range whether pressure is justified."
+}

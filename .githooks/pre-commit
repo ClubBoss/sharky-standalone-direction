@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+staged_content=$(
+	git diff --cached --name-only --diff-filter=ACDMRT -- \
+		'content/**' \
+		'tools/validate_training_content.dart' \
+		'tooling/allowlists/**'
+)
+
+if [ -z "$staged_content" ]; then
+	echo "Content validation skipped (no content/tooling changes staged)."
+	exit 0
+fi
+
+python3 tools/allowlists_sync.py --write --staged-only
+git add tooling/allowlists/target_tokens_allowlist_*.txt 2>/dev/null || true
+python3 tools/allowlists_sync.py --check --staged-only
+dart run tools/validate_training_content.dart --ci --staged-only

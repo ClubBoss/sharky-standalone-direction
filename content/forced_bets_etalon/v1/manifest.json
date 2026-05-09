@@ -1,0 +1,25 @@
+{
+  "id": "forced_bets_etalon",
+  "order": 5,
+  "title": "Forced Bets: Blinds",
+  "name": "Forced Bets Etalon",
+  "description": "Watch how the blinds seed the pot before the hand begins.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": [
+    "etalon",
+    "blinds"
+  ],
+  "telemetry_tags": [
+    "etalon",
+    "blinds"
+  ],
+  "version": "1.0.0",
+  "created": "2025-12-15T00:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

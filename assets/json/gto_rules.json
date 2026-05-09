@@ -1,0 +1,30 @@
+{
+  "preflop": {
+    "fold": {"optimal": "fold", "confidence": 0.65, "base_ev": 0.1, "reason": "Tight fold versus aggression"},
+    "call": {"optimal": "call", "confidence": 0.7, "base_ev": 0.2, "reason": "Pot odds justify a call"},
+    "raise": {"optimal": "raise", "confidence": 0.75, "base_ev": 0.3, "reason": "Open with aggression in position"},
+    "check": {"optimal": "check", "confidence": 0.6, "base_ev": 0.1, "reason": "Pot control out of position"},
+    "bet": {"optimal": "bet", "confidence": 0.7, "base_ev": 0.25, "reason": "Initiate aggression when checked to"}
+  },
+  "flop": {
+    "fold": {"optimal": "fold", "confidence": 0.7, "base_ev": 0.1, "reason": "Weak equity vs c-bet"},
+    "call": {"optimal": "call", "confidence": 0.65, "base_ev": 0.15, "reason": "Continue with equity and position"},
+    "raise": {"optimal": "raise", "confidence": 0.7, "base_ev": 0.25, "reason": "Pressure ranges on favorable boards"},
+    "check": {"optimal": "check", "confidence": 0.6, "base_ev": 0.1, "reason": "Protect checking range"},
+    "bet": {"optimal": "bet", "confidence": 0.7, "base_ev": 0.25, "reason": "Exploit folds with c-bet"}
+  },
+  "turn": {
+    "fold": {"optimal": "fold", "confidence": 0.75, "base_ev": 0.05, "reason": "Pot odds declining"},
+    "call": {"optimal": "call", "confidence": 0.6, "base_ev": 0.1, "reason": "Realize equity with sufficient odds"},
+    "raise": {"optimal": "raise", "confidence": 0.65, "base_ev": 0.2, "reason": "Charge draws or value thinly"},
+    "check": {"optimal": "check", "confidence": 0.6, "base_ev": 0.05, "reason": "Control pot size"},
+    "bet": {"optimal": "bet", "confidence": 0.65, "base_ev": 0.2, "reason": "Barrel on good cards"}
+  },
+  "river": {
+    "fold": {"optimal": "fold", "confidence": 0.8, "base_ev": 0.05, "reason": "Avoid thin calls without blockers"},
+    "call": {"optimal": "call", "confidence": 0.7, "base_ev": 0.15, "reason": "Pot odds and bluff-catch rationale"},
+    "raise": {"optimal": "raise", "confidence": 0.6, "base_ev": 0.2, "reason": "Thin value vs capped ranges"},
+    "check": {"optimal": "check", "confidence": 0.65, "base_ev": 0.05, "reason": "Showdown value without value bet"},
+    "bet": {"optimal": "bet", "confidence": 0.65, "base_ev": 0.2, "reason": "Polarize value/bluff for maximum EV"}
+  }
+}

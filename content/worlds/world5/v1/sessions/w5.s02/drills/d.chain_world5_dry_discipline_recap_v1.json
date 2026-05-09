@@ -1,0 +1,56 @@
+{
+  "id": "chain_world5_dry_discipline_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w5_s02_dry_discipline_recap_v1",
+  "prompt": "Play this short World 5 dry-discipline recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: The board is high-card heavy with limited draw pressure. Which simple action fits best when the texture still leaves the value edge clean?",
+      "intent_v1": "texture_high_card",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A calm high-card texture still supports the value raise.",
+      "feedback_incorrect_v1": "Incorrect. Start from the high-card dry read before acting.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 5 recap chains should still begin by reading whether the dry board leaves a clean pressure story."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 2: The board is paired and the pressure story is thinner than it first looked. Which simple action fits best when the texture narrows clean raise value?",
+      "intent_v1": "texture_pairing",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The paired texture points to the more controlled continue.",
+      "feedback_incorrect_v1": "Incorrect. Let the paired-board read soften the line first.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Paired boards often shrink the clean raise story even when the board still looks quiet."
+    },
+    {
+      "street": "flop",
+      "prompt": "Step 3: The board still looks dry, but your hand has weak improvement and little clean pressure. Which simple action fits best now?",
+      "intent_v1": "texture_wet_vs_dry",
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Dry texture does not force aggression when the improvement outlook is poor.",
+      "feedback_incorrect_v1": "Incorrect. Start from the board, then notice that the weak improvement path removes the pressure story.",
+      "recap_v1": "World 5 dry-discipline recap should now feel ordered: high-card dry boards can press, paired dry boards often control, and dry texture alone does not rescue weak improvement.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The reusable World 5 recap pattern is to keep texture primary, then use secondary weakness only to confirm when the board story breaks down."
+    }
+  ]
+}

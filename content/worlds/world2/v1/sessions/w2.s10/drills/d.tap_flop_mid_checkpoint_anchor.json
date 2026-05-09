@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_mid_checkpoint_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap the middle flop slot before mixed checkpoint action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Board anchor is required before branch selection.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Flop-mid context is locked.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card helps define the full board texture, so read that card first before choosing the branch action."
+}

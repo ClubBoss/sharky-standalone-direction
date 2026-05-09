@@ -1,0 +1,21 @@
+# Scenario
+Villain opens from MP, you defend from CO with a probe-check plan; attacker sizing signals layered weights, defender must read the shape before reacting.
+
+# Snapshot
+Attacker: tight top density, steady mid cohesion, light bottom band. Defender: broad spectrum with mixed blockers, ready to react based on structure.
+
+# Player task
+Read whether the attacker’s range is linear, polar, or mixed and explain how the densities support that shape.
+
+# Expected reasoning
+Top continuity plus steady mids implies attacker keeps value pressure high while maintaining coverage. The light bottom band and cohesion contradict a pure polar bluff distribution, since there are still mid combos to call. Mixed structure explains the blend: top value anchors, mids defend, and the stable bottom prevents thinning too far. Defender should expect concentrated top/mid pressure and lean protection rather than linear calls.
+
+# Correct line
+Mixed shape: top-heavy value with a supportive mid layer and light bottom.
+
+# Why not the alternatives
+- Linear: would require uniform step-down, but attacker retains a tight bottom.
+- Polar: lacks the mid cohesion that exists, so fold/raise splits are unlikely.
+- Aggressive polar: top density only works with mid coverage, so not pure polar aggression.
+- Passive linear: ignores the pressure in the top half that forces reaction.
+- Pure bluffing: attacker keeps real value combos, so folding out of caution is wrong.

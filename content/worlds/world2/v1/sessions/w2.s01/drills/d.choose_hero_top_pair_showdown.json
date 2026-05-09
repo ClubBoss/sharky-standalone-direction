@@ -1,0 +1,20 @@
+{
+  "id": "choose_hero_top_pair_showdown",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "world2_showdown_bridge",
+  "prompt": "Showdown check: Hero has top pair. Villain only has a pair of sevens. Who wins?",
+  "intent_v1": "world2_showdown_bridge",
+  "intro_v1": "Read the real cards first. The winner should come from visible hand and board truth, not from prompt wording alone.",
+  "street_v1": "river",
+  "hero_hole_cards_v1": ["Ah", "Qd"],
+  "villain_hole_cards_v1": ["7c", "7s"],
+  "board_cards_v1": ["Ad", "Kc", "9h", "4s", "2d"],
+  "available_actions_v1": ["hero", "villain", "board_plays"],
+  "why_v1": "Top pair beats an underpair here before kicker detail matters.",
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "showdown_winner_choice_mismatch",
+  "feedback_correct_v1": "Correct. Hero wins with the stronger pair.",
+  "feedback_incorrect_v1": "Incorrect. The ace on the board pairs hero's hand, while pocket sevens stay below that pair, so the higher pair wins at showdown."
+}

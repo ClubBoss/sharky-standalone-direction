@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_right",
+  "kind": "board_tap",
+  "prompt": "Tap the right flop slot before acting.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Flop anchor confirms early street context for intent checks.",
+  "expected": {
+    "boardSlot": "flop_right"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. The right flop card is the board anchor for this setup, so tapping it first fixes the protection read before you choose an action.",
+  "feedback_incorrect_v1": "Incorrect. This mixed setup uses the right flop card as the anchor, so tap that slot first."
+}

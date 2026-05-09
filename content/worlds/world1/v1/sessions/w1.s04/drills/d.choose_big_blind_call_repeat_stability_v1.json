@@ -1,0 +1,18 @@
+{
+  "id": "choose_big_blind_call_repeat_stability_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened and hero is in the big blind with KTo. Which simple action fits best if the defend habit stays stable?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "The big blind can still continue by calling with a playable broadway hand instead of treating the spot like a first-in raise.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. After the cutoff opens first, KTo in the big blind keeps the same stable defend pattern here, so the clean response is call."
+}

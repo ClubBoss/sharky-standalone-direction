@@ -1,0 +1,18 @@
+{
+  "dry_run": true,
+  "schema_fixed": 0,
+  "enricher_fixed": 0,
+  "fixed_total": 0,
+  "issues_remaining": 0,
+  "audit": {
+    "files": 193,
+    "entries": 1819,
+    "invalid_schema": 0,
+    "empty_goals": 0,
+    "empty_reactions": 0,
+    "parse_errors": 0,
+    "pass": true,
+    "exit_code": 0
+  },
+  "pass": true
+}

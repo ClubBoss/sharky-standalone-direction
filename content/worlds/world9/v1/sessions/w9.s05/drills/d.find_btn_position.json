@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_position",
+  "kind": "seat_tap",
+  "prompt": "Tap button seat before position-based exploit action.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "btn"
+  },
+  "why_v1": "Seat anchor keeps action order stable before player-based exploit decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Button is the seat anchor here because the exploit depends on the last-acting player holding the position edge.",
+  "feedback_incorrect_v1": "Incorrect. Tap the button because this exploit depends on holding the position advantage."
+}

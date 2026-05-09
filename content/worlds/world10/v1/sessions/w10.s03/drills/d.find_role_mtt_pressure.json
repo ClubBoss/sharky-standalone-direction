@@ -1,0 +1,13 @@
+{
+  "id": "find_role_mtt_pressure",
+  "kind": "seat_tap",
+  "prompt": "Tap sb as the position anchor before acting.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep action order clear before a track-specific action.",
+  "feedback_correct_v1": "Correct. The small blind is the right seat anchor, so the cue read stays tied to the out-of-position seat that has to survive the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right position anchor because tournament pressure shifts once you know which seat can jam, call off, or leverage survival fear."
+}

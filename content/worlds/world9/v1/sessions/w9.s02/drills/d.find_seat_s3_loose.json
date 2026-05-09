@@ -1,0 +1,14 @@
+{
+  "id": "find_seat_s3_loose",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S3 before you act.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "seatId": "S3",
+    "role": "hj"
+  },
+  "why_v1": "Start with the loose player so you know who you want to pressure.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start at S3 because that is the loose player you want to pressure.",
+  "feedback_incorrect_v1": "Incorrect. Tap seat S3 because that is the loose player in this hand."
+}

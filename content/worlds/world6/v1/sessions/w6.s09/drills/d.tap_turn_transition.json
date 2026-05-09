@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_transition",
+  "kind": "board_tap",
+  "prompt": "Tap the turn.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the turn because the fourth card can make the board better or worse for you.",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card can make the board better for you or start to turn against you.",
+  "feedback_incorrect_v1": "Incorrect. Use the turn because the fourth card can make the board better for you or start to turn against you."
+}

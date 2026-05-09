@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_loose",
+  "kind": "action_choice",
+  "prompt": "Loose player spot: choose raise.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise when a loose player will keep going with weak hands.",
+  "feedback_correct_v1": "Correct. Raise fits because the loose player will keep going too wide.",
+  "feedback_incorrect_v1": "Incorrect. Raise fits when a loose player keeps paying with weak hands."
+}

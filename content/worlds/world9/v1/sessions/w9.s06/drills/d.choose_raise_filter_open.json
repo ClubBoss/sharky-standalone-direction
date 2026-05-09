@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_filter_open",
+  "kind": "action_choice",
+  "prompt": "Good board: choose raise.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise when the board turns a good read into real pressure.",
+  "feedback_correct_v1": "Correct. Raise fits because this board opens a real pressure spot.",
+  "feedback_incorrect_v1": "Incorrect. Raise fits when the board opens a real pressure spot."
+}

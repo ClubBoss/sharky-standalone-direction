@@ -1,0 +1,13 @@
+{
+  "id": "find_bb",
+  "kind": "seat_tap",
+  "prompt": "Bubble setup: tap BB.",
+  "intent_v1": "bubble_intuition",
+  "why_v1": "Seat anchor keeps action order stable before tournament-pressure decisions.",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The big blind is the right seat anchor, so the tournament read stays tied to the forced defender who has to absorb the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the right seat anchor because it is the forced defender with the widest range and the least freedom once bubble pressure starts. If you anchor the wrong seat, you miss where survival pressure changes the decision most."
+}

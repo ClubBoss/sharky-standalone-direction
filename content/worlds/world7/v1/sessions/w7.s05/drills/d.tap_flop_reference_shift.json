@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_reference_shift",
+  "kind": "board_tap",
+  "prompt": "Tap the left flop card.",
+  "intent_v1": "stack_to_pot_awareness",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Start with the flop because the board first shows whether the spot still looks good.",
+  "feedback_correct_v1": "Correct. Use the left flop card because the flop sets the board story before the turn can change it.",
+  "feedback_incorrect_v1": "Incorrect. Use the left flop card because the flop sets the board story before the turn can change it."
+}

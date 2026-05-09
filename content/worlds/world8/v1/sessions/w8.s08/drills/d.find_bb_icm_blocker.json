@@ -1,0 +1,13 @@
+{
+  "id": "find_bb_icm_blocker",
+  "kind": "seat_tap",
+  "prompt": "Tap BB before blocker-adjusted ICM action.",
+  "intent_v1": "bubble_intuition",
+  "expected": {
+    "role": "bb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before ICM decisions.",
+  "feedback_correct_v1": "Correct. The big blind is the right seat anchor, so the tournament read stays tied to the forced defender who has to absorb the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. The big blind is the target seat anchor because this blocker-adjusted ICM read changes from the forced defender seat."
+}

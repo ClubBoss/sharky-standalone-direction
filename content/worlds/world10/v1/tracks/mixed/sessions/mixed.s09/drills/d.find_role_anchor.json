@@ -1,0 +1,13 @@
+{
+  "id": "find_role_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap sb as the position anchor before acting.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep order and pressure reads stable.",
+  "feedback_correct_v1": "Correct. The small blind is the right seat anchor, so the read stays tied to the out-of-position blind that feels the pressure first.",
+  "feedback_incorrect_v1": "Incorrect. Anchor the small blind first so the mixed read stays tied to the correct pressure position before you act."
+}

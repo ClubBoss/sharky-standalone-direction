@@ -1,0 +1,14 @@
+{
+  "id": "tap_hole_left_cash_pressure",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap left hole card to keep your read and action aligned.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p0",
+    "cardId": "Kd"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Card anchors keep your decision process consistent.",
+  "feedback_correct_v1": "Correct. Kd is the anchor card, so the read stays tied to the exact hole-card cue this line is built on.",
+  "feedback_incorrect_v1": "Incorrect. The king of diamonds matters because that card changes blocker coverage and shows whether the cash-pressure line has enough real equity to continue."
+}

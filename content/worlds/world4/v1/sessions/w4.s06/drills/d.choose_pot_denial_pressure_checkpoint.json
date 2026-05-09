@@ -1,0 +1,14 @@
+{
+  "id": "choose_pot_denial_pressure_checkpoint",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the denial size that creates the biggest immediate cost to continue.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Pot creates the strongest immediate denial pressure by making the continue expensive right away.",
+  "expected": {
+    "presetId": "pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

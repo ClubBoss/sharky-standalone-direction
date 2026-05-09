@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_oop_depth",
+  "kind": "seat_tap",
+  "prompt": "Tap small blind seat before out-of-position depth action.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "role": "sb"
+  },
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Small blind is the seat anchor because that partly committed seat has to act first and absorbs the depth pressure earliest.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right anchor here because that seat is partly committed and has to act first out of position."
+}

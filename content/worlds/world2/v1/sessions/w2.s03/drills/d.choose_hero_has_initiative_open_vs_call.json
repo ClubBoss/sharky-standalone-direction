@@ -1,0 +1,22 @@
+{
+  "id": "choose_hero_has_initiative_open_vs_call",
+  "kind": "initiative_aggressor_choice_v1",
+  "intent_v1": "world2_initiative_bridge",
+  "prompt": "Hero raised preflop and villain called. Who has initiative on the flop?",
+  "intro_v1": "Read who made the last aggressive action first. Initiative usually stays with that player on the next street.",
+  "player_count_v1": 2,
+  "hero_seat_v1": "btn",
+  "villain_seat_v1": "bb",
+  "active_seats_v1": ["btn", "bb"],
+  "street_v1": "flop",
+  "last_aggressor_v1": "hero",
+  "initiative_owner_v1": "hero",
+  "available_actions_v1": ["hero", "villain"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "initiative_aggressor_choice_mismatch",
+  "why_v1": "Hero made the last aggressive action, so hero keeps initiative.",
+  "feedback_correct_v1": "Correct. Hero raised last, so hero keeps initiative on the flop.",
+  "feedback_incorrect_v1": "Incorrect. Hero has initiative here because hero made the last aggressive action."
+}

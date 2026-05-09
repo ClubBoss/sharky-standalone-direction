@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_c2_checkback_control",
+  "kind": "action_choice",
+  "prompt": "Marginal control node after check: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Call keeps the pot controlled with medium strength. Raising adds risk without enough value.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "missed_checkback_spot",
+  "feedback_correct_v1": "Correct. Control node expects checkback branch.",
+  "feedback_incorrect_v1": "Incorrect. This control node should not force raise.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

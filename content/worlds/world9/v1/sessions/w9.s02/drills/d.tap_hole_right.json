@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your right hole card.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the exact hand before you decide how hard to push.",
+  "feedback_correct_v1": "Correct. Use the right hole card because this read still depends on your exact hand.",
+  "feedback_incorrect_v1": "Incorrect. Tap the right hole card because you still need the exact hand before you act."
+}

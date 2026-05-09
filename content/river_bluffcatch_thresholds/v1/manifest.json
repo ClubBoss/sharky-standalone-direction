@@ -1,0 +1,19 @@
+{
+  "id": "river_bluffcatch_thresholds",
+  "name": "River Bluffcatch Thresholds",
+  "title": "River Bluffcatch Thresholds",
+  "order": 15,
+  "description": "Decide between calling, folding, or raising when bluffcatching.",
+  "trainingType": "etalon",
+  "gameType": "cash",
+  "bb": 100,
+  "spotCount": 1,
+  "tags": ["river","bluffcatch","thresholds"],
+  "telemetry_tags": ["river","bluffcatch","thresholds"],
+  "version": "1.0.0",
+  "created": "2025-12-25T08:00:00.000Z",
+  "locked": false,
+  "requiresTheoryCompleted": false,
+  "spots": [],
+  "dynamicSpots": []
+}

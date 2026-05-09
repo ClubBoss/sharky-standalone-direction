@@ -1,0 +1,13 @@
+{
+  "id": "classify_in_position_connected_raise_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "In position, the board is connected and your improvement pressure is strong. Choose the best action.",
+  "intent_v1": "texture_connectivity",
+  "board_texture_v1": "connected",
+  "expected_action": "raise",
+  "acceptable_actions": ["call"],
+  "why_v1": "Connected textures in position can justify pressure when strong improvement paths and fold equity line up.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. In-position connected texture supports a raise.",
+  "feedback_incorrect_v1": "Incorrect. Start from the connected-board pressure: in position, strong improvement paths plus fold equity justify raising instead of taking the passive line."
+}

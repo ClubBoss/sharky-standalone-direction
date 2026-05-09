@@ -1,0 +1,7 @@
+{"id":"psi3:quiz:01","type":"mc","prompt":"Purpose of Psi-3 analytics?","options":["Track onboarding signals","Design decks","Handle payments"],"answer":0,"explanation":"Psi-3 links early signals to funnel and retention metrics."}
+{"id":"psi3:quiz:02","type":"tf","prompt":"Early metrics include accuracy, speed, friction.","answer":true,"explanation":"These form the core early-signal set."}
+{"id":"psi3:quiz:03","type":"mc","prompt":"V4 persona/coaching influence?","options":["Adjusts tone and pacing","Changes rake","Deals cards"],"answer":0,"explanation":"Persona signals guide tone, pacing, and advice."}
+{"id":"psi3:quiz:04","type":"tf","prompt":"Cohesion checks can pause analytics if misaligned.","answer":true,"explanation":"Consistency gates prevent polluted data."}
+{"id":"psi3:quiz:05","type":"mc","prompt":"Session-length heuristic for tension users?","options":["10-15 minutes","60 minutes","No limit"],"answer":0,"explanation":"Short sessions reduce overload."}
+{"id":"psi3:quiz:06","type":"mc","prompt":"First 24h metric focus?","options":["Repeat opens","ICM sims","Live odds"],"answer":0,"explanation":"Early conversion tracks repeat opens and action success."}
+{"id":"psi3:quiz:07","type":"tf","prompt":"V4 visuals aim to stabilize logging and clarity.","answer":true,"explanation":"Stable visuals support clean event capture and user clarity."}

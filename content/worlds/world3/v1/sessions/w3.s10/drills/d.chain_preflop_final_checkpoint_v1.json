@@ -1,0 +1,60 @@
+{
+  "id": "chain_preflop_final_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s10_preflop_final_checkpoint_v1",
+  "prompt": "Play this short World 3 final preflop checkpoint chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button with KQs and the pot is unopened. Which compact preflop action fits best?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "Qs"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. A strong broadway hand in position should open cleanly when the pot is unopened.",
+      "feedback_incorrect_v1": "Incorrect. KQs on the button in an unopened pot should raise because the hand is strong, position is favorable, and taking initiative wins the cleanest value.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The checkpoint starts by testing whether stronger hands still become straightforward opens in the cleanest preflop frame."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Hero is on the button with QJs after the cutoff opened first. Which compact action fits better now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Qh", "Js"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. The hand remains playable, but the opened pot changes the compact action to a call.",
+      "feedback_incorrect_v1": "Incorrect. After the cutoff opens, QJs still continues well in position, but calling is better than treating a facing-open spot like an unopened raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 3 closes by checking that the learner still updates the action when the frame changes."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Hero is in the cutoff with J8o and the pot is unopened. Which compact action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "co",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Jd", "8c"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. A weaker offsuit hand in earlier position should still fold.",
+      "feedback_incorrect_v1": "Incorrect. J8o from the cutoff is too weak to open profitably with players behind, so folding is the disciplined choice.",
+      "recap_v1": "This final World 3 checkpoint closes the framework loop: hand category, position, and action frame should now combine into the clearest raise, call, or fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The checkpoint is successful when the learner can move between open, call, and fold without guessing or memorizing a chart."
+    }
+  ]
+}

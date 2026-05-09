@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_range",
+  "kind": "board_tap",
+  "prompt": "Tap turn slot to confirm range pressure update.",
+  "intent_v1": "range_vs_hand",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. turn is the board anchor because the second street change shows whether range pressure is growing or flattening.",
+  "feedback_incorrect_v1": "Incorrect. turn is the correct board cue because the second street change shows whether range pressure is growing or flattening."
+}

@@ -1,0 +1,14 @@
+{
+  "id": "choose_one_third_pot_keep_price_checkpoint",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the smaller size that keeps the price easy for weaker continues.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "One third pot keeps the continue cheap enough for weaker hands you still want involved.",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

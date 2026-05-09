@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_trap",
+  "kind": "action_choice",
+  "prompt": "This trap spot is not a raise, choose action.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Call keeps weaker bluffs in when raising is too aggressive.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this trap spot.",
+  "feedback_incorrect_v1": "Incorrect. Calling keeps weaker bluffs in and avoids inflating the pot when this hand wants to trap."
+}

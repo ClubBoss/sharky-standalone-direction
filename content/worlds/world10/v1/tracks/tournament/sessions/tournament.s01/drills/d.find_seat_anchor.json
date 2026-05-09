@@ -1,0 +1,13 @@
+{
+  "id": "find_seat_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S2 to lock the acting anchor.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "seatId": "S2"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchors keep your action tied to the right player.",
+  "feedback_correct_v1": "Correct. Seat S2 is the right seat anchor, so the read stays tied to the exact player slot this track decision is built around.",
+  "feedback_incorrect_v1": "Incorrect. Seat S2 is the correct anchor because the tournament action has to stay attached to the acting player."
+}

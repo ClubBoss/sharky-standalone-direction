@@ -1,0 +1,13 @@
+{
+  "id": "find_btn",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before choosing your preflop action.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Acting order starts from seat context, not from card emotion.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "action_order_mismatch",
+  "feedback_correct_v1": "Correct. Button identifies the late-position action anchor.",
+  "feedback_incorrect_v1": "Incorrect. The button acts last preflop, so find it first to see whether you have late-position control before choosing an action."
+}

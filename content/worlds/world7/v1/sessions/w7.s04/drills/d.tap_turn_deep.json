@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn_deep",
+  "kind": "board_tap",
+  "prompt": "Tap turn to update deep-stack pressure line.",
+  "intent_v1": "stack_depth_adjustment",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before depth action.",
+  "feedback_correct_v1": "Correct. Use the turn because the fourth card shows whether the deep pressure is getting stronger.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right board anchor here because the second board change updates the deep-stack pressure line."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Tournament pressure street cue: tap turn.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before tournament-pressure action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor, so the tournament read updates on the street where pressure often changes shape.",
+  "feedback_incorrect_v1": "Incorrect. The turn is the right board anchor because it is the second board change, and that street updates whether survival pressure should keep the line controlled or let you press harder. Missing the turn misses the card that reshapes the bubble-pressure decision before the river."
+}

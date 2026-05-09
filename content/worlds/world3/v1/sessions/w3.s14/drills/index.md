@@ -1,0 +1,1 @@
+- chain_position_sensitive_open_fold_v1: carry one authored preflop scene through position-sensitive unopened-pot open and fold framing with the same hand.

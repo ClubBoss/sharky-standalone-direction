@@ -1,0 +1,13 @@
+{
+  "id": "find_role_mixed_stability",
+  "kind": "seat_tap",
+  "prompt": "Tap btn as the position anchor before acting.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Position anchors keep action order clear before a track-specific action.",
+  "feedback_correct_v1": "Correct. The button is the right seat anchor, so the cue read stays tied to the player with the positional edge.",
+  "feedback_incorrect_v1": "Incorrect. The button is the right position anchor because mixed-game stability depends on knowing which range owns the positional edge before money goes in."
+}

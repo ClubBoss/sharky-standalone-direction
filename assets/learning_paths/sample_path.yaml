@@ -1,0 +1,53 @@
+id: sample
+title: Sample Learning Path
+description: Sample learning path for tests.
+tags:
+  - sample
+  - test
+prerequisitePathIds: []
+stages:
+  - id: s1
+    title: Stage One
+    description: First stage
+    packId: pack1
+    requiredAccuracy: 80
+    minHands: 10
+    subStages:
+      - id: s1a
+        packId: pack1
+        title: Part A
+        description: Intro task
+        requiredAccuracy: 80
+        minHands: 5
+      - id: s1b
+        packId: pack1
+        title: Part B
+        description: Final task
+        requiredAccuracy: 80
+        minHands: 5
+    objectives:
+      - Push decisions
+    unlocks:
+      - s2
+  - id: s2
+    title: Stage Two
+    description: Second stage
+    packId: pack2
+    requiredAccuracy: 70
+    minHands: 5
+    objectives:
+      - Postflop calls
+    unlockCondition:
+      dependsOn: s1
+      minAccuracy: 75
+sections:
+  - id: basics
+    title: Push/Fold Basics
+    description: Intro section
+    stageIds:
+      - s1
+  - id: advanced
+    title: ICM Spots
+    description: Advanced section
+    stageIds:
+      - s2

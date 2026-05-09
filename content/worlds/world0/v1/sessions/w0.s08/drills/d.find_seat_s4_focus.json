@@ -1,0 +1,11 @@
+{
+  "id": "find_seat_s4_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the seat labeled S4.",
+  "expected": {
+    "seatId": "S4"
+  },
+  "error_class": "seat_id_confusion",
+  "feedback_correct_v1": "Correct. The seat S4 is the right seat anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the seat S4 here so the read stays tied to the correct seat anchor for this rep."
+}

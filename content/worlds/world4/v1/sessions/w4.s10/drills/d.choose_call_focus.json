@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_focus",
+  "kind": "action_choice",
+  "prompt": "With moderate equity and stable price, choose action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Call controls variance when denial raise adds little value.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_incorrect_v1": "Incorrect. Moderate equity with a stable price supports a controlled call instead of forcing a bigger denial line."
+}

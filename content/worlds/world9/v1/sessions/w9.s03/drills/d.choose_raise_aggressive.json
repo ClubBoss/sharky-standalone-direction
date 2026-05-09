@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_aggressive",
+  "kind": "action_choice",
+  "prompt": "Passive player spot: choose raise.",
+  "intent_v1": "player_profile_passive_aggressive",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Raise when a passive player is likely to call too weak.",
+  "feedback_correct_v1": "Correct. Raise fits because the passive player will keep going too weak.",
+  "feedback_incorrect_v1": "Incorrect. Raise fits when a passive player is likely to pay off too much."
+}

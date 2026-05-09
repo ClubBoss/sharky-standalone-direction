@@ -1,0 +1,10 @@
+{
+  "id": "tap_hole_left_repeat",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your left hole card.",
+  "intent_v1": "trash_hands",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "hole_card_slot_confusion"
+}

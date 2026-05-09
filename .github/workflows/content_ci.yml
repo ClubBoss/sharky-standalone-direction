@@ -1,0 +1,224 @@
+# PR trigger removed; mono-ci is the single PR gate.
+name: Content CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  content:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(join(github.event.pull_request.labels.*.name), 'run-content-ci') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: stable
+          cache: true
+
+      - name: Cache pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      - name: Trust all git dirs (CI)
+        run: git config --global --add safe.directory '*'
+
+      - name: Build gaps (if exists)
+        run: |
+          test -f tooling/build_gaps.dart && dart run tooling/build_gaps.dart || true
+
+      - name: Build gap details (if exists)
+        run: |
+          test -f tooling/build_gap_details.dart && dart run tooling/build_gap_details.dart || true
+
+      - name: Build term lint (if exists)
+        run: |
+          test -f tooling/build_term_lint.dart && dart run tooling/build_term_lint.dart || true
+
+      - name: Compute unlocks (if exists)
+        run: |
+          test -f tooling/unlocks.dart && dart run tooling/unlocks.dart || true
+
+      - name: Build badges (if exists)
+        run: |
+          test -f tooling/badges.dart && dart run tooling/badges.dart || true
+
+      - name: Build search index (if exists)
+        run: |
+          test -f tooling/build_search_index.dart && dart run tooling/build_search_index.dart || true
+
+      - name: Build see-also (JSON)
+        run: |
+          if [ -f tooling/build_see_also.dart ]; then
+            dart run tooling/build_see_also.dart
+          else
+            echo "SKIP: tooling/build_see_also.dart not present"
+          fi
+
+      - name: Check links (best-effort)
+        continue-on-error: true
+        run: |
+          if [ -f tooling/check_links.dart ]; then
+            dart run tooling/check_links.dart --json build/links_report.json
+          else
+            echo "SKIP: tooling/check_links.dart not present"
+          fi
+
+      - name: Detect relevant diff
+        id: diff
+        run: |
+          set -euo pipefail
+          BASE=origin/main
+          git fetch --no-tags --prune --depth=1 origin main
+          CHANGED=$(git diff --name-only "$BASE...HEAD")
+          if echo "$CHANGED" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/|tooling/allowlists/|tooling/pre_release_check\.dart|tools/health_dashboard\.dart)'; then
+            echo "relevant_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pre-release check
+        if: steps.diff.outputs.relevant_changed == 'true'
+        run: |
+          if [ -f tooling/pre_release_check.dart ]; then
+            dart run tooling/pre_release_check.dart
+          else
+            echo "SKIP: tooling/pre_release_check.dart not present"
+          fi
+
+      - name: Skip pre-release check
+        if: steps.diff.outputs.relevant_changed != 'true'
+        run: echo "SKIP: no relevant diff for pre_release_check"
+
+      - name: Summarize (early)
+        if: always()
+        run: dart run tooling/ci_summary.dart >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Export UI assets
+        if: always()
+        run: |
+          mkdir -p build/ui_assets
+          if [ -f tooling/export_ui_assets.dart ]; then
+            dart run tooling/export_ui_assets.dart --out build/ui_assets --recompute
+          else
+            echo "SKIP: tooling/export_ui_assets.dart not present"
+          fi
+          if [ -f tooling/export_ui_preview.dart ]; then
+            dart run tooling/export_ui_preview.dart --out build/ui_preview.html
+          else
+            echo "SKIP: tooling/export_ui_preview.dart not present"
+          fi
+
+      - name: Upload UI preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-preview
+          path: build/ui_preview.html
+
+      - name: Verify UI asset sizes
+        run: |
+          if [ -f tooling/verify_ui_asset_sizes.dart ]; then
+            dart run tooling/verify_ui_asset_sizes.dart --manifest build/ui_assets/manifest.json --budget tooling/budgets/ui_assets_budget.json
+          else
+            echo "SKIP: tooling/verify_ui_asset_sizes.dart not present"
+          fi
+
+      - name: Curriculum status smoke test
+        run: |
+          if [ -f test/curriculum_status_test.dart ]; then
+            dart test -r expanded --concurrency=1 --timeout=60s test/curriculum_status_test.dart
+          else
+            echo "SKIP: test/curriculum_status_test.dart not present"
+          fi
+
+      - name: Export beta bundle
+        run: |
+          if [ -f tooling/export_beta_bundle.dart ]; then
+            dart run tooling/export_beta_bundle.dart --out build/beta_bundle.zip
+          else
+            echo "SKIP: tooling/export_beta_bundle.dart not present"
+          fi
+
+      - name: Zip content (best-effort)
+        run: zip -qr build/beta_content.zip content || true
+
+      - name: Zip allowlists (best-effort)
+        run: |
+          if [ -d tooling/allowlists ]; then
+            zip -qr build/allowlists.zip tooling/allowlists || true
+          else
+            echo "SKIP: tooling/allowlists not present"
+          fi
+
+      - name: Upload content artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-artifacts
+          path: |
+            build/gaps.json
+            build/gap_details.json
+            build/term_lint.json
+            build/beta_content.zip
+            build/allowlists.zip
+            build/unlocks.txt
+            build/badges.json
+            build/pre_release_check.txt
+            build/search_index.json
+            build/see_also.json
+            build/links_report.json
+            build/ui_assets
+            build/demos_steps.json
+
+      - name: Make snapshots
+        if: always()
+        run: make snapshots
+
+      - name: Upload snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshots
+          path: ci/snapshots/**
+
+      - name: Comment Pre-Release Summary
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = 'Pre-Release Summary';
+            try {
+              const content = fs.readFileSync('build/pre_release_check.txt', 'utf8');
+              body = `### Pre-Release Summary\n\n\n\n${content}`;
+            } catch (e) {}
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Summarize (final)
+        if: always()
+        run: dart run tooling/ci_summary.dart >> "$GITHUB_STEP_SUMMARY"

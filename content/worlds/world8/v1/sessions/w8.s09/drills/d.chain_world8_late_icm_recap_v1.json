@@ -1,0 +1,53 @@
+{
+  "id": "chain_world8_late_icm_recap_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w8_s09_late_icm_recap_v1",
+  "prompt": "Play this short World 8 late-ICM recap chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Step 1: Tournament pressure is still active near the end of the hand, but the closure threshold has softened enough to avoid a forced release. Which simple action fits best?",
+      "intent_v1": "survival_pressure",
+      "available_actions_v1": [
+        "fold",
+        "call"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This late-street ICM step can stay controlled.",
+      "feedback_incorrect_v1": "Incorrect. The recap starts from pressure awareness, but not every pressured finish is a fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "World 8 recap should reinforce that late-street ICM closure is threshold-based, not automatic panic."
+    },
+    {
+      "street": "turn",
+      "prompt": "Step 2: Survival cost rises again and the closure threshold tightens before the final street. Which simple action fits best?",
+      "intent_v1": "bubble_intuition",
+      "available_actions_v1": [
+        "fold",
+        "call"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This is the point where tournament discipline should take over.",
+      "feedback_incorrect_v1": "Incorrect. Once the ICM threshold tightens again, the cleaner finish is to release.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The World 8 habit is to let survival pressure retake control whenever the late-street threshold becomes strict."
+    },
+    {
+      "street": "river",
+      "prompt": "Step 3: The final closure no longer carries the harshest threshold, but tournament pressure still argues for control instead of escalation. Which simple action fits best now?",
+      "intent_v1": "risk_premium_intuition",
+      "available_actions_v1": [
+        "fold",
+        "call"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This final late-ICM step returns to measured control.",
+      "feedback_incorrect_v1": "Incorrect. The threshold has relaxed enough for control, but not enough for force.",
+      "recap_v1": "World 8 late-street ICM closure should now feel tiered: continue when pressure relaxes, fold when survival cost tightens again, and return only to controlled closure when the threshold softens without disappearing.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "This recap keeps World 8 identity intact by making tournament thresholds, not raw aggression, the structural reason the line changes."
+    }
+  ]
+}

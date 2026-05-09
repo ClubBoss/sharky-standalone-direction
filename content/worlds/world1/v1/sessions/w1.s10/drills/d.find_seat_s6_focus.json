@@ -1,0 +1,10 @@
+{
+  "id": "find_seat_s6_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S6.",
+  "intent_v1": "trash_hands",
+  "expected": {
+    "seatId": "S6"
+  },
+  "error_class": "seat_id_confusion"
+}

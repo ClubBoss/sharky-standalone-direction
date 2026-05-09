@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_right_position",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap right hole card before final position exploit action.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p1"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Hole-card anchor keeps hand reference stable before exploit action.",
+  "feedback_correct_v1": "Correct. Right hole card is the exploit anchor here because that private-card cue keeps the position read tied to the actual hand.",
+  "feedback_incorrect_v1": "Incorrect. Tap the right hole card because that card keeps the final position exploit tied to the exact hand."
+}

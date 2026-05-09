@@ -1,0 +1,90 @@
+name: Phase 4 Nightly Regression
+
+on:
+  workflow_dispatch:
+
+jobs:
+  phase4-nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: "3.27.0"
+
+      - name: Cache Dart tooling
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool/pub
+          key: ${{ runner.os }}-dart-3.27.0-${{ hashFiles('pubspec.lock','pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-dart-3.27.0-
+            ${{ runner.os }}-dart-
+
+      - name: Seed Phase 4 log fixture
+        run: |
+          mkdir -p /tmp
+          timestamp="$(date -u +"%Y%m%dT%H%M%S")"
+          cp test/fixtures/phase_logs/phase123_sample.txt /tmp/poker_analyzer_phase_logs_"${timestamp}".txt
+
+      - name: Attempt Phase 4 log capture
+        run: |
+          timeout 180s CAPTURE_LOG=1 tool/dev/run_macos_debug.sh >/tmp/phase4_capture.log 2>&1 || true
+          if [[ -s /tmp/phase4_capture.log ]]; then
+            echo "Phase 4 capture log:"
+            tail -n 20 /tmp/phase4_capture.log
+          fi
+
+      - name: Prepare Phase 4 log
+        id: phase4-log-path
+        run: |
+          set -euo pipefail
+          log_path="$(ls -t /tmp/poker_analyzer_phase_logs_*.txt 2>/dev/null | head -n1 || true)"
+          if [[ -z "$log_path" ]]; then
+            dart run tools/phase4_emit_sample_logs.dart
+            log_path="$(ls -t /tmp/poker_analyzer_phase_logs_*.txt | head -n1)"
+          fi
+          log_exists=false
+          if [[ -n "$log_path" ]]; then
+            log_exists=true
+          fi
+          echo "log_path=$log_path" >> "$GITHUB_OUTPUT"
+          echo "log_exists=$log_exists" >> "$GITHUB_OUTPUT"
+
+      - name: Run full Phase 4 suite
+        env:
+          RUN_PHASE4_ALL: "1"
+          PHASE4_LOG_INPUT: ${{ steps.phase4-log-path.outputs.log_path }}
+        run: |
+          bash tool/dev/precommit_sanity.sh
+
+      - name: Upload Phase 4 logs
+        if: always()
+        run: |
+          found=false
+          mkdir -p artifacts/phase4-logs
+          for file in /tmp/poker_analyzer_phase_logs_*.txt; do
+            if [[ -f "$file" ]]; then
+              cp "$file" artifacts/phase4-logs/
+              found=true
+            fi
+          done
+          if [[ "$found" == "true" ]]; then
+            echo "Phase 4 logs copied for upload."
+          else
+            echo "No Phase 4 logs to upload."
+          fi
+        shell: bash
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-logs
+          path: artifacts/phase4-logs

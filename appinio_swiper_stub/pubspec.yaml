@@ -1,0 +1,7 @@
+name: appinio_swiper
+version: 1.0.0
+publish_to: none
+description: Stub implementation of Appinio swiper controls for analyzer builds.
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "seatCount": 2,
+  "heroSeat": 0,
+  "initialStacks": [
+    1000,
+    900
+  ],
+  "actingSeatStart": 0,
+  "decisionNodeV1": {
+    "street": "preflop",
+    "legalActions": [
+      "fold",
+      "call",
+      "raise"
+    ],
+    "solutionBestAction": "call"
+  },
+  "nodes": [
+    {
+      "id": "hu1",
+      "street": "preflop",
+      "actingSeatIndex": 0,
+      "pot": 15,
+      "decisionNode": {
+        "street": "preflop",
+        "legalActions": [
+          "fold",
+          "call",
+          "raise"
+        ],
+        "solutionBestAction": "call"
+      },
+      "nextByAction": {
+        "call": "hu2",
+        "raise": "hu2"
+      }
+    },
+    {
+      "id": "hu2",
+      "street": "flop",
+      "actingSeatIndex": 1,
+      "pot": 30,
+      "decisionNode": {
+        "street": "flop",
+        "legalActions": [
+          "fold",
+          "raise"
+        ],
+        "solutionBestAction": "raise"
+      }
+    }
+  ]
+}

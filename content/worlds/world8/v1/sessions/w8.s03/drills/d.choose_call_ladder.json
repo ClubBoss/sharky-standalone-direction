@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_ladder",
+  "kind": "action_choice",
+  "prompt": "Ladder pressure proxy: choose the best action.",
+  "intent_v1": "tournament_context_shift",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when survival pressure does not require a fold or raise.",
+  "feedback_correct_v1": "Correct. Calling fits the tournament cue set, so the line preserves equity without risking more than this pressure read can justify.",
+  "feedback_incorrect_v1": "Incorrect. Calling is better here because ladder pressure is present but not severe enough to force a fold or reward an unnecessary raise."
+}

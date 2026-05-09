@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_protection_followthrough",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the protection size that charges without instantly jumping to the biggest preset.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Half pot applies a meaningful protection tax while preserving a more moderate line.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

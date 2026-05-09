@@ -1,0 +1,11 @@
+{
+  "id": "find_btn_focus",
+  "kind": "seat_tap",
+  "prompt": "Tap the btn seat.",
+  "intent_v1": "trash_hands",
+  "why_v1": "This drill checks seat context before action selection.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "seat_role_confusion"
+}

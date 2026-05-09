@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_context",
+  "kind": "board_tap",
+  "prompt": "Tap the river slot before labeling value or bluff intent.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "River intent selection starts from final-street context.",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. River context is locked.",
+  "feedback_incorrect_v1": "Incorrect. The river is the last board card, so read it first. That card decides whether draws missed, value improved, or the board paired before you label the final action."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tap_hole_left_filter",
+  "kind": "hole_cards_tap",
+  "prompt": "Tap your left hole card.",
+  "intent_v1": "player_profile_tight_loose",
+  "expected": {
+    "cardSlot": "p0"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Use the exact hand before you decide if this board is worth pushing.",
+  "feedback_correct_v1": "Correct. Use the left hole card because this board read still depends on your exact hand.",
+  "feedback_incorrect_v1": "Incorrect. Tap the left hole card because you still need the exact hand before you act."
+}

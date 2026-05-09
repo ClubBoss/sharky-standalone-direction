@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_focus",
+  "kind": "action_choice",
+  "prompt": "With dominated hand and poor price, choose action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Fold preserves chips when protection equity is no longer real.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold is expected in this release spot.",
+  "feedback_incorrect_v1": "Incorrect. A dominated hand with poor price should be released rather than carried forward."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "intro_game_flow",
+  "order": 4,
+  "title": "Game Flow",
+  "description": "Blinds, streets, and action.",
+  "version": "v1",
+  "difficulty_tier": 1,
+  "error_class": "intro_game_flow",
+  "reasoning": "Describes the sequence of rounds and dealer/button motions.",
+  "availability": "available"
+}

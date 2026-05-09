@@ -1,0 +1,18 @@
+{
+  "id": "choose_call_bridge_tocall_price_ok",
+  "kind": "action_choice",
+  "prompt": "Bridge node with positive toCall and acceptable price: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "When the price is manageable and still acceptable to continue, calling keeps the hand in play without forcing extra aggression or stretching into a raise.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. The price is manageable, so calling keeps the hand in play without forcing extra aggression or stretching into a raise.",
+  "feedback_acceptable_v1": "Acceptable. Folding avoids a bigger leak, but this manageable price is still good enough that calling keeps more value in play.",
+  "feedback_incorrect_v1": "Incorrect. Folding gives up too much at a manageable price and manageable continue price, and calling keeps the hand in play while raising forces extra aggression when the cleaner line is to call.",
+  "acceptable_actions": [
+    "call",
+    "fold"
+  ]
+}

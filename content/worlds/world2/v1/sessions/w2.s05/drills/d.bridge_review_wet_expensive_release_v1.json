@@ -1,0 +1,16 @@
+{
+  "id": "bridge_review_wet_expensive_release_v1",
+  "kind": "action_choice",
+  "prompt": "Wet coordinated flop, expensive continue price, and two risky streets still ahead: choose action.",
+  "intent_v1": "world2_authored_bridge",
+  "why_v1": "When the board already builds pressure and the price is poor, future streets make a weak continue worse instead of better.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The wet board, bad price, and future-street risk all push this spot toward release.",
+  "feedback_incorrect_v1": "Incorrect. A wet board, expensive price, and two risky streets ahead make folding cleaner than chasing a weak continue.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "find_seat_s4_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap seat S4.",
+  "intent_v1": "hand_discipline_fold",
+  "expected": {
+    "seatId": "S4"
+  },
+  "error_class": "seat_id_confusion"
+}

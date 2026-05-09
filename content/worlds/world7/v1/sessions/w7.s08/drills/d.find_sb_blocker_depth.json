@@ -1,0 +1,13 @@
+{
+  "id": "find_sb_blocker_depth",
+  "kind": "seat_tap",
+  "prompt": "Tap SB before blocker-adjusted depth action.",
+  "intent_v1": "shallow_stack_pressure",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "why_v1": "Seat anchor keeps action order stable before stack-depth decisions.",
+  "feedback_correct_v1": "Correct. Small blind is the seat anchor because that partly committed seat is the first one blocker pressure can force into trouble.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right anchor here because that partly committed seat is the most sensitive to blocker pressure."
+}

@@ -1,0 +1,21 @@
+# Scenario
+IP fires a small stab after completing flop action, leaving OOP to parse the top/mid/bottom layers before responding.
+
+# Snapshot
+Top: concentrated value combos, Mid: compressed coverage with dual-purpose hands, Bottom: weak offsuit fillers.
+
+# Player task
+Determine whether the layering is balanced, compressed, or stretched and explain how the densities support that read.
+
+# Expected reasoning
+Strong top value plus compressed mid coverage means the attacker keeps pressure concentrated where it matters, avoiding over-thinning mid strength. The weak bottom implies they are not stretching to thin bluffs, so the structure is not stretched. Balanced would show more even layers, but the emphasis on mid layer suggests a compressed strategy to keep options open. OOP should respect this layering when choosing to defend or fold.
+
+# Correct line
+Compressed layering: top power and mid coverage with a trimmed bottom band.
+
+# Why not the alternatives
+- Balanced: would have smoother transitions between bands, not a trimmed bottom.
+- Stretched: would include more bottom/weak combos, but here the bottom remains weak and light.
+- Pure value: lacks the dual-purpose mid coverage that keeps aggression fluid.
+- Pure blotching: ignores that the mid coverage supports value calls rather than pure bluffs.
+- Neutral: downplays the compressed mid and trimmed bottom that drive the structure.

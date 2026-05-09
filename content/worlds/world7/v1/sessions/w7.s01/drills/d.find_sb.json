@@ -1,0 +1,13 @@
+{
+  "id": "find_sb",
+  "kind": "seat_tap",
+  "prompt": "Shallow stack setup: tap SB.",
+  "intent_v1": "shallow_stack_pressure",
+  "why_v1": "Seat anchor keeps action order stable before depth decisions.",
+  "expected": {
+    "role": "sb"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. Start from the small blind because the forced money makes this the vulnerable seat.",
+  "feedback_incorrect_v1": "Incorrect. The small blind is the right seat anchor here because it is partly committed before the shallow-stack decision starts."
+}

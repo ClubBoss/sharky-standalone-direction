@@ -1,0 +1,16 @@
+{
+  "id": "bridge_review_connected_future_street_release_v1",
+  "kind": "action_choice",
+  "prompt": "Connected turn card, weak improvement path, and a poor price with the river still to come: choose action.",
+  "intent_v1": "world2_authored_bridge",
+  "why_v1": "A connected board that can keep changing on later streets punishes weak continues when the price is already bad.",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. The board pressure and future-street risk make release the disciplined choice.",
+  "feedback_incorrect_v1": "Incorrect. A connected board, weak improvement path, and bad price make folding cleaner than paying for a risky river.",
+  "acceptable_actions": [
+    "fold"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_fold_filter_block",
+  "kind": "action_choice",
+  "prompt": "Bad board: choose fold.",
+  "intent_v1": "avoid_leveling",
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Fold when the board turns the pressure spot into something too thin.",
+  "feedback_correct_v1": "Correct. Fold fits because this board takes the pressure spot away.",
+  "feedback_incorrect_v1": "Incorrect. Fold fits when the board takes the pressure spot away."
+}

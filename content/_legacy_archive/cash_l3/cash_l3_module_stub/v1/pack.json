@@ -1,0 +1,9 @@
+{
+  "id": "cash_l3_stub_v1",
+  "version": "1",
+  "theory": "theory.md",
+  "drills": "drills.jsonl",
+  "recap": "recap.md",
+  "quiz": "quiz.jsonl",
+  "footprint": "footprint.txt"
+}

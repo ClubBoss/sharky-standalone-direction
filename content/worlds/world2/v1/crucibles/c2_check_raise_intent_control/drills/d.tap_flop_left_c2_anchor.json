@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_c2_anchor",
+  "kind": "board_tap",
+  "prompt": "Tap flop-left anchor before check-raise intent decision.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Street anchor is required before intent branch selection.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Flop anchor is set for this intent node.",
+  "feedback_incorrect_v1": "Incorrect. Set flop anchor before action selection."
+}

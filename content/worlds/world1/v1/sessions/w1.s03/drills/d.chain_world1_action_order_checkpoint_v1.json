@@ -1,0 +1,96 @@
+{
+  "id": "chain_world1_action_order_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w1_s03_action_order_checkpoint_v1",
+  "prompt": "Play this short World 1 action-order checkpoint chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Cutoff folded, button folded, and hero is in the small blind with AQs. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "sb",
+      "villain_seat_v1": "bb",
+      "active_seats_v1": [
+        "co",
+        "btn",
+        "sb",
+        "bb"
+      ],
+      "hero_hole_cards_v1": [
+        "As",
+        "Qd"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. Once earlier players fold, a strong hand in a clean first-in spot should raise.",
+      "feedback_incorrect_v1": "Incorrect. With AQs in the small blind after both late seats fold, the pot is still unopened, so raising takes the lead before the big blind gets a free look.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The action-order checkpoint starts by recognizing when the pot is still unopened."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Cutoff opened first and hero is on the button with KQs. Which simple action fits best when the pressure reaches you?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Kh",
+        "Qs"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. Once an open reaches you, the cleaner response is a call.",
+      "feedback_incorrect_v1": "Incorrect. Once the cutoff opens, KQs on the button is no longer starting the action, so calling uses position without turning it into a loose re-raise spot.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Pressure arriving first should change the learner's frame before any deeper strategy appears."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Cutoff opened, button called, and hero is in the big blind with T7o. Which simple action fits best now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "bb",
+      "villain_seat_v1": "co",
+      "active_seats_v1": [
+        "btn",
+        "co",
+        "bb"
+      ],
+      "empty_seats_v1": [
+        "sb"
+      ],
+      "hero_hole_cards_v1": [
+        "Td",
+        "7c"
+      ],
+      "available_actions_v1": [
+        "fold",
+        "call",
+        "raise"
+      ],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. When pressure stacks from multiple players, a weak offsuit hand should fold.",
+      "feedback_incorrect_v1": "Incorrect. T7o in the big blind is weak against an open and a caller, so folding is better than paying into multiway pressure out of position.",
+      "recap_v1": "World 1 action-order checkpoints should now read cleanly: unopened action can raise, one open can become a call, and stacked pressure should push weak hands out.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "The key aha is that action order changes the answer before the learner ever needs advanced theory."
+    }
+  ]
+}

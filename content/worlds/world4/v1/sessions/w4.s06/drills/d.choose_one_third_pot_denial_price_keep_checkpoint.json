@@ -1,0 +1,14 @@
+{
+  "id": "choose_one_third_pot_denial_price_keep_checkpoint",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the lighter denial size that still keeps realization from being too cheap.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "One third pot still charges the continue while preserving a lighter price-keeping line.",
+  "expected": {
+    "presetId": "one_third_pot"
+  },
+  "acceptable_preset_ids": [
+    "half_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

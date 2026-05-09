@@ -1,0 +1,13 @@
+{
+  "id": "tap_turn",
+  "kind": "board_tap",
+  "prompt": "Equity realization check: tap turn.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "turn"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "feedback_correct_v1": "Correct. turn is the board anchor here because the second street decides whether the realization edge grows or gets squeezed.",
+  "feedback_incorrect_v1": "Incorrect. The turn matters because it changes pressure, adds or removes draws, and can shift who still wants to keep building the pot. You need that new card before judging how well the hand realizes its equity."
+}

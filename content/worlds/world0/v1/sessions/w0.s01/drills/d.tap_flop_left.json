@@ -1,0 +1,11 @@
+{
+  "id": "tap_flop_left",
+  "kind": "board_tap",
+  "prompt": "Tap the left flop card.",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "board_slot_confusion",
+  "feedback_correct_v1": "Correct. The left flop card is the right board anchor in this rep, so keep the read tied to that exact cue.",
+  "feedback_incorrect_v1": "Incorrect. Use the left flop card here so the read stays tied to the correct board anchor for this rep."
+}

@@ -1,0 +1,8 @@
+{
+  "file": "drills.jsonl",
+  "type": "jsonl",
+  "ascii_only": true,
+  "required_fields": {
+    "id": "string"
+  }
+}

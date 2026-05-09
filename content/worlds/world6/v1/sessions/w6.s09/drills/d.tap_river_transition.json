@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_transition",
+  "kind": "board_tap",
+  "prompt": "Tap the river.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Use the river because the last card tells you whether to keep betting or slow down.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. Use the river because the last card tells you whether thin value is still there or if you should slow down.",
+  "feedback_incorrect_v1": "Incorrect. Use the river because the last card tells you whether thin value is still there or if you should slow down."
+}

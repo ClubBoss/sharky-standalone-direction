@@ -1,0 +1,11 @@
+{
+  "id": "choose_call_repeat",
+  "kind": "action_choice",
+  "prompt": "Choose the best action.",
+  "intent_v1": "trash_hands",
+  "why_v1": "Call only when hand strength can realize equity.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "action_selection"
+}

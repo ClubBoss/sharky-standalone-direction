@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_repeat",
+  "kind": "action_choice",
+  "prompt": "With fair price and medium strength, choose action.",
+  "intent_v1": "bet_for_protection",
+  "why_v1": "Call controls risk when a raise would overcommit.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_incorrect_v1": "Incorrect. Fair price plus medium strength makes call the safer protection line than an overcommitting raise."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "choose_call_icm_synth",
+  "kind": "action_choice",
+  "prompt": "After synthesis check, choose call.",
+  "intent_v1": "survival_pressure",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Call controls risk when tournament pressure does not force fold or raise.",
+  "feedback_correct_v1": "Correct. Calling fits the tournament cue set, so the line preserves equity without risking more than this pressure read can justify.",
+  "feedback_incorrect_v1": "Incorrect. Call is better when the ICM synthesis read says your stack still has room to maneuver, because a controlled continue preserves chips and playability better than forcing a thin fold or raise."
+}

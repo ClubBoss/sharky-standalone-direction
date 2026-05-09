@@ -1,0 +1,16 @@
+fade_in
+fade_out
+scale_in
+scale_out
+slide_in
+slide_out
+expand
+collapse
+pulse
+highlight
+shimmer
+tap_feedback
+hold_feedback
+transition_soft
+transition_medium
+transition_strong

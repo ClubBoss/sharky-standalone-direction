@@ -1,0 +1,44 @@
+{
+  "terms": [
+    {
+      "term": "Big Blind",
+      "definition": "Mandatory bet posted by the player two seats to the dealer's left at the start of a hand."
+    },
+    {
+      "term": "Small Blind",
+      "definition": "Mandatory bet posted by the player immediately to the dealer's left before any cards are dealt."
+    },
+    {
+      "term": "All-In",
+      "definition": "A wager where a player commits all remaining chips during a betting round."
+    },
+    {
+      "term": "Hand Review",
+      "definition": "Training flow where players analyze past hands to improve decision making."
+    },
+    {
+      "term": "Coaching Tip",
+      "definition": "Short instructional message surfaced by the training UI to highlight optimal play."
+    },
+    {
+      "term": "Equity Graph",
+      "definition": "Visual chart showing how a player's winning chances evolve across hand streets."
+    },
+    {
+      "term": "Spot Difficulty",
+      "definition": "UI label describing the challenge rating of a training scenario."
+    },
+    {
+      "term": "Progress Map",
+      "definition": "Navigation component that tracks a player's advancement through training stages."
+    },
+    {
+      "term": "Session Recap",
+      "definition": "Summary screen that aggregates outcomes, feedback, and suggested next drills."
+    },
+    {
+      "term": "XP Reward",
+      "definition": "Experience points granted for completing training tasks within the analyzer."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "chain_depth_synthesis_checkpoint_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w7_s10_depth_synthesis_checkpoint_v1",
+  "prompt": "Play this short three-step World 7 depth synthesis chain.",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "flop",
+      "prompt": "Flop: Medium depth keeps future-street pressure alive. Choose action.",
+      "intent_v1": "stack_depth_adjustment",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "call",
+      "feedback_correct_v1": "Correct. This medium-depth flop step prefers the controlled line.",
+      "feedback_incorrect_v1": "Incorrect. With medium depth still leaving room to pressure later streets, this flop should stay on the controlled continue instead of jumping to aggression.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When later streets still matter but the edge is not yet strong enough to press, controlled continuation keeps the line cleaner."
+    },
+    {
+      "street": "turn",
+      "prompt": "Turn: Deep depth and position now support more pressure. Choose action.",
+      "intent_v1": "deep_stack_playability",
+      "available_actions_v1": ["call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. This deeper turn step supports a raise.",
+      "feedback_incorrect_v1": "Incorrect. Once deeper stacks and position both improve the pressure edge, this turn should lean into the stronger raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When depth and position both improve the pressure edge, the learner should stop defaulting to passive continuation."
+    },
+    {
+      "street": "river",
+      "prompt": "River: Shallow closure and a thin edge should end the pressure line. Choose action.",
+      "intent_v1": "stack_depth_adjustment",
+      "available_actions_v1": ["fold", "call"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. This shallow closure step should release.",
+      "feedback_incorrect_v1": "Incorrect. When the stack is shallow enough that the pressure edge is gone, this river should release rather than force one more continue.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "When remaining depth is no longer giving useful leverage and the edge is thin, disciplined release is cleaner than forced continuation."
+    }
+  ]
+}

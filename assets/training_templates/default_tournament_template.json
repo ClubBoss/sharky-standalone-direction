@@ -1,0 +1,30 @@
+{
+  "id": "default-tournament-template",
+  "name": "Default Tournament Template",
+  "gameType": "Tournament",
+  "category": "Default",
+  "description": "Basic tournament spots",
+  "version": "1.0.0",
+  "author": "Poker Analyzer",
+  "revision": 1,
+  "createdAt": "2024-01-01T00:00:00.000",
+  "updatedAt": "2024-01-01T00:00:00.000",
+  "isBuiltIn": true,
+  "hands": [
+    {
+      "name": "Tourney Hand 1",
+      "heroIndex": 0,
+      "heroPosition": "BTN",
+      "numberOfPlayers": 2,
+      "playerCards": [
+        [{"rank": "A", "suit": "♠"}, {"rank": "K", "suit": "♠"}],
+        [{"rank": "Q", "suit": "♦"}, {"rank": "Q", "suit": "♣"}]
+      ],
+      "boardCards": [],
+      "boardStreet": 0,
+      "actions": [],
+      "stackSizes": {"0": 100, "1": 100},
+      "playerPositions": {"0": "BTN", "1": "BB"}
+    }
+  ]
+}

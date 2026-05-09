@@ -1,0 +1,13 @@
+{
+  "id": "choose_raise_co_open",
+  "kind": "action_choice",
+  "prompt": "Cutoff first-in spot: choose the open default action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Cutoff remains a late-position open seat with raise default.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Raise is the cutoff first-in default.",
+  "feedback_incorrect_v1": "Incorrect. First in from the cutoff, late position still supports the default raise."
+}

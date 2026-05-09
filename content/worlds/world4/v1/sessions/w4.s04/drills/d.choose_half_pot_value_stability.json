@@ -1,0 +1,14 @@
+{
+  "id": "choose_half_pot_value_stability",
+  "kind": "bet_sizing_choice_v1",
+  "prompt": "Pick the stable value size that still keeps weaker continues available.",
+  "intent_v1": "bet_for_value",
+  "why_v1": "Half pot keeps the value plan strong without pushing too many weaker continues out.",
+  "expected": {
+    "presetId": "half_pot"
+  },
+  "acceptable_preset_ids": [
+    "one_third_pot"
+  ],
+  "error_class": "bet_sizing_selection"
+}

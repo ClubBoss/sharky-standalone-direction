@@ -1,0 +1,18 @@
+{
+  "id": "choose_cutoff_raise_clean_start_v1",
+  "kind": "action_choice",
+  "prompt": "Hero is in the cutoff with ATs and everyone folded to them. Which simple action fits best if the start is still clean?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "A clean first-in spot with a playable suited ace should still raise before later pressure appears.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. With folds to the cutoff, ATs keeps the start clean enough to open for a raise before later pressure appears."
+}

@@ -1,0 +1,13 @@
+# Drills
+- choose_half_pot_protection_charge: use the standard protection size when you want the continue to feel clearly more expensive without jumping straight to maximum force.
+- choose_pot_max_pressure_draw_charge: use the biggest preset when the goal is to make the continue expensive immediately.
+- choose_one_third_pot_block_cheap_realization: use the lighter protection line when you still need to tax realization and keep the price from staying too easy.
+- choose_min_raise_protection_reopen: reopen action with the smallest legal raise when control and protection meet.
+- find_bb_repeat: tap the big blind seat to anchor the repeat rep.
+- find_sb_repeat: tap the small blind seat to anchor the repeat rep.
+- find_seat_s2_repeat: tap seat S2 to confirm the acting seat in the repeat rep.
+- choose_raise_repeat: with clear protection edge, choose action in the repeat rep.
+- choose_call_repeat: with medium protection value, choose action in the repeat rep.
+- choose_fold_repeat: with weak protection value, choose action in the repeat rep.
+- tap_turn_repeat: tap the turn slot to confirm street context in the repeat rep.
+- tap_hole_right_repeat: tap the right hole card to confirm hand context in the repeat rep.

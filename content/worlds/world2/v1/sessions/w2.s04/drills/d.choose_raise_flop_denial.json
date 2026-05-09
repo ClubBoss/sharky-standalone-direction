@@ -1,0 +1,17 @@
+{
+  "id": "choose_raise_flop_denial",
+  "kind": "action_choice",
+  "prompt": "Flop denial spot versus overcards: choose action.",
+  "intent_v1": "position_ip_advantage",
+  "why_v1": "Denial spots use the bet branch to remove free equity.",
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Denial line is bet in this spot.",
+  "feedback_incorrect_v1": "Incorrect. This denial spot wants a bet now so weaker overcards do not get a free turn.",
+  "acceptable_actions": [
+    "raise",
+    "call"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "choose_call_c3_river_bluff_blocked",
+  "kind": "action_choice",
+  "prompt": "River bluff-blocked node: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "Blocked bluff nodes use passive branch in this set.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "value_bluff_confusion",
+  "feedback_correct_v1": "Correct. Bluff-blocked node checks back.",
+  "feedback_incorrect_v1": "Incorrect. This blocked node should not bluff.",
+  "acceptable_actions": [
+    "call"
+  ]
+}

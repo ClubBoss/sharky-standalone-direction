@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_repeat",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before final action.",
+  "intent_v1": "bet_for_denial",
+  "why_v1": "Button anchor confirms late position before denial action.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "anchor_order_mismatch",
+  "feedback_correct_v1": "Correct. The button fixes the late-position edge, so the denial repeat stays tied to the seat that can press last.",
+  "feedback_incorrect_v1": "Incorrect. Position is anchored on the button here, so confirm the button seat before the denial decision."
+}

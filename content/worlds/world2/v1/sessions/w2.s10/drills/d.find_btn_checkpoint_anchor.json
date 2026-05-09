@@ -1,0 +1,13 @@
+{
+  "id": "find_btn_checkpoint_anchor",
+  "kind": "seat_tap",
+  "prompt": "Tap the button seat before checkpoint action selection.",
+  "intent_v1": "position_btn_vs_early",
+  "why_v1": "Checkpoint action order starts from position anchor.",
+  "expected": {
+    "role": "btn"
+  },
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Button anchor is set for this checkpoint node.",
+  "feedback_incorrect_v1": "Incorrect. The button tells you who acts last, so find it first before deciding whether this branch should continue with patient in-position value."
+}

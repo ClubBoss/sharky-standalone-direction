@@ -1,0 +1,18 @@
+{
+  "id": "choose_first_in_raise_after_folds_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff folded, button folded, and hero is in the small blind with AQs. Which simple action fits best now?",
+  "intent_v1": "hand_discipline_fold",
+  "available_actions_v1": [
+    "fold",
+    "call",
+    "raise"
+  ],
+  "expected": {
+    "actionId": "raise"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "Once earlier players fold, a strong hand in a clean first-in spot should raise before the big blind acts.",
+  "feedback_correct_v1": "Correct.",
+  "feedback_incorrect_v1": "Incorrect. After the cutoff and button both fold, AQs in the small blind becomes a clean unopened spot, so the right action is to raise."
+}

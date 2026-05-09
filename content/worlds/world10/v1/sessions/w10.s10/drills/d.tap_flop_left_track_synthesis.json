@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_left_track_synthesis",
+  "kind": "board_tap",
+  "prompt": "Tap flop_left to confirm the first board anchor.",
+  "intent_v1": "one_lever_adjustment",
+  "expected": {
+    "boardSlot": "flop_left"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "why_v1": "Board anchors keep your adjustment stable across streets.",
+  "feedback_correct_v1": "Correct. flop_left is the first board anchor, so the texture read starts from the cue that sets the flop pattern.",
+  "feedback_incorrect_v1": "Incorrect. The left flop card matters because the first flop texture read is one piece of the full strategic picture, not a detail you can skip."
+}

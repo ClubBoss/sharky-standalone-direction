@@ -1,0 +1,13 @@
+{
+  "id": "tap_flop_blocker_depth",
+  "kind": "board_tap",
+  "prompt": "Tap flop middle to anchor blocker in depth context.",
+  "intent_v1": "stack_to_pot_awareness",
+  "why_v1": "Board anchor keeps street context stable before stack-depth action.",
+  "expected": {
+    "boardSlot": "flop_mid"
+  },
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. flop_mid is the board anchor because the blocker only matters after the flop texture shows whether it has real support.",
+  "feedback_incorrect_v1": "Incorrect. The middle flop card is the right anchor here because the full flop picture has to be set before you judge whether the blocker has enough board support."
+}

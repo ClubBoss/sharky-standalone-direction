@@ -1,0 +1,4 @@
+{"id":"gt_quiz_01","type":"mc","prompt":"You only have 1 hour to play. What fits best?","options":["Cash Game","Tournament","Main Event"],"answer":0,"explanation":"Cash games allow you to leave at any moment. Tournaments require commitment."}
+{"id":"gt_quiz_02","type":"mc","prompt":"Where do blinds increase over time?","options":["Cash Game","Tournament"],"answer":1,"explanation":"In tournaments, blinds go up to force action and eliminate players."}
+{"id":"gt_quiz_03","type":"mc","prompt":"If you lose your stack here, you are eliminated.","options":["Cash Game","Tournament"],"answer":1,"explanation":"Tournaments eliminate players when their stack is gone; cash games allow re-buy."}
+{"id":"gt_quiz_04","type":"mc","prompt":"Sharky asks: Which chip has a fixed dollar value?","options":["Tournament Chip","Cash Game Chip"],"answer":1,"explanation":"In cash games, chips map to real money; in tournaments, chips are points."}

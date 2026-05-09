@@ -1,0 +1,17 @@
+{
+  "id": "choose_call_c1_4bet_defend",
+  "kind": "action_choice",
+  "prompt": "Defined 4bet defend node with price support: choose action.",
+  "intent_v1": "position_oop_pain",
+  "why_v1": "This defend node keeps call as legal response.",
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "tocall_legality_mismatch",
+  "feedback_correct_v1": "Correct. Call is expected in this defend node.",
+  "feedback_incorrect_v1": "Incorrect. This node expects call, not an illegal branch.",
+  "acceptable_actions": [
+    "call",
+    "fold"
+  ]
+}

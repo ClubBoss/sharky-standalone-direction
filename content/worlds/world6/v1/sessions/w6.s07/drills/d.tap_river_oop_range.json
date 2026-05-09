@@ -1,0 +1,13 @@
+{
+  "id": "tap_river_oop_range",
+  "kind": "board_tap",
+  "prompt": "Tap river slot to complete out-of-position range defense line.",
+  "intent_v1": "equity_realization",
+  "expected": {
+    "boardSlot": "river"
+  },
+  "why_v1": "Board anchor keeps street context stable before range action.",
+  "error_class": "focus_anchor_mismatch",
+  "feedback_correct_v1": "Correct. River card anchored to complete the out-of-position defense line.",
+  "feedback_incorrect_v1": "Incorrect. The river card is the right anchor because the final board state decides whether the out-of-position range can keep defending or must give up."
+}

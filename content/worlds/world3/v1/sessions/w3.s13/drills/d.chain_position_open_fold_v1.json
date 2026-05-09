@@ -1,0 +1,59 @@
+{
+  "id": "chain_position_open_fold_v1",
+  "kind": "hand_chain_v1",
+  "chain_id": "w3_s13_position_open_fold_v1",
+  "prompt": "Play this short World 3 unopened-pot open-versus-fold chain.",
+  "intent_v1": "action_sequence",
+  "expected": {},
+  "error_class": "unused",
+  "steps": [
+    {
+      "street": "preflop",
+      "prompt": "Step 1: Hero is on the button and villain is in the cutoff. Who will be in position after the flop?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "available_actions_v1": ["hero", "villain"],
+      "expected_action": "hero",
+      "feedback_correct_v1": "Correct. The button acts later than the cutoff after the flop, so hero is in position.",
+      "feedback_incorrect_v1": "Incorrect. Hero is in position here because the button acts after the cutoff postflop.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position tells you who gets to react with more information after the flop."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 2: Keep the same seats. Hero holds AJo and the pot is unopened. Which simple preflop action fits better now?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Ah", "Jd"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "raise",
+      "feedback_correct_v1": "Correct. In position with a clearly playable broadway hand, opening is the cleaner default.",
+      "feedback_incorrect_v1": "Incorrect. This is a good in-position unopened-pot open, so the simple frame is raise.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Unopened pots reward stronger in-position hands for taking the initiative."
+    },
+    {
+      "street": "preflop",
+      "prompt": "Step 3: Keep the same seats and unopened frame, but now hero holds K8o on the button. Which simple preflop action fits better?",
+      "player_count_v1": 4,
+      "hero_seat_v1": "btn",
+      "villain_seat_v1": "co",
+      "active_seats_v1": ["btn", "co", "bb"],
+      "empty_seats_v1": ["sb"],
+      "hero_hole_cards_v1": ["Kh", "8d"],
+      "available_actions_v1": ["fold", "call", "raise"],
+      "expected_action": "fold",
+      "feedback_correct_v1": "Correct. Position helps, but this weaker offsuit hand is still not strong enough to open comfortably.",
+      "feedback_incorrect_v1": "Incorrect. Position improves the spot, but it does not turn this weaker offsuit hand into a good unopened-pot open.",
+      "recap_v1": "World 3 keeps getting more practical: position helps a hand, but better hands still open while weaker hands still fold.",
+      "error_class": "expected_action_mismatch",
+      "why_v1": "Position is an edge, not a permission slip for every hand in an unopened pot."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"id":"de_v1_1","signal":"accuracy","target":"baseline","weight":1,"curve":"linear","delta":0,"persona_hook":"neutral","tte_hook":"range","sr_hook":"early"}
+{"id":"de_v1_2","signal":"speed","target":"timing","weight":1,"curve":"step","delta":1,"persona_hook":"aggressive","tte_hook":"texture","sr_hook":"mid"}
+{"id":"de_v1_3","signal":"error_freq","target":"boost","weight":2,"curve":"accelerated","delta":2,"persona_hook":"passive","tte_hook":"action","sr_hook":"error_boost"}
+{"id":"de_v1_4","signal":"confidence","target":"stability","weight":1,"curve":"dampen","delta":1,"persona_hook":"balanced","tte_hook":"icm","sr_hook":"late"}
