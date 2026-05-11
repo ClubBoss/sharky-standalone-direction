@@ -1365,7 +1365,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('Stage shift · World 2 table reads -> World 3 preflop framework'),
+      find.text(
+        'Stage shift · World 2 table reads -> World 3 preflop framework',
+      ),
       findsOneWidget,
     );
     expect(

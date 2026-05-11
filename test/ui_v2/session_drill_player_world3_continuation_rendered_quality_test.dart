@@ -42,10 +42,7 @@ void main() {
     return SessionDrillItemV1(drillId: spec.id, spec: spec);
   }
 
-  void _expectLeftToRightOrder(
-    WidgetTester tester,
-    List<Key> keys,
-  ) {
+  void _expectLeftToRightOrder(WidgetTester tester, List<Key> keys) {
     double? previousLeft;
     for (final key in keys) {
       final finder = find.byKey(key);
@@ -166,7 +163,9 @@ void main() {
         final tableRect = tester.getRect(tableFinder);
         final actionBarRect = tester.getRect(actionBarFinder);
         final sourceStreetRect = tester.getRect(
-          find.byKey(const Key('session_drill_player_hand_chain_source_street_v1')),
+          find.byKey(
+            const Key('session_drill_player_hand_chain_source_street_v1'),
+          ),
         );
 
         expect(promptRect.height, greaterThan(18));
@@ -178,9 +177,7 @@ void main() {
             tester.view.physicalSize.height / tester.view.devicePixelRatio;
         expect(
           logicalScreenHeight - actionBarRect.bottom,
-          greaterThanOrEqualTo(
-            kCanonicalLearnerActionSafeAreaMinimumV1.bottom,
-          ),
+          greaterThanOrEqualTo(kCanonicalLearnerActionSafeAreaMinimumV1.bottom),
         );
         _expectLeftToRightOrder(tester, const <Key>[
           Key('session_drill_player_hand_chain_action_fold_v1'),

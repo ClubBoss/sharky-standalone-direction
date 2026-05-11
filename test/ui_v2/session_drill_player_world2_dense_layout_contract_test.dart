@@ -97,9 +97,7 @@ void main() {
           tester.view.physicalSize.height / tester.view.devicePixelRatio;
       expect(
         logicalScreenHeight - actionRect.bottom,
-        greaterThanOrEqualTo(
-          kCanonicalLearnerActionSafeAreaMinimumV1.bottom,
-        ),
+        greaterThanOrEqualTo(kCanonicalLearnerActionSafeAreaMinimumV1.bottom),
       );
       expect(tester.takeException(), isNull);
     },

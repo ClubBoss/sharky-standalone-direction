@@ -13,10 +13,10 @@ void main() {
       SharedPreferences.setMockInitialValues({});
     });
 
-    test('should initialize with English as default', () async {
+    test('should initialize with Russian as default', () async {
       await controller.initialize();
-      expect(controller.languageCode, 'en');
-      expect(controller.currentLocale.languageCode, 'en');
+      expect(controller.languageCode, 'ru');
+      expect(controller.currentLocale.languageCode, 'ru');
       expect(controller.isInitialized, true);
     });
 
@@ -36,8 +36,8 @@ void main() {
     test('should not change if language is the same', () async {
       await controller.initialize();
 
-      final changed1 = await controller.setLanguage('en');
-      expect(changed1, false); // Already English
+      final changed1 = await controller.setLanguage('ru');
+      expect(changed1, false); // Already Russian
 
       final changed2 = await controller.setLanguage('fr');
       expect(changed2, true);
@@ -51,7 +51,7 @@ void main() {
 
       final changed = await controller.setLanguage('invalid');
       expect(changed, false);
-      expect(controller.languageCode, 'en'); // Should remain English
+      expect(controller.languageCode, 'ru'); // Should remain Russian
     });
 
     test('should restore saved language on initialization', () async {

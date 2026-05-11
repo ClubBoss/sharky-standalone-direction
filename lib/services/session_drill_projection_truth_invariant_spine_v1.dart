@@ -29,7 +29,9 @@ void validateSessionDrillProjectionInvariantSpineV1({
     throw StateError('$errorPrefix requires hero/villain seats to differ');
   }
   if (reconciledTruthV1.seatOrderV1.length != reconciledTruthV1.playerCountV1) {
-    throw StateError('$errorPrefix requires seat order length to match player_count_v1');
+    throw StateError(
+      '$errorPrefix requires seat order length to match player_count_v1',
+    );
   }
   if (reconciledTruthV1.seatOrderV1.toSet().length !=
       reconciledTruthV1.seatOrderV1.length) {
@@ -40,10 +42,13 @@ void validateSessionDrillProjectionInvariantSpineV1({
   if (heroOccupancy == ScenarioSeatOccupancyV1.empty) {
     throw StateError('$errorPrefix requires hero seat to be non-empty');
   }
-  final villainSeatIndexV1 =
-      reconciledTruthV1.seatOrderV1.indexOf(reconciledTruthV1.villainSeatV1);
+  final villainSeatIndexV1 = reconciledTruthV1.seatOrderV1.indexOf(
+    reconciledTruthV1.villainSeatV1,
+  );
   if (villainSeatIndexV1 < 0) {
-    throw StateError('$errorPrefix requires villain seat inside reconciled seat order');
+    throw StateError(
+      '$errorPrefix requires villain seat inside reconciled seat order',
+    );
   }
   final villainOccupancy =
       reconciledTruthV1.seatOccupanciesV1[villainSeatIndexV1];
@@ -57,11 +62,15 @@ void validateSessionDrillProjectionInvariantSpineV1({
   }
   final blindLevelState = reconciledTruthV1.blindLevelStateV1;
   if (blindLevelState != null) {
-    if (reconciledTruthV1.seatOccupanciesV1[blindLevelState.smallBlindSeatIndexV1] ==
+    if (reconciledTruthV1.seatOccupanciesV1[blindLevelState
+            .smallBlindSeatIndexV1] ==
         ScenarioSeatOccupancyV1.empty) {
-      throw StateError('$errorPrefix requires small blind seat to be non-empty');
+      throw StateError(
+        '$errorPrefix requires small blind seat to be non-empty',
+      );
     }
-    if (reconciledTruthV1.seatOccupanciesV1[blindLevelState.bigBlindSeatIndexV1] ==
+    if (reconciledTruthV1.seatOccupanciesV1[blindLevelState
+            .bigBlindSeatIndexV1] ==
         ScenarioSeatOccupancyV1.empty) {
       throw StateError('$errorPrefix requires big blind seat to be non-empty');
     }

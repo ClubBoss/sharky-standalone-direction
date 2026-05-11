@@ -1,13 +1,23 @@
 import 'package:flutter/widgets.dart';
 
-const EdgeInsets kCanonicalLearnerActionSurfacePaddingV1 =
-    EdgeInsets.fromLTRB(12, 0, 12, 8);
-const EdgeInsets kCanonicalLearnerBottomBandPaddingV1 =
-    EdgeInsets.fromLTRB(8, 6, 8, 8);
-const EdgeInsets kCanonicalLearnerActionSafeAreaMinimumV1 =
-    EdgeInsets.only(bottom: 8);
-const EdgeInsets kCanonicalLearnerBottomBandSafeAreaMinimumV1 =
-    EdgeInsets.only(bottom: 14);
+const EdgeInsets kCanonicalLearnerActionSurfacePaddingV1 = EdgeInsets.fromLTRB(
+  12,
+  0,
+  12,
+  8,
+);
+const EdgeInsets kCanonicalLearnerBottomBandPaddingV1 = EdgeInsets.fromLTRB(
+  8,
+  6,
+  8,
+  8,
+);
+const EdgeInsets kCanonicalLearnerActionSafeAreaMinimumV1 = EdgeInsets.only(
+  bottom: 8,
+);
+const EdgeInsets kCanonicalLearnerBottomBandSafeAreaMinimumV1 = EdgeInsets.only(
+  bottom: 14,
+);
 const double kCanonicalLearnerFeedbackActionGapV1 = 6.0;
 const double kCanonicalLearnerBottomBandHeightFractionV1 = 0.16;
 const double kCanonicalLearnerBottomBandMinHeightV1 = 72.0;
@@ -36,7 +46,10 @@ List<T> canonicalLearnerPrimaryActionOrderV1<T>(
 ) {
   final indexedItems = items.toList(growable: false);
   final recognizedCount = indexedItems
-      .where((item) => canonicalLearnerPrimaryActionOrderRankV1(actionIdOf(item)) != null)
+      .where(
+        (item) =>
+            canonicalLearnerPrimaryActionOrderRankV1(actionIdOf(item)) != null,
+      )
       .length;
   if (recognizedCount < 2) {
     return indexedItems;
@@ -51,14 +64,10 @@ List<T> canonicalLearnerPrimaryActionOrderV1<T>(
     growable: false,
   );
   indexed.sort((left, right) {
-    final leftRank = canonicalLearnerPrimaryActionOrderRankV1(
-          actionIdOf(left.$2),
-        ) ??
-        99;
-    final rightRank = canonicalLearnerPrimaryActionOrderRankV1(
-          actionIdOf(right.$2),
-        ) ??
-        99;
+    final leftRank =
+        canonicalLearnerPrimaryActionOrderRankV1(actionIdOf(left.$2)) ?? 99;
+    final rightRank =
+        canonicalLearnerPrimaryActionOrderRankV1(actionIdOf(right.$2)) ?? 99;
     if (leftRank != rightRank) {
       return leftRank.compareTo(rightRank);
     }

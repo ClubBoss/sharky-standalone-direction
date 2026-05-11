@@ -20,9 +20,7 @@ void main() {
         isTrue,
       );
       expect(
-        hostContract.contains(
-          'resolveCanonicalTerminalWorld1RuntimeConfigV1(',
-        ),
+        hostContract.contains('resolveCanonicalTerminalWorld1RuntimeConfigV1('),
         isTrue,
       );
       expect(
@@ -30,9 +28,7 @@ void main() {
         isFalse,
       );
       expect(
-        world1Adapter.contains(
-          'resolveWorld1CanonicalHostLaunchStateV1(',
-        ),
+        world1Adapter.contains('resolveWorld1CanonicalHostLaunchStateV1('),
         isFalse,
       );
       expect(

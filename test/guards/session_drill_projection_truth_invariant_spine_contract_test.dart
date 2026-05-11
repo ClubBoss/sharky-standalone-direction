@@ -21,7 +21,9 @@ void main() {
         isTrue,
       );
       expect(
-        validatorSource.contains('buildValidatedSessionDrillProjectedScenarioV1('),
+        validatorSource.contains(
+          'buildValidatedSessionDrillProjectedScenarioV1(',
+        ),
         isTrue,
       );
       expect(

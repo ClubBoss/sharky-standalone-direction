@@ -31,7 +31,9 @@ void main() {
       isTrue,
     );
     expect(
-      sessionRoute.contains('return CanonicalTerminalSessionDrillSurfacedRunnerV1('),
+      sessionRoute.contains(
+        'return CanonicalTerminalSessionDrillSurfacedRunnerV1(',
+      ),
       isTrue,
     );
     expect(

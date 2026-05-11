@@ -154,9 +154,7 @@ List<String> _validateInitiativePressureCopyConsistencyV1({
   if ((RegExp(
             r'\bhero[^.]*\b(more likely to continue pressure|keep the pressure|keeps pressure|continue pressure)\b',
           ).hasMatch(lowerText) ||
-          RegExp(
-            r'\bpressure[^.]*\bhero\b',
-          ).hasMatch(lowerText)) &&
+          RegExp(r'\bpressure[^.]*\bhero\b').hasMatch(lowerText)) &&
       pressureOwner != 'hero') {
     issues.add(
       '$source: hero pressure copy contradicts pressure_owner_v1 $pressureOwner',
@@ -165,9 +163,7 @@ List<String> _validateInitiativePressureCopyConsistencyV1({
   if ((RegExp(
             r'\bvillain[^.]*\b(more likely to continue pressure|keep the pressure|keeps pressure|continue pressure)\b',
           ).hasMatch(lowerText) ||
-          RegExp(
-            r'\bpressure[^.]*\bvillain\b',
-          ).hasMatch(lowerText)) &&
+          RegExp(r'\bpressure[^.]*\bvillain\b').hasMatch(lowerText)) &&
       pressureOwner != 'villain') {
     issues.add(
       '$source: villain pressure copy contradicts pressure_owner_v1 $pressureOwner',

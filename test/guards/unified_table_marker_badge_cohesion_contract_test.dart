@@ -101,9 +101,11 @@ void main() {
         ),
       );
 
-      final shells = tester.widgetList<RunnerSeatStateBadgeShellV1>(
-        find.byType(RunnerSeatStateBadgeShellV1),
-      ).toList(growable: false);
+      final shells = tester
+          .widgetList<RunnerSeatStateBadgeShellV1>(
+            find.byType(RunnerSeatStateBadgeShellV1),
+          )
+          .toList(growable: false);
 
       expect(shells, hasLength(2));
       expect(

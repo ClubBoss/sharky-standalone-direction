@@ -15,8 +15,12 @@ void main() {
       final preflopIndex = prompts.indexOf(
         'Preflop decision in Hijack: facing an open.',
       );
-      final flopIndex = prompts.indexOf('Flop decision in Cutoff: board is visible.');
-      final recapIndex = prompts.indexOf('Seat recap: find Under the Gun again.');
+      final flopIndex = prompts.indexOf(
+        'Flop decision in Cutoff: board is visible.',
+      );
+      final recapIndex = prompts.indexOf(
+        'Seat recap: find Under the Gun again.',
+      );
       final turnIndex = prompts.indexOf(
         'Turn decision in Big Blind: read the fourth board card.',
       );

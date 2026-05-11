@@ -1,4 +1,0 @@
-{"id":"sr_v1_1","stage":"early","weight":1,"interval":"1d","boost":0,"error_weight":1,"persona":"neutral"}
-{"id":"sr_v1_2","stage":"mid","weight":1,"interval":"3d","boost":0,"error_weight":1,"persona":"neutral"}
-{"id":"sr_v1_3","stage":"late","weight":1,"interval":"7d","boost":0,"error_weight":1,"persona":"neutral"}
-{"id":"sr_v1_4","stage":"error_boost","weight":2,"interval":"1d","boost":1,"error_weight":2,"persona":"correction"}

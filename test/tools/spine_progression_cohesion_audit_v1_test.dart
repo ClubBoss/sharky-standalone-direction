@@ -50,7 +50,10 @@ void main() {
       world1Campaign.runnerContract,
       'sessionDrillRunnerProgressionChrome',
     );
-    expect(world1Campaign.hostGrammarProfile, 'world1SharedLearnerHostGrammarV1');
+    expect(
+      world1Campaign.hostGrammarProfile,
+      'world1SharedLearnerHostGrammarV1',
+    );
     expect(
       world1Campaign.hostGrammarPrimitives,
       containsAll(<String>[
@@ -212,7 +215,7 @@ void main() {
     expect((decoded['summary'] as Map<String, dynamic>)['total_rows'], 34);
     expect(
       ((decoded['summary'] as Map<String, dynamic>)['status_counts']
-          as Map<String, dynamic>)['mixed'] ??
+              as Map<String, dynamic>)['mixed'] ??
           0,
       0,
     );

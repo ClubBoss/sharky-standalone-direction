@@ -1,5 +1,0 @@
-{"id":"drill_1","prompt":"BTN opens 2.2bb, 40bb deep, KJo. Action?","choices":["fold","call","raise"],"answer":"raise"}
-{"id":"drill_2","prompt":"CO faces BTN 3b to 8bb, 80bb deep, JJ. Action?","choices":["fold","call","raise"],"answer":"call"}
-{"id":"drill_3","prompt":"HJ vs BB defend, 20bb, A5s. Open size?","choices":["fold","min-raise","2.2bb"],"answer":"2.2bb"}
-{"id":"drill_4","prompt":"UTG 40bb, ATo offsuit, table sticky. Action?","choices":["fold","open 2.5bb","open 2.2bb"],"answer":"fold"}
-{"id":"drill_5","prompt":"BTN vs BB call, flop K72r, 40bb, K9s. Line?","choices":["bet small","check back","pot bet"],"answer":"bet small"}

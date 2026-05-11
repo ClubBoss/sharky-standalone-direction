@@ -1,7 +1,0 @@
-{"id":"psi1:quiz:01","type":"mc","prompt":"What does Tier-A measure?","options":["Passive emotion signals","V4 visuals","XP rewards"],"answer":0,"explanation":"Tier-A reads passive signals before ESM refines them."}
-{"id":"psi1:quiz:02","type":"tf","prompt":"ESM turns Tier-A signals into states like momentum.","answer":true,"explanation":"ESM interprets Tier-A outputs into actionable states."}
-{"id":"psi1:quiz:03","type":"mc","prompt":"ATM tracks which two aspects?","options":["Attention and tone","XP and rewards","Deck order"],"answer":0,"explanation":"ATM models attention level and communication tone."}
-{"id":"psi1:quiz:04","type":"tf","prompt":"V4 visuals are optional and can be toggled.","answer":true,"explanation":"V4 runtime can be active or off; onboarding defaults on."}
-{"id":"psi1:quiz:05","type":"mc","prompt":"First spot in Psi-2 focuses on?","options":["BTN vs BB dry flop","ICM shove","Multiway turn"],"answer":0,"explanation":"Onboarding funnels into a simple SRP BTN vs BB dry flop."}
-{"id":"psi1:quiz:06","type":"mc","prompt":"Coaching hooks trigger when?","options":["Heuristics flag non-normal hints","Every action","Never"],"answer":0,"explanation":"Hooks appear when heuristics leave the normal range."}
-{"id":"psi1:quiz:07","type":"tf","prompt":"Sharky guides in a professional tone, not cartoonish.","answer":true,"explanation":"Sharky is an expert voice, concise and clear."}

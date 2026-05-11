@@ -32,21 +32,24 @@ void main() {
     }
   });
 
-  test('validator no longer reports World 0 prompt shorthand failures', () async {
-    final result = await Process.run('dart', [
-      'run',
-      'tools/validate_world_content_v1.dart',
-    ]);
-    final combined = '${result.stdout}\n${result.stderr}';
-    expect(
-      combined.contains('world0_seat_label_shorthand_prompt_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-    expect(
-      combined.contains('world0_drills_index_button_seat_jargon_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-  });
+  test(
+    'validator no longer reports World 0 prompt shorthand failures',
+    () async {
+      final result = await Process.run('dart', [
+        'run',
+        'tools/validate_world_content_v1.dart',
+      ]);
+      final combined = '${result.stdout}\n${result.stderr}';
+      expect(
+        combined.contains('world0_seat_label_shorthand_prompt_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+      expect(
+        combined.contains('world0_drills_index_button_seat_jargon_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+    },
+  );
 }

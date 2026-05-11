@@ -114,9 +114,7 @@ void main() {
     fail('Did not reach a seat-quiz interactive step deterministically.');
   }
 
-  void _expectConceptPreludeVisibleInInstructionSurfaceV1(
-    WidgetTester tester,
-  ) {
+  void _expectConceptPreludeVisibleInInstructionSurfaceV1(WidgetTester tester) {
     final tableCanvas = find.byKey(const Key('microtask_table_canvas'));
     final stadium = find.byKey(const Key('microtask_table_stadium_shell_v1'));
     final instructionSurface = find.byKey(
@@ -158,7 +156,8 @@ void main() {
     expect(
       instructionRect.top >= tableRect.top,
       isTrue,
-      reason: 'The smart-learning surface must stay inside the visible table canvas.',
+      reason:
+          'The smart-learning surface must stay inside the visible table canvas.',
     );
     expect(
       instructionRect.bottom <= tableRect.bottom,
@@ -169,12 +168,14 @@ void main() {
     expect(
       instructionRect.left >= stadiumRect.left,
       isTrue,
-      reason: 'The instruction surface should stay centered over the felt lane.',
+      reason:
+          'The instruction surface should stay centered over the felt lane.',
     );
     expect(
       instructionRect.right <= stadiumRect.right,
       isTrue,
-      reason: 'The instruction surface should stay centered over the felt lane.',
+      reason:
+          'The instruction surface should stay centered over the felt lane.',
     );
     expect(
       (instructionRect.center.dx - stadiumRect.center.dx).abs() <= 12,
@@ -185,22 +186,26 @@ void main() {
     expect(
       cardRect.top >= instructionRect.top,
       isTrue,
-      reason: 'The smart-learning card must render inside the instruction surface.',
+      reason:
+          'The smart-learning card must render inside the instruction surface.',
     );
     expect(
       cardRect.bottom <= instructionRect.bottom,
       isTrue,
-      reason: 'The smart-learning card must render inside the instruction surface.',
+      reason:
+          'The smart-learning card must render inside the instruction surface.',
     );
     expect(
       cardRect.left >= instructionRect.left,
       isTrue,
-      reason: 'The smart-learning card must render inside the instruction surface.',
+      reason:
+          'The smart-learning card must render inside the instruction surface.',
     );
     expect(
       cardRect.right <= instructionRect.right,
       isTrue,
-      reason: 'The smart-learning card must render inside the instruction surface.',
+      reason:
+          'The smart-learning card must render inside the instruction surface.',
     );
     expect(
       cardRect.width <= stadiumRect.width * 0.76,
@@ -253,9 +258,7 @@ void main() {
         stadiumRect: stadiumRect,
         preferredWidth: 280,
         containerHeight: 104,
-        avoidRects: <Rect>[
-          const Rect.fromLTWH(30, 180, 330, 140),
-        ],
+        avoidRects: <Rect>[const Rect.fromLTWH(30, 180, 330, 140)],
         laneTopFactor: 0.3,
         laneBottomFactor: 0.5,
       );
@@ -423,25 +426,26 @@ void main() {
     },
   );
 
-  testWidgets('concept-first big-blind step keeps compact reinforce on correct', (
-    tester,
-  ) async {
-    await _pumpToConceptSeatStepV1(tester);
+  testWidgets(
+    'concept-first big-blind step keeps compact reinforce on correct',
+    (tester) async {
+      await _pumpToConceptSeatStepV1(tester);
 
-    await _completeSeatStepByIdV1(tester, 'btn');
-    await _waitForSeatQuizInteractiveV1(tester);
-    await _completeSeatStepByIdV1(tester, 'sb');
-    await _waitForSeatQuizInteractiveV1(tester);
-    final seat = find.byKey(const Key('microtask_seat_bb'));
-    await tester.tap(seat.first, warnIfMissed: false);
-    await tester.pump(const Duration(milliseconds: 80));
-    final check = find.byKey(const Key('microtask_check_cta'));
-    await tester.tap(check.first, warnIfMissed: false);
-    await tester.pump(const Duration(milliseconds: 120));
+      await _completeSeatStepByIdV1(tester, 'btn');
+      await _waitForSeatQuizInteractiveV1(tester);
+      await _completeSeatStepByIdV1(tester, 'sb');
+      await _waitForSeatQuizInteractiveV1(tester);
+      final seat = find.byKey(const Key('microtask_seat_bb'));
+      await tester.tap(seat.first, warnIfMissed: false);
+      await tester.pump(const Duration(milliseconds: 80));
+      final check = find.byKey(const Key('microtask_check_cta'));
+      await tester.tap(check.first, warnIfMissed: false);
+      await tester.pump(const Duration(milliseconds: 120));
 
-    expect(find.textContaining('Reinforce:'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.textContaining('Reinforce:'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('concept-first micro-slice incorrect path keeps factual why', (
     tester,

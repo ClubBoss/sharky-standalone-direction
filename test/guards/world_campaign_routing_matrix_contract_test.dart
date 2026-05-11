@@ -6,9 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/constants/telemetry_events.dart';
 import 'package:poker_analyzer/infra/telemetry.dart';
+import 'package:poker_analyzer/l10n/app_localizations.dart';
 import 'package:poker_analyzer/payments/payment_service.dart';
 import '_harness/canonical_direct_session_launch_contract_harness_v1.dart';
-import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/map/ui_v2_progress_map_screen_v2.dart';
 import 'package:poker_analyzer/ui_v2/screens/session_result_screen.dart';
 import 'package:poker_analyzer/ui_v2/screens/universal_intake_plan_screen.dart';
 import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
@@ -366,7 +367,14 @@ Future<void> _assertWorldRouting(WidgetTester tester, int world) async {
   });
   try {
     SharedPreferences.setMockInitialValues(_prefsForWorld(world));
-    await tester.pumpWidget(const AppRoot());
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const UiV2ProgressMapScreenV2(),
+      ),
+    );
     await tester.pump(const Duration(milliseconds: 300));
     expect(tester.takeException(), isNull);
 
@@ -403,7 +411,8 @@ Future<void> _assertWorldRouting(WidgetTester tester, int world) async {
 
     if (directSession.evaluate().isNotEmpty ||
         loadError.evaluate().isNotEmpty) {
-      expectCanonicalDirectSessionLaunchV1(tester, 'w$world.s01');
+      final expectedDirectSessionId = world <= 6 ? 'w$world.s01' : expectedPackId;
+      expectCanonicalDirectSessionLaunchV1(tester, expectedDirectSessionId);
       expect(loadError, findsNothing);
       expect(packValue, findsNothing);
       expect(tester.takeException(), isNull);
@@ -475,7 +484,14 @@ void main() {
       'world10_calibration_completed_v1': true,
     });
 
-    await tester.pumpWidget(const AppRoot());
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const UiV2ProgressMapScreenV2(),
+      ),
+    );
     for (var i = 0; i < 80; i++) {
       if (find.byKey(const Key('world1_state_current')).evaluate().isNotEmpty) {
         break;

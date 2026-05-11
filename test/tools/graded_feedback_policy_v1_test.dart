@@ -25,13 +25,15 @@ void main() {
 
       for (final relativePath in gradedCorridorFiles) {
         final file = File('$repoRoot/$relativePath');
-        final json = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+        final json =
+            jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
 
-        final feedbackCorrect = (json['feedback_correct_v1'] as String?)?.trim();
-        final feedbackIncorrect =
-            (json['feedback_incorrect_v1'] as String?)?.trim();
-        final feedbackAcceptable =
-            (json['feedback_acceptable_v1'] as String?)?.trim();
+        final feedbackCorrect = (json['feedback_correct_v1'] as String?)
+            ?.trim();
+        final feedbackIncorrect = (json['feedback_incorrect_v1'] as String?)
+            ?.trim();
+        final feedbackAcceptable = (json['feedback_acceptable_v1'] as String?)
+            ?.trim();
 
         expect(
           feedbackCorrect,
@@ -51,22 +53,26 @@ void main() {
         expect(
           feedbackAcceptable,
           isNot(feedbackCorrect),
-          reason: '$relativePath acceptable feedback should not mirror the positive path.',
+          reason:
+              '$relativePath acceptable feedback should not mirror the positive path.',
         );
         expect(
           feedbackAcceptable,
           isNot(feedbackIncorrect),
-          reason: '$relativePath acceptable feedback should not mirror the wrong-path correction.',
+          reason:
+              '$relativePath acceptable feedback should not mirror the wrong-path correction.',
         );
         expect(
           hasGenericAcceptableFeedbackV1(feedbackAcceptable),
           isFalse,
-          reason: '$relativePath acceptable feedback should stay scenario-first, not generic.',
+          reason:
+              '$relativePath acceptable feedback should stay scenario-first, not generic.',
         );
         expect(
           hasGenericIncorrectFeedbackV1(feedbackIncorrect),
           isFalse,
-          reason: '$relativePath incorrect feedback should stay scenario-first, not generic.',
+          reason:
+              '$relativePath incorrect feedback should stay scenario-first, not generic.',
         );
       }
     },

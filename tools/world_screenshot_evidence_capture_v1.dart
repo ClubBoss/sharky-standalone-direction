@@ -86,7 +86,10 @@ void main(List<String> args) async {
     }
     entries.add(<String, Object?>{
       'session_id': sessionId,
-      'path': file.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''),
+      'path': file.path.replaceAll(
+        '${Directory.current.path}${Platform.pathSeparator}',
+        '',
+      ),
       'bytes': file.lengthSync(),
     });
   }
@@ -95,11 +98,7 @@ void main(List<String> args) async {
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-      'world_id': 'W$world',
-      'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''),
-      'entries': entries,
-    })}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'world_id': 'W$world', 'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'entries': entries})}\n',
   );
 }
 

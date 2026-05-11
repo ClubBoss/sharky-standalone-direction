@@ -2,10 +2,7 @@ import 'package:flutter/foundation.dart';
 
 enum SharedLearnerFeedbackVerdictV1 { fail, softPass, correct }
 
-enum SharedLearnerFeedbackComparisonStyleV1 {
-  strongerLine,
-  correctAnswer,
-}
+enum SharedLearnerFeedbackComparisonStyleV1 { strongerLine, correctAnswer }
 
 @immutable
 class SharedLearnerFeedbackExplanationV1 {
@@ -51,8 +48,8 @@ SharedLearnerFeedbackExplanationV1 buildSharedLearnerFeedbackExplanationV1({
 }) {
   final expected = _normalizeDisplayLabelV1(
     expectedLabel,
-    fallback: comparisonStyle ==
-            SharedLearnerFeedbackComparisonStyleV1.strongerLine
+    fallback:
+        comparisonStyle == SharedLearnerFeedbackComparisonStyleV1.strongerLine
         ? 'the stronger line'
         : 'the right answer',
   );
@@ -109,8 +106,7 @@ SharedLearnerFeedbackExplanationV1? tryParseSharedLearnerFeedbackExplanationV1(
 
   String? teachingText;
   if (noticeIndex >= 0) {
-    final noticeEnd =
-        nextTimeIndex >= 0 && nextTimeIndex > noticeIndex
+    final noticeEnd = nextTimeIndex >= 0 && nextTimeIndex > noticeIndex
         ? nextTimeIndex
         : trimmed.length;
     teachingText = trimmed.substring(noticeIndex + 1, noticeEnd).trim();
@@ -145,7 +141,8 @@ String _headlineTextV1({
 }) {
   switch (verdict) {
     case SharedLearnerFeedbackVerdictV1.fail:
-      if (comparisonStyle == SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
+      if (comparisonStyle ==
+          SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
         if (chosen != null) {
           return 'Better line: $expected. $chosen is weaker here.';
         }
@@ -156,7 +153,8 @@ String _headlineTextV1({
       }
       return 'Better answer: $expected.';
     case SharedLearnerFeedbackVerdictV1.softPass:
-      if (comparisonStyle == SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
+      if (comparisonStyle ==
+          SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
         if (chosen != null) {
           return '$chosen works, but $expected is the stronger line here.';
         }
@@ -168,7 +166,8 @@ String _headlineTextV1({
       return 'There is a cleaner answer here: $expected.';
     case SharedLearnerFeedbackVerdictV1.correct:
       final confirmed = chosen ?? expected;
-      if (comparisonStyle == SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
+      if (comparisonStyle ==
+          SharedLearnerFeedbackComparisonStyleV1.strongerLine) {
         return '$confirmed is the stronger line here.';
       }
       return '$confirmed is the right answer here.';
@@ -202,14 +201,21 @@ String _normalizeSentenceV1(String? source) {
   if (value.isEmpty) {
     return '';
   }
-  value = value.replaceFirst(
-    RegExp(r'^(expected|you chose|incorrect|correct|why|fix|notice|next time):\s*', caseSensitive: false),
-    '',
-  ).trim();
-  value = value.replaceFirst(
-    RegExp(r'^(incorrect|correct)\.\s*', caseSensitive: false),
-    '',
-  ).trim();
+  value = value
+      .replaceFirst(
+        RegExp(
+          r'^(expected|you chose|incorrect|correct|why|fix|notice|next time):\s*',
+          caseSensitive: false,
+        ),
+        '',
+      )
+      .trim();
+  value = value
+      .replaceFirst(
+        RegExp(r'^(incorrect|correct)\.\s*', caseSensitive: false),
+        '',
+      )
+      .trim();
   if (value.isEmpty) {
     return '';
   }

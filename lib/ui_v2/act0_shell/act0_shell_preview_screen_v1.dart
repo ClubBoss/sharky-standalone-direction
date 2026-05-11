@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/services/app_language_controller.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -109,6 +113,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunMistakeTaskIds = <String>{};
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
+  final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
   final Set<String> _lessonRunQuickFixTaskIds = <String>{};
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
@@ -116,6 +121,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _lastDailyDate = '';
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
+  String? _activeLessonWrapUpTaskId;
   Act0BlockCompletionSummaryV1? _blockCompletionSummary;
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
@@ -124,8 +130,447 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementQuestionIndex = 0;
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
+  int _placementDiagnosticScore = 0;
+  bool get _isRuLocaleV1 => Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+
+  String _copyV1({required String en, required String ru}) =>
+      _isRuLocaleV1 ? ru : en;
+
+  String _localizedLessonTitleV1(Act0LessonCardV1 lesson) =>
+      act0LocalizedLessonTitleAtomByIdV1(
+        lesson.lessonId,
+        fallback: lesson.title,
+        isRu: _isRuLocaleV1,
+      );
+
+  String _localizedLessonSubtitleV1(Act0LessonCardV1 lesson) =>
+      act0LocalizedLessonSubtitleAtomByIdV1(
+        lesson.lessonId,
+        fallback: lesson.subtitle,
+        isRu: _isRuLocaleV1,
+      );
+
+  String _localizedTaskTitleV1(Act0LessonTaskV1 task) =>
+      act0LocalizedTaskTitleAtomByIdV1(
+        task.taskId,
+        fallback: task.title,
+        isRu: _isRuLocaleV1,
+      );
+
+  String _localizedTaskSummaryV1(Act0LessonTaskV1 task) =>
+      act0LocalizedTaskSummaryAtomByIdV1(
+        task.taskId,
+        fallback: task.summary ?? task.runner.caption,
+        isRu: _isRuLocaleV1,
+      );
+
+  List<Act0PlacementQuestionV1> _localizedPlacementQuestionsV1() {
+    if (!_isRuLocaleV1) {
+      return _placementQuestionsV1;
+    }
+    return _placementQuestionsV1
+        .map(_localizePlacementQuestionV1)
+        .toList(growable: false);
+  }
+
+  Act0PlacementQuestionV1 _localizePlacementQuestionV1(
+    Act0PlacementQuestionV1 question,
+  ) {
+    return Act0PlacementQuestionV1(
+      questionId: question.questionId,
+      eyebrow: _localizedPlacementQuestionEyebrowV1(question),
+      title: _localizedPlacementQuestionTitleV1(question),
+      subtitle: _localizedPlacementQuestionSubtitleV1(question),
+      helper: _localizedPlacementQuestionHelperV1(question),
+      icon: question.icon,
+      allowsMultiple: question.allowsMultiple,
+      minSelections: question.minSelections,
+      maxSelections: question.maxSelections,
+      options: question.options
+          .map(
+            (option) => _localizePlacementOptionV1(question.questionId, option),
+          )
+          .toList(growable: false),
+    );
+  }
+
+  Act0PlacementOptionV1 _localizePlacementOptionV1(
+    String questionId,
+    Act0PlacementOptionV1 option,
+  ) {
+    return Act0PlacementOptionV1(
+      optionId: option.optionId,
+      label: _localizedPlacementOptionLabelV1(questionId, option),
+      score: option.score,
+      profileTag: _localizedPlacementProfileTagV1(option.profileTag),
+      subtitle: _localizedPlacementOptionSubtitleV1(questionId, option),
+      icon: option.icon,
+      badge: _localizedPlacementOptionBadgeV1(questionId, option),
+    );
+  }
+
+  Act0PlacementResultV1 _localizedPlacementResultV1(
+    Act0PlacementResultV1 result,
+  ) {
+    if (!_isRuLocaleV1) {
+      return result;
+    }
+    return Act0PlacementResultV1(
+      level: result.level,
+      levelLabel: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics => 'Готов к базовым решениям',
+        Act0PlacementResultLevelV1.rustyBeginner => 'Подзабывший новичок',
+        Act0PlacementResultLevelV1.newPlayer => 'Новый игрок',
+      },
+      summary: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Ты уже достаточно читаешь стол, чтобы начать с реальных решений.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'База уже есть. Теперь нужно успокоить ход раздачи, прежде чем ускоряться.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Лучший старт сейчас - спокойно собрать фундамент и почувствовать стол.',
+      },
+      reportHeadline: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics => 'Стартуем с действий',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'Сначала стабилизируем ход раздачи',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Сначала фундамент, потом решения',
+      },
+      reportBody: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Тебе уже не нужен долгий разгон. Шарки может быстрее перейти к языку действий и при этом держать структуру на виду.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'Полный ресет уже не нужен, но раздача всё ещё размывается в ключевых местах. Сначала закрепим этот ритм, потом ускоримся.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Главный пробел сейчас не в стратегии, а в спокойном понимании стола. Сначала Шарки сделает ход раздачи очевидным.',
+      },
+      coachTitle: 'Шарки говорит',
+      coachLine: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Ты готов к языку действий. Я просто не дам структуре исчезнуть, пока чтение не станет уверенным.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'У тебя уже есть база. Теперь я уберу туман в раздаче, прежде чем темп вырастет.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Пока без сложной стратегии. Сначала сделаем стол и ход раздачи спокойными и понятными.',
+      },
+      profileSummary: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Профиль: уже знаком со столом и готов к первым настоящим решениям.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'Профиль: база есть, но руке всё ещё не хватает устойчивости.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Профиль: чистый старт с понятным маршрутом без лишней спешки.',
+      },
+      diagnosticCorrect: result.diagnosticCorrect,
+      diagnosticTotal: result.diagnosticTotal,
+      profileSignals: result.profileSignals
+          .map(_localizedPlacementSignalLineV1)
+          .toList(growable: false),
+      analysisHighlights: result.analysisHighlights
+          .map(_localizedPlacementHighlightV1)
+          .toList(growable: false),
+      firstSessionPlan: result.firstSessionPlan
+          .map(_localizedPlacementPlanStepV1)
+          .toList(growable: false),
+      skillStats: result.skillStats
+          .map(
+            (stat) => Act0PlacementSkillStatV1(
+              label: _localizedPlacementSkillLabelV1(stat.label),
+              value: stat.value,
+              meaning: stat.meaning,
+              affects: stat.affects,
+              whyImportant: stat.whyImportant,
+              locked: stat.locked,
+            ),
+          )
+          .toList(growable: false),
+      strengths: result.strengths
+          .map(_localizedPlacementAtomV1)
+          .toList(growable: false),
+      weakSpots: result.weakSpots
+          .map(_localizedPlacementAtomV1)
+          .toList(growable: false),
+      recommendedLessonId: result.recommendedLessonId,
+      recommendedTaskId: result.recommendedTaskId,
+      recommendedTitle: _localizedPlacementRecommendedTitleV1(
+        result.recommendedTitle,
+      ),
+      recommendedReason: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Живой чек оказался чистым, так что можно начинать с языка действий, а не возвращаться к нулю.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'Живой чек показывает: сначала лучше успокоить движение руки, а уже потом ускоряться.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Живой чек говорит, что сначала приложению стоит объяснить сам стол, а не сразу требовать сложные решения.',
+      },
+      routeTrustLine: switch (result.level) {
+        Act0PlacementResultLevelV1.readyForBasics =>
+          'Шарки всё равно держит маршрут рядом со стартом, чтобы ни одно важное звено не потерялось.',
+        Act0PlacementResultLevelV1.rustyBeginner =>
+          'Ты пропускаешь полный ресет, но маршрут всё равно остаётся рядом с фундаментом.',
+        Act0PlacementResultLevelV1.newPlayer =>
+          'Маршрут специально стартует со стола, чтобы ничего важного не пряталось под скоростью.',
+      },
+      premiumPitch:
+          'Премиум добавит персональные фиксы, дополнительные репы и более умный недельный ритм после того, как ценность уже показана.',
+      trialValuePoints: result.trialValuePoints
+          .map(_localizedPlacementTrialPointV1)
+          .toList(growable: false),
+    );
+  }
+
+  String? _localizedPlacementQuestionEyebrowV1(
+    Act0PlacementQuestionV1 question,
+  ) {
+    return switch (question.questionId) {
+      'age' => 'Начнём с тебя',
+      'experience' => 'Точка старта',
+      'frequency' => 'Текущий ритм',
+      'format' => 'Твоя цель',
+      'confidence' => 'Где помочь сначала',
+      'goal' => 'Стиль коучинга',
+      _ => question.eyebrow,
+    };
+  }
+
+  String _localizedPlacementQuestionTitleV1(Act0PlacementQuestionV1 question) {
+    return switch (question.questionId) {
+      'age' => 'Что сейчас больше всего похоже на тебя?',
+      'experience' => 'С какой точки ты стартуешь?',
+      'frequency' => 'Как часто ты играешь?',
+      'format' => 'Для чего тебе покер?',
+      'confidence' => 'Что больше всего путает?',
+      'goal' => 'Как Шарки должен тебя вести?',
+      _ => question.title,
+    };
+  }
+
+  String _localizedPlacementQuestionSubtitleV1(
+    Act0PlacementQuestionV1 question,
+  ) {
+    return switch (question.questionId) {
+      'age' => 'Это помогает Шарки звучать как коуч, а не как форма настройки.',
+      'experience' =>
+        'Скажи честно. Это лишь влияет на то, с чего лучше начать.',
+      'frequency' =>
+        'Так Шарки понимает, нужен ли мягкий разогрев или более быстрые репы.',
+      'format' =>
+        'Это влияет на примеры, язык и первые ситуации, которые покажет Шарки.',
+      'confidence' => 'Выбери всё, что заставляет тебя тормозить или гадать.',
+      'goal' => 'Выбери стиль, который реально удержит тебя в приложении.',
+      _ => question.subtitle,
+    };
+  }
+
+  String? _localizedPlacementQuestionHelperV1(
+    Act0PlacementQuestionV1 question,
+  ) {
+    return switch (question.questionId) {
+      'age' =>
+        'Здесь нет неправильного ответа. Меняются только тон, темп и первые примеры.',
+      'experience' =>
+        'Задача не оценить тебя, а не тратить первые сессии впустую.',
+      'frequency' =>
+        'Если покер не у тебя в руках постоянно, приложение не должно притворяться, что мышечная память уже есть.',
+      'format' =>
+        'Выбери всё, что реально подходит. Шарки ищет доминирующий паттерн, а не загоняет тебя в одну дорожку.',
+      'confidence' =>
+        'Шарки использует это, чтобы подстроить первые объяснения, ревью-подсказки и ранние repair-споты.',
+      'goal' =>
+        'Выбери всё, что звучит мотивирующе. Давление должно быть правильным, а не лишним.',
+      _ => question.helper,
+    };
+  }
+
+  String _localizedPlacementOptionLabelV1(
+    String questionId,
+    Act0PlacementOptionV1 option,
+  ) {
+    return switch ('$questionId:${option.optionId}') {
+      'age:age_18_24' => 'Я совсем новый и хочу, чтобы всё было просто',
+      'age:age_25_34' =>
+        'Какие-то слова я знаю, но реальные раздачи всё ещё хаотичны',
+      'age:age_35_plus' =>
+        'Я слежу за покером, но хочу принимать более точные решения',
+      'experience:new' => 'Я пока почти не играл',
+      'experience:friends' =>
+        'Играл по-любительски, в основном угадывал с друзьями',
+      'experience:watching' =>
+        'Смотрю покерный контент, но в реальных решениях всё замирает',
+      'experience:online' =>
+        'Играл онлайн или вживую и хочу более чёткую структуру',
+      'frequency:rarely' => 'Почти никогда или ещё не играл',
+      'frequency:weekly' => 'То да, то нет: в одни недели играю, в другие нет',
+      'frequency:often' => 'Довольно регулярно',
+      'format:basics' => 'Хочу, чтобы игра наконец начала быть понятной',
+      'format:cash' => 'Хочу увереннее чувствовать себя в кэш-спотах',
+      'format:tournaments' => 'Мне важнее турнирные решения',
+      'format:home_games' => 'Не хочу теряться в домашних играх',
+      'format:content' =>
+        'Хочу, чтобы видео и разговоры о раздачах перестали звучать загадочно',
+      'confidence:rules' => 'Понимать, чей ход и как вообще движется раздача',
+      'confidence:cards' => 'Быстро читать карты, пары и силу руки',
+      'confidence:decisions' =>
+        'Понимать, когда фолдить, коллировать или рейзить, без лишних сомнений',
+      'confidence:board' => 'Видеть, что изменилось на флопе, тёрне или ривере',
+      'confidence:pressure' =>
+        'Сохранять ясность, когда начинаются ставки и давление',
+      'goal:guided' => 'Веди меня спокойно и пошагово',
+      'goal:practice' => 'Хочу учиться в основном через практику',
+      'goal:diagnose' => 'Быстро показывай, где у меня утечки',
+      'goal:daily_plan' =>
+        'Дай короткий план, которого реально можно придерживаться',
+      'goal:honest' => 'Будь прямым, когда я начинаю угадывать',
+      _ => option.label,
+    };
+  }
+
+  String? _localizedPlacementOptionSubtitleV1(
+    String questionId,
+    Act0PlacementOptionV1 option,
+  ) {
+    return switch ('$questionId:${option.optionId}') {
+      'age:age_18_24' => 'Спокойный и ясный старт, шаг за шагом.',
+      'age:age_25_34' =>
+        'Больше практических примеров и более чёткий ход раздачи.',
+      'age:age_35_plus' =>
+        'Если можно - двигаемся быстрее, но логику всё равно держим на виду.',
+      'experience:new' => 'Старт с нуля и чистая сборка языка стола.',
+      'experience:friends' =>
+        'Слова уже знакомы, но структуру ещё нужно подтянуть.',
+      'experience:watching' =>
+        'Превратим пассивное знание в рабочий навык за столом.',
+      'experience:online' =>
+        'Можем сократить часть интро и быстрее выйти к действиям.',
+      'frequency:rarely' =>
+        'Сделаем упор на базу стола и очень чистую первую раздачу.',
+      'frequency:weekly' =>
+        'Какой-то ритм уже есть, но фундамент нужно закрепить.',
+      'frequency:often' =>
+        'Можно выдержать более плотные репы и более быстрый переход к решениям.',
+      'format:basics' =>
+        'Сначала грамотность стола, а уже потом стратегия и жаргон.',
+      'format:cash' =>
+        'Больше примеров про фишки, давление и практические решения.',
+      'format:tournaments' =>
+        'Больше примеров про выживание, давление и меняющийся leverage.',
+      'format:home_games' =>
+        'Больше фокуса на ходе раздачи, уверенности и темпе стола.',
+      'format:content' =>
+        'Больше примеров, которые расшифровывают язык стола, а не подразумевают его.',
+      'confidence:rules' =>
+        'Хочется, чтобы стол, блайнды и порядок действий перестали быть туманными.',
+      'confidence:cards' =>
+        'Хочется быстрее читать силу руки и увереннее чувствовать себя на шоудауне.',
+      'confidence:decisions' =>
+        'Хочется увереннее выбирать правильное действие в правильный момент.',
+      'confidence:board' => 'Хочется, чтобы доска читалась, а не шумела.',
+      'confidence:pressure' =>
+        'Хочется спокойнее принимать решения, когда стол перестаёт быть пассивным.',
+      'goal:guided' =>
+        'Сначала короткие объяснения, потом мягкая практика, которая действительно укладывается.',
+      'goal:practice' =>
+        'Меньше разговоров, больше повторов, когда концепт уже виден.',
+      'goal:diagnose' => 'Быстро поднимай слабые места и держи repair рядом.',
+      'goal:daily_plan' =>
+        'Компактный привычечный ритм с одним ясным следующим шагом каждый день.',
+      'goal:honest' => 'Больше ясности и острее feedback, но без жёсткости.',
+      _ => option.subtitle,
+    };
+  }
+
+  String? _localizedPlacementOptionBadgeV1(
+    String questionId,
+    Act0PlacementOptionV1 option,
+  ) {
+    return switch ('$questionId:${option.optionId}') {
+      'age:age_18_24' => 'Лучший первый старт',
+      'experience:new' => 'Лучше всего для нуля',
+      'experience:online' => 'Более быстрый старт',
+      'format:basics' => 'Основа',
+      'confidence:rules' => 'Фундамент',
+      'goal:guided' => 'Спокойный старт',
+      _ => option.badge,
+    };
+  }
+
+  String _localizedPlacementProfileTagV1(String profileTag) {
+    return switch (profileTag) {
+      'NewSimple' => 'НовыйСтарт',
+      'KnowsSome' => 'ЧтоТоЗнает',
+      'SharperDecisions' => 'ТочнееРешения',
+      'New' => 'Новый',
+      'Casual' => 'Любитель',
+      'Watching' => 'Смотрит',
+      'Played' => 'Играл',
+      'Rarely' => 'Редко',
+      'Weekly' => 'Иногда',
+      'Frequent' => 'Часто',
+      'Basics' => 'База',
+      'Cash' => 'Кэш',
+      'Tournament' => 'Турниры',
+      'HomeGames' => 'ДомашниеИгры',
+      'Content' => 'Контент',
+      'Rules' => 'Правила',
+      'Cards' => 'Карты',
+      'Decisions' => 'Решения',
+      'Board' => 'Борд',
+      'Pressure' => 'Давление',
+      'Guided' => 'Спокойно',
+      'Practice' => 'Практика',
+      'Diagnostic' => 'Диагностика',
+      'DailyPlan' => 'ДневнойПлан',
+      'Direct' => 'Прямо',
+      _ => profileTag,
+    };
+  }
+
+  String _localizedPlacementSignalLineV1(String line) =>
+      _localizedPlacementAtomV1(line);
+  String _localizedPlacementHighlightV1(String line) =>
+      _localizedPlacementAtomV1(line);
+  String _localizedPlacementPlanStepV1(String line) =>
+      _localizedPlacementAtomV1(line);
+  String _localizedPlacementTrialPointV1(String line) =>
+      _localizedPlacementAtomV1(line);
+  String _localizedPlacementRecommendedTitleV1(String title) =>
+      act0LocalizedLessonTitleAtomV1(title, isRu: true);
+  String _localizedPlacementSkillLabelV1(String label) =>
+      _localizedPlacementAtomV1(label);
+
+  String _localizedPlacementAtomV1(String value) {
+    return switch (value) {
+      'Table read' => 'Чтение стола',
+      'Board read' => 'Чтение борда',
+      'Action order' => 'Порядок действий',
+      'Position pressure' => 'Давление позиции',
+      'Fresh start' => 'Чистый старт',
+      'Clear path' => 'Понятный маршрут',
+      'Motivation' => 'Мотивация',
+      'Some table language' => 'Немного языка стола',
+      'Experience' => 'Опыт',
+      'Decision comfort' => 'Комфорт в решениях',
+      'Table' => 'Стол',
+      'Pot' => 'Банк',
+      'Blinds' => 'Блайнды',
+      'Streets' => 'Улицы',
+      'Actions' => 'Действия',
+      'Positions' => 'Позиции',
+      'Hand flow' => 'Ход раздачи',
+      'Action decisions' => 'Решения по действиям',
+      'Board tracking' => 'Чтение борда',
+      'Pressure control' => 'Контроль давления',
+      _ => value,
+    };
+  }
+
   bool _placementHandoffActive = false;
   final Map<String, Set<String>> _placementAnswerIds = <String, Set<String>>{};
+  final Set<String> _placementDiagnosticHitSignals = <String>{};
+  final Set<String> _placementDiagnosticMissSignals = <String>{};
   final Map<String, int> _profileSkillValues = <String, int>{};
   final List<Act0SkillGainV1> _recentSkillGains = <Act0SkillGainV1>[];
   Act0PlacementResultV1? _placementResult;
@@ -199,12 +644,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _teachingStepIndex = 0;
         _resetLessonRunMetrics();
       }
-      // Phase 1: collapse previous expanded block before scrolling to target.
-      _learnDetailLessonId = null;
+      _learnDetailLessonId = lessonId;
       _learnDetailWorldId = null;
-      _learnPendingAutoOpenLessonIdV1 = lessonId;
+      _learnPendingAutoOpenLessonIdV1 = null;
     });
-    return true;
+    return false;
   }
 
   void _handleLearnLessonOpenAfterScrollV1(String lessonId) {
@@ -212,7 +656,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     setState(() {
-      // Phase 2: open only after child reports scroll settled at target.
       _learnDetailLessonId = lessonId;
       _learnPendingAutoOpenLessonIdV1 = null;
     });
@@ -506,8 +949,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _placementQuestionIndex = 0;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
+      _placementDiagnosticScore = 0;
       _placementHandoffActive = false;
       _placementAnswerIds.clear();
+      _placementDiagnosticHitSignals.clear();
+      _placementDiagnosticMissSignals.clear();
       _profileSkillValues.clear();
       _recentSkillGains.clear();
       _placementResult = null;
@@ -523,6 +969,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _placementTrialPreviewSelected = false;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
+      _placementDiagnosticScore = 0;
+      _placementDiagnosticHitSignals.clear();
+      _placementDiagnosticMissSignals.clear();
       _tab = Act0ShellTabV1.learn;
       _showPlayHub = true;
       _returnToPlayHubOnBack = false;
@@ -541,8 +990,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _placementQuestionIndex = 0;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
+      _placementDiagnosticScore = 0;
       _placementHandoffActive = false;
       _placementAnswerIds.clear();
+      _placementDiagnosticHitSignals.clear();
+      _placementDiagnosticMissSignals.clear();
       _profileSkillValues.clear();
       _recentSkillGains.clear();
       _placementResult = null;
@@ -629,16 +1081,81 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       context: context,
       backgroundColor: Act0ShellTokensV1.surface,
       builder: (context) {
+        final languageController = Provider.of<AppLanguageController?>(
+          context,
+          listen: false,
+        );
+        final currentLanguageCode = languageController?.languageCode;
         return SafeArea(
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (languageController != null) ...[
+                  ListTile(
+                    leading: const Icon(Icons.language_rounded),
+                    title: Text(
+                      _copyV1(en: 'Preview language', ru: 'Язык предпросмотра'),
+                    ),
+                    subtitle: Text(
+                      currentLanguageCode == 'ru'
+                          ? 'Русский'
+                          : AppLanguageController.getLanguageName(
+                              currentLanguageCode ?? 'en',
+                            ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton.tonal(
+                            key: const Key('act0_shell_dev_menu_lang_ru'),
+                            onPressed: currentLanguageCode == 'ru'
+                                ? null
+                                : () async {
+                                    await languageController.setLanguage('ru');
+                                    if (!context.mounted) return;
+                                    Navigator.of(context).pop();
+                                  },
+                            child: const Text('Русский'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton.tonal(
+                            key: const Key('act0_shell_dev_menu_lang_en'),
+                            onPressed: currentLanguageCode == 'en'
+                                ? null
+                                : () async {
+                                    await languageController.setLanguage('en');
+                                    if (!context.mounted) return;
+                                    Navigator.of(context).pop();
+                                  },
+                            child: const Text('English'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                ],
                 ListTile(
                   key: const Key('act0_shell_dev_menu_reset_progress'),
                   leading: const Icon(Icons.restart_alt_rounded),
-                  title: const Text('Reset app progress'),
-                  subtitle: const Text('Clear app prefs and return to Today.'),
+                  title: Text(
+                    _copyV1(
+                      en: 'Reset app progress',
+                      ru: 'Сбросить прогресс приложения',
+                    ),
+                  ),
+                  subtitle: Text(
+                    _copyV1(
+                      en: 'Clear app prefs and return to Today.',
+                      ru: 'Очистить настройки приложения и вернуться на главный экран.',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _handleResetAppProgress();
@@ -647,9 +1164,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_placement'),
                   leading: const Icon(Icons.flag_outlined),
-                  title: const Text('Open placement'),
-                  subtitle: const Text(
-                    'Jump into the placement flow manually.',
+                  title: Text(
+                    _copyV1(en: 'Open placement', ru: 'Открыть плейсмент'),
+                  ),
+                  subtitle: Text(
+                    _copyV1(
+                      en: 'Jump into the placement flow manually.',
+                      ru: 'Войти в поток плейсмента вручную.',
+                    ),
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -660,7 +1182,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_home'),
                   leading: const Icon(Icons.home_outlined),
-                  title: const Text('Open Today'),
+                  title: Text(
+                    _copyV1(en: 'Open Today', ru: 'Открыть главный экран'),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevSurface(tab: Act0ShellTabV1.home);
@@ -669,8 +1193,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_map'),
                   leading: const Icon(Icons.map_outlined),
-                  title: const Text('Open Learn map'),
-                  subtitle: const Text('Jump to Learn and skip placement.'),
+                  title: Text(
+                    _copyV1(en: 'Open Learn map', ru: 'Открыть карту обучения'),
+                  ),
+                  subtitle: Text(
+                    _copyV1(
+                      en: 'Jump to Learn and skip placement.',
+                      ru: 'Перейти в обучение и пропустить плейсмент.',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevMapSkippingPlacement();
@@ -679,7 +1210,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_play_hub'),
                   leading: const Icon(Icons.sports_esports_outlined),
-                  title: const Text('Open Play hub'),
+                  title: Text(
+                    _copyV1(en: 'Open Play hub', ru: 'Открыть хаб практики'),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevSurface(
@@ -691,7 +1224,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_runner'),
                   leading: const Icon(Icons.play_circle_outline_rounded),
-                  title: const Text('Open current runner'),
+                  title: Text(
+                    _copyV1(
+                      en: 'Open current runner',
+                      ru: 'Открыть текущий раннер',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevSurface(
@@ -703,7 +1241,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_review'),
                   leading: const Icon(Icons.fact_check_outlined),
-                  title: const Text('Open Review'),
+                  title: Text(_copyV1(en: 'Open Review', ru: 'Открыть разбор')),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevSurface(tab: Act0ShellTabV1.review);
@@ -712,7 +1250,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ListTile(
                   key: const Key('act0_shell_dev_menu_open_profile'),
                   leading: const Icon(Icons.person_outline_rounded),
-                  title: const Text('Open Profile'),
+                  title: Text(
+                    _copyV1(en: 'Open Profile', ru: 'Открыть профиль'),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     _openDevSurface(tab: Act0ShellTabV1.profile);
@@ -723,6 +1263,74 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _openPremiumPreviewSheet({
+    required String eyebrow,
+    required String title,
+    required String summary,
+    required List<String> valuePoints,
+    required String trustLine,
+    String? footerLine,
+  }) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Act0PremiumPreviewSheetV1(
+        eyebrow: eyebrow,
+        title: title,
+        summary: summary,
+        valuePoints: valuePoints,
+        trustLine: trustLine,
+        footerLine: footerLine,
+      ),
+    );
+  }
+
+  void _previewPlacementTrial() {
+    final result = _placementResult;
+    setState(() {
+      _placementTrialPreviewSelected = true;
+    });
+    if (result == null) {
+      return;
+    }
+    unawaited(
+      _openPremiumPreviewSheet(
+        eyebrow: 'Premium preview',
+        title: 'See the guided week before you ever upgrade.',
+        summary: result.premiumPitch,
+        valuePoints: result.trialValuePoints,
+        trustLine:
+            'The free route stays intact. Premium only expands the work after Sharky has already shown value.',
+        footerLine:
+            'Nothing here replaces the core path. It only adds sharper follow-up after real reps.',
+      ),
+    );
+  }
+
+  void _previewLockedWorldPremium(Act0WorldCardV1 world) {
+    final worldTitle = act0LocalizedWorldTitleV1(context, world);
+    final worldSubtitle = act0LocalizedWorldSubtitleV1(context, world);
+    final valuePoints = <String>[
+      'Extra drills tied to the exact spots that broke before this world.',
+      'A calmer seven-day rhythm once $worldTitle opens.',
+      'Progress signals that show what this world is really adding to your game.',
+    ];
+    unawaited(
+      _openPremiumPreviewSheet(
+        eyebrow: 'Premium preview',
+        title: '$worldTitle gets deeper, not louder.',
+        summary:
+            '$worldSubtitle Premium adds extra reps and follow-up around this world once the free route unlocks it naturally.',
+        valuePoints: valuePoints,
+        trustLine:
+            '${world.unlockLabel} The route still opens in order, so nothing important gets skipped.',
+        footerLine:
+            'This is a preview, not a gate. Free progression still owns the main path.',
+      ),
     );
   }
 
@@ -747,8 +1355,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playRunner = isPlayRunner
         ? _repairRunnerForTask(playSelectedTask!).copyWith(
             lessonId: selectedLesson.lessonId,
-            lessonTitle: selectedLesson.title,
-            lessonSubtitle: selectedLesson.subtitle,
+            lessonTitle: _localizedLessonTitleV1(selectedLesson),
+            lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
             beatIndex: _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
             beatCount: selectedLesson.taskList.length,
             phase: _phase,
@@ -795,11 +1403,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             Expanded(
               child: _showPlacement && !_placementDiagnosticActive
                   ? Act0PlacementShellV1(
-                      questions: _placementQuestionsV1,
+                      questions: _localizedPlacementQuestionsV1(),
                       showIntro: _placementIntroVisible,
                       currentQuestionIndex: _placementQuestionIndex,
                       selectedOptionIds: _placementAnswerIds,
-                      result: _placementResult,
+                      result: _placementResult == null
+                          ? null
+                          : _localizedPlacementResultV1(_placementResult!),
                       trialPreviewSelected: _placementTrialPreviewSelected,
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
@@ -837,9 +1447,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           fromZero: true,
                         );
                       }),
-                      onStartTrialPreview: () => setState(() {
-                        _placementTrialPreviewSelected = true;
-                      }),
+                      onStartTrialPreview: _previewPlacementTrial,
                     )
                   : switch (_tab) {
                       Act0ShellTabV1.home => Act0HomeShellV1(
@@ -858,32 +1466,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        handoffLabel: _homeHandoffLabel(
+                        repairLabel: _homeRepairLabel(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        handoffHeadline: _homeHandoffHeadline(
+                        repairHeadline: _homeRepairHeadline(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        handoffDetail: _homeHandoffDetail(
+                        repairDetail: _homeRepairDetail(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        handoffOutcome: _homeHandoffOutcome(
+                        repairOutcome: _homeRepairOutcome(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        handoffPills: _homeHandoffPills(
+                        repairCtaLabel: _homeRepairCtaLabel(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        showHandoffPanel: _homeHandoffVisible(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        onDismissHandoff: () => setState(() {
-                          _dismissHomeHandoff(
+                        showRepairPanel: true,
+                        onStartRepair: () => setState(() {
+                          _startHomeRepairAction(
                             selectedWorld,
                             _firstPlayableLesson(selectedWorld),
                           );
@@ -897,27 +1502,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         onOpenDevMenu: _openDevMenu,
                         onStartDailyDrill: _dailyCompletedTaskIds.length < 3
                             ? () => setState(() {
-                                final recommendation = _learningRecommendation(
-                                  selectedWorld: selectedWorld,
-                                  selectedLesson: _firstPlayableLesson(
-                                    selectedWorld,
-                                  ),
-                                );
-                                final shouldRepairFirst =
-                                    recommendation.kind ==
-                                        _Act0LearningNextActionKindV1
-                                            .repairDeepLeak ||
-                                    recommendation.kind ==
-                                        _Act0LearningNextActionKindV1
-                                            .repairWeakSpot;
-                                if (shouldRepairFirst) {
-                                  _startRecommendation(
-                                    recommendation,
-                                    selectedWorld,
-                                    returnToPlayHub: false,
-                                  );
-                                  return;
-                                }
                                 final world = _worldById(
                                   _progressedWorlds(
                                     widget.state ?? Act0ShellStateV1.sample,
@@ -991,6 +1575,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               _learnDetailWorldId = null;
                               _learnDetailLessonId = null;
                               _learnPopupTaskId = null;
+                              _learnPendingAutoOpenLessonIdV1 = null;
                               if (world.lessons.isNotEmpty &&
                                   !world.lessons.any(
                                     (lesson) =>
@@ -1006,6 +1591,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             } else {
                               _learnDetailWorldId = worldId;
                               _learnDetailLessonId = null;
+                              _learnPendingAutoOpenLessonIdV1 = null;
                             }
                           });
                         },
@@ -1013,6 +1599,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _showWorldMenu = true;
                           _learnDetailLessonId = null;
                           _learnPopupTaskId = null;
+                          _learnPendingAutoOpenLessonIdV1 = null;
                         }),
                         onCloseWorldMenu: () => setState(() {
                           _showWorldMenu = false;
@@ -1023,6 +1610,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _learnDetailWorldId = null;
                           _learnPopupTaskId = null;
                         }),
+                        onPreviewPremiumWorld: _previewLockedWorldPremium,
                         onSelectLesson: (lessonId) {
                           final lesson = selectedWorld.lessons
                               .cast<Act0LessonCardV1?>()
@@ -1223,6 +1811,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               )
                             : Act0LessonRunnerShellV1(
                                 runner: playRunner!,
+                                selectedTaskId: playSelectedTask?.taskId,
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
                                 tableVisualVariant: widget.tableVisualVariant,
@@ -1239,6 +1828,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _showPlayHub = true;
                                     _placementDiagnosticIndex = 0;
                                     _placementDiagnosticCorrect = 0;
+                                    _placementDiagnosticScore = 0;
+                                    _placementDiagnosticHitSignals.clear();
+                                    _placementDiagnosticMissSignals.clear();
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -1285,6 +1877,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     return;
                                   }
                                   _completeCurrentTask(playSelectedTask);
+                                  if (_maybeStartLessonWrapUpRetry(
+                                    selectedLesson,
+                                  )) {
+                                    return;
+                                  }
                                   if (_maybeShowBlockCompletionSummary(
                                     selectedWorld: selectedWorld,
                                     selectedLesson: selectedLesson,
@@ -1330,9 +1927,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                                 onContinueReview: () => setState(() {
                                   if (_placementDiagnosticActive) {
+                                    final spot = _placementDiagnosticSpotsV1
+                                        .elementAt(_placementDiagnosticIndex);
                                     if (playRunner.selectedOption?.isCorrect ??
                                         false) {
                                       _placementDiagnosticCorrect += 1;
+                                      _placementDiagnosticScore += 1;
+                                      _placementDiagnosticHitSignals.add(
+                                        spot.signalId,
+                                      );
+                                    } else {
+                                      _placementDiagnosticMissSignals.add(
+                                        spot.signalId,
+                                      );
                                     }
                                     if (_startNextPlacementDiagnostic(
                                       _progressWorlds(baseState),
@@ -1368,6 +1975,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _teachingStepIndex = 0;
                                     return;
                                   }
+                                  if (_activeLessonWrapUpTaskId ==
+                                      playSelectedTask.taskId) {
+                                    final wrappedCorrect =
+                                        playRunner.selectedOption?.isCorrect ??
+                                        false;
+                                    if (wrappedCorrect) {
+                                      _completeCurrentTask(playSelectedTask);
+                                    }
+                                    _lessonRunWrapUpCompletedTaskIds.add(
+                                      playSelectedTask.taskId,
+                                    );
+                                    _activeLessonWrapUpTaskId = null;
+                                    _selectedOptionId = null;
+                                    _phase = Act0LessonPhaseV1.theory;
+                                    _teachingStepIndex = 0;
+                                    if (_maybeStartLessonWrapUpRetry(
+                                      selectedLesson,
+                                    )) {
+                                      return;
+                                    }
+                                    if (_maybeShowBlockCompletionSummary(
+                                      selectedWorld: selectedWorld,
+                                      selectedLesson: selectedLesson,
+                                      selectedTask: playSelectedTask,
+                                    )) {
+                                      return;
+                                    }
+                                    _advanceAfterTask(
+                                      selectedWorld,
+                                      selectedLesson,
+                                    );
+                                    return;
+                                  }
                                   if (_shouldRetryInsideLesson(
                                     playSelectedTask,
                                     playRunner,
@@ -1379,6 +2019,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     return;
                                   }
                                   _completeCurrentTask(playSelectedTask);
+                                  if (_maybeStartLessonWrapUpRetry(
+                                    selectedLesson,
+                                  )) {
+                                    return;
+                                  }
                                   if (_maybeShowBlockCompletionSummary(
                                     selectedWorld: selectedWorld,
                                     selectedLesson: selectedLesson,
@@ -1523,8 +2168,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return <Act0PracticeGroupV1>[
       Act0PracticeGroupV1(
         groupId: 'continue',
-        title: 'Continue lesson',
-        subtitle: '${selectedLesson.title}: ${currentTask.title}',
+        title: _copyV1(en: 'Continue lesson', ru: 'Продолжить урок'),
+        subtitle:
+            '${_localizedLessonTitleV1(selectedLesson)}: ${_localizedTaskTitleV1(currentTask)}',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.continueLesson,
         ),
@@ -1552,7 +2198,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ),
       Act0PracticeGroupV1(
         groupId: 'weak_spots',
-        title: weakSpot?.title ?? quickFix?.title ?? 'Fix weak spots',
+        title:
+            weakSpot?.title ??
+            quickFix?.title ??
+            _copyV1(en: 'Fix weak spots', ru: 'Исправь слабые споты'),
         subtitle: weakSpot == null && quickFix == null
             ? 'Mistakes you make will appear here.'
             : weakSpot?.reason ??
@@ -1578,8 +2227,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       Act0PracticeGroupV1(
         groupId: 'daily',
         title: _dailyCompletedTaskIds.length >= 3
-            ? 'Daily set complete'
-            : 'Quick daily drill',
+            ? _copyV1(en: 'Daily set complete', ru: 'Дневная серия закрыта')
+            : _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
         subtitle: _dailyCompletedTaskIds.length >= 3
             ? 'Nice. Keep going or repair weak spots next.'
             : dailyDeckEntry.isSpaced
@@ -1761,20 +2410,42 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         kind: isDeep
             ? _Act0LearningNextActionKindV1.repairDeepLeak
             : _Act0LearningNextActionKindV1.repairWeakSpot,
-        label: isDeep ? 'Deep leak' : 'Needs review',
-        title: isDeep ? 'Fix a deep leak' : 'Repair one weak spot',
+        label: isDeep
+            ? _copyV1(en: 'Deep leak', ru: 'Глубокая утечка')
+            : _copyV1(en: 'Needs work', ru: 'Нужно подтянуть'),
+        title: isDeep
+            ? _copyV1(en: 'Fix a deep leak', ru: 'Исправь глубокую утечку')
+            : _copyV1(
+                en: 'Repair one weak spot',
+                ru: 'Почини один слабый спот',
+              ),
         subtitle: isDeep
-            ? 'This spot missed twice. Repair it before moving on.'
-            : 'Fix this mistake before it becomes a habit.',
+            ? _copyV1(
+                en: 'This spot missed twice. Repair it before moving on.',
+                ru: 'Этот спот сломался дважды. Почини его перед тем как идти дальше.',
+              )
+            : _copyV1(
+                en: 'Fix this mistake before it becomes a habit.',
+                ru: 'Исправь эту ошибку, пока она не стала привычкой.',
+              ),
         ctaLabel: _recommendationCtaLabel(
           isDeep
               ? _Act0LearningNextActionKindV1.repairDeepLeak
               : _Act0LearningNextActionKindV1.repairWeakSpot,
         ),
-        hint: 'Next route: repair this spot now.',
+        hint: _copyV1(
+          en: 'Repair this spot now.',
+          ru: 'Исправь этот спот сейчас.',
+        ),
         outcome: isDeep
-            ? 'Deep leak first: repair ${_playDrillTitleForLesson(topMistake.lessonId)}.'
-            : 'On repair: return to ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+            ? _copyV1(
+                en: 'Deep leak first: repair ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+                ru: 'Сначала глубокая утечка: почини ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+              )
+            : _copyV1(
+                en: 'On repair: return to ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+                ru: 'После фикса вернись к ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+              ),
         mistake: topMistake,
         lessonId: topMistake.lessonId,
         taskId: topMistake.taskId,
@@ -1788,15 +2459,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (quickFix != null) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.reviewQuickFix,
-        label: 'Quick fix',
-        title: 'Review a quick fix',
-        subtitle: 'You repaired this once. One light review keeps it stable.',
+        label: _copyV1(en: 'Quick fix', ru: 'Быстрый фикс'),
+        title: _copyV1(en: 'Review a quick fix', ru: 'Повтори быстрый фикс'),
+        subtitle: _copyV1(
+          en: 'You repaired this once. One light review keeps it stable.',
+          ru: 'Ты уже чинил это один раз. Один лёгкий повтор закрепит спот.',
+        ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.reviewQuickFix,
         ),
-        hint: 'Next route: light review in Review.',
-        outcome:
-            'Light review: keep ${_playDrillTitleForLesson(quickFix.lessonId)} warm.',
+        hint: _copyV1(
+          en: 'Light review in Review.',
+          ru: 'Лёгкий повтор во вкладке Разбор.',
+        ),
+        outcome: _copyV1(
+          en: 'Light review: keep ${_playDrillTitleForLesson(quickFix.lessonId)} warm.',
+          ru: 'Лёгкий повтор: держи ${_playDrillTitleForLesson(quickFix.lessonId)} в тонусе.',
+        ),
         mistake: quickFix,
         lessonId: quickFix.lessonId,
         taskId: quickFix.taskId,
@@ -1810,18 +2489,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final streakSaved = _streakSaveEarned();
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
-        label: streakSaved ? 'Streak saved' : 'Done for today',
-        title: streakSaved ? 'Streak saved today' : 'Great session',
+        label: streakSaved
+            ? _copyV1(en: 'Streak saved', ru: 'Стрик сохранён')
+            : _copyV1(en: 'Done for today', ru: 'На сегодня всё'),
+        title: streakSaved
+            ? _copyV1(en: 'Streak saved today', ru: 'Сегодня стрик сохранён')
+            : _copyV1(en: 'Great session', ru: 'Сильная сессия'),
         subtitle: streakSaved
-            ? 'You protected momentum by repairing and finishing the daily set.'
-            : 'Come back tomorrow to keep the streak going.',
+            ? _copyV1(
+                en: 'You protected momentum by repairing and finishing the daily set.',
+                ru: 'Ты сохранил ритм: сначала починил ошибки, потом закрыл дневную серию.',
+              )
+            : _copyV1(
+                en: 'Come back tomorrow to keep the streak going.',
+                ru: 'Возвращайся завтра, чтобы продолжить стрик.',
+              ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
         ),
         hint: '',
         outcome: streakSaved
-            ? 'Momentum protected. One clean daily tomorrow extends it.'
-            : 'Streak active. Same time tomorrow locks it in.',
+            ? _copyV1(
+                en: 'Momentum protected. One clean daily tomorrow extends it.',
+                ru: 'Ритм сохранён. Один чистый дневной сет завтра его продлит.',
+              )
+            : _copyV1(
+                en: 'Streak active. Same time tomorrow locks it in.',
+                ru: 'Стрик активен. Возвращение завтра закрепит его.',
+              ),
         lessonId: selectedLesson.lessonId,
         taskId: null,
         practiceGroupId: 'daily',
@@ -1832,18 +2527,27 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.continueLesson,
         label: _cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
-            ? 'Start here'
-            : 'Continue',
-        title: selectedLesson.title,
-        subtitle: selectedLesson.subtitle,
+            ? _copyV1(en: 'Start here', ru: 'Начни здесь')
+            : _copyV1(en: 'Continue', ru: 'Продолжить'),
+        title: _localizedLessonTitleV1(selectedLesson),
+        subtitle: _localizedLessonSubtitleV1(selectedLesson),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.continueLesson,
         ),
-        hint: 'Next route: continue this lesson now.',
+        hint: _copyV1(
+          en: 'Continue this lesson now.',
+          ru: 'Продолжи этот урок сейчас.',
+        ),
         outcome:
             _nextLesson(selectedWorld.lessons, selectedLesson.lessonId) == null
-            ? 'On return: keep the clean pass moving.'
-            : 'On return: ${_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title} stays next to unlock.',
+            ? _copyV1(
+                en: 'On return: keep the clean pass moving.',
+                ru: 'Когда вернёшься, просто продолжай чистый проход.',
+              )
+            : _copyV1(
+                en: 'On return: ${_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title} stays next to unlock.',
+                ru: 'Когда вернёшься, следующим для открытия останется ${act0LocalizedLessonTitleAtomByIdV1(_nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.lessonId, fallback: _nextLesson(selectedWorld.lessons, selectedLesson.lessonId)!.title, isRu: _isRuLocaleV1)}.',
+              ),
         lessonId: selectedLesson.lessonId,
         taskId: currentTask.taskId,
         practiceGroupId: 'continue',
@@ -1853,14 +2557,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_dailyCompletedTaskIds.length < 3) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDrill,
-        label: 'Daily set',
-        title: 'Quick daily drill',
-        subtitle: 'Run three short spots to keep today clean.',
+        label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
+        title: _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
+        subtitle: _copyV1(
+          en: 'Run three short spots to keep today clean.',
+          ru: 'Пройди три коротких спота, чтобы день остался чистым.',
+        ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDrill,
         ),
-        hint: 'Next route: quick daily drill in Play.',
-        outcome: 'Daily set: 3 crisp reps, no extra noise.',
+        hint: _copyV1(
+          en: 'Quick daily drill in Play.',
+          ru: 'Быстрый дневной дрилл во вкладке Практика.',
+        ),
+        outcome: _copyV1(
+          en: 'Daily set: 3 crisp reps, no extra noise.',
+          ru: 'Дневная серия: 3 чётких повтора без лишнего шума.',
+        ),
         lessonId: selectedLesson.lessonId,
         taskId: _preferredPracticeTask(
           selectedLesson,
@@ -1898,14 +2611,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     return _Act0LearningRecommendationV1(
       kind: _Act0LearningNextActionKindV1.categoryPractice,
-      label: 'Keep going',
-      title: 'Actions',
-      subtitle: 'Lock in one core action pattern.',
+      label: _copyV1(en: 'Keep going', ru: 'Продолжай'),
+      title: _copyV1(en: 'Actions', ru: 'Действия'),
+      subtitle: _copyV1(
+        en: 'Lock in one core action pattern.',
+        ru: 'Закрепи один базовый паттерн действий.',
+      ),
       ctaLabel: _recommendationCtaLabel(
         _Act0LearningNextActionKindV1.categoryPractice,
       ),
-      hint: 'Next route: category practice in Play.',
-      outcome: 'Category practice: keep your strongest reads warm.',
+      hint: _copyV1(
+        en: 'Category practice in Play.',
+        ru: 'Практика по категории во вкладке Практика.',
+      ),
+      outcome: _copyV1(
+        en: 'Category practice: keep your strongest reads warm.',
+        ru: 'Практика по категории: держи сильные чтения в тонусе.',
+      ),
       lessonId: actionsLesson.lessonId,
       taskId: _preferredPracticeTask(actionsLesson, preferDrill: true)?.taskId,
       practiceGroupId: 'actions',
@@ -1914,19 +2636,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _recommendationCtaLabel(_Act0LearningNextActionKindV1 kind) {
     return switch (kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak => 'Fix this now',
-      _Act0LearningNextActionKindV1.repairWeakSpot => 'Fix this now',
-      _Act0LearningNextActionKindV1.reviewQuickFix => 'Review now',
-      _Act0LearningNextActionKindV1.continueLesson => 'Continue',
-      _Act0LearningNextActionKindV1.dailyDrill => 'Start daily set',
-      _Act0LearningNextActionKindV1.dailyDone => 'View progress',
-      _Act0LearningNextActionKindV1.categoryPractice => 'Practice',
+      _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
+        en: 'Fix this now',
+        ru: 'Исправить сейчас',
+      ),
+      _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
+        en: 'Fix this now',
+        ru: 'Исправить сейчас',
+      ),
+      _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
+        en: 'Review now',
+        ru: 'Повторить сейчас',
+      ),
+      _Act0LearningNextActionKindV1.continueLesson => _copyV1(
+        en: 'Continue',
+        ru: 'Продолжить',
+      ),
+      _Act0LearningNextActionKindV1.dailyDrill => _copyV1(
+        en: 'Start daily set',
+        ru: 'Начать дневную серию',
+      ),
+      _Act0LearningNextActionKindV1.dailyDone => _copyV1(
+        en: 'View progress',
+        ru: 'Смотреть прогресс',
+      ),
+      _Act0LearningNextActionKindV1.categoryPractice => _copyV1(
+        en: 'Practice',
+        ru: 'Практика',
+      ),
     };
   }
 
   String _homeNextActionLabel() {
     if (_placementHandoffActive) {
-      return 'First guided start';
+      return _copyV1(en: 'First guided start', ru: 'Первый guided-старт');
     }
     final state = widget.state ?? Act0ShellStateV1.sample;
     final selectedWorld = _worldById(
@@ -1937,7 +2680,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld.lessons,
       _selectedLessonId,
     );
-    return _learningRecommendation(
+    return _homePrimaryRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
     ).label;
@@ -1949,7 +2692,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _progressedWorlds(state),
       _selectedWorldId,
     );
-    return _learningRecommendation(
+    return _homePrimaryRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     ).title;
@@ -1961,7 +2704,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _progressedWorlds(state),
       _selectedWorldId,
     );
-    return _learningRecommendation(
+    return _homePrimaryRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     ).subtitle;
@@ -1969,7 +2712,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _homeNextActionCtaLabel() {
     if (_placementHandoffActive) {
-      return 'Start first rep';
+      return _copyV1(en: 'Start first rep', ru: 'Начать первый реп');
     }
     final state = widget.state ?? Act0ShellStateV1.sample;
     final selectedWorld = _worldById(
@@ -1980,7 +2723,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld.lessons,
       _selectedLessonId,
     );
-    return _learningRecommendation(
+    return _homePrimaryRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
     ).ctaLabel;
@@ -1991,251 +2734,226 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return 'One tap opens the first guided rep chosen from your placement result.';
+      return _copyV1(
+        en: 'One tap opens the first guided rep chosen from your placement result.',
+        ru: 'Одно нажатие откроет первый guided-реп, выбранный по результату плейсмента.',
+      );
     }
-    final hint = _learningRecommendation(
+    final hint = _homePrimaryRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     ).hint;
     return hint.isEmpty ? null : hint;
   }
 
-  String _homeHandoffLabel(
+  _Act0LearningRecommendationV1 _homePrimaryRecommendation({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonCardV1 selectedLesson,
+  }) {
+    final currentTask = _firstIncompleteTask(selectedLesson);
+    final nextLesson = _nextLesson(
+      selectedWorld.lessons,
+      selectedLesson.lessonId,
+    );
+    return _Act0LearningRecommendationV1(
+      kind: _Act0LearningNextActionKindV1.continueLesson,
+      label: _cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
+          ? _copyV1(en: 'Start here', ru: 'Начни здесь')
+          : _copyV1(en: 'Continue', ru: 'Продолжить'),
+      title: _localizedLessonTitleV1(selectedLesson),
+      subtitle: _localizedLessonSubtitleV1(selectedLesson),
+      ctaLabel: _copyV1(en: 'Continue', ru: 'Продолжить'),
+      hint: _copyV1(
+        en: 'Continue this lesson now.',
+        ru: 'Продолжи этот урок сейчас.',
+      ),
+      outcome: nextLesson == null
+          ? _copyV1(
+              en: 'On return: keep the clean pass moving.',
+              ru: 'Когда вернёшься, просто продолжай чистый проход.',
+            )
+          : _copyV1(
+              en: 'On return: ${nextLesson.title} stays next to unlock.',
+              ru: 'Когда вернёшься, следующим для открытия останется ${nextLesson.title}.',
+            ),
+      lessonId: selectedLesson.lessonId,
+      taskId: currentTask.taskId,
+      practiceGroupId: 'continue',
+    );
+  }
+
+  String _homeRepairLabel(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return 'First route';
+      return _copyV1(en: 'Review', ru: 'Разбор');
     }
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     );
     return switch (recommendation.kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak => 'Repair first',
-      _Act0LearningNextActionKindV1.repairWeakSpot => 'Repair first',
-      _Act0LearningNextActionKindV1.reviewQuickFix => 'Quick review',
-      _Act0LearningNextActionKindV1.dailyDrill => 'Daily reps',
-      _Act0LearningNextActionKindV1.categoryPractice => 'Practice focus',
-      _Act0LearningNextActionKindV1.continueLesson => 'Best next action',
-      _Act0LearningNextActionKindV1.dailyDone =>
-        _streakSaveEarned() ? 'Streak saved' : 'Great session',
+      _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
+        en: 'Fix next',
+        ru: 'Исправь следующим',
+      ),
+      _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
+        en: 'Fix next',
+        ru: 'Исправь следующим',
+      ),
+      _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
+        en: 'Review next',
+        ru: 'Повтори следующим',
+      ),
+      _Act0LearningNextActionKindV1.dailyDrill => _copyV1(
+        en: 'Review',
+        ru: 'Разбор',
+      ),
+      _Act0LearningNextActionKindV1.categoryPractice => _copyV1(
+        en: 'Review',
+        ru: 'Разбор',
+      ),
+      _Act0LearningNextActionKindV1.continueLesson => _copyV1(
+        en: 'Review',
+        ru: 'Разбор',
+      ),
+      _Act0LearningNextActionKindV1.dailyDone => _copyV1(
+        en: 'Review',
+        ru: 'Разбор',
+      ),
     };
   }
 
-  String _homeHandoffIdentity(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 currentLesson,
-  ) {
-    final recommendation = _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: currentLesson,
-    );
-    final focusTaskId =
-        recommendation.mistake?.taskId ?? recommendation.taskId ?? '';
-    final focusLessonId =
-        recommendation.mistake?.lessonId ??
-        recommendation.lessonId ??
-        currentLesson.lessonId;
-    final practiceGroupId = recommendation.practiceGroupId ?? '';
-    return <String>[
-      recommendation.kind.name,
-      selectedWorld.worldId,
-      focusLessonId,
-      focusTaskId,
-      practiceGroupId,
-    ].join('|');
-  }
-
-  bool _homeHandoffVisible(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 currentLesson,
-  ) {
-    final identity = _homeHandoffIdentity(selectedWorld, currentLesson);
-    if (_dismissedHomeHandoffKey.isEmpty ||
-        _dismissedHomeHandoffKey != identity ||
-        _dismissedHomeHandoffDay.isEmpty) {
-      return true;
-    }
-    final today = _todayDateString();
-    if (_dismissedHomeHandoffDay == today) {
-      return false;
-    }
-    try {
-      final dismissedDay = DateTime.parse(_dismissedHomeHandoffDay);
-      final todayDate = DateTime.parse(today);
-      return todayDate.difference(dismissedDay).inDays >=
-          _homeHandoffDismissDays;
-    } catch (_) {
-      return true;
-    }
-  }
-
-  void _dismissHomeHandoff(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 currentLesson,
-  ) {
-    _dismissedHomeHandoffKey = _homeHandoffIdentity(
-      selectedWorld,
-      currentLesson,
-    );
-    _dismissedHomeHandoffDay = _todayDateString();
-    _persistProgress();
-  }
-
   String _homeDailyGoalCtaLabel(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 currentLesson,
+    Act0WorldCardV1 _selectedWorld,
+    Act0LessonCardV1 _currentLesson,
   ) {
-    final recommendation = _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: currentLesson,
-    );
-    final shouldRepairFirst =
-        recommendation.kind == _Act0LearningNextActionKindV1.repairDeepLeak ||
-        recommendation.kind == _Act0LearningNextActionKindV1.repairWeakSpot;
-    return shouldRepairFirst ? 'Repair weak spot →' : 'Practice now →';
+    return _copyV1(en: 'Practice now →', ru: 'Практиковать сейчас →');
   }
 
-  String _homeHandoffHeadline(
+  String _homeRepairHeadline(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return 'Placement complete. Start your first guided rep now.';
+      return _copyV1(
+        en: 'Nothing to fix right now.',
+        ru: 'Сейчас нечего чинить.',
+      );
     }
-    final nextLesson = _nextLesson(
-      selectedWorld.lessons,
-      currentLesson.lessonId,
-    );
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     );
     if (recommendation.mistake != null) {
-      return 'Repair ${recommendation.mistake!.title}, then reopen ${nextLesson?.title ?? currentLesson.title}.';
+      return 'Fix ${recommendation.mistake!.title}.';
     }
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
-      return 'Review this quick fix before it turns into a weak spot.';
+      return _copyV1(
+        en: 'Review this quick fix.',
+        ru: 'Повтори этот быстрый фикс.',
+      );
     }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDrill) {
-      return 'Daily set: three crisp reps, then keep the path moving.';
-    }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDone) {
-      if (_streakSaveEarned()) {
-        return 'Streak saved by effort. Repair plus daily set protected momentum.';
-      }
-      return 'Great session. Come back tomorrow to keep the streak going.';
-    }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.categoryPractice) {
-      return 'All clear. Pick one category and keep it sharp.';
-    }
-    if (nextLesson == null) {
-      return 'Finish this lesson, then lock it in with ${_playDrillTitleForLesson(currentLesson.lessonId)}.';
-    }
-    return 'Finish this lesson to unlock ${nextLesson.title}.';
+    return _copyV1(
+      en: 'Nothing to fix right now.',
+      ru: 'Сейчас нечего чинить.',
+    );
   }
 
-  String _homeHandoffDetail(
+  String _homeRepairDetail(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return 'One tap opens the guided rep chosen from your placement result.';
+      return _copyV1(
+        en: 'You are clean. The path is ready when you are.',
+        ru: 'Сейчас всё чисто. Маршрут готов, когда будешь готов ты.',
+      );
     }
-    final nextLesson = _nextLesson(
-      selectedWorld.lessons,
-      currentLesson.lessonId,
-    );
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     );
     if (recommendation.mistake != null) {
-      return 'Fast reset: ${_playDrillTitleForLesson(recommendation.mistake!.lessonId)} in Play.';
+      return _copyV1(
+        en: 'Last miss came from ${_playDrillTitleForLesson(recommendation.mistake!.lessonId)}.',
+        ru: 'Последняя ошибка пришла из ${_playDrillTitleForLesson(recommendation.mistake!.lessonId)}.',
+      );
     }
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
-      return 'Light review: ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)} stays warm.';
+      return _copyV1(
+        en: 'Last repair came from ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)}.',
+        ru: 'Последний фикс пришёл из ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)}.',
+      );
     }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDrill) {
-      return 'Short daily practice now; full lessons can wait.';
-    }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDone) {
-      if (_streakSaveEarned()) {
-        return 'Momentum protected today. One clean daily tomorrow keeps it alive.';
-      }
-      return 'Streak active. Same time tomorrow locks it in.';
-    }
-    if (recommendation.kind == _Act0LearningNextActionKindV1.categoryPractice) {
-      return 'Start with Actions, then rotate to another category.';
-    }
-    if (nextLesson == null) {
-      return 'Lock it in with ${_playDrillTitleForLesson(currentLesson.lessonId)} in Play.';
-    }
-    return 'Then run ${_playDrillTitleForLesson(currentLesson.lessonId)} in Play.';
+    return _copyV1(
+      en: 'No open leaks right now. Keep the path moving.',
+      ru: 'Сейчас открытых утечек нет. Просто продолжай маршрут.',
+    );
   }
 
-  String _homeHandoffOutcome(
+  String _homeRepairOutcome(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,
   ) {
-    return _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: currentLesson,
-    ).outcome;
-  }
-
-  List<String> _homeHandoffPills(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 currentLesson,
-  ) {
-    if (_placementHandoffActive) {
-      return <String>['Route ready', '1-tap rep'];
-    }
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     );
-    final mistake = recommendation.mistake;
-    final activeLessonId = mistake?.lessonId ?? currentLesson.lessonId;
-    if (mistake == null) {
-      return switch (recommendation.kind) {
-        _Act0LearningNextActionKindV1.reviewQuickFix => <String>[
-          'Quick fix',
-          _playMasteryLabel(),
-        ],
-        _Act0LearningNextActionKindV1.dailyDrill => <String>[
-          '3 spot set',
-          _playMasteryLabel(),
-        ],
-        _Act0LearningNextActionKindV1.categoryPractice => <String>[
-          'Category practice',
-          _playMasteryLabel(),
-        ],
-        _ => <String>[_playMasteryLabel()],
-      };
+    if (recommendation.mistake != null) {
+      return _copyV1(
+        en: 'One fix now keeps the leak from following you forward.',
+        ru: 'Один фикс сейчас не даст утечке потянуться за тобой дальше.',
+      );
     }
-    return <String>['Replay: ${_playDrillTitleForLesson(activeLessonId)}'];
+    if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
+      return _copyV1(
+        en: 'One light review keeps this spot stable.',
+        ru: 'Один лёгкий повтор удержит этот спот стабильным.',
+      );
+    }
+    return _copyV1(
+      en: 'Nothing is asking for repair right now.',
+      ru: 'Сейчас ничего не просит ремонта.',
+    );
+  }
+
+  String? _homeRepairCtaLabel(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: currentLesson,
+    );
+    if (recommendation.mistake != null) {
+      return _copyV1(en: 'Fix now', ru: 'Исправить сейчас');
+    }
+    if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
+      return _copyV1(en: 'Open Review', ru: 'Открыть разбор');
+    }
+    return null;
   }
 
   String _playMasteryLabel() {
     final topMistake = _topOpenMistake();
     if (topMistake?.severityLabel == 'Deep leak') {
-      return 'Deep leak';
+      return _copyV1(en: 'Deep leak', ru: 'Глубокая утечка');
     }
     if (topMistake != null) {
-      return 'Needs review';
+      return _copyV1(en: 'Needs work', ru: 'Нужно подтянуть');
     }
     if (_quickFixMistakes().isNotEmpty) {
-      return 'Quick fix';
+      return _copyV1(en: 'Quick fix', ru: 'Быстрый фикс');
     }
     if (_cleanTaskIds.length >= 3) {
-      return 'Clean pass';
+      return _copyV1(en: 'Clean pass', ru: 'Чистый проход');
     }
     if (_completedTaskIds.isNotEmpty) {
-      return 'Solid';
+      return _copyV1(en: 'Solid', ru: 'Уверенно');
     }
-    return 'Learning';
+    return _copyV1(en: 'Learning', ru: 'Обучение');
   }
 
   String _playScreenSubtitle(
@@ -2247,32 +2965,47 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedLesson: selectedLesson,
     );
     return switch (recommendation.kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak =>
-        'A deep leak needs repair before new drills.',
-      _Act0LearningNextActionKindV1.repairWeakSpot =>
-        'Fix one weak spot. Then keep the path moving.',
-      _Act0LearningNextActionKindV1.reviewQuickFix =>
-        'One light review keeps a quick fix stable.',
-      _Act0LearningNextActionKindV1.dailyDone =>
-        'Daily set complete. Come back tomorrow.',
-      _ => 'Pick one drill. Sharpen one edge.',
+      _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
+        en: 'Repair first. Extra reps can wait.',
+        ru: 'Сначала фикс. Дополнительные репы подождут.',
+      ),
+      _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
+        en: 'Fix one leak or run a few extra reps.',
+        ru: 'Исправь одну утечку или сделай пару дополнительных репов.',
+      ),
+      _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
+        en: 'Run one light review or choose a lane.',
+        ru: 'Сделай один лёгкий повтор или выбери дорожку.',
+      ),
+      _Act0LearningNextActionKindV1.dailyDone => _copyV1(
+        en: 'Daily set done. Extra reps stay optional.',
+        ru: 'Дневная серия закрыта. Дополнительные репы остаются опциональными.',
+      ),
+      _ => _copyV1(
+        en: 'Extra reps live here.',
+        ru: 'Здесь живут дополнительные репы.',
+      ),
     };
   }
 
   String _dailyGoalValueLabel() {
     final count = _dailyCompletedTaskIds.length.clamp(0, 3);
     if (count < 3) {
-      return '$count/3 daily spots';
+      return _copyV1(en: '$count/3 daily spots', ru: '$count/3 дневных спота');
     }
-    return _streakSaveEarned() ? 'Streak saved today' : 'Done for today';
+    return _streakSaveEarned()
+        ? _copyV1(en: 'Streak saved today', ru: 'Сегодня стрик сохранён')
+        : _copyV1(en: 'Done for today', ru: 'На сегодня всё');
   }
 
   String _compactDailyLabel() {
     final count = _dailyCompletedTaskIds.length.clamp(0, 3);
     if (count < 3) {
-      return 'Today $count/3';
+      return _copyV1(en: 'Today $count/3', ru: 'Сегодня $count/3');
     }
-    return _streakSaveEarned() ? 'Saved \u2713' : 'Done \u2713';
+    return _streakSaveEarned()
+        ? _copyV1(en: 'Saved \u2713', ru: 'Сохранён \u2713')
+        : _copyV1(en: 'Done \u2713', ru: 'Готово \u2713');
   }
 
   bool _streakSaveEarned() {
@@ -2375,13 +3108,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _placementHandoffActive = false;
     final lesson = _lessonById(selectedWorld.lessons, _selectedLessonId);
     _startRecommendation(
-      _learningRecommendation(
+      _homePrimaryRecommendation(
         selectedWorld: selectedWorld,
         selectedLesson: lesson,
       ),
       selectedWorld,
       returnToPlayHub: false,
     );
+  }
+
+  void _startHomeRepairAction(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: currentLesson,
+    );
+    if (recommendation.mistake != null) {
+      _startRecommendation(
+        recommendation,
+        selectedWorld,
+        returnToPlayHub: false,
+      );
+      return;
+    }
+    if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
+      _tab = Act0ShellTabV1.review;
+    }
   }
 
   Act0PracticeGroupV1 _groupForLesson(
@@ -2494,7 +3248,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _Act0LearningNextActionKindV1.reviewQuickFix => 'Quick review',
       _Act0LearningNextActionKindV1.dailyDrill => 'Daily set',
       _Act0LearningNextActionKindV1.categoryPractice => 'Practice focus',
-      _Act0LearningNextActionKindV1.continueLesson => 'Best next action',
+      _Act0LearningNextActionKindV1.continueLesson => 'Best next from Learn',
       _Act0LearningNextActionKindV1.dailyDone => 'Great session',
     };
   }
@@ -2513,7 +3267,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _Act0LearningNextActionKindV1.reviewQuickFix => 'Review this now.',
       _Act0LearningNextActionKindV1.dailyDrill => 'Daily set first.',
       _Act0LearningNextActionKindV1.categoryPractice => 'Practice this now.',
-      _Act0LearningNextActionKindV1.continueLesson => 'Keep the lesson moving.',
+      _Act0LearningNextActionKindV1.continueLesson =>
+        'Start with the main path.',
       _Act0LearningNextActionKindV1.dailyDone => 'Done for today.',
     };
   }
@@ -2522,21 +3277,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 selectedLesson,
   ) {
-    return _homeHandoffLabel(selectedWorld, selectedLesson);
+    return _homeRepairLabel(selectedWorld, selectedLesson);
   }
 
   String _learnGuideLine(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 selectedLesson,
   ) {
-    return _homeHandoffHeadline(selectedWorld, selectedLesson);
+    return _homeRepairHeadline(selectedWorld, selectedLesson);
   }
 
   String _learnGuideDetail(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 selectedLesson,
   ) {
-    return _homeHandoffDetail(selectedWorld, selectedLesson);
+    return _homeRepairDetail(selectedWorld, selectedLesson);
   }
 
   Act0SharkyMoodV1 _learnGuideMood(
@@ -2596,6 +3351,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String _playDrillTitleForLesson(String lessonId) {
+    if (_isRuLocaleV1) {
+      return switch (lessonId) {
+        'what_poker_is' => 'Действия',
+        'cards_ranks_suits' => 'Старшинство рук',
+        'your_first_hand' => 'Улицы',
+        'fold_check_call_raise' => 'Действия',
+        'blinds_action_order' => 'Позиции',
+        'positions' => 'Позиции',
+        'hand_rankings_table' => 'Старшинство рук',
+        'showdown_winning' => 'Шоудаун',
+        _ => 'Быстрый дневной дрилл',
+      };
+    }
     return switch (lessonId) {
       'what_poker_is' => 'Actions',
       'cards_ranks_suits' => 'Hand rankings',
@@ -2711,6 +3479,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _startPlacementDiagnostic(List<Act0WorldCardV1> worlds) {
     _placementDiagnosticIndex = 0;
     _placementDiagnosticCorrect = 0;
+    _placementDiagnosticScore = 0;
+    _placementDiagnosticHitSignals.clear();
+    _placementDiagnosticMissSignals.clear();
     _placementIntroVisible = false;
     _startPlacementDiagnosticAt(worlds, _placementDiagnosticIndex);
   }
@@ -2730,7 +3501,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     int diagnosticIndex,
   ) {
     final spot = _placementDiagnosticSpotsV1[diagnosticIndex];
-    final world = _worldById(worlds, 'world_1');
+    final world = _worldById(worlds, spot.worldId);
     final lesson = _lessonById(world.lessons, spot.lessonId);
     final task = _taskById(lesson, spot.taskId);
     _selectedWorldId = world.worldId;
@@ -2855,17 +3626,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0PlacementResultV1 _buildPlacementResult() {
-    var score = _placementDiagnosticCorrect * 2;
-    for (final question in _placementQuestionsV1) {
-      score += _placementQuestionScore(question);
-    }
+    final profileScore = _placementQuestionsV1.fold<int>(
+      0,
+      (sum, question) => sum + _placementQuestionScore(question),
+    );
+    final diagnosticTotal = _placementDiagnosticSpotsV1.length;
+    final foundationTotal = _placementDiagnosticSpotsV1
+        .where((spot) => spot.isFoundation)
+        .length;
+    final foundationCorrect = _placementDiagnosticSpotsV1
+        .where((spot) => spot.isFoundation)
+        .where((spot) => _placementDiagnosticHitSignals.contains(spot.signalId))
+        .length;
+    final foundationMisses = _placementDiagnosticSpotsV1
+        .where((spot) => spot.isFoundation)
+        .where(
+          (spot) => _placementDiagnosticMissSignals.contains(spot.signalId),
+        )
+        .length;
+    final advancedCorrect = _placementDiagnosticSpotsV1
+        .where((spot) => !spot.isFoundation)
+        .where((spot) => _placementDiagnosticHitSignals.contains(spot.signalId))
+        .length;
+    final score = profileScore + _placementDiagnosticScore;
+    final foundationPerfect = foundationCorrect == foundationTotal;
+    final diagnosticMostlyClean =
+        foundationMisses <= 1 && _placementDiagnosticCorrect >= 2;
 
-    if (score >= 8) {
+    if (foundationPerfect && advancedCorrect >= 1 && score >= 6) {
       return Act0PlacementResultV1(
         level: Act0PlacementResultLevelV1.readyForBasics,
         levelLabel: 'Ready for action basics',
         summary:
-            'You know some poker language. Start where actions and order become real decisions.',
+            'You already track the table well enough to start on real decisions.',
         reportHeadline: _placementReportHeadline(
           Act0PlacementResultLevelV1.readyForBasics,
         ),
@@ -2895,13 +3688,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         skillStats: _placementSkillStats(
           Act0PlacementResultLevelV1.readyForBasics,
         ),
-        strengths: <String>['Experience', 'Decision comfort'],
-        weakSpots: <String>['Actions', 'Positions'],
+        strengths: _placementStrengthsFor(
+          Act0PlacementResultLevelV1.readyForBasics,
+        ),
+        weakSpots: _placementWeakSpotsFor(
+          Act0PlacementResultLevelV1.readyForBasics,
+        ),
         recommendedLessonId: 'fold_check_call_raise',
         recommendedTaskId: 'actions_legal_context',
         recommendedTitle: 'Fold, check, call, raise',
         recommendedReason:
-            'Your answers show enough table comfort to start action vocabulary.',
+            'The live check stayed clean, so the route can start on action language instead of resetting the table.',
+        routeTrustLine:
+            'Sharky still keeps the route near the start, so no core link goes missing.',
         premiumPitch:
             'Premium can turn your diagnostic into daily weak-spot drills, review queues, and progress insights.',
         trialValuePoints: <String>[
@@ -2911,12 +3710,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ],
       );
     }
-    if (score >= 4) {
+    if (diagnosticMostlyClean && score >= 4) {
       return Act0PlacementResultV1(
         level: Act0PlacementResultLevelV1.rustyBeginner,
         levelLabel: 'Rusty beginner',
         summary:
-            'You have a starting point. Lock the table flow before action decisions get harder.',
+            'You have a base. The hand flow is there, but it still needs settling before faster decisions.',
         reportHeadline: _placementReportHeadline(
           Act0PlacementResultLevelV1.rustyBeginner,
         ),
@@ -2946,13 +3745,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         skillStats: _placementSkillStats(
           Act0PlacementResultLevelV1.rustyBeginner,
         ),
-        strengths: <String>['Motivation', 'Some table language'],
-        weakSpots: <String>['Blinds', 'Streets'],
+        strengths: _placementStrengthsFor(
+          Act0PlacementResultLevelV1.rustyBeginner,
+        ),
+        weakSpots: _placementWeakSpotsFor(
+          Act0PlacementResultLevelV1.rustyBeginner,
+        ),
         recommendedLessonId: 'your_first_hand',
         recommendedTaskId: 'your_first_hand_preflop',
         recommendedTitle: 'Your first hand, dealt',
         recommendedReason:
-            'You are ready to see how a hand moves through each street.',
+            'The live check says the route should steady the hand before it speeds you up.',
+        routeTrustLine:
+            'You skip the full reset, but Sharky still keeps the route close to the foundations.',
         premiumPitch:
             'Premium can keep your review focused on the spots you miss instead of repeating everything.',
         trialValuePoints: <String>[
@@ -2988,13 +3793,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         Act0PlacementResultLevelV1.newPlayer,
       ),
       skillStats: _placementSkillStats(Act0PlacementResultLevelV1.newPlayer),
-      strengths: <String>['Fresh start', 'Clear path'],
-      weakSpots: <String>['Table', 'Pot', 'Blinds'],
+      strengths: _placementStrengthsFor(Act0PlacementResultLevelV1.newPlayer),
+      weakSpots: _placementWeakSpotsFor(Act0PlacementResultLevelV1.newPlayer),
       recommendedLessonId: 'what_poker_is',
       recommendedTaskId: 'what_poker_is_theory',
       recommendedTitle: 'What poker is',
       recommendedReason:
-          'The foundation path explains the table before asking for decisions.',
+          'The live check says the app should still teach the table itself before asking for harder decisions.',
+      routeTrustLine:
+          'The route starts at the table on purpose, so nothing important is hidden under speed.',
       premiumPitch:
           'Premium can add personal repair drills and a seven-day guided plan after this foundation.',
       trialValuePoints: <String>[
@@ -3155,14 +3962,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _placementReportBody(Act0PlacementResultLevelV1 level) {
     final confusion = _placementConfusionRead();
-    final coaching = _placementCoachingRead();
     return switch (level) {
       Act0PlacementResultLevelV1.newPlayer =>
-        'This does not read like a strategy gap. It reads like a table-model gap: $confusion should become obvious before Sharky asks for real decisions. The best fit is $coaching.',
+        'The first gap is table clarity, not strategy. Sharky should make $confusion feel obvious before real decisions start.',
       Act0PlacementResultLevelV1.rustyBeginner =>
-        'You already have enough exposure to skip a full reset, but the risk is guessing through the hand. Sharky should stabilize the flow first, especially around $confusion, then speed up.',
+        'You can skip a full reset, but the hand still gets blurry around $confusion. Sharky should steady that first, then speed up.',
       Act0PlacementResultLevelV1.readyForBasics =>
-        'You show enough comfort to start on actions instead of spending too long on table setup. The main goal is to make $confusion feel automatic while Sharky keeps the structure visible.',
+        'You have enough comfort to start on actions. The goal now is to make $confusion feel automatic while structure stays visible.',
     };
   }
 
@@ -3178,11 +3984,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final confusion = _placementConfusionRead();
     return switch (level) {
       Act0PlacementResultLevelV1.newPlayer =>
-        'You do not need harder strategy yet. First I want to make $confusion feel calm and obvious.',
+        'No hard strategy yet. First I want $confusion to feel calm and obvious.',
       Act0PlacementResultLevelV1.rustyBeginner =>
-        'You already have enough exposure. Now I want to stop the hand from feeling blurry before decisions speed up.',
+        'You have enough exposure. Now I want to stop the hand from blurring before decisions speed up.',
       Act0PlacementResultLevelV1.readyForBasics =>
-        'You are ready to move into action language, but I will still keep structure visible while your reads settle.',
+        'You are ready for action language. I will keep structure visible while your reads settle.',
     };
   }
 
@@ -3218,13 +4024,84 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return signals;
   }
 
+  List<String> _placementStrengthsFor(Act0PlacementResultLevelV1 level) {
+    final strengths = <String>[];
+    for (final signalId in _placementDiagnosticHitSignals) {
+      final label = _placementSignalLabel(signalId);
+      if (!strengths.contains(label)) {
+        strengths.add(label);
+      }
+    }
+    if (strengths.isNotEmpty) {
+      return strengths.take(3).toList(growable: false);
+    }
+    return switch (level) {
+      Act0PlacementResultLevelV1.newPlayer => <String>[
+        'Fresh start',
+        'Clear path',
+      ],
+      Act0PlacementResultLevelV1.rustyBeginner => <String>[
+        'Motivation',
+        'Some table language',
+      ],
+      Act0PlacementResultLevelV1.readyForBasics => <String>[
+        'Experience',
+        'Decision comfort',
+      ],
+    };
+  }
+
+  List<String> _placementWeakSpotsFor(Act0PlacementResultLevelV1 level) {
+    final weakSpots = <String>[];
+    for (final signalId in _placementDiagnosticMissSignals) {
+      final label = _placementSignalLabel(signalId);
+      if (!weakSpots.contains(label)) {
+        weakSpots.add(label);
+      }
+    }
+    if (weakSpots.isNotEmpty) {
+      return weakSpots.take(3).toList(growable: false);
+    }
+    return switch (level) {
+      Act0PlacementResultLevelV1.newPlayer => <String>[
+        'Table',
+        'Pot',
+        'Blinds',
+      ],
+      Act0PlacementResultLevelV1.rustyBeginner => <String>['Blinds', 'Streets'],
+      Act0PlacementResultLevelV1.readyForBasics => <String>[
+        'Actions',
+        'Positions',
+      ],
+    };
+  }
+
+  String _placementSignalLabel(String signalId) {
+    switch (signalId) {
+      case 'table_read':
+        return 'Table read';
+      case 'board_read':
+        return 'Board read';
+      case 'action_order':
+        return 'Action order';
+      case 'position_pressure':
+        return 'Position pressure';
+      default:
+        return 'Placement read';
+    }
+  }
+
   List<String> _placementAnalysisHighlights(Act0PlacementResultLevelV1 level) {
+    final liveCheckRead = _placementDiagnosticMissSignals.isEmpty
+        ? 'Live check stayed clean across table, board, and action flow.'
+        : 'Live check flagged ${_placementWeakSpotsFor(level).join(', ').toLowerCase()} as the first friction points.';
     return <String>[
       'Experience read: ${_placementExperienceRead()}.',
       'Current rhythm: ${_placementRhythmRead()}.',
       'Main friction area: ${_placementConfusionRead()}.',
       'Preferred use case: ${_placementFormatRead()}.',
       'Best coaching fit: ${_placementCoachingRead()}.',
+      liveCheckRead,
       if (level == Act0PlacementResultLevelV1.readyForBasics)
         'Diagnostic confirms enough table comfort to begin with action vocabulary.',
       if (level == Act0PlacementResultLevelV1.rustyBeginner)
@@ -3280,6 +4157,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_placementHasSelection('experience', 'friends') ||
         _placementHasSelection('experience', 'watching')) {
       handReading += 4;
+    }
+    if (_placementDiagnosticHitSignals.contains('position_pressure')) {
+      actionDecisions += 4;
+      tableFlow += 4;
+    }
+    if (_placementDiagnosticMissSignals.contains('position_pressure')) {
+      actionDecisions -= 4;
+      tableFlow -= 4;
     }
 
     int clampStat(int value) => value.clamp(8, 82);
@@ -3400,7 +4285,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _mistakeRecords[selectedTask.taskId] = _Act0MistakeRecordV1(
       taskId: selectedTask.taskId,
       lessonId: selectedLesson.lessonId,
-      title: selectedTask.title,
+      title: _localizedTaskTitleV1(selectedTask),
       weaknessLabel: category,
       selectedOptionId: option.id,
       selectedLabel: option.label,
@@ -3472,6 +4357,31 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _teachingStepIndex = runner.teachingSteps.length;
   }
 
+  bool _maybeStartLessonWrapUpRetry(Act0LessonCardV1 selectedLesson) {
+    if (_placementDiagnosticActive || _activeRepairTaskId != null) {
+      return false;
+    }
+    for (final task in selectedLesson.taskList) {
+      if (!_lessonRunMistakeTaskIds.contains(task.taskId)) {
+        continue;
+      }
+      if (_lessonRunWrapUpCompletedTaskIds.contains(task.taskId)) {
+        continue;
+      }
+      _activeLessonWrapUpTaskId = task.taskId;
+      _selectedTaskId = task.taskId;
+      _selectedOptionId = null;
+      _phase = task.runner.options.isEmpty
+          ? task.phase
+          : Act0LessonPhaseV1.drill;
+      _teachingStepIndex = 0;
+      _tab = Act0ShellTabV1.play;
+      _showPlayHub = false;
+      return true;
+    }
+    return false;
+  }
+
   String _repairActionLabel(Act0LessonTaskV1 task) {
     return switch (task.stepKind) {
       Act0LessonStepKindV1.learn => 'Replay the concept slowly',
@@ -3497,6 +4407,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0RunnerStateV1 _repairRunnerForTask(Act0LessonTaskV1 selectedTask) {
+    if (_activeLessonWrapUpTaskId == selectedTask.taskId) {
+      final record = _mistakeRecords[selectedTask.taskId];
+      final option = record == null
+          ? null
+          : _optionById(selectedTask.runner.options, record.selectedOptionId);
+      final focusLabels = option == null || record == null
+          ? const <String>[]
+          : _repairContextLabels(selectedTask.runner, option);
+      final focusTable = option == null || record == null
+          ? selectedTask.runner.table
+          : _repairFocusedTable(selectedTask.runner.table, option, record);
+      return selectedTask.runner.copyWith(
+        sharky: selectedTask.runner.sharky.copyWith(
+          preSessionLine: 'One last check before the lesson wraps.',
+          preSessionMood: Act0SharkyMoodV1.thinking,
+        ),
+        table: focusTable,
+        teachingSteps: <Act0TeachingStepV1>[
+          Act0TeachingStepV1(
+            title: 'One last check',
+            body: record == null
+                ? 'Run this spot once more before the lesson summary.'
+                : 'You missed this earlier. Read it once more before the lesson ends.',
+            table: focusTable,
+            focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
+            focusCardIds: option?.repairFocusCardIds ?? const <String>[],
+            focusLabels: focusLabels,
+            ctaLabel: 'Retry',
+          ),
+          ...selectedTask.runner.teachingSteps,
+        ],
+      );
+    }
     final record = _activeRepairTaskId == selectedTask.taskId
         ? _mistakeRecords[selectedTask.taskId]
         : null;
@@ -3769,6 +4712,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final task = _taskForId(taskId);
       if (task != null) {
         items.add(task.title);
+        if (_isRuLocaleV1) {
+          items[items.length - 1] = _localizedTaskTitleV1(task);
+        }
       }
       if (items.length == 4) {
         break;
@@ -4124,7 +5070,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return false;
     }
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
-      lessonTitle: selectedLesson.title,
+      lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
       errorCount: _lessonRunMistakeTaskIds.length,
       taskCount: selectedLesson.taskList.length,
@@ -4207,8 +5153,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _lessonRunMistakeTaskIds.clear();
     _lessonRunPendingRetryTaskIds.clear();
     _lessonRunRetriedTaskIds.clear();
+    _lessonRunWrapUpCompletedTaskIds.clear();
     _lessonRunQuickFixTaskIds.clear();
     _lessonRunDeepLeakTaskIds.clear();
+    _activeLessonWrapUpTaskId = null;
     _blockCompletionSummary = null;
   }
 
@@ -4815,6 +5763,9 @@ class _BottomNavV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRu = Localizations.localeOf(
+      context,
+    ).languageCode.toLowerCase().startsWith('ru');
     return SizedBox(
       key: const Key('act0_shell_bottom_nav'),
       height: Act0ShellTokensV1.bottomNavHeight,
@@ -4826,35 +5777,35 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.home,
               current: current,
               icon: Icons.home_rounded,
-              label: 'Home',
+              label: isRu ? 'Главная' : 'Home',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.learn,
               current: current,
               icon: Icons.menu_book_rounded,
-              label: 'Learn',
+              label: isRu ? 'Обучение' : 'Learn',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.play,
               current: current,
               icon: Icons.spa_rounded,
-              label: 'Play',
+              label: isRu ? 'Практика' : 'Play',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.review,
               current: current,
               icon: Icons.refresh_rounded,
-              label: 'Review',
+              label: isRu ? 'Разбор' : 'Review',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.profile,
               current: current,
               icon: Icons.person_rounded,
-              label: 'You',
+              label: isRu ? 'Ты' : 'You',
               onSelected: onSelected,
             ),
           ],
@@ -5210,26 +6161,47 @@ const _placementQuestionsV1 = <Act0PlacementQuestionV1>[
 
 class _Act0PlacementDiagnosticSpotV1 {
   const _Act0PlacementDiagnosticSpotV1({
+    required this.worldId,
     required this.lessonId,
     required this.taskId,
+    required this.signalId,
+    this.isFoundation = false,
   });
 
+  final String worldId;
   final String lessonId;
   final String taskId;
+  final String signalId;
+  final bool isFoundation;
 }
 
 const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
   _Act0PlacementDiagnosticSpotV1(
+    worldId: 'world_1',
     lessonId: 'what_poker_is',
     taskId: 'what_poker_is_find_hero',
+    signalId: 'table_read',
+    isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
+    worldId: 'world_1',
     lessonId: 'your_first_hand',
     taskId: 'your_first_hand_flop',
+    signalId: 'board_read',
+    isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
+    worldId: 'world_1',
     lessonId: 'blinds_action_order',
     taskId: 'blinds_first_actor',
+    signalId: 'action_order',
+    isFoundation: true,
+  ),
+  _Act0PlacementDiagnosticSpotV1(
+    worldId: 'world_1',
+    lessonId: 'positions',
+    taskId: 'positions_button',
+    signalId: 'position_pressure',
   ),
 ];
 

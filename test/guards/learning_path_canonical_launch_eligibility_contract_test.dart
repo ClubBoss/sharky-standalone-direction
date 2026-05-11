@@ -9,10 +9,13 @@ void main() {
     'learning-path canonical launch eligibility stays explicit and zero-ambiguity',
     () {
       final learningPathSources = <String>[
-        File('lib/services/learning_path_level_one_builder_service.dart')
-            .readAsStringSync(),
+        File(
+          'lib/services/learning_path_level_one_builder_service.dart',
+        ).readAsStringSync(),
         File('lib/services/learning_path_stage_seeder.dart').readAsStringSync(),
-        File('lib/services/learning_path_config_loader.dart').readAsStringSync(),
+        File(
+          'lib/services/learning_path_config_loader.dart',
+        ).readAsStringSync(),
       ].join('\n');
 
       final exactCanonicalMatches = <String>{

@@ -11,9 +11,7 @@ import 'package:poker_analyzer/theme/app_typography.dart';
 const _auditHubSnapshotPathV1 = 'assets/audit_hub_v1/operational_snapshot.json';
 
 Route<void> auditHubRouteV1() {
-  return MaterialPageRoute<void>(
-    builder: (_) => const AuditHubScreenV1(),
-  );
+  return MaterialPageRoute<void>(builder: (_) => const AuditHubScreenV1());
 }
 
 class AuditHubScreenV1 extends StatefulWidget {
@@ -171,9 +169,18 @@ class _CanonicalReadinessViewV1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _kv('Source SSOT', readiness.sourceSsotPath),
-        _kv('Core Product Readiness', '${readiness.coreReadinessPercent.toStringAsFixed(1)} / 100'),
-        _kv('Ship / Distribution Readiness', '${readiness.shipReadinessPercent.toStringAsFixed(1)} / 100'),
-        _kv('Final Product Readiness', '${readiness.finalReadinessPercent.toStringAsFixed(1)} / 100'),
+        _kv(
+          'Core Product Readiness',
+          '${readiness.coreReadinessPercent.toStringAsFixed(1)} / 100',
+        ),
+        _kv(
+          'Ship / Distribution Readiness',
+          '${readiness.shipReadinessPercent.toStringAsFixed(1)} / 100',
+        ),
+        _kv(
+          'Final Product Readiness',
+          '${readiness.finalReadinessPercent.toStringAsFixed(1)} / 100',
+        ),
         _kv('Top bottleneck block', readiness.topBottleneckBlock),
         _kv('Top bottleneck epic', readiness.topBottleneckEpic),
         _kv('Confidence note', readiness.confidenceNote),
@@ -192,7 +199,10 @@ class _RecalibrationCandidateViewV1 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _kv('Canonical readiness source path', candidate.canonicalReadinessSourcePath),
+        _kv(
+          'Canonical readiness source path',
+          candidate.canonicalReadinessSourcePath,
+        ),
         _kv('Status', candidate.status.wireValue),
         _kv(
           'Canonical scores',
@@ -275,15 +285,14 @@ class _RecalibrationCandidateViewV1 extends StatelessWidget {
     );
   }
 
-  Widget _buildProofGap(String gap) => _structuredRow(title: gap, lines: const <String>[]);
+  Widget _buildProofGap(String gap) =>
+      _structuredRow(title: gap, lines: const <String>[]);
 
-  Widget _emptyRow(String label) => _structuredRow(title: label, lines: const <String>[]);
+  Widget _emptyRow(String label) =>
+      _structuredRow(title: label, lines: const <String>[]);
 }
 
-Widget _structuredRow({
-  required String title,
-  required List<String> lines,
-}) {
+Widget _structuredRow({required String title, required List<String> lines}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: AppSpacing.sm),
     child: Container(
@@ -335,9 +344,7 @@ Widget _kv(String label, String value) {
         const SizedBox(height: AppSpacing.xs),
         Text(
           value,
-          style: AppTypography.body.copyWith(
-            color: SharkyTokensV1.textPrimary,
-          ),
+          style: AppTypography.body.copyWith(color: SharkyTokensV1.textPrimary),
         ),
       ],
     ),

@@ -146,10 +146,7 @@ void main() {
       isFalse,
     );
     expect(hasPromptAnswerLeakV1('In this spot, choose raise.'), isTrue);
-    expect(
-      hasPromptAnswerLeakV1('In this cash spot, choose raise.'),
-      isTrue,
-    );
+    expect(hasPromptAnswerLeakV1('In this cash spot, choose raise.'), isTrue);
     expect(
       hasPromptAnswerLeakV1('In this spot, choose the best action.'),
       isFalse,
@@ -209,18 +206,9 @@ void main() {
       hasActionFocusCueLeakV1('Choose the best action. Focus: call'),
       isTrue,
     );
-    expect(
-      hasActionFocusCueLeakV1('Think it through. Focus: jam'),
-      isTrue,
-    );
-    expect(
-      hasActionFocusCueLeakV1('Think it through. Focus: all-in'),
-      isTrue,
-    );
-    expect(
-      hasActionFocusCueLeakV1('Choose the best action.'),
-      isFalse,
-    );
+    expect(hasActionFocusCueLeakV1('Think it through. Focus: jam'), isTrue);
+    expect(hasActionFocusCueLeakV1('Think it through. Focus: all-in'), isTrue);
+    expect(hasActionFocusCueLeakV1('Choose the best action.'), isFalse);
     expect(
       hasActionFocusCueLeakV1('Choose the best action. Use board and chips.'),
       isFalse,

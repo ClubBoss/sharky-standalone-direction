@@ -111,8 +111,8 @@ This rhythm does not require four separate screens every time. It does require t
 
 ## How To Use This Matrix
 
-- Use it together with [SKILL_COVERAGE_MATRIX_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/SKILL_COVERAGE_MATRIX_v1.md) to decide whether a missing family is also blocked by prerequisite order.
-- Use it together with [WORLD_NODE_MODE_MATRIX_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/WORLD_NODE_MODE_MATRIX_v1.md) to decide whether a world/node placement is too early, too late, or missing its bridge.
+- Use it together with [SKILL_COVERAGE_MATRIX_v1.md](docs/plan/SKILL_COVERAGE_MATRIX_v1.md) to decide whether a missing family is also blocked by prerequisite order.
+- Use it together with [WORLD_NODE_MODE_MATRIX_v1.md](docs/plan/WORLD_NODE_MODE_MATRIX_v1.md) to decide whether a world/node placement is too early, too late, or missing its bridge.
 - Future guards should validate obvious prerequisite/order violations once the matrix is encoded enough to support that cleanly.
 - Future fill work should prefer bounded additions that preserve progression integrity over coverage-only additions.
 

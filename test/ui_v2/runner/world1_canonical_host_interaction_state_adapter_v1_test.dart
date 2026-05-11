@@ -78,26 +78,29 @@ void main() {
     expect(incorrect.spineMistakesCount, 3);
   });
 
-  test('seat quiz resolution resolves success reinforcement and auto-advance', () {
-    final correct = resolveWorld1CanonicalSeatQuizResolutionStateV1(
-      const World1CanonicalSeatQuizResolutionInputV1(
-        kind: World1CanonicalSeatQuizResolutionKindV1.correct,
-        isCampaignSpineSession: true,
-        attempts: 0,
-        wrongAttemptsCount: 0,
-        negativeDelta: 0,
-        conceptFirstSeatMicroSlice: false,
-        actionLiteracyMicroSlice: true,
-        streetFlowMicroSlice: false,
-        conceptFirstSeatReinforceLine: 'concept',
-        actionLiteracyReinforceLine: 'action',
-        streetFlowReinforceLine: 'street',
-        insightText: 'insight',
-      ),
-    );
-    expect(correct.feedback, 'action');
-    expect(correct.seatQuizAutoAdvancePending, isTrue);
-  });
+  test(
+    'seat quiz resolution resolves success reinforcement and auto-advance',
+    () {
+      final correct = resolveWorld1CanonicalSeatQuizResolutionStateV1(
+        const World1CanonicalSeatQuizResolutionInputV1(
+          kind: World1CanonicalSeatQuizResolutionKindV1.correct,
+          isCampaignSpineSession: true,
+          attempts: 0,
+          wrongAttemptsCount: 0,
+          negativeDelta: 0,
+          conceptFirstSeatMicroSlice: false,
+          actionLiteracyMicroSlice: true,
+          streetFlowMicroSlice: false,
+          conceptFirstSeatReinforceLine: 'concept',
+          actionLiteracyReinforceLine: 'action',
+          streetFlowReinforceLine: 'street',
+          insightText: 'insight',
+        ),
+      );
+      expect(correct.feedback, 'action');
+      expect(correct.seatQuizAutoAdvancePending, isTrue);
+    },
+  );
 
   test('review-pass and advance-step states reset host interaction fields', () {
     final now = DateTime.utc(2026, 3, 27, 12);
@@ -150,7 +153,10 @@ void main() {
   });
 
   test('outcome continue-busy states are canonicalized', () {
-    expect(kWorld1CanonicalOutcomeContinueBusyStartedV1.resultContinueBusy, isTrue);
+    expect(
+      kWorld1CanonicalOutcomeContinueBusyStartedV1.resultContinueBusy,
+      isTrue,
+    );
     expect(
       kWorld1CanonicalOutcomeContinueBusyFinishedV1.resultContinueBusy,
       isFalse,
@@ -169,7 +175,10 @@ void main() {
 
     expect(kWorld1CanonicalHandLoopFallbackStateV1.enginePlaybackBusy, isFalse);
     expect(kWorld1CanonicalHandLoopFallbackStateV1.engineCurrentStreet, isNull);
-    expect(kWorld1CanonicalHandLoopFallbackStateV1.engineTurnFeedLines, isEmpty);
+    expect(
+      kWorld1CanonicalHandLoopFallbackStateV1.engineTurnFeedLines,
+      isEmpty,
+    );
   });
 
   test('hand-loop interop failure and outcome states are canonicalized', () {
@@ -253,7 +262,10 @@ void main() {
     expect(tick.enginePotPulse, isTrue);
     expect(tick.enginePlaybackBusy, isTrue);
 
-    expect(kWorld1CanonicalPlaybackCompletedStateV1.enginePlaybackBusy, isFalse);
+    expect(
+      kWorld1CanonicalPlaybackCompletedStateV1.enginePlaybackBusy,
+      isFalse,
+    );
   });
 
   test('hand-loop follow-up plans are canonicalized', () {
@@ -331,10 +343,7 @@ void main() {
     );
     expect(failure.correctTelemetry['correct'], isFalse);
     expect(failure.correctTelemetry['error_type'], 'range');
-    expect(
-      failure.effectProfile,
-      World1CanonicalHandLoopEffectProfileV1.error,
-    );
+    expect(failure.effectProfile, World1CanonicalHandLoopEffectProfileV1.error);
     expect(failure.uiSoundEventName, 'error');
     expect(failure.uiSfxAssetName, 'chip_lose');
     expect(failure.uiHapticEventName, 'error');
@@ -365,14 +374,11 @@ void main() {
     );
     expect(execution.engineVerdict, 'correct');
     expect(execution.engineErrorType, 'range');
-    expect(
-      execution.engineSummaryLines,
-      const <String>[
-        'Hand loop -> hero decisions 2, steps 5, stop showdown',
-        'summary 1',
-        'summary 2',
-      ],
-    );
+    expect(execution.engineSummaryLines, const <String>[
+      'Hand loop -> hero decisions 2, steps 5, stop showdown',
+      'summary 1',
+      'summary 2',
+    ]);
     expect(execution.engineFallbackNote, isNull);
     expect(execution.engineTurnFeedLines, const <String>['feed 1']);
     expect(execution.isCorrect, isTrue);

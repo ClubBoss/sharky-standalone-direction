@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 
-enum World2BoardTextureTruthPatternV1 { paired, connectedRun3, dryRainbowCalmer }
+enum World2BoardTextureTruthPatternV1 {
+  paired,
+  connectedRun3,
+  dryRainbowCalmer,
+}
 
 class World2BoardTextureTruthSnapshotV1 {
   const World2BoardTextureTruthSnapshotV1({

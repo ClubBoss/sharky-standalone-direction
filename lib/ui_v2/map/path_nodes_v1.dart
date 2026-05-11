@@ -140,8 +140,7 @@ void _insertOptionalAppliedDrillsV1({
     if (!shouldInsert) continue;
 
     final anchorIndex = nodes.indexWhere(
-      (node) =>
-          node.kind == PathNodeKindV1.pack && node.packId == anchorPackId,
+      (node) => node.kind == PathNodeKindV1.pack && node.packId == anchorPackId,
     );
     if (anchorIndex < 0) continue;
 

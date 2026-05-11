@@ -107,12 +107,10 @@ void main() {
         }
         final skillParts = _splitSkillFamilyParts(skillFamily);
         expect(
-          mappedSkillCells.any(
-            (cell) {
-              final normalizedCell = cell.toLowerCase();
-              return skillParts.every(normalizedCell.contains);
-            },
-          ),
+          mappedSkillCells.any((cell) {
+            final normalizedCell = cell.toLowerCase();
+            return skillParts.every(normalizedCell.contains);
+          }),
           isTrue,
           reason:
               'Skill family "$skillFamily" is not deferred/later but has no world/node home in WORLD_NODE_MODE_MATRIX_v1.',

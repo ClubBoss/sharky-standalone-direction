@@ -120,9 +120,7 @@ Future<void> main(List<String> args) async {
 }
 
 Future<CanonicalEarlyPathCorrectnessAuditReportV1>
-buildCanonicalEarlyPathCorrectnessAuditReportV1({
-  String repoRoot = '.',
-}) async {
+buildCanonicalEarlyPathCorrectnessAuditReportV1({String repoRoot = '.'}) async {
   final sessionsRoot = '$repoRoot/content/worlds/world2/v1/sessions';
   final rows = <CanonicalEarlyPathCorrectnessFamilyRowV1>[
     _buildWorld1ScenarioTruthRowV1(),
@@ -145,8 +143,14 @@ buildCanonicalEarlyPathCorrectnessAuditReportV1({
       0,
       (sum, row) => sum + row.familySourceCount,
     ),
-    totalCheckedSources: rows.fold<int>(0, (sum, row) => sum + row.checkedCount),
-    totalResidueSources: rows.fold<int>(0, (sum, row) => sum + row.residueCount),
+    totalCheckedSources: rows.fold<int>(
+      0,
+      (sum, row) => sum + row.checkedCount,
+    ),
+    totalResidueSources: rows.fold<int>(
+      0,
+      (sum, row) => sum + row.residueCount,
+    ),
   );
 
   return CanonicalEarlyPathCorrectnessAuditReportV1(
@@ -178,7 +182,9 @@ String renderCanonicalEarlyPathCorrectnessAuditV1(
 
   if (report.summary.totalIssues == 0) {
     out.writeln();
-    out.writeln('No canonical early-path correctness issues detected in v1 scope.');
+    out.writeln(
+      'No canonical early-path correctness issues detected in v1 scope.',
+    );
     return out.toString().trimRight();
   }
 
@@ -416,7 +422,9 @@ Future<CanonicalEarlyPathCorrectnessFamilyRowV1> _buildWorld3RuntimeTruthRowV1(
     }
     final drillIds = parseDrillIdsFromIndexV1(indexFile.readAsStringSync());
     if (drillIds.length != 1) {
-      issues.add('$sessionId expected exactly 1 drill id but found ${drillIds.length}');
+      issues.add(
+        '$sessionId expected exactly 1 drill id but found ${drillIds.length}',
+      );
       continue;
     }
 
@@ -435,12 +443,16 @@ Future<CanonicalEarlyPathCorrectnessFamilyRowV1> _buildWorld3RuntimeTruthRowV1(
       sessionId: sessionId,
       drillId: drillId,
       drillRaw: drillFile.readAsStringSync(),
-      defaultsRaw: defaultsFile.existsSync() ? defaultsFile.readAsStringSync() : null,
+      defaultsRaw: defaultsFile.existsSync()
+          ? defaultsFile.readAsStringSync()
+          : null,
     );
     final spec = DrillSpecV1.fromJsonString(mergedRaw);
 
     if (spec.kind != DrillKindV1.handChain) {
-      issues.add('$sessionId expected hand_chain_v1 but found ${spec.kind.name}');
+      issues.add(
+        '$sessionId expected hand_chain_v1 but found ${spec.kind.name}',
+      );
       continue;
     }
     final steps = spec.chainStepsV1;

@@ -27,10 +27,7 @@ void main() {
         'minHands': 10,
       });
 
-      expect(
-        canonicalStage.canonicalModuleId,
-        'world1_act0_table_literacy',
-      );
+      expect(canonicalStage.canonicalModuleId, 'world1_act0_table_literacy');
       expect(
         canonicalStage.toJson()['canonicalModuleId'],
         'world1_act0_table_literacy',

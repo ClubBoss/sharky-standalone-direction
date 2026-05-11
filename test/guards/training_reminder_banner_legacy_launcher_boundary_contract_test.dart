@@ -17,13 +17,17 @@ void main() {
       ).readAsStringSync();
 
       expect(
-        engine.contains('ReminderBanner build() => const ReminderBanner(GoalReminderBanner());'),
+        engine.contains(
+          'ReminderBanner build() => const ReminderBanner(GoalReminderBanner());',
+        ),
         isTrue,
         reason:
             'Daily goal reminder should remain an explicit reminder-engine banner source.',
       );
       expect(
-        engine.contains('ReminderBanner build() => const ReminderBanner(BrokenStreakBanner());'),
+        engine.contains(
+          'ReminderBanner build() => const ReminderBanner(BrokenStreakBanner());',
+        ),
         isTrue,
         reason:
             'Broken streak reminder should remain an explicit reminder-engine banner source.',
@@ -55,13 +59,17 @@ void main() {
             'Reminder banners should stay outside canonical runner ownership in this seam.',
       );
       expect(
-        goalReminder.contains('world1_foundations_microtask_runner_screen.dart'),
+        goalReminder.contains(
+          'world1_foundations_microtask_runner_screen.dart',
+        ),
         isFalse,
         reason:
             'Goal reminder banner should not import canonical runner implementation directly.',
       );
       expect(
-        brokenStreak.contains('world1_foundations_microtask_runner_screen.dart'),
+        brokenStreak.contains(
+          'world1_foundations_microtask_runner_screen.dart',
+        ),
         isFalse,
         reason:
             'Broken streak banner should not import canonical runner implementation directly.',

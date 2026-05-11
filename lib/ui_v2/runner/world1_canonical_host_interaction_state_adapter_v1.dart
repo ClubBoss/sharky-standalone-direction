@@ -38,8 +38,7 @@ class World1CanonicalSeatSelectionResolvedV1 {
   final bool shouldAutoRunSeatQuizCheck;
 }
 
-World1CanonicalSeatSelectionResolvedV1
-resolveWorld1CanonicalSeatSelectionV1(
+World1CanonicalSeatSelectionResolvedV1 resolveWorld1CanonicalSeatSelectionV1(
   World1CanonicalSeatSelectionInputV1 input,
 ) {
   final introTapBlocked =
@@ -338,10 +337,10 @@ class World1CanonicalOutcomeContinueBusyStateV1 {
 }
 
 const World1CanonicalOutcomeContinueBusyStateV1
-    kWorld1CanonicalOutcomeContinueBusyStartedV1 =
+kWorld1CanonicalOutcomeContinueBusyStartedV1 =
     World1CanonicalOutcomeContinueBusyStateV1(resultContinueBusy: true);
 const World1CanonicalOutcomeContinueBusyStateV1
-    kWorld1CanonicalOutcomeContinueBusyFinishedV1 =
+kWorld1CanonicalOutcomeContinueBusyFinishedV1 =
     World1CanonicalOutcomeContinueBusyStateV1(resultContinueBusy: false);
 
 class World1CanonicalHandLoopLaunchStateV1 {
@@ -369,9 +368,7 @@ class World1CanonicalHandLoopLaunchStateV1 {
 }
 
 World1CanonicalHandLoopLaunchStateV1
-resolveWorld1CanonicalHandLoopLaunchStateV1({
-  required Object preflopStreet,
-}) {
+resolveWorld1CanonicalHandLoopLaunchStateV1({required Object preflopStreet}) {
   return World1CanonicalHandLoopLaunchStateV1(
     engineRunBusy: true,
     enginePlaybackBusy: true,
@@ -408,7 +405,8 @@ class World1CanonicalHandLoopFallbackStateV1 {
 }
 
 const World1CanonicalHandLoopFallbackStateV1
-    kWorld1CanonicalHandLoopFallbackStateV1 = World1CanonicalHandLoopFallbackStateV1(
+kWorld1CanonicalHandLoopFallbackStateV1 =
+    World1CanonicalHandLoopFallbackStateV1(
       enginePlaybackBusy: false,
       engineCurrentStreet: null,
       engineStepStreet: null,
@@ -450,7 +448,7 @@ class World1CanonicalHandLoopInteropFailureStateV1 {
 }
 
 const World1CanonicalHandLoopInteropFailureStateV1
-    kWorld1CanonicalHandLoopInteropFailureStateV1 =
+kWorld1CanonicalHandLoopInteropFailureStateV1 =
     World1CanonicalHandLoopInteropFailureStateV1(
       engineUseLegacyBackend: false,
       engineVerdict: null,
@@ -508,10 +506,10 @@ class World1CanonicalHandLoopRunBusyStateV1 {
 }
 
 const World1CanonicalHandLoopRunBusyStateV1
-    kWorld1CanonicalHandLoopRunBusyStartedV1 =
+kWorld1CanonicalHandLoopRunBusyStartedV1 =
     World1CanonicalHandLoopRunBusyStateV1(engineRunBusy: true);
 const World1CanonicalHandLoopRunBusyStateV1
-    kWorld1CanonicalHandLoopRunBusyFinishedV1 =
+kWorld1CanonicalHandLoopRunBusyFinishedV1 =
     World1CanonicalHandLoopRunBusyStateV1(engineRunBusy: false);
 
 class World1CanonicalLegacyBackendSummaryStateV1 {
@@ -665,10 +663,7 @@ const World1CanonicalPlaybackStateV1 kWorld1CanonicalPlaybackCompletedStateV1 =
       enginePlaybackBusy: false,
     );
 
-enum World1CanonicalHandLoopFollowUpActionV1 {
-  seatQuizCheck,
-  presentOutcome,
-}
+enum World1CanonicalHandLoopFollowUpActionV1 { seatQuizCheck, presentOutcome }
 
 class World1CanonicalHandLoopFollowUpPlanV1 {
   const World1CanonicalHandLoopFollowUpPlanV1({
@@ -687,7 +682,7 @@ class World1CanonicalHandLoopFollowUpPlanV1 {
 }
 
 const World1CanonicalHandLoopFollowUpPlanV1
-    kWorld1CanonicalHandLoopFallbackFollowUpPlanV1 =
+kWorld1CanonicalHandLoopFallbackFollowUpPlanV1 =
     World1CanonicalHandLoopFollowUpPlanV1(
       action: World1CanonicalHandLoopFollowUpActionV1.seatQuizCheck,
       continueAdvancesFlow: false,
@@ -697,7 +692,7 @@ const World1CanonicalHandLoopFollowUpPlanV1
     );
 
 const World1CanonicalHandLoopFollowUpPlanV1
-    kWorld1CanonicalHandLoopInteropFailureFollowUpPlanV1 =
+kWorld1CanonicalHandLoopInteropFailureFollowUpPlanV1 =
     World1CanonicalHandLoopFollowUpPlanV1(
       action: World1CanonicalHandLoopFollowUpActionV1.seatQuizCheck,
       continueAdvancesFlow: false,
@@ -707,7 +702,7 @@ const World1CanonicalHandLoopFollowUpPlanV1
     );
 
 const World1CanonicalHandLoopFollowUpPlanV1
-    kWorld1CanonicalHandLoopOutcomeFollowUpPlanV1 =
+kWorld1CanonicalHandLoopOutcomeFollowUpPlanV1 =
     World1CanonicalHandLoopFollowUpPlanV1(
       action: World1CanonicalHandLoopFollowUpActionV1.presentOutcome,
       continueAdvancesFlow: true,
@@ -800,7 +795,9 @@ resolveWorld1CanonicalHandLoopOutcomeEffectsStateV1(
     uiHapticEventName: input.isCorrect ? 'success' : 'error',
     triggerSuccessPulse: input.isCorrect,
     triggerFailurePulse: !input.isCorrect,
-    nextAttemptsForStep: input.isCorrect ? null : input.previousAttemptsForStep + 1,
+    nextAttemptsForStep: input.isCorrect
+        ? null
+        : input.previousAttemptsForStep + 1,
     nextMistakesCount: input.isCorrect ? null : input.previousMistakesCount + 1,
     showHint: input.isCorrect ? null : true,
     feedback: input.reason,

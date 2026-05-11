@@ -12,8 +12,7 @@ class OnboardingPreferencesService {
   static Future<bool> hasCompletedOnboarding() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final canonical =
-          prefs.getBool(_canonicalKeyOnboardingComplete) ?? false;
+      final canonical = prefs.getBool(_canonicalKeyOnboardingComplete) ?? false;
       if (canonical) {
         return true;
       }

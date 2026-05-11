@@ -53,16 +53,19 @@ void main() {
     expect(report.issues, isEmpty);
     expect(report.checkedCount, 9);
     expect(report.skippedCount, 0);
-    expect(report.familySources, unorderedEquals(<String>[
-      'content/worlds/world2/v1/sessions/w2.s04/drills/d.tap_flop_left_context.json',
-      'content/worlds/world2/v1/sessions/w2.s04/drills/d.tap_flop_right_context.json',
-      'content/worlds/world2/v1/sessions/w2.s05/drills/d.tap_turn_context.json',
-      'content/worlds/world2/v1/sessions/w2.s06/drills/d.tap_river_context.json',
-      'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_flop_sequence_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_river_sequence_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_turn_sequence_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s10/drills/d.tap_flop_mid_checkpoint_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s10/drills/d.tap_turn_checkpoint_anchor.json',
-    ]));
+    expect(
+      report.familySources,
+      unorderedEquals(<String>[
+        'content/worlds/world2/v1/sessions/w2.s04/drills/d.tap_flop_left_context.json',
+        'content/worlds/world2/v1/sessions/w2.s04/drills/d.tap_flop_right_context.json',
+        'content/worlds/world2/v1/sessions/w2.s05/drills/d.tap_turn_context.json',
+        'content/worlds/world2/v1/sessions/w2.s06/drills/d.tap_river_context.json',
+        'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_flop_sequence_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_river_sequence_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s08/drills/d.tap_turn_sequence_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s10/drills/d.tap_flop_mid_checkpoint_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s10/drills/d.tap_turn_checkpoint_anchor.json',
+      ]),
+    );
   });
 }

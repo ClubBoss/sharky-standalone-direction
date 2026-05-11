@@ -90,7 +90,10 @@ resolveWorld1CanonicalOverlayLaneContractV1(
 ) {
   const boardLaneTopInsetPx = 18.0;
   const heroLaneBottomInsetPx = 62.0;
-  final overlayLaneTop = math.max(input.stadiumRect.top + boardLaneTopInsetPx, 6.0);
+  final overlayLaneTop = math.max(
+    input.stadiumRect.top + boardLaneTopInsetPx,
+    6.0,
+  );
   final overlayLaneBottom = math.min(
     input.stadiumRect.bottom - heroLaneBottomInsetPx,
     input.canvasSize.height - 6.0,
@@ -110,10 +113,10 @@ resolveWorld1CanonicalOverlayLaneContractV1(
       input.seatVisualRadius + (input.compactPortrait ? 58.0 : 50.0);
   final demoRotatedPromptWidthFactor =
       input.demoHandLoopVisualStep &&
-              input.rotatingHeroSeatId != null &&
-              input.rotatingHeroSeatId != 'co'
-          ? 0.80
-          : 1.0;
+          input.rotatingHeroSeatId != null &&
+          input.rotatingHeroSeatId != 'co'
+      ? 0.80
+      : 1.0;
   final feltCaptionMaxWidth = input.demoHandLoopVisualStep
       ? math.max(
           180.0,
@@ -141,9 +144,9 @@ resolveWorld1CanonicalOverlayLaneContractV1(
         ..sort();
   final topArcBottomPx = topSeatCircleBottoms.isEmpty
       ? overlayLaneRect.top
-      : topSeatCircleBottoms.take(math.min(3, topSeatCircleBottoms.length)).reduce(
-          math.max,
-        );
+      : topSeatCircleBottoms
+            .take(math.min(3, topSeatCircleBottoms.length))
+            .reduce(math.max);
   final captionZonePadPx = input.handLoopVisualMode
       ? (input.compactPortrait ? 24.0 : 20.0)
       : (input.compactPortrait ? 10.0 : 8.0);
@@ -241,13 +244,19 @@ resolveWorld1CanonicalOverlayLaneContractV1(
   final demoPromptLaneRect = Rect.fromLTRB(
     feltCaptionLeft,
     math.max(
-      math.max(overlayLaneRect.top + 4, input.boardRect.bottom + captionZonePadPx),
+      math.max(
+        overlayLaneRect.top + 4,
+        input.boardRect.bottom + captionZonePadPx,
+      ),
       topSeatBandAvoidBottom,
     ),
     feltCaptionRight,
     math.max(
       math.max(
-        math.max(overlayLaneRect.top + 4, input.boardRect.bottom + captionZonePadPx),
+        math.max(
+          overlayLaneRect.top + 4,
+          input.boardRect.bottom + captionZonePadPx,
+        ),
         topSeatBandAvoidBottom,
       ),
       (input.heroCardsRect?.top ?? overlayLaneRect.bottom) -
@@ -265,8 +274,8 @@ resolveWorld1CanonicalOverlayLaneContractV1(
     overlayLaneRect.bottom - feltCaptionMaxHeightAllowance,
   );
 
-  final handLoopPromptTopBand = input.promptAffectedStateFamily &&
-          input.promptUsesFeltCaptionHost
+  final handLoopPromptTopBand =
+      input.promptAffectedStateFamily && input.promptUsesFeltCaptionHost
       ? () {
           final renderedCueAvoidRects = <Rect>[
             cueBadgeAvoidRect(
@@ -303,8 +312,9 @@ resolveWorld1CanonicalOverlayLaneContractV1(
             ),
           );
           return World1CanonicalFeltCaptionBandV1(
-            captionTop:
-                maxCaptionTop.clamp(minCaptionTop, maxCaptionTop).toDouble(),
+            captionTop: maxCaptionTop
+                .clamp(minCaptionTop, maxCaptionTop)
+                .toDouble(),
             captionLeft: feltCaptionLeft,
             captionRight: feltCaptionRight,
             maxCaptionWidth: feltCaptionMaxWidth,
@@ -318,7 +328,10 @@ resolveWorld1CanonicalOverlayLaneContractV1(
         ]
       : handLoopPromptTopBand != null
       ? <({double top, double bottom})>[
-          (top: handLoopPromptTopBand.captionTop, bottom: handLoopPromptTopBand.captionTop),
+          (
+            top: handLoopPromptTopBand.captionTop,
+            bottom: handLoopPromptTopBand.captionTop,
+          ),
         ]
       : <({double top, double bottom})>[
           (top: midZoneTop, bottom: midZoneBottom),
@@ -337,9 +350,9 @@ resolveWorld1CanonicalOverlayLaneContractV1(
     if (overlapArea > 0) {
       final pushedTop =
           (candidateRect.top + (input.compactPortrait ? 10.0 : 8.0)).clamp(
-        zoneTop,
-        zoneBottom,
-      );
+            zoneTop,
+            zoneBottom,
+          );
       final pushedRect = makeCaptionRectForTop(pushedTop);
       final pushedOverlapArea = overlapAreaWithAvoidRects(pushedRect);
       if (pushedOverlapArea <= overlapArea) {

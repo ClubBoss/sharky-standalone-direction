@@ -79,7 +79,9 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.textContaining('Half pot builds value while keeping worse hands in.'),
+        find.textContaining(
+          'Half pot builds value while keeping worse hands in.',
+        ),
         findsOneWidget,
       );
 
@@ -93,9 +95,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text(
-          'BET 1/3 works, but BET 1/2 is the stronger line here.',
-        ),
+        find.text('BET 1/3 works, but BET 1/2 is the stronger line here.'),
         findsOneWidget,
       );
       expect(
@@ -1020,11 +1020,12 @@ void main() {
       tester.view.physicalSize = const Size(1290, 3000);
       tester.view.devicePixelRatio = 1.0;
 
-      final drills = (await tester.runAsync(
-        () => const DrillRuntimeAdapterV1().loadSessionDrills('w4.s03'),
-      ))!
-          .where((item) => item.drillId == 'find_seat_s3')
-          .toList(growable: false);
+      final drills =
+          (await tester.runAsync(
+                () => const DrillRuntimeAdapterV1().loadSessionDrills('w4.s03'),
+              ))!
+              .where((item) => item.drillId == 'find_seat_s3')
+              .toList(growable: false);
 
       await tester.pumpWidget(
         MaterialApp(

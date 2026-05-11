@@ -174,48 +174,45 @@ void main() {
     },
   );
 
-  test(
-    'generic deterministic chain helper accepts valid multi-step shape',
-    () {
-      final spec = DrillSpecV1(
-        id: 'chain_valid_shape_v1',
-        kind: DrillKindV1.handChain,
-        prompt: 'Play this short chain.',
-        expected: const DrillExpectedV1(),
-        errorClass: 'unused',
-        chainIdV1: 'chain_valid_shape_v1',
-        chainStepsV1: const <DrillChainStepV1>[
-          DrillChainStepV1(
-            street: 'flop',
-            prompt: 'Step 1',
-            errorClass: 'expected_action_mismatch',
-            availableActionsV1: <String>['call', 'raise'],
-            expectedActionV1: 'raise',
-            feedbackCorrectV1: 'Correct.',
-            feedbackIncorrectV1: 'Incorrect.',
-          ),
-          DrillChainStepV1(
-            street: 'turn',
-            prompt: 'Step 2',
-            errorClass: 'range_bucket_mismatch',
-            rangeBucketV1: 'draw',
-            feedbackCorrectV1: 'Correct.',
-            feedbackIncorrectV1: 'Incorrect.',
-          ),
-        ],
-      );
-
-      expect(
-        () => validateDeterministicMultiStepChainShapeContractV1(
-          spec: spec,
-          minSteps: 2,
-          maxSteps: 4,
-          errorPrefix: 'generic deterministic chain contract',
+  test('generic deterministic chain helper accepts valid multi-step shape', () {
+    final spec = DrillSpecV1(
+      id: 'chain_valid_shape_v1',
+      kind: DrillKindV1.handChain,
+      prompt: 'Play this short chain.',
+      expected: const DrillExpectedV1(),
+      errorClass: 'unused',
+      chainIdV1: 'chain_valid_shape_v1',
+      chainStepsV1: const <DrillChainStepV1>[
+        DrillChainStepV1(
+          street: 'flop',
+          prompt: 'Step 1',
+          errorClass: 'expected_action_mismatch',
+          availableActionsV1: <String>['call', 'raise'],
+          expectedActionV1: 'raise',
+          feedbackCorrectV1: 'Correct.',
+          feedbackIncorrectV1: 'Incorrect.',
         ),
-        returnsNormally,
-      );
-    },
-  );
+        DrillChainStepV1(
+          street: 'turn',
+          prompt: 'Step 2',
+          errorClass: 'range_bucket_mismatch',
+          rangeBucketV1: 'draw',
+          feedbackCorrectV1: 'Correct.',
+          feedbackIncorrectV1: 'Incorrect.',
+        ),
+      ],
+    );
+
+    expect(
+      () => validateDeterministicMultiStepChainShapeContractV1(
+        spec: spec,
+        minSteps: 2,
+        maxSteps: 4,
+        errorPrefix: 'generic deterministic chain contract',
+      ),
+      returnsNormally,
+    );
+  });
 
   test(
     'all proven World 2 single-step table-state scenarios validate and execute headlessly',
@@ -248,7 +245,11 @@ void main() {
       var validatedDrillCount = 0;
       for (final sessionId in threeStepSessions) {
         final drills = await adapter.loadSessionDrills(sessionId);
-        expect(drills, hasLength(1), reason: '$sessionId should contain one chain');
+        expect(
+          drills,
+          hasLength(1),
+          reason: '$sessionId should contain one chain',
+        );
         final result = validator.validateWorld2ThreeStepHandChainV1(
           drills.single.spec,
         );
@@ -267,8 +268,14 @@ void main() {
       final positionResult = validator.validateWorld2SingleStepTableScenarioV1(
         positionDrill.spec,
       );
-      expect(positionResult.scenarioSpecs.single.decisionNodeV1.street, Street.flop);
-      expect(positionResult.scenarioSpecs.single.decisionNodeV1.solutionBestAction, 'hero');
+      expect(
+        positionResult.scenarioSpecs.single.decisionNodeV1.street,
+        Street.flop,
+      );
+      expect(
+        positionResult.scenarioSpecs.single.decisionNodeV1.solutionBestAction,
+        'hero',
+      );
       expect(
         positionResult.scenarioSpecs.single.resolvedSeatOccupanciesV1,
         const <ScenarioSeatOccupancyV1>[
@@ -284,11 +291,16 @@ void main() {
         chainDrill.spec,
       );
       expect(chainResult.scenarioSpecs[0].decisionNodeV1.street, Street.flop);
+      expect(chainResult.scenarioSpecs[1].decisionNodeV1.legalActions, <String>[
+        '4',
+        '8',
+        '9',
+        '15',
+      ]);
       expect(
-        chainResult.scenarioSpecs[1].decisionNodeV1.legalActions,
-        <String>['4', '8', '9', '15'],
+        chainResult.scenarioSpecs[2].decisionNodeV1.solutionBestAction,
+        'raise',
       );
-      expect(chainResult.scenarioSpecs[2].decisionNodeV1.solutionBestAction, 'raise');
     },
   );
 
@@ -298,8 +310,9 @@ void main() {
       final sessionPath = adapter.debugSessionPathForIdV1('w2.s09');
       final drillPath =
           '$sessionPath/drills/d.chain_position_initiative_texture_v1.json';
-      final rawJson = jsonDecode(await File(drillPath).readAsString())
-          as Map<String, dynamic>;
+      final rawJson =
+          jsonDecode(await File(drillPath).readAsString())
+              as Map<String, dynamic>;
       final steps = (rawJson['steps'] as List).cast<Map<String, dynamic>>();
       steps[0]['hero_seat_v1'] = 'utg';
       final malformed = DrillSpecV1.fromJson(rawJson);
@@ -323,8 +336,9 @@ void main() {
       final sessionPath = adapter.debugSessionPathForIdV1('w2.s03');
       final drillPath =
           '$sessionPath/drills/d.choose_hero_has_initiative_open_vs_call.json';
-      final rawJson = jsonDecode(await File(drillPath).readAsString())
-          as Map<String, dynamic>;
+      final rawJson =
+          jsonDecode(await File(drillPath).readAsString())
+              as Map<String, dynamic>;
       rawJson.remove('initiative_owner_v1');
       final malformed = DrillSpecV1.fromJson(rawJson);
 

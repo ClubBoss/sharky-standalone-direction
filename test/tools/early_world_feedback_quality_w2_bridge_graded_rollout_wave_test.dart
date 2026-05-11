@@ -9,40 +9,49 @@ void main() {
     () {
       final repoRoot = Directory.current.path;
       final expectations = <String, Map<String, List<String>>>{
-        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_call_bridge_tocall_price_ok.json': {
-          'feedback_acceptable_v1': <String>[
-            'Acceptable.',
-            'manageable price',
-            'keeps more value in play',
-          ],
-        },
-        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_raise_bridge_pressure_counter.json': {
-          'feedback_acceptable_v1': <String>[
-            'Acceptable.',
-            'stronger counter',
-            'absorbing pressure',
-          ],
-        },
-        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_raise_bridge_value.json': {
-          'feedback_acceptable_v1': <String>[
-            'Acceptable.',
-            'value-heavy hand',
-            'weaker continues',
-          ],
-        },
+        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_call_bridge_tocall_price_ok.json':
+            {
+              'feedback_acceptable_v1': <String>[
+                'Acceptable.',
+                'manageable price',
+                'keeps more value in play',
+              ],
+            },
+        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_raise_bridge_pressure_counter.json':
+            {
+              'feedback_acceptable_v1': <String>[
+                'Acceptable.',
+                'stronger counter',
+                'absorbing pressure',
+              ],
+            },
+        'content/worlds/world2/v1/sessions/w2.s09/drills/d.choose_raise_bridge_value.json':
+            {
+              'feedback_acceptable_v1': <String>[
+                'Acceptable.',
+                'value-heavy hand',
+                'weaker continues',
+              ],
+            },
       };
 
       for (final entry in expectations.entries) {
         final file = File('$repoRoot/${entry.key}');
-        final json = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+        final json =
+            jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
 
-        final feedbackCorrect = (json['feedback_correct_v1'] as String?)?.trim();
-        final feedbackIncorrect =
-            (json['feedback_incorrect_v1'] as String?)?.trim();
-        final feedbackAcceptable =
-            (json['feedback_acceptable_v1'] as String?)?.trim();
+        final feedbackCorrect = (json['feedback_correct_v1'] as String?)
+            ?.trim();
+        final feedbackIncorrect = (json['feedback_incorrect_v1'] as String?)
+            ?.trim();
+        final feedbackAcceptable = (json['feedback_acceptable_v1'] as String?)
+            ?.trim();
 
-        expect(feedbackCorrect, isNotNull, reason: '${entry.key} should keep feedback_correct_v1.');
+        expect(
+          feedbackCorrect,
+          isNotNull,
+          reason: '${entry.key} should keep feedback_correct_v1.',
+        );
         expect(
           feedbackIncorrect,
           isNotNull,
@@ -56,12 +65,14 @@ void main() {
         expect(
           feedbackAcceptable,
           isNot(feedbackCorrect),
-          reason: '${entry.key} acceptable feedback should differ from positive feedback.',
+          reason:
+              '${entry.key} acceptable feedback should differ from positive feedback.',
         );
         expect(
           feedbackAcceptable,
           isNot(feedbackIncorrect),
-          reason: '${entry.key} acceptable feedback should differ from corrective feedback.',
+          reason:
+              '${entry.key} acceptable feedback should differ from corrective feedback.',
         );
 
         for (final fieldEntry in entry.value.entries) {
@@ -70,7 +81,8 @@ void main() {
             expect(
               value,
               contains(snippet),
-              reason: '${entry.key} ${fieldEntry.key} should express the graded teaching reason.',
+              reason:
+                  '${entry.key} ${fieldEntry.key} should express the graded teaching reason.',
             );
           }
         }

@@ -191,13 +191,17 @@ void main() {
       );
       expect(
         find.byKey(
-          const Key('session_drill_player_world2_outs_intro_supplement_v1_title'),
+          const Key(
+            'session_drill_player_world2_outs_intro_supplement_v1_title',
+          ),
         ),
         findsOneWidget,
       );
       expect(
         find.byKey(
-          const Key('session_drill_player_world2_outs_intro_supplement_v1_body'),
+          const Key(
+            'session_drill_player_world2_outs_intro_supplement_v1_body',
+          ),
         ),
         findsOneWidget,
       );
@@ -240,7 +244,9 @@ void main() {
       );
       expect(
         find.byKey(
-          const Key('session_drill_player_world2_outs_recap_supplement_v1_body'),
+          const Key(
+            'session_drill_player_world2_outs_recap_supplement_v1_body',
+          ),
         ),
         findsOneWidget,
       );

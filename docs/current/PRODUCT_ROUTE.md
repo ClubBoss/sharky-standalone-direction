@@ -6,8 +6,8 @@ Purpose: shortest entry into the current product-working route.
 Start here:
 
 1. `docs/plan/MASTER_PLAN_v3.0.md`
-2. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-3. `docs/plan/README_ACTIVE_v1.md`
+2. `docs/plan/README_ACTIVE_v1.md`
+3. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only if launch/readiness reference is actually needed
 
 Use this route when the question is:
 

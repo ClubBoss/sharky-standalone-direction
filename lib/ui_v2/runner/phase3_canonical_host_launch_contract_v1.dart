@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 class Phase3CanonicalResolvedHostLaunchV1 {
-  const Phase3CanonicalResolvedHostLaunchV1({
-    required this.runId,
-  });
+  const Phase3CanonicalResolvedHostLaunchV1({required this.runId});
 
   final String runId;
 }

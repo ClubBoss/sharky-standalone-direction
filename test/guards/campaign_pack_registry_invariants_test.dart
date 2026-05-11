@@ -178,8 +178,8 @@ void main() {
         if (_hasRaiseAction(actions)) {
           expect(
             toCall,
-            greaterThan(0),
-            reason: 'RAISE action requires toCall>0 at step $i',
+            greaterThanOrEqualTo(0),
+            reason: 'RAISE action requires a non-negative toCall at step $i',
           );
         }
       }

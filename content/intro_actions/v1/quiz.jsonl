@@ -1,2 +1,0 @@
-{"id":"act_quiz_01","type":"mc","prompt":"In a live game, you want to check. What do you do?","options":["Scream 'Check'","Tap the table","Throw cards away"],"answer":1,"explanation":"Tapping the table is the universal signal for check."}
-{"id":"act_quiz_02","type":"mc","prompt":"Online: You have the nuts. Opponent checks. You should:","options":["Check back","Bet / Raise"],"answer":1,"explanation":"Bet to build the pot and win more money."}

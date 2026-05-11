@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+
+String _reviewCopyV1(
+  BuildContext context, {
+  String? atomId,
+  String? fallback,
+  String? en,
+  String? ru,
+}) {
+  if (atomId != null) {
+    return act0LocalizedSurfaceAtomV1(
+      context,
+      atomId,
+      fallback: fallback ?? en ?? '',
+    );
+  }
+  return _isRuLocaleV1(context) ? (ru ?? en ?? '') : (en ?? fallback ?? '');
+}
 
 class Act0ReviewShellV1 extends StatelessWidget {
   const Act0ReviewShellV1({
@@ -20,26 +42,16 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localeIsRu = _isRuLocaleV1(context);
     final nextMistake = review.mistakes.isEmpty ? null : review.mistakes.first;
-    final canDoBetter = review.mistakes
-        .where((mistake) => mistake.severityLabel == 'Can do better')
-        .toList();
-    final deepLeaks = review.mistakes
-        .where((mistake) => mistake.severityLabel == 'Deep leak')
-        .toList();
-    final stillOpen = review.mistakes
-        .where(
-          (mistake) =>
-              mistake.severityLabel != 'Deep leak' &&
-              mistake.severityLabel != 'Can do better',
-        )
-        .toList();
-    final quickFixes = review.fixedMistakes
-        .where((mistake) => mistake.severityLabel == 'Quick fix')
-        .toList();
-    final recentlyFixed = review.fixedMistakes
-        .where((mistake) => mistake.severityLabel != 'Quick fix')
-        .toList();
+    final recovered = <Act0MistakeCardV1>[
+      ...review.fixedMistakes.where(
+        (mistake) => mistake.severityLabel != 'Quick fix',
+      ),
+      ...review.fixedMistakes.where(
+        (mistake) => mistake.severityLabel == 'Quick fix',
+      ),
+    ];
     return ListView(
       key: const Key('act0_shell_review_screen'),
       padding: const EdgeInsets.fromLTRB(
@@ -49,25 +61,45 @@ class Act0ReviewShellV1 extends StatelessWidget {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        Text(review.title, style: Act0ShellTokensV1.screenTitle),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(review.subtitle, style: Act0ShellTokensV1.muted),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        Row(
-          children: [
-            for (var index = 0; index < review.stats.length; index++) ...[
-              Expanded(
-                child: _ReviewStatV1(
-                  label: review.stats[index].label,
-                  value: review.stats[index].value,
-                ),
-              ),
-              if (index < review.stats.length - 1)
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-            ],
-          ],
+        Text(
+          _reviewCopyV1(
+            context,
+            atomId: 'review_title',
+            fallback: review.title,
+          ),
+          style: Act0ShellTokensV1.screenTitle,
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          _reviewCopyV1(
+            context,
+            atomId: 'review_subtitle',
+            fallback: review.subtitle,
+          ),
+          style: Act0ShellTokensV1.muted,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        Act0SharkyGuideCardV1(
+          eyebrow: localeIsRu ? 'Шарки' : 'Sharky',
+          line: _reviewSharkyLineV1(
+            localeIsRu: localeIsRu,
+            nextMistake: nextMistake,
+            recoveredCount: recovered.length,
+          ),
+          detail: _reviewSharkyDetailV1(
+            localeIsRu: localeIsRu,
+            nextMistake: nextMistake,
+            recoveredCount: recovered.length,
+          ),
+          mood: nextMistake != null
+              ? Act0SharkyMoodV1.repair
+              : Act0SharkyMoodV1.happy,
+          tone: nextMistake != null
+              ? Act0ShellTokensV1.gold
+              : Act0ShellTokensV1.primary,
+          compact: true,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
         _ReviewBoardV1(
           review: review,
           nextMistake: nextMistake,
@@ -77,89 +109,133 @@ class Act0ReviewShellV1 extends StatelessWidget {
         if (review.mistakes.isEmpty)
           _ReviewEmptyStateV1(review: review)
         else ...[
-          if (deepLeaks.isNotEmpty) ...[
-            Text('Needs work', style: Act0ShellTokensV1.sectionTitle),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            for (final mistake in deepLeaks) ...[
-              _MistakeCardV1(
-                mistake: mistake,
-                prominent: mistake.taskId == review.mistakes.first.taskId,
-                onFixMistake: onFixMistake,
+          Text(
+            _reviewCopyV1(
+              context,
+              atomId: 'review_fix_next_label',
+              fallback: 'Fix next',
+            ),
+            style: Act0ShellTokensV1.sectionTitle,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            _reviewCopyV1(
+              context,
+              en: 'Start with the highest-pressure miss. The rest can wait.',
+              ru: 'Начни с самой давящей ошибки. Остальное может подождать.',
+            ),
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _MistakeCardV1(
+            mistake: review.mistakes.first,
+            prominent: true,
+            onFixMistake: onFixMistake,
+          ),
+          if (review.mistakes.length > 1) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Container(
+              key: const Key('act0_shell_review_more_repairs_line'),
+              padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+              decoration: Act0ShellTokensV1.surfaceDecoration(
+                color: Act0ShellTokensV1.surface2.withOpacity(0.56),
+                glow: false,
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-            ],
-          ],
-          if (stillOpen.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Text('Still open', style: Act0ShellTokensV1.sectionTitle),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            for (final mistake in stillOpen) ...[
-              _MistakeCardV1(
-                mistake: mistake,
-                prominent: mistake.taskId == review.mistakes.first.taskId,
-                onFixMistake: onFixMistake,
+              child: Text(
+                localeIsRu
+                    ? (review.mistakes.length == 2
+                          ? 'После этого ждёт ещё один фикс.'
+                          : 'После этого ждут ещё ${review.mistakes.length - 1} фикса.')
+                    : (review.mistakes.length == 2
+                          ? '1 more repair is waiting after this one.'
+                          : '${review.mistakes.length - 1} more repairs are waiting after this one.'),
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textDim,
+                ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-            ],
-          ],
-          if (canDoBetter.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Text('Can do better', style: Act0ShellTokensV1.sectionTitle),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            for (final item in canDoBetter) ...[
-              _MistakeCardV1(
-                mistake: item,
-                prominent: false,
-                onFixMistake: onFixMistake,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-            ],
+            ),
           ],
         ],
-        if (quickFixes.isNotEmpty) ...[
+        if (recovered.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapLg),
-          Text('Quick fixes', style: Act0ShellTokensV1.sectionTitle),
+          Text(
+            _reviewCopyV1(
+              context,
+              atomId: 'review_recovered_lately_label',
+              fallback: 'Recovered lately',
+            ),
+            style: Act0ShellTokensV1.sectionTitle,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            localeIsRu
+                ? (recovered.length == 1
+                      ? 'Один спот уже снова под контролем. Так протечки перестают казаться вечными.'
+                      : '${recovered.length} спота уже снова под контролем. Так игра начинает ощущаться легче.')
+                : (recovered.length == 1
+                      ? 'One spot is already back under control. That is how leaks stop feeling permanent.'
+                      : '${recovered.length} spots are already back under control. That is how the board starts feeling lighter.'),
+            style: Act0ShellTokensV1.muted,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (final mistake in quickFixes.take(3)) ...[
+          for (final mistake in recovered.take(2)) ...[
             _FixedMistakeCardV1(
               mistake: mistake,
-              quick: true,
+              quick: mistake.severityLabel == 'Quick fix',
               onReplay: onReplayFixedMistake,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
         ],
-        if (recentlyFixed.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-          Text('Recently fixed', style: Act0ShellTokensV1.sectionTitle),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (final mistake in recentlyFixed.take(3)) ...[
-            _FixedMistakeCardV1(
-              mistake: mistake,
-              onReplay: onReplayFixedMistake,
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-          ],
-        ],
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        Text('Strong spots', style: Act0ShellTokensV1.sectionTitle),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        Wrap(
-          spacing: Act0ShellTokensV1.gapSm,
-          runSpacing: Act0ShellTokensV1.gapSm,
-          children: [
-            for (final spot in review.strongSpots)
-              _SpotPillV1(label: spot, color: Act0ShellTokensV1.primary),
-            if (review.strongSpots.isEmpty)
-              const _SpotPillV1(
-                label: 'Finish a clean drill',
-                color: Act0ShellTokensV1.textDim,
-              ),
-          ],
-        ),
       ],
     );
   }
+}
+
+String _reviewSharkyLineV1({
+  required bool localeIsRu,
+  required Act0MistakeCardV1? nextMistake,
+  required int recoveredCount,
+}) {
+  if (nextMistake == null) {
+    return localeIsRu
+        ? (recoveredCount > 0
+              ? 'Стол снова чист. Этот фикс закрепился.'
+              : 'Стол чист. Держи маршрут в движении.')
+        : (recoveredCount > 0
+              ? 'Board is clean again. That repair work stuck.'
+              : 'Board is clean. Keep the route moving.');
+  }
+  if (recoveredCount > 0) {
+    return localeIsRu
+        ? 'Сначала один чистый фикс. ${recoveredCount == 1 ? 'Один спот уже вернулся.' : '$recoveredCount спота уже вернулись.'}'
+        : 'One clean fix first. ${recoveredCount == 1 ? 'One spot is already back.' : '$recoveredCount spots are already back.'}';
+  }
+  return localeIsRu
+      ? 'Сначала один чистый фикс. Остальное может подождать.'
+      : 'One clean fix first. The rest can wait.';
+}
+
+String _reviewSharkyDetailV1({
+  required bool localeIsRu,
+  required Act0MistakeCardV1? nextMistake,
+  required int recoveredCount,
+}) {
+  if (nextMistake == null) {
+    return localeIsRu
+        ? (recoveredCount > 0
+              ? 'Сейчас в маршруте нет ничего срочного.'
+              : 'Сейчас путь не тянет ни в какой срочный фикс.')
+        : (recoveredCount > 0
+              ? 'Nothing urgent is pulling on the route right now.'
+              : 'No urgent repair is pulling on the path right now.');
+  }
+  if (recoveredCount > 0) {
+    return localeIsRu
+        ? '${nextMistake.weaknessLabel} — следующая точка давления. Почини её, и игра снова станет легче.'
+        : '${nextMistake.weaknessLabel} is the next pressure point. Clean it and the board gets lighter again.';
+  }
+  return nextMistake.weaknessLabel;
 }
 
 class _ReviewBoardV1 extends StatelessWidget {
@@ -175,28 +251,52 @@ class _ReviewBoardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final openCount = review.mistakes.length;
-    final fixedCount = review.fixedMistakes.length;
-    final strongCount = review.strongSpots.length;
     final hasRepair = nextMistake != null;
     final tone = hasRepair ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary;
-    final title = hasRepair ? 'Repair first' : 'Review board';
-    final headline = hasRepair ? nextMistake!.title : 'Board is clean';
+    final title = hasRepair
+        ? _reviewCopyV1(
+            context,
+            atomId: 'review_board_title_fix',
+            fallback: 'Fix next',
+          )
+        : _reviewCopyV1(
+            context,
+            atomId: 'review_board_title_clean',
+            fallback: 'Review',
+          );
+    final headline = hasRepair
+        ? nextMistake!.title
+        : _reviewCopyV1(
+            context,
+            atomId: 'review_board_headline_clean',
+            fallback: 'Board is clean',
+          );
     final body = hasRepair
         ? nextMistake!.reason
-        : 'No urgent fixes right now. Keep the board clean with one crisp run.';
+        : _reviewCopyV1(
+            context,
+            atomId: 'review_board_body_clean',
+            fallback:
+                'No urgent fixes right now. Keep the board clean with one crisp run.',
+          );
     final support = hasRepair
-        ? 'Fix one weak spot. Then keep the path moving.'
+        ? _reviewCopyV1(
+            context,
+            atomId: 'review_board_support_fix',
+            fallback:
+                'One clean fix here matters more than scanning the whole board.',
+          )
         : (review.strongSpots.isEmpty
-              ? 'Finish one clean drill to start a momentum streak.'
-              : 'Keep your strongest reads warm while the board stays clean.');
-    final nextActionLabel = hasRepair ? 'Repair first' : 'Daily set';
-    final nextActionTitle = hasRepair
-        ? 'Fix ${nextMistake!.weaknessLabel} now'
-        : 'Run daily set';
-    final nextActionBody = hasRepair
-        ? 'Fix this spot now. On repair: return to your main path.'
-        : 'Three crisp reps keep this board empty and your strong reads warm.';
+              ? _reviewCopyV1(
+                  context,
+                  atomId: 'review_board_support_clean_empty',
+                  fallback: 'Nothing to fix yet. Keep the route moving.',
+                )
+              : _reviewCopyV1(
+                  context,
+                  atomId: 'review_board_support_clean_strong',
+                  fallback: 'You are clean right now. Keep the route moving.',
+                ));
 
     return Container(
       key: const Key('act0_shell_review_board'),
@@ -286,39 +386,6 @@ class _ReviewBoardV1 extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Wrap(
-            spacing: Act0ShellTokensV1.gapSm,
-            runSpacing: Act0ShellTokensV1.gapSm,
-            children: [
-              _ReviewBoardMetricPillV1(
-                key: const Key('act0_shell_review_board_open_count'),
-                label: openCount == 1
-                    ? '1 to fix now'
-                    : '$openCount to fix now',
-                tone: hasRepair
-                    ? Act0ShellTokensV1.gold
-                    : Act0ShellTokensV1.textDim,
-                icon: Icons.flag_rounded,
-              ),
-              _ReviewBoardMetricPillV1(
-                key: const Key('act0_shell_review_board_fixed_count'),
-                label: fixedCount == 1
-                    ? '1 recovered'
-                    : '$fixedCount recovered',
-                tone: Act0ShellTokensV1.primary,
-                icon: Icons.check_circle_rounded,
-              ),
-              _ReviewBoardMetricPillV1(
-                key: const Key('act0_shell_review_board_strong_count'),
-                label: strongCount == 1
-                    ? '1 strong read'
-                    : '$strongCount strong reads',
-                tone: Act0ShellTokensV1.info,
-                icon: Icons.bolt_rounded,
-              ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
           Container(
             key: const Key('act0_shell_review_board_support_line'),
             padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -338,81 +405,13 @@ class _ReviewBoardV1 extends StatelessWidget {
                 Expanded(
                   child: Text(
                     support,
+                    key: const Key('act0_shell_review_board_support_text'),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
                       fontWeight: FontWeight.w800,
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
-            'Mistakes are data. Your next decision is what counts.',
-            key: const Key('act0_shell_review_board_trust_line'),
-            style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Container(
-            key: const Key('act0_shell_review_board_next_action'),
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface3,
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-              border: Border.all(
-                color: hasRepair
-                    ? Act0ShellTokensV1.gold.withOpacity(0.28)
-                    : Act0ShellTokensV1.primary.withOpacity(0.24),
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  hasRepair ? Icons.build_rounded : Icons.play_arrow_rounded,
-                  size: 18,
-                  color: hasRepair
-                      ? Act0ShellTokensV1.gold
-                      : Act0ShellTokensV1.primary,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        nextActionLabel,
-                        key: const Key(
-                          'act0_shell_review_board_next_action_label',
-                        ),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: hasRepair
-                              ? Act0ShellTokensV1.gold
-                              : Act0ShellTokensV1.primary,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        nextActionTitle,
-                        key: const Key(
-                          'act0_shell_review_board_next_action_title',
-                        ),
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        nextActionBody,
-                        key: const Key(
-                          'act0_shell_review_board_next_action_body',
-                        ),
-                        style: Act0ShellTokensV1.muted,
-                      ),
-                    ],
                   ),
                 ),
               ],
@@ -425,7 +424,13 @@ class _ReviewBoardV1 extends StatelessWidget {
               onPressed: () => onFixMistake!(nextMistake!),
               style: Act0ShellTokensV1.quietButtonStyle(),
               icon: const Icon(Icons.build_rounded, size: 18),
-              label: const Text('Fix now'),
+              label: Text(
+                _reviewCopyV1(
+                  context,
+                  atomId: 'review_board_fix_cta',
+                  fallback: 'Fix now',
+                ),
+              ),
             ),
           ],
         ],
@@ -814,8 +819,8 @@ class _ReviewBoardMetricPillV1 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(
               color: tone,
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
@@ -848,16 +853,16 @@ class _SpotPillV1 extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface3,
+        color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: Act0ShellTokensV1.border.withOpacity(0.92)),
+        border: Border.all(color: color.withOpacity(0.18)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),

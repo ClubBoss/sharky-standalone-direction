@@ -1,7 +1,0 @@
-{"id":"c19:quiz:01","type":"mc","prompt":"Why use small cbets on dry boards?","options":["Range edge","No fold equity","Stacks tiny"],"answer":0,"explanation":"Preflop aggressor owns board; small size gains folds efficiently."}
-{"id":"c19:quiz:02","type":"tf","prompt":"Paired boards reduce bluff success.","answer":true,"explanation":"Fewer folds because coverage is strong; value rises."}
-{"id":"c19:quiz:03","type":"mc","prompt":"3BP OOP on wet flop best default?","options":["Check more","Jam often","Min-bet"],"answer":0,"explanation":"Checking keeps pot manageable when equity swings."}
-{"id":"c19:quiz:04","type":"tf","prompt":"Overfolding pools invite wider turn barrels.","answer":true,"explanation":"High fold rates make second barrels profitable."}
-{"id":"c19:quiz:05","type":"mc","prompt":"ICM fear plus undersized cbet suggests?","options":["Capped range","Max strength","Random play"],"answer":0,"explanation":"Small sizing under pressure often signals capped holdings."}
-{"id":"c19:quiz:06","type":"mc","prompt":"River thin value works best versus overcallers.","options":["Yes","No","Never bet"],"answer":0,"explanation":"Loose callers pay small value bets with bluff-catchers."}
-{"id":"c19:quiz:07","type":"tf","prompt":"GTO ignores population leaks by design.","answer":true,"explanation":"Balanced play targets equilibrium, not field-specific errors."}

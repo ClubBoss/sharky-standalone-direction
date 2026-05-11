@@ -93,10 +93,7 @@ void main() {
         'lib/ui_v2/runner/world1_modern_table_adapter_v1.dart',
       ).readAsStringSync();
 
-      expect(
-        owner.contains('_buildWorld1CanonicalEmbeddedTableV1('),
-        isTrue,
-      );
+      expect(owner.contains('_buildWorld1CanonicalEmbeddedTableV1('), isTrue);
       expect(owner.contains('child: ModernTableScreenV1('), isTrue);
       expect(
         owner.contains('tableBuilder: (context) => _buildWorld1TableV1('),

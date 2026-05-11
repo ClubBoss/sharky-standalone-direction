@@ -58,7 +58,8 @@ List<CheckpointSeededDrillV1> buildCheckpointSeededDrillsV1({
     candidates.add(
       CheckpointSeededDrillV1(
         drillId: 'checkpoint_${(i + 1).toString().padLeft(2, '0')}',
-        errorClass: _checkpointGlobalErrorClassByStepIndexV1[i] ?? 'checkpoint_misc',
+        errorClass:
+            _checkpointGlobalErrorClassByStepIndexV1[i] ?? 'checkpoint_misc',
         step: steps[i],
       ),
     );
@@ -66,14 +67,15 @@ List<CheckpointSeededDrillV1> buildCheckpointSeededDrillsV1({
   final selected = <CheckpointSeededDrillV1>[];
   final selectedIds = <String>{};
   List<CheckpointSeededDrillV1> sortedForClass(String errorClass) {
-    final filtered = candidates
-        .where(
-          (candidate) =>
-              candidate.errorClass == errorClass &&
-              !selectedIds.contains(candidate.drillId),
-        )
-        .toList(growable: false)
-      ..sort((a, b) => a.drillId.compareTo(b.drillId));
+    final filtered =
+        candidates
+            .where(
+              (candidate) =>
+                  candidate.errorClass == errorClass &&
+                  !selectedIds.contains(candidate.drillId),
+            )
+            .toList(growable: false)
+          ..sort((a, b) => a.drillId.compareTo(b.drillId));
     return filtered;
   }
 
@@ -95,10 +97,11 @@ List<CheckpointSeededDrillV1> buildCheckpointSeededDrillsV1({
     }
   }
 
-  final fallback = candidates
-      .where((candidate) => !selectedIds.contains(candidate.drillId))
-      .toList(growable: false)
-    ..sort((a, b) => a.drillId.compareTo(b.drillId));
+  final fallback =
+      candidates
+          .where((candidate) => !selectedIds.contains(candidate.drillId))
+          .toList(growable: false)
+        ..sort((a, b) => a.drillId.compareTo(b.drillId));
   for (final item in fallback) {
     selected.add(item);
   }
@@ -204,11 +207,12 @@ bootstrapWorld1ReviewQueueSessionV1({
         await (loadReviewQueue ?? ProgressService.getReviewQueueForPackV1)(
           normalizedPackId,
         );
-    final queued = refs
-        .map((ref) => ref.stepIndex)
-        .where((index) => index >= 0 && index < stepCount)
-        .toList(growable: false)
-      ..sort();
+    final queued =
+        refs
+            .map((ref) => ref.stepIndex)
+            .where((index) => index >= 0 && index < stepCount)
+            .toList(growable: false)
+          ..sort();
     if (queued.isEmpty) {
       return const World1CanonicalReviewQueueBootstrapResultV1(
         shouldPop: true,

@@ -132,8 +132,9 @@ void main() {
       },
     );
 
-    String? presetFor(String label) =>
-        model.options.firstWhere((o) => o.label == label).pilotBetSizingPresetId;
+    String? presetFor(String label) => model.options
+        .firstWhere((o) => o.label == label)
+        .pilotBetSizingPresetId;
 
     expect(presetFor('BET 1/3'), 'one_third_pot');
     expect(presetFor('BET 1/2'), 'half_pot');

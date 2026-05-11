@@ -1,8 +1,0 @@
-module_id: cash_l3_stub_v1
-version: v1
-files:
-  theory: theory.md
-  drills: drills.jsonl
-  recap: recap.md
-  quiz: quiz.jsonl
-  pack: pack.json

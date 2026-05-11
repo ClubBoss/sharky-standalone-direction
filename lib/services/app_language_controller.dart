@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppLanguageController extends ChangeNotifier {
   static const String _keyLanguageCode = 'app_language_code';
 
-  Locale _currentLocale = const Locale('en');
+  Locale _currentLocale = const Locale('ru');
   bool _isInitialized = false;
 
   /// Supported languages with their native names
@@ -56,15 +56,15 @@ class AppLanguageController extends ChangeNotifier {
           supportedLanguages.containsKey(savedLanguageCode)) {
         _currentLocale = Locale(savedLanguageCode);
       } else {
-        // Default to English if no saved preference
-        _currentLocale = const Locale('en');
+        // Launch default stays Russian until the full premium RU pass lands.
+        _currentLocale = const Locale('ru');
       }
 
       _isInitialized = true;
       notifyListeners();
     } catch (e) {
-      // Silently fail with default English
-      _currentLocale = const Locale('en');
+      // Silently fail with the launch default locale.
+      _currentLocale = const Locale('ru');
       _isInitialized = true;
     }
   }

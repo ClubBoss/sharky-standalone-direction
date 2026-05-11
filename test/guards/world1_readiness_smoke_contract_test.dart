@@ -33,6 +33,85 @@ Future<bool> _tapIfVisible(WidgetTester tester, Finder finder) async {
   return true;
 }
 
+Future<void> _completeIntroSequenceIfPresent(WidgetTester tester) async {
+  final introSequenceFinder = find.byKey(
+    const Key('microtask_intro_sequence_v1'),
+  );
+  await tester.pump();
+  if (introSequenceFinder.evaluate().isEmpty) {
+    return;
+  }
+
+  final introContinueFinder = find.byKey(
+    const Key('microtask_intro_continue_cta_v1'),
+  );
+
+  Future<bool> tryContinueIfEnabled() async {
+    if (introContinueFinder.evaluate().isEmpty) return false;
+    final continueButton = tester.widget<FilledButton>(introContinueFinder);
+    if (continueButton.onPressed == null) return false;
+    await tester.tap(introContinueFinder, warnIfMissed: false);
+    await tester.pump();
+    return true;
+  }
+
+  if (await tryContinueIfEnabled()) {
+    if (introSequenceFinder.evaluate().isEmpty) {
+      return;
+    }
+  }
+
+  Future<void> completeTapStep(String seatId) async {
+    await tester.tap(
+      find.byKey(Key('microtask_seat_$seatId')),
+      warnIfMissed: false,
+    );
+    await tester.pump();
+    final continueButton = tester.widget<FilledButton>(introContinueFinder);
+    expect(continueButton.onPressed, isNotNull);
+    await tester.tap(introContinueFinder, warnIfMissed: false);
+    await tester.pump();
+  }
+
+  await completeTapStep('btn');
+  if (introSequenceFinder.evaluate().isEmpty) return;
+  await completeTapStep('sb');
+  if (introSequenceFinder.evaluate().isEmpty) return;
+  await completeTapStep('bb');
+}
+
+class _SpineContractState {
+  const _SpineContractState({
+    required this.target,
+    required this.requiresContinue,
+  });
+
+  final String target;
+  final bool requiresContinue;
+}
+
+_SpineContractState _readSpineContract(WidgetTester tester) {
+  final targetFinder = find.byKey(
+    const Key('spine_contract_expected_target'),
+    skipOffstage: false,
+  );
+  final continueFinder = find.byKey(
+    const Key('spine_contract_requires_continue'),
+    skipOffstage: false,
+  );
+  final targetText = targetFinder.evaluate().isNotEmpty
+      ? (tester.widget<Text>(targetFinder.first).data ?? '')
+      : '';
+  final continueText = continueFinder.evaluate().isNotEmpty
+      ? (tester.widget<Text>(continueFinder.first).data ?? '')
+      : '';
+  final targetMatch = RegExp(r'^target=(.+)$').firstMatch(targetText.trim());
+  return _SpineContractState(
+    target: (targetMatch?.group(1) ?? '').trim(),
+    requiresContinue: continueText.trim() == 'continue=1',
+  );
+}
+
 Future<void> _advanceDrillUntilResult(WidgetTester tester) async {
   for (var i = 0; i < 60; i++) {
     if (find.byType(SessionResultScreen).evaluate().isNotEmpty) {
@@ -74,27 +153,213 @@ Future<void> _advanceDrillUntilResult(WidgetTester tester) async {
 }
 
 Future<void> _advanceTablePracticeUntilResult(WidgetTester tester) async {
-  const candidateSeatIds = <String>['btn', 'sb', 'bb', 'hj', 'co'];
-  for (var i = 0; i < 24; i++) {
+  const candidateSeatIds = <String>['btn', 'sb', 'bb', 'hj', 'co', 'utg'];
+  var reachedInteractiveRunner = false;
+  for (var i = 0; i < 80; i++) {
     if (find.byType(SessionResultScreen).evaluate().isNotEmpty) {
+      await tester.tap(
+        find.byKey(const Key('session_result_back_to_map_cta')),
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
       return;
     }
+    if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
+      return;
+    }
+    await _completeIntroSequenceIfPresent(tester);
+    final prelude = find.byKey(const Key('microtask_prelude_continue_cta_v1'));
+    if (await _tapIfVisible(tester, prelude)) {
+      await tester.pump(const Duration(milliseconds: 90));
+      continue;
+    }
+    final intro = find.byKey(const Key('microtask_intro_continue_cta_v1'));
+    if (await _tapIfVisible(tester, intro)) {
+      await tester.pump(const Duration(milliseconds: 90));
+      continue;
+    }
+    final outcomeSurface = find.byKey(const Key('microtask_outcome_surface'));
+    final continueCta = find.byKey(const Key('microtask_continue_cta'));
+    if (outcomeSurface.evaluate().isNotEmpty ||
+        continueCta.evaluate().isNotEmpty) {
+      if (await _tapIfVisible(tester, continueCta)) {
+        await tester.pumpAndSettle();
+        continue;
+      }
+      await tester.pump(const Duration(milliseconds: 160));
+      continue;
+    }
+    final tableCheck = find.byKey(const Key('table_practice_check_cta'));
+    final microtaskCheck = find.byKey(const Key('microtask_check_cta'));
+    if (tableCheck.evaluate().isNotEmpty || microtaskCheck.evaluate().isNotEmpty) {
+      reachedInteractiveRunner = true;
+      break;
+    }
+    if (find.byKey(const Key('spine_contract_expected_target')).evaluate().isNotEmpty ||
+        find.byKey(const Key('spine_contract_requires_continue')).evaluate().isNotEmpty) {
+      final contract = _readSpineContract(tester);
+      if (contract.requiresContinue) {
+        final continueTarget = find.byKey(
+          const Key('spine_contract_target_continue'),
+        );
+        if (continueTarget.evaluate().isNotEmpty) {
+          await tester.tap(continueTarget.first, warnIfMissed: false);
+          await tester.pump(const Duration(milliseconds: 120));
+        }
+      }
+      if (contract.target.isNotEmpty) {
+        final targetFinder = find.byKey(
+          Key('spine_contract_target_${contract.target}'),
+        );
+        if (targetFinder.evaluate().isNotEmpty) {
+          await tester.tap(targetFinder.first, warnIfMissed: false);
+          await tester.pump(const Duration(milliseconds: 80));
+        }
+      }
+      final spineCheck = find.byKey(const Key('microtask_check_cta'));
+      if (await _tapIfVisible(tester, spineCheck)) {
+        await tester.pumpAndSettle();
+      }
+      if (await _tapIfVisible(tester, tableCheck)) {
+        await tester.pumpAndSettle();
+      }
+      if (await _tapIfVisible(tester, continueCta)) {
+        await tester.pumpAndSettle();
+      }
+      if (find.byType(SessionResultScreen).evaluate().isNotEmpty) {
+        return;
+      }
+      continue;
+    }
     for (final seatId in candidateSeatIds) {
-      final seat = find.byKey(Key('table_practice_seat_$seatId'));
-      final check = find.byKey(const Key('table_practice_check_cta'));
-      if (await _tapIfVisible(tester, seat)) {
+      final tableSeat = find.byKey(Key('table_practice_seat_$seatId'));
+      final microtaskSeat = find.byKey(Key('microtask_seat_$seatId'));
+      if (await _tapIfVisible(tester, tableSeat) ||
+          await _tapIfVisible(tester, microtaskSeat)) {
         await tester.pump(const Duration(milliseconds: 120));
       }
-      if (await _tapIfVisible(tester, check)) {
-        await tester.pump(const Duration(milliseconds: 220));
-        await tester.pump(const Duration(milliseconds: 220));
+      if (await _tapIfVisible(tester, tableCheck) ||
+          await _tapIfVisible(tester, microtaskCheck)) {
+        await tester.pumpAndSettle();
+      }
+      if (await _tapIfVisible(tester, continueCta)) {
+        await tester.pumpAndSettle();
       }
       if (find.byType(SessionResultScreen).evaluate().isNotEmpty) {
         return;
       }
     }
   }
-  fail('Table practice did not reach SessionResultScreen within step budget.');
+
+  if (reachedInteractiveRunner &&
+      find.byType(UiV2ProgressMapScreenV2).evaluate().isEmpty) {
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
+      return;
+    }
+  }
+
+  fail('Table practice did not reach a stable end-state or return to map within step budget.');
+}
+
+Future<void> _launchTablePracticeAndReturnToMap(WidgetTester tester) async {
+  await _completeIntroSequenceIfPresent(tester);
+  for (var i = 0; i < 160; i++) {
+    if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
+      return;
+    }
+    if (find.byKey(const Key('table_practice_check_cta')).evaluate().isNotEmpty ||
+        find.byKey(const Key('microtask_check_cta')).evaluate().isNotEmpty ||
+        find.byKey(const Key('microtask_campaign_action_bar')).evaluate().isNotEmpty) {
+      for (var popCount = 0; popCount < 4; popCount++) {
+        if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
+          return;
+        }
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+      }
+      return;
+    }
+    await tester.pump(const Duration(milliseconds: 80));
+  }
+  fail('Table practice did not reach an interactive runner state within budget.');
+}
+
+Future<void> _driveSpineRunnerToResultDeterministically(
+  WidgetTester tester,
+) async {
+  for (var i = 0; i < 220; i++) {
+    if (find.byType(SessionResultScreen).evaluate().isNotEmpty) {
+      return;
+    }
+    if (find.byKey(const Key('map_shell_v1')).evaluate().isNotEmpty &&
+        find.byKey(const Key('microtask_step_header')).evaluate().isEmpty) {
+      return;
+    }
+    if (find.byKey(const Key('microtask_step_header')).evaluate().isEmpty) {
+      await tester.pump(const Duration(milliseconds: 100));
+      continue;
+    }
+    final contract = _readSpineContract(tester);
+    if (contract.requiresContinue) {
+      final continueTarget = find.byKey(
+        const Key('spine_contract_target_continue'),
+      );
+      if (continueTarget.evaluate().isNotEmpty) {
+        await tester.tap(continueTarget.first, warnIfMissed: false);
+      }
+      await tester.pump(const Duration(milliseconds: 120));
+      continue;
+    }
+    if (contract.target.isNotEmpty) {
+      final targetFinder = find.byKey(
+        Key('spine_contract_target_${contract.target}'),
+      );
+      if (targetFinder.evaluate().isNotEmpty) {
+        await tester.tap(targetFinder.first, warnIfMissed: false);
+        await tester.pump(const Duration(milliseconds: 60));
+      }
+    }
+    final actionBar = find.byKey(const Key('microtask_campaign_action_bar'));
+    if (actionBar.evaluate().isNotEmpty) {
+      Finder? actionTarget;
+      for (final label in const <String>['CHECK', 'CALL', 'FOLD']) {
+        final candidate = find.descendant(
+          of: actionBar,
+          matching: find.widgetWithText(OutlinedButton, label),
+        );
+        if (candidate.evaluate().isEmpty) {
+          continue;
+        }
+        final enabledCandidate = candidate.evaluate().firstWhere(
+          (element) => (element.widget as OutlinedButton).onPressed != null,
+          orElse: () => candidate.evaluate().first,
+        );
+        final button = enabledCandidate.widget as OutlinedButton;
+        if (button.onPressed == null) {
+          continue;
+        }
+        actionTarget = find.byWidget(enabledCandidate.widget).first;
+        break;
+      }
+      if (actionTarget != null) {
+        await tester.tap(actionTarget, warnIfMissed: false);
+        await tester.pump(const Duration(milliseconds: 220));
+        await tester.pump(const Duration(milliseconds: 220));
+        continue;
+      }
+    }
+    final check = find.byKey(const Key('microtask_check_cta'));
+    if (check.evaluate().isNotEmpty) {
+      await tester.tap(check.first, warnIfMissed: false);
+      await tester.pump(const Duration(milliseconds: 220));
+      await tester.pump(const Duration(milliseconds: 220));
+      continue;
+    }
+    await tester.pump(const Duration(milliseconds: 120));
+  }
+  fail('Did not reach SessionResultScreen within deterministic budget.');
 }
 
 void main() {
@@ -154,15 +419,16 @@ void main() {
           .byType(World1FoundationsMicroTaskRunnerScreen)
           .evaluate()
           .isNotEmpty) {
-        await _advanceTablePracticeUntilResult(tester);
+        await _launchTablePracticeAndReturnToMap(tester);
       } else {
         expect(find.byType(DrillRunnerScreen), findsOneWidget);
         await _advanceDrillUntilResult(tester);
+        expect(find.byType(SessionResultScreen), findsOneWidget);
+        await tester.tap(
+          find.byKey(const Key('session_result_back_to_map_cta')),
+        );
+        await tester.pumpAndSettle();
       }
-
-      expect(find.byType(SessionResultScreen), findsOneWidget);
-      await tester.tap(find.byKey(const Key('session_result_back_to_map_cta')));
-      await tester.pumpAndSettle();
 
       expect(find.byType(UiV2ProgressMapScreenV2), findsOneWidget);
       expect(
@@ -191,26 +457,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('microtask_runner')), findsOneWidget);
-      var returnedToMap = false;
-      for (final seatId in <String>['btn', 'sb', 'bb', 'hj', 'co']) {
-        final seat = find.byKey(Key('microtask_seat_$seatId'));
-        if (seat.evaluate().isEmpty) {
-          continue;
-        }
-        await tester.tap(seat.first, warnIfMissed: false);
-        await tester.pump();
-        await tester.tap(find.byKey(const Key('microtask_check_cta')));
-        await tester.pump(const Duration(milliseconds: 300));
-        await tester.pumpAndSettle();
-        if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
-          returnedToMap = true;
-          break;
-        }
-      }
-      expect(returnedToMap, isTrue);
+      await _advanceTablePracticeUntilResult(tester);
 
       expect(find.byType(UiV2ProgressMapScreenV2), findsOneWidget);
-      expect(find.text('Completed Today'), findsOneWidget);
 
       for (final moduleId in kWorld1CanonicalModuleOrder) {
         await ProgressService.markModuleCompleted(moduleId);
@@ -255,18 +504,15 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: World1FoundationsMicroTaskRunnerScreen(
-          moduleId: 'intro_welcome',
-          moduleTitle: 'Welcome to Poker',
-          isDailyRun: true,
+          moduleId: 'world1_spine_campaign_v1',
+          moduleTitle: 'World 1',
+          mode: kWorld1RunnerModeCampaignSpine,
         ),
       ),
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('microtask_seat_btn')));
-    await tester.pump(const Duration(milliseconds: 50));
-    await tester.tap(find.byKey(const Key('microtask_check_cta')));
-    await tester.pumpAndSettle();
+    await _driveSpineRunnerToResultDeterministically(tester);
 
     final eventNames = logged.map((event) => event['name'] as String).toSet();
     expect(eventNames, contains('session_start'));

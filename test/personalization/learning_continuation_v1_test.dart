@@ -38,28 +38,31 @@ void main() {
     expect(handoffContext.continuationReasonCode, continuation.reasonCode);
   });
 
-  test('early-arc session continuation uses route headline instead of local focus', () {
-    const recommendation = PersonalizedRecommendationV1(
-      recommendedFocusId: 'showdown_truth',
-      reasonCode: 'showdown_truth_bridge',
-      shortHintText:
-          'You are ready to carry the same simple table anchors into the first World 2 session route.',
-      recommendedNextAction: PersonalizedNextActionV1.nextModule,
-      recommendedNextSessionTarget: 'w2.s01',
-    );
+  test(
+    'early-arc session continuation uses route headline instead of local focus',
+    () {
+      const recommendation = PersonalizedRecommendationV1(
+        recommendedFocusId: 'showdown_truth',
+        reasonCode: 'showdown_truth_bridge',
+        shortHintText:
+            'You are ready to carry the same simple table anchors into the first World 2 session route.',
+        recommendedNextAction: PersonalizedNextActionV1.nextModule,
+        recommendedNextSessionTarget: 'w2.s01',
+      );
 
-    final continuation =
-        LearningContinuationFactoryV1.fromPersonalizedRecommendation(
-          recommendation: recommendation,
-          resolveModuleTitle: recommendedModuleTitleForId,
-        );
+      final continuation =
+          LearningContinuationFactoryV1.fromPersonalizedRecommendation(
+            recommendation: recommendation,
+            resolveModuleTitle: recommendedModuleTitleForId,
+          );
 
-    expect(continuation, isNotNull);
-    expect(
-      continuation!.headline,
-      'What changes now: Read visible table truth',
-    );
-  });
+      expect(continuation, isNotNull);
+      expect(
+        continuation!.headline,
+        'What changes now: Read visible table truth',
+      );
+    },
+  );
 
   test('shared learning continuation preserves weak-pattern review context', () {
     const reviewContract = WeakPatternReviewContractV1(

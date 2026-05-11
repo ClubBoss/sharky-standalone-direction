@@ -65,10 +65,7 @@ void main() {
       streetContract?.nextSessionProgressLabel,
       'World 1 · Pack 4 of 7 · Campaign spine',
     );
-    expect(
-      tableContract?.statusText,
-      'Table map · Pack 1 of 7 · Step 1 of 3',
-    );
+    expect(tableContract?.statusText, 'Table map · Pack 1 of 7 · Step 1 of 3');
     expect(
       actionContract?.statusText,
       'First action choices · Pack 2 of 7 · Step 1 of 3',

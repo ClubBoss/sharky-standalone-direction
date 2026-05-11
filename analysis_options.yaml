@@ -48,6 +48,26 @@ analyzer:
     - bin/**
     - design/components/**
     - design/screenshots/**
+    # Legacy / archive test directories — excluded from analysis
+    - test/*.dart
+    - test/architecture/**
+    - test/controllers/**
+    - test/core/**
+    - test/ev/**
+    - test/headless/**
+    - test/helpers/**
+    - test/models/**
+    - test/presenters/**
+    - test/quarantine/**
+    - test/smoke/**
+    - test/undo_history/**
+    - test/utils/**
+    - test/widgets/**
+    - test/services/**
+    - test/screens/**
+    - test/ui_v2/runner/world1_seat_quiz_feedback_copy_v1_test.dart
+    - test/ui_v2/ui_v2_session_result_screen_contract_test.dart
+    - test_v2/**
   errors:
     missing_return: error
     dead_code: error
@@ -75,7 +95,7 @@ analyzer:
 
 linter:
   rules:
-    - always_declare_return_types
+    # always_declare_return_types — disabled: generates info noise in test files
     # - avoid_print  # Disabled to reduce noise in tool/ scripts
     - avoid_types_on_closure_parameters
     # - prefer_const_constructors  # Disabled - causes too many issues
@@ -85,6 +105,6 @@ linter:
     - unnecessary_this
     - use_key_in_widget_constructors
     - await_only_futures
-    - unnecessary_lambdas
+    # - unnecessary_lambdas  # disabled: generates info noise in test/services
     - unnecessary_null_checks
     - unnecessary_brace_in_string_interps

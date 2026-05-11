@@ -33,16 +33,19 @@ void main() {
     }
   });
 
-  test('validator no longer reports World 0 board-slot jargon failures', () async {
-    final result = await Process.run('dart', [
-      'run',
-      'tools/validate_world_content_v1.dart',
-    ]);
-    final combined = '${result.stdout}\n${result.stderr}';
-    expect(
-      combined.contains('world0_board_slot_prompt_jargon_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-  });
+  test(
+    'validator no longer reports World 0 board-slot jargon failures',
+    () async {
+      final result = await Process.run('dart', [
+        'run',
+        'tools/validate_world_content_v1.dart',
+      ]);
+      final combined = '${result.stdout}\n${result.stderr}';
+      expect(
+        combined.contains('world0_board_slot_prompt_jargon_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+    },
+  );
 }

@@ -3,8 +3,10 @@ import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/world2_showdown_truth_validator_v1.dart';
 
 void main() {
-  test('showdown_winner_choice_v1 exposes normalized scenario showdown payload', () {
-    final spec = DrillSpecV1.fromJsonString('''
+  test(
+    'showdown_winner_choice_v1 exposes normalized scenario showdown payload',
+    () {
+      final spec = DrillSpecV1.fromJsonString('''
       {
         "id": "normalized_showdown_payload",
         "kind": "showdown_winner_choice_v1",
@@ -22,22 +24,27 @@ void main() {
       }
       ''');
 
-    final scenario = spec.scenarioShowdownContextV1;
+      final scenario = spec.scenarioShowdownContextV1;
 
-    expect(scenario, isNotNull);
-    expect(scenario!.streetV1, 'river');
-    expect(scenario.heroHoleCardsV1, const <String>['Ah', 'Qd']);
-    expect(scenario.villainHoleCardsV1, const <String>['7c', '7s']);
-    expect(
-      scenario.boardCardsV1,
-      const <String>['Ad', 'Kc', '9h', '4s', '2d'],
-    );
-    expect(
-      scenario.availableActionsV1,
-      const <String>['hero', 'villain', 'board_plays'],
-    );
-    expect(scenario.expectedActionIdV1, 'hero');
-  });
+      expect(scenario, isNotNull);
+      expect(scenario!.streetV1, 'river');
+      expect(scenario.heroHoleCardsV1, const <String>['Ah', 'Qd']);
+      expect(scenario.villainHoleCardsV1, const <String>['7c', '7s']);
+      expect(scenario.boardCardsV1, const <String>[
+        'Ad',
+        'Kc',
+        '9h',
+        '4s',
+        '2d',
+      ]);
+      expect(scenario.availableActionsV1, const <String>[
+        'hero',
+        'villain',
+        'board_plays',
+      ]);
+      expect(scenario.expectedActionIdV1, 'hero');
+    },
+  );
 
   test('visible-card World 2 showdown drills pass the first truth slice', () {
     final report = validateWorld2ShowdownTruthDirectoryV1(

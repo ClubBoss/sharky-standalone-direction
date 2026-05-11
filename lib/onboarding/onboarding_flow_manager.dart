@@ -358,9 +358,7 @@ class _MistakeRepeatExplanationScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     _OnboardingSurfaceCardV1(
-                      key: const Key(
-                        'onboarding_mistake_explainer_surface_v1',
-                      ),
+                      key: const Key('onboarding_mistake_explainer_surface_v1'),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -383,8 +381,7 @@ class _MistakeRepeatExplanationScreen extends StatelessWidget {
                           _ExplanationCard(
                             icon: Icons.calendar_today,
                             title: l10n.onboardingWhenRepeatsTitle,
-                            description:
-                                l10n.onboardingWhenRepeatsDescription,
+                            description: l10n.onboardingWhenRepeatsDescription,
                           ),
                           const SizedBox(height: 16),
                           _ExplanationCard(

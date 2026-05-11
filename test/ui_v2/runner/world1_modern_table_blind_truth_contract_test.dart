@@ -218,8 +218,7 @@ void main() {
               modernTable.debugPriceSetterCueLabelV1 == 'RAISE',
           isTrue,
         );
-        if (modernTable.scenarioSpec?.decisionNodeV1.street ==
-            Street.preflop) {
+        if (modernTable.scenarioSpec?.decisionNodeV1.street == Street.preflop) {
           expect(modernTable.debugPriceSetterCueLabelV1, isNot('BET'));
         }
       }
@@ -293,7 +292,10 @@ void main() {
       final actionBarRect = tester.getRect(
         find.byKey(const Key('microtask_campaign_action_bar')),
       );
-      expect(logicalScreenHeight - actionBarRect.bottom, greaterThanOrEqualTo(8));
+      expect(
+        logicalScreenHeight - actionBarRect.bottom,
+        greaterThanOrEqualTo(8),
+      );
 
       final tableCenter = tester
           .getRect(find.byKey(const Key('modern_table_oval')))

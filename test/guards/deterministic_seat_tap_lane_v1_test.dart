@@ -53,24 +53,27 @@ void main() {
     expect(report.issues, isEmpty);
     expect(report.checkedCount, 17);
     expect(report.skippedCount, 0);
-    expect(report.familySources, unorderedEquals(<String>[
-      'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_bb.json',
-      'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_btn.json',
-      'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_sb.json',
-      'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_seat_s6.json',
-      'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_btn.json',
-      'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_seat_s0.json',
-      'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_seat_s1.json',
-      'content/worlds/world2/v1/sessions/w2.s03/drills/d.find_bb.json',
-      'content/worlds/world2/v1/sessions/w2.s03/drills/d.find_sb.json',
-      'content/worlds/world2/v1/sessions/w2.s05/drills/d.find_btn_turn_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s06/drills/d.find_bb_river_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s07/drills/d.find_btn_pressure_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s07/drills/d.find_seat_s3_pressure_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s09/drills/d.find_bb_bridge_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s09/drills/d.find_seat_s5_bridge_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s10/drills/d.find_btn_checkpoint_anchor.json',
-      'content/worlds/world2/v1/sessions/w2.s10/drills/d.find_seat_s6_checkpoint_anchor.json',
-    ]));
+    expect(
+      report.familySources,
+      unorderedEquals(<String>[
+        'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_bb.json',
+        'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_btn.json',
+        'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_sb.json',
+        'content/worlds/world2/v1/sessions/w2.s01/drills/d.find_seat_s6.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_btn.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_seat_s0.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/d.find_seat_s1.json',
+        'content/worlds/world2/v1/sessions/w2.s03/drills/d.find_bb.json',
+        'content/worlds/world2/v1/sessions/w2.s03/drills/d.find_sb.json',
+        'content/worlds/world2/v1/sessions/w2.s05/drills/d.find_btn_turn_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s06/drills/d.find_bb_river_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s07/drills/d.find_btn_pressure_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s07/drills/d.find_seat_s3_pressure_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s09/drills/d.find_bb_bridge_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s09/drills/d.find_seat_s5_bridge_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s10/drills/d.find_btn_checkpoint_anchor.json',
+        'content/worlds/world2/v1/sessions/w2.s10/drills/d.find_seat_s6_checkpoint_anchor.json',
+      ]),
+    );
   });
 }

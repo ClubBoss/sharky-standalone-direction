@@ -164,7 +164,8 @@ WorldRouteOwnershipInventoryReportV1 buildWorldRouteOwnershipInventoryReportV1({
             'Campaign launch stays on the canonical session-drill player for the World10 core spine.',
       ),
       WorldRouteOwnershipInventoryRowV1(
-        label: 'Cash track handoff (`world10_spine_followup_v1_b0 -> cash.s01`)',
+        label:
+            'Cash track handoff (`world10_spine_followup_v1_b0 -> cash.s01`)',
         route: 'session_drill_surface',
         expectation: 'pass',
         note:
@@ -179,7 +180,8 @@ WorldRouteOwnershipInventoryReportV1 buildWorldRouteOwnershipInventoryReportV1({
             'Result continuation, map launch, and runtime adapter all resolve the tournament followup to `tournament.s01`.',
       ),
       WorldRouteOwnershipInventoryRowV1(
-        label: 'Mixed track handoff (`world10_spine_followup_v1_b2 -> mixed.s01`)',
+        label:
+            'Mixed track handoff (`world10_spine_followup_v1_b2 -> mixed.s01`)',
         route: 'session_drill_surface',
         expectation: 'pass',
         note:
@@ -224,7 +226,9 @@ WorldRouteOwnershipInventoryReportV1 buildWorldRouteOwnershipInventoryReportV1({
     );
   }
 
-  throw StateError('Unreachable world route ownership inventory branch for W$world');
+  throw StateError(
+    'Unreachable world route ownership inventory branch for W$world',
+  );
 }
 
 String encodeWorldRouteOwnershipInventoryReportJsonV1(

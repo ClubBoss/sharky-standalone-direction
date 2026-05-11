@@ -238,13 +238,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get masteredPacks => '✅ Вы уже освоили';
 
   @override
-  String get dailyGoals => 'Daily Goals';
+  String get dailyGoals => 'Цели на день';
 
   @override
-  String get sessions => 'Sessions';
+  String get sessions => 'Сессии';
 
   @override
-  String get accuracyPercent => 'Accuracy %';
+  String get accuracyPercent => 'Точность';
 
   @override
   String get ev => 'EV';
@@ -380,10 +380,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get legalDeleteFailure => 'Failed to clear local data';
 
   @override
-  String get playerType => 'Player Type';
+  String get playerType => 'Тип игрока';
 
   @override
-  String get selectAction => 'Select Action';
+  String get selectAction => 'Выберите действие';
 
   @override
   String get fold => 'Fold';
@@ -398,10 +398,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get push => 'Push';
 
   @override
-  String get amount => 'Amount';
+  String get amount => 'Сумма';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Подтвердить';
 
   @override
   String get clear => 'Очистить';
@@ -413,7 +413,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get entrants => 'Entrants';
 
   @override
-  String get gameType => 'Game Type';
+  String get gameType => 'Тип игры';
 
   @override
   String get holdemNl => 'Hold\'em NL';
@@ -422,7 +422,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get omahaPl => 'Omaha PL';
 
   @override
-  String get otherGameType => 'Other';
+  String get otherGameType => 'Другое';
 
   @override
   String spotsLabel(Object value) {

@@ -23,11 +23,10 @@ void main() {
     fail('Timed out waiting for ${finder.description}');
   }
 
-  Future<void> _tapBoardSlot(
-    WidgetTester tester,
-    int slotIndex,
-  ) async {
-    final table = tester.widget<ModernTableScreenV1>(find.byType(ModernTableScreenV1));
+  Future<void> _tapBoardSlot(WidgetTester tester, int slotIndex) async {
+    final table = tester.widget<ModernTableScreenV1>(
+      find.byType(ModernTableScreenV1),
+    );
     final boardSlot = switch (slotIndex) {
       0 => 'flop_left',
       1 => 'flop_mid',
@@ -115,7 +114,9 @@ void main() {
     await _tapBoardSlot(tester, 0);
     await tester.pumpAndSettle();
     expect(
-      find.text('Tap the turn slot before deciding second barrel or checkback.'),
+      find.text(
+        'Tap the turn slot before deciding second barrel or checkback.',
+      ),
       findsWidgets,
     );
 
@@ -143,19 +144,14 @@ void main() {
         'content/worlds/world2/v1/sessions/w2.s04/drills/d.tap_flop_right_context.json',
       ])
         SessionDrillItemV1(
-          drillId: DrillSpecV1.fromJsonString(
-            File(path).readAsStringSync(),
-          ).id,
+          drillId: DrillSpecV1.fromJsonString(File(path).readAsStringSync()).id,
           spec: DrillSpecV1.fromJsonString(File(path).readAsStringSync()),
         ),
     ];
 
     expect(
       boardTapDrills.map((item) => item.drillId),
-      containsAll(<String>[
-        'tap_flop_left_context',
-        'tap_flop_right_context',
-      ]),
+      containsAll(<String>['tap_flop_left_context', 'tap_flop_right_context']),
     );
 
     await tester.pumpWidget(

@@ -1,3 +1,0 @@
-{"id":"intro_session_basics_drill_001","kind":"drill","hero_action":"Recall the training flow","villain_action":"session_overview","explanation":"Pick the steps: entry, practice, completion.","tags":["intro_session_basics"]}
-{"id":"intro_session_basics_drill_002","kind":"drill","hero_action":"Identify the session start trigger","villain_action":"start_session","explanation":"A session starts when a pack is launched.","tags":["intro_session_basics"]}
-{"id":"intro_session_basics_drill_003","kind":"drill","hero_action":"Identify the completion signal","villain_action":"session_end","explanation":"Completion shows the result screen.","tags":["intro_session_basics"]}

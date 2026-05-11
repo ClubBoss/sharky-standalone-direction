@@ -164,40 +164,47 @@ void main() {
     }
   });
 
-  test('exact earliest-safe world anchors are not undercut by world/node placement', () {
-    for (final row in progressionRows) {
-      final skillFamily = row['Skill / mode family'] ?? '';
-      final earliestAnchor = row['Likely earliest safe world anchor'] ?? '';
-      final earliestWorld = _firstWorldNumber(earliestAnchor);
-      if (earliestWorld == null || earliestAnchor.contains('or')) {
-        continue;
-      }
-
-      final matchingWorldRows = worldRows.where((worldRow) {
-        final normalizedCell =
-            (worldRow['Target skill families'] ?? '').toLowerCase();
-        final skillParts = _splitSkillFamilyParts(skillFamily);
-        return skillParts.every(normalizedCell.contains);
-      }).toList(growable: false);
-
-      if (matchingWorldRows.isEmpty) {
-        continue;
-      }
-
-      for (final worldRow in matchingWorldRows) {
-        final mappedWorld = _firstWorldNumber(worldRow['World / node family'] ?? '');
-        if (mappedWorld == null) {
+  test(
+    'exact earliest-safe world anchors are not undercut by world/node placement',
+    () {
+      for (final row in progressionRows) {
+        final skillFamily = row['Skill / mode family'] ?? '';
+        final earliestAnchor = row['Likely earliest safe world anchor'] ?? '';
+        final earliestWorld = _firstWorldNumber(earliestAnchor);
+        if (earliestWorld == null || earliestAnchor.contains('or')) {
           continue;
         }
-        expect(
-          mappedWorld >= earliestWorld,
-          isTrue,
-          reason:
-              'World/node family "${worldRow['World / node family']}" places "$skillFamily" before its earliest safe anchor "$earliestAnchor".',
-        );
+
+        final matchingWorldRows = worldRows
+            .where((worldRow) {
+              final normalizedCell = (worldRow['Target skill families'] ?? '')
+                  .toLowerCase();
+              final skillParts = _splitSkillFamilyParts(skillFamily);
+              return skillParts.every(normalizedCell.contains);
+            })
+            .toList(growable: false);
+
+        if (matchingWorldRows.isEmpty) {
+          continue;
+        }
+
+        for (final worldRow in matchingWorldRows) {
+          final mappedWorld = _firstWorldNumber(
+            worldRow['World / node family'] ?? '',
+          );
+          if (mappedWorld == null) {
+            continue;
+          }
+          expect(
+            mappedWorld >= earliestWorld,
+            isTrue,
+            reason:
+                'World/node family "${worldRow['World / node family']}" places "$skillFamily" before its earliest safe anchor "$earliestAnchor".',
+          );
+        }
       }
-    }
-  });
+    },
+  );
 
   test('world/node matrix mode families stay inside the curated strategy', () {
     for (final row in worldRows) {

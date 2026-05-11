@@ -147,11 +147,12 @@ Map<String, Object> buildReleaseReadinessSnapshot({String rootPath = '.'}) {
       generatedStoreAssetsZip.existsSync();
   final storeAssetsPresent =
       inRepoStoreAssetsPresent || generatedStoreAssetsPresent;
-  final releaseContentDirsPresent = ReleaseContentPlanV1.modules.every(
-    (module) => Directory(
-      '${root.path}${Platform.pathSeparator}content${Platform.pathSeparator}${module.id}${Platform.pathSeparator}v1',
-    ).existsSync(),
-  );
+  final releaseContentDirsPresent = ReleaseContentPlanV1.manifestEnforcedModules
+      .every(
+        (module) => Directory(
+          '${root.path}${Platform.pathSeparator}content${Platform.pathSeparator}${module.id}${Platform.pathSeparator}v1',
+        ).existsSync(),
+      );
   final branchProgressionSurfacePresent =
       branchSurfaceFile.existsSync() &&
       branchSurfaceFile.readAsStringSync().contains('ModuleLauncherBranch');

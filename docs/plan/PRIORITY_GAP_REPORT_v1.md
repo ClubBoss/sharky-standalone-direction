@@ -29,11 +29,11 @@ It is a bounded “what should we build next, and why?” reference.
 
 This report is grounded in:
 
-- [CANONICAL_STAGED_IMPLEMENTATION_PLAN_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/CANONICAL_STAGED_IMPLEMENTATION_PLAN_v1.md)
-- [MODE_FAMILY_STRATEGY_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/MODE_FAMILY_STRATEGY_v1.md)
-- [SKILL_COVERAGE_MATRIX_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/SKILL_COVERAGE_MATRIX_v1.md)
-- [WORLD_NODE_MODE_MATRIX_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/WORLD_NODE_MODE_MATRIX_v1.md)
-- [PROGRESSION_PREREQUISITE_MATRIX_v1.md](/Users/elmarsalimzade/poker_ai_analyzer/Poker_Analyzer/docs/plan/PROGRESSION_PREREQUISITE_MATRIX_v1.md)
+- [CANONICAL_STAGED_IMPLEMENTATION_PLAN_v1.md](docs/plan/CANONICAL_STAGED_IMPLEMENTATION_PLAN_v1.md)
+- [MODE_FAMILY_STRATEGY_v1.md](docs/plan/MODE_FAMILY_STRATEGY_v1.md)
+- [SKILL_COVERAGE_MATRIX_v1.md](docs/plan/SKILL_COVERAGE_MATRIX_v1.md)
+- [WORLD_NODE_MODE_MATRIX_v1.md](docs/plan/WORLD_NODE_MODE_MATRIX_v1.md)
+- [PROGRESSION_PREREQUISITE_MATRIX_v1.md](docs/plan/PROGRESSION_PREREQUISITE_MATRIX_v1.md)
 - current truth-map / dev-hub status reality
 
 ## Status Buckets Used Here

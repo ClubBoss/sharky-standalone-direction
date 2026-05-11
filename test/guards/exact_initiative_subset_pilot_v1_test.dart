@@ -25,7 +25,9 @@ void main() {
     );
     expect(
       content,
-      contains('`test/ui_v2/session_drill_player_initiative_contract_test.dart`'),
+      contains(
+        '`test/ui_v2/session_drill_player_initiative_contract_test.dart`',
+      ),
     );
     expect(
       content,
@@ -41,54 +43,60 @@ void main() {
     );
   });
 
-  test('representative initiative exact-subset content satisfies the pilot contract', () {
-    final initiativeSpec = DrillSpecV1.fromJsonString(
-      File(
-        'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_has_initiative_open_vs_call.json',
-      ).readAsStringSync(),
-    );
-    final aggressorSpec = DrillSpecV1.fromJsonString(
-      File(
-        'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_villain_last_aggressor_open_vs_call.json',
-      ).readAsStringSync(),
-    );
+  test(
+    'representative initiative exact-subset content satisfies the pilot contract',
+    () {
+      final initiativeSpec = DrillSpecV1.fromJsonString(
+        File(
+          'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_has_initiative_open_vs_call.json',
+        ).readAsStringSync(),
+      );
+      final aggressorSpec = DrillSpecV1.fromJsonString(
+        File(
+          'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_villain_last_aggressor_open_vs_call.json',
+        ).readAsStringSync(),
+      );
 
-    expect(initiativeSpec.kind, DrillKindV1.initiativeAggressorChoice);
-    expect(initiativeSpec.lastAggressorV1, isNotNull);
-    expect(initiativeSpec.initiativeOwnerV1, isNotNull);
-    expect(initiativeSpec.activeSeatsV1, isNotNull);
-    expect(initiativeSpec.streetV1, isNotNull);
-    expect(initiativeSpec.expected.actionId, 'hero');
+      expect(initiativeSpec.kind, DrillKindV1.initiativeAggressorChoice);
+      expect(initiativeSpec.lastAggressorV1, isNotNull);
+      expect(initiativeSpec.initiativeOwnerV1, isNotNull);
+      expect(initiativeSpec.activeSeatsV1, isNotNull);
+      expect(initiativeSpec.streetV1, isNotNull);
+      expect(initiativeSpec.expected.actionId, 'hero');
 
-    expect(aggressorSpec.kind, DrillKindV1.initiativeAggressorChoice);
-    expect(aggressorSpec.lastAggressorV1, isNotNull);
-    expect(aggressorSpec.initiativeOwnerV1, isNotNull);
-    expect(aggressorSpec.activeSeatsV1, isNotNull);
-    expect(aggressorSpec.streetV1, isNotNull);
-    expect(aggressorSpec.expected.actionId, 'villain');
-  });
+      expect(aggressorSpec.kind, DrillKindV1.initiativeAggressorChoice);
+      expect(aggressorSpec.lastAggressorV1, isNotNull);
+      expect(aggressorSpec.initiativeOwnerV1, isNotNull);
+      expect(aggressorSpec.activeSeatsV1, isNotNull);
+      expect(aggressorSpec.streetV1, isNotNull);
+      expect(aggressorSpec.expected.actionId, 'villain');
+    },
+  );
 
-  test('exact initiative subset pilot remains validator-clean with explicit exclusions', () {
-    final report = validateWorld2InitiativeTruthDirectoryV1(
-      'content/worlds/world2/v1/sessions',
-    );
+  test(
+    'exact initiative subset pilot remains validator-clean with explicit exclusions',
+    () {
+      final report = validateWorld2InitiativeTruthDirectoryV1(
+        'content/worlds/world2/v1/sessions',
+      );
 
-    expect(report.issues, isEmpty);
-    expect(report.checkedCount, 2);
-    expect(report.skippedCount, 2);
-    expect(
-      report.checkedSources,
-      unorderedEquals(<String>[
-        'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_has_initiative_open_vs_call.json',
-        'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_villain_last_aggressor_open_vs_call.json',
-      ]),
-    );
-    expect(
-      report.skippedSources,
-      unorderedEquals(<String>[
-        'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_more_likely_to_continue_pressure.json',
-        'content/worlds/world2/v1/sessions/w2.s05/drills/d.review_initiative_hero_keeps_pressure.json',
-      ]),
-    );
-  });
+      expect(report.issues, isEmpty);
+      expect(report.checkedCount, 2);
+      expect(report.skippedCount, 2);
+      expect(
+        report.checkedSources,
+        unorderedEquals(<String>[
+          'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_has_initiative_open_vs_call.json',
+          'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_villain_last_aggressor_open_vs_call.json',
+        ]),
+      );
+      expect(
+        report.skippedSources,
+        unorderedEquals(<String>[
+          'content/worlds/world2/v1/sessions/w2.s03/drills/d.choose_hero_more_likely_to_continue_pressure.json',
+          'content/worlds/world2/v1/sessions/w2.s05/drills/d.review_initiative_hero_keeps_pressure.json',
+        ]),
+      );
+    },
+  );
 }

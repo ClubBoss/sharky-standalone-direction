@@ -19,26 +19,29 @@ void main() {
     }
   });
 
-  test('validator no longer reports World 0 table-map jargon failures', () async {
-    final result = await Process.run('dart', [
-      'run',
-      'tools/validate_world_content_v1.dart',
-    ]);
-    final combined = '${result.stdout}\n${result.stderr}';
-    expect(
-      combined.contains('world0_notes_table_map_jargon_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-    expect(
-      combined.contains('world0_drills_index_table_map_jargon_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-    expect(
-      combined.contains('world0_session_table_map_jargon_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-  });
+  test(
+    'validator no longer reports World 0 table-map jargon failures',
+    () async {
+      final result = await Process.run('dart', [
+        'run',
+        'tools/validate_world_content_v1.dart',
+      ]);
+      final combined = '${result.stdout}\n${result.stderr}';
+      expect(
+        combined.contains('world0_notes_table_map_jargon_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+      expect(
+        combined.contains('world0_drills_index_table_map_jargon_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+      expect(
+        combined.contains('world0_session_table_map_jargon_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+    },
+  );
 }

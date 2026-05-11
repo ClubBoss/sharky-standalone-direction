@@ -1,9 +1,0 @@
-### C17 Mixed Checkpoints Recap
-
-Mixed checkpoints keep your line coherent from preflop through river. Start by tagging pot type (SRP or 3BP), position (UTG, MP, CO, BTN, SB, BB), and stack depth. In SRP IP on dry high boards, cbet_small for range edge. In 3BP OOP on dynamic boards, check more and deploy cbet_big only with strong equity. Each checkpoint is a pause: who has range advantage, who has nut advantage, what blockers you hold, and which future cards change leverage.
-
-Board texture drives your flop choice. Dry, high boards allow small, frequent cbets; wet textures prefer bigger bets or checks. Paired boards reduce bluff success, so pot control or delayed cbet makes sense. When the turn bricks after a small flop bet, repeat small to fold ace-highs; when a scare card favors you, increase size or raise small leads. Rivers demand discipline: thin value versus overcalling pools, or checks when ranges are bluff-catch heavy and villains under-bluff.
-
-Population leaks guide the exploit overlay. Recreational players overcall on paired boards and overfold scary turns. Some regs overbluff 3BP when checked to, so you add check-call lines with bluff-catchers and blocker support. Undersized cbets in ICM spots often cap ranges; respond with raises or floats and pressure turn bricks. Always tie actions to a trigger so you avoid spew and keep lines repeatable.
-
-Contrast with a balanced baseline: GTO spreads actions; checkpoints bias toward observed leaks while maintaining enough stability to avoid being exploited. The flow: identify pot and position, map board class, pick flop size, set turn reactions for bricks versus scare cards, and define river thresholds for value and bluffs. Run this loop every hand so SRP, 3BP, IP, and OOP decisions stay consistent under time pressure. The result is a deterministic, ASCII-only routine that adapts to texture shifts and population errors without losing control of pot size or bluff frequency.

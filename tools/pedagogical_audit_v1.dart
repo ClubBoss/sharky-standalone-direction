@@ -24,7 +24,7 @@ const _bannedJargon = <String>[
 const _maxReasoningLength = 260;
 
 void main() {
-  final modules = ReleaseContentPlanV1.modules.toList()
+  final modules = ReleaseContentPlanV1.manifestEnforcedModules.toList()
     ..sort((a, b) => a.id.compareTo(b.id));
 
   final moduleReports = <_ModuleReport>[];
@@ -158,6 +158,11 @@ void _writeReport(List<_ModuleReport> reports) {
     ..writeln(
       'This audit covers the release content modules defined in '
       '`ReleaseContentPlanV1` and reports deterministic reasoning quality.',
+    )
+    ..writeln()
+    ..writeln(
+      'Compatibility-only intro/core modules without active manifests are'
+      ' excluded from this audit.',
     )
     ..writeln()
     ..writeln('## Summary Table')

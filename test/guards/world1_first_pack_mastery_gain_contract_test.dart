@@ -55,7 +55,10 @@ void main() {
       expect(actionPayoff, isNotNull);
       expect(streetPayoff, isNotNull);
 
-      expect(tableContract.completionBodyText, isNot(contains('Unlocked next:')));
+      expect(
+        tableContract.completionBodyText,
+        isNot(contains('Unlocked next:')),
+      );
       expect(
         actionContract.completionBodyText,
         isNot(contains('Unlocked next:')),

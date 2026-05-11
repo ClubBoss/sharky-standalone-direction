@@ -1,6 +1,6 @@
 # PROJECT_READINESS_EPICS_SSOT_v1
-Status: ACTIVE
-Purpose: canonical readiness authority for reporting, prioritization, bottleneck selection, and rollout calibration on current `main`.
+Status: REFERENCE
+Purpose: auxiliary launch-readiness reference for release/store-prep framing on current product.
 Last updated: 2026-04-02
 
 Current calibration basis for this version:
@@ -12,7 +12,20 @@ Current calibration basis for this version:
 
 ## Purpose / scope
 
-This document is the active readiness authority for the project.
+This document is no longer the active day-to-day product authority.
+
+Use `docs/plan/MASTER_PLAN_v3.0.md` for:
+
+- what to build next
+- product bottleneck selection
+- day-to-day route order
+- bounded-wave prioritization
+
+Use this document only for:
+
+- launch/store-prep readiness framing
+- broad release checklists
+- historical completeness/reference context
 
 It replaces the older beta-path release-readiness model as the canonical source
 for:
@@ -28,7 +41,7 @@ This document is deliberately broader than:
 - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md`
 - `docs/ROADMAP_FINAL_100_SSOT.md`
 
-Use this document for current readiness truth.
+Do not use this document as the default driver for current product work.
 
 Use `docs/plan/WORLD_READINESS_REGISTRY_v1.md` for subordinate world-level
 quality/control visibility, route-selection support, and per-world
@@ -45,17 +58,14 @@ the earlier beta-capable A-G calibration.
 
 Authority rule:
 
-- On any readiness-scoring, readiness-meaning, or readiness-bottleneck conflict
-  with another active planning doc, this file wins unless and until a newer
-  versioned readiness SSOT explicitly supersedes it.
+- `docs/plan/MASTER_PLAN_v3.0.md` wins for active product decisions, next-wave selection, and product bottleneck choice.
+- This document is advisory/reference-only unless the question is specifically about launch/readiness framing.
 
 Registry rule:
 
-- this document remains the top scoring and bottleneck authority
-- the world registry is subordinate and does not create a competing readiness
-  system
-- the product surface readiness layer is subordinate and does not create a
-  competing readiness system
+- this document no longer acts as the top bottleneck authority for daily product work
+- the world registry and product-surface layers remain supporting references
+- active product routing should flow through `docs/plan/MASTER_PLAN_v3.0.md`
 
 Scope rule:
 

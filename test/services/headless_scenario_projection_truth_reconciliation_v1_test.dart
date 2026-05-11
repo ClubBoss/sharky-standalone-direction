@@ -34,15 +34,12 @@ void main() {
 
       expect(scenario.heroSeat, 0);
       expect(scenario.actingSeatStart, 1);
-      expect(
-        scenario.seatOccupancies,
-        const <ScenarioSeatOccupancyV1>[
-          ScenarioSeatOccupancyV1.active,
-          ScenarioSeatOccupancyV1.active,
-          ScenarioSeatOccupancyV1.active,
-          ScenarioSeatOccupancyV1.folded,
-        ],
-      );
+      expect(scenario.seatOccupancies, const <ScenarioSeatOccupancyV1>[
+        ScenarioSeatOccupancyV1.active,
+        ScenarioSeatOccupancyV1.active,
+        ScenarioSeatOccupancyV1.active,
+        ScenarioSeatOccupancyV1.folded,
+      ]);
       expect(scenario.blindLevelStateV1?.smallBlindSeatIndexV1, 2);
       expect(scenario.blindLevelStateV1?.bigBlindSeatIndexV1, 1);
     },

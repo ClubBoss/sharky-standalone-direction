@@ -80,8 +80,7 @@ class WorldPedagogicalProgressionReportV1 {
   final PedagogicalProgressionTruthStatusV1 status;
   final PedagogicalProgressionTruthStatusV1 progressionCorrectnessStatus;
   final PedagogicalProgressionTruthStatusV1 wrongAnswerFeedbackQualityStatus;
-  final PedagogicalProgressionTruthStatusV1
-      introFramingOnboardingQualityStatus;
+  final PedagogicalProgressionTruthStatusV1 introFramingOnboardingQualityStatus;
   final PedagogicalProgressionTruthStatusV1 sessionDrillSemanticFitStatus;
   final PedagogicalProgressionTruthStatusV1 worldPedagogicalFinishStatus;
   final String summary;
@@ -100,8 +99,7 @@ class WorldPedagogicalProgressionReportV1 {
         introFramingOnboardingQualityStatus.wireValue,
     'session_drill_semantic_fit_status':
         sessionDrillSemanticFitStatus.wireValue,
-    'world_pedagogical_finish_status':
-        worldPedagogicalFinishStatus.wireValue,
+    'world_pedagogical_finish_status': worldPedagogicalFinishStatus.wireValue,
     'summary': summary,
     'findings': findings.map((finding) => finding.toJson()).toList(),
     'owner_files': ownerFiles,
@@ -183,11 +181,12 @@ buildWorldPedagogicalProgressionReportsV1({
 }) {
   final selectedWorlds = worlds.toList(growable: false)
     ..sort(
-      (left, right) => _parseWorldNumberFromWorldIdV1(
-        left['world_id'] as String? ?? '',
-      ).compareTo(
-        _parseWorldNumberFromWorldIdV1(right['world_id'] as String? ?? ''),
-      ),
+      (left, right) =>
+          _parseWorldNumberFromWorldIdV1(
+            left['world_id'] as String? ?? '',
+          ).compareTo(
+            _parseWorldNumberFromWorldIdV1(right['world_id'] as String? ?? ''),
+          ),
     );
   return selectedWorlds
       .map(
@@ -206,7 +205,9 @@ WorldPedagogicalProgressionReportV1 buildWorldPedagogicalProgressionReportV1({
   final worldId = worldSnapshot['world_id'] as String? ?? 'unknown';
   final worldNumber = _parseWorldNumberFromWorldIdV1(worldId);
   final worldLabel = 'world$worldNumber';
-  final sessionsRoot = Directory('$rootPath/content/worlds/$worldLabel/v1/sessions');
+  final sessionsRoot = Directory(
+    '$rootPath/content/worlds/$worldLabel/v1/sessions',
+  );
   final worldMarkdownPath = 'content/worlds/$worldLabel/v1/world.md';
   final sessionsIndexPath = 'content/worlds/$worldLabel/v1/sessions/index.md';
   final ownerFiles = <String>[
@@ -276,8 +277,7 @@ WorldPedagogicalProgressionReportV1 buildWorldPedagogicalProgressionReportV1({
   if (progressionViolations.isNotEmpty) {
     findings.add(
       PedagogicalProgressionFindingV1(
-        gapId:
-            'pedagogy_${worldId.toLowerCase()}_progression_correctness_v1',
+        gapId: 'pedagogy_${worldId.toLowerCase()}_progression_correctness_v1',
         worldScope: <String>[worldId],
         category: 'progression_correctness',
         currentStatus: 'truth_surfaced',
@@ -353,11 +353,15 @@ WorldPedagogicalProgressionReportV1 buildWorldPedagogicalProgressionReportV1({
         category: 'session_drill_semantic_fit',
         currentStatus: 'truth_surfaced',
         admissibility: 'truth_layer_first',
-        likelySeam: 'session framing does not clearly cover all live drill families',
+        likelySeam:
+            'session framing does not clearly cover all live drill families',
         ownerFiles: <String>[
           sessionsIndexPath,
           ...semanticMismatchSessions
-              .map((item) => 'content/worlds/$worldLabel/v1/sessions/${item.sessionId}/session.md')
+              .map(
+                (item) =>
+                    'content/worlds/$worldLabel/v1/sessions/${item.sessionId}/session.md',
+              )
               .take(4),
         ],
         measurableProofPath: <String>[
@@ -581,7 +585,8 @@ PedagogicalProgressionFindingV1? _buildIntroFramingFindingV1({
     category: 'intro_framing_onboarding_quality',
     currentStatus: 'truth_surfaced',
     admissibility: 'truth_layer_first',
-    likelySeam: 'first-user framing / onboarding quality remains under release-grade finish',
+    likelySeam:
+        'first-user framing / onboarding quality remains under release-grade finish',
     ownerFiles: <String>[worldMarkdownPath, sessionsIndexPath],
     measurableProofPath: <String>[
       'dart run $worldPedagogicalProgressionAuditToolPathV1 --world=$worldNumber --json',
@@ -646,7 +651,8 @@ PedagogicalProgressionFindingV1? _buildPedagogicalFinishFindingV1({
       if (pedagogyHealth != null && pedagogyHealth != 'done')
         'pedagogy_health=$pedagogyHealth',
       ...openLensNames.take(4),
-      if ((worldSnapshot['release_grade_blocker_note'] as String?)?.isNotEmpty ??
+      if ((worldSnapshot['release_grade_blocker_note'] as String?)
+              ?.isNotEmpty ??
           false)
         worldSnapshot['release_grade_blocker_note'] as String,
     ],
@@ -782,7 +788,8 @@ bool _hasExecutableWorld0OpenerFramingProofV1({
     r'^- w0\.s\d{2}:',
     multiLine: true,
   ).allMatches(sessionsIndexText).length;
-  final allSessionsHaveFramingSections = sessionFiles.isNotEmpty &&
+  final allSessionsHaveFramingSections =
+      sessionFiles.isNotEmpty &&
       sessionFiles.every((file) {
         final text = file.readAsStringSync().toLowerCase();
         return text.contains('## objective') &&
@@ -848,9 +855,7 @@ bool _hasExecutableWorld0PedagogicalFinishProofV1({
       ) &&
       sessionsIndexLower.contains('completion shape:') &&
       sessionsIndexLower.contains('handoff to w1:') &&
-      sessionsIndexLower.contains(
-        'without reteaching table orientation',
-      );
+      sessionsIndexLower.contains('without reteaching table orientation');
 }
 
 bool _hasExecutableWorld10PedagogicalFinishProofV1({
@@ -867,7 +872,9 @@ bool _hasExecutableWorld10PedagogicalFinishProofV1({
 
   final worldFile = File('$rootPath/$worldMarkdownPath');
   final sessionsIndexFile = File('$rootPath/$sessionsIndexPath');
-  final sessionsRoot = Directory('$rootPath/content/worlds/world10/v1/sessions');
+  final sessionsRoot = Directory(
+    '$rootPath/content/worlds/world10/v1/sessions',
+  );
   if (!worldFile.existsSync() ||
       !sessionsIndexFile.existsSync() ||
       !sessionsRoot.existsSync()) {
@@ -896,7 +903,8 @@ bool _hasExecutableWorld10PedagogicalFinishProofV1({
     r'^- w10\.s\d{2}:',
     multiLine: true,
   ).allMatches(sessionsIndexText).length;
-  final allSessionsHaveFramingSections = sessionFiles.length == 10 &&
+  final allSessionsHaveFramingSections =
+      sessionFiles.length == 10 &&
       sessionFiles.every((file) {
         final text = file.readAsStringSync().toLowerCase();
         return text.contains('## objective') &&
@@ -904,7 +912,8 @@ bool _hasExecutableWorld10PedagogicalFinishProofV1({
             text.contains('## decision') &&
             text.contains('## explanation');
       });
-  final allSessionNotesAuthored = noteFiles.length == 10 &&
+  final allSessionNotesAuthored =
+      noteFiles.length == 10 &&
       noteFiles.every((file) {
         final text = file.readAsStringSync().toLowerCase();
         return text.contains('# notes') &&
@@ -925,7 +934,9 @@ bool _hasExecutableWorld10PedagogicalFinishProofV1({
       sessionsIndexLower.contains('handoff to tracks:') &&
       sessionsIndexLower.contains('w10.s10') &&
       sessionsIndexLower.contains('integrated synthesis check') &&
-      sessionsIndexLower.contains('use the selected root session to deepen the same cue story') &&
+      sessionsIndexLower.contains(
+        'use the selected root session to deepen the same cue story',
+      ) &&
       allSessionsHaveFramingSections &&
       allSessionNotesAuthored;
 }
@@ -940,8 +951,13 @@ bool _isFoundationalActionButtonLiteracyDrillV1(Map<String, Object?> drill) {
     drill['expected'] as Map? ?? const <String, Object?>{},
   );
   final actionId = (expected['actionId'] as String? ?? '').trim().toLowerCase();
-  if (!const <String>{'fold', 'call', 'raise', 'check', 'bet'}
-      .contains(actionId)) {
+  if (!const <String>{
+    'fold',
+    'call',
+    'raise',
+    'check',
+    'bet',
+  }.contains(actionId)) {
     return false;
   }
 

@@ -14,7 +14,9 @@ void main() {
       expect(earlyErrors, isNotEmpty);
       expect(
         earlyErrors.join('\n'),
-        contains('must not introduce "pot odds" before the outs bridge is established'),
+        contains(
+          'must not introduce "pot odds" before the outs bridge is established',
+        ),
       );
 
       final laterErrors = validator.validateProgressionAntiJumpTextV1(

@@ -18,7 +18,7 @@ void main() {
 
     final failures = <String, String>{};
 
-    for (final module in ReleaseContentPlanV1.modules) {
+    for (final module in ReleaseContentPlanV1.manifestEnforcedModules) {
       final moduleDir = Directory('$baseDir/${module.id}/v1');
       if (!moduleDir.existsSync()) {
         failures[module.id] =

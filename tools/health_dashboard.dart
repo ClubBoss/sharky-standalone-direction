@@ -2177,7 +2177,9 @@ Future<void> _writeReleaseBaselineReport(Map<String, Object?> summary) async {
       );
     }
   }
-  await File('RELEASE_BASELINE_REPORT.md').writeAsString(buf.toString());
+  await File(
+    'docs/archive/root_history/RELEASE_BASELINE_REPORT.md',
+  ).writeAsString(buf.toString());
 }
 
 Future<Map<String, Object>> _readExportMetrics() async {

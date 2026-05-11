@@ -57,7 +57,9 @@ buildSessionDrillCanonicalSurfacedSupplementalAssemblyV1({
       SessionDrillSupplementalAssemblySlotV1.factualSourceMetaGroup,
   ];
   final postActionSlots = <SessionDrillSupplementalAssemblySlotV1>[
-    if (allowsCompactFactualIntro && factualContractPresent && factualShowsIntro)
+    if (allowsCompactFactualIntro &&
+        factualContractPresent &&
+        factualShowsIntro)
       SessionDrillSupplementalAssemblySlotV1.factualIntroGroup,
     if (factualContractPresent && factualShowsRecap)
       SessionDrillSupplementalAssemblySlotV1.factualRecapGroup,

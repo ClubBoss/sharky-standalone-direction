@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+
+String _placementCopyV1(
+  BuildContext context, {
+  required String en,
+  required String ru,
+}) => _isRuLocaleV1(context) ? ru : en;
 
 class Act0PlacementShellV1 extends StatelessWidget {
   const Act0PlacementShellV1({
@@ -39,6 +49,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localeIsRu = _isRuLocaleV1(context);
     final placementResult = result;
     if (placementResult == null) {
       final currentQuestion = currentQuestionIndex < questions.length
@@ -67,32 +78,75 @@ class Act0PlacementShellV1 extends StatelessWidget {
                 132,
               ),
               children: [
-                const _PlacementHeroV1(
-                  title: 'Find your path',
-                  subtitle: 'A few quick answers, then a smart starting point.',
+                _PlacementHeroV1(
+                  title: _placementCopyV1(
+                    context,
+                    en: 'Find your start',
+                    ru: 'Найди свой старт',
+                  ),
+                  subtitle: _placementCopyV1(
+                    context,
+                    en: 'A few fast answers, then Sharky picks the route.',
+                    ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                  ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
-                if (showIntro)
-                  const _PlacementIntroViewV1()
-                else
-                  _QuestionOrDiagnosticV1(
-                    questions: questions,
-                    currentQuestionIndex: currentQuestionIndex,
-                    selectedOptionIds: selectedOptionIds,
-                    onSelectOption: onSelectOption,
-                    onBack: onBack,
-                  ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 360),
+                  reverseDuration: const Duration(milliseconds: 220),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInOutCubic,
+                  transitionBuilder: (child, animation) {
+                    final curved = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    );
+                    return FadeTransition(
+                      opacity: curved,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.03, 0.02),
+                          end: Offset.zero,
+                        ).animate(curved),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: showIntro
+                      ? const KeyedSubtree(
+                          key: ValueKey<String>('act0_shell_placement_intro'),
+                          child: _PlacementIntroViewV1(),
+                        )
+                      : KeyedSubtree(
+                          key: ValueKey<String>(
+                            'act0_shell_placement_body_$currentQuestionIndex',
+                          ),
+                          child: _QuestionOrDiagnosticV1(
+                            questions: questions,
+                            currentQuestionIndex: currentQuestionIndex,
+                            selectedOptionIds: selectedOptionIds,
+                            onSelectOption: onSelectOption,
+                            onBack: onBack,
+                          ),
+                        ),
+                ),
               ],
             ),
           ),
           _PlacementFlowActionBarV1(
             title: showIntro
-                ? 'Placement sets your first route, your first skill map, and your first real plan.'
+                ? (localeIsRu
+                      ? 'Две минуты. Потом Шарки подберёт старт.'
+                      : 'Two minutes. Then Sharky places you.')
                 : currentQuestionIndex >= questions.length
-                ? 'Finish the check and Sharky turns it into a sharper starting path.'
+                ? (localeIsRu
+                      ? 'Один короткий живой чек — и маршрут готов.'
+                      : 'One short live check, then your route is ready.')
                 : currentQuestion?.allowsMultiple == true
-                ? 'Pick every answer that fits. Continue stays here the whole time.'
-                : 'Answer fast and keep moving. Continue stays pinned below.',
+                ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
+                : (localeIsRu
+                      ? 'Отвечай быстро и двигайся дальше.'
+                      : 'Answer fast and keep moving.'),
             buttonKey: Key(
               showIntro
                   ? 'act0_shell_placement_intro_cta'
@@ -101,10 +155,10 @@ class Act0PlacementShellV1 extends StatelessWidget {
                   : 'act0_shell_placement_next_cta',
             ),
             buttonLabel: showIntro
-                ? 'Start placement'
+                ? (localeIsRu ? 'Начать плейсмент' : 'Start placement')
                 : currentQuestionIndex >= questions.length
-                ? 'Start skill check'
-                : 'Continue',
+                ? (localeIsRu ? 'Начать проверку' : 'Start skill check')
+                : (localeIsRu ? 'Продолжить' : 'Continue'),
             onPressed: showIntro
                 ? onStartPlacement
                 : currentQuestionIndex >= questions.length
@@ -128,12 +182,46 @@ class Act0PlacementShellV1 extends StatelessWidget {
               116,
             ),
             children: [
-              const _PlacementHeroV1(
-                title: 'Find your path',
-                subtitle: 'A few quick answers, then a smart starting point.',
+              _PlacementHeroV1(
+                title: _placementCopyV1(
+                  context,
+                  en: 'Find your start',
+                  ru: 'Найди свой старт',
+                ),
+                subtitle: _placementCopyV1(
+                  context,
+                  en: 'A few fast answers, then Sharky picks the route.',
+                  ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
-              _PlacementResultViewV1(result: placementResult),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 420),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInOutCubic,
+                transitionBuilder: (child, animation) {
+                  final curved = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  );
+                  return FadeTransition(
+                    opacity: curved,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.04),
+                        end: Offset.zero,
+                      ).animate(curved),
+                      child: child,
+                    ),
+                  );
+                },
+                child: KeyedSubtree(
+                  key: ValueKey<String>(
+                    'act0_shell_placement_result_${placementResult.level.name}',
+                  ),
+                  child: _PlacementResultViewV1(result: placementResult),
+                ),
+              ),
             ],
           ),
         ),
@@ -204,7 +292,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'Before Sharky locks the route, it runs one quick live check to see whether the table already feels natural or still needs slower structure.',
+                  'One short live check. Then Sharky locks the first route.',
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                   ),
@@ -225,20 +313,17 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 SizedBox(height: Act0ShellTokensV1.gapSm),
                 _PlacementStepLineV1(
                   icon: Icons.person_search_rounded,
-                  label:
-                      'Seat awareness: can you instantly find Hero and orient yourself at the table?',
+                  label: 'Table read and seat orientation.',
                 ),
                 SizedBox(height: 10),
                 _PlacementStepLineV1(
                   icon: Icons.view_kanban_rounded,
-                  label:
-                      'Board awareness: can you read what changed when shared cards arrive?',
+                  label: 'Board and street basics.',
                 ),
                 SizedBox(height: 10),
                 _PlacementStepLineV1(
                   icon: Icons.alt_route_rounded,
-                  label:
-                      'Action order: can you tell who speaks first when the hand starts moving?',
+                  label: 'Action order once the hand starts moving.',
                 ),
               ],
             ),
@@ -253,14 +338,12 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 SizedBox(height: Act0ShellTokensV1.gapSm),
                 _PlacementStepLineV1(
                   icon: Icons.route_rounded,
-                  label:
-                      'A recommended path that starts where you are instead of where a generic beginner plan would start.',
+                  label: 'A first route that starts where you actually are.',
                 ),
                 SizedBox(height: 10),
                 _PlacementStepLineV1(
                   icon: Icons.analytics_rounded,
-                  label:
-                      'A first poker skill snapshot that follows you into the profile and keeps growing from correct answers.',
+                  label: 'A cleaner first session and a sharper baseline.',
                 ),
               ],
             ),
@@ -276,127 +359,159 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
     final choiceLabel = question.allowsMultiple
         ? 'Choose anything that fits'
         : 'Choose one';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          key: Key('act0_shell_placement_question_${question.questionId}'),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.surfaceDecoration(glow: true),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    key: const Key('act0_shell_placement_back_arrow'),
-                    onPressed: currentQuestionIndex == 0 ? null : onBack,
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    color: Act0ShellTokensV1.primary,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapXs),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          question.eyebrow ?? 'Placement profile',
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.primary,
-                          ),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 320),
+      reverseDuration: const Duration(milliseconds: 180),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInOutCubic,
+      transitionBuilder: (child, animation) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.02, 0.02),
+              end: Offset.zero,
+            ).animate(curved),
+            child: child,
+          ),
+        );
+      },
+      child: Container(
+        key: Key('act0_shell_placement_question_${question.questionId}'),
+        padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+        decoration:
+            Act0ShellTokensV1.surfaceDecoration(
+              glow: true,
+              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
+              borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.24),
+            ).copyWith(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                  Act0ShellTokensV1.primary.withValues(alpha: 0.07),
+                  Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
+                  Act0ShellTokensV1.info.withValues(alpha: 0.06),
+                ],
+              ),
+            ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  key: const Key('act0_shell_placement_back_arrow'),
+                  onPressed: currentQuestionIndex == 0 ? null : onBack,
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  color: Act0ShellTokensV1.primary,
+                  visualDensity: VisualDensity.compact,
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapXs),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        question.eyebrow ?? 'Placement profile',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.primary,
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.primary.withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.primary.withOpacity(0.22),
                     ),
                   ),
+                  child: Text(
+                    '${currentQuestionIndex + 1}/${questions.length}',
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.primary,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Text(question.title, style: Act0ShellTokensV1.sectionTitle),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(question.subtitle, style: Act0ShellTokensV1.muted),
+            if (question.helper != null) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              Text(
+                question.helper!,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                ),
+              ),
+            ],
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Wrap(
+              spacing: Act0ShellTokensV1.gapSm,
+              runSpacing: Act0ShellTokensV1.gapSm,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  choiceLabel,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.primary,
+                  ),
+                ),
+                if (question.allowsMultiple)
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.10),
+                      color: Act0ShellTokensV1.gold.withOpacity(0.10),
                       borderRadius: BorderRadius.circular(
                         Act0ShellTokensV1.radiusPill,
                       ),
                       border: Border.all(
-                        color: Act0ShellTokensV1.primary.withOpacity(0.22),
+                        color: Act0ShellTokensV1.gold.withOpacity(0.24),
                       ),
                     ),
                     child: Text(
-                      '${currentQuestionIndex + 1}/${questions.length}',
+                      '$selectedCount selected',
                       style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.primary,
+                        color: Act0ShellTokensV1.gold,
                         letterSpacing: 0.2,
                       ),
                     ),
                   ),
-                ],
+              ],
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            for (final option in question.options) ...[
+              _PlacementOptionButtonV1(
+                option: option,
+                selected: selectedIds.contains(option.optionId),
+                multiSelect: question.allowsMultiple,
+                onTap: () => onSelectOption(question, option.optionId),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(question.title, style: Act0ShellTokensV1.sectionTitle),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
-              Text(question.subtitle, style: Act0ShellTokensV1.muted),
-              if (question.helper != null) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Text(
-                  question.helper!,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                  ),
-                ),
-              ],
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Wrap(
-                spacing: Act0ShellTokensV1.gapSm,
-                runSpacing: Act0ShellTokensV1.gapSm,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    choiceLabel,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
-                    ),
-                  ),
-                  if (question.allowsMultiple)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Act0ShellTokensV1.gold.withOpacity(0.10),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusPill,
-                        ),
-                        border: Border.all(
-                          color: Act0ShellTokensV1.gold.withOpacity(0.24),
-                        ),
-                      ),
-                      child: Text(
-                        '$selectedCount selected',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              for (final option in question.options) ...[
-                _PlacementOptionButtonV1(
-                  option: option,
-                  selected: selectedIds.contains(option.optionId),
-                  multiSelect: question.allowsMultiple,
-                  onTap: () => onSelectOption(question, option.optionId),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-              ],
             ],
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -424,19 +539,19 @@ class _PlacementIntroViewV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapXs),
               const Text(
-                'Your fastest route into real poker understanding.',
+                'Fast route in. No long setup.',
                 style: Act0ShellTokensV1.screenTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                'This is not a throwaway quiz. Sharky uses it to build your first training route, seed your poker skill stats, and turn the app into something that feels tailored from the first minute.',
+                'Sharky uses this to choose your first route and skip the wrong start.',
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                'If you have never held cards and just heard about poker today, this start is still built for you. Two minutes now gives Sharky enough signal to skip the generic route and make the app feel personal immediately.',
+                'If you are brand new, this still works. If you already know some poker, it avoids wasting your first reps.',
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.textMuted,
                 ),
@@ -451,53 +566,22 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Who this is for', style: Act0ShellTokensV1.cardTitle),
+              Text('Who this fits', style: Act0ShellTokensV1.cardTitle),
               SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlacementStepLineV1(
                 icon: Icons.school_rounded,
-                label:
-                    'Absolute beginners who want a calm first step and no poker jargon overload.',
+                label: 'New players who want a calm first step.',
               ),
               SizedBox(height: 10),
               _PlacementStepLineV1(
                 icon: Icons.groups_rounded,
                 label:
-                    'Casual players who know some terms but still feel lost in real table decisions.',
+                    'Casual players who know some terms but still freeze in hands.',
               ),
               SizedBox(height: 10),
               _PlacementStepLineV1(
                 icon: Icons.psychology_alt_rounded,
-                label:
-                    'Learners who want practical decisions, not long theory walls.',
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_intro_why'),
-          borderColor: Act0ShellTokensV1.info.withOpacity(0.18),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Why it matters', style: Act0ShellTokensV1.cardTitle),
-              SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementStepLineV1(
-                icon: Icons.route_rounded,
-                label:
-                    'You skip the generic start and land on the first lessons that fit your current level.',
-              ),
-              SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.insights_rounded,
-                label:
-                    'The app turns your answers into broader poker stats like Table sense, Board reading, and Blind play.',
-              ),
-              SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.auto_awesome_rounded,
-                label:
-                    'Your result becomes a personal launch plan, not just a score screen.',
+                label: 'Anyone who wants reps, not long theory walls.',
               ),
             ],
           ),
@@ -513,47 +597,17 @@ class _PlacementIntroViewV1 extends StatelessWidget {
               SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlacementStepLineV1(
                 icon: Icons.play_circle_rounded,
-                label:
-                    'You learn through short real spots, not passive reading.',
+                label: 'Short real spots, not passive reading.',
               ),
               SizedBox(height: 8),
               _PlacementStepLineV1(
                 icon: Icons.build_circle_rounded,
-                label:
-                    'Mistakes are repaired immediately, so confusion does not pile up.',
+                label: 'Misses get repaired before confusion piles up.',
               ),
               SizedBox(height: 8),
               _PlacementStepLineV1(
                 icon: Icons.route_rounded,
-                label:
-                    'Your route adapts to your current level instead of forcing one generic sequence.',
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_intro_how'),
-          borderColor: Act0ShellTokensV1.gold.withOpacity(0.18),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('How it works', style: Act0ShellTokensV1.cardTitle),
-              SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementStepLineV1(
-                icon: Icons.flash_on_rounded,
-                label: 'A few quick profile questions.',
-              ),
-              SizedBox(height: 8),
-              _PlacementStepLineV1(
-                icon: Icons.quiz_rounded,
-                label: 'A short skill check with real table spots.',
-              ),
-              SizedBox(height: 8),
-              _PlacementStepLineV1(
-                icon: Icons.play_lesson_rounded,
-                label:
-                    'A recommended starting lesson path and the first sessions to run next.',
+                label: 'Your first route matches your current level.',
               ),
             ],
           ),
@@ -565,22 +619,21 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Your first 10 minutes', style: Act0ShellTokensV1.cardTitle),
+              Text('What you get', style: Act0ShellTokensV1.cardTitle),
               SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlacementStepLineV1(
                 icon: Icons.looks_one_rounded,
-                label: 'Understand the table and card flow without pressure.',
+                label: 'One clear start instead of a generic opener.',
               ),
               SizedBox(height: 8),
               _PlacementStepLineV1(
                 icon: Icons.looks_two_rounded,
-                label: 'Make a few guided decisions and see instant feedback.',
+                label: 'A live check built from real spots across the course.',
               ),
               SizedBox(height: 8),
               _PlacementStepLineV1(
                 icon: Icons.looks_3_rounded,
-                label:
-                    'Leave with a clear next step instead of random practice.',
+                label: 'A route you can open immediately.',
               ),
             ],
           ),
@@ -721,74 +774,13 @@ class _PlacementResultViewV1 extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        Container(
-          key: const Key('act0_shell_placement_coach_note'),
-          padding: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Act0ShellTokensV1.gold.withOpacity(0.28),
-                Colors.white.withOpacity(0.08),
-              ],
-            ),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.placementCoachSurface,
-              borderRadius: BorderRadius.circular(
-                Act0ShellTokensV1.radiusLg - 1,
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.gold.withOpacity(0.16),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusMd,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.format_quote_rounded,
-                    size: 20,
-                    color: Act0ShellTokensV1.gold,
-                  ),
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Sharky says',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        result.coachLine,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontStyle: FontStyle.italic,
-                          height: 1.45,
-                        ),
-                      ),
-                    ],
-                  ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                Act0SharkyGuideCardV1(
+                  eyebrow: 'Sharky says',
+                  line: result.coachLine,
+                  mood: _placementMoodForResult(result),
+                  tone: _placementToneForResult(result),
+                  compact: true,
                 ),
               ],
             ),
@@ -821,7 +813,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Text(
-                    'Your first stop',
+                    'First stop',
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.primary,
                     ),
@@ -897,7 +889,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
               ],
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                'Route locked in. Tap below to open your path — takes 5 seconds.',
+                result.routeTrustLine,
                 key: const Key('act0_shell_placement_destination_trust_line'),
                 style: Act0ShellTokensV1.muted,
               ),
@@ -976,6 +968,22 @@ class _PlacementResultViewV1 extends StatelessWidget {
   }
 }
 
+Act0SharkyMoodV1 _placementMoodForResult(Act0PlacementResultV1 result) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer => Act0SharkyMoodV1.thinking,
+    Act0PlacementResultLevelV1.rustyBeginner => Act0SharkyMoodV1.repair,
+    Act0PlacementResultLevelV1.readyForBasics => Act0SharkyMoodV1.happy,
+  };
+}
+
+Color _placementToneForResult(Act0PlacementResultV1 result) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer => Act0ShellTokensV1.info,
+    Act0PlacementResultLevelV1.rustyBeginner => Act0ShellTokensV1.gold,
+    Act0PlacementResultLevelV1.readyForBasics => Act0ShellTokensV1.primary,
+  };
+}
+
 class _PlacementSectionCardV1 extends StatelessWidget {
   const _PlacementSectionCardV1({
     super.key,
@@ -992,10 +1000,21 @@ class _PlacementSectionCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2,
-        borderColor: borderColor ?? Act0ShellTokensV1.border,
-      ),
+      decoration:
+          Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface2,
+            borderColor: borderColor ?? Act0ShellTokensV1.border,
+          ).copyWith(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                Colors.white.withOpacity(0.015),
+                Act0ShellTokensV1.surface2,
+                Act0ShellTokensV1.surface.withOpacity(0.92),
+              ],
+            ),
+          ),
       child: child,
     );
   }
@@ -1073,12 +1092,21 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
         Act0ShellTokensV1.pageX,
         Act0ShellTokensV1.gapMd,
       ),
-      decoration: Act0ShellTokensV1.glassDecoration(top: true),
+      decoration: Act0ShellTokensV1.glassDecoration(top: true).copyWith(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Act0ShellTokensV1.surface2.withOpacity(0.96),
+            Act0ShellTokensV1.surface.withOpacity(0.98),
+          ],
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Your first route is ready. Open it and start with one guided rep.',
+            'Your first route is ready.',
             textAlign: TextAlign.center,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.text,
@@ -1177,7 +1205,7 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                   result.recommendedReason,
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
-                    height: 1.42,
+                    height: 1.38,
                   ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -1210,7 +1238,7 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'Most people finish the first guided rep in under 10 minutes. You can change the route anytime.',
+                  result.routeTrustLine,
                   key: const Key('act0_shell_placement_recommended_trust_line'),
                   style: Act0ShellTokensV1.muted,
                   textAlign: TextAlign.center,
@@ -1257,7 +1285,10 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
                       OutlinedButton(
                         key: const Key('act0_shell_placement_trial_cta'),
-                        onPressed: onStartTrialPreview,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          onStartTrialPreview();
+                        },
                         style: Act0ShellTokensV1.quietButtonStyle(height: 40),
                         child: const Text('Preview 7-day trial'),
                       ),
@@ -1310,7 +1341,16 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_placement_flow_action_bar'),
-      decoration: Act0ShellTokensV1.glassDecoration(top: true),
+      decoration: Act0ShellTokensV1.glassDecoration(top: true).copyWith(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Act0ShellTokensV1.surface2.withOpacity(0.96),
+            Act0ShellTokensV1.surface.withOpacity(0.98),
+          ],
+        ),
+      ),
       padding: const EdgeInsets.fromLTRB(
         Act0ShellTokensV1.pageX,
         Act0ShellTokensV1.gapSm,
@@ -1396,12 +1436,20 @@ class _PlacementHeroV1 extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: <Color>[
-            Act0ShellTokensV1.primary.withOpacity(0.18),
+            Act0ShellTokensV1.primary.withOpacity(0.22),
+            Act0ShellTokensV1.info.withOpacity(0.08),
             Act0ShellTokensV1.surface,
             Act0ShellTokensV1.surface2,
           ],
         ),
         border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.24)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Act0ShellTokensV1.primary.withOpacity(0.16),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
       child: Row(
         children: [

@@ -5,52 +5,61 @@ import 'package:poker_analyzer/audit_hub_v1/world_pedagogical_progression_audit_
 import 'package:test/test.dart';
 
 void main() {
-  test('world0 pedagogical/progression audit surfaces progression and feedback truth', () {
-    final snapshot = jsonDecode(
-      File('assets/audit_hub_v1/operational_snapshot.json').readAsStringSync(),
-    ) as Map<String, Object?>;
-    final worlds =
-        (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
-            .whereType<Map>()
-            .map(Map<String, Object?>.from)
-            .toList(growable: false);
-    final world0 = worlds.firstWhere((world) => world['world_id'] == 'W0');
-    final report = buildWorldPedagogicalProgressionReportV1(
-      worldSnapshot: world0,
-    );
+  test(
+    'world0 pedagogical/progression audit surfaces progression and feedback truth',
+    () {
+      final snapshot =
+          jsonDecode(
+                File(
+                  'assets/audit_hub_v1/operational_snapshot.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, Object?>;
+      final worlds = (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
+          .whereType<Map>()
+          .map(Map<String, Object?>.from)
+          .toList(growable: false);
+      final world0 = worlds.firstWhere((world) => world['world_id'] == 'W0');
+      final report = buildWorldPedagogicalProgressionReportV1(
+        worldSnapshot: world0,
+      );
 
-    expect(report.worldId, 'W0');
-    expect(
-      report.progressionCorrectnessStatus,
-      PedagogicalProgressionTruthStatusV1.surfacedGap,
-    );
-    expect(
-      report.wrongAnswerFeedbackQualityStatus,
-      PedagogicalProgressionTruthStatusV1.surfacedGap,
-    );
-    expect(
-      report.findings.any(
-        (finding) => finding.category == 'progression_correctness',
-      ),
-      isTrue,
-    );
-    expect(
-      report.findings.any(
-        (finding) => finding.category == 'wrong_answer_feedback_quality',
-      ),
-      isTrue,
-    );
-  });
+      expect(report.worldId, 'W0');
+      expect(
+        report.progressionCorrectnessStatus,
+        PedagogicalProgressionTruthStatusV1.surfacedGap,
+      );
+      expect(
+        report.wrongAnswerFeedbackQualityStatus,
+        PedagogicalProgressionTruthStatusV1.surfacedGap,
+      );
+      expect(
+        report.findings.any(
+          (finding) => finding.category == 'progression_correctness',
+        ),
+        isTrue,
+      );
+      expect(
+        report.findings.any(
+          (finding) => finding.category == 'wrong_answer_feedback_quality',
+        ),
+        isTrue,
+      );
+    },
+  );
 
   test('pedagogical/progression truth summary aggregates world reports', () {
-    final snapshot = jsonDecode(
-      File('assets/audit_hub_v1/operational_snapshot.json').readAsStringSync(),
-    ) as Map<String, Object?>;
-    final worlds =
-        (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
-            .whereType<Map>()
-            .map(Map<String, Object?>.from)
-            .toList(growable: false);
+    final snapshot =
+        jsonDecode(
+              File(
+                'assets/audit_hub_v1/operational_snapshot.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, Object?>;
+    final worlds = (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
+        .whereType<Map>()
+        .map(Map<String, Object?>.from)
+        .toList(growable: false);
     final reports = buildWorldPedagogicalProgressionReportsV1(worlds: worlds);
     final summary = buildPedagogicalProgressionTruthSummaryJsonV1(
       reports: reports,

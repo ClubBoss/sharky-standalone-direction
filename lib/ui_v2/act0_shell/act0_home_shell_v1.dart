@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+
+String _shellCopyV1(
+  BuildContext context, {
+  required String en,
+  required String ru,
+}) => _isRuLocaleV1(context) ? ru : en;
 
 class Act0HomeShellV1 extends StatelessWidget {
   const Act0HomeShellV1({
@@ -14,17 +24,13 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.nextActionSubtitle,
     this.nextActionCtaLabel = 'Continue',
     this.nextActionHint,
-    this.handoffLabel = 'Keep going',
-    this.handoffHeadline,
-    this.handoffDetail,
-    this.handoffOutcome,
-    this.handoffPills = const <String>[
-      'Lesson step',
-      'Live spot',
-      'Repair loop',
-    ],
-    this.showHandoffPanel = true,
-    this.onDismissHandoff,
+    this.repairLabel = 'Review',
+    this.repairHeadline,
+    this.repairDetail,
+    this.repairOutcome,
+    this.repairCtaLabel,
+    this.showRepairPanel = true,
+    this.onStartRepair,
     this.dailyGoalValue,
     this.dailyGoalCtaLabel = 'Practice now →',
     this.sharkyOverride,
@@ -41,13 +47,13 @@ class Act0HomeShellV1 extends StatelessWidget {
   final String? nextActionSubtitle;
   final String nextActionCtaLabel;
   final String? nextActionHint;
-  final String handoffLabel;
-  final String? handoffHeadline;
-  final String? handoffDetail;
-  final String? handoffOutcome;
-  final List<String> handoffPills;
-  final bool showHandoffPanel;
-  final VoidCallback? onDismissHandoff;
+  final String repairLabel;
+  final String? repairHeadline;
+  final String? repairDetail;
+  final String? repairOutcome;
+  final String? repairCtaLabel;
+  final bool showRepairPanel;
+  final VoidCallback? onStartRepair;
   final String? dailyGoalValue;
   final String dailyGoalCtaLabel;
   final Act0SharkyCueV1? sharkyOverride;
@@ -58,13 +64,24 @@ class Act0HomeShellV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lesson = currentLesson ?? state.currentLesson;
-    final title = nextActionTitle ?? lesson.title;
-    final subtitle = nextActionSubtitle ?? lesson.subtitle;
+    final title =
+        nextActionTitle ?? act0LocalizedLessonTitleV1(context, lesson);
+    final subtitle =
+        nextActionSubtitle ?? act0LocalizedLessonSubtitleV1(context, lesson);
+    final courseTitle = act0LocalizedWorldTitleV1(context, state.selectedWorld);
     final sharky = sharkyOverride ?? lesson.runner.sharky;
-    final earnedAchievements = state.profile.achievements
-        .where((achievement) => !achievement.locked)
-        .take(2)
-        .toList(growable: false);
+    final nextActionLabel = this.nextActionLabel == 'Continue'
+        ? _shellCopyV1(context, en: 'Continue', ru: 'Продолжить')
+        : this.nextActionLabel;
+    final nextActionCtaLabel = this.nextActionCtaLabel == 'Continue'
+        ? _shellCopyV1(context, en: 'Continue', ru: 'Продолжить')
+        : this.nextActionCtaLabel;
+    final repairLabel = this.repairLabel == 'Review'
+        ? _shellCopyV1(context, en: 'Review', ru: 'Разбор')
+        : this.repairLabel;
+    final dailyGoalCtaLabel = this.dailyGoalCtaLabel == 'Practice now →'
+        ? _shellCopyV1(context, en: 'Practice now →', ru: 'Начать практику →')
+        : this.dailyGoalCtaLabel;
     return ListView(
       key: const Key('act0_shell_home_screen'),
       padding: const EdgeInsets.fromLTRB(
@@ -78,9 +95,22 @@ class Act0HomeShellV1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Text(
-                state.courseTitle,
-                style: Act0ShellTokensV1.screenTitle,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _shellCopyV1(context, en: 'Home', ru: 'Главная'),
+                    style: Act0ShellTokensV1.screenTitle,
+                  ),
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                  Text(
+                    courseTitle,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.primary,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
               ),
             ),
             if (onOpenDevMenu != null)
@@ -90,7 +120,11 @@ class Act0HomeShellV1 extends StatelessWidget {
                 icon: const Icon(Icons.more_horiz_rounded),
                 color: Act0ShellTokensV1.muted.color,
                 splashRadius: 18,
-                tooltip: 'Dev menu',
+                tooltip: _shellCopyV1(
+                  context,
+                  en: 'Dev menu',
+                  ru: 'Меню разработчика',
+                ),
                 visualDensity: const VisualDensity(
                   horizontal: -3,
                   vertical: -3,
@@ -98,29 +132,9 @@ class Act0HomeShellV1 extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(state.courseSubtitle, style: Act0ShellTokensV1.muted),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        _DailyGoalCardV1(
-          state: state,
-          dailyGoalValue: dailyGoalValue,
-          dailyGoalCtaLabel: dailyGoalCtaLabel,
-          onStartDailyDrill: onStartDailyDrill,
-        ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _HomeStreakStripV1(
-          streakDays: state.streakDays,
-          streakLast7: state.profile.streakLast7,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _SharkyHomeCardV1(
-          sharky: sharky,
-          streakDays: state.streakDays,
-          earnedAchievements: earnedAchievements,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
         Container(
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapXl),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
           decoration: Act0ShellTokensV1.heroDecoration(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,110 +206,13 @@ class Act0HomeShellV1 extends StatelessWidget {
                         const SizedBox(height: Act0ShellTokensV1.gapSm),
                         Text(
                           subtitle,
+                          key: const Key(
+                            'act0_shell_home_next_action_subtitle',
+                          ),
                           style: Act0ShellTokensV1.muted,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: Act0ShellTokensV1.gapSm),
-                        if (showHandoffPanel)
-                          Container(
-                            key: const Key('act0_shell_home_handoff_panel'),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Act0ShellTokensV1.gapMd,
-                              vertical: Act0ShellTokensV1.gapSm,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Act0ShellTokensV1.surface2.withValues(
-                                alpha: 0.78,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusXl,
-                              ),
-                              border: Border.all(
-                                color: Act0ShellTokensV1.primary.withValues(
-                                  alpha: 0.22,
-                                ),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        handoffLabel,
-                                        style: Act0ShellTokensV1.label.copyWith(
-                                          color: Act0ShellTokensV1.primary,
-                                        ),
-                                      ),
-                                    ),
-                                    if (onDismissHandoff != null)
-                                      IconButton(
-                                        key: const Key(
-                                          'act0_shell_home_handoff_dismiss',
-                                        ),
-                                        onPressed: onDismissHandoff,
-                                        icon: const Icon(Icons.close_rounded),
-                                        color: Act0ShellTokensV1.muted.color,
-                                        splashRadius: 16,
-                                        visualDensity: const VisualDensity(
-                                          horizontal: -4,
-                                          vertical: -4,
-                                        ),
-                                        tooltip: 'Dismiss',
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                                Text(
-                                  handoffHeadline ??
-                                      'Short session. Progress saves automatically.',
-                                  style: Act0ShellTokensV1.body.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (handoffDetail != null) ...[
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    handoffDetail!,
-                                    style: Act0ShellTokensV1.muted,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                                if (handoffOutcome != null) ...[
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'Outcome: $handoffOutcome',
-                                    key: const Key(
-                                      'act0_shell_home_handoff_outcome',
-                                    ),
-                                    style: Act0ShellTokensV1.muted.copyWith(
-                                      color: Act0ShellTokensV1.gold,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                                if (handoffPills.isNotEmpty) ...[
-                                  const SizedBox(height: 6),
-                                  Wrap(
-                                    spacing: Act0ShellTokensV1.gapSm,
-                                    runSpacing: 6,
-                                    children: [
-                                      for (final pill in handoffPills)
-                                        _TodayFlowPillV1(label: pill),
-                                    ],
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
                       ],
                     ),
                   ),
@@ -314,135 +231,155 @@ class Act0HomeShellV1 extends StatelessWidget {
                   nextActionHint!,
                   key: const Key('act0_shell_home_cta_hint'),
                   style: Act0ShellTokensV1.muted,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ],
           ),
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        if (showRepairPanel) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _HomeRepairCardV1(
+            localeIsRu: _isRuLocaleV1(context),
+            embedded: true,
+            repairLabel: showRepairPanel ? repairLabel : null,
+            repairHeadline: showRepairPanel ? repairHeadline : null,
+            repairDetail: showRepairPanel ? repairDetail : null,
+            repairOutcome: showRepairPanel ? repairOutcome : null,
+            repairCtaLabel: showRepairPanel ? repairCtaLabel : null,
+            onStartRepair: showRepairPanel ? onStartRepair : null,
+          ),
+        ],
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
         Container(
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.surfaceDecoration(),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface.withValues(alpha: 0.64),
+            borderColor: Act0ShellTokensV1.border.withValues(alpha: 0.44),
+            glow: false,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.levelLabel,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.gold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Course progress',
-                          style: Act0ShellTokensV1.cardTitle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Text(
-                    '${state.xp}/${state.xpTarget} XP',
-                    textAlign: TextAlign.right,
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.gold,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
+              Text(
+                _shellCopyV1(
+                  context,
+                  en: 'Optional practice',
+                  ru: 'Дополнительная практика',
                 ),
-                child: LinearProgressIndicator(
-                  minHeight: Act0ShellTokensV1.progressHeight + 2,
-                  value: state.xpProgress,
-                  backgroundColor: Act0ShellTokensV1.surface3,
-                  color: Act0ShellTokensV1.gold,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.primary,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(_xpToNextLevelLabel(state), style: Act0ShellTokensV1.muted),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Row(
-                children: [
-                  Expanded(
-                    child: _TinyStatV1(
-                      label: 'Streak',
-                      value: _streakStatLabel(state.streakDays),
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Expanded(
-                    child: _TinyStatV1(
-                      label: 'Lessons',
-                      value: pathProgressLabel ?? state.pathProgressLabel,
-                    ),
-                  ),
-                ],
+              _DailyGoalCardV1(
+                localeIsRu: _isRuLocaleV1(context),
+                state: state,
+                dailyGoalValue: dailyGoalValue,
+                dailyGoalCtaLabel: dailyGoalCtaLabel,
+                onStartDailyDrill: onStartDailyDrill,
+                subdued: true,
               ),
             ],
           ),
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        _HomeFooterSharkyLineV1(
+          state: state,
+          sharky: sharky,
+          localeIsRu: _isRuLocaleV1(context),
         ),
       ],
     );
   }
 }
 
-String _streakStatLabel(int days) {
-  if (days == 0) return '—';
-  if (days == 1) return '1 day';
-  return '$days days';
-}
-
-String _xpToNextLevelLabel(Act0ShellStateV1 state) {
-  final remaining = (state.xpTarget - state.xp).clamp(0, 999999);
-  if (remaining == 0) {
-    return 'Level target reached';
-  }
-  return '$remaining XP to next level';
-}
-
-String _dailyGoalSupportText(String goalValue) {
+String _dailyGoalSupportText(bool localeIsRu, String goalValue) {
   if (goalValue.startsWith('Streak saved')) {
-    return 'Recovery earned. Momentum is protected today.';
+    return localeIsRu
+        ? 'Восстановление засчитано. Ритм на сегодня сохранён.'
+        : 'Recovery earned. The rhythm stays alive today.';
   }
   if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
-    return 'Goal complete. Return tomorrow to keep the streak alive.';
+    return localeIsRu
+        ? 'Цель на сегодня закрыта. Завтрашний старт уже готов.'
+        : 'Goal complete. Tomorrow is already set up.';
   }
   if (goalValue.startsWith('0/')) {
-    return 'Start one spot to keep the pace.';
+    return localeIsRu
+        ? 'Начни с одного чистого спота и задай ритм.'
+        : 'Start one clean spot and let the rhythm begin.';
   }
-  return 'Good start. Keep the path moving.';
+  return localeIsRu
+      ? 'Хороший старт. Ещё один чистый реп держит маршрут тёплым.'
+      : 'Good start. One more clean rep keeps the route warm.';
+}
+
+String _dailyGoalTrustLineV1({
+  required bool localeIsRu,
+  required String goalValue,
+  required int streakDays,
+}) {
+  if (goalValue.startsWith('Streak saved')) {
+    return localeIsRu
+        ? (streakDays > 0
+              ? 'Ритм на $streakDays дн. сохранён.'
+              : 'Импульс на завтра сохранён.')
+        : (streakDays > 0
+              ? '$streakDays day rhythm protected.'
+              : 'Momentum protected for tomorrow.');
+  }
+  if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
+    return localeIsRu
+        ? (streakDays > 0
+              ? 'Серия на $streakDays дн. в порядке. Завтра будет легче.'
+              : 'Сегодняшний день засчитан. Завтра будет легче.')
+        : (streakDays > 0
+              ? '$streakDays day rhythm is safe. Tomorrow starts lighter.'
+              : 'Today is banked. Tomorrow starts lighter.');
+  }
+  if (streakDays >= 7) {
+    return localeIsRu
+        ? '$streakDays дней стабильно.'
+        : '$streakDays days steady.';
+  }
+  if (streakDays >= 3) {
+    return localeIsRu
+        ? 'Серия $streakDays дня жива.'
+        : '$streakDays day streak live.';
+  }
+  return localeIsRu
+      ? 'Один чистый реп запускает ритм.'
+      : 'One clean rep starts the rhythm.';
 }
 
 class _DailyGoalCardV1 extends StatelessWidget {
   const _DailyGoalCardV1({
+    required this.localeIsRu,
     required this.state,
     required this.dailyGoalValue,
     required this.dailyGoalCtaLabel,
     this.onStartDailyDrill,
+    this.subdued = false,
   });
 
+  final bool localeIsRu;
   final Act0ShellStateV1 state;
   final String? dailyGoalValue;
   final String dailyGoalCtaLabel;
   final VoidCallback? onStartDailyDrill;
+  final bool subdued;
 
   @override
   Widget build(BuildContext context) {
     final goalValue = dailyGoalValue ?? state.dailyGoalValue;
     final isDone = goalValue.startsWith('Done') || goalValue.contains('3/3');
+    final trustLine = _dailyGoalTrustLineV1(
+      localeIsRu: localeIsRu,
+      goalValue: goalValue,
+      streakDays: state.streakDays,
+    );
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -450,90 +387,80 @@ class _DailyGoalCardV1 extends StatelessWidget {
         onTap: isDone ? null : onStartDailyDrill,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
         child: Container(
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.surfaceDecoration(),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: subdued
+                ? Act0ShellTokensV1.surface2.withValues(alpha: 0.52)
+                : Act0ShellTokensV1.surface.withValues(alpha: 0.88),
+            borderColor: subdued
+                ? Act0ShellTokensV1.border.withValues(alpha: 0.36)
+                : Act0ShellTokensV1.border.withValues(alpha: 0.68),
+            glow: false,
+          ),
           child: Row(
             children: [
-              SizedBox(
-                width: 56,
-                height: 56,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CircularProgressIndicator(
-                      value: state.xpProgress,
-                      strokeWidth: 4,
-                      backgroundColor: Act0ShellTokensV1.surface3,
-                      color: Act0ShellTokensV1.primary,
-                    ),
-                    Center(
-                      child: Text(
-                        '${(state.xpProgress * 100).round()}%',
-                        style: Act0ShellTokensV1.body.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ],
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusLg,
+                  ),
+                ),
+                child: Icon(
+                  isDone ? Icons.check_circle_rounded : Icons.flash_on_rounded,
+                  color: Act0ShellTokensV1.primary,
+                  size: 20,
                 ),
               ),
-              const SizedBox(width: Act0ShellTokensV1.gapLg),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(state.dailyGoalLabel, style: Act0ShellTokensV1.label),
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(goalValue, style: Act0ShellTokensV1.cardTitle),
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
                     Text(
-                      _dailyGoalSupportText(goalValue),
-                      style: Act0ShellTokensV1.muted,
+                      localeIsRu ? 'Быстрая практика' : 'Quick practice',
+                      style: Act0ShellTokensV1.label,
                     ),
-                    if (isDone) ...[
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      Container(
-                        key: const Key('act0_shell_home_daily_done_badge'),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
+                    const SizedBox(height: 4),
+                    Text(goalValue, style: Act0ShellTokensV1.cardTitle),
+                    const SizedBox(height: 4),
+                    Text(
+                      _dailyGoalSupportText(localeIsRu, goalValue),
+                      style: Act0ShellTokensV1.muted.copyWith(fontSize: 11.5),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      key: const Key('act0_shell_home_daily_trust_line'),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Act0ShellTokensV1.primary.withValues(
+                          alpha: subdued ? 0.08 : 0.10,
                         ),
-                        decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          Act0ShellTokensV1.radiusPill,
+                        ),
+                        border: Border.all(
                           color: Act0ShellTokensV1.primary.withValues(
-                            alpha: 0.14,
+                            alpha: 0.18,
                           ),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: Act0ShellTokensV1.primary.withValues(
-                              alpha: 0.26,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle_rounded,
-                              size: 14,
-                              color: Act0ShellTokensV1.primary,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Done today',
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: Act0ShellTokensV1.primary,
-                                letterSpacing: 0.2,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                    ],
+                      child: Text(
+                        trustLine,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.primary,
+                          letterSpacing: 0.15,
+                        ),
+                      ),
+                    ),
                     if (!isDone && onStartDailyDrill != null) ...[
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
+                      const SizedBox(height: 6),
                       Text(
                         dailyGoalCtaLabel,
                         key: const Key('act0_shell_home_daily_practice_now'),
@@ -545,13 +472,27 @@ class _DailyGoalCardV1 extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                state.levelLabel,
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.primary,
-                  fontWeight: FontWeight.w900,
+              if (isDone)
+                Container(
+                  key: const Key('act0_shell_home_daily_done_badge'),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                  ),
+                  child: Text(
+                    localeIsRu ? 'Готово' : 'Done',
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.primary,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -560,236 +501,221 @@ class _DailyGoalCardV1 extends StatelessWidget {
   }
 }
 
-class _TinyStatV1 extends StatelessWidget {
-  const _TinyStatV1({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(color: Act0ShellTokensV1.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: Act0ShellTokensV1.label),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(value, style: Act0ShellTokensV1.body),
-        ],
-      ),
-    );
-  }
-}
-
-class _HomeStreakStripV1 extends StatelessWidget {
-  const _HomeStreakStripV1({
-    required this.streakDays,
-    required this.streakLast7,
+class _HomeRepairCardV1 extends StatelessWidget {
+  const _HomeRepairCardV1({
+    required this.localeIsRu,
+    this.embedded = false,
+    this.repairLabel,
+    this.repairHeadline,
+    this.repairDetail,
+    this.repairOutcome,
+    this.repairCtaLabel,
+    this.onStartRepair,
   });
 
-  final int streakDays;
-  final List<bool> streakLast7;
+  final bool localeIsRu;
+  final bool embedded;
+  final String? repairLabel;
+  final String? repairHeadline;
+  final String? repairDetail;
+  final String? repairOutcome;
+  final String? repairCtaLabel;
+  final VoidCallback? onStartRepair;
 
   @override
   Widget build(BuildContext context) {
-    final days = _normalize7DayStreak(streakDays, streakLast7);
     return Container(
-      key: const Key('act0_shell_home_streak_strip'),
+      key: const Key('act0_shell_home_repair_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
-        color: Act0ShellTokensV1.surface,
+        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.18),
+        glow: false,
+        color: embedded
+            ? Act0ShellTokensV1.surface2.withValues(alpha: 0.42)
+            : Act0ShellTokensV1.surface.withValues(alpha: 0.76),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                'Return rhythm',
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.primary,
+          if (repairHeadline != null ||
+              repairDetail != null ||
+              repairOutcome != null) ...[
+            Container(
+              key: const Key('act0_shell_home_repair_panel'),
+              padding: const EdgeInsets.symmetric(
+                horizontal: Act0ShellTokensV1.gapMd,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.surface3.withValues(alpha: 0.72),
+                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+                border: Border.all(
+                  color: Act0ShellTokensV1.border.withValues(alpha: 0.46),
                 ),
               ),
-              const Spacer(),
-              Text(
-                _streakStatLabel(streakDays),
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.primary,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Row(
-            children: [
-              for (var i = 0; i < days.length; i++) ...[
-                Expanded(
-                  child: Container(
-                    key: Key('act0_shell_home_streak_day_$i'),
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: days[i]
-                          ? Act0ShellTokensV1.primary
-                          : Act0ShellTokensV1.surface3,
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
-                      ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (repairLabel != null)
+                          Text(
+                            repairLabel!,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.primary,
+                            ),
+                          ),
+                        if (repairHeadline != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            repairHeadline!,
+                            key: const Key('act0_shell_home_repair_headline'),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Act0ShellTokensV1.body.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                        if (repairDetail != null) ...[
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.history_rounded,
+                                size: 14,
+                                color: Act0ShellTokensV1.textDim,
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  repairDetail!,
+                                  key: const Key(
+                                    'act0_shell_home_repair_detail',
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Act0ShellTokensV1.muted.copyWith(
+                                    color: Act0ShellTokensV1.textDim,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (repairOutcome != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            repairOutcome!,
+                            key: const Key('act0_shell_home_repair_outcome'),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Act0ShellTokensV1.muted.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                            ),
+                          ),
+                        ],
+                        if (repairCtaLabel != null &&
+                            onStartRepair != null) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapSm),
+                          FilledButton.tonal(
+                            key: const Key('act0_shell_home_repair_cta'),
+                            onPressed: onStartRepair,
+                            style: FilledButton.styleFrom(
+                              visualDensity: const VisualDensity(
+                                horizontal: -1,
+                                vertical: -1,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              foregroundColor: Act0ShellTokensV1.primary,
+                            ),
+                            child: Text(repairCtaLabel!),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                ),
-                if (i < days.length - 1)
-                  const SizedBox(width: Act0ShellTokensV1.gapXs),
-              ],
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
-            'No pressure: one clean rep keeps rhythm.',
-            key: const Key('act0_shell_home_streak_trust_line'),
-            style: Act0ShellTokensV1.muted,
-          ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
-
-  List<bool> _normalize7DayStreak(int streakDays, List<bool> streakLast7) {
-    if (streakLast7.length == 7) {
-      return streakLast7;
-    }
-    final normalized = List<bool>.filled(7, false);
-    final activeDays = streakDays.clamp(0, 7);
-    for (var i = 7 - activeDays; i < 7; i++) {
-      normalized[i] = true;
-    }
-    return normalized;
-  }
 }
 
-class _SharkyHomeCardV1 extends StatelessWidget {
-  const _SharkyHomeCardV1({
+class _HomeFooterSharkyLineV1 extends StatelessWidget {
+  const _HomeFooterSharkyLineV1({
+    required this.state,
     required this.sharky,
-    required this.streakDays,
-    required this.earnedAchievements,
+    required this.localeIsRu,
   });
 
+  final Act0ShellStateV1 state;
   final Act0SharkyCueV1 sharky;
-  final int streakDays;
-  final List<Act0AchievementV1> earnedAchievements;
+  final bool localeIsRu;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: const Key('act0_shell_home_sharky_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.28),
-        glow: true,
-        color: Act0ShellTokensV1.surface2,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Act0SharkyGuideCardV1(
-            eyebrow: 'Sharky guide',
-            line: sharky.preSessionLine,
-            detail: sharky.summaryLine,
-            mood: sharky.preSessionMood,
-            badgeLabel: streakDays > 0 ? '$streakDays day streak' : null,
-          ),
-          if (earnedAchievements.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            Text('Unlocked', style: Act0ShellTokensV1.label),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Wrap(
-              spacing: Act0ShellTokensV1.gapSm,
-              runSpacing: Act0ShellTokensV1.gapSm,
-              children: [
-                for (final achievement in earnedAchievements)
-                  _HomeAccentPillV1(
-                    key: Key(
-                      'act0_shell_home_achievement_${achievement.label}',
-                    ),
-                    label: achievement.label,
-                    icon: Icons.workspace_premium_rounded,
-                  ),
-              ],
-            ),
-          ],
-        ],
+    final line = _footerLine();
+    return Act0SharkyPresenceBubbleV1(
+      line: line,
+      mood: sharky.preSessionMood,
+      tone: act0SharkyToneForMoodV1(sharky.preSessionMood),
+      textKey: const Key('act0_shell_home_footer_sharky_line'),
+      mascotSize: 76,
+      bubblePadding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapMd,
+        vertical: 12,
       ),
     );
   }
-}
 
-class _HomeAccentPillV1 extends StatelessWidget {
-  const _HomeAccentPillV1({super.key, required this.label, this.icon});
-
-  final String label;
-  final IconData? icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 14, color: Act0ShellTokensV1.primary),
-            const SizedBox(width: 6),
-          ],
-          Text(
-            label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.primary,
-              letterSpacing: 0.2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TodayFlowPillV1 extends StatelessWidget {
-  const _TodayFlowPillV1({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.24),
-        ),
-      ),
-      child: Text(
-        label,
-        style: Act0ShellTokensV1.label.copyWith(
-          color: Act0ShellTokensV1.primary,
-          letterSpacing: 0.2,
-        ),
-      ),
-    );
+  String _footerLine() {
+    switch (sharky.preSessionMood) {
+      case Act0SharkyMoodV1.repair:
+        return localeIsRu
+            ? (state.streakDays >= 3
+                  ? '${state.streakDays} дня подряд. Сначала почини это место и сохрани чистую серию.'
+                  : 'Начни с этого фикса. Один чистый проход — и маршрут снова открыт.')
+            : (state.streakDays >= 3
+                  ? '${state.streakDays} days running. Fix this one first and keep the run clean.'
+                  : 'Start with this fix. Clean it once, then the route opens up.');
+      case Act0SharkyMoodV1.celebrate:
+        return localeIsRu
+            ? (state.streakDays > 0
+                  ? 'Хорошая работа сегодня. Ритм сохранён. Я подержу место до завтра.'
+                  : sharky.summaryLine)
+            : (state.streakDays > 0
+                  ? 'Nice work today. The rhythm is safe. I will hold the seat for tomorrow.'
+                  : sharky.summaryLine);
+      case Act0SharkyMoodV1.happy:
+        if (state.streakDays >= 7) {
+          return localeIsRu
+              ? '${state.streakDays} дней стабильно. Этот ритм уже начинает превращаться в настоящее преимущество.'
+              : '${state.streakDays} days steady. That rhythm is starting to feel like real edge.';
+        }
+        if (state.streakDays >= 3) {
+          return localeIsRu
+              ? '${state.streakDays} дня подряд. Один чистый реп — и серия жива.'
+              : '${state.streakDays} days running. One clean rep keeps it alive.';
+        }
+        return localeIsRu
+            ? 'Ты уже в ритме. Один быстрый чистый реп держит его тёплым.'
+            : 'You are rolling. One quick clean rep keeps the rhythm warm.';
+      case Act0SharkyMoodV1.thinking:
+        return localeIsRu
+            ? 'Один спокойный чистый реп сейчас лучше десяти спешных потом.'
+            : 'One calm clean rep now beats ten rushed ones later.';
+      case Act0SharkyMoodV1.neutral:
+        return localeIsRu
+            ? 'Не спеши. Чистые чтения собирают настоящее преимущество.'
+            : 'Stay patient. Clean reads build real edge.';
+    }
   }
 }

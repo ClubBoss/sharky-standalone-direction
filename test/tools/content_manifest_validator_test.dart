@@ -17,7 +17,7 @@ void main() {
     expect(errors, contains('intro_welcome manifest missing reasoning'));
   });
 
-  test('release manifest with wrong availability reports error', () {
+  test('compatibility manifest availability is no longer enforced', () {
     final manifest = {
       'difficulty_tier': 1,
       'error_class': 'intro_orientation',
@@ -31,7 +31,7 @@ void main() {
 
     expect(
       errors,
-      contains('intro_welcome release manifest must be available'),
+      isNot(contains('intro_welcome release manifest must be available')),
     );
   });
 

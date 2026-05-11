@@ -770,7 +770,11 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
             .toString();
     final moduleTitle = (first['title'] ?? first['name'] ?? moduleId)
         .toString();
-    await navigateToTheorySession(context, moduleId, moduleTitle: moduleTitle);
+    await navigateToLearningModuleV1(
+      context,
+      moduleId,
+      moduleTitle: moduleTitle,
+    );
   }
 
   Widget _buildMapRenderFallback({
@@ -2032,8 +2036,8 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
           _focusCurrentNodeOnNextBuild = false;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted || !_mapScrollController.hasClients) return;
-            final currentNodeId =
-                (effectiveNodes[currentIndex]['id'] ?? '').toString();
+            final currentNodeId = (effectiveNodes[currentIndex]['id'] ?? '')
+                .toString();
             final currentNodeContext =
                 _worldNodeKeysV1[currentNodeId]?.currentContext;
             if (currentNodeContext != null) {
@@ -3656,12 +3660,15 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
                           final row = levelRows[index];
                           final level = row['level'] as int;
                           final packIds =
-                              row['packIds'] as List<String>? ?? const <String>[];
-                          final completedCount = row['completedCount'] as int? ?? 0;
+                              row['packIds'] as List<String>? ??
+                              const <String>[];
+                          final completedCount =
+                              row['completedCount'] as int? ?? 0;
                           final done = row['done'] as bool? ?? false;
                           final isCurrent =
                               currentLevel != null && level == currentLevel;
-                          final isNext = nextLevel != null && level == nextLevel;
+                          final isNext =
+                              nextLevel != null && level == nextLevel;
                           final showDetails = done || isCurrent || isNext;
                           final status = done
                               ? 'DONE'
@@ -3752,7 +3759,9 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
                                             vertical: 4,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: statusColor.withOpacity(0.16),
+                                            color: statusColor.withOpacity(
+                                              0.16,
+                                            ),
                                             borderRadius: BorderRadius.circular(
                                               999,
                                             ),
@@ -3819,7 +3828,8 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
                                                   color: showDetails
                                                       ? SharkyTokensV1
                                                             .textSecondary
-                                                      : SharkyTokensV1.textMuted,
+                                                      : SharkyTokensV1
+                                                            .textMuted,
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                           ),
@@ -3875,11 +3885,12 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
                                                 'map_levels_replay_$level',
                                               ),
                                               onPressed: () async {
-                                                Navigator.of(sheetContext).pop();
+                                                Navigator.of(
+                                                  sheetContext,
+                                                ).pop();
                                                 await _openCampaignPack(
                                                   packId: packIds.first,
-                                                  title:
-                                                      'LEVEL $level REPLAY',
+                                                  title: 'LEVEL $level REPLAY',
                                                 );
                                               },
                                               child: Text(actionLabel),
@@ -3900,7 +3911,8 @@ class _UiV2ProgressMapScreenV2State extends State<UiV2ProgressMapScreenV2>
                                                   : null,
                                               style: FilledButton.styleFrom(
                                                 backgroundColor: isCurrent
-                                                    ? SharkyTokensV1.brandPrimary
+                                                    ? SharkyTokensV1
+                                                          .brandPrimary
                                                     : SharkyTokensV1.slate600,
                                                 disabledBackgroundColor:
                                                     SharkyTokensV1.slate600

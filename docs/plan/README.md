@@ -2,11 +2,11 @@
 
 `docs/plan/` is reserved for active planning truth:
 - master plans
-- canonical readiness authority and scoring truth
+- product-working authority and route order
 - execution maps
 - SSOT policy docs
 - contracts
-- readiness and pacing rules
+- readiness references and pacing rules
 
 It is no longer the default home for seam audits or closeout packets.
 

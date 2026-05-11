@@ -5,23 +5,26 @@ import 'package:poker_analyzer/models/card_model.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_board_pot_body_contract_v1.dart';
 
 void main() {
-  test('world1 canonical board/pot contract resolves demo board placeholders', () {
-    final resolved = resolveWorld1CanonicalBoardPotBodyContractV1(
-      effectiveStreet: StreetV1.turn,
-      boardCardsCount: 5,
-      demoHandLoopVisualStep: true,
-      demoHandLoopSession: false,
-      displayedPotChips: 12,
-      compactPotBadge: true,
-      inlinePotBadge: true,
-      potPulse: false,
-    );
+  test(
+    'world1 canonical board/pot contract resolves demo board placeholders',
+    () {
+      final resolved = resolveWorld1CanonicalBoardPotBodyContractV1(
+        effectiveStreet: StreetV1.turn,
+        boardCardsCount: 5,
+        demoHandLoopVisualStep: true,
+        demoHandLoopSession: false,
+        displayedPotChips: 12,
+        compactPotBadge: true,
+        inlinePotBadge: true,
+        potPulse: false,
+      );
 
-    expect(resolved.visibleBoardCount, 4);
-    expect(resolved.renderHiddenBoardPlaceholders, isTrue);
-    expect(resolved.renderedBoardCount, 5);
-    expect(resolved.displayedPotChips, 12);
-  });
+      expect(resolved.visibleBoardCount, 4);
+      expect(resolved.renderHiddenBoardPlaceholders, isTrue);
+      expect(resolved.renderedBoardCount, 5);
+      expect(resolved.displayedPotChips, 12);
+    },
+  );
 
   testWidgets('world1 canonical board body renders hidden placeholders', (
     tester,
@@ -56,7 +59,10 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('microtask_engine_board_strip')), findsOneWidget);
+    expect(
+      find.byKey(const Key('microtask_engine_board_strip')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('world1 canonical pot badge renders amount key', (tester) async {
@@ -81,7 +87,10 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('microtask_engine_pot_feedback')), findsOneWidget);
+    expect(
+      find.byKey(const Key('microtask_engine_pot_feedback')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('microtask_pot_value_v1')), findsOneWidget);
     expect(find.text('POT'), findsOneWidget);
   });

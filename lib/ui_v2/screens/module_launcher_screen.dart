@@ -179,7 +179,7 @@ String _canonicalDevHubNodeTitleForPackV1({
     return 'Practice 3';
   }
   if (normalized.contains('spine_campaign_v1')) {
-    return recommendedModuleTitleForId(packId);
+    return recommendedLearningModuleTitleForId(packId);
   }
   return 'World $world Lesson $lessonNumber';
 }
@@ -418,7 +418,7 @@ class _CanonicalDevAccessHubScreenV1State
     await pushWorld1FoundationsRunnerV1<void>(
       context,
       moduleId: entry.packId,
-      moduleTitle: recommendedModuleTitleForId(entry.packId),
+      moduleTitle: recommendedLearningModuleTitleForId(entry.packId),
       mode: kWorld1RunnerModeCampaignSpine,
       startHandIndex: startHandIndex,
     );
@@ -970,7 +970,8 @@ class ModuleLauncherScreen extends StatelessWidget {
                       subtitle:
                           'Inspect canonical readiness and recalibration candidate truth',
                       icon: Icons.monitor_heart_outlined,
-                      onTap: () => Navigator.of(context).push(auditHubRouteV1()),
+                      onTap: () =>
+                          Navigator.of(context).push(auditHubRouteV1()),
                     ),
                   ],
                 ],

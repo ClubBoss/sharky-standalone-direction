@@ -45,25 +45,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hands => 'рук';
 
   @override
-  String get packCatalogTitle => 'Pack catalog';
+  String get packCatalogTitle => 'Каталог паков';
 
   @override
-  String get packCatalogSubtitle => 'Browse curated packs';
+  String get packCatalogSubtitle => 'Подборка паков для тренировки';
 
   @override
-  String get difficultyAdvanced => 'Advanced';
+  String get difficultyAdvanced => 'Продвинутый';
 
   @override
-  String get difficultyIntermediate => 'Intermediate';
+  String get difficultyIntermediate => 'Средний';
 
   @override
-  String get difficultyBeginner => 'Beginner';
+  String get difficultyBeginner => 'Начальный';
 
   @override
-  String get packStatusComingSoon => 'Coming soon';
+  String get packStatusComingSoon => 'Скоро';
 
   @override
-  String get packStatusLocked => 'Locked';
+  String get packStatusLocked => 'Закрыто';
 
   @override
   String get startTraining => 'Начать тренировку';
@@ -238,13 +238,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get masteredPacks => '✅ Вы уже освоили';
 
   @override
-  String get dailyGoals => 'Daily Goals';
+  String get dailyGoals => 'Цели на день';
 
   @override
-  String get sessions => 'Sessions';
+  String get sessions => 'Сессии';
 
   @override
-  String get accuracyPercent => 'Accuracy %';
+  String get accuracyPercent => 'Точность';
 
   @override
   String get ev => 'EV';
@@ -302,88 +302,89 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cancel => 'Отмена';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Сбросить';
 
   @override
-  String get settingsResetTitle => 'Reset Settings';
+  String get settingsResetTitle => 'Сброс настроек';
 
   @override
   String get settingsResetConfirmation =>
-      'Are you sure you want to reset all settings to defaults?';
+      'Сбросить все настройки к значениям по умолчанию?';
 
   @override
-  String get settingsResetSuccess => 'Settings reset to defaults';
+  String get settingsResetSuccess => 'Настройки сброшены';
 
   @override
-  String get settingsResetButton => 'Reset to Defaults';
+  String get settingsResetButton => 'Сбросить до стандартных';
 
   @override
-  String get settingsCurrentLanguageLabel => 'Current Language';
+  String get settingsCurrentLanguageLabel => 'Текущий язык';
 
   @override
   String languageChangedSnackbar(Object language) {
-    return 'Language changed to $language';
+    return 'Язык переключен: $language';
   }
 
   @override
-  String get languageSelectorTitle => 'Select Language';
+  String get languageSelectorTitle => 'Язык приложения';
 
   @override
   String get languageSelectorDescription =>
-      'Choose your preferred language. The app will update instantly.';
+      'Выберите язык интерфейса. Изменения применяются сразу.';
 
   @override
-  String get settingsLegalEntryTitle => 'Legal & Compliance';
+  String get settingsLegalEntryTitle => 'Правила и данные';
 
   @override
-  String get settingsLegalEntrySubtitle => 'Privacy, terms, and data controls';
+  String get settingsLegalEntrySubtitle =>
+      'Конфиденциальность, условия и управление данными';
 
   @override
-  String get legalScreenTitle => 'Legal & Compliance';
+  String get legalScreenTitle => 'Правила и данные';
 
   @override
-  String get legalPoliciesSectionTitle => 'Policies';
+  String get legalPoliciesSectionTitle => 'Документы';
 
   @override
-  String get legalDataSectionTitle => 'Data';
+  String get legalDataSectionTitle => 'Данные';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
 
   @override
-  String get privacyPolicySubtitle => 'View how we handle player data';
+  String get privacyPolicySubtitle => 'Как мы работаем с данными игрока';
 
   @override
   String get termsOfUse => 'Terms of Use';
 
   @override
-  String get termsOfUseSubtitle => 'Read the governing terms';
+  String get termsOfUseSubtitle => 'Правила использования сервиса';
 
   @override
-  String get legalDeleteDataTitle => 'Delete Data / Account';
+  String get legalDeleteDataTitle => 'Удалить данные / аккаунт';
 
   @override
   String get legalDeleteDataSubtitle =>
-      'Wipe local learning progress, snapshots, and session history';
+      'Удалить локальный прогресс, снимки и историю сессий';
 
   @override
-  String get legalDeleteConfirmationTitle => 'Delete local data?';
+  String get legalDeleteConfirmationTitle => 'Удалить локальные данные?';
 
   @override
   String get legalDeleteConfirmationBody =>
-      'This will remove learning progress, snapshots, and session fingerprints from this device. This cannot be undone.';
+      'Это удалит прогресс, снимки и отпечатки сессий с этого устройства. Действие нельзя отменить.';
 
   @override
-  String get legalDeleteSuccess => 'Local data cleared';
+  String get legalDeleteSuccess => 'Локальные данные удалены';
 
   @override
-  String get legalDeleteFailure => 'Failed to clear local data';
+  String get legalDeleteFailure => 'Не удалось удалить локальные данные';
 
   @override
-  String get playerType => 'Player Type';
+  String get playerType => 'Тип игрока';
 
   @override
-  String get selectAction => 'Select Action';
+  String get selectAction => 'Выберите действие';
 
   @override
   String get fold => 'Fold';
@@ -398,10 +399,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get push => 'Push';
 
   @override
-  String get amount => 'Amount';
+  String get amount => 'Сумма';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Подтвердить';
 
   @override
   String get clear => 'Очистить';
@@ -413,7 +414,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get entrants => 'Entrants';
 
   @override
-  String get gameType => 'Game Type';
+  String get gameType => 'Тип игры';
 
   @override
   String get holdemNl => 'Hold\'em NL';
@@ -422,7 +423,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get omahaPl => 'Omaha PL';
 
   @override
-  String get otherGameType => 'Other';
+  String get otherGameType => 'Другое';
 
   @override
   String spotsLabel(Object value) {

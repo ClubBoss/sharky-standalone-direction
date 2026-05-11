@@ -226,10 +226,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(World1FoundationsMicroTaskRunnerScreen), findsOneWidget);
-    final expectedFollowupPackId = await ProgressService.getNextSpinePackToRunV1();
-    final followupRunner = tester.widget<World1FoundationsMicroTaskRunnerScreen>(
-      find.byType(World1FoundationsMicroTaskRunnerScreen),
-    );
+    final expectedFollowupPackId =
+        await ProgressService.getNextSpinePackToRunV1();
+    final followupRunner = tester
+        .widget<World1FoundationsMicroTaskRunnerScreen>(
+          find.byType(World1FoundationsMicroTaskRunnerScreen),
+        );
     expect(followupRunner.moduleId, expectedFollowupPackId);
 
     final followup = await _runFollowupAndCollect(tester);

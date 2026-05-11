@@ -32,8 +32,9 @@ import '../widgets/training_pack_tag_filter_bar.dart';
 import '../theme/app_colors.dart';
 import '../services/training_session_service.dart';
 
-CanonicalLegacyTrainingLaunchInputV1
-buildPacksLibrarySessionLaunchInputV1(TrainingSession session) {
+CanonicalLegacyTrainingLaunchInputV1 buildPacksLibrarySessionLaunchInputV1(
+  TrainingSession session,
+) {
   return CanonicalLegacyTrainingLaunchInputV1.session(session: session);
 }
 
@@ -1073,10 +1074,7 @@ class _PacksLibraryScreenState extends State<PacksLibraryScreen> {
                                     pushReplacementPacksLibraryTrainingSessionV1<
                                       void,
                                       void
-                                    >(
-                                      context,
-                                      session: session,
-                                    ),
+                                    >(context, session: session),
                                   );
                                 },
                                 child: const Text('Resume'),
@@ -1148,10 +1146,7 @@ class _PacksLibraryScreenState extends State<PacksLibraryScreen> {
                                     pushReplacementPacksLibraryTrainingSessionV1<
                                       void,
                                       void
-                                    >(
-                                      context,
-                                      session: newSession,
-                                    ),
+                                    >(context, session: newSession),
                                   );
                                 },
                                 child: const Text('Start'),

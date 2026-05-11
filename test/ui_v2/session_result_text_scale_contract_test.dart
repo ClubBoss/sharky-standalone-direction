@@ -33,9 +33,15 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final whatsNext = find.byKey(const Key('session_result_whats_next_block'));
-      final finishLabel = find.byKey(const Key('session_result_finish_label_v1'));
-      final primaryCta = find.byKey(const Key('session_result_back_to_map_cta'));
+      final whatsNext = find.byKey(
+        const Key('session_result_whats_next_block'),
+      );
+      final finishLabel = find.byKey(
+        const Key('session_result_finish_label_v1'),
+      );
+      final primaryCta = find.byKey(
+        const Key('session_result_back_to_map_cta'),
+      );
 
       expect(whatsNext, findsOneWidget);
       expect(finishLabel, findsOneWidget);

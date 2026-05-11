@@ -1,11 +1,47 @@
-import 'dart:async' show unawaited;
+import 'dart:async' show Completer, Timer, unawaited;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+
+String _learnCopyV1(
+  BuildContext context, {
+  required String en,
+  required String ru,
+}) => _isRuLocaleV1(context) ? ru : en;
+
+({Color accent, Color accentSoft}) _learnWorldToneV1(int worldNumber) {
+  return switch (worldNumber) {
+    <= 2 => (
+      accent: const Color(0xFF43C8A6),
+      accentSoft: const Color(0xFF1A3B33),
+    ),
+    <= 4 => (
+      accent: const Color(0xFF4EA3F8),
+      accentSoft: const Color(0xFF182C44),
+    ),
+    <= 6 => (
+      accent: const Color(0xFF7D8CFF),
+      accentSoft: const Color(0xFF242D56),
+    ),
+    <= 8 => (
+      accent: const Color(0xFFF7B83E),
+      accentSoft: const Color(0xFF3F2D12),
+    ),
+    <= 10 => (
+      accent: const Color(0xFFFF8A5B),
+      accentSoft: const Color(0xFF4A261B),
+    ),
+    _ => (accent: const Color(0xFFE76FB3), accentSoft: const Color(0xFF44233D)),
+  };
+}
 
 class Act0LearnPathShellV1 extends StatefulWidget {
   const Act0LearnPathShellV1({
@@ -33,6 +69,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.onOpenWorldMenu,
     required this.onCloseWorldMenu,
     required this.onDismissWorldDetail,
+    required this.onPreviewPremiumWorld,
     required this.onSelectLesson,
     required this.onOpenLessonAfterScroll,
     required this.onDismissDetail,
@@ -64,6 +101,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final VoidCallback onOpenWorldMenu;
   final VoidCallback onCloseWorldMenu;
   final VoidCallback onDismissWorldDetail;
+  final ValueChanged<Act0WorldCardV1> onPreviewPremiumWorld;
   final bool Function(String lessonId) onSelectLesson;
   final ValueChanged<String> onOpenLessonAfterScroll;
   final VoidCallback onDismissDetail;
@@ -76,18 +114,32 @@ class Act0LearnPathShellV1 extends StatefulWidget {
 }
 
 class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
+  static const bool _useCenteredLearnSpineLayoutV1 = true;
+  static const Duration _inlineLessonHubExpandDurationV1 = Duration(
+    milliseconds: 660,
+  );
+  static const Duration _inlineLessonHubCollapseDurationV1 = Duration(
+    milliseconds: 420,
+  );
+  static const double _lessonTopGapUnderHeaderV1 = 2.0;
+  static const double _learnPathCardWidthFactorV1 = 0.88;
+  static const double _inlineLessonHubWidthFactorV1 = 0.96;
+  static const double _levelsWorldNodeWidthFactorV1 = 0.76;
   final Map<String, GlobalKey> _lessonKeys = <String, GlobalKey>{};
   final Map<String, LayerLink> _taskLinks = <String, LayerLink>{};
   final GlobalKey _learnStackKey = GlobalKey();
-  final GlobalKey _selectedLessonPanelKey = GlobalKey();
   final GlobalKey _pinnedModuleHeaderKey = GlobalKey();
+  final GlobalKey _selectedLessonPanelKey = GlobalKey();
   final ScrollController _learnScrollController = ScrollController();
+  final Set<Timer> _pendingTimersV1 = <Timer>{};
+  int _scrollEpochV1 = 0;
+  String? _expansionReadyLessonIdV1;
 
   @override
   void initState() {
     super.initState();
     if (widget.detailLessonId != null) {
-      _scrollExpandedLessonIntoView(widget.detailLessonId!);
+      _expansionReadyLessonIdV1 = widget.detailLessonId;
     }
   }
 
@@ -97,16 +149,56 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     if (widget.selectedWorldId != oldWidget.selectedWorldId) {
       _scrollToTopOnWorldSwitchV1();
     }
+    if (widget.detailLessonId != null &&
+        widget.detailLessonId != oldWidget.detailLessonId) {
+      _handleLessonOpenedV1(
+        widget.detailLessonId!,
+        from: oldWidget.detailLessonId,
+      );
+    } else if (widget.detailLessonId == null &&
+        oldWidget.detailLessonId != null &&
+        _expansionReadyLessonIdV1 != null) {
+      setState(() {
+        _expansionReadyLessonIdV1 = null;
+      });
+    }
   }
 
   @override
   void dispose() {
+    for (final timer in _pendingTimersV1) {
+      timer.cancel();
+    }
+    _pendingTimersV1.clear();
     _learnScrollController.dispose();
     super.dispose();
   }
 
+  Future<void> _waitWithCancelV1(Duration duration) {
+    if (duration == Duration.zero) {
+      return Future<void>.value();
+    }
+    final completer = Completer<void>();
+    late final Timer timer;
+    timer = Timer(duration, () {
+      _pendingTimersV1.remove(timer);
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    });
+    _pendingTimersV1.add(timer);
+    return completer.future;
+  }
+
   void _scrollToTopOnWorldSwitchV1() {
+    final epoch = ++_scrollEpochV1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (epoch != _scrollEpochV1) {
+        return;
+      }
+      if (widget.detailLessonId != null) {
+        return;
+      }
       if (!mounted || !_learnScrollController.hasClients) {
         return;
       }
@@ -119,82 +211,170 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     });
   }
 
-  void _scrollExpandedLessonIntoView(String lessonId) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+  void _handleLessonOpenedV1(String newLessonId, {required String? from}) {
+    final epoch = ++_scrollEpochV1;
+    if (_expansionReadyLessonIdV1 != null) {
+      setState(() {
+        _expansionReadyLessonIdV1 = null;
+      });
+    }
+    unawaited(() async {
+      if (from != null) {
+        await _waitWithCancelV1(_inlineLessonHubCollapseDurationV1);
+      }
+      if (epoch != _scrollEpochV1 ||
+          !mounted ||
+          widget.detailLessonId != newLessonId) {
+        return;
+      }
+      await _scrollLessonHeaderToTopV1(
+        newLessonId,
+        settleFrames: from == null ? 2 : 1,
+        maxDurationMs: 760,
+        maxAttempts: 2,
+      );
+      if (epoch != _scrollEpochV1 ||
+          !mounted ||
+          widget.detailLessonId != newLessonId) {
+        return;
+      }
+      setState(() {
+        _expansionReadyLessonIdV1 = newLessonId;
+      });
+    }());
+  }
+
+  Future<void> _waitForLearnLayoutSettleV1({int frames = 2}) async {
+    for (var i = 0; i < frames; i++) {
+      await WidgetsBinding.instance.endOfFrame;
       if (!mounted) {
         return;
       }
-      await _scrollLessonHeaderToTopV1(lessonId);
-    });
+    }
   }
 
-  Future<void> _scrollLessonHeaderToTopV1(String lessonId) async {
+  Future<void> _scrollLessonHeaderToTopV1(
+    String lessonId, {
+    int settleFrames = 2,
+    int maxDurationMs = 460,
+    int maxAttempts = 1,
+  }) async {
     if (!_learnScrollController.hasClients) {
       return;
     }
-    double? computeTargetOffset() {
-      final context = _lessonKeys[lessonId]?.currentContext;
-      if (context == null) {
-        return null;
+    await _waitForLearnLayoutSettleV1(frames: settleFrames);
+    if (!mounted || !_learnScrollController.hasClients) {
+      return;
+    }
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      final target = _computeLessonTargetOffsetV1(lessonId);
+      if (target == null) {
+        return;
       }
-      final renderObject = context.findRenderObject();
-      if (renderObject == null) {
-        return null;
+      final delta = (target - _learnScrollController.offset).abs();
+      if (delta < 0.75) {
+        return;
       }
-      final viewport = RenderAbstractViewport.maybeOf(renderObject);
-      if (viewport == null) {
-        return null;
-      }
-      final pinnedHeaderHeight =
-          _pinnedModuleHeaderKey.currentContext?.size?.height ?? 118.0;
-      // Keep selected lesson title directly under the pinned world header.
-      final topInset = (pinnedHeaderHeight - 14).clamp(0.0, 9999.0);
-      final revealOffset = viewport.getOffsetToReveal(renderObject, 0.0).offset;
-      return (revealOffset - topInset).clamp(
-        _learnScrollController.position.minScrollExtent,
-        _learnScrollController.position.maxScrollExtent,
+      final durationCap = attempt == 0 ? maxDurationMs : 240;
+      final durationMs = (160 + (delta * 0.2)).clamp(140, durationCap).round();
+      await _learnScrollController.animateTo(
+        target,
+        duration: Duration(milliseconds: durationMs),
+        curve: Curves.easeOutCubic,
       );
+      if (attempt == maxAttempts - 1) {
+        return;
+      }
+      await _waitForLearnLayoutSettleV1(frames: 1);
+      if (!mounted || !_learnScrollController.hasClients) {
+        return;
+      }
     }
+  }
 
-    final target = computeTargetOffset();
-    if (target == null) {
-      return;
+  double? _computeLessonTargetOffsetV1(String lessonId) {
+    final anchoredTarget = _computeLessonTargetOffsetAnchoredV1(lessonId);
+    if (anchoredTarget != null) {
+      return anchoredTarget;
     }
-    final delta = (target - _learnScrollController.offset).abs();
-    if (delta < 1.0) {
-      return;
+    final lessonContext = _lessonKeys[lessonId]?.currentContext;
+    if (lessonContext == null) {
+      return null;
     }
-    final durationMs = (180 + (delta * 0.22)).clamp(220, 460).round();
-    await _learnScrollController.animateTo(
-      target,
-      duration: Duration(milliseconds: durationMs),
-      curve: Curves.easeInOutCubic,
+    final lessonRenderObject = lessonContext.findRenderObject();
+    if (lessonRenderObject == null) {
+      return null;
+    }
+    final viewport = RenderAbstractViewport.maybeOf(lessonRenderObject);
+    if (viewport == null) {
+      return null;
+    }
+    final topInset =
+        (_PinnedModuleHeaderDelegateV1.extentV1 - _lessonTopGapUnderHeaderV1)
+            .clamp(0.0, 9999.0);
+    final revealOffset = viewport
+        .getOffsetToReveal(lessonRenderObject, 0.0)
+        .offset;
+    return (revealOffset - topInset).clamp(
+      _learnScrollController.position.minScrollExtent,
+      _learnScrollController.position.maxScrollExtent,
     );
-    if (!mounted || !_learnScrollController.hasClients) {
-      return;
+  }
+
+  double? _computeLessonTargetOffsetAnchoredV1(String lessonId) {
+    if (!_learnScrollController.hasClients) {
+      return null;
     }
-    // Correct final position after layout settles (old panel collapsed,
-    // new panel mounted) to avoid ending below the intended header anchor.
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted || !_learnScrollController.hasClients) {
-      return;
+    final anchorBox = _learnStackKey.currentContext?.findRenderObject();
+    final lessonBox = _lessonKeys[lessonId]?.currentContext?.findRenderObject();
+    final headerBox = _pinnedModuleHeaderKey.currentContext?.findRenderObject();
+    if (anchorBox is! RenderBox ||
+        lessonBox is! RenderBox ||
+        headerBox is! RenderBox) {
+      return null;
     }
-    final correctedTarget = computeTargetOffset();
-    if (correctedTarget == null) {
-      return;
+    final lessonTop = lessonBox
+        .localToGlobal(Offset.zero, ancestor: anchorBox)
+        .dy;
+    final headerTop = headerBox
+        .localToGlobal(Offset.zero, ancestor: anchorBox)
+        .dy;
+    final desiredLessonTop =
+        headerTop +
+        _PinnedModuleHeaderDelegateV1.extentV1 +
+        _lessonTopGapUnderHeaderV1;
+    final requiredDelta = lessonTop - desiredLessonTop;
+    return (_learnScrollController.offset + requiredDelta).clamp(
+      _learnScrollController.position.minScrollExtent,
+      _learnScrollController.position.maxScrollExtent,
+    );
+  }
+
+  bool get _shouldShowSharkyGuideCardV1 {
+    if (_resolvedSharkyGuideLineV1.isNotEmpty) {
+      return true;
     }
-    if ((correctedTarget - _learnScrollController.offset).abs() >= 1.0) {
-      _learnScrollController.jumpTo(correctedTarget);
+    return (widget.sharkyGuideDetail ?? '').trim().isNotEmpty;
+  }
+
+  String get _resolvedSharkyGuideLineV1 {
+    final explicitLine = (widget.sharkyGuideLine ?? '').trim();
+    if (explicitLine.isNotEmpty) {
+      return explicitLine;
     }
+    if ((widget.sharkyGuideDetail ?? '').trim().isNotEmpty) {
+      return 'Stay with the next clear step.';
+    }
+    return '';
   }
 
   @override
   Widget build(BuildContext context) {
     final detailLesson = widget.detailLessonId == null
         ? null
-        : widget.lessons.firstWhere(
-            (lesson) => lesson.lessonId == widget.detailLessonId,
-            orElse: () => widget.lessons.first,
+        : widget.lessons.cast<Act0LessonCardV1?>().firstWhere(
+            (lesson) => lesson?.lessonId == widget.detailLessonId,
+            orElse: () => null,
           );
     final detailWorld = widget.worldDetailId == null
         ? null
@@ -208,6 +388,11 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
             (task) => task?.taskId == widget.activePopupTaskId,
             orElse: () => null,
           );
+    final selectedWorld = widget.worlds.firstWhere(
+      (world) => world.worldId == widget.selectedWorldId,
+      orElse: () => widget.worlds.first,
+    );
+    final worldTone = _learnWorldToneV1(selectedWorld.worldNumber);
     return TapRegionSurface(
       child: Stack(
         key: _learnStackKey,
@@ -253,37 +438,24 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 6,
+                                  Text(
+                                    _learnCopyV1(
+                                      context,
+                                      en: 'Learn',
+                                      ru: 'Обучение',
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: Act0ShellTokensV1.info.withValues(
-                                        alpha: 0.14,
-                                      ),
-                                      borderRadius: BorderRadius.circular(
-                                        Act0ShellTokensV1.radiusPill,
-                                      ),
-                                      border: Border.all(
-                                        color: Act0ShellTokensV1.info
-                                            .withValues(alpha: 0.34),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'COURSE PATH',
-                                      style: Act0ShellTokensV1.label.copyWith(
-                                        color: Act0ShellTokensV1.info,
-                                        letterSpacing: 1.2,
-                                      ),
-                                    ),
+                                    style: Act0ShellTokensV1.screenTitle,
                                   ),
                                   const SizedBox(
-                                    height: Act0ShellTokensV1.gapSm,
+                                    height: Act0ShellTokensV1.gapXs,
                                   ),
                                   Text(
-                                    'Learning Path',
-                                    style: Act0ShellTokensV1.screenTitle,
+                                    _learnCopyV1(
+                                      context,
+                                      en: 'The course path lives here.',
+                                      ru: 'Здесь живёт путь по курсу.',
+                                    ),
+                                    style: Act0ShellTokensV1.muted,
                                   ),
                                 ],
                               ),
@@ -308,7 +480,9 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                 ),
                               ),
                               icon: const Icon(Icons.map_rounded, size: 17),
-                              label: const Text('Levels'),
+                              label: Text(
+                                _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
+                              ),
                             ),
                           ],
                         ),
@@ -317,16 +491,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                           widget.moduleProgressLabel,
                           style: Act0ShellTokensV1.muted,
                         ),
-                        if ((widget.sharkyGuideLine ?? '')
-                            .trim()
-                            .isNotEmpty) ...[
+                        if (_shouldShowSharkyGuideCardV1) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
-                          Act0SharkyGuideCardV1(
-                            eyebrow: widget.sharkyGuideTitle ?? 'Sharky guide',
-                            line: widget.sharkyGuideLine!,
+                          _LearnCoachLineV1(
+                            line: _resolvedSharkyGuideLineV1,
                             detail: widget.sharkyGuideDetail,
                             mood: widget.sharkyGuideMood,
-                            compact: true,
                           ),
                         ],
                         const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -347,12 +517,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                       child: KeyedSubtree(
                         key: _pinnedModuleHeaderKey,
                         child: _ModuleHeaderV1(
-                          worldNumber: widget.worlds
-                              .firstWhere(
-                                (w) => w.worldId == widget.selectedWorldId,
-                                orElse: () => widget.worlds.first,
-                              )
-                              .worldNumber,
+                          worldNumber: selectedWorld.worldNumber,
                           title: widget.moduleTitle,
                           progressLabel: widget.moduleProgressLabel,
                           progressFraction: widget.lessons.isEmpty
@@ -368,6 +533,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                           onTap: widget.detailLessonId == null
                               ? null
                               : widget.onDismissDetail,
+                          accent: worldTone.accent,
+                          accentSoft: worldTone.accentSoft,
                         ),
                       ),
                     ),
@@ -415,20 +582,25 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Align(
-                                      alignment: i.isEven
-                                          ? Alignment.centerLeft
-                                          : Alignment.centerRight,
+                                      alignment: _useCenteredLearnSpineLayoutV1
+                                          ? Alignment.center
+                                          : (i.isEven
+                                                ? Alignment.centerLeft
+                                                : Alignment.centerRight),
                                       child: FractionallySizedBox(
-                                        widthFactor: 0.78,
+                                        widthFactor:
+                                            _learnPathCardWidthFactorV1,
                                         child: _PathCardV1(
                                           index: i + 1,
+                                          worldAccent: worldTone.accent,
+                                          worldAccentSoft: worldTone.accentSoft,
                                           lesson: widget.lessons[i],
                                           selected:
                                               widget.lessons[i].lessonId ==
                                               widget.selectedLessonId,
                                           expanded:
                                               widget.lessons[i].lessonId ==
-                                              detailLesson?.lessonId,
+                                              widget.detailLessonId,
                                           completedTaskIds:
                                               widget.completedTaskIds,
                                           skippedTaskIds: widget.skippedTaskIds,
@@ -440,25 +612,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                                   Act0LessonStateV1.current &&
                                               widget.lessons[i].state ==
                                                   Act0LessonStateV1.locked,
-                                          onSelectLesson: (lessonId) {
-                                            final shouldAutoOpen =
-                                                widget.onSelectLesson(lessonId);
-                                            if (!shouldAutoOpen) {
-                                              return;
-                                            }
-                                            unawaited(
-                                              _scrollLessonHeaderToTopV1(
-                                                lessonId,
-                                              ).then((_) {
-                                                if (!mounted) {
-                                                  return;
-                                                }
-                                                widget.onOpenLessonAfterScroll(
-                                                  lessonId,
-                                                );
-                                              }),
-                                            );
-                                          },
+                                          onSelectLesson: widget.onSelectLesson,
                                         ),
                                       ),
                                     ),
@@ -466,42 +620,44 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                       alignment: Alignment.center,
                                       visible:
                                           widget.lessons[i].lessonId ==
-                                          detailLesson?.lessonId,
-                                      child: KeyedSubtree(
-                                        key: _selectedLessonPanelKey,
-                                        child: _SelectedLessonPopupV1(
-                                          lesson: widget.lessons[i],
-                                          selectedTaskId: widget.selectedTaskId,
-                                          activePopupTaskId:
-                                              widget.activePopupTaskId,
-                                          completedTaskIds:
-                                              widget.completedTaskIds,
-                                          skippedTaskIds: widget.skippedTaskIds,
-                                          pathClosedTaskIds:
-                                              widget.pathClosedTaskIds,
-                                          completionOutcomeLabel:
-                                              widget.lessonOutcomeLabels[widget
-                                                  .lessons[i]
-                                                  .lessonId],
-                                          taskLinkForId: (taskId) =>
-                                              _taskLinks.putIfAbsent(
-                                                '${widget.lessons[i].lessonId}::$taskId',
-                                                LayerLink.new,
-                                              ),
-                                          onSelectTask: widget.onSelectTask,
-                                          onStartTask: widget.onStartTask,
-                                        ),
+                                              widget.detailLessonId &&
+                                          widget.lessons[i].lessonId ==
+                                              _expansionReadyLessonIdV1,
+                                      child: _SelectedLessonPopupV1(
+                                        panelRenderKey: _selectedLessonPanelKey,
+                                        lesson: widget.lessons[i],
+                                        selectedTaskId: widget.selectedTaskId,
+                                        activePopupTaskId:
+                                            widget.activePopupTaskId,
+                                        completedTaskIds:
+                                            widget.completedTaskIds,
+                                        skippedTaskIds: widget.skippedTaskIds,
+                                        pathClosedTaskIds:
+                                            widget.pathClosedTaskIds,
+                                        completionOutcomeLabel:
+                                            widget.lessonOutcomeLabels[widget
+                                                .lessons[i]
+                                                .lessonId],
+                                        taskLinkForId: (taskId) =>
+                                            _taskLinks.putIfAbsent(
+                                              '${widget.lessons[i].lessonId}::$taskId',
+                                              LayerLink.new,
+                                            ),
+                                        onSelectTask: widget.onSelectTask,
+                                        onStartTask: widget.onStartTask,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               if (i < widget.lessons.length - 1)
-                                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                                const SizedBox(height: Act0ShellTokensV1.gapLg),
                             ],
                             const SizedBox(
                               key: Key('act0_shell_learn_safe_bottom_spacer'),
-                              height: Act0ShellTokensV1.gapXl,
+                              height:
+                                  Act0ShellTokensV1.bottomNavHeight +
+                                  Act0ShellTokensV1.gapLg,
                             ),
                           ],
                         ),
@@ -562,6 +718,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                 onSelectWorld: widget.onSelectWorld,
                 onClose: widget.onCloseWorldMenu,
                 onDismissWorldDetail: widget.onDismissWorldDetail,
+                onPreviewPremiumWorld: widget.onPreviewPremiumWorld,
               ),
             ),
         ],
@@ -578,6 +735,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
     required this.onSelectWorld,
     required this.onClose,
     required this.onDismissWorldDetail,
+    required this.onPreviewPremiumWorld,
   });
 
   final List<Act0WorldCardV1> worlds;
@@ -586,6 +744,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
   final ValueChanged<String> onSelectWorld;
   final VoidCallback onClose;
   final VoidCallback onDismissWorldDetail;
+  final ValueChanged<Act0WorldCardV1> onPreviewPremiumWorld;
 
   @override
   Widget build(BuildContext context) {
@@ -593,6 +752,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       (world) => world.worldId == selectedWorldId,
       orElse: () => worlds.first,
     );
+    final secondaryWorlds = worlds
+        .where((world) => world.worldId != selectedWorldId)
+        .toList(growable: false);
     final selectedStateColor = _worldStateColor(selectedWorld.status);
     final selectedStateLabel = switch (selectedWorld.status) {
       Act0WorldStateV1.completed => 'Cleared',
@@ -655,52 +817,67 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
               Container(
                 key: const Key('act0_shell_levels_sticky_node_header'),
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
                 decoration: BoxDecoration(
                   color: selectedStateColor.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-                  border: Border.all(
-                    color: selectedStateColor.withValues(alpha: 0.42),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusMd,
                   ),
+                  border: Border.all(
+                    color: selectedStateColor.withValues(alpha: 0.34),
+                  ),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: selectedStateColor.withValues(alpha: 0.10),
+                      blurRadius: 18,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 34,
-                      height: 34,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: selectedStateColor.withValues(alpha: 0.22),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: selectedStateColor.withValues(alpha: 0.70),
-                        ),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
-                        '${selectedWorld.worldNumber}',
+                        'ACTIVE CHAPTER',
                         style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontWeight: FontWeight.w800,
+                          color: selectedStateColor,
+                          letterSpacing: 0.8,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
+                    const SizedBox(height: 8),
+                    _WorldNodeV1(
+                      world: selectedWorld,
+                      selected: true,
+                      onSelectWorld: onSelectWorld,
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            selectedWorld.title,
-                            maxLines: 1,
+                            'World ${selectedWorld.worldNumber} of ${worlds.length} · $selectedStateLabel',
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.cardTitle,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: selectedStateColor.withValues(alpha: 0.86),
+                              fontSize: 10.8,
+                              letterSpacing: 0.3,
+                            ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 4),
                           Text(
-                            '$selectedStateLabel · ${selectedWorld.lessons.length} lessons',
-                            maxLines: 1,
+                            selectedWorld.subtitle,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.muted,
+                            style: Act0ShellTokensV1.muted.copyWith(
+                              fontSize: 11.5,
+                              height: 1.2,
+                            ),
                           ),
                         ],
                       ),
@@ -739,7 +916,10 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             child: Container(
                               width: 3,
-                              margin: const EdgeInsets.only(top: 54, bottom: 58),
+                              margin: const EdgeInsets.only(
+                                top: 54,
+                                bottom: 58,
+                              ),
                               decoration: BoxDecoration(
                                 color: Act0ShellTokensV1.border.withValues(
                                   alpha: 0.72,
@@ -753,12 +933,16 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            for (var i = 0; i < worlds.length; i++) ...[
+                            for (
+                              var i = 0;
+                              i < secondaryWorlds.length;
+                              i++
+                            ) ...[
                               Padding(
                                 padding: EdgeInsets.fromLTRB(
-                                  i.isOdd ? 26 : 0,
+                                  i.isOdd ? 22 : 0,
                                   0,
-                                  i.isEven ? 26 : 0,
+                                  i.isEven ? 22 : 0,
                                   0,
                                 ),
                                 child: Align(
@@ -766,17 +950,17 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                       ? Alignment.centerLeft
                                       : Alignment.centerRight,
                                   child: FractionallySizedBox(
-                                    widthFactor: 0.82,
+                                    widthFactor: _Act0LearnPathShellV1State
+                                        ._levelsWorldNodeWidthFactorV1,
                                     child: _WorldNodeV1(
-                                      world: worlds[i],
-                                      selected:
-                                          worlds[i].worldId == selectedWorldId,
+                                      world: secondaryWorlds[i],
+                                      selected: false,
                                       onSelectWorld: onSelectWorld,
                                     ),
                                   ),
                                 ),
                               ),
-                              if (i < worlds.length - 1)
+                              if (i < secondaryWorlds.length - 1)
                                 const SizedBox(height: Act0ShellTokensV1.gapLg),
                             ],
                           ],
@@ -809,7 +993,10 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
               ),
               child: GestureDetector(
                 onTap: () {},
-                child: _SelectedWorldPopupV1(world: detailWorld!),
+                child: _SelectedWorldPopupV1(
+                  world: detailWorld!,
+                  onPreviewPremiumWorld: onPreviewPremiumWorld,
+                ),
               ),
             ),
           ),
@@ -835,10 +1022,10 @@ class _LevelsHeaderV1 extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withValues(alpha: 0.07),
+        color: Act0ShellTokensV1.surface.withValues(alpha: 0.82),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
         border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.18),
+          color: Act0ShellTokensV1.border.withValues(alpha: 0.70),
         ),
       ),
       child: Row(
@@ -867,7 +1054,10 @@ class _LevelsHeaderV1 extends StatelessWidget {
               children: [
                 Text(title, style: Act0ShellTokensV1.cardTitle),
                 const SizedBox(height: 3),
-                Text(subtitle, style: Act0ShellTokensV1.muted),
+                Text(
+                  subtitle,
+                  style: Act0ShellTokensV1.muted.copyWith(fontSize: 11.5),
+                ),
                 const SizedBox(height: 3),
                 Text(
                   progressLabel,
@@ -909,17 +1099,17 @@ class _WorldNodeV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
         onTap: () => onSelectWorld(world.worldId),
         child: Ink(
-          padding: const EdgeInsets.fromLTRB(10, 10, 12, 10),
+          padding: const EdgeInsets.fromLTRB(10, 9, 12, 9),
           decoration: BoxDecoration(
             color: selected
-                ? color.withValues(alpha: 0.09)
+                ? color.withValues(alpha: 0.12)
                 : Act0ShellTokensV1.surface.withValues(
-                    alpha: locked ? 0.52 : 0.94,
+                    alpha: locked ? 0.42 : 0.82,
                   ),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
             border: Border.all(
               color: color.withValues(
-                alpha: selected ? 0.60 : (locked ? 0.18 : 0.30),
+                alpha: selected ? 0.72 : (locked ? 0.14 : 0.22),
               ),
             ),
             boxShadow: active || selected
@@ -974,12 +1164,12 @@ class _WorldNodeV1 extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      world.title,
+                      act0LocalizedWorldTitleV1(context, world),
                       style: Act0ShellTokensV1.cardTitle.copyWith(
                         color: locked
                             ? Act0ShellTokensV1.textMuted
                             : Act0ShellTokensV1.text,
-                        fontSize: 13.5,
+                        fontSize: selected ? 14.0 : 13.2,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -995,10 +1185,10 @@ class _WorldNodeV1 extends StatelessWidget {
                         color: locked
                             ? Act0ShellTokensV1.textDim
                             : color.withValues(alpha: 0.80),
-                        fontSize: 10.5,
+                        fontSize: selected ? 10.8 : 10.2,
                         letterSpacing: 0.3,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -1033,13 +1223,19 @@ class _WorldNodeV1 extends StatelessWidget {
 }
 
 class _SelectedWorldPopupV1 extends StatelessWidget {
-  const _SelectedWorldPopupV1({required this.world});
+  const _SelectedWorldPopupV1({
+    required this.world,
+    required this.onPreviewPremiumWorld,
+  });
 
   final Act0WorldCardV1 world;
+  final ValueChanged<Act0WorldCardV1> onPreviewPremiumWorld;
 
   @override
   Widget build(BuildContext context) {
     final color = _worldStateColor(world.status);
+    final worldTitle = act0LocalizedWorldTitleV1(context, world);
+    final worldSubtitle = act0LocalizedWorldSubtitleV1(context, world);
     return Container(
       key: const Key('act0_shell_selected_world_panel'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
@@ -1075,15 +1271,103 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(world.title, style: Act0ShellTokensV1.sectionTitle),
+          Text(worldTitle, style: Act0ShellTokensV1.sectionTitle),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(world.subtitle, style: Act0ShellTokensV1.muted),
+          Text(worldSubtitle, style: Act0ShellTokensV1.muted),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
             world.unlockLabel,
             key: const Key('act0_shell_world_unlock_label'),
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
+            ),
+          ),
+          if (world.isLocked) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            Text(
+              'Premium preview',
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.gold,
+              ),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              'See what this world adds before it opens. No pressure, no forced upgrade.',
+              style: Act0ShellTokensV1.muted,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            OutlinedButton(
+              key: const Key('act0_shell_world_premium_preview_cta'),
+              onPressed: () => onPreviewPremiumWorld(world),
+              style: Act0ShellTokensV1.quietButtonStyle(height: 40),
+              child: const Text('Preview premium path'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LearnCoachLineV1 extends StatelessWidget {
+  const _LearnCoachLineV1({
+    required this.line,
+    required this.detail,
+    required this.mood,
+  });
+
+  final String line;
+  final String? detail;
+  final Act0SharkyMoodV1 mood;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = switch (mood) {
+      Act0SharkyMoodV1.repair => Act0ShellTokensV1.gold,
+      Act0SharkyMoodV1.celebrate => Act0ShellTokensV1.primary,
+      Act0SharkyMoodV1.happy => Act0ShellTokensV1.primary,
+      Act0SharkyMoodV1.neutral => Act0ShellTokensV1.info,
+      Act0SharkyMoodV1.thinking => Act0ShellTokensV1.info,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapMd,
+        vertical: Act0ShellTokensV1.gapSm,
+      ),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface3,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(color: accent.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.waves_rounded, color: accent, size: 18),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  line,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if ((detail ?? '').trim().isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(detail!, style: Act0ShellTokensV1.muted),
+                ],
+              ],
             ),
           ),
         ],
@@ -1094,6 +1378,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
 
 class _SelectedLessonPopupV1 extends StatelessWidget {
   const _SelectedLessonPopupV1({
+    required this.panelRenderKey,
     required this.lesson,
     required this.selectedTaskId,
     required this.activePopupTaskId,
@@ -1106,6 +1391,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     required this.onStartTask,
   });
 
+  final Key panelRenderKey;
   final Act0LessonCardV1 lesson;
   final String selectedTaskId;
   final String? activePopupTaskId;
@@ -1122,6 +1408,8 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     final stateColor = _stateColor(lesson.state);
     final locked = lesson.state == Act0LessonStateV1.locked;
     final tasks = lesson.taskList;
+    final lessonTitle = act0LocalizedLessonTitleV1(context, lesson);
+    final lessonSubtitle = act0LocalizedLessonSubtitleV1(context, lesson);
     final nextTask = tasks.firstWhere(
       (task) => !pathClosedTaskIds.contains(task.taskId),
       orElse: () => tasks.first,
@@ -1129,88 +1417,120 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     return Padding(
       key: const Key('act0_shell_selected_lesson_panel'),
       padding: const EdgeInsets.only(top: 4, bottom: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (lesson.subtitle.isNotEmpty) ...<Widget>[
-            Text(
-              lesson.subtitle,
-              key: const Key('act0_shell_selected_lesson_subtitle'),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.muted,
+      child: Container(
+        key: panelRenderKey,
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+        decoration:
+            Act0ShellTokensV1.surfaceDecoration(
+              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
+              borderColor: stateColor.withValues(alpha: 0.18),
+            ).copyWith(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-          ],
-          Column(
-            key: const Key('act0_shell_lesson_hub_steps'),
-            children: [
-              for (var i = 0; i < tasks.length; i++) ...[
-                _LessonHubStepV1(
-                  index: i + 1,
-                  link: taskLinkForId(tasks[i].taskId),
-                  lesson: lesson,
-                  task: tasks[i],
-                  isLast: i == tasks.length - 1,
-                  isDone: completedTaskIds.contains(tasks[i].taskId),
-                  isSkipped: skippedTaskIds.contains(tasks[i].taskId),
-                  isCurrent: tasks[i].taskId == nextTask.taskId,
-                  isSelected: activePopupTaskId == null
-                      ? tasks[i].taskId == nextTask.taskId
-                      : tasks[i].taskId == activePopupTaskId,
-                  isLocked:
-                      locked ||
-                      (!pathClosedTaskIds.contains(tasks[i].taskId) &&
-                          tasks[i].taskId != nextTask.taskId),
-                  onSelectTask: onSelectTask,
-                  onStartTask: onStartTask,
-                ),
-              ],
-            ],
-          ),
-          if (completionOutcomeLabel != null) ...[
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(lessonTitle, style: Act0ShellTokensV1.cardTitle),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              completionOutcomeLabel!,
-              key: const Key('act0_shell_selected_lesson_outcome'),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: stateColor,
-                fontWeight: FontWeight.w700,
+            if (lessonSubtitle.isNotEmpty) ...<Widget>[
+              Text(
+                lessonSubtitle,
+                key: const Key('act0_shell_selected_lesson_subtitle'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Act0ShellTokensV1.muted,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+            ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: stateColor.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(
+                  Act0ShellTokensV1.radiusPill,
+                ),
+                border: Border.all(color: stateColor.withValues(alpha: 0.22)),
+              ),
+              child: Text(
+                locked
+                    ? 'This lesson opens after the path reaches it.'
+                    : 'Open one step at a time. The next clear step stays on top.',
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: locked ? Act0ShellTokensV1.textDim : stateColor,
+                  letterSpacing: 0.2,
+                ),
               ),
             ),
-          ],
-          if (!locked) ...[
             const SizedBox(height: Act0ShellTokensV1.gapMd),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                key: const Key('act0_shell_lesson_start_cta'),
-                onPressed: () => onStartTask(lesson.lessonId, nextTask.taskId),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Act0ShellTokensV1.primary,
-                  foregroundColor: Act0ShellTokensV1.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPill,
+            Column(
+              key: const Key('act0_shell_lesson_hub_steps'),
+              children: [
+                for (var i = 0; i < tasks.length; i++) ...[
+                  _LessonHubStepV1(
+                    index: i + 1,
+                    link: taskLinkForId(tasks[i].taskId),
+                    lesson: lesson,
+                    task: tasks[i],
+                    isLast: i == tasks.length - 1,
+                    isDone: completedTaskIds.contains(tasks[i].taskId),
+                    isSkipped: skippedTaskIds.contains(tasks[i].taskId),
+                    isCurrent: tasks[i].taskId == nextTask.taskId,
+                    isSelected: activePopupTaskId == null
+                        ? tasks[i].taskId == nextTask.taskId
+                        : tasks[i].taskId == activePopupTaskId,
+                    isLocked:
+                        locked ||
+                        (!pathClosedTaskIds.contains(tasks[i].taskId) &&
+                            tasks[i].taskId != nextTask.taskId),
+                    onSelectTask: onSelectTask,
+                    onStartTask: onStartTask,
+                  ),
+                ],
+              ],
+            ),
+            if (completionOutcomeLabel != null) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                completionOutcomeLabel!,
+                key: const Key('act0_shell_selected_lesson_outcome'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: stateColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+            if (!locked) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  key: const Key('act0_shell_lesson_start_cta'),
+                  onPressed: () =>
+                      onStartTask(lesson.lessonId, nextTask.taskId),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Act0ShellTokensV1.primary,
+                    foregroundColor: Act0ShellTokensV1.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusPill,
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    elevation: 0,
+                    textStyle: Act0ShellTokensV1.label.copyWith(
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  elevation: 0,
-                  textStyle: Act0ShellTokensV1.label.copyWith(
-                    letterSpacing: 0.5,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  child: Text(lesson.primaryCtaLabel),
                 ),
-                child: Text(lesson.primaryCtaLabel),
               ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -1231,22 +1551,23 @@ class _InlineLessonHubSlotV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSize(
       duration: const Duration(milliseconds: 580),
-      reverseDuration: Duration.zero,
+      reverseDuration:
+          _Act0LearnPathShellV1State._inlineLessonHubCollapseDurationV1,
       curve: Curves.easeInOutCubicEmphasized,
       alignment: Alignment.topCenter,
       child: visible
           ? Align(
               alignment: alignment,
               child: FractionallySizedBox(
-                widthFactor: 0.92,
+                widthFactor:
+                    _Act0LearnPathShellV1State._inlineLessonHubWidthFactorV1,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    top: Act0ShellTokensV1.gapSm,
                     bottom: Act0ShellTokensV1.gapSm,
                   ),
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 360),
-                    reverseDuration: Duration.zero,
+                    reverseDuration: const Duration(milliseconds: 220),
                     switchInCurve: Curves.easeOutCubic,
                     switchOutCurve: Curves.easeInOutCubic,
                     transitionBuilder: (child, animation) {
@@ -1363,20 +1684,16 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
         curve: Curves.easeOutCubic,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final lanePattern = <double>[-18, 6, 24, -8];
-            final laneOffsetRaw = lanePattern[(widget.index - 1) % lanePattern.length];
-            final maxShift = (constraints.maxWidth * 0.08).clamp(10.0, 24.0);
-            final laneOffset = laneOffsetRaw.clamp(-maxShift, maxShift);
             final cardWidth = constraints.maxWidth < 320
-                ? constraints.maxWidth - 58
-                : 254.0;
+                ? constraints.maxWidth - 34
+                : (constraints.maxWidth * 0.9).clamp(248.0, 320.0);
             final centerLeft = (constraints.maxWidth - cardWidth) / 2;
-            final cardLeft = (centerLeft + laneOffset)
+            final cardLeft = centerLeft
                 .clamp(0.0, constraints.maxWidth - cardWidth)
                 .toDouble();
             final threadX = cardLeft + 27;
             return SizedBox(
-              height: 68,
+              height: 80,
               child: Stack(
                 clipBehavior: Clip.hardEdge,
                 children: [
@@ -1515,22 +1832,29 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                         style: Act0ShellTokensV1.label.copyWith(
                                           color: color,
                                           letterSpacing: 0.8,
-                                          fontSize: 8.7,
+                                          fontSize: 8.4,
                                         ),
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(height: 2),
+                                      const SizedBox(height: 0.5),
                                       Text(
-                                        widget.task.title,
+                                        act0LocalizedTaskTitleV1(
+                                          context,
+                                          widget.task,
+                                        ),
+                                        key: Key(
+                                          'act0_shell_lesson_step_title_${widget.task.taskId}',
+                                        ),
                                         style: Act0ShellTokensV1.body.copyWith(
                                           color: widget.isLocked
                                               ? Act0ShellTokensV1.textMuted
                                               : Act0ShellTokensV1.text,
                                           fontWeight: FontWeight.w800,
-                                          fontSize: 11.8,
+                                          fontSize: 11.3,
+                                          height: 1.0,
                                         ),
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
@@ -1560,7 +1884,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                       letterSpacing: 0.45,
                                       fontSize: 8.7,
                                     ),
-                                    maxLines: 1,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -1621,6 +1945,7 @@ class _SelectedTaskPopupOverlayV1 extends StatelessWidget {
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
     final detailLine = _selectedTaskDetail(
+      context: context,
       task: task,
       nextTask: nextTask,
       isDone: isDone,
@@ -1766,6 +2091,8 @@ class _ModuleHeaderV1 extends StatelessWidget {
     required this.progressLabel,
     required this.progressFraction,
     required this.onTap,
+    required this.accent,
+    required this.accentSoft,
   });
 
   final int worldNumber;
@@ -1773,6 +2100,8 @@ class _ModuleHeaderV1 extends StatelessWidget {
   final String progressLabel;
   final double progressFraction;
   final VoidCallback? onTap;
+  final Color accent;
+  final Color accentSoft;
 
   @override
   Widget build(BuildContext context) {
@@ -1782,26 +2111,52 @@ class _ModuleHeaderV1 extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
       child: Container(
-        padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-        decoration: Act0ShellTokensV1.heroDecoration(),
+        padding: const EdgeInsets.fromLTRB(
+          Act0ShellTokensV1.gapLg,
+          14,
+          Act0ShellTokensV1.gapLg,
+          14,
+        ),
+        decoration: Act0ShellTokensV1.heroDecoration().copyWith(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: <Color>[
+              accent.withValues(alpha: 0.22),
+              accentSoft.withValues(alpha: 0.90),
+              Act0ShellTokensV1.surface,
+              Act0ShellTokensV1.surface2,
+            ],
+          ),
+          border: Border.all(color: accent.withValues(alpha: 0.34)),
+          boxShadow: <BoxShadow>[
+            const BoxShadow(
+              color: Color(0x26000000),
+              blurRadius: 18,
+              offset: Offset(0, 8),
+            ),
+            BoxShadow(
+              color: accent.withValues(alpha: 0.12),
+              blurRadius: 22,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 42,
+                  height: 42,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: <Color>[
-                        Act0ShellTokensV1.gold,
-                        Act0ShellTokensV1.primary,
-                      ],
+                      colors: <Color>[Act0ShellTokensV1.gold, accent],
                     ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
@@ -1821,10 +2176,10 @@ class _ModuleHeaderV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Current route',
+                        'World $worldNumber',
                         style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
-                          letterSpacing: 1.0,
+                          color: accent,
+                          letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 3),
@@ -1833,8 +2188,8 @@ class _ModuleHeaderV1 extends StatelessWidget {
                       Text(
                         progressLabel,
                         key: const Key('act0_shell_learn_route_board'),
-                        style: Act0ShellTokensV1.muted,
-                        maxLines: 1,
+                        style: Act0ShellTokensV1.muted.copyWith(fontSize: 11.5),
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
@@ -1843,38 +2198,36 @@ class _ModuleHeaderV1 extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 7,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
                     color: Act0ShellTokensV1.surface3.withValues(alpha: 0.76),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusPill,
                     ),
-                    border: Border.all(
-                      color: Act0ShellTokensV1.gold.withValues(alpha: 0.24),
-                    ),
+                    border: Border.all(color: accent.withValues(alpha: 0.24)),
                   ),
                   child: Text(
-                    '$progressPercent%',
+                    '$progressPercent% clear',
                     style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.gold,
-                      letterSpacing: 0.8,
+                      color: accent,
+                      letterSpacing: 0.2,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
             ClipRRect(
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
               child: LinearProgressIndicator(
                 key: const Key('act0_shell_learn_progress_bar'),
                 value: progressFraction,
                 minHeight: 4,
-                backgroundColor: Act0ShellTokensV1.border.withValues(alpha: 0.3),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  Act0ShellTokensV1.primary,
+                backgroundColor: Act0ShellTokensV1.border.withValues(
+                  alpha: 0.3,
                 ),
+                valueColor: AlwaysStoppedAnimation<Color>(accent),
               ),
             ),
           ],
@@ -1887,13 +2240,15 @@ class _ModuleHeaderV1 extends StatelessWidget {
 class _PinnedModuleHeaderDelegateV1 extends SliverPersistentHeaderDelegate {
   const _PinnedModuleHeaderDelegateV1({required this.child});
 
+  static const double extentV1 = 148.0;
+
   final Widget child;
 
   @override
-  double get minExtent => 138;
+  double get minExtent => extentV1;
 
   @override
-  double get maxExtent => 138;
+  double get maxExtent => extentV1;
 
   @override
   Widget build(
@@ -1913,6 +2268,8 @@ class _PinnedModuleHeaderDelegateV1 extends SliverPersistentHeaderDelegate {
 class _PathCardV1 extends StatelessWidget {
   const _PathCardV1({
     required this.index,
+    required this.worldAccent,
+    required this.worldAccentSoft,
     required this.lesson,
     required this.selected,
     required this.expanded,
@@ -1924,6 +2281,8 @@ class _PathCardV1 extends StatelessWidget {
   });
 
   final int index;
+  final Color worldAccent;
+  final Color worldAccentSoft;
   final Act0LessonCardV1 lesson;
   final bool selected;
   final bool expanded;
@@ -1953,21 +2312,26 @@ class _PathCardV1 extends StatelessWidget {
         .length;
     final totalSteps = lesson.taskList.length;
     final stepSummary = isCompleted
-        ? '$totalSteps steps cleared'
+        ? '$totalSteps steps complete'
         : isCurrent
-        ? '$completedSteps of $totalSteps steps clear'
+        ? isInProgress
+              ? '$completedSteps of $totalSteps steps complete'
+              : '$totalSteps steps ready'
         : isLocked
-        ? 'Unlock to open all $totalSteps steps'
-        : '$totalSteps steps ready';
+        ? 'Opens after the lesson before it'
+        : '$totalSteps steps inside';
     final stateBadgeLabel = isCompleted
         ? 'Done'
         : isInProgress
-        ? 'Live'
+        ? 'Now'
         : isCurrent
         ? 'Open'
         : isNextUp
         ? 'Next'
+        : isLocked
+        ? 'Locked'
         : 'Later';
+    final lessonTitle = act0LocalizedLessonTitleV1(context, lesson);
 
     return Opacity(
       opacity: lesson.state == Act0LessonStateV1.locked ? 0.68 : 1,
@@ -1988,9 +2352,11 @@ class _PathCardV1 extends StatelessWidget {
                 colors: isCurrent
                     ? <Color>[
                         stateColor.withValues(alpha: 0.12),
+                        worldAccent.withValues(alpha: 0.08),
                         Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
                       ]
                     : <Color>[
+                        worldAccentSoft.withValues(alpha: 0.30),
                         Act0ShellTokensV1.surface2.withValues(alpha: 0.84),
                         Act0ShellTokensV1.surface.withValues(alpha: 0.96),
                       ],
@@ -2027,6 +2393,16 @@ class _PathCardV1 extends StatelessWidget {
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
+                    gradient: isCompleted
+                        ? null
+                        : LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: <Color>[
+                              stateColor.withValues(alpha: 0.18),
+                              worldAccent.withValues(alpha: 0.12),
+                            ],
+                          ),
                     border: Border.all(
                       color: stateColor.withValues(alpha: 0.62),
                     ),
@@ -2055,24 +2431,39 @@ class _PathCardV1 extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            'LESSON $index',
+                            'Lesson $index',
                             style: Act0ShellTokensV1.label.copyWith(
                               color: stateColor,
-                              letterSpacing: 1.0,
+                              letterSpacing: 0.5,
                             ),
                           ),
                           const SizedBox(width: Act0ShellTokensV1.gapSm),
-                          Expanded(
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: stateColor.withValues(
+                                alpha: isCompleted ? 0.18 : 0.12,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                Act0ShellTokensV1.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: stateColor.withValues(alpha: 0.24),
+                              ),
+                            ),
                             child: Text(
                               stateBadgeLabel,
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
                               style: Act0ShellTokensV1.label.copyWith(
                                 color: isCompleted
                                     ? Act0ShellTokensV1.gold
                                     : stateColor,
-                                letterSpacing: 0.3,
+                                letterSpacing: 0.2,
                               ),
                             ),
                           ),
@@ -2080,11 +2471,11 @@ class _PathCardV1 extends StatelessWidget {
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
                       Text(
-                        lesson.title,
+                        lessonTitle,
                         style: Act0ShellTokensV1.cardTitle.copyWith(
                           fontSize: 15,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (isCurrent || expanded || isLocked) ...[
@@ -2092,12 +2483,12 @@ class _PathCardV1 extends StatelessWidget {
                         Text(
                           stepSummary,
                           style: Act0ShellTokensV1.muted.copyWith(
-                            fontSize: 11,
+                            fontSize: 11.3,
                             color: isLocked
                                 ? Act0ShellTokensV1.textDim
                                 : Act0ShellTokensV1.textMuted,
                           ),
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -2132,6 +2523,7 @@ String _stepLabel(Act0LessonStepKindV1 kind) {
 }
 
 String _selectedTaskDetail({
+  required BuildContext context,
   required Act0LessonTaskV1 task,
   required Act0LessonTaskV1 nextTask,
   required bool isDone,
@@ -2139,16 +2531,24 @@ String _selectedTaskDetail({
   required bool isLocked,
 }) {
   if (isLocked) {
-    return task.lockedSummary ??
-        'Clear ${nextTask.title.toLowerCase()} first, then this node opens.';
+    return act0LocalizedTaskLockedSummaryV1(
+      context,
+      task,
+      fallback:
+          task.lockedSummary ??
+          'Clear ${act0LocalizedTaskTitleV1(context, nextTask).toLowerCase()} first, then this node opens.',
+    );
   }
   if (isSkipped) {
-    return 'Skipped during placement. Run it now to convert it into a full clear.';
+    return _isRuLocaleV1(context)
+        ? 'Этот шаг был пропущен во время плейсмента. Пройди его сейчас, чтобы закрыть путь полностью.'
+        : 'Skipped during placement. Run it now to convert it into a full clear.';
   }
-  if (isDone) {
-    return task.summary ?? task.runner.caption;
-  }
-  return task.summary ?? task.runner.caption;
+  return act0LocalizedTaskSummaryV1(
+    context,
+    task,
+    fallback: task.summary ?? task.runner.caption,
+  );
 }
 
 IconData _stepIcon(Act0LessonStepKindV1 kind) {

@@ -1148,10 +1148,9 @@ List<String> _validateDrillJsonFile(
 
 List<String> _validateWorld0NotesCopy(String notesMdPath) {
   final errors = <String>[];
-  final raw = File(notesMdPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    notesMdPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0TableReadLeakV1(raw)) {
     errors.add(
       '$notesMdPath: world0_notes_table_read_jargon_leak_v1 (World 0 notes must use "table layout" phrasing instead of "table read")',
@@ -1202,10 +1201,9 @@ List<String> _validateWorld0NotesCopy(String notesMdPath) {
 
 List<String> _validateWorld0WorldCopy(String worldMdPath) {
   final errors = <String>[];
-  final raw = File(worldMdPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    worldMdPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0ActorLanguageLeakV1(raw)) {
     errors.add(
       '$worldMdPath: world0_world_actor_language_leak_v1 (World 0 world copy must use "acting seat" phrasing instead of "actor" wording)',
@@ -1221,10 +1219,9 @@ List<String> _validateWorld0WorldCopy(String worldMdPath) {
 
 List<String> _validateWorld0SessionIndexCopy(String sessionIndexPath) {
   final errors = <String>[];
-  final raw = File(sessionIndexPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    sessionIndexPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0PositionLanguageLeakV1(raw)) {
     errors.add(
       '$sessionIndexPath: world0_sessions_index_position_language_leak_v1 (World 0 sessions index must use seat-layout wording instead of position phrasing)',
@@ -1255,10 +1252,9 @@ List<String> _validateWorld0SessionIndexCopy(String sessionIndexPath) {
 
 List<String> _validateWorld0AtomsCopy(String atomsMdPath) {
   final errors = <String>[];
-  final raw = File(atomsMdPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    atomsMdPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0ActorLanguageLeakV1(raw)) {
     errors.add(
       '$atomsMdPath: world0_atoms_actor_language_leak_v1 (World 0 atoms must use "acting seat" phrasing instead of "actor" wording)',
@@ -1284,10 +1280,9 @@ List<String> _validateWorld0AtomsCopy(String atomsMdPath) {
 
 List<String> _validateWorld0DrillsIndexCopy(String drillsIndexPath) {
   final errors = <String>[];
-  final raw = File(drillsIndexPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    drillsIndexPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0TableReadLeakV1(raw)) {
     errors.add(
       '$drillsIndexPath: world0_drills_index_table_read_jargon_leak_v1 (World 0 drill indexes must use "table layout" phrasing instead of "table read")',
@@ -1368,10 +1363,9 @@ List<String> _validateWorld0DrillsIndexCopy(String drillsIndexPath) {
 
 List<String> _validateWorld0SessionCopy(String sessionMdPath) {
   final errors = <String>[];
-  final raw = File(sessionMdPath)
-      .readAsStringSync()
-      .replaceAll('\r\n', '\n')
-      .replaceAll('\r', '\n');
+  final raw = File(
+    sessionMdPath,
+  ).readAsStringSync().replaceAll('\r\n', '\n').replaceAll('\r', '\n');
   if (_hasWorld0PositionLanguageLeakV1(raw)) {
     errors.add(
       '$sessionMdPath: world0_session_position_language_leak_v1 (World 0 session copy must use seat/table wording instead of position phrasing)',

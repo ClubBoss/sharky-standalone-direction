@@ -1,3 +1,6 @@
+/// Compatibility campaign pack registry for the older intro/core microtask
+/// chain. This file remains live for runner/bootstrap/test compatibility, but
+/// it is no longer the active product content truth for Sharky_1.0.
 enum MicroTaskStreetV1 { flop, turn, river }
 
 class MicroTaskStep {

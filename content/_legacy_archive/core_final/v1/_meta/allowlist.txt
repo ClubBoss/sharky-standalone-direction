@@ -1,4 +1,0 @@
-l3_preflop_vs_3bet
-l3_flop_cbet
-l3_turn_raise
-l3_river_call

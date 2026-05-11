@@ -3,6 +3,11 @@
 Status: ACTIVE
 Last updated: 2026-05-06
 
+Canonical workspace root:
+
+1. `/Users/elmarsalimzade/Sharky_1.0`
+2. Older neighboring roots are archive/donor references only.
+
 ## Purpose
 
 Define the minimal active content-document stack so future curriculum and
@@ -42,6 +47,13 @@ Use these documents first for content decisions:
    App-wide product-working recalibration after the recent `Volume I` route-strengthening wave.
 14. `docs/plan/VOLUME_I_CLUSTER_EXECUTION_POLICY_v1.md`
    Default execution shape for improving the rest of `Volume I` by cluster rather than by isolated world only.
+15. `docs/content/CONTENT_ROOT_SCOPE_AUDIT_v1.md`
+   Standalone-root content boundary: active authored shelves vs support vs historical-only content.
+16. `docs/content/NONRUNTIME_MODULE_FAMILIES_AUDIT_v1.md`
+   Post-cutover truth for top-level module content vs archived legacy module families.
+17. `docs/content/LEGACY_COMPATIBILITY_OWNERS_v1.md`
+   Code-owner map for older intro/core/table-first runtime seams that are still
+   live but no longer define active product truth.
 
 ## Cross-World System Owners
 
@@ -93,7 +105,7 @@ These may still contain useful context, but they are not first-stop routing
 docs for active content work:
 
 1. `docs/plan/MASTER_PLAN_v2.2.md`
-2. `docs/plan/archive/execution_history/ROUTE_TO_B_EXECUTION_RESET_v1.md`
+2. historical execution files from older donor roots only
 3. `docs/plan/SKILL_COVERAGE_MATRIX_v1.md`
 4. `docs/plan/WORLD_NODE_MODE_MATRIX_v1.md`
 5. `docs/plan/PROGRESSION_PREREQUISITE_MATRIX_v1.md`
@@ -112,6 +124,27 @@ Preferred structure:
 3. `docs/learning/` for concept universe and learning architecture
 4. `docs/archive/` or `docs/_archive/` only for files that are truly inactive
    and no longer needed as active references
+
+## Content Root Truth
+
+Treat the content tree like this:
+
+1. Active authored content:
+   - `content/world1_act0_*/v1/`
+   - `content/worlds/world*/v1/`
+   - `content/gauntlets/`
+   - `content/schedules/`
+2. Active support/reference inside the root:
+   - `content/_meta/`
+   - `content/_schemas/`
+   - `content/_templates/`
+   - `content/_reference/`
+3. Historical-only content:
+   - `/Users/elmarsalimzade/Sharky_1.0_archive/content/_legacy_archive/`
+   - `/Users/elmarsalimzade/Sharky_1.0_archive/content/top_level_module_archive/`
+   - `/Users/elmarsalimzade/Sharky_1.0_archive/content/legacy_root_files/`
+
+Do not use the historical content archive as a source for new runtime ownership.
 
 ## Operational Recommendation
 

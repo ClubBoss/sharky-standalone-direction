@@ -711,7 +711,8 @@ class DrillSpecV1 {
     final recapRaw = json['recap_v1'];
     final feedbackAcceptableRaw = json['feedback_acceptable_v1'];
     final feedbackCorrectRaw = json['feedback_correct_v1'];
-    final feedbackIncorrectByActionRaw = json['feedback_incorrect_by_action_v1'];
+    final feedbackIncorrectByActionRaw =
+        json['feedback_incorrect_by_action_v1'];
     final feedbackIncorrectRaw = json['feedback_incorrect_v1'];
     final expectedActionRaw = json['expected_action'];
     final rangeBucketRaw = json['range_bucket_v1'];
@@ -1978,7 +1979,9 @@ void _validateExpectedForKind(DrillSpecV1 spec) {
       final incorrectByAction = spec.feedbackIncorrectByActionV1;
       if (incorrectByAction != null) {
         const allowedActions = <String>{'fold', 'call', 'raise'};
-        if (incorrectByAction.keys.any((action) => !allowedActions.contains(action))) {
+        if (incorrectByAction.keys.any(
+          (action) => !allowedActions.contains(action),
+        )) {
           throw const FormatException(
             'feedback_incorrect_by_action_v1 keys for action_choice must be fold|call|raise',
           );

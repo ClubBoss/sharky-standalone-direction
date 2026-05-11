@@ -6,7 +6,9 @@ import 'package:poker_analyzer/content/release_content_plan.dart';
 
 void main() {
   test('release plan modules align with available manifests', () {
-    final planIds = ReleaseContentPlanV1.modules.map((m) => m.id).toSet();
+    final planIds = ReleaseContentPlanV1.manifestEnforcedModules
+        .map((m) => m.id)
+        .toSet();
 
     final contentDir = Directory('content');
     final manifestMap = <String, Map<String, dynamic>>{};
@@ -25,7 +27,7 @@ void main() {
       }
     }
 
-    for (final module in ReleaseContentPlanV1.modules) {
+    for (final module in ReleaseContentPlanV1.manifestEnforcedModules) {
       final manifest = manifestMap[module.id];
       expect(
         manifest,

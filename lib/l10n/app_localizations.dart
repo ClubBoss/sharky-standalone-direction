@@ -183,43 +183,43 @@ abstract class AppLocalizations {
   /// No description provided for @packCatalogTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Pack catalog'**
+  /// **'Каталог паков'**
   String get packCatalogTitle;
 
   /// No description provided for @packCatalogSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Browse curated packs'**
+  /// **'Подборка паков для тренировки'**
   String get packCatalogSubtitle;
 
   /// No description provided for @difficultyAdvanced.
   ///
   /// In ru, this message translates to:
-  /// **'Advanced'**
+  /// **'Продвинутый'**
   String get difficultyAdvanced;
 
   /// No description provided for @difficultyIntermediate.
   ///
   /// In ru, this message translates to:
-  /// **'Intermediate'**
+  /// **'Средний'**
   String get difficultyIntermediate;
 
   /// No description provided for @difficultyBeginner.
   ///
   /// In ru, this message translates to:
-  /// **'Beginner'**
+  /// **'Начальный'**
   String get difficultyBeginner;
 
   /// No description provided for @packStatusComingSoon.
   ///
   /// In ru, this message translates to:
-  /// **'Coming soon'**
+  /// **'Скоро'**
   String get packStatusComingSoon;
 
   /// No description provided for @packStatusLocked.
   ///
   /// In ru, this message translates to:
-  /// **'Locked'**
+  /// **'Закрыто'**
   String get packStatusLocked;
 
   /// No description provided for @startTraining.
@@ -561,19 +561,19 @@ abstract class AppLocalizations {
   /// No description provided for @dailyGoals.
   ///
   /// In ru, this message translates to:
-  /// **'Daily Goals'**
+  /// **'Цели на день'**
   String get dailyGoals;
 
   /// No description provided for @sessions.
   ///
   /// In ru, this message translates to:
-  /// **'Sessions'**
+  /// **'Сессии'**
   String get sessions;
 
   /// No description provided for @accuracyPercent.
   ///
   /// In ru, this message translates to:
-  /// **'Accuracy %'**
+  /// **'Точность'**
   String get accuracyPercent;
 
   /// No description provided for @ev.
@@ -657,85 +657,85 @@ abstract class AppLocalizations {
   /// No description provided for @reset.
   ///
   /// In ru, this message translates to:
-  /// **'Reset'**
+  /// **'Сбросить'**
   String get reset;
 
   /// No description provided for @settingsResetTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Reset Settings'**
+  /// **'Сброс настроек'**
   String get settingsResetTitle;
 
   /// No description provided for @settingsResetConfirmation.
   ///
   /// In ru, this message translates to:
-  /// **'Are you sure you want to reset all settings to defaults?'**
+  /// **'Сбросить все настройки к значениям по умолчанию?'**
   String get settingsResetConfirmation;
 
   /// No description provided for @settingsResetSuccess.
   ///
   /// In ru, this message translates to:
-  /// **'Settings reset to defaults'**
+  /// **'Настройки сброшены'**
   String get settingsResetSuccess;
 
   /// No description provided for @settingsResetButton.
   ///
   /// In ru, this message translates to:
-  /// **'Reset to Defaults'**
+  /// **'Сбросить до стандартных'**
   String get settingsResetButton;
 
   /// No description provided for @settingsCurrentLanguageLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Current Language'**
+  /// **'Текущий язык'**
   String get settingsCurrentLanguageLabel;
 
   /// No description provided for @languageChangedSnackbar.
   ///
   /// In ru, this message translates to:
-  /// **'Language changed to {language}'**
+  /// **'Язык переключен: {language}'**
   String languageChangedSnackbar(Object language);
 
   /// No description provided for @languageSelectorTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Select Language'**
+  /// **'Язык приложения'**
   String get languageSelectorTitle;
 
   /// No description provided for @languageSelectorDescription.
   ///
   /// In ru, this message translates to:
-  /// **'Choose your preferred language. The app will update instantly.'**
+  /// **'Выберите язык интерфейса. Изменения применяются сразу.'**
   String get languageSelectorDescription;
 
   /// No description provided for @settingsLegalEntryTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Legal & Compliance'**
+  /// **'Правила и данные'**
   String get settingsLegalEntryTitle;
 
   /// No description provided for @settingsLegalEntrySubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Privacy, terms, and data controls'**
+  /// **'Конфиденциальность, условия и управление данными'**
   String get settingsLegalEntrySubtitle;
 
   /// No description provided for @legalScreenTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Legal & Compliance'**
+  /// **'Правила и данные'**
   String get legalScreenTitle;
 
   /// No description provided for @legalPoliciesSectionTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Policies'**
+  /// **'Документы'**
   String get legalPoliciesSectionTitle;
 
   /// No description provided for @legalDataSectionTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Data'**
+  /// **'Данные'**
   String get legalDataSectionTitle;
 
   /// No description provided for @privacyPolicy.
@@ -747,7 +747,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyPolicySubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'View how we handle player data'**
+  /// **'Как мы работаем с данными игрока'**
   String get privacyPolicySubtitle;
 
   /// No description provided for @termsOfUse.
@@ -759,55 +759,55 @@ abstract class AppLocalizations {
   /// No description provided for @termsOfUseSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Read the governing terms'**
+  /// **'Правила использования сервиса'**
   String get termsOfUseSubtitle;
 
   /// No description provided for @legalDeleteDataTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Delete Data / Account'**
+  /// **'Удалить данные / аккаунт'**
   String get legalDeleteDataTitle;
 
   /// No description provided for @legalDeleteDataSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Wipe local learning progress, snapshots, and session history'**
+  /// **'Удалить локальный прогресс, снимки и историю сессий'**
   String get legalDeleteDataSubtitle;
 
   /// No description provided for @legalDeleteConfirmationTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Delete local data?'**
+  /// **'Удалить локальные данные?'**
   String get legalDeleteConfirmationTitle;
 
   /// No description provided for @legalDeleteConfirmationBody.
   ///
   /// In ru, this message translates to:
-  /// **'This will remove learning progress, snapshots, and session fingerprints from this device. This cannot be undone.'**
+  /// **'Это удалит прогресс, снимки и отпечатки сессий с этого устройства. Действие нельзя отменить.'**
   String get legalDeleteConfirmationBody;
 
   /// No description provided for @legalDeleteSuccess.
   ///
   /// In ru, this message translates to:
-  /// **'Local data cleared'**
+  /// **'Локальные данные удалены'**
   String get legalDeleteSuccess;
 
   /// No description provided for @legalDeleteFailure.
   ///
   /// In ru, this message translates to:
-  /// **'Failed to clear local data'**
+  /// **'Не удалось удалить локальные данные'**
   String get legalDeleteFailure;
 
   /// No description provided for @playerType.
   ///
   /// In ru, this message translates to:
-  /// **'Player Type'**
+  /// **'Тип игрока'**
   String get playerType;
 
   /// No description provided for @selectAction.
   ///
   /// In ru, this message translates to:
-  /// **'Select Action'**
+  /// **'Выберите действие'**
   String get selectAction;
 
   /// No description provided for @fold.
@@ -837,13 +837,13 @@ abstract class AppLocalizations {
   /// No description provided for @amount.
   ///
   /// In ru, this message translates to:
-  /// **'Amount'**
+  /// **'Сумма'**
   String get amount;
 
   /// No description provided for @confirm.
   ///
   /// In ru, this message translates to:
-  /// **'Confirm'**
+  /// **'Подтвердить'**
   String get confirm;
 
   /// No description provided for @clear.
@@ -867,7 +867,7 @@ abstract class AppLocalizations {
   /// No description provided for @gameType.
   ///
   /// In ru, this message translates to:
-  /// **'Game Type'**
+  /// **'Тип игры'**
   String get gameType;
 
   /// No description provided for @holdemNl.
@@ -885,7 +885,7 @@ abstract class AppLocalizations {
   /// No description provided for @otherGameType.
   ///
   /// In ru, this message translates to:
-  /// **'Other'**
+  /// **'Другое'**
   String get otherGameType;
 
   /// No description provided for @spotsLabel.

@@ -40,15 +40,15 @@ class ContentManifestValidator {
       if (availability is! String ||
           !_validAvailabilities.contains(availability.trim())) {
         errors.add('$moduleId manifest has invalid availability');
-      } else if (ReleaseContentPlanV1.isRelease(moduleId) &&
+      } else if (ReleaseContentPlanV1.requiresActiveManifestFor(moduleId) &&
           availability.trim() != 'available') {
         errors.add('$moduleId release manifest must be available');
       }
-    } else if (ReleaseContentPlanV1.isRelease(moduleId)) {
+    } else if (ReleaseContentPlanV1.requiresActiveManifestFor(moduleId)) {
       errors.add('$moduleId manifest missing availability');
     }
 
-    if (ReleaseContentPlanV1.isRelease(moduleId)) {
+    if (ReleaseContentPlanV1.requiresActiveManifestFor(moduleId)) {
       for (final key in manifest.keys) {
         if (key == 'seed' || key == 'timestamp' || key == 'random') {
           errors.add(

@@ -32,7 +32,11 @@ void main() {
 
       final expectations = <int, List<String>>{
         0: <String>['button', 'initiative', 'late position'],
-        1: <String>['cutoff opens first', 'calling keeps position', 'marginal raise spot'],
+        1: <String>[
+          'cutoff opens first',
+          'calling keeps position',
+          'marginal raise spot',
+        ],
         2: <String>['earlier position', 'players behind', 'button advantage'],
       };
       final bannedPhrases = <String>{
@@ -49,14 +53,16 @@ void main() {
           expect(
             feedback,
             contains(snippet),
-            reason: 'Step ${entry.key + 1} should teach the poker reason explicitly.',
+            reason:
+                'Step ${entry.key + 1} should teach the poker reason explicitly.',
           );
         }
         for (final banned in bannedPhrases) {
           expect(
             feedback,
             isNot(contains(banned)),
-            reason: 'Step ${entry.key + 1} should not regress to generic template wording.',
+            reason:
+                'Step ${entry.key + 1} should not regress to generic template wording.',
           );
         }
       }

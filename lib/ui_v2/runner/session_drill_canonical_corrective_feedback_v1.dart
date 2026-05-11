@@ -43,8 +43,7 @@ resolveSessionDrillCanonicalCorrectiveFeedbackV1({
         expectedLabel: '$expectedOuts outs',
         chosenLabel: chosenActionIdV1,
         teachingText: spec.whyV1,
-        guidanceText:
-            'Count the live improving cards before you answer.',
+        guidanceText: 'Count the live improving cards before you answer.',
       );
       return SessionDrillCanonicalCorrectiveFeedbackV1(
         detailText: explanation.headlineText,
@@ -64,8 +63,7 @@ resolveSessionDrillCanonicalCorrectiveFeedbackV1({
         expectedLabel: _winnerLabelV1(expectedWinner!),
         chosenLabel: _winnerLabelOrNullV1(chosenActionIdV1),
         teachingText: spec.whyV1,
-        guidanceText:
-            'Compare the made hands first, then choose the winner.',
+        guidanceText: 'Compare the made hands first, then choose the winner.',
       );
       return SessionDrillCanonicalCorrectiveFeedbackV1(
         detailText: explanation.headlineText,
@@ -129,7 +127,9 @@ resolveSessionDrillCanonicalCorrectiveFeedbackV1({
         whyText: boardTextureExplanation.composeSupportingText(),
       );
     case DrillKindV1.handChain:
-      if (!_supportsCanonicalHandChainCorrectiveFeedbackV1(normalizedSessionId)) {
+      if (!_supportsCanonicalHandChainCorrectiveFeedbackV1(
+        normalizedSessionId,
+      )) {
         return null;
       }
       final step = currentHandChainStepV1;
@@ -282,7 +282,9 @@ String _winnerLabelV1(String winnerId) {
   }
 }
 
-bool _supportsCanonicalHandChainCorrectiveFeedbackV1(String normalizedSessionId) {
+bool _supportsCanonicalHandChainCorrectiveFeedbackV1(
+  String normalizedSessionId,
+) {
   return normalizedSessionId.startsWith('w1.') ||
       normalizedSessionId.startsWith('w3.') ||
       normalizedSessionId.startsWith('w6.');
@@ -307,13 +309,17 @@ String? _handChainExpectedLabelV1(DrillChainStepV1 step) {
 SharedLearnerFeedbackComparisonStyleV1 _handChainComparisonStyleV1(
   DrillChainStepV1 step,
 ) {
-  if (!_isMissing(step.expectedActionV1) || !_isMissing(step.expectedPresetIdV1)) {
+  if (!_isMissing(step.expectedActionV1) ||
+      !_isMissing(step.expectedPresetIdV1)) {
     return SharedLearnerFeedbackComparisonStyleV1.strongerLine;
   }
   return SharedLearnerFeedbackComparisonStyleV1.correctAnswer;
 }
 
-String? _handChainChosenLabelV1(DrillChainStepV1 step, String? chosenActionIdV1) {
+String? _handChainChosenLabelV1(
+  DrillChainStepV1 step,
+  String? chosenActionIdV1,
+) {
   if (!_isMissing(step.expectedPresetIdV1)) {
     return _presetLabelOrNullV1(chosenActionIdV1);
   }
@@ -376,10 +382,11 @@ String _positionWhyLineV1(DrillSpecV1 spec) {
   }
   final question = spec.prompt.trim().toLowerCase();
   final expectedActor = _actorLabelV1(spec.expected.actionId ?? '');
-  final expectedSeat = (spec.expected.actionId?.trim().toLowerCase() == 'hero'
-          ? spec.heroSeatV1
-          : spec.villainSeatV1)
-      ?.toUpperCase();
+  final expectedSeat =
+      (spec.expected.actionId?.trim().toLowerCase() == 'hero'
+              ? spec.heroSeatV1
+              : spec.villainSeatV1)
+          ?.toUpperCase();
   if (question.contains('out of position')) {
     return '$expectedActor is out of position here because ${expectedSeat ?? 'that seat'} must act earlier after the flop.';
   }
@@ -391,10 +398,11 @@ String _positionWhyLineV1(DrillSpecV1 spec) {
 
 String _positionFixLineV1(DrillSpecV1 spec, String expectedActor) {
   final actor = _actorLabelV1(expectedActor);
-  final expectedSeat = (expectedActor.trim().toLowerCase() == 'hero'
-          ? spec.heroSeatV1
-          : spec.villainSeatV1)
-      ?.toUpperCase();
+  final expectedSeat =
+      (expectedActor.trim().toLowerCase() == 'hero'
+              ? spec.heroSeatV1
+              : spec.villainSeatV1)
+          ?.toUpperCase();
   final question = spec.prompt.trim().toLowerCase();
   if (question.contains('out of position')) {
     return 'Find the seat that must act first after the flop, then choose $actor as out of position.';
@@ -466,15 +474,12 @@ String _boardTextureFixLineV1(DrillSpecV1 spec, String expectedAction) {
   }
 }
 
-String? _preferredTeachingTextV1(
-  DrillSpecV1 spec, {
-  String? chosenActionIdV1,
-}) {
+String? _preferredTeachingTextV1(DrillSpecV1 spec, {String? chosenActionIdV1}) {
   final normalizedActionId = chosenActionIdV1?.trim().toLowerCase();
   final actionSpecific = normalizedActionId == null
       ? null
       : spec.scenarioCoreV1.feedbackIncorrectByActionV1?[normalizedActionId]
-          ?.trim();
+            ?.trim();
   if (!_isMissing(actionSpecific)) {
     return actionSpecific!;
   }
@@ -553,10 +558,7 @@ String _boardTapGuidanceLineV1(String expectedBoardSlot) {
   return 'Lock the ${_boardSlotLabelV1(expectedBoardSlot)} card first so the board context is complete before you decide.';
 }
 
-String _holeCardTargetLabelV1({
-  required String cardSlot,
-  String? cardId,
-}) {
+String _holeCardTargetLabelV1({required String cardSlot, String? cardId}) {
   if (!_isMissing(cardId)) {
     return _humanizeCardIdV1(cardId!);
   }
@@ -576,10 +578,7 @@ String? _chosenHoleCardLabelOrNullV1(DrillUserEventV1? event) {
   if (_isMissing(cardId) && _isMissing(cardSlot)) {
     return null;
   }
-  return _holeCardTargetLabelV1(
-    cardSlot: cardSlot ?? '',
-    cardId: cardId,
-  );
+  return _holeCardTargetLabelV1(cardSlot: cardSlot ?? '', cardId: cardId);
 }
 
 String _holeCardsTapGuidanceLineV1(DrillSpecV1 spec) {

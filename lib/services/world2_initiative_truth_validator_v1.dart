@@ -204,16 +204,22 @@ List<String> _validateInitiativeCopyConsistencyV1({
   if ((RegExp(r'\bhero[^.]*\bcontinue pressure\b').hasMatch(lowerText) ||
           RegExp(r'\bhero[^.]*\bkeep pressure\b').hasMatch(lowerText) ||
           RegExp(r'\bhero[^.]*\bapply pressure first\b').hasMatch(lowerText) ||
-          RegExp(r'\bhero[^.]*\bmore likely to (?:continue|keep) (?:the )?pressure\b')
-              .hasMatch(lowerText)) &&
+          RegExp(
+            r'\bhero[^.]*\bmore likely to (?:continue|keep) (?:the )?pressure\b',
+          ).hasMatch(lowerText)) &&
       truth.pressureOwner != 'hero') {
-    issues.add('$source: hero pressure-owner copy contradicts initiative truth');
+    issues.add(
+      '$source: hero pressure-owner copy contradicts initiative truth',
+    );
   }
   if ((RegExp(r'\bvillain[^.]*\bcontinue pressure\b').hasMatch(lowerText) ||
           RegExp(r'\bvillain[^.]*\bkeep pressure\b').hasMatch(lowerText) ||
-          RegExp(r'\bvillain[^.]*\bapply pressure first\b').hasMatch(lowerText) ||
-          RegExp(r'\bvillain[^.]*\bmore likely to (?:continue|keep) (?:the )?pressure\b')
-              .hasMatch(lowerText)) &&
+          RegExp(
+            r'\bvillain[^.]*\bapply pressure first\b',
+          ).hasMatch(lowerText) ||
+          RegExp(
+            r'\bvillain[^.]*\bmore likely to (?:continue|keep) (?:the )?pressure\b',
+          ).hasMatch(lowerText)) &&
       truth.pressureOwner != 'villain') {
     issues.add(
       '$source: villain pressure-owner copy contradicts initiative truth',

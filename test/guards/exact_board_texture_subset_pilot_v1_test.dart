@@ -21,7 +21,9 @@ void main() {
     );
     expect(
       content,
-      contains('`test/tools/world2_board_texture_truth_validator_v1_test.dart`'),
+      contains(
+        '`test/tools/world2_board_texture_truth_validator_v1_test.dart`',
+      ),
     );
     expect(
       content,

@@ -1,4 +1,0 @@
-# Rubric
-## Cohesion
-## Accuracy
-## Notes

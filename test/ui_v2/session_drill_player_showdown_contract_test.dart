@@ -179,7 +179,6 @@ void main() {
         find.byKey(const Key('session_drill_player_showdown_board_plays_v1')),
       );
       await tester.pump();
-
     },
   );
 
@@ -219,7 +218,9 @@ void main() {
     );
 
     expect(
-      find.byKey(const Key('session_drill_player_world2_showdown_intro_card_v1')),
+      find.byKey(
+        const Key('session_drill_player_world2_showdown_intro_card_v1'),
+      ),
       findsOneWidget,
     );
     expect(
@@ -268,7 +269,9 @@ void main() {
     );
 
     expect(
-      find.byKey(const Key('session_drill_player_world2_showdown_recap_card_v1')),
+      find.byKey(
+        const Key('session_drill_player_world2_showdown_recap_card_v1'),
+      ),
       findsOneWidget,
     );
     expect(

@@ -67,7 +67,10 @@ void main() {
 
       expect(resolved.portraitOverlay, isNull);
       expect(resolved.shellContract.bottomBandChild, isNotNull);
-      expect(resolved.shellContract.bottomBandSurfaceKey, const Key('microtask_scene_support_lane_v1'));
+      expect(
+        resolved.shellContract.bottomBandSurfaceKey,
+        const Key('microtask_scene_support_lane_v1'),
+      );
 
       await tester.pumpWidget(
         MaterialApp(

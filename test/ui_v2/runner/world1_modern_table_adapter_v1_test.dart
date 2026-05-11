@@ -160,37 +160,39 @@ void main() {
     },
   );
 
-  test('world1 modern table adapter maps preflop re-raises to RAISE cue copy', () {
-    final resolved = resolveWorld1ModernTableAdapterV1(
-      World1ModernTableAdapterInputV1(
-        seatIds: const <String>['btn', 'sb', 'bb', 'utg', 'hj', 'co'],
-        heroSeatId: 'hj',
-        actingSeatId: 'hj',
-        selectedSeatId: null,
-        foldedBySeatId: const <String, bool>{},
-        committedBySeatId: const <String, int>{
-          'sb': 1,
-          'bb': 2,
-          'utg': 5,
-          'hj': 8,
-        },
-        pot: 16,
-        currentBet: 8,
-        actingSeatToCall: 0,
-        lastAggressorSeatId: 'hj',
-        priceSettingActionKindV1: ActionKindV1.raise,
-        betOwnerSeatId: 'hj',
-        currentStreet: scenario_fsm.Street.preflop,
-        visibleBoardCount: 0,
-        heroCards: <CardModel>[
-          CardModel(rank: 'K', suit: '♠'),
-          CardModel(rank: 'J', suit: '♠'),
-        ],
-        boardCards: const <CardModel>[],
-        promptLabel: 'Practice: Preflop decision. Choose the best action.',
-        showsActingSeat: true,
-      ),
-    );
+  test(
+    'world1 modern table adapter maps preflop re-raises to RAISE cue copy',
+    () {
+      final resolved = resolveWorld1ModernTableAdapterV1(
+        World1ModernTableAdapterInputV1(
+          seatIds: const <String>['btn', 'sb', 'bb', 'utg', 'hj', 'co'],
+          heroSeatId: 'hj',
+          actingSeatId: 'hj',
+          selectedSeatId: null,
+          foldedBySeatId: const <String, bool>{},
+          committedBySeatId: const <String, int>{
+            'sb': 1,
+            'bb': 2,
+            'utg': 5,
+            'hj': 8,
+          },
+          pot: 16,
+          currentBet: 8,
+          actingSeatToCall: 0,
+          lastAggressorSeatId: 'hj',
+          priceSettingActionKindV1: ActionKindV1.raise,
+          betOwnerSeatId: 'hj',
+          currentStreet: scenario_fsm.Street.preflop,
+          visibleBoardCount: 0,
+          heroCards: <CardModel>[
+            CardModel(rank: 'K', suit: '♠'),
+            CardModel(rank: 'J', suit: '♠'),
+          ],
+          boardCards: const <CardModel>[],
+          promptLabel: 'Practice: Preflop decision. Choose the best action.',
+          showsActingSeat: true,
+        ),
+      );
 
       expect(
         resolved.debugPriceSetterSeatIndexV1,

@@ -88,7 +88,7 @@ void main() {
         PathNodeKindV1.checkpoint,
         PathNodeKindV1.pack,
         PathNodeKindV1.optionalPack,
-        ]);
+      ]);
       expect(nodes[1].packId, 'world1_streets_demo_v1');
       expect(nodes[2].packId, 'world2_spine_campaign_v1');
       expect(nodes[3].packId, 'world2_spine_followup_v1_b2');
@@ -264,10 +264,7 @@ void main() {
           hasReviewQueueForNextPack: false,
         );
 
-        expect(
-          nodes.any((n) => n.packId == 'world2_streets_demo_v1'),
-          isFalse,
-        );
+        expect(nodes.any((n) => n.packId == 'world2_streets_demo_v1'), isFalse);
       },
     );
   });

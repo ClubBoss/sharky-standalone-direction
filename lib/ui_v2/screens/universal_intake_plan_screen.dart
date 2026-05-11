@@ -1176,7 +1176,7 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
   }
 
   String _recommendedModuleTitle(String moduleId) {
-    return recommendedModuleTitleForId(moduleId);
+    return recommendedLearningModuleTitleForId(moduleId);
   }
 
   String _todayPlanRoutingReasonV1(String normalizedNextPackId) {
@@ -1449,7 +1449,7 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
       if (_startInProgress || !mounted) return;
       _startInProgress = true;
       ProgressService.intakeFlowActiveInSession = true;
-      await navigateToTheorySession(
+      await navigateToLearningModuleV1(
         context,
         resolvedEntryId,
         handoffContextV1: handoffContextV1,

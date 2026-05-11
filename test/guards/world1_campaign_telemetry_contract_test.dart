@@ -6,8 +6,8 @@ import 'package:poker_analyzer/constants/telemetry_events.dart';
 import 'package:poker_analyzer/core/services/audio_service.dart';
 import 'package:poker_analyzer/infra/telemetry.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
-import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/screens/session_result_screen.dart';
+import 'package:poker_analyzer/ui_v2/screens/universal_intake_plan_screen.dart';
 
 class _SpineContractState {
   const _SpineContractState({
@@ -275,7 +275,9 @@ void main() {
       });
       ProgressService.world1DailyCompletionInSession.value = false;
 
-      await tester.pumpWidget(const AppRoot());
+      await tester.pumpWidget(
+        const MaterialApp(home: UniversalIntakePlanScreen()),
+      );
       await tester.pumpAndSettle();
 
       await _startAndCompletePack(

@@ -147,7 +147,9 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('session_drill_player_result_soft_pass_reason_v1')),
+        find.byKey(
+          const Key('session_drill_player_result_soft_pass_reason_v1'),
+        ),
         findsOneWidget,
       );
       expect(

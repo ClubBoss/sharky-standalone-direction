@@ -153,10 +153,11 @@ World1CanonicalHandLoopRunV1 runWorld1CanonicalEngineV2HandLoopV1(
         );
       }
       if (heroActionIndex == 0) {
-        firstHeroActionExpectedLabel =
-            expectedFirstHeroActionKind?.name.toUpperCase();
+        firstHeroActionExpectedLabel = expectedFirstHeroActionKind?.name
+            .toUpperCase();
         firstHeroActionActualLabel = heroAction.kind.name.toUpperCase();
-        firstHeroActionMatchesExpected = expectedFirstHeroActionKind == null ||
+        firstHeroActionMatchesExpected =
+            expectedFirstHeroActionKind == null ||
             heroAction.kind == expectedFirstHeroActionKind;
       }
       final heroEvent = PlayerActionEventV1(heroAction);
@@ -203,7 +204,8 @@ World1CanonicalHandLoopRunV1 runWorld1CanonicalEngineV2HandLoopV1(
       );
     }
     if (heroActionIndex > 0 &&
-        (autoRun.stopReason == EngineV2AutoResolveStopReasonV1.evaluationReached ||
+        (autoRun.stopReason ==
+                EngineV2AutoResolveStopReasonV1.evaluationReached ||
             autoRun.stopReason ==
                 EngineV2AutoResolveStopReasonV1.outcomeReached)) {
       return World1CanonicalHandLoopRunV1(
@@ -217,7 +219,8 @@ World1CanonicalHandLoopRunV1 runWorld1CanonicalEngineV2HandLoopV1(
       );
     }
     if (autoRun.stopReason == EngineV2AutoResolveStopReasonV1.outcomeReached ||
-        autoRun.stopReason == EngineV2AutoResolveStopReasonV1.evaluationReached) {
+        autoRun.stopReason ==
+            EngineV2AutoResolveStopReasonV1.evaluationReached) {
       continue;
     }
     loopSteps += 1;

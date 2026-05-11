@@ -61,16 +61,17 @@ void main() {
     expect(rowById['world3_early_arc_runtime_truth_v1']!.checkedCount, 10);
   });
 
-  test('canonical early-path correctness audit v1 json stays structured', () async {
-    final report = await buildCanonicalEarlyPathCorrectnessAuditReportV1();
-    final decoded =
-        jsonDecode(
-              encodeCanonicalEarlyPathCorrectnessAuditJsonV1(report),
-            )
-            as Map<String, dynamic>;
+  test(
+    'canonical early-path correctness audit v1 json stays structured',
+    () async {
+      final report = await buildCanonicalEarlyPathCorrectnessAuditReportV1();
+      final decoded =
+          jsonDecode(encodeCanonicalEarlyPathCorrectnessAuditJsonV1(report))
+              as Map<String, dynamic>;
 
-    expect(decoded['version'], 'v1');
-    expect(decoded['rows'], isA<List<dynamic>>());
-    expect(decoded['summary'], isA<Map<String, dynamic>>());
-  });
+      expect(decoded['version'], 'v1');
+      expect(decoded['rows'], isA<List<dynamic>>());
+      expect(decoded['summary'], isA<Map<String, dynamic>>());
+    },
+  );
 }

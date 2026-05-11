@@ -1,2 +1,0 @@
-{"id":"w_quiz_01","type":"mc","prompt":"If you play 10,000 hands perfectly, will you win?","options":["No, it's all luck","Yes, skill wins in the long run","Only if the dealer likes me","50/50 chance"],"answer":1,"explanation":"Over a large sample size (Long Run), math guarantees that skill wins."}
-{"id":"w_quiz_02","type":"mc","prompt":"Sharky says: Treat your bankroll like...","options":["A lottery ticket","Free money","A business investment","Money for pizza"],"answer":2,"explanation":"Poker is resource management. Protect your investment."}

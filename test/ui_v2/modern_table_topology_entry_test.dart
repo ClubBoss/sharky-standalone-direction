@@ -26,81 +26,77 @@ void main() {
     }
   });
 
-  testWidgets(
-    'canonical table keeps 9 max on the full-ring topology path',
-    (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: ModernTableScreenV1(seatCount: 9)),
-      );
-      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+  testWidgets('canonical table keeps 9 max on the full-ring topology path', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: ModernTableScreenV1(seatCount: 9)),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
-      expect(
-        canonicalTableTopologyProfileForSeatCountV1(9).id,
-        CanonicalTableTopologyProfileIdV1.fullRing9Max,
-      );
-      for (var i = 0; i < 9; i++) {
-        expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
-      }
-      expect(find.byKey(const Key('modern_table_seat_9')), findsNothing);
-    },
-  );
+    expect(
+      canonicalTableTopologyProfileForSeatCountV1(9).id,
+      CanonicalTableTopologyProfileIdV1.fullRing9Max,
+    );
+    for (var i = 0; i < 9; i++) {
+      expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('modern_table_seat_9')), findsNothing);
+  });
 
-  testWidgets(
-    'canonical table keeps 10 max on the full-ring topology path',
-    (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: ModernTableScreenV1(seatCount: 10)),
-      );
-      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+  testWidgets('canonical table keeps 10 max on the full-ring topology path', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: ModernTableScreenV1(seatCount: 10)),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
-      expect(
-        canonicalTableTopologyProfileForSeatCountV1(10).id,
-        CanonicalTableTopologyProfileIdV1.fullRing10Max,
-      );
-      for (var i = 0; i < 10; i++) {
-        expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
-      }
-      expect(find.byKey(const Key('modern_table_seat_10')), findsNothing);
-    },
-  );
+    expect(
+      canonicalTableTopologyProfileForSeatCountV1(10).id,
+      CanonicalTableTopologyProfileIdV1.fullRing10Max,
+    );
+    for (var i = 0; i < 10; i++) {
+      expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('modern_table_seat_10')), findsNothing);
+  });
 
-  testWidgets(
-    'canonical table keeps 6 max on the short-handed topology path',
-    (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: ModernTableScreenV1(seatCount: 6)),
-      );
-      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+  testWidgets('canonical table keeps 6 max on the short-handed topology path', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: ModernTableScreenV1(seatCount: 6)),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
-      expect(
-        canonicalTableTopologyProfileForSeatCountV1(6).id,
-        CanonicalTableTopologyProfileIdV1.shortHanded6Max,
-      );
-      for (var i = 0; i < 6; i++) {
-        expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
-      }
-      expect(find.byKey(const Key('modern_table_seat_6')), findsNothing);
-    },
-  );
+    expect(
+      canonicalTableTopologyProfileForSeatCountV1(6).id,
+      CanonicalTableTopologyProfileIdV1.shortHanded6Max,
+    );
+    for (var i = 0; i < 6; i++) {
+      expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('modern_table_seat_6')), findsNothing);
+  });
 
-  testWidgets(
-    'canonical table keeps 2 max on the heads-up topology path',
-    (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: ModernTableScreenV1(seatCount: 2)),
-      );
-      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+  testWidgets('canonical table keeps 2 max on the heads-up topology path', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: ModernTableScreenV1(seatCount: 2)),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
-      expect(
-        canonicalTableTopologyProfileForSeatCountV1(2).id,
-        CanonicalTableTopologyProfileIdV1.headsUp2Max,
-      );
-      for (var i = 0; i < 2; i++) {
-        expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
-      }
-      expect(find.byKey(const Key('modern_table_seat_2')), findsNothing);
-    },
-  );
+    expect(
+      canonicalTableTopologyProfileForSeatCountV1(2).id,
+      CanonicalTableTopologyProfileIdV1.headsUp2Max,
+    );
+    for (var i = 0; i < 2; i++) {
+      expect(find.byKey(Key('modern_table_seat_$i')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('modern_table_seat_2')), findsNothing);
+  });
 
   testWidgets(
     'canonical table keeps 5 max on the derived transitional topology path',

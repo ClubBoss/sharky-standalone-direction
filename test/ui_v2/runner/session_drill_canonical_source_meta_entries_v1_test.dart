@@ -72,12 +72,20 @@ void main() {
       );
 
       expect(entries.length, 2);
-      expect(entries.first.testKey, 'session_drill_player_hand_chain_source_street_v1');
+      expect(
+        entries.first.testKey,
+        'session_drill_player_hand_chain_source_street_v1',
+      );
       expect(entries.first.text, 'Street: PREFLOP');
-      expect(entries[1].testKey, 'session_drill_player_hand_chain_source_hero_v1');
+      expect(
+        entries[1].testKey,
+        'session_drill_player_hand_chain_source_hero_v1',
+      );
       expect(
         entries.any(
-          (entry) => entry.testKey == 'session_drill_player_hand_chain_source_board_v1',
+          (entry) =>
+              entry.testKey ==
+              'session_drill_player_hand_chain_source_board_v1',
         ),
         isFalse,
       );

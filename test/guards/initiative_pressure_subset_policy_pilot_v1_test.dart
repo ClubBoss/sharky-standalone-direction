@@ -22,7 +22,9 @@ void main() {
     );
     expect(
       content,
-      contains('`test/ui_v2/session_drill_player_initiative_contract_test.dart`'),
+      contains(
+        '`test/ui_v2/session_drill_player_initiative_contract_test.dart`',
+      ),
     );
     expect(
       content,

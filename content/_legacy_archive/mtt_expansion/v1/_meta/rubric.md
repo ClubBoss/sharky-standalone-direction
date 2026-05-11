@@ -1,2 +1,0 @@
-# Rubric (MTT v1)
-PLACEHOLDER

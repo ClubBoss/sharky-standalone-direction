@@ -1,7 +1,7 @@
 # Docs Archive Hygiene Queue v1
 
 Status: ACTIVE GOVERNANCE QUEUE
-Last updated: 2026-05-06
+Last updated: 2026-05-11
 
 ## Purpose
 
@@ -42,7 +42,6 @@ active docs still reference them directly:
 1. `docs/plan/SKILL_COVERAGE_MATRIX_v1.md`
 2. `docs/plan/WORLD_NODE_MODE_MATRIX_v1.md`
 3. `docs/plan/PROGRESSION_PREREQUISITE_MATRIX_v1.md`
-4. `docs/plan/MASTER_PLAN_v2.2.md`
 
 ## Required Before Moving Any Blocked File
 
@@ -61,10 +60,20 @@ active docs still reference them directly:
    - archived source copies under `docs/plan/archive/queue_history/`
    - short root stubs at the old paths
    - no remaining active-stack dependence on their old active framing
+3. Legacy master plan path now has:
+   - archived source at `docs/archive/obsolete_plans/MASTER_PLAN_v2.2.md`
+   - short root stub at `docs/plan/MASTER_PLAN_v2.2.md`
+   - active-chain replacement pointer to `docs/plan/MASTER_PLAN_v3.0.md`
+4. M1 readiness audits v1-v3 now have:
+   - archived source copies under `docs/audit/history/`
+   - short root stubs at `docs/audit/M1_READINESS_AUDIT_v1.md`,
+     `docs/audit/M1_READINESS_AUDIT_v2.md`, and
+     `docs/audit/M1_READINESS_AUDIT_v3.md`
+   - replacement pointer to `docs/audit/M1_READINESS_AUDIT_v4.md`
 
 ## Next Recommended Hygiene Packet
 
-1. audit active references to the four blocked files above
+1. audit active references to the three blocked files above
 2. classify each reference as:
    - must stay active
    - should point to a newer authority

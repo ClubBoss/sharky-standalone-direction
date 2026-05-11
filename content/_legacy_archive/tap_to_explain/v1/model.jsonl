@@ -1,4 +1,0 @@
-{"id":"tte_v1_1","trigger":"range","explain":"PLACEHOLDER_EXPLAIN_1","link":"range_overview","weight":1}
-{"id":"tte_v1_2","trigger":"texture","explain":"PLACEHOLDER_EXPLAIN_2","link":"texture_groups","weight":1}
-{"id":"tte_v1_3","trigger":"action","explain":"PLACEHOLDER_EXPLAIN_3","link":"action_patterns","weight":2}
-{"id":"tte_v1_4","trigger":"icm","explain":"PLACEHOLDER_EXPLAIN_4","link":"icm_basics","weight":2}

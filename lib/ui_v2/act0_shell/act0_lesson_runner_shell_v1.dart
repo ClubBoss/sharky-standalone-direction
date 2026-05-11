@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
@@ -128,18 +130,18 @@ class Act0BlockCompletionSummaryV1 {
 
   String get habitRewardDetail {
     if (deepLeakCount > 0) {
-      return 'A real weak spot was caught. Fixing it now builds the habit.';
+      return 'A real weak spot was caught. Fixing it now protects tomorrow from feeling heavier.';
     }
     if (quickFixCount > 0) {
-      return 'You corrected a miss inside the lesson. Review it once later.';
+      return 'You corrected a miss inside the lesson. That kind of comeback is how consistency starts to feel earned.';
     }
     if (errorCount == 0 && taskCount > 0) {
-      return 'No repairs needed. This is the pattern to repeat tomorrow.';
+      return 'No repairs needed. This is exactly the kind of pass that makes tomorrow lighter.';
     }
     if (qualifiesForNextLesson) {
-      return 'The block counts. Keep the next session short and sharp.';
+      return 'The block counts. A short sharp return tomorrow is enough.';
     }
-    return 'Replay is the right move before adding new material.';
+    return 'Replay is the right move before adding new material. Clean it once and the route will feel lighter again.';
   }
 
   String get gateMessage {
@@ -251,6 +253,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   const Act0LessonRunnerShellV1({
     super.key,
     required this.runner,
+    this.selectedTaskId,
     this.selectedTaskFamily,
     required this.onBack,
     required this.onContinueTheory,
@@ -266,6 +269,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   });
 
   final Act0RunnerStateV1 runner;
+  final String? selectedTaskId;
   final Act0TaskFamilyV1? selectedTaskFamily;
   final VoidCallback onBack;
   final VoidCallback onContinueTheory;
@@ -782,15 +786,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final isRefinedDev2 = _isRefinedDev2;
     final teachingStep = _teachingStep;
     final isTeaching = _isTeaching;
-    final prompt = isTeaching ? teachingStep!.title : runner.caption;
+    final prompt = act0LocalizedRunnerPromptAtomByTaskIdV1(
+      widget.selectedTaskId,
+      fallback: isTeaching ? teachingStep!.title : runner.caption,
+      isRu: act0IsRuLocaleV1(context),
+    );
     final shouldShowRunnerHint = switch (runner.hintPolicy) {
       Act0HintPolicyV1.always => true,
       Act0HintPolicyV1.theoryOnly => isTheory,
       Act0HintPolicyV1.hidden => false,
     };
-    final hint = isTeaching
-        ? teachingStep!.body
-        : (shouldShowRunnerHint ? runner.hint : '');
+    final hint = act0LocalizedRunnerSupportAtomByTaskIdV1(
+      widget.selectedTaskId,
+      fallback: isTeaching
+          ? teachingStep!.body
+          : (shouldShowRunnerHint ? runner.hint : ''),
+      isRu: act0IsRuLocaleV1(context),
+    );
     final learningRailProgress = _learningRailProgressLabel(runner);
     final taskRailLabel = _taskRailLabelForRunner(
       isTeaching: isTeaching,
@@ -1361,7 +1373,7 @@ class _TaskRailV1 extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Act0ShellTokensV1.body.copyWith(
                 fontSize: 12,
@@ -1378,7 +1390,6 @@ class _TaskRailV1 extends StatelessWidget {
 
 class _SharkyCuePillV1 extends StatelessWidget {
   const _SharkyCuePillV1({
-    super.key,
     required this.line,
     required this.tone,
     required this.mood,
@@ -1603,6 +1614,8 @@ class _LearningRailV1 extends StatelessWidget {
         progressTotal > 2 &&
         progressCurrent >= 1 &&
         progressCurrent <= progressTotal;
+    final showTaskLabel = taskLabel != null && taskLabel!.trim().isNotEmpty;
+    final hasSupportLine = hint.isNotEmpty || focusLabels.isNotEmpty;
     final tone = canAdvance
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
@@ -1614,38 +1627,43 @@ class _LearningRailV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
         child: Ink(
           decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
+            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
             border: Border.all(
               color: canAdvance
                   ? Act0ShellTokensV1.primary.withValues(alpha: 0.28)
-                  : Act0ShellTokensV1.border.withValues(alpha: 0.82),
+                  : Act0ShellTokensV1.border.withValues(alpha: 0.60),
             ),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 128, maxHeight: 218),
+            constraints: const BoxConstraints(minHeight: 110, maxHeight: 186),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 150;
+                final compactRail = constraints.maxHeight <= 138;
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: compactRail ? 9 : 12,
-                    vertical: compactRail ? 9 : 12,
+                    horizontal: compactRail ? 10 : 12,
+                    vertical: compactRail ? 10 : 11,
                   ),
                   child: Column(
                     children: [
-                      if ((taskLabel != null && taskLabel!.isNotEmpty) ||
-                          progressLabel != null) ...[
+                      if (showTaskLabel || progressLabel != null) ...[
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (taskLabel != null && taskLabel!.isNotEmpty)
-                              _DockStatusPillV1(
+                            if (showTaskLabel)
+                              Text(
+                                taskLabel!,
                                 key: const Key(
                                   'act0_shell_learning_rail_task_label',
                                 ),
-                                label: taskLabel!,
-                                icon: Icons.flag_rounded,
-                                tone: Act0ShellTokensV1.gold,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: Act0ShellTokensV1.textMuted,
+                                  letterSpacing: 0.2,
+                                  fontSize: compactRail ? 10 : 10.5,
+                                ),
                               ),
                             const Spacer(),
                             if (progressLabel != null)
@@ -1667,7 +1685,7 @@ class _LearningRailV1 extends StatelessWidget {
                                     ),
                           ],
                         ),
-                        SizedBox(height: compactRail ? 6 : 8),
+                        SizedBox(height: compactRail ? 5 : 6),
                       ],
                       Expanded(
                         child: Row(
@@ -1692,40 +1710,28 @@ class _LearningRailV1 extends StatelessWidget {
                                       mood: sharkyMood,
                                       compact: compactRail,
                                     ),
-                                    SizedBox(height: compactRail ? 6 : 8),
+                                    SizedBox(height: compactRail ? 4 : 5),
                                   ],
                                   Text(
                                     prompt,
                                     key: const Key('act0_shell_runner_prompt'),
-                                    maxLines: compactRail ? 2 : 3,
-                                    overflow: TextOverflow.fade,
+                                    maxLines: compactRail ? 3 : 3,
+                                    overflow: TextOverflow.ellipsis,
                                     style: Act0ShellTokensV1.body.copyWith(
                                       color: Act0ShellTokensV1.text,
-                                      fontSize: compactRail ? 15 : 17,
-                                      height: 1.12,
+                                      fontSize: compactRail ? 15 : 16,
+                                      height: 1.08,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  if (hint.isNotEmpty) ...[
-                                    SizedBox(height: compactRail ? 6 : 8),
+                                  if (hasSupportLine) ...[
+                                    SizedBox(height: compactRail ? 4 : 6),
                                     Flexible(
                                       child: _LearningRailKeyIdeaV1(
                                         hint: hint,
+                                        focusLabels: focusLabels,
                                         compact: compactRail,
                                       ),
-                                    ),
-                                  ] else if (focusLabels.isNotEmpty) ...[
-                                    SizedBox(height: compactRail ? 5 : 7),
-                                    Wrap(
-                                      key: const Key(
-                                        'act0_shell_learning_rail_focus_labels',
-                                      ),
-                                      spacing: 5,
-                                      runSpacing: 3,
-                                      children: [
-                                        for (final label in focusLabels.take(3))
-                                          _RailFocusChipV1(label: label),
-                                      ],
                                     ),
                                   ],
                                 ],
@@ -1801,32 +1807,19 @@ class _LearningRailSharkyHeaderV1 extends StatelessWidget {
         Act0SharkyMascotV1(
           mood: mood,
           tone: Act0ShellTokensV1.primary,
-          size: compact ? 30 : 38,
+          size: compact ? 24 : 28,
         ),
-        SizedBox(width: compact ? 6 : 8),
+        SizedBox(width: compact ? 5 : 6),
         Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: compact ? 8 : 10,
-              vertical: compact ? 6 : 8,
-            ),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
-              ),
-            ),
-            child: Text(
-              line,
-              maxLines: compact ? 1 : 2,
-              overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.text,
-                fontSize: compact ? 10.5 : 11.5,
-                height: 1.15,
-                fontWeight: FontWeight.w800,
-              ),
+          child: Text(
+            line,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontSize: compact ? 10.5 : 11,
+              height: 1.0,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -1836,37 +1829,34 @@ class _LearningRailSharkyHeaderV1 extends StatelessWidget {
 }
 
 class _LearningRailKeyIdeaV1 extends StatelessWidget {
-  const _LearningRailKeyIdeaV1({required this.hint, this.compact = false});
+  const _LearningRailKeyIdeaV1({
+    required this.hint,
+    required this.focusLabels,
+    this.compact = false,
+  });
 
   final String hint;
+  final List<String> focusLabels;
   final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 10 : 11,
-        vertical: compact ? 7 : 8,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.035),
-        borderRadius: BorderRadius.circular(compact ? 12 : 14),
-        border: Border.all(
-          color: Act0ShellTokensV1.border.withValues(alpha: 0.66),
-        ),
-      ),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        hint,
-        maxLines: compact ? 2 : 3,
-        overflow: TextOverflow.fade,
-        style: Act0ShellTokensV1.body.copyWith(
-          color: Act0ShellTokensV1.text,
-          fontSize: compact ? 12 : 12.8,
-          height: 1.15,
-          fontWeight: FontWeight.w800,
-        ),
+    final hasHint = hint.trim().isNotEmpty;
+    final fallback = focusLabels.take(2).join(' · ');
+    final line = hasHint ? hint : fallback;
+    if (line.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      line,
+      key: const Key('act0_shell_learning_rail_support_line'),
+      maxLines: compact ? 3 : 4,
+      overflow: TextOverflow.ellipsis,
+      style: Act0ShellTokensV1.body.copyWith(
+        color: Act0ShellTokensV1.textMuted,
+        fontSize: compact ? 12 : 12.6,
+        height: 1.15,
+        fontWeight: FontWeight.w700,
       ),
     );
   }
@@ -2179,7 +2169,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
                 Text(
                   taskLabel,
                   key: const Key('act0_shell_seat_tap_task_label'),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
@@ -2191,8 +2181,8 @@ class _SeatTapPromptV1 extends StatelessWidget {
                   Text(
                     question,
                     key: const Key('act0_shell_action_question'),
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
                       fontSize: 15,
@@ -2202,8 +2192,8 @@ class _SeatTapPromptV1 extends StatelessWidget {
                 Text(
                   'Read the table, then tap one seat.',
                   key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: Act0ShellTokensV1.muted.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
@@ -2257,8 +2247,8 @@ class _CoachCardV1 extends StatelessWidget {
             prompt,
             key: const Key('act0_shell_runner_prompt'),
             textAlign: refined ? TextAlign.left : TextAlign.center,
-            maxLines: refined ? 3 : 2,
-            overflow: TextOverflow.fade,
+            maxLines: refined ? 4 : 3,
+            overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontSize: compact ? 13 : 15,
@@ -2270,8 +2260,8 @@ class _CoachCardV1 extends StatelessWidget {
             Text(
               hint,
               textAlign: refined ? TextAlign.left : TextAlign.center,
-              maxLines: refined ? 1 : 2,
-              overflow: TextOverflow.fade,
+              maxLines: refined ? 3 : 2,
+              overflow: TextOverflow.ellipsis,
               style: Act0ShellTokensV1.muted.copyWith(
                 fontSize: compact ? 11 : 13,
               ),
@@ -2387,130 +2377,94 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final actionLabel = isWrong ? betterLabel : preferredLabel;
     return Container(
       key: const Key('act0_shell_feedback_card'),
-      padding: EdgeInsets.all(refined ? 10 : Act0ShellTokensV1.gapMd),
+      padding: EdgeInsets.all(refined ? 10 : 12),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: tone.withValues(alpha: 0.60),
+        borderColor: tone.withValues(alpha: 0.46),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: tone.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: tone.withValues(alpha: 0.18)),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Act0SharkyMascotV1(
-                  mood: sharkyMood,
-                  tone: sharkyTone,
-                  size: refined ? 60 : 66,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (reactionLine.isNotEmpty) ...[
-                        Container(
-                          key: const Key('act0_shell_sharky_outcome_reaction'),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.06),
-                            ),
-                          ),
-                          child: Text(
-                            reactionLine,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.muted.copyWith(
-                              color: Act0ShellTokensV1.text,
-                              fontSize: 11,
-                              height: 1.15,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Act0SharkyMascotV1(
+                mood: sharkyMood,
+                tone: sharkyTone,
+                size: refined ? 48 : 52,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (reactionLine.isNotEmpty)
+                      Text(
+                        reactionLine,
+                        key: const Key('act0_shell_sharky_outcome_reaction'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.muted.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                          fontSize: 11.5,
+                          height: 1.12,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(height: 8),
-                      ],
-                      if (showVerdictTitle)
-                        Row(
-                          children: [
-                            Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: tone.withValues(alpha: 0.16),
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.radiusMd,
-                                ),
-                              ),
-                              child: Icon(
-                                icon,
-                                key: iconKey,
+                      ),
+                    if (reactionLine.isNotEmpty && showVerdictTitle)
+                      const SizedBox(height: 5),
+                    if (showVerdictTitle)
+                      Row(
+                        children: [
+                          Icon(icon, key: iconKey, color: tone, size: 18),
+                          const SizedBox(width: 7),
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: Act0ShellTokensV1.cardTitle.copyWith(
                                 color: tone,
-                                size: 17,
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                title,
-                                style: Act0ShellTokensV1.cardTitle.copyWith(
-                                  color: tone,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 9),
           if ((isWrong || isSuboptimal) && selectedLabel.isNotEmpty) ...[
             Text(
               'You picked $selectedLabel',
               key: const Key('act0_shell_feedback_selected_label'),
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.text,
+                color: Act0ShellTokensV1.textMuted,
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            const SizedBox(height: 4),
           ],
           if (actionLabel.isNotEmpty) ...[
             Text(
               '$actionPrefix: $actionLabel',
               key: const Key('act0_shell_feedback_preferred_label'),
               maxLines: 2,
-              overflow: TextOverflow.fade,
+              overflow: TextOverflow.ellipsis,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.text,
-                fontSize: 18,
+                fontSize: refined ? 17 : 18,
                 height: 1.08,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            const SizedBox(height: 6),
           ],
           Text(
             reason,
             key: const Key('act0_shell_feedback_reason'),
-            maxLines: refined ? 3 : 4,
-            overflow: TextOverflow.fade,
+            maxLines: refined ? 4 : 5,
+            overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.textMuted,
               fontSize: 13,
@@ -2518,49 +2472,26 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             ),
           ),
           if (showPotSweep && potLabel.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: 10),
             _PotSweepMomentV1(potLabel: potLabel),
           ],
           if (contextLabels.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Container(
-              key: const Key('act0_shell_feedback_replay_panel'),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
-                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-                border: Border.all(color: tone.withValues(alpha: 0.14)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isWrong ? 'Table replay' : 'Table read',
-                    key: const Key('act0_shell_feedback_replay_title'),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      letterSpacing: 0.4,
-                    ),
+            const SizedBox(height: 8),
+            Wrap(
+              key: const Key('act0_shell_feedback_context_labels'),
+              spacing: 6,
+              runSpacing: 5,
+              children: [
+                for (final label in contextLabels)
+                  _DockStatusPillV1(
+                    label: label,
+                    icon: Icons.check_rounded,
+                    tone: tone,
                   ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    key: const Key('act0_shell_feedback_context_labels'),
-                    spacing: 6,
-                    runSpacing: 5,
-                    children: [
-                      for (final label in contextLabels)
-                        _DockStatusPillV1(
-                          label: label,
-                          icon: Icons.check_rounded,
-                          tone: tone,
-                        ),
-                    ],
-                  ),
-                ],
-              ),
+              ],
             ),
           ],
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          const SizedBox(height: 10),
           Row(
             children: [
               if (onBack != null) ...[
@@ -2640,7 +2571,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: <Color>[
-                celebrateTone.withValues(alpha: 0.14),
+                celebrateTone.withValues(alpha: 0.18),
+                Act0ShellTokensV1.info.withValues(alpha: 0.05),
                 Act0ShellTokensV1.surface,
                 Act0ShellTokensV1.surface2,
               ],
@@ -2666,6 +2598,24 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusPill,
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[
+                      celebrateTone.withValues(alpha: 0.18),
+                      celebrateTone.withValues(alpha: 0.82),
+                      Act0ShellTokensV1.info.withValues(alpha: 0.34),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
               Row(
                 children: [
                   Container(
@@ -2710,7 +2660,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 summary.lessonTitle,
                 style: Act0ShellTokensV1.screenTitle.copyWith(fontSize: 28),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              const SizedBox(height: 6),
               Text(
                 summary.gateMessage,
                 key: const Key('act0_shell_block_summary_gate_message'),
@@ -2718,63 +2668,68 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   color: Act0ShellTokensV1.textMuted,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                summary.suggestedNextAction,
-                key: const Key('act0_shell_block_summary_suggested_next'),
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.text,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              if (summary.sharkyLine.isNotEmpty) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _SharkyCuePillV1(
-                  key: const Key('act0_shell_block_summary_sharky_line'),
-                  line: summary.sharkyLine,
-                  tone: celebrateTone,
-                  mood: Act0SharkyMoodV1.celebrate,
-                ),
-              ],
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
               Container(
                 key: const Key('act0_shell_block_summary_habit_reward'),
                 padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                 decoration: BoxDecoration(
-                  color: celebrateTone.withValues(alpha: 0.11),
+                  color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusCard,
                   ),
                   border: Border.all(
-                    color: celebrateTone.withValues(alpha: 0.24),
+                    color: celebrateTone.withValues(alpha: 0.20),
                   ),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      summary.deepLeakCount > 0
-                          ? Icons.construction_rounded
-                          : summary.quickFixCount > 0
-                          ? Icons.replay_circle_filled_rounded
-                          : Icons.local_fire_department_rounded,
-                      color: celebrateTone,
-                      size: 24,
+                    Container(
+                      width: 34,
+                      height: 34,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: celebrateTone.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(
+                          Act0ShellTokensV1.radiusLg,
+                        ),
+                      ),
+                      child: Icon(
+                        summary.deepLeakCount > 0
+                            ? Icons.build_circle_rounded
+                            : summary.quickFixCount > 0
+                            ? Icons.trending_up_rounded
+                            : summary.leveledUp
+                            ? Icons.auto_awesome_rounded
+                            : Icons.check_circle_rounded,
+                        size: 18,
+                        color: celebrateTone,
+                      ),
                     ),
-                    const SizedBox(width: Act0ShellTokensV1.gapMd),
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             summary.habitRewardLabel,
-                            style: Act0ShellTokensV1.cardTitle.copyWith(
-                              color: Act0ShellTokensV1.text,
+                            key: const Key(
+                              'act0_shell_block_summary_habit_reward_label',
+                            ),
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: celebrateTone,
+                              letterSpacing: 0.35,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 4),
                           Text(
                             summary.habitRewardDetail,
-                            style: Act0ShellTokensV1.muted,
+                            key: const Key(
+                              'act0_shell_block_summary_habit_reward_detail',
+                            ),
+                            style: Act0ShellTokensV1.body.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                            ),
                           ),
                         ],
                       ),
@@ -2782,42 +2737,63 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapLg),
-              _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Row(
-                children: [
-                  Expanded(
-                    child: _BlockSummaryStatTileV1(
-                      key: const Key('act0_shell_block_summary_accuracy'),
-                      label: 'Accuracy',
-                      value: '${summary.accuracyPercent}%',
-                      tone: summary.qualifiesForNextLesson
-                          ? Act0ShellTokensV1.primary
-                          : Act0ShellTokensV1.gold,
-                    ),
+              Container(
+                key: const Key('act0_shell_block_summary_next_label'),
+                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                decoration: BoxDecoration(
+                  color: celebrateTone.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusCard,
                   ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Expanded(
-                    child: _BlockSummaryStatTileV1(
-                      key: const Key('act0_shell_block_summary_xp'),
-                      label: 'Correct',
-                      value: '${summary.correctCount}/${summary.taskCount}',
-                      tone: Act0ShellTokensV1.info,
-                    ),
+                  border: Border.all(
+                    color: celebrateTone.withValues(alpha: 0.24),
                   ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Expanded(
-                    child: _BlockSummaryStatTileV1(
-                      key: const Key('act0_shell_block_summary_errors'),
-                      label: 'Errors',
-                      value: '${summary.errorCount}',
-                      tone: summary.errorCount == 0
-                          ? Act0ShellTokensV1.primary
-                          : Act0ShellTokensV1.gold,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      summary.suggestedNextAction,
+                      key: const Key('act0_shell_block_summary_suggested_next'),
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                ],
+                    if (summary.sharkyLine.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Act0SharkyPresenceBubbleV1(
+                        line: summary.sharkyLine,
+                        mood: summary.qualifiesForNextLesson
+                            ? Act0SharkyMoodV1.celebrate
+                            : Act0SharkyMoodV1.repair,
+                        tone: summary.qualifiesForNextLesson
+                            ? Act0ShellTokensV1.primary
+                            : Act0ShellTokensV1.gold,
+                        textKey: const Key(
+                          'act0_shell_block_summary_sharky_line',
+                        ),
+                        mascotSize: 50,
+                        bubblePadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              _BlockXpProgressCardV1(summary: summary),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              Text(
+                '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} errors',
+                key: const Key('act0_shell_block_summary_accuracy'),
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               if (summary.quickFixCount > 0 || summary.deepLeakCount > 0) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -2834,63 +2810,35 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: _BlockSummaryStatTileV1(
+                        child: Text(
+                          'Quick fixes: ${summary.quickFixCount}',
                           key: const Key(
                             'act0_shell_block_summary_quick_fixes',
                           ),
-                          label: 'Quick fixes',
-                          value: '${summary.quickFixCount}',
-                          tone: Act0ShellTokensV1.primary,
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                       const SizedBox(width: Act0ShellTokensV1.gapSm),
                       Expanded(
-                        child: _BlockSummaryStatTileV1(
+                        child: Text(
+                          'Deep leaks: ${summary.deepLeakCount}',
                           key: const Key('act0_shell_block_summary_deep_leaks'),
-                          label: 'Deep leaks',
-                          value: '${summary.deepLeakCount}',
-                          tone: summary.deepLeakCount == 0
-                              ? Act0ShellTokensV1.textMuted
-                              : Act0ShellTokensV1.danger,
+                          textAlign: TextAlign.right,
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: summary.deepLeakCount == 0
+                                ? Act0ShellTokensV1.textMuted
+                                : Act0ShellTokensV1.danger,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Container(
-                key: const Key('act0_shell_block_summary_next_label'),
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                decoration: BoxDecoration(
-                  color:
-                      (summary.qualifiesForNextLesson
-                              ? Act0ShellTokensV1.primary
-                              : Act0ShellTokensV1.gold)
-                          .withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusCard,
-                  ),
-                  border: Border.all(
-                    color:
-                        (summary.qualifiesForNextLesson
-                                ? Act0ShellTokensV1.primary
-                                : Act0ShellTokensV1.gold)
-                            .withValues(alpha: 0.24),
-                  ),
-                ),
-                child: Text(
-                  summary.hasNextLesson
-                      ? summary.qualifiesForNextLesson
-                            ? 'Next block ready: ${summary.nextLessonTitle}'
-                            : 'Next block locked until you clean this one up.'
-                      : 'You\'ve completed the final lesson.',
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
               const SizedBox(height: Act0ShellTokensV1.gapLg),
               FilledButton(
                 key: const Key('act0_shell_block_summary_continue_cta'),
@@ -3008,48 +2956,6 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _BlockSummaryStatTileV1 extends StatelessWidget {
-  const _BlockSummaryStatTileV1({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.tone,
-  });
-
-  final String label;
-  final String value;
-  final Color tone;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(color: tone.withValues(alpha: 0.28)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: tone,
-              letterSpacing: 0.4,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            value,
-            style: Act0ShellTokensV1.sectionTitle.copyWith(color: tone),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -3228,7 +3134,7 @@ class _PotSweepMomentV1 extends StatelessWidget {
             Text(
               potLabel,
               key: const Key('act0_shell_pot_sweep_label'),
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.gold,
@@ -3523,7 +3429,7 @@ class _TableRepairCalloutV1 extends StatelessWidget {
                 key: const Key('act0_shell_table_repair_callout_text'),
                 textAlign: TextAlign.center,
                 maxLines: 2,
-                overflow: TextOverflow.fade,
+                overflow: TextOverflow.ellipsis,
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.text,
                   fontSize: 9.4,
@@ -3659,8 +3565,8 @@ class _CenterPotV1 extends StatelessWidget {
         key: const Key('act0_shell_center_info_card'),
         width: Act0ShellTokensV1.centerInfoWidth,
         padding: EdgeInsets.symmetric(
-          horizontal: refined ? 8 : 4,
-          vertical: refined ? 6 : 3,
+          horizontal: refined ? 7 : 4,
+          vertical: refined ? 5 : 3,
         ),
         decoration: refined
             ? BoxDecoration(
@@ -3668,20 +3574,20 @@ class _CenterPotV1 extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Colors.white.withValues(alpha: 0.05),
-                    Colors.black.withValues(alpha: 0.18),
-                    Colors.black.withValues(alpha: 0.24),
+                    Colors.white.withValues(alpha: 0.04),
+                    Colors.black.withValues(alpha: 0.15),
+                    Colors.black.withValues(alpha: 0.20),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(
                   Act0ShellTokensV1.radiusCard,
                 ),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.18),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 14,
+                    offset: const Offset(0, 7),
                   ),
                 ],
               )
@@ -3805,7 +3711,7 @@ class _CenterInfoPillV1 extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             label,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.label.copyWith(
               color: filled ? tone : Act0ShellTokensV1.text,
@@ -4221,7 +4127,7 @@ class _SeatNodeV1 extends StatelessWidget {
                                       ? '${seat.seatLabel} Hero'
                                       : '${seat.seatLabel}  ${seat.displayName}'
                                 : seat.seatLabel,
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: refined && !hero
@@ -4839,8 +4745,8 @@ class _ActionTrailStepV1State extends State<_ActionTrailStepV1> {
               SizedBox(width: refined ? 5 : 6),
               Text(
                 widget.item.label,
-                maxLines: 1,
-                overflow: TextOverflow.visible,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: Act0ShellTokensV1.muted.copyWith(
                   fontSize: refined ? 8.8 : 9.5,
                   fontWeight: isLatest ? FontWeight.w900 : FontWeight.w800,
@@ -5447,24 +5353,24 @@ BoxDecoration _playingCardDecorationV1({
     borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXs),
     border: Border.all(
       color: highlighted
-          ? Act0ShellTokensV1.gold.withValues(alpha: 0.88)
-          : Colors.black.withValues(alpha: 0.11),
+          ? Act0ShellTokensV1.gold.withValues(alpha: 0.72)
+          : Colors.black.withValues(alpha: 0.08),
       width: highlighted ? 1.6 : 1,
     ),
     boxShadow: <BoxShadow>[
       const BoxShadow(
         color: Act0ShellTokensV1.shadowSoft,
-        blurRadius: 8,
+        blurRadius: 7,
         offset: Offset(0, 2),
       ),
       if (highlighted)
         BoxShadow(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.24),
-          blurRadius: 12,
-          spreadRadius: 1,
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.18),
+          blurRadius: 10,
+          spreadRadius: 0.6,
         ),
       BoxShadow(
-        color: Colors.white.withValues(alpha: 0.24),
+        color: Colors.white.withValues(alpha: 0.18),
         blurRadius: 0,
         spreadRadius: -0.2,
       ),
@@ -5683,7 +5589,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                       taskLabel,
                       key: const Key('act0_shell_action_task_label'),
                       textAlign: TextAlign.center,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.info,
@@ -5695,8 +5601,8 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                       question,
                       key: const Key('act0_shell_action_question'),
                       textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.body.copyWith(
                         color: Act0ShellTokensV1.text,
                         fontSize: 15,

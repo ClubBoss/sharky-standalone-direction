@@ -110,39 +110,37 @@ void main() {
         isEmpty,
       );
       expect(
-        normalizeSharedLearnerHostScreenFamilyV1(
-          'SessionDrillPlayerV1Screen',
-        ),
+        normalizeSharedLearnerHostScreenFamilyV1('SessionDrillPlayerV1Screen'),
         'CanonicalTerminalSessionDrillSurfacedRunnerV1',
       );
     },
   );
 
-  test('world1 campaign spine and seat quiz slices share one active grammar', () {
-    final campaignSpineAdoption = resolveSharedLearnerHostGrammarAdoptionV1(
-      hostFamily: 'world1FoundationsRunner',
-      screenFamily: 'World1FoundationsMicroTaskRunnerScreen',
-      itemType: 'campaign_pack',
-      modeFamily: 'campaignSpine',
-    );
-    final seatQuizAdoption = resolveSharedLearnerHostGrammarAdoptionV1(
-      hostFamily: 'world1FoundationsRunner',
-      screenFamily: 'World1FoundationsMicroTaskRunnerScreen',
-      itemType: 'campaign_pack',
-      modeFamily: 'seatQuiz',
-    );
+  test(
+    'world1 campaign spine and seat quiz slices share one active grammar',
+    () {
+      final campaignSpineAdoption = resolveSharedLearnerHostGrammarAdoptionV1(
+        hostFamily: 'world1FoundationsRunner',
+        screenFamily: 'World1FoundationsMicroTaskRunnerScreen',
+        itemType: 'campaign_pack',
+        modeFamily: 'campaignSpine',
+      );
+      final seatQuizAdoption = resolveSharedLearnerHostGrammarAdoptionV1(
+        hostFamily: 'world1FoundationsRunner',
+        screenFamily: 'World1FoundationsMicroTaskRunnerScreen',
+        itemType: 'campaign_pack',
+        modeFamily: 'seatQuiz',
+      );
 
-    expect(campaignSpineAdoption, isNotNull);
-    expect(seatQuizAdoption, isNotNull);
-    expect(
-      campaignSpineAdoption!.profile.id,
-      kWorld1SharedLearnerHostGrammarIdV1,
-    );
-    expect(
-      seatQuizAdoption!.profile.id,
-      kWorld1SharedLearnerHostGrammarIdV1,
-    );
-  });
+      expect(campaignSpineAdoption, isNotNull);
+      expect(seatQuizAdoption, isNotNull);
+      expect(
+        campaignSpineAdoption!.profile.id,
+        kWorld1SharedLearnerHostGrammarIdV1,
+      );
+      expect(seatQuizAdoption!.profile.id, kWorld1SharedLearnerHostGrammarIdV1);
+    },
+  );
 
   test(
     'legacy drill runner factual slice is not yet claimed as canonical host grammar',

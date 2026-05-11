@@ -611,9 +611,7 @@ class _DrillRunnerScreenState extends State<DrillRunnerScreen> {
                 padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
                 backgroundColor: SharkyTokensV1.brandPrimary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    SharkyTokensV1.radiusMd,
-                  ),
+                  borderRadius: BorderRadius.circular(SharkyTokensV1.radiusMd),
                 ),
               ),
               onPressed: () {
@@ -1158,9 +1156,7 @@ class _DrillRunnerScreenState extends State<DrillRunnerScreen> {
         children: [
           Text(
             'Preparing drill flow',
-            style: AppTypography.h3.copyWith(
-              color: SharkyTokensV1.textPrimary,
-            ),
+            style: AppTypography.h3.copyWith(color: SharkyTokensV1.textPrimary),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
@@ -1205,9 +1201,7 @@ class _DrillRunnerScreenState extends State<DrillRunnerScreen> {
         children: [
           Text(
             'Step $stepIndex of $stepTotal',
-            style: AppTypography.h3.copyWith(
-              color: SharkyTokensV1.textPrimary,
-            ),
+            style: AppTypography.h3.copyWith(color: SharkyTokensV1.textPrimary),
           ),
           const SizedBox(height: AppSpacing.xs),
           ClipRRect(

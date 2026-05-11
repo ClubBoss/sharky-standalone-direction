@@ -31,14 +31,17 @@ void main(List<String> args) {
   }
 
   final snapshot = Map<String, Object?>.from(
-    jsonDecode(File('assets/audit_hub_v1/operational_snapshot.json').readAsStringSync())
+    jsonDecode(
+          File(
+            'assets/audit_hub_v1/operational_snapshot.json',
+          ).readAsStringSync(),
+        )
         as Map,
   );
-  final worlds =
-      (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
-          .whereType<Map>()
-          .map(Map<String, Object?>.from)
-          .toList(growable: false);
+  final worlds = (snapshot['worlds'] as List<Object?>? ?? const <Object?>[])
+      .whereType<Map>()
+      .map(Map<String, Object?>.from)
+      .toList(growable: false);
   final worldId = 'W$world';
   final worldSnapshot = worlds.firstWhere(
     (item) => item['world_id'] == worldId,

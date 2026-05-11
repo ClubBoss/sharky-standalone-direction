@@ -427,9 +427,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text(
-          'Next lesson ready: World 10 Cash Track · Session 10 of 10.',
-        ),
+        find.text('Next lesson ready: World 10 Cash Track · Session 10 of 10.'),
         findsOneWidget,
       );
       await tester.tap(

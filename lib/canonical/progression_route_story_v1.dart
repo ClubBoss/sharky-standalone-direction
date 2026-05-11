@@ -61,7 +61,8 @@ String progressionRouteHeadlineForTargetV1(ProgressionRouteTargetV1 target) {
   return 'Next up: ${target.routeLabel}';
 }
 
-bool isEarlyArcSessionWorldV1(int? world) => world != null && world >= 2 && world <= 3;
+bool isEarlyArcSessionWorldV1(int? world) =>
+    world != null && world >= 2 && world <= 3;
 
 String? progressionRouteStageShiftValueForTargetV1(
   ProgressionRouteTargetV1 target,
@@ -147,14 +148,17 @@ String? progressionReviewCadenceValueForTargetV1({
     return null;
   }
   final normalizedReason = rhythmReason.trim().toLowerCase();
-  final isCheckpointBeat = reviewRequired && normalizedReason == 'review required';
+  final isCheckpointBeat =
+      reviewRequired && normalizedReason == 'review required';
   return switch (target.world) {
-    2 => isCheckpointBeat
-        ? 'Checkpoint review: lock the World 1 foundations before the next World 2 session.'
-        : 'Quick review: refresh the World 1 foundations before the next World 2 session.',
-    3 => isCheckpointBeat
-        ? 'Checkpoint review: lock the World 2 table-reading bridge before the next World 3 session.'
-        : 'Quick review: refresh the World 2 table-reading bridge before the next World 3 session.',
+    2 =>
+      isCheckpointBeat
+          ? 'Checkpoint review: lock the World 1 foundations before the next World 2 session.'
+          : 'Quick review: refresh the World 1 foundations before the next World 2 session.',
+    3 =>
+      isCheckpointBeat
+          ? 'Checkpoint review: lock the World 2 table-reading bridge before the next World 3 session.'
+          : 'Quick review: refresh the World 2 table-reading bridge before the next World 3 session.',
     _ => null,
   };
 }

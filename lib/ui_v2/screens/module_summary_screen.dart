@@ -183,7 +183,7 @@ class ModuleSummaryScreen extends StatelessWidget {
                       style: _primaryCtaStyle(),
                       onPressed: () {
                         UiSoundV1.fire(UiSoundEventV1.tap);
-                        navigateToTheorySession(
+                        navigateToLearningModuleV1(
                           context,
                           id,
                           moduleTitle: title,

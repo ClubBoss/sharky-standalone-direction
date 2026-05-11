@@ -92,7 +92,26 @@ String recommendedModuleIdForFocus({
   }
 }
 
-String recommendedModuleTitleForId(String moduleId) {
+String recommendedCompatibilityModuleTitleForId(String moduleId) {
+  switch (moduleId) {
+    case 'intro_actions':
+      return 'Actions and Flow';
+    case 'intro_game_types':
+      return 'Game Types';
+    case 'intro_hand_rankings':
+      return 'Hand Rankings';
+    case 'intro_how_to_win':
+      return 'How to Win';
+    case 'core_rules_and_setup':
+      return 'Rules and Setup';
+    case 'tier_1_checkpoint':
+      return 'Tier 1 Checkpoint';
+    default:
+      return 'Welcome to Poker';
+  }
+}
+
+String recommendedLearningModuleTitleForId(String moduleId) {
   final entryMetadata = resolveWorld1FoundationsEntryMetadataV1(moduleId);
   if (entryMetadata != null) {
     return entryMetadata.titleText;
@@ -104,18 +123,8 @@ String recommendedModuleTitleForId(String moduleId) {
       return 'Campaign Follow-up B1';
     case 'world1_spine_followup_v1_b2':
       return 'Campaign Follow-up B2';
-    case 'intro_actions':
-      return 'Actions and Flow';
     case 'core_positions_and_initiative':
       return 'Positions and Initiative';
-    case 'intro_game_types':
-      return 'Game Types';
-    case 'intro_hand_rankings':
-      return 'Hand Rankings';
-    case 'intro_how_to_win':
-      return 'How to Win';
-    case 'core_rules_and_setup':
-      return 'Rules and Setup';
     case 'core_starting_hands':
       return 'Starting Hands';
     case 'core_pot_odds_equity':
@@ -132,11 +141,13 @@ String recommendedModuleTitleForId(String moduleId) {
       return 'River Fundamentals';
     case 'core_bankroll_management':
       return 'Bankroll Management';
-    case 'tier_1_checkpoint':
-      return 'Tier 1 Checkpoint';
     default:
-      return 'Welcome to Poker';
+      return recommendedCompatibilityModuleTitleForId(moduleId);
   }
+}
+
+String recommendedModuleTitleForId(String moduleId) {
+  return recommendedLearningModuleTitleForId(moduleId);
 }
 
 String formatYmdHour(DateTime dtUtc) {

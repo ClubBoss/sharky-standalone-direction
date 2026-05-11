@@ -45,6 +45,8 @@ ProgressionHandoffContextV1? buildProgressionHandoffContextForPackV1(
     continuationHeadline: shouldCarryEarlyArcCue
         ? progressionRouteStageShiftHeadlineForTargetV1(target)
         : null,
-    continuationReasonLine: shouldCarryEarlyArcCue ? routeStory.reasonLine : null,
+    continuationReasonLine: shouldCarryEarlyArcCue
+        ? routeStory.reasonLine
+        : null,
   );
 }

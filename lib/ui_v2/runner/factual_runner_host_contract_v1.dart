@@ -73,10 +73,8 @@ class FactualRunnerHostContractV1 {
   final RunnerHostSourceMetaContractV1 sourceMeta;
   final FactualRunnerHostSupplementContractV1 supplements;
 
-  bool get showsSourceMeta =>
-      sections.showSourceMeta && sourceMeta.hasEntries;
-  RunnerHostPromptRevealPresentationResolvedV1 get promptReveal =>
-      presentation;
+  bool get showsSourceMeta => sections.showSourceMeta && sourceMeta.hasEntries;
+  RunnerHostPromptRevealPresentationResolvedV1 get promptReveal => presentation;
   RunnerRevealPayloadResolvedV1 get reveal => presentation.reveal;
   String get shortPrompt => presentation.shortPrompt;
   String get detailsPrompt => presentation.detailsPrompt;

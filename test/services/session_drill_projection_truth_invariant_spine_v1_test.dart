@@ -14,7 +14,8 @@ void main() {
       foldedSeatsV1: const <String>['co'],
       emptySeatsV1: const <String>['sb'],
       actingSeatV1: 'btn',
-      seatOrderPolicyV1: SessionDrillSeatOrderPolicyV1.heroVillainThenStateBuckets,
+      seatOrderPolicyV1:
+          SessionDrillSeatOrderPolicyV1.heroVillainThenStateBuckets,
     );
   }
 
@@ -41,7 +42,8 @@ void main() {
       foldedSeatsV1: const <String>['co'],
       emptySeatsV1: const <String>['sb'],
       actingSeatV1: 'btn',
-      seatOrderPolicyV1: SessionDrillSeatOrderPolicyV1.heroVillainThenStateBuckets,
+      seatOrderPolicyV1:
+          SessionDrillSeatOrderPolicyV1.heroVillainThenStateBuckets,
     );
 
     expect(

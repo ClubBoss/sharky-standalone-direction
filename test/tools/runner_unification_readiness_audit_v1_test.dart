@@ -50,10 +50,7 @@ void main() {
       expect(world2Session.launchPathKind, RunnerLaunchPathKindV1.adapted);
       expect(world2Session.launchHealth, RunnerLaunchHealthStatusV1.ok);
       expect(world2Session.launchHealthReason, 'supplements_live');
-      expect(
-        world2Session.canonicalityReasons,
-        contains('canonical_spine_ok'),
-      );
+      expect(world2Session.canonicalityReasons, contains('canonical_spine_ok'));
       expect(
         world2Session.canonicalityReasons,
         isNot(contains('host_family_split')),
@@ -102,20 +99,14 @@ void main() {
       expect(world4Session.canonicality, RunnerCanonicalityStatusV1.canonical);
       expect(world4Session.launchPathKind, RunnerLaunchPathKindV1.adapted);
       expect(world4Session.launchHealth, RunnerLaunchHealthStatusV1.ok);
-      expect(
-        world4Session.launchHealthReason,
-        'canonical_single_step_session',
-      );
+      expect(world4Session.launchHealthReason, 'canonical_single_step_session');
 
       final world9Session = byId['w9.s10']!;
       expect(world9Session.runnerFamily, 'sessionDrillPlayer');
       expect(world9Session.canonicality, RunnerCanonicalityStatusV1.canonical);
       expect(world9Session.launchPathKind, RunnerLaunchPathKindV1.adapted);
       expect(world9Session.launchHealth, RunnerLaunchHealthStatusV1.ok);
-      expect(
-        world9Session.launchHealthReason,
-        'canonical_single_step_session',
-      );
+      expect(world9Session.launchHealthReason, 'canonical_single_step_session');
 
       final cashTrack = byId['cash.s01']!;
       expect(cashTrack.runnerFamily, 'sessionDrillPlayer');
@@ -171,7 +162,10 @@ void main() {
 
       final world10Campaign = byId['world10_spine_campaign_v1']!;
       expect(world10Campaign.runnerFamily, 'sessionDrillPlayer');
-      expect(world10Campaign.canonicality, RunnerCanonicalityStatusV1.canonical);
+      expect(
+        world10Campaign.canonicality,
+        RunnerCanonicalityStatusV1.canonical,
+      );
       expect(world10Campaign.launchPathKind, RunnerLaunchPathKindV1.adapted);
       expect(
         world10Campaign.launchHealthReason,
@@ -313,10 +307,7 @@ void main() {
         byId['world2_spine_campaign_v1']!.launchPathKind,
         RunnerLaunchPathKindV1.adapted,
       );
-      expect(
-        byId['cash.s01']!.launchPathKind,
-        RunnerLaunchPathKindV1.adapted,
-      );
+      expect(byId['cash.s01']!.launchPathKind, RunnerLaunchPathKindV1.adapted);
     },
   );
 

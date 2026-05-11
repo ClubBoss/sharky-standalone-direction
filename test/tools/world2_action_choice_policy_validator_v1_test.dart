@@ -294,8 +294,10 @@ void main() {
     );
   });
 
-  test('validator supports manageable-price continue hand_chain step reuse', () {
-    final spec = DrillSpecV1.fromJsonString('''
+  test(
+    'validator supports manageable-price continue hand_chain step reuse',
+    () {
+      final spec = DrillSpecV1.fromJsonString('''
       {
         "id":"chain_texture_outs_continue_v1",
         "kind":"hand_chain_v1",
@@ -333,14 +335,15 @@ void main() {
       }
       ''');
 
-    expect(
-      validateWorld2ActionChoicePolicyChainStepV1(
-        step: spec.chainStepsV1!.last,
-        source: 'memory://chain_texture_outs_continue_v1#step2',
-      ),
-      isEmpty,
-    );
-  });
+      expect(
+        validateWorld2ActionChoicePolicyChainStepV1(
+          step: spec.chainStepsV1!.last,
+          source: 'memory://chain_texture_outs_continue_v1#step2',
+        ),
+        isEmpty,
+      );
+    },
+  );
 
   test('validator supports poor-price release hand_chain step reuse', () {
     final spec = DrillSpecV1.fromJsonString('''

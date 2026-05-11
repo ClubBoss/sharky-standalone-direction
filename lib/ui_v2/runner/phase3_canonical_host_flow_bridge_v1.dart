@@ -43,8 +43,9 @@ class Phase3CanonicalHostFlowStateV1 {
       returnCtaLogged: returnCtaLogged ?? this.returnCtaLogged,
       returnCtaActionExecuted:
           returnCtaActionExecuted ?? this.returnCtaActionExecuted,
-      ctaShownAtUtc:
-          clearCtaShownAtUtc ? null : (ctaShownAtUtc ?? this.ctaShownAtUtc),
+      ctaShownAtUtc: clearCtaShownAtUtc
+          ? null
+          : (ctaShownAtUtc ?? this.ctaShownAtUtc),
       returnCtaLatencyLogged:
           returnCtaLatencyLogged ?? this.returnCtaLatencyLogged,
     );
@@ -131,10 +132,7 @@ class Phase3CanonicalHostFlowBridgeV1 {
       );
     }
     return Phase3CanonicalFinishPlanV1(
-      nextState: state.copyWith(
-        navigationHappened: true,
-        flowLogged: true,
-      ),
+      nextState: state.copyWith(navigationHappened: true, flowLogged: true),
       shouldLogFlowEnd: !state.flowLogged,
       flowResult: flowResult,
       shouldNavigateHome: true,
@@ -156,10 +154,10 @@ class Phase3CanonicalHostFlowBridgeV1 {
     }
 
     final shownAt = state.ctaShownAtUtc;
-    final shouldLogLatency =
-        shownAt != null && !state.returnCtaLatencyLogged;
-    final latencyMs =
-        shouldLogLatency ? nowUtc.difference(shownAt).inMilliseconds : null;
+    final shouldLogLatency = shownAt != null && !state.returnCtaLatencyLogged;
+    final latencyMs = shouldLogLatency
+        ? nowUtc.difference(shownAt).inMilliseconds
+        : null;
 
     return Phase3CanonicalContinueTrainingPlanV1(
       nextState: state.copyWith(

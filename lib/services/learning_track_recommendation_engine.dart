@@ -68,38 +68,41 @@ class LearningTrackRecommendationEngine {
   Future<World10TrackRecommendationV1> getWorld10TrackRecommendationV1() async {
     final mastery = await masteryService.computeTrackMastery();
 
-    final candidates = <({
-      String choiceId,
-      String label,
-      String sourceTrackId,
-      String fallbackReason,
-      int tieBreak,
-    })>[
-      (
-        choiceId: 'tournament',
-        label: 'Tournament',
-        sourceTrackId: 'mtt_pro',
-        fallbackReason:
-            'Tournament pressure and survival tradeoffs look like the weakest current fit signal.',
-        tieBreak: 0,
-      ),
-      (
-        choiceId: 'cash',
-        label: 'Cash',
-        sourceTrackId: 'live_exploit',
-        fallbackReason:
-            'Cash depth and steadier value tradeoffs look like the weakest current fit signal.',
-        tieBreak: 1,
-      ),
-      (
-        choiceId: 'mixed',
-        label: 'Mixed',
-        sourceTrackId: 'leak_fixer',
-        fallbackReason:
-            'A balanced mixed path is the safest fit when your broad leak-fixing signal is lowest.',
-        tieBreak: 2,
-      ),
-    ];
+    final candidates =
+        <
+          ({
+            String choiceId,
+            String label,
+            String sourceTrackId,
+            String fallbackReason,
+            int tieBreak,
+          })
+        >[
+          (
+            choiceId: 'tournament',
+            label: 'Tournament',
+            sourceTrackId: 'mtt_pro',
+            fallbackReason:
+                'Tournament pressure and survival tradeoffs look like the weakest current fit signal.',
+            tieBreak: 0,
+          ),
+          (
+            choiceId: 'cash',
+            label: 'Cash',
+            sourceTrackId: 'live_exploit',
+            fallbackReason:
+                'Cash depth and steadier value tradeoffs look like the weakest current fit signal.',
+            tieBreak: 1,
+          ),
+          (
+            choiceId: 'mixed',
+            label: 'Mixed',
+            sourceTrackId: 'leak_fixer',
+            fallbackReason:
+                'A balanced mixed path is the safest fit when your broad leak-fixing signal is lowest.',
+            tieBreak: 2,
+          ),
+        ];
 
     candidates.sort((a, b) {
       final aValue = mastery[a.sourceTrackId] ?? 0.0;

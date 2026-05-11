@@ -1,1 +1,0 @@
-{"id":"intro_success_signals_drill_001","kind":"drill","hero_action":"Identify the completion cue","villain_action":"session_complete","explanation":"Completion shows the result screen and emits session_end.","tags":["intro_success_signals"]}

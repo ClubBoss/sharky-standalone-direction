@@ -23,7 +23,9 @@ void main() {
     expect(report.summary.reasonCounts.keys, isEmpty);
     expect(report.issues.where((issue) => issue.world == 1), isEmpty);
     expect(
-      report.issues.where((issue) => issue.itemId == 'world10_spine_campaign_v1'),
+      report.issues.where(
+        (issue) => issue.itemId == 'world10_spine_campaign_v1',
+      ),
       isEmpty,
     );
   });

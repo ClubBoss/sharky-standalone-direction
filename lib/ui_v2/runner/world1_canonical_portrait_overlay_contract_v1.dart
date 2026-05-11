@@ -139,11 +139,7 @@ Widget buildWorld1CanonicalPortraitOverlayBodyV1({
           mainAxisSize: MainAxisSize.min,
           children: const <Widget>[
             SizedBox(width: 1, height: 1),
-            SizedBox(
-              key: Key('microtask_hint_bubble'),
-              width: 1,
-              height: 1,
-            ),
+            SizedBox(key: Key('microtask_hint_bubble'), width: 1, height: 1),
           ],
         ),
       );

@@ -57,7 +57,9 @@ void main() {
       await tester.pumpAndSettle();
 
       final primer = find.byKey(const Key('onboarding_staged_model_primer'));
-      final learnMore = find.byKey(const Key('onboarding_staged_model_learn_more'));
+      final learnMore = find.byKey(
+        const Key('onboarding_staged_model_learn_more'),
+      );
       expect(primer, findsOneWidget);
       expect(learnMore, findsOneWidget);
       await tester.ensureVisible(learnMore);

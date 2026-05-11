@@ -231,7 +231,7 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
   LearningContinuationV1? _sharedContinuationV1() {
     return LearningContinuationFactoryV1.fromPersonalizedRecommendation(
       recommendation: _activePersonalizationResultV1,
-      resolveModuleTitle: recommendedModuleTitleForId,
+      resolveModuleTitle: recommendedLearningModuleTitleForId,
       recentSignals: _recentSignalsV1,
     );
   }
@@ -370,10 +370,10 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
       continuation: continuation,
     );
     if (resolvedEntryId == actionOrderBtnLastModuleId) {
-      await navigateToTheorySession(
+      await navigateToLearningModuleV1(
         context,
         resolvedEntryId,
-        moduleTitle: recommendedModuleTitleForId(resolvedEntryId),
+        moduleTitle: recommendedLearningModuleTitleForId(resolvedEntryId),
         handoffContextV1: handoffContextV1,
       );
       return;
@@ -391,7 +391,7 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
     await pushReplacementWorld1FoundationsRunnerV1<void, void>(
       context,
       moduleId: resolvedEntryId,
-      moduleTitle: recommendedModuleTitleForId(resolvedEntryId),
+      moduleTitle: recommendedLearningModuleTitleForId(resolvedEntryId),
       mode: landingDecision.runnerMode ?? kWorld1RunnerModeCampaignSpine,
       startHandIndex: landingDecision.startHandIndex,
       handoffContextV1: handoffContextV1,
@@ -799,7 +799,11 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
     final moduleTitle = (moduleData['title'] ?? moduleData['name'] ?? moduleId)
         .toString();
     if (moduleId.isEmpty) return;
-    await navigateToTheorySession(context, moduleId, moduleTitle: moduleTitle);
+    await navigateToLearningModuleV1(
+      context,
+      moduleId,
+      moduleTitle: moduleTitle,
+    );
   }
 
   _SessionResultReturnShellTargetV1 _resolveReturnShellTargetV1() {

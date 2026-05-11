@@ -199,15 +199,11 @@ WorldScreenshotEvidenceReportV1 _buildScreenshotEvidenceReportForWorldV1({
     try {
       final decoded = jsonDecode(manifestFile.readAsStringSync());
       if (decoded is! Map<String, Object?>) {
-        blockingGaps.add(
-          '`$manifestPath` must decode to a JSON object.',
-        );
+        blockingGaps.add('`$manifestPath` must decode to a JSON object.');
       } else {
         final rawEntries = decoded['entries'];
         if (rawEntries is! List<Object?>) {
-          blockingGaps.add(
-            '`$manifestPath` must contain an `entries` list.',
-          );
+          blockingGaps.add('`$manifestPath` must contain an `entries` list.');
         } else {
           for (final rawEntry in rawEntries.whereType<Map>()) {
             final entry = Map<String, Object?>.from(rawEntry);
@@ -243,9 +239,7 @@ WorldScreenshotEvidenceReportV1 _buildScreenshotEvidenceReportForWorldV1({
         }
       }
     } catch (error) {
-      blockingGaps.add(
-        'Failed to parse `$manifestPath`: $error',
-      );
+      blockingGaps.add('Failed to parse `$manifestPath`: $error');
     }
   }
 

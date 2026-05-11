@@ -8,7 +8,10 @@ void main() {
     expect(report.worldId, 'W0');
     expect(report.status, WorldScreenshotEvidenceStatusV1.executable);
     expect(report.screenshotEvidenceCount, 3);
-    expect(report.coveredSessionIds, containsAll(<String>['w0.s01', 'w0.s05', 'w0.s10']));
+    expect(
+      report.coveredSessionIds,
+      containsAll(<String>['w0.s01', 'w0.s05', 'w0.s10']),
+    );
     expect(report.blockingGaps, isEmpty);
     expect(
       report.measurableProofPath,

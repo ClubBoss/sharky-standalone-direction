@@ -3,7 +3,7 @@
 Status: ACTIVE
 Last updated: 2026-05-06
 
-Readiness scoring SSOT:
+Launch-readiness reference:
 
 - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
 
@@ -20,30 +20,37 @@ Keeps as reference:
 - `docs/plan/MASTER_PLAN_v2.2.md` for deeper system, economy, and historical
   invariant context that is not part of the current simple-product route
 
-Content planning references:
+Content planning references (AUTHORITY STACK FOR CURRICULUM):
 
-- `docs/plan/CURRICULUM_OPERATING_SYSTEM_SSOT_v1.md`
-- `docs/plan/CURRICULUM_ROUTE_POLICY_DECISIONS_v1.md`
-- `docs/learning/CONCEPTS_SOURCE_FULL_IMPORT_v1.md`
-- `docs/learning/UNIFIED_LEARNING_ARCHITECTURE_v4.4.md`
-- `docs/learning/UNIFIED_LEARNING_ARCHITECTURE_v4.3.1.md`
-- `docs/content/CONTENT_SYSTEM_v2.1.md`
-- `docs/content/ACTIVE_CONTENT_SSOT_INDEX_v1.md`
-- `docs/content/CONTENT_EXCELLENCE_CANON_v1.md`
-- `docs/content/CONTENT_PLAN_PER_WORLD_v2.1.md`
-- `docs/plan/CONCEPT_TO_WORLD_COVERAGE_MATRIX_v1.md`
-- `docs/plan/CURRICULUM_DENSITY_WORLD_VOLUME_CANON_v1.md`
-- `docs/plan/WORLD_PROGRESSION_PACING_SSOT_v1.md`
-- `docs/plan/CONTENT_AUTHORING_CONTRACT_CONTENT_GRAMMAR_v1.md`
-- `docs/plan/VOLUME_I_WORLD_QUALITY_SCORECARD_v1.md`
-- `docs/plan/VOLUME_I_WORLD_CALIBRATION_2026_05_06_v1.md`
-- `docs/plan/PRODUCT_SCORECARD_RECALIBRATION_2026_05_06_v1.md`
-- `docs/plan/VOLUME_I_CLUSTER_EXECUTION_POLICY_v1.md`
-- `docs/plan/SEAM_TRANSITION_AUDIT_TEMPLATE_v1.md`
-- `docs/plan/LEAK_MAP_AND_RECOMMENDATION_SYSTEM_SSOT_v1.md`
-- `docs/plan/ADAPTIVE_SPACED_REPETITION_SSOT_v1.md`
-- `docs/plan/HAND_HISTORY_REVIEW_LAYER_SSOT_v1.md`
-- `docs/plan/SKILL_GRAPH_PROGRESS_MAP_SSOT_v1.md`
+**Top-level curriculum vision and route authority:**
+- `docs/plan/LONG_HORIZON_MASTERY_MAP_v1.md` — long-term player growth strata and 0-3/3-6/6-12 month horizons
+- `docs/plan/VOLUME_STRUCTURE_AND_SPECIALIZATION_POLICY_v1.md` — Volume I/II/III structure and Cash/MTT fork rules
+- `docs/reference/LONG_TERM_WORLD_VISION_REFERENCE_v1.md` — W1–W36 full vision with competitive coverage audit
+
+**Curriculum design and coverage:**
+- `docs/plan/CONCEPT_TO_WORLD_COVERAGE_MATRIX_v1.md` — 47 concept families with world homes and reinforcement paths
+- `docs/plan/CURRICULUM_OPERATING_SYSTEM_SSOT_v1.md` — operating principles for minimal-change curriculum updates
+- `docs/plan/CURRICULUM_ROUTE_POLICY_DECISIONS_v1.md` — frozen route policy decisions (keep_late, move_earlier, split_seed_mastery)
+- `docs/learning/UNIFIED_LEARNING_ARCHITECTURE_v4.4.md` — cognitive shift + emotional win + transfer task contract per world
+- `docs/learning/CONCEPTS_SOURCE_FULL_IMPORT_v1.md` — source concept universe
+
+**Content and world production:**
+- `docs/content/CONTENT_SYSTEM_v2.1.md` — content encoding and parsing
+- `docs/content/ACTIVE_CONTENT_SSOT_INDEX_v1.md` — active content inventory truth
+- `docs/content/CONTENT_EXCELLENCE_CANON_v1.md` — release-quality standards per world
+- `docs/content/CONTENT_PLAN_PER_WORLD_v2.1.md` — MVP-first production plan (Worlds 0–4, skeleton for 5–9)
+- `docs/plan/CURRICULUM_DENSITY_WORLD_VOLUME_CANON_v1.md` — minimum content density rules
+- `docs/plan/WORLD_PROGRESSION_PACING_SSOT_v1.md` — pacing truth and difficulty scaling
+- `docs/plan/CONTENT_AUTHORING_CONTRACT_CONTENT_GRAMMAR_v1.md` — grammar and style for content authoring
+- `docs/plan/VOLUME_I_WORLD_QUALITY_SCORECARD_v1.md` — quality metrics for Volume I (W1–W12)
+- `docs/plan/VOLUME_I_WORLD_CALIBRATION_2026_05_06_v1.md` — recent calibration snapshot
+- `docs/plan/SEAM_TRANSITION_AUDIT_TEMPLATE_v1.md` — template and protocol for world-to-world transitions
+
+**Cross-world learning systems (owned, not sprinkled across world docs):**
+- `docs/plan/LEAK_MAP_AND_RECOMMENDATION_SYSTEM_SSOT_v1.md` — weakness map and repair routing
+- `docs/plan/ADAPTIVE_SPACED_REPETITION_SSOT_v1.md` — concept resurfacing and interleaving
+- `docs/plan/HAND_HISTORY_REVIEW_LAYER_SSOT_v1.md` — hand review and study-from-hands layer
+- `docs/plan/SKILL_GRAPH_PROGRESS_MAP_SSOT_v1.md` — family-level progress state (not only world ladder)
 
 Historical planning references retained for traceability only:
 
@@ -64,6 +71,9 @@ Retention and value references:
 Localization references:
 
 - `docs/l10n/RU_POKER_TERMS_CANON_v1.md` — Russian terminology and tone canon
+- `docs/plan/RUSSIAN_LOCALIZATION_ROLLOUT_v1.md` — active Russian rollout order
+- `docs/plan/ACT0_CONTENT_LOCALIZATION_SCALING_v1.md` — scalable content-copy seam policy
+- `docs/plan/ACT0_EXECUTION_SNAPSHOT_2026_05_11_v1.md` — current Act0 continuity snapshot
 
 ## Purpose
 
@@ -90,11 +100,13 @@ If a task asks "what should we build next?", this file wins.
 - Historical deep-system reference: `docs/plan/MASTER_PLAN_v2.2.md`
 
 Use this file when choosing what to improve next in the learner-facing product.
-Use the readiness SSOT when reporting true release readiness.
+Use the readiness reference only when discussing launch/readiness framing.
 
 If a task asks "what should we build next in the app?", start here.
 
-If a task asks "are we truly release-ready?", use the readiness SSOT.
+If a task asks "are we truly release-ready for launch/store prep?", use the readiness reference.
+
+Do not use the readiness reference as the default bottleneck selector for day-to-day product work.
 
 ## Product 100
 
@@ -786,6 +798,10 @@ Reason:
 ## Screen Jobs
 
 Each tab should have one clear job.
+
+Detailed active surface mechanism and role contract:
+
+- `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`
 
 | Surface | Job | Should not become |
 | --- | --- | --- |

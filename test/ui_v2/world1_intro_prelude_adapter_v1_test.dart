@@ -11,17 +11,11 @@ void main() {
     expect(adapter.sections.showCompletionInHeader, isFalse);
     expect(adapter.sections.showEmbeddedFeedbackBelowTable, isFalse);
     expect(
-      adapter.shouldShowIntroSurface(
-        preludeVisible: true,
-        introVisible: false,
-      ),
+      adapter.shouldShowIntroSurface(preludeVisible: true, introVisible: false),
       isTrue,
     );
     expect(
-      adapter.shouldShowIntroSurface(
-        preludeVisible: false,
-        introVisible: true,
-      ),
+      adapter.shouldShowIntroSurface(preludeVisible: false, introVisible: true),
       isTrue,
     );
     expect(

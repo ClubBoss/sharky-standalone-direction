@@ -14,7 +14,10 @@ void main() {
             'Fix: Facing a bet here, raise instead of taking the passive line.',
       );
 
-      expect(explanation.headlineText, 'Better line: RAISE TO. CALL is weaker here.');
+      expect(
+        explanation.headlineText,
+        'Better line: RAISE TO. CALL is weaker here.',
+      );
       expect(
         explanation.teachingText,
         'Notice: Facing the bet, aggression keeps initiative.',
@@ -34,7 +37,10 @@ void main() {
         guidanceText: 'Fix: Big Blind comes right after Small Blind.',
       );
 
-      expect(explanation.headlineText, 'Better answer: BB. SB misses this scene.');
+      expect(
+        explanation.headlineText,
+        'Better answer: BB. SB misses this scene.',
+      );
       expect(
         explanation.guidanceText,
         'Next time: Big Blind comes right after Small Blind.',
@@ -63,7 +69,10 @@ void main() {
       );
 
       expect(parsed, isNotNull);
-      expect(parsed!.headlineText, 'Better line: RAISE TO. CALL is weaker here.');
+      expect(
+        parsed!.headlineText,
+        'Better line: RAISE TO. CALL is weaker here.',
+      );
       expect(
         parsed.teachingText,
         'Notice: Facing the bet, aggression keeps initiative.',

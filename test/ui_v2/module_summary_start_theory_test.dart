@@ -15,9 +15,9 @@ void main() {
       const MaterialApp(
         home: ModuleSummaryScreen(
           moduleData: <String, dynamic>{
-            'id': 'intro_welcome',
-            'title': 'Welcome to Poker',
-            'description': 'Why poker is a game of skill.',
+            'id': 'non_table_first_module',
+            'title': 'Fallback Theory',
+            'description': 'Generic theory module used by the summary route.',
             'tier': 'Free',
           },
         ),
@@ -26,7 +26,8 @@ void main() {
 
     await tester.pump();
     await tester.tap(find.text('START THEORY'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
 
     expect(find.byType(TheorySessionScreen), findsOneWidget);
     expect(tester.takeException(), isNull);

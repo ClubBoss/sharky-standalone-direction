@@ -8,10 +8,7 @@ void main() {
       'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
     ).readAsStringSync();
 
-    expect(
-      source,
-      contains("resolvedFailExplanationV1?.guidanceText == null"),
-    );
+    expect(source, contains("resolvedFailExplanationV1?.guidanceText == null"));
     expect(source, contains("(line) => line.trim().startsWith('Next time:')"));
   });
 }

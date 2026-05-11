@@ -45,10 +45,7 @@ class SharedLearnerTeachingPromptRevealSheetV1 extends StatelessWidget {
       grammar: grammar,
       style: style.detailsStyle,
     );
-    final bodyChildren = <Widget>[
-      promptDetails,
-      ...extraChildren,
-    ];
+    final bodyChildren = <Widget>[promptDetails, ...extraChildren];
     final headerChildren = <Widget>[
       if (style.headerTitle != null || style.showCloseButton) ...[
         Row(
@@ -56,10 +53,7 @@ class SharedLearnerTeachingPromptRevealSheetV1 extends StatelessWidget {
             Expanded(
               child: style.headerTitle == null
                   ? const SizedBox.shrink()
-                  : Text(
-                      style.headerTitle!,
-                      style: style.headerTitleStyle,
-                    ),
+                  : Text(style.headerTitle!, style: style.headerTitleStyle),
             ),
             if (style.showCloseButton)
               IconButton(
@@ -77,10 +71,7 @@ class SharedLearnerTeachingPromptRevealSheetV1 extends StatelessWidget {
         ? Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...headerChildren,
-              ...bodyChildren,
-            ],
+            children: [...headerChildren, ...bodyChildren],
           )
         : Builder(
             builder: (context) {
@@ -108,10 +99,7 @@ class SharedLearnerTeachingPromptRevealSheetV1 extends StatelessWidget {
           );
 
     return SafeArea(
-      child: Padding(
-        padding: style.padding,
-        child: sheetContent,
-      ),
+      child: Padding(padding: style.padding, child: sheetContent),
     );
   }
 }

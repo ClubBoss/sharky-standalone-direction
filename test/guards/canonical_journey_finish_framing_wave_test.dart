@@ -25,10 +25,7 @@ void main() {
     );
 
     final requiredReview = mapReviewQueueStripLabelsV1(reviewRequired: true);
-    expect(
-      requiredReview.value,
-      'Review missed spots before the next lesson.',
-    );
+    expect(requiredReview.value, 'Review missed spots before the next lesson.');
     expect(
       learnerJourneyReviewQueueHeadlineTextV1(reviewRequired: true),
       'Up next: Review missed spots',

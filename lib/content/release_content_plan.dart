@@ -1,15 +1,23 @@
+/// Compatibility-only release metadata for the older intro/core lesson chain.
+///
+/// This file is still referenced by runtime validators and historical guards,
+/// but it is not the active product content truth. Active content planning now
+/// lives in MASTER_PLAN_v3.0, the W1-W12 doc chain, and the authored Act0 /
+/// worlds content shelves.
 class ReleaseContentModule {
   const ReleaseContentModule({
     required this.id,
     required this.difficultyTier,
     required this.errorClass,
     required this.reasoning,
+    this.requiresActiveManifest = false,
   });
 
   final String id;
   final int difficultyTier;
   final String errorClass;
   final String reasoning;
+  final bool requiresActiveManifest;
 }
 
 class ReleaseContentPlanV1 {
@@ -88,7 +96,15 @@ class ReleaseContentPlanV1 {
     for (final module in modules) module.id: module,
   };
 
+  static final List<ReleaseContentModule> manifestEnforcedModules = modules
+      .where((module) => module.requiresActiveManifest)
+      .toList(growable: false);
+
   static bool isRelease(String moduleId) => byId.containsKey(moduleId);
 
   static ReleaseContentModule? metadataFor(String moduleId) => byId[moduleId];
+
+  static bool requiresActiveManifestFor(String moduleId) {
+    return byId[moduleId]?.requiresActiveManifest ?? false;
+  }
 }

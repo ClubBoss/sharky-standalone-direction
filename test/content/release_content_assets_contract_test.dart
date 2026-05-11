@@ -17,7 +17,7 @@ void main() {
     final manifestErrors = <String, String>{};
     final jsonlEmpty = <String, List<String>>{};
 
-    for (final module in ReleaseContentPlanV1.modules) {
+    for (final module in ReleaseContentPlanV1.manifestEnforcedModules) {
       final moduleDir = Directory('$assetDir/${module.id}/v1');
       if (!moduleDir.existsSync()) {
         missingDirs.add(module.id);

@@ -50,7 +50,9 @@ void main() {
     expect(
       issues,
       contains(
-        contains('expected.actionId villain contradicts pressure_owner_v1 hero'),
+        contains(
+          'expected.actionId villain contradicts pressure_owner_v1 hero',
+        ),
       ),
     );
   });

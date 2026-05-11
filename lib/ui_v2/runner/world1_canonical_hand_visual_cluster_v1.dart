@@ -47,30 +47,24 @@ List<Widget> buildWorld1CanonicalHandVisualClusterV1({
   return <Widget>[
     if (contract.showBoard)
       Positioned.fill(
-        child: Align(
-          alignment: contract.boardAlignment,
-          child: boardChild,
-        ),
+        child: Align(alignment: contract.boardAlignment, child: boardChild),
       ),
     if (contract.showPot)
       Positioned.fill(
-        child: Align(
-          alignment: contract.potAlignment,
-          child: potChild,
-        ),
+        child: Align(alignment: contract.potAlignment, child: potChild),
       ),
     Positioned.fill(
       child: Align(
         alignment: contract.heroAlignment,
-        child: contract.showHeroCards ? heroCardsChild : const SizedBox.shrink(),
+        child: contract.showHeroCards
+            ? heroCardsChild
+            : const SizedBox.shrink(),
       ),
     ),
   ];
 }
 
-Widget buildWorld1CanonicalHeroCardsBodyV1({
-  required Widget cardsRow,
-}) {
+Widget buildWorld1CanonicalHeroCardsBodyV1({required Widget cardsRow}) {
   return KeyedSubtree(
     key: const Key('microtask_demo_hero_cards_box_v1'),
     child: Container(
@@ -78,9 +72,7 @@ Widget buildWorld1CanonicalHeroCardsBodyV1({
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.18),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: SharkyTokensV1.slate500.withOpacity(0.32),
-        ),
+        border: Border.all(color: SharkyTokensV1.slate500.withOpacity(0.32)),
       ),
       child: cardsRow,
     ),

@@ -7,7 +7,8 @@ void main() {
     'world/node placement validator blocks early range-thinking placement but allows World 6 range content',
     () {
       final earlyErrors = validator.validateWorldNodePlacementTextV1(
-        filePath: 'content/worlds/world4/v1/sessions/w4.s03/drills/d.bad_range.json',
+        filePath:
+            'content/worlds/world4/v1/sessions/w4.s03/drills/d.bad_range.json',
         content:
             '{"id":"bad_range","intent_v1":"think_in_ranges","prompt":"Range-first proxy: choose action."}',
       );
@@ -20,7 +21,8 @@ void main() {
       );
 
       final laterErrors = validator.validateWorldNodePlacementTextV1(
-        filePath: 'content/worlds/world6/v1/sessions/w6.s03/drills/d.choose_raise_range.json',
+        filePath:
+            'content/worlds/world6/v1/sessions/w6.s03/drills/d.choose_raise_range.json',
         content:
             '{"id":"choose_raise_range","intent_v1":"think_in_ranges","prompt":"Range-first proxy: choose the best action."}',
       );

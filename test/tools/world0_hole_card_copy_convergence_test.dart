@@ -13,16 +13,19 @@ void main() {
     expect(content.contains('right hole card'), isTrue);
   });
 
-  test('validator no longer reports World 0 hole-card plural failures', () async {
-    final result = await Process.run('dart', [
-      'run',
-      'tools/validate_world_content_v1.dart',
-    ]);
-    final combined = '${result.stdout}\n${result.stderr}';
-    expect(
-      combined.contains('world0_drills_index_hole_cards_plural_leak_v1'),
-      isFalse,
-      reason: combined,
-    );
-  });
+  test(
+    'validator no longer reports World 0 hole-card plural failures',
+    () async {
+      final result = await Process.run('dart', [
+        'run',
+        'tools/validate_world_content_v1.dart',
+      ]);
+      final combined = '${result.stdout}\n${result.stderr}';
+      expect(
+        combined.contains('world0_drills_index_hole_cards_plural_leak_v1'),
+        isFalse,
+        reason: combined,
+      );
+    },
+  );
 }

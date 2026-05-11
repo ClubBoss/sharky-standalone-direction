@@ -272,10 +272,15 @@ void main() {
       expect(canonicalTruthUsesSessionWorldCohesionSpineV1('w6.s05'), isTrue);
       expect(canonicalTruthUsesSessionWorldCohesionSpineV1('w9.s10'), isTrue);
       expect(
-        canonicalTruthUsesSessionWorldCohesionSpineV1('world4_spine_campaign_v1'),
+        canonicalTruthUsesSessionWorldCohesionSpineV1(
+          'world4_spine_campaign_v1',
+        ),
         isFalse,
       );
-      expect(canonicalTruthUsesSessionWorldCohesionSpineV1('cash.s01'), isFalse);
+      expect(
+        canonicalTruthUsesSessionWorldCohesionSpineV1('cash.s01'),
+        isFalse,
+      );
     },
   );
 }

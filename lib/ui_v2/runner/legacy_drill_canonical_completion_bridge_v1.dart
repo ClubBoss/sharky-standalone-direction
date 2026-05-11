@@ -46,9 +46,7 @@ class LegacyDrillCanonicalCompletionBridgeV1 {
   }
 
   static LegacyDrillCanonicalRevealCompletionPlanV1
-  resolveRevealCompletionPlan({
-    required bool isFinalItem,
-  }) {
+  resolveRevealCompletionPlan({required bool isFinalItem}) {
     return LegacyDrillCanonicalRevealCompletionPlanV1(
       primaryLabel: isFinalItem ? 'FINISH' : 'Got it',
       secondaryLabel: isFinalItem ? null : 'Missed it',

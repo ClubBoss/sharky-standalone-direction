@@ -6,7 +6,8 @@ import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_module_theory_host_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
 
-Route<void> moduleTheoryHostRouteV1({
+/// Active, neutral theory-host route for learner-facing module navigation.
+Route<void> learningModuleRouteV1({
   required String moduleId,
   required String moduleTitle,
   ProgressionHandoffContextV1? handoffContextV1,
@@ -18,7 +19,8 @@ Route<void> moduleTheoryHostRouteV1({
   );
 }
 
-Future<void> navigateToTheorySession(
+/// Active, neutral learner-facing theory/module navigation helper.
+Future<void> navigateToLearningModuleV1(
   BuildContext context,
   String moduleId, {
   String? moduleTitle,
@@ -32,9 +34,39 @@ Future<void> navigateToTheorySession(
   );
 }
 
-Future<void> startDemoSpine(BuildContext context) async {
+Future<void> startLegacyCompatibilityDemoSpineV1(BuildContext context) async {
   if (!kDebugMode || kTableFirstDemoSpine.isEmpty) return;
-  await navigateToTheorySession(context, kTableFirstDemoSpine.first);
+  await navigateToLearningModuleV1(context, kTableFirstDemoSpine.first);
+}
+
+Route<void> moduleTheoryHostRouteV1({
+  required String moduleId,
+  required String moduleTitle,
+  ProgressionHandoffContextV1? handoffContextV1,
+}) {
+  return learningModuleRouteV1(
+    moduleId: moduleId,
+    moduleTitle: moduleTitle,
+    handoffContextV1: handoffContextV1,
+  );
+}
+
+Future<void> navigateToTheorySession(
+  BuildContext context,
+  String moduleId, {
+  String? moduleTitle,
+  ProgressionHandoffContextV1? handoffContextV1,
+}) {
+  return navigateToLearningModuleV1(
+    context,
+    moduleId,
+    moduleTitle: moduleTitle,
+    handoffContextV1: handoffContextV1,
+  );
+}
+
+Future<void> startDemoSpine(BuildContext context) async {
+  await startLegacyCompatibilityDemoSpineV1(context);
 }
 
 Route<T> world1FoundationsRunnerRouteV1<T>({

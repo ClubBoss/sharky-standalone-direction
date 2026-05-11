@@ -25,7 +25,8 @@ void main() {
 
       final progressionLaunchPackId =
           await ProgressService.getNextSpinePackToRunV1();
-      final completedPackIds = await ProgressService.getSpineCompletedPackIdsV1();
+      final completedPackIds =
+          await ProgressService.getSpineCompletedPackIdsV1();
       final canonicalCampaignEntryPackId = resolveWorld1CanonicalEntryPackIdV1(
         completedPackIds: completedPackIds,
         fallbackPackId: progressionLaunchPackId,

@@ -628,15 +628,14 @@ List<String> _validateTwoPairCopyConsistencyV1({
   if (!text.toLowerCase().contains('two pair')) {
     return const <String>[];
   }
-  final heroHasTwoPair = heroMadeHand.category == World2MadeHandCategoryV1.twoPair;
+  final heroHasTwoPair =
+      heroMadeHand.category == World2MadeHandCategoryV1.twoPair;
   final villainHasTwoPair =
       villainMadeHand.category == World2MadeHandCategoryV1.twoPair;
   if (heroHasTwoPair || villainHasTwoPair) {
     return const <String>[];
   }
-  return <String>[
-    '$source: two-pair copy contradicts visible cards',
-  ];
+  return <String>['$source: two-pair copy contradicts visible cards'];
 }
 
 List<String> _validateGenericUnderpairCopyConsistencyV1({
@@ -661,9 +660,7 @@ List<String> _validateGenericUnderpairCopyConsistencyV1({
   if (hasVisibleUnderpair) {
     return const <String>[];
   }
-  return <String>[
-    '$source: generic underpair copy contradicts visible cards',
-  ];
+  return <String>['$source: generic underpair copy contradicts visible cards'];
 }
 
 List<String> _validatePairCopyConsistencyV1({

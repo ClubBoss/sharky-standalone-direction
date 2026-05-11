@@ -120,7 +120,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('session_result_next_module_cta')), findsOneWidget);
+      expect(
+        find.byKey(const Key('session_result_next_module_cta')),
+        findsOneWidget,
+      );
       expect(find.text('OPEN WORLD 2'), findsOneWidget);
       final whyFinder = find.byKey(const Key('session_result_why_line_v1'));
       expect(whyFinder, findsOneWidget);

@@ -1,7 +1,0 @@
-{"id":"c20:quiz:01","type":"mc","prompt":"Why does spacing beat cramming?","options":["Better recall","Less work","No reason"],"answer":0,"explanation":"Spacing reinforces memory as it fades; cramming decays fast."}
-{"id":"c20:quiz:02","type":"tf","prompt":"Early reviews should be close together.","answer":true,"explanation":"1h then 1d/3d/7d keeps recall strong early."}
-{"id":"c20:quiz:03","type":"mc","prompt":"When to reset an item?","options":["After miss","After pass","Never"],"answer":0,"explanation":"Misses drop back to earlier window for faster review."}
-{"id":"c20:quiz:04","type":"tf","prompt":"Micro-quizzes feed the spaced scheduler.","answer":true,"explanation":"Short prompts flag weak spots for resurfacing."}
-{"id":"c20:quiz:05","type":"mc","prompt":"ICM undersized cbet tag means?","options":["Capped range","Max strength","Random"],"answer":0,"explanation":"Small fear bet is capped; schedule raise/float practice."}
-{"id":"c20:quiz:06","type":"mc","prompt":"Optimal early windows include?","options":["1h/1d","30d/60d","None"],"answer":0,"explanation":"Start with 1h then 1d before stretching to longer gaps."}
-{"id":"c20:quiz:07","type":"tf","prompt":"Live sessions need tighter review than online.","answer":true,"explanation":"Lower volume live means closer post-session refreshers."}

@@ -1,1 +1,0 @@
-{"id": "action_order_btn_last_drill_001", "question": "Who acts last postflop?", "rationale": "The button closes each street, so he always decides after the blinds.", "target": "button_order", "goal": "Name the final actor postflop", "reaction_text": "Button closes the action", "answer_choices": ["Button", "Small Blind", "Big Blind"], "correct_answer": "Button"}

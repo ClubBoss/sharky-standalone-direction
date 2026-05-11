@@ -19,6 +19,8 @@ Included:
 
 Excluded on purpose:
 - Build and cache output: `build/`, `.dart_tool/`, `Pods/`, `.symlinks/`
+- Tool-generated sidecars and preview mirrors:
+  `content_adaptive_generated/`, `content_adaptive_preview/`
 - Historical/archive tails: `archive/`, `backup_content/`, `baseline/`, `legacy/`
 - Old release artifacts and report bundles: `release/`, `docs/_archive/`, `docs/reference/history/`, `docs/plan/archive/`
 - Old audit dumps, logs, and generated temp files
@@ -27,3 +29,6 @@ Excluded on purpose:
 Operational note:
 - `Sharky_main` remains the archive/source donor.
 - `Sharky_1.0` is the new standalone working root for active product work.
+- If adaptive preview/generated outputs are needed later, tooling may recreate
+  them from scratch; they are not product truth and should not be treated as
+  source content.

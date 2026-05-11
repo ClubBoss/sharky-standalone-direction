@@ -545,7 +545,7 @@ class RepositoryAuditor {
     buffer.writeln('**Generated**: ${DateTime.now().toIso8601String()}');
 
     await File(
-      '$root/REPOSITORY_HEALTH_SCORE.md',
+      '$root/docs/archive/root_history/REPOSITORY_HEALTH_SCORE.md',
     ).writeAsString(buffer.toString());
   }
 

@@ -31,10 +31,7 @@ void main() {
 
       expect(streetFlow, isNotNull);
       expect(streetFlow!.usesBlockingIntroOverlay, isFalse);
-      expect(
-        streetFlow.embeddedPreludeCardKey,
-        'street_flow_prelude_card_v1',
-      );
+      expect(streetFlow.embeddedPreludeCardKey, 'street_flow_prelude_card_v1');
     },
   );
 }

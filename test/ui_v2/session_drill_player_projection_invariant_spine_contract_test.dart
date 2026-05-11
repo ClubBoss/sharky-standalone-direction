@@ -13,7 +13,10 @@ void main() {
   }) async {
     for (var i = 0; i < maxTicks; i++) {
       await tester.pump(step);
-      if (find.byKey(const Key('session_drill_player_load_error')).evaluate().isNotEmpty ||
+      if (find
+              .byKey(const Key('session_drill_player_load_error'))
+              .evaluate()
+              .isNotEmpty ||
           find.byType(ModernTableScreenV1).evaluate().isNotEmpty) {
         return;
       }
@@ -62,7 +65,10 @@ void main() {
 
       final exception = tester.takeException();
       expect(exception, isA<StateError>());
-      expect(exception.toString(), contains('small blind seat to be non-empty'));
+      expect(
+        exception.toString(),
+        contains('small blind seat to be non-empty'),
+      );
       expect(find.byType(ModernTableScreenV1), findsNothing);
     },
   );

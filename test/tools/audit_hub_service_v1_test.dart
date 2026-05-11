@@ -225,10 +225,10 @@ void main() {
         'Recommended next wave (normalized): `Ops / Release Confidence`',
       ),
     );
-      expect(
-        markdown,
-        contains('Routing truth normalized before recommendation: `yes`'),
-      );
+    expect(
+      markdown,
+      contains('Routing truth normalized before recommendation: `yes`'),
+    );
     expect(
       markdown,
       contains('Recommended next frontier: `Ops / Release Confidence`'),

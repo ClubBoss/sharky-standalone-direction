@@ -2408,7 +2408,10 @@ void main() {
       final labels = mapReviewQueueStripLabelsV1(reviewRequired: false);
 
       expect(labels.title, 'REVIEW');
-      expect(labels.value, 'Quick review: refresh missed spots before the next lesson.');
+      expect(
+        labels.value,
+        'Quick review: refresh missed spots before the next lesson.',
+      );
       expect(labels.cta, 'REVIEW');
     },
   );

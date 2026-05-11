@@ -1,2 +1,0 @@
-{"id":"win_quiz_01","type":"mc","prompt":"You have nothing. Opponent checks. You want to win now. What do you do?","options":["Check","Bet (Bluff)","Fold"],"answer":1,"explanation":"If you check, you might lose at showdown. A bet might make them fold."}
-{"id":"win_quiz_02","type":"mc","prompt":"What is a 'Value Bet'?","options":["Betting with a bad hand","Betting with a strong hand to get paid","Betting randomly"],"answer":1,"explanation":"Value betting extracts money from worse hands."}

@@ -106,7 +106,8 @@ WorldVisualInstrumentationReportV1 buildWorldVisualInstrumentationReportV1({
         final drillIds = sessionEntry['drill_ids'];
         final shared = sessionEntry['shared'];
         final validDrillIds =
-            drillIds is List<Object?> && drillIds.whereType<String>().isNotEmpty;
+            drillIds is List<Object?> &&
+            drillIds.whereType<String>().isNotEmpty;
         final validShared = shared is Map<String, Object?> && shared.isNotEmpty;
         if (validDrillIds && validShared) {
           coveredSessionIds.add(representativeSessionId);
@@ -146,7 +147,8 @@ WorldVisualInstrumentationReportV1 buildWorldVisualInstrumentationReportV1({
       'flutter test test/services/drill_runtime_adapter_v1_asset_bundle_test.dart',
       'flutter test test/ui_v2/session_drill_player_completion_surface_contract_test.dart',
     ];
-    final proofSurfaceTruth = status == WorldVisualInstrumentationStatusV1.executable
+    final proofSurfaceTruth =
+        status == WorldVisualInstrumentationStatusV1.executable
         ? 'Visual instrumentation is wired for representative World10 track surfaces: cash.s01, tournament.s05, and mixed.s10 are projection-backed through the bundled track defaults assets.'
         : 'World10 visual instrumentation remains ${status.wireValue}; blocking gaps: ${blockingGaps.join(' | ')}';
 
@@ -196,7 +198,9 @@ WorldVisualInstrumentationReportV1 buildWorldVisualInstrumentationReportV1({
     try {
       final decoded = jsonDecode(defaultsFile.readAsStringSync());
       if (decoded is! Map<String, Object?>) {
-        blockingGaps.add('`$_world0DefaultsPathV1` must decode to a JSON object.');
+        blockingGaps.add(
+          '`$_world0DefaultsPathV1` must decode to a JSON object.',
+        );
       } else {
         final rawSessions = decoded['sessions'];
         if (rawSessions is! Map<String, Object?>) {
@@ -222,8 +226,7 @@ WorldVisualInstrumentationReportV1 buildWorldVisualInstrumentationReportV1({
       final drillIds = entry['drill_ids'];
       final shared = entry['shared'];
       final validDrillIds =
-          drillIds is List<Object?> &&
-          drillIds.whereType<String>().isNotEmpty;
+          drillIds is List<Object?> && drillIds.whereType<String>().isNotEmpty;
       final validShared = shared is Map<String, Object?> && shared.isNotEmpty;
       if (validDrillIds && validShared) {
         coveredSessionIds.add(sessionId);

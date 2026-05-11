@@ -79,74 +79,83 @@ void main() {
     expect(runner.startHandIndex, 2);
   });
 
-  testWidgets('dev hub state console shows truth-map-backed status and summary', (
-    tester,
-  ) async {
-    final truthWorld1 = canonicalTruthWorldEntriesV1().firstWhere(
-      (entry) => entry.world == 1,
-    );
+  testWidgets(
+    'dev hub state console shows truth-map-backed status and summary',
+    (tester) async {
+      final truthWorld1 = canonicalTruthWorldEntriesV1().firstWhere(
+        (entry) => entry.world == 1,
+      );
 
-    await tester.pumpWidget(const MaterialApp(home: ModuleLauncherScreen()));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(const MaterialApp(home: ModuleLauncherScreen()));
+      await tester.pumpAndSettle();
 
-    final hubTile = find.byKey(const Key('canonical_dev_hub_entry_tile_v1'));
-    await tester.ensureVisible(hubTile);
-    await tester.tap(hubTile, warnIfMissed: false);
-    await tester.pumpAndSettle();
+      final hubTile = find.byKey(const Key('canonical_dev_hub_entry_tile_v1'));
+      await tester.ensureVisible(hubTile);
+      await tester.tap(hubTile, warnIfMissed: false);
+      await tester.pumpAndSettle();
 
-    final world1Summary = find.byKey(
-      const Key('canonical_dev_hub_world_summary_1_v1'),
-      skipOffstage: false,
-    );
-    expect(world1Summary, findsOneWidget);
-    expect(
-      tester.widget<Text>(world1Summary).data,
-      '4 production_live · 3 production_live_modernized',
-    );
-    final world1GapSummary = find.byKey(
-      const Key('canonical_dev_hub_world_gap_summary_1_v1'),
-      skipOffstage: false,
-    );
-    expect(world1GapSummary, findsOneWidget);
-    expect(
-      tester.widget<Text>(world1GapSummary).data,
-      '${truthWorld1.nodes.length} represented_ready',
-    );
+      final world1Summary = find.byKey(
+        const Key('canonical_dev_hub_world_summary_1_v1'),
+        skipOffstage: false,
+      );
+      expect(world1Summary, findsOneWidget);
+      expect(
+        tester.widget<Text>(world1Summary).data,
+        '4 production_live · 3 production_live_modernized',
+      );
+      final world1GapSummary = find.byKey(
+        const Key('canonical_dev_hub_world_gap_summary_1_v1'),
+        skipOffstage: false,
+      );
+      expect(world1GapSummary, findsOneWidget);
+      expect(
+        tester.widget<Text>(world1GapSummary).data,
+        '${truthWorld1.nodes.length} represented_ready',
+      );
 
-    final firstPackId = kWorld1CanonicalModuleOrder.first;
-    expect(
-      find.byKey(Key('canonical_dev_hub_status_${firstPackId}_v1')),
-      findsOneWidget,
-    );
-    expect(find.text('production_live_modernized'), findsWidgets);
-    expect(
-      tester.widget<Text>(
-        find.byKey(Key('canonical_dev_hub_mode_${firstPackId}_v1')),
-      ).data,
-      'seat_quiz',
-    );
-    expect(
-      tester.widget<Text>(
-        find.byKey(Key('canonical_dev_hub_host_${firstPackId}_v1')),
-      ).data,
-      'Campaign Runner',
-    );
-    expect(
-      tester.widget<Text>(
-        find.byKey(Key('canonical_dev_hub_gap_${firstPackId}_v1')),
-      ).data,
-      'represented_ready',
-    );
-    expect(
-      find.descendant(
-        of: find.byKey(
-          Key('canonical_dev_hub_status_${kWorld1CanonicalModuleOrder[1]}_v1'),
+      final firstPackId = kWorld1CanonicalModuleOrder.first;
+      expect(
+        find.byKey(Key('canonical_dev_hub_status_${firstPackId}_v1')),
+        findsOneWidget,
+      );
+      expect(find.text('production_live_modernized'), findsWidgets);
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(Key('canonical_dev_hub_mode_${firstPackId}_v1')),
+            )
+            .data,
+        'seat_quiz',
+      );
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(Key('canonical_dev_hub_host_${firstPackId}_v1')),
+            )
+            .data,
+        'Campaign Runner',
+      );
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(Key('canonical_dev_hub_gap_${firstPackId}_v1')),
+            )
+            .data,
+        'represented_ready',
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(
+            Key(
+              'canonical_dev_hub_status_${kWorld1CanonicalModuleOrder[1]}_v1',
+            ),
+          ),
+          matching: find.text('production_live_modernized'),
         ),
-        matching: find.text('production_live_modernized'),
-      ),
-      findsOneWidget,
-    );
-  });
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('map debug flow exposes direct canonical dev hub entry', (
     tester,
@@ -188,10 +197,7 @@ void main() {
       final world2 = worlds.firstWhere((entry) => entry.world == 2);
       final world3 = worlds.firstWhere((entry) => entry.world == 3);
 
-      expect(
-        world2.nodes.every((node) => node.launchesSessionDrill),
-        isTrue,
-      );
+      expect(world2.nodes.every((node) => node.launchesSessionDrill), isTrue);
       expect(
         world2.nodes.any(
           (node) => node.packId == 'w2.s12' && node.launchesSessionDrill,

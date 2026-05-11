@@ -96,13 +96,10 @@ void main() {
         DrillUserEventV1.actionChoice('raise'),
       );
 
-      expect(
-        spec.feedbackIncorrectByActionV1,
-        const <String, String>{
-          'fold': 'Incorrect. Folding gives up showdown value too cheaply.',
-          'raise': 'Incorrect. Raising turns showdown value into a thin bluff.',
-        },
-      );
+      expect(spec.feedbackIncorrectByActionV1, const <String, String>{
+        'fold': 'Incorrect. Folding gives up showdown value too cheaply.',
+        'raise': 'Incorrect. Raising turns showdown value into a thin bluff.',
+      });
       expect(
         spec.scenarioCoreV1.feedbackIncorrectByActionV1,
         const <String, String>{
@@ -233,27 +230,30 @@ void main() {
     );
   });
 
-  test('action matching is normalized while board matching remains case-sensitive', () {
-    final actionSpec = DrillSpecV1.fromJsonString(
-      '{"id":"choose_fold","kind":"action_choice","prompt":"Choose fold","expected":{"actionId":"fold"},"error_class":"action_selection"}',
-    );
-    final boardSpec = DrillSpecV1.fromJsonString(
-      '{"id":"tap_flop_left","kind":"board_tap","prompt":"Tap left flop","expected":{"boardSlot":"flop_left"},"error_class":"board_slot_confusion"}',
-    );
+  test(
+    'action matching is normalized while board matching remains case-sensitive',
+    () {
+      final actionSpec = DrillSpecV1.fromJsonString(
+        '{"id":"choose_fold","kind":"action_choice","prompt":"Choose fold","expected":{"actionId":"fold"},"error_class":"action_selection"}',
+      );
+      final boardSpec = DrillSpecV1.fromJsonString(
+        '{"id":"tap_flop_left","kind":"board_tap","prompt":"Tap left flop","expected":{"boardSlot":"flop_left"},"error_class":"board_slot_confusion"}',
+      );
 
-    expect(
-      evaluator
-          .evaluate(actionSpec, DrillUserEventV1.actionChoice('FOLD'))
-          .isPass,
-      isTrue,
-    );
-    expect(
-      evaluator
-          .evaluate(boardSpec, DrillUserEventV1.boardTap('FLOP_LEFT'))
-          .isPass,
-      isFalse,
-    );
-  });
+      expect(
+        evaluator
+            .evaluate(actionSpec, DrillUserEventV1.actionChoice('FOLD'))
+            .isPass,
+        isTrue,
+      );
+      expect(
+        evaluator
+            .evaluate(boardSpec, DrillUserEventV1.boardTap('FLOP_LEFT'))
+            .isPass,
+        isFalse,
+      );
+    },
+  );
 
   test(
     'bet_sizing_choice_v1 parsing/evaluation supports expected and soft-pass presets',

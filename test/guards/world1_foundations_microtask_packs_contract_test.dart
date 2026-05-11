@@ -25,7 +25,9 @@ void main() {
 
   test('world1 act0 opening packs keep distinct task-shape progression', () {
     final tableLiteracy = world1MicroTaskPackFor('world1_act0_table_literacy');
-    final actionLiteracy = world1MicroTaskPackFor('world1_act0_action_literacy');
+    final actionLiteracy = world1MicroTaskPackFor(
+      'world1_act0_action_literacy',
+    );
     final streetFlow = world1MicroTaskPackFor('world1_act0_street_flow');
 
     expect(
@@ -62,13 +64,10 @@ void main() {
           'The third pack should feel street-aware, not like another seat-label loop.',
     );
 
-    expect(
-      streetFlow.map((step) => step.street).toSet(),
-      <MicroTaskStreetV1>{
-        MicroTaskStreetV1.flop,
-        MicroTaskStreetV1.turn,
-        MicroTaskStreetV1.river,
-      },
-    );
+    expect(streetFlow.map((step) => step.street).toSet(), <MicroTaskStreetV1>{
+      MicroTaskStreetV1.flop,
+      MicroTaskStreetV1.turn,
+      MicroTaskStreetV1.river,
+    });
   });
 }

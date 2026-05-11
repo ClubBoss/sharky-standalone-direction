@@ -7,8 +7,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
 - Read order:
   - `AGENTS.md`
   - this file
-  - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` for readiness meaning / bottlenecks
   - `docs/plan/MASTER_PLAN_v3.0.md` for active product-working route / block order
+  - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
   - latest Audit Hub surfaces if routing depends on fresh live truth:
     - `assets/audit_hub_v1/latest_run.json`
     - `assets/audit_hub_v1/operational_snapshot.json`
@@ -22,20 +22,20 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - routing from stale review packets without checking live Audit Hub freshness
 
 - Fast next-frontier selection:
-  - if the task is readiness / routing, use the readiness SSOT + `MASTER_PLAN_v3.0.md` first
+  - if the task is active product routing, use `docs/plan/MASTER_PLAN_v3.0.md` first
+  - if the task is launch/readiness framing, use `docs/plan/MASTER_PLAN_v3.0.md` plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
   - if the task is operator routing, check `latest_run.json` summary, then `completion_gap_synthesis`, `autonomous_block_handoff`, and latest dossier / top packet
   - if the task is runtime/debugging, start from the canonical runner boundary and only open legacy paths if a boundary contract proves they still own that seam
 
 ## 1. Source-of-truth hierarchy
 
 - Strict priority order:
-  1. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-     - canonical readiness authority
-     - defines final `100/100`
-     - owns bottleneck meaning and scoring truth
-  2. `docs/plan/MASTER_PLAN_v3.0.md`
+  1. `docs/plan/MASTER_PLAN_v3.0.md`
      - active product-working master plan
      - owns current route order, launch-shape priorities, and bounded-wave sequencing
+  2. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
+     - auxiliary launch-readiness reference
+     - use for release/store-prep framing, not day-to-day bottleneck selection
   3. Historical execution references:
      - `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md`
      - `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md`
@@ -52,9 +52,9 @@ Purpose: primary orientation layer for future agents before repo investigation.
      - canonical negative truth for dashboard ownership
 
 - Routing vs readiness vs reference:
-  - readiness meaning / bottleneck truth -> `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-  - near-term route / execution mode / wave sizing -> `docs/plan/MASTER_PLAN_v3.0.md`
   - active product-working plan -> `docs/plan/MASTER_PLAN_v3.0.md`
+  - near-term route / execution mode / wave sizing -> `docs/plan/MASTER_PLAN_v3.0.md`
+  - launch/readiness framing reference -> `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
   - deeper historical structure / reference context -> `docs/plan/MASTER_PLAN_v2.2.md`
   - archived execution-route context -> `docs/plan/archive/execution_history/`
   - operator live-route interpretation -> `docs/ops/AUTONOMOUS_WAVE_PROTOCOL_SSOT.md` + Audit Hub outputs

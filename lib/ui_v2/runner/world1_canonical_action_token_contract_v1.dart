@@ -94,7 +94,8 @@ resolveWorld1CanonicalActionTokenContractV1(
   final heroLaneTopV1 =
       (input.heroCardsRect?.bottom ?? input.heroCenterPoint.dy) +
       input.demoHeroToTokenGap;
-  final heroLaneBottomV1 = input.overlayLaneBottom - (input.compactPhone ? 10.0 : 12.0);
+  final heroLaneBottomV1 =
+      input.overlayLaneBottom - (input.compactPhone ? 10.0 : 12.0);
   final minDemoTokenCenterYV1 = heroLaneTopV1 + (demoTokenMarkerSizeV1 / 2);
   final maxDemoTokenCenterYV1 = math.max(
     minDemoTokenCenterYV1,
@@ -129,7 +130,10 @@ resolveWorld1CanonicalActionTokenContractV1(
       ? const Offset(1, 0)
       : (betInwardMag <= 0.01
             ? const Offset(1, 0)
-            : Offset(-(betInward.dy / betInwardMag), betInward.dx / betInwardMag));
+            : Offset(
+                -(betInward.dy / betInwardMag),
+                betInward.dx / betInwardMag,
+              ));
   final betCenter = input.demoHandLoopVisualStep
       ? Offset(anchorCenter.dx + tokenGap, anchorCenter.dy)
       : _resolveFeltTokenCenterV1(
@@ -189,7 +193,8 @@ List<Widget> buildWorld1CanonicalActionTokenBodiesV1({
                     chipSize: contract.demoChipSize,
                     compact: true,
                     backgroundOpacity: 0.9,
-                    stackLayers: (contract.markerContract?.compactStack ?? false)
+                    stackLayers:
+                        (contract.markerContract?.compactStack ?? false)
                         ? 1
                         : 2,
                   ),
@@ -275,9 +280,15 @@ Offset _clampMarkerCenterV1({
   required Offset fallbackCenter,
 }) {
   final minX = math.max(canvasSafeRect.left, markerRadius + 1);
-  final maxX = math.min(canvasSafeRect.right, canvasSafeRect.right - markerRadius - 1);
+  final maxX = math.min(
+    canvasSafeRect.right,
+    canvasSafeRect.right - markerRadius - 1,
+  );
   final minY = math.max(canvasSafeRect.top, markerRadius + 1);
-  final maxY = math.min(canvasSafeRect.bottom, canvasSafeRect.bottom - markerRadius - 1);
+  final maxY = math.min(
+    canvasSafeRect.bottom,
+    canvasSafeRect.bottom - markerRadius - 1,
+  );
   final resolvedX = maxX < minX
       ? fallbackCenter.dx
       : center.dx.clamp(minX, maxX).toDouble();

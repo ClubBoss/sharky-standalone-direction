@@ -40,10 +40,7 @@ void main() {
     await tester.pump(settle);
   }
 
-  void _expectLeftToRightOrder(
-    WidgetTester tester,
-    List<Key> keys,
-  ) {
+  void _expectLeftToRightOrder(WidgetTester tester, List<Key> keys) {
     double? previousLeft;
     for (final key in keys) {
       final finder = find.byKey(key);

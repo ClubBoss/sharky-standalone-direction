@@ -32,7 +32,10 @@ void main() {
     }
 
     expect(find.byKey(const Key('today_plan_start_cta')), findsOneWidget);
-    expect(find.byKey(const ValueKey<String>('world1_state_current')), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('world1_state_current')),
+      findsNothing,
+    );
     expect(tester.takeException(), isNull);
   });
 

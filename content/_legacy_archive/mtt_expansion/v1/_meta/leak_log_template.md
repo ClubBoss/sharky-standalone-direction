@@ -1,2 +1,0 @@
-# Leak Log (MTT v1)
-PLACEHOLDER

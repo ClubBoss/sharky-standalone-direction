@@ -156,9 +156,7 @@ String renderOperationalReviewPacketMarkdown(Map<String, Object?> packet) {
     ..writeln(_markdownList(packet['decision_use_now'] as List<Object?>))
     ..writeln()
     ..writeln('## Human Decision Handoff')
-    ..writeln(
-      _markdownList(packet['human_decision_handoff'] as List<Object?>),
-    )
+    ..writeln(_markdownList(packet['human_decision_handoff'] as List<Object?>))
     ..writeln()
     ..writeln('## Manual-Inference-Only')
     ..writeln(_markdownList(packet['manual_inference_only'] as List<Object?>))

@@ -21,7 +21,10 @@ ScenarioV1 _heroCheckScenario() {
       AdvanceStepV1(),
       PlayerActionStepV1(
         playerId: PlayerIdV1('villain'),
-        action: ActionV1(actorId: PlayerIdV1('villain'), kind: ActionKindV1.check),
+        action: ActionV1(
+          actorId: PlayerIdV1('villain'),
+          kind: ActionKindV1.check,
+        ),
       ),
       AdvanceStepV1(),
       PlayerActionStepV1(
@@ -31,7 +34,10 @@ ScenarioV1 _heroCheckScenario() {
       AdvanceStepV1(),
       PlayerActionStepV1(
         playerId: PlayerIdV1('villain'),
-        action: ActionV1(actorId: PlayerIdV1('villain'), kind: ActionKindV1.check),
+        action: ActionV1(
+          actorId: PlayerIdV1('villain'),
+          kind: ActionKindV1.check,
+        ),
       ),
       AdvanceStepV1(),
       FinishStepV1(),
@@ -40,18 +46,21 @@ ScenarioV1 _heroCheckScenario() {
 }
 
 void main() {
-  test('hand-loop execution contract runs engine body and records expectation', () {
-    final run = runWorld1CanonicalEngineV2HandLoopV1(
-      _heroCheckScenario(),
-      expectedFirstHeroActionKind: ActionKindV1.check,
-    );
+  test(
+    'hand-loop execution contract runs engine body and records expectation',
+    () {
+      final run = runWorld1CanonicalEngineV2HandLoopV1(
+        _heroCheckScenario(),
+        expectedFirstHeroActionKind: ActionKindV1.check,
+      );
 
-    expect(run.entries, isNotEmpty);
-    expect(run.heroActionsApplied, greaterThan(0));
-    expect(run.firstHeroActionMatchesExpected, isTrue);
-    expect(run.firstHeroActionExpectedLabel, 'CHECK');
-    expect(run.firstHeroActionActualLabel, 'CHECK');
-  });
+      expect(run.entries, isNotEmpty);
+      expect(run.heroActionsApplied, greaterThan(0));
+      expect(run.firstHeroActionMatchesExpected, isTrue);
+      expect(run.firstHeroActionExpectedLabel, 'CHECK');
+      expect(run.firstHeroActionActualLabel, 'CHECK');
+    },
+  );
 
   test('hand-loop execution contract detects first-action mismatch', () {
     final run = runWorld1CanonicalEngineV2HandLoopV1(

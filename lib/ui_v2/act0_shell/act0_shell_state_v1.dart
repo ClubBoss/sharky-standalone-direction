@@ -1109,6 +1109,7 @@ class Act0PlacementResultV1 {
     required this.recommendedTaskId,
     required this.recommendedTitle,
     required this.recommendedReason,
+    required this.routeTrustLine,
     required this.premiumPitch,
     required this.trialValuePoints,
   });
@@ -1133,6 +1134,7 @@ class Act0PlacementResultV1 {
   final String recommendedTaskId;
   final String recommendedTitle;
   final String recommendedReason;
+  final String routeTrustLine;
   final String premiumPitch;
   final List<String> trialValuePoints;
 }

@@ -7,10 +7,12 @@ import 'package:poker_analyzer/l10n/app_localizations.dart';
 import 'package:poker_analyzer/navigation/deep_link_target_v1.dart';
 import 'package:poker_analyzer/onboarding/onboarding_flow_manager.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
+import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
 import 'package:poker_analyzer/ui_v2/screens/universal_intake_plan_screen.dart';
 import 'package:poker_analyzer/ui_v2/ui_v2_beta_shell.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 export 'package:poker_analyzer/app/runtime_surface.dart' show appRoot;
 
@@ -45,51 +47,13 @@ Route<dynamic>? buildLegacySurfaceRedirectRoute(RouteSettings settings) {
   return null;
 }
 
-class AppRoot extends StatelessWidget {
+class AppRoot extends StatefulWidget {
   const AppRoot({super.key, this.navigatorKey});
 
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // Providing a basic dark theme to ensure text is visible on dark backgrounds
-      // defined in AppColors. Complex theme logic will be restored later.
-      theme: ThemeData.dark(
-        useMaterial3: true,
-      ).copyWith(splashFactory: InkRipple.splashFactory),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      builder: (context, child) {
-        if (child == null) {
-          return const NonBlankFallbackSurfaceV1(
-            title: 'Screen is unavailable',
-            message: 'Please retry or go back.',
-            retryLabel: null,
-          );
-        }
-        return ValueListenableBuilder<int>(
-          valueListenable: _uiRenderRecoveryTick,
-          builder: (context, _, __) {
-            final media = MediaQuery.of(context);
-            final clamped = media.copyWith(
-              textScaleFactor: media.textScaleFactor.clamp(1.0, 1.4),
-            );
-            return _ErrorWidgetBuilderScope(
-              onRetry: () {
-                _uiRenderRecoveryTick.value = _uiRenderRecoveryTick.value + 1;
-              },
-              child: MediaQuery(data: clamped, child: child),
-            );
-          },
-        );
-      },
-      navigatorKey: navigatorKey,
-      onGenerateRoute: buildLegacySurfaceRedirectRoute,
-      home: _EntryGate(navigatorKey: navigatorKey),
-    );
-  }
+  State<AppRoot> createState() => _AppRootState();
 
   // ---------------------------------------------------------------------------
   // 🚨 STUB API SURFACE (CRITICAL FOR COMPILATION)
@@ -102,6 +66,76 @@ class AppRoot extends StatelessWidget {
 
   Widget provideV4HelpInfoIcon(String id) => const SizedBox();
   Widget provideV4ExplainSurface(String id) => const SizedBox();
+}
+
+class _AppRootState extends State<AppRoot> {
+  late final AppLanguageController _languageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _languageController = AppLanguageController()
+      ..addListener(_onLocaleChanged);
+    unawaited(_languageController.initialize());
+  }
+
+  void _onLocaleChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _languageController
+      ..removeListener(_onLocaleChanged)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<AppLanguageController>.value(
+      value: _languageController,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        locale: _languageController.currentLocale,
+        // Providing a basic dark theme to ensure text is visible on dark backgrounds
+        // defined in AppColors. Complex theme logic will be restored later.
+        theme: ThemeData.dark(
+          useMaterial3: true,
+        ).copyWith(splashFactory: InkRipple.splashFactory),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        builder: (context, child) {
+          if (child == null) {
+            return const NonBlankFallbackSurfaceV1(
+              title: 'Screen is unavailable',
+              message: 'Please retry or go back.',
+              retryLabel: null,
+            );
+          }
+          return ValueListenableBuilder<int>(
+            valueListenable: _uiRenderRecoveryTick,
+            builder: (context, _, __) {
+              final media = MediaQuery.of(context);
+              final clamped = media.copyWith(
+                textScaleFactor: media.textScaleFactor.clamp(1.0, 1.4),
+              );
+              return _ErrorWidgetBuilderScope(
+                onRetry: () {
+                  _uiRenderRecoveryTick.value = _uiRenderRecoveryTick.value + 1;
+                },
+                child: MediaQuery(data: clamped, child: child),
+              );
+            },
+          );
+        },
+        navigatorKey: widget.navigatorKey,
+        onGenerateRoute: buildLegacySurfaceRedirectRoute,
+        home: _EntryGate(navigatorKey: widget.navigatorKey),
+      ),
+    );
+  }
 }
 
 class _ErrorWidgetBuilderScope extends StatefulWidget {

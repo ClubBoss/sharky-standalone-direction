@@ -59,7 +59,10 @@ void main() {
         'lib/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart',
       ).readAsStringSync();
 
-      expect(source.contains('_buildSharedEmbeddedScenarioFrameSurfaceV1('), isTrue);
+      expect(
+        source.contains('_buildSharedEmbeddedScenarioFrameSurfaceV1('),
+        isTrue,
+      );
       expect(
         RegExp(
           r'case SessionDrillCanonicalRenderSurfaceFamilyV1\.world10TrackFinite:\s+case SessionDrillCanonicalRenderSurfaceFamilyV1\.generic:\s+return _buildSharedEmbeddedScenarioFrameSurfaceV1\(',
@@ -67,7 +70,10 @@ void main() {
         ).hasMatch(source),
         isTrue,
       );
-      expect(source.contains('_buildWorld10TrackFiniteLayoutSurfaceV1('), isFalse);
+      expect(
+        source.contains('_buildWorld10TrackFiniteLayoutSurfaceV1('),
+        isFalse,
+      );
     },
   );
 }

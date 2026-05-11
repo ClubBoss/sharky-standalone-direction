@@ -24,7 +24,10 @@ void main() {
       );
 
       const actionSnippets = <String, List<String>>{
-        'call': <String>['The blocker refines the range read', 'does not override'],
+        'call': <String>[
+          'The blocker refines the range read',
+          'does not override',
+        ],
         'raise': <String>['Raising fits', 'range edge'],
       };
 
