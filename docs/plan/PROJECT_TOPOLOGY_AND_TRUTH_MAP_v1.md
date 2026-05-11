@@ -208,6 +208,22 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - validators -> authored truth / content contract
   - guard tests -> runtime ownership, boundary integrity, anti-drift
 
+## 4.1 Localization file model
+
+- Act0 localization API / runtime seam:
+  - `lib/ui_v2/act0_shell/act0_content_copy_v1.dart`
+- Act0 RU language data:
+  - `lib/ui_v2/act0_shell/l10n/act0_copy_ru_v1.dart`
+- Act0 file-model SSOT:
+  - `docs/plan/ACT0_LOCALIZATION_FILE_MODEL_SSOT_v1.md`
+
+Rules:
+
+- do not scatter localized learner-facing copy back across screens
+- do not treat the core Act0 copy API file as the place to hand-edit Russian
+- for Act0, edit the language file or generated world packs, then flow changes
+  back through the same stable-id tooling
+
 ## 5. Hub / control-plane truth
 
 - Generator / owner:

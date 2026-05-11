@@ -73,6 +73,7 @@ Localization references:
 - `docs/l10n/RU_POKER_TERMS_CANON_v1.md` — Russian terminology and tone canon
 - `docs/plan/RUSSIAN_LOCALIZATION_ROLLOUT_v1.md` — active Russian rollout order
 - `docs/plan/ACT0_CONTENT_LOCALIZATION_SCALING_v1.md` — scalable content-copy seam policy
+- `docs/plan/ACT0_LOCALIZATION_FILE_MODEL_SSOT_v1.md` — Act0 storage model: one API layer, one language file per language, generated world packs
 - `docs/plan/ACT0_EXECUTION_SNAPSHOT_2026_05_11_v1.md` — current Act0 continuity snapshot
 
 ## Purpose

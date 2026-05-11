@@ -13,6 +13,12 @@ This file defines the cheap, scalable path for Act0 content copy so Russian laun
 ## Canonical seam
 
 - `lib/ui_v2/act0_shell/act0_content_copy_v1.dart`
+- `lib/ui_v2/act0_shell/l10n/act0_copy_ru_v1.dart`
+
+Reader/API logic lives in the core seam file.
+
+Language data should live in the language file, not in screen-local runtime
+owners.
 
 This seam owns:
 
@@ -71,3 +77,5 @@ For future localization/content expansion:
 - avoid duplicate translation switches in multiple screens
 - prefer one owner seam over many ad hoc string patches
 - migrate task-level copy only when that content becomes visible on the active launch path
+- prefer one language file per language for Act0 over many screen-level
+  localization files

@@ -2328,6 +2328,7 @@ class _World1FoundationsMicroTaskRunnerScreenState
         World1CanonicalHandLoopEffectProfileV1.error) {
       _wrongAttemptsByStep[_stepIndex] =
           outcomeEffectsStateV1.nextAttemptsForStep!;
+      _queueCurrentStepForReview();
       if (mounted) {
         setState(() {
           _spineMistakesCount = outcomeEffectsStateV1.nextMistakesCount!;
@@ -5955,7 +5956,7 @@ class _World1FoundationsMicroTaskRunnerScreenState
   }
 
   void _queueCurrentStepForReview() {
-    if (_isInReviewPass) return;
+    if (_isInReviewPass || _isReviewQueueSession) return;
     if (_reviewQueueSet.add(_stepIndex)) {
       _reviewQueueStepIndices.add(_stepIndex);
       unawaited(_persistReviewQueueRefForCurrentStepV1(_stepIndex));
@@ -7862,7 +7863,7 @@ class _World1FoundationsMicroTaskRunnerScreenState
         _debugPreShowSeatQuizPrepUsV1 =
             DateTime.now().toUtc().microsecondsSinceEpoch - seatQuizPrepStartUs;
       }
-      if (!_isInReviewPass && attempts >= 2) {
+      if (!_isInReviewPass) {
         _queueCurrentStepForReview();
       }
       return;

@@ -1,25 +1,37 @@
 import 'dart:io';
 
-final _statePath = File('lib/ui_v2/act0_shell/act0_shell_state_v1.dart');
-final _copyPath = File('lib/ui_v2/act0_shell/act0_content_copy_v1.dart');
+import '_lib/act0_copy_language_paths.dart';
 
-void main() {
-  if (!_statePath.existsSync() || !_copyPath.existsSync()) {
+final _statePath = File('lib/ui_v2/act0_shell/act0_shell_state_v1.dart');
+
+void main(List<String> args) {
+  final languageCode = _parseLanguageCode(args);
+  final copyPath = File(act0LanguageCopyFilePathV1(languageCode));
+  if (!_statePath.existsSync() || !copyPath.existsSync()) {
     stderr.writeln('Required Act0 state/copy files are missing.');
     exitCode = 1;
     return;
   }
 
   final stateSource = _statePath.readAsStringSync();
-  final copySource = _copyPath.readAsStringSync();
+  final copySource = copyPath.readAsStringSync();
 
   final stateWorldIds = _extractFieldValues(stateSource, 'worldId');
   final stateLessonIds = _extractFieldValues(stateSource, 'lessonId');
   final stateTaskIds = _extractFieldValues(stateSource, 'taskId');
 
-  final copyWorldIds = _extractCopyMapKeys(copySource, '_ruWorldCopyByIdV1');
-  final copyLessonIds = _extractCopyMapKeys(copySource, '_ruLessonCopyByIdV1');
-  final copyTaskIds = _extractCopyMapKeys(copySource, '_ruTaskCopyByIdV1');
+  final copyWorldIds = _extractCopyMapKeys(
+    copySource,
+    '_${languageCode}WorldCopyByIdV1',
+  );
+  final copyLessonIds = _extractCopyMapKeys(
+    copySource,
+    '_${languageCode}LessonCopyByIdV1',
+  );
+  final copyTaskIds = _extractCopyMapKeys(
+    copySource,
+    '_${languageCode}TaskCopyByIdV1',
+  );
 
   final missingWorldIds = stateWorldIds.difference(copyWorldIds).toList()
     ..sort();
@@ -27,7 +39,7 @@ void main() {
     ..sort();
   final missingTaskIds = stateTaskIds.difference(copyTaskIds).toList()..sort();
 
-  stdout.writeln('Act0 content copy gap audit');
+  stdout.writeln('Act0 ${languageCode.toUpperCase()} content copy gap audit');
   stdout.writeln('World ids in state: ${stateWorldIds.length}');
   stdout.writeln('Lesson ids in state: ${stateLessonIds.length}');
   stdout.writeln('Task ids in state: ${stateTaskIds.length}');
@@ -46,6 +58,20 @@ void main() {
       "  '$taskId': Act0TaskDisplayCopyV1(title: '', summary: ''),",
     );
   }
+}
+
+String _parseLanguageCode(List<String> args) {
+  for (var index = 0; index < args.length; index += 1) {
+    if (args[index] != '--lang') {
+      continue;
+    }
+    if (index + 1 >= args.length) {
+      stderr.writeln('Missing value for --lang');
+      exit(64);
+    }
+    return act0NormalizedLanguageCodeForToolsV1(args[index + 1]);
+  }
+  return 'ru';
 }
 
 Set<String> _extractFieldValues(String source, String fieldName) {

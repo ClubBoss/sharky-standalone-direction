@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
@@ -1645,6 +1646,283 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('Runner localizes World 2 discipline question copy in Russian', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_2')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'hand_discipline_buckets')
+        .taskList
+        .firstWhere(
+          (entry) => entry.taskId == 'hand_discipline_buckets_premium',
+        );
+    final drillReadyRunner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.drill,
+      teachingSteps: const <Act0TeachingStepV1>[],
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Act0LessonRunnerShellV1(
+          runner: drillReadyRunner,
+          selectedTaskId: task.taskId,
+          onBack: () {},
+          onContinueTheory: () {},
+          onChooseOption: (_) {},
+          onContinueReview: () {},
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('act0_shell_action_question')), findsOneWidget);
+    expect(find.text('Какая группа у АА?'), findsOneWidget);
+  });
+
+  testWidgets('World 1 table-read runner copy localizes through stable ids', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+        .taskList
+        .firstWhere(
+          (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+        );
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Builder(
+          builder: (context) => Column(
+            children: <Widget>[
+              Text(act0LocalizedTaskTitleV1(context, task)),
+              Text(
+                act0LocalizedRunnerPromptAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.caption,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+              Text(
+                act0LocalizedRunnerQuestionAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.question,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Первое чтение живого стола'), findsOneWidget);
+    expect(
+      find.text(
+        'Сначала посмотри на свои карты, потом на борд, потом на банк.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('С чего лучше начать быстрое чтение стола?'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('World 3 position-apply lesson localizes through stable ids', (
+    tester,
+  ) async {
+    final lesson = Act0ShellStateV1.sample
+        .worldById('world_3')
+        .lessons
+        .firstWhere((entry) => entry.lessonId == 'position_apply');
+    final task = lesson.taskList.firstWhere(
+      (entry) => entry.taskId == 'position_apply_intro',
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Builder(
+          builder: (context) => Column(
+            children: <Widget>[
+              Text(act0LocalizedTaskTitleV1(context, task)),
+              Text(
+                act0LocalizedRunnerQuestionAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.question,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Позиция меняет решение'), findsOneWidget);
+    expect(find.text('Почему позиция так важна за столом?'), findsOneWidget);
+  });
+
+  testWidgets('World 1 positions residue localizes through stable ids', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'positions')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'positions_review');
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Builder(
+          builder: (context) => Column(
+            children: <Widget>[
+              Text(act0LocalizedTaskTitleV1(context, task)),
+              Text(
+                act0LocalizedRunnerPromptAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.caption,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+              Text(
+                act0LocalizedRunnerQuestionAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.question,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Повтор по позициям'), findsOneWidget);
+    expect(
+      find.text(
+        'Главная мысль проста: позиция меняет не силу карты, а удобство решения.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Какое место здесь действует позже остальных после флопа?'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('World 1 showdown residue localizes through stable ids', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'showdown_winning')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'showdown_kicker_drill');
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Builder(
+          builder: (context) => Column(
+            children: <Widget>[
+              Text(act0LocalizedTaskTitleV1(context, task)),
+              Text(
+                act0LocalizedRunnerSupportAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.hint,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+              Text(
+                act0LocalizedRunnerQuestionAtomByTaskIdV1(
+                  task.taskId,
+                  fallback: task.runner.question,
+                  isRu: act0IsRuLocaleV1(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Та же пара, лучший кикер'), findsOneWidget);
+    expect(
+      find.text(
+        'Эта боковая карта называется кикером. Она часто ломает кажущуюся ничью.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Что может разбить ничью при одинаковой паре?'),
+      findsOneWidget,
+    );
+  });
+
+  test(
+    'Act0 language bundle normalizes locale codes and falls back safely',
+    () {
+      expect(
+        act0LocalizedTaskTitleAtomByLanguageV1(
+          'what_poker_is_table_read_transfer',
+          fallback: 'Real-table first read',
+          languageCode: 'ru-RU',
+        ),
+        'Первое чтение живого стола',
+      );
+      expect(
+        act0LocalizedTaskTitleAtomByLanguageV1(
+          'what_poker_is_table_read_transfer',
+          fallback: 'Real-table first read',
+          languageCode: 'es',
+        ),
+        'Real-table first read',
+      );
+    },
+  );
 
   testWidgets(
     'Home launch-path copy keeps two-line safety in compact Russian',

@@ -6,6 +6,7 @@ Depends on:
 - `docs/plan/MASTER_PLAN_v3.0.md`
 - `docs/l10n/RU_POKER_TERMS_CANON_v1.md`
 - `docs/plan/ACT0_CONTENT_LOCALIZATION_SCALING_v1.md`
+- `docs/plan/ACT0_LOCALIZATION_FILE_MODEL_SSOT_v1.md`
 - `docs/plan/ACT0_EXECUTION_SNAPSHOT_2026_05_11_v1.md`
 
 ## Goal
@@ -23,6 +24,7 @@ It is a launch-path quality program.
 3. Product truth first, support surfaces second.
 4. Rewrite awkward English-shaped Russian instead of polishing it.
 5. Do not mix localization with new feature expansion.
+6. Do not re-scatter Russian across screen files after the language-file model is established.
 
 ## Wave order
 

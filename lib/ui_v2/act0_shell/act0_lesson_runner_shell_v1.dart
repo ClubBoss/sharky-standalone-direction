@@ -803,6 +803,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           : (shouldShowRunnerHint ? runner.hint : ''),
       isRu: act0IsRuLocaleV1(context),
     );
+    final question = act0LocalizedRunnerQuestionAtomByTaskIdV1(
+      widget.selectedTaskId,
+      fallback: runner.question,
+      isRu: act0IsRuLocaleV1(context),
+    );
     final learningRailProgress = _learningRailProgressLabel(runner);
     final taskRailLabel = _taskRailLabelForRunner(
       isTeaching: isTeaching,
@@ -1030,13 +1035,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               ? runner.options.any((option) => option.seatId != null)
                     ? _SeatTapPromptV1(
                         taskLabel: taskRailLabel ?? 'Tap the correct seat',
-                        question: runner.question,
+                        question: question,
                         options: runner.options,
                         onBack: null,
                       )
                     : _ActionPromptPanelV1(
                         taskLabel: taskRailLabel ?? 'Choose the best action',
-                        question: runner.question,
+                        question: question,
                         onBack: null,
                         child: _ActionPanelV1(
                           options: runner.options,
