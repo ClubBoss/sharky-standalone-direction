@@ -14,6 +14,8 @@ These instructions apply to the entire repository.
 ## Canonical Root
 - This repository is the standalone active product root.
 - Canonical local root: `/Users/elmarsalimzade/Sharky_1.0`
+- Canonical GitHub remote for active product work: `https://github.com/ClubBoss/sharky-standalone-direction.git`.
+- Future pushes must target `origin/main` in this standalone repository.
 - Older neighboring roots such as `Poker_Analyzer`, `Sharky`, and `Sharky_main` are legacy/donor/archive workspaces, not the default place for new product edits.
 - Do not route active product fixes into neighboring roots unless the user explicitly asks for archive/reference retrieval.
 - Do not spend tokens reading `docs/archive/`, `docs/_archive/`, archive buckets, or donor roots unless the user explicitly asks for historical/reference retrieval.

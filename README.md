@@ -3,6 +3,10 @@
 This repository is the standalone active product root:
 
 - `/Users/elmarsalimzade/Sharky_1.0`
+- GitHub canonical remote: `https://github.com/ClubBoss/sharky-standalone-direction.git`
+
+All future pushes for active product development must go to `origin/main` in
+this standalone repository.
 
 Older neighboring roots under `poker_ai_analyzer/` are donor/archive
 workspaces only and must not be treated as the active product.
