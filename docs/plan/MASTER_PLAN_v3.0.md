@@ -199,6 +199,57 @@ Calibration note (2026-05-11):
 - Other rows are intentionally unchanged in this wave because no direct
   user-surface evidence moved them.
 
+## Route To 100 Theses
+
+The path from "good product" to "best-in-class product" is no longer about
+finding random local polish. It now depends on a small number of product-level
+truths that should shape wave selection and score calibration.
+
+1. **Entry magic matters more than report detail.**
+   `Placement` should feel like fast trusted routing, not like a miniature
+   diagnostic report or setup funnel.
+2. **Growth must be felt in the loop, not only stored in profile.**
+   `Table -> Result` should make skill growth, earned progress, and next-step
+   confidence emotionally visible before the user ever visits `You`.
+3. **Learn must feel like a world, not only a path.**
+   Route clarity alone is not enough for 100/100. The map has to feel like a
+   real learning journey with landmarks, identity, and forward pull.
+4. **Premium consistency is a system quality, not a per-screen garnish.**
+   Shape language, emphasis, density, reward grammar, and CTA rhythm should
+   read like one intentional product across the active shell.
+5. **Habit energy should come from clean return reasons, not noisy gamification.**
+   Sharky, streak, achievements, quick reps, and celebrations should reinforce
+   the route and felt progress without turning the product into growth theater.
+
+Use these theses when a proposed idea sounds attractive but competes with route
+clarity, trust, or learning quality. If a proposal weakens one of the five
+truths above, it is not part of the route to 100.
+
+## Current Route To 100
+
+After the landed `Home`, `You`, `Review`, and `Placement` waves, the next route
+should be shaped by compounding user-visible leaps, not by reopening already
+strong surfaces.
+
+Current next-wave order:
+
+1. `Table / Result felt-growth`
+2. `Learn world-feel`
+3. `Shell premium consistency`
+4. `Sharky / rewards / habit coherence`
+5. `Play polish as quick-return practice layer`
+
+Why this order:
+
+- `Placement` is now materially stronger as trusted routing.
+- `Home` is no longer the main bottleneck.
+- the biggest remaining gap is that growth is computed but not yet strongly
+  felt in the rep-to-result loop.
+- once `Table / Result` is stronger, `Learn` can be upgraded from a polished
+  path into a more memorable world without fighting weak entry or weak payoff.
+- shell-wide consistency and habit coherence should come after the route and
+  payoff layers are stronger, not before.
+
 ## Priority Order
 
 Work in this order unless a clear user-visible blocker appears:

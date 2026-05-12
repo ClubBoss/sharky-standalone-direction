@@ -55,6 +55,25 @@ Secondary branches:
 This means the app should always have one dominant forward route.
 All other surfaces support that route instead of competing with it.
 
+## Product Theses
+
+The launch surfaces should also obey a few product-level truths:
+
+1. **Trust the route faster than you explain it.**
+   Entry and routing surfaces should create confidence quickly instead of
+   stacking explanatory UI.
+2. **Let progress be felt inside the learning loop.**
+   The learner should feel forward movement in `Table` and `Result`, not only
+   when opening `You`.
+3. **Make the path feel like a world.**
+   `Learn` should eventually deliver landmarks, journey identity, and forward
+   pull, not only structure.
+4. **Keep reward energy subordinate to learning clarity.**
+   Streaks, Sharky, achievements, and celebrations should strengthen the route,
+   not compete with it.
+5. **Prefer premium coherence over isolated clever screens.**
+   No single surface should invent its own visual dialect or reward grammar.
+
 ## Surface Contract
 
 Each surface must answer one unique learner question.
@@ -244,40 +263,24 @@ When planning a launch-surface wave:
 
 ## Next Wave Guidance
 
-Given the current `MASTER_PLAN_v3.0` priority order and launch-surface runway,
-the default next surface wave should be:
+Given the current launch-surface runway, the default next surface waves should
+now be:
 
-`Home / Learn / Play role clarification`
+1. `Table / Result` felt-growth pass
+2. `Learn` world-feel refinement
+3. shell-wide premium consistency pass
+4. `Sharky / rewards / habit` coherence pass
 
-Why:
+Implementation note (2026-05-13):
 
-- `Home` owns re-entry and next-step clarity
-- `Learn` owns the canonical path
-- `Play` is the most likely duplicate/confusion source if left underdefined
-
-Only after that wave is materially clearer should the next default work move to:
-
-1. `Review` as repair lane refinement
-2. `You` as identity/progress mirror refinement
-
-Implementation note (2026-05-12):
-
-- The first `Home / Learn / Play` clarification wave is now the active landed
-  contract in code.
-- `Home` keeps one dominant next-step block while extra reps are explicitly
-  framed as optional.
-- `Learn` now states that it owns the main route and that `Play` only adds
-  extra reps.
-- `Play` now leads with one featured recommended rep before the secondary
-  practice sections.
-- `Home` clean-state repair guidance should stay compact and calm when there is
-  nothing to fix, instead of expanding into a full multi-line repair block.
-- `Home` extra-reps guidance should read as one secondary surface, not a card
-  nested inside another card, and the clean-state message should feel positive
-  rather than neutral-grey.
-- `Home` momentum/status truth should live in one place. If streak or daily
-  state is already expressed in the momentum card, `Sharky` should not repeat
-  the same metric and should add only a distinct coaching or payoff line.
+- `Home / Learn / Play` role clarification is landed.
+- `You` is now materially more identity-first and less dashboard-heavy.
+- `Review` is materially more repair-first and less dense in the prominent
+  mistake card.
+- `Placement` now behaves more like fast trusted routing and less like a
+  stacked multi-panel report.
+- the strongest remaining product gap is no longer route ownership. It is the
+  lack of strongly felt growth and payoff inside the `Table -> Result` loop.
 - `Home` should stay compact: the course label is secondary, the primary CTA
   should not be followed by another duplicate CTA hint, and the extra-rep lane
   should read as one tight optional action rather than a second mini-screen.
