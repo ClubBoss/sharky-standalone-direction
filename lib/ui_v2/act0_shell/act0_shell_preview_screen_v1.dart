@@ -1424,11 +1424,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
     final profileState = _profileState(state.profile, progress);
-    final reviewNavBadgeLabel = reviewState.mistakes.isEmpty
-        ? null
-        : reviewState.mistakes.length > 9
-        ? '9+'
-        : '${reviewState.mistakes.length}';
+    final reviewNavHasDot = reviewState.mistakes.isNotEmpty;
     final worlds = _progressWorlds(baseState);
     _normalizeSelection(worlds);
     final selectedWorld = _worldById(worlds, _selectedWorldId);
@@ -1665,24 +1661,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           final world = _worldById(worlds, worldId);
                           setState(() {
                             if (world.isSelectable) {
+                              final lesson = _firstPlayableLesson(world);
                               _selectedWorldId = worldId;
+                              _selectedLessonId = lesson.lessonId;
+                              _selectedTaskId = _firstIncompleteTask(
+                                lesson,
+                              ).taskId;
+                              _phase = _taskById(lesson, _selectedTaskId).phase;
+                              _selectedOptionId = null;
+                              _teachingStepIndex = 0;
                               _showWorldMenu = false;
                               _learnDetailWorldId = null;
                               _learnDetailLessonId = null;
                               _learnPopupTaskId = null;
                               _learnPendingAutoOpenLessonIdV1 = null;
-                              if (world.lessons.isNotEmpty &&
-                                  !world.lessons.any(
-                                    (lesson) =>
-                                        lesson.lessonId == _selectedLessonId,
-                                  )) {
-                                final lesson = _firstPlayableLesson(world);
-                                _selectedLessonId = lesson.lessonId;
-                                _selectedTaskId = _firstIncompleteTask(
-                                  lesson,
-                                ).taskId;
-                                _teachingStepIndex = 0;
-                              }
                             } else {
                               _learnDetailWorldId = worldId;
                               _learnDetailLessonId = null;
@@ -2178,7 +2170,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
-              reviewBadgeLabel: reviewNavBadgeLabel,
+              reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
                 _tab = tab;
                 if (tab == Act0ShellTabV1.play) {
@@ -2840,6 +2832,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld: selectedWorld,
       selectedLesson: currentLesson,
     ).hint;
+    if (hint == 'Continue this lesson now.') {
+      return null;
+    }
     return hint.isEmpty ? null : hint;
   }
 
@@ -2856,7 +2851,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       kind: _Act0LearningNextActionKindV1.continueLesson,
       label: _cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
           ? _copyV1(en: 'Start here', ru: 'Начни здесь')
-          : _copyV1(en: 'Continue', ru: 'Продолжить'),
+          : _copyV1(en: 'Next', ru: 'Дальше'),
       title: _localizedLessonTitleV1(selectedLesson),
       subtitle: _localizedLessonSubtitleV1(selectedLesson),
       ctaLabel: _copyV1(en: 'Continue', ru: 'Продолжить'),
@@ -2926,7 +2921,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0WorldCardV1 _selectedWorld,
     Act0LessonCardV1 _currentLesson,
   ) {
-    return _copyV1(en: 'Practice now →', ru: 'Практиковать сейчас →');
+    return _copyV1(en: 'Start practice', ru: 'Начать практику');
   }
 
   String _homeRepairHeadline(
@@ -2934,7 +2929,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return _copyV1(en: 'Route is clean.', ru: 'Маршрут чист.');
+      return _copyV1(en: 'All sharp.', ru: 'Всё чётко.');
     }
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
@@ -2949,7 +2944,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтори этот быстрый фикс.',
       );
     }
-    return _copyV1(en: 'Route is clean.', ru: 'Маршрут чист.');
+    return _copyV1(en: 'All sharp.', ru: 'Всё чётко.');
   }
 
   String _homeRepairDetail(
@@ -2958,8 +2953,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) {
     if (_placementHandoffActive) {
       return _copyV1(
-        en: 'No open leaks. Stay on Learn and keep the lesson moving.',
-        ru: 'Открытых утечек нет. Оставайся в обучении и веди урок дальше.',
+        en: 'No leaks open. Keep going.',
+        ru: 'Утечек нет. Просто продолжай.',
       );
     }
     final recommendation = _learningRecommendation(
@@ -2979,8 +2974,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     return _copyV1(
-      en: 'No open leaks. Stay on Learn and keep the lesson moving.',
-      ru: 'Открытых утечек нет. Оставайся в обучении и веди урок дальше.',
+      en: 'No leaks open. Keep going.',
+      ru: 'Утечек нет. Просто продолжай.',
     );
   }
 
@@ -5896,12 +5891,12 @@ class _BottomNavV1 extends StatelessWidget {
   const _BottomNavV1({
     required this.current,
     required this.onSelected,
-    this.reviewBadgeLabel,
+    this.reviewHasDot = false,
   });
 
   final Act0ShellTabV1 current;
   final ValueChanged<Act0ShellTabV1> onSelected;
-  final String? reviewBadgeLabel;
+  final bool reviewHasDot;
 
   @override
   Widget build(BuildContext context) {
@@ -5941,7 +5936,7 @@ class _BottomNavV1 extends StatelessWidget {
               current: current,
               icon: Icons.refresh_rounded,
               label: isRu ? 'Разбор' : 'Review',
-              badgeLabel: reviewBadgeLabel,
+              showDot: reviewHasDot,
               onSelected: onSelected,
             ),
             _NavItemV1(
@@ -5965,7 +5960,7 @@ class _NavItemV1 extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onSelected,
-    this.badgeLabel,
+    this.showDot = false,
   });
 
   final Act0ShellTabV1 tab;
@@ -5973,7 +5968,7 @@ class _NavItemV1 extends StatelessWidget {
   final IconData icon;
   final String label;
   final ValueChanged<Act0ShellTabV1> onSelected;
-  final String? badgeLabel;
+  final bool showDot;
 
   @override
   Widget build(BuildContext context) {
@@ -5981,7 +5976,7 @@ class _NavItemV1 extends StatelessWidget {
     final color = selected
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
-    final hasBadge = badgeLabel != null && badgeLabel!.isNotEmpty;
+    final hasBadge = showDot;
     return Expanded(
       child: InkWell(
         onTap: () => onSelected(tab),
@@ -5997,42 +5992,22 @@ class _NavItemV1 extends StatelessWidget {
                   Icon(icon, size: 21, color: color),
                   if (hasBadge)
                     Positioned(
-                      top: -7,
-                      right: -12,
+                      top: -3,
+                      right: -6,
                       child: Container(
                         key: Key(
                           'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
                         ),
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                          vertical: 2,
-                        ),
+                        width: 9,
+                        height: 9,
                         decoration: BoxDecoration(
-                          color: selected
-                              ? Act0ShellTokensV1.primary
-                              : Act0ShellTokensV1.gold,
+                          color: Act0ShellTokensV1.gold,
                           borderRadius: BorderRadius.circular(
                             Act0ShellTokensV1.radiusPill,
                           ),
                           border: Border.all(
                             color: Act0ShellTokensV1.surface,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Text(
-                          badgeLabel!,
-                          textAlign: TextAlign.center,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: selected
-                                ? Act0ShellTokensV1.onPrimary
-                                : Act0ShellTokensV1.onPrimary,
-                            fontSize: 8.2,
-                            letterSpacing: 0.2,
-                            height: 1,
+                            width: 1.2,
                           ),
                         ),
                       ),

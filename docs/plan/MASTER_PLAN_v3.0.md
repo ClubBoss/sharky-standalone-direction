@@ -917,12 +917,25 @@ Current wave note (2026-05-12):
    `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`.
 3. Success signal: `Home` frames extra reps as optional, `Learn` states it owns
    the main route, and `Play` opens with one featured recommended rep before
-   the secondary practice sections.
+   the secondary practice sections. Follow-up in the same route family:
+   `Home` clean-state repair stays compact, and `Learn` opens on the active
+   lesson instead of the top of the page. `Home` extra reps also stay as one
+   calm secondary surface rather than nested cards. `Home` streak/daily truth
+   should live in one momentum surface, while `Sharky` adds a distinct coaching
+   line instead of repeating the same metric. The compact `Home` pass also
+   keeps course title secondary, removes duplicate CTA hints, and tightens the
+   optional rep lane so the screen reads in one quick scan.
 4. Verification set: `dart format` on touched shell/test files, `flutter test
    test/ui_v2/act0_shell_preview_screen_v1_test.dart`, and `git diff --check`.
 5. What changed / what is next: this wave tightened surface roles without
-   reopening runner or review logic; the next default wave remains
-   `Review` density refinement followed by `You` identity refinement.
+   reopening runner or review logic. Follow-up `You` refinement now locks the
+   profile contract around one compact identity hero, a primary poker-skills
+   board, a shorter rhythm/streak block, and an achievements preview with
+   collection drill-down, while route/focus stays secondary. Skills and
+   achievements may compress into compact two-column grids as long as they stay
+   readable and the gains still come from real lesson/drill progression hooks,
+   not decorative fake stats. The next default wave after that returns to
+   `Review` density refinement.
 
 ## How To Use This Plan
 

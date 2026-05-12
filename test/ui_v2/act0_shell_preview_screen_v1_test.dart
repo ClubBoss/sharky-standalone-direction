@@ -224,6 +224,22 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> openBottomTabAndDrainV1(
+    WidgetTester tester,
+    String label, {
+    Duration drain = const Duration(seconds: 2),
+  }) async {
+    await tester.tap(find.text(label).first);
+    await tester.pumpAndSettle();
+    await tester.pump(drain);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> openBottomTabV1(WidgetTester tester, String label) async {
+    await tester.tap(find.text(label).first);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> advanceTeachingToDrill(WidgetTester tester) async {
     for (var i = 0; i < 8; i++) {
       if (find
@@ -473,28 +489,29 @@ void main() {
   ) async {
     await pumpTall(tester, host());
 
-    expect(find.text('Poker from Zero'), findsOneWidget);
+    expect(find.text('Active world: Poker from Zero'), findsOneWidget);
     expect(find.text('Fold, check, call, raise'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_home_repair_panel')),
       findsOneWidget,
     );
-    expect(find.text('Route is clean.'), findsOneWidget);
+    expect(find.text('All sharp.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_home_repair_clear_state')),
       findsOneWidget,
     );
     expect(find.text('Nothing to fix right now.'), findsNothing);
-    expect(find.text('Extra reps'), findsOneWidget);
+    expect(find.text('Extra reps'), findsNothing);
+    expect(find.text('Optional rep'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_home_optional_practice_hint')),
       findsOneWidget,
     );
     expect(
       find.text('Play stays optional. The main route still lives in Learn.'),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('One extra rep, only if you want it.'), findsNothing);
+    expect(find.text('One extra rep, only if you want it.'), findsOneWidget);
     expect(find.text('Now: Actions'), findsNothing);
     expect(find.text('Next: Blinds & action order'), findsNothing);
     expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
@@ -502,8 +519,8 @@ void main() {
       find.byKey(const Key('act0_shell_home_primary_tap_target')),
       findsOneWidget,
     );
-    expect(find.byKey(const Key('act0_shell_home_cta_hint')), findsOneWidget);
-    expect(find.text('Continue this lesson now.'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_home_cta_hint')), findsNothing);
+    expect(find.text('Continue this lesson now.'), findsNothing);
     expect(find.byKey(const Key('act0_shell_home_streak_strip')), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_home_dev_menu_button')),
@@ -1172,10 +1189,7 @@ void main() {
   ) async {
     await pumpCompact(tester, host());
 
-    await tester.tap(find.text('Learn'));
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Learn');
 
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
     expect(
@@ -1201,11 +1215,7 @@ void main() {
   ) async {
     await pumpTall(tester, host());
 
-    await tester.tap(find.text('Learn'));
-    await tester.pumpAndSettle();
-    // Drain Future.delayed scroll timers triggered by auto-expand.
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Learn');
 
     // Auto-expand should have opened the current lesson panel.
     expect(
@@ -1231,10 +1241,7 @@ void main() {
   ) async {
     await pumpTall(tester, host(locale: const Locale('ru')));
 
-    await tester.tap(find.text('Обучение'));
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Обучение');
 
     expect(
       find.byKey(const Key('act0_shell_selected_lesson_panel')),
@@ -1301,8 +1308,7 @@ void main() {
   ) async {
     // Navigating to Learn via bottom nav auto-expands the current lesson.
     await pumpTall(tester, host());
-    await tester.tap(find.text('Learn'));
-    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Learn');
 
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
     expect(
@@ -1329,10 +1335,7 @@ void main() {
     (tester) async {
       await pumpTall(tester, host());
 
-      await tester.tap(find.text('Learn'));
-      await tester.pumpAndSettle();
-      await tester.pump(const Duration(seconds: 2));
-      await tester.pumpAndSettle();
+      await openBottomTabAndDrainV1(tester, 'Learn');
 
       // Auto-expanded lesson panel must be visible.
       expect(
@@ -8298,25 +8301,25 @@ void main() {
   testWidgets('Bottom nav switches tabs', (tester) async {
     await pumpTall(tester, host());
 
-    await tester.tap(find.text('Learn'));
-    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Learn');
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
 
-    await tester.tap(find.text('Review'));
-    await tester.pumpAndSettle();
+    await openBottomTabV1(tester, 'Review');
     expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
 
-    await tester.tap(find.text('You'));
-    await tester.pumpAndSettle();
+    await openBottomTabV1(tester, 'You');
     expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_profile_hero_card')),
       findsOneWidget,
     );
-    expect(
-      find.byKey(const Key('act0_shell_profile_recommended_focus')),
-      findsOneWidget,
+    final focusFinder = find.byKey(
+      const Key('act0_shell_profile_recommended_focus'),
     );
+    await tester.scrollUntilVisible(focusFinder, 180);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(focusFinder);
+    expect(focusFinder, findsOneWidget);
   });
 
   testWidgets('Bottom nav surfaces review backlog', (tester) async {
@@ -8369,7 +8372,7 @@ void main() {
       find.byKey(const Key('act0_shell_nav_badge_review')),
       findsOneWidget,
     );
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
   });
 
   testWidgets('Play tab shows practice groups and launches a group runner', (
@@ -8377,79 +8380,55 @@ void main() {
   ) async {
     await pumpTall(tester, host());
 
-    await tester.tap(find.text('Play'));
+    await tester.tap(find.text('Play').first);
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
-    expect(
-      find.byKey(const Key('act0_shell_play_featured_card')),
-      findsOneWidget,
-    );
-    expect(find.text('Best extra rep'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_play_featured_title')),
-      findsOneWidget,
-    );
-    expect(find.text('Best next from Learn'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_play_featured_cta')),
-      findsOneWidget,
-    );
-    expect(find.text('Quick practice'), findsOneWidget);
-    expect(find.text('Recommended repair'), findsOneWidget);
-    expect(find.text('Nothing to repair right now.'), findsOneWidget);
-    expect(find.text('Practice lanes'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_play_topic_filters')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('act0_shell_play_intro_card')), findsOneWidget);
+    expect(find.text('Start now'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_play_active_hub')), findsOneWidget);
+    expect(find.text('Topic packs'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_play_topic_hub')), findsOneWidget);
     expect(
-      find.byKey(const Key('act0_shell_play_topic_filter_Preflop')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_play_topic_filter_Position')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_play_topic_filter_Postflop')),
-      findsOneWidget,
-    );
-    expect(
       find.byKey(const Key('act0_shell_practice_group_placement')),
-      findsNothing,
+      findsOneWidget,
     );
     expect(
       find.byKey(const Key('act0_shell_practice_group_daily')),
       findsOneWidget,
     );
-    expect(find.text('Start daily set'), findsOneWidget);
+    expect(find.text('Start'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_actions')),
       180,
     );
+    await tester.pumpAndSettle();
     expect(find.text('Actions'), findsOneWidget);
     // Drill sets section header separates quick picks from drills — scroll to Positions.
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_positions')),
       220,
     );
+    await tester.pumpAndSettle();
     expect(find.text('Positions'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_rankings')),
       220,
     );
+    await tester.pumpAndSettle();
     expect(find.text('Hand rankings'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_actions')),
       -220,
     );
-    await tester.tap(
-      find.byKey(const Key('act0_shell_practice_group_actions')),
+    await tester.pumpAndSettle();
+    final actionsTile = find.byKey(
+      const Key('act0_shell_practice_group_actions'),
     );
+    await tester.ensureVisible(actionsTile);
+    await tester.tap(actionsTile);
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
@@ -8675,7 +8654,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const Key('act0_shell_profile_recent_skill_gains')),
+      find.byKey(const Key('act0_shell_profile_skill_stats')),
       findsOneWidget,
     );
     expect(find.text('Recent gains'), findsOneWidget);

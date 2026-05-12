@@ -197,8 +197,9 @@ It should not:
 
 It should:
 
-- show current strengths
-- show one visible growth edge
+- show who the player is becoming in one quick scan
+- make skill growth more visible than generic profile stats
+- keep streak and achievements as proof, not as the whole story
 - translate progress into a personal story
 
 It should not:
@@ -206,6 +207,14 @@ It should not:
 - lead with raw stats
 - look like an admin profile
 - create dashboard bloat
+
+Canonical `You` structure:
+
+1. one compact identity hero
+2. one primary poker-skills board, preferably compact enough to scan as a short grid instead of a long dashboard list
+3. one compact rhythm / streak block
+4. one achievements preview with a compact grid and collection drill-down
+5. route/focus notes only as a quiet secondary footer
 
 ## Design Consequences
 
@@ -257,6 +266,19 @@ Implementation note (2026-05-12):
   extra reps.
 - `Play` now leads with one featured recommended rep before the secondary
   practice sections.
+- `Home` clean-state repair guidance should stay compact and calm when there is
+  nothing to fix, instead of expanding into a full multi-line repair block.
+- `Home` extra-reps guidance should read as one secondary surface, not a card
+  nested inside another card, and the clean-state message should feel positive
+  rather than neutral-grey.
+- `Home` momentum/status truth should live in one place. If streak or daily
+  state is already expressed in the momentum card, `Sharky` should not repeat
+  the same metric and should add only a distinct coaching or payoff line.
+- `Home` should stay compact: the course label is secondary, the primary CTA
+  should not be followed by another duplicate CTA hint, and the extra-rep lane
+  should read as one tight optional action rather than a second mini-screen.
+- `Learn` first-open behavior should land on the active lesson itself, not the
+  page top, and should preserve the existing scroll-first then open contract.
 
 ## Success Test
 

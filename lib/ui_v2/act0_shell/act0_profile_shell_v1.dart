@@ -51,232 +51,186 @@ class Act0ProfileShellV1 extends StatelessWidget {
           style: Act0ShellTokensV1.screenTitle,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        Container(
-          key: const Key('act0_shell_profile_hero_card'),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapXl),
-          decoration: Act0ShellTokensV1.heroDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.primary,
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusXl,
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Act0ShellTokensV1.primary.withOpacity(0.34),
-                          blurRadius: 28,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      color: Act0ShellTokensV1.onPrimary,
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapLg),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          profile.playerName,
-                          style: Act0ShellTokensV1.sectionTitle,
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapXs),
-                        Text(profile.level, style: Act0ShellTokensV1.muted),
-                        const SizedBox(height: Act0ShellTokensV1.gapSm),
-                        Text(
-                          profile.xpLine,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.gold,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Text(
-                _profileCopyV1(
-                  context,
-                  en: 'This screen is your growth view: momentum, focus, and proof that the work is sticking.',
-                  ru: 'Это твой экран роста: ритм, текущий фокус и короткое доказательство, что работа закрепляется.',
-                ),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.text,
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Wrap(
-                spacing: Act0ShellTokensV1.gapSm,
-                runSpacing: Act0ShellTokensV1.gapSm,
-                children: [
-                  _ProfileHeroFactChipV1(
-                    keyName: 'tasks',
-                    label: profile.lessonsLine,
-                    tone: Act0ShellTokensV1.primary,
-                  ),
-                  _ProfileHeroFactChipV1(
-                    keyName: 'accuracy',
-                    label: profile.accuracyLine,
-                    tone: Act0ShellTokensV1.gold,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        if (profile.recommendedFocusTitle.isNotEmpty) ...[
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              key: const Key('act0_shell_profile_recommended_focus'),
-              onTap: onGoToHome,
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-              child: Container(
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                      Act0ShellTokensV1.gold.withOpacity(0.15),
-                      Act0ShellTokensV1.surface,
-                      Act0ShellTokensV1.surface2,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusLg,
-                  ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.gold.withOpacity(0.28),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Act0ShellTokensV1.gold.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusLg,
-                        ),
-                        border: Border.all(
-                          color: Act0ShellTokensV1.gold.withOpacity(0.28),
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.route_rounded,
-                        color: Act0ShellTokensV1.gold,
-                      ),
-                    ),
-                    const SizedBox(width: Act0ShellTokensV1.gapMd),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _profileCopyV1(
-                              context,
-                              atomId: 'profile_recommended_focus_label',
-                              fallback: 'Recommended focus',
-                            ),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.gold,
-                            ),
-                          ),
-                          const SizedBox(height: Act0ShellTokensV1.gapXs),
-                          Text(
-                            profile.recommendedFocusTitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.cardTitle,
-                          ),
-                          const SizedBox(height: Act0ShellTokensV1.gapXs),
-                          Text(
-                            profile.recommendedFocusBody,
-                            key: const Key(
-                              'act0_shell_profile_recommended_focus_body',
-                            ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.muted,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: Act0ShellTokensV1.gapSm),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          profile.recommendedFocusCtaLabel,
-                          key: const Key(
-                            'act0_shell_profile_recommended_focus_cta_label',
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.primary,
-                          ),
-                        ),
-                        if (onGoToHome != null) ...[
-                          const SizedBox(height: Act0ShellTokensV1.gapXs),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 18,
-                            color: Act0ShellTokensV1.primary,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        _ProfileHeroCardV1(profile: profile),
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        if (profile.skillStats.isNotEmpty) ...[
+          _ProfileSkillStatsStripV1(profile: profile),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
         _ProfileIdentityCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         _ProfileConsistencyCardV1(profile: profile),
-        if (profile.recentSkillGains.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-          _ProfileRecentGainsCardV1(profile: profile),
-        ],
-        if (profile.totalWorldsCount > 0) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-          _WorldProgressStripV1(
-            clearedCount: profile.worldsClearedCount,
-            activeCount: profile.worldsActiveCount,
-            totalCount: profile.totalWorldsCount,
-          ),
-        ],
         if (profile.achievements.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapLg),
           _ProfileMilestonesCardV1(profile: profile),
         ],
-        if (profile.skillStats.isNotEmpty) ...[
+        if (profile.recommendedFocusTitle.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapLg),
-          _ProfileSkillStatsStripV1(profile: profile),
+          _ProfileCurrentFocusCardV1(profile: profile),
         ],
       ],
     );
   }
+}
+
+class _ProfileHeroCardV1 extends StatelessWidget {
+  const _ProfileHeroCardV1({required this.profile});
+
+  final Act0ProfileStateV1 profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final summary = _profileIdentitySummaryV1(context, profile);
+    return Container(
+      key: const Key('act0_shell_profile_hero_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.heroDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.primary,
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusLg,
+                  ),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Act0ShellTokensV1.primary.withOpacity(0.32),
+                      blurRadius: 24,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.person_rounded,
+                  color: Act0ShellTokensV1.onPrimary,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapMd),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      profile.playerName,
+                      style: Act0ShellTokensV1.sectionTitle,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(profile.level, style: Act0ShellTokensV1.muted),
+                    const SizedBox(height: Act0ShellTokensV1.gapSm),
+                    Text(summary.headline, style: Act0ShellTokensV1.cardTitle),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 7,
+                ),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.gold.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusMd,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.gold.withOpacity(0.22),
+                  ),
+                ),
+                child: Text(
+                  profile.xpLine,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.gold,
+                    letterSpacing: 0.1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(
+            summary.body,
+            key: const Key('act0_shell_profile_identity_summary'),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.text,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Wrap(
+            spacing: Act0ShellTokensV1.gapSm,
+            runSpacing: Act0ShellTokensV1.gapSm,
+            children: [
+              _ProfileHeroFactChipV1(
+                keyName: 'accuracy',
+                label: profile.accuracyLine,
+                tone: Act0ShellTokensV1.primary,
+              ),
+              _ProfileHeroFactChipV1(
+                keyName: 'tasks',
+                label: profile.lessonsLine,
+                tone: Act0ShellTokensV1.info,
+              ),
+              if (profile.streakDays > 0)
+                _ProfileHeroFactChipV1(
+                  keyName: 'streak',
+                  label: profile.streakLine,
+                  tone: Act0ShellTokensV1.gold,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+({String headline, String body}) _profileIdentitySummaryV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final strong = profile.strongCategories.isNotEmpty
+      ? profile.strongCategories.first
+      : _profileCopyV1(context, en: 'table basics', ru: 'база по столу');
+  final gain = profile.recentSkillGains.isNotEmpty
+      ? profile.recentSkillGains.first.label
+      : _profileCopyV1(context, en: 'recent reps', ru: 'недавние репы');
+  final headline = profile.strongCategories.isNotEmpty
+      ? _profileCopyV1(
+          context,
+          en: '$strong is becoming part of your game.',
+          ru: '$strong уже становится частью твоей игры.',
+        )
+      : _profileCopyV1(
+          context,
+          en: 'Your poker base is starting to feel real.',
+          ru: 'Твоя покерная база уже начинает ощущаться реальной.',
+        );
+  final body = profile.recentSkillGains.isNotEmpty
+      ? _profileCopyV1(
+          context,
+          en: '$gain moved recently. The profile below shows what is already sticking.',
+          ru: '$gain сдвинулся недавно. Ниже видно, что уже закрепляется.',
+        )
+      : _profileCopyV1(
+          context,
+          en: 'Your profile below shows the skills, rhythm, and proof you have already built.',
+          ru: 'Ниже видно навыки, ритм и доказательства того, что уже закрепилось.',
+        );
+  return (headline: headline, body: body);
+}
+
+int _profileUnlockedAchievementsCountV1(Act0ProfileStateV1 profile) {
+  return profile.achievements
+      .where((achievement) => !achievement.locked)
+      .length;
 }
 
 class _ProfileHeroFactChipV1 extends StatelessWidget {
@@ -297,7 +251,7 @@ class _ProfileHeroFactChipV1 extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: tone.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
         border: Border.all(color: tone.withOpacity(0.22)),
       ),
       child: Text(
@@ -306,6 +260,54 @@ class _ProfileHeroFactChipV1 extends StatelessWidget {
           color: tone,
           letterSpacing: 0.15,
         ),
+      ),
+    );
+  }
+}
+
+class _ProfileCurrentFocusCardV1 extends StatelessWidget {
+  const _ProfileCurrentFocusCardV1({required this.profile});
+
+  final Act0ProfileStateV1 profile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_profile_recommended_focus'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2,
+        borderColor: Act0ShellTokensV1.border,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _profileCopyV1(
+              context,
+              en: 'Route note',
+              ru: 'Заметка по маршруту',
+            ),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.textDim,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            profile.recommendedFocusTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            profile.recommendedFocusBody,
+            key: const Key('act0_shell_profile_recommended_focus_body'),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted,
+          ),
+        ],
       ),
     );
   }
@@ -322,6 +324,9 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
     if (visibleStats.isEmpty) {
       return const SizedBox.shrink();
     }
+    final recentGainByLabel = <String, Act0SkillGainV1>{
+      for (final gain in profile.recentSkillGains) gain.label: gain,
+    };
     return Container(
       key: const Key('act0_shell_profile_skill_stats'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
@@ -333,11 +338,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(
-              context,
-              en: 'Core poker skills',
-              ru: 'Базовые покерные навыки',
-            ),
+            _profileCopyV1(context, en: 'Poker skills', ru: 'Покерные навыки'),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
             ),
@@ -346,23 +347,48 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Placement seeds the first read. Real reps sharpen it from here.',
-              ru: 'Плейсмент даёт первый срез. Дальше навык шлифуют реальные репы.',
+              en: profile.recentSkillGains.isEmpty
+                  ? 'This is what your game is actually made of.'
+                  : 'Recent gains show where the game is moving right now.',
+              ru: profile.recentSkillGains.isEmpty
+                  ? 'Это и есть те навыки, из которых реально состоит твоя игра.'
+                  : 'Последние приросты показывают, куда игра двигается прямо сейчас.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (var i = 0; i < visibleStats.length; i++) ...[
-                  _ProfileSkillCardV1(stat: visibleStats[i]),
-                  if (i != visibleStats.length - 1)
-                    const SizedBox(width: Act0ShellTokensV1.gapMd),
-                ],
-              ],
+          if (profile.recentSkillGains.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Text(
+              _profileCopyV1(
+                context,
+                en: 'Recent gains',
+                ru: 'Последние приросты',
+              ),
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.gold,
+              ),
             ),
+            const SizedBox(height: 4),
+            Text(
+              profile.recentSkillGains
+                  .take(2)
+                  .map((gain) => '${gain.label} +${gain.gain}')
+                  .join('  ·  '),
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.text,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _TwoColumnStaggeredGridV1(
+            children: [
+              for (final stat in visibleStats)
+                _ProfileSkillCardV1(
+                  stat: stat,
+                  gain: recentGainByLabel[stat.label],
+                ),
+            ],
           ),
         ],
       ),
@@ -400,28 +426,19 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
             _profileCopyV1(
               context,
               atomId: 'profile_consistency_label',
-              fallback: 'Consistency',
+              fallback: 'Rhythm',
             ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
-            _profileCopyV1(
-              context,
-              atomId: 'profile_streak_label',
-              fallback: 'Streak',
-            ),
-            style: Act0ShellTokensV1.label,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(streakLine, style: Act0ShellTokensV1.cardTitle),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             support,
             key: const Key('act0_shell_profile_consistency_support_text'),
-            maxLines: 3,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.muted,
           ),
@@ -437,14 +454,6 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
                     : '${profile.consistencyActiveDays} active days',
                 tone: Act0ShellTokensV1.primary,
               ),
-              if (profile.worldsClearedCount > 0)
-                _ConsistencyFactChipV1(
-                  keyName: 'worlds',
-                  label: _isRuLocaleV1(context)
-                      ? '${profile.worldsClearedCount}/${profile.totalWorldsCount} миров закрыто'
-                      : '${profile.worldsClearedCount}/${profile.totalWorldsCount} worlds cleared',
-                  tone: Act0ShellTokensV1.gold,
-                ),
               if (profile.mistakesFixedLine.isNotEmpty)
                 _ConsistencyFactChipV1(
                   keyName: 'fixes',
@@ -453,35 +462,17 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Container(
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          KeyedSubtree(
             key: const Key('act0_shell_profile_momentum_line'),
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface3.withOpacity(0.74),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-              border: Border.all(color: Act0ShellTokensV1.border),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.trending_up_rounded,
-                  size: 18,
-                  color: Act0ShellTokensV1.primary,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Expanded(
-                  child: Text(
-                    momentumLine,
-                    key: const Key('act0_shell_profile_momentum_text'),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                    ),
-                  ),
-                ),
-              ],
+            child: Text(
+              momentumLine,
+              key: const Key('act0_shell_profile_momentum_text'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+              ),
             ),
           ),
           if (profile.streakLast7.isNotEmpty) ...[
@@ -592,7 +583,7 @@ class _ConsistencyFactChipV1 extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: tone.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
         border: Border.all(color: tone.withOpacity(0.22)),
       ),
       child: Text(
@@ -613,7 +604,7 @@ class _ProfileMilestonesCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final featured = profile.achievements.take(2).toList();
+    final featured = profile.achievements.take(3).toList();
     final storyLine = _milestoneStoryLineV1(profile);
     return Container(
       key: const Key('act0_shell_profile_milestones'),
@@ -634,14 +625,41 @@ class _ProfileMilestonesCardV1 extends StatelessWidget {
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(storyLine, style: Act0ShellTokensV1.muted),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (var i = 0; i < featured.length; i++) ...[
-            _AchievementCardV1(
-              label: featured[i].label,
-              icon: _achievementIconForLabel(featured[i].label),
-              locked: featured[i].locked,
+          _TwoColumnStaggeredGridV1(
+            children: [
+              for (final achievement in featured)
+                _AchievementCardV1(
+                  label: achievement.label,
+                  icon: _achievementIconForLabel(achievement.label),
+                  locked: achievement.locked,
+                ),
+            ],
+          ),
+          if (profile.achievements.length > featured.length) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton(
+                key: const Key('act0_shell_profile_achievements_button'),
+                onPressed: () => _showAchievementsSheet(context, profile),
+                style: Act0ShellTokensV1.quietButtonStyle().copyWith(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusMd,
+                      ),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  _profileCopyV1(
+                    context,
+                    en: 'View all badges',
+                    ru: 'Все бейджи',
+                  ),
+                ),
+              ),
             ),
-            if (i < featured.length - 1)
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
         ],
       ),
@@ -667,11 +685,7 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(
-              context,
-              en: 'Recent gains',
-              ru: 'Последний рост',
-            ),
+            _profileCopyV1(context, en: 'Recent gains', ru: 'Последний рост'),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.info,
             ),
@@ -686,7 +700,11 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (var index = 0; index < profile.recentSkillGains.take(3).length; index += 1) ...[
+          for (
+            var index = 0;
+            index < profile.recentSkillGains.take(3).length;
+            index += 1
+          ) ...[
             _RecentSkillGainRowV1(gain: profile.recentSkillGains[index]),
             if (index < profile.recentSkillGains.take(3).length - 1)
               const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -716,13 +734,13 @@ String _milestoneStoryLineV1(Act0ProfileStateV1 profile) {
       .where((item) => !item.locked)
       .length;
   if (unlockedCount >= 3) {
-    return 'These are no longer tiny wins. The route is leaving visible proof.';
+    return 'Visible proof that the work is turning into something real.';
   }
   if (unlockedCount >= 1) {
     return 'Small proofs that the work is starting to stick.';
   }
   if (profile.streakDays >= 3) {
-    return 'The streak is warming up. The first real milestone is close.';
+    return 'The streak is warming up. The first real badge is close.';
   }
   return 'Small proofs appear fast when the reps stay clean.';
 }
@@ -787,11 +805,11 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
         ? profile.strongCategories.first
         : _profileCopyV1(context, en: 'Table basics', ru: 'Основы стола');
     final gain = profile.recentSkillGains.isNotEmpty
-        ? profile.recentSkillGains.first.label
+        ? '${profile.recentSkillGains.first.label} +${profile.recentSkillGains.first.gain}'
         : _profileCopyV1(context, en: 'Recent reps', ru: 'Недавние повторы');
-    final focus = profile.recommendedFocusTitle.isNotEmpty
-        ? profile.recommendedFocusTitle
-        : _profileCopyV1(context, en: 'the next lesson', ru: 'следующий урок');
+    final weak = profile.weakCategories.isNotEmpty
+        ? profile.weakCategories.first
+        : _profileCopyV1(context, en: 'No live leak', ru: 'Явной протечки нет');
     final headline = profile.strongCategories.isNotEmpty
         ? _profileCopyV1(
             context,
@@ -805,8 +823,8 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
           );
     final body = _profileCopyV1(
       context,
-      en: 'Recent gains are sticking. Keep the route moving with $focus.',
-      ru: 'Последние улучшения закрепляются. Продолжай маршрут через $focus.',
+      en: 'You can already see what is steady, what is growing, and what still needs calm reps.',
+      ru: 'Уже видно, что у тебя стабильно, что растёт и где ещё нужны спокойные репы.',
     );
     return Container(
       key: const Key('act0_shell_profile_identity_card'),
@@ -849,6 +867,16 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
                 ),
                 value: gain,
                 color: Act0ShellTokensV1.info,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              _IdentitySignalRowV1(
+                label: _profileCopyV1(
+                  context,
+                  en: 'Still shaping',
+                  ru: 'Ещё формируется',
+                ),
+                value: weak,
+                color: Act0ShellTokensV1.gold,
               ),
             ],
           ),
@@ -1178,36 +1206,72 @@ class _CategoryPanelV1 extends StatelessWidget {
 }
 
 class _ProfileSkillCardV1 extends StatelessWidget {
-  const _ProfileSkillCardV1({required this.stat});
+  const _ProfileSkillCardV1({required this.stat, this.gain});
 
   final Act0PlacementSkillStatV1 stat;
+  final Act0SkillGainV1? gain;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 154,
-      child: InkWell(
-        key: Key('act0_shell_profile_skill_stat_${stat.label}'),
-        onTap: () => _showSkillDetailsSheet(context, stat),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
-        child: Container(
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-          decoration: Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface2,
-            borderColor: stat.locked
-                ? Act0ShellTokensV1.border
-                : Act0ShellTokensV1.primary.withOpacity(0.20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(stat.label, style: Act0ShellTokensV1.body),
+    final tone = stat.locked
+        ? Act0ShellTokensV1.textMuted
+        : Act0ShellTokensV1.primary;
+    return InkWell(
+      key: Key('act0_shell_profile_skill_stat_${stat.label}'),
+      onTap: () => _showSkillDetailsSheet(context, stat),
+      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 126),
+        padding: const EdgeInsets.all(12),
+        decoration: Act0ShellTokensV1.surfaceDecoration(
+          color: Act0ShellTokensV1.surface3.withOpacity(0.72),
+          borderColor: stat.locked
+              ? Act0ShellTokensV1.border
+              : tone.withOpacity(0.18),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(stat.label, style: Act0ShellTokensV1.body),
+                      const SizedBox(height: 4),
+                      Text(
+                        stat.locked ? 'Later' : stat.levelLabel,
+                        style: Act0ShellTokensV1.label.copyWith(color: tone),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: Act0ShellTokensV1.gapXs),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                if (gain != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Act0ShellTokensV1.gold.withOpacity(0.10),
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusMd,
+                      ),
+                      border: Border.all(
+                        color: Act0ShellTokensV1.gold.withOpacity(0.22),
+                      ),
+                    ),
+                    child: Text(
+                      '+${gain!.gain}',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.gold,
+                      ),
+                    ),
+                  )
+                else
                   Icon(
                     stat.locked
                         ? Icons.lock_rounded
@@ -1217,45 +1281,93 @@ class _ProfileSkillCardV1 extends StatelessWidget {
                         ? Act0ShellTokensV1.textMuted
                         : Act0ShellTokensV1.info,
                   ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              stat.locked ? 'Opens later' : stat.nextLevelLabel,
+              key: Key('act0_shell_profile_skill_value_${stat.label}'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.muted,
+            ),
+            if (gain != null) ...[
+              const SizedBox(height: 2),
               Text(
-                stat.locked ? 'Later' : stat.levelLabel,
+                gain!.source,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: stat.locked
-                      ? Act0ShellTokensV1.textMuted
-                      : Act0ShellTokensV1.primary,
+                  color: Act0ShellTokensV1.textDim,
+                  letterSpacing: 0.1,
                 ),
               ),
-              const SizedBox(height: 6),
+            ],
+            const SizedBox(height: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radius2xs),
+              child: LinearProgressIndicator(
+                minHeight: 8,
+                value: stat.nextLevelProgress,
+                backgroundColor: Act0ShellTokensV1.surface,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  stat.locked
+                      ? Act0ShellTokensV1.textMuted.withOpacity(0.20)
+                      : tone,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          margin: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderColor: Act0ShellTokensV1.gold.withOpacity(0.22),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Badge collection', style: Act0ShellTokensV1.sectionTitle),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
               Text(
-                stat.locked ? 'Opens later' : stat.nextLevelLabel,
-                key: Key('act0_shell_profile_skill_value_${stat.label}'),
+                'Proof from streaks, repairs, clean drills, and steady return.',
                 style: Act0ShellTokensV1.muted,
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
-                ),
-                child: LinearProgressIndicator(
-                  minHeight: 8,
-                  value: stat.nextLevelProgress,
-                  backgroundColor: Act0ShellTokensV1.surface3,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    stat.locked
-                        ? Act0ShellTokensV1.textMuted.withOpacity(0.20)
-                        : Act0ShellTokensV1.primary,
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: _TwoColumnStaggeredGridV1(
+                    children: [
+                      for (final achievement in profile.achievements)
+                        _AchievementCardV1(
+                          label: achievement.label,
+                          icon: _achievementIconForLabel(achievement.label),
+                          locked: achievement.locked,
+                        ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 }
 
 void _showSkillDetailsSheet(
@@ -1403,13 +1515,15 @@ class _AchievementCardV1 extends StatelessWidget {
       key: Key('act0_shell_profile_achievement_$keySlug'),
       opacity: locked ? 0.62 : 1,
       child: Container(
-        padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+        constraints: const BoxConstraints(minHeight: 94),
+        padding: const EdgeInsets.all(12),
         decoration: Act0ShellTokensV1.surfaceDecoration(
           borderColor: locked
               ? Act0ShellTokensV1.border
               : Act0ShellTokensV1.gold.withOpacity(0.42),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 36,
@@ -1430,11 +1544,42 @@ class _AchievementCardV1 extends StatelessWidget {
                 size: 20,
               ),
             ),
-            const SizedBox(width: Act0ShellTokensV1.gapMd),
-            Expanded(child: Text(label, style: Act0ShellTokensV1.cardTitle)),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Text(
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.body.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TwoColumnStaggeredGridV1 extends StatelessWidget {
+  const _TwoColumnStaggeredGridV1({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final gap = Act0ShellTokensV1.gapSm;
+        final itemWidth = (constraints.maxWidth - gap) / 2;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (var i = 0; i < children.length; i++)
+              SizedBox(width: itemWidth, child: children[i]),
+          ],
+        );
+      },
     );
   }
 }
