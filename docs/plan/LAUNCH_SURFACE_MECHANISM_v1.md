@@ -85,11 +85,13 @@ It should:
 - feel confident
 - remove fear of starting
 - hand the learner into the product cleanly
+- resolve into one obvious first route, not a mini diagnostic report
 
 It should not:
 
 - feel like a long test
 - explain the whole system
+- stack several explanatory panels before routing is obvious
 - ask the learner to choose a product model
 
 ### Home

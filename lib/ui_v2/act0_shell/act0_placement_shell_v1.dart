@@ -306,10 +306,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'What the check looks at',
-                  style: Act0ShellTokensV1.cardTitle,
-                ),
+                Text('Three fast reads', style: Act0ShellTokensV1.cardTitle),
                 SizedBox(height: Act0ShellTokensV1.gapSm),
                 _PlacementStepLineV1(
                   icon: Icons.person_search_rounded,
@@ -325,25 +322,10 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   icon: Icons.alt_route_rounded,
                   label: 'Action order once the hand starts moving.',
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _PlacementSectionCardV1(
-            borderColor: Act0ShellTokensV1.gold.withOpacity(0.18),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('What you get after', style: Act0ShellTokensV1.cardTitle),
                 SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementStepLineV1(
-                  icon: Icons.route_rounded,
-                  label: 'A first route that starts where you actually are.',
-                ),
-                SizedBox(height: 10),
-                _PlacementStepLineV1(
-                  icon: Icons.analytics_rounded,
-                  label: 'A cleaner first session and a sharper baseline.',
+                Text(
+                  'Then you land in one route that fits and opens fast.',
+                  style: Act0ShellTokensV1.muted,
                 ),
               ],
             ),
@@ -549,13 +531,6 @@ class _PlacementIntroViewV1 extends StatelessWidget {
                   color: Act0ShellTokensV1.text,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                'If you are brand new, this still works. If you already know some poker, it avoids wasting your first reps.',
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                ),
-              ),
             ],
           ),
         ),
@@ -566,71 +541,18 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Who this fits', style: Act0ShellTokensV1.cardTitle),
-              SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementStepLineV1(
-                icon: Icons.school_rounded,
-                label: 'New players who want a calm first step.',
-              ),
-              SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.groups_rounded,
-                label:
-                    'Casual players who know some terms but still freeze in hands.',
-              ),
-              SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.psychology_alt_rounded,
-                label: 'Anyone who wants reps, not long theory walls.',
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_intro_why_faster'),
-          borderColor: Act0ShellTokensV1.info.withOpacity(0.18),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Why this works faster', style: Act0ShellTokensV1.cardTitle),
-              SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementStepLineV1(
-                icon: Icons.play_circle_rounded,
-                label: 'Short real spots, not passive reading.',
-              ),
-              SizedBox(height: 8),
-              _PlacementStepLineV1(
-                icon: Icons.build_circle_rounded,
-                label: 'Misses get repaired before confusion piles up.',
-              ),
-              SizedBox(height: 8),
-              _PlacementStepLineV1(
-                icon: Icons.route_rounded,
-                label: 'Your first route matches your current level.',
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_intro_first_10_min'),
-          borderColor: Act0ShellTokensV1.gold.withOpacity(0.18),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
               Text('What you get', style: Act0ShellTokensV1.cardTitle),
               SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlacementStepLineV1(
-                icon: Icons.looks_one_rounded,
+                icon: Icons.route_rounded,
                 label: 'One clear start instead of a generic opener.',
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 10),
               _PlacementStepLineV1(
-                icon: Icons.looks_two_rounded,
-                label: 'A live check built from real spots across the course.',
+                icon: Icons.play_circle_rounded,
+                label: 'One short live check built from real spots.',
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 10),
               _PlacementStepLineV1(
                 icon: Icons.looks_3_rounded,
                 label: 'A route you can open immediately.',
@@ -775,6 +697,14 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
+                Text(
+                  result.routeTrustLine,
+                  key: const Key('act0_shell_placement_destination_trust_line'),
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                  ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
                 Act0SharkyGuideCardV1(
                   eyebrow: 'Sharky says',
                   line: result.coachLine,
@@ -813,7 +743,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Text(
-                    'First stop',
+                    'First route',
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.primary,
                     ),
@@ -832,25 +762,9 @@ class _PlacementResultViewV1 extends StatelessWidget {
               ),
               if (result.firstSessionPlan.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 2),
-                      child: Icon(
-                        Icons.play_arrow_rounded,
-                        size: 16,
-                        color: Act0ShellTokensV1.info,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        result.firstSessionPlan.first,
-                        style: Act0ShellTokensV1.muted,
-                      ),
-                    ),
-                  ],
+                _PlacementMicroStepV1(
+                  index: 1,
+                  text: result.firstSessionPlan.first,
                 ),
               ],
               if (result.firstSessionPlan.length > 1) ...[
@@ -871,7 +785,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Next 10 minutes',
+                        'Right after that',
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.info,
                         ),
@@ -887,12 +801,6 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                result.routeTrustLine,
-                key: const Key('act0_shell_placement_destination_trust_line'),
-                style: Act0ShellTokensV1.muted,
-              ),
             ],
           ),
         ),
@@ -932,11 +840,6 @@ class _PlacementResultViewV1 extends StatelessWidget {
                             color: Act0ShellTokensV1.info,
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Your first stat board',
-                          style: Act0ShellTokensV1.cardTitle,
-                        ),
                       ],
                     ),
                   ),
@@ -944,7 +847,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Tap a skill to see what it means, what it affects, and why it matters.',
+                'Your first reads and action habits start here.',
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.textMuted,
                 ),
@@ -954,12 +857,10 @@ class _PlacementResultViewV1 extends StatelessWidget {
                 spacing: Act0ShellTokensV1.gapSm,
                 runSpacing: Act0ShellTokensV1.gapSm,
                 children: [
-                  for (final stat in result.skillStats)
+                  for (final stat in result.skillStats.take(4))
                     _PlacementSkillCardV1(stat: stat),
                 ],
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(result.profileSummary, style: Act0ShellTokensV1.muted),
             ],
           ),
         ),
@@ -1106,7 +1007,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Your first route is ready.',
+            'Your route is ready.',
             textAlign: TextAlign.center,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.text,

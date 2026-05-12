@@ -937,8 +937,12 @@ Current wave note (2026-05-12):
    not decorative fake stats. The active `Review` density pass then removes
    duplicate repair-status rows from the prominent mistake card, keeps one
    visible diagnosis/contrast/CTA path, and leaves deeper context in quieter
-   secondary treatment. The next default wave after that moves to
-   `Placement` compression.
+   secondary treatment. The active `Placement` pass then compresses intro and
+   result surfaces so entry feels like fast trusted routing, not a multi-panel
+   report. Intro drops to one compact promise plus one support block; the live
+   check readiness state collapses into one short explanation card; the result
+   view promotes one obvious first route while poker skills stay as a quieter
+   preview instead of a long stat wall.
 
 ## How To Use This Plan
 

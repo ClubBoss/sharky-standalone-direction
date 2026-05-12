@@ -724,19 +724,9 @@ void main() {
       find.byKey(const Key('act0_shell_placement_intro_for_who')),
       findsOneWidget,
     );
-    expect(
-      find.byKey(const Key('act0_shell_placement_intro_why_faster')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_placement_intro_first_10_min')),
-      findsOneWidget,
-    );
     expect(find.text('Fast route in. No long setup.'), findsOneWidget);
-    expect(find.text('Who this fits'), findsOneWidget);
-    expect(find.text('Why this works faster'), findsOneWidget);
     expect(find.text('What you get'), findsOneWidget);
-    expect(find.textContaining('If you are brand new'), findsOneWidget);
+    expect(find.textContaining('skip the wrong start'), findsOneWidget);
     expect(find.text('Two minutes. Then Sharky places you.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_placement_flow_action_bar')),
@@ -778,11 +768,14 @@ void main() {
       find.text('One short live check. Then Sharky locks the first route.'),
       findsOneWidget,
     );
-    expect(find.text('What the check looks at'), findsOneWidget);
+    expect(find.text('Three fast reads'), findsOneWidget);
     expect(find.textContaining('Table read'), findsOneWidget);
     expect(find.textContaining('Board and street'), findsOneWidget);
     expect(find.textContaining('Action order'), findsOneWidget);
-    expect(find.text('What you get after'), findsOneWidget);
+    expect(
+      find.text('Then you land in one route that fits and opens fast.'),
+      findsOneWidget,
+    );
     expect(find.text('Start skill check'), findsOneWidget);
   });
 
@@ -920,8 +913,8 @@ void main() {
     );
     expect(find.text('Sharky read'), findsOneWidget);
     expect(find.text('Core poker skills'), findsOneWidget);
-    expect(find.text('Blind play'), findsOneWidget);
-    expect(find.text('Table sense'), findsOneWidget);
+    expect(find.textContaining('Lv'), findsWidgets);
+    expect(find.text('First route'), findsWidgets);
     expect(
       find.byKey(const Key('act0_shell_placement_open_recommended_path')),
       findsOneWidget,
@@ -939,17 +932,8 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('act0_shell_placement_skill_stat_Blind play')),
-      240,
-      scrollable: find.descendant(
-        of: find.byKey(const Key('act0_shell_placement_screen')),
-        matching: find.byType(Scrollable),
-      ),
-    );
-    await tester.pumpAndSettle();
     await tester.tap(
-      find.byKey(const Key('act0_shell_placement_skill_stat_Blind play')),
+      find.byKey(const Key('act0_shell_placement_skill_stat_Table sense')),
     );
     await tester.pumpAndSettle();
     expect(find.text('What it means'), findsOneWidget);
@@ -987,13 +971,6 @@ void main() {
     expect(find.byKey(const Key('act0_shell_bottom_nav')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
     expect(find.text('First guided start'), findsOneWidget);
-    expect(find.text('Start first rep'), findsOneWidget);
-    expect(
-      find.text(
-        'One tap opens the first guided rep chosen from your placement result.',
-      ),
-      findsOneWidget,
-    );
 
     await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
     await tester.pumpAndSettle();
