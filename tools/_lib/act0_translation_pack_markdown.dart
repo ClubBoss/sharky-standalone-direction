@@ -41,6 +41,7 @@ class Act0TranslationTask {
     required this.runnerPromptLocalized,
     required this.runnerSupportLocalized,
     required this.runnerQuestionLocalized,
+    required this.teachingSteps,
   });
 
   final String taskId;
@@ -50,6 +51,19 @@ class Act0TranslationTask {
   final String runnerPromptLocalized;
   final String runnerSupportLocalized;
   final String runnerQuestionLocalized;
+  final List<Act0TranslationTeachingStep> teachingSteps;
+}
+
+class Act0TranslationTeachingStep {
+  const Act0TranslationTeachingStep({
+    required this.stepIndex,
+    required this.titleLocalized,
+    required this.bodyLocalized,
+  });
+
+  final int stepIndex;
+  final String titleLocalized;
+  final String bodyLocalized;
 }
 
 class Act0TranslationPackParser {
@@ -87,6 +101,7 @@ class Act0TranslationPackParser {
 
     String? currentTaskId;
     final currentTaskFields = <String, String>{};
+    final currentTaskTeachingSteps = <int, Act0TranslationTeachingStep>{};
 
     void flushTask() {
       if (currentTaskId == null) {
@@ -107,10 +122,15 @@ class Act0TranslationPackParser {
               currentTaskFields['runnerSupport_$_languageFieldSuffix'] ?? '',
           runnerQuestionLocalized:
               currentTaskFields['runnerQuestion_$_languageFieldSuffix'] ?? '',
+          teachingSteps: List<Act0TranslationTeachingStep>.unmodifiable(
+            currentTaskTeachingSteps.values.toList()
+              ..sort((a, b) => a.stepIndex.compareTo(b.stepIndex)),
+          ),
         ),
       );
       currentTaskId = null;
       currentTaskFields.clear();
+      currentTaskTeachingSteps.clear();
     }
 
     void flushLesson() {
@@ -151,7 +171,24 @@ class Act0TranslationPackParser {
       if (currentTaskId != null && rawLine.startsWith('  ')) {
         final field = _parseField(line);
         if (field != null) {
-          currentTaskFields[field.$1] = field.$2;
+          final teachingStepField = _parseTeachingStepField(
+            field.$1,
+            field.$2,
+            _languageFieldSuffix,
+          );
+          if (teachingStepField != null) {
+            final existing =
+                currentTaskTeachingSteps[teachingStepField.stepIndex] ??
+                Act0TranslationTeachingStep(
+                  stepIndex: teachingStepField.stepIndex,
+                  titleLocalized: '',
+                  bodyLocalized: '',
+                );
+            currentTaskTeachingSteps[teachingStepField.stepIndex] =
+                teachingStepField.apply(existing);
+          } else {
+            currentTaskFields[field.$1] = field.$2;
+          }
         }
         continue;
       }
@@ -234,5 +271,43 @@ class Act0TranslationPackParser {
       }
     }
     return '';
+  }
+
+  static _TeachingStepField? _parseTeachingStepField(
+    String key,
+    String value,
+    String languageFieldSuffix,
+  ) {
+    final match = RegExp(
+      '^teachingStep(\\d+)_(title|body)_$languageFieldSuffix\$',
+    ).firstMatch(key);
+    if (match == null) {
+      return null;
+    }
+    return _TeachingStepField(
+      stepIndex: int.parse(match.group(1)!),
+      fieldName: match.group(2)!,
+      value: value,
+    );
+  }
+}
+
+class _TeachingStepField {
+  const _TeachingStepField({
+    required this.stepIndex,
+    required this.fieldName,
+    required this.value,
+  });
+
+  final int stepIndex;
+  final String fieldName;
+  final String value;
+
+  Act0TranslationTeachingStep apply(Act0TranslationTeachingStep existing) {
+    return Act0TranslationTeachingStep(
+      stepIndex: stepIndex,
+      titleLocalized: fieldName == 'title' ? value : existing.titleLocalized,
+      bodyLocalized: fieldName == 'body' ? value : existing.bodyLocalized,
+    );
   }
 }

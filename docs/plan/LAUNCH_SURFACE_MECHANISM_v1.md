@@ -247,6 +247,17 @@ Only after that wave is materially clearer should the next default work move to:
 1. `Review` as repair lane refinement
 2. `You` as identity/progress mirror refinement
 
+Implementation note (2026-05-12):
+
+- The first `Home / Learn / Play` clarification wave is now the active landed
+  contract in code.
+- `Home` keeps one dominant next-step block while extra reps are explicitly
+  framed as optional.
+- `Learn` now states that it owns the main route and that `Play` only adds
+  extra reps.
+- `Play` now leads with one featured recommended rep before the secondary
+  practice sections.
+
 ## Success Test
 
 The surface mechanism is working when all of the following feel true:

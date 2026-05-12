@@ -59,6 +59,17 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
     final allTopicsLabel = localeIsRu ? 'Все темы' : 'All topics';
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
+    final featuredGroup =
+        widget.groups.cast<Act0PracticeGroupV1?>().firstWhere(
+          (group) => group?.isRecommended ?? false,
+          orElse: () => null,
+        ) ??
+        quickDrillGroup ??
+        fixLeakGroup ??
+        widget.groups.cast<Act0PracticeGroupV1?>().firstWhere(
+          (group) => group?.isEnabled ?? false,
+          orElse: () => null,
+        );
     final topicGroups =
         widget.groups
             .where(
@@ -128,6 +139,27 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           style: Act0ShellTokensV1.muted,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapLg),
+        if (featuredGroup != null) ...[
+          _SectionHeaderV1(
+            label: _playCopyV1(
+              context,
+              'play_best_next_label',
+              fallback: 'Best extra rep',
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          _FeaturedPracticeCardV1(
+            group: featuredGroup,
+            title: widget.recommendedTitle,
+            subtitle: widget.recommendedSubtitle,
+            reasonLabel: widget.recommendedReasonLabel,
+            outcomeLead: widget.recommendedOutcomeLead,
+            outcome: widget.recommendedOutcome,
+            masteryLabel: widget.masteryLabel,
+            onStartGroup: widget.onStartGroup,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ],
 
         if (quickDrillGroup != null) ...[
           _SectionHeaderV1(
@@ -317,6 +349,198 @@ class _TopicFilterChipV1 extends StatelessWidget {
             color: selected
                 ? Act0ShellTokensV1.primary
                 : Act0ShellTokensV1.textMuted,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FeaturedPracticeCardV1 extends StatelessWidget {
+  const _FeaturedPracticeCardV1({
+    required this.group,
+    required this.title,
+    required this.subtitle,
+    required this.reasonLabel,
+    required this.outcomeLead,
+    required this.outcome,
+    required this.masteryLabel,
+    required this.onStartGroup,
+  });
+
+  final Act0PracticeGroupV1 group;
+  final String title;
+  final String subtitle;
+  final String reasonLabel;
+  final String outcomeLead;
+  final String outcome;
+  final String masteryLabel;
+  final ValueChanged<Act0PracticeGroupV1> onStartGroup;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = group.isEnabled;
+    final accentColor = _groupIconColor(group.groupId);
+    final metaLine = [
+      if (group.sessionLabel.isNotEmpty) group.sessionLabel,
+      if (group.durationLabel.isNotEmpty) group.durationLabel,
+    ].join(' · ');
+    return Opacity(
+      opacity: enabled ? 1 : 0.64,
+      child: InkWell(
+        key: const Key('act0_shell_play_featured_card'),
+        onTap: enabled ? () => onStartGroup(group) : null,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+        child: Container(
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                accentColor.withOpacity(0.18),
+                Act0ShellTokensV1.surface,
+                Act0ShellTokensV1.surface2,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+            border: Border.all(
+              color: enabled
+                  ? accentColor.withOpacity(0.34)
+                  : Act0ShellTokensV1.border,
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: accentColor.withOpacity(enabled ? 0.12 : 0.06),
+                blurRadius: 26,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _GroupIconV1(groupId: group.groupId),
+                  const SizedBox(width: Act0ShellTokensV1.gapMd),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          spacing: Act0ShellTokensV1.gapSm,
+                          runSpacing: Act0ShellTokensV1.gapXs,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: accentColor.withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.radiusPill,
+                                ),
+                                border: Border.all(
+                                  color: accentColor.withOpacity(0.22),
+                                ),
+                              ),
+                              child: Text(
+                                masteryLabel,
+                                key: const Key(
+                                  'act0_shell_play_featured_mastery_label',
+                                ),
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: accentColor,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                            if (metaLine.isNotEmpty)
+                              Text(
+                                metaLine,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: Act0ShellTokensV1.textDim,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: Act0ShellTokensV1.gapSm),
+                        Text(
+                          title,
+                          key: const Key('act0_shell_play_featured_title'),
+                          style: Act0ShellTokensV1.sectionTitle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              Text(
+                subtitle,
+                key: const Key('act0_shell_play_featured_subtitle'),
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Container(
+                key: const Key('act0_shell_play_featured_reason'),
+                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.surface2.withOpacity(0.82),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusLg,
+                  ),
+                  border: Border.all(color: Act0ShellTokensV1.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reasonLabel,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: accentColor,
+                      ),
+                    ),
+                    const SizedBox(height: Act0ShellTokensV1.gapXs),
+                    Text(
+                      '$outcomeLead $outcome',
+                      key: const Key('act0_shell_play_featured_outcome'),
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FilledButton(
+                  key: const Key('act0_shell_play_featured_cta'),
+                  onPressed: enabled ? () => onStartGroup(group) : null,
+                  style: Act0ShellTokensV1.primaryButtonStyle(
+                    height: Act0ShellTokensV1.compactCtaHeight,
+                  ),
+                  child: Text(
+                    enabled
+                        ? group.ctaLabel
+                        : _playCopyV1(
+                            context,
+                            'play_later_cta',
+                            fallback: 'Later',
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -47,6 +47,7 @@ class Act0TaskPack {
     required this.hint,
     required this.question,
     required this.feedbackReason,
+    required this.teachingSteps,
   });
 
   final String taskId;
@@ -60,11 +61,19 @@ class Act0TaskPack {
   final String? hint;
   final String? question;
   final String? feedbackReason;
+  final List<Act0TeachingStepPack> teachingSteps;
 
   bool get hasRunnerCopy =>
       (caption?.trim().isNotEmpty ?? false) ||
       (hint?.trim().isNotEmpty ?? false) ||
       (question?.trim().isNotEmpty ?? false);
+}
+
+class Act0TeachingStepPack {
+  const Act0TeachingStepPack({required this.title, required this.body});
+
+  final String title;
+  final String body;
 }
 
 class Act0SourceParser {
@@ -130,74 +139,182 @@ class Act0SourceParser {
       final closeBracket = findMatchingBracket(source, openBracket);
       final block = source.substring(openBracket + 1, closeBracket);
       final lessons = <Act0LessonPack>[];
-
-      for (final lessonBlock in extractChildBlocks(
-        block,
-        'Act0LessonCardV1(',
-      )) {
-        final lessonId = extractStringField(lessonBlock, 'lessonId');
-        final title = extractStringField(lessonBlock, 'title');
-        final subtitle = extractStringField(lessonBlock, 'subtitle');
-        if (lessonId == null || title == null || subtitle == null) {
-          continue;
+      var searchStart = 0;
+      while (true) {
+        final directIndex = block.indexOf('Act0LessonCardV1(', searchStart);
+        final helperIndex = block.indexOf('_lessonFromTasksV1(', searchStart);
+        final hasDirect = directIndex != -1;
+        final hasHelper = helperIndex != -1;
+        if (!hasDirect && !hasHelper) {
+          break;
         }
 
-        final tasks = <Act0TaskPack>[];
-        final tasksStart = lessonBlock.indexOf('tasks: <Act0LessonTaskV1>[');
-        if (tasksStart != -1) {
-          final openTaskBracket = lessonBlock.indexOf('[', tasksStart);
-          final closeTaskBracket = findMatchingBracket(
-            lessonBlock,
-            openTaskBracket,
-          );
-          final tasksBlock = lessonBlock.substring(
-            openTaskBracket + 1,
-            closeTaskBracket,
-          );
-          for (final taskBlock in extractChildBlocks(
-            tasksBlock,
-            'Act0LessonTaskV1(',
-          )) {
-            final taskId = extractStringField(taskBlock, 'taskId');
-            final taskTitle = extractStringField(taskBlock, 'title');
-            if (taskId == null || taskTitle == null) {
-              continue;
-            }
+        final isDirect = hasDirect && (!hasHelper || directIndex < helperIndex);
+        final markerIndex = isDirect ? directIndex : helperIndex;
+        final openParen = block.indexOf('(', markerIndex);
+        final closeParen = findMatchingParen(block, openParen);
+        final lessonBlock = block.substring(openParen + 1, closeParen);
 
-            final runnerName = extractIdentifierField(taskBlock, 'runner');
-            final runnerSpec = runnerName == null ? null : runners[runnerName];
-            tasks.add(
-              Act0TaskPack(
-                taskId: taskId,
-                title: taskTitle,
-                summary: extractStringField(taskBlock, 'summary'),
-                lockedSummary: extractStringField(taskBlock, 'lockedSummary'),
-                phase: extractEnumField(taskBlock, 'phase') ?? 'unknown',
-                stepKind: extractEnumField(taskBlock, 'stepKind') ?? 'unknown',
-                runnerName: runnerName,
-                caption: runnerSpec?.caption,
-                hint: runnerSpec?.hint,
-                question: runnerSpec?.question,
-                feedbackReason: runnerSpec?.feedbackReason,
-              ),
-            );
-          }
+        final lesson = isDirect
+            ? _parseDirectLessonBlock(lessonBlock, runners)
+            : _parseHelperLessonBlock(lessonBlock, runners, result);
+        if (lesson != null) {
+          lessons.add(lesson);
         }
-
-        lessons.add(
-          Act0LessonPack(
-            lessonId: lessonId,
-            title: title,
-            subtitle: subtitle,
-            tasks: tasks,
-          ),
-        );
+        searchStart = closeParen + 1;
       }
 
       result[listName] = lessons;
     }
 
     return result;
+  }
+
+  Act0LessonPack? _parseDirectLessonBlock(
+    String lessonBlock,
+    Map<String, _RunnerSpec> runners,
+  ) {
+    final lessonId = extractStringField(lessonBlock, 'lessonId');
+    final title = extractStringField(lessonBlock, 'title');
+    final subtitle = extractStringField(lessonBlock, 'subtitle');
+    if (lessonId == null || title == null || subtitle == null) {
+      return null;
+    }
+
+    return Act0LessonPack(
+      lessonId: lessonId,
+      title: title,
+      subtitle: subtitle,
+      tasks: _extractTasksField(lessonBlock, 'tasks', runners),
+    );
+  }
+
+  Act0LessonPack? _parseHelperLessonBlock(
+    String lessonBlock,
+    Map<String, _RunnerSpec> runners,
+    Map<String, List<Act0LessonPack>> lessonLists,
+  ) {
+    final lessonId = extractStringField(lessonBlock, 'lessonId');
+    final title = extractStringField(lessonBlock, 'title');
+    final subtitle = extractStringField(lessonBlock, 'subtitle');
+    if (lessonId == null || title == null || subtitle == null) {
+      return null;
+    }
+
+    final sourceTasks = _extractSourceTasks(lessonBlock, runners, lessonLists);
+    final extraDrills = _extractTasksField(lessonBlock, 'extraDrills', runners);
+    final tasks = _mergeHelperTasks(sourceTasks, extraDrills);
+
+    return Act0LessonPack(
+      lessonId: lessonId,
+      title: title,
+      subtitle: subtitle,
+      tasks: tasks,
+    );
+  }
+
+  List<Act0TaskPack> _extractSourceTasks(
+    String lessonBlock,
+    Map<String, _RunnerSpec> runners,
+    Map<String, List<Act0LessonPack>> lessonLists,
+  ) {
+    final inlineTasks = _extractTasksField(lessonBlock, 'sourceTasks', runners);
+    if (inlineTasks.isNotEmpty) {
+      return inlineTasks;
+    }
+
+    final refMatch = RegExp(
+      r'sourceTasks:\s*(_\w+)\[(\d+)\]\.taskList',
+    ).firstMatch(lessonBlock);
+    if (refMatch == null) {
+      return const <Act0TaskPack>[];
+    }
+    final listName = refMatch.group(1)!;
+    final lessonIndex = int.tryParse(refMatch.group(2)!);
+    final sourceLessons = lessonLists[listName];
+    if (lessonIndex == null ||
+        sourceLessons == null ||
+        lessonIndex < 0 ||
+        lessonIndex >= sourceLessons.length) {
+      return const <Act0TaskPack>[];
+    }
+    return List<Act0TaskPack>.unmodifiable(sourceLessons[lessonIndex].tasks);
+  }
+
+  List<Act0TaskPack> _mergeHelperTasks(
+    List<Act0TaskPack> sourceTasks,
+    List<Act0TaskPack> extraDrills,
+  ) {
+    if (extraDrills.isEmpty) {
+      return sourceTasks;
+    }
+    final recapStartIndex = sourceTasks.lastIndexWhere(
+      (task) => task.phase == 'review',
+    );
+    final insertIndex = recapStartIndex == -1
+        ? sourceTasks.length
+        : recapStartIndex;
+    return List<Act0TaskPack>.unmodifiable(<Act0TaskPack>[
+      ...sourceTasks.take(insertIndex),
+      ...extraDrills,
+      ...sourceTasks.skip(insertIndex),
+    ]);
+  }
+
+  List<Act0TaskPack> _extractTasksField(
+    String block,
+    String fieldName,
+    Map<String, _RunnerSpec> runners,
+  ) {
+    final tasksStart = block.indexOf('$fieldName:');
+    if (tasksStart == -1) {
+      return const <Act0TaskPack>[];
+    }
+    final openTaskBracket = block.indexOf('[', tasksStart);
+    if (openTaskBracket == -1) {
+      return const <Act0TaskPack>[];
+    }
+    final closeTaskBracket = findMatchingBracket(block, openTaskBracket);
+    final tasksBlock = block.substring(openTaskBracket + 1, closeTaskBracket);
+    return _parseTaskBlocks(tasksBlock, runners);
+  }
+
+  List<Act0TaskPack> _parseTaskBlocks(
+    String tasksBlock,
+    Map<String, _RunnerSpec> runners,
+  ) {
+    final tasks = <Act0TaskPack>[];
+    for (final taskBlock in extractChildBlocks(
+      tasksBlock,
+      'Act0LessonTaskV1(',
+    )) {
+      final taskId = extractStringField(taskBlock, 'taskId');
+      final taskTitle = extractStringField(taskBlock, 'title');
+      if (taskId == null || taskTitle == null) {
+        continue;
+      }
+
+      final runnerName = extractIdentifierField(taskBlock, 'runner');
+      final runnerSpec = runnerName == null ? null : runners[runnerName];
+      tasks.add(
+        Act0TaskPack(
+          taskId: taskId,
+          title: taskTitle,
+          summary: extractStringField(taskBlock, 'summary'),
+          lockedSummary: extractStringField(taskBlock, 'lockedSummary'),
+          phase: extractEnumField(taskBlock, 'phase') ?? 'unknown',
+          stepKind: extractEnumField(taskBlock, 'stepKind') ?? 'unknown',
+          runnerName: runnerName,
+          caption: runnerSpec?.caption,
+          hint: runnerSpec?.hint,
+          question: runnerSpec?.question,
+          feedbackReason: runnerSpec?.feedbackReason,
+          teachingSteps:
+              runnerSpec?.teachingSteps ?? const <Act0TeachingStepPack>[],
+        ),
+      );
+    }
+    return List<Act0TaskPack>.unmodifiable(tasks);
   }
 
   Map<String, _RunnerSpec> _parseRunnerSpecs() {
@@ -216,6 +333,7 @@ class Act0SourceParser {
           hint: extractStringField(block, 'hint'),
           question: extractStringField(block, 'question'),
           feedbackReason: extractStringField(block, 'feedbackReason'),
+          teachingSteps: _extractTeachingSteps(block),
         );
       } else {
         final copyWithMatch = RegExp(
@@ -236,6 +354,7 @@ class Act0SourceParser {
           feedbackReason:
               extractStringField(block, 'feedbackReason') ??
               base?.feedbackReason,
+          teachingSteps: _extractTeachingSteps(block) ?? base?.teachingSteps,
         );
       }
     }
@@ -250,12 +369,41 @@ class _RunnerSpec {
     required this.hint,
     required this.question,
     required this.feedbackReason,
+    required this.teachingSteps,
   });
 
   final String? caption;
   final String? hint;
   final String? question;
   final String? feedbackReason;
+  final List<Act0TeachingStepPack>? teachingSteps;
+}
+
+List<Act0TeachingStepPack>? _extractTeachingSteps(String block) {
+  final marker = 'teachingSteps:';
+  final start = block.indexOf(marker);
+  if (start == -1) {
+    return null;
+  }
+  final openBracket = block.indexOf('[', start);
+  if (openBracket == -1) {
+    return null;
+  }
+  final closeBracket = findMatchingBracket(block, openBracket);
+  final teachingBlock = block.substring(openBracket + 1, closeBracket);
+  final steps = <Act0TeachingStepPack>[];
+  for (final stepBlock in extractChildBlocks(
+    teachingBlock,
+    'Act0TeachingStepV1(',
+  )) {
+    final title = extractStringField(stepBlock, 'title');
+    final body = extractStringField(stepBlock, 'body');
+    if (title == null || body == null) {
+      continue;
+    }
+    steps.add(Act0TeachingStepPack(title: title, body: body));
+  }
+  return List<Act0TeachingStepPack>.unmodifiable(steps);
 }
 
 List<String> extractChildBlocks(String block, String marker) {

@@ -7682,6 +7682,11 @@ final _earlyLatePositionRunner = _latePositionRunner.copyWith(
       feedbackReason: 'BTN is late and usually has more information.',
     ),
   ],
+  table: _latePositionRunner.table.copyWith(
+    selectableSeatIds: const <String>['btn', 'utg'],
+    highlightedSeatIds: const <String>['utg'],
+    activeSeatId: 'utg',
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Early seats decide sooner.',

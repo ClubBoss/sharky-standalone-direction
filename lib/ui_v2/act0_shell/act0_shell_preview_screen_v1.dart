@@ -21,6 +21,88 @@ import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.d
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 
+Act0RunnerStateV1 normalizeAct0SeatTapRunnerV1(Act0RunnerStateV1 runner) {
+  final seatOptions = runner.options
+      .where((option) => (option.seatId ?? '').trim().isNotEmpty)
+      .toList(growable: false);
+  if (seatOptions.isEmpty) {
+    return runner;
+  }
+
+  Act0RunnerOptionV1? correctOption;
+  for (final option in seatOptions) {
+    if (option.isCorrect) {
+      correctOption = option;
+      break;
+    }
+  }
+  if (correctOption == null) {
+    return runner;
+  }
+
+  final visibleSeats = runner.table.seats
+      .where((seat) {
+        final seatId = seat.seatId.trim();
+        return seatId.isNotEmpty && (seat.isOccupied || seat.isHero);
+      })
+      .toList(growable: false);
+  if (visibleSeats.isEmpty) {
+    return runner;
+  }
+
+  final optionsBySeatId = <String, Act0RunnerOptionV1>{
+    for (final option in seatOptions) option.seatId!.trim(): option,
+  };
+  final correctSeatId = correctOption.seatId!.trim();
+  final expandedOptions = <Act0RunnerOptionV1>[
+    for (final seat in visibleSeats)
+      optionsBySeatId[seat.seatId.trim()] ??
+          Act0RunnerOptionV1(
+            id: '__seat_tap__${runner.lessonId}_${seat.seatId.trim()}',
+            label: seat.seatLabel,
+            seatId: seat.seatId.trim(),
+            isCorrect: false,
+            preferredLabel: correctOption.preferredLabel,
+            betterAnswerLabel: correctOption.betterAnswerLabel,
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Almost there.',
+            feedbackReason:
+                '${seat.seatLabel} is not the target seat in this spot.',
+            repairFocusSeatIds: <String>[seat.seatId.trim(), correctSeatId],
+            repairFocusLabels: <String>[
+              seat.seatLabel,
+              correctOption.preferredLabel,
+            ],
+          ),
+  ];
+
+  return runner.copyWith(
+    options: expandedOptions,
+    table: runner.table.copyWith(
+      selectableSeatIds: visibleSeats
+          .map((seat) => seat.seatId.trim())
+          .toList(growable: false),
+    ),
+  );
+}
+
+Act0RunnerStateV1 normalizeAct0DrillSeatHighlightPolicyV1(
+  Act0RunnerStateV1 runner,
+) {
+  if (runner.phase != Act0LessonPhaseV1.drill) {
+    return runner;
+  }
+  final activeSeatId = (runner.table.activeSeatId ?? '').trim();
+  return runner.copyWith(
+    table: runner.table.copyWith(
+      activeSeatId: activeSeatId,
+      highlightedSeatIds: activeSeatId.isEmpty
+          ? const <String>[]
+          : <String>[activeSeatId],
+    ),
+  );
+}
+
 enum _Act0LearningNextActionKindV1 {
   repairDeepLeak,
   repairWeakSpot,
@@ -122,6 +204,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeLessonWrapUpTaskId;
+  String? _lessonRunWrapUpAnchorTaskId;
   Act0BlockCompletionSummaryV1? _blockCompletionSummary;
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
@@ -1339,6 +1422,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
+    final reviewState = _reviewState(state.review);
+    final profileState = _profileState(state.profile, progress);
+    final reviewNavBadgeLabel = reviewState.mistakes.isEmpty
+        ? null
+        : reviewState.mistakes.length > 9
+        ? '9+'
+        : '${reviewState.mistakes.length}';
     final worlds = _progressWorlds(baseState);
     _normalizeSelection(worlds);
     final selectedWorld = _worldById(worlds, _selectedWorldId);
@@ -1353,18 +1443,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
     final playRunner = isPlayRunner
-        ? _repairRunnerForTask(playSelectedTask!).copyWith(
-            lessonId: selectedLesson.lessonId,
-            lessonTitle: _localizedLessonTitleV1(selectedLesson),
-            lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
-            beatIndex: _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
-            beatCount: selectedLesson.taskList.length,
-            phase: _phase,
-            selectedOptionId: _selectedOptionId,
-            teachingStepIndex: _teachingStepIndex,
-            nextLessonId: _nextLessonId(
-              selectedWorld.lessons,
-              selectedLesson.lessonId,
+        ? normalizeAct0DrillSeatHighlightPolicyV1(
+            normalizeAct0SeatTapRunnerV1(
+              _repairRunnerForTask(playSelectedTask!).copyWith(
+                lessonId: selectedLesson.lessonId,
+                lessonTitle: _localizedLessonTitleV1(selectedLesson),
+                lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
+                beatIndex:
+                    _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
+                beatCount: selectedLesson.taskList.length,
+                phase: _phase,
+                selectedOptionId: _selectedOptionId,
+                teachingStepIndex: _teachingStepIndex,
+                nextLessonId: _nextLessonId(
+                  selectedWorld.lessons,
+                  selectedLesson.lessonId,
+                ),
+              ),
             ),
           )
         : null;
@@ -1995,6 +2090,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     )) {
                                       return;
                                     }
+                                    _restoreWrapUpAnchorTaskId(selectedLesson);
                                     if (_maybeShowBlockCompletionSummary(
                                       selectedWorld: selectedWorld,
                                       selectedLesson: selectedLesson,
@@ -2042,7 +2138,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                               ),
                       Act0ShellTabV1.review => Act0ReviewShellV1(
-                        review: _reviewState(state.review),
+                        review: reviewState,
                         selected: _reviewConfidence,
                         onSelected: (value) => setState(() {
                           _reviewConfidence = value;
@@ -2066,7 +2162,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                       ),
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
-                        profile: _profileState(state.profile, progress),
+                        profile: profileState,
                         onRetakePlacement: _openPlacementFlow,
                         onGoToHome: () =>
                             setState(() => _tab = Act0ShellTabV1.home),
@@ -2082,6 +2178,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
+              reviewBadgeLabel: reviewNavBadgeLabel,
               onSelected: (tab) => setState(() {
                 _tab = tab;
                 if (tab == Act0ShellTabV1.play) {
@@ -2837,10 +2934,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonCardV1 currentLesson,
   ) {
     if (_placementHandoffActive) {
-      return _copyV1(
-        en: 'Nothing to fix right now.',
-        ru: 'Сейчас нечего чинить.',
-      );
+      return _copyV1(en: 'Route is clean.', ru: 'Маршрут чист.');
     }
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
@@ -2855,10 +2949,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтори этот быстрый фикс.',
       );
     }
-    return _copyV1(
-      en: 'Nothing to fix right now.',
-      ru: 'Сейчас нечего чинить.',
-    );
+    return _copyV1(en: 'Route is clean.', ru: 'Маршрут чист.');
   }
 
   String _homeRepairDetail(
@@ -2867,8 +2958,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) {
     if (_placementHandoffActive) {
       return _copyV1(
-        en: 'You are clean. The path is ready when you are.',
-        ru: 'Сейчас всё чисто. Маршрут готов, когда будешь готов ты.',
+        en: 'No open leaks. Stay on Learn and keep the lesson moving.',
+        ru: 'Открытых утечек нет. Оставайся в обучении и веди урок дальше.',
       );
     }
     final recommendation = _learningRecommendation(
@@ -2888,8 +2979,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     return _copyV1(
-      en: 'No open leaks right now. Keep the path moving.',
-      ru: 'Сейчас открытых утечек нет. Просто продолжай маршрут.',
+      en: 'No open leaks. Stay on Learn and keep the lesson moving.',
+      ru: 'Открытых утечек нет. Оставайся в обучении и веди урок дальше.',
     );
   }
 
@@ -2913,10 +3004,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Один лёгкий повтор удержит этот спот стабильным.',
       );
     }
-    return _copyV1(
-      en: 'Nothing is asking for repair right now.',
-      ru: 'Сейчас ничего не просит ремонта.',
-    );
+    return '';
   }
 
   String? _homeRepairCtaLabel(
@@ -4361,6 +4449,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_placementDiagnosticActive || _activeRepairTaskId != null) {
       return false;
     }
+    final wrapUpAnchorTaskId = _lessonRunWrapUpAnchorTaskId ?? _selectedTaskId;
+    if (_nextTask(selectedLesson, wrapUpAnchorTaskId) != null) {
+      return false;
+    }
+    _lessonRunWrapUpAnchorTaskId ??= wrapUpAnchorTaskId;
     for (final task in selectedLesson.taskList) {
       if (!_lessonRunMistakeTaskIds.contains(task.taskId)) {
         continue;
@@ -4380,6 +4473,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return true;
     }
     return false;
+  }
+
+  void _restoreWrapUpAnchorTaskId(Act0LessonCardV1 selectedLesson) {
+    final wrapUpAnchorTaskId = _lessonRunWrapUpAnchorTaskId;
+    if (wrapUpAnchorTaskId == null) {
+      return;
+    }
+    final anchorTask = _taskById(selectedLesson, wrapUpAnchorTaskId);
+    _selectedTaskId = anchorTask.taskId;
+    _phase = anchorTask.phase;
   }
 
   String _repairActionLabel(Act0LessonTaskV1 task) {
@@ -4406,6 +4509,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
   }
 
+  int _remainingWrapUpTaskCount() {
+    return _lessonRunMistakeTaskIds
+        .where((taskId) => !_lessonRunWrapUpCompletedTaskIds.contains(taskId))
+        .length;
+  }
+
   Act0RunnerStateV1 _repairRunnerForTask(Act0LessonTaskV1 selectedTask) {
     if (_activeLessonWrapUpTaskId == selectedTask.taskId) {
       final record = _mistakeRecords[selectedTask.taskId];
@@ -4418,26 +4527,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final focusTable = option == null || record == null
           ? selectedTask.runner.table
           : _repairFocusedTable(selectedTask.runner.table, option, record);
+      final showWrapUpIntro = _lessonRunWrapUpCompletedTaskIds.isEmpty;
+      final remainingWrapUpTaskCount = _remainingWrapUpTaskCount();
+      final wrapUpCountLine = remainingWrapUpTaskCount <= 1
+          ? 'One spot to revisit before the lesson summary.'
+          : '$remainingWrapUpTaskCount spots to revisit before the lesson summary.';
       return selectedTask.runner.copyWith(
-        sharky: selectedTask.runner.sharky.copyWith(
-          preSessionLine: 'One last check before the lesson wraps.',
-          preSessionMood: Act0SharkyMoodV1.thinking,
-        ),
+        sharky: showWrapUpIntro
+            ? selectedTask.runner.sharky.copyWith(
+                preSessionLine: 'One last check before the lesson wraps.',
+                preSessionMood: Act0SharkyMoodV1.thinking,
+              )
+            : selectedTask.runner.sharky,
         table: focusTable,
-        teachingSteps: <Act0TeachingStepV1>[
-          Act0TeachingStepV1(
-            title: 'One last check',
-            body: record == null
-                ? 'Run this spot once more before the lesson summary.'
-                : 'You missed this earlier. Read it once more before the lesson ends.',
-            table: focusTable,
-            focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
-            focusCardIds: option?.repairFocusCardIds ?? const <String>[],
-            focusLabels: focusLabels,
-            ctaLabel: 'Retry',
-          ),
-          ...selectedTask.runner.teachingSteps,
-        ],
+        teachingSteps: showWrapUpIntro
+            ? <Act0TeachingStepV1>[
+                Act0TeachingStepV1(
+                  title: 'One last check',
+                  body: record == null
+                      ? wrapUpCountLine
+                      : 'You missed this earlier. $wrapUpCountLine',
+                  table: focusTable,
+                  focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
+                  focusCardIds: option?.repairFocusCardIds ?? const <String>[],
+                  focusLabels: focusLabels,
+                  ctaLabel: 'Retry',
+                ),
+              ]
+            : const <Act0TeachingStepV1>[],
       );
     }
     final record = _activeRepairTaskId == selectedTask.taskId
@@ -4508,8 +4625,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0ReviewStateV1 _reviewState(Act0ReviewStateV1 base) {
-    final open = _openMistakes();
-    final fixed = _fixedMistakes();
+    final open = _openMistakes().isEmpty
+        ? base.mistakes.where((mistake) => !mistake.resolved).toList()
+        : _openMistakes();
+    final fixed = _fixedMistakes().isEmpty
+        ? base.fixedMistakes
+        : _fixedMistakes();
     final state = widget.state ?? Act0ShellStateV1.sample;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
@@ -4523,6 +4644,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
     );
+    final strongSpots = _strongCategories().isEmpty
+        ? base.strongSpots
+        : _strongCategories();
     return Act0ReviewStateV1(
       title: 'Repair board',
       subtitle: recommendation.subtitle,
@@ -4538,16 +4662,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           value: '${_quickFixMistakes().length}',
         ),
         Act0ReviewStatV1(label: 'Fixed', value: '${fixed.length}'),
-        Act0ReviewStatV1(
-          label: 'Strong',
-          value: '${_strongCategories().length}',
-        ),
+        Act0ReviewStatV1(label: 'Strong', value: '${strongSpots.length}'),
       ],
       chosenLabel: open.isEmpty ? base.chosenLabel : open.first.selectedLabel,
       betterLabel: open.isEmpty ? base.betterLabel : open.first.betterLabel,
       mistakes: open,
       fixedMistakes: fixed,
-      strongSpots: _strongCategories(),
+      strongSpots: strongSpots,
     );
   }
 
@@ -5157,6 +5278,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _lessonRunQuickFixTaskIds.clear();
     _lessonRunDeepLeakTaskIds.clear();
     _activeLessonWrapUpTaskId = null;
+    _lessonRunWrapUpAnchorTaskId = null;
     _blockCompletionSummary = null;
   }
 
@@ -5413,8 +5535,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         xpLine: '${progress.xp} / ${base.xpTarget} XP',
         lessonsLine: base.profile.lessonsLine,
         accuracyLine: base.profile.accuracyLine,
+        streakLine: base.profile.streakLine,
+        streakDays: base.profile.streakDays,
         consistencyActiveDays: base.profile.consistencyActiveDays,
         achievements: base.profile.achievements,
+        strongCategories: base.profile.strongCategories,
+        weakCategories: base.profile.weakCategories,
+        recentProgress: base.profile.recentProgress,
+        recentSkillGains: base.profile.recentSkillGains,
+        skillStats: base.profile.skillStats,
+        streakLast7: base.profile.streakLast7,
+        recommendedFocusTitle: base.profile.recommendedFocusTitle,
+        recommendedFocusBody: base.profile.recommendedFocusBody,
+        recommendedFocusCtaLabel: base.profile.recommendedFocusCtaLabel,
+        worldsClearedCount: base.profile.worldsClearedCount,
+        worldsActiveCount: base.profile.worldsActiveCount,
+        totalWorldsCount: base.profile.totalWorldsCount,
+        mistakesFixedLine: base.profile.mistakesFixedLine,
       ),
     );
   }
@@ -5756,10 +5893,15 @@ class _TopBarV1 extends StatelessWidget {
 }
 
 class _BottomNavV1 extends StatelessWidget {
-  const _BottomNavV1({required this.current, required this.onSelected});
+  const _BottomNavV1({
+    required this.current,
+    required this.onSelected,
+    this.reviewBadgeLabel,
+  });
 
   final Act0ShellTabV1 current;
   final ValueChanged<Act0ShellTabV1> onSelected;
+  final String? reviewBadgeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -5799,6 +5941,7 @@ class _BottomNavV1 extends StatelessWidget {
               current: current,
               icon: Icons.refresh_rounded,
               label: isRu ? 'Разбор' : 'Review',
+              badgeLabel: reviewBadgeLabel,
               onSelected: onSelected,
             ),
             _NavItemV1(
@@ -5822,6 +5965,7 @@ class _NavItemV1 extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onSelected,
+    this.badgeLabel,
   });
 
   final Act0ShellTabV1 tab;
@@ -5829,6 +5973,7 @@ class _NavItemV1 extends StatelessWidget {
   final IconData icon;
   final String label;
   final ValueChanged<Act0ShellTabV1> onSelected;
+  final String? badgeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -5836,6 +5981,7 @@ class _NavItemV1 extends StatelessWidget {
     final color = selected
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
+    final hasBadge = badgeLabel != null && badgeLabel!.isNotEmpty;
     return Expanded(
       child: InkWell(
         onTap: () => onSelected(tab),
@@ -5845,7 +5991,54 @@ class _NavItemV1 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 21, color: color),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(icon, size: 21, color: color),
+                  if (hasBadge)
+                    Positioned(
+                      top: -7,
+                      right: -12,
+                      child: Container(
+                        key: Key(
+                          'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? Act0ShellTokensV1.primary
+                              : Act0ShellTokensV1.gold,
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusPill,
+                          ),
+                          border: Border.all(
+                            color: Act0ShellTokensV1.surface,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          badgeLabel!,
+                          textAlign: TextAlign.center,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: selected
+                                ? Act0ShellTokensV1.onPrimary
+                                : Act0ShellTokensV1.onPrimary,
+                            fontSize: 8.2,
+                            letterSpacing: 0.2,
+                            height: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(height: 2),
               Text(
                 label,
@@ -5861,6 +6054,16 @@ class _NavItemV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+String _navItemKeyLabelV1(Act0ShellTabV1 tab) {
+  return switch (tab) {
+    Act0ShellTabV1.home => 'home',
+    Act0ShellTabV1.learn => 'learn',
+    Act0ShellTabV1.play => 'play',
+    Act0ShellTabV1.review => 'review',
+    Act0ShellTabV1.profile => 'profile',
+  };
 }
 
 const _placementQuestionsV1 = <Act0PlacementQuestionV1>[

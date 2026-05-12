@@ -265,11 +265,23 @@ class Act0HomeShellV1 extends StatelessWidget {
               Text(
                 _shellCopyV1(
                   context,
-                  en: 'Optional practice',
-                  ru: 'Дополнительная практика',
+                  en: 'Extra reps',
+                  ru: 'Дополнительные репы',
                 ),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.primary,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                _shellCopyV1(
+                  context,
+                  en: 'Play stays optional. The main route still lives in Learn.',
+                  ru: 'Практика остаётся опциональной. Главный маршрут всё так же живёт в обучении.',
+                ),
+                key: const Key('act0_shell_home_optional_practice_hint'),
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textDim,
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -524,6 +536,19 @@ class _HomeRepairCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final normalizedRepairLabel = (repairLabel ?? '').trim().isEmpty
+        ? null
+        : repairLabel;
+    final normalizedRepairHeadline = (repairHeadline ?? '').trim().isEmpty
+        ? null
+        : repairHeadline;
+    final normalizedRepairDetail = (repairDetail ?? '').trim().isEmpty
+        ? null
+        : repairDetail;
+    final normalizedRepairOutcome = (repairOutcome ?? '').trim().isEmpty
+        ? null
+        : repairOutcome;
+    final hasActionableRepair = repairCtaLabel != null && onStartRepair != null;
     return Container(
       key: const Key('act0_shell_home_repair_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -537,9 +562,9 @@ class _HomeRepairCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (repairHeadline != null ||
-              repairDetail != null ||
-              repairOutcome != null) ...[
+          if (normalizedRepairHeadline != null ||
+              normalizedRepairDetail != null ||
+              normalizedRepairOutcome != null) ...[
             Container(
               key: const Key('act0_shell_home_repair_panel'),
               padding: const EdgeInsets.symmetric(
@@ -547,100 +572,162 @@ class _HomeRepairCardV1 extends StatelessWidget {
                 vertical: 10,
               ),
               decoration: BoxDecoration(
-                color: Act0ShellTokensV1.surface3.withValues(alpha: 0.72),
+                color: hasActionableRepair
+                    ? Act0ShellTokensV1.surface3.withValues(alpha: 0.72)
+                    : Act0ShellTokensV1.surface3.withValues(alpha: 0.46),
                 borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
                 border: Border.all(
-                  color: Act0ShellTokensV1.border.withValues(alpha: 0.46),
+                  color: hasActionableRepair
+                      ? Act0ShellTokensV1.border.withValues(alpha: 0.46)
+                      : Act0ShellTokensV1.primary.withValues(alpha: 0.16),
                 ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: hasActionableRepair
+                  ? Row(
                       children: [
-                        if (repairLabel != null)
-                          Text(
-                            repairLabel!,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.primary,
-                            ),
-                          ),
-                        if (repairHeadline != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            repairHeadline!,
-                            key: const Key('act0_shell_home_repair_headline'),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.body.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                        if (repairDetail != null) ...[
-                          const SizedBox(height: 6),
-                          Row(
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(
-                                Icons.history_rounded,
-                                size: 14,
-                                color: Act0ShellTokensV1.textDim,
+                              if (normalizedRepairLabel != null)
+                                Text(
+                                  normalizedRepairLabel,
+                                  style: Act0ShellTokensV1.label.copyWith(
+                                    color: Act0ShellTokensV1.primary,
+                                  ),
+                                ),
+                              if (normalizedRepairHeadline != null) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  normalizedRepairHeadline,
+                                  key: const Key(
+                                    'act0_shell_home_repair_headline',
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Act0ShellTokensV1.body.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                              if (normalizedRepairDetail != null) ...[
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.history_rounded,
+                                      size: 14,
+                                      color: Act0ShellTokensV1.textDim,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        normalizedRepairDetail,
+                                        key: const Key(
+                                          'act0_shell_home_repair_detail',
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Act0ShellTokensV1.muted.copyWith(
+                                          color: Act0ShellTokensV1.textDim,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                              if (normalizedRepairOutcome != null) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  normalizedRepairOutcome,
+                                  key: const Key(
+                                    'act0_shell_home_repair_outcome',
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Act0ShellTokensV1.muted.copyWith(
+                                    color: Act0ShellTokensV1.textMuted,
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: Act0ShellTokensV1.gapSm),
+                              FilledButton.tonal(
+                                key: const Key('act0_shell_home_repair_cta'),
+                                onPressed: onStartRepair,
+                                style: FilledButton.styleFrom(
+                                  visualDensity: const VisualDensity(
+                                    horizontal: -1,
+                                    vertical: -1,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                  foregroundColor: Act0ShellTokensV1.primary,
+                                ),
+                                child: Text(repairCtaLabel!),
                               ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text(
-                                  repairDetail!,
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      key: const Key('act0_shell_home_repair_clear_state'),
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Act0ShellTokensV1.primary.withValues(
+                              alpha: 0.10,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              Act0ShellTokensV1.radiusMd,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.check_rounded,
+                            size: 18,
+                            color: Act0ShellTokensV1.primary,
+                          ),
+                        ),
+                        const SizedBox(width: Act0ShellTokensV1.gapSm),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (normalizedRepairHeadline != null)
+                                Text(
+                                  normalizedRepairHeadline,
+                                  key: const Key(
+                                    'act0_shell_home_repair_headline',
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Act0ShellTokensV1.body.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              if (normalizedRepairDetail != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  normalizedRepairDetail,
                                   key: const Key(
                                     'act0_shell_home_repair_detail',
                                   ),
-                                  maxLines: 2,
+                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Act0ShellTokensV1.muted.copyWith(
                                     color: Act0ShellTokensV1.textDim,
                                   ),
                                 ),
-                              ),
+                              ],
                             ],
                           ),
-                        ],
-                        if (repairOutcome != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            repairOutcome!,
-                            key: const Key('act0_shell_home_repair_outcome'),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.muted.copyWith(
-                              color: Act0ShellTokensV1.textMuted,
-                            ),
-                          ),
-                        ],
-                        if (repairCtaLabel != null &&
-                            onStartRepair != null) ...[
-                          const SizedBox(height: Act0ShellTokensV1.gapSm),
-                          FilledButton.tonal(
-                            key: const Key('act0_shell_home_repair_cta'),
-                            onPressed: onStartRepair,
-                            style: FilledButton.styleFrom(
-                              visualDensity: const VisualDensity(
-                                horizontal: -1,
-                                vertical: -1,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
-                              ),
-                              foregroundColor: Act0ShellTokensV1.primary,
-                            ),
-                            child: Text(repairCtaLabel!),
-                          ),
-                        ],
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
             ),
           ],
         ],

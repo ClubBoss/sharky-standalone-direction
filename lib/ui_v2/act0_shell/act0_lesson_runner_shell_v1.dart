@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -786,30 +787,43 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final isRefinedDev2 = _isRefinedDev2;
     final teachingStep = _teachingStep;
     final isTeaching = _isTeaching;
-    final prompt = act0LocalizedRunnerPromptAtomByTaskIdV1(
-      widget.selectedTaskId,
-      fallback: isTeaching ? teachingStep!.title : runner.caption,
-      isRu: act0IsRuLocaleV1(context),
-    );
+    final prompt = isTeaching
+        ? act0LocalizedTeachingStepTitleAtomByTaskIdV1(
+            widget.selectedTaskId,
+            runner.teachingStepIndex,
+            fallback: teachingStep!.title,
+            isRu: act0IsRuLocaleV1(context),
+          )
+        : act0LocalizedRunnerPromptAtomByTaskIdV1(
+            widget.selectedTaskId,
+            fallback: runner.caption,
+            isRu: act0IsRuLocaleV1(context),
+          );
     final shouldShowRunnerHint = switch (runner.hintPolicy) {
       Act0HintPolicyV1.always => true,
       Act0HintPolicyV1.theoryOnly => isTheory,
       Act0HintPolicyV1.hidden => false,
     };
-    final hint = act0LocalizedRunnerSupportAtomByTaskIdV1(
-      widget.selectedTaskId,
-      fallback: isTeaching
-          ? teachingStep!.body
-          : (shouldShowRunnerHint ? runner.hint : ''),
-      isRu: act0IsRuLocaleV1(context),
-    );
+    final hint = isTeaching
+        ? act0LocalizedTeachingStepBodyAtomByTaskIdV1(
+            widget.selectedTaskId,
+            runner.teachingStepIndex,
+            fallback: teachingStep!.body,
+            isRu: act0IsRuLocaleV1(context),
+          )
+        : act0LocalizedRunnerSupportAtomByTaskIdV1(
+            widget.selectedTaskId,
+            fallback: shouldShowRunnerHint ? runner.hint : '',
+            isRu: act0IsRuLocaleV1(context),
+          );
     final question = act0LocalizedRunnerQuestionAtomByTaskIdV1(
       widget.selectedTaskId,
       fallback: runner.question,
       isRu: act0IsRuLocaleV1(context),
     );
     final learningRailProgress = _learningRailProgressLabel(runner);
-    final taskRailLabel = _taskRailLabelForRunner(
+    final taskRailLabel = act0RuntimeTaskRailLabelV1(
+      context,
       isTeaching: isTeaching,
       isTheory: isTheory,
       isDrill: isDrill,
@@ -1034,13 +1048,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               : isDrill
               ? runner.options.any((option) => option.seatId != null)
                     ? _SeatTapPromptV1(
-                        taskLabel: taskRailLabel ?? 'Tap the correct seat',
+                        taskLabel: taskRailLabel,
                         question: question,
                         options: runner.options,
                         onBack: null,
                       )
                     : _ActionPromptPanelV1(
-                        taskLabel: taskRailLabel ?? 'Choose the best action',
+                        taskLabel: taskRailLabel,
                         question: question,
                         onBack: null,
                         child: _ActionPanelV1(
@@ -1309,38 +1323,6 @@ class _StepIntroPillV1 extends StatelessWidget {
   }
 }
 
-String? _taskRailLabelForRunner({
-  required bool isTeaching,
-  required bool isTheory,
-  required bool isDrill,
-  required bool isReview,
-  required bool hasSeatTargets,
-  Act0TaskFamilyV1? taskFamily,
-}) {
-  if (isReview) {
-    return 'Check the reason, then continue';
-  }
-  if (isTeaching || isTheory) {
-    return 'Read the table first';
-  }
-  if (isDrill && hasSeatTargets) {
-    return 'Tap the correct seat';
-  }
-  if (isDrill) {
-    if (taskFamily == Act0TaskFamilyV1.sizing) {
-      return 'Choose the best size';
-    }
-    if (taskFamily == Act0TaskFamilyV1.compare) {
-      return 'Choose the winning hand';
-    }
-    if (taskFamily == Act0TaskFamilyV1.counting) {
-      return 'Choose the correct count';
-    }
-    return 'Choose the best action';
-  }
-  return null;
-}
-
 class _TaskRailV1 extends StatelessWidget {
   const _TaskRailV1({required this.label});
 
@@ -1378,8 +1360,7 @@ class _TaskRailV1 extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
               style: Act0ShellTokensV1.body.copyWith(
                 fontSize: 12,
                 color: Act0ShellTokensV1.text,
@@ -2164,9 +2145,9 @@ class _SeatTapPromptV1 extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _DockStatusPillV1(
+                _DockStatusPillV1(
                   key: Key('act0_shell_action_required_badge'),
-                  label: 'Your move',
+                  label: act0RuntimeSeatTapStatusLabelV1(context),
                   icon: Icons.touch_app_rounded,
                   tone: Act0ShellTokensV1.gold,
                 ),
@@ -2174,8 +2155,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
                 Text(
                   taskLabel,
                   key: const Key('act0_shell_seat_tap_task_label'),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
                     letterSpacing: 0.2,
@@ -2186,8 +2166,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
                   Text(
                     question,
                     key: const Key('act0_shell_action_question'),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 4,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
                       fontSize: 15,
@@ -2195,10 +2174,9 @@ class _SeatTapPromptV1 extends StatelessWidget {
                     ),
                   ),
                 Text(
-                  'Read the table, then tap one seat.',
+                  act0RuntimeSeatTapHelperLabelV1(context),
                   key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                   style: Act0ShellTokensV1.muted.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
@@ -2376,10 +2354,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       quality: quality,
     );
     final showVerdictTitle = title.isNotEmpty;
-    final actionPrefix = isWrong
-        ? 'Better option'
-        : (isSuboptimal ? 'Sharper line' : 'Best play');
-    final actionLabel = isWrong ? betterLabel : preferredLabel;
+    final actionPrefix = act0RuntimeFeedbackActionPrefixV1(context, quality);
+    final actionLabel = act0RuntimeLocalizedOptionLabelV1(
+      context,
+      isWrong ? betterLabel : preferredLabel,
+    );
     return Container(
       key: const Key('act0_shell_feedback_card'),
       padding: EdgeInsets.all(refined ? 10 : 12),
@@ -2424,7 +2403,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           const SizedBox(width: 7),
                           Expanded(
                             child: Text(
-                              title,
+                              act0RuntimeLocalizedGeneralLabelV1(
+                                context,
+                                title,
+                              ),
                               style: Act0ShellTokensV1.cardTitle.copyWith(
                                 color: tone,
                               ),
@@ -2440,7 +2422,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           const SizedBox(height: 9),
           if ((isWrong || isSuboptimal) && selectedLabel.isNotEmpty) ...[
             Text(
-              'You picked $selectedLabel',
+              act0RuntimeFeedbackSelectedLineV1(context, selectedLabel),
               key: const Key('act0_shell_feedback_selected_label'),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -2466,7 +2448,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(height: 6),
           ],
           Text(
-            reason,
+            act0RuntimeLocalizedGeneralLabelV1(context, reason),
             key: const Key('act0_shell_feedback_reason'),
             maxLines: refined ? 4 : 5,
             overflow: TextOverflow.ellipsis,
@@ -2489,7 +2471,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               children: [
                 for (final label in contextLabels)
                   _DockStatusPillV1(
-                    label: label,
+                    label: act0RuntimeLocalizedContextLabelV1(context, label),
                     icon: Icons.check_rounded,
                     tone: tone,
                   ),
@@ -3381,9 +3363,10 @@ class _Act0TableV1 extends StatelessWidget {
   }
 
   String? _resolveActiveSeatId(Act0TableStateV1 table) {
-    final explicit = (table.activeSeatId ?? '').trim();
-    if (explicit.isNotEmpty) {
-      return explicit;
+    final explicitRaw = table.activeSeatId;
+    if (explicitRaw != null) {
+      final explicit = explicitRaw.trim();
+      return explicit.isEmpty ? null : explicit;
     }
     for (final seat in table.seats) {
       if (seat.isActive) {
@@ -3608,15 +3591,20 @@ class _CenterPotV1 extends StatelessWidget {
                 if (table.centerLabel.isNotEmpty)
                   _CenterInfoPillV1(
                     key: const Key('act0_shell_center_focus_badge'),
-                    label: table.centerLabel,
+                    label: act0RuntimeLocalizedCenterLabelV1(
+                      context,
+                      table.centerLabel,
+                    ),
                     tone: Act0ShellTokensV1.primary,
                     icon: Icons.visibility_rounded,
                     compact: refined,
                   ),
                 _CenterInfoPillV1(
                   key: const Key('act0_shell_center_street_badge'),
-                  label: (streetLabelOverride ?? table.streetLabel)
-                      .toUpperCase(),
+                  label: act0RuntimeLocalizedStreetLabelV1(
+                    context,
+                    streetLabelOverride ?? table.streetLabel,
+                  ).toUpperCase(),
                   tone: Act0ShellTokensV1.gold,
                   icon: Icons.layers_rounded,
                   compact: refined,
@@ -3649,7 +3637,10 @@ class _CenterPotV1 extends StatelessWidget {
               children: [
                 _CenterInfoPillV1(
                   key: const Key('act0_shell_center_pot_stat'),
-                  label: potLabelOverride ?? table.potLabel,
+                  label: act0RuntimeLocalizedPotLabelV1(
+                    context,
+                    potLabelOverride ?? table.potLabel,
+                  ),
                   tone: Act0ShellTokensV1.text,
                   icon: Icons.casino_rounded,
                   compact: refined,
@@ -3659,7 +3650,10 @@ class _CenterPotV1 extends StatelessWidget {
                 if (table.toCallLabel.isNotEmpty)
                   _CenterInfoPillV1(
                     key: const Key('act0_shell_center_to_call_stat'),
-                    label: table.toCallLabel,
+                    label: act0RuntimeLocalizedToCallLabelV1(
+                      context,
+                      table.toCallLabel,
+                    ),
                     tone: Act0ShellTokensV1.info,
                     icon: Icons.arrow_downward_rounded,
                     compact: refined,
@@ -3714,14 +3708,15 @@ class _CenterInfoPillV1 extends StatelessWidget {
         children: [
           Icon(icon, size: compact ? 11 : 12, color: tone),
           const SizedBox(width: 5),
-          Text(
-            label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: filled ? tone : Act0ShellTokensV1.text,
-              fontSize: compact ? 8.6 : 9.2,
-              letterSpacing: compact ? 0.2 : 0.4,
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 3,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: filled ? tone : Act0ShellTokensV1.text,
+                fontSize: compact ? 8.6 : 9.2,
+                letterSpacing: compact ? 0.2 : 0.4,
+              ),
             ),
           ),
         ],
@@ -3930,7 +3925,7 @@ class _SeatNodeV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
-    final highlighted = active || emphasized || seat.isTarget || selected;
+    final highlighted = active || emphasized || selected;
     final showsMarkerCluster =
         seat.isDealerButton ||
         seat.isLastAggressor ||
@@ -4127,13 +4122,13 @@ class _SeatNodeV1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hero
-                                ? refined
-                                      ? '${seat.seatLabel} Hero'
-                                      : '${seat.seatLabel}  ${seat.displayName}'
-                                : seat.seatLabel,
+                            act0RuntimeLocalizedSeatPrimaryLabelV1(
+                              context,
+                              seat: seat,
+                              hero: hero,
+                              refined: refined,
+                            ),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: refined && !hero
                                   ? Act0ShellTokensV1.textMuted
@@ -4144,9 +4139,9 @@ class _SeatNodeV1 extends StatelessWidget {
                               letterSpacing: refined ? 0.2 : 0.4,
                             ),
                           ),
-                          if (_seatSubLabel(seat) != null)
+                          if (_seatSubLabel(context, seat) != null)
                             Text(
-                              _seatSubLabel(seat)!,
+                              _seatSubLabel(context, seat)!,
                               style: Act0ShellTokensV1.muted.copyWith(
                                 fontSize: useSlimRefinedSeat
                                     ? 8.0
@@ -4209,32 +4204,15 @@ class _SeatNodeV1 extends StatelessWidget {
     );
   }
 
-  String? _seatSubLabel(Act0SeatStateV1 seat) {
+  String? _seatSubLabel(BuildContext context, Act0SeatStateV1 seat) {
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
-    final explicitLabel =
-        seat.currentBetLabel ?? seat.stackLabel ?? seat.blindAmountLabel;
-    final toActAmountLabel = seat.currentBetLabel ?? seat.blindAmountLabel;
-    if (!hero && active) {
-      if (toActAmountLabel != null && toActAmountLabel.isNotEmpty) {
-        return 'To act - $toActAmountLabel';
-      }
-      return 'To act';
-    }
-    if (explicitLabel != null && explicitLabel.isNotEmpty) {
-      return explicitLabel;
-    }
-    if (refined && !hero) {
-      if (seat.isDealerButton) {
-        return 'Dealer';
-      }
-      if (seat.isSmallBlind) {
-        return 'Small blind';
-      }
-      if (seat.isBigBlind) {
-        return 'Big blind';
-      }
-    }
-    return null;
+    return act0RuntimeLocalizedSeatSubLabelV1(
+      context,
+      hero: hero,
+      active: active,
+      refined: refined,
+      seat: seat,
+    );
   }
 }
 
@@ -4749,9 +4727,12 @@ class _ActionTrailStepV1State extends State<_ActionTrailStepV1> {
               ),
               SizedBox(width: refined ? 5 : 6),
               Text(
-                widget.item.label,
+                act0RuntimeLocalizedActionTrailLabelV1(
+                  context,
+                  widget.item.label,
+                ),
+                key: Key('act0_shell_action_trail_step_label_${widget.index}'),
                 maxLines: 2,
-                overflow: TextOverflow.ellipsis,
                 style: Act0ShellTokensV1.muted.copyWith(
                   fontSize: refined ? 8.8 : 9.5,
                   fontWeight: isLatest ? FontWeight.w900 : FontWeight.w800,
@@ -4777,7 +4758,7 @@ class _ActionTrailStepV1State extends State<_ActionTrailStepV1> {
                     ),
                   ),
                   child: Text(
-                    'Now',
+                    act0RuntimeLocalizedLatestBadgeV1(context),
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.gold,
                       fontSize: refined ? 7.4 : 7.8,
@@ -5513,7 +5494,7 @@ class _ActionPanelV1 extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(option.label),
+                Text(act0RuntimeLocalizedOptionLabelV1(context, option.label)),
                 if (option.amountLabel.isNotEmpty)
                   Text(
                     option.amountLabel,
@@ -5583,9 +5564,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const _DockStatusPillV1(
+                    _DockStatusPillV1(
                       key: Key('act0_shell_question_badge'),
-                      label: 'Spot check',
+                      label: act0RuntimeQuestionBadgeLabelV1(context),
                       icon: Icons.help_outline_rounded,
                       tone: Act0ShellTokensV1.gold,
                     ),

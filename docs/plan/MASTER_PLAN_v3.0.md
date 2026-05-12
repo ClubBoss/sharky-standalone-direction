@@ -1,7 +1,7 @@
 # MASTER PLAN v3.0
 
 Status: ACTIVE
-Last updated: 2026-05-06
+Last updated: 2026-05-11
 
 Launch-readiness reference:
 
@@ -160,7 +160,7 @@ These may matter later, but not for the current simple-good-working target.
 
 ## Product Scorecard
 
-Working estimate as of 2026-05-06: **81 / 100**
+Working estimate as of 2026-05-11: **82 / 100**
 
 This number is a prioritization estimate, not release readiness.
 
@@ -172,18 +172,32 @@ product route. The `100 state` column is the direction of travel after that.
 | First start and placement | 8 | 78 | Placement is short, attractive, question-led, and routes the user clearly. | It feels personally useful without feeling like setup work. |
 | Home, navigation, and re-entry | 7 | 83 | Home tells the user exactly what to do next; tabs have distinct jobs. | Returning to the app always feels obvious and low-friction. |
 | Learn path and world map | 9 | 81 | The path is readable, sequential, and not cluttered. | It feels like a polished learning world, not a list. |
-| Content and world readiness | 16 | 91 | Release-visible worlds have enough intro, practice, apply, and review content to teach their core job. | The ladder feels planned, smooth, and complete instead of random or thin. |
+| Content and world readiness | 16 | 92 | Release-visible worlds have enough intro, practice, apply, and review content to teach their core job. | The ladder feels planned, smooth, and complete instead of random or thin. |
 | Table/session core | 13 | 84 | One table session feels smooth, readable, and worth repeating. | The table feels like the premium core of the product. |
-| Mistake repair and Review | 9 | 85 | A wrong answer becomes a clear, useful repair step without shame. | Review feels like a personal coach, not a correction log. |
+| Mistake repair and Review | 9 | 89 | A wrong answer becomes a clear, useful repair step without shame. | Review feels like a personal coach, not a correction log. |
 | Play/practice hub | 6 | 78 | Play is a clean practice hub, not a duplicate of Learn. | Practice feels quick, useful, and habit-forming. |
 | You/profile/identity | 5 | 72 | Profile shows simple progress, strengths, weak spots, and next focus. | The user sees identity and improvement without dashboard bloat. |
 | Sharky, mascot, rewards, and habit | 9 | 78 | Sharky, streak-lite, achievements, and block celebrations exist without noise. | The product feels alive, rewarding, and worth returning to. |
 | Visual and premium feel | 8 | 76 | Screens feel coherent, modern, and polished enough for external review. | The app looks premium across the whole active shell. |
-| Copy and trust | 5 | 82 | Text is short, calm, useful, and beginner-safe. | The app sounds like a confident coach with no system noise. |
+| Copy and trust | 5 | 84 | Text is short, calm, useful, and beginner-safe. | The app sounds like a confident coach with no system noise. |
 | Value/trial readiness | 3 | 37 | Premium/trial appears only as value-first preview after proof. | Upgrade feels like expansion, not pressure. |
 | Simplicity and performance | 2 | 74 | The product stays fast, light, and easy to change. | New improvements remain cheap because the product stays simple. |
 
-Weighted current estimate: about **81 / 100**.
+Weighted current estimate: about **82 / 100**.
+
+Calibration note (2026-05-11):
+
+- `Mistake repair and Review` increased after canonical review-queue behavior was
+  stabilized and guarded by deterministic tests on the active World 1 runner
+  path.
+- `Copy and trust` increased after the Act0 localization seam was normalized to
+  one core reader/API layer plus one RU language file with stable-id lookups,
+  reducing drift and screen-level inconsistency risk.
+- `Content and world readiness` increased slightly because localization
+  production infrastructure (coverage/audit/pack workflows) now supports faster
+  safe expansion without reopening runtime seams.
+- Other rows are intentionally unchanged in this wave because no direct
+  user-surface evidence moved them.
 
 ## Priority Order
 
@@ -891,6 +905,24 @@ do not skip gates when a user-visible flow or shared contract changed.
 
 If native git is blocked by the known stale worktree pointer, use the parent
 gitdir/work-tree fallback and report that explicitly.
+
+Current wave note (2026-05-12):
+
+1. Wave goal: clarify `Home / Learn / Play` so one dominant route wins without
+   turning `Play` into a second map.
+2. Scope boundary: `lib/ui_v2/act0_shell/act0_home_shell_v1.dart`,
+   `lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart`,
+   `lib/ui_v2/act0_shell/act0_play_shell_v1.dart`,
+   `test/ui_v2/act0_shell_preview_screen_v1_test.dart`,
+   `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`.
+3. Success signal: `Home` frames extra reps as optional, `Learn` states it owns
+   the main route, and `Play` opens with one featured recommended rep before
+   the secondary practice sections.
+4. Verification set: `dart format` on touched shell/test files, `flutter test
+   test/ui_v2/act0_shell_preview_screen_v1_test.dart`, and `git diff --check`.
+5. What changed / what is next: this wave tightened surface roles without
+   reopening runner or review logic; the next default wave remains
+   `Review` density refinement followed by `You` identity refinement.
 
 ## How To Use This Plan
 

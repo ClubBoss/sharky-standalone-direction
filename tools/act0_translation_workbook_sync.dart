@@ -100,6 +100,9 @@ String _renderMasterWorkbook(
       '- `dart run tools/act0_content_copy_coverage_report.dart --lang $languageCode`',
     )
     ..writeln(
+      '- `dart run tools/act0_translation_quality_report.dart --lang $languageCode`',
+    )
+    ..writeln(
       '- `dart run tools/act0_translation_pack_audit.dart --lang $languageCode`',
     )
     ..writeln(
@@ -128,10 +131,16 @@ String _renderMasterWorkbook(
     ..writeln(
       '- Runner questions localized: ${coverage.localizedRunnerQuestionTasks}/${coverage.totalRunnerTasks} (${_percent(coverage.localizedRunnerQuestionTasks, coverage.totalRunnerTasks)})',
     )
+    ..writeln(
+      '- Teaching step titles localized: ${coverage.localizedTeachingStepTitles}/${coverage.totalTeachingSteps} (${_percent(coverage.localizedTeachingStepTitles, coverage.totalTeachingSteps)})',
+    )
+    ..writeln(
+      '- Teaching step bodies localized: ${coverage.localizedTeachingStepBodies}/${coverage.totalTeachingSteps} (${_percent(coverage.localizedTeachingStepBodies, coverage.totalTeachingSteps)})',
+    )
     ..writeln()
     ..writeln('## World Packs')
     ..writeln(
-      '| World | EN title | Lessons | Tasks | Runner prompts | Runner supports | Runner questions | Pack |',
+      '| World | EN title | Lessons | Tasks | Runner prompts | Runner supports | Runner questions | Step titles | Step bodies | Pack |',
     )
     ..writeln('| --- | --- | --- | --- | --- | --- | --- | --- |');
 
@@ -148,6 +157,8 @@ String _renderMasterWorkbook(
       '${world.localizedRunnerPromptTasks}/${world.totalRunnerTasks} | '
       '${world.localizedRunnerSupportTasks}/${world.totalRunnerTasks} | '
       '${world.localizedRunnerQuestionTasks}/${world.totalRunnerTasks} | '
+      '${world.localizedTeachingStepTitles}/${world.totalTeachingSteps} | '
+      '${world.localizedTeachingStepBodies}/${world.totalTeachingSteps} | '
       '[$fileName](/Users/elmarsalimzade/Sharky_1.0/docs/l10n/act0_world_packs/$fileName) |',
     );
   }
@@ -178,10 +189,16 @@ String _renderWorldPack(
     ..writeln('EN title: ${world.title}')
     ..writeln('EN subtitle: ${world.subtitle}')
     ..writeln(
-      'title_$languageCode: ${_preferExisting(existingPack?.titleLocalized, worldCopy?.title)}',
+      _markdownField(
+        'title_$languageCode',
+        _preferExisting(existingPack?.titleLocalized, worldCopy?.title),
+      ),
     )
     ..writeln(
-      'subtitle_$languageCode: ${_preferExisting(existingPack?.subtitleLocalized, worldCopy?.subtitle)}',
+      _markdownField(
+        'subtitle_$languageCode',
+        _preferExisting(existingPack?.subtitleLocalized, worldCopy?.subtitle),
+      ),
     )
     ..writeln()
     ..writeln('## Coverage')
@@ -197,6 +214,12 @@ String _renderWorldPack(
     )
     ..writeln(
       '- Runner questions: ${coverage.localizedRunnerQuestionTasks}/${coverage.totalRunnerTasks}',
+    )
+    ..writeln(
+      '- Teaching step titles: ${coverage.localizedTeachingStepTitles}/${coverage.totalTeachingSteps}',
+    )
+    ..writeln(
+      '- Teaching step bodies: ${coverage.localizedTeachingStepBodies}/${coverage.totalTeachingSteps}',
     )
     ..writeln()
     ..writeln('## Translator Rules')
@@ -228,10 +251,19 @@ String _renderWorldPack(
     buffer.writeln('title_en: ${lesson.title}');
     buffer.writeln('subtitle_en: ${lesson.subtitle}');
     buffer.writeln(
-      'title_$languageCode: ${_preferExisting(existingLesson?.titleLocalized, lessonCopy?.title)}',
+      _markdownField(
+        'title_$languageCode',
+        _preferExisting(existingLesson?.titleLocalized, lessonCopy?.title),
+      ),
     );
     buffer.writeln(
-      'subtitle_$languageCode: ${_preferExisting(existingLesson?.subtitleLocalized, lessonCopy?.subtitle)}',
+      _markdownField(
+        'subtitle_$languageCode',
+        _preferExisting(
+          existingLesson?.subtitleLocalized,
+          lessonCopy?.subtitle,
+        ),
+      ),
     );
     buffer.writeln();
 
@@ -263,32 +295,92 @@ String _renderWorldPack(
       if (task.question?.isNotEmpty ?? false) {
         buffer.writeln('  runnerQuestion_en: ${task.question}');
       }
+      for (var index = 0; index < task.teachingSteps.length; index += 1) {
+        final step = task.teachingSteps[index];
+        final existingStep = existingTask?.teachingSteps
+            .where((candidate) => candidate.stepIndex == index)
+            .cast<Act0TranslationTeachingStep?>()
+            .firstWhere((candidate) => candidate != null, orElse: () => null);
+        final taskCopyStep =
+            taskCopy?.teachingSteps != null &&
+                index < taskCopy!.teachingSteps!.length
+            ? taskCopy.teachingSteps![index]
+            : null;
+        buffer.writeln(
+          _markdownField('  teachingStep${index}_title_en', step.title),
+        );
+        buffer.writeln(
+          _markdownField('  teachingStep${index}_body_en', step.body),
+        );
+        buffer.writeln(
+          _markdownField(
+            '  teachingStep${index}_title_$languageCode',
+            _preferExisting(existingStep?.titleLocalized, taskCopyStep?.title),
+          ),
+        );
+        buffer.writeln(
+          _markdownField(
+            '  teachingStep${index}_body_$languageCode',
+            _preferExisting(existingStep?.bodyLocalized, taskCopyStep?.body),
+          ),
+        );
+      }
       buffer.writeln(
-        '  title_$languageCode: ${_preferExisting(existingTask?.titleLocalized, taskCopy?.title)}',
+        _markdownField(
+          '  title_$languageCode',
+          _preferExisting(existingTask?.titleLocalized, taskCopy?.title),
+        ),
       );
       if (task.summary?.isNotEmpty ?? false) {
         buffer.writeln(
-          '  summary_$languageCode: ${_preferExisting(existingTask?.summaryLocalized, taskCopy?.summary)}',
+          _markdownField(
+            '  summary_$languageCode',
+            _preferExisting(existingTask?.summaryLocalized, taskCopy?.summary),
+          ),
         );
       }
       if (task.lockedSummary?.isNotEmpty ?? false) {
         buffer.writeln(
-          '  lockedSummary_$languageCode: ${_preferExisting(existingTask?.lockedSummaryLocalized, taskCopy?.lockedSummary)}',
+          _markdownField(
+            '  lockedSummary_$languageCode',
+            _preferExisting(
+              existingTask?.lockedSummaryLocalized,
+              taskCopy?.lockedSummary,
+            ),
+          ),
         );
       }
       if (task.caption?.isNotEmpty ?? false) {
         buffer.writeln(
-          '  runnerPrompt_$languageCode: ${_preferExisting(existingTask?.runnerPromptLocalized, taskCopy?.runnerPrompt)}',
+          _markdownField(
+            '  runnerPrompt_$languageCode',
+            _preferExisting(
+              existingTask?.runnerPromptLocalized,
+              taskCopy?.runnerPrompt,
+            ),
+          ),
         );
       }
       if (task.hint?.isNotEmpty ?? false) {
         buffer.writeln(
-          '  runnerSupport_$languageCode: ${_preferExisting(existingTask?.runnerSupportLocalized, taskCopy?.runnerSupport)}',
+          _markdownField(
+            '  runnerSupport_$languageCode',
+            _preferExisting(
+              existingTask?.runnerSupportLocalized,
+              taskCopy?.runnerSupport,
+            ),
+          ),
         );
       }
       if (task.question?.isNotEmpty ?? false) {
         buffer.writeln(
-          '  runnerQuestion_$languageCode: ${_preferExisting(existingTask?.runnerQuestionLocalized, taskCopy?.runnerQuestion)}',
+          _markdownField(
+            '  runnerQuestion_$languageCode',
+            _preferExisting(
+              existingTask?.runnerQuestionLocalized,
+              taskCopy?.runnerQuestion,
+            ),
+          ),
         );
       }
       buffer.writeln();
@@ -305,11 +397,22 @@ String _worldFileName(int worldNumber, String worldId, String languageCode) {
 
 String _escapePipes(String input) => input.replaceAll('|', r'\|');
 
+String _markdownField(String key, String value) {
+  final normalized = value.replaceAll(RegExp(r'\s+'), ' ').trim();
+  if (normalized.trim().isEmpty) {
+    return '$key:';
+  }
+  return '$key: $normalized';
+}
+
 String _preferExisting(String? existingValue, String? fallback) {
+  if (fallback?.trim().isNotEmpty ?? false) {
+    return fallback!;
+  }
   if (existingValue?.trim().isNotEmpty ?? false) {
     return existingValue!;
   }
-  return fallback ?? '';
+  return '';
 }
 
 String _percent(int value, int total) {

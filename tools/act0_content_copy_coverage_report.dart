@@ -50,9 +50,19 @@ void main(List<String> args) {
     '/${snapshot.totalRunnerTasks} '
     '(${_percent(snapshot.localizedRunnerQuestionTasks, snapshot.totalRunnerTasks)})',
   );
+  stdout.writeln(
+    'Teaching step titles: ${snapshot.localizedTeachingStepTitles}'
+    '/${snapshot.totalTeachingSteps} '
+    '(${_percent(snapshot.localizedTeachingStepTitles, snapshot.totalTeachingSteps)})',
+  );
+  stdout.writeln(
+    'Teaching step bodies: ${snapshot.localizedTeachingStepBodies}'
+    '/${snapshot.totalTeachingSteps} '
+    '(${_percent(snapshot.localizedTeachingStepBodies, snapshot.totalTeachingSteps)})',
+  );
   stdout.writeln('');
   stdout.writeln(
-    'worldId | lessons | tasks | runnerPrompt | runnerSupport | runnerQuestion',
+    'worldId | lessons | tasks | runnerPrompt | runnerSupport | runnerQuestion | stepTitle | stepBody',
   );
   for (final world in snapshot.worlds) {
     stdout.writeln(
@@ -61,7 +71,9 @@ void main(List<String> args) {
       '${world.localizedTasks}/${world.totalTasks} | '
       '${world.localizedRunnerPromptTasks}/${world.totalRunnerTasks} | '
       '${world.localizedRunnerSupportTasks}/${world.totalRunnerTasks} | '
-      '${world.localizedRunnerQuestionTasks}/${world.totalRunnerTasks}',
+      '${world.localizedRunnerQuestionTasks}/${world.totalRunnerTasks} | '
+      '${world.localizedTeachingStepTitles}/${world.totalTeachingSteps} | '
+      '${world.localizedTeachingStepBodies}/${world.totalTeachingSteps}',
     );
   }
 }

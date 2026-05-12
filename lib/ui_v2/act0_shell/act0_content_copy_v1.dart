@@ -25,6 +25,7 @@ class Act0TaskDisplayCopyV1 {
     this.runnerPrompt,
     this.runnerSupport,
     this.runnerQuestion,
+    this.teachingSteps,
   });
 
   final String? title;
@@ -33,6 +34,14 @@ class Act0TaskDisplayCopyV1 {
   final String? runnerPrompt;
   final String? runnerSupport;
   final String? runnerQuestion;
+  final List<Act0TeachingStepDisplayCopyV1>? teachingSteps;
+}
+
+class Act0TeachingStepDisplayCopyV1 {
+  const Act0TeachingStepDisplayCopyV1({this.title, this.body});
+
+  final String? title;
+  final String? body;
 }
 
 class Act0SurfaceAtomCopyV1 {
@@ -275,6 +284,36 @@ String act0LocalizedRunnerQuestionAtomByTaskIdV1(
   );
 }
 
+String act0LocalizedTeachingStepTitleAtomByTaskIdV1(
+  String? taskId,
+  int? teachingStepIndex, {
+  required String fallback,
+  String? languageCode,
+  bool? isRu,
+}) {
+  return act0LocalizedTeachingStepTitleAtomByLanguageV1(
+    taskId,
+    teachingStepIndex,
+    fallback: fallback,
+    languageCode: languageCode ?? ((isRu ?? false) ? 'ru' : ''),
+  );
+}
+
+String act0LocalizedTeachingStepBodyAtomByTaskIdV1(
+  String? taskId,
+  int? teachingStepIndex, {
+  required String fallback,
+  String? languageCode,
+  bool? isRu,
+}) {
+  return act0LocalizedTeachingStepBodyAtomByLanguageV1(
+    taskId,
+    teachingStepIndex,
+    fallback: fallback,
+    languageCode: languageCode ?? ((isRu ?? false) ? 'ru' : ''),
+  );
+}
+
 String act0LocalizedSurfaceAtomByIdV1(
   String atomId, {
   required String fallback,
@@ -395,6 +434,34 @@ String act0LocalizedRunnerQuestionAtomByLanguageV1(
   return bundle?.tasks[taskId]?.runnerQuestion ?? fallback;
 }
 
+String act0LocalizedTeachingStepTitleAtomByLanguageV1(
+  String? taskId,
+  int? teachingStepIndex, {
+  required String fallback,
+  required String languageCode,
+}) {
+  final step = _act0LocalizedTeachingStepByLanguageV1(
+    taskId,
+    teachingStepIndex,
+    languageCode: languageCode,
+  );
+  return step?.title ?? fallback;
+}
+
+String act0LocalizedTeachingStepBodyAtomByLanguageV1(
+  String? taskId,
+  int? teachingStepIndex, {
+  required String fallback,
+  required String languageCode,
+}) {
+  final step = _act0LocalizedTeachingStepByLanguageV1(
+    taskId,
+    teachingStepIndex,
+    languageCode: languageCode,
+  );
+  return step?.body ?? fallback;
+}
+
 String act0LocalizedSurfaceAtomByLanguageV1(
   String atomId, {
   required String fallback,
@@ -411,3 +478,20 @@ Act0LanguageCopyBundleV1? act0CopyBundleForLanguageCodeV1(String languageCode) {
 
 String _act0NormalizedLanguageCodeV1(String languageCode) =>
     languageCode.trim().toLowerCase().split(RegExp('[-_]')).first;
+
+Act0TeachingStepDisplayCopyV1? _act0LocalizedTeachingStepByLanguageV1(
+  String? taskId,
+  int? teachingStepIndex, {
+  required String languageCode,
+}) {
+  if (taskId == null || teachingStepIndex == null || teachingStepIndex < 0) {
+    return null;
+  }
+  final teachingSteps = act0CopyBundleForLanguageCodeV1(
+    languageCode,
+  )?.tasks[taskId]?.teachingSteps;
+  if (teachingSteps == null || teachingStepIndex >= teachingSteps.length) {
+    return null;
+  }
+  return teachingSteps[teachingStepIndex];
+}

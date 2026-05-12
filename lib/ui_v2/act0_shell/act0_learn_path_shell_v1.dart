@@ -138,9 +138,13 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   @override
   void initState() {
     super.initState();
-    if (widget.detailLessonId != null) {
-      _expansionReadyLessonIdV1 = widget.detailLessonId;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final initialLessonId = widget.detailLessonId ?? widget.selectedLessonId;
+      if (!mounted) {
+        return;
+      }
+      _handleLessonOpenedV1(initialLessonId, from: null);
+    });
   }
 
   @override
@@ -499,6 +503,19 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                             mood: widget.sharkyGuideMood,
                           ),
                         ],
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        _LearnRouteContractCardV1(
+                          line: _learnCopyV1(
+                            context,
+                            en: 'This is the main route. Clear the current lesson here.',
+                            ru: 'Это главный маршрут. Текущий урок нужно закрывать здесь.',
+                          ),
+                          detail: _learnCopyV1(
+                            context,
+                            en: 'Play stays optional and only adds extra reps after the path is clear.',
+                            ru: 'Практика остаётся опциональной и добавляет только дополнительные репы после основного пути.',
+                          ),
+                        ),
                         const SizedBox(height: Act0ShellTokensV1.gapLg),
                       ],
                     ),
@@ -1367,6 +1384,69 @@ class _LearnCoachLineV1 extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(detail!, style: Act0ShellTokensV1.muted),
                 ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearnRouteContractCardV1 extends StatelessWidget {
+  const _LearnRouteContractCardV1({required this.line, required this.detail});
+
+  final String line;
+  final String detail;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_learn_route_contract_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.18),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.info.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.alt_route_rounded,
+              size: 18,
+              color: Act0ShellTokensV1.info,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  line,
+                  key: const Key('act0_shell_learn_route_contract_line'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(
+                  detail,
+                  key: const Key('act0_shell_learn_route_contract_detail'),
+                  style: Act0ShellTokensV1.muted,
+                ),
               ],
             ),
           ),

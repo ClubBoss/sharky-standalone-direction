@@ -13,6 +13,9 @@ class Act0CoverageSnapshot {
     required this.localizedRunnerPromptTasks,
     required this.localizedRunnerSupportTasks,
     required this.localizedRunnerQuestionTasks,
+    required this.totalTeachingSteps,
+    required this.localizedTeachingStepTitles,
+    required this.localizedTeachingStepBodies,
     required this.worlds,
   });
 
@@ -26,6 +29,9 @@ class Act0CoverageSnapshot {
   final int localizedRunnerPromptTasks;
   final int localizedRunnerSupportTasks;
   final int localizedRunnerQuestionTasks;
+  final int totalTeachingSteps;
+  final int localizedTeachingStepTitles;
+  final int localizedTeachingStepBodies;
   final List<Act0WorldCoverage> worlds;
 }
 
@@ -41,6 +47,9 @@ class Act0WorldCoverage {
     required this.localizedRunnerPromptTasks,
     required this.localizedRunnerSupportTasks,
     required this.localizedRunnerQuestionTasks,
+    required this.totalTeachingSteps,
+    required this.localizedTeachingStepTitles,
+    required this.localizedTeachingStepBodies,
   });
 
   final Act0WorldPack world;
@@ -53,6 +62,9 @@ class Act0WorldCoverage {
   final int localizedRunnerPromptTasks;
   final int localizedRunnerSupportTasks;
   final int localizedRunnerQuestionTasks;
+  final int totalTeachingSteps;
+  final int localizedTeachingStepTitles;
+  final int localizedTeachingStepBodies;
 }
 
 Act0CoverageSnapshot buildAct0CoverageSnapshot(
@@ -68,6 +80,9 @@ Act0CoverageSnapshot buildAct0CoverageSnapshot(
   var localizedRunnerPromptTasks = 0;
   var localizedRunnerSupportTasks = 0;
   var localizedRunnerQuestionTasks = 0;
+  var totalTeachingSteps = 0;
+  var localizedTeachingStepTitles = 0;
+  var localizedTeachingStepBodies = 0;
 
   for (final world in content.worlds) {
     var worldLocalizedLessons = 0;
@@ -77,6 +92,9 @@ Act0CoverageSnapshot buildAct0CoverageSnapshot(
     var worldLocalizedRunnerPromptTasks = 0;
     var worldLocalizedRunnerSupportTasks = 0;
     var worldLocalizedRunnerQuestionTasks = 0;
+    var worldTotalTeachingSteps = 0;
+    var worldLocalizedTeachingStepTitles = 0;
+    var worldLocalizedTeachingStepBodies = 0;
 
     totalLessons += world.lessons.length;
     for (final lesson in world.lessons) {
@@ -112,6 +130,24 @@ Act0CoverageSnapshot buildAct0CoverageSnapshot(
           localizedRunnerQuestionTasks += 1;
           worldLocalizedRunnerQuestionTasks += 1;
         }
+
+        totalTeachingSteps += task.teachingSteps.length;
+        worldTotalTeachingSteps += task.teachingSteps.length;
+        final localizedSteps = taskCopy?.teachingSteps;
+        for (var index = 0; index < task.teachingSteps.length; index += 1) {
+          final stepCopy =
+              localizedSteps != null && index < localizedSteps.length
+              ? localizedSteps[index]
+              : null;
+          if (stepCopy?.title?.trim().isNotEmpty ?? false) {
+            localizedTeachingStepTitles += 1;
+            worldLocalizedTeachingStepTitles += 1;
+          }
+          if (stepCopy?.body?.trim().isNotEmpty ?? false) {
+            localizedTeachingStepBodies += 1;
+            worldLocalizedTeachingStepBodies += 1;
+          }
+        }
       }
     }
 
@@ -127,6 +163,9 @@ Act0CoverageSnapshot buildAct0CoverageSnapshot(
         localizedRunnerPromptTasks: worldLocalizedRunnerPromptTasks,
         localizedRunnerSupportTasks: worldLocalizedRunnerSupportTasks,
         localizedRunnerQuestionTasks: worldLocalizedRunnerQuestionTasks,
+        totalTeachingSteps: worldTotalTeachingSteps,
+        localizedTeachingStepTitles: worldLocalizedTeachingStepTitles,
+        localizedTeachingStepBodies: worldLocalizedTeachingStepBodies,
       ),
     );
   }
@@ -144,6 +183,9 @@ Act0CoverageSnapshot buildAct0CoverageSnapshot(
     localizedRunnerPromptTasks: localizedRunnerPromptTasks,
     localizedRunnerSupportTasks: localizedRunnerSupportTasks,
     localizedRunnerQuestionTasks: localizedRunnerQuestionTasks,
+    totalTeachingSteps: totalTeachingSteps,
+    localizedTeachingStepTitles: localizedTeachingStepTitles,
+    localizedTeachingStepBodies: localizedTeachingStepBodies,
     worlds: worlds,
   );
 }

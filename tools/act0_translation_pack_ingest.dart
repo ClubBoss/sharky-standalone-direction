@@ -106,6 +106,27 @@ String? _renderTaskStub(Act0TranslationTask task, String languageCode) {
   addField('runnerPrompt', task.runnerPromptLocalized);
   addField('runnerSupport', task.runnerSupportLocalized);
   addField('runnerQuestion', task.runnerQuestionLocalized);
+  if (task.teachingSteps.isNotEmpty) {
+    final stepLines = <String>[];
+    for (final step in task.teachingSteps) {
+      if (step.titleLocalized.trim().isNotEmpty ||
+          step.bodyLocalized.trim().isNotEmpty) {
+        stepLines.add('  Act0TeachingStepDisplayCopyV1(');
+        if (step.titleLocalized.trim().isNotEmpty) {
+          stepLines.add("    title: ${_quote(step.titleLocalized)},");
+        }
+        if (step.bodyLocalized.trim().isNotEmpty) {
+          stepLines.add("    body: ${_quote(step.bodyLocalized)},");
+        }
+        stepLines.add('  ),');
+      }
+    }
+    if (stepLines.isNotEmpty) {
+      lines.add('  teachingSteps: <Act0TeachingStepDisplayCopyV1>[');
+      lines.addAll(stepLines);
+      lines.add('  ],');
+    }
+  }
   if (lines.isEmpty) {
     return null;
   }

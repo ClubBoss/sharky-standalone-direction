@@ -28,7 +28,7 @@ _ruWorldCopyByIdV1 = <String, Act0WorldDisplayCopyV1>{
   ),
   'world_7': Act0WorldDisplayCopyV1(
     title: 'Диапазоны без перегруза',
-    subtitle: 'Группируй руки в простые диапазоны без солверного шума.',
+    subtitle: 'Группируй руки просто, без лишней теории.',
   ),
   'world_8': Act0WorldDisplayCopyV1(
     title: 'Глубина стека и риск',
@@ -118,17 +118,39 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt: 'Твоё место всегда внизу. С него и начинай чтение стола.',
     runnerSupport:
         'Сначала найди своё место, блайнды и баттон. Эти ориентиры держат всю раздачу понятной.',
-    runnerQuestion: 'Где находится место Hero?',
+    runnerQuestion: 'Где находится твоё место?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Начинаем с кэш-игры в холдем.',
+        body:
+            'В холдеме у каждого игрока 2 закрытые карты, а на стол выходят 5 общих. Итоговая рука собирается из лучших пяти карт из этих семи. Есть разные форматы покера, но курс стартует с No-Limit Hold’em cash: здесь ценность фишек не меняется, а одни и те же базовые решения повторяются раз за разом.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Перед тобой покерный стол.',
+        body:
+            'Ты играешь за нижнее место. Остальные места за столом — соперники.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цель раздачи — забрать банк.',
+        body:
+            'Игроки вкладывают фишки в центр стола. Тот, кто выигрывает раздачу, забирает этот банк.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Раздачу запускают блайнды.',
+        body:
+            'Сначала SB ставит 0.5 BB, а BB — 1 BB. Эти обязательные ставки появляются ещё до первого решения. Карты пока скрыты, чтобы ты сначала спокойно прочитал сам стол.',
+      ),
+    ],
   ),
   'what_poker_is_find_hero': Act0TaskDisplayCopyV1(
     title: 'Найди своё место',
     summary:
-        'Сначала научись видеть, где сидит Hero, и только потом отслеживай остальное.',
+        'Сначала научись видеть, где сидишь ты, и только потом отслеживай остальное.',
     runnerPrompt:
         'Сначала найди своё место, а уже потом смотри на остальной стол.',
     runnerSupport:
         'Привычка простая: сперва свои карты и своё место, потом всё остальное.',
-    runnerQuestion: 'Какое место принадлежит Hero?',
+    runnerQuestion: 'Какое место принадлежит тебе?',
   ),
   'what_poker_is_pot_stack': Act0TaskDisplayCopyV1(
     title: 'Банк и стек',
@@ -171,7 +193,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         'Пройди чтение стола целиком и чисто: место, банк и финал раздачи.',
     runnerPrompt: 'Сначала прочитай стол, потом уже думай о решении.',
     runnerSupport:
-        'Hero — это ты, блайнды запускают первый банк, а стол подсказывает, что происходит.',
+        'Ты играешь из нижнего места, блайнды запускают первый банк, а стол подсказывает, что происходит.',
     runnerQuestion: 'Что такое банк?',
   ),
   'cards_ranks_suits_theory': Act0TaskDisplayCopyV1(
@@ -179,6 +201,12 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt: 'Каждая карта состоит из ранга и масти.',
     runnerSupport: 'В колоде 52 карты. Ты читаешь карту через эти две части.',
     runnerQuestion: 'Из каких двух частей состоит карта?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала разберём саму колоду.',
+        body: 'В холдеме 52 карты: 13 рангов и 4 масти.',
+      ),
+    ],
   ),
   'cards_ranks_suits_rank_drill': Act0TaskDisplayCopyV1(
     title: 'Старшая карта',
@@ -189,14 +217,15 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   'cards_ranks_suits_suit_drill': Act0TaskDisplayCopyV1(
     title: 'Назови масть',
     runnerPrompt: 'У карты всегда есть и ранг, и масть.',
-    runnerSupport: 'Здесь масти записаны коротко: s, h, d, c.',
+    runnerSupport:
+        'Здесь масти записаны английскими буквами: s — пики, h — черви, d — бубны, c — трефы.',
     runnerQuestion: 'Какая масть у Ah?',
   ),
   'cards_ranks_suits_private_board': Act0TaskDisplayCopyV1(
     title: 'Карманные и борд',
     runnerPrompt: 'Карманные карты твои, борд общий для всех.',
     runnerSupport:
-        'Твои две карты остаются у Hero, а карты борда могут использовать все.',
+        'Твои две карты остаются у тебя, а карты борда могут использовать все.',
     runnerQuestion: 'Какие карты доступны всем игрокам?',
   ),
   'cards_ranks_suits_board_count': Act0TaskDisplayCopyV1(
@@ -228,6 +257,16 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Карты борда появятся позже. Сначала у тебя только две карманные.',
     runnerQuestion: 'Сколько карманных карт ты получаешь на старте?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Раздача начинается на префлопе.',
+        body: 'Ты получаешь две закрытые карты. Карт борда на столе пока нет.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрытые карты принадлежат только тебе.',
+        body: 'Эти две карты видишь и используешь только ты.',
+      ),
+    ],
   ),
   'your_first_hand_flop': Act0TaskDisplayCopyV1(
     title: 'Флоп',
@@ -408,8 +447,8 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     title: 'Найди пару',
     runnerPrompt: 'Пара уже сильнее просто старшей карты.',
     runnerSupport:
-        'Ищи два совпадающих ранга. Это первый устойчивый made hand в базовой лестнице.',
-    runnerQuestion: 'Что собрал Hero в этом примере?',
+        'Ищи два совпадающих ранга. Это первая устойчивая готовая рука в базовой лестнице.',
+    runnerQuestion: 'Что собрал ты в этом примере?',
   ),
   'hand_rankings_two_pair_drill': Act0TaskDisplayCopyV1(
     title: 'Две пары против одной',
@@ -578,7 +617,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt:
         'Иди по порядку: группа руки, место, ситуация, потом действие.',
     runnerSupport:
-        'Этот каркас убирает суету: сначала пойми, что за рука и где ты сидишь, а потом решай, стоят ли фишки входа.',
+        'Этот каркас убирает суету: сначала пойми, что за рука и где ты сидишь, а потом решай, стоит ли входить в игру.',
     runnerQuestion: 'Какой порядок здесь самый чистый?',
   ),
   'apply_utg_fold': Act0TaskDisplayCopyV1(
@@ -603,7 +642,8 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     title: 'HJ, средняя рука',
     summary:
         'Средняя рука в средней позиции просит аккуратного решения, а не автоматического продолжения.',
-    runnerPrompt: 'Средняя рука любит контекст сильнее, чем автопилот.',
+    runnerPrompt:
+        'Средняя рука требует оценки ситуации, а не игры на автопилоте.',
     runnerSupport:
         'Здесь важно не упрямство, а трезвый каркас: группа руки, место и ситуация должны дать чистую причину продолжать.',
     runnerQuestion: 'Какое решение здесь выглядит наиболее дисциплинированным?',
@@ -633,21 +673,21 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
   ),
   'position_apply_late_open': Act0TaskDisplayCopyV1(
     title: 'Поздняя позиция: открыть или зайти пассивно?',
-    runnerPrompt: 'Банк не открыт. Hero в поздней позиции с ATo.',
+    runnerPrompt: 'Банк не открыт. Ты в поздней позиции с ATo.',
     runnerSupport:
         'В поздней позиции такая рука спокойно тянет на открытие, а не на пассивный вход.',
     runnerQuestion: 'Какое действие здесь выглядит самым простым?',
   ),
   'position_apply_early_fold': Act0TaskDisplayCopyV1(
     title: 'Ранняя позиция: та же рука уходит в пас',
-    runnerPrompt: 'Банк не открыт. Hero в ранней позиции с ATo.',
+    runnerPrompt: 'Банк не открыт. Ты в ранней позиции с ATo.',
     runnerSupport:
         'Та же рука в ранней позиции чувствует себя заметно хуже и не требует упрямства.',
     runnerQuestion: 'Какое действие здесь будет дисциплинированным?',
   ),
   'position_apply_hj_fold': Act0TaskDisplayCopyV1(
     title: 'HJ: держим дисциплину',
-    runnerPrompt: 'Банк не открыт. Hero в раннем участке стола с ATo.',
+    runnerPrompt: 'Банк не открыт. Ты в HJ с ATo.',
     runnerSupport:
         'Даже знакомая рука не обязана продолжать, если место за столом делает спот неудобным.',
     runnerQuestion: 'Какое действие здесь будет дисциплинированным?',
@@ -710,6 +750,477 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Сейчас всё чисто. Просто держи маршрут в движении.',
   ),
   'review_board_fix_cta': Act0SurfaceAtomCopyV1(text: 'Чинить сейчас'),
+  'runner_badge_your_move': Act0SurfaceAtomCopyV1(text: 'Твой ход'),
+  'runner_task_check_reason_continue': Act0SurfaceAtomCopyV1(
+    text: 'Сверь причину и продолжай',
+  ),
+  'runner_task_read_table_first': Act0SurfaceAtomCopyV1(
+    text: 'Сначала прочитай стол',
+  ),
+  'runner_task_tap_correct_seat': Act0SurfaceAtomCopyV1(
+    text: 'Нажми на правильное место',
+  ),
+  'runner_task_choose_best_size': Act0SurfaceAtomCopyV1(
+    text: 'Выбери лучший сайзинг',
+  ),
+  'runner_task_choose_winning_hand': Act0SurfaceAtomCopyV1(
+    text: 'Выбери руку-победителя',
+  ),
+  'runner_task_choose_correct_count': Act0SurfaceAtomCopyV1(
+    text: 'Выбери правильный счёт',
+  ),
+  'runner_task_choose_best_action': Act0SurfaceAtomCopyV1(
+    text: 'Выбери лучшее действие',
+  ),
+  'runner_prompt_read_table_then_tap': Act0SurfaceAtomCopyV1(
+    text: 'Сначала прочитай стол, потом нажми на одно место.',
+  ),
+  'runtime_label_fold': Act0SurfaceAtomCopyV1(text: 'Пас'),
+  'runtime_label_check': Act0SurfaceAtomCopyV1(text: 'Чек'),
+  'runtime_label_call': Act0SurfaceAtomCopyV1(text: 'Колл'),
+  'runtime_label_raise': Act0SurfaceAtomCopyV1(text: 'Рейз'),
+  'runtime_label_one': Act0SurfaceAtomCopyV1(text: 'Один'),
+  'runtime_label_two': Act0SurfaceAtomCopyV1(text: 'Два'),
+  'runtime_label_three': Act0SurfaceAtomCopyV1(text: 'Три'),
+  'runtime_label_four': Act0SurfaceAtomCopyV1(text: 'Четыре'),
+  'runtime_label_five': Act0SurfaceAtomCopyV1(text: 'Пять'),
+  'runtime_label_six': Act0SurfaceAtomCopyV1(text: 'Шесть'),
+  'runtime_label_king': Act0SurfaceAtomCopyV1(text: 'Король'),
+  'runtime_label_ace': Act0SurfaceAtomCopyV1(text: 'Туз'),
+  'runtime_label_pot_short': Act0SurfaceAtomCopyV1(text: 'Банк'),
+  'runtime_label_stack': Act0SurfaceAtomCopyV1(text: 'Стек'),
+  'runtime_label_board_cards': Act0SurfaceAtomCopyV1(text: 'Карты борда'),
+  'runtime_label_private_cards': Act0SurfaceAtomCopyV1(text: 'Карманные карты'),
+  'runtime_label_everyone_folds': Act0SurfaceAtomCopyV1(text: 'Все выбросили'),
+  'runtime_label_largest_stack': Act0SurfaceAtomCopyV1(
+    text: 'Самый большой стек',
+  ),
+  'runtime_label_pair': Act0SurfaceAtomCopyV1(text: 'Пара'),
+  'runtime_label_high_card': Act0SurfaceAtomCopyV1(text: 'Старшая карта'),
+  'runtime_label_flush': Act0SurfaceAtomCopyV1(text: 'Флеш'),
+  'runtime_label_straight': Act0SurfaceAtomCopyV1(text: 'Стрит'),
+  'runtime_label_two_pair': Act0SurfaceAtomCopyV1(text: 'Две пары'),
+  'runtime_label_one_pair': Act0SurfaceAtomCopyV1(text: 'Одна пара'),
+  'runtime_label_win_now': Act0SurfaceAtomCopyV1(text: 'Забрать сразу'),
+  'runtime_label_show_cards': Act0SurfaceAtomCopyV1(text: 'Открыть карты'),
+  'runtime_label_best_hand': Act0SurfaceAtomCopyV1(text: 'Лучшая рука'),
+  'runtime_label_first_actor': Act0SurfaceAtomCopyV1(text: 'Кто ходит первым'),
+  'runtime_label_kicker': Act0SurfaceAtomCopyV1(text: 'Кикер'),
+  'runtime_label_seat_name': Act0SurfaceAtomCopyV1(text: 'Название места'),
+  'runtime_label_premium': Act0SurfaceAtomCopyV1(text: 'Премиум'),
+  'runtime_label_strong': Act0SurfaceAtomCopyV1(text: 'Сильная'),
+  'runtime_label_medium': Act0SurfaceAtomCopyV1(text: 'Средняя'),
+  'runtime_label_trash': Act0SurfaceAtomCopyV1(text: 'Мусор'),
+  'runtime_label_value': Act0SurfaceAtomCopyV1(text: 'Вэлью'),
+  'runtime_label_bluff': Act0SurfaceAtomCopyV1(text: 'Блеф'),
+  'runtime_label_dry': Act0SurfaceAtomCopyV1(text: 'Сухой'),
+  'runtime_label_wet': Act0SurfaceAtomCopyV1(text: 'Связный'),
+  'runtime_label_flush_draw': Act0SurfaceAtomCopyV1(text: 'Флеш-дро'),
+  'runtime_label_straight_draw': Act0SurfaceAtomCopyV1(text: 'Стрит-дро'),
+  'runtime_label_no': Act0SurfaceAtomCopyV1(text: 'Нет'),
+  'runtime_label_yes': Act0SurfaceAtomCopyV1(text: 'Да'),
+  'runtime_label_heart': Act0SurfaceAtomCopyV1(text: 'Червь'),
+  'runtime_label_club': Act0SurfaceAtomCopyV1(text: 'Трефа'),
+  'runtime_label_tie': Act0SurfaceAtomCopyV1(text: 'Ничья'),
+  'runtime_label_split': Act0SurfaceAtomCopyV1(text: 'Поделить банк'),
+  'runtime_label_missed': Act0SurfaceAtomCopyV1(text: 'Мимо'),
+  'runtime_label_bluff_candidate': Act0SurfaceAtomCopyV1(
+    text: 'Кандидат в блеф',
+  ),
+  'runtime_label_spot_check': Act0SurfaceAtomCopyV1(text: 'Проверка спота'),
+  'runtime_feedback_you_picked': Act0SurfaceAtomCopyV1(text: 'Ты выбрал'),
+  'runtime_feedback_better_option': Act0SurfaceAtomCopyV1(
+    text: 'Лучший вариант',
+  ),
+  'runtime_feedback_sharper_line': Act0SurfaceAtomCopyV1(
+    text: 'Более точная линия',
+  ),
+  'runtime_feedback_best_play': Act0SurfaceAtomCopyV1(text: 'Лучшее решение'),
+  'runtime_feedback_almost_there': Act0SurfaceAtomCopyV1(text: 'Почти.'),
+  'runtime_feedback_playable_move': Act0SurfaceAtomCopyV1(text: 'Играбельно.'),
+  'runtime_feedback_nice_read': Act0SurfaceAtomCopyV1(text: 'Хорошее чтение.'),
+  'runtime_feedback_not_quite': Act0SurfaceAtomCopyV1(text: 'Не совсем так.'),
+  'runtime_feedback_fold_reason_btn': Act0SurfaceAtomCopyV1(
+    text:
+        'Когда до тебя все выбросили на баттоне, пас слишком легко отдаёт играбельный спот.',
+  ),
+  'runtime_feedback_call_reason_btn': Act0SurfaceAtomCopyV1(
+    text:
+        'Колл здесь допустим, но слишком пассивен. Рейз может сразу забрать блайнды и строит банк лучше.',
+  ),
+  'runtime_feedback_raise_reason_btn': Act0SurfaceAtomCopyV1(
+    text:
+        'Когда ты входишь первым на баттоне, рейз открывает раздачу и давит на блайнды.',
+  ),
+  'runtime_context_limp_legal': Act0SurfaceAtomCopyV1(text: 'Лимп допустим'),
+  'runtime_context_raise_sharper': Act0SurfaceAtomCopyV1(text: 'Рейз точнее'),
+  'runtime_context_button_open': Act0SurfaceAtomCopyV1(
+    text: 'Открытие с баттона',
+  ),
+  'runtime_phrase_widen_late_steals_slightly': Act0SurfaceAtomCopyV1(
+    text: 'Чуть шире крадём из поздней позиции',
+  ),
+  'runtime_phrase_bet_half_pot': Act0SurfaceAtomCopyV1(text: 'Ставь полбанка'),
+  'runtime_phrase_bet_for_value': Act0SurfaceAtomCopyV1(text: 'Ставь на вэлью'),
+  'runtime_phrase_repeatable_daily_transfer_loop': Act0SurfaceAtomCopyV1(
+    text: 'Повторяемый ежедневный цикл переноса в игру',
+  ),
+  'runtime_phrase_stable_bridge_deeper_strategy': Act0SurfaceAtomCopyV1(
+    text: 'Надёжный мост к более глубокой стратегии',
+  ),
+  'runtime_phrase_ak_appears_more_often': Act0SurfaceAtomCopyV1(
+    text: 'A-K встречается чаще',
+  ),
+  'runtime_phrase_activate_one_trigger_lever_now': Act0SurfaceAtomCopyV1(
+    text: 'Сейчас включи один триггер и один рычаг',
+  ),
+  'runtime_phrase_apply_selective_open_pressure': Act0SurfaceAtomCopyV1(
+    text: 'Точечно дави открытием',
+  ),
+  'runtime_phrase_audit_process_first_then_outcome': Act0SurfaceAtomCopyV1(
+    text: 'Сначала разбери процесс, потом результат',
+  ),
+  'runtime_phrase_btn_sb_bb_still_act_after_you': Act0SurfaceAtomCopyV1(
+    text: 'После тебя ещё действуют BTN, SB и BB',
+  ),
+  'runtime_phrase_bet_value_heavier_trim_bluffs': Act0SurfaceAtomCopyV1(
+    text: 'Ставь на вэлью плотнее и сокращай блефы',
+  ),
+  'runtime_phrase_bluffcatch_wider_with_blockers': Act0SurfaceAtomCopyV1(
+    text: 'Коллируй блефы чуть шире, если есть блокеры',
+  ),
+  'runtime_phrase_choose_one_tendency_and_act': Act0SurfaceAtomCopyV1(
+    text: 'Выбери одну тенденцию и подстройся под неё',
+  ),
+  'runtime_phrase_count_more_players_behind': Act0SurfaceAtomCopyV1(
+    text: 'Считай больше игроков позади и чуть зажимай ранние открытия',
+  ),
+  'runtime_phrase_disciplined_urgency_reasonable_spots': Act0SurfaceAtomCopyV1(
+    text: 'Действуй срочно, но дисциплинированно, в разумных спотах',
+  ),
+  'runtime_phrase_facing_an_open': Act0SurfaceAtomCopyV1(
+    text: 'Перед тобой уже было открытие',
+  ),
+  'runtime_phrase_flag_loose_call_possible_leak': Act0SurfaceAtomCopyV1(
+    text: 'Пометь этот лузовый колл как возможную утечку',
+  ),
+  'runtime_phrase_fold_more_marginal_bluffcatchers': Act0SurfaceAtomCopyV1(
+    text: 'Чаще пасуй с пограничными руками для колла против блефа',
+  ),
+  'runtime_phrase_if_villain_underbluffs_fold_marginal_bluffcatchers':
+      Act0SurfaceAtomCopyV1(
+        text:
+            'Если соперник недоблефовывает, пасуй с пограничными руками для колла против блефа',
+      ),
+  'runtime_phrase_it_can_slide_toward_missed': Act0SurfaceAtomCopyV1(
+    text: 'Рука может сместиться ближе к категории "мимо"',
+  ),
+  'runtime_phrase_log_leak_and_reset': Act0SurfaceAtomCopyV1(
+    text: 'Коротко запиши утечку и вернись в текущую раздачу',
+  ),
+  'runtime_phrase_loose_passive_caller': Act0SurfaceAtomCopyV1(
+    text: 'Лузово-пассивный коллер',
+  ),
+  'runtime_phrase_make_small_adjustment_gather_evidence': Act0SurfaceAtomCopyV1(
+    text: 'Сделай маленькую подстройку и собери ещё доказательства',
+  ),
+  'runtime_phrase_make_only_small_adjustment_keep_watching':
+      Act0SurfaceAtomCopyV1(
+        text: 'Сделай только маленькую подстройку и продолжай наблюдать',
+      ),
+  'runtime_phrase_map_pressure_first_then_adjust': Act0SurfaceAtomCopyV1(
+    text: 'Сначала оцени давление, потом подстраивайся под игрока',
+  ),
+  'runtime_phrase_medium_stack_faces_bubble_pressure': Act0SurfaceAtomCopyV1(
+    text:
+        'Средний стек сильнее чувствует баббл и не может так свободно коллировать',
+  ),
+  'runtime_phrase_middle_ground_room_and_commitment': Act0SurfaceAtomCopyV1(
+    text:
+        'Промежуточная глубина: есть место для манёвра, но уже можно привязаться к банку',
+  ),
+  'runtime_phrase_more_room_more_risk': Act0SurfaceAtomCopyV1(
+    text: 'Больше пространства, но и больше риска',
+  ),
+  'runtime_phrase_more_room_to_maneuver': Act0SurfaceAtomCopyV1(
+    text: 'Больше пространства для манёвра',
+  ),
+  'runtime_phrase_narrow_to_one_transfer_goal': Act0SurfaceAtomCopyV1(
+    text: 'Сузь фокус до одной цели переноса на следующую сессию',
+  ),
+  'runtime_phrase_one_bet_can_commit_hand': Act0SurfaceAtomCopyV1(
+    text: 'Одна ставка уже может привязать тебя к банку',
+  ),
+  'runtime_phrase_one_measurable_focus_session': Act0SurfaceAtomCopyV1(
+    text: 'Один измеримый фокус на всю сессию',
+  ),
+  'runtime_phrase_open_slightly_wider_late_position': Act0SurfaceAtomCopyV1(
+    text: 'Открывайся чуть шире в поздней позиции',
+  ),
+  'runtime_phrase_over_aggressive_bluffer': Act0SurfaceAtomCopyV1(
+    text: 'Слишком агрессивный блефер',
+  ),
+  'runtime_phrase_patience_and_table_selection': Act0SurfaceAtomCopyV1(
+    text: 'Терпение и выбор стола',
+  ),
+  'runtime_phrase_pause_on_high_ev_nodes': Act0SurfaceAtomCopyV1(
+    text: 'Коротко тормози в узлах с высоким EV',
+  ),
+  'runtime_phrase_prepare_action_windows_before_red_zone_panic':
+      Act0SurfaceAtomCopyV1(
+        text: 'Готовь окна для действия до паники в красной зоне',
+      ),
+  'runtime_phrase_range_plus_stack_depth': Act0SurfaceAtomCopyV1(
+    text: 'Диапазон плюс глубина стека',
+  ),
+  'runtime_phrase_range_plus_stack_risk': Act0SurfaceAtomCopyV1(
+    text: 'Диапазон плюс риск стека',
+  ),
+  'runtime_phrase_range_tightens': Act0SurfaceAtomCopyV1(
+    text: 'Диапазон сужается',
+  ),
+  'runtime_phrase_red_zone_player': Act0SurfaceAtomCopyV1(
+    text: 'Игрок в красной зоне',
+  ),
+  'runtime_phrase_review_process_before_result': Act0SurfaceAtomCopyV1(
+    text: 'Сначала оцени процесс, потом суди по результату',
+  ),
+  'runtime_phrase_run_brief_reset_reanchor_plan': Act0SurfaceAtomCopyV1(
+    text: 'Сделай короткий reset и вернись к плану',
+  ),
+  'runtime_phrase_run_short_reset_before_next_major_spot':
+      Act0SurfaceAtomCopyV1(
+        text: 'Перед следующим большим спотом сделай короткий reset',
+      ),
+  'runtime_phrase_select_one_repeated_leak_priority': Act0SurfaceAtomCopyV1(
+    text: 'Выбери одну повторяющуюся утечку как приоритет',
+  ),
+  'runtime_phrase_set_one_low_friction_focus_target': Act0SurfaceAtomCopyV1(
+    text: 'Поставь одну цель, которую легко удерживать в фокусе',
+  ),
+  'runtime_phrase_some_room_not_carefree_deep': Act0SurfaceAtomCopyV1(
+    text: 'Место для манёвра ещё есть, но это уже не беззаботная глубина',
+  ),
+  'runtime_phrase_stick_to_process_planned_exploit': Act0SurfaceAtomCopyV1(
+    text: 'Держись процесса и заранее намеченной exploit-линии',
+  ),
+  'runtime_phrase_take_practical_jam_spots_before_blinded_out':
+      Act0SurfaceAtomCopyV1(
+        text: 'Забирай практичные jam-споты до того, как тебя съедят блайнды',
+      ),
+  'runtime_phrase_structured_exploit_before_transfer': Act0SurfaceAtomCopyV1(
+    text: 'Сначала структурный exploit, потом перенос в живую игру',
+  ),
+  'runtime_phrase_survival_pressure_matters_more': Act0SurfaceAtomCopyV1(
+    text: 'Давление на выживание здесь важнее',
+  ),
+  'runtime_phrase_take_reasonable_jam_or_reshove': Act0SurfaceAtomCopyV1(
+    text: 'Ищи разумный jam или reshove-спот',
+  ),
+  'runtime_phrase_take_only_evidence_backed_lines': Act0SurfaceAtomCopyV1(
+    text: 'Играй только линии, за которыми есть доказательства',
+  ),
+  'runtime_phrase_texture_draw_outs': Act0SurfaceAtomCopyV1(
+    text: 'Текстура, дро, ауты',
+  ),
+  'runtime_phrase_tight_folding_profile_nit': Act0SurfaceAtomCopyV1(
+    text: 'Слишком тайтовый профиль (нит)',
+  ),
+  'runtime_phrase_tighten_marginal_calls': Act0SurfaceAtomCopyV1(
+    text: 'Поджимай пограничные коллы',
+  ),
+  'runtime_phrase_tighten_weakest_steals_keep_stronger_value':
+      Act0SurfaceAtomCopyV1(
+        text: 'Срежь самые слабые кражи и оставь более сильное вэлью',
+      ),
+  'runtime_phrase_tournament_table': Act0SurfaceAtomCopyV1(
+    text: 'Турнирный стол',
+  ),
+  'runtime_phrase_use_controlled_urgency': Act0SurfaceAtomCopyV1(
+    text: 'Используй контролируемую срочность',
+  ),
+  'runtime_phrase_usually_check_or_fold': Act0SurfaceAtomCopyV1(
+    text: 'Обычно чек или пас',
+  ),
+  'runtime_phrase_which_bucket_is_my_hand_in': Act0SurfaceAtomCopyV1(
+    text: 'В какой группе моя рука?',
+  ),
+  'runtime_phrase_write_one_priority_leak_one_fix': Act0SurfaceAtomCopyV1(
+    text: 'Запиши одну приоритетную утечку и один фикс на завтра',
+  ),
+  'runtime_phrase_draw_hit': Act0SurfaceAtomCopyV1(text: 'Дро доехало'),
+  'runtime_phrase_bet_one_third': Act0SurfaceAtomCopyV1(
+    text: 'Ставь одну треть банка',
+  ),
+  'runtime_phrase_purpose_and_price': Act0SurfaceAtomCopyV1(
+    text: 'Цель и цена',
+  ),
+  'runtime_phrase_seat_context': Act0SurfaceAtomCopyV1(text: 'Контекст места'),
+  'runtime_feedback_too_passive': Act0SurfaceAtomCopyV1(
+    text: 'Слишком пассивно.',
+  ),
+  'runtime_phrase_board_got_more_dangerous_easy_value_caution':
+      Act0SurfaceAtomCopyV1(
+        text:
+            'Борд стал опаснее, так что старая лёгкая вэлью-линия уже требует осторожности',
+      ),
+  'runtime_phrase_board_got_wetter_thin_value_caution': Act0SurfaceAtomCopyV1(
+    text:
+        'Борд стал более связным, так что старая тонкая вэлью-линия уже требует осторожности',
+  ),
+  'runtime_phrase_tighten_defend_avoid_thin_allins': Act0SurfaceAtomCopyV1(
+    text: 'Подожми защиту и не лезь в тонкие олл-ины',
+  ),
+  'runtime_phrase_trash_bucket_clean_fold': Act0SurfaceAtomCopyV1(
+    text: 'Мусорная группа, чистый пас',
+  ),
+  'runtime_phrase_valuebet_heavier_bluff_less': Act0SurfaceAtomCopyV1(
+    text: 'Ставь на вэлью плотнее, блефуй реже',
+  ),
+  'runtime_phrase_widen_late_steals_keep_change_small': Act0SurfaceAtomCopyV1(
+    text: 'Чуть шире крадём поздно, но подстройку держим маленькой',
+  ),
+  'runtime_phrase_bottom_seat': Act0SurfaceAtomCopyV1(text: 'Нижнее место'),
+  'runtime_phrase_bucket_seat_frame': Act0SurfaceAtomCopyV1(
+    text: 'Группа, место, фрейм',
+  ),
+  'runtime_feedback_close_idea': Act0SurfaceAtomCopyV1(text: 'Мысль рядом.'),
+  'runtime_phrase_free_card': Act0SurfaceAtomCopyV1(text: 'Бесплатная карта'),
+  'runtime_feedback_playable_caution': Act0SurfaceAtomCopyV1(
+    text: 'Играбельно, но осторожно.',
+  ),
+  'runtime_feedback_playable_start': Act0SurfaceAtomCopyV1(
+    text: 'Играбельное начало.',
+  ),
+  'runtime_phrase_five_in_a_row': Act0SurfaceAtomCopyV1(text: 'Пять подряд'),
+  'runtime_phrase_hand_seat_action': Act0SurfaceAtomCopyV1(
+    text: 'Рука, место, действие',
+  ),
+  'runtime_feedback_nice_count': Act0SurfaceAtomCopyV1(text: 'Хороший счёт.'),
+  'runtime_feedback_playable_read': Act0SurfaceAtomCopyV1(
+    text: 'Играбельное чтение.',
+  ),
+  'runtime_feedback_playable_thought': Act0SurfaceAtomCopyV1(
+    text: 'Играбельная мысль.',
+  ),
+  'runtime_feedback_too_broad': Act0SurfaceAtomCopyV1(text: 'Слишком широко.'),
+  'runtime_feedback_too_loose': Act0SurfaceAtomCopyV1(text: 'Слишком лузово.'),
+  'runtime_feedback_too_rigid': Act0SurfaceAtomCopyV1(text: 'Слишком жёстко.'),
+  'runtime_phrase_trips': Act0SurfaceAtomCopyV1(text: 'Трипс'),
+  'runtime_feedback_wrong_direction': Act0SurfaceAtomCopyV1(
+    text: 'Неверное направление.',
+  ),
+  'table_word_pot': Act0SurfaceAtomCopyV1(text: 'Банк'),
+  'table_word_to_call': Act0SurfaceAtomCopyV1(text: 'До колла'),
+  'table_word_to_act': Act0SurfaceAtomCopyV1(text: 'Ход'),
+  'table_word_dealer': Act0SurfaceAtomCopyV1(text: 'Дилер'),
+  'table_word_small_blind': Act0SurfaceAtomCopyV1(text: 'Малый блайнд'),
+  'table_word_big_blind': Act0SurfaceAtomCopyV1(text: 'Большой блайнд'),
+  'table_word_now': Act0SurfaceAtomCopyV1(text: 'Сейчас'),
+  'table_word_you': Act0SurfaceAtomCopyV1(text: 'Ты'),
+  'table_word_blind': Act0SurfaceAtomCopyV1(text: 'блайнд'),
+  'table_word_acts': Act0SurfaceAtomCopyV1(text: 'действует'),
+  'table_word_opens': Act0SurfaceAtomCopyV1(text: 'открывает'),
+  'table_word_bets': Act0SurfaceAtomCopyV1(text: 'ставит'),
+  'table_word_calls': Act0SurfaceAtomCopyV1(text: 'коллирует'),
+  'table_word_raises': Act0SurfaceAtomCopyV1(text: 'рейзит до'),
+  'table_word_checks': Act0SurfaceAtomCopyV1(text: 'чекает'),
+  'table_word_folds': Act0SurfaceAtomCopyV1(text: 'пас'),
+  'table_trail_flop_dealt': Act0SurfaceAtomCopyV1(text: 'Флоп открыт'),
+  'table_street_preflop': Act0SurfaceAtomCopyV1(text: 'Префлоп'),
+  'table_street_flop': Act0SurfaceAtomCopyV1(text: 'Флоп'),
+  'table_street_turn': Act0SurfaceAtomCopyV1(text: 'Тёрн'),
+  'table_street_river': Act0SurfaceAtomCopyV1(text: 'Ривер'),
+  'table_center_blinds_posted': Act0SurfaceAtomCopyV1(
+    text: 'Блайнды поставлены',
+  ),
+  'table_center_action_on_hero': Act0SurfaceAtomCopyV1(text: 'Ход за тобой'),
+  'table_center_private_cards': Act0SurfaceAtomCopyV1(text: 'Карманные карты'),
+  'table_center_shared_board': Act0SurfaceAtomCopyV1(text: 'Общий борд'),
+  'table_center_ranks_and_suits': Act0SurfaceAtomCopyV1(text: 'Ранги и масти'),
+  'table_center_pot_vs_stack': Act0SurfaceAtomCopyV1(text: 'Банк и стек'),
+  'table_center_no_bet_yet': Act0SurfaceAtomCopyV1(text: 'Ставки ещё нет'),
+  'table_center_facing_a_bet': Act0SurfaceAtomCopyV1(
+    text: 'Перед тобой ставка',
+  ),
+  'table_center_facing_a_price': Act0SurfaceAtomCopyV1(
+    text: 'Перед тобой цена',
+  ),
+  'table_center_read_hand_board_pot': Act0SurfaceAtomCopyV1(
+    text: 'Читай руку, борд и банк',
+  ),
+  'table_center_five_board_cards': Act0SurfaceAtomCopyV1(
+    text: 'Пять карт борда',
+  ),
+  'table_center_premium_bucket': Act0SurfaceAtomCopyV1(text: 'Премиум-группа'),
+  'table_center_trash_bucket': Act0SurfaceAtomCopyV1(text: 'Мусорная группа'),
+  'table_center_co_opened': Act0SurfaceAtomCopyV1(text: 'CO открылся'),
+  'table_center_weak_continue': Act0SurfaceAtomCopyV1(
+    text: 'Слабое продолжение?',
+  ),
+  'table_center_unopened_pot': Act0SurfaceAtomCopyV1(
+    text: 'Никто ещё не вошёл',
+  ),
+  'table_center_early_position': Act0SurfaceAtomCopyV1(text: 'Ранняя позиция'),
+  'table_center_co_three_behind': Act0SurfaceAtomCopyV1(
+    text: 'CO и ещё три игрока позади',
+  ),
+  'table_center_weak_ace': Act0SurfaceAtomCopyV1(text: 'Слабый туз'),
+  'table_center_hj_unopened_pot': Act0SurfaceAtomCopyV1(
+    text: 'HJ, никто ещё не вошёл',
+  ),
+  'table_center_strong_bucket': Act0SurfaceAtomCopyV1(text: 'Сильная группа'),
+  'table_center_medium_bucket': Act0SurfaceAtomCopyV1(text: 'Средняя группа'),
+  'table_center_medium_good_seat': Act0SurfaceAtomCopyV1(
+    text: 'Средняя рука, хорошее место',
+  ),
+  'table_center_trash_early': Act0SurfaceAtomCopyV1(text: 'Мусорная рука рано'),
+  'table_center_strong_late': Act0SurfaceAtomCopyV1(
+    text: 'Сильная рука поздно',
+  ),
+  'table_center_hj_opens_2_5_bb': Act0SurfaceAtomCopyV1(
+    text: 'HJ открывает 2.5 BB',
+  ),
+  'table_center_name_purpose': Act0SurfaceAtomCopyV1(text: 'Назови цель'),
+  'table_center_top_pair': Act0SurfaceAtomCopyV1(text: 'Топ-пара'),
+  'table_center_missed_hand': Act0SurfaceAtomCopyV1(text: 'Рука мимо'),
+  'table_center_value_spot': Act0SurfaceAtomCopyV1(text: 'Вэлью-спот'),
+  'table_center_fold_pressure': Act0SurfaceAtomCopyV1(text: 'Давление на пас'),
+  'table_center_low_fold_pressure': Act0SurfaceAtomCopyV1(
+    text: 'Мало давления на пас',
+  ),
+  'table_center_next_card_matters': Act0SurfaceAtomCopyV1(
+    text: 'Следующая карта важна',
+  ),
+  'table_center_facing_price': Act0SurfaceAtomCopyV1(text: 'Перед тобой цена'),
+  'table_center_small_price': Act0SurfaceAtomCopyV1(text: 'Небольшая цена'),
+  'table_center_high_price': Act0SurfaceAtomCopyV1(text: 'Высокая цена'),
+  'table_center_one_third': Act0SurfaceAtomCopyV1(text: 'Одна треть?'),
+  'table_center_half_pot': Act0SurfaceAtomCopyV1(text: 'Полбанка?'),
+  'table_center_pot_size': Act0SurfaceAtomCopyV1(text: 'В банк?'),
+  'table_center_texture_read': Act0SurfaceAtomCopyV1(text: 'Чтение текстуры'),
+  'table_center_wet_board': Act0SurfaceAtomCopyV1(text: 'Связанный борд'),
+  'table_center_disconnected': Act0SurfaceAtomCopyV1(text: 'Разрозненный'),
+  'table_center_9_8_7': Act0SurfaceAtomCopyV1(text: '9-8-7'),
+  'table_center_two_hearts': Act0SurfaceAtomCopyV1(text: 'Две черви'),
+  'table_center_connected_ranks': Act0SurfaceAtomCopyV1(text: 'Связные ранги'),
+  'table_center_rainbow_flop': Act0SurfaceAtomCopyV1(text: 'Радужный флоп'),
+  'table_center_4_or_9_helps': Act0SurfaceAtomCopyV1(text: '4 или 9 помогают'),
+  'table_center_big_gaps': Act0SurfaceAtomCopyV1(text: 'Большие разрывы'),
+  'table_center_outs_help': Act0SurfaceAtomCopyV1(text: 'Ауты помогают'),
+  'table_center_turn_changes': Act0SurfaceAtomCopyV1(text: 'Тёрн меняет план'),
+  'table_center_heart_lands': Act0SurfaceAtomCopyV1(text: 'Червь доехала'),
+  'table_center_draw_missed': Act0SurfaceAtomCopyV1(text: 'Дро не доехало'),
+  'table_center_range_bucket': Act0SurfaceAtomCopyV1(
+    text: 'Какая группа диапазона?',
+  ),
+  'table_center_range_shift': Act0SurfaceAtomCopyV1(text: 'Сдвиг диапазона'),
+  'table_center_value_action': Act0SurfaceAtomCopyV1(text: 'Вэлью-действие'),
+  'table_center_bucket': Act0SurfaceAtomCopyV1(text: 'Какая группа?'),
+  'table_center_combo_count': Act0SurfaceAtomCopyV1(text: 'Сколько комбинаций'),
+  'table_center_effective_stack': Act0SurfaceAtomCopyV1(
+    text: 'Эффективный стек',
+  ),
   'profile_title': Act0SurfaceAtomCopyV1(text: 'Ты'),
   'profile_recommended_focus_label': Act0SurfaceAtomCopyV1(
     text: 'Следующий фокус',

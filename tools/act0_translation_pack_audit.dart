@@ -102,6 +102,28 @@ void main(List<String> args) {
           task.runnerQuestionLocalized,
           sourceTask.question,
         );
+        for (final teachingStep in task.teachingSteps) {
+          final sourceStep =
+              teachingStep.stepIndex < sourceTask.teachingSteps.length
+              ? sourceTask.teachingSteps[teachingStep.stepIndex]
+              : null;
+          _checkUnexpectedFilledField(
+            findings,
+            file.path,
+            task.taskId,
+            'teachingStep${teachingStep.stepIndex}_title_${options.languageCode}',
+            teachingStep.titleLocalized,
+            sourceStep?.title,
+          );
+          _checkUnexpectedFilledField(
+            findings,
+            file.path,
+            task.taskId,
+            'teachingStep${teachingStep.stepIndex}_body_${options.languageCode}',
+            teachingStep.bodyLocalized,
+            sourceStep?.body,
+          );
+        }
       }
     }
 

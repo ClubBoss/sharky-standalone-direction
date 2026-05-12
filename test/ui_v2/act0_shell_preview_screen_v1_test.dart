@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -478,8 +479,21 @@ void main() {
       find.byKey(const Key('act0_shell_home_repair_panel')),
       findsOneWidget,
     );
-    expect(find.text('Nothing to fix right now.'), findsOneWidget);
-    expect(find.text('Optional practice'), findsOneWidget);
+    expect(find.text('Route is clean.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_repair_clear_state')),
+      findsOneWidget,
+    );
+    expect(find.text('Nothing to fix right now.'), findsNothing);
+    expect(find.text('Extra reps'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_optional_practice_hint')),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Play stays optional. The main route still lives in Learn.'),
+      findsOneWidget,
+    );
     expect(find.text('One extra rep, only if you want it.'), findsNothing);
     expect(find.text('Now: Actions'), findsNothing);
     expect(find.text('Next: Blinds & action order'), findsNothing);
@@ -1156,9 +1170,11 @@ void main() {
   testWidgets('Learn tab auto-expands current lesson on first open', (
     tester,
   ) async {
-    await pumpTall(tester, host());
+    await pumpCompact(tester, host());
 
     await tester.tap(find.text('Learn'));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
@@ -1169,6 +1185,14 @@ void main() {
     expect(
       find.byKey(const Key('act0_shell_lesson_hub_steps')),
       findsOneWidget,
+    );
+    expect(
+      tester
+          .getTopLeft(
+            find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
+          )
+          .dy,
+      greaterThan(44),
     );
   });
 
@@ -1251,11 +1275,13 @@ void main() {
           GlobalWidgetsLocalizations.delegate,
         ],
         home: Builder(
-          builder: (context) => Column(
-            children: <Widget>[
-              Text(act0LocalizedLessonTitleV1(context, lesson)),
-              Text(act0LocalizedTaskSummaryV1(context, task)),
-            ],
+          builder: (context) => SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text(act0LocalizedLessonTitleV1(context, lesson)),
+                Text(act0LocalizedTaskSummaryV1(context, task)),
+              ],
+            ),
           ),
         ),
       ),
@@ -1602,6 +1628,281 @@ void main() {
     );
   });
 
+  testWidgets(
+    'Runner localizes action options and counting answers in Russian',
+    (tester) async {
+      final actionTask = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .taskList
+          .firstWhere((task) => task.taskId == 'actions_raise_drill');
+      final actionRunner = actionTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: actionRunner,
+              selectedTaskId: actionTask.taskId,
+              selectedTaskFamily: actionTask.resolvedTaskFamily,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Проверка спота'), findsOneWidget);
+      expect(find.text('Пас'), findsOneWidget);
+      expect(find.text('Колл'), findsOneWidget);
+      expect(find.text('Рейз'), findsOneWidget);
+      expect(find.text('Spot check'), findsNothing);
+      expect(find.text('Fold'), findsNothing);
+      expect(find.text('Call'), findsNothing);
+      expect(find.text('Raise'), findsNothing);
+
+      final countingTask = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'range_combo_counts')
+          .taskList
+          .firstWhere((task) => task.taskId == 'w6_ak_combos');
+      final countingRunner = countingTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: countingRunner,
+              selectedTaskId: countingTask.taskId,
+              selectedTaskFamily: countingTask.resolvedTaskFamily,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('16 комбинаций'), findsOneWidget);
+      expect(find.text('12 комбинаций'), findsOneWidget);
+      expect(find.text('6 комбинаций'), findsOneWidget);
+      expect(find.text('16 combos'), findsNothing);
+    },
+  );
+
+  testWidgets('Runner localizes early feedback labels in Russian', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'actions_raise_drill');
+    final reviewRunner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      selectedOptionId: 'fold',
+      teachingSteps: const <Act0TeachingStepV1>[],
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: reviewRunner,
+            selectedTaskId: task.taskId,
+            selectedTaskFamily: task.resolvedTaskFamily,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Почти.'), findsOneWidget);
+    expect(find.text('Ты выбрал Пас'), findsOneWidget);
+    expect(find.text('Лучший вариант: Рейз'), findsOneWidget);
+    expect(
+      find.text(
+        'Когда до тебя все выбросили на баттоне, пас слишком легко отдаёт играбельный спот.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Limp is legal'), findsNothing);
+    expect(find.text('You picked Fold'), findsNothing);
+    expect(find.text('Better option: Raise'), findsNothing);
+  });
+
+  testWidgets('Runtime surface helper localizes repeated families in Russian', (
+    tester,
+  ) async {
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Builder(
+          builder: (context) => ListView(
+            children: <Widget>[
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(context, '16 combos'),
+                key: const Key('runtime_probe_combos'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(
+                  context,
+                  '18 BB effective stack',
+                ),
+                key: const Key('runtime_probe_effective_stack'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(
+                  context,
+                  '2 private cards, 3 board cards, 6 BB in the pot',
+                ),
+                key: const Key('runtime_probe_table_read'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(context, '6-max'),
+                key: const Key('runtime_probe_max_players'),
+              ),
+              Text(
+                act0RuntimeLocalizedActionTrailLabelV1(
+                  context,
+                  'BB calls 3 BB',
+                ),
+                key: const Key('runtime_probe_calls'),
+              ),
+              Text(
+                act0RuntimeLocalizedActionTrailLabelV1(
+                  context,
+                  'Flop: BB checks',
+                ),
+                key: const Key('runtime_probe_flop_checks'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(
+                  context,
+                  'Widen late steals slightly',
+                ),
+                key: const Key('runtime_probe_widen'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(context, 'Bet half-pot'),
+                key: const Key('runtime_probe_half_pot'),
+              ),
+              Text(
+                act0RuntimeLocalizedGeneralLabelV1(context, 'Facing an open'),
+                key: const Key('runtime_probe_facing_open'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.widget<Text>(find.byKey(const Key('runtime_probe_combos'))).data,
+      '16 комбинаций',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('runtime_probe_effective_stack')))
+          .data,
+      'Эффективный стек 18 BB',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('runtime_probe_table_read')))
+          .data,
+      '2 закрытые карты, 3 общие карты, в банке 6 BB',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('runtime_probe_max_players')))
+          .data,
+      '6-макс',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('runtime_probe_calls'))).data,
+      'BB коллирует 3 BB',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('runtime_probe_flop_checks')))
+          .data,
+      'Флоп: BB чекает',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('runtime_probe_widen'))).data,
+      'Чуть шире крадём из поздней позиции',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('runtime_probe_half_pot'))).data,
+      'Ставь полбанка',
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('runtime_probe_facing_open')))
+          .data,
+      'Перед тобой уже было открытие',
+    );
+    expect(find.text('16 combos'), findsNothing);
+    expect(find.text('18 BB effective stack'), findsNothing);
+    expect(
+      find.text('2 private cards, 3 board cards, 6 BB in the pot'),
+      findsNothing,
+    );
+    expect(find.text('6-max'), findsNothing);
+    expect(find.text('BB calls 3 BB'), findsNothing);
+    expect(find.text('Flop: BB checks'), findsNothing);
+    expect(find.text('Widen late steals slightly'), findsNothing);
+    expect(find.text('Bet half-pot'), findsNothing);
+    expect(find.text('Facing an open'), findsNothing);
+  });
+
   testWidgets('Runner localizes World 2 discipline prompt copy in Russian', (
     tester,
   ) async {
@@ -1688,6 +1989,115 @@ void main() {
     expect(find.text('Какая группа у АА?'), findsOneWidget);
   });
 
+  testWidgets('Runner localizes seat-tap table chrome in Russian', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'blinds_action_order')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'blinds_first_actor');
+    final runner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.drill,
+      teachingSteps: const <Act0TeachingStepV1>[],
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            selectedTaskId: task.taskId,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Твой ход'), findsOneWidget);
+    expect(find.text('Нажми на правильное место'), findsOneWidget);
+    expect(
+      find.text('Сначала прочитай стол, потом нажми на одно место.'),
+      findsOneWidget,
+    );
+    expect(find.text('Блайнды поставлены'), findsOneWidget);
+    expect(find.text('Банк 1.5 BB'), findsOneWidget);
+    expect(find.text('Ход: 1 BB'), findsOneWidget);
+    expect(find.text('SB блайнд 0.5 BB'), findsOneWidget);
+    expect(find.text('BB блайнд 1 BB'), findsOneWidget);
+    expect(find.text('Your move'), findsNothing);
+    expect(find.text('Tap the correct seat'), findsNothing);
+    expect(find.text('Read the table, then tap one seat.'), findsNothing);
+    expect(find.text('Blinds posted'), findsNothing);
+    expect(find.text('Pot 1.5 BB'), findsNothing);
+    expect(find.text('To act - 1 BB'), findsNothing);
+  });
+
+  testWidgets(
+    'Runner Russian table chrome keeps seat prompt and trail labels out of ellipsis mode',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'blinds_action_order')
+          .taskList
+          .firstWhere((entry) => entry.taskId == 'blinds_first_actor');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      final taskLabel = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_seat_tap_task_label')),
+      );
+      final helperLabel = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_seat_tap_prompt_text')),
+      );
+      final trailLabel = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_action_trail_step_label_0')),
+      );
+
+      expect(taskLabel.overflow, isNot(TextOverflow.ellipsis));
+      expect(helperLabel.overflow, isNot(TextOverflow.ellipsis));
+      expect(trailLabel.overflow, isNot(TextOverflow.ellipsis));
+    },
+  );
+
   testWidgets('World 1 table-read runner copy localizes through stable ids', (
     tester,
   ) async {
@@ -1745,6 +2155,85 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'World 1 teaching steps switch Russian copy instead of freezing one task line',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere((entry) => entry.taskId == 'what_poker_is_theory');
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Act0LessonRunnerShellV1(
+            runner: task.runner.copyWith(
+              teachingStepIndex: 0,
+              selectedOptionId: null,
+              phase: Act0LessonPhaseV1.theory,
+            ),
+            selectedTaskId: task.taskId,
+            tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+            onBack: () {},
+            onPreviousTheory: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      );
+
+      expect(find.text('Начинаем с кэш-игры в холдем.'), findsOneWidget);
+      expect(
+        find.textContaining('2 закрытые карты', findRichText: true),
+        findsOneWidget,
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Act0LessonRunnerShellV1(
+            runner: task.runner.copyWith(
+              teachingStepIndex: 1,
+              selectedOptionId: null,
+              phase: Act0LessonPhaseV1.theory,
+            ),
+            selectedTaskId: task.taskId,
+            tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+            onBack: () {},
+            onPreviousTheory: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      );
+
+      expect(find.text('Перед тобой покерный стол.'), findsOneWidget);
+      expect(
+        find.text('Ты играешь за Hero. Остальные места за столом — соперники.'),
+        findsOneWidget,
+      );
+      expect(find.text('Начинаем с кэш-игры в холдем.'), findsNothing);
+    },
+  );
 
   testWidgets('World 3 position-apply lesson localizes through stable ids', (
     tester,
@@ -1842,6 +2331,194 @@ void main() {
     expect(
       find.text('Какое место здесь действует позже остальных после флопа?'),
       findsOneWidget,
+    );
+  });
+
+  test('World 1 position seat drills keep seat affordances aligned', () {
+    final lesson = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((entry) => entry.lessonId == 'positions');
+
+    final seatDrillTasks = lesson.taskList
+        .where((task) {
+          return task.phase == Act0LessonPhaseV1.drill &&
+              task.runner.options.any((option) => option.seatId != null);
+        })
+        .toList(growable: false);
+
+    expect(seatDrillTasks, isNotEmpty);
+
+    for (final task in seatDrillTasks) {
+      final seatOptions = task.runner.options
+          .where((option) => option.seatId != null)
+          .toList(growable: false);
+      final correctOptions = seatOptions
+          .where((option) => option.isCorrect)
+          .toList(growable: false);
+
+      expect(
+        correctOptions,
+        hasLength(1),
+        reason: 'Expected exactly one correct seat option in ${task.taskId}',
+      );
+
+      final correctSeatId = correctOptions.single.seatId!;
+      final optionSeatIds = seatOptions.map((option) => option.seatId!).toSet();
+
+      expect(
+        task.runner.table.selectableSeatIds.toSet(),
+        optionSeatIds,
+        reason:
+            'Selectable seats must match authored seat options in ${task.taskId}',
+      );
+      expect(
+        task.runner.table.activeSeatId,
+        correctSeatId,
+        reason:
+            'Active seat must point at the correct answer in ${task.taskId}',
+      );
+      expect(
+        task.runner.table.highlightedSeatIds,
+        contains(correctSeatId),
+        reason:
+            'Highlighted seats must include the correct answer in ${task.taskId}',
+      );
+    }
+  });
+
+  test('All Act0 task seat references resolve after runtime normalization', () {
+    final state = Act0ShellStateV1.sample;
+
+    for (final world in state.worlds) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          final runner = normalizeAct0DrillSeatHighlightPolicyV1(
+            normalizeAct0SeatTapRunnerV1(
+              task.runner.copyWith(phase: task.phase),
+            ),
+          );
+          final tableSeatIds = runner.table.seats
+              .map((seat) => seat.seatId)
+              .where((seatId) => seatId.trim().isNotEmpty)
+              .toSet();
+
+          expect(
+            tableSeatIds,
+            isNotEmpty,
+            reason: 'Expected at least one seat in ${task.taskId}',
+          );
+
+          final activeSeatId = (runner.table.activeSeatId ?? '').trim();
+          if (activeSeatId.isNotEmpty) {
+            expect(
+              tableSeatIds.contains(activeSeatId),
+              isTrue,
+              reason: 'Unknown activeSeatId in ${task.taskId}',
+            );
+          }
+
+          if (task.phase == Act0LessonPhaseV1.drill) {
+            expect(
+              runner.table.highlightedSeatIds,
+              activeSeatId.isEmpty ? isEmpty : <String>[activeSeatId],
+              reason:
+                  'Drill seat highlights must match the active seat in ${task.taskId}',
+            );
+          }
+
+          final heroSeatId = (runner.table.heroSeatId ?? '').trim();
+          if (heroSeatId.isNotEmpty) {
+            expect(
+              tableSeatIds.contains(heroSeatId),
+              isTrue,
+              reason: 'Unknown heroSeatId in ${task.taskId}',
+            );
+          }
+
+          expect(
+            runner.table.highlightedSeatIds.every(tableSeatIds.contains),
+            isTrue,
+            reason: 'Unknown highlighted seat id in ${task.taskId}',
+          );
+          expect(
+            runner.table.selectableSeatIds.every(tableSeatIds.contains),
+            isTrue,
+            reason: 'Unknown selectable seat id in ${task.taskId}',
+          );
+
+          for (final option in runner.options) {
+            final seatId = (option.seatId ?? '').trim();
+            if (seatId.isNotEmpty) {
+              expect(
+                tableSeatIds.contains(seatId),
+                isTrue,
+                reason: 'Unknown option seat id in ${task.taskId}',
+              );
+            }
+            expect(
+              option.repairFocusSeatIds.every(tableSeatIds.contains),
+              isTrue,
+              reason: 'Unknown repair focus seat id in ${task.taskId}',
+            );
+          }
+
+          for (final step in runner.teachingSteps) {
+            final stepSeatIds = (step.table ?? runner.table).seats
+                .map((seat) => seat.seatId)
+                .where((seatId) => seatId.trim().isNotEmpty)
+                .toSet();
+            expect(
+              step.focusSeatIds.every(stepSeatIds.contains),
+              isTrue,
+              reason: 'Unknown teaching focus seat id in ${task.taskId}',
+            );
+          }
+        }
+      }
+    }
+  });
+
+  testWidgets('Seat target flags do not create stale drill gold rings', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'positions')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'positions_utg');
+
+    final runner = normalizeAct0SeatTapRunnerV1(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingStepIndex: task.runner.teachingSteps.length,
+      ),
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onChooseSeat: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_active_seat_ring_utg')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_active_seat_ring_btn')),
+      findsNothing,
     );
   });
 
@@ -3841,6 +4518,136 @@ void main() {
     expect(find.byKey(const Key('act0_shell_option_raise')), findsOneWidget);
   });
 
+  testWidgets('Lesson wrap-up waits until the final task', (tester) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_legal_context',
+    );
+    final followUpTask = Act0LessonTaskV1(
+      taskId: '${drillTask.taskId}_follow_up',
+      title: '${drillTask.title} follow up',
+      phase: drillTask.phase,
+      runner: drillTask.runner,
+      rewardXp: drillTask.rewardXp,
+      stepKind: drillTask.stepKind,
+      taskFamily: drillTask.taskFamily,
+      summary: drillTask.summary,
+      lockedSummary: drillTask.lockedSummary,
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask, followUpTask],
+    );
+
+    await pumpCompact(
+      tester,
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
+    );
+
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('One last check'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_card')),
+      findsNothing,
+    );
+
+    await advanceTeachingToDrill(tester);
+    expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+  });
+
+  testWidgets('Final wrap-up of an early miss does not replay lesson tail', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_legal_context',
+    );
+    final followUpTask = Act0LessonTaskV1(
+      taskId: '${drillTask.taskId}_follow_up',
+      title: '${drillTask.title} follow up',
+      phase: drillTask.phase,
+      runner: drillTask.runner,
+      rewardXp: drillTask.rewardXp,
+      stepKind: drillTask.stepKind,
+      taskFamily: drillTask.taskFamily,
+      summary: drillTask.summary,
+      lockedSummary: drillTask.lockedSummary,
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask, followUpTask],
+    );
+
+    await pumpCompact(
+      tester,
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
+    );
+
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('One last check'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_card')),
+      findsOneWidget,
+    );
+    expect(find.text('One last check'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_action_panel')), findsNothing);
+  });
+
   testWidgets('Second wrong answer becomes a deeper Review leak', (
     tester,
   ) async {
@@ -3976,7 +4783,8 @@ void main() {
         findsNothing,
       );
 
-      await advanceTeachingToDrill(tester);
+      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+      await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
       await tester.tap(find.byKey(const Key('act0_shell_option_check')));
       await tester.pumpAndSettle();
@@ -3989,8 +4797,12 @@ void main() {
         find.byKey(const Key('act0_shell_block_summary_card')),
         findsOneWidget,
       );
-      expect(find.text('Quick fixes'), findsOneWidget);
-      expect(find.text('Deep leaks'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_quick_fixes')),
+        findsOneWidget,
+      );
+      expect(find.text('Quick fixes: 1'), findsOneWidget);
+      expect(find.text('Deep leaks: 0'), findsOneWidget);
     },
   );
 
@@ -4039,7 +4851,8 @@ void main() {
 
       expect(find.text('One last check'), findsOneWidget);
 
-      await advanceTeachingToDrill(tester);
+      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -4051,9 +4864,89 @@ void main() {
         find.byKey(const Key('act0_shell_block_summary_card')),
         findsOneWidget,
       );
-      expect(find.text('Deep leaks'), findsOneWidget);
+      expect(find.text('Deep leaks: 1'), findsOneWidget);
     },
   );
+
+  testWidgets('Multiple final mistakes show one wrap-up intro only once', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final firstTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_legal_context',
+    );
+    final secondTask = Act0LessonTaskV1(
+      taskId: '${firstTask.taskId}_second',
+      title: '${firstTask.title} second',
+      phase: firstTask.phase,
+      runner: firstTask.runner,
+      rewardXp: firstTask.rewardXp,
+      stepKind: firstTask.stepKind,
+      taskFamily: firstTask.taskFamily,
+      summary: firstTask.summary,
+      lockedSummary: firstTask.lockedSummary,
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[firstTask, secondTask],
+    );
+
+    await pumpCompact(
+      tester,
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
+    );
+
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('One last check'), findsOneWidget);
+    expect(
+      find.text(
+        'You missed this earlier. 2 spots to revisit before the lesson summary.',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+    await tester.pumpAndSettle();
+    expect(find.text('One last check'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('One last check'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+  });
 
   testWidgets('Quick fix card can replay the repaired spot', (tester) async {
     await pumpTall(
@@ -4862,10 +5755,12 @@ void main() {
       return MaterialApp(
         home: StatefulBuilder(
           builder: (context, setState) {
-            final runner = task.runner.copyWith(
-              phase: phase,
-              selectedOptionId: selectedOptionId,
-              teachingStepIndex: teachingStepIndex,
+            final runner = normalizeAct0SeatTapRunnerV1(
+              task.runner.copyWith(
+                phase: phase,
+                selectedOptionId: selectedOptionId,
+                teachingStepIndex: teachingStepIndex,
+              ),
             );
             return Scaffold(
               body: Act0LessonRunnerShellV1(
@@ -4897,9 +5792,10 @@ void main() {
     await advanceTeachingToDrill(tester);
     expect(find.byKey(const Key('act0_shell_seat_tap_utg')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_seat_tap_btn')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_seat_tap_co')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_seat_tap_prompt')), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_btn')));
+    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_co')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
@@ -7413,35 +8309,67 @@ void main() {
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('act0_shell_profile_retake_placement_cta')),
-      300,
-      scrollable: find.descendant(
-        of: find.byKey(const Key('act0_shell_profile_screen')),
-        matching: find.byType(Scrollable),
+    expect(
+      find.byKey(const Key('act0_shell_profile_hero_card')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_profile_recommended_focus')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Bottom nav surfaces review backlog', (tester) async {
+    await pumpTall(tester, host());
+
+    expect(find.byKey(const Key('act0_shell_nav_badge_review')), findsNothing);
+
+    final sample = Act0ShellStateV1.sample;
+    final stateWithReviewBacklog = Act0ShellStateV1(
+      courseTitle: sample.courseTitle,
+      courseSubtitle: sample.courseSubtitle,
+      levelLabel: sample.levelLabel,
+      xp: sample.xp,
+      xpTarget: sample.xpTarget,
+      streakDays: sample.streakDays,
+      dailyGoalLabel: sample.dailyGoalLabel,
+      dailyGoalValue: sample.dailyGoalValue,
+      pathProgressLabel: sample.pathProgressLabel,
+      selectedWorldId: sample.selectedWorldId,
+      worlds: sample.worlds,
+      lessons: sample.lessons,
+      review: Act0ReviewStateV1(
+        title: sample.review.title,
+        subtitle: sample.review.subtitle,
+        weaknessLabel: sample.review.weaknessLabel,
+        reason: sample.review.reason,
+        stats: sample.review.stats,
+        chosenLabel: sample.review.chosenLabel,
+        betterLabel: sample.review.betterLabel,
+        mistakes: const <Act0MistakeCardV1>[
+          Act0MistakeCardV1(
+            taskId: 'nav_review_badge_task',
+            lessonId: 'world_1_lesson',
+            title: 'Fix one action spot',
+            weaknessLabel: 'Action timing',
+            selectedOptionId: 'call',
+            selectedLabel: 'Call',
+            betterLabel: 'Raise',
+            reason: 'Late position wants more pressure here.',
+            attempts: 1,
+          ),
+        ],
       ),
+      profile: sample.profile,
     );
-    await tester.pumpAndSettle();
+
+    await pumpTall(tester, host(state: stateWithReviewBacklog));
+
     expect(
-      find.byKey(const Key('act0_shell_profile_retake_placement_cta')),
+      find.byKey(const Key('act0_shell_nav_badge_review')),
       findsOneWidget,
     );
-    await tester.tap(
-      find.byKey(const Key('act0_shell_profile_retake_placement_cta')),
-    );
-    await tester.pumpAndSettle();
-    expect(
-      find.byKey(const Key('act0_shell_placement_screen')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_placement_intro_card')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_placement_intro_cta')),
-      findsOneWidget,
-    );
+    expect(find.text('1'), findsOneWidget);
   });
 
   testWidgets('Play tab shows practice groups and launches a group runner', (
@@ -7454,6 +8382,20 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_card')),
+      findsOneWidget,
+    );
+    expect(find.text('Best extra rep'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_title')),
+      findsOneWidget,
+    );
+    expect(find.text('Best next from Learn'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_cta')),
+      findsOneWidget,
+    );
     expect(find.text('Quick practice'), findsOneWidget);
     expect(find.text('Recommended repair'), findsOneWidget);
     expect(find.text('Nothing to repair right now.'), findsOneWidget);
@@ -7750,9 +8692,9 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Your game right now'), findsOneWidget);
-      expect(find.text('Working well'), findsOneWidget);
-      expect(find.text('Next reps'), findsWidgets);
-      expect(find.text('Recent gains'), findsNothing);
+      expect(find.text('Steady'), findsOneWidget);
+      expect(find.text('Next reps'), findsNothing);
+      expect(find.text('Recent gains'), findsOneWidget);
       expect(find.textContaining('Base: '), findsNothing);
       expect(find.textContaining('Recent gain: '), findsNothing);
       expect(
@@ -7773,7 +8715,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-    expect(find.text('Best next action'), findsOneWidget);
   });
 
   testWidgets('Play keeps placement out of the main practice surface', (

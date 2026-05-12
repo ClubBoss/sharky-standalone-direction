@@ -38,6 +38,7 @@ class Act0TaskCopyRecord {
     this.runnerPrompt,
     this.runnerSupport,
     this.runnerQuestion,
+    this.teachingSteps,
   });
 
   final String? title;
@@ -46,6 +47,14 @@ class Act0TaskCopyRecord {
   final String? runnerPrompt;
   final String? runnerSupport;
   final String? runnerQuestion;
+  final List<Act0TeachingStepCopyRecord>? teachingSteps;
+}
+
+class Act0TeachingStepCopyRecord {
+  const Act0TeachingStepCopyRecord({this.title, this.body});
+
+  final String? title;
+  final String? body;
 }
 
 class Act0SurfaceAtomCopyRecord {
@@ -115,6 +124,7 @@ class Act0CopyRegistryParser {
           runnerPrompt: extractStringField(block, 'runnerPrompt'),
           runnerSupport: extractStringField(block, 'runnerSupport'),
           runnerQuestion: extractStringField(block, 'runnerQuestion'),
+          teachingSteps: _extractTeachingSteps(block),
         );
       },
     );
@@ -165,4 +175,31 @@ class Act0CopyRegistryParser {
     }
     return result;
   }
+}
+
+List<Act0TeachingStepCopyRecord>? _extractTeachingSteps(String block) {
+  final marker = 'teachingSteps:';
+  final start = block.indexOf(marker);
+  if (start == -1) {
+    return null;
+  }
+  final openBracket = block.indexOf('[', start);
+  if (openBracket == -1) {
+    return null;
+  }
+  final closeBracket = findMatchingBracket(block, openBracket);
+  final teachingBlock = block.substring(openBracket + 1, closeBracket);
+  final steps = <Act0TeachingStepCopyRecord>[];
+  for (final stepBlock in extractChildBlocks(
+    teachingBlock,
+    'Act0TeachingStepDisplayCopyV1(',
+  )) {
+    steps.add(
+      Act0TeachingStepCopyRecord(
+        title: extractStringField(stepBlock, 'title'),
+        body: extractStringField(stepBlock, 'body'),
+      ),
+    );
+  }
+  return List<Act0TeachingStepCopyRecord>.unmodifiable(steps);
 }
