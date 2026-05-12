@@ -121,8 +121,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
           Text(
             _reviewCopyV1(
               context,
-              en: 'Start with the highest-pressure miss. The rest can wait.',
-              ru: 'Начни с самой давящей ошибки. Остальное может подождать.',
+              en: 'Start with the highest-pressure miss first.',
+              ru: 'Сначала почини самую давящую ошибку.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
@@ -585,35 +585,6 @@ class _MistakeCardV1 extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  mistake.attempts == 1
-                      ? 'Missed 1 time'
-                      : 'Missed ${mistake.attempts} times',
-                  key: const Key('act0_shell_mistake_attempts'),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                  ),
-                ),
-              ),
-              if (mistake.contextLabels.isNotEmpty)
-                _ReviewBoardMetricPillV1(
-                  key: prominent
-                      ? const Key('act0_shell_mistake_context_count_badge')
-                      : Key(
-                          'act0_shell_mistake_context_count_badge_${mistake.taskId}',
-                        ),
-                  label: mistake.contextLabels.length == 1
-                      ? '1 table cue'
-                      : '${mistake.contextLabels.length} table cues',
-                  tone: Act0ShellTokensV1.info,
-                  icon: Icons.visibility_rounded,
-                ),
-            ],
-          ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Row(
             children: [
@@ -637,17 +608,35 @@ class _MistakeCardV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(mistake.title, style: Act0ShellTokensV1.cardTitle),
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(mistake.weaknessLabel, style: Act0ShellTokensV1.muted),
+                    if (!prominent) ...[
+                      const SizedBox(height: Act0ShellTokensV1.gapXs),
+                      Text(
+                        mistake.weaknessLabel,
+                        style: Act0ShellTokensV1.muted,
+                      ),
+                    ],
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(mistake.reason, style: Act0ShellTokensV1.muted),
           if (mistake.contextLabels.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            _ReviewBoardMetricPillV1(
+              key: prominent
+                  ? const Key('act0_shell_mistake_context_count_badge')
+                  : Key(
+                      'act0_shell_mistake_context_count_badge_${mistake.taskId}',
+                    ),
+              label: mistake.contextLabels.length == 1
+                  ? '1 table cue'
+                  : '${mistake.contextLabels.length} table cues',
+              tone: Act0ShellTokensV1.info,
+              icon: Icons.visibility_rounded,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
             Wrap(
               key: const Key('act0_shell_mistake_context_labels'),
               spacing: 6,

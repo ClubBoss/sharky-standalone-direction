@@ -8732,7 +8732,7 @@ void main() {
 
       await tester.tap(find.text('Play'));
       await tester.pumpAndSettle();
-      expect(find.text('Fix this now'), findsWidgets);
+      expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
 
       await tester.tap(find.text('Review'));
       await tester.pumpAndSettle();
@@ -8755,9 +8755,13 @@ void main() {
         find.byKey(const Key('act0_shell_mistake_context_labels')),
         findsOneWidget,
       );
+      expect(
+        find.byKey(const Key('act0_shell_mistake_context_count_badge')),
+        findsOneWidget,
+      );
       expect(find.text('Hero acts'), findsWidgets);
       expect(find.text('Blinds posted'), findsWidgets);
-      expect(find.text('Missed 1 time'), findsOneWidget);
+      expect(find.text('Missed 1 time'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_mistake_repair_plan')),
         findsOneWidget,

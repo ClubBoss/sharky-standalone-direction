@@ -934,8 +934,11 @@ Current wave note (2026-05-12):
    collection drill-down, while route/focus stays secondary. Skills and
    achievements may compress into compact two-column grids as long as they stay
    readable and the gains still come from real lesson/drill progression hooks,
-   not decorative fake stats. The next default wave after that returns to
-   `Review` density refinement.
+   not decorative fake stats. The active `Review` density pass then removes
+   duplicate repair-status rows from the prominent mistake card, keeps one
+   visible diagnosis/contrast/CTA path, and leaves deeper context in quieter
+   secondary treatment. The next default wave after that moves to
+   `Placement` compression.
 
 ## How To Use This Plan
 

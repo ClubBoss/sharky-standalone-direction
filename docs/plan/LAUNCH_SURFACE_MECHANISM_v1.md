@@ -167,12 +167,14 @@ It should:
 
 - foreground one useful repair action
 - explain why this repair matters
+- keep the prominent mistake card to one diagnosis, one contrast, and one next step
 - show recovery without shame
 
 It should not:
 
 - present a taxonomy-first UI
 - feel punitive
+- repeat the same repair signal through duplicate badges, labels, and helper rows
 - become a second curriculum browser
 
 ### Play
