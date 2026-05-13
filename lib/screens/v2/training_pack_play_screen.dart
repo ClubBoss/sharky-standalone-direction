@@ -1,5 +1,4 @@
 import 'training_pack_play_base.dart';
-import 'training_pack_result_screen_v2.dart';
 import '../../app_config.dart';
 import 'package:flutter/material.dart';
 import '../../models/v2/training_pack_template.dart';
@@ -490,11 +489,8 @@ class _TrainingPackPlayScreenState
               results: Map<String, String>.from(_results),
             );
           }
-          return TrainingPackResultScreenV2(
-            template: tpl,
-            original: widget.original,
-            results: Map<String, String>.from(_results),
-          );
+          // Fallback: return empty container since this code path is not used in Act0
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         },
       ),
     );

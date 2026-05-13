@@ -12,9 +12,6 @@ library;
 // HUD
 export 'hud/ui_v2_hud_overlay.dart';
 
-// Map/Progress
-export 'map/ui_v2_progress_map_screen_v2.dart';
-
 // League
 export 'league/ui_v2_league_dashboard_screen.dart';
 

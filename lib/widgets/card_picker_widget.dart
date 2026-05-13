@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poker_analyzer/ui_v3/theme/visual_theme_v3.dart';
 import '../models/card_model.dart';
 import 'card_selector.dart';
 
@@ -42,13 +41,13 @@ class CardPickerWidget extends StatelessWidget {
           width: 36 * scale,
           height: 52 * scale,
           decoration: BoxDecoration(
-            color: VisualThemeV3.cardLight.withValues(
+            color: Colors.grey[200]!.withValues(
               alpha: card == null ? 0.3 : 1,
             ),
             borderRadius: BorderRadius.circular(6),
             boxShadow: [
               BoxShadow(
-                color: VisualThemeV3.textPrimaryLight.withValues(alpha: 0.25),
+                color: Colors.black.withValues(alpha: 0.25),
                 blurRadius: 3,
                 offset: const Offset(1, 2),
               ),
@@ -60,13 +59,13 @@ class CardPickerWidget extends StatelessWidget {
                   '${card.rank}${card.suit}',
                   style: TextStyle(
                     color: isRed
-                        ? VisualThemeV3.danger
-                        : VisualThemeV3.textPrimaryLight,
+                        ? Colors.red
+                        : Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18 * scale,
                   ),
                 )
-              : Icon(Icons.add, color: VisualThemeV3.neutralGrey),
+              : const Icon(Icons.add, color: Colors.grey),
         ),
       );
     }),

@@ -64,7 +64,7 @@ import '../services/theory_lesson_tag_clusterer.dart';
 import '../services/theory_cluster_summary_service.dart';
 import 'theory_cluster_detail_screen.dart';
 import 'package:collection/collection.dart';
-import 'learning_path_screen_v2.dart';
+
 import '../widgets/sync_status_widget.dart';
 import '../services/user_preferences_service.dart';
 import '../models/theory_lesson_cluster.dart';

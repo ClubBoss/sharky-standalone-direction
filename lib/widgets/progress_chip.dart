@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poker_analyzer/ui_v3/theme/visual_theme_v3.dart';
+
 
 class ProgressChip extends StatelessWidget {
   final double pct;
@@ -22,7 +22,7 @@ class ProgressChip extends StatelessWidget {
       child: Text(
         '${(pct * 100).round()}%',
         style: const TextStyle(
-          color: VisualThemeV3.textPrimaryLight,
+          color: Colors.white,
           fontSize: 12,
         ),
       ),

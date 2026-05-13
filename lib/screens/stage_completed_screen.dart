@@ -9,7 +9,6 @@ import '../services/remedial_generation_controller.dart';
 import '../services/learning_path_telemetry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'learning_path_screen_v2.dart';
 import 'training_session_screen.dart';
 
 /// Shown when a learning path stage is completed successfully.
@@ -79,17 +78,7 @@ class _StageCompletedScreenState extends State<StageCompletedScreen> {
     final template = LearningPathRegistryService.instance.findById(
       widget.pathId,
     );
-    if (template != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              LearningPathScreen(template: template, highlightedStageId: null),
-        ),
-      );
-    } else {
-      Navigator.popUntil(context, (r) => r.isFirst);
-    }
+    Navigator.popUntil(context, (r) => r.isFirst);
   }
 
   Future<void> _startRemedial() async {
