@@ -89,6 +89,7 @@ class Act0PlayShellV1 extends StatefulWidget {
   const Act0PlayShellV1({
     super.key,
     required this.groups,
+    required this.recommendedGroupId,
     required this.recommendedTitle,
     required this.recommendedSubtitle,
     required this.recommendedReasonLabel,
@@ -100,6 +101,7 @@ class Act0PlayShellV1 extends StatefulWidget {
   });
 
   final List<Act0PracticeGroupV1> groups;
+  final String recommendedGroupId;
   final String recommendedTitle;
   final String recommendedSubtitle;
   final String recommendedReasonLabel;
@@ -116,19 +118,22 @@ class Act0PlayShellV1 extends StatefulWidget {
 class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   @override
   Widget build(BuildContext context) {
+    final featuredGroup = _groupById(widget.groups, widget.recommendedGroupId);
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
     final placementGroup = _groupById(widget.groups, 'placement');
+    final excludedGroupIds = <String>{
+      if (quickDrillGroup != null) quickDrillGroup.groupId,
+      if (fixLeakGroup != null) fixLeakGroup.groupId,
+      'placement',
+      'continue',
+    };
+    if (featuredGroup != null) {
+      excludedGroupIds.add(featuredGroup.groupId);
+    }
     final topicGroups =
         widget.groups
-            .where(
-              (group) => !<String>{
-                if (quickDrillGroup != null) quickDrillGroup.groupId,
-                if (fixLeakGroup != null) fixLeakGroup.groupId,
-                'placement',
-                'continue',
-              }.contains(group.groupId),
-            )
+            .where((group) => !excludedGroupIds.contains(group.groupId))
             .toList()
           ..sort((a, b) {
             final topicCompare = _topicSortIndex(
@@ -145,10 +150,12 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
     final activeGroups = <Act0PracticeGroupV1>[
       if (quickDrillGroup != null) quickDrillGroup,
       if (fixLeakGroup != null) fixLeakGroup,
-    ];
+    ].where((group) => featuredGroup?.groupId != group.groupId).toList();
     final topicShelfGroups = <Act0PracticeGroupV1>[
       ...topicGroups,
-      if (placementGroup != null) placementGroup,
+      if (placementGroup != null &&
+          featuredGroup?.groupId != placementGroup.groupId)
+        placementGroup,
     ];
 
     return ListView(
@@ -180,20 +187,35 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           overflow: TextOverflow.ellipsis,
           style: Act0ShellTokensV1.muted,
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlayIntroCardV1(
-          title: _playLineV1(
-            context,
-            en: 'Train without reopening lessons.',
-            ru: 'Тренируйся без повторного входа в уроки.',
+        if (featuredGroup != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _FeaturedPracticeCardV1(
+            group: featuredGroup,
+            title: widget.recommendedTitle,
+            subtitle: widget.recommendedSubtitle,
+            reasonLabel: widget.recommendedReasonLabel,
+            outcomeLead: widget.recommendedOutcomeLead,
+            outcome: widget.recommendedOutcome,
+            masteryLabel: widget.masteryLabel,
+            onStartGroup: widget.onStartGroup,
           ),
-          body: _playLineV1(
-            context,
-            en: 'Quick drills first. Topic packs when you want a focused set.',
-            ru: 'Сначала быстрые дриллы. Ниже паки, когда нужен точечный сет.',
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ] else ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _PlayIntroCardV1(
+            title: _playLineV1(
+              context,
+              en: 'Train without reopening lessons.',
+              ru: 'Тренируйся без повторного входа в уроки.',
+            ),
+            body: _playLineV1(
+              context,
+              en: 'Quick drills first. Topic packs when you want a focused set.',
+              ru: 'Сначала быстрые дриллы. Ниже паки, когда нужен точечный сет.',
+            ),
           ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ],
         if (activeGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
           if (activeGroups.isNotEmpty) ...[
             _SectionHeaderV1(
@@ -552,14 +574,7 @@ class _FeaturedPracticeCardV1 extends StatelessWidget {
                       style: Act0ShellTokensV1.primaryButtonStyle(
                         height: Act0ShellTokensV1.compactCtaHeight,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(_playActionLabelV1(context, group)),
-                          const SizedBox(width: 6),
-                          const Icon(Icons.arrow_forward_rounded, size: 16),
-                        ],
-                      ),
+                      child: Text(_playActionLabelV1(context, group)),
                     ),
                   ),
                 ],

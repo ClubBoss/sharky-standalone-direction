@@ -1784,6 +1784,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   world: selectedWorld,
                                   selectedLesson: selectedLesson,
                                 ),
+                                recommendedGroupId:
+                                    _learningRecommendation(
+                                      selectedWorld: selectedWorld,
+                                      selectedLesson: selectedLesson,
+                                    ).practiceGroupId ??
+                                    'daily',
                                 recommendedTitle: _recommendedPlayTitle(),
                                 recommendedSubtitle: _recommendedPlaySubtitle(
                                   selectedLesson,

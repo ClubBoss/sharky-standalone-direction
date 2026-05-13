@@ -2684,6 +2684,7 @@ void main() {
                   isEnabled: false,
                 ),
               ],
+              recommendedGroupId: 'weak_spots',
               recommendedTitle: 'Best next action',
               recommendedSubtitle: 'One disabled group for copy truth.',
               recommendedReasonLabel: 'Why this next',
@@ -8370,7 +8371,14 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
-    expect(find.byKey(const Key('act0_shell_play_intro_card')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_card')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_cta')),
+      findsOneWidget,
+    );
     expect(find.text('Start now'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_play_active_hub')), findsOneWidget);
     expect(find.text('Topic packs'), findsOneWidget);
@@ -8437,6 +8445,7 @@ void main() {
                 isEnabled: false,
               ),
             ],
+            recommendedGroupId: 'actions',
             recommendedTitle: 'Best next action',
             recommendedSubtitle: 'One disabled group for copy truth.',
             recommendedReasonLabel: 'Why this next',
