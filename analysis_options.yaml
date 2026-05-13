@@ -41,14 +41,33 @@ analyzer:
     - lib/plugins/**
     - lib/ui/settings/**
     - lib/ui/**
+    - lib/content/glb/**
+    - lib/content/training/**training_pack_template_v2*.dart
+    - lib/content/cseries/**
+    - lib/services/ai_adaptive_signal_pack.dart
+    - lib/services/learning_path_preview_launcher.dart
+    - lib/services/personalization_hub.dart
+    - lib/ui_v2/screens/**
+    - lib/ui_v2/table/**
+    - lib/ui_v2/simulation/**
+    - lib/ui_v2/sr/**
+    - lib/ui_v2/theme/**
+    - lib/ui_v2/theme_v3/**
+    - lib/ui_v2/localization/**
+    - lib/ui_v2/ui_v2.dart
+    - lib/ui_v2/map/**
+    - lib/plugins/**
     - poker_backup/**
     - poker_clean_backup/**
     - your_repo_root/**
+    - docs/archive/**
+    - test/audit_hub_v1/**
+    - test/guards/**
+    - test/ui_v2/**
     - tool/**
     - bin/**
     - design/components/**
     - design/screenshots/**
-    # Legacy / archive test directories — excluded from analysis
     - test/*.dart
     - test/architecture/**
     - test/controllers/**
