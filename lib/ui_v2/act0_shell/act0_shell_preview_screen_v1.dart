@@ -2593,16 +2593,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? _copyV1(en: 'Streak saved', ru: 'Стрик сохранён')
             : _copyV1(en: 'Done for today', ru: 'На сегодня всё'),
         title: streakSaved
-            ? _copyV1(en: 'Streak saved today', ru: 'Сегодня стрик сохранён')
-            : _copyV1(en: 'Great session', ru: 'Сильная сессия'),
+            ? _copyV1(
+                en: 'Seat held for tomorrow',
+                ru: 'Место на завтра удержано',
+              )
+            : _copyV1(en: 'Tomorrow is set', ru: 'Завтрашний старт готов'),
         subtitle: streakSaved
             ? _copyV1(
-                en: 'You protected momentum by repairing and finishing the daily set.',
-                ru: 'Ты сохранил ритм: сначала починил ошибки, потом закрыл дневную серию.',
+                en: 'You earned tomorrow by repairing first and then closing the daily set.',
+                ru: 'Ты заработал завтрашний старт: сначала починил ошибки, потом закрыл дневную серию.',
               )
             : _copyV1(
-                en: 'Come back tomorrow to keep the streak going.',
-                ru: 'Возвращайся завтра, чтобы продолжить стрик.',
+                en: 'Today is banked. One short return tomorrow keeps the rhythm warm.',
+                ru: 'Сегодняшний день засчитан. Один короткий возврат завтра сохранит ритм тёплым.',
               ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
@@ -2610,12 +2613,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         hint: '',
         outcome: streakSaved
             ? _copyV1(
-                en: 'Momentum protected. One clean daily tomorrow extends it.',
-                ru: 'Ритм сохранён. Один чистый дневной сет завтра его продлит.',
+                en: 'Seat held. One clean daily tomorrow extends it.',
+                ru: 'Место удержано. Один чистый дневной сет завтра его продлит.',
               )
             : _copyV1(
-                en: 'Streak active. Same time tomorrow locks it in.',
-                ru: 'Стрик активен. Возвращение завтра закрепит его.',
+                en: 'Tomorrow starts ready. One clean daily keeps the loop warm.',
+                ru: 'Завтра старт уже готов. Один чистый дневной сет удержит цикл тёплым.',
               ),
         lessonId: selectedLesson.lessonId,
         taskId: null,
@@ -2688,17 +2691,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
         label: streakSaved ? 'Streak saved' : 'Done for today',
-        title: streakSaved ? 'Streak saved today' : 'Great session',
+        title: streakSaved ? 'Seat held for tomorrow' : 'Tomorrow is set',
         subtitle: streakSaved
-            ? 'You protected momentum by repairing and finishing the daily set.'
-            : 'Come back tomorrow to keep the streak going.',
+            ? 'You earned tomorrow by repairing first and then closing the daily set.'
+            : 'Today is banked. One short return tomorrow keeps the rhythm warm.',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
         ),
         hint: '',
         outcome: streakSaved
-            ? 'Momentum protected. One clean daily tomorrow extends it.'
-            : 'Streak active. Same time tomorrow locks it in.',
+            ? 'Seat held. One clean daily tomorrow extends it.'
+            : 'Tomorrow starts ready. One clean daily keeps the loop warm.',
         lessonId: selectedLesson.lessonId,
         taskId: null,
         practiceGroupId: 'daily',
@@ -3088,7 +3091,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _copyV1(en: '$count/3 daily spots', ru: '$count/3 дневных спота');
     }
     return _streakSaveEarned()
-        ? _copyV1(en: 'Streak saved today', ru: 'Сегодня стрик сохранён')
+        ? _copyV1(en: 'Seat held for tomorrow', ru: 'Место на завтра удержано')
         : _copyV1(en: 'Done for today', ru: 'На сегодня всё');
   }
 
@@ -3113,11 +3116,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily done after successful repair — celebrate saved streak effort
     if (_streakSaveEarned()) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Nice save. You earned your streak by fixing leaks.',
+        preSessionLine: 'Seat held. You earned tomorrow by fixing leaks today.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
-        summaryLine: 'Saved by effort today. Repeat one clean set tomorrow.',
+        summaryLine:
+            'Seat held by effort today. Repeat one clean set tomorrow.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
       );
     }
@@ -3125,11 +3129,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily goal complete — highest priority
     if (_dailyCompletedTaskIds.length >= 3) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Good session today. Come back tomorrow.',
+        preSessionLine: 'Good work. This seat stays warm for tomorrow.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
-        summaryLine: 'The pattern is forming. One more day builds the habit.',
+        summaryLine:
+            'Tomorrow is ready. One more clean day strengthens the habit.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
       );
     }
@@ -3149,7 +3154,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Streak milestone — 3+ day streak and daily not yet done
     if (state.streakDays >= 3 && _dailyCompletedTaskIds.isEmpty) {
       return Act0SharkyCueV1(
-        preSessionLine: '${state.streakDays} days running. Keep it alive.',
+        preSessionLine:
+            '${state.streakDays} days running. One clean rep keeps it alive.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
@@ -3343,7 +3349,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _Act0LearningNextActionKindV1.dailyDrill => 'Daily set',
       _Act0LearningNextActionKindV1.categoryPractice => 'Practice focus',
       _Act0LearningNextActionKindV1.continueLesson => 'Best next from Learn',
-      _Act0LearningNextActionKindV1.dailyDone => 'Great session',
+      _Act0LearningNextActionKindV1.dailyDone => 'Seat held',
     };
   }
 
@@ -3363,7 +3369,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _Act0LearningNextActionKindV1.categoryPractice => 'Practice this now.',
       _Act0LearningNextActionKindV1.continueLesson =>
         'Start with the main path.',
-      _Act0LearningNextActionKindV1.dailyDone => 'Done for today.',
+      _Act0LearningNextActionKindV1.dailyDone => 'Tomorrow is ready.',
     };
   }
 
@@ -4710,6 +4716,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : '${((_cleanTaskIds.length / totalAttempts) * 100).round()}% practice accuracy';
     final streakDays = _effectiveStreakDays(state);
     final streakSaved = _streakSaveEarned();
+    final focusTitle = recommendation.title.trim().isNotEmpty
+        ? recommendation.title
+        : (_weakCategories().isNotEmpty
+              ? 'Repair ${_weakCategories().first}'
+              : 'Keep the next clean rep simple');
+    final focusBody = recommendation.subtitle.trim().isNotEmpty
+        ? recommendation.subtitle
+        : (_weakCategories().isNotEmpty
+              ? 'One calm repair here will make the rest of the route lighter.'
+              : 'Stay close to the active route and keep the next rep clean.');
+    final focusCtaLabel = recommendation.ctaLabel.trim().isNotEmpty
+        ? recommendation.ctaLabel
+        : 'Open next step';
     return Act0ProfileStateV1(
       playerName: base.playerName,
       level: 'Level ${progress.level}',
@@ -4759,9 +4778,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recentSkillGains: _profileRecentSkillGains(base.recentSkillGains),
       skillStats: _profileSkillStats(base.skillStats),
       streakLast7: base.streakLast7,
-      recommendedFocusTitle: recommendation.title,
-      recommendedFocusBody: recommendation.subtitle,
-      recommendedFocusCtaLabel: recommendation.ctaLabel,
+      recommendedFocusTitle: focusTitle,
+      recommendedFocusBody: focusBody,
+      recommendedFocusCtaLabel: focusCtaLabel,
       worldsClearedCount: _progressedWorlds(
         state,
       ).where((w) => w.status == Act0WorldStateV1.completed).length,

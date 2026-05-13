@@ -18,6 +18,9 @@ void main() {
                 subtitle: 'One short set to stay warm.',
                 ctaLabel: 'Start',
                 categoryLabel: 'Today',
+                countLabel: '3 spots',
+                sessionLabel: 'Daily set',
+                durationLabel: '~3 min',
                 isEnabled: true,
               ),
               Act0PracticeGroupV1(
@@ -26,6 +29,8 @@ void main() {
                 subtitle: 'Fix the mistake that keeps repeating.',
                 ctaLabel: 'Fix',
                 categoryLabel: 'Repair',
+                countLabel: '1 leak',
+                durationLabel: '~3 min',
                 isEnabled: true,
               ),
               Act0PracticeGroupV1(
@@ -59,7 +64,12 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Quick daily drill'), findsOneWidget);
-    expect(find.text('Start now'), findsOneWidget);
+    expect(find.text('Return loop'), findsOneWidget);
+    expect(find.text('Start daily set'), findsOneWidget);
+    expect(
+      find.textContaining('3 crisp reps, no extra noise.'),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_practice_group_daily')),
       findsNothing,
@@ -67,6 +77,11 @@ void main() {
     expect(
       find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsOneWidget,
+    );
+    expect(find.text('~3 min'), findsWidgets);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_practice_group_actions')),
+      180,
     );
     expect(
       find.byKey(const Key('act0_shell_practice_group_actions')),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -91,50 +92,36 @@ class Act0HomeShellV1 extends StatelessWidget {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _shellCopyV1(context, en: 'Home', ru: 'Главная'),
-                    style: Act0ShellTokensV1.screenTitle,
+        Act0ShellScreenHeaderV1(
+          title: _shellCopyV1(context, en: 'Home', ru: 'Главная'),
+          subtitle: _shellCopyV1(
+            context,
+            en: 'One clear next step is waiting below.',
+            ru: 'Ниже тебя ждёт один ясный следующий шаг.',
+          ),
+          eyebrow: _shellCopyV1(
+            context,
+            en: 'Active world: $courseTitle',
+            ru: 'Активный мир: $courseTitle',
+          ),
+          trailing: onOpenDevMenu == null
+              ? null
+              : IconButton(
+                  key: const Key('act0_shell_home_dev_menu_button'),
+                  onPressed: onOpenDevMenu,
+                  icon: const Icon(Icons.more_horiz_rounded),
+                  color: Act0ShellTokensV1.muted.color,
+                  splashRadius: 18,
+                  tooltip: _shellCopyV1(
+                    context,
+                    en: 'Dev menu',
+                    ru: 'Меню разработчика',
                   ),
-                  const SizedBox(height: Act0ShellTokensV1.gapXs),
-                  Text(
-                    _shellCopyV1(
-                      context,
-                      en: 'Active world: $courseTitle',
-                      ru: 'Активный мир: $courseTitle',
-                    ),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.textDim,
-                      letterSpacing: 0.2,
-                    ),
+                  visualDensity: const VisualDensity(
+                    horizontal: -3,
+                    vertical: -3,
                   ),
-                ],
-              ),
-            ),
-            if (onOpenDevMenu != null)
-              IconButton(
-                key: const Key('act0_shell_home_dev_menu_button'),
-                onPressed: onOpenDevMenu,
-                icon: const Icon(Icons.more_horiz_rounded),
-                color: Act0ShellTokensV1.muted.color,
-                splashRadius: 18,
-                tooltip: _shellCopyV1(
-                  context,
-                  en: 'Dev menu',
-                  ru: 'Меню разработчика',
                 ),
-                visualDensity: const VisualDensity(
-                  horizontal: -3,
-                  vertical: -3,
-                ),
-              ),
-          ],
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         Container(
@@ -279,13 +266,13 @@ class Act0HomeShellV1 extends StatelessWidget {
 String _dailyGoalSupportText(bool localeIsRu, String goalValue) {
   if (goalValue.startsWith('Streak saved')) {
     return localeIsRu
-        ? 'Фикс засчитан. Ритм на сегодня сохранён.'
-        : 'Repair banked. The rhythm stays alive today.';
+        ? 'Фикс засчитан. Ты честно удержал ритм на завтра.'
+        : 'Repair banked. You earned tomorrow\'s rhythm.';
   }
   if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
     return localeIsRu
-        ? 'Цель на сегодня закрыта. Завтрашний старт уже готов.'
-        : 'Goal complete. Tomorrow is already set.';
+        ? 'Цель на сегодня закрыта. Завтрашнее возвращение уже стало легче.'
+        : 'Goal complete. Tomorrow\'s return already feels lighter.';
   }
   if (goalValue.startsWith('0/')) {
     return localeIsRu
@@ -308,7 +295,7 @@ String _dailyGoalTrustLineV1({
               ? '$streakDays дн. сохранены'
               : 'Импульс на завтра сохранён.')
         : (streakDays > 0
-              ? '$streakDays day rhythm saved'
+              ? '$streakDays day rhythm held'
               : 'Momentum protected for tomorrow.');
   }
   if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
@@ -481,31 +468,11 @@ class _DailyGoalCardV1 extends StatelessWidget {
                 FilledButton.tonal(
                   key: const Key('act0_shell_home_daily_practice_now'),
                   onPressed: onStartDailyDrill,
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 44),
-                    backgroundColor: accentColor.withValues(alpha: 0.12),
-                    foregroundColor: accentColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    visualDensity: const VisualDensity(
-                      horizontal: -1,
-                      vertical: -1,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusMd,
-                      ),
-                    ),
+                  style: Act0ShellTokensV1.tonalButtonStyle(
+                    tone: accentColor,
+                    fullWidth: true,
                   ),
-                  child: Text(
-                    dailyGoalCtaLabel,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: accentColor,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                  child: Text(dailyGoalCtaLabel),
                 ),
               ],
             ],
@@ -631,16 +598,8 @@ class _HomeRepairCardV1 extends StatelessWidget {
                   FilledButton.tonal(
                     key: const Key('act0_shell_home_repair_cta'),
                     onPressed: onStartRepair,
-                    style: FilledButton.styleFrom(
-                      visualDensity: const VisualDensity(
-                        horizontal: -1,
-                        vertical: -1,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      foregroundColor: Act0ShellTokensV1.primary,
+                    style: Act0ShellTokensV1.tonalButtonStyle(
+                      tone: Act0ShellTokensV1.primary,
                     ),
                     child: Text(repairCtaLabel!),
                   ),
@@ -737,21 +696,21 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
       case Act0SharkyMoodV1.celebrate:
         return localeIsRu
             ? (state.streakDays > 0
-                  ? 'Хорошая работа сегодня. Я подержу это место до завтра.'
+                  ? 'Место на завтра удержано. Один короткий чистый реп его продлит.'
                   : sharky.summaryLine)
             : (state.streakDays > 0
-                  ? 'Nice work today. I will hold this seat for tomorrow.'
+                  ? 'Seat held for tomorrow. One short clean rep extends it.'
                   : sharky.summaryLine);
       case Act0SharkyMoodV1.happy:
         if (state.streakDays >= 7) {
           return localeIsRu
-              ? 'Чтения уже спокойнее. Это начинает давать настоящее преимущество.'
-              : 'Cleaner reads now. That is turning into real edge.';
+              ? 'Серия уже настоящая. Один спокойный чистый реп держит её честной.'
+              : 'The streak is real now. One calm clean rep keeps it honest.';
         }
         if (state.streakDays >= 3) {
           return localeIsRu
-              ? 'Чтения чище. Один хороший реп держит темп.'
-              : 'Cleaner reads. One good rep keeps it warm.';
+              ? '${state.streakDays} дня в ритме. Один чистый реп удерживает место тёплым.'
+              : '${state.streakDays} days running. One clean rep keeps the seat warm.';
         }
         return localeIsRu
             ? 'Ты уже входишь в ритм. Один чистый реп задаст тон.'

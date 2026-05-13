@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -489,59 +490,59 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _learnCopyV1(
-                                      context,
-                                      en: 'Learn',
-                                      ru: 'Обучение',
+                        Act0ShellScreenHeaderV1(
+                          title: _learnCopyV1(
+                            context,
+                            en: 'Learn',
+                            ru: 'Обучение',
+                          ),
+                          subtitle: _learnCopyV1(
+                            context,
+                            en: 'Move one chapter at a time.',
+                            ru: 'Двигайся по главам шаг за шагом.',
+                          ),
+                          eyebrow: _learnCopyV1(
+                            context,
+                            en: 'Guided route',
+                            ru: 'Маршрут',
+                          ),
+                          trailing: OutlinedButton.icon(
+                            key: const Key('act0_shell_levels_menu_button'),
+                            onPressed: widget.onOpenWorldMenu,
+                            style:
+                                Act0ShellTokensV1.quietButtonStyle(
+                                  height: 40,
+                                ).copyWith(
+                                  minimumSize: const WidgetStatePropertyAll(
+                                    Size(0, 40),
+                                  ),
+                                  foregroundColor: const WidgetStatePropertyAll(
+                                    Act0ShellTokensV1.primary,
+                                  ),
+                                  side: WidgetStatePropertyAll(
+                                    BorderSide(
+                                      color: Act0ShellTokensV1.primary
+                                          .withValues(alpha: 0.48),
                                     ),
-                                    style: Act0ShellTokensV1.screenTitle,
                                   ),
-                                  const SizedBox(
-                                    height: Act0ShellTokensV1.gapXs,
-                                  ),
-                                  Text(
-                                    _learnCopyV1(
-                                      context,
-                                      en: 'Move one chapter at a time.',
-                                      ru: 'Двигайся по главам шаг за шагом.',
+                                  shape: WidgetStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        Act0ShellTokensV1.radiusPill,
+                                      ),
                                     ),
-                                    style: Act0ShellTokensV1.muted,
                                   ),
-                                ],
-                              ),
+                                  textStyle: WidgetStatePropertyAll(
+                                    Act0ShellTokensV1.label.copyWith(
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                ),
+                            icon: const Icon(Icons.map_rounded, size: 17),
+                            label: Text(
+                              _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                             ),
-                            OutlinedButton.icon(
-                              key: const Key('act0_shell_levels_menu_button'),
-                              onPressed: widget.onOpenWorldMenu,
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Act0ShellTokensV1.primary,
-                                side: BorderSide(
-                                  color: Act0ShellTokensV1.primary.withValues(
-                                    alpha: 0.48,
-                                  ),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    Act0ShellTokensV1.radiusPill,
-                                  ),
-                                ),
-                                textStyle: Act0ShellTokensV1.label.copyWith(
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                              icon: const Icon(Icons.map_rounded, size: 17),
-                              label: Text(
-                                _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         const SizedBox(height: Act0ShellTokensV1.gapSm),
                         Text(
@@ -1484,7 +1485,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
               key: const Key('act0_shell_world_premium_preview_cta'),
               onPressed: () => onPreviewPremiumWorld(world),
               style: Act0ShellTokensV1.quietButtonStyle(height: 40),
-              child: const Text('Preview premium path'),
+              child: const Text('See what premium adds'),
             ),
           ],
         ],

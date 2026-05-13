@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -43,10 +44,26 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
     return _playCopyV1(context, 'play_later_cta', fallback: 'Later');
   }
   return switch (group.groupId) {
-    'daily' => _playLineV1(context, en: 'Start', ru: 'Старт'),
-    'weak_spots' => _playLineV1(context, en: 'Fix', ru: 'Исправить'),
-    'continue' => _playLineV1(context, en: 'Resume', ru: 'Вернуться'),
-    'placement' => _playLineV1(context, en: 'Check', ru: 'Проверить'),
+    'daily' => _playLineV1(
+      context,
+      en: 'Start daily set',
+      ru: 'Запустить дневную серию',
+    ),
+    'weak_spots' => _playLineV1(
+      context,
+      en: 'Fix next leak',
+      ru: 'Исправить следующий сбой',
+    ),
+    'continue' => _playLineV1(
+      context,
+      en: 'Resume route',
+      ru: 'Вернуться в маршрут',
+    ),
+    'placement' => _playLineV1(
+      context,
+      en: 'Run check',
+      ru: 'Запустить проверку',
+    ),
     _ => _playLineV1(context, en: 'Open', ru: 'Открыть'),
   };
 }
@@ -80,8 +97,12 @@ String _playTileTitleV1(BuildContext context, Act0PracticeGroupV1 group) {
 
 List<String> _playTileFactsV1(Act0PracticeGroupV1 group) {
   return switch (group.groupId) {
-    'weak_spots' => [if (group.countLabel.isNotEmpty) group.countLabel],
-    _ => const <String>[],
+    'daily' || 'weak_spots' || 'continue' || 'placement' => [
+      if (group.countLabel.isNotEmpty) group.countLabel,
+      if (group.sessionLabel.isNotEmpty) group.sessionLabel,
+      if (group.durationLabel.isNotEmpty) group.durationLabel,
+    ],
+    _ => [if (group.durationLabel.isNotEmpty) group.durationLabel],
   };
 }
 
@@ -167,13 +188,9 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        Text(
-          _playCopyV1(context, 'play_title', fallback: 'Play'),
-          style: Act0ShellTokensV1.screenTitle,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(
-          _playCopyV1(
+        Act0ShellScreenHeaderV1(
+          title: _playCopyV1(context, 'play_title', fallback: 'Play'),
+          subtitle: _playCopyV1(
             context,
             'play_screen_subtitle',
             fallback: _playLineV1(
@@ -182,10 +199,12 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
               ru: 'Быстрые дриллы и сфокусированные паки.',
             ),
           ),
-          key: const Key('act0_shell_play_subtitle'),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: Act0ShellTokensV1.muted,
+          subtitleKey: const Key('act0_shell_play_subtitle'),
+          eyebrow: _playLineV1(
+            context,
+            en: 'Quick practice',
+            ru: 'Быстрая практика',
+          ),
         ),
         if (featuredGroup != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -221,8 +240,13 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             _SectionHeaderV1(
               label: _playLineV1(
                 context,
-                en: 'Start now',
-                ru: 'Запустить сейчас',
+                en: 'Return loop',
+                ru: 'Возвратный цикл',
+              ),
+              hint: _playLineV1(
+                context,
+                en: 'One short rep now. Then go back to the route.',
+                ru: 'Один короткий повтор сейчас. Потом обратно в маршрут.',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -917,28 +941,32 @@ class _PracticeTileCardV1 extends StatelessWidget {
               ),
               if (facts.isNotEmpty) ...[
                 const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.surface2,
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for (final fact in facts)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Act0ShellTokensV1.surface2,
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusPill,
+                          ),
+                          border: Border.all(color: Act0ShellTokensV1.border),
+                        ),
+                        child: Text(
+                          fact,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.textDim,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
                       ),
-                      border: Border.all(color: Act0ShellTokensV1.border),
-                    ),
-                    child: Text(
-                      facts.first,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.textDim,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
               ],
               const SizedBox(height: 4),

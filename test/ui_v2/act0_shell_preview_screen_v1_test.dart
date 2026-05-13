@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -26,6 +27,35 @@ void main() {
 
   setUp(() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
+
+  testWidgets('Feedback shell falls back to scenario-first reason when empty', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Almost there.',
+            reason: '',
+            quality: Act0FeedbackQualityV1.wrong,
+            sharkyLine: 'Good spot to fix.',
+            sharkyMood: Act0SharkyMoodV1.repair,
+            selectedLabel: 'Raise',
+            preferredLabel: 'Call',
+            betterLabel: 'Call',
+            contextLabels: const <String>['BTN'],
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
+    expect(
+      find.text('BTN first. Compare it with Call before you continue.'),
+      findsOneWidget,
+    );
   });
 
   Widget host({
@@ -727,6 +757,16 @@ void main() {
     expect(find.text('Fast route in. No long setup.'), findsOneWidget);
     expect(find.text('What you get'), findsOneWidget);
     expect(find.textContaining('skip the wrong start'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_placement_intro_reassurance')),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining(
+        'You see your route and first rep before any premium prompt',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Two minutes. Then Sharky places you.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_placement_flow_action_bar')),
@@ -765,7 +805,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('One short live check. Then Sharky locks the first route.'),
+      find.text(
+        'One short live check. Then Sharky locks the first useful route.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Three fast reads'), findsOneWidget);
@@ -773,7 +815,9 @@ void main() {
     expect(find.textContaining('Board and street'), findsOneWidget);
     expect(find.textContaining('Action order'), findsOneWidget);
     expect(
-      find.text('Then you land in one route that fits and opens fast.'),
+      find.text(
+        'Then you land in one route that fits, opens fast, and proves itself early.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Start skill check'), findsOneWidget);
@@ -900,6 +944,10 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_placement_right_place_banner')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_placement_skill_stats')),
       findsOneWidget,
     );
@@ -924,6 +972,12 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_placement_first_win_card')),
+      findsOneWidget,
+    );
+    expect(find.text('What should feel better first'), findsOneWidget);
+    expect(find.textContaining('By the end of the first rep'), findsWidgets);
+    expect(
       find.textContaining('keeps the route close to the foundations'),
       findsOneWidget,
     );
@@ -932,6 +986,10 @@ void main() {
       findsOneWidget,
     );
 
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_shell_placement_skill_stat_Table sense')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(
       find.byKey(const Key('act0_shell_placement_skill_stat_Table sense')),
     );
@@ -956,6 +1014,10 @@ void main() {
     expect(find.text('Preview 7-day trial'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_placement_recommended_trust_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_placement_recommended_proof_banner')),
       findsOneWidget,
     );
 
@@ -1096,7 +1158,15 @@ void main() {
       find.byKey(const Key('act0_shell_premium_preview_title')),
       findsOneWidget,
     );
-    expect(find.text('Keep going free'), findsOneWidget);
+    expect(find.text('Stay on free route'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_premium_preview_free_label')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_premium_preview_value_label')),
+      findsOneWidget,
+    );
     expect(
       find.textContaining(
         'Premium only expands the work after Sharky has already shown value',
@@ -1145,9 +1215,9 @@ void main() {
       find.byKey(const Key('act0_shell_home_footer_sharky_line')),
       findsOneWidget,
     );
-    expect(find.textContaining('3 day streak live.'), findsOneWidget);
+    expect(find.textContaining('3 day streak'), findsOneWidget);
     expect(
-      find.text('3 days running. One clean rep keeps it alive.'),
+      find.text('3 days running. One clean rep keeps the seat warm.'),
       findsOneWidget,
     );
     expect(
@@ -2942,11 +3012,11 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('Hand Discipline gets deeper'), findsOneWidget);
+    expect(find.text('Stay on free route'), findsOneWidget);
     expect(
       find.textContaining('Free progression still owns the main path'),
       findsOneWidget,
     );
-    expect(find.text('Keep going free'), findsOneWidget);
   });
 
   testWidgets('Learn completed and current cards open runner', (tester) async {
@@ -4083,23 +4153,16 @@ void main() {
 
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('Daily set'),
-      180,
-      scrollable: find.descendant(
-        of: find.byKey(const Key('act0_shell_home_screen')),
-        matching: find.byType(Scrollable),
-      ),
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_shell_home_daily_goal_card')),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Daily set'), findsOneWidget);
-    expect(find.text('Quick daily drill'), findsOneWidget);
     expect(
-      find.text('Daily set: three crisp reps, then keep the path moving.'),
+      find.byKey(const Key('act0_shell_home_daily_goal_card')),
       findsOneWidget,
     );
-    expect(find.text('3 spot set'), findsOneWidget);
-    expect(find.text('Clean pass'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
   });
 
   testWidgets('Block summary locks continue below accuracy threshold', (
@@ -8262,7 +8325,7 @@ void main() {
       find.byKey(const Key('act0_shell_lesson_step_blinds_theory')),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Start'), findsOneWidget);
+    expect(find.text('Start daily set'), findsOneWidget);
   });
 
   testWidgets('Runner Review Continue advances to next task when available', (
@@ -8379,7 +8442,7 @@ void main() {
       find.byKey(const Key('act0_shell_play_featured_cta')),
       findsOneWidget,
     );
-    expect(find.text('Start now'), findsOneWidget);
+    expect(find.text('Start daily set'), findsWidgets);
     expect(find.byKey(const Key('act0_shell_play_active_hub')), findsOneWidget);
     expect(find.text('Topic packs'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_play_topic_hub')), findsOneWidget);
@@ -8391,7 +8454,6 @@ void main() {
       find.byKey(const Key('act0_shell_practice_group_daily')),
       findsOneWidget,
     );
-    expect(find.text('Start'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_actions')),
       180,
@@ -8553,13 +8615,19 @@ void main() {
       find.byKey(const Key('act0_shell_home_daily_done_badge')),
       findsOneWidget,
     );
-    expect(find.text('Great session'), findsWidgets);
+    expect(
+      find.text('Seat held for tomorrow. One short clean rep extends it.'),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_home_repair_panel')),
       80,
     );
     await tester.pumpAndSettle();
-    expect(find.text('Great session'), findsWidgets);
+    expect(
+      find.text('Seat held for tomorrow. One short clean rep extends it.'),
+      findsOneWidget,
+    );
     expect(find.text('Done for today'), findsWidgets); // daily goal card too
   });
 
@@ -8663,7 +8731,42 @@ void main() {
   testWidgets(
     'Profile ties focus, strengths, and recent gains into one story',
     (tester) async {
-      await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ProfileShellV1(
+              profile: const Act0ProfileStateV1(
+                playerName: 'New player',
+                level: 'Level 1',
+                xpLine: '120 / 200 XP',
+                lessonsLine: '8 of 24 tasks complete',
+                accuracyLine: '82% practice accuracy',
+                consistencyActiveDays: 3,
+                streakLine: '3 day streak',
+                streakDays: 3,
+                achievements: <Act0AchievementV1>[
+                  Act0AchievementV1(label: 'First clear read'),
+                ],
+                strongCategories: <String>['Table sense'],
+                weakCategories: <String>['Action order'],
+                recentSkillGains: <Act0SkillGainV1>[
+                  Act0SkillGainV1(
+                    label: 'Table sense',
+                    gain: 6,
+                    source: 'Action words',
+                  ),
+                ],
+                recommendedFocusTitle: 'Repair one weak spot',
+                recommendedFocusBody:
+                    'Fix this mistake before it becomes a habit.',
+                recommendedFocusCtaLabel: 'Fix this now',
+              ),
+              onRetakePlacement: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
 
       expect(
         find.byKey(const Key('act0_shell_profile_identity_card')),
@@ -8671,10 +8774,19 @@ void main() {
       );
       expect(find.text('Your game right now'), findsOneWidget);
       expect(find.text('Steady'), findsOneWidget);
-      expect(find.text('Next reps'), findsNothing);
-      expect(find.text('Recent gains'), findsOneWidget);
+      expect(find.text('Next focus'), findsWidgets);
+      expect(find.text('Earned growth'), findsOneWidget);
       expect(find.textContaining('Base: '), findsNothing);
       expect(find.textContaining('Recent gain: '), findsNothing);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_recommended_focus')),
+        220,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_shell_profile_recommended_focus_cta_label')),
         findsOneWidget,
@@ -8687,6 +8799,15 @@ void main() {
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
 
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_profile_recommended_focus')),
+      220,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_screen')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(
       find.byKey(const Key('act0_shell_profile_recommended_focus')),
     );
@@ -9074,7 +9195,7 @@ void main() {
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Streak saved today'), findsWidgets);
+    expect(find.text('Seat held for tomorrow'), findsWidgets);
   });
 
   testWidgets('Block summary exposes mastery and suggested next action', (
@@ -9331,6 +9452,68 @@ void main() {
     _expectNoForbiddenLabels();
   });
 
+  testWidgets(
+    'Review surfaces a dominant repair pattern when evidence repeats',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ReviewShellV1(
+              review: const Act0ReviewStateV1(
+                title: 'Repair board',
+                subtitle: 'Fix the biggest leak first.',
+                weaknessLabel: 'Action order',
+                reason: 'Late action keeps getting rushed.',
+                stats: <Act0ReviewStatV1>[
+                  Act0ReviewStatV1(label: 'Open', value: '2'),
+                ],
+                chosenLabel: 'Call',
+                betterLabel: 'Fold',
+                mistakes: <Act0MistakeCardV1>[
+                  Act0MistakeCardV1(
+                    taskId: 'a1',
+                    lessonId: 'actions',
+                    title: 'BTN opens action',
+                    weaknessLabel: 'Action order',
+                    selectedOptionId: 'call',
+                    selectedLabel: 'Call',
+                    betterLabel: 'Fold',
+                    reason: 'Action order slipped under pressure.',
+                    attempts: 2,
+                  ),
+                  Act0MistakeCardV1(
+                    taskId: 'a2',
+                    lessonId: 'actions',
+                    title: 'BB closes action',
+                    weaknessLabel: 'Action order',
+                    selectedOptionId: 'raise',
+                    selectedLabel: 'Raise',
+                    betterLabel: 'Check',
+                    reason: 'Action order blurred again.',
+                    attempts: 1,
+                  ),
+                ],
+              ),
+              selected: null,
+              onSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_pattern_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Pattern starting to form'), findsOneWidget);
+      expect(
+        find.text('Action order is showing up 2 times. Fix this family first.'),
+        findsOneWidget,
+      );
+    },
+  );
+
   test('Detached shell uses a local token source', () {
     final files = Directory('lib/ui_v2/act0_shell')
         .listSync()
@@ -9422,7 +9605,7 @@ void main() {
       find.byKey(const Key('act0_shell_home_daily_practice_now')),
       findsOneWidget,
     );
-    expect(find.text('Practice now →'), findsOneWidget);
+    expect(find.text('Start practice'), findsOneWidget);
   });
 
   testWidgets('Tapping daily goal card from Home launches drill runner', (
@@ -9500,9 +9683,10 @@ void main() {
     );
 
     expect(
-      find.text('Finish three spaced spots across completed worlds.'),
+      find.byKey(const Key('act0_shell_practice_group_daily')),
       findsOneWidget,
     );
+    expect(find.textContaining('spots'), findsWidgets);
   });
 
   testWidgets('Daily group from spaced deck still launches runner', (

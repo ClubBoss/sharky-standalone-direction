@@ -257,4 +257,23 @@ class Act0ShellTokensV1 {
       textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
     );
   }
+
+  static ButtonStyle tonalButtonStyle({
+    required Color tone,
+    double height = compactCtaHeight,
+    bool fullWidth = false,
+  }) {
+    return FilledButton.styleFrom(
+      minimumSize: Size(fullWidth ? double.infinity : 0, height),
+      backgroundColor: tone.withOpacity(0.12),
+      foregroundColor: tone,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      visualDensity: const VisualDensity(horizontal: -1, vertical: -1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusMd),
+      ),
+      textStyle: body.copyWith(color: tone, fontWeight: FontWeight.w800),
+      elevation: 0,
+    );
+  }
 }

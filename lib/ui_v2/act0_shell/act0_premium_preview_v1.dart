@@ -78,15 +78,14 @@ class Act0PremiumPreviewSheetV1 extends StatelessWidget {
               const SizedBox(height: Act0ShellTokensV1.gapXs),
               Text(summary, style: Act0ShellTokensV1.muted),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
-              for (var i = 0; i < valuePoints.length; i++) ...[
-                _PremiumPreviewValueLineV1(
-                  key: Key('act0_shell_premium_preview_value_$i'),
-                  label: valuePoints[i],
+              Text(
+                'Free right now',
+                key: const Key('act0_shell_premium_preview_free_label'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.primary,
                 ),
-                if (i < valuePoints.length - 1)
-                  const SizedBox(height: Act0ShellTokensV1.gapXs),
-              ],
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
               Container(
                 key: const Key('act0_shell_premium_preview_trust_line'),
                 padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -104,6 +103,23 @@ class Act0PremiumPreviewSheetV1 extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Text(
+                'Premium adds later',
+                key: const Key('act0_shell_premium_preview_value_label'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.gold,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              for (var i = 0; i < valuePoints.length; i++) ...[
+                _PremiumPreviewValueLineV1(
+                  key: Key('act0_shell_premium_preview_value_$i'),
+                  label: valuePoints[i],
+                ),
+                if (i < valuePoints.length - 1)
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+              ],
               if (footerLine != null && footerLine!.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
@@ -120,7 +136,7 @@ class Act0PremiumPreviewSheetV1 extends StatelessWidget {
                   key: const Key('act0_shell_premium_preview_continue_free'),
                   onPressed: () => Navigator.of(context).pop(),
                   style: Act0ShellTokensV1.primaryButtonStyle(),
-                  child: const Text('Keep going free'),
+                  child: const Text('Stay on free route'),
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -130,7 +146,7 @@ class Act0PremiumPreviewSheetV1 extends StatelessWidget {
                   key: const Key('act0_shell_premium_preview_not_now'),
                   onPressed: () => Navigator.of(context).pop(),
                   style: Act0ShellTokensV1.quietButtonStyle(height: 42),
-                  child: const Text('Not now'),
+                  child: const Text('Maybe later'),
                 ),
               ),
             ],

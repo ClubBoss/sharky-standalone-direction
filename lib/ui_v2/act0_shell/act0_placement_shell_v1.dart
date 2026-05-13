@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -140,8 +141,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
                       : 'Two minutes. Then Sharky places you.')
                 : currentQuestionIndex >= questions.length
                 ? (localeIsRu
-                      ? 'Один короткий живой чек — и маршрут готов.'
-                      : 'One short live check, then your route is ready.')
+                      ? 'Один короткий живой чек — и первый полезный маршрут готов.'
+                      : 'One short live check, then your first useful route is ready.')
                 : currentQuestion?.allowsMultiple == true
                 ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
                 : (localeIsRu
@@ -292,7 +293,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'One short live check. Then Sharky locks the first route.',
+                  'One short live check. Then Sharky locks the first useful route.',
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                   ),
@@ -324,7 +325,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 ),
                 SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'Then you land in one route that fits and opens fast.',
+                  'Then you land in one route that fits, opens fast, and proves itself early.',
                   style: Act0ShellTokensV1.muted,
                 ),
               ],
@@ -531,6 +532,13 @@ class _PlacementIntroViewV1 extends StatelessWidget {
                   color: Act0ShellTokensV1.text,
                 ),
               ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              const _PlacementMiniBannerV1(
+                key: Key('act0_shell_placement_intro_reassurance'),
+                icon: Icons.verified_rounded,
+                text:
+                    'No payment choice first. You see your route and first rep before any premium prompt.',
+              ),
             ],
           ),
         ),
@@ -576,6 +584,12 @@ class _PlacementResultViewV1 extends StatelessWidget {
       key: const Key('act0_shell_placement_result'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        _PlacementMiniBannerV1(
+          key: const Key('act0_shell_placement_right_place_banner'),
+          icon: Icons.place_rounded,
+          text: _rightPlaceLineV1(result),
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapSm),
         Container(
           key: const Key('act0_shell_placement_report_panel'),
           padding: const EdgeInsets.all(1),
@@ -758,6 +772,39 @@ class _PlacementResultViewV1 extends StatelessWidget {
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                   height: 1.4,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              Container(
+                key: const Key('act0_shell_placement_first_win_card'),
+                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.surface,
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusLg,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.gold.withOpacity(0.24),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'What should feel better first',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.gold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _firstRepProofLineV1(result),
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        height: 1.38,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (result.firstSessionPlan.isNotEmpty) ...[
@@ -1109,6 +1156,14 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                     height: 1.38,
                   ),
                 ),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                _PlacementMiniBannerV1(
+                  key: const Key(
+                    'act0_shell_placement_recommended_proof_banner',
+                  ),
+                  icon: Icons.flash_on_rounded,
+                  text: _firstRepProofLineV1(result),
+                ),
                 const SizedBox(height: Act0ShellTokensV1.gapLg),
                 _PlacementSectionCardV1(
                   borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
@@ -1190,7 +1245,11 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                           Navigator.of(context).pop();
                           onStartTrialPreview();
                         },
-                        style: Act0ShellTokensV1.quietButtonStyle(height: 40),
+                        style: Act0ShellTokensV1.tonalButtonStyle(
+                          tone: Act0ShellTokensV1.gold,
+                          height: 40,
+                          fullWidth: true,
+                        ),
                         child: const Text('Preview 7-day trial'),
                       ),
                     ],
@@ -1284,7 +1343,11 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
 }
 
 class _PlacementMiniBannerV1 extends StatelessWidget {
-  const _PlacementMiniBannerV1({required this.icon, required this.text});
+  const _PlacementMiniBannerV1({
+    super.key,
+    required this.icon,
+    required this.text,
+  });
 
   final IconData icon;
   final String text;
@@ -1320,6 +1383,28 @@ class _PlacementMiniBannerV1 extends StatelessWidget {
   }
 }
 
+String _rightPlaceLineV1(Act0PlacementResultV1 result) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer =>
+      'You are in the right place. We start by making the table feel calm before any strategy load.',
+    Act0PlacementResultLevelV1.rustyBeginner =>
+      'You are in the right place. We steady hand flow first, then speed you back up.',
+    Act0PlacementResultLevelV1.readyForBasics =>
+      'You are in the right place. We can start on actions while structure stays visible.',
+  };
+}
+
+String _firstRepProofLineV1(Act0PlacementResultV1 result) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer =>
+      'By the end of the first rep, seats, blinds, and turn order should stop feeling random.',
+    Act0PlacementResultLevelV1.rustyBeginner =>
+      'By the end of the first rep, the hand should feel connected again from preflop to river.',
+    Act0PlacementResultLevelV1.readyForBasics =>
+      'By the end of the first rep, action words should attach to real table moments instead of floating as terms.',
+  };
+}
+
 class _PlacementHeroV1 extends StatelessWidget {
   const _PlacementHeroV1({required this.title, required this.subtitle});
 
@@ -1328,6 +1413,7 @@ class _PlacementHeroV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localeIsRu = _isRuLocaleV1(context);
     return Container(
       key: const Key('act0_shell_placement_hero'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -1352,40 +1438,30 @@ class _PlacementHeroV1 extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary,
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Act0ShellTokensV1.primary.withOpacity(0.28),
-                  blurRadius: 20,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.psychology_alt_rounded,
-              color: Act0ShellTokensV1.onPrimary,
-              size: 26,
-            ),
+      child: Act0ShellScreenHeaderV1(
+        eyebrow: localeIsRu ? 'Быстрый старт' : 'Quick start',
+        title: title,
+        subtitle: subtitle,
+        trailing: Container(
+          width: 48,
+          height: 48,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.primary,
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Act0ShellTokensV1.primary.withOpacity(0.28),
+                blurRadius: 20,
+              ),
+            ],
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Act0ShellTokensV1.screenTitle),
-                const SizedBox(height: 2),
-                Text(subtitle, style: Act0ShellTokensV1.muted),
-              ],
-            ),
+          child: const Icon(
+            Icons.psychology_alt_rounded,
+            color: Act0ShellTokensV1.onPrimary,
+            size: 26,
           ),
-        ],
+        ),
       ),
     );
   }

@@ -22,6 +22,13 @@ Use this file for:
 - closure criteria per wave
 - keeping the route to `100` in one durable place
 
+Anti-drift note:
+
+- `docs/plan/DETACHED_ACT0_ROUTE_TO_100_WAVES_v1.md` is historical/reference
+  only for this route
+- the active execution note is `docs/plan/MINI_ROUTE_TO_100_WAVES_v1.md`
+- do not reimport old readiness block scoring into this mini route
+
 ## Current Calibration
 
 Practical product state today:
@@ -44,6 +51,17 @@ Important distinction:
 - launch/store readiness still remains governed by
   `PROJECT_READINESS_EPICS_SSOT_v1.md`
 
+External report handling:
+
+- the latest external report is accepted only as a qualitative stress test
+- its reused old readiness-block numbers are not current SSOT for this route
+- the useful carried-forward signals are:
+  - feedback quality is still a real product risk
+  - human novice proof is still missing
+  - identity / habit / trust must be felt in-product, not only exist
+    structurally
+- the current route remains product-first, not commerce/store-first
+
 ## Route Principles
 
 1. One active bottleneck family at a time.
@@ -55,34 +73,44 @@ Important distinction:
    `Placement -> Home -> Learn -> Table -> Result -> Home`
 5. Keep value/trial strictly value-after-proof.
 6. Treat simplicity as a guardrail on every wave, not as a late cleanup excuse.
+7. External reports may change prioritization only if they beat the current
+   active SSOT with concrete user-visible evidence.
+8. `Play-first` remains the default unless a stronger active-route blocker
+   appears.
+9. Feedback clarity is a prerequisite for return-loop quality.
+10. No claim of "near 100" is allowed without device proof and novice proof.
 
 ## Wave Order
 
-### Wave 1. Play As Quick-Return Practice Layer
+### Wave 1. Play Quick-Return Loop + Feedback Floor
 
 Goal:
-Turn `Play` into the clearest fast-return surface in the product.
+Turn `Play` into the clearest fast-return surface in the product and make sure
+the return loop teaches clearly enough to deserve repeat use.
 
 In scope:
 
-- one dominant `Today's Drill` or equivalent quick-return entry
+- dominant quick-return entry in `Play`
 - deterministic quick-practice ordering
-- short time-to-complete visibility
-- clear tie-back from practice to course progress
+- visible short session commitment
+- tie-back from practice to course progress
+- weak-feedback heatmap on the active learner path
+- generic-copy residue audit on `Play`, `Result`, and repair-adjacent feedback
 
 Success signal:
 
 - `Play` is clearly not a second `Learn`
-- the learner can enter useful practice in one tap
-- practice feels short, purposeful, and habit-friendly
+- one-tap practice feels useful and short
+- learner-visible feedback on the active return loop is scenario-first,
+  specific, and calm
 
 Must not do:
 
-- no expansion into broad new game modes
-- no duplicate world-map behavior
-- no deep rewards layer in this wave
+- no Sharky expansion
+- no placement redesign
+- no commerce work
 
-### Wave 2. Visual Proof And Shell Polish
+### Wave 2. Visual Proof + Shell Coherence
 
 Goal:
 Raise the whole active shell to honest external-review quality.
@@ -93,7 +121,7 @@ In scope:
   `Review`, `You`, `Table`, and `Result`
 - CTA hierarchy cleanup
 - spacing, safe-area, overflow, empty-state, and consistency fixes
-- minimal high-value motion/polish where clearly missing
+- small high-value motion only where clearly missing
 
 Success signal:
 
@@ -105,7 +133,7 @@ Must not do:
 - no broad redesign of dormant systems
 - no isolated "pretty" polish that weakens route clarity
 
-### Wave 3. Sharky, Earned Rewards, And Habit Energy
+### Wave 3. Sharky + Earned Habit Energy
 
 Goal:
 Make the product feel alive without drifting into noisy gamification or AI chat.
@@ -127,7 +155,7 @@ Must not do:
 - no deep persona/AI expansion
 - no leaderboard, vanity, or fake-pressure loops
 
-### Wave 4. Placement Trust And Micro-Aha Closure
+### Wave 4. Placement Trust + First-User Aha
 
 Goal:
 Make first start feel short, confident, and personally useful.
@@ -136,23 +164,24 @@ In scope:
 
 - tighter placement flow
 - one clear "you're in the right place" moment
-- first-route handoff quality
+- cleaner handoff into the first route
 - removal of pre-value premium pressure from placement if still present
+- bounded novice walkthrough proof for first-session clarity and aha
 
 Success signal:
 
 - placement feels like trusted routing, not setup work
-- the user exits placement with one obvious next step and early confidence
+- first-user proof exists from real walkthroughs, not only internal belief
 
 Must not do:
 
 - no long diagnostic funnel
 - no monetization push before first useful learning proof
 
-### Wave 5. Review Pattern Coaching And You Identity Mirror
+### Wave 5. Review Pattern Coaching + You Identity Mirror
 
 Goal:
-Convert progress from isolated events into visible learner growth.
+Turn isolated progress into felt learner growth.
 
 In scope:
 
@@ -171,7 +200,7 @@ Must not do:
 - no dashboard bloat
 - no taxonomy-heavy review browser
 
-### Wave 6. Value/Trial Closure And Final Product Pass
+### Wave 6. Value/Trial Closure + Final Product Pass
 
 Goal:
 Close the remaining practical product gap around premium timing, trust, and
@@ -195,6 +224,16 @@ Must not do:
 
 - no store/distribution packaging takeover
 - no full-repo simplification crusade outside the active route
+
+## Mandatory Proof Gates
+
+- `Feedback gate`: before finishing Wave 1, run weak-feedback heatmap and
+  generic-copy residue audit on the active learner path
+- `Device gate`: before finishing Wave 2, run screenshot/device proof across
+  compact phone, large phone, tablet
+- `Novice gate`: before finishing Wave 4, run bounded novice walkthroughs
+  focused on first-session clarity, first-session aha, and whether early worlds
+  create real decision improvement
 
 ## Cross-Wave Guardrails
 
@@ -239,10 +278,12 @@ Minimum proof per wave:
 
 Start with:
 
-- `Wave 1. Play As Quick-Return Practice Layer`
+- `Wave 1. Play Quick-Return Loop + Feedback Floor`
 
 Why:
 
 - it is the cleanest remaining product bottleneck
 - it compounds with later habit work
 - it strengthens re-entry without reopening already-strong core teaching surfaces
+- it absorbs the strongest useful signal from the latest external report
+  without reviving the old heavy readiness model

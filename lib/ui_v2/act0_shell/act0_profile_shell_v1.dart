@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -46,9 +47,19 @@ class Act0ProfileShellV1 extends StatelessWidget {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        Text(
-          _profileCopyV1(context, atomId: 'profile_title', fallback: 'You'),
-          style: Act0ShellTokensV1.screenTitle,
+        Act0ShellScreenHeaderV1(
+          title: _profileCopyV1(
+            context,
+            atomId: 'profile_title',
+            fallback: 'You',
+          ),
+          subtitle: _profileCopyV1(
+            context,
+            en: 'See what is sticking, what still leaks, and where to focus next.',
+            ru: 'Смотри, что уже держится, где ещё течёт и куда идти дальше.',
+          ),
+          eyebrow: profile.level,
+          eyebrowTone: Act0ShellTokensV1.info,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileHeroCardV1(profile: profile),
@@ -66,7 +77,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
         ],
         if (profile.recommendedFocusTitle.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapLg),
-          _ProfileCurrentFocusCardV1(profile: profile),
+          _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
         ],
       ],
     );
@@ -266,13 +277,14 @@ class _ProfileHeroFactChipV1 extends StatelessWidget {
 }
 
 class _ProfileCurrentFocusCardV1 extends StatelessWidget {
-  const _ProfileCurrentFocusCardV1({required this.profile});
+  const _ProfileCurrentFocusCardV1({required this.profile, this.onGoToHome});
 
   final Act0ProfileStateV1 profile;
+  final VoidCallback? onGoToHome;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       key: const Key('act0_shell_profile_recommended_focus'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
@@ -283,13 +295,9 @@ class _ProfileCurrentFocusCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(
-              context,
-              en: 'Route note',
-              ru: 'Заметка по маршруту',
-            ),
+            _profileCopyV1(context, en: 'Next focus', ru: 'Следующий фокус'),
             style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.textDim,
+              color: Act0ShellTokensV1.primary,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -307,7 +315,28 @@ class _ProfileCurrentFocusCardV1 extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.muted,
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(
+            profile.recommendedFocusCtaLabel,
+            key: const Key('act0_shell_profile_recommended_focus_cta_label'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ],
+      ),
+    );
+    if (onGoToHome == null) {
+      return card;
+    }
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        key: const Key('act0_shell_profile_recommended_focus_tap'),
+        onTap: onGoToHome,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        child: card,
       ),
     );
   }
@@ -817,11 +846,18 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
     final weak = profile.weakCategories.isNotEmpty
         ? profile.weakCategories.first
         : _profileCopyV1(context, en: 'No live leak', ru: 'Явной протечки нет');
+    final focus = profile.recommendedFocusTitle.isNotEmpty
+        ? profile.recommendedFocusTitle
+        : _profileCopyV1(
+            context,
+            en: 'Keep the next clean rep simple.',
+            ru: 'Держи следующий чистый реп простым.',
+          );
     final headline = profile.strongCategories.isNotEmpty
         ? _profileCopyV1(
             context,
-            en: '$strong is starting to feel steady.',
-            ru: '$strong начинает ощущаться увереннее.',
+            en: 'You are becoming the kind of player who keeps $strong steady.',
+            ru: 'Ты становишься игроком, у которого $strong держится увереннее.',
           )
         : _profileCopyV1(
             context,
@@ -869,11 +905,21 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
               _IdentitySignalRowV1(
                 label: _profileCopyV1(
                   context,
-                  en: 'Recent gain',
-                  ru: 'Последний рост',
+                  en: 'Earned growth',
+                  ru: 'Заработанный рост',
                 ),
                 value: gain,
                 color: Act0ShellTokensV1.info,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              _IdentitySignalRowV1(
+                label: _profileCopyV1(
+                  context,
+                  en: 'Next focus',
+                  ru: 'Следующий фокус',
+                ),
+                value: focus,
+                color: Act0ShellTokensV1.gold,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               _IdentitySignalRowV1(
@@ -883,7 +929,7 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
                   ru: 'Ещё формируется',
                 ),
                 value: weak,
-                color: Act0ShellTokensV1.gold,
+                color: Act0ShellTokensV1.danger,
               ),
             ],
           ),

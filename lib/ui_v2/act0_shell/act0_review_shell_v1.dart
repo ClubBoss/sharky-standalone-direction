@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -44,6 +45,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeIsRu = _isRuLocaleV1(context);
     final nextMistake = review.mistakes.isEmpty ? null : review.mistakes.first;
+    final dominantPattern = _dominantReviewPatternV1(review.mistakes);
     final recovered = <Act0MistakeCardV1>[
       ...review.fixedMistakes.where(
         (mistake) => mistake.severityLabel != 'Quick fix',
@@ -61,22 +63,24 @@ class Act0ReviewShellV1 extends StatelessWidget {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        Text(
-          _reviewCopyV1(
+        Act0ShellScreenHeaderV1(
+          title: _reviewCopyV1(
             context,
             atomId: 'review_title',
             fallback: review.title,
           ),
-          style: Act0ShellTokensV1.screenTitle,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(
-          _reviewCopyV1(
+          subtitle: _reviewCopyV1(
             context,
             atomId: 'review_subtitle',
             fallback: review.subtitle,
           ),
-          style: Act0ShellTokensV1.muted,
+          eyebrow: _reviewHeaderEyebrowV1(
+            localeIsRu: localeIsRu,
+            pendingCount: review.mistakes.length,
+          ),
+          eyebrowTone: review.mistakes.isEmpty
+              ? Act0ShellTokensV1.primary
+              : Act0ShellTokensV1.gold,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         Act0SharkyGuideCardV1(
@@ -99,6 +103,13 @@ class Act0ReviewShellV1 extends StatelessWidget {
               : Act0ShellTokensV1.primary,
           compact: true,
         ),
+        if (dominantPattern != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ReviewPatternCardV1(
+            pattern: dominantPattern,
+            localeIsRu: localeIsRu,
+          ),
+        ],
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         _ReviewBoardV1(
           review: review,
@@ -192,6 +203,110 @@ class Act0ReviewShellV1 extends StatelessWidget {
   }
 }
 
+class _ReviewPatternSignalV1 {
+  const _ReviewPatternSignalV1({
+    required this.label,
+    required this.count,
+    required this.totalAttempts,
+    required this.titles,
+  });
+
+  final String label;
+  final int count;
+  final int totalAttempts;
+  final List<String> titles;
+}
+
+_ReviewPatternSignalV1? _dominantReviewPatternV1(
+  List<Act0MistakeCardV1> mistakes,
+) {
+  if (mistakes.length < 2) {
+    return null;
+  }
+  final grouped = <String, List<Act0MistakeCardV1>>{};
+  for (final mistake in mistakes) {
+    grouped
+        .putIfAbsent(mistake.weaknessLabel, () => <Act0MistakeCardV1>[])
+        .add(mistake);
+  }
+  _ReviewPatternSignalV1? best;
+  for (final entry in grouped.entries) {
+    final bucket = entry.value;
+    final totalAttempts = bucket.fold<int>(
+      0,
+      (sum, mistake) => sum + mistake.attempts,
+    );
+    if (bucket.length < 2 && totalAttempts < 3) {
+      continue;
+    }
+    final candidate = _ReviewPatternSignalV1(
+      label: entry.key,
+      count: bucket.length,
+      totalAttempts: totalAttempts,
+      titles: bucket.map((mistake) => mistake.title).take(2).toList(),
+    );
+    if (best == null ||
+        candidate.count > best.count ||
+        (candidate.count == best.count &&
+            candidate.totalAttempts > best.totalAttempts)) {
+      best = candidate;
+    }
+  }
+  return best;
+}
+
+class _ReviewPatternCardV1 extends StatelessWidget {
+  const _ReviewPatternCardV1({required this.pattern, required this.localeIsRu});
+
+  final _ReviewPatternSignalV1 pattern;
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    final examples = pattern.titles.join(' · ');
+    return Container(
+      key: const Key('act0_shell_review_pattern_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
+        borderColor: Act0ShellTokensV1.info.withOpacity(0.24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localeIsRu
+                ? 'Паттерн начинает проступать'
+                : 'Pattern starting to form',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            localeIsRu
+                ? '${pattern.label} всплывает ${pattern.count} раза. Сначала почини эту группу.'
+                : '${pattern.label} is showing up ${pattern.count} times. Fix this family first.',
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          if (examples.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              examples,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 String _reviewSharkyLineV1({
   required bool localeIsRu,
   required Act0MistakeCardV1? nextMistake,
@@ -214,6 +329,21 @@ String _reviewSharkyLineV1({
   return localeIsRu
       ? 'Сначала один чистый фикс. Остальное может подождать.'
       : 'One clean fix first. The rest can wait.';
+}
+
+String _reviewHeaderEyebrowV1({
+  required bool localeIsRu,
+  required int pendingCount,
+}) {
+  if (pendingCount <= 0) {
+    return localeIsRu ? 'Стол чист' : 'Board clean';
+  }
+  if (pendingCount == 1) {
+    return localeIsRu ? '1 фикс ждёт' : '1 fix waiting';
+  }
+  return localeIsRu
+      ? '$pendingCount фикса ждут'
+      : '$pendingCount fixes waiting';
 }
 
 String _reviewSharkyDetailV1({

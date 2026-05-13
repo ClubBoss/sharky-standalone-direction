@@ -140,13 +140,13 @@ class Act0BlockCompletionSummaryV1 {
       return 'A real weak spot was caught. Fixing it now keeps tomorrow from feeling heavier.';
     }
     if (quickFixCount > 0) {
-      return 'You corrected a miss inside the lesson. That kind of recovery is how consistency starts to feel earned.';
+      return 'You corrected the miss inside the lesson. That recovery keeps tomorrow\'s seat intact.';
     }
     if (errorCount == 0 && taskCount > 0) {
-      return 'No repairs needed. Clean work like this makes tomorrow lighter.';
+      return 'No repairs needed. Clean work like this makes tomorrow\'s first rep lighter.';
     }
     if (qualifiesForNextLesson) {
-      return 'The block counts. One short sharp return tomorrow is enough.';
+      return 'The block counts. One short clean return tomorrow is enough.';
     }
     return 'Replay is the right move before adding new material. Clean it once and the route will feel lighter again.';
   }
@@ -2385,6 +2385,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       context,
       isWrong ? betterLabel : preferredLabel,
     );
+    final resolvedReason = _feedbackReasonFloorV1(
+      context,
+      reason: reason,
+      quality: quality,
+      selectedLabel: selectedLabel,
+      preferredLabel: preferredLabel,
+      betterLabel: betterLabel,
+      contextLabels: contextLabels,
+    );
     final growthLabel = completionSummary?.growthLabel ?? '';
     return Container(
       key: const Key('act0_shell_feedback_card'),
@@ -2483,7 +2492,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(height: 8),
           ],
           Text(
-            act0RuntimeLocalizedGeneralLabelV1(context, reason),
+            resolvedReason,
             key: const Key('act0_shell_feedback_reason'),
             maxLines: refined ? 4 : 5,
             overflow: TextOverflow.ellipsis,
@@ -2539,6 +2548,61 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+String _feedbackReasonFloorV1(
+  BuildContext context, {
+  required String reason,
+  required Act0FeedbackQualityV1 quality,
+  required String selectedLabel,
+  required String preferredLabel,
+  required String betterLabel,
+  required List<String> contextLabels,
+}) {
+  final resolved = act0RuntimeLocalizedGeneralLabelV1(context, reason).trim();
+  if (resolved.isNotEmpty) {
+    return resolved;
+  }
+
+  final localeIsRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  final focusLabel = contextLabels.isEmpty
+      ? ''
+      : act0RuntimeLocalizedContextLabelV1(context, contextLabels.first).trim();
+  final betterLine = act0RuntimeLocalizedOptionLabelV1(
+    context,
+    quality == Act0FeedbackQualityV1.wrong ? betterLabel : preferredLabel,
+  ).trim();
+  final pickedLine = act0RuntimeLocalizedOptionLabelV1(
+    context,
+    selectedLabel,
+  ).trim();
+
+  if (quality == Act0FeedbackQualityV1.correct) {
+    if (focusLabel.isNotEmpty) {
+      return localeIsRu
+          ? '$focusLabel прочитан верно. Сохрани это и продолжай.'
+          : '$focusLabel read correctly. Keep it and continue.';
+    }
+    return localeIsRu
+        ? 'Чтение верное. Сохрани его и продолжай.'
+        : 'Read is correct. Keep it and continue.';
+  }
+
+  if (focusLabel.isNotEmpty && betterLine.isNotEmpty) {
+    return localeIsRu
+        ? '$focusLabel сначала. Сравни это с $betterLine перед продолжением.'
+        : '$focusLabel first. Compare it with $betterLine before you continue.';
+  }
+  if (pickedLine.isNotEmpty && betterLine.isNotEmpty) {
+    return localeIsRu
+        ? 'Сравни $pickedLine с $betterLine перед продолжением.'
+        : 'Compare $pickedLine with $betterLine before you continue.';
+  }
+  return localeIsRu
+      ? 'Сделай паузу, прочитай спот ещё раз и затем продолжай.'
+      : 'Pause, read the spot again, then continue.';
 }
 
 String _feedbackReactionLineV1({
@@ -2887,7 +2951,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               OutlinedButton(
                 key: const Key('act0_shell_block_summary_replay_cta'),
                 onPressed: onReplay,
-                style: Act0ShellTokensV1.quietButtonStyle(),
+                style: Act0ShellTokensV1.tonalButtonStyle(
+                  tone: Act0ShellTokensV1.info,
+                  fullWidth: true,
+                ),
                 child: const Text('Replay block'),
               ),
               if (summary.hasNextLesson) ...[
