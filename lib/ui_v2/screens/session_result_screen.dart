@@ -38,7 +38,7 @@ import 'package:poker_analyzer/training/lesson_module_ids.dart';
 import 'package:poker_analyzer/sharky/design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/map/progress_map_world1_determinism.dart';
 import 'package:poker_analyzer/ui_v2/home/direct_loader.dart';
-import 'package:poker_analyzer/ui_v2/map/ui_v2_progress_map_screen_v2.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/runner_bottom_action_stack_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/module_summary_screen.dart';
@@ -52,6 +52,15 @@ import 'package:poker_analyzer/ui_v2/visual/campaign_ui_kit_v1.dart';
 import 'package:poker_analyzer/ui_v2/widgets/next_action_strip_v1.dart';
 import 'package:poker_analyzer/ui_v2/widgets/section_header.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// Stub: progress map screen was archived. Navigate to canonical Act0 root.
+Route<void> progressMapRouteV1({
+  bool autoOpenReviewQueueForNextPackV1 = false,
+}) {
+  return MaterialPageRoute<void>(
+    builder: (_) => const Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+  );
+}
 
 Route<T> sessionResultRouteV1<T>({
   required int correctCount,
