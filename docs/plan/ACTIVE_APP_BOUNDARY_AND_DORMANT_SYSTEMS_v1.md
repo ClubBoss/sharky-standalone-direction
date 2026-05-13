@@ -80,6 +80,10 @@ wave and classify it as:
 2. dormant but still linked
 3. still active through a proven dependency seam
 
+Current dependency classification reference:
+
+- `docs/plan/DORMANT_SYSTEM_DEPENDENCY_AUDIT_v1.md`
+
 ## What this file is not
 
 This file does not:
