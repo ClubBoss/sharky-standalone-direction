@@ -171,6 +171,7 @@ It should not:
 It should:
 
 - explain the immediate outcome clearly
+- make skill growth visible before the learner ever opens `You`
 - reinforce the key lesson
 - route the learner to the correct next place
 
@@ -267,6 +268,8 @@ Given the current launch-surface runway, the default next surface waves should
 now be:
 
 1. `Table / Result` felt-growth pass
+   Landed direction: correct reps now surface compact skill-gain highlights in
+   feedback and block summary instead of leaving all growth to XP and profile.
 2. `Learn` world-feel refinement
 3. shell-wide premium consistency pass
 4. `Sharky / rewards / habit` coherence pass

@@ -198,6 +198,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
   final Set<String> _lessonRunQuickFixTaskIds = <String>{};
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
+  final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
   int _persistedStreakDays = 0;
   String _lastDailyDate = '';
@@ -1476,6 +1477,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               earnedXpDelta: _earnedXp + playSelectedTask.rewardXp,
             ).xp,
             xpTarget: baseState.xpTarget,
+            skillGains: _skillGainsFromMapV1(
+              _skillDeltaForAnswer(selectedLesson, playSelectedTask),
+              source: playSelectedTask.title,
+            ),
           )
         : null;
     final showTopBar =
@@ -4850,6 +4855,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
   ) {
     final deltas = _skillDeltaForAnswer(selectedLesson, selectedTask);
+    _mergeSkillGainCountsV1(_lessonRunSkillGainCounts, deltas);
     for (final entry in deltas.entries) {
       final current = _profileSkillValues[entry.key] ?? 0;
       _profileSkillValues[entry.key] = (current + entry.value).clamp(0, 99);
@@ -4858,6 +4864,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         gain: entry.value,
         source: selectedTask.title,
       );
+    }
+  }
+
+  void _mergeSkillGainCountsV1(
+    Map<String, int> target,
+    Map<String, int> deltas,
+  ) {
+    for (final entry in deltas.entries) {
+      target[entry.key] = (target[entry.key] ?? 0) + entry.value;
     }
   }
 
@@ -4962,6 +4977,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_recentSkillGains.length > 6) {
       _recentSkillGains.removeRange(6, _recentSkillGains.length);
     }
+  }
+
+  List<Act0SkillGainV1> _skillGainsFromMapV1(
+    Map<String, int> deltas, {
+    required String source,
+  }) {
+    final entries = deltas.entries.toList()
+      ..sort((a, b) {
+        final gainCompare = b.value.compareTo(a.value);
+        if (gainCompare != 0) {
+          return gainCompare;
+        }
+        return a.key.compareTo(b.key);
+      });
+    return <Act0SkillGainV1>[
+      for (final entry in entries.take(3))
+        Act0SkillGainV1(label: entry.key, gain: entry.value, source: source),
+    ];
   }
 
   List<Act0SkillGainV1> _profileRecentSkillGains(
@@ -5238,6 +5271,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }(),
       quickFixCount: _lessonRunQuickFixTaskIds.length,
       deepLeakCount: _lessonRunDeepLeakTaskIds.length,
+      skillGains: _skillGainsFromMapV1(
+        _lessonRunSkillGainCounts,
+        source: _localizedLessonTitleV1(selectedLesson),
+      ),
     );
     _fireBlockCompletionEffects(_blockCompletionSummary!);
     return true;
@@ -5272,6 +5309,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _lessonRunWrapUpCompletedTaskIds.clear();
     _lessonRunQuickFixTaskIds.clear();
     _lessonRunDeepLeakTaskIds.clear();
+    _lessonRunSkillGainCounts.clear();
     _activeLessonWrapUpTaskId = null;
     _lessonRunWrapUpAnchorTaskId = null;
     _blockCompletionSummary = null;

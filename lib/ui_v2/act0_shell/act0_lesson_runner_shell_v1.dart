@@ -18,6 +18,7 @@ class Act0RunnerCompletionSummaryV1 {
     required this.startXp,
     required this.endXp,
     required this.xpTarget,
+    this.skillGains = const <Act0SkillGainV1>[],
   });
 
   final int xpGain;
@@ -26,10 +27,13 @@ class Act0RunnerCompletionSummaryV1 {
   final int startXp;
   final int endXp;
   final int xpTarget;
+  final List<Act0SkillGainV1> skillGains;
 
   bool get leveledUp => endLevel > startLevel;
 
   String get toastRewardLabel => leveledUp ? 'Level up' : 'Clean rep';
+
+  String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
 }
 
 class Act0BlockCompletionSummaryV1 {
@@ -48,6 +52,7 @@ class Act0BlockCompletionSummaryV1 {
     this.nextLessonTitle,
     this.quickFixCount = 0,
     this.deepLeakCount = 0,
+    this.skillGains = const <Act0SkillGainV1>[],
   });
 
   static const int unlockAccuracyPercent = 80;
@@ -66,6 +71,7 @@ class Act0BlockCompletionSummaryV1 {
   final String? nextLessonTitle;
   final int quickFixCount;
   final int deepLeakCount;
+  final List<Act0SkillGainV1> skillGains;
 
   bool get hasNextLesson =>
       nextLessonTitle != null && nextLessonTitle!.isNotEmpty;
@@ -157,6 +163,26 @@ class Act0BlockCompletionSummaryV1 {
               : 'Clean finish. You completed all lessons.'
         : 'Need $unlockAccuracyPercent% accuracy to unlock ${nextLessonTitle!}. Replay this block and tighten up the mistakes.';
   }
+
+  String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
+}
+
+String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
+  if (gains.isEmpty) {
+    return '';
+  }
+  final sorted = gains.toList()
+    ..sort((a, b) {
+      final gainCompare = b.gain.compareTo(a.gain);
+      if (gainCompare != 0) {
+        return gainCompare;
+      }
+      return a.label.compareTo(b.label);
+    });
+  return sorted
+      .take(2)
+      .map((gain) => '${gain.label} +${gain.gain}')
+      .join('  •  ');
 }
 
 // ── Pure pot-calculation helpers (top-level so they are unit-testable) ────────
@@ -2359,6 +2385,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       context,
       isWrong ? betterLabel : preferredLabel,
     );
+    final growthLabel = completionSummary?.growthLabel ?? '';
     return Container(
       key: const Key('act0_shell_feedback_card'),
       padding: EdgeInsets.all(refined ? 10 : 12),
@@ -2446,6 +2473,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
+          ],
+          if (growthLabel.isNotEmpty) ...[
+            _GrowthHighlightV1(
+              key: const Key('act0_shell_feedback_growth_highlight'),
+              label: growthLabel,
+              tone: Act0ShellTokensV1.primary,
+            ),
+            const SizedBox(height: 8),
           ],
           Text(
             act0RuntimeLocalizedGeneralLabelV1(context, reason),
@@ -2771,6 +2806,15 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ],
                 ),
               ),
+              if (summary.growthLabel.isNotEmpty) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                _GrowthHighlightV1(
+                  key: const Key('act0_shell_block_summary_growth_highlight'),
+                  title: 'What moved',
+                  label: summary.growthLabel,
+                  tone: celebrateTone,
+                ),
+              ],
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -2943,6 +2987,72 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _GrowthHighlightV1 extends StatelessWidget {
+  const _GrowthHighlightV1({
+    super.key,
+    required this.label,
+    required this.tone,
+    this.title = 'Skill gain',
+  });
+
+  final String title;
+  final String label;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapMd,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.24)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: tone.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            ),
+            child: Icon(Icons.auto_graph_rounded, size: 17, color: tone),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    letterSpacing: 0.35,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

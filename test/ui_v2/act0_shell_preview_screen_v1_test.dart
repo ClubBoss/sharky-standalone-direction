@@ -8613,6 +8613,11 @@ void main() {
     await advanceTeachingToDrill(tester);
     await tester.tap(find.byKey(const Key('act0_shell_option_check')));
     await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_feedback_growth_highlight')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Betting decisions +'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
@@ -9075,6 +9080,18 @@ void main() {
               xpTarget: 200,
               nextLessonTitle: 'Blinds and action order',
               sharkyLine: 'Sharky: clean pass. Keep the table picture simple.',
+              skillGains: <Act0SkillGainV1>[
+                Act0SkillGainV1(
+                  label: 'Betting decisions',
+                  gain: 6,
+                  source: 'Action words',
+                ),
+                Act0SkillGainV1(
+                  label: 'Table sense',
+                  gain: 2,
+                  source: 'Action words',
+                ),
+              ],
             ),
             onReplay: () {},
             onContinue: () {},
@@ -9097,6 +9114,15 @@ void main() {
     expect(find.text('Clean pass bonus'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_sharky_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_growth_highlight')),
+      findsOneWidget,
+    );
+    expect(find.text('What moved'), findsOneWidget);
+    expect(
+      find.text('Betting decisions +6  •  Table sense +2'),
       findsOneWidget,
     );
     expect(find.text('Continue to Blinds and action order.'), findsOneWidget);

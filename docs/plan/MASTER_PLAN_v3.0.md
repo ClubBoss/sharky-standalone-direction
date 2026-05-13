@@ -233,18 +233,17 @@ strong surfaces.
 
 Current next-wave order:
 
-1. `Table / Result felt-growth`
-2. `Learn world-feel`
-3. `Shell premium consistency`
-4. `Sharky / rewards / habit coherence`
-5. `Play polish as quick-return practice layer`
+1. `Learn world-feel`
+2. `Shell premium consistency`
+3. `Sharky / rewards / habit coherence`
+4. `Play polish as quick-return practice layer`
 
 Why this order:
 
 - `Placement` is now materially stronger as trusted routing.
 - `Home` is no longer the main bottleneck.
-- the biggest remaining gap is that growth is computed but not yet strongly
-  felt in the rep-to-result loop.
+- `Table / Result` now surfaces compact skill-gain highlights inside feedback
+  and block summary, so growth is more visible in the loop before profile.
 - once `Table / Result` is stronger, `Learn` can be upgraded from a polished
   path into a more memorable world without fighting weak entry or weak payoff.
 - shell-wide consistency and habit coherence should come after the route and
