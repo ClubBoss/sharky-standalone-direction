@@ -1013,8 +1013,8 @@ Current score: `0.47`
 - unlocks: [K1, I2, N2]
 - blocking_level: hard_blocker
 - machine_proof: Governed first-session rubric plus telemetry-backed first-session audit.
-- human_proof: Human walkthrough focused on trust, clarity, and motivation.
-- notes: Canonical first-session trust framing, aha reinforcement, and deterministic telemetry now exist on the admitted path, but human walkthrough and wider distribution-grade proof remain open.
+- human_proof: Bounded novice walkthrough focused on trust, clarity, motivation, and whether the first meaningful session creates a real aha.
+- notes: Canonical first-session trust framing, aha reinforcement, and deterministic telemetry now exist on the admitted path, but bounded novice proof and wider distribution-grade proof remain open.
 
 #### J3. Distribution-grade onboarding proof
 - id: J3

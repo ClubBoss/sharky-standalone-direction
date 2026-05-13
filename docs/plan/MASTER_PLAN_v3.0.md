@@ -281,6 +281,27 @@ Keep these signals:
    dormant complexity, especially in persona, legacy runner, and non-canonical
    feature families.
 
+Critical v1 closure deliverables implied by those signals:
+
+1. **Feedback quality closure**
+   Learner-visible feedback must be scenario-first, specific, and calm. Before
+   calling the early route externally strong, run a weak-feedback heatmap and a
+   generic-copy residue audit on the active learner path.
+2. **Human novice proof**
+   Before claiming the early route is externally strong, run a bounded novice
+   walkthrough gate focused on first-session clarity, first-session aha, and
+   whether the early worlds create real decision improvement.
+3. **Placement micro-aha**
+   `Placement` is not closed at 100/100 unless the route ends with one compact
+   "you're in the right place" moment, not only correct classification.
+4. **Review pattern coaching**
+   The next maturity step after item-level repair is grouping repeated mistake
+   families into one useful coaching pattern rather than only separate repair
+   cards.
+5. **Earned celebration hooks**
+   Celebrations must stay tied to real learning evidence: repaired pattern,
+   completed world block, stabilized skill family, or first meaningful win.
+
 Do not let external reviews push these anti-route moves into active product
 work:
 
@@ -290,6 +311,9 @@ work:
 4. reopening full AI-coach / solver / community / bankroll systems before the
    core route is finished
 5. moving store/distribution work ahead of the active product bottlenecks
+6. elevating hand analyzer, community, bankroll, solver, leaderboard, or
+   BB/100-style claims into the active route before the learner loop is strong
+   enough to justify them
 
 Use this section as a filter:
 

@@ -105,6 +105,8 @@ It should:
 - remove fear of starting
 - hand the learner into the product cleanly
 - resolve into one obvious first route, not a mini diagnostic report
+- end with one compact trust/aha moment so the learner feels understood, not
+  merely sorted
 
 It should not:
 
@@ -174,6 +176,7 @@ It should:
 - make skill growth visible before the learner ever opens `You`
 - reinforce the key lesson
 - route the learner to the correct next place
+- support the learner's sense of improvement, not only one-off task correction
 
 It should not:
 
@@ -191,6 +194,8 @@ It should:
 - explain why this repair matters
 - keep the prominent mistake card to one diagnosis, one contrast, and one next step
 - show recovery without shame
+- mature toward grouped pattern coaching when repeated mistakes point to one
+  learner habit, not only isolated task-by-task repair
 
 It should not:
 
@@ -251,6 +256,8 @@ The surface contract above implies the following product decisions:
 5. `You` must stay identity-first, not data-first.
 6. `Result` must always hand back into `Home`, `Learn`, or `Review`.
 7. `Placement` should fade away after routing instead of acting like a persistent destination.
+8. celebrations and habit signals must stay subordinate to learning clarity on
+   every active surface
 
 ## Planning Rules
 

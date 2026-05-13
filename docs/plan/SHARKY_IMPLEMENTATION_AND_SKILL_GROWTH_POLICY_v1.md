@@ -122,6 +122,21 @@ Wrong states should prioritize:
 
 Wrong states should be calmer and clearer than they are today, not denser.
 
+### Feedback Closure Requirements
+
+Before the early route can be called externally strong:
+
+1. learner-visible feedback on the active route must be scenario-first,
+   specific, and calm
+2. a weak-feedback heatmap must exist for the active learner path
+3. a generic-copy residue audit must be run and tracked to closure
+
+Not acceptable as closure:
+
+- short generic praise with no table-specific reason
+- wrong-answer copy that could fit almost any spot
+- system-shaped template residue that sounds detached from the hand
+
 ## Sharky Visual Role
 
 Real Sharky art is approved and strongly preferred over coded icon-only mascot

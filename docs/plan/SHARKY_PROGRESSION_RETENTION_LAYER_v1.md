@@ -65,6 +65,13 @@ Early Sharky scope:
 - one short reaction after success or error
 - one identity reinforcement line after meaningful progress
 
+Governed early phrase-pack categories:
+- pre-session encouragement
+- post-correct reaction
+- post-mistake repair tone
+- progress reinforcement
+- milestone celebration
+
 ### Streak-Lite
 
 Use a lightweight streak system only if it reinforces return behavior without creating punishment.
@@ -78,6 +85,7 @@ Avoid:
 - guilt-heavy reset framing
 - punishing loss of long streaks
 - friction that overwhelms learning value
+- using streak loss or reward withdrawal as emotional pressure
 
 ### Mastery / Progress By Skill Family
 
@@ -100,6 +108,12 @@ When the learner completes a meaningful block or capstone:
 - reinforce what they can now do
 
 The celebration should feel earned, compact, and tied to real learning.
+
+Allowed early earned celebration events:
+- repaired weak pattern
+- completed world block
+- meaningful skill-family gain
+- daily return without pressure
 
 ### Meaningful Badges
 
