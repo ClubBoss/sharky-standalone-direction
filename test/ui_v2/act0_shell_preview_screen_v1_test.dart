@@ -8928,8 +8928,8 @@ void main() {
       await tester.tap(find.text('Play'));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
-      expect(find.text('Quick practice'), findsOneWidget);
-      expect(find.text('Recommended repair'), findsOneWidget);
+      expect(find.text('Start now'), findsOneWidget);
+      expect(find.text('Topic packs'), findsOneWidget);
       await tester.ensureVisible(
         find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       );

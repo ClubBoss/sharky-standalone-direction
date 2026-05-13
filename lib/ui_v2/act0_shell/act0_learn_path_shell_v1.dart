@@ -1532,7 +1532,7 @@ class _LearnCoachLineV1 extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: accent.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
             ),
             child: Icon(Icons.waves_rounded, color: accent, size: 18),
           ),
@@ -1587,7 +1587,7 @@ class _LearnRouteContractCardV1 extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Act0ShellTokensV1.info.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
             ),
             child: const Icon(
               Icons.alt_route_rounded,

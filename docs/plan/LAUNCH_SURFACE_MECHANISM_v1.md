@@ -280,6 +280,8 @@ now be:
    feedback and block summary instead of leaving all growth to XP and profile.
 2. `Learn` world-feel refinement
 3. shell-wide premium consistency pass
+   Landed direction: active shell surfaces now share the same compact
+   rectangular chip and CTA language instead of mixing pill and panel dialects.
 4. `Sharky / rewards / habit` coherence pass
 
 Implementation note (2026-05-13):

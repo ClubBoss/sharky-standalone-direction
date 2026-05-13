@@ -227,15 +227,14 @@ truths above, it is not part of the route to 100.
 
 ## Current Route To 100
 
-After the landed `Home`, `You`, `Review`, `Placement`, `Table / Result`, and
-`Learn` waves, the next route should be shaped by compounding user-visible
-leaps, not by reopening already strong surfaces.
+After the landed `Home`, `You`, `Review`, `Placement`, `Table / Result`,
+`Learn`, and shell-consistency waves, the next route should be shaped by
+compounding user-visible leaps, not by reopening already strong surfaces.
 
 Current next-wave order:
 
-1. `Shell premium consistency`
-2. `Sharky / rewards / habit coherence`
-3. `Play polish as quick-return practice layer`
+1. `Sharky / rewards / habit coherence`
+2. `Play polish as quick-return practice layer`
 
 Why this order:
 
@@ -245,8 +244,11 @@ Why this order:
   and block summary, so growth is more visible in the loop before profile.
 - `Learn` now carries stronger chapter identity, next-landmark pull, and less
   shelf-like route language without reopening the scroll/open seam.
-- shell-wide consistency and habit coherence should now come after the route,
-  payoff, and world-feel layers are stronger, not before.
+- shell-wide consistency now keeps shape language, CTA corners, and compact
+  chip treatment aligned across active surfaces instead of splitting into
+  rounded dialects.
+- habit coherence should now come after the route, payoff, world-feel, and
+  shell-consistency layers are stronger, not before.
 
 ## Captured Signals From External Reviews (2026-05-13)
 

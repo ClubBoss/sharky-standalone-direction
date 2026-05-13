@@ -663,7 +663,7 @@ class _PlayGridIntroV1 extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Act0ShellTokensV1.primary.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
             ),
             child: const Icon(
               Icons.grid_view_rounded,
@@ -1002,7 +1002,7 @@ class _PlayLaneIntroV1 extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Act0ShellTokensV1.info.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
             ),
             child: const Icon(
               Icons.tune_rounded,
@@ -1337,7 +1337,7 @@ class _GroupIconV1 extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: color.withOpacity(0.14),
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
         border: Border.all(color: color.withOpacity(0.30)),
       ),
       child: Icon(icon, color: color, size: 20),
