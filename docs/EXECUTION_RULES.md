@@ -12,8 +12,8 @@ the canonical publish-path contracts and snapshot tooling.
 
 This file does not replace:
 
-- `docs/README_SSOT.md`
-- `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md`
+- `docs/README.md`
+- `docs/plan/MASTER_PLAN_v3.0.md`
 - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
 
 Historical execution protocol reference remains at:
@@ -112,7 +112,8 @@ Historical execution protocol reference remains at:
   own.
 - The active runtime gate remains `tools/release_gate_world1.sh`; the owner
   docs above record what is covered now versus what still needs human proof.
-- Scoring/reporting authority remains `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`.
+- Launch/readiness scoring authority remains `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`.
+- Active product route authority remains `docs/plan/MASTER_PLAN_v3.0.md`.
 
 ## Operational Confidence Baseline
 

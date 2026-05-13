@@ -9,6 +9,7 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - this file
   - `docs/plan/MASTER_PLAN_v3.0.md` for active product-working route / block order
   - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
+  - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` when the task risks drifting into legacy, persona, AI-coach, or non-Act0 families
   - latest Audit Hub surfaces if routing depends on fresh live truth:
     - `assets/audit_hub_v1/latest_run.json`
     - `assets/audit_hub_v1/operational_snapshot.json`
@@ -98,6 +99,20 @@ Purpose: primary orientation layer for future agents before repo investigation.
 - Canonical vs legacy-only:
   - canonical learner-facing runtime truth is the launch-boundary / terminal-surface / shared-shell path feeding embedded `ModernTableScreenV1`
   - legacy paths are compatibility lanes only; do not copy new learner/runtime ownership back into `DrillRunnerScreen` or `table_surface.dart`
+
+## 2a. Active app boundary
+
+- Current active learner-facing app truth is the Act0 shell route.
+- Prefer these families first:
+  - `lib/ui_v2/act0_shell/*`
+  - `lib/ui_v2/app_root.dart`
+  - `lib/ui_v2/ui_v2_beta_shell.dart`
+- Treat these as dormant/non-route unless explicitly reopened:
+  - `lib/ui_v2/persona/*`
+  - `lib/ui_v2/ai_coach/*`
+  - `lib/personalization/*`
+  - `lib/ui_v3/*`
+  - older non-Act0 learner surfaces that are not the current canonical entry path
 
 ## 3. Core runtime seams
 

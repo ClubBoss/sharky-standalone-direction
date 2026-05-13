@@ -1,15 +1,21 @@
 # PRODUCT_SURFACE_READINESS_v1
-Status: ACTIVE
-Purpose: subordinate learner-facing surface-quality control layer for current
-`main`.
+Status: REFERENCE
+Purpose: historical learner-facing surface-quality reference from the older
+pre-Act0 release-readiness lane. Keep for traceability only unless a task
+explicitly asks for this older audit model.
 Last updated: 2026-04-03
 
 ## Purpose / authority
 
-This document sits beneath:
+This document historically sat beneath:
 
 - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
 - `docs/plan/WORLD_READINESS_REGISTRY_v1.md`
+
+Current active product-surface route truth now lives in:
+
+- `docs/plan/MASTER_PLAN_v3.0.md`
+- `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`
 
 Use it to answer the product-surface questions the main readiness SSOT and the
 world registry should not carry directly:
@@ -23,13 +29,16 @@ world registry should not carry directly:
 
 Authority / non-authority:
 
-- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` remains the top readiness,
-  scoring, and bottleneck authority.
+- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` remains the top
+  launch/readiness scoring authority.
 - `docs/plan/WORLD_READINESS_REGISTRY_v1.md` remains the subordinate
   world-quality layer.
-- This document is the subordinate learner-facing surface-quality layer.
+- This document is no longer the active learner-facing surface-quality layer
+  for day-to-day product routing.
 - It does not create a second readiness verdict, weighted score, or competing
   control plane.
+
+Do not use this file first when choosing current product waves.
 
 ## Canonical first-user spine
 

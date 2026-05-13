@@ -25,18 +25,35 @@ These instructions apply to the entire repository.
   them; use `docs/content/LEGACY_COMPATIBILITY_OWNERS_v1.md` first.
 
 ## Readiness SSOT
-- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` is the canonical readiness authority for reporting, prioritization, and the meaning of final `100/100`.
-- Future progress reporting should use its Core / Ship / Final layered model plus block and epic state movement rather than floating seam-only percentages.
+- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` is the canonical launch/readiness authority for final `100/100`, store-prep framing, and release-side reporting.
+- Future launch/readiness reporting should use its Core / Ship / Final layered model plus block and epic state movement rather than floating seam-only percentages.
+- It must not override `docs/plan/MASTER_PLAN_v3.0.md` for day-to-day product prioritization or next-wave selection.
 - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md` is historical only and must not be used as the active readiness authority.
 - Closed seams should not be reopened without concrete new evidence.
 
 ## Execution Mode
-- `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md` is the active execution-mode and Route-to-B truth for the current publish-ready push.
+- `docs/plan/MASTER_PLAN_v3.0.md` is the active execution-mode and route-order authority for current product work.
+- `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md` and `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md` are historical/reference execution docs only.
 - Prefer the largest safe bounded wave that closes one active bottleneck family.
 - One active bottleneck block at a time; use one mission prompt per active block.
-- Reassess after 1-2 waves or when the active readiness bottleneck block changes.
+- Reassess after 1-2 waves or when the active product bottleneck block changes.
 - Class-of-issues fixes beat local symptom fixes.
 - Use micro-steps only when the larger bounded wave is unsafe or evidence-incomplete.
+
+## Active App Boundary
+- The active learner-facing product is the Act0 shell route plus its direct support seams.
+- Treat these as active app truth first:
+  - `lib/ui_v2/act0_shell/*`
+  - `docs/plan/MASTER_PLAN_v3.0.md`
+  - `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`
+  - `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md`
+- Do not route new active-app work into dormant systems unless the user explicitly asks or a proven dependency seam requires it.
+- Dormant / non-route families include, unless reopened by the task:
+  - `lib/ui_v2/persona/*`
+  - `lib/ui_v2/ai_coach/*`
+  - `lib/personalization/*`
+  - `lib/ui_v3/*`
+  - legacy non-Act0 screen families under `lib/ui_v2/screens/*` that are not the current Act0 entry path
 
 ## Code
 - Keep diffs proportional to the active block; do not force 1-2 file slices when the chosen bounded wave requires a larger but still controlled change set.

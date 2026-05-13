@@ -1,13 +1,19 @@
 # WORLD_READINESS_REGISTRY_v1
-Status: ACTIVE
-Purpose: subordinate world-quality control registry for `W0`-`W10` visibility,
-route selection, gap tracking, and honest release-grade assessment.
+Status: REFERENCE
+Purpose: historical world-quality registry for broader release-readiness
+framing. Keep for traceability and later-world reference, not for current
+day-to-day product routing.
 Last updated: 2026-04-02
 
 ## Purpose
 
-This registry sits beneath
+This registry historically sat beneath
 `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`.
+
+Current active route and active visible product priorities now live in:
+
+- `docs/plan/MASTER_PLAN_v3.0.md`
+- `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`
 
 Use it to answer the world-level questions the main readiness SSOT should not
 carry directly:
@@ -19,13 +25,16 @@ carry directly:
 
 ## Authority / non-authority
 
-- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` remains the top readiness,
-  scoring, and bottleneck authority.
-- This registry is a subordinate world-quality tracking layer.
+- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` remains the top
+  launch/readiness scoring authority.
+- This registry is a subordinate world-quality tracking layer for that broader
+  readiness frame.
 - It does not introduce a second readiness verdict, weighted percentage, or
   competing scoring formula.
 - It is intentionally narrower than the main SSOT: it tracks world-level
   quality shape, open gaps, and release-grade blockers.
+
+Do not use this file first when choosing current product-facing waves.
 
 ## Status meanings
 
