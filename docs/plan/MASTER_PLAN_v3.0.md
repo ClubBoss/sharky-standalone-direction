@@ -228,13 +228,13 @@ truths above, it is not part of the route to 100.
 ## Current Route To 100
 
 After the landed `Home`, `You`, `Review`, `Placement`, `Table / Result`,
-`Learn`, and shell-consistency waves, the next route should be shaped by
-compounding user-visible leaps, not by reopening already strong surfaces.
+`Learn`, shell-consistency, and habit-coherence waves, the next route should
+be shaped by compounding user-visible leaps, not by reopening already strong
+surfaces.
 
 Current next-wave order:
 
-1. `Sharky / rewards / habit coherence`
-2. `Play polish as quick-return practice layer`
+1. `Play polish as quick-return practice layer`
 
 Why this order:
 
@@ -247,8 +247,10 @@ Why this order:
 - shell-wide consistency now keeps shape language, CTA corners, and compact
   chip treatment aligned across active surfaces instead of splitting into
   rounded dialects.
-- habit coherence should now come after the route, payoff, world-feel, and
-  shell-consistency layers are stronger, not before.
+- habit coherence now keeps Sharky prefix-light, rewards tied to repair/rhythm
+  evidence, and achievement language aligned with real learning proof instead
+  of generic activity labels.
+- `Play` is now the clearest remaining quick-return surface to tighten.
 
 ## Captured Signals From External Reviews (2026-05-13)
 

@@ -283,6 +283,9 @@ now be:
    Landed direction: active shell surfaces now share the same compact
    rectangular chip and CTA language instead of mixing pill and panel dialects.
 4. `Sharky / rewards / habit` coherence pass
+   Landed direction: active shell reward language now stays tied to repair,
+   rhythm, clean reads, and real proof events without default `Sharky says`
+   prefix spam.
 
 Implementation note (2026-05-13):
 

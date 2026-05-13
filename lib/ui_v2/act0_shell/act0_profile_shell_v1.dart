@@ -629,8 +629,9 @@ class _ProfileMilestonesCardV1 extends StatelessWidget {
             children: [
               for (final achievement in featured)
                 _AchievementCardV1(
+                  achievementId: achievement.stableId,
                   label: achievement.label,
-                  icon: _achievementIconForLabel(achievement.label),
+                  icon: _achievementIconForAchievement(achievement),
                   locked: achievement.locked,
                 ),
             ],
@@ -715,16 +716,22 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
   }
 }
 
-IconData _achievementIconForLabel(String label) {
-  final normalized = label.toLowerCase();
-  if (normalized.contains('streak')) {
+IconData _achievementIconForAchievement(Act0AchievementV1 achievement) {
+  final normalizedId = achievement.stableId.toLowerCase();
+  final normalizedLabel = achievement.label.toLowerCase();
+  if (normalizedId.contains('streak') || normalizedId.contains('rhythm')) {
     return Icons.local_fire_department_rounded;
   }
-  if (normalized.contains('perfect')) {
+  if (normalizedId.contains('perfect') ||
+      normalizedId.contains('clean_drill') ||
+      normalizedLabel.contains('clean')) {
     return Icons.stars_rounded;
   }
-  if (normalized.contains('table')) {
+  if (normalizedId.contains('table') || normalizedLabel.contains('read')) {
     return Icons.visibility_rounded;
+  }
+  if (normalizedId.contains('repair')) {
+    return Icons.build_circle_rounded;
   }
   return Icons.emoji_events_rounded;
 }
@@ -1354,8 +1361,9 @@ void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
                     children: [
                       for (final achievement in profile.achievements)
                         _AchievementCardV1(
+                          achievementId: achievement.stableId,
                           label: achievement.label,
-                          icon: _achievementIconForLabel(achievement.label),
+                          icon: _achievementIconForAchievement(achievement),
                           locked: achievement.locked,
                         ),
                     ],
@@ -1499,20 +1507,21 @@ class _RecentSkillGainRowV1 extends StatelessWidget {
 
 class _AchievementCardV1 extends StatelessWidget {
   const _AchievementCardV1({
+    required this.achievementId,
     required this.label,
     required this.icon,
     required this.locked,
   });
 
+  final String achievementId;
   final String label;
   final IconData icon;
   final bool locked;
 
   @override
   Widget build(BuildContext context) {
-    final keySlug = label.toLowerCase().replaceAll(' ', '_');
     return Opacity(
-      key: Key('act0_shell_profile_achievement_$keySlug'),
+      key: Key('act0_shell_profile_achievement_$achievementId'),
       opacity: locked ? 0.62 : 1,
       child: Container(
         constraints: const BoxConstraints(minHeight: 94),

@@ -8559,7 +8559,7 @@ void main() {
     (tester) async {
       await pumpTall(tester, host());
 
-      // Complete one correct daily drill to earn "First table read"
+      // Complete one correct daily drill to earn the first clear-read badge
       await tester.tap(find.text('Play'));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -8584,10 +8584,10 @@ void main() {
         findsOneWidget,
       );
 
-      // Streak stat tile is visible
-      expect(find.text('Streak'), findsOneWidget);
+      // Rhythm block is visible
+      expect(find.text('Rhythm'), findsOneWidget);
 
-      // Scroll to Achievements and verify "First table read" is now unlocked
+      // Scroll to Achievements and verify the first clear-read badge is unlocked
       await tester.scrollUntilVisible(
         find.byKey(
           const Key('act0_shell_profile_achievement_first_table_read'),
@@ -9087,7 +9087,7 @@ void main() {
               endXp: 100,
               xpTarget: 200,
               nextLessonTitle: 'Blinds and action order',
-              sharkyLine: 'Sharky: clean pass. Keep the table picture simple.',
+              sharkyLine: 'Clean pass. Keep the table picture simple.',
               skillGains: <Act0SkillGainV1>[
                 Act0SkillGainV1(
                   label: 'Betting decisions',
@@ -9119,7 +9119,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_habit_reward')),
       findsOneWidget,
     );
-    expect(find.text('Clean pass bonus'), findsOneWidget);
+    expect(find.text('Clean read'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_sharky_line')),
       findsOneWidget,
@@ -9238,9 +9238,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Needs review'), findsOneWidget);
-    expect(find.text('Repair streak'), findsOneWidget);
+    expect(find.text('Repair flagged'), findsOneWidget);
     expect(
-      find.textContaining('protects tomorrow from feeling heavier'),
+      find.textContaining('keeps tomorrow from feeling heavier'),
       findsOneWidget,
     );
     expect(find.text('Deep leaks: 1'), findsOneWidget);
@@ -9305,10 +9305,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Table sense'), findsOneWidget);
-    expect(find.text('Tap any skill to learn what it means.'), findsOneWidget);
-    expect(find.text('Later'), findsWidgets);
+    expect(find.textContaining('Recent gains show'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('Daily habit'),
+      find.text('Rhythm'),
       240,
       scrollable: find.descendant(
         of: find.byKey(const Key('act0_shell_profile_screen')),
@@ -9316,9 +9315,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Daily habit'), findsOneWidget);
-    expect(find.text('First table read'), findsOneWidget);
-    expect(find.text('Three day streak'), findsOneWidget);
+    expect(find.text('Rhythm'), findsOneWidget);
+    expect(find.text('First clear read'), findsOneWidget);
+    expect(find.text('Three day rhythm'), findsOneWidget);
 
     _expectNoForbiddenLabels();
   });

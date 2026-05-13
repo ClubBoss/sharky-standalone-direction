@@ -186,9 +186,13 @@ class Act0ShellStateV1 {
       consistencyActiveDays: 11,
       streakLast7: const <bool>[false, false, false, false, true, true, true],
       achievements: <Act0AchievementV1>[
-        Act0AchievementV1(label: 'First table read'),
-        Act0AchievementV1(label: 'Three day streak'),
-        Act0AchievementV1(label: 'First perfect drill', locked: true),
+        Act0AchievementV1(id: 'first_table_read', label: 'First clear read'),
+        Act0AchievementV1(id: 'three_day_streak', label: 'Three day rhythm'),
+        Act0AchievementV1(
+          id: 'first_perfect_drill',
+          label: 'Clean drill chain',
+          locked: true,
+        ),
       ],
       strongCategories: <String>['Table', 'Cards', 'Streets'],
       weakCategories: <String>['Actions'],
@@ -636,7 +640,7 @@ class Act0SharkyCueV1 {
     correctReaction: 'Sharp read.',
     wrongReaction: 'Good spot to fix.',
     repairLine: 'Take one breath. I will point at the clue.',
-    summaryLine: 'Sharky: you are reading the table with more control.',
+    summaryLine: 'You are reading the table with more control.',
   );
 }
 
@@ -1003,10 +1007,19 @@ class Act0SkillGainV1 {
 }
 
 class Act0AchievementV1 {
-  const Act0AchievementV1({required this.label, this.locked = false});
+  const Act0AchievementV1({this.id, required this.label, this.locked = false});
 
+  final String? id;
   final String label;
   final bool locked;
+
+  String get stableId {
+    final resolved = id?.trim();
+    if (resolved != null && resolved.isNotEmpty) {
+      return resolved;
+    }
+    return label.toLowerCase().replaceAll(' ', '_');
+  }
 }
 
 class Act0PracticeGroupV1 {

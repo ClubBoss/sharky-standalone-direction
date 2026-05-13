@@ -331,7 +331,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         Act0PlacementResultLevelV1.newPlayer =>
           'Главный пробел сейчас не в стратегии, а в спокойном понимании стола. Сначала Шарки сделает ход раздачи очевидным.',
       },
-      coachTitle: 'Шарки говорит',
+      coachTitle: 'Шарки',
       coachLine: switch (result.level) {
         Act0PlacementResultLevelV1.readyForBasics =>
           'Ты готов к языку действий. Я просто не дам структуре исчезнуть, пока чтение не станет уверенным.',
@@ -4062,9 +4062,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _placementCoachTitle(Act0PlacementResultLevelV1 level) {
     return switch (level) {
-      Act0PlacementResultLevelV1.newPlayer => 'Sharky says',
-      Act0PlacementResultLevelV1.rustyBeginner => 'Sharky says',
-      Act0PlacementResultLevelV1.readyForBasics => 'Sharky says',
+      Act0PlacementResultLevelV1.newPlayer => 'Sharky',
+      Act0PlacementResultLevelV1.rustyBeginner => 'Sharky',
+      Act0PlacementResultLevelV1.readyForBasics => 'Sharky',
     };
   }
 
@@ -4722,17 +4722,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       consistencyActiveDays: base.consistencyActiveDays,
       achievements: <Act0AchievementV1>[
         Act0AchievementV1(
-          label: 'First table read',
+          id: 'first_table_read',
+          label: 'First clear read',
           locked: completedCount == 0,
         ),
-        Act0AchievementV1(label: 'Three day streak', locked: streakDays < 3),
         Act0AchievementV1(
-          label: 'Repair queue clear',
+          id: 'three_day_streak',
+          label: 'Three day rhythm',
+          locked: streakDays < 3,
+        ),
+        Act0AchievementV1(
+          id: 'repair_queue_clear',
+          label: 'Repair route clear',
           locked: _openMistakes().isNotEmpty,
         ),
-        Act0AchievementV1(label: 'Streak save earned', locked: !streakSaved),
         Act0AchievementV1(
-          label: 'Clean practice run',
+          id: 'streak_save_earned',
+          label: 'Rhythm saved today',
+          locked: !streakSaved,
+        ),
+        Act0AchievementV1(
+          id: 'clean_practice_run',
+          label: 'Clean drill chain',
           locked: _cleanTaskIds.length < 3,
         ),
       ],

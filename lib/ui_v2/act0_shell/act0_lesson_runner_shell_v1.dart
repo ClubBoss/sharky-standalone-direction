@@ -121,32 +121,32 @@ class Act0BlockCompletionSummaryV1 {
 
   String get habitRewardLabel {
     if (deepLeakCount > 0) {
-      return 'Repair streak';
+      return 'Repair flagged';
     }
     if (quickFixCount > 0) {
-      return 'Comeback win';
+      return 'Miss recovered';
     }
     if (errorCount == 0 && taskCount > 0) {
-      return 'Clean pass bonus';
+      return 'Clean read';
     }
     if (qualifiesForNextLesson) {
-      return 'Progress saved';
+      return 'Route held';
     }
     return 'Replay ready';
   }
 
   String get habitRewardDetail {
     if (deepLeakCount > 0) {
-      return 'A real weak spot was caught. Fixing it now protects tomorrow from feeling heavier.';
+      return 'A real weak spot was caught. Fixing it now keeps tomorrow from feeling heavier.';
     }
     if (quickFixCount > 0) {
-      return 'You corrected a miss inside the lesson. That kind of comeback is how consistency starts to feel earned.';
+      return 'You corrected a miss inside the lesson. That kind of recovery is how consistency starts to feel earned.';
     }
     if (errorCount == 0 && taskCount > 0) {
-      return 'No repairs needed. This is exactly the kind of pass that makes tomorrow lighter.';
+      return 'No repairs needed. Clean work like this makes tomorrow lighter.';
     }
     if (qualifiesForNextLesson) {
-      return 'The block counts. A short sharp return tomorrow is enough.';
+      return 'The block counts. One short sharp return tomorrow is enough.';
     }
     return 'Replay is the right move before adding new material. Clean it once and the route will feel lighter again.';
   }

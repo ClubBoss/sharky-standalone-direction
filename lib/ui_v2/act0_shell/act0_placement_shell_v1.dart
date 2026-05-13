@@ -706,7 +706,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 Act0SharkyGuideCardV1(
-                  eyebrow: 'Sharky says',
+                  eyebrow: 'Sharky',
                   line: result.coachLine,
                   mood: _placementMoodForResult(result),
                   tone: _placementToneForResult(result),
