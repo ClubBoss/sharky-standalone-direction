@@ -249,6 +249,55 @@ Why this order:
 - shell-wide consistency and habit coherence should come after the route and
   payoff layers are stronger, not before.
 
+## Captured Signals From External Reviews (2026-05-13)
+
+External reviews were useful as stress tests, but they must not override the
+current route with generic launch-app advice or speculative feature drift.
+
+Keep these signals:
+
+1. **Sharky should ship as a compact hand-written coach before any deep AI layer.**
+   For v1, curated phrase quality matters more than personalization machinery.
+   The route should favor a small governed phrase set over a large dormant AI
+   persona system.
+2. **Review should eventually evolve from item-by-item repair into pattern-level coaching.**
+   The next stage after density cleanup is grouping repeated mistake families
+   into one useful coaching signal rather than only separate cards.
+3. **Profile must stay one quick-scroll identity mirror.**
+   Skills, streak, and achievements should stay compact and legible; no return
+   to dashboard bloat.
+4. **A real-device screenshot pass is mandatory before external review.**
+   Visual coherence cannot be trusted from code alone. After shell consistency,
+   run a device sweep across compact phone, large phone, and tablet classes.
+5. **First-user and pedagogy quality need human proof, not only internal confidence.**
+   After the current product waves, run bounded novice walkthroughs focused on:
+   first-session clarity, first-session aha, and whether early worlds create
+   actual decision improvement.
+6. **Premium/trial timing must stay value-after-proof.**
+   Trial/premium messaging should appear only after a useful learning loop,
+   never as pre-value pressure inside first-touch routing.
+7. **Simplicity is a real product constraint.**
+   The active v1 route should keep favoring compact product-visible systems over
+   dormant complexity, especially in persona, legacy runner, and non-canonical
+   feature families.
+
+Do not let external reviews push these anti-route moves into active product
+work:
+
+1. removing the world structure entirely
+2. adding leaderboard theater or vanity percentile claims
+3. introducing speculative BB/100 promises
+4. reopening full AI-coach / solver / community / bankroll systems before the
+   core route is finished
+5. moving store/distribution work ahead of the active product bottlenecks
+
+Use this section as a filter:
+
+- If an external idea strengthens route clarity, felt growth, world feel,
+  premium consistency, or compact habit energy, it may enter the route.
+- If it mostly adds market noise, social theater, or deep-system burden, park
+  it for later or reject it.
+
 ## Priority Order
 
 Work in this order unless a clear user-visible blocker appears:
