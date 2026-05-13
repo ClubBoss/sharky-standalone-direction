@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/ui_v2.dart';
 import 'package:poker_analyzer/ui_v2/ui_v2_adaptive_dashboard_screen.dart';
-import 'package:poker_analyzer/ui_v2/ui_v2_beta_shell.dart';
 import 'package:poker_analyzer/ui_v2/ui_v2_feedback_panel.dart';
 import '../../app_config.dart';
 import '../../config/app_flags.dart';

@@ -24,7 +24,7 @@ import '../widgets/focus_of_the_week_card.dart';
 import '../widgets/sync_status_widget.dart';
 import 'weakness_overview_screen.dart';
 import 'ready_to_train_screen.dart';
-import '../ui_v2/ui_v2_beta_shell.dart';
+import '../ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import '../ui/history/history_screen.dart';
 import '../ui/session_player/models.dart';
 import '../ui/session_player/mvs_player.dart';

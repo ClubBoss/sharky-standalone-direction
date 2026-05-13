@@ -133,6 +133,9 @@ The following cuts were safe and already landed:
 1. remove stray local screenshot artifact under `lib/ui_v2/ai_coach/`
 2. remove the unused `universal_intake_plan_screen.dart` import from
    `lib/ui_v2/app_root.dart`
+3. extract `buildCanonicalPathRootV1` into
+   `lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart` so the active
+   entry path no longer depends on `ui_v2_beta_shell.dart`
 
 These reduce noise without pretending larger dormant families are safe to
 delete yet.

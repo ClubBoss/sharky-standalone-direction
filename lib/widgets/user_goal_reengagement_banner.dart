@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/user_goal.dart';
 import '../services/goal_analytics_service.dart';
 import '../services/user_goal_engine.dart';
-import '../ui_v2/ui_v2_beta_shell.dart';
+import '../ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 
 /// Banner reminding the user to resume the stalest active goal.
 class GoalReengagementBanner extends StatefulWidget {

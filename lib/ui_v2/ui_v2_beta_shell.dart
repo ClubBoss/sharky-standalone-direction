@@ -3,18 +3,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:poker_analyzer/canonical/canonical_truth_map_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/map/ui_v2_progress_map_screen_v2.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/table_first_navigation.dart';
 import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
-
-Widget buildCanonicalPathRootV1({
-  MapDebugAutoOpenSurfaceV1? debugAutoOpenSurfaceV1,
-}) {
-  // Canonical root remains Act0 preview shell by product decision.
-  // Keep this aligned with AGENTS.md Runtime Surface Canonical (Act0).
-  return Act0ShellPreviewScreenV1(showPlacementOnStart: false);
-}
 
 class UiV2BetaShell extends StatefulWidget {
   const UiV2BetaShell({super.key});

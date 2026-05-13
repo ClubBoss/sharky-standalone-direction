@@ -3,28 +3,28 @@ import 'dart:io';
 import 'package:test/test.dart';
 
 void main() {
-  test('app root delegates canonical path root ownership to beta shell', () {
+  test('app root delegates canonical path root ownership to act0 shell', () {
     final appRoot = File('lib/ui_v2/app_root.dart').readAsStringSync();
-    final betaShell = File(
-      'lib/ui_v2/ui_v2_beta_shell.dart',
+    final canonicalRoot = File(
+      'lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart',
     ).readAsStringSync();
 
     expect(
-      betaShell.contains('Widget buildCanonicalPathRootV1('),
+      canonicalRoot.contains('Widget buildCanonicalPathRootV1('),
       isTrue,
-      reason: 'Beta shell should own the canonical path root builder.',
+      reason: 'Act0 shell should own the canonical path root builder.',
     );
     expect(
       appRoot.contains('builder: (_) => buildCanonicalPathRootV1()'),
       isTrue,
       reason:
-          'App root legacy redirects should delegate to shell-owned path root.',
+          'App root legacy redirects should delegate to the Act0-owned path root.',
     );
     expect(
-      appRoot.contains("AppRoot (_EntryGate) -> UiV2BetaShell"),
+      appRoot.contains("AppRoot (_EntryGate) -> Act0ShellPreviewScreenV1"),
       isTrue,
       reason:
-          'Entry matrix should name the shell owner on the completed branch.',
+          'Entry matrix should name the Act0 owner on the completed branch.',
     );
   });
 }
