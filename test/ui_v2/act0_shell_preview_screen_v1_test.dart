@@ -2766,6 +2766,10 @@ void main() {
 
     expect(find.text('Learn'), findsWidgets);
     expect(
+      find.byKey(const Key('act0_shell_learn_journey_strip')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_levels_menu_button')),
       findsOneWidget,
     );
@@ -2847,9 +2851,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('act0_shell_levels_menu')), findsOneWidget);
-      expect(find.text('Levels'), findsWidgets);
-      expect(find.text('Full Mastery Path'), findsOneWidget);
-      expect(find.text('36 worlds across 3 mastery tiers'), findsOneWidget);
+      expect(find.text('Worlds'), findsWidgets);
+      expect(find.text('Volume I route'), findsOneWidget);
+      expect(
+        find.text('12 live worlds. Later volumes unlock ahead.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Next landmark'), findsOneWidget);
       for (final title in const <String>[
         'Poker from Zero',
         'Hand Discipline',

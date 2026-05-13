@@ -43,6 +43,18 @@ String _learnCopyV1(
   };
 }
 
+Act0WorldCardV1? _nextWorldAfterV1(
+  List<Act0WorldCardV1> worlds,
+  Act0WorldCardV1 currentWorld,
+) {
+  for (final world in worlds) {
+    if (world.worldNumber == currentWorld.worldNumber + 1) {
+      return world;
+    }
+  }
+  return null;
+}
+
 class Act0LearnPathShellV1 extends StatefulWidget {
   const Act0LearnPathShellV1({
     super.key,
@@ -436,6 +448,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       (world) => world.worldId == widget.selectedWorldId,
       orElse: () => widget.worlds.first,
     );
+    final nextWorld = _nextWorldAfterV1(widget.worlds, selectedWorld);
     final worldTone = _learnWorldToneV1(selectedWorld.worldNumber);
     return TapRegionSurface(
       child: Stack(
@@ -496,8 +509,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                   Text(
                                     _learnCopyV1(
                                       context,
-                                      en: 'The course path lives here.',
-                                      ru: 'Здесь живёт путь по курсу.',
+                                      en: 'Move one chapter at a time.',
+                                      ru: 'Двигайся по главам шаг за шагом.',
                                     ),
                                     style: Act0ShellTokensV1.muted,
                                   ),
@@ -535,6 +548,17 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                           widget.moduleProgressLabel,
                           style: Act0ShellTokensV1.muted,
                         ),
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        _LearnJourneyStripV1(
+                          worldNumber: selectedWorld.worldNumber,
+                          title: widget.moduleTitle,
+                          subtitle: selectedWorld.subtitle,
+                          lessonCount: widget.lessons.length,
+                          rewardXp: selectedWorld.rewardXp,
+                          nextLandmarkTitle: nextWorld?.title,
+                          accent: worldTone.accent,
+                          accentSoft: worldTone.accentSoft,
+                        ),
                         const SizedBox(height: Act0ShellTokensV1.gapLg),
                       ],
                     ),
@@ -555,7 +579,9 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         child: _ModuleHeaderV1(
                           worldNumber: selectedWorld.worldNumber,
                           title: widget.moduleTitle,
+                          subtitle: selectedWorld.subtitle,
                           progressLabel: widget.moduleProgressLabel,
+                          lessonCount: widget.lessons.length,
                           progressFraction: widget.lessons.isEmpty
                               ? 0.0
                               : widget.lessons
@@ -847,7 +873,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'Levels',
+                      _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                       textAlign: TextAlign.center,
                       style: Act0ShellTokensV1.screenTitle,
                     ),
@@ -882,7 +908,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
-                        'ACTIVE CHAPTER',
+                        _learnCopyV1(
+                          context,
+                          en: 'ACTIVE CHAPTER',
+                          ru: 'АКТИВНАЯ ГЛАВА',
+                        ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: selectedStateColor,
                           letterSpacing: 0.8,
@@ -921,6 +951,24 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               height: 1.2,
                             ),
                           ),
+                          if (_nextWorldAfterV1(worlds, selectedWorld) !=
+                              null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              _learnCopyV1(
+                                context,
+                                en: 'Next landmark · ${_nextWorldAfterV1(worlds, selectedWorld)!.title}',
+                                ru: 'Следующий рубеж · ${_nextWorldAfterV1(worlds, selectedWorld)!.title}',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: Act0ShellTokensV1.gold,
+                                fontSize: 10.4,
+                                letterSpacing: 0.26,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -929,8 +977,16 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               _LevelsHeaderV1(
-                title: 'Full Mastery Path',
-                subtitle: '36 worlds across 3 mastery tiers',
+                title: _learnCopyV1(
+                  context,
+                  en: 'Volume I route',
+                  ru: 'Маршрут Том I',
+                ),
+                subtitle: _learnCopyV1(
+                  context,
+                  en: '12 live worlds. Later volumes unlock ahead.',
+                  ru: '12 активных миров. Следующие тома откроются позже.',
+                ),
                 progressLabel: () {
                   final active = worlds.firstWhere(
                     (w) => w.status == Act0WorldStateV1.current,
@@ -2281,7 +2337,9 @@ class _ModuleHeaderV1 extends StatelessWidget {
   const _ModuleHeaderV1({
     required this.worldNumber,
     required this.title,
+    required this.subtitle,
     required this.progressLabel,
+    required this.lessonCount,
     required this.progressFraction,
     required this.onTap,
     required this.accent,
@@ -2290,7 +2348,9 @@ class _ModuleHeaderV1 extends StatelessWidget {
 
   final int worldNumber;
   final String title;
+  final String subtitle;
   final String progressLabel;
+  final int lessonCount;
   final double progressFraction;
   final VoidCallback? onTap;
   final Color accent;
@@ -2397,7 +2457,11 @@ class _ModuleHeaderV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Main route · World $worldNumber',
+                        _learnCopyV1(
+                          context,
+                          en: 'Volume I · World $worldNumber',
+                          ru: 'Том I · Мир $worldNumber',
+                        ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: accent,
                           fontSize: 10.6,
@@ -2411,9 +2475,20 @@ class _ModuleHeaderV1 extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Act0ShellTokensV1.cardTitle,
                       ),
+                      const SizedBox(height: 1),
+                      Text(
+                        subtitle,
+                        style: Act0ShellTokensV1.muted.copyWith(fontSize: 10.6),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 2),
                       Text(
-                        progressLabel,
+                        _learnCopyV1(
+                          context,
+                          en: '$lessonCount lessons · $progressLabel',
+                          ru: '$lessonCount уроков · $progressLabel',
+                        ),
                         key: const Key('act0_shell_learn_route_board'),
                         style: Act0ShellTokensV1.muted.copyWith(fontSize: 10.8),
                         maxLines: 1,
@@ -2489,6 +2564,147 @@ class _PinnedModuleHeaderDelegateV1 extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant _PinnedModuleHeaderDelegateV1 oldDelegate) {
     return oldDelegate.child != child;
+  }
+}
+
+class _LearnJourneyStripV1 extends StatelessWidget {
+  const _LearnJourneyStripV1({
+    required this.worldNumber,
+    required this.title,
+    required this.subtitle,
+    required this.lessonCount,
+    required this.rewardXp,
+    required this.nextLandmarkTitle,
+    required this.accent,
+    required this.accentSoft,
+  });
+
+  final int worldNumber;
+  final String title;
+  final String subtitle;
+  final int lessonCount;
+  final int rewardXp;
+  final String? nextLandmarkTitle;
+  final Color accent;
+  final Color accentSoft;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_learn_journey_strip'),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            accent.withValues(alpha: 0.16),
+            accentSoft.withValues(alpha: 0.62),
+            Act0ShellTokensV1.surface.withValues(alpha: 0.95),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(color: accent.withValues(alpha: 0.28)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _learnCopyV1(context, en: 'CURRENT CHAPTER', ru: 'ТЕКУЩАЯ ГЛАВА'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: accent,
+              fontSize: 10.4,
+              letterSpacing: 0.7,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _learnCopyV1(
+              context,
+              en: 'World $worldNumber · $title',
+              ru: 'Мир $worldNumber · $title',
+            ),
+            style: Act0ShellTokensV1.cardTitle,
+          ),
+          const SizedBox(height: 4),
+          Text(subtitle, style: Act0ShellTokensV1.muted.copyWith(height: 1.25)),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _LearnStatTagV1(
+                icon: Icons.route_rounded,
+                label: _learnCopyV1(
+                  context,
+                  en: '$lessonCount lessons',
+                  ru: '$lessonCount уроков',
+                ),
+                accent: accent,
+              ),
+              _LearnStatTagV1(
+                icon: Icons.workspace_premium_rounded,
+                label: _learnCopyV1(
+                  context,
+                  en: '$rewardXp XP route',
+                  ru: '$rewardXp XP пути',
+                ),
+                accent: Act0ShellTokensV1.gold,
+              ),
+              if (nextLandmarkTitle != null)
+                _LearnStatTagV1(
+                  icon: Icons.flag_rounded,
+                  label: _learnCopyV1(
+                    context,
+                    en: 'Next · $nextLandmarkTitle',
+                    ru: 'Дальше · $nextLandmarkTitle',
+                  ),
+                  accent: accent,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearnStatTagV1 extends StatelessWidget {
+  const _LearnStatTagV1({
+    required this.icon,
+    required this.label,
+    required this.accent,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color accent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+        border: Border.all(color: accent.withValues(alpha: 0.24)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: accent),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.text,
+              letterSpacing: 0.18,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

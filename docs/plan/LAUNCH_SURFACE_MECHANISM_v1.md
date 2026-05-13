@@ -142,6 +142,7 @@ It should:
 - show where the learner is now
 - show what is next
 - show what is locked and why
+- surface one clear current-chapter identity and one visible next-landmark cue
 
 It should not:
 
