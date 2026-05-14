@@ -18,7 +18,7 @@ It does not claim complete full-product smoke coverage.
   training session:
   `test/ui_v2/onboarding_first_win_test.dart`
 - Cold-start intake reaches Today with a single deterministic start CTA:
-  `test/guards/world1_intake_plan_flow_contract_test.dart`
+  `test/guards/world1_app_root_startup_contract_test.dart`
 - First-session result continuation stays deterministic:
   `test/ui_v2/session_result_world1_onboarding_payoff_test.dart`
 - Free users are gated from premium-target placement until entitlement exists:

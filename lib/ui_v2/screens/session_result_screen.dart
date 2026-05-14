@@ -1624,7 +1624,11 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
     final statusHeader = resultSurfaceContractV1.statusHeader;
     final whyLine = resultSurfaceContractV1.whyLine;
     final continuationLine = resultSurfaceContractV1.continuationLine;
-    final sharkyLine = resultSurfaceContractV1.sharkyLine;
+    final sharkyLine = _resolveResultSharkyLineV1(
+      sharkyLine: resultSurfaceContractV1.sharkyLine,
+      whyLine: whyLine,
+      continuationLine: continuationLine,
+    );
     final upNextHeadline = resultSurfaceContractV1.upNextHeadline;
     final summaryLineSecondary = resultSurfaceContractV1.summaryLineSecondary;
     if (sharkyLine != null && whyLine != null) {
@@ -2126,6 +2130,36 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
       ),
     );
   }
+}
+
+String? _resolveResultSharkyLineV1({
+  required String? sharkyLine,
+  required String? whyLine,
+  required String? continuationLine,
+}) {
+  final trimmed = sharkyLine?.trim() ?? '';
+  const genericLines = <String>{
+    'good',
+    'nice',
+    'great',
+    'ok',
+    'okay',
+    'well done',
+    'good job',
+    'sharky',
+  };
+  if (trimmed.isNotEmpty && !genericLines.contains(trimmed.toLowerCase())) {
+    return trimmed;
+  }
+  final continuation = continuationLine?.trim() ?? '';
+  if (continuation.isNotEmpty) {
+    return 'Sharky: Lock this read, then $continuation';
+  }
+  final why = whyLine?.trim() ?? '';
+  if (why.isNotEmpty) {
+    return 'Sharky: Good. Keep this reason in the next hand too.';
+  }
+  return 'Sharky: Keep one clean read and one clear action for the next spot.';
 }
 
 class _SessionResultSurfaceContractV1 {

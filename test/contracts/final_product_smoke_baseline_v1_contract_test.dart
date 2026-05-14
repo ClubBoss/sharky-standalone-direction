@@ -36,7 +36,7 @@ void main() {
       );
       expect(
         smokeContent,
-        contains('test/guards/world1_intake_plan_flow_contract_test.dart'),
+        contains('test/guards/world1_app_root_startup_contract_test.dart'),
       );
       expect(
         smokeContent,

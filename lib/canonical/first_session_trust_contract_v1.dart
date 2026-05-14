@@ -54,7 +54,7 @@ FirstSessionTrustPlanContractV1? resolveFirstSessionTrustPlanContractV1(
     launchSubtitleLine:
         'Start with the table map: dealer anchor first, then the blind pair.',
     sharkyLine:
-        'Sharky: Start with the seat map. The rest of the hand builds from there.',
+      'Sharky: Start with the seat map first. Every next decision gets clearer.',
   );
 }
 
@@ -64,10 +64,10 @@ FirstSessionAhaContractV1? resolveFirstSessionAhaContractV1(String moduleId) {
   }
   return const FirstSessionAhaContractV1(
     realTableWhyLine:
-        'Real-table value: once Button and the blinds are clear, your first action choice has a reason instead of a guess.',
+        'Real-table value: once Button and blinds are clear, your first preflop action is a reasoned choice, not a guess.',
     continuationLine:
         'Next: use this same seat map to choose the first action before the flop.',
     sharkyLine:
-        'Sharky: Good. Keep the seat map first and the next spot will read cleaner.',
+      'Sharky: Nice work. Keep seat map first and the next spot will read faster.',
   );
 }

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -147,38 +148,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   final ScrollController _learnScrollController = ScrollController();
   final Set<Timer> _pendingTimersV1 = <Timer>{};
   int _scrollEpochV1 = 0;
-  String? _expansionReadyLessonIdV1;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final initialLessonId = widget.detailLessonId ?? widget.selectedLessonId;
-      if (!mounted) {
-        return;
-      }
-      _handleLessonOpenedV1(initialLessonId, from: null);
-    });
-  }
 
   @override
   void didUpdateWidget(covariant Act0LearnPathShellV1 oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedWorldId != oldWidget.selectedWorldId) {
       _scrollToTopOnWorldSwitchV1();
-    }
-    if (widget.detailLessonId != null &&
-        widget.detailLessonId != oldWidget.detailLessonId) {
-      _handleLessonOpenedV1(
-        widget.detailLessonId!,
-        from: oldWidget.detailLessonId,
-      );
-    } else if (widget.detailLessonId == null &&
-        oldWidget.detailLessonId != null &&
-        _expansionReadyLessonIdV1 != null) {
-      setState(() {
-        _expansionReadyLessonIdV1 = null;
-      });
     }
   }
 
@@ -231,27 +206,15 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
 
   void _handleLessonOpenedV1(String newLessonId, {required String? from}) {
     final epoch = ++_scrollEpochV1;
-    if (_expansionReadyLessonIdV1 != null) {
-      setState(() {
-        _expansionReadyLessonIdV1 = null;
-      });
-    }
     unawaited(() async {
       if (from != null) {
-        await _waitWithCancelV1(_inlineLessonHubCollapseDurationV1);
+        await _waitForLearnLayoutSettleV1(frames: 1);
       }
-      if (epoch != _scrollEpochV1 ||
-          !mounted ||
-          widget.detailLessonId != newLessonId) {
+      if (epoch != _scrollEpochV1 || !mounted) {
         return;
       }
-      setState(() {
-        _expansionReadyLessonIdV1 = newLessonId;
-      });
       await _waitForLearnLayoutSettleV1(frames: from == null ? 2 : 1);
-      if (epoch != _scrollEpochV1 ||
-          !mounted ||
-          widget.detailLessonId != newLessonId) {
+      if (epoch != _scrollEpochV1 || !mounted) {
         return;
       }
       await _scrollLessonHeaderToTopV1(
@@ -260,6 +223,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         maxDurationMs: 760,
         maxAttempts: 1,
       );
+      if (epoch != _scrollEpochV1 || !mounted) {
+        return;
+      }
+      widget.onOpenLessonAfterScroll(newLessonId);
     }());
   }
 
@@ -405,6 +372,62 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   double? _computeExpandedLessonTargetOffsetV1(String lessonId) {
     // For expanded lessons, use anchored approach to position correctly.
     return _computeLessonTargetOffsetAnchoredV1(lessonId);
+  }
+
+  Future<void> _scrollExpandedLessonPanelIntoViewV1(String lessonId) async {
+    if (!_learnScrollController.hasClients) {
+      return;
+    }
+    await _waitForLearnLayoutSettleV1(frames: 1);
+    if (!mounted || !_learnScrollController.hasClients) {
+      return;
+    }
+    final anchorBox = _learnStackKey.currentContext?.findRenderObject();
+    final panelBox = _selectedLessonPanelKey.currentContext?.findRenderObject();
+    final lessonBox = _lessonKeys[lessonId]?.currentContext?.findRenderObject();
+    if (anchorBox is! RenderBox ||
+        panelBox is! RenderBox ||
+        lessonBox is! RenderBox) {
+      return;
+    }
+    final lessonTop = lessonBox
+        .localToGlobal(Offset.zero, ancestor: anchorBox)
+        .dy;
+    final panelBottom = panelBox
+        .localToGlobal(Offset(0, panelBox.size.height), ancestor: anchorBox)
+        .dy;
+    const minLessonTop = 45.0;
+    final viewportBottom =
+        anchorBox.size.height -
+        Act0ShellTokensV1.bottomNavHeight -
+        Act0ShellTokensV1.gapLg;
+    final overflow = panelBottom - viewportBottom;
+    // Keep the validated "scroll first, then open" contract dominant.
+    // Only run a second pass when the expanded panel is materially clipped.
+    if (overflow <= 12) {
+      return;
+    }
+    final extraScroll = (overflow + 8).clamp(
+      0.0,
+      (lessonTop - minLessonTop).clamp(0.0, overflow + 8),
+    );
+    if (extraScroll <= 0) {
+      return;
+    }
+    final target = (_learnScrollController.offset + extraScroll).clamp(
+      _learnScrollController.position.minScrollExtent,
+      _learnScrollController.position.maxScrollExtent,
+    );
+    final delta = (target - _learnScrollController.offset).abs();
+    if (delta < 0.75) {
+      return;
+    }
+    final durationMs = (140 + (delta * 0.18)).clamp(140, 320).round();
+    await _learnScrollController.animateTo(
+      target,
+      duration: Duration(milliseconds: durationMs),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   bool get _shouldShowSharkyGuideCardV1 {
@@ -675,18 +698,26 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                                   Act0LessonStateV1.current &&
                                               widget.lessons[i].state ==
                                                   Act0LessonStateV1.locked,
-                                          onSelectLesson: widget.onSelectLesson,
+                                          onSelectLesson: (lessonId) {
+                                            final shouldOpenAfterScroll = widget
+                                                .onSelectLesson(lessonId);
+                                            if (shouldOpenAfterScroll) {
+                                              _handleLessonOpenedV1(
+                                                lessonId,
+                                                from: widget.detailLessonId,
+                                              );
+                                            }
+                                            return shouldOpenAfterScroll;
+                                          },
                                         ),
                                       ),
                                     ),
-                                    _InlineLessonHubSlotV1(
-                                      alignment: Alignment.center,
-                                      visible:
-                                          widget.lessons[i].lessonId ==
-                                              widget.detailLessonId &&
-                                          widget.lessons[i].lessonId ==
-                                              _expansionReadyLessonIdV1,
-                                      child: _SelectedLessonPopupV1(
+                                      _InlineLessonHubSlotV1(
+                                        alignment: Alignment.center,
+                                        visible:
+                                            widget.lessons[i].lessonId ==
+                                            widget.detailLessonId,
+                                        child: _SelectedLessonPopupV1(
                                         panelRenderKey: _selectedLessonPanelKey,
                                         lesson: widget.lessons[i],
                                         selectedTaskId: widget.selectedTaskId,
@@ -830,6 +861,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       Act0WorldStateV1.current => 'Active now',
       Act0WorldStateV1.locked => 'Locked',
     };
+    final selectedWorldMetaBlocks = act0BuildInstructionBlocksV1(
+      text: selectedWorld.subtitle,
+      compact: true,
+    );
+    final nextWorld = _nextWorldAfterV1(worlds, selectedWorld);
     return Stack(
       key: const Key('act0_shell_levels_menu'),
       children: [
@@ -934,8 +970,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         children: [
                           Text(
                             'World ${selectedWorld.worldNumber} of ${worlds.length} · $selectedStateLabel',
+                            key: const Key(
+                              'act0_shell_levels_selected_world_status_line',
+                            ),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.fade,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: selectedStateColor.withValues(alpha: 0.86),
                               fontSize: 10.8,
@@ -943,26 +982,39 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            selectedWorld.subtitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Act0ShellTokensV1.muted.copyWith(
-                              fontSize: 11.5,
-                              height: 1.2,
+                          for (
+                            var index = 0;
+                            index < selectedWorldMetaBlocks.length;
+                            index++
+                          ) ...[
+                            Text(
+                              selectedWorldMetaBlocks[index],
+                              key: Key(
+                                'act0_shell_levels_selected_world_meta_block_$index',
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.fade,
+                              style: Act0ShellTokensV1.muted.copyWith(
+                                fontSize: 11.5,
+                                height: 1.2,
+                              ),
                             ),
-                          ),
-                          if (_nextWorldAfterV1(worlds, selectedWorld) !=
-                              null) ...[
+                            if (index != selectedWorldMetaBlocks.length - 1)
+                              const SizedBox(height: 4),
+                          ],
+                          if (nextWorld != null) ...[
                             const SizedBox(height: 6),
                             Text(
                               _learnCopyV1(
                                 context,
-                                en: 'Next landmark · ${_nextWorldAfterV1(worlds, selectedWorld)!.title}',
-                                ru: 'Следующий рубеж · ${_nextWorldAfterV1(worlds, selectedWorld)!.title}',
+                                en: 'Next landmark · ${nextWorld.title}',
+                                ru: 'Следующий рубеж · ${nextWorld.title}',
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              key: const Key(
+                                'act0_shell_levels_selected_world_next_landmark',
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
                               style: Act0ShellTokensV1.label.copyWith(
                                 color: Act0ShellTokensV1.gold,
                                 fontSize: 10.4,
@@ -1653,21 +1705,45 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final compactPanel = MediaQuery.sizeOf(context).height < 940;
     final stateColor = _stateColor(lesson.state);
     final locked = lesson.state == Act0LessonStateV1.locked;
     final tasks = lesson.taskList;
     final lessonTitle = act0LocalizedLessonTitleV1(context, lesson);
     final lessonSubtitle = act0LocalizedLessonSubtitleV1(context, lesson);
+    final lessonSubtitleBlocks = act0BuildInstructionBlocksV1(
+      text: lessonSubtitle,
+      compact: compactPanel,
+    );
+    final guidanceCopy = locked
+        ? _learnCopyV1(
+            context,
+            en: 'Opens when this route reaches it.',
+            ru: 'Откроется, когда маршрут дойдёт сюда.',
+          )
+        : _learnCopyV1(
+            context,
+            en: 'One clear step. The next move stays on top.',
+            ru: 'Один ясный шаг. Следующий ход всегда наверху.',
+          );
     final nextTask = tasks.firstWhere(
       (task) => !pathClosedTaskIds.contains(task.taskId),
       orElse: () => tasks.first,
     );
     return Padding(
       key: const Key('act0_shell_selected_lesson_panel'),
-      padding: const EdgeInsets.only(top: 4, bottom: 10),
+      padding: EdgeInsets.only(
+        top: compactPanel ? 2 : 4,
+        bottom: compactPanel ? 6 : 10,
+      ),
       child: Container(
         key: panelRenderKey,
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+        padding: EdgeInsets.fromLTRB(
+          compactPanel ? 11 : 14,
+          compactPanel ? 10 : 14,
+          compactPanel ? 11 : 14,
+          compactPanel ? 10 : 14,
+        ),
         decoration:
             Act0ShellTokensV1.surfaceDecoration(
               color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
@@ -1680,37 +1756,64 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(lessonTitle, style: Act0ShellTokensV1.cardTitle),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            if (lessonSubtitle.isNotEmpty) ...<Widget>[
-              Text(
-                lessonSubtitle,
-                key: const Key('act0_shell_selected_lesson_subtitle'),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Act0ShellTokensV1.muted,
+            SizedBox(height: compactPanel ? 1 : Act0ShellTokensV1.gapXs),
+            if (lessonSubtitleBlocks.isNotEmpty) ...<Widget>[
+              for (
+                var index = 0;
+                index < lessonSubtitleBlocks.length;
+                index++
+              ) ...[
+                Text(
+                  lessonSubtitleBlocks[index],
+                  key: index == 0
+                      ? const Key('act0_shell_selected_lesson_subtitle')
+                      : Key('act0_shell_selected_lesson_subtitle_block_$index'),
+                  maxLines: compactPanel ? 2 : 3,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    height: compactPanel ? 1.14 : 1.22,
+                  ),
+                ),
+                if (index != lessonSubtitleBlocks.length - 1)
+                  const SizedBox(height: 2),
+              ],
+              SizedBox(
+                height: compactPanel
+                    ? Act0ShellTokensV1.gapXs
+                    : Act0ShellTokensV1.gapSm,
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
             ],
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              key: const Key('act0_shell_selected_lesson_guidance'),
+              padding: EdgeInsets.symmetric(
+                horizontal: compactPanel ? 10 : 12,
+                vertical: compactPanel ? 5 : 7,
+              ),
               decoration: BoxDecoration(
-                color: stateColor.withValues(alpha: 0.10),
+                color: stateColor.withValues(alpha: compactPanel ? 0.08 : 0.10),
                 borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
+                  compactPanel
+                      ? Act0ShellTokensV1.radiusMd
+                      : Act0ShellTokensV1.radiusPill,
                 ),
                 border: Border.all(color: stateColor.withValues(alpha: 0.22)),
               ),
               child: Text(
-                locked
-                    ? 'This lesson opens after the path reaches it.'
-                    : 'Open one step at a time. The next clear step stays on top.',
+                guidanceCopy,
+                maxLines: 2,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.label.copyWith(
                   color: locked ? Act0ShellTokensV1.textDim : stateColor,
                   letterSpacing: 0.2,
+                  height: compactPanel ? 1.16 : 1.18,
                 ),
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            SizedBox(
+              height: compactPanel
+                  ? Act0ShellTokensV1.gapXs
+                  : Act0ShellTokensV1.gapMd,
+            ),
             Column(
               key: const Key('act0_shell_lesson_hub_steps'),
               children: [
@@ -1751,7 +1854,11 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
               ),
             ],
             if (!locked) ...[
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              SizedBox(
+                height: compactPanel
+                    ? Act0ShellTokensV1.gapSm
+                    : Act0ShellTokensV1.gapMd,
+              ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -1766,7 +1873,9 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
                         Act0ShellTokensV1.radiusPill,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(
+                      vertical: compactPanel ? 12 : 14,
+                    ),
                     elevation: 0,
                     textStyle: Act0ShellTokensV1.label.copyWith(
                       letterSpacing: 0.5,
@@ -1797,50 +1906,21 @@ class _InlineLessonHubSlotV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 580),
-      reverseDuration:
-          _Act0LearnPathShellV1State._inlineLessonHubCollapseDurationV1,
-      curve: Curves.easeInOutCubicEmphasized,
-      alignment: Alignment.topCenter,
-      child: visible
-          ? Align(
-              alignment: alignment,
-              child: FractionallySizedBox(
-                widthFactor:
-                    _Act0LearnPathShellV1State._inlineLessonHubWidthFactorV1,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: Act0ShellTokensV1.gapSm,
-                  ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 360),
-                    reverseDuration: const Duration(milliseconds: 220),
-                    switchInCurve: Curves.easeOutCubic,
-                    switchOutCurve: Curves.easeInOutCubic,
-                    transitionBuilder: (child, animation) {
-                      final curved = CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOutCubic,
-                      );
-                      return FadeTransition(
-                        opacity: curved,
-                        child: SizeTransition(
-                          sizeFactor: curved,
-                          axisAlignment: -1,
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: KeyedSubtree(
-                      key: const ValueKey<String>('act0_inline_lesson_hub'),
-                      child: child,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          : const SizedBox.shrink(),
+    if (!visible) {
+      return const SizedBox.shrink();
+    }
+    return Align(
+      alignment: alignment,
+      child: FractionallySizedBox(
+        widthFactor: _Act0LearnPathShellV1State._inlineLessonHubWidthFactorV1,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: Act0ShellTokensV1.gapSm),
+          child: KeyedSubtree(
+            key: const ValueKey<String>('act0_inline_lesson_hub'),
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1879,24 +1959,9 @@ class _LessonHubStepV1 extends StatefulWidget {
 }
 
 class _LessonHubStepV1State extends State<_LessonHubStepV1> {
-  bool _visible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _showWithDelay();
-  }
-
-  void _showWithDelay() {
-    Future<void>.delayed(Duration(milliseconds: 110 + widget.index * 115), () {
-      if (mounted) {
-        setState(() => _visible = true);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final compactRow = MediaQuery.sizeOf(context).height < 940;
     final color = widget.isDone
         ? Act0ShellTokensV1.primary
         : widget.isSkipped
@@ -1922,235 +1987,230 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
         : widget.isLocked
         ? 'Later'
         : '${widget.index}';
-    return AnimatedOpacity(
-      opacity: _visible ? 1 : 0,
-      duration: const Duration(milliseconds: 430),
-      curve: Curves.easeOutCubic,
-      child: AnimatedSlide(
-        offset: _visible ? Offset.zero : const Offset(0, -0.06),
-        duration: const Duration(milliseconds: 430),
-        curve: Curves.easeOutCubic,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final cardWidth = constraints.maxWidth < 320
-                ? constraints.maxWidth - 34
-                : (constraints.maxWidth * 0.9).clamp(248.0, 320.0);
-            final centerLeft = (constraints.maxWidth - cardWidth) / 2;
-            final cardLeft = centerLeft
-                .clamp(0.0, constraints.maxWidth - cardWidth)
-                .toDouble();
-            final threadX = cardLeft + 27;
-            return SizedBox(
-              height: 80,
-              child: Stack(
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  if (!widget.isLast)
-                    Positioned(
-                      left: threadX - 1.5,
-                      top: 25,
-                      bottom: 0,
-                      child: Container(
-                        width: 2,
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.16),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                        ),
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = constraints.maxWidth < 320
+            ? constraints.maxWidth - 34
+            : (constraints.maxWidth * 0.9).clamp(248.0, 320.0);
+        final centerLeft = (constraints.maxWidth - cardWidth) / 2;
+        final cardLeft = centerLeft
+            .clamp(0.0, constraints.maxWidth - cardWidth)
+            .toDouble();
+        final threadX = cardLeft + 27;
+        return SizedBox(
+          height: compactRow ? 72 : 80,
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              if (!widget.isLast)
+                Positioned(
+                  left: threadX - 1.5,
+                  top: 25,
+                  bottom: 0,
+                  child: Container(
+                    width: 2,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusPill,
                       ),
                     ),
-                  Positioned(
-                    left: cardLeft,
-                    top: 4,
-                    child: CompositedTransformTarget(
-                      link: widget.link,
-                      child: Material(
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusXxl,
+                  ),
+                ),
+              Positioned(
+                left: cardLeft,
+                top: 4,
+                child: CompositedTransformTarget(
+                  link: widget.link,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusXxl,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    color: Colors.transparent,
+                    child: InkWell(
+                      key: Key(
+                        'act0_shell_lesson_step_${widget.task.taskId}',
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusXxl,
+                      ),
+                      onTap: () => widget.onSelectTask(
+                        widget.lesson.lessonId,
+                        widget.task.taskId,
+                      ),
+                      child: Ink(
+                        width: cardWidth,
+                        height: compactRow ? 52 : 56,
+                        padding: EdgeInsets.fromLTRB(
+                          9,
+                          compactRow ? 5 : 6,
+                          10,
+                          compactRow ? 5 : 6,
                         ),
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.transparent,
-                        child: InkWell(
-                          key: Key(
-                            'act0_shell_lesson_step_${widget.task.taskId}',
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: widget.isSelected
+                                ? <Color>[
+                                    color.withValues(alpha: 0.18),
+                                    Act0ShellTokensV1.surface2.withValues(
+                                      alpha: 0.96,
+                                    ),
+                                  ]
+                                : <Color>[
+                                    Act0ShellTokensV1.learnPathTaskSurface,
+                                    Act0ShellTokensV1.surface.withValues(
+                                      alpha: 0.92,
+                                    ),
+                                  ],
                           ),
                           borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusXxl,
+                            Act0ShellTokensV1.radiusXl,
                           ),
-                          onTap: () => widget.onSelectTask(
-                            widget.lesson.lessonId,
-                            widget.task.taskId,
-                          ),
-                          child: Ink(
-                            width: cardWidth,
-                            height: 56,
-                            padding: const EdgeInsets.fromLTRB(9, 6, 10, 6),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: widget.isSelected
-                                    ? <Color>[
-                                        color.withValues(alpha: 0.18),
-                                        Act0ShellTokensV1.surface2.withValues(
-                                          alpha: 0.96,
-                                        ),
-                                      ]
-                                    : <Color>[
-                                        Act0ShellTokensV1.learnPathTaskSurface,
-                                        Act0ShellTokensV1.surface.withValues(
-                                          alpha: 0.92,
-                                        ),
-                                      ],
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusXl,
-                              ),
-                              border: Border.all(
-                                color: widget.isSelected
-                                    ? color.withValues(alpha: 0.58)
-                                    : Act0ShellTokensV1.border.withValues(
-                                        alpha: 0.40,
-                                      ),
-                              ),
-                              boxShadow: <BoxShadow>[
-                                const BoxShadow(
-                                  color: Color(0x44000000),
-                                  blurRadius: 10,
-                                  offset: Offset(0, 4),
-                                ),
-                                if (widget.isSelected)
-                                  BoxShadow(
-                                    color: color.withValues(alpha: 0.10),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                          border: Border.all(
+                            color: widget.isSelected
+                                ? color.withValues(alpha: 0.58)
+                                : Act0ShellTokensV1.border.withValues(
+                                    alpha: 0.40,
                                   ),
-                              ],
+                          ),
+                          boxShadow: <BoxShadow>[
+                            const BoxShadow(
+                              color: Color(0x44000000),
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 36,
-                                  height: 36,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: <Color>[
-                                        color.withValues(
-                                          alpha: widget.isDone ? 1 : 0.24,
-                                        ),
-                                        color.withValues(
-                                          alpha: widget.isDone ? 0.82 : 0.08,
-                                        ),
-                                      ],
+                            if (widget.isSelected)
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.10),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: compactRow ? 32 : 36,
+                              height: compactRow ? 32 : 36,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    color.withValues(
+                                      alpha: widget.isDone ? 1 : 0.24,
                                     ),
-                                    borderRadius: BorderRadius.circular(
-                                      Act0ShellTokensV1.radiusCard,
+                                    color.withValues(
+                                      alpha: widget.isDone ? 0.82 : 0.08,
                                     ),
-                                    border: Border.all(
-                                      color: color.withValues(alpha: 0.62),
-                                    ),
-                                    boxShadow: <BoxShadow>[
-                                      if (!widget.isLocked)
-                                        BoxShadow(
-                                          color: color.withValues(alpha: 0.20),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 5),
-                                        ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    icon,
-                                    size: 16,
-                                    color: widget.isDone
-                                        ? Act0ShellTokensV1.onPrimary
-                                        : color,
-                                  ),
+                                  ],
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _stepLabel(widget.task.stepKind),
-                                        style: Act0ShellTokensV1.label.copyWith(
-                                          color: color,
-                                          letterSpacing: 0.8,
-                                          fontSize: 8.4,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 0.5),
-                                      Text(
-                                        act0LocalizedTaskTitleV1(
-                                          context,
-                                          widget.task,
-                                        ),
-                                        key: Key(
-                                          'act0_shell_lesson_step_title_${widget.task.taskId}',
-                                        ),
-                                        style: Act0ShellTokensV1.body.copyWith(
-                                          color: widget.isLocked
-                                              ? Act0ShellTokensV1.textMuted
-                                              : Act0ShellTokensV1.text,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 11.3,
-                                          height: 1.0,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.radiusCard,
                                 ),
-                                const SizedBox(width: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 9,
-                                    vertical: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: color.withValues(
-                                      alpha: widget.isSelected ? 0.20 : 0.12,
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.62),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  if (!widget.isLocked)
+                                    BoxShadow(
+                                      color: color.withValues(alpha: 0.20),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
                                     ),
-                                    borderRadius: BorderRadius.circular(
-                                      Act0ShellTokensV1.radiusPill,
-                                    ),
-                                    border: Border.all(
-                                      color: color.withValues(alpha: 0.28),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    statusLabel,
+                                ],
+                              ),
+                              child: Icon(
+                                icon,
+                                size: compactRow ? 15 : 16,
+                                color: widget.isDone
+                                    ? Act0ShellTokensV1.onPrimary
+                                    : color,
+                              ),
+                            ),
+                            SizedBox(width: compactRow ? 8 : 10),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _stepLabel(widget.task.stepKind),
                                     style: Act0ShellTokensV1.label.copyWith(
                                       color: color,
-                                      letterSpacing: 0.45,
-                                      fontSize: 8.7,
+                                      letterSpacing: 0.8,
+                                      fontSize: compactRow ? 8.0 : 8.4,
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 0.5),
+                                  Text(
+                                    act0LocalizedTaskTitleV1(
+                                      context,
+                                      widget.task,
+                                    ),
+                                    key: Key(
+                                      'act0_shell_lesson_step_title_${widget.task.taskId}',
+                                    ),
+                                    style: Act0ShellTokensV1.body.copyWith(
+                                      color: widget.isLocked
+                                          ? Act0ShellTokensV1.textMuted
+                                          : Act0ShellTokensV1.text,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: compactRow ? 10.7 : 11.3,
+                                      height: 1.0,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            SizedBox(width: compactRow ? 4 : 6),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: compactRow ? 8 : 9,
+                                vertical: compactRow ? 4 : 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: color.withValues(
+                                  alpha: widget.isSelected ? 0.20 : 0.12,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.radiusPill,
+                                ),
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.28),
+                                ),
+                              ),
+                              child: Text(
+                                statusLabel,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: color,
+                                  letterSpacing: 0.45,
+                                  fontSize: compactRow ? 8.2 : 8.7,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            );
-          },
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -2734,7 +2794,7 @@ class _PathCardV1 extends StatelessWidget {
   final Set<String> skippedTaskIds;
   final Set<String> pathClosedTaskIds;
   final bool isNextUp;
-  final ValueChanged<String> onSelectLesson;
+  final bool Function(String lessonId) onSelectLesson;
 
   @override
   Widget build(BuildContext context) {

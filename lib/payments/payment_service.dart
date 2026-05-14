@@ -37,6 +37,7 @@ class PaymentService extends ChangeNotifier {
   /// These must match the IDs configured in Google Play Console and App Store Connect.
   static const String productPremiumPack = 'premium_pack';
   static const String productProSubscription = 'pro_subscription_monthly';
+  static const String productProSubscriptionAnnual = 'pro_subscription_annual';
   static const String productXpBooster = 'xp_booster';
   static const String productCoinsPackSmall = 'coins_pack_small';
   static const String productCoinsPackMedium = 'coins_pack_medium';
@@ -45,6 +46,7 @@ class PaymentService extends ChangeNotifier {
   static const Set<String> _productIds = {
     productPremiumPack,
     productProSubscription,
+    productProSubscriptionAnnual,
     productXpBooster,
     productCoinsPackSmall,
     productCoinsPackMedium,
@@ -317,7 +319,8 @@ class PaymentService extends ChangeNotifier {
 
   static bool _isPremiumEntitlementProductV1(String productId) {
     return productId == productPremiumPack ||
-        productId == productProSubscription;
+        productId == productProSubscription ||
+        productId == productProSubscriptionAnnual;
   }
 
   @visibleForTesting

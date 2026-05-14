@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -12,6 +14,12 @@ String _placementCopyV1(
   required String en,
   required String ru,
 }) => _isRuLocaleV1(context) ? ru : en;
+
+String _placementAtomV1(
+  BuildContext context,
+  String atomId, {
+  required String fallback,
+}) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
 class Act0PlacementShellV1 extends StatelessWidget {
   const Act0PlacementShellV1({
@@ -50,6 +58,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final localeIsRu = _isRuLocaleV1(context);
     final placementResult = result;
     if (placementResult == null) {
@@ -72,64 +81,75 @@ class Act0PlacementShellV1 extends StatelessWidget {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                Act0ShellTokensV1.pageX,
+              padding: EdgeInsets.fromLTRB(
+                pagePadding,
                 Act0ShellTokensV1.gapMd,
-                Act0ShellTokensV1.pageX,
+                pagePadding,
                 132,
               ),
               children: [
-                _PlacementHeroV1(
-                  title: _placementCopyV1(
-                    context,
-                    en: 'Find your start',
-                    ru: 'Найди свой старт',
-                  ),
-                  subtitle: _placementCopyV1(
-                    context,
-                    en: 'A few fast answers, then Sharky picks the route.',
-                    ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 360),
-                  reverseDuration: const Duration(milliseconds: 220),
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInOutCubic,
-                  transitionBuilder: (child, animation) {
-                    final curved = CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeOutCubic,
-                    );
-                    return FadeTransition(
-                      opacity: curved,
-                      child: SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0.03, 0.02),
-                          end: Offset.zero,
-                        ).animate(curved),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: showIntro
-                      ? const KeyedSubtree(
-                          key: ValueKey<String>('act0_shell_placement_intro'),
-                          child: _PlacementIntroViewV1(),
-                        )
-                      : KeyedSubtree(
-                          key: ValueKey<String>(
-                            'act0_shell_placement_body_$currentQuestionIndex',
-                          ),
-                          child: _QuestionOrDiagnosticV1(
-                            questions: questions,
-                            currentQuestionIndex: currentQuestionIndex,
-                            selectedOptionIds: selectedOptionIds,
-                            onSelectOption: onSelectOption,
-                            onBack: onBack,
-                          ),
+                Act0ShellTokensV1.centeredContent(
+                  context,
+                  tabletMaxWidth: 860,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _PlacementHeroV1(
+                        title: _placementCopyV1(
+                          context,
+                          en: 'Find your start',
+                          ru: 'Найди свой старт',
                         ),
+                        subtitle: _placementCopyV1(
+                          context,
+                          en: 'A few fast answers, then Sharky picks where to begin.',
+                          ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                        ),
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 360),
+                        reverseDuration: const Duration(milliseconds: 220),
+                        switchInCurve: Curves.easeOutCubic,
+                        switchOutCurve: Curves.easeInOutCubic,
+                        transitionBuilder: (child, animation) {
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          );
+                          return FadeTransition(
+                            opacity: curved,
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.03, 0.02),
+                                end: Offset.zero,
+                              ).animate(curved),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: showIntro
+                            ? const KeyedSubtree(
+                                key: ValueKey<String>(
+                                  'act0_shell_placement_intro',
+                                ),
+                                child: _PlacementIntroViewV1(),
+                              )
+                            : KeyedSubtree(
+                                key: ValueKey<String>(
+                                  'act0_shell_placement_body_$currentQuestionIndex',
+                                ),
+                                child: _QuestionOrDiagnosticV1(
+                                  questions: questions,
+                                  currentQuestionIndex: currentQuestionIndex,
+                                  selectedOptionIds: selectedOptionIds,
+                                  onSelectOption: onSelectOption,
+                                  onBack: onBack,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -137,12 +157,12 @@ class Act0PlacementShellV1 extends StatelessWidget {
           _PlacementFlowActionBarV1(
             title: showIntro
                 ? (localeIsRu
-                      ? 'Две минуты. Потом Шарки подберёт старт.'
-                      : 'Two minutes. Then Sharky places you.')
+                      ? 'Две минуты. Потом Шарки покажет, с чего начать.'
+                      : 'Two minutes. Then Sharky shows where to start.')
                 : currentQuestionIndex >= questions.length
                 ? (localeIsRu
-                      ? 'Один короткий живой чек — и первый полезный маршрут готов.'
-                      : 'One short live check, then your first useful route is ready.')
+                      ? 'Один короткий живой чек — и первый полезный старт готов.'
+                      : 'One short live check, then your first useful start is ready.')
                 : currentQuestion?.allowsMultiple == true
                 ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
                 : (localeIsRu
@@ -158,7 +178,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
             buttonLabel: showIntro
                 ? (localeIsRu ? 'Начать плейсмент' : 'Start placement')
                 : currentQuestionIndex >= questions.length
-                ? (localeIsRu ? 'Начать проверку' : 'Start skill check')
+                ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
                 : (localeIsRu ? 'Продолжить' : 'Continue'),
             onPressed: showIntro
                 ? onStartPlacement
@@ -176,51 +196,60 @@ class Act0PlacementShellV1 extends StatelessWidget {
         Expanded(
           child: ListView(
             key: const Key('act0_shell_placement_result_scroll'),
-            padding: const EdgeInsets.fromLTRB(
-              Act0ShellTokensV1.pageX,
+            padding: EdgeInsets.fromLTRB(
+              pagePadding,
               Act0ShellTokensV1.gapMd,
-              Act0ShellTokensV1.pageX,
+              pagePadding,
               116,
             ),
             children: [
-              _PlacementHeroV1(
-                title: _placementCopyV1(
-                  context,
-                  en: 'Find your start',
-                  ru: 'Найди свой старт',
-                ),
-                subtitle: _placementCopyV1(
-                  context,
-                  en: 'A few fast answers, then Sharky picks the route.',
-                  ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 420),
-                switchInCurve: Curves.easeOutCubic,
-                switchOutCurve: Curves.easeInOutCubic,
-                transitionBuilder: (child, animation) {
-                  final curved = CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  );
-                  return FadeTransition(
-                    opacity: curved,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0, 0.04),
-                        end: Offset.zero,
-                      ).animate(curved),
-                      child: child,
+              Act0ShellTokensV1.centeredContent(
+                context,
+                tabletMaxWidth: 860,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _PlacementHeroV1(
+                      title: _placementCopyV1(
+                        context,
+                        en: 'Find your start',
+                        ru: 'Найди свой старт',
+                      ),
+                      subtitle: _placementCopyV1(
+                        context,
+                        en: 'A few fast answers, then Sharky picks where to begin.',
+                        ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                      ),
                     ),
-                  );
-                },
-                child: KeyedSubtree(
-                  key: ValueKey<String>(
-                    'act0_shell_placement_result_${placementResult.level.name}',
-                  ),
-                  child: _PlacementResultViewV1(result: placementResult),
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 420),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInOutCubic,
+                      transitionBuilder: (child, animation) {
+                        final curved = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        );
+                        return FadeTransition(
+                          opacity: curved,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, 0.04),
+                              end: Offset.zero,
+                            ).animate(curved),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey<String>(
+                          'act0_shell_placement_result_${placementResult.level.name}',
+                        ),
+                        child: _PlacementResultViewV1(result: placementResult),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -277,9 +306,13 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                       visualDensity: VisualDensity.compact,
                     ),
                     const SizedBox(width: Act0ShellTokensV1.gapXs),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Skill check',
+                        _placementAtomV1(
+                          context,
+                          'placement_ready_skill_check',
+                          fallback: 'Skill check',
+                        ),
                         style: Act0ShellTokensV1.sectionTitle,
                       ),
                     ),
@@ -293,7 +326,12 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'One short live check. Then Sharky locks the first useful route.',
+                  _placementAtomV1(
+                    context,
+                    'placement_ready_best_place_to_begin',
+                    fallback:
+                        'One short live check. Then Sharky locks the best place to begin.',
+                  ),
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                   ),
@@ -304,28 +342,52 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _PlacementSectionCardV1(
             key: const Key('act0_shell_placement_ready_steps'),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Three fast reads', style: Act0ShellTokensV1.cardTitle),
-                SizedBox(height: Act0ShellTokensV1.gapSm),
+                Text(
+                  _placementAtomV1(
+                    context,
+                    'placement_ready_three_fast_reads',
+                    fallback: 'Three fast reads',
+                  ),
+                  style: Act0ShellTokensV1.cardTitle,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
                 _PlacementStepLineV1(
                   icon: Icons.person_search_rounded,
-                  label: 'Table read and seat orientation.',
+                  label: _placementAtomV1(
+                    context,
+                    'placement_ready_table_read_and_seat_orientation',
+                    fallback: 'Table read and seat orientation.',
+                  ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 _PlacementStepLineV1(
                   icon: Icons.view_kanban_rounded,
-                  label: 'Board and street basics.',
+                  label: _placementAtomV1(
+                    context,
+                    'placement_ready_board_and_street_basics',
+                    fallback: 'Board and street basics.',
+                  ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 _PlacementStepLineV1(
                   icon: Icons.alt_route_rounded,
-                  label: 'Action order once the hand starts moving.',
+                  label: _placementAtomV1(
+                    context,
+                    'placement_ready_action_order',
+                    fallback: 'Action order once the hand starts moving.',
+                  ),
                 ),
-                SizedBox(height: Act0ShellTokensV1.gapSm),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  'Then you land in one route that fits, opens fast, and proves itself early.',
+                  _placementAtomV1(
+                    context,
+                    'placement_ready_start_proves_itself_early',
+                    fallback:
+                        'Then you land in one start that fits, opens fast, and proves itself early.',
+                  ),
                   style: Act0ShellTokensV1.muted,
                 ),
               ],
@@ -515,29 +577,46 @@ class _PlacementIntroViewV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Placement',
+                _placementAtomV1(
+                  context,
+                  'placement_intro_route_check',
+                  fallback: 'Route check',
+                ),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.primary,
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapXs),
-              const Text(
-                'Fast route in. No long setup.',
+              Text(
+                _placementAtomV1(
+                  context,
+                  'placement_intro_quick_route_check',
+                  fallback: 'Quick route check. No long setup.',
+                ),
                 style: Act0ShellTokensV1.screenTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                'Sharky uses this to choose your first route and skip the wrong start.',
+                _placementAtomV1(
+                  context,
+                  'placement_intro_best_place_to_begin',
+                  fallback:
+                      'Sharky uses this to pick the best place to begin and skip the wrong opener.',
+                ),
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
-              const _PlacementMiniBannerV1(
-                key: Key('act0_shell_placement_intro_reassurance'),
+              _PlacementMiniBannerV1(
+                key: const Key('act0_shell_placement_intro_reassurance'),
                 icon: Icons.verified_rounded,
-                text:
-                    'No payment choice first. You see your route and first rep before any premium prompt.',
+                text: _placementAtomV1(
+                  context,
+                  'placement_intro_no_payment_choice_first',
+                  fallback:
+                      'No payment choice first. You see where to start and your first hand before any premium prompt.',
+                ),
               ),
             ],
           ),
@@ -546,29 +625,88 @@ class _PlacementIntroViewV1 extends StatelessWidget {
         _PlacementSectionCardV1(
           key: const Key('act0_shell_placement_intro_for_who'),
           borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('What you get', style: Act0ShellTokensV1.cardTitle),
-              SizedBox(height: Act0ShellTokensV1.gapSm),
+              Text(
+                _placementAtomV1(
+                  context,
+                  'placement_intro_what_happens_next',
+                  fallback: 'What happens next',
+                ),
+                style: Act0ShellTokensV1.cardTitle,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlacementStepLineV1(
                 icon: Icons.route_rounded,
-                label: 'One clear start instead of a generic opener.',
+                label: _placementAtomV1(
+                  context,
+                  'placement_intro_clear_place_to_start',
+                  fallback:
+                      'One clear place to start instead of a generic opener.',
+                ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _PlacementStepLineV1(
                 icon: Icons.play_circle_rounded,
-                label: 'One short live check built from real spots.',
+                label: _placementAtomV1(
+                  context,
+                  'placement_intro_short_live_check',
+                  fallback: 'One short live check using real table spots.',
+                ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _PlacementStepLineV1(
                 icon: Icons.looks_3_rounded,
-                label: 'A route you can open immediately.',
+                label: _placementAtomV1(
+                  context,
+                  'placement_intro_start_module_now',
+                  fallback: 'A start module you can open immediately.',
+                ),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PlacementInstructionBlocksV1 extends StatelessWidget {
+  const _PlacementInstructionBlocksV1({
+    required this.text,
+    required this.keyBase,
+    required this.style,
+    this.textAlign,
+  });
+
+  final String text;
+  final String keyBase;
+  final TextStyle style;
+  final TextAlign? textAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    final blocks = act0BuildInstructionBlocksV1(text: text, compact: true);
+    if (blocks.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return KeyedSubtree(
+      key: Key(keyBase),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var index = 0; index < blocks.length; index++) ...[
+            if (index > 0) const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              blocks[index],
+              key: Key('${keyBase}_block_$index'),
+              style: style,
+              textAlign: textAlign,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -652,7 +790,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                     const SizedBox(width: Act0ShellTokensV1.gapSm),
                     Expanded(
                       child: Text(
-                        'Sharky read',
+                        'Sharky recommendation',
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.primary,
                         ),
@@ -670,8 +808,9 @@ class _PlacementResultViewV1 extends StatelessWidget {
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 Text(result.summary, style: Act0ShellTokensV1.screenTitle),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Text(
-                  result.reportBody,
+                _PlacementInstructionBlocksV1(
+                  keyBase: 'act0_shell_placement_report_body',
+                  text: result.reportBody,
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                     height: 1.45,
@@ -711,9 +850,9 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
-                Text(
-                  result.routeTrustLine,
-                  key: const Key('act0_shell_placement_destination_trust_line'),
+                _PlacementInstructionBlocksV1(
+                  keyBase: 'act0_shell_placement_destination_trust_line',
+                  text: result.routeTrustLine,
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.textMuted,
                   ),
@@ -757,7 +896,11 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Text(
-                    'First route',
+                    _placementAtomV1(
+                      context,
+                      'placement_sheet_start_here',
+                      fallback: 'Start here',
+                    ),
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.primary,
                     ),
@@ -767,8 +910,9 @@ class _PlacementResultViewV1 extends StatelessWidget {
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(result.recommendedTitle, style: Act0ShellTokensV1.cardTitle),
               const SizedBox(height: 6),
-              Text(
-                result.recommendedReason,
+              _PlacementInstructionBlocksV1(
+                keyBase: 'act0_shell_placement_recommended_reason',
+                text: result.recommendedReason,
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                   height: 1.4,
@@ -838,8 +982,9 @@ class _PlacementResultViewV1 extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        result.firstSessionPlan[1],
+                      _PlacementInstructionBlocksV1(
+                        keyBase: 'act0_shell_placement_next_10_blocks',
+                        text: result.firstSessionPlan[1],
                         style: Act0ShellTokensV1.muted.copyWith(
                           color: Act0ShellTokensV1.text,
                         ),
@@ -1054,7 +1199,11 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Your route is ready.',
+            _placementAtomV1(
+              context,
+              'placement_result_your_start_is_ready',
+              fallback: 'Your start is ready.',
+            ),
             textAlign: TextAlign.center,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.text,
@@ -1065,7 +1214,13 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
             key: const Key('act0_shell_placement_open_recommended_path'),
             onPressed: () => _showRecommendedPathSheet(context),
             style: Act0ShellTokensV1.primaryButtonStyle(),
-            child: const Text('See first route'),
+            child: Text(
+              _placementAtomV1(
+                context,
+                'placement_result_see_where_to_start',
+                fallback: 'See where to start',
+              ),
+            ),
           ),
         ],
       ),
@@ -1138,7 +1293,11 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapLg),
                 Text(
-                  'First route',
+                  _placementAtomV1(
+                    context,
+                    'placement_sheet_start_here',
+                    fallback: 'Start here',
+                  ),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                   ),
@@ -1149,8 +1308,9 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                   style: Act0ShellTokensV1.sectionTitle,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Text(
-                  result.recommendedReason,
+                _PlacementInstructionBlocksV1(
+                  keyBase: 'act0_shell_placement_sheet_recommended_reason',
+                  text: result.recommendedReason,
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                     height: 1.38,
@@ -1171,7 +1331,11 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'First sessions',
+                        _placementAtomV1(
+                          context,
+                          'placement_sheet_first_sessions',
+                          fallback: 'First sessions',
+                        ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.gold,
                         ),
@@ -1193,9 +1357,9 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Text(
-                  result.routeTrustLine,
-                  key: const Key('act0_shell_placement_recommended_trust_line'),
+                _PlacementInstructionBlocksV1(
+                  keyBase: 'act0_shell_placement_recommended_trust_line',
+                  text: result.routeTrustLine,
                   style: Act0ShellTokensV1.muted,
                   textAlign: TextAlign.center,
                 ),
@@ -1214,7 +1378,11 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                           ),
                           const SizedBox(width: Act0ShellTokensV1.gapSm),
                           Text(
-                            'Premium trial',
+                            _placementAtomV1(
+                              context,
+                              'placement_sheet_premium_trial',
+                              fallback: 'Premium trial',
+                            ),
                             style: Act0ShellTokensV1.cardTitle.copyWith(
                               color: Act0ShellTokensV1.gold,
                             ),
@@ -1222,7 +1390,11 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      Text(result.premiumPitch, style: Act0ShellTokensV1.muted),
+                      _PlacementInstructionBlocksV1(
+                        keyBase: 'act0_shell_placement_premium_pitch',
+                        text: result.premiumPitch,
+                        style: Act0ShellTokensV1.muted,
+                      ),
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
                       for (final point in result.trialValuePoints.take(2)) ...[
                         _PlacementStepLineV1(
@@ -1233,8 +1405,13 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                       ],
                       if (trialPreviewSelected) ...[
                         const SizedBox(height: Act0ShellTokensV1.gapXs),
-                        const Text(
-                          'Trial preview saved. You can still continue free.',
+                        Text(
+                          _placementAtomV1(
+                            context,
+                            'placement_sheet_trial_preview_saved',
+                            fallback:
+                                'Trial preview saved. You can still continue free.',
+                          ),
                           style: Act0ShellTokensV1.muted,
                         ),
                       ],
@@ -1250,7 +1427,13 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                           height: 40,
                           fullWidth: true,
                         ),
-                        child: const Text('Preview 7-day trial'),
+                        child: Text(
+                          _placementAtomV1(
+                            context,
+                            'placement_sheet_preview_trial',
+                            fallback: 'Preview 7-day trial',
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -1263,7 +1446,13 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                     onStartRecommended();
                   },
                   style: Act0ShellTokensV1.primaryButtonStyle(),
-                  child: const Text('Start first rep'),
+                  child: Text(
+                    _placementAtomV1(
+                      context,
+                      'placement_sheet_start_first_hand',
+                      fallback: 'Start first hand',
+                    ),
+                  ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 OutlinedButton(
@@ -1273,7 +1462,13 @@ class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
                     onStartFromZero();
                   },
                   style: Act0ShellTokensV1.quietButtonStyle(),
-                  child: const Text('Start from zero'),
+                  child: Text(
+                    _placementAtomV1(
+                      context,
+                      'placement_sheet_start_from_zero',
+                      fallback: 'Start from zero',
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -1397,11 +1592,11 @@ String _rightPlaceLineV1(Act0PlacementResultV1 result) {
 String _firstRepProofLineV1(Act0PlacementResultV1 result) {
   return switch (result.level) {
     Act0PlacementResultLevelV1.newPlayer =>
-      'By the end of the first rep, seats, blinds, and turn order should stop feeling random.',
+      'By the end of the first hand, seats, blinds, and turn order should stop feeling random.',
     Act0PlacementResultLevelV1.rustyBeginner =>
-      'By the end of the first rep, the hand should feel connected again from preflop to river.',
+      'By the end of the first hand, the hand should feel connected again from preflop to river.',
     Act0PlacementResultLevelV1.readyForBasics =>
-      'By the end of the first rep, action words should attach to real table moments instead of floating as terms.',
+      'By the end of the first hand, action words should attach to real table moments instead of floating as terms.',
   };
 }
 

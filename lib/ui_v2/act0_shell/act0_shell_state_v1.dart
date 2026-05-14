@@ -99,6 +99,7 @@ Act0TaskFamilyV1 act0InferTaskFamilyV1({
 // BeatV1/task data -> Act0ShellStateV1 -> Act0RunnerStateV1
 // -> Act0TableStateV1 -> dumb Flutter renderers.
 
+// TODO(Wave F): Split Act0ShellStateV1 into progression, review, recommendation, placement, profile/habit, tokens, feedback modules (see ACT0_ARCHITECTURE_SPLIT_ROADMAP_v1.md)
 class Act0ShellStateV1 {
   const Act0ShellStateV1({
     required this.courseTitle,
@@ -127,9 +128,12 @@ class Act0ShellStateV1 {
   final String dailyGoalValue;
   final String pathProgressLabel;
   final String selectedWorldId;
+  // TODO(Wave F): Move to progression_state.dart
   final List<Act0WorldCardV1> worlds;
   final List<Act0LessonCardV1> lessons;
+  // TODO(Wave F): Move to review_state.dart
   final Act0ReviewStateV1 review;
+  // TODO(Wave F): Move to profile_state.dart
   final Act0ProfileStateV1 profile;
 
   Act0WorldCardV1 get selectedWorld => worlds.firstWhere(
@@ -225,6 +229,7 @@ class Act0ShellStateV1 {
   );
 }
 
+// TODO(Wave F): Move to world_card.dart
 class Act0WorldCardV1 {
   const Act0WorldCardV1({
     required this.worldId,
@@ -280,6 +285,7 @@ class Act0WorldCardV1 {
   }
 }
 
+// TODO(Wave F): Move to lesson_card.dart
 class Act0LessonCardV1 {
   const Act0LessonCardV1({
     required this.lessonId,
@@ -5526,7 +5532,7 @@ const _meetTableRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Bottom seat',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'The hero marker is at the bottom seat in this lesson.',
     ),
     Act0RunnerOptionV1(
@@ -5536,7 +5542,7 @@ const _meetTableRunner = Act0RunnerStateV1(
       isCorrect: true,
       preferredLabel: 'Bottom seat',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Hero seat found!',
       feedbackReason: 'The hero marker shows your seat at the bottom.',
     ),
     Act0RunnerOptionV1(
@@ -5546,11 +5552,11 @@ const _meetTableRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Bottom seat',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'Your seat is marked by the hero badge, not random.',
     ),
   ],
-  feedbackTitle: 'Nice read.',
+  feedbackTitle: 'Sharp read.',
   feedbackReason:
       'The hero marker shows your seat. The dealer button moves around the table.',
   primaryCtaLabel: 'Continue',
@@ -5625,7 +5631,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'We start with Hold\'em cash.',
       body:
-          'Hold\'em gives every player 2 private hole cards and deals 5 community cards the whole table shares — you build the best 5-card hand from those 7. Poker has many formats, but this course starts with No-Limit Hold\'em cash games. Cash is the cleanest base: chips keep one stable value and the same core decisions repeat hand after hand. The other main format is tournaments, where you buy in once and play for a prize pool.',
+          'Each player gets 2 private hole cards. The table shares 5 community cards. You build the best 5-card hand from those 7. This course starts with No-Limit Hold\'em cash, where chip values stay stable hand to hand.',
       focusLabels: <String>[
         '2 hole cards',
         'Cash vs tournament',
@@ -5647,7 +5653,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'Blinds start the hand.',
       body:
-          'SB posts 0.5 BB. BB posts 1 BB before anyone chooses. Hole cards stay hidden at first so you can read the table without extra noise.',
+          'SB posts 0.5 BB and BB posts 1 BB before anyone chooses. The blinds appear before the first decision, and the hole cards stay hidden so you can read the table cleanly.',
       focusSeatIds: <String>['sb', 'bb'],
       focusLabels: <String>['SB 0.5', 'BB 1', 'Cards hidden first'],
     ),
@@ -5672,7 +5678,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'First in on the Button, folding gives up a playable spot.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
@@ -5687,7 +5693,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable move.',
+      feedbackTitle: 'Limp is legal, but raise is sharper.',
       feedbackReason:
           'Calling is legal and not a disaster, but limping on the Button is passive. Raising wins blinds outright and builds better pots.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
@@ -5701,7 +5707,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       isCorrect: true,
       preferredLabel: 'Raise',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'First in on the Button, raising opens the pot and pressures the blinds.',
       repairFocusSeatIds: <String>['btn'],
@@ -5709,7 +5715,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       repairFocusLabels: <String>['Button open', 'Hero acts'],
     ),
   ],
-  feedbackTitle: 'Nice read.',
+  feedbackTitle: 'Solid understanding.',
   feedbackReason:
       'Raising is the clean first-in Button action; calling would only limp.',
   primaryCtaLabel: 'Continue',
@@ -5842,7 +5848,7 @@ const _firstHandRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Two',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'You start with two private cards.',
     ),
     Act0RunnerOptionV1(
@@ -5851,7 +5857,7 @@ const _firstHandRunner = Act0RunnerStateV1(
       isCorrect: true,
       preferredLabel: 'Two',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Good.',
+      feedbackTitle: 'Two cards: correct.',
       feedbackReason: 'You start with two private cards.',
     ),
     Act0RunnerOptionV1(
@@ -5860,11 +5866,11 @@ const _firstHandRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Two',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Five cards can make a hand, but you start with two.',
     ),
   ],
-  feedbackTitle: 'Good.',
+  feedbackTitle: 'Two private cards: correct.',
   feedbackReason:
       'You start with two private cards. The board cards are shared by everyone.',
   primaryCtaLabel: 'Continue',
@@ -5964,7 +5970,7 @@ const _readBoardRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Three',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'The flop has three board cards.',
     ),
     Act0RunnerOptionV1(
@@ -5973,7 +5979,7 @@ const _readBoardRunner = Act0RunnerStateV1(
       isCorrect: true,
       preferredLabel: 'Three',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'A flop has three board cards.',
     ),
     Act0RunnerOptionV1(
@@ -5982,11 +5988,11 @@ const _readBoardRunner = Act0RunnerStateV1(
       isCorrect: false,
       preferredLabel: 'Three',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'Five board cards appear only by the river.',
     ),
   ],
-  feedbackTitle: 'Nice read.',
+  feedbackTitle: 'Excellent spot.',
   feedbackReason:
       'A flop has three board cards. Turn and river add one card each.',
   primaryCtaLabel: 'Continue',
@@ -6078,7 +6084,7 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Ace',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Ace is higher than king in this beginner drill.',
     ),
     Act0RunnerOptionV1(
@@ -6087,8 +6093,8 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Ace',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'Ace is the higher rank here.',
+      feedbackTitle: 'Spot on.',
+      feedbackReason: 'Compare top card first: ace outranks king in this spot.',
     ),
     Act0RunnerOptionV1(
       id: 'suit',
@@ -6096,7 +6102,7 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Ace',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'Suit does not make one rank higher than another.',
     ),
   ],
@@ -6147,7 +6153,7 @@ final _potStackRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Pot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'The pot is the chips in the middle.',
     ),
     Act0RunnerOptionV1(
@@ -6156,7 +6162,7 @@ final _potStackRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Pot',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'Your stack is your chips, not the middle pot.',
     ),
   ],
@@ -6188,7 +6194,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Everyone folds',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'UTG acts first.',
       feedbackReason: 'If everyone folds, the last player wins the pot.',
     ),
     Act0RunnerOptionV1(
@@ -6197,7 +6203,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Everyone folds',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'A larger stack does not automatically win the pot.',
     ),
   ],
@@ -6223,8 +6229,8 @@ final _suitsRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'h',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'Ah means ace of hearts.',
+      feedbackTitle: 'Sharp read.',
+      feedbackReason: 'Card code check: A means ace and h means hearts.',
     ),
     Act0RunnerOptionV1(
       id: 'rank',
@@ -6232,7 +6238,7 @@ final _suitsRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'h',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'A is the rank. h is the suit.',
     ),
   ],
@@ -6258,7 +6264,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Board cards',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'Board cards are shared by everyone still in the hand.',
     ),
     Act0RunnerOptionV1(
@@ -6267,7 +6273,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Board cards',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Private cards belong only to one player.',
     ),
   ],
@@ -6300,7 +6306,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Four',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'Three cards is the flop. Turn makes four.',
     ),
     Act0RunnerOptionV1(
@@ -6309,7 +6315,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Four',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'The turn is the fourth board card.',
     ),
     Act0RunnerOptionV1(
@@ -6318,7 +6324,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Four',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'Five board cards appear on the river.',
     ),
   ],
@@ -6354,7 +6360,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Four cards is the turn. River makes five.',
     ),
     Act0RunnerOptionV1(
@@ -6363,7 +6369,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'The river completes five board cards.',
     ),
     Act0RunnerOptionV1(
@@ -6372,7 +6378,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'Holdem uses five board cards, not six.',
     ),
   ],
@@ -6409,7 +6415,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'Folding gives up the hand. Checking is free here.',
     ),
     Act0RunnerOptionV1(
@@ -6418,7 +6424,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: 'Checking keeps the hand going when no bet faces you.',
     ),
     Act0RunnerOptionV1(
@@ -6427,7 +6433,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'Calling means matching a bet. There is no bet here.',
     ),
   ],
@@ -6462,7 +6468,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'Fold gives up the hand and saves the call.',
     ),
     Act0RunnerOptionV1(
@@ -6472,7 +6478,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'Calling spends chips to continue with a weak hand.',
     ),
     Act0RunnerOptionV1(
@@ -6482,7 +6488,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Raising adds more chips with a weak hand.',
     ),
   ],
@@ -6563,7 +6569,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'Folding gives up instead of continuing.',
     ),
     Act0RunnerOptionV1(
@@ -6573,7 +6579,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'Calling matches the current price.',
     ),
     Act0RunnerOptionV1(
@@ -6583,7 +6589,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'Raising adds more chips than the call price.',
     ),
   ],
@@ -6689,7 +6695,7 @@ final _firstPreflopActorRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'UTG acts first preflop.',
       feedbackReason: 'UTG acts first before the flop.',
     ),
     Act0RunnerOptionV1(
@@ -6699,7 +6705,7 @@ final _firstPreflopActorRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'The Button acts late, not first preflop.',
     ),
   ],
@@ -6732,7 +6738,7 @@ final _lastPreflopActorRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'The big blind can act last before the flop.',
     ),
     Act0RunnerOptionV1(
@@ -6742,7 +6748,7 @@ final _lastPreflopActorRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'The small blind acts before the big blind preflop.',
     ),
   ],
@@ -6775,7 +6781,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'Button acts last after the flop in this hand.',
     ),
     Act0RunnerOptionV1(
@@ -6785,7 +6791,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'UTG is early, not the late postflop seat here.',
     ),
   ],
@@ -6840,8 +6846,8 @@ final _buttonSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'BTN marks the Button seat.',
+      feedbackTitle: 'Solid understanding.',
+      feedbackReason: 'BTN is the dealer button and acts last postflop.',
     ),
     Act0RunnerOptionV1(
       id: 'co',
@@ -6850,7 +6856,7 @@ final _buttonSeatRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'CO is one seat before the Button.',
     ),
   ],
@@ -6883,8 +6889,9 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'UTG acts first preflop.',
+      feedbackTitle: 'Well done.',
+      feedbackReason:
+          'UTG acts first preflop, so opening range should stay tighter.',
     ),
     Act0RunnerOptionV1(
       id: 'hj',
@@ -6893,7 +6900,7 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'HJ is after UTG in this order.',
     ),
   ],
@@ -6926,7 +6933,7 @@ final _latePositionRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: 'BTN is late and often acts last after the flop.',
     ),
     Act0RunnerOptionV1(
@@ -6936,7 +6943,7 @@ final _latePositionRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'UTG is early and has less information.',
     ),
   ],
@@ -6968,7 +6975,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Pair',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'Hero has a pair with the board.',
     ),
     Act0RunnerOptionV1(
@@ -6977,7 +6984,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Pair',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'A matching rank makes a pair.',
     ),
   ],
@@ -7024,7 +7031,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flush',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'A flush ranks above a straight.',
     ),
     Act0RunnerOptionV1(
@@ -7033,7 +7040,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flush',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'A straight is strong, but a flush ranks higher.',
     ),
   ],
@@ -7060,7 +7067,7 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Two pair',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Button acts last postflop.',
       feedbackReason: 'Two pair ranks above one pair.',
     ),
     Act0RunnerOptionV1(
@@ -7069,8 +7076,8 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Two pair',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
-      feedbackReason: 'One pair loses to two pair.',
+      feedbackTitle: 'Very close.',
+      feedbackReason: 'Two pair beats one pair, so this hand is second best.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -7107,7 +7114,7 @@ final _showdownRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Win now',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'When everyone folds, the last player wins the pot.',
     ),
     Act0RunnerOptionV1(
@@ -7116,7 +7123,7 @@ final _showdownRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Win now',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'No showdown is needed when everyone else folds.',
     ),
   ],
@@ -7162,7 +7169,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'The best hand wins at showdown.',
     ),
     Act0RunnerOptionV1(
@@ -7171,7 +7178,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'Acting first does not win a showdown.',
     ),
   ],
@@ -7197,7 +7204,7 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Kicker',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'The better kicker can win when the main pair matches.',
     ),
     Act0RunnerOptionV1(
@@ -7206,7 +7213,7 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Kicker',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'Seat name does not break a tied hand.',
     ),
   ],
@@ -7233,7 +7240,7 @@ final _tableObjectsRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'BB is the big blind and posts 1 BB.',
     ),
     Act0RunnerOptionV1(
@@ -7243,7 +7250,7 @@ final _tableObjectsRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'SB posts 0.5 BB. BB posts 1 BB.',
     ),
   ],
@@ -7298,7 +7305,7 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
       isCorrect: true,
       preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'That is the clean first live read. Separate hero cards, shared board, and chips in the middle before choosing anything.',
     ),
@@ -7309,7 +7316,7 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
       preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'The flop has only three shared cards. Five board cards appear only by the river.',
     ),
@@ -7361,7 +7368,7 @@ final _boardCountRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'The river completes five shared board cards.',
     ),
     Act0RunnerOptionV1(
@@ -7370,7 +7377,7 @@ final _boardCountRunner = _readBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'Two is your private card count, not the full board.',
     ),
   ],
@@ -7404,7 +7411,7 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'Your final poker hand is the best five cards.',
     ),
     Act0RunnerOptionV1(
@@ -7413,7 +7420,7 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'You may see seven cards, but only five form the hand.',
     ),
   ],
@@ -7438,7 +7445,8 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Card takeaway.',
-      body: 'Rank compares height. Suit groups cards. Board cards are shared.',
+      body:
+          'Rank compares height. Suit groups cards, and board cards are shared.',
       focusLabels: <String>['Rank', 'Suit', 'Board'],
     ),
   ],
@@ -7457,7 +7465,7 @@ final _actionTrailRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flop: BB checks',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'CO is the cutoff seat.',
       feedbackReason: 'The last trail item is the latest action.',
     ),
     Act0RunnerOptionV1(
@@ -7466,7 +7474,7 @@ final _actionTrailRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flop: BB checks',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Posting blinds happened before the hand developed.',
     ),
   ],
@@ -7505,7 +7513,7 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'River',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'The river comes after the turn.',
     ),
     Act0RunnerOptionV1(
@@ -7514,7 +7522,7 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'River',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'The flop comes before the turn.',
     ),
   ],
@@ -7536,7 +7544,8 @@ final _actionWordsRunner = _whatYouCanDoRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Actions are table verbs.',
-      body: 'Fold exits. Check waits. Call matches. Raise adds.',
+      body:
+          'Fold exits and check waits. Call matches the price, and raise adds more.',
       focusLabels: <String>['Fold', 'Check', 'Call', 'Raise'],
     ),
   ],
@@ -7639,7 +7648,7 @@ final _cutoffSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'CO',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'CO is the cutoff seat before the Button.',
     ),
     Act0RunnerOptionV1(
@@ -7649,7 +7658,7 @@ final _cutoffSeatRunner = _meetTableRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'CO',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'HJ is before CO in the six-seat order.',
     ),
   ],
@@ -7681,7 +7690,7 @@ final _earlyLatePositionRunner = _latePositionRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'UTG is the early preflop seat.',
     ),
     Act0RunnerOptionV1(
@@ -7691,7 +7700,7 @@ final _earlyLatePositionRunner = _latePositionRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'BTN is late and usually has more information.',
     ),
   ],
@@ -7742,7 +7751,7 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Trips',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'Three of a kind ranks above two pair.',
     ),
     Act0RunnerOptionV1(
@@ -7751,7 +7760,7 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Trips',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'Two pair is below three of a kind.',
     ),
   ],
@@ -7777,7 +7786,7 @@ final _straightRankRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five in a row',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: 'A straight uses five ranks in sequence.',
     ),
     Act0RunnerOptionV1(
@@ -7786,7 +7795,7 @@ final _straightRankRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Five in a row',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Same suit makes a flush, not a straight.',
     ),
   ],
@@ -7864,7 +7873,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Tie',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'If the same five cards play, the pot can be split.',
     ),
     Act0RunnerOptionV1(
@@ -7873,7 +7882,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Tie',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'Seat position does not win when the same hand plays.',
     ),
   ],
@@ -7905,7 +7914,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Split',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'A tied pot is split between tied players.',
     ),
     Act0RunnerOptionV1(
@@ -7914,7 +7923,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Split',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'Acting order does not break a tied hand.',
     ),
   ],
@@ -8168,7 +8177,7 @@ final _world2InitiativeDrillRunner = _actionTrailRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'UTG is the early seat.',
       feedbackReason: 'BTN made the aggressive raise. BB only called.',
     ),
     Act0RunnerOptionV1(
@@ -8178,7 +8187,7 @@ final _world2InitiativeDrillRunner = _actionTrailRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Calling continues the hand, but the raise gives BTN initiative.',
     ),
@@ -8212,7 +8221,7 @@ final _world2InitiativeActiveRunner = _world2InitiativeDrillRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'BB is active now, even though BTN has initiative.',
     ),
     Act0RunnerOptionV1(
@@ -8222,7 +8231,7 @@ final _world2InitiativeActiveRunner = _world2InitiativeDrillRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'BTN has initiative, but BB is the active seat now.',
     ),
   ],
@@ -8293,7 +8302,7 @@ final _world2CheckpointRunner = _world2InitiativeDrillRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Hand, seat, action',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'Read hand value, position, and initiative before moving into strategy.',
     ),
@@ -8303,7 +8312,7 @@ final _world2CheckpointRunner = _world2InitiativeDrillRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Hand, seat, action',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'Seat matters, but it is only one part of the context.',
     ),
   ],
@@ -8348,8 +8357,9 @@ final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Premium',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'AA is a premium hand bucket.',
+      feedbackTitle: 'Solid understanding.',
+      feedbackReason:
+          'AA belongs to premium pairs and usually raises for value.',
     ),
     Act0RunnerOptionV1(
       id: 'medium',
@@ -8358,7 +8368,7 @@ final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Premium',
       betterAnswerLabel: 'Premium',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'AA is stronger than a medium hand.',
     ),
   ],
@@ -8392,7 +8402,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Trash',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'J8o from early position belongs in the trash bucket.',
     ),
     Act0RunnerOptionV1(
@@ -8402,7 +8412,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Trash',
       betterAnswerLabel: 'Trash',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: 'Offsuit disconnected hands are not strong starters.',
     ),
   ],
@@ -8496,7 +8506,7 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: 'Weak offsuit hands from early position can simply fold.',
     ),
     Act0RunnerOptionV1(
@@ -8506,7 +8516,7 @@ final _world3EarlyFoldRunner = _world3TrashBucketRunner.copyWith(
       preferredLabel: 'Fold',
       betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Position is early and the hand bucket is too weak.',
     ),
   ],
@@ -8533,7 +8543,7 @@ final _world3FirstInRecapRunner = _world3ButtonOpenRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Calling first in is limping. It is legal, but usually weaker than a clean open-or-fold habit.',
     ),
@@ -8544,7 +8554,7 @@ final _world3FirstInRecapRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Call',
       betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Folding is legal first in. Calling is the passive limp this question asks for.',
     ),
@@ -8589,7 +8599,7 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'KQo can continue in position against a simple open.',
     ),
     Act0RunnerOptionV1(
@@ -8599,7 +8609,7 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
       preferredLabel: 'Call',
       betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'This hand is playable enough to continue in position.',
     ),
   ],
@@ -8685,7 +8695,7 @@ final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'BTN is the late seat.',
       feedbackReason: 'J8o is too weak to continue against the open.',
     ),
     Act0RunnerOptionV1(
@@ -8696,7 +8706,7 @@ final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
       preferredLabel: 'Fold',
       betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Position does not rescue every weak offsuit hand.',
     ),
   ],
@@ -8769,7 +8779,7 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Raise',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'ATo in late position can open an unopened pot.',
     ),
     Act0RunnerOptionV1(
@@ -8780,7 +8790,7 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable move.',
+      feedbackTitle: 'Limp is legal, raise is stronger.',
       feedbackReason:
           'Limping ATo is legal, but raising takes advantage of late position and puts pressure on the blinds.',
     ),
@@ -8852,7 +8862,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN, SB, and BB still act after you',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'That is the real-table transfer. Count the players behind before treating the seat as comfortable.',
     ),
@@ -8863,7 +8873,7 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
       preferredLabel: 'BTN, SB, and BB still act after you',
       betterAnswerLabel: 'BTN, SB, and BB still act after you',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'Cutoff is late, but Button and the blinds still act after hero.',
     ),
@@ -9010,7 +9020,7 @@ final _w1DisciplineCheckpointRunner = _world3DominatedRecapRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Seat context',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Bucket is step one. Seat context is the next check before choosing action.',
     ),
@@ -9021,7 +9031,7 @@ final _w1DisciplineCheckpointRunner = _world3DominatedRecapRunner.copyWith(
       preferredLabel: 'Seat context',
       betterAnswerLabel: 'Seat context',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'One bucket does not force one action. Position changes comfort.',
     ),
@@ -9056,7 +9066,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
       isCorrect: true,
       preferredLabel: 'Trash bucket, clean fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'That is the transfer. J4o from HJ is not a curiosity spot. Name trash, protect chips, and move on.',
     ),
@@ -9067,7 +9077,7 @@ final _w2DisciplineTableNoticeRunner = _w1DisciplineApplyEarlyFoldRunner.copyWit
       preferredLabel: 'Trash bucket, clean fold',
       betterAnswerLabel: 'Trash bucket, clean fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'This is exactly the leak hand-discipline is trying to prevent. J4o does not become playable because it looks fun.',
     ),
@@ -9123,7 +9133,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Strong',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'JJ is a strong hand — second bucket. Very playable, but not premium.',
     ),
@@ -9134,7 +9144,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Strong',
       betterAnswerLabel: 'Strong',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'Premium is reserved for the absolute top hands like AA, KK, and AKs.',
     ),
@@ -9145,7 +9155,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Strong',
       betterAnswerLabel: 'Strong',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'JJ is above medium. Medium hands need more context to play well.',
     ),
@@ -9183,7 +9193,7 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Medium',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'KQo is a medium hand — good enough to play but needs a comfortable spot.',
     ),
@@ -9194,7 +9204,7 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Medium',
       betterAnswerLabel: 'Medium',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Strong hands need less context. KQo wants a good position and a clear frame.',
     ),
@@ -9205,7 +9215,7 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
       preferredLabel: 'Medium',
       betterAnswerLabel: 'Medium',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'KQo is above trash. Two connected high cards have real playable value.',
     ),
@@ -9246,7 +9256,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
     highlightedSeatIds: const <String>['btn'],
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
   ),
-  feedbackTitle: 'Nice read.',
+  feedbackTitle: 'Clean execution.',
   feedbackReason:
       'KQo on the Button can open cleanly when the pot is unopened.',
   options: const <Act0RunnerOptionV1>[
@@ -9257,7 +9267,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'KQo on the Button has enough to open. Folding here wastes a strong seat.',
       repairFocusSeatIds: <String>['btn'],
@@ -9272,7 +9282,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable move.',
+      feedbackTitle: 'Passive line, weaker pressure.',
       feedbackReason:
           'Limping KQo is legal but starts the hand passively. Raising opens the pot and pressures the blinds.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
@@ -9286,7 +9296,7 @@ final _w1MediumOpenRunner = _world3ButtonOpenRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Raise',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Raise is the sharp Button play.',
       feedbackReason: 'KQo on the Button is a clean first-in open.',
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
@@ -9421,7 +9431,7 @@ final _world3CheckpointRunner = _world3SameHandIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bucket, seat, frame',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'That framework keeps preflop choices clear. Next, every bet needs a purpose too.',
     ),
@@ -9432,7 +9442,7 @@ final _world3CheckpointRunner = _world3SameHandIntroRunner.copyWith(
       preferredLabel: 'Bucket, seat, frame',
       betterAnswerLabel: 'Bucket, seat, frame',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'One hand can change action when position or action frame changes.',
     ),
@@ -9463,7 +9473,7 @@ final _w4TableFrameNoticeRunner = _world3FacingOpenIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Facing an open',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'That is the live-table transfer. Name the frame before choosing the action.',
     ),
@@ -9474,7 +9484,7 @@ final _w4TableFrameNoticeRunner = _world3FacingOpenIntroRunner.copyWith(
       preferredLabel: 'Facing an open',
       betterAnswerLabel: 'Facing an open',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'The open already happened, so the clean frame is no longer unopened.',
     ),
@@ -9586,7 +9596,7 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'A value bet wants weaker hands to call.',
     ),
     Act0RunnerOptionV1(
@@ -9596,7 +9606,7 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
       preferredLabel: 'Value',
       betterAnswerLabel: 'Value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'Hero is not trying to fold out everything; weaker hands can pay.',
     ),
@@ -9632,7 +9642,7 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bluff',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'A bluff tries to make better hands fold.',
     ),
     Act0RunnerOptionV1(
@@ -9642,7 +9652,7 @@ final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
       preferredLabel: 'Bluff',
       betterAnswerLabel: 'Bluff',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'Hero missed, so the bet is not asking weaker hands to pay.',
     ),
@@ -9714,7 +9724,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Half-pot asks weaker hands to pay without using a huge size.',
     ),
@@ -9725,7 +9735,7 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       preferredLabel: 'Bet half-pot',
       betterAnswerLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'Checking can miss value when worse hands can call.',
     ),
   ],
@@ -9752,7 +9762,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'Checking can miss value in this simple top-pair spot.',
     ),
     Act0RunnerOptionV1(
@@ -9763,7 +9773,7 @@ final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
       preferredLabel: 'Check',
       betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'The question asks which action misses value; betting is the value action.',
     ),
@@ -9819,7 +9829,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet one-third',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'A one-third bet creates fold pressure at a controlled price.',
     ),
@@ -9830,7 +9840,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
       preferredLabel: 'Bet one-third',
       betterAnswerLabel: 'Bet one-third',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable move.',
+      feedbackTitle: 'Limp is legal, but raise is sharper.',
       feedbackReason:
           'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
     ),
@@ -9857,7 +9867,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Raise is the clean open.',
       feedbackReason:
           'When fold pressure is low, checking avoids a forced bluff.',
     ),
@@ -9869,7 +9879,7 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
       preferredLabel: 'Check',
       betterAnswerLabel: 'Check',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'A pot-size bluff is too ambitious when fold pressure is unclear.',
     ),
@@ -9942,7 +9952,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'The bet makes the next card cost something.',
     ),
     Act0RunnerOptionV1(
@@ -9952,7 +9962,7 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
       preferredLabel: 'Bet half-pot',
       betterAnswerLabel: 'Bet half-pot',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Checking lets villain see the next card for free.',
     ),
   ],
@@ -9977,7 +9987,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Free card',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'Checking allowed villain to continue without paying.',
     ),
     Act0RunnerOptionV1(
@@ -9987,7 +9997,7 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       preferredLabel: 'Free card',
       betterAnswerLabel: 'Free card',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'Villain pays only when Hero bets.',
     ),
   ],
@@ -10102,7 +10112,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'A small price can be worth paying with a real hand.',
     ),
     Act0RunnerOptionV1(
@@ -10112,7 +10122,7 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       preferredLabel: 'Call',
       betterAnswerLabel: 'Call',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'The price is small enough to continue with one pair.',
     ),
   ],
@@ -10151,7 +10161,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason: 'A high price with a weak hand can simply fold.',
     ),
     Act0RunnerOptionV1(
@@ -10162,7 +10172,7 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       preferredLabel: 'Fold',
       betterAnswerLabel: 'Fold',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'Calling pays too much for this weak hand.',
     ),
   ],
@@ -10232,7 +10242,7 @@ final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '2 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: '2 BB into 6 BB is one-third pot.',
     ),
     Act0RunnerOptionV1(
@@ -10242,7 +10252,7 @@ final _world4SmallBetRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: '2 BB',
       betterAnswerLabel: '2 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason: '6 BB into 6 BB is pot-size, not one-third.',
     ),
   ],
@@ -10266,8 +10276,8 @@ final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '3 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: '3 BB into 6 BB is half-pot.',
+      feedbackTitle: 'Spot on.',
+      feedbackReason: 'Into a 6 BB pot, 3 BB is exactly a half-pot size.',
     ),
     Act0RunnerOptionV1(
       id: 'two',
@@ -10276,7 +10286,7 @@ final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: '3 BB',
       betterAnswerLabel: '3 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: '2 BB into 6 BB is one-third pot, not half-pot.',
     ),
     Act0RunnerOptionV1(
@@ -10286,7 +10296,7 @@ final _world4HalfPotRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: '3 BB',
       betterAnswerLabel: '3 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: '6 BB into 6 BB is pot-size, not half-pot.',
     ),
   ],
@@ -10309,7 +10319,7 @@ final _world4PotBetRunner = _world4SizingIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '6 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: '6 BB into 6 BB is a pot-size bet.',
     ),
     Act0RunnerOptionV1(
@@ -10319,7 +10329,7 @@ final _world4PotBetRunner = _world4SizingIntroRunner.copyWith(
       preferredLabel: '6 BB',
       betterAnswerLabel: '6 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: '2 BB is one-third pot here, not pot-size.',
     ),
   ],
@@ -10378,7 +10388,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Purpose and price',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Discipline: fold early trash.',
       feedbackReason:
           'A bet tells a purpose, creates a size, and gives the caller a price. Next, board texture tells you which bet purpose fits.',
     ),
@@ -10389,7 +10399,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       preferredLabel: 'Purpose and price',
       betterAnswerLabel: 'Purpose and price',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Random sizes hide the lesson. Good beginner bets have a clear job.',
     ),
@@ -10445,7 +10455,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Dry',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'Spread ranks and mixed suits make this a dry board.',
     ),
     Act0RunnerOptionV1(
@@ -10455,7 +10465,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       preferredLabel: 'Dry',
       betterAnswerLabel: 'Dry',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'Wet boards show more connected ranks or suit pressure.',
     ),
   ],
@@ -10473,7 +10483,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Wet',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason: 'Connected ranks and two hearts create many changes.',
     ),
     Act0RunnerOptionV1(
@@ -10483,7 +10493,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       preferredLabel: 'Wet',
       betterAnswerLabel: 'Wet',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'This board is connected and suited enough to be wet.',
     ),
   ],
@@ -10545,7 +10555,7 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Disconnected',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason: 'The ranks are far apart, so it is disconnected.',
     ),
     Act0RunnerOptionV1(
@@ -10555,7 +10565,7 @@ final _world5DisconnectedBoardRunner = _world5DryBoardRunner.copyWith(
       preferredLabel: 'Disconnected',
       betterAnswerLabel: 'Disconnected',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason: 'Connected boards have close ranks, not big gaps.',
     ),
   ],
@@ -10581,8 +10591,8 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Connected ranks',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: '9-8-7 are neighboring ranks.',
+      feedbackTitle: 'Well done.',
+      feedbackReason: '9-8-7 are connected ranks, so straight draws are live.',
     ),
     Act0RunnerOptionV1(
       id: 'paired_board',
@@ -10591,7 +10601,7 @@ final _world5ConnectedBoardRunner = _world5WetBoardRunner.copyWith(
       preferredLabel: 'Connected ranks',
       betterAnswerLabel: 'Connected ranks',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'A paired board repeats a rank. This board connects ranks.',
     ),
@@ -10666,7 +10676,7 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flush draw',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason: 'More hearts can complete a flush.',
     ),
     Act0RunnerOptionV1(
@@ -10676,7 +10686,7 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       preferredLabel: 'Flush draw',
       betterAnswerLabel: 'Flush draw',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason: 'The visible clue is same suit, not connected ranks.',
     ),
   ],
@@ -10695,7 +10705,7 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'No',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason: 'Different suits make no obvious flush draw.',
     ),
     Act0RunnerOptionV1(
@@ -10705,7 +10715,7 @@ final _world5NoFlushDrawRunner = _world5TextureIntroRunner.copyWith(
       preferredLabel: 'No',
       betterAnswerLabel: 'No',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'A rainbow flop does not show flush pressure yet.',
     ),
   ],
@@ -10759,7 +10769,7 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Straight draw',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason: 'Nearby ranks create straight outs.',
     ),
     Act0RunnerOptionV1(
@@ -10769,7 +10779,7 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
       preferredLabel: 'Straight draw',
       betterAnswerLabel: 'Straight draw',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason: 'The clue is rank connection, not matching suits.',
     ),
   ],
@@ -10800,7 +10810,7 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'No',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Discipline: open strong late.',
       feedbackReason:
           'The ranks are too far apart for an obvious straight path.',
     ),
@@ -10811,7 +10821,7 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
       preferredLabel: 'No',
       betterAnswerLabel: 'No',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason: 'Straight pressure needs closer ranks.',
     ),
   ],
@@ -10865,7 +10875,7 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Heart',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason: 'A heart can complete the flush.',
     ),
     Act0RunnerOptionV1(
@@ -10875,7 +10885,7 @@ final _world5FlushOutRunner = _world5FlushDrawRunner.copyWith(
       preferredLabel: 'Heart',
       betterAnswerLabel: 'Heart',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason: 'The flush path is hearts, so hearts are the outs.',
     ),
   ],
@@ -10893,8 +10903,8 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       isCorrect: true,
       preferredLabel: '9',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
-      feedbackReason: 'A 9 completes 5-6-7-8-9.',
+      feedbackTitle: 'Strong choice.',
+      feedbackReason: 'With 5-6-7-8 on board, any 9 completes the straight.',
     ),
     Act0RunnerOptionV1(
       id: 'king',
@@ -10903,7 +10913,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       preferredLabel: '9',
       betterAnswerLabel: '9',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason: 'A king does not connect this rank ladder.',
     ),
   ],
@@ -10963,7 +10973,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Draw hit',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'The new heart completes the same flush draw you were already tracking on the flop.',
     ),
@@ -10974,7 +10984,7 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
       preferredLabel: 'Draw hit',
       betterAnswerLabel: 'Draw hit',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'A heart is not blank when the flop already showed a live heart draw.',
     ),
@@ -11004,7 +11014,7 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Draw missed',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'The final card did not complete the same flush draw, so the story ends as a miss.',
     ),
@@ -11015,7 +11025,7 @@ final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
       preferredLabel: 'Draw missed',
       betterAnswerLabel: 'Draw missed',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'No heart arrived on the river, so the tracked heart draw stayed incomplete.',
     ),
@@ -11065,7 +11075,7 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
       betterAnswerLabel:
           'The board got more dangerous, so the old easy-value story needs caution',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'Street-change worlds exist because later cards really do change the draw story. Ignoring the turn is the leak.',
     ),
@@ -11107,7 +11117,7 @@ final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Texture, draw, outs',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Board reading starts with texture, visible draws, and improvement cards. Next, you will group hands into simple ranges.',
     ),
@@ -11129,7 +11139,7 @@ final _world5BoardCheckpointRunner = _world5TextureIntroRunner.copyWith(
       preferredLabel: 'Texture, draw, outs',
       betterAnswerLabel: 'Texture, draw, outs',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason: 'The board gives clues before you guess.',
     ),
   ],
@@ -11160,7 +11170,7 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Range plus stack depth',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Range buckets map likely hands, and stack depth sets the risk profile for those hands.',
     ),
@@ -11182,7 +11192,7 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       preferredLabel: 'Range plus stack depth',
       betterAnswerLabel: 'Range plus stack depth',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'Clean planning comes from range + texture + stack depth, not guessing.',
     ),
@@ -11233,7 +11243,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
       betterAnswerLabel:
           'The board got wetter, so the old thin-value plan needs caution',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'The new turn card changed how many stronger and drawing hands can exist. Treating it like the same dry board is the leak.',
     ),
@@ -11297,7 +11307,7 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'Top pair with the top kicker is a strong value hand on this dry board.',
     ),
@@ -11308,7 +11318,7 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
       preferredLabel: 'Value',
       betterAnswerLabel: 'Value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'K-Q hit the king. Bluff candidates are hands that missed and can still fold opponents out.',
     ),
@@ -11319,7 +11329,7 @@ final _w6ValueDryBoardRunner = _w6RangeIntroRunner.copyWith(
       preferredLabel: 'Value',
       betterAnswerLabel: 'Value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'K-Q flopped top pair. Missed hands do not connect to the board at all.',
     ),
@@ -11341,7 +11351,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Missed',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Missed: no pair, no draw.',
       feedbackReason:
           'J-T has no pair and no clear draw on K-7-2. It is in the missed bucket.',
     ),
@@ -11364,7 +11374,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'Value hands connect to the board. J-T has no pair or flush draw here.',
     ),
@@ -11475,7 +11485,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Missed',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'K-Q has no pair and no draw on 8-7-6. It missed this board completely.',
     ),
@@ -11498,7 +11508,7 @@ final _w6WrongBoardRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'Missed',
       betterAnswerLabel: 'Missed',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'K-Q did not pair on 8-7-6. Only hands that connect to the board '
           'carry value betting equity.',
@@ -11520,7 +11530,7 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           '9-8 flopped two pair. Two pair is a strong value hand on any texture.',
     ),
@@ -11531,7 +11541,7 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'Value',
       betterAnswerLabel: 'Value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           '9-8 has real equity. Bluff candidates are hands with little made equity '
           'but enough fold pressure potential.',
@@ -11543,7 +11553,7 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'Value',
       betterAnswerLabel: 'Value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Two pair is a strong made hand. Missed hands have no pair and no useful draw.',
     ),
@@ -11563,7 +11573,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'It can slide toward missed',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Street changes can remove pressure and push a former bluff candidate closer to missed.',
     ),
@@ -11574,7 +11584,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       preferredLabel: 'It can slide toward missed',
       betterAnswerLabel: 'It can slide toward missed',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'A brick turn does not create value. Often it removes pressure instead.',
     ),
@@ -11649,7 +11659,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'Top pair good kicker bets to get value from worse hands that will call.',
     ),
@@ -11660,7 +11670,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable move.',
+      feedbackTitle: 'Legal check, lost value.',
       feedbackReason:
           'Checking is legal but leaves value behind. Strong value hands build the pot '
           'by betting, not by waiting.',
@@ -11672,7 +11682,7 @@ final _w6ValueRangeActionRunner = _w6PressureLinesIntroRunner.copyWith(
       preferredLabel: 'Bet for value',
       betterAnswerLabel: 'Bet for value',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Folding top pair good kicker on a dry board gives up a very profitable spot.',
     ),
@@ -11694,7 +11704,7 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bluff candidate',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'A-Q has two overcards and ace-blocker. It can represent pressure '
           'without made-hand equity.',
@@ -11718,7 +11728,7 @@ final _w6BluffCandidateRunner = _w6PressureLinesIntroRunner.copyWith(
       preferredLabel: 'Bluff candidate',
       betterAnswerLabel: 'Bluff candidate',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'A-Q has no pair here. Value hands have made equity that opponents '
           'will call with worse.',
@@ -11740,7 +11750,7 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Usually check or fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Pure missed hands conserve chips more often than they force action.',
     ),
@@ -11845,7 +11855,7 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
       preferredLabel: '16 combos',
       betterAnswerLabel: '16 combos',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'Six combos is the count for a pocket pair. Two different ranks like A-K appear much more often.',
     ),
@@ -11887,7 +11897,7 @@ final _w6PairComboRunner = _w6ComboCountsIntroRunner.copyWith(
       preferredLabel: '6 combos',
       betterAnswerLabel: '6 combos',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'Sixteen combos belongs to two different ranks like A-K, not to one pocket pair.',
     ),
@@ -11929,7 +11939,7 @@ final _w6ComboWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
       preferredLabel: 'A-K appears more often',
       betterAnswerLabel: 'A-K appears more often',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'Pocket pairs have only 6 combos. Broad non-pair families like A-K are denser.',
     ),
@@ -11992,7 +12002,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '30 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'The effective stack is always the smaller stack. Here only 30 BB can really go into the pot.',
     ),
@@ -12003,7 +12013,7 @@ final _w7EffectiveStackThirtyRunner = _w7EffectiveStackIntroRunner.copyWith(
       preferredLabel: '30 BB',
       betterAnswerLabel: '30 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'Your own stack can be deeper, but the hand risk is capped by the smaller stack across from you.',
     ),
@@ -12034,7 +12044,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '100 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Bucket first: ask before acting.',
       feedbackReason:
           'When both stacks are equal, that shared stack is the effective stack.',
     ),
@@ -12056,7 +12066,7 @@ final _w7EffectiveStackEvenRunner = _w7EffectiveStackIntroRunner.copyWith(
       preferredLabel: '100 BB',
       betterAnswerLabel: '100 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Add the stacks and you get total chips, not effective stack. The hand still plays 100 BB deep.',
     ),
@@ -12076,7 +12086,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       isCorrect: true,
       preferredLabel: '18 BB effective stack',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'That is the real live-table risk. The smaller stack sets the hand depth.',
     ),
@@ -12087,7 +12097,7 @@ final _w7EffectiveStackTableNoticeRunner = _w7EffectiveStackIntroRunner.copyWith
       preferredLabel: '18 BB effective stack',
       betterAnswerLabel: '18 BB effective stack',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'Your deeper stack matters less than the smaller stack that actually caps what can go in.',
     ),
@@ -12154,7 +12164,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '20 BB',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'At 20 BB, the hand plays more simply. Less money is left behind, so the decision tree is shorter.',
     ),
@@ -12176,7 +12186,7 @@ final _w7TwentyBbWiderRunner = _w7DepthShiftIntroRunner.copyWith(
       preferredLabel: '20 BB',
       betterAnswerLabel: '20 BB',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Stack depth changes both risk and commitment. The same hand does not play the same way at every depth.',
     ),
@@ -12196,7 +12206,7 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'More room and more risk',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Deep stacks create more room to maneuver, but they also punish weak top pairs and dominated hands more often.',
     ),
@@ -12207,7 +12217,7 @@ final _w7HundredBbTighterRunner = _w7DepthShiftIntroRunner.copyWith(
       preferredLabel: 'More room and more risk',
       betterAnswerLabel: 'More room and more risk',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'Deep stacks do not remove risk. They increase it because more money can go in across more streets.',
     ),
@@ -12238,7 +12248,7 @@ final _w7FortyBbMiddleRunner = _w7DepthShiftIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Some room, but not carefree deep',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           '40 BB sits in the middle. You still have room, but depth still creates future-street risk.',
     ),
@@ -12316,7 +12326,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'One bet can commit the hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'SPR 2 means there is not much room left. One bet can make the hand close to committed.',
     ),
@@ -12327,7 +12337,7 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       preferredLabel: 'One bet can commit the hand',
       betterAnswerLabel: 'One bet can commit the hand',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'That is the opposite of low SPR. Low SPR reduces room and speeds up commitment.',
     ),
@@ -12358,7 +12368,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'More room to maneuver',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'High SPR leaves more stack behind, so you still have room to bet, check, fold, or plan later streets.',
     ),
@@ -12369,7 +12379,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
       preferredLabel: 'More room to maneuver',
       betterAnswerLabel: 'More room to maneuver',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'Immediate commitment is a low-SPR feature. High SPR creates more room, not less.',
     ),
@@ -12400,7 +12410,7 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Middle ground: some room, some commitment',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'SPR 4 often means you still have choices, but commitment pressure is already starting to matter.',
     ),
@@ -12479,7 +12489,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: '6-max',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Board fit: sharp read.',
       feedbackReason:
           '6-max widens many opens because fewer players are left behind to wake up with premiums.',
     ),
@@ -12490,7 +12500,7 @@ final _w7SixMaxWiderRunner = _w7FormatPressureIntroRunner.copyWith(
       preferredLabel: '6-max',
       betterAnswerLabel: '6-max',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'Full ring has more players left to act, so early-position ranges usually tighten rather than widen.',
     ),
@@ -12521,7 +12531,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Range tightens',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'Full ring means more players behind. That added pressure usually tightens early-position opens.',
     ),
@@ -12532,7 +12542,7 @@ final _w7FullRingTighterRunner = _w7FormatPressureIntroRunner.copyWith(
       preferredLabel: 'Range tightens',
       betterAnswerLabel: 'Range tightens',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'More players behind do not widen the range. They increase the chance of running into strength and usually tighten it.',
     ),
@@ -12563,7 +12573,7 @@ final _w7FormatTableNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Count more players behind and tighten early opens a bit',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'That is the real-table transfer: more players behind usually means tighter early-position pressure.',
     ),
@@ -12644,7 +12654,7 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Range plus stack risk',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Good planning now needs both parts: what range is present and how much risk that depth creates. Tournament pressure is the next step.',
     ),
@@ -12666,7 +12676,7 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
       preferredLabel: 'Range plus stack risk',
       betterAnswerLabel: 'Range plus stack risk',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Raw chip count alone is too thin. Effective stack, SPR, and format explain the real pressure better than chips by themselves.',
     ),
@@ -12707,7 +12717,7 @@ final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Survival pressure matters more',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'Tournament chips are tied to staying alive. You still seek EV, but survival pressure changes which thin spots are worth taking.',
     ),
@@ -12718,7 +12728,7 @@ final _w9CashVsTournamentRunner = _w9SurvivalIntroRunner.copyWith(
       preferredLabel: 'Survival pressure matters more',
       betterAnswerLabel: 'Survival pressure matters more',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'Cash and tournament contexts are not the same. Tournament life creates extra downside for busting.',
     ),
@@ -12749,7 +12759,7 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Take a reasonable jam or reshove spot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'At very low stack depth, survival comes from acting before you get blinded out. Controlled urgency beats passive waiting.',
     ),
@@ -12771,7 +12781,7 @@ final _w9ShortStackSurvivalRunner = _w9SurvivalIntroRunner.copyWith(
       preferredLabel: 'Take a reasonable jam or reshove spot',
       betterAnswerLabel: 'Take a reasonable jam or reshove spot',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Open-fold lines with very short stacks burn too many chips. Tournament pressure rewards cleaner commit-or-fold plans.',
     ),
@@ -12791,7 +12801,7 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Tournament table',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Tournament life adds elimination risk. That makes thin stack-offs more expensive than in reloadable cash spots.',
     ),
@@ -12802,7 +12812,7 @@ final _w9SurvivalTradeoffRunner = _w9SurvivalIntroRunner.copyWith(
       preferredLabel: 'Tournament table',
       betterAnswerLabel: 'Tournament table',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Close call.',
       feedbackReason:
           'Cash chips still matter, but reload makes busting less final. Tournament pressure creates the bigger penalty for thin stack-offs.',
     ),
@@ -12864,7 +12874,7 @@ final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Use controlled urgency',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'Red-zone stacks cannot drift. Tournament pressure rewards timely commitment when edges appear.',
     ),
@@ -12886,7 +12896,7 @@ final _w9MZoneRedRunner = _w9MRatioIntroRunner.copyWith(
       preferredLabel: 'Use controlled urgency',
       betterAnswerLabel: 'Use controlled urgency',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Nearly there.',
       feedbackReason:
           'Short tournament stacks often play poorly as passive flats. Clearer commit-or-fold lines are usually stronger.',
     ),
@@ -12906,7 +12916,7 @@ final _w9MZoneGreenRunner = _w9MRatioIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Patience and table selection',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Effective stack: correct.',
       feedbackReason:
           'With room in green zone, you can pass thin spots and choose cleaner pressure lines.',
     ),
@@ -12948,7 +12958,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Prepare action windows before red-zone panic',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'Yellow zone is not emergency mode yet, but it is no longer pure patience. Good tournament play starts planning cleaner shove, reshove, and steal windows here.',
     ),
@@ -12959,7 +12969,7 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       preferredLabel: 'Prepare action windows before red-zone panic',
       betterAnswerLabel: 'Prepare action windows before red-zone panic',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'One more step.',
       feedbackReason:
           'Waiting until the stack is critical often removes good options. Yellow zone is where you prepare instead of drift.',
     ),
@@ -13027,7 +13037,7 @@ final _w9MediumStackTightenRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Tighten marginal calls',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'Risk premium near the bubble means medium stacks should avoid thin call-offs and protect tournament life.',
     ),
@@ -13038,7 +13048,7 @@ final _w9MediumStackTightenRunner = _w9BubblePressureIntroRunner.copyWith(
       preferredLabel: 'Tighten marginal calls',
       betterAnswerLabel: 'Tighten marginal calls',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Getting warmer.',
       feedbackReason:
           'Pure chip-EV calls can be too loose near bubble pressure. Tournament survival increases the cost of busting.',
     ),
@@ -13069,7 +13079,7 @@ final _w9BigStackLeverageRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Apply selective open pressure',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Big stacks can leverage bubble pressure because medium stacks cannot call as freely.',
     ),
@@ -13111,7 +13121,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Still take practical jam spots before blinded out',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'Bubble pressure matters, but short stacks cannot fold forever. Survival still needs practical action windows before the stack disappears.',
     ),
@@ -13133,7 +13143,7 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
       preferredLabel: 'Still take practical jam spots before blinded out',
       betterAnswerLabel: 'Still take practical jam spots before blinded out',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'On the right track.',
       feedbackReason:
           'Calling off light near bubble pressure is still expensive. The better plan is selective action, not loose stack-offs.',
     ),
@@ -13164,7 +13174,7 @@ final _w9CheckpointSurvivalLineRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Disciplined urgency in reasonable spots',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Good tournament pressure play combines survival with timely action, not passive waiting.',
     ),
@@ -13206,7 +13216,7 @@ final _w9CheckpointZoneLineRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Red-zone player',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Lower M-ratio means fewer orbits and higher urgency. Red-zone stacks need earlier action windows.',
     ),
@@ -13248,7 +13258,7 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Tighten defend and avoid thin all-ins',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'Bubble risk premium raises the bar for medium-stack stack-offs against covering stacks.',
     ),
@@ -13259,7 +13269,7 @@ final _w9CheckpointBubbleLineRunner = _w9BubblePressureIntroRunner.copyWith(
       preferredLabel: 'Tighten defend and avoid thin all-ins',
       betterAnswerLabel: 'Tighten defend and avoid thin all-ins',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Good direction.',
       feedbackReason:
           'Near bubble, tournament pressure changes the downside of busting. Pure chip-EV defense can be too loose.',
     ),
@@ -13309,7 +13319,7 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Map pressure first, then adjust by player',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: '6-max: wider open.',
       feedbackReason:
           'That sequence is the bridge to World 10: pressure context first, player-specific exploit second.',
     ),
@@ -13331,7 +13341,7 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
       preferredLabel: 'Map pressure first, then adjust by player',
       betterAnswerLabel: 'Map pressure first, then adjust by player',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Almost got it.',
       feedbackReason:
           'Raw hand strength is not enough in tournament phases. Pressure context changes both your range and theirs.',
     ),
@@ -13358,7 +13368,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
       preferredLabel:
           'Medium stack faces bubble pressure and cannot call as freely',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'That is the transfer. Bubble pressure hits the medium stack harder, while the covering stack can apply leverage.',
     ),
@@ -13371,7 +13381,7 @@ final _w9TablePressureNoticeRunner = _w9BubblePressureIntroRunner.copyWith(
       betterAnswerLabel:
           'Medium stack faces bubble pressure and cannot call as freely',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Very close.',
       feedbackReason:
           'Tournament life and bubble risk change this spot. Cash-style call freedom is too loose here.',
     ),
@@ -13433,7 +13443,7 @@ final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Tight-folding profile (nit)',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'Frequent folds and low aggression map to a tight profile. That supports selective steal pressure.',
     ),
@@ -13475,7 +13485,7 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Loose-passive caller',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Frequent calls with low raise rate is the classic loose-passive tendency.',
     ),
@@ -13517,7 +13527,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Over-aggressive bluffer',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'Repeated thin barrels and raise-heavy pressure suggest an over-aggressive profile worth tagging before you widen bluff-catches.',
     ),
@@ -13591,7 +13601,7 @@ final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Open slightly wider in late position',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Against overfolders, wider late opens capture blinds more often with low resistance.',
     ),
@@ -13633,7 +13643,7 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Value-bet heavier, bluff less often',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Overcallers pay value and resist bluffs. Shift the mix toward value first.',
     ),
@@ -13675,7 +13685,7 @@ final _w10VsStickyDefenderTightenStealsRunner = _w10OneLeverIntroRunner.copyWith
       isCorrect: true,
       preferredLabel: 'Tighten the weakest steals and keep stronger value',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'If blinds defend too wide, weak auto-steals lose value. Keep the exploit specific by trimming trash and preserving stronger opens.',
     ),
@@ -13748,7 +13758,7 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bluff-catch a bit wider with blockers',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Full ring: tighten early.',
       feedbackReason:
           'Against overbluffs, selective wider bluff-catching is profitable when your line blocks value combos.',
     ),
@@ -13790,7 +13800,7 @@ final _w10UnderbluffFoldMoreRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold more marginal bluff-catchers',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'If bluff frequency is too low, marginal calls lose EV. Disciplined folds become the exploit.',
     ),
@@ -13832,7 +13842,7 @@ final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Make only a small adjustment and keep watching',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'Two hands can justify attention, not a full strategy swing. Small exploit probes plus more evidence keep your line disciplined.',
     ),
@@ -13885,7 +13895,7 @@ final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Choose one primary tendency and act on it',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Prioritizing one tendency keeps the exploit coherent and measurable before layering more changes.',
     ),
@@ -13927,7 +13937,7 @@ final _w10CheckpointLeverLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Widen late steals slightly',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'That is a clear one-lever exploit against fold-heavy blinds and is easy to track.',
     ),
@@ -13969,7 +13979,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
       isCorrect: true,
       preferredLabel: 'Make a small adjustment and gather more evidence',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Guardrails mean respecting uncertainty. Small exploit moves plus more data beats extreme reactions.',
     ),
@@ -14028,7 +14038,7 @@ final _world10PlayerAdjustmentCheckpointRunner = _w10ExploitGuardrailsIntroRunne
       isCorrect: true,
       preferredLabel: 'Structured exploit before transfer',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'That is the W10 bridge to W11: structured adaptation first, then robust transfer across live play conditions.',
     ),
@@ -14076,7 +14086,7 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Widen late steals slightly and keep the change small',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'That is the clean transfer: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.',
     ),
@@ -14147,7 +14157,7 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'One measurable focus for the whole session',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Stack risk: correct.',
       feedbackReason:
           'A single measurable focus transfers training into real play with less mental overload.',
     ),
@@ -14189,7 +14199,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Narrow to one transfer goal next session',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'Transfer improves when you narrow scope and collect cleaner evidence on one behavior.',
     ),
@@ -14262,7 +14272,7 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Widen late steals slightly',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'This is a direct trigger-to-lever transfer with clear evidence and low complexity.',
     ),
@@ -14304,7 +14314,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet value heavier and trim bluffs',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Against overcalls, value-heavy transfer lines outperform bluff-heavy defaults.',
     ),
@@ -14378,7 +14388,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Select one repeated leak as priority',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'Choosing one repeated leak gives the highest transfer value for the next focused session.',
     ),
@@ -14420,7 +14430,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'If villain underbluffs, fold marginal bluff-catchers',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Specific if-then repair targets transfer directly into live decisions better than generic intentions.',
     ),
@@ -14473,7 +14483,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Set one low-friction focus target',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Low-energy sessions still transfer well when focus is clear, small, and measurable.',
     ),
@@ -14515,7 +14525,7 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Activate one trigger-action lever now',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'Single trigger-action execution keeps transfer disciplined and observable in real play.',
     ),
@@ -14557,7 +14567,7 @@ final _w11CheckpointReviewLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Write one priority leak and one fix for tomorrow',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Survival: tournament pressure matters.',
       feedbackReason:
           'Transfer compounds when review creates one actionable output that directly shapes the next session plan.',
     ),
@@ -14617,7 +14627,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'A repeatable daily transfer loop',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'That is the intended endpoint: practical, repeatable transfer from learning into daily table decisions.',
     ),
@@ -14681,7 +14691,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Review the decision process before judging result',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'One reveal does not invalidate disciplined logic. Process review protects you from outcome bias.',
     ),
@@ -14723,7 +14733,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flag the loose call as a possible leak',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Good results can mask weak process. Flagging the decision keeps your learning honest.',
     ),
@@ -14797,7 +14807,7 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Run short reset protocol before next major spot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Well done.',
       feedbackReason:
           'A fast reset protects your next decisions from emotional carryover.',
     ),
@@ -14839,7 +14849,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Log leak briefly and reset to current hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Excellent spot.',
       feedbackReason:
           'Quick logging plus reset preserves learning without carrying emotional noise into next hands.',
     ),
@@ -14912,7 +14922,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Stick to process and planned exploit line',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Spot on.',
       feedbackReason:
           'Process-led confidence ignores ego hooks and preserves decision quality.',
     ),
@@ -14954,7 +14964,7 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
       isCorrect: true,
       preferredLabel: 'Pause briefly on high-EV decision nodes',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Clean execution.',
       feedbackReason:
           'Small targeted pauses preserve discipline where it matters most without killing flow.',
     ),
@@ -15009,7 +15019,7 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       isCorrect: true,
       preferredLabel: 'Audit process first, then outcome',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'M-ratio: urgency zone read.',
       feedbackReason:
           'That sequence keeps you grounded through variance and supports long-term growth.',
     ),
@@ -15051,7 +15061,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       isCorrect: true,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Sharp read.',
       feedbackReason:
           'Reset and re-anchor protects next decisions without derailing session rhythm.',
     ),
@@ -15093,7 +15103,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       isCorrect: true,
       preferredLabel: 'Take only evidence-backed lines',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Strong choice.',
       feedbackReason:
           'Evidence-first discipline is the stable bridge into deeper strategic worlds.',
     ),
@@ -15153,7 +15163,7 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       isCorrect: true,
       preferredLabel: 'A stable bridge into deeper strategy',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Nice read.',
+      feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Mindset stability is what lets complex strategic lessons transfer instead of collapsing under pressure.',
     ),

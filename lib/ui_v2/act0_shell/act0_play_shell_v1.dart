@@ -14,20 +14,11 @@ Color _groupIconColor(String groupId) {
   return Act0ShellTokensV1.info;
 }
 
-bool _isRuLocaleV1(BuildContext context) =>
-    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
-
 String _playCopyV1(
   BuildContext context,
   String atomId, {
   required String fallback,
 }) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
-
-String _playLineV1(
-  BuildContext context, {
-  required String en,
-  required String ru,
-}) => _isRuLocaleV1(context) ? ru : en;
 
 String _playTaskLineV1(BuildContext _context, Act0PracticeGroupV1 group) =>
     group.subtitle;
@@ -35,61 +26,89 @@ String _playTaskLineV1(BuildContext _context, Act0PracticeGroupV1 group) =>
 String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
   if (!group.isEnabled) {
     if (group.groupId == 'weak_spots') {
-      return _playLineV1(
+      return _playCopyV1(
         context,
-        en: 'No active fixes',
-        ru: 'Нет активных фиксов',
+        'play_action_no_active_fixes',
+        fallback: 'No active fixes',
       );
     }
     return _playCopyV1(context, 'play_later_cta', fallback: 'Later');
   }
   return switch (group.groupId) {
-    'daily' => _playLineV1(
+    'daily' => _playCopyV1(
       context,
-      en: 'Start daily set',
-      ru: 'Запустить дневную серию',
+      'play_action_start_daily_set',
+      fallback: 'Start daily set',
     ),
-    'weak_spots' => _playLineV1(
+    'weak_spots' => _playCopyV1(
       context,
-      en: 'Fix next leak',
-      ru: 'Исправить следующий сбой',
+      'play_action_fix_next_leak',
+      fallback: 'Fix next leak',
     ),
-    'continue' => _playLineV1(
+    'continue' => _playCopyV1(
       context,
-      en: 'Resume route',
-      ru: 'Вернуться в маршрут',
+      'play_action_resume_route',
+      fallback: 'Resume route',
     ),
-    'placement' => _playLineV1(
+    'placement' => _playCopyV1(
       context,
-      en: 'Run check',
-      ru: 'Запустить проверку',
+      'play_action_run_check',
+      fallback: 'Run check',
     ),
-    _ => _playLineV1(context, en: 'Open', ru: 'Открыть'),
+    _ => _playCopyV1(context, 'play_action_open', fallback: 'Open'),
   };
 }
 
 String _playTileBadgeV1(BuildContext context, Act0PracticeGroupV1 group) {
   return switch (group.groupId) {
-    'daily' => _playLineV1(context, en: 'Today', ru: 'Сегодня'),
-    'weak_spots' => _playLineV1(context, en: 'Repair', ru: 'Фикс'),
-    'continue' => _playLineV1(context, en: 'Route', ru: 'Маршрут'),
-    'placement' => _playLineV1(context, en: 'Skill check', ru: 'Skill check'),
-    'actions' => _playLineV1(context, en: 'Decisions', ru: 'Решения'),
-    'positions' => _playLineV1(context, en: 'Seats', ru: 'Позиции'),
-    'streets' => _playLineV1(context, en: 'Streets', ru: 'Улицы'),
-    'rankings' => _playLineV1(context, en: 'Rankings', ru: 'Ранги'),
-    'showdown' => _playLineV1(context, en: 'Showdown', ru: 'Шоудаун'),
-    _ => _playLineV1(context, en: 'Pack', ru: 'Пак'),
+    'daily' => _playCopyV1(context, 'play_badge_today', fallback: 'Today'),
+    'weak_spots' => _playCopyV1(
+      context,
+      'play_badge_repair',
+      fallback: 'Repair',
+    ),
+    'continue' => _playCopyV1(context, 'play_badge_route', fallback: 'Route'),
+    'placement' => _playCopyV1(
+      context,
+      'play_badge_skill_check',
+      fallback: 'Skill check',
+    ),
+    'actions' => _playCopyV1(
+      context,
+      'play_badge_decisions',
+      fallback: 'Decisions',
+    ),
+    'positions' => _playCopyV1(context, 'play_badge_seats', fallback: 'Seats'),
+    'streets' => _playCopyV1(
+      context,
+      'play_badge_streets',
+      fallback: 'Streets',
+    ),
+    'rankings' => _playCopyV1(
+      context,
+      'play_badge_rankings',
+      fallback: 'Rankings',
+    ),
+    'showdown' => _playCopyV1(
+      context,
+      'play_badge_showdown',
+      fallback: 'Showdown',
+    ),
+    _ => _playCopyV1(context, 'play_badge_pack', fallback: 'Pack'),
   };
 }
 
 String _playTileTitleV1(BuildContext context, Act0PracticeGroupV1 group) {
   return switch (group.groupId) {
-    'placement' => _playLineV1(context, en: 'Skill check', ru: 'Skill check'),
-    'continue' => _playLineV1(
+    'placement' => _playCopyV1(
       context,
-      en: 'Resume route',
-      ru: 'Вернуться в маршрут',
+      'play_badge_skill_check',
+      fallback: 'Skill check',
+    ),
+    'continue' => _playCopyV1(
+      context,
+      'play_action_resume_route',
+      fallback: 'Resume route',
     ),
     _ => group.title,
   };
@@ -172,12 +191,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       if (quickDrillGroup != null) quickDrillGroup,
       if (fixLeakGroup != null) fixLeakGroup,
     ].where((group) => featuredGroup?.groupId != group.groupId).toList();
-    final topicShelfGroups = <Act0PracticeGroupV1>[
-      ...topicGroups,
-      if (placementGroup != null &&
-          featuredGroup?.groupId != placementGroup.groupId)
-        placementGroup,
-    ];
+    final topicShelfGroups = <Act0PracticeGroupV1>[...topicGroups];
 
     return ListView(
       key: const Key('act0_shell_play_screen'),
@@ -193,17 +207,13 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           subtitle: _playCopyV1(
             context,
             'play_screen_subtitle',
-            fallback: _playLineV1(
-              context,
-              en: 'Fast drills and focused packs.',
-              ru: 'Быстрые дриллы и сфокусированные паки.',
-            ),
+            fallback: 'Fast drills and focused packs.',
           ),
           subtitleKey: const Key('act0_shell_play_subtitle'),
-          eyebrow: _playLineV1(
+          eyebrow: _playCopyV1(
             context,
-            en: 'Quick practice',
-            ru: 'Быстрая практика',
+            'play_quick_practice_label',
+            fallback: 'Quick practice',
           ),
         ),
         if (featuredGroup != null) ...[
@@ -218,19 +228,25 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             masteryLabel: widget.masteryLabel,
             onStartGroup: widget.onStartGroup,
           ),
+          if (featuredGroup.groupId == 'weak_spots' &&
+              !featuredGroup.isEnabled) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
+          ],
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ] else ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _PlayIntroCardV1(
-            title: _playLineV1(
+            title: _playCopyV1(
               context,
-              en: 'Train without reopening lessons.',
-              ru: 'Тренируйся без повторного входа в уроки.',
+              'play_intro_title',
+              fallback: 'Train without reopening lessons.',
             ),
-            body: _playLineV1(
+            body: _playCopyV1(
               context,
-              en: 'Quick drills first. Topic packs when you want a focused set.',
-              ru: 'Сначала быстрые дриллы. Ниже паки, когда нужен точечный сет.',
+              'play_intro_body',
+              fallback:
+                  'Quick drills first. Topic packs when you want a focused set.',
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -238,15 +254,15 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
         if (activeGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
           if (activeGroups.isNotEmpty) ...[
             _SectionHeaderV1(
-              label: _playLineV1(
+              label: _playCopyV1(
                 context,
-                en: 'Return loop',
-                ru: 'Возвратный цикл',
+                'play_return_loop_label',
+                fallback: 'Return loop',
               ),
-              hint: _playLineV1(
+              hint: _playCopyV1(
                 context,
-                en: 'One short rep now. Then go back to the route.',
-                ru: 'Один короткий повтор сейчас. Потом обратно в маршрут.',
+                'play_return_loop_hint',
+                fallback: 'One short rep now. Then go back to the route.',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -259,19 +275,23 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
                 onStartGroup: widget.onStartGroup,
               ),
             ),
+            if (fixLeakGroup != null && !fixLeakGroup.isEnabled) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
+            ],
             const SizedBox(height: Act0ShellTokensV1.gapLg),
           ],
           if (topicShelfGroups.isNotEmpty) ...[
             _SectionHeaderV1(
-              label: _playLineV1(
+              label: _playCopyV1(
                 context,
-                en: 'Topic packs',
-                ru: 'Паки по темам',
+                'play_topic_packs_label',
+                fallback: 'Topic packs',
               ),
-              hint: _playLineV1(
+              hint: _playCopyV1(
                 context,
-                en: 'Choose one skill family and run a focused set.',
-                ru: 'Выбери один тип навыка и пройди сфокусированный сет.',
+                'play_topic_packs_hint',
+                fallback: 'Choose one skill family and run a focused set.',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -843,29 +863,29 @@ class _PracticeTileCardV1 extends StatelessWidget {
     final accentColor = _groupIconColor(group.groupId);
     final facts = _playTileFactsV1(group);
     final compactSubtitle = switch (group.groupId) {
-      'daily' => _playLineV1(
+      'daily' => _playCopyV1(
         context,
-        en: 'One short set to stay warm.',
-        ru: 'Короткий сет, чтобы держать ритм.',
+        'play_tile_daily_subtitle',
+        fallback: 'One short set to stay warm.',
       ),
-      'weak_spots' => _playLineV1(
+      'weak_spots' => _playCopyV1(
         context,
-        en: enabled
+        enabled
+            ? 'play_tile_weak_spots_enabled_subtitle'
+            : 'play_tile_weak_spots_disabled_subtitle',
+        fallback: enabled
             ? 'Fix the mistake that keeps repeating.'
             : 'New mistakes will show up here.',
-        ru: enabled
-            ? 'Исправь ошибку, которая повторяется.'
-            : 'Новые ошибки будут появляться здесь.',
       ),
-      'continue' => _playLineV1(
+      'continue' => _playCopyV1(
         context,
-        en: 'Go back to your best next step.',
-        ru: 'Вернись к следующему лучшему шагу.',
+        'play_tile_continue_subtitle',
+        fallback: 'Go back to your best next step.',
       ),
-      'placement' => _playLineV1(
+      'placement' => _playCopyV1(
         context,
-        en: 'Short check before tuning your route.',
-        ru: 'Короткая проверка перед настройкой маршрута.',
+        'play_tile_placement_subtitle',
+        fallback: 'Short check before tuning your route.',
       ),
       _ => group.subtitle,
     };
@@ -1019,10 +1039,14 @@ class _PlayLaneIntroV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allTopicsLabel = localeIsRu ? 'Все темы' : 'All topics';
+    final allTopicsLabel = _playCopyV1(
+      context,
+      'play_all_topics_label',
+      fallback: 'All topics',
+    );
     final subtitle = selectedTopic == allTopicsLabel
         ? (localeIsRu
-              ? '$visibleLaneCount линий готовы. Выбери одну и сделай несколько репов.'
+              ? '$visibleLaneCount линий готовы. Выбери одну и сделай несколько повторов.'
               : '$visibleLaneCount lanes ready. Pick one and run a few reps.')
         : (localeIsRu
               ? '$visibleLaneCount ${visibleLaneCount == 1 ? 'линия' : 'линии'} внутри темы $selectedTopic.'
@@ -1072,35 +1096,35 @@ class _TopicPracticeCardV1 extends StatelessWidget {
     final enabled = group.isEnabled;
     final accentColor = Act0ShellTokensV1.info;
     final compactSubtitle = switch (group.groupId) {
-      'placement' => _playLineV1(
+      'placement' => _playCopyV1(
         context,
-        en: 'Short check before you tune your route.',
-        ru: 'Короткая проверка перед настройкой маршрута.',
+        'play_topic_placement_subtitle',
+        fallback: 'Short check before you tune your route.',
       ),
-      'actions' => _playLineV1(
+      'actions' => _playCopyV1(
         context,
-        en: 'Choose fold, check, call, or raise faster.',
-        ru: 'Быстрее выбирай fold, check, call или raise.',
+        'play_topic_actions_subtitle',
+        fallback: 'Choose fold, check, call, or raise faster.',
       ),
-      'positions' => _playLineV1(
+      'positions' => _playCopyV1(
         context,
-        en: 'Read seats and action order cleanly.',
-        ru: 'Чисто читай позиции и порядок хода.',
+        'play_topic_positions_subtitle',
+        fallback: 'Read seats and action order cleanly.',
       ),
-      'streets' => _playLineV1(
+      'streets' => _playCopyV1(
         context,
-        en: 'Read the hand street by street.',
-        ru: 'Читай раздачу по улицам шаг за шагом.',
+        'play_topic_streets_subtitle',
+        fallback: 'Read the hand street by street.',
       ),
-      'rankings' => _playLineV1(
+      'rankings' => _playCopyV1(
         context,
-        en: 'Compare hand strength on real boards.',
-        ru: 'Сравнивай силу рук на реальных досках.',
+        'play_topic_rankings_subtitle',
+        fallback: 'Compare hand strength on real boards.',
       ),
-      'showdown' => _playLineV1(
+      'showdown' => _playCopyV1(
         context,
-        en: 'Settle the pot cleanly at the end.',
-        ru: 'Чисто закрывай банк в конце раздачи.',
+        'play_topic_showdown_subtitle',
+        fallback: 'Settle the pot cleanly at the end.',
       ),
       _ => group.subtitle,
     };

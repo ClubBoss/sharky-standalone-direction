@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -16,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
@@ -399,7 +401,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           'Маршрут специально стартует со стола, чтобы ничего важного не пряталось под скоростью.',
       },
       premiumPitch:
-          'Премиум добавит персональные фиксы, дополнительные репы и более умный недельный ритм после того, как ценность уже показана.',
+          'Премиум добавит персональный разбор ошибок, больше практики и более умный недельный ритм после того, как ценность уже показана.',
       trialValuePoints: result.trialValuePoints
           .map(_localizedPlacementTrialPointV1)
           .toList(growable: false),
@@ -440,7 +442,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'experience' =>
         'Скажи честно. Это лишь влияет на то, с чего лучше начать.',
       'frequency' =>
-        'Так Шарки понимает, нужен ли мягкий разогрев или более быстрые репы.',
+        'Так Шарки понимает, нужен ли мягкий разогрев или более быстрые повторы.',
       'format' =>
         'Это влияет на примеры, язык и первые ситуации, которые покажет Шарки.',
       'confidence' => 'Выбери всё, что заставляет тебя тормозить или гадать.',
@@ -462,7 +464,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'format' =>
         'Выбери всё, что реально подходит. Шарки ищет доминирующий паттерн, а не загоняет тебя в одну дорожку.',
       'confidence' =>
-        'Шарки использует это, чтобы подстроить первые объяснения, ревью-подсказки и ранние repair-споты.',
+        'Шарки использует это, чтобы подстроить первые объяснения, подсказки к разбору и ранние тренировочные споты.',
       'goal' =>
         'Выбери всё, что звучит мотивирующе. Давление должно быть правильным, а не лишним.',
       _ => question.helper,
@@ -504,7 +506,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'Сохранять ясность, когда начинаются ставки и давление',
       'goal:guided' => 'Веди меня спокойно и пошагово',
       'goal:practice' => 'Хочу учиться в основном через практику',
-      'goal:diagnose' => 'Быстро показывай, где у меня утечки',
+      'goal:diagnose' => 'Быстро показывай, где я чаще ошибаюсь',
       'goal:daily_plan' =>
         'Дай короткий план, которого реально можно придерживаться',
       'goal:honest' => 'Будь прямым, когда я начинаю угадывать',
@@ -534,7 +536,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'frequency:weekly' =>
         'Какой-то ритм уже есть, но фундамент нужно закрепить.',
       'frequency:often' =>
-        'Можно выдержать более плотные репы и более быстрый переход к решениям.',
+        'Можно выдержать более плотную практику и более быстрый переход к решениям.',
       'format:basics' =>
         'Сначала грамотность стола, а уже потом стратегия и жаргон.',
       'format:cash' =>
@@ -558,10 +560,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'Сначала короткие объяснения, потом мягкая практика, которая действительно укладывается.',
       'goal:practice' =>
         'Меньше разговоров, больше повторов, когда концепт уже виден.',
-      'goal:diagnose' => 'Быстро поднимай слабые места и держи repair рядом.',
+      'goal:diagnose' =>
+        'Быстро подсвечивай слабые места и сразу веди к разбору.',
       'goal:daily_plan' =>
         'Компактный привычечный ритм с одним ясным следующим шагом каждый день.',
-      'goal:honest' => 'Больше ясности и острее feedback, но без жёсткости.',
+      'goal:honest' => 'Больше ясности и точнее разбор, но без жёсткости.',
       _ => option.subtitle,
     };
   }
@@ -663,6 +666,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _dismissedHomeHandoffDay = '';
   int _learnLessonOpenSequenceV1 = 0;
   String? _learnPendingAutoOpenLessonIdV1;
+  bool _showWelcome = false;
+  bool _bootSurfaceReady = true;
+  bool _welcomeCompletedV1 = false;
+  Act0ShellTabV1? _welcomeReturnTabV1;
 
   Set<String> get _pathClosedTaskIds => <String>{
     ..._completedTaskIds,
@@ -677,6 +684,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _tab = widget.initialTab;
     _phase = widget.initialPhase;
     _showPlacement = widget.showPlacementOnStart;
+    _showWelcome = false;
+    _bootSurfaceReady = !widget.showPlacementOnStart;
     _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
     final state = widget.state ?? Act0ShellStateV1.sample;
     _selectedWorldId = state.selectedWorldId;
@@ -695,9 +704,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedTaskId = _firstIncompleteTask(state.currentLesson).taskId;
     _learnPopupTaskId = null;
     _resetLessonRunMetrics();
-    if (_usesPersistedProgress) {
-      unawaited(_restorePersistedProgress());
-    }
+    unawaited(_bootstrapFirstStartRouteV1());
   }
 
   @override
@@ -705,6 +712,38 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnLessonOpenSequenceV1++;
     _persistProgress();
     super.dispose();
+  }
+
+  Future<void> _bootstrapFirstStartRouteV1() async {
+    if (_usesPersistedProgress) {
+      await _restorePersistedProgress();
+    }
+    if (!widget.showPlacementOnStart) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _showPlacement = false;
+        _showWelcome = false;
+        _bootSurfaceReady = true;
+      });
+      return;
+    }
+    final intakeCompleted = await ProgressService.isIntakeCompleted();
+    final welcomeCompleted =
+        await Act0FirstStartPreferencesV1.hasCompletedWelcome();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _welcomeCompletedV1 = welcomeCompleted;
+      _showPlacement = !intakeCompleted;
+      _showWelcome = intakeCompleted && !welcomeCompleted;
+      _bootSurfaceReady = true;
+      if (_showWelcome) {
+        _tab = Act0ShellTabV1.home;
+      }
+    });
   }
 
   bool _handleLearnLessonSelectV1({
@@ -728,11 +767,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _teachingStepIndex = 0;
         _resetLessonRunMetrics();
       }
-      _learnDetailLessonId = lessonId;
+      _learnDetailLessonId = null;
       _learnDetailWorldId = null;
-      _learnPendingAutoOpenLessonIdV1 = null;
+      _learnPendingAutoOpenLessonIdV1 = lessonId;
     });
-    return false;
+    return true;
   }
 
   void _handleLearnLessonOpenAfterScrollV1(String lessonId) {
@@ -816,28 +855,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             closedTaskIds,
           )
         : _firstIncompleteTaskWithTaskIds(selectedLesson, closedTaskIds);
-    final resumeInRunner =
-        parsed.resumeInRunner && !widget.showPlacementOnStart;
-    final restoredSelectedOptionId =
-        parsed.resumeSelectedOptionId != null &&
-            selectedTask.runner.options.any(
-              (option) => option.id == parsed.resumeSelectedOptionId,
-            )
-        ? parsed.resumeSelectedOptionId
-        : null;
-    final restoredPhase =
-        _phaseFromStorage(parsed.resumePhase) ?? selectedTask.phase;
-    final effectivePhase =
-        restoredPhase == Act0LessonPhaseV1.review &&
-            restoredSelectedOptionId == null
-        ? Act0LessonPhaseV1.drill
-        : restoredPhase;
-    final restoredTeachingStepIndex = resumeInRunner
-        ? parsed.resumeTeachingStepIndex.clamp(
-            0,
-            selectedTask.runner.teachingSteps.length,
-          )
-        : 0;
+    // Boot policy is Home-first. Persisted lesson/task progress is restored,
+    // but ephemeral runner phase is not resumed over the launch surface.
 
     if (!mounted) {
       return;
@@ -864,14 +883,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
-      _phase = resumeInRunner ? effectivePhase : selectedTask.phase;
-      _selectedOptionId =
-          resumeInRunner && effectivePhase == Act0LessonPhaseV1.review
-          ? restoredSelectedOptionId
-          : null;
-      _teachingStepIndex = restoredTeachingStepIndex;
-      _tab = resumeInRunner ? Act0ShellTabV1.play : widget.initialTab;
-      _showPlayHub = !resumeInRunner;
+      _phase = selectedTask.phase;
+      _selectedOptionId = null;
+      _teachingStepIndex = 0;
+      _tab = widget.initialTab;
+      _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
       _blockCompletionSummary = null;
       _persistedStreakDays = restoredStreakDays;
       _lastDailyDate = isNewDay ? today : parsed.lastActiveDay;
@@ -900,19 +916,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return diff == 1;
     } catch (_) {
       return false;
-    }
-  }
-
-  static Act0LessonPhaseV1? _phaseFromStorage(String raw) {
-    switch (raw) {
-      case 'theory':
-        return Act0LessonPhaseV1.theory;
-      case 'drill':
-        return Act0LessonPhaseV1.drill;
-      case 'review':
-        return Act0LessonPhaseV1.review;
-      default:
-        return null;
     }
   }
 
@@ -1027,6 +1030,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _dismissedHomeHandoffKey = '';
       _dismissedHomeHandoffDay = '';
       _showPlacement = showPlacement;
+      _showWelcome = false;
+      _welcomeCompletedV1 = false;
+      _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementTrialPreviewSelected = false;
@@ -1048,6 +1054,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _openDevMapSkippingPlacement() {
     setState(() {
       _showPlacement = false;
+      _showWelcome = false;
+      _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = false;
       _placementTrialPreviewSelected = false;
@@ -1068,6 +1076,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _openPlacementFlow() {
     setState(() {
       _showPlacement = true;
+      _showWelcome = false;
+      _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementTrialPreviewSelected = false;
@@ -1105,6 +1115,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final selectedTask = _taskById(selectedLesson, _selectedTaskId);
     setState(() {
       _showPlacement = false;
+      _showWelcome = false;
+      _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementTrialPreviewSelected = false;
       _tab = tab;
@@ -1153,6 +1165,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     await _invalidatePersistedProgressWrites();
     await ProgressService.debugReset();
     await OnboardingPreferencesService.resetOnboarding();
+    await Act0FirstStartPreferencesV1.resetWelcome();
     if (!mounted) {
       return;
     }
@@ -1484,7 +1497,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           )
         : null;
     final showTopBar =
+        _bootSurfaceReady &&
         !_showPlacement &&
+        !_showWelcome &&
         !(_tab == Act0ShellTabV1.play &&
             widget.tableVisualVariant ==
                 Act0ShellTableVisualVariantV1.refinedDev2);
@@ -1497,7 +1512,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             if (showTopBar)
               _TopBarV1(state: state, goalLabel: _compactDailyLabel()),
             Expanded(
-              child: _showPlacement && !_placementDiagnosticActive
+              child: !_bootSurfaceReady
+                  ? const Center(child: CircularProgressIndicator())
+                  : _showPlacement && !_placementDiagnosticActive
                   ? Act0PlacementShellV1(
                       questions: _localizedPlacementQuestionsV1(),
                       showIntro: _placementIntroVisible,
@@ -1531,19 +1548,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       onStartDiagnostic: () => setState(() {
                         _startPlacementDiagnostic(_progressWorlds(baseState));
                       }),
-                      onStartRecommended: () => setState(() {
-                        _startPlacementRecommendation(
-                          _progressWorlds(baseState),
-                          fromZero: false,
+                      onStartRecommended: () {
+                        unawaited(
+                          _startPlacementRecommendation(
+                            _progressWorlds(baseState),
+                            fromZero: false,
+                          ),
                         );
-                      }),
-                      onStartFromZero: () => setState(() {
-                        _startPlacementRecommendation(
-                          _progressWorlds(baseState),
-                          fromZero: true,
+                      },
+                      onStartFromZero: () {
+                        unawaited(
+                          _startPlacementRecommendation(
+                            _progressWorlds(baseState),
+                            fromZero: true,
+                          ),
                         );
-                      }),
+                      },
                       onStartTrialPreview: _previewPlacementTrial,
+                    )
+                  : _showWelcome
+                  ? Act0WelcomeShellV1(
+                      replayMode: _welcomeReturnTabV1 != null,
+                      onCompleted: () {
+                        unawaited(_completeWelcomeV1());
+                      },
+                      onClose: _welcomeReturnTabV1 != null
+                          ? _closeWelcomeReplayV1
+                          : null,
+                      tableVisualVariant: widget.tableVisualVariant,
                     )
                   : switch (_tab) {
                       Act0ShellTabV1.home => Act0HomeShellV1(
@@ -2167,6 +2199,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
                         profile: profileState,
                         onRetakePlacement: _openPlacementFlow,
+                        onReplayWelcome: _openWelcomeReplayV1,
                         onGoToHome: () =>
                             setState(() => _tab = Act0ShellTabV1.home),
                       ),
@@ -2176,7 +2209,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       ),
       bottomNavigationBar:
-          (_showPlacement && !_placementDiagnosticActive) ||
+          !_bootSurfaceReady ||
+              _showWelcome ||
+              (_showPlacement && !_placementDiagnosticActive) ||
               (_tab == Act0ShellTabV1.play && !_showPlayHub)
           ? null
           : _BottomNavV1(
@@ -2511,22 +2546,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? _Act0LearningNextActionKindV1.repairDeepLeak
             : _Act0LearningNextActionKindV1.repairWeakSpot,
         label: isDeep
-            ? _copyV1(en: 'Deep leak', ru: 'Глубокая утечка')
+            ? _copyV1(en: 'Deep leak', ru: 'Серьёзная ошибка')
             : _copyV1(en: 'Needs work', ru: 'Нужно подтянуть'),
         title: isDeep
-            ? _copyV1(en: 'Fix a deep leak', ru: 'Исправь глубокую утечку')
+            ? _copyV1(en: 'Fix a deep leak', ru: 'Разбери серьёзную ошибку')
             : _copyV1(
                 en: 'Repair one weak spot',
-                ru: 'Почини один слабый спот',
+                ru: 'Разбери одно слабое место',
               ),
         subtitle: isDeep
             ? _copyV1(
                 en: 'This spot missed twice. Repair it before moving on.',
-                ru: 'Этот спот сломался дважды. Почини его перед тем как идти дальше.',
+                ru: 'Этот спот уже дважды не дался. Разбери его, прежде чем идти дальше.',
               )
             : _copyV1(
                 en: 'Fix this mistake before it becomes a habit.',
-                ru: 'Исправь эту ошибку, пока она не стала привычкой.',
+                ru: 'Разбери эту ошибку, пока она не закрепилась.',
               ),
         ctaLabel: _recommendationCtaLabel(
           isDeep
@@ -2535,16 +2570,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         hint: _copyV1(
           en: 'Repair this spot now.',
-          ru: 'Исправь этот спот сейчас.',
+          ru: 'Разбери этот спот сейчас.',
         ),
         outcome: isDeep
             ? _copyV1(
                 en: 'Deep leak first: repair ${_playDrillTitleForLesson(topMistake.lessonId)}.',
-                ru: 'Сначала глубокая утечка: почини ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+                ru: 'Сначала разбери серьёзную ошибку: ${_playDrillTitleForLesson(topMistake.lessonId)}.',
               )
             : _copyV1(
                 en: 'On repair: return to ${_playDrillTitleForLesson(topMistake.lessonId)}.',
-                ru: 'После фикса вернись к ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+                ru: 'После разбора вернись к ${_playDrillTitleForLesson(topMistake.lessonId)}.',
               ),
         mistake: topMistake,
         lessonId: topMistake.lessonId,
@@ -2559,22 +2594,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (quickFix != null) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.reviewQuickFix,
-        label: _copyV1(en: 'Quick fix', ru: 'Быстрый фикс'),
-        title: _copyV1(en: 'Review a quick fix', ru: 'Повтори быстрый фикс'),
+        label: _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор'),
+        title: _copyV1(en: 'Review a quick fix', ru: 'Сделай лёгкий повтор'),
         subtitle: _copyV1(
           en: 'You repaired this once. One light review keeps it stable.',
-          ru: 'Ты уже чинил это один раз. Один лёгкий повтор закрепит спот.',
+          ru: 'Ты уже один раз разобрал этот спот. Один лёгкий повтор поможет его закрепить.',
         ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.reviewQuickFix,
         ),
         hint: _copyV1(
           en: 'Light review in Review.',
-          ru: 'Лёгкий повтор во вкладке Разбор.',
+          ru: 'Сделай лёгкий повтор во вкладке Разбор.',
         ),
         outcome: _copyV1(
           en: 'Light review: keep ${_playDrillTitleForLesson(quickFix.lessonId)} warm.',
-          ru: 'Лёгкий повтор: держи ${_playDrillTitleForLesson(quickFix.lessonId)} в тонусе.',
+          ru: 'Лёгкий повтор: ещё раз спокойно пройди ${_playDrillTitleForLesson(quickFix.lessonId)}.',
         ),
         mistake: quickFix,
         lessonId: quickFix.lessonId,
@@ -2590,22 +2625,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
         label: streakSaved
-            ? _copyV1(en: 'Streak saved', ru: 'Стрик сохранён')
+            ? _copyV1(en: 'Streak saved', ru: 'Ритм сохранён')
             : _copyV1(en: 'Done for today', ru: 'На сегодня всё'),
         title: streakSaved
             ? _copyV1(
                 en: 'Seat held for tomorrow',
-                ru: 'Место на завтра удержано',
+                ru: 'Завтра будет легко вернуться',
               )
             : _copyV1(en: 'Tomorrow is set', ru: 'Завтрашний старт готов'),
         subtitle: streakSaved
             ? _copyV1(
                 en: 'You earned tomorrow by repairing first and then closing the daily set.',
-                ru: 'Ты заработал завтрашний старт: сначала починил ошибки, потом закрыл дневную серию.',
+                ru: 'Сегодня ты сначала разобрал ошибки, а потом закрыл дневной набор. Завтра будет проще продолжить.',
               )
             : _copyV1(
                 en: 'Today is banked. One short return tomorrow keeps the rhythm warm.',
-                ru: 'Сегодняшний день засчитан. Один короткий возврат завтра сохранит ритм тёплым.',
+                ru: 'Сегодняшний день закрыт. Короткий заход завтра поможет не выпадать из ритма.',
               ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
@@ -2614,11 +2649,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         outcome: streakSaved
             ? _copyV1(
                 en: 'Seat held. One clean daily tomorrow extends it.',
-                ru: 'Место удержано. Один чистый дневной сет завтра его продлит.',
+                ru: 'Завтра будет проще продолжить. Один чистый дневной набор продлит этот ритм.',
               )
             : _copyV1(
                 en: 'Tomorrow starts ready. One clean daily keeps the loop warm.',
-                ru: 'Завтра старт уже готов. Один чистый дневной сет удержит цикл тёплым.',
+                ru: 'Завтра можно сразу продолжать. Один чистый дневной набор удержит ритм.',
               ),
         lessonId: selectedLesson.lessonId,
         taskId: null,
@@ -2664,7 +2699,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         title: _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
         subtitle: _copyV1(
           en: 'Run three short spots to keep today clean.',
-          ru: 'Пройди три коротких спота, чтобы день остался чистым.',
+          ru: 'Пройди три коротких спота, чтобы держать день в ритме.',
         ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDrill,
@@ -2675,7 +2710,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         outcome: _copyV1(
           en: 'Daily set: 3 crisp reps, no extra noise.',
-          ru: 'Дневная серия: 3 чётких повтора без лишнего шума.',
+          ru: 'Дневной набор: 3 чётких спота без лишнего шума.',
         ),
         lessonId: selectedLesson.lessonId,
         taskId: _preferredPracticeTask(
@@ -2729,7 +2764,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ),
       outcome: _copyV1(
         en: 'Category practice: keep your strongest reads warm.',
-        ru: 'Практика по категории: держи сильные чтения в тонусе.',
+        ru: 'Практика по категории: закрепи то, что уже хорошо читается.',
       ),
       lessonId: actionsLesson.lessonId,
       taskId: _preferredPracticeTask(actionsLesson, preferDrill: true)?.taskId,
@@ -2772,7 +2807,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _homeNextActionLabel() {
     if (_placementHandoffActive) {
-      return _copyV1(en: 'First guided start', ru: 'Первый guided-старт');
+      return _copyV1(en: 'Start here', ru: 'Начни здесь');
     }
     final state = widget.state ?? Act0ShellStateV1.sample;
     final selectedWorld = _worldById(
@@ -2815,7 +2850,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _homeNextActionCtaLabel() {
     if (_placementHandoffActive) {
-      return _copyV1(en: 'Start first rep', ru: 'Начать первый реп');
+      return _copyV1(en: 'Start first hand', ru: 'Начать первую раздачу');
     }
     final state = widget.state ?? Act0ShellStateV1.sample;
     final selectedWorld = _worldById(
@@ -2838,8 +2873,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) {
     if (_placementHandoffActive) {
       return _copyV1(
-        en: 'One tap opens the first guided rep chosen from your placement result.',
-        ru: 'Одно нажатие откроет первый guided-реп, выбранный по результату плейсмента.',
+        en: 'One tap opens the first hand chosen from your placement result.',
+        ru: 'Одно нажатие откроет первую раздачу, выбранную по результату плейсмента.',
       );
     }
     final hint = _homePrimaryRecommendation(
@@ -2955,7 +2990,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
       return _copyV1(
         en: 'Review this quick fix.',
-        ru: 'Повтори этот быстрый фикс.',
+        ru: 'Сделай здесь лёгкий повтор.',
       );
     }
     return _copyV1(en: 'All sharp.', ru: 'Всё чётко.');
@@ -2968,7 +3003,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_placementHandoffActive) {
       return _copyV1(
         en: 'No leaks open. Keep going.',
-        ru: 'Утечек нет. Просто продолжай.',
+        ru: 'Сейчас явных ошибок нет. Просто продолжай.',
       );
     }
     final recommendation = _learningRecommendation(
@@ -2984,12 +3019,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
       return _copyV1(
         en: 'Last repair came from ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)}.',
-        ru: 'Последний фикс пришёл из ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)}.',
+        ru: 'Последний разбор был по уроку ${_playDrillTitleForLesson(recommendation.lessonId ?? currentLesson.lessonId)}.',
       );
     }
     return _copyV1(
       en: 'No leaks open. Keep going.',
-      ru: 'Утечек нет. Просто продолжай.',
+      ru: 'Сейчас явных ошибок нет. Просто продолжай.',
     );
   }
 
@@ -3004,7 +3039,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (recommendation.mistake != null) {
       return _copyV1(
         en: 'One fix now keeps the leak from following you forward.',
-        ru: 'Один фикс сейчас не даст утечке потянуться за тобой дальше.',
+        ru: 'Один разбор сейчас не даст этой ошибке закрепиться.',
       );
     }
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
@@ -3036,13 +3071,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _playMasteryLabel() {
     final topMistake = _topOpenMistake();
     if (topMistake?.severityLabel == 'Deep leak') {
-      return _copyV1(en: 'Deep leak', ru: 'Глубокая утечка');
+      return _copyV1(en: 'Deep leak', ru: 'Серьёзная ошибка');
     }
     if (topMistake != null) {
       return _copyV1(en: 'Needs work', ru: 'Нужно подтянуть');
     }
     if (_quickFixMistakes().isNotEmpty) {
-      return _copyV1(en: 'Quick fix', ru: 'Быстрый фикс');
+      return _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор');
     }
     if (_cleanTaskIds.length >= 3) {
       return _copyV1(en: 'Clean pass', ru: 'Чистый проход');
@@ -3064,11 +3099,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return switch (recommendation.kind) {
       _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
         en: 'Repair first. Extra reps can wait.',
-        ru: 'Сначала фикс. Дополнительные репы подождут.',
+        ru: 'Сначала разбор. Дополнительная практика подождёт.',
       ),
       _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
         en: 'Fix one leak or run a few extra reps.',
-        ru: 'Исправь одну утечку или сделай пару дополнительных репов.',
+        ru: 'Разбери одно слабое место или сделай ещё пару полезных повторов.',
       ),
       _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
         en: 'Run one light review or choose a lane.',
@@ -3076,11 +3111,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ),
       _Act0LearningNextActionKindV1.dailyDone => _copyV1(
         en: 'Daily set done. Extra reps stay optional.',
-        ru: 'Дневная серия закрыта. Дополнительные репы остаются опциональными.',
+        ru: 'Дневной набор закрыт. Дополнительная практика остаётся по желанию.',
       ),
       _ => _copyV1(
         en: 'Extra reps live here.',
-        ru: 'Здесь живут дополнительные репы.',
+        ru: 'Здесь можно сделать дополнительную практику.',
       ),
     };
   }
@@ -3091,7 +3126,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _copyV1(en: '$count/3 daily spots', ru: '$count/3 дневных спота');
     }
     return _streakSaveEarned()
-        ? _copyV1(en: 'Seat held for tomorrow', ru: 'Место на завтра удержано')
+        ? _copyV1(
+            en: 'Seat held for tomorrow',
+            ru: 'Завтра будет легко вернуться',
+          )
         : _copyV1(en: 'Done for today', ru: 'На сегодня всё');
   }
 
@@ -3621,10 +3659,26 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resetLessonRunMetrics();
   }
 
-  void _startPlacementRecommendation(
+  Future<void> _persistPlacementCompletionV1(
+    Act0PlacementResultV1 result,
+  ) async {
+    await ProgressService.saveIntakeProfile(<String, Object?>{
+      'version': 'act0_placement_v1',
+      'completedAt': DateTime.now().toUtc().toIso8601String(),
+      'diagnosticCorrect': result.diagnosticCorrect,
+      'diagnosticTotal': result.diagnosticTotal,
+      'placementLevel': result.level.name,
+      'recommendedLessonId': result.recommendedLessonId,
+      'recommendedTaskId': result.recommendedTaskId,
+      'focusLabel': result.level.name,
+    });
+    await ProgressService.setPlacementScoreV1(_placementDiagnosticScore);
+  }
+
+  Future<void> _startPlacementRecommendation(
     List<Act0WorldCardV1> worlds, {
     required bool fromZero,
-  }) {
+  }) async {
     final world = _worldById(worlds, 'world_1');
     final result = _placementResult;
     final lessonId = fromZero || result == null
@@ -3653,6 +3707,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedLessonId = lesson.lessonId;
     _selectedTaskId = task.taskId;
     _showPlacement = false;
+    _showWelcome = !_welcomeCompletedV1;
     _placementDiagnosticActive = false;
     _placementIntroVisible = false;
     _placementHandoffActive = true;
@@ -3668,6 +3723,50 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _teachingStepIndex = 0;
     _resetLessonRunMetrics();
     _persistProgress();
+    await _persistPlacementCompletionV1(result ?? _buildPlacementResult());
+  }
+
+  void _openWelcomeReplayV1() {
+    setState(() {
+      _welcomeReturnTabV1 = _tab;
+      _showWelcome = true;
+      _showPlacement = false;
+      _placementDiagnosticActive = false;
+      _placementHandoffActive = false;
+      _showPlayHub = true;
+      _returnToPlayHubOnBack = false;
+      _blockCompletionSummary = null;
+      _selectedOptionId = null;
+      _phase = Act0LessonPhaseV1.theory;
+      _teachingStepIndex = 0;
+    });
+  }
+
+  void _closeWelcomeReplayV1() {
+    final returnTab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
+    setState(() {
+      _showWelcome = false;
+      _welcomeReturnTabV1 = null;
+      _tab = returnTab;
+    });
+  }
+
+  Future<void> _completeWelcomeV1() async {
+    await Act0FirstStartPreferencesV1.setWelcomeCompleted();
+    if (!mounted) {
+      return;
+    }
+    final replayMode = _welcomeReturnTabV1 != null;
+    setState(() {
+      _welcomeCompletedV1 = true;
+      _showWelcome = false;
+      if (replayMode) {
+        _tab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
+      } else {
+        _tab = Act0ShellTabV1.home;
+      }
+      _welcomeReturnTabV1 = null;
+    });
   }
 
   _Act0PlacementSkipPlanV1 _buildPlacementSkipPlan({
@@ -3798,9 +3897,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTaskId: 'actions_legal_context',
         recommendedTitle: 'Fold, check, call, raise',
         recommendedReason:
-            'The live check stayed clean, so the route can start on action language instead of resetting the table.',
+            'The live check stayed clean, so we can begin with action words instead of resetting the table.',
         routeTrustLine:
-            'Sharky still keeps the route near the start, so no core link goes missing.',
+            'Sharky still keeps the start close to the basics, so no core link goes missing.',
         premiumPitch:
             'Premium can turn your diagnostic into daily weak-spot drills, review queues, and progress insights.',
         trialValuePoints: <String>[
@@ -3855,9 +3954,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTaskId: 'your_first_hand_preflop',
         recommendedTitle: 'Your first hand, dealt',
         recommendedReason:
-            'The live check says the route should steady the hand before it speeds you up.',
+            'The live check says we should steady the hand before we speed you up.',
         routeTrustLine:
-            'You skip the full reset, but Sharky still keeps the route close to the foundations.',
+            'You skip the full reset, but Sharky still keeps the start close to the foundations.',
         premiumPitch:
             'Premium can keep your review focused on the spots you miss instead of repeating everything.',
         trialValuePoints: <String>[
@@ -3901,7 +4000,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recommendedReason:
           'The live check says the app should still teach the table itself before asking for harder decisions.',
       routeTrustLine:
-          'The route starts at the table on purpose, so nothing important is hidden under speed.',
+          'The start stays at the table on purpose, so nothing important is hidden under speed.',
       premiumPitch:
           'Premium can add personal repair drills and a seven-day guided plan after this foundation.',
       trialValuePoints: <String>[

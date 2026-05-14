@@ -61,7 +61,7 @@ void main() {
       final whyLine = (tester.widget<Text>(whyLineFinder).data ?? '').trim();
       expect(
         whyLine,
-        'Real-table value: once Button and the blinds are clear, your first action choice has a reason instead of a guess.',
+        'Real-table value: once Button and blinds are clear, your first preflop action is a reasoned choice, not a guess.',
       );
 
       final upNextHeadlineFinder = find.byKey(
@@ -89,11 +89,11 @@ void main() {
       final sharkyLine = (tester.widget<Text>(sharkyFinder).data ?? '').trim();
       expect(
         sharkyLine,
-        'Sharky: Good. Keep the seat map first and the next spot will read cleaner.',
+        'Sharky: Nice work. Keep seat map first and the next spot will read faster.',
       );
       expect(
         find.text(
-          'Sharky: Good. Keep the seat map first and the next spot will read cleaner.',
+          'Sharky: Nice work. Keep seat map first and the next spot will read faster.',
         ),
         findsOneWidget,
       );

@@ -8,10 +8,11 @@ The following product IDs are configured in the app:
 
 1. **premium_pack** - Non-consumable, unlocks all premium training packs
 2. **pro_subscription_monthly** - Monthly subscription with all features
-3. **xp_booster** - Consumable, adds 500 XP
-4. **coins_pack_small** - Consumable, adds 100 coins
-5. **coins_pack_medium** - Consumable, adds 500 coins
-6. **coins_pack_large** - Consumable, adds 1200 coins
+3. **pro_subscription_annual** - Annual subscription with all features
+4. **xp_booster** - Consumable, adds 500 XP
+5. **coins_pack_small** - Consumable, adds 100 coins
+6. **coins_pack_medium** - Consumable, adds 500 coins
+7. **coins_pack_large** - Consumable, adds 1200 coins
 
 ## Android Configuration (Google Play)
 
@@ -36,10 +37,13 @@ The following product IDs are configured in the app:
    
    Repeat for all products with appropriate details.
 
-3. **Configure Subscriptions** (for pro_subscription_monthly)
+3. **Configure Subscriptions** (for pro_subscription_monthly and pro_subscription_annual)
    - Go to "Subscriptions" instead of "In-app products"
    - Create subscription with ID: `pro_subscription_monthly`
-   - Set billing period: 1 month
+   - Create subscription with ID: `pro_subscription_annual`
+   - Put both inside one subscription group
+   - Set billing period: 1 month for monthly
+   - Set billing period: 1 year for annual
    - Set price and other details
    - Enable free trial if desired
 
@@ -83,12 +87,14 @@ The following product IDs are configured in the app:
    - Screenshot: Upload if required
    - Submit for review
 
-   **Auto-Renewable Subscriptions** (pro_subscription_monthly):
+   **Auto-Renewable Subscriptions** (pro_subscription_monthly, pro_subscription_annual):
    - Create Subscription Group first
    - Add subscription to group
    - Product ID: `pro_subscription_monthly`
    - Duration: 1 month
-   - Price: Select tier
+   - Product ID: `pro_subscription_annual`
+   - Duration: 1 year
+   - Price: Select tiers
    - Localizations: Add descriptions
 
    **Consumable Products** (xp_booster, coins packs):

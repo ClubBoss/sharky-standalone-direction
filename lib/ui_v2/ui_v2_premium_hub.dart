@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/payments/payment_service.dart';
 import 'package:poker_analyzer/services/entitlement_sync_v1.dart';
-import 'package:poker_analyzer/services/premium_restore_flow_v1.dart';
+import 'package:poker_analyzer/services/release_commerce_availability_v1.dart';
+import 'package:poker_analyzer/services/release_premium_access_action_v1.dart';
+import 'package:poker_analyzer/services/subscription_surface_copy_v1.dart';
 import 'package:poker_analyzer/services/subscription_status_v1.dart';
 import 'package:poker_analyzer/services/premium_value_package_v1.dart';
 import 'package:poker_analyzer/theme/theme_v2.dart';
@@ -23,7 +25,8 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
   bool _loading = false;
   SubscriptionStatusV1? _status;
   bool _restoreInProgress = false;
-  String? _restoreMessage;
+  String? _actionMessage;
+  ReleaseCommerceAvailabilityStateV1? _commerceAvailability;
 
   @override
   void initState() {
@@ -50,8 +53,13 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
 
   Future<void> _load() async {
     final status = await SubscriptionServiceV1.getStatusV1();
+    final commerceAvailability =
+        await ReleaseCommerceAvailabilityServiceV1.readV1();
     if (!mounted) return;
-    setState(() => _status = status);
+    setState(() {
+      _status = status;
+      _commerceAvailability = commerceAvailability;
+    });
   }
 
   void _handleEntitlementSyncV1() {
@@ -60,20 +68,36 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
 
   Future<void> _upgrade() async {
     if (_loading) return;
-    setState(() => _loading = true);
+    final paymentService = PaymentService();
+    setState(() {
+      _loading = true;
+      _actionMessage = null;
+    });
     try {
-      final res = await PremiumService().buyPremium();
-      final ok = res['validated'] == true;
+      final result = await ReleasePremiumAccessActionV1.upgradeV1(
+        readStatusBefore: SubscriptionServiceV1.getStatusV1,
+        checkStoreAvailability: () async {
+          await paymentService.initialize();
+          return paymentService.isAvailable;
+        },
+        readLastError: () => paymentService.lastError,
+        performUpgrade: PremiumService().buyPremium,
+        readStatusAfter: SubscriptionServiceV1.getStatusV1,
+      );
       if (!mounted) return;
-      if (ok) {
-        await _load();
+      setState(() {
+        _status = result.subscriptionStatus;
+        _actionMessage = result.message;
+      });
+      if (result.status == ReleasePremiumAccessActionStatusV1.activated ||
+          result.status == ReleasePremiumAccessActionStatusV1.alreadyActive) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Premium Activated')));
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Purchase failed')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result.message ?? 'Purchase failed')),
+        );
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -84,25 +108,26 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
     if (_restoreInProgress) return;
     setState(() {
       _restoreInProgress = true;
-      _restoreMessage = null;
+      _actionMessage = null;
     });
     final paymentService = PaymentService();
-    final status = _status ?? await SubscriptionServiceV1.getStatusV1();
     try {
-      final outcome = await PremiumRestoreFlowV1.run(
-        entitlementBefore: status.isEntitled,
-        performRestore: paymentService.restorePurchases,
-        readEntitlementAfter: () async {
-          final latestStatus = await SubscriptionServiceV1.getStatusV1();
-          return latestStatus.isEntitled;
+      final result = await ReleasePremiumAccessActionV1.restoreV1(
+        readStatusBefore: SubscriptionServiceV1.getStatusV1,
+        checkStoreAvailability: () async {
+          await paymentService.initialize();
+          return paymentService.isAvailable;
         },
+        performRestore: paymentService.restorePurchases,
+        readEntitlementAfter: () async =>
+            (await SubscriptionServiceV1.getStatusV1()).isEntitled,
         readLastError: () => paymentService.lastError,
+        readStatusAfter: SubscriptionServiceV1.getStatusV1,
       );
-      final refreshedStatus = await SubscriptionServiceV1.getStatusV1();
       if (!mounted) return;
       setState(() {
-        _status = refreshedStatus;
-        _restoreMessage = outcome.message;
+        _status = result.subscriptionStatus;
+        _actionMessage = result.message;
       });
     } finally {
       if (mounted) {
@@ -112,25 +137,31 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
   }
 
   String _hubStatusLineV1(SubscriptionAccessStateV1 accessState) {
-    return switch (accessState) {
-      SubscriptionAccessStateV1.premium =>
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
-      SubscriptionAccessStateV1.trial =>
-        'Trial active: premium-target Today routes and World 5+ stay open during the active trial.',
-      SubscriptionAccessStateV1.free =>
-        'Free access stays on the opening path plus one Today route per UTC day.',
-    };
+    return SubscriptionSurfaceCopyV1.hubStatusLine(
+      _status ??
+          SubscriptionStatusV1(
+            isPremium: false,
+            isEntitled: false,
+            isTrialActive: false,
+            trialRemainingDays: 0,
+            source: SubscriptionSourceV1.none,
+            accessState: accessState,
+          ),
+    );
   }
 
   String _hubPackageSummaryLineV1(SubscriptionAccessStateV1 accessState) {
-    return switch (accessState) {
-      SubscriptionAccessStateV1.premium =>
-        'Your account already has premium access on current main.',
-      SubscriptionAccessStateV1.trial =>
-        'Your account is on trial now. Premium keeps the same premium-target access after the trial ends.',
-      SubscriptionAccessStateV1.free =>
-        'Premium adds premium-target Today routes and World 5+ progression on current main.',
-    };
+    return SubscriptionSurfaceCopyV1.hubPackageSummaryLine(
+      _status ??
+          SubscriptionStatusV1(
+            isPremium: false,
+            isEntitled: false,
+            isTrialActive: false,
+            trialRemainingDays: 0,
+            source: SubscriptionSourceV1.none,
+            accessState: accessState,
+          ),
+    );
   }
 
   @override
@@ -138,12 +169,21 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
     final theme = Theme.of(context);
     final brand = theme.extension<BrandTheme>();
     final status = _status;
+    final commerceAvailability = _commerceAvailability;
     final accessState = status?.accessState ?? SubscriptionAccessStateV1.free;
     final isPremium = accessState == SubscriptionAccessStateV1.premium;
-    final upgradeLabel = switch (accessState) {
+    final canRestore = commerceAvailability?.canRestore ?? true;
+    final canUpgrade = commerceAvailability?.canUpgrade ?? true;
+    final defaultUpgradeLabel = switch (accessState) {
       SubscriptionAccessStateV1.premium => 'Premium Activated',
       SubscriptionAccessStateV1.trial => 'Upgrade to Premium',
       SubscriptionAccessStateV1.free => 'Upgrade',
+    };
+    final upgradeLabel = switch (accessState) {
+      SubscriptionAccessStateV1.premium => defaultUpgradeLabel,
+      SubscriptionAccessStateV1.trial => defaultUpgradeLabel,
+      SubscriptionAccessStateV1.free =>
+        commerceAvailability?.offerScope.upgradeLabel ?? defaultUpgradeLabel,
     };
     return Scaffold(
       appBar: AppBar(title: Text(kPremiumValuePackageV1.title)),
@@ -178,10 +218,18 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
               _Benefit(text: kPremiumValuePackageV1.freeRuleLine),
               _Benefit(text: kPremiumValuePackageV1.unlockLine),
               _Benefit(text: kPremiumValuePackageV1.restoreLine),
-              if (_restoreMessage != null) ...[
+              if (commerceAvailability?.message case final message?) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _restoreMessage!,
+                  message,
+                  key: const Key('premium_hub_store_note_v1'),
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+              if (_actionMessage != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  _actionMessage!,
                   key: const Key('premium_hub_restore_status_v1'),
                   style: theme.textTheme.bodyMedium,
                 ),
@@ -191,7 +239,9 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
                 width: double.infinity,
                 child: OutlinedButton(
                   key: const Key('premium_hub_restore_cta_v1'),
-                  onPressed: _restoreInProgress ? null : _restore,
+                  onPressed: _restoreInProgress || !canRestore
+                      ? null
+                      : _restore,
                   child: Text(
                     _restoreInProgress ? 'RESTORING...' : 'Restore purchases',
                   ),
@@ -202,7 +252,9 @@ class _UiV2PremiumHubState extends State<UiV2PremiumHub>
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   key: const Key('premium_hub_upgrade_cta_v1'),
-                  onPressed: isPremium || _loading ? null : _upgrade,
+                  onPressed: isPremium || _loading || !canUpgrade
+                      ? null
+                      : _upgrade,
                   icon: const Icon(Icons.workspace_premium),
                   label: Text(upgradeLabel),
                 ),

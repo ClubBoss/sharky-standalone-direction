@@ -1,7 +1,7 @@
 # MASTER PLAN v3.0
 
 Status: ACTIVE
-Last updated: 2026-05-11
+Last updated: 2026-05-14
 
 Launch-readiness reference:
 
@@ -74,7 +74,7 @@ Localization references:
 - `docs/plan/RUSSIAN_LOCALIZATION_ROLLOUT_v1.md` — active Russian rollout order
 - `docs/plan/ACT0_CONTENT_LOCALIZATION_SCALING_v1.md` — scalable content-copy seam policy
 - `docs/plan/ACT0_LOCALIZATION_FILE_MODEL_SSOT_v1.md` — Act0 storage model: one API layer, one language file per language, generated world packs
-- `docs/plan/ACT0_EXECUTION_SNAPSHOT_2026_05_11_v1.md` — current Act0 continuity snapshot
+- `docs/plan/ACT0_EXECUTION_SNAPSHOT_2026_05_14_v1.md` — current Act0 continuity snapshot
 
 ## Purpose
 
@@ -130,6 +130,10 @@ For this plan, 100% means:
     not a noisy chat system.
 13. Premium/trial messaging appears only after value and habit credibility are
     visible.
+14. The public monetization model is stable from the first public release:
+    `W1-W4` free, `W5-W36` premium.
+15. Progression slows through repair, mastery, and session rhythm, not timers,
+    pain loops, or fake scarcity.
 
 This is a practical product 100, not a final company/release 100.
 
@@ -160,44 +164,61 @@ These may matter later, but not for the current simple-good-working target.
 
 ## Product Scorecard
 
-Working estimate as of 2026-05-11: **82 / 100**
+Working estimate as of 2026-05-14:
 
-This number is a prioritization estimate, not release readiness.
+- active route quality: **94-95 / 100**
+- launch-surface maturity: **89-91 / 100**
+- launch/commercial readiness: **82-86 / 100**
+
+These numbers are prioritization estimates, not release readiness.
 
 The `Good enough for v1` column is the shipping-quality bar for this simple
 product route. The `100 state` column is the direction of travel after that.
 
 | Area | Weight | Now | Good enough for v1 | 100 state |
 | --- | ---: | ---: | --- | --- |
-| First start and placement | 8 | 78 | Placement is short, attractive, question-led, and routes the user clearly. | It feels personally useful without feeling like setup work. |
-| Home, navigation, and re-entry | 7 | 83 | Home tells the user exactly what to do next; tabs have distinct jobs. | Returning to the app always feels obvious and low-friction. |
-| Learn path and world map | 9 | 81 | The path is readable, sequential, and not cluttered. | It feels like a polished learning world, not a list. |
-| Content and world readiness | 16 | 92 | Release-visible worlds have enough intro, practice, apply, and review content to teach their core job. | The ladder feels planned, smooth, and complete instead of random or thin. |
-| Table/session core | 13 | 84 | One table session feels smooth, readable, and worth repeating. | The table feels like the premium core of the product. |
-| Mistake repair and Review | 9 | 89 | A wrong answer becomes a clear, useful repair step without shame. | Review feels like a personal coach, not a correction log. |
-| Play/practice hub | 6 | 78 | Play is a clean practice hub, not a duplicate of Learn. | Practice feels quick, useful, and habit-forming. |
-| You/profile/identity | 5 | 72 | Profile shows simple progress, strengths, weak spots, and next focus. | The user sees identity and improvement without dashboard bloat. |
-| Sharky, mascot, rewards, and habit | 9 | 78 | Sharky, streak-lite, achievements, and block celebrations exist without noise. | The product feels alive, rewarding, and worth returning to. |
-| Visual and premium feel | 8 | 76 | Screens feel coherent, modern, and polished enough for external review. | The app looks premium across the whole active shell. |
-| Copy and trust | 5 | 84 | Text is short, calm, useful, and beginner-safe. | The app sounds like a confident coach with no system noise. |
-| Value/trial readiness | 3 | 37 | Premium/trial appears only as value-first preview after proof. | Upgrade feels like expansion, not pressure. |
-| Simplicity and performance | 2 | 74 | The product stays fast, light, and easy to change. | New improvements remain cheap because the product stays simple. |
+| First start and placement | 8 | 89 | Placement is short, attractive, question-led, and routes the user clearly. | It feels personally useful without feeling like setup work. |
+| Home, navigation, and re-entry | 7 | 91 | Home tells the user exactly what to do next; tabs have distinct jobs. | Returning to the app always feels obvious and low-friction. |
+| Learn path and world map | 9 | 91 | The path is readable, sequential, and not cluttered. | It feels like a polished learning world, not a list. |
+| Content and world readiness | 16 | 93 | Release-visible worlds have enough intro, practice, apply, and review content to teach their core job. | The ladder feels planned, smooth, and complete instead of random or thin. |
+| Table/session core | 13 | 89 | One table session feels smooth, readable, and worth repeating. | The table feels like the premium core of the product. |
+| Mistake repair and Review | 9 | 93 | A wrong answer becomes a clear, useful repair step without shame. | Review feels like a personal coach, not a correction log. |
+| Play/practice hub | 6 | 91 | Play is a clean practice hub, not a duplicate of Learn. | Practice feels quick, useful, and habit-forming. |
+| You/profile/identity | 5 | 88 | Profile shows simple progress, strengths, weak spots, and next focus. | The user sees identity and improvement without dashboard bloat. |
+| Sharky, mascot, rewards, and habit | 9 | 84 | Sharky, streak-lite, achievements, and block celebrations exist without noise. | The product feels alive, rewarding, and worth returning to. |
+| Visual and premium feel | 8 | 87 | Screens feel coherent, modern, and polished enough for external review. | The app looks premium across the whole active shell. |
+| Copy and trust | 5 | 91 | Text is short, calm, useful, and beginner-safe. | The app sounds like a confident coach with no system noise. |
+| Value/trial readiness | 3 | 74 | Premium/trial appears only after value proof and matches real entitlement truth. | Upgrade feels like expansion, not pressure. |
+| Simplicity and performance | 2 | 60 | The product stays fast, light, and easy to change. | New improvements remain cheap because the product stays simple. |
 
-Weighted current estimate: about **82 / 100**.
+Weighted scorecard estimate is still useful for route direction, but it now
+needs one explicit correction:
 
-Calibration note (2026-05-11):
+- the route is strong
+- the app can still feel alpha-like in visual finish, Sharky distinctiveness,
+  motion, and late-surface maturity
+- therefore the broad app-quality read is lower than the old route-only number
 
-- `Mistake repair and Review` increased after canonical review-queue behavior was
-  stabilized and guarded by deterministic tests on the active World 1 runner
-  path.
-- `Copy and trust` increased after the Act0 localization seam was normalized to
-  one core reader/API layer plus one RU language file with stable-id lookups,
-  reducing drift and screen-level inconsistency risk.
-- `Content and world readiness` increased slightly because localization
-  production infrastructure (coverage/audit/pack workflows) now supports faster
-  safe expansion without reopening runtime seams.
-- Other rows are intentionally unchanged in this wave because no direct
-  user-surface evidence moved them.
+Calibration note (2026-05-14):
+
+- the old `96-97` route estimate was too tunnel-focused for full-app maturity
+  reporting
+- `flutter analyze` is clean
+- the latest full preview-suite run is no longer fully green; live status is
+  `+276 -4` after parallel drift
+- `Table/session core` moved because runner semantics, active-seat truth,
+  counting prompts, and lower-lesson learn continuation were closed, but
+  premium-feel table maturity is still not fully proven
+- `Placement` moved because the route is cleaner and more value-first, but it
+  still lacks real novice proof.
+- `Value/trial readiness` is materially higher than the old row because the
+  public model, access-state seams, package scope, and release-facing fallback
+  truth are now much more explicit in code and tests
+- `Sharky` and `Visual` moved down because the app still reads more like a
+  strong alpha than a fully authored premium product in some surfaces
+- `Simplicity and performance` remains the lowest engineering-health row after
+  the route stabilized, because the active product is greener than the file
+  boundaries are clean.
 
 ## Route To 100 Theses
 
@@ -208,6 +229,11 @@ truths that should shape wave selection and score calibration.
 1. **Entry magic matters more than report detail.**
    `Placement` should feel like fast trusted routing, not like a miniature
    diagnostic report or setup funnel.
+1A. **Product onboarding is not curriculum content.**
+   If the app needs a short "how Sharky works / why this feels easier" layer,
+   it should live as a one-time post-placement onboarding sequence, not as a
+   canonical `World 0` on the Learn map. Curriculum worlds teach poker.
+   Onboarding teaches the product shape.
 2. **Growth must be felt in the loop, not only stored in profile.**
    `Table -> Result` should make skill growth, earned progress, and next-step
    confidence emotionally visible before the user ever visits `You`.
@@ -217,9 +243,186 @@ truths that should shape wave selection and score calibration.
 4. **Premium consistency is a system quality, not a per-screen garnish.**
    Shape language, emphasis, density, reward grammar, and CTA rhythm should
    read like one intentional product across the active shell.
+
+## First-Use Onboarding Policy
+
+If Sharky needs to demonstrate product power before the normal route begins,
+the correct form is:
+
+`Placement -> Welcome layer -> first micro-win -> Home / Learn / World 1`
+
+not:
+
+`World 0 on the map -> long intro -> World 1`
+
+Rules for this layer:
+
+1. It is a one-time onboarding layer, not a normal world.
+2. It sits after `Placement`, because `Placement` should stay short and route
+   the user first instead of carrying both diagnosis and product explanation.
+3. It must stay table-adjacent and interactive, not become a detached theory
+   wall or product brochure.
+4. It should prove value through one short guided success loop, not through
+   claims that the product is "best" or "powerful".
+5. It can explain the jobs of `Home`, `Learn`, `Play`, and `Review`, but only
+   in compact user-facing language.
+6. It must hand off cleanly into `Poker from Zero` and must not pollute the
+   Learn map or the 36-world curriculum architecture.
+
+Suggested shape:
+
+1. one short "how learning works here" beat
+2. one short "why this feels easier" beat
+3. one compact app-shape beat (`Home / Learn / Play / Review`)
+4. one table micro-session with a clear feedback moment
+5. handoff into the normal World 1 route
+
+### Admitted Welcome Layer Blueprint
+
+The current best-form blueprint is:
+
+1. **Beat 1 — How Sharky works**
+   One compact screen that explains the core promise in user terms:
+   one table read, one decision, one clear why.
+2. **Beat 2 — Why this feels easier**
+   One compact screen that explains the format advantage:
+   no theory wall, no overload, one thing at a time.
+3. **Beat 3 — App shape**
+   One compact screen that gives jobs to `Home`, `Learn`, `Play`, and `Review`
+   without dashboard language.
+4. **Beat 4 — First micro-win**
+   One short table-adjacent interaction with a clear answer and calm feedback.
+5. **Beat 5 — Route handoff**
+   One clean close that routes the user into `Poker from Zero` without making
+   the onboarding layer feel like a separate curriculum world.
+
+Hard constraints:
+
+1. No brochure copy about being "the best product".
+2. Product power must be demonstrated, not declared.
+3. Keep the layer short enough that it improves trust instead of delaying value.
+4. The layer should be replayable from a help/settings seam later, but it
+   should not occupy permanent space on the Learn map.
+
 5. **Habit energy should come from clean return reasons, not noisy gamification.**
    Sharky, streak, achievements, quick reps, and celebrations should reinforce
    the route and felt progress without turning the product into growth theater.
+
+### Implementation Contract
+
+To keep the layer aligned with the rest of the product:
+
+1. **Route position**
+   It runs only after `Placement` completes and before the normal first landing
+   on `Home`.
+2. **Completion policy**
+   It is auto-shown once for first-time users, then marked complete.
+3. **Replay policy**
+   It should be replayable later from a secondary help/settings seam, not from
+   the Learn map.
+4. **Curriculum boundary**
+   It must not count as a world, lesson, or map node in the 36-world ladder.
+5. **Content quality bar**
+   Its copy should meet the same authored quality bar as the active worlds:
+   short, calm, premium, table-adjacent, and beginner-safe.
+6. **Power demonstration rule**
+   "Product power" should be shown by clarity, interaction, feedback quality,
+   and route confidence, not by superiority claims or feature boasting.
+7. **Exit contract**
+   The final beat must route the user into `Poker from Zero` without a second
+   explanation wall.
+
+### Suggested Owner Seams
+
+This layer should be owned as a first-start shell family, not as curriculum
+content:
+
+1. completion / boot gating in the Act0 preview-shell route
+2. one compact welcome-surface renderer
+3. one short table micro-session seam
+4. one persisted completion flag
+5. one replay entry from a non-Learn utility surface
+
+### Exact Beat Spec
+
+The current preferred build brief is:
+
+1. **Beat 1 — Core promise**
+   - job: reduce uncertainty fast
+   - user takeaway: "I read one spot, choose one action, and get one clear why."
+   - visual focus: compact premium intro surface, no table yet
+   - copy budget: one headline, one support block, one CTA
+2. **Beat 2 — Why this format works**
+   - job: make the product feel powerful without bragging
+   - user takeaway: "This is easier because it is one decision at a time."
+   - visual focus: same shell, slightly richer support block
+   - copy budget: one headline, max two short support blocks
+3. **Beat 3 — App shape**
+   - job: stop future tab confusion before it starts
+   - user takeaway:
+     - `Home` tells me what to do now
+     - `Learn` is the route
+     - `Play` is extra practice
+     - `Review` fixes mistakes
+   - visual focus: four compact role cards or one segmented explainer surface
+   - copy budget: one line per tab job
+4. **Beat 4 — First micro-win**
+   - job: prove the method through experience
+   - user takeaway: "I already used Sharky once and understood the feedback."
+   - visual focus: real table, one tiny action loop
+   - interaction: one very simple decision with one calm feedback reveal
+   - result: clear success moment, not difficulty spike
+5. **Beat 5 — Handoff**
+   - job: move from onboarding into real curriculum without friction
+   - user takeaway: "Now I start Poker from Zero."
+   - visual focus: compact confirmation / next-step surface
+   - CTA: direct route into the first real lesson
+
+Non-goals:
+
+1. teaching poker depth before World 1
+2. proving every feature in the app
+3. marketing comparison language
+4. another long explanation after the micro-win
+
+### Technical Implementation Spec
+
+To keep the future build bounded and route-safe, the layer should land through
+these seams:
+
+1. **Boot gating seam**
+   - after successful `Placement`, boot checks a dedicated
+     `welcomeOnboardingCompleted` truth
+   - if the flag is false, route into the Welcome layer
+   - if the flag is true, route into the normal `Home` landing
+2. **Persistence seam**
+   - the completion flag must live separately from world, lesson, and route
+     mastery progress
+   - replaying or completing the Welcome layer must not mutate curriculum
+     completion state
+3. **Replay seam**
+   - replay entry belongs to a help/settings-style utility seam only
+   - replay must not re-open automatically from Learn and must not reset user
+     progress
+4. **Welcome shell seam**
+   - use one compact renderer family for Beats 1-3 and Beat 5
+   - do not spread first-use explanation logic across `Placement`, `Home`, and
+     `Learn`
+5. **Micro-session seam**
+   - Beat 4 should be one standalone tiny table loop, not a normal lesson node
+   - its outcome should create confidence and route clarity, not review debt or
+     fake failure stakes
+6. **Exit / handoff seam**
+   - when the layer completes, mark the completion flag true
+   - route directly into `Home` with `Poker from Zero` as the dominant next
+     action
+   - do not stack a second orientation surface after the micro-win
+7. **Proof seam**
+   - first-run after `Placement` shows the Welcome layer
+   - later boots skip it when the flag is true
+   - replay can reopen it without altering world progress
+   - completion must not create world ids, lesson ids, or map artifacts
+   - exit must hand off into the normal `Poker from Zero` route
 
 Use these theses when a proposed idea sounds attractive but competes with route
 clarity, trust, or learning quality. If a proposal weakens one of the five
@@ -228,29 +431,95 @@ truths above, it is not part of the route to 100.
 ## Current Route To 100
 
 After the landed `Home`, `You`, `Review`, `Placement`, `Table / Result`,
-`Learn`, shell-consistency, and habit-coherence waves, the next route should
-be shaped by compounding user-visible leaps, not by reopening already strong
-surfaces.
+`Learn`, shell-consistency, habit-coherence, and integration-closure waves,
+the next route is no longer a broad product-surface route, but it is also not
+just proof plus commerce. The remaining path to 100 now has to account for
+full-app maturity, not only route coherence.
 
 Current next-wave order:
 
-1. `Play polish as quick-return practice layer`
+1. `Progress / skill truth closure`
+2. `Play contract closure`
+3. `Placement truth closure`
+4. `Learn simplification closure`
+5. `Profile role compression`
+6. `Welcome presentation closure`
+7. `Proof closure`
+8. `Commerce/store truth closure`
+9. `Late maturity closure`
 
 Why this order:
 
-- `Placement` is now materially stronger as trusted routing.
-- `Home` is no longer the main bottleneck.
-- `Table / Result` now surfaces compact skill-gain highlights inside feedback
-  and block summary, so growth is more visible in the loop before profile.
-- `Learn` now carries stronger chapter identity, next-landmark pull, and less
-  shelf-like route language without reopening the scroll/open seam.
-- shell-wide consistency now keeps shape language, CTA corners, and compact
-  chip treatment aligned across active surfaces instead of splitting into
-  rounded dialects.
-- habit coherence now keeps Sharky prefix-light, rewards tied to repair/rhythm
-  evidence, and achievement language aligned with real learning proof instead
-  of generic activity labels.
-- `Play` is now the clearest remaining quick-return surface to tighten.
+- the highest remaining EV is no longer localization polish or broad visual
+  cleanup; it is product-truth work where the app can still feel decorative or
+  placeholder-driven
+- `Learn` reset truth, `XP / skill` meaning, `Play` placeholder drills, and
+  weak `Placement` questions all weaken trust more than another surface-level
+  polish pass would help
+- `Play` must stop reading like a second route and start reading like true
+  quick-return practice with real drills and minimal chrome
+- `Learn` and `You` still need simplification, but those surfaces should be
+  compressed after route truth is fixed rather than used to hide it
+- `Welcome` presentation still matters, but it should be redesigned after the
+  first-start and progress systems are trustworthy, not before
+- proof, commerce truth, and late architecture closure still matter, but they
+  no longer outrank the active product-truth seams above
+
+Immediate execution rule:
+
+1. do not jump between `Learn`, `Play`, `You`, `Placement`, and `Welcome` for
+   isolated symptoms
+2. close one dominant owner family at a time
+3. the next admitted family is `progress / skill truth`
+4. the first wave inside that family is audit-only:
+   - reset-to-zero truth
+   - XP award derivation
+   - skill-gain derivation
+   - gain presentation ownership
+   - profile-stat source truth
+5. only after that audit proves a coherent owner seam should implementation
+   begin
+
+Captured current product signals for this lane:
+
+- `Learn`: reset is not truly zero-state; chrome/pills and duplicated chapter
+  signaling still create clutter
+- `Play`: quick-return role still mixes with route-learning and placeholder
+  drill inventory
+- `You`: identity surface is too text-heavy and over-signaled
+- `Placement`: question set still reads placeholder-like rather than
+  route-separating
+- `Welcome`: visual/presentation quality is below the desired premium bar
+- `Progress / skills`: XP, skill growth, and gain presentation still need one
+  truthful ownership pass before later surface simplification
+
+## What Still Separates 96-97 From 100
+
+The remaining gap is now narrow and explicit.
+
+1. **Novice proof is still open.**
+   The route feels strong internally, but it still needs real first-user
+   walkthrough proof for trust, clarity, and first-session aha.
+2. **Feedback source diversity is still too weak.**
+   Runtime coaching quality is much better, but authored feedback still reuses
+   generic verdict titles too heavily to count as fully mature coaching.
+3. **Device-proof needs one final refresh on the near-final build.**
+   The shell is much stronger, but practical 100 should still be backed by a
+   clean compact phone / large phone / tablet proof pass on the current build.
+4. **Launch surfaces still need one maturity verdict.**
+   The app is coherent, but not every active surface yet reads as release-grade
+   premium product quality.
+5. **Value/trial is still preview-grade, not deterministic commerce truth.**
+   Upgrade timing is improved, but restore/purchase/trial-expiry truth is not
+   yet closed.
+6. **Retention pacing is still implicit, not fully governed.**
+   The route already has session energy, done-for-today, repair-first return,
+   and spaced resurfacing signals, but the anti-binge / quality-aware
+   progression policy is not yet fully locked as one release-grade runtime
+   contract.
+7. **Architecture simplicity is still below product quality.**
+   The route is green, but the biggest Act0 files are still too large to call
+   the system fully mature.
 
 ## Captured Signals From External Reviews (2026-05-13)
 

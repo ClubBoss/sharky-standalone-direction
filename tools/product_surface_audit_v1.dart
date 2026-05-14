@@ -234,7 +234,7 @@ const List<_SurfaceFamilySpecV1> _kSurfaceFamiliesV1 = <_SurfaceFamilySpecV1>[
     firstUserSpine: true,
     ownerPaths: <String>['lib/ui_v2/screens/universal_intake_plan_screen.dart'],
     requiredTestPaths: <String>[
-      'test/guards/world1_intake_plan_flow_contract_test.dart',
+      'test/guards/world1_app_root_startup_contract_test.dart',
       'test/ui_v2/today_plan_entitlement_truth_v1_test.dart',
       'test/guards/world_campaign_map_home_contract_test.dart',
     ],

@@ -41,7 +41,7 @@ void main() {
     const steps = <String>[
       'test/guards/app_boot_release_smoke_test.dart',
       'test/ui_v2/onboarding_first_win_test.dart',
-      'test/guards/world1_intake_plan_flow_contract_test.dart',
+      'test/guards/world1_app_root_startup_contract_test.dart',
       'test/ui_v2/session_result_world1_onboarding_payoff_test.dart',
       'test/ui_v2/today_plan_entitlement_truth_v1_test.dart',
       'test/ui_v2/premium_hub_access_state_v1_test.dart',

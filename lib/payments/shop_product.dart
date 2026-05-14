@@ -52,6 +52,16 @@ class ShopProducts {
     type: ProductType.subscription,
   );
 
+  static ShopProduct proSubscriptionAnnual({ProductDetails? details}) =>
+      ShopProduct(
+        id: 'pro_subscription_annual',
+        name: 'Pro Subscription Annual',
+        description: 'Annual subscription with all features',
+        storeProduct: details,
+        iconName: 'vip',
+        type: ProductType.subscription,
+      );
+
   static ShopProduct xpBooster({ProductDetails? details}) => ShopProduct(
     id: 'xp_booster',
     name: 'XP Booster',

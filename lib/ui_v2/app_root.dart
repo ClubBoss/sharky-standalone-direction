@@ -2,15 +2,12 @@ import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode;
-import 'package:poker_analyzer/canonical/canonical_landing_decision_v1.dart';
 import 'package:poker_analyzer/l10n/app_localizations.dart';
 import 'package:poker_analyzer/navigation/deep_link_target_v1.dart';
-import 'package:poker_analyzer/onboarding/onboarding_flow_manager.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 export 'package:poker_analyzer/app/runtime_surface.dart' show appRoot;
@@ -415,59 +412,12 @@ class _EntryGateState extends State<_EntryGate> {
   }
 
   Future<void> _bootstrapEntrySurface() async {
-    final prefs = await SharedPreferences.getInstance();
-    final canonicalOnboardingCompleted =
-        prefs.getBool('onboardingCompleted') ?? false;
-    final onboardingCompleted =
-        canonicalOnboardingCompleted ||
-        await OnboardingPreferencesService.hasCompletedOnboarding();
-    if (onboardingCompleted && !canonicalOnboardingCompleted) {
-      await OnboardingPreferencesService.setOnboardingComplete();
-    }
-    var intakeCompleted = await ProgressService.isIntakeCompleted();
-    final campaignComplete = await ProgressService.isCampaignCompleteV1();
-    if (onboardingCompleted && !intakeCompleted) {
-      await ProgressService.saveIntakeProfile(<String, Object?>{
-        'version': 'v1',
-        'completedAt': DateTime.now().toUtc().toIso8601String(),
-        'steps': 0,
-        'wrongAttempts': 0,
-        'errorClass': 'none',
-        'focusLabel': 'baseline',
-      });
-      intakeCompleted = true;
-    }
-    final bootCanonicalEntryPackId = campaignComplete
-        ? ''
-        : '__boot_incomplete_campaign_v1__';
-    final checkpointState =
-        await ProgressService.getCheckpointProgressStateV1();
-    final landingDecision = await resolveCanonicalLandingDecisionV1(
-      CanonicalLandingDecisionInputsV1(
-        onboardingCompleted: onboardingCompleted,
-        intakeCompleted: intakeCompleted,
-        campaignComplete: campaignComplete,
-        checkpointPending: checkpointState.checkpointPending,
-        nextPackId: bootCanonicalEntryPackId,
-        canonicalEntryPackId: bootCanonicalEntryPackId,
-        hasReviewQueueForCanonicalEntryPack: false,
-        activePackId: '',
-        currentPackId: '',
-        nextHandIndex: 0,
-        source: CanonicalLandingSourceV1.boot,
-      ),
-    );
-    final showPlacementOnStart =
-        landingDecision.surfaceKind == CanonicalLandingSurfaceKindV1.intakePlan;
+    const showPlacementOnStart = true;
     if (!mounted) return;
     setState(() {
       _showPlacementOnStart = showPlacementOnStart;
       _entryReady = true;
     });
-    await _safeStart(
-      'Onboarding',
-      () => OnboardingFlowManager.instance.maybeStart(context),
-    );
     await _safeStart('Deep link', _maybeHandleDeepLink);
   }
 

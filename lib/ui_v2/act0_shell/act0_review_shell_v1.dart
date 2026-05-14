@@ -43,6 +43,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = Act0ShellTokensV1.isTabletWidth(context);
+    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final localeIsRu = _isRuLocaleV1(context);
     final nextMistake = review.mistakes.isEmpty ? null : review.mistakes.first;
     final dominantPattern = _dominantReviewPatternV1(review.mistakes);
@@ -54,12 +56,127 @@ class Act0ReviewShellV1 extends StatelessWidget {
         (mistake) => mistake.severityLabel == 'Quick fix',
       ),
     ];
+    final leftColumn = <Widget>[
+      Act0SharkyGuideCardV1(
+        eyebrow: localeIsRu ? 'Шарки' : 'Sharky',
+        line: _reviewSharkyLineV1(
+          localeIsRu: localeIsRu,
+          nextMistake: nextMistake,
+          recoveredCount: recovered.length,
+        ),
+        detail: _reviewSharkyDetailV1(
+          localeIsRu: localeIsRu,
+          nextMistake: nextMistake,
+          recoveredCount: recovered.length,
+        ),
+        mood: nextMistake != null
+            ? Act0SharkyMoodV1.repair
+            : Act0SharkyMoodV1.happy,
+        tone: nextMistake != null
+            ? Act0ShellTokensV1.gold
+            : Act0ShellTokensV1.primary,
+        compact: true,
+      ),
+      if (dominantPattern != null) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        _ReviewPatternCardV1(pattern: dominantPattern, localeIsRu: localeIsRu),
+      ],
+      const SizedBox(height: Act0ShellTokensV1.gapLg),
+      _ReviewBoardV1(
+        review: review,
+        nextMistake: nextMistake,
+        onFixMistake: onFixMistake,
+      ),
+    ];
+    final rightColumn = <Widget>[
+      if (review.mistakes.isEmpty)
+        _ReviewEmptyStateV1(review: review)
+      else ...[
+        Text(
+          _reviewCopyV1(
+            context,
+            atomId: 'review_fix_next_label',
+            fallback: 'Fix next',
+          ),
+          style: Act0ShellTokensV1.sectionTitle,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          _reviewCopyV1(
+            context,
+            en: 'Start with the highest-pressure miss first.',
+            ru: 'Сначала почини самую давящую ошибку.',
+          ),
+          style: Act0ShellTokensV1.muted,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        _MistakeCardV1(
+          mistake: review.mistakes.first,
+          prominent: true,
+          onFixMistake: onFixMistake,
+        ),
+        if (review.mistakes.length > 1) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Container(
+            key: const Key('act0_shell_review_more_repairs_line'),
+            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+            decoration: Act0ShellTokensV1.surfaceDecoration(
+              color: Act0ShellTokensV1.surface2.withOpacity(0.56),
+              glow: false,
+            ),
+            child: Text(
+              localeIsRu
+                  ? (review.mistakes.length == 2
+                        ? 'После этого ждёт ещё один фикс.'
+                        : 'После этого ждут ещё ${review.mistakes.length - 1} фикса.')
+                  : (review.mistakes.length == 2
+                        ? '1 more repair is waiting after this one.'
+                        : '${review.mistakes.length - 1} more repairs are waiting after this one.'),
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textDim,
+              ),
+            ),
+          ),
+        ],
+      ],
+      if (recovered.isNotEmpty) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        Text(
+          _reviewCopyV1(
+            context,
+            atomId: 'review_recovered_lately_label',
+            fallback: 'Recovered lately',
+          ),
+          style: Act0ShellTokensV1.sectionTitle,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          localeIsRu
+              ? (recovered.length == 1
+                    ? 'Один спот уже снова под контролем. Так протечки перестают казаться вечными.'
+                    : '${recovered.length} спота уже снова под контролем. Так игра начинает ощущаться легче.')
+              : (recovered.length == 1
+                    ? 'One spot is already back under control. That is how leaks stop feeling permanent.'
+                    : '${recovered.length} spots are already back under control. That is how the board starts feeling lighter.'),
+          style: Act0ShellTokensV1.muted,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        for (final mistake in recovered.take(2)) ...[
+          _FixedMistakeCardV1(
+            mistake: mistake,
+            quick: mistake.severityLabel == 'Quick fix',
+            onReplay: onReplayFixedMistake,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+        ],
+      ],
+    ];
     return ListView(
       key: const Key('act0_shell_review_screen'),
-      padding: const EdgeInsets.fromLTRB(
-        Act0ShellTokensV1.pageX,
+      padding: EdgeInsets.fromLTRB(
+        pagePadding,
         Act0ShellTokensV1.gapLg,
-        Act0ShellTokensV1.pageX,
+        pagePadding,
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
@@ -83,121 +200,39 @@ class Act0ReviewShellV1 extends StatelessWidget {
               : Act0ShellTokensV1.gold,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapLg),
-        Act0SharkyGuideCardV1(
-          eyebrow: localeIsRu ? 'Шарки' : 'Sharky',
-          line: _reviewSharkyLineV1(
-            localeIsRu: localeIsRu,
-            nextMistake: nextMistake,
-            recoveredCount: recovered.length,
-          ),
-          detail: _reviewSharkyDetailV1(
-            localeIsRu: localeIsRu,
-            nextMistake: nextMistake,
-            recoveredCount: recovered.length,
-          ),
-          mood: nextMistake != null
-              ? Act0SharkyMoodV1.repair
-              : Act0SharkyMoodV1.happy,
-          tone: nextMistake != null
-              ? Act0ShellTokensV1.gold
-              : Act0ShellTokensV1.primary,
-          compact: true,
-        ),
-        if (dominantPattern != null) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ReviewPatternCardV1(
-            pattern: dominantPattern,
-            localeIsRu: localeIsRu,
-          ),
-        ],
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        _ReviewBoardV1(
-          review: review,
-          nextMistake: nextMistake,
-          onFixMistake: onFixMistake,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        if (review.mistakes.isEmpty)
-          _ReviewEmptyStateV1(review: review)
-        else ...[
-          Text(
-            _reviewCopyV1(
-              context,
-              atomId: 'review_fix_next_label',
-              fallback: 'Fix next',
-            ),
-            style: Act0ShellTokensV1.sectionTitle,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            _reviewCopyV1(
-              context,
-              en: 'Start with the highest-pressure miss first.',
-              ru: 'Сначала почини самую давящую ошибку.',
-            ),
-            style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _MistakeCardV1(
-            mistake: review.mistakes.first,
-            prominent: true,
-            onFixMistake: onFixMistake,
-          ),
-          if (review.mistakes.length > 1) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Container(
-              key: const Key('act0_shell_review_more_repairs_line'),
-              padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-              decoration: Act0ShellTokensV1.surfaceDecoration(
-                color: Act0ShellTokensV1.surface2.withOpacity(0.56),
-                glow: false,
-              ),
-              child: Text(
-                localeIsRu
-                    ? (review.mistakes.length == 2
-                          ? 'После этого ждёт ещё один фикс.'
-                          : 'После этого ждут ещё ${review.mistakes.length - 1} фикса.')
-                    : (review.mistakes.length == 2
-                          ? '1 more repair is waiting after this one.'
-                          : '${review.mistakes.length - 1} more repairs are waiting after this one.'),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textDim,
+        Act0ShellTokensV1.centeredContent(
+          context,
+          tabletMaxWidth: 1080,
+          child: isTablet
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: leftColumn,
+                      ),
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapLg),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: rightColumn,
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...leftColumn,
+                    const SizedBox(height: Act0ShellTokensV1.gapLg),
+                    ...rightColumn,
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ],
-        if (recovered.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-          Text(
-            _reviewCopyV1(
-              context,
-              atomId: 'review_recovered_lately_label',
-              fallback: 'Recovered lately',
-            ),
-            style: Act0ShellTokensV1.sectionTitle,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            localeIsRu
-                ? (recovered.length == 1
-                      ? 'Один спот уже снова под контролем. Так протечки перестают казаться вечными.'
-                      : '${recovered.length} спота уже снова под контролем. Так игра начинает ощущаться легче.')
-                : (recovered.length == 1
-                      ? 'One spot is already back under control. That is how leaks stop feeling permanent.'
-                      : '${recovered.length} spots are already back under control. That is how the board starts feeling lighter.'),
-            style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (final mistake in recovered.take(2)) ...[
-            _FixedMistakeCardV1(
-              mistake: mistake,
-              quick: mistake.severityLabel == 'Quick fix',
-              onReplay: onReplayFixedMistake,
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-          ],
-        ],
+        ),
       ],
     );
   }
@@ -312,23 +347,65 @@ String _reviewSharkyLineV1({
   required Act0MistakeCardV1? nextMistake,
   required int recoveredCount,
 }) {
+  final seed = recoveredCount + (nextMistake?.attempts ?? 0);
   if (nextMistake == null) {
-    return localeIsRu
-        ? (recoveredCount > 0
-              ? 'Стол снова чист. Этот фикс закрепился.'
-              : 'Стол чист. Держи маршрут в движении.')
-        : (recoveredCount > 0
-              ? 'Board is clean again. That repair work stuck.'
-              : 'Board is clean. Keep the route moving.');
+    return _pickReviewPaletteLineV1(
+      localeIsRu
+          ? (recoveredCount > 0
+                ? <String>[
+                    'Стол снова чист. Этот фикс закрепился.',
+                    'Чисто. Этот ремонт не откатился назад.',
+                    'Очередь пустая. Исправление действительно закрепилось.',
+                  ]
+                : <String>[
+                    'Стол чист. Держи маршрут в движении.',
+                    'Сейчас чисто. Удержи ритм одним спокойным репом.',
+                    'Ничего срочного нет. Продолжай ровный ход.',
+                  ])
+          : (recoveredCount > 0
+                ? <String>[
+                    'Board is clean again. That repair work stuck.',
+                    'Clean board. That fix held up.',
+                    'Queue is clear. The repair has actually landed.',
+                  ]
+                : <String>[
+                    'Board is clean. Keep the route moving.',
+                    'Everything is clear right now. Keep rhythm with one calm rep.',
+                    'Nothing urgent is pending. Continue with a steady pass.',
+                  ]),
+      seed: seed,
+    );
   }
   if (recoveredCount > 0) {
-    return localeIsRu
-        ? 'Сначала один чистый фикс. ${recoveredCount == 1 ? 'Один спот уже вернулся.' : '$recoveredCount спота уже вернулись.'}'
-        : 'One clean fix first. ${recoveredCount == 1 ? 'One spot is already back.' : '$recoveredCount spots are already back.'}';
+    return _pickReviewPaletteLineV1(
+      localeIsRu
+          ? <String>[
+              'Сначала один чистый фикс. ${recoveredCount == 1 ? 'Один спот уже вернулся.' : '$recoveredCount спота уже вернулись.'}',
+              'Один прицельный фикс первым. ${recoveredCount == 1 ? 'Один спот уже снова под контролем.' : '$recoveredCount спота уже снова под контролем.'}',
+              'Сначала снимаем главное давление. ${recoveredCount == 1 ? 'Один спот уже держится.' : '$recoveredCount спота уже держатся.'}',
+            ]
+          : <String>[
+              'One clean fix first. ${recoveredCount == 1 ? 'One spot is already back.' : '$recoveredCount spots are already back.'}',
+              'One targeted repair first. ${recoveredCount == 1 ? 'One spot is back under control.' : '$recoveredCount spots are back under control.'}',
+              'Remove the main pressure first. ${recoveredCount == 1 ? 'One spot is already holding.' : '$recoveredCount spots are already holding.'}',
+            ],
+      seed: seed,
+    );
   }
-  return localeIsRu
-      ? 'Сначала один чистый фикс. Остальное может подождать.'
-      : 'One clean fix first. The rest can wait.';
+  return _pickReviewPaletteLineV1(
+    localeIsRu
+        ? <String>[
+            'Сначала один чистый фикс. Остальное может подождать.',
+            'Один фикс за раз. Так быстрее возвращается контроль.',
+            'Начни с главного узла. Остальное подтянется следом.',
+          ]
+        : <String>[
+            'One clean fix first. The rest can wait.',
+            'One repair at a time. Control returns faster that way.',
+            'Start with the top pressure node. The rest follows.',
+          ],
+    seed: seed,
+  );
 }
 
 String _reviewHeaderEyebrowV1({
@@ -351,21 +428,57 @@ String _reviewSharkyDetailV1({
   required Act0MistakeCardV1? nextMistake,
   required int recoveredCount,
 }) {
+  final seed = recoveredCount + (nextMistake?.attempts ?? 0);
   if (nextMistake == null) {
-    return localeIsRu
-        ? (recoveredCount > 0
-              ? 'Сейчас в маршруте нет ничего срочного.'
-              : 'Сейчас путь не тянет ни в какой срочный фикс.')
-        : (recoveredCount > 0
-              ? 'Nothing urgent is pulling on the route right now.'
-              : 'No urgent repair is pulling on the path right now.');
+    return _pickReviewPaletteLineV1(
+      localeIsRu
+          ? (recoveredCount > 0
+                ? <String>[
+                    'Сейчас в маршруте нет ничего срочного.',
+                    'Срочных дырок сейчас нет, можно держать ровный ритм.',
+                  ]
+                : <String>[
+                    'Сейчас путь не тянет ни в какой срочный фикс.',
+                    'Пока ничто не требует аварийного ремонта.',
+                  ])
+          : (recoveredCount > 0
+                ? <String>[
+                    'Nothing urgent is pulling on the route right now.',
+                    'No urgent leaks are pulling on the route right now.',
+                  ]
+                : <String>[
+                    'No urgent repair is pulling on the path right now.',
+                    'Nothing requires emergency repair right now.',
+                  ]),
+      seed: seed,
+    );
   }
   if (recoveredCount > 0) {
-    return localeIsRu
-        ? '${nextMistake.weaknessLabel} — следующая точка давления. Почини её, и игра снова станет легче.'
-        : '${nextMistake.weaknessLabel} is the next pressure point. Clean it and the board gets lighter again.';
+    return _pickReviewPaletteLineV1(
+      localeIsRu
+          ? <String>[
+              '${nextMistake.weaknessLabel} — следующая точка давления. Почини её, и игра снова станет легче.',
+              '${nextMistake.weaknessLabel} сейчас давит сильнее всего. Один чистый фикс вернёт лёгкость.',
+            ]
+          : <String>[
+              '${nextMistake.weaknessLabel} is the next pressure point. Clean it and the board gets lighter again.',
+              '${nextMistake.weaknessLabel} is the strongest pressure point now. One clean fix restores flow.',
+            ],
+      seed: seed,
+    );
   }
   return nextMistake.weaknessLabel;
+}
+
+String _pickReviewPaletteLineV1(List<String> variants, {required int seed}) {
+  final cleaned = variants
+      .map((line) => line.trim())
+      .where((line) => line.isNotEmpty)
+      .toList(growable: false);
+  if (cleaned.isEmpty) {
+    return '';
+  }
+  return cleaned[seed % cleaned.length];
 }
 
 class _ReviewBoardV1 extends StatelessWidget {
@@ -536,8 +649,8 @@ class _ReviewBoardV1 extends StatelessWidget {
                   child: Text(
                     support,
                     key: const Key('act0_shell_review_board_support_text'),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 4,
+                    overflow: TextOverflow.fade,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
                       fontWeight: FontWeight.w800,
@@ -603,7 +716,13 @@ class _ReviewEmptyStateV1 extends StatelessWidget {
               children: [
                 Text(review.emptyTitle, style: Act0ShellTokensV1.cardTitle),
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(review.emptyBody, style: Act0ShellTokensV1.muted),
+                Text(
+                  review.emptyBody,
+                  key: const Key('act0_shell_review_empty_body'),
+                  maxLines: 3,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted,
+                ),
               ],
             ),
           ),
@@ -751,7 +870,15 @@ class _MistakeCardV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(mistake.reason, style: Act0ShellTokensV1.muted),
+          Text(
+            mistake.reason,
+            key: prominent
+                ? const Key('act0_shell_mistake_reason')
+                : Key('act0_shell_mistake_reason_${mistake.taskId}'),
+            maxLines: 4,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.muted,
+          ),
           if (mistake.contextLabels.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             _ReviewBoardMetricPillV1(
@@ -904,7 +1031,7 @@ class _FixedMistakeCardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.primaryButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
-              child: Text(quick ? 'Run fix again' : 'Replay fix'),
+              child: Text(quick ? 'Run quick fix again' : 'Run this fix again'),
             ),
           ],
         ],

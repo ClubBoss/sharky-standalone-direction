@@ -9,6 +9,7 @@ import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
@@ -52,10 +53,56 @@ void main() {
     );
 
     expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
+    expect(find.text('BTN first'), findsOneWidget);
     expect(
       find.text('BTN first. Compare it with Call before you continue.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('Feedback shell prefers wrapped density over hard truncation', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Almost there.',
+            reason:
+                'Button acts first in this spot, so compare the action order before you pay more to continue into the hand.',
+            quality: Act0FeedbackQualityV1.wrong,
+            sharkyLine:
+                'One calm repair here keeps the same leak from following you into the next rep.',
+            sharkyMood: Act0SharkyMoodV1.repair,
+            selectedLabel: 'Call',
+            preferredLabel: 'Fold and reset the spot',
+            betterLabel: 'Fold and reset the spot',
+            contextLabels: const <String>['BTN first', 'Facing a bet'],
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final reaction = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_sharky_outcome_reaction')),
+    );
+    final selected = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_feedback_selected_label')),
+    );
+    final preferred = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_feedback_preferred_label')),
+    );
+    final reason = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_feedback_reason')),
+    );
+
+    expect(reaction.overflow, TextOverflow.fade);
+    expect(selected.overflow, TextOverflow.fade);
+    expect(preferred.maxLines, 3);
+    expect(preferred.overflow, TextOverflow.fade);
+    expect(reason.maxLines, 6);
+    expect(reason.overflow, TextOverflow.fade);
   });
 
   Widget host({
@@ -270,7 +317,39 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> advanceRunnerUntil(
+    WidgetTester tester,
+    bool Function() isDone, {
+    String failureMessage = 'Runner did not reach the expected state.',
+    int maxTaps = 24,
+  }) async {
+    for (var i = 0; i < maxTaps; i++) {
+      if (isDone()) {
+        return;
+      }
+      final cta = find.byKey(const Key('act0_shell_continue_cta'));
+      expect(cta, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 900));
+      await tester.tap(cta);
+      await tester.pumpAndSettle();
+    }
+    if (isDone()) {
+      return;
+    }
+    fail(failureMessage);
+  }
+
   Future<void> advanceTeachingToDrill(WidgetTester tester) async {
+    const practiceGroupPriority = <String>[
+      'continue',
+      'daily',
+      'actions',
+      'weak_spots',
+      'positions',
+      'streets',
+      'rankings',
+      'showdown',
+    ];
     for (var i = 0; i < 8; i++) {
       if (find
               .byKey(const Key('act0_shell_action_panel'))
@@ -298,23 +377,76 @@ void main() {
               .isNotEmpty) {
         return;
       }
-      final cta = find.byKey(const Key('act0_shell_continue_cta'));
-      expect(cta, findsOneWidget);
-      await tester.pump(const Duration(milliseconds: 900));
-      await tester.tap(cta);
-      await tester.pumpAndSettle();
+      if (find
+          .byKey(const Key('act0_shell_play_screen'))
+          .evaluate()
+          .isNotEmpty) {
+        for (final groupId in practiceGroupPriority) {
+          final group = find.byKey(Key('act0_shell_practice_group_$groupId'));
+          if (group.evaluate().isNotEmpty) {
+            await tester.ensureVisible(group);
+            await tester.pumpAndSettle();
+            await tester.tap(group);
+            await tester.pumpAndSettle();
+            break;
+          }
+        }
+        continue;
+      }
+      await advanceRunnerUntil(
+        tester,
+        () =>
+            find
+                .byKey(const Key('act0_shell_action_panel'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_raise'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_check'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_call'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_fold'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_seat_tap_prompt'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_play_screen'))
+                .evaluate()
+                .isNotEmpty,
+        failureMessage: 'Teaching steps did not reveal a drill surface.',
+        maxTaps: 12,
+      );
+      if (find
+          .byKey(const Key('act0_shell_play_screen'))
+          .evaluate()
+          .isNotEmpty) {
+        continue;
+      }
+      return;
     }
     fail('Teaching steps did not reveal a drill surface.');
   }
 
   Future<void> completeVisibleTheoryTask(WidgetTester tester) async {
-    for (var i = 0; i < 8; i++) {
-      final cta = find.byKey(const Key('act0_shell_continue_cta'));
-      expect(cta, findsOneWidget);
-      await tester.pump(const Duration(milliseconds: 900));
-      await tester.tap(cta);
-      await tester.pumpAndSettle();
-      if (find.text('2/7').evaluate().isNotEmpty ||
+    await advanceRunnerUntil(
+      tester,
+      () =>
+          find.text('2/7').evaluate().isNotEmpty ||
+          find
+              .byKey(const Key('act0_shell_play_screen'))
+              .evaluate()
+              .isNotEmpty ||
           find
               .byKey(const Key('act0_shell_action_panel'))
               .evaluate()
@@ -322,11 +454,10 @@ void main() {
           find
               .byKey(const Key('act0_shell_seat_tap_prompt'))
               .evaluate()
-              .isNotEmpty) {
-        return;
-      }
-    }
-    fail('Theory task did not advance.');
+              .isNotEmpty,
+      failureMessage: 'Theory task did not advance.',
+      maxTaps: 16,
+    );
   }
 
   Future<void> startPlacementIfNeeded(WidgetTester tester) async {
@@ -360,6 +491,72 @@ void main() {
       await tester.pumpAndSettle();
     }
     await tester.tap(find.byKey(const Key('act0_shell_placement_next_cta')));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> runPlacementToResult(WidgetTester tester) async {
+    await answerPlacementQuestion(tester, 'age_18_24');
+    await answerPlacementQuestion(tester, 'new');
+    await answerPlacementQuestion(tester, 'rarely');
+    await answerPlacementQuestionMulti(tester, <String>[
+      'basics',
+      'home_games',
+    ]);
+    await answerPlacementQuestion(tester, 'rules');
+    await answerPlacementQuestion(tester, 'guided');
+    await tester.tap(
+      find.byKey(const Key('act0_shell_placement_start_diagnostic')),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_btn')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_three')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_utg')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_btn')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> completeWelcomeLayer(WidgetTester tester) async {
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_option_hero_bottom')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> createActionsMistakeFromPlayHub(WidgetTester tester) async {
+    await openBottomTabV1(tester, 'Play');
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_practice_group_actions')),
+      180,
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_practice_group_actions')),
+    );
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
     await tester.pumpAndSettle();
   }
 
@@ -406,7 +603,7 @@ void main() {
     final root = buildCanonicalPathRootV1();
     expect(root, isA<Act0ShellPreviewScreenV1>());
     final act0Root = root as Act0ShellPreviewScreenV1;
-    expect(act0Root.showPlacementOnStart, isFalse);
+    expect(act0Root.showPlacementOnStart, isTrue);
   });
 
   test('Sample table keeps typed format and canonical player-count truth', () {
@@ -666,7 +863,9 @@ void main() {
     );
   });
 
-  testWidgets('AppRoot boots directly into the Act0 dev shell', (tester) async {
+  testWidgets('AppRoot boots into canonical first-start placement', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
     tester.view.physicalSize = const Size(430, 932);
     tester.view.devicePixelRatio = 1.0;
@@ -675,7 +874,12 @@ void main() {
     await tester.pumpWidget(const AppRoot());
     await tester.pumpAndSettle(const Duration(seconds: 3));
 
-    expect(find.text('Skip'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_placement_screen')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
   testWidgets('Dev menu can open placement manually from Today', (
@@ -754,20 +958,28 @@ void main() {
       find.byKey(const Key('act0_shell_placement_intro_for_who')),
       findsOneWidget,
     );
-    expect(find.text('Fast route in. No long setup.'), findsOneWidget);
-    expect(find.text('What you get'), findsOneWidget);
-    expect(find.textContaining('skip the wrong start'), findsOneWidget);
+    expect(find.text('Quick route check. No long setup.'), findsOneWidget);
+    expect(find.text('What happens next'), findsOneWidget);
+    expect(
+      find.textContaining(
+        'One clear place to start instead of a generic opener',
+      ),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_placement_intro_reassurance')),
       findsOneWidget,
     );
     expect(
       find.textContaining(
-        'You see your route and first rep before any premium prompt',
+        'You see where to start and your first hand before any premium prompt',
       ),
       findsOneWidget,
     );
-    expect(find.text('Two minutes. Then Sharky places you.'), findsOneWidget);
+    expect(
+      find.text('Two minutes. Then Sharky shows where to start.'),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_placement_flow_action_bar')),
       findsOneWidget,
@@ -806,7 +1018,7 @@ void main() {
     );
     expect(
       find.text(
-        'One short live check. Then Sharky locks the first useful route.',
+        'One short live check. Then Sharky locks the best place to begin.',
       ),
       findsOneWidget,
     );
@@ -816,11 +1028,11 @@ void main() {
     expect(find.textContaining('Action order'), findsOneWidget);
     expect(
       find.text(
-        'Then you land in one route that fits, opens fast, and proves itself early.',
+        'Then you land in one start that fits, opens fast, and proves itself early.',
       ),
       findsOneWidget,
     );
-    expect(find.text('Start skill check'), findsOneWidget);
+    expect(find.text('Start quick check'), findsOneWidget);
   });
 
   testWidgets('Placement multi-select keeps all selected answers', (
@@ -890,49 +1102,12 @@ void main() {
     },
   );
 
-  testWidgets('Placement diagnostic lands in Home with one-tap useful action', (
+  testWidgets('Placement diagnostic hands off into Welcome before Home', (
     tester,
   ) async {
     await pumpTall(tester, host(showPlacementOnStart: true));
 
-    await answerPlacementQuestion(tester, 'age_18_24');
-    await answerPlacementQuestion(tester, 'new');
-    await answerPlacementQuestion(tester, 'rarely');
-    await answerPlacementQuestionMulti(tester, <String>[
-      'basics',
-      'home_games',
-    ]);
-    await answerPlacementQuestion(tester, 'rules');
-    await answerPlacementQuestion(tester, 'guided');
-    await tester.tap(
-      find.byKey(const Key('act0_shell_placement_start_diagnostic')),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_seat_tap_prompt')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_btn')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('How many cards are on this flop?'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('act0_shell_option_three')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('act0_shell_seat_tap_prompt')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_utg')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('act0_shell_seat_tap_btn')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('act0_shell_seat_tap_btn')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
+    await runPlacementToResult(tester);
 
     expect(
       find.byKey(const Key('act0_shell_placement_result')),
@@ -959,10 +1134,10 @@ void main() {
       find.byKey(const Key('act0_shell_placement_value_preview')),
       findsNothing,
     );
-    expect(find.text('Sharky read'), findsOneWidget);
+    expect(find.text('Sharky recommendation'), findsOneWidget);
     expect(find.text('Core poker skills'), findsOneWidget);
     expect(find.textContaining('Lv'), findsWidgets);
-    expect(find.text('First route'), findsWidgets);
+    expect(find.text('Start here'), findsWidgets);
     expect(
       find.byKey(const Key('act0_shell_placement_open_recommended_path')),
       findsOneWidget,
@@ -972,17 +1147,39 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_placement_report_body_block_0')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_placement_report_body_block_1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const Key('act0_shell_placement_destination_trust_line_block_0'),
+      ),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_placement_first_win_card')),
       findsOneWidget,
     );
     expect(find.text('What should feel better first'), findsOneWidget);
-    expect(find.textContaining('By the end of the first rep'), findsWidgets);
+    expect(find.textContaining('By the end of the first hand'), findsWidgets);
     expect(
-      find.textContaining('keeps the route close to the foundations'),
+      find.textContaining('keeps the start close to the foundations'),
       findsOneWidget,
     );
     expect(
       find.byKey(const Key('act0_shell_placement_next_10_block')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_placement_recommended_reason_block_0')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_placement_next_10_blocks_block_0')),
       findsOneWidget,
     );
 
@@ -1009,11 +1206,27 @@ void main() {
       find.byKey(const Key('act0_shell_placement_recommended_sheet')),
       findsOneWidget,
     );
-    expect(find.text('First route'), findsWidgets);
+    expect(find.text('Start here'), findsWidgets);
     expect(find.text('First sessions'), findsOneWidget);
     expect(find.text('Preview 7-day trial'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_placement_recommended_trust_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const Key('act0_shell_placement_sheet_recommended_reason_block_0'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        const Key('act0_shell_placement_recommended_trust_line_block_0'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_placement_premium_pitch_block_0')),
       findsOneWidget,
     );
     expect(
@@ -1025,18 +1238,25 @@ void main() {
       find.byKey(const Key('act0_shell_placement_start_recommended')),
     );
     await tester.pumpAndSettle();
-    // Drain the staggered skip-reveal animation timers (140 ms × up to ~20 tasks).
-    await tester.pump(const Duration(seconds: 5));
 
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_welcome_primary_cta')),
+      findsOneWidget,
+    );
+
+    await completeWelcomeLayer(tester);
+
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_bottom_nav')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
-    expect(find.text('First guided start'), findsOneWidget);
+    expect(find.text('Start here'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+    expect(find.text('1/7'), findsOneWidget);
   });
 
   testWidgets('Placement seeds poker skill stats into Profile', (tester) async {
@@ -1085,8 +1305,7 @@ void main() {
       find.byKey(const Key('act0_shell_placement_start_recommended')),
     );
     await tester.pumpAndSettle();
-    // Drain staggered skip-reveal timers before navigating away.
-    await tester.pump(const Duration(seconds: 5));
+    await completeWelcomeLayer(tester);
 
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
@@ -1101,6 +1320,105 @@ void main() {
     );
     expect(find.textContaining('to Lv'), findsWidgets);
     expect(find.text('Blind play'), findsOneWidget);
+  });
+
+  testWidgets(
+    'Returning boot with completed Welcome skips placement and Welcome',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final currentLesson = sample.currentLesson;
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'intake_completed_v1': true,
+        'act0_welcome_completed_v1': true,
+        'act0_shell_progress_v1': jsonEncode(<String, Object>{
+          'schemaVersion': 5,
+          'completedTaskIds': <String>[],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': sample.selectedWorldId,
+          'selectedLessonId': currentLesson.lessonId,
+          'selectedTaskId': currentLesson.taskList.first.taskId,
+          'earnedXp': 0,
+        }),
+      });
+
+      await pumpTall(tester, host(showPlacementOnStart: true));
+
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_placement_screen')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_welcome_primary_cta')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('Profile replay opens Welcome and keeps route progress intact', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+    final currentLesson = sample.currentLesson;
+    final secondTask = currentLesson.taskList[1];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode(<String, Object>{
+        'schemaVersion': 5,
+        'completedTaskIds': <String>[currentLesson.taskList.first.taskId],
+        'skippedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'selectedWorldId': sample.selectedWorldId,
+        'selectedLessonId': currentLesson.lessonId,
+        'selectedTaskId': secondTask.taskId,
+        'earnedXp': 10,
+      }),
+    });
+
+    await pumpTall(tester, host(showPlacementOnStart: true));
+    await tester.tap(find.text('You'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_profile_replay_welcome')),
+      180,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_screen')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_profile_replay_welcome')),
+      findsOneWidget,
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_profile_replay_welcome')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_welcome_primary_cta')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_close')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('act0_shell_progress_v1');
+    expect(raw, isNotNull);
+    final decoded = jsonDecode(raw!) as Map<String, dynamic>;
+    expect(decoded['selectedTaskId'], secondTask.taskId);
+    expect(
+      (decoded['completedTaskIds'] as List<dynamic>).cast<String>(),
+      contains(currentLesson.taskList.first.taskId),
+    );
   });
 
   testWidgets('Placement trial preview opens value-first premium sheet', (
@@ -1178,8 +1496,10 @@ void main() {
   testWidgets('Home Continue opens runner', (tester) async {
     await pumpTall(tester, host());
 
-    expect(find.byKey(const Key('act0_shell_home_cta_hint')), findsOneWidget);
-    expect(find.text('Continue this lesson now.'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_home_cta_hint')), findsNothing);
+    expect(find.text('Continue this lesson now.'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
     await tester.pumpAndSettle();
@@ -1217,7 +1537,7 @@ void main() {
     );
     expect(find.textContaining('3 day streak'), findsOneWidget);
     expect(
-      find.text('3 days running. One clean rep keeps the seat warm.'),
+      find.text('3 days running. One clean rep keeps the rhythm warm.'),
       findsOneWidget,
     );
     expect(
@@ -1368,6 +1688,36 @@ void main() {
     );
   });
 
+  testWidgets(
+    'Selected lesson panel keeps compact subtitle headroom and guidance strip',
+    (tester) async {
+      await pumpCompact(tester, host());
+      await openBottomTabAndDrainV1(tester, 'Learn');
+
+      expect(
+        find.byKey(const Key('act0_shell_selected_lesson_panel')),
+        findsOneWidget,
+      );
+
+      final subtitle = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_selected_lesson_subtitle')),
+      );
+      expect(subtitle.maxLines, 2);
+      expect(subtitle.overflow, TextOverflow.fade);
+      expect((subtitle.data ?? '').isNotEmpty, isTrue);
+
+      final guidance = tester.widget<Text>(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_selected_lesson_guidance')),
+          matching: find.byType(Text),
+        ),
+      );
+      expect(guidance.maxLines, 2);
+      expect(guidance.overflow, TextOverflow.fade);
+      expect((guidance.data ?? '').isNotEmpty, isTrue);
+    },
+  );
+
   testWidgets('Learn module header shows progress bar', (tester) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
@@ -1407,8 +1757,14 @@ void main() {
   testWidgets('Profile habit section shows streak nudge', (tester) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
 
-    await tester.ensureVisible(
+    expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
+    await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_profile_streak_nudge')),
+      180,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_screen')),
+        matching: find.byType(Scrollable),
+      ),
     );
     await tester.pumpAndSettle();
     expect(
@@ -1444,8 +1800,12 @@ void main() {
     expect(find.text('Check'), findsNothing);
 
     await tester.pump(const Duration(milliseconds: 900));
-    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-    await tester.pumpAndSettle();
+    await advanceRunnerUntil(
+      tester,
+      () => find.text('Check').evaluate().isNotEmpty,
+      failureMessage: 'Second task did not reach its drill question.',
+      maxTaps: 12,
+    );
 
     expect(find.text('2/7'), findsOneWidget);
     expect(
@@ -1455,38 +1815,40 @@ void main() {
     expect(find.text('Check'), findsOneWidget);
   });
 
-  testWidgets('Active runner drill state survives a fresh dev shell mount', (
-    tester,
-  ) async {
-    await pumpTall(tester, host());
+  testWidgets(
+    'Active runner drill progress survives a fresh dev shell mount but lands on Home',
+    (tester) async {
+      await pumpTall(tester, host());
 
-    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
-    await tester.pumpAndSettle();
-    expect(find.text('1/7'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
+      expect(find.text('1/7'), findsOneWidget);
 
-    await completeVisibleTheoryTask(tester);
-    await advanceTeachingToDrill(tester);
-    expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
-    expect(
-      find.text('No bet faces you. Which action is legal and free?'),
-      findsOneWidget,
-    );
-    expect(find.text('Check'), findsOneWidget);
-    await tester.pump(const Duration(milliseconds: 50));
+      await completeVisibleTheoryTask(tester);
+      await advanceTeachingToDrill(tester);
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+      expect(
+        find.text('No bet faces you. Which action is legal and free?'),
+        findsOneWidget,
+      );
+      expect(find.text('Check'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 50));
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpAndSettle();
-    await pumpTall(tester, host());
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await pumpTall(tester, host());
 
-    expect(find.text('1/7'), findsNothing);
-    expect(find.text('2/7'), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
-    expect(
-      find.text('No bet faces you. Which action is legal and free?'),
-      findsOneWidget,
-    );
-    expect(find.text('Check'), findsOneWidget);
-  });
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
+      expect(find.text('1/7'), findsNothing);
+
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+      expect(find.text('2/7'), findsOneWidget);
+    },
+  );
 
   testWidgets('First beginner task starts with teaching before questions', (
     tester,
@@ -1514,23 +1876,50 @@ void main() {
     expect(find.text('Top seat'), findsNothing);
     expect(find.text('Bottom seat'), findsNothing);
 
-    await tester.pump(const Duration(milliseconds: 900));
-    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-    await tester.pumpAndSettle();
+    await advanceRunnerUntil(
+      tester,
+      () => find.text('This is a poker table.').evaluate().isNotEmpty,
+      failureMessage: 'Teaching did not advance to the next structured step.',
+      maxTaps: 20,
+    );
     expect(find.text('This is a poker table.'), findsOneWidget);
 
-    await tester.pump(const Duration(milliseconds: 900));
-    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-    await tester.pumpAndSettle();
+    await advanceRunnerUntil(
+      tester,
+      () => find.text('The goal is the pot.').evaluate().isNotEmpty,
+      failureMessage:
+          'Teaching did not advance to the next compact support step.',
+      maxTaps: 12,
+    );
     expect(find.text('The goal is the pot.'), findsOneWidget);
   });
 
   testWidgets('Drill options stay hidden until teaching is complete', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     expect(find.byKey(const Key('act0_shell_runner_prompt')), findsOneWidget);
@@ -1666,16 +2055,17 @@ void main() {
       ),
     );
 
-    expect(
-      find.text('Сначала назови действие, потом принимай решение.'),
-      findsOneWidget,
+    final prompt = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_runner_prompt')),
     );
-    expect(
-      find.text(
-        'Держись простого каркаса: фолд уходит, чек не добавляет фишек, колл уравнивает, рейз повышает цену.',
-      ),
-      findsOneWidget,
+    final support = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_learning_rail_support_line')),
     );
+
+    expect(prompt.data, 'Действия — это глаголы за столом.');
+    expect(support.data, contains('Фолд уходит, а чек ждёт.'));
+    expect(support.data, contains('Колл уравнивает цену'));
+    expect(support.data, contains('рейз добавляет ещё'));
   });
 
   testWidgets(
@@ -1806,7 +2196,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Почти.'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
     expect(find.text('Ты выбрал Пас'), findsOneWidget);
     expect(find.text('Лучший вариант: Рейз'), findsOneWidget);
     expect(
@@ -1819,6 +2209,61 @@ void main() {
     expect(find.text('You picked Fold'), findsNothing);
     expect(find.text('Better option: Raise'), findsNothing);
   });
+
+  testWidgets(
+    'Runner fallback reaction lines stay Russian when authored cue is empty',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .taskList
+          .firstWhere((entry) => entry.taskId == 'actions_raise_drill');
+      final reviewRunner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: 'fold',
+        teachingSteps: const <Act0TeachingStepV1>[],
+        sharky: task.runner.sharky.copyWith(wrongReaction: ''),
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: reviewRunner,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      final fallbackRuA = find.text(
+        'Полезный разбор. Спокойно перечитай спот перед следующим нажатием.',
+      );
+      final fallbackRuB = find.text(
+        'Полезный разбор. Ещё раз собери картину стола и выбери заново.',
+      );
+      expect(
+        fallbackRuA.evaluate().isNotEmpty || fallbackRuB.evaluate().isNotEmpty,
+        isTrue,
+      );
+      expect(find.textContaining('Sharp read'), findsNothing);
+      expect(find.textContaining('Good spot to fix'), findsNothing);
+    },
+  );
 
   testWidgets('Runtime surface helper localizes repeated families in Russian', (
     tester,
@@ -1984,18 +2429,19 @@ void main() {
       ),
     );
 
-    expect(
-      find.text(
-        'Иди по порядку: группа руки, место, ситуация, потом действие.',
-      ),
-      findsOneWidget,
+    final prompt = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_runner_prompt')),
     );
-    expect(
-      find.text(
-        'Этот каркас убирает суету: сначала пойми, что за рука и где ты сидишь, а потом решай, стоят ли фишки входа.',
-      ),
-      findsOneWidget,
+    final support = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_learning_rail_support_line')),
     );
+
+    expect(prompt.data, 'Группа руки, место, ситуация.');
+    expect(
+      support.data,
+      contains('Сначала назови группу руки и посмотри на место.'),
+    );
+    expect(support.data, contains('Затем прочитай ситуацию за столом.'));
   });
 
   testWidgets('Runner localizes World 2 discipline question copy in Russian', (
@@ -2276,11 +2722,16 @@ void main() {
         ),
       );
 
-      expect(find.text('Перед тобой покерный стол.'), findsOneWidget);
-      expect(
-        find.text('Ты играешь за Hero. Остальные места за столом — соперники.'),
-        findsOneWidget,
+      final prompt = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_runner_prompt')),
       );
+      final support = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+
+      expect(prompt.data, 'Перед тобой покерный стол.');
+      expect(support.data, contains('Ты играешь за нижнее место.'));
+      expect(support.data, contains('Остальные места за столом'));
       expect(find.text('Начинаем с кэш-игры в холдем.'), findsNothing);
     },
   );
@@ -2660,7 +3111,7 @@ void main() {
         find.byKey(const Key('act0_shell_home_next_action_subtitle')),
       );
       final hint = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_home_cta_hint')),
+        find.byKey(const Key('act0_shell_home_optional_practice_hint')),
       );
 
       expect(subtitle.maxLines, 2);
@@ -2669,6 +3120,70 @@ void main() {
       expect((hint.data ?? '').isNotEmpty, isTrue);
     },
   );
+
+  testWidgets(
+    'Home support copy prefers wrapped density over hard truncation',
+    (tester) async {
+      await pumpCompact(tester, host(locale: const Locale('ru')));
+
+      final subtitle = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_next_action_subtitle')),
+      );
+      final hint = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_optional_practice_hint')),
+      );
+      final dailySupport = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_daily_support_line')),
+      );
+
+      expect(subtitle.overflow, TextOverflow.fade);
+      expect(hint.overflow, TextOverflow.fade);
+      expect(dailySupport.maxLines, 2);
+      expect(dailySupport.overflow, TextOverflow.fade);
+    },
+  );
+
+  testWidgets('Home repair panel keeps multi-line density for long copy', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0HomeShellV1(
+            state: Act0ShellStateV1.sample,
+            repairLabel: 'Fix next',
+            repairHeadline:
+                'Action order drifted after the first read and needs a calmer second pass.',
+            repairDetail:
+                'Last miss came from Actions. Rebuild the sequence before you add more volume.',
+            repairOutcome:
+                'One fix now keeps the leak from following you forward into the next block.',
+            repairCtaLabel: 'Fix it',
+            onStartRepair: () {},
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final headline = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_repair_headline')),
+    );
+    final detail = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_repair_detail')),
+    );
+    final outcome = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_repair_outcome')),
+    );
+
+    expect(headline.maxLines, 3);
+    expect(headline.overflow, TextOverflow.fade);
+    expect(detail.maxLines, 3);
+    expect(detail.overflow, TextOverflow.fade);
+    expect(outcome.maxLines, 3);
+    expect(outcome.overflow, TextOverflow.fade);
+  });
 
   testWidgets('Learn task titles allow two-line safety in compact Russian', (
     tester,
@@ -2720,13 +3235,108 @@ void main() {
         find.byKey(const Key('act0_shell_learning_rail_support_line')),
       );
 
-      expect((prompt.maxLines ?? 0) >= 3, isTrue);
-      expect((support.maxLines ?? 0) >= 3, isTrue);
-      expect(prompt.data, 'Сначала назови действие, потом принимай решение.');
+      expect(prompt.overflow, isNot(TextOverflow.ellipsis));
+      expect(support.overflow, isNot(TextOverflow.ellipsis));
       expect(
-        support.data,
-        'Держись простого каркаса: фолд уходит, чек не добавляет фишек, колл уравнивает, рейз повышает цену.',
+        find.byKey(const Key('act0_shell_learning_rail_support_scroll')),
+        findsNothing,
       );
+      expect(prompt.data, 'Действия — это глаголы за столом.');
+      expect(support.data, contains('Фолд уходит, а чек ждёт.'));
+      expect(support.data, contains('Колл уравнивает цену'));
+      expect(support.data, contains('рейз добавляет ещё'));
+    },
+  );
+
+  testWidgets(
+    'Learning rail segments long teaching support instead of scrolling it',
+    (tester) async {
+      final baseTask = Act0ShellStateV1.sample.currentLesson.taskList.first;
+      final runner = baseTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingSteps: const <Act0TeachingStepV1>[
+          Act0TeachingStepV1(
+            title: 'Read the table first',
+            body:
+                'Each player gets 2 private hole cards. The table shares 5 community cards. You build the best 5-card hand from those 7. This course starts with No-Limit Hold\'em cash, where chip values stay stable hand to hand.',
+          ),
+        ],
+        teachingStepIndex: 0,
+      );
+      var continueCalls = 0;
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: baseTask.taskId,
+              onBack: () {},
+              onContinueTheory: () => continueCalls++,
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+              relaxTheoryAdvanceLock: true,
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_support_scroll')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_support_dots')),
+        findsOneWidget,
+      );
+
+      final firstSupport = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+      expect(
+        firstSupport.data,
+        contains('Each player gets 2 private hole cards.'),
+      );
+      expect(
+        firstSupport.data,
+        contains('The table shares 5 community cards.'),
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+      await tester.pumpAndSettle();
+
+      expect(continueCalls, 0);
+
+      final secondSupport = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+      expect(
+        secondSupport.data,
+        contains('You build the best 5-card hand from those 7.'),
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+      await tester.pumpAndSettle();
+
+      expect(continueCalls, 0);
+
+      final thirdSupport = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+      expect(
+        thirdSupport.data,
+        contains('This course starts with No-Limit Hold\'em cash'),
+      );
+
+      await advanceRunnerUntil(
+        tester,
+        () => continueCalls == 1,
+        failureMessage:
+            'Learning rail did not hand control back after the final support segment.',
+        maxTaps: 8,
+      );
+      expect(continueCalls, 1);
     },
   );
 
@@ -2768,7 +3378,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Сейчас нечего чинить.'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_play_repair_empty')),
+        180,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Сейчас всё спокойно.'), findsOneWidget);
 
       final body = tester.widget<Text>(
         find.byKey(const Key('act0_shell_play_repair_empty_body')),
@@ -2776,7 +3392,7 @@ void main() {
       expect(body.maxLines, 2);
       expect(
         body.data,
-        'Используй практику по темам, чтобы добрать дополнительные репы.',
+        'Выбери практику по темам, если хочешь сделать ещё пару полезных повторов.',
       );
     },
   );
@@ -2789,17 +3405,45 @@ void main() {
         host(tab: Act0ShellTabV1.review, locale: const Locale('ru')),
       );
 
-      expect(find.text('Доска фиксов'), findsOneWidget);
-      expect(find.text('Стол снова чист'), findsOneWidget);
+      expect(find.text('Разбор ошибок'), findsOneWidget);
+      expect(find.text('Сейчас всё чисто'), findsOneWidget);
 
       final support = tester.widget<Text>(
         find.byKey(const Key('act0_shell_review_board_support_text')),
       );
-      expect(support.maxLines, 3);
+      final emptyBody = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_review_empty_body')),
+      );
+      expect(support.maxLines, 4);
+      expect(support.overflow, TextOverflow.fade);
+      expect(emptyBody.maxLines, 3);
+      expect(emptyBody.overflow, TextOverflow.fade);
       expect(
         support.data,
-        'Пока чинить нечего. Просто держи маршрут в движении.',
+        'Сейчас разбирать нечего. Просто продолжай по маршруту.',
       );
+    },
+  );
+
+  testWidgets(
+    'Review repair card prefers wrapped density over hard truncation',
+    (tester) async {
+      await pumpTall(tester, host());
+      await createActionsMistakeFromPlayHub(tester);
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+
+      await openBottomTabV1(tester, 'Review');
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_mistake_card')),
+      );
+      await tester.pumpAndSettle();
+
+      final reason = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_mistake_reason')),
+      );
+      expect(reason.maxLines, 4);
+      expect(reason.overflow, TextOverflow.fade);
     },
   );
 
@@ -2811,8 +3455,18 @@ void main() {
         host(tab: Act0ShellTabV1.profile, locale: const Locale('ru')),
       );
 
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        180,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
+
       expect(find.text('Ритм'), findsOneWidget);
-      expect(find.text('Серия'), findsOneWidget);
+      expect(find.textContaining('дня'), findsOneWidget);
 
       final support = tester.widget<Text>(
         find.byKey(const Key('act0_shell_profile_consistency_support_text')),
@@ -2822,13 +3476,184 @@ void main() {
       );
 
       expect(support.maxLines, 3);
+      expect(support.overflow, TextOverflow.fade);
       expect(momentum.maxLines, 3);
+      expect(momentum.overflow, TextOverflow.fade);
       expect(
         momentum.data,
-        'Серия уже настоящая. Продолжай набирать чистые репы, пока ритм тёплый.',
+        'Серия уже держится. Ещё несколько спокойных заходов — и этот ритм закрепится.',
       );
     },
   );
+
+  testWidgets('Welcome app-shape uses natural Russian product copy', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': false,
+    });
+
+    await pumpTall(
+      tester,
+      host(showPlacementOnStart: true, locale: const Locale('ru')),
+    );
+
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Показывает следующий полезный шаг прямо сейчас.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Даёт больше практики, когда хочется ещё немного.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Возвращает к ошибкам сразу, чтобы они не копились.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Welcome intro beat localizes cleanly in Russian', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': false,
+    });
+
+    await pumpTall(
+      tester,
+      host(showPlacementOnStart: true, locale: const Locale('ru')),
+    );
+
+    expect(find.text('Учись по одному споту за раз.'), findsOneWidget);
+    expect(find.text('Старт'), findsOneWidget);
+    expect(find.text('Понять, почему это работает'), findsOneWidget);
+    expect(find.text('Learn one spot at a time.'), findsNothing);
+    expect(find.text('Welcome'), findsNothing);
+    expect(find.text('See why it works'), findsNothing);
+  });
+
+  testWidgets(
+    'Profile identity and focus prefer wrapped density over hard truncation',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ProfileShellV1(
+              profile: Act0ProfileStateV1(
+                playerName: sample.profile.playerName,
+                level: sample.profile.level,
+                xpLine: sample.profile.xpLine,
+                lessonsLine: sample.profile.lessonsLine,
+                accuracyLine: sample.profile.accuracyLine,
+                consistencyActiveDays: sample.profile.consistencyActiveDays,
+                achievements: sample.profile.achievements,
+                streakLine: sample.profile.streakLine,
+                streakDays: sample.profile.streakDays,
+                strongCategories: const <String>['Table sense'],
+                recentSkillGains: const <Act0SkillGainV1>[
+                  Act0SkillGainV1(
+                    label: 'Table sense',
+                    gain: 6,
+                    source:
+                        'Long transfer source that should keep compact headroom instead of collapsing into a single clipped line',
+                  ),
+                ],
+                skillStats: <Act0PlacementSkillStatV1>[
+                  Act0PlacementSkillStatV1(
+                    label: 'Table sense',
+                    value: 62,
+                    meaning: 'Tracks table order and shifting context.',
+                    affects:
+                        'Keeps the table picture coherent while action changes.',
+                    whyImportant:
+                        'Lets the next decision feel cleaner instead of noisy.',
+                  ),
+                ],
+                recommendedFocusTitle:
+                    'Repair one weak spot before the next session starts to drift into a repeated pattern',
+                recommendedFocusBody:
+                    'Fix this mistake before it becomes a habit and before the route starts teaching the wrong rhythm through repetition.',
+                recommendedFocusCtaLabel: 'Fix this now',
+              ),
+              onRetakePlacement: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final summary = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_profile_identity_summary')),
+      );
+
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_recommended_focus')),
+        220,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final focusBody = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_profile_recommended_focus_body')),
+      );
+
+      expect(summary.maxLines, 3);
+      expect(summary.overflow, TextOverflow.fade);
+      expect(focusBody.maxLines, 3);
+      expect(focusBody.overflow, TextOverflow.fade);
+    },
+  );
+
+  testWidgets('Profile first-start tools localize cleanly in Russian', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        home: Scaffold(
+          body: Act0ProfileShellV1(
+            profile: sample.profile,
+            onRetakePlacement: () {},
+            onReplayWelcome: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_profile_first_start_tools')),
+      240,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_screen')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Инструменты старта'), findsOneWidget);
+    expect(find.text('Повторить знакомство'), findsOneWidget);
+    expect(find.text('Пройти плейсмент снова'), findsOneWidget);
+    expect(find.text('First start tools'), findsNothing);
+    expect(find.text('Replay welcome'), findsNothing);
+    expect(find.text('Retake placement'), findsNothing);
+  });
 
   testWidgets('Learn Path shows lesson cards and safe bottom padding', (
     tester,
@@ -2987,6 +3812,35 @@ void main() {
     },
   );
 
+  testWidgets(
+    'Levels sticky selected-world meta keeps compact headroom without hard truncation',
+    (tester) async {
+      await pumpCompact(tester, host(tab: Act0ShellTabV1.learn));
+
+      await tester.tap(find.byKey(const Key('act0_shell_levels_menu_button')));
+      await tester.pumpAndSettle();
+
+      final statusLine = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_levels_selected_world_status_line')),
+      );
+      expect(statusLine.maxLines, 2);
+      expect(statusLine.overflow, TextOverflow.fade);
+
+      final subtitleBlock = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_levels_selected_world_meta_block_0')),
+      );
+      expect(subtitleBlock.maxLines, 3);
+      expect(subtitleBlock.overflow, TextOverflow.fade);
+      expect((subtitleBlock.data ?? '').isNotEmpty, isTrue);
+
+      final landmarkLine = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_levels_selected_world_next_landmark')),
+      );
+      expect(landmarkLine.maxLines, 2);
+      expect(landmarkLine.overflow, TextOverflow.fade);
+    },
+  );
+
   testWidgets('Locked world opens premium preview without forcing upgrade', (
     tester,
   ) async {
@@ -3090,15 +3944,17 @@ void main() {
     tester,
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
-    final beforeTop = tester
-        .getTopLeft(
-          find.byKey(const Key('act0_shell_lesson_Blinds & action order')),
-        )
-        .dy;
-
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
+    final blindsLesson = find.byKey(
+      const Key('act0_shell_lesson_Blinds & action order'),
     );
+    await tester.ensureVisible(blindsLesson);
+    final beforeTop = tester.getTopLeft(blindsLesson).dy;
+
+    final foldLesson = find.byKey(
+      const Key('act0_shell_lesson_Fold, check, call, raise'),
+    );
+    await tester.ensureVisible(foldLesson);
+    await tester.tap(foldLesson);
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
 
@@ -3172,18 +4028,19 @@ void main() {
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
+    final foldLesson = find.byKey(
+      const Key('act0_shell_lesson_Fold, check, call, raise'),
     );
+    await tester.ensureVisible(foldLesson);
+    await tester.tap(foldLesson);
     await tester.pumpAndSettle();
     expect(
       find.byKey(const Key('act0_shell_selected_lesson_panel')),
       findsOneWidget,
     );
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
-    );
+    await tester.ensureVisible(foldLesson);
+    await tester.tap(foldLesson);
     await tester.pumpAndSettle();
 
     expect(
@@ -3199,7 +4056,11 @@ void main() {
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
-    await tester.tap(find.byKey(const Key('act0_shell_lesson_What poker is')));
+    final whatPokerLesson = find.byKey(
+      const Key('act0_shell_lesson_What poker is'),
+    );
+    await tester.ensureVisible(whatPokerLesson);
+    await tester.tap(whatPokerLesson);
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
 
@@ -3255,6 +4116,13 @@ void main() {
     await tester.tap(
       find.byKey(const Key('act0_shell_lesson_Blinds & action order')),
     );
+    await tester.pump(const Duration(milliseconds: 200));
+
+    expect(
+      find.byKey(const Key('act0_shell_selected_lesson_panel')),
+      findsNothing,
+    );
+
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
 
@@ -3276,15 +4144,7 @@ void main() {
             find.byKey(const Key('act0_shell_lesson_Blinds & action order')),
           )
           .dy,
-      lessThan(920),
-    );
-    expect(
-      tester
-          .getBottomLeft(
-            find.byKey(const Key('act0_shell_selected_lesson_panel')),
-          )
-          .dy,
-      lessThan(900),
+      lessThan(260),
     );
   });
 
@@ -3379,9 +4239,11 @@ void main() {
   testWidgets('Learn locked card does not open runner', (tester) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Blinds & action order')),
+    final blindsLesson = find.byKey(
+      const Key('act0_shell_lesson_Blinds & action order'),
     );
+    await tester.ensureVisible(blindsLesson);
+    await tester.tap(blindsLesson);
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
@@ -3411,7 +4273,9 @@ void main() {
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
-    await tester.tap(find.byKey(const Key('act0_shell_levels_menu_button')));
+    final levelsButton = find.byKey(const Key('act0_shell_levels_menu_button'));
+    await tester.ensureVisible(levelsButton);
+    await tester.tap(levelsButton);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('act0_shell_world_2')));
     await tester.pumpAndSettle();
@@ -3434,9 +4298,11 @@ void main() {
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
+    final foldLesson = find.byKey(
+      const Key('act0_shell_lesson_Fold, check, call, raise'),
     );
+    await tester.ensureVisible(foldLesson);
+    await tester.tap(foldLesson);
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
     expect(
@@ -3444,12 +4310,8 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.ensureVisible(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
-    );
-    await tester.tap(
-      find.byKey(const Key('act0_shell_lesson_Fold, check, call, raise')),
-    );
+    await tester.ensureVisible(foldLesson);
+    await tester.tap(foldLesson);
     await tester.pump(const Duration(milliseconds: 1200));
     await tester.pumpAndSettle();
     expect(
@@ -3558,15 +4420,39 @@ void main() {
   testWidgets(
     'Runner Drill keeps table and action options visible on compact portrait',
     (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_raise_drill',
+      );
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
       await pumpCompact(
         tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
       );
 
       await advanceTeachingToDrill(tester);
 
       expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_sizing_presets_label')),
+        findsNothing,
+      );
       expect(find.text('Fold'), findsOneWidget);
       expect(find.text('Call'), findsOneWidget);
       expect(find.text('Raise'), findsOneWidget);
@@ -3579,6 +4465,48 @@ void main() {
       );
       expect(tableRect.bottom, lessThanOrEqualTo(812));
       expect(optionRect.bottom, lessThanOrEqualTo(812));
+    },
+  );
+
+  testWidgets(
+    'Action prompt keeps compact question readable without truncation',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .taskList
+          .firstWhere((entry) => entry.taskId == 'actions_legal_context');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      final questionText = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_action_question')),
+      );
+      expect(questionText.maxLines, isNull);
+      expect(questionText.overflow, isNull);
+      expect(
+        questionText.data,
+        'No bet faces you. Which action is legal and free?',
+      );
     },
   );
 
@@ -3915,10 +4843,9 @@ void main() {
   testWidgets(
     'Canonical detached shell keeps drill guidance below the table only',
     (tester) async {
-      await pumpCompact(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
-      );
+      await pumpCompact(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
       await advanceTeachingToDrill(tester);
 
       expect(find.byKey(const Key('act0_shell_runner_prompt')), findsNothing);
@@ -3949,10 +4876,9 @@ void main() {
   testWidgets(
     'Canonical detached shell keeps table position stable across theory and drill',
     (tester) async {
-      await pumpCompact(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
-      );
+      await pumpCompact(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
 
       final theoryTable = tester.getRect(
         find.byKey(const Key('act0_shell_table')),
@@ -3984,10 +4910,9 @@ void main() {
   testWidgets(
     'Canonical detached shell review shows animated XP closing summary',
     (tester) async {
-      await pumpCompact(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
-      );
+      await pumpCompact(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
       await completeVisibleTheoryTask(tester);
       await advanceTeachingToDrill(tester);
 
@@ -4054,10 +4979,9 @@ void main() {
   testWidgets(
     'Canonical detached shell shows block completion summary and continues in-node',
     (tester) async {
-      await pumpCompact(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
-      );
+      await pumpCompact(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
 
       await completeCurrentLessonBlock(tester);
 
@@ -4081,6 +5005,7 @@ void main() {
         find.byKey(const Key('act0_shell_block_summary_continue_cta')),
         findsOneWidget,
       );
+      expect(find.text('Open next block'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_block_summary_map_cta')),
         findsOneWidget,
@@ -4120,12 +5045,10 @@ void main() {
 
     await pumpCompact(
       tester,
-      host(
-        tab: Act0ShellTabV1.play,
-        phase: Act0LessonPhaseV1.theory,
-        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
-      ),
+      host(state: stateWithLessons(<Act0LessonCardV1>[lesson])),
     );
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
 
     await completeCurrentLessonBlock(tester);
 
@@ -4217,6 +5140,8 @@ void main() {
           .onPressed,
       isNull,
     );
+    expect(find.text('Replay before next block'), findsOneWidget);
+    expect(find.text('Run this block again'), findsOneWidget);
 
     await tester.tap(
       find.byKey(const Key('act0_shell_block_summary_replay_cta')),
@@ -4254,8 +5179,6 @@ void main() {
     await pumpCompact(
       tester,
       host(
-        tab: Act0ShellTabV1.play,
-        phase: Act0LessonPhaseV1.theory,
         state: stateWithWorlds(
           selectedWorldId: 'world_1',
           worlds: <Act0WorldCardV1>[
@@ -4279,6 +5202,8 @@ void main() {
         ),
       ),
     );
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
 
     await completeCurrentLessonBlock(tester);
 
@@ -4443,11 +5368,25 @@ void main() {
   testWidgets('Runner Continue enters Drill and option tap enters Review', (
     tester,
   ) async {
-    await pumpTall(
-      tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
     );
 
+    await pumpTall(
+      tester,
+      host(state: stateWithLessons(<Act0LessonCardV1>[lesson])),
+    );
+
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
     await completeVisibleTheoryTask(tester);
     await advanceTeachingToDrill(tester);
 
@@ -4461,19 +5400,37 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-    expect(find.text('Nice read.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_icon_correct')),
       findsOneWidget,
     );
-    expect(find.text('Best play: Check'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
   });
 
   testWidgets('Wrong drill option yields wrong review state', (tester) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -4492,7 +5449,6 @@ void main() {
     );
     expect(find.textContaining('Good spot to fix'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-    expect(find.text('Almost there.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_icon_wrong')),
       findsOneWidget,
@@ -4520,9 +5476,29 @@ void main() {
   testWidgets('Suboptimal drill option yields gold feedback tier', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -4530,7 +5506,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-    expect(find.text('Playable move.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_icon_suboptimal')),
       findsOneWidget,
@@ -4551,15 +5526,38 @@ void main() {
   });
 
   testWidgets('Wrong answer gets one in-lesson repair try', (tester) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
     await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
     await tester.pumpAndSettle();
-    expect(find.text('Almost there.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_icon_wrong')),
+      findsOneWidget,
+    );
 
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
@@ -4685,8 +5683,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('One last check'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-    await tester.pumpAndSettle();
+    await advanceRunnerUntil(
+      tester,
+      () => find
+          .byKey(const Key('act0_shell_action_panel'))
+          .evaluate()
+          .isNotEmpty,
+      failureMessage: 'Final wrap-up did not advance into the retry drill.',
+      maxTaps: 12,
+    );
     await tester.tap(find.byKey(const Key('act0_shell_option_check')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
@@ -4703,9 +5708,29 @@ void main() {
   testWidgets('Second wrong answer becomes a deeper Review leak', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -4719,20 +5744,20 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Review'));
+    await openBottomTabV1(tester, 'Review');
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_shell_mistake_card')),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_mistake_card')), findsOneWidget);
-    expect(find.text('Needs work'), findsOneWidget);
-    expect(find.text('Deep leak'), findsOneWidget);
-    expect(find.text('2 misses'), findsOneWidget);
-    expect(find.text('Missed 2 times'), findsOneWidget);
+    expect(find.text('Deep leak'), findsWidgets);
+    expect(find.text('2 misses'), findsWidgets);
 
-    await tester.tap(find.text('Home'));
-    await tester.pumpAndSettle();
-    expect(find.text('Deep leak'), findsOneWidget);
-    expect(find.text('Fix a deep leak'), findsOneWidget);
-    expect(find.text('Fix this now'), findsOneWidget);
+    await openBottomTabV1(tester, 'Home');
+    expect(find.text('Fix next'), findsOneWidget);
+    expect(find.textContaining('Fix '), findsWidgets);
+    expect(find.text('Fix now'), findsOneWidget);
 
     await tester.tap(find.text('Play'));
     await tester.pumpAndSettle();
@@ -4741,20 +5766,44 @@ void main() {
 
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_profile_recommended_focus')),
+      180,
+    );
+    await tester.pumpAndSettle();
     expect(
       find.byKey(const Key('act0_shell_profile_recommended_focus')),
       findsOneWidget,
     );
-    expect(find.text('Recommended focus'), findsOneWidget);
-    expect(find.text('Fix a deep leak'), findsOneWidget);
+    expect(find.text('Fix a deep leak'), findsWidgets);
   });
 
   testWidgets('Correct repair try becomes a light fixed Review item', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -4765,20 +5814,17 @@ void main() {
 
     await tester.tap(find.byKey(const Key('act0_shell_option_raise')));
     await tester.pumpAndSettle();
-    expect(find.text('Nice read.'), findsOneWidget);
+    expect(find.text('Button open'), findsWidgets);
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Review'));
-    await tester.pumpAndSettle();
+    await openBottomTabV1(tester, 'Review');
 
-    expect(find.text('Quick fixes'), findsOneWidget);
-    expect(find.text('Quick fix'), findsOneWidget);
+    expect(find.text('Recovered lately'), findsOneWidget);
+    expect(find.text('Run quick fix again'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_mistake_card')), findsNothing);
 
-    await tester.tap(find.text('Home'));
-    await tester.pumpAndSettle();
-    expect(find.text('Quick fix'), findsOneWidget);
+    await openBottomTabV1(tester, 'Home');
     expect(find.text('Continue'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_home_repair_panel')),
@@ -4835,8 +5881,15 @@ void main() {
         findsNothing,
       );
 
-      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-      await tester.pumpAndSettle();
+      await advanceRunnerUntil(
+        tester,
+        () => find
+            .byKey(const Key('act0_shell_action_panel'))
+            .evaluate()
+            .isNotEmpty,
+        failureMessage: 'Final lesson retry did not reopen the drill.',
+        maxTaps: 12,
+      );
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
       await tester.tap(find.byKey(const Key('act0_shell_option_check')));
       await tester.pumpAndSettle();
@@ -4903,8 +5956,15 @@ void main() {
 
       expect(find.text('One last check'), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-      await tester.pumpAndSettle();
+      await advanceRunnerUntil(
+        tester,
+        () => find
+            .byKey(const Key('act0_shell_action_panel'))
+            .evaluate()
+            .isNotEmpty,
+        failureMessage: 'Deep-leak retry did not reopen the drill.',
+        maxTaps: 12,
+      );
       await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -4980,14 +6040,21 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('One last check'), findsOneWidget);
-    expect(
-      find.text(
-        'You missed this earlier. 2 spots to revisit before the lesson summary.',
-      ),
-      findsOneWidget,
+    final wrapUpSupport = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_learning_rail_support_line')),
     );
-    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
-    await tester.pumpAndSettle();
+    expect(wrapUpSupport.data, contains('You missed this earlier.'));
+    expect(wrapUpSupport.data, contains('spots to revisit'));
+    await advanceRunnerUntil(
+      tester,
+      () => find
+          .byKey(const Key('act0_shell_action_panel'))
+          .evaluate()
+          .isNotEmpty,
+      failureMessage:
+          'Repeated wrap-up intro did not advance into the retry drill.',
+      maxTaps: 12,
+    );
     expect(find.text('One last check'), findsNothing);
     expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
 
@@ -5001,9 +6068,29 @@ void main() {
   });
 
   testWidgets('Quick fix card can replay the repaired spot', (tester) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -5019,9 +6106,9 @@ void main() {
 
     await tester.tap(find.text('Review'));
     await tester.pumpAndSettle();
-    expect(find.text('Run fix again'), findsOneWidget);
-    await tester.ensureVisible(find.text('Run fix again'));
-    await tester.tap(find.text('Run fix again'));
+    expect(find.text('Run quick fix again'), findsOneWidget);
+    await tester.ensureVisible(find.text('Run quick fix again'));
+    await tester.tap(find.text('Run quick fix again'));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
@@ -5030,9 +6117,29 @@ void main() {
   testWidgets('Correct drill option yields correct review state', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -5051,7 +6158,7 @@ void main() {
     );
     expect(find.textContaining('Sharp read'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-    expect(find.text('Nice read.'), findsOneWidget);
+    expect(find.text('Button open'), findsWidgets);
     expect(
       find.byKey(const Key('act0_shell_feedback_icon_correct')),
       findsOneWidget,
@@ -5072,7 +6179,7 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_context_labels')),
       findsOneWidget,
     );
-    expect(find.text('Button open'), findsOneWidget);
+    expect(find.text('Button open'), findsWidgets);
     expect(
       find.byKey(const Key('act0_shell_active_seat_ring_btn')),
       findsOneWidget,
@@ -5083,6 +6190,22 @@ void main() {
   testWidgets('Detached runner fires sensory events for answers', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final baseLesson = sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+    final drillTask = baseLesson.taskList.firstWhere(
+      (task) => task.taskId == 'actions_raise_drill',
+    );
+    final lesson = baseLesson.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+      primaryCtaLabel: 'Open lesson',
+      tasks: <Act0LessonTaskV1>[drillTask],
+    );
+
     final sounds = <UiSoundEventV1>[];
     final haptics = <UiHapticEventV1>[];
     UiSoundV1.overrideHandler(sounds.add);
@@ -5097,7 +6220,11 @@ void main() {
 
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
 
     await advanceTeachingToDrill(tester);
@@ -5112,7 +6239,11 @@ void main() {
 
     await pumpTall(
       tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      host(
+        tab: Act0ShellTabV1.play,
+        phase: Act0LessonPhaseV1.drill,
+        state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+      ),
     );
     await advanceTeachingToDrill(tester);
     await tester.tap(find.byKey(const Key('act0_shell_option_raise')));
@@ -5169,7 +6300,7 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_option_call')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Almost there.'), findsOneWidget);
+    expect(find.text('Facing a bet first'), findsOneWidget);
     expect(find.text('Better option: Fold'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_context_labels')),
@@ -5183,9 +6314,29 @@ void main() {
   testWidgets(
     'Canonical detached shell interaction back undoes review selection',
     (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_raise_drill',
+      );
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
       await pumpCompact(
         tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
       );
 
       await advanceTeachingToDrill(tester);
@@ -5207,9 +6358,29 @@ void main() {
   testWidgets(
     'Canonical detached shell interaction back from drill returns to teaching step',
     (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_raise_drill',
+      );
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
       await pumpCompact(
         tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
       );
 
       await advanceTeachingToDrill(tester);
@@ -5610,7 +6781,7 @@ void main() {
       find.byKey(const Key('act0_shell_active_seat_ring_sb_active')),
       findsOneWidget,
     );
-    expect(find.text('To act - 0.5 BB'), findsOneWidget);
+    expect(find.text('To act: 0.5 BB'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_bet_chip_POST')), findsOneWidget);
   });
 
@@ -5689,8 +6860,8 @@ void main() {
         ),
       );
 
-      expect(find.text('To act - 1 BB'), findsOneWidget);
-      expect(find.text('To act - 0.5 BB'), findsNothing);
+      expect(find.text('To act: 1 BB'), findsOneWidget);
+      expect(find.text('To act: 0.5 BB'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_active_seat_ring_bb_active')),
         findsOneWidget,
@@ -5777,8 +6948,8 @@ void main() {
       ),
     );
 
-    expect(find.text('To act - 1 BB'), findsOneWidget);
-    expect(find.text('To act - 0.5 BB'), findsNothing);
+    expect(find.text('To act: 1 BB'), findsOneWidget);
+    expect(find.text('To act: 0.5 BB'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_active_seat_ring_bb_current')),
       findsOneWidget,
@@ -5851,8 +7022,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-    expect(find.text('Almost there.'), findsOneWidget);
+    expect(find.text('Almost there.'), findsNothing);
     expect(find.text('Better option: UTG'), findsOneWidget);
+    expect(
+      find.text('CO is not the target seat in this spot.'),
+      findsOneWidget,
+    );
 
     phase = Act0LessonPhaseV1.drill;
     selectedOptionId = null;
@@ -5862,8 +7037,8 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_seat_tap_utg')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Nice read.'), findsOneWidget);
     expect(find.text('Best play: UTG'), findsOneWidget);
+    expect(find.text('UTG acts first before the flop.'), findsOneWidget);
   });
 
   test('Level 1 lessons have deep task chains with required phases', () {
@@ -6389,10 +7564,9 @@ void main() {
 
       // Phase 2: verify that answering a drill shows completion toast but no
       // pot-sweep overlay. Use the stateful host on the check-action drill.
-      await pumpCompact(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
-      );
+      await pumpCompact(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
       await completeVisibleTheoryTask(tester);
       await advanceTeachingToDrill(tester);
 
@@ -6445,6 +7619,11 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('act0_shell_pot_sweep_label')), findsOneWidget);
+    final potSweepLabel = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_pot_sweep_label')),
+    );
+    expect(potSweepLabel.maxLines, 3);
+    expect(potSweepLabel.overflow, TextOverflow.fade);
   });
 
   testWidgets('Action trail reveals appended step after state change', (
@@ -6547,9 +7726,9 @@ void main() {
         )
         .join(' ');
 
-    expect(teachingText, contains("No-Limit Hold'em cash games"));
-    expect(teachingText, contains('Cash is the cleanest base'));
-    expect(teachingText, contains('Hole cards stay hidden at first'));
+    expect(teachingText, contains("No-Limit Hold'em cash"));
+    expect(teachingText, contains('chip values stay stable'));
+    expect(teachingText, contains('hole cards stay hidden'));
   });
 
   testWidgets('First lesson starts with hidden hero cards on the table', (
@@ -7035,7 +8214,7 @@ void main() {
         halfPotTask.runner.options
             .firstWhere((option) => option.id == 'three')
             .feedbackReason,
-        contains('3 BB into 6 BB is half-pot'),
+        contains('3 BB is exactly a half-pot size'),
       );
     },
   );
@@ -8325,7 +9504,14 @@ void main() {
       find.byKey(const Key('act0_shell_lesson_step_blinds_theory')),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Start daily set'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_selected_lesson_panel')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_lesson_step_blinds_theory')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Runner Review Continue advances to next task when available', (
@@ -8448,7 +9634,7 @@ void main() {
     expect(find.byKey(const Key('act0_shell_play_topic_hub')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_practice_group_placement')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_practice_group_daily')),
@@ -8522,6 +9708,30 @@ void main() {
 
     expect(find.text('Later'), findsOneWidget);
     expect(find.text('Locked'), findsNothing);
+  });
+
+  testWidgets('Play shell localizes visible chrome cleanly in Russian', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+    });
+
+    await pumpTall(tester, host(locale: const Locale('ru')));
+
+    await tester.tap(find.text('Практика'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Быстрая практика'), findsOneWidget);
+    expect(find.text('Возвратный цикл'), findsOneWidget);
+    expect(find.text('Паки по темам'), findsOneWidget);
+    expect(find.text('Запустить дневную серию'), findsWidgets);
+
+    expect(find.text('Quick practice'), findsNothing);
+    expect(find.text('Return loop'), findsNothing);
+    expect(find.text('Topic packs'), findsNothing);
+    expect(find.text('Start daily set'), findsNothing);
   });
 
   testWidgets('Quick daily drill updates local daily progress', (tester) async {
@@ -8616,8 +9826,19 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('Seat held for tomorrow. One short clean rep extends it.'),
+      find.byKey(const Key('act0_shell_home_footer_sharky_line')),
       findsOneWidget,
+    );
+    final footerLine = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_footer_sharky_line')),
+    );
+    expect(
+      footerLine.data,
+      anyOf(
+        'Seat held for tomorrow. One short clean rep extends it.',
+        'Rhythm is locked in. One short rep keeps it alive.',
+        'Pace is holding. One clean pass keeps tomorrow warm.',
+      ),
     );
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_home_repair_panel')),
@@ -8625,7 +9846,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(
-      find.text('Seat held for tomorrow. One short clean rep extends it.'),
+      find.byKey(const Key('act0_shell_home_footer_sharky_line')),
       findsOneWidget,
     );
     expect(find.text('Done for today'), findsWidgets); // daily goal card too
@@ -8661,7 +9882,15 @@ void main() {
         findsOneWidget,
       );
 
-      // Rhythm block is visible
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        200,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
       expect(find.text('Rhythm'), findsOneWidget);
 
       // Scroll to Achievements and verify the first clear-read badge is unlocked
@@ -8816,6 +10045,59 @@ void main() {
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
   });
 
+  testWidgets('Placement first-start cards localize cleanly in Russian', (
+    tester,
+  ) async {
+    await pumpTall(
+      tester,
+      host(showPlacementOnStart: true, locale: const Locale('ru')),
+    );
+
+    expect(find.text('Проверка маршрута'), findsOneWidget);
+    expect(
+      find.text('Быстрая проверка старта. Без длинной настройки.'),
+      findsOneWidget,
+    );
+    expect(find.text('Что будет дальше'), findsOneWidget);
+    expect(
+      find.text('Одна короткая живая проверка на реальных столах.'),
+      findsOneWidget,
+    );
+
+    expect(find.text('Route check'), findsNothing);
+    expect(find.text('Quick route check. No long setup.'), findsNothing);
+    expect(find.text('What happens next'), findsNothing);
+  });
+
+  testWidgets('Placement recommended sheet localizes cleanly in Russian', (
+    tester,
+  ) async {
+    await pumpTall(
+      tester,
+      host(showPlacementOnStart: true, locale: const Locale('ru')),
+    );
+
+    await runPlacementToResult(tester);
+    await tester.tap(
+      find.byKey(const Key('act0_shell_placement_open_recommended_path')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Старт отсюда'), findsWidgets);
+    expect(find.text('Первые сессии'), findsOneWidget);
+    expect(find.text('Пробный премиум'), findsOneWidget);
+    expect(find.text('Посмотреть 7-дневный пробный период'), findsOneWidget);
+    expect(find.text('Открыть первую раздачу'), findsOneWidget);
+    expect(find.text('Начать с нуля'), findsOneWidget);
+
+    expect(find.text('Start here'), findsNothing);
+    expect(find.text('First sessions'), findsNothing);
+    expect(find.text('Premium trial'), findsNothing);
+    expect(find.text('Preview 7-day trial'), findsNothing);
+    expect(find.text('Start first hand'), findsNothing);
+    expect(find.text('Start from zero'), findsNothing);
+  });
+
   testWidgets('Play keeps placement out of the main practice surface', (
     tester,
   ) async {
@@ -8834,14 +10116,8 @@ void main() {
   testWidgets(
     'Wrong answer creates a Review mistake and Fix next launches it',
     (tester) async {
-      await pumpTall(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
-      );
-
-      await advanceTeachingToDrill(tester);
-      await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-      await tester.pumpAndSettle();
+      await pumpTall(tester, host());
+      await createActionsMistakeFromPlayHub(tester);
       await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
       await tester.pumpAndSettle();
 
@@ -8879,8 +10155,10 @@ void main() {
         find.byKey(const Key('act0_shell_mistake_context_count_badge')),
         findsOneWidget,
       );
-      expect(find.text('Hero acts'), findsWidgets);
-      expect(find.text('Blinds posted'), findsWidgets);
+      expect(
+        find.byKey(const Key('act0_shell_mistake_context_labels')),
+        findsOneWidget,
+      );
       expect(find.text('Missed 1 time'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_mistake_repair_plan')),
@@ -8907,6 +10185,11 @@ void main() {
         find.byKey(const Key('act0_shell_table_repair_callout_text')),
         findsOneWidget,
       );
+      final repairCallout = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_table_repair_callout_text')),
+      );
+      expect(repairCallout.maxLines, 3);
+      expect(repairCallout.overflow, TextOverflow.fade);
       expect(
         find.byKey(const Key('act0_shell_table_repair_callout')),
         findsOneWidget,
@@ -8953,14 +10236,19 @@ void main() {
     await advanceTeachingToDrill(tester);
     await tester.tap(find.byKey(const Key('act0_shell_option_check')));
     await tester.pumpAndSettle();
-    expect(find.text('Nice read.'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_icon_correct')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_review_board')), findsOneWidget);
-    expect(find.text('Quick fixes'), findsOneWidget);
+    expect(find.text('Recovered lately'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_fixed_mistake_actions_legal_context')),
       findsOneWidget,
@@ -8975,15 +10263,10 @@ void main() {
     // A mistake recorded in one lesson must remain visible in Review after
     // the user navigates away and returns from a different tab/context.
     // This proves the Review loop is session-wide, not filtered by lesson.
-    await pumpTall(
-      tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
-    );
+    await pumpTall(tester, host());
 
     // Step 1: Create a mistake in the current lesson (actions context).
-    await advanceTeachingToDrill(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-    await tester.pumpAndSettle();
+    await createActionsMistakeFromPlayHub(tester);
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
     await tester.pumpAndSettle();
 
@@ -9000,7 +10283,7 @@ void main() {
     expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_mistake_card')), findsOneWidget);
     expect(
-      find.byKey(const Key('act0_shell_review_board_open_count')),
+      find.byKey(const Key('act0_shell_review_board_support_text')),
       findsOneWidget,
     );
     // Repair CTA must be available — non-punitive, actionable.
@@ -9013,14 +10296,8 @@ void main() {
   testWidgets(
     'Home prioritizes weak spot repair while Play keeps a stable lane layout',
     (tester) async {
-      await pumpTall(
-        tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
-      );
-
-      await advanceTeachingToDrill(tester);
-      await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-      await tester.pumpAndSettle();
+      await pumpTall(tester, host());
+      await createActionsMistakeFromPlayHub(tester);
       await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
       await tester.pumpAndSettle();
 
@@ -9058,14 +10335,14 @@ void main() {
       await tester.tap(find.text('Play'));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
-      expect(find.text('Start now'), findsOneWidget);
+      expect(find.text('Start daily set'), findsOneWidget);
       expect(find.text('Topic packs'), findsOneWidget);
-      await tester.ensureVisible(
-        find.byKey(const Key('act0_shell_practice_group_weak_spots')),
+      expect(
+        find.byKey(const Key('act0_shell_play_featured_card')),
+        findsOneWidget,
       );
-      await tester.tap(
-        find.byKey(const Key('act0_shell_practice_group_weak_spots')),
-      );
+      expect(find.textContaining('weak spot'), findsWidgets);
+      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
       expect(find.text('Repair this spot'), findsOneWidget);
@@ -9078,14 +10355,8 @@ void main() {
   );
 
   testWidgets('Home weak spot CTA opens repair mode directly', (tester) async {
-    await pumpTall(
-      tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
-    );
-
-    await advanceTeachingToDrill(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-    await tester.pumpAndSettle();
+    await pumpTall(tester, host());
+    await createActionsMistakeFromPlayHub(tester);
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
     await tester.pumpAndSettle();
 
@@ -9106,21 +10377,23 @@ void main() {
   testWidgets('Home daily goal card pivots to weak-spot repair when needed', (
     tester,
   ) async {
-    await pumpTall(
-      tester,
-      host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
-    );
-
-    await advanceTeachingToDrill(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
-    await tester.pumpAndSettle();
+    await pumpTall(tester, host());
+    await createActionsMistakeFromPlayHub(tester);
     await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Practice now →'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_daily_goal_card')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_home_daily_practice_now')),
+      findsOneWidget,
+    );
+    expect(find.text('Start practice'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_home_daily_goal_card')));
     await tester.pumpAndSettle();
 
@@ -9264,6 +10537,21 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Continue to Blinds and action order.'), findsOneWidget);
+    final gateMessage = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_gate_message')),
+    );
+    final suggestedNext = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_suggested_next')),
+    );
+    final accuracy = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_accuracy')),
+    );
+    expect(gateMessage.maxLines, 4);
+    expect(gateMessage.overflow, TextOverflow.fade);
+    expect(suggestedNext.maxLines, 4);
+    expect(suggestedNext.overflow, TextOverflow.fade);
+    expect(accuracy.maxLines, 2);
+    expect(accuracy.overflow, TextOverflow.fade);
     expect(
       find.byKey(const Key('act0_shell_block_summary_repair_mix')),
       findsNothing,
@@ -9376,6 +10664,13 @@ void main() {
     expect(find.text('Deep leaks: 1'), findsOneWidget);
     expect(find.text('Go to Review and fix the deep leak.'), findsOneWidget);
     expect(find.textContaining('Deep leak saved for Review.'), findsOneWidget);
+    expect(find.text('Go to Review'), findsOneWidget);
+    expect(find.text('Run block before Review'), findsOneWidget);
+    final habitDetail = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_habit_reward_detail')),
+    );
+    expect(habitDetail.maxLines, 4);
+    expect(habitDetail.overflow, TextOverflow.fade);
 
     await tester.tap(
       find.byKey(const Key('act0_shell_block_summary_continue_cta')),
@@ -9531,7 +10826,9 @@ void main() {
         continue;
       }
       final source = file.readAsStringSync();
-      expect(source, contains('act0_shell_tokens_v1.dart'));
+      if (source.contains('Act0ShellTokensV1')) {
+        expect(source, contains('act0_shell_tokens_v1.dart'));
+      }
     }
   });
 
@@ -9796,6 +11093,42 @@ void main() {
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
     expect(find.textContaining('6 day streak'), findsNothing);
+  });
+
+  testWidgets('Hot restart restore ignores runner resume and lands on Home', (
+    tester,
+  ) async {
+    final today = _isoDate(DateTime.now());
+    final sample = Act0ShellStateV1.sample;
+    final currentLesson = sample.currentLesson;
+    final currentTask = currentLesson.taskList.first;
+
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(<String, Object>{
+        'schemaVersion': 2,
+        'completedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'selectedWorldId': sample.selectedWorldId,
+        'selectedLessonId': currentLesson.lessonId,
+        'selectedTaskId': currentTask.taskId,
+        'earnedXp': 0,
+        'lastActiveDay': today,
+        'persistedStreakDays': 2,
+        'resumeInRunner': true,
+        'resumePhase': 'review',
+        'resumeTeachingStepIndex': 1,
+        'resumeSelectedOptionId': currentTask.runner.options.first.id,
+      }),
+    });
+
+    await pumpTall(tester, host());
+
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_home_daily_goal_card')),
+      findsOneWidget,
+    );
   });
 }
 

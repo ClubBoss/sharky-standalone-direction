@@ -122,7 +122,7 @@ Map<String, Object> buildReleaseReadinessSnapshot({String rootPath = '.'}) {
     '${root.path}${Platform.pathSeparator}lib${Platform.pathSeparator}ui_v2${Platform.pathSeparator}screens${Platform.pathSeparator}universal_intake_plan_screen.dart',
   );
   final intakeContractFile = File(
-    '${root.path}${Platform.pathSeparator}test${Platform.pathSeparator}guards${Platform.pathSeparator}world1_intake_plan_flow_contract_test.dart',
+    '${root.path}${Platform.pathSeparator}test${Platform.pathSeparator}guards${Platform.pathSeparator}world1_app_root_startup_contract_test.dart',
   );
   final iosAssetsDir = Directory(
     '${root.path}${Platform.pathSeparator}assets${Platform.pathSeparator}store${Platform.pathSeparator}ios',

@@ -123,7 +123,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       Act0TeachingStepDisplayCopyV1(
         title: 'Начинаем с кэш-игры в холдем.',
         body:
-            'В холдеме у каждого игрока 2 закрытые карты, а на стол выходят 5 общих. Итоговая рука собирается из лучших пяти карт из этих семи. Есть разные форматы покера, но курс стартует с No-Limit Hold’em cash: здесь ценность фишек не меняется, а одни и те же базовые решения повторяются раз за разом.',
+            'У каждого игрока 2 закрытые карты. На стол выходят 5 общих карт. Лучшая рука собирается из любых пяти карт из этих семи. Мы начинаем с кэш-игры, где ценность фишек не меняется.',
       ),
       Act0TeachingStepDisplayCopyV1(
         title: 'Перед тобой покерный стол.',
@@ -138,7 +138,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       Act0TeachingStepDisplayCopyV1(
         title: 'Раздачу запускают блайнды.',
         body:
-            'Сначала SB ставит 0.5 BB, а BB — 1 BB. Эти обязательные ставки появляются ещё до первого решения. Карты пока скрыты, чтобы ты сначала спокойно прочитал сам стол.',
+            'Сначала SB ставит 0.5 BB, а BB — 1 BB. Эти ставки появляются ещё до первого решения, а карты пока скрыты, чтобы ты спокойно прочитал стол.',
       ),
     ],
   ),
@@ -312,6 +312,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt: 'Сначала назови действие, потом принимай решение.',
     runnerSupport:
         'Держись простого каркаса: фолд уходит, чек не добавляет фишек, колл уравнивает, рейз повышает цену.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Действия — это глаголы за столом.',
+        body:
+            'Фолд уходит, а чек ждёт. Колл уравнивает цену, а рейз добавляет ещё.',
+      ),
+    ],
   ),
   'actions_legal_context': Act0TaskDisplayCopyV1(
     title: 'Разрешённые действия',
@@ -619,6 +626,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Этот каркас убирает суету: сначала пойми, что за рука и где ты сидишь, а потом решай, стоит ли входить в игру.',
     runnerQuestion: 'Какой порядок здесь самый чистый?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Группа руки, место, ситуация.',
+        body:
+            'Сначала назови группу руки и посмотри на место. Затем прочитай ситуацию за столом.',
+      ),
+    ],
   ),
   'apply_utg_fold': Act0TaskDisplayCopyV1(
     title: 'UTG, мусорная рука',
@@ -710,7 +724,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   ),
   'play_quick_practice_label': Act0SurfaceAtomCopyV1(text: 'Быстрая практика'),
   'play_recommended_repair_label': Act0SurfaceAtomCopyV1(
-    text: 'Рекомендуемый фикс',
+    text: 'Лучше сделать сейчас',
   ),
   'play_practice_lanes_label': Act0SurfaceAtomCopyV1(text: 'Линии практики'),
   'play_topic_preflop': Act0SurfaceAtomCopyV1(text: 'Префлоп'),
@@ -719,35 +733,110 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'play_topic_hand_reading': Act0SurfaceAtomCopyV1(text: 'Чтение руки'),
   'play_topic_showdown': Act0SurfaceAtomCopyV1(text: 'Шоудаун'),
   'play_repair_empty_title': Act0SurfaceAtomCopyV1(
-    text: 'Сейчас нечего чинить.',
+    text: 'Сейчас всё спокойно.',
   ),
   'play_repair_empty_body': Act0SurfaceAtomCopyV1(
-    text: 'Используй практику по темам, чтобы добрать дополнительные репы.',
+    text:
+        'Выбери практику по темам, если хочешь сделать ещё пару полезных повторов.',
+  ),
+  'play_action_no_active_fixes': Act0SurfaceAtomCopyV1(
+    text: 'Нет активных разборов',
+  ),
+  'play_action_start_daily_set': Act0SurfaceAtomCopyV1(
+    text: 'Запустить дневную серию',
+  ),
+  'play_action_fix_next_leak': Act0SurfaceAtomCopyV1(
+    text: 'Разобрать следующую ошибку',
+  ),
+  'play_action_resume_route': Act0SurfaceAtomCopyV1(
+    text: 'Вернуться в маршрут',
+  ),
+  'play_action_run_check': Act0SurfaceAtomCopyV1(text: 'Запустить проверку'),
+  'play_action_open': Act0SurfaceAtomCopyV1(text: 'Открыть'),
+  'play_badge_today': Act0SurfaceAtomCopyV1(text: 'Сегодня'),
+  'play_badge_repair': Act0SurfaceAtomCopyV1(text: 'Разбор'),
+  'play_badge_route': Act0SurfaceAtomCopyV1(text: 'Маршрут'),
+  'play_badge_skill_check': Act0SurfaceAtomCopyV1(text: 'Проверка базы'),
+  'play_badge_decisions': Act0SurfaceAtomCopyV1(text: 'Решения'),
+  'play_badge_seats': Act0SurfaceAtomCopyV1(text: 'Позиции'),
+  'play_badge_streets': Act0SurfaceAtomCopyV1(text: 'Улицы'),
+  'play_badge_rankings': Act0SurfaceAtomCopyV1(text: 'Ранги'),
+  'play_badge_showdown': Act0SurfaceAtomCopyV1(text: 'Шоудаун'),
+  'play_badge_pack': Act0SurfaceAtomCopyV1(text: 'Пак'),
+  'play_intro_title': Act0SurfaceAtomCopyV1(
+    text: 'Тренируйся без повторного входа в уроки.',
+  ),
+  'play_intro_body': Act0SurfaceAtomCopyV1(
+    text: 'Сначала быстрые дриллы. Ниже паки, когда нужен точечный сет.',
+  ),
+  'play_return_loop_label': Act0SurfaceAtomCopyV1(text: 'Возвратный цикл'),
+  'play_return_loop_hint': Act0SurfaceAtomCopyV1(
+    text: 'Один короткий повтор сейчас. Потом обратно в маршрут.',
+  ),
+  'play_topic_packs_label': Act0SurfaceAtomCopyV1(text: 'Паки по темам'),
+  'play_topic_packs_hint': Act0SurfaceAtomCopyV1(
+    text: 'Выбери один тип навыка и пройди сфокусированный сет.',
+  ),
+  'play_tile_daily_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Короткий сет, чтобы держать ритм.',
+  ),
+  'play_tile_weak_spots_enabled_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Разбери ошибку, которая повторяется.',
+  ),
+  'play_tile_weak_spots_disabled_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Новые ошибки будут появляться здесь.',
+  ),
+  'play_tile_continue_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Вернись к следующему лучшему шагу.',
+  ),
+  'play_tile_placement_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Короткая проверка перед настройкой маршрута.',
+  ),
+  'play_all_topics_label': Act0SurfaceAtomCopyV1(text: 'Все темы'),
+  'play_topic_placement_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Короткая проверка перед настройкой маршрута.',
+  ),
+  'play_topic_actions_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Быстрее выбирай пас, чек, колл или рейз.',
+  ),
+  'play_topic_positions_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Чисто читай позиции и порядок хода.',
+  ),
+  'play_topic_streets_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Читай раздачу по улицам шаг за шагом.',
+  ),
+  'play_topic_rankings_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Сравнивай силу рук на реальных досках.',
+  ),
+  'play_topic_showdown_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Чисто закрывай банк в конце раздачи.',
   ),
   'play_later_cta': Act0SurfaceAtomCopyV1(text: 'Позже'),
-  'review_fix_next_label': Act0SurfaceAtomCopyV1(text: 'Чиним дальше'),
-  'review_title': Act0SurfaceAtomCopyV1(text: 'Доска фиксов'),
+  'review_fix_next_label': Act0SurfaceAtomCopyV1(text: 'Разобрать дальше'),
+  'review_title': Act0SurfaceAtomCopyV1(text: 'Разбор ошибок'),
   'review_subtitle': Act0SurfaceAtomCopyV1(
     text: 'Разбери один промах, прежде чем двигаться дальше.',
   ),
   'review_recovered_lately_label': Act0SurfaceAtomCopyV1(
     text: 'Недавно восстановлено',
   ),
-  'review_board_title_fix': Act0SurfaceAtomCopyV1(text: 'Чиним следующим'),
+  'review_board_title_fix': Act0SurfaceAtomCopyV1(text: 'Сначала разберём'),
   'review_board_title_clean': Act0SurfaceAtomCopyV1(text: 'Повтор'),
-  'review_board_headline_clean': Act0SurfaceAtomCopyV1(text: 'Стол снова чист'),
+  'review_board_headline_clean': Act0SurfaceAtomCopyV1(
+    text: 'Сейчас всё чисто',
+  ),
   'review_board_body_clean': Act0SurfaceAtomCopyV1(
     text:
-        'Срочных фиксов сейчас нет. Держи стол чистым через один спокойный прогон.',
+        'Срочных ошибок сейчас нет. Один спокойный повтор поможет так и оставить.',
   ),
   'review_board_support_fix': Act0SurfaceAtomCopyV1(
-    text: 'Один чистый фикс здесь важнее, чем беглый взгляд на весь стол.',
+    text: 'Один точный разбор здесь важнее, чем беглый взгляд на всё сразу.',
   ),
   'review_board_support_clean_empty': Act0SurfaceAtomCopyV1(
-    text: 'Пока чинить нечего. Просто держи маршрут в движении.',
+    text: 'Сейчас разбирать нечего. Просто продолжай по маршруту.',
   ),
   'review_board_support_clean_strong': Act0SurfaceAtomCopyV1(
-    text: 'Сейчас всё чисто. Просто держи маршрут в движении.',
+    text: 'Сейчас всё под контролем. Просто продолжай по маршруту.',
   ),
   'review_board_fix_cta': Act0SurfaceAtomCopyV1(text: 'Чинить сейчас'),
   'runner_badge_your_move': Act0SurfaceAtomCopyV1(text: 'Твой ход'),
@@ -902,7 +991,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Перед тобой уже было открытие',
   ),
   'runtime_phrase_flag_loose_call_possible_leak': Act0SurfaceAtomCopyV1(
-    text: 'Пометь этот лузовый колл как возможную утечку',
+    text: 'Пометь этот лузовый колл как возможное слабое место',
   ),
   'runtime_phrase_fold_more_marginal_bluffcatchers': Act0SurfaceAtomCopyV1(
     text: 'Чаще пасуй с пограничными руками для колла против блефа',
@@ -916,7 +1005,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Рука может сместиться ближе к категории "мимо"',
   ),
   'runtime_phrase_log_leak_and_reset': Act0SurfaceAtomCopyV1(
-    text: 'Коротко запиши утечку и вернись в текущую раздачу',
+    text: 'Коротко запиши ошибку и вернись к текущей раздаче',
   ),
   'runtime_phrase_loose_passive_caller': Act0SurfaceAtomCopyV1(
     text: 'Лузово-пассивный коллер',
@@ -964,7 +1053,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Терпение и выбор стола',
   ),
   'runtime_phrase_pause_on_high_ev_nodes': Act0SurfaceAtomCopyV1(
-    text: 'Коротко тормози в узлах с высоким EV',
+    text: 'Коротко тормози в самых ценных спотах',
   ),
   'runtime_phrase_prepare_action_windows_before_red_zone_panic':
       Act0SurfaceAtomCopyV1(
@@ -986,14 +1075,14 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Сначала оцени процесс, потом суди по результату',
   ),
   'runtime_phrase_run_brief_reset_reanchor_plan': Act0SurfaceAtomCopyV1(
-    text: 'Сделай короткий reset и вернись к плану',
+    text: 'Сделай короткую паузу и вернись к плану',
   ),
   'runtime_phrase_run_short_reset_before_next_major_spot':
       Act0SurfaceAtomCopyV1(
-        text: 'Перед следующим большим спотом сделай короткий reset',
+        text: 'Перед следующим большим спотом сделай короткую паузу',
       ),
   'runtime_phrase_select_one_repeated_leak_priority': Act0SurfaceAtomCopyV1(
-    text: 'Выбери одну повторяющуюся утечку как приоритет',
+    text: 'Выбери одну повторяющуюся ошибку как главный фокус',
   ),
   'runtime_phrase_set_one_low_friction_focus_target': Act0SurfaceAtomCopyV1(
     text: 'Поставь одну цель, которую легко удерживать в фокусе',
@@ -1002,20 +1091,20 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Место для манёвра ещё есть, но это уже не беззаботная глубина',
   ),
   'runtime_phrase_stick_to_process_planned_exploit': Act0SurfaceAtomCopyV1(
-    text: 'Держись процесса и заранее намеченной exploit-линии',
+    text: 'Держись процесса и заранее намеченной подстройки',
   ),
   'runtime_phrase_take_practical_jam_spots_before_blinded_out':
       Act0SurfaceAtomCopyV1(
-        text: 'Забирай практичные jam-споты до того, как тебя съедят блайнды',
+        text: 'Забирай разумные олл-ины до того, как тебя съедят блайнды',
       ),
   'runtime_phrase_structured_exploit_before_transfer': Act0SurfaceAtomCopyV1(
-    text: 'Сначала структурный exploit, потом перенос в живую игру',
+    text: 'Сначала понятная подстройка, потом перенос в живую игру',
   ),
   'runtime_phrase_survival_pressure_matters_more': Act0SurfaceAtomCopyV1(
     text: 'Давление на выживание здесь важнее',
   ),
   'runtime_phrase_take_reasonable_jam_or_reshove': Act0SurfaceAtomCopyV1(
-    text: 'Ищи разумный jam или reshove-спот',
+    text: 'Ищи разумный олл-ин или ре-олл-ин',
   ),
   'runtime_phrase_take_only_evidence_backed_lines': Act0SurfaceAtomCopyV1(
     text: 'Играй только линии, за которыми есть доказательства',
@@ -1046,7 +1135,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'В какой группе моя рука?',
   ),
   'runtime_phrase_write_one_priority_leak_one_fix': Act0SurfaceAtomCopyV1(
-    text: 'Запиши одну приоритетную утечку и один фикс на завтра',
+    text: 'Запиши одну главную ошибку и один шаг на завтра',
   ),
   'runtime_phrase_draw_hit': Act0SurfaceAtomCopyV1(text: 'Дро доехало'),
   'runtime_phrase_bet_one_third': Act0SurfaceAtomCopyV1(
@@ -1226,7 +1315,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Следующий фокус',
   ),
   'profile_working_well_label': Act0SurfaceAtomCopyV1(text: 'Уже получается'),
-  'profile_next_reps_label': Act0SurfaceAtomCopyV1(text: 'Следующие репы'),
+  'profile_next_reps_label': Act0SurfaceAtomCopyV1(text: 'Следующий шаг'),
   'profile_consistency_label': Act0SurfaceAtomCopyV1(text: 'Ритм'),
   'profile_streak_label': Act0SurfaceAtomCopyV1(text: 'Серия'),
   'profile_momentum_streak_7': Act0SurfaceAtomCopyV1(
@@ -1235,30 +1324,144 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   ),
   'profile_momentum_streak_3': Act0SurfaceAtomCopyV1(
     text:
-        'Серия уже настоящая. Продолжай набирать чистые репы, пока ритм тёплый.',
+        'Серия уже держится. Ещё несколько спокойных заходов — и этот ритм закрепится.',
   ),
   'profile_momentum_worlds_cleared': Act0SurfaceAtomCopyV1(
     text: 'Закрытый мир важнее шумной цифры. Просто держи маршрут в движении.',
   ),
   'profile_momentum_first_habit': Act0SurfaceAtomCopyV1(
     text:
-        'Первая устойчивая привычка здесь простая: вернуться ещё на один чистый реп.',
+        'Первая устойчивая привычка здесь простая: вернуться ещё на один короткий чистый заход.',
   ),
   'profile_support_no_streak_with_fix': Act0SurfaceAtomCopyV1(
-    text: 'Ты уже починил живой промах. Ещё один чистый реп запускает ритм.',
+    text: 'Ты уже разобрал живой промах. Ещё один чистый заход запустит ритм.',
   ),
   'profile_support_no_streak_plain': Act0SurfaceAtomCopyV1(
-    text: 'Один чистый реп запускает ритм.',
+    text: 'Один чистый заход запускает ритм.',
   ),
   'profile_support_streak_7': Act0SurfaceAtomCopyV1(
     text: 'Это уже не случайная серия. Ритм становится частью твоей игры.',
   ),
   'profile_support_worlds_cleared': Act0SurfaceAtomCopyV1(
-    text: 'Ритм уже оставляет после себя доказательства. Держи маршрут тёплым.',
+    text: 'Ритм уже видно. Просто продолжай по маршруту.',
   ),
   'profile_support_default': Act0SurfaceAtomCopyV1(
+    text: 'Сохраняй ритм. Со временем решения начнут ощущаться естественно.',
+  ),
+  'profile_first_start_tools_title': Act0SurfaceAtomCopyV1(
+    text: 'Инструменты старта',
+  ),
+  'profile_first_start_tools_body': Act0SurfaceAtomCopyV1(
     text:
-        'Держи ритм тёплым. Постоянство постепенно превращается в ощущение игры.',
+        'Можно заново посмотреть стартовое знакомство с продуктом или пройти плейсмент ещё раз, не ломая прогресс маршрута.',
+  ),
+  'profile_first_start_replay_welcome': Act0SurfaceAtomCopyV1(
+    text: 'Повторить знакомство',
+  ),
+  'profile_first_start_retake_placement': Act0SurfaceAtomCopyV1(
+    text: 'Пройти плейсмент снова',
+  ),
+  'welcome_intro_title': Act0SurfaceAtomCopyV1(
+    text: 'Учись по одному споту за раз.',
+  ),
+  'welcome_intro_eyebrow': Act0SurfaceAtomCopyV1(text: 'Старт'),
+  'welcome_intro_line': Act0SurfaceAtomCopyV1(
+    text:
+        'Sharky делает следующий шаг очевидным: один взгляд на стол, один ответ, одно понятное почему.',
+  ),
+  'welcome_intro_detail': Act0SurfaceAtomCopyV1(
+    text: 'Без длинной стены теории. Без догадок, что здесь важнее всего.',
+  ),
+  'welcome_intro_cta': Act0SurfaceAtomCopyV1(
+    text: 'Понять, почему это работает',
+  ),
+  'welcome_why_title': Act0SurfaceAtomCopyV1(
+    text: 'Это специально ощущается легче.',
+  ),
+  'welcome_why_eyebrow': Act0SurfaceAtomCopyV1(text: 'Почему это работает'),
+  'welcome_why_line': Act0SurfaceAtomCopyV1(
+    text:
+        'Sharky учит по одному решению за раз и держит объяснение рядом со столом.',
+  ),
+  'welcome_why_detail': Act0SurfaceAtomCopyV1(
+    text:
+        'Ты видишь подсказку, отвечаешь один раз, получаешь причину и двигаешься дальше.',
+  ),
+  'welcome_why_cta': Act0SurfaceAtomCopyV1(text: 'Показать, как устроен путь'),
+  'welcome_handoff_eyebrow': Act0SurfaceAtomCopyV1(text: 'Следующий шаг'),
+  'placement_intro_route_check': Act0SurfaceAtomCopyV1(
+    text: 'Проверка маршрута',
+  ),
+  'placement_intro_quick_route_check': Act0SurfaceAtomCopyV1(
+    text: 'Быстрая проверка старта. Без длинной настройки.',
+  ),
+  'placement_intro_best_place_to_begin': Act0SurfaceAtomCopyV1(
+    text:
+        'Шарки использует это, чтобы сразу выбрать верную точку старта и не увести тебя в лишнее.',
+  ),
+  'placement_intro_no_payment_choice_first': Act0SurfaceAtomCopyV1(
+    text:
+        'Сначала без выбора оплаты. Ты увидишь, с чего начать и какая первая полезная раздача тебя ждёт.',
+  ),
+  'placement_intro_what_happens_next': Act0SurfaceAtomCopyV1(
+    text: 'Что будет дальше',
+  ),
+  'placement_intro_clear_place_to_start': Act0SurfaceAtomCopyV1(
+    text: 'Одна понятная точка старта вместо случайного начала.',
+  ),
+  'placement_intro_short_live_check': Act0SurfaceAtomCopyV1(
+    text: 'Одна короткая живая проверка на реальных столах.',
+  ),
+  'placement_intro_start_module_now': Act0SurfaceAtomCopyV1(
+    text: 'Первый модуль, который можно открыть сразу.',
+  ),
+  'placement_ready_skill_check': Act0SurfaceAtomCopyV1(
+    text: 'Проверка на столе',
+  ),
+  'placement_ready_best_place_to_begin': Act0SurfaceAtomCopyV1(
+    text: 'Одна короткая живая проверка. Потом Шарки закрепит лучший старт.',
+  ),
+  'placement_ready_three_fast_reads': Act0SurfaceAtomCopyV1(
+    text: 'Три быстрых чтения',
+  ),
+  'placement_ready_table_read_and_seat_orientation': Act0SurfaceAtomCopyV1(
+    text: 'Чтение стола и ориентация по местам.',
+  ),
+  'placement_ready_board_and_street_basics': Act0SurfaceAtomCopyV1(
+    text: 'База по борду и улицам.',
+  ),
+  'placement_ready_action_order': Act0SurfaceAtomCopyV1(
+    text: 'Порядок действий, когда раздача начинает двигаться.',
+  ),
+  'placement_ready_start_proves_itself_early': Act0SurfaceAtomCopyV1(
+    text:
+        'Потом ты попадёшь в тот старт, который подходит именно тебе, быстро открывается и сразу доказывает свою пользу.',
+  ),
+  'placement_result_your_start_is_ready': Act0SurfaceAtomCopyV1(
+    text: 'Твой старт уже готов.',
+  ),
+  'placement_result_see_where_to_start': Act0SurfaceAtomCopyV1(
+    text: 'Посмотреть точку старта',
+  ),
+  'placement_sheet_start_here': Act0SurfaceAtomCopyV1(text: 'Старт отсюда'),
+  'placement_sheet_first_sessions': Act0SurfaceAtomCopyV1(
+    text: 'Первые сессии',
+  ),
+  'placement_sheet_premium_trial': Act0SurfaceAtomCopyV1(
+    text: 'Пробный премиум',
+  ),
+  'placement_sheet_trial_preview_saved': Act0SurfaceAtomCopyV1(
+    text:
+        'Пробный просмотр сохранён. Бесплатный маршрут всё равно можно продолжить.',
+  ),
+  'placement_sheet_preview_trial': Act0SurfaceAtomCopyV1(
+    text: 'Посмотреть 7-дневный пробный период',
+  ),
+  'placement_sheet_start_first_hand': Act0SurfaceAtomCopyV1(
+    text: 'Открыть первую раздачу',
+  ),
+  'placement_sheet_start_from_zero': Act0SurfaceAtomCopyV1(
+    text: 'Начать с нуля',
   ),
 };
 

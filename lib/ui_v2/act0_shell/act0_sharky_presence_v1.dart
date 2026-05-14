@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -36,63 +37,135 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final mascotSize = compact ? 72.0 : 92.0;
     final detailText = detail?.trim() ?? '';
-    return Container(
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: tone.withValues(alpha: compact ? 0.22 : 0.28),
-        glow: !compact,
-        color: compact ? Act0ShellTokensV1.surface2 : Act0ShellTokensV1.surface,
-      ),
-      padding: EdgeInsets.all(
-        compact ? Act0ShellTokensV1.gapMd : Act0ShellTokensV1.gapLg,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _SharkyMascotFrameV1(
-            mood: mood,
-            tone: tone,
-            size: mascotSize,
-            animated: true,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final stacked = compact && constraints.maxWidth < 360;
+        final content = _SharkyGuideContentV1(
+          eyebrow: eyebrow,
+          line: line,
+          detailText: detailText,
+          tone: tone,
+          badgeLabel: badgeLabel,
+          compact: compact,
+        );
+        return Container(
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            borderColor: tone.withValues(alpha: compact ? 0.22 : 0.28),
+            glow: !compact,
+            color: compact
+                ? Act0ShellTokensV1.surface2
+                : Act0ShellTokensV1.surface,
           ),
-          SizedBox(
-            width: compact ? Act0ShellTokensV1.gapMd : Act0ShellTokensV1.gapLg,
+          padding: EdgeInsets.all(
+            compact ? Act0ShellTokensV1.gapMd : Act0ShellTokensV1.gapLg,
           ),
-          Expanded(
+          child: stacked
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _SharkyMascotFrameV1(
+                          mood: mood,
+                          tone: tone,
+                          size: mascotSize,
+                          animated: true,
+                        ),
+                        const SizedBox(width: Act0ShellTokensV1.gapMd),
+                        Expanded(child: content),
+                      ],
+                    ),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _SharkyMascotFrameV1(
+                      mood: mood,
+                      tone: tone,
+                      size: mascotSize,
+                      animated: true,
+                    ),
+                    SizedBox(
+                      width: compact
+                          ? Act0ShellTokensV1.gapMd
+                          : Act0ShellTokensV1.gapLg,
+                    ),
+                    Expanded(child: content),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+}
+
+class _SharkyGuideContentV1 extends StatelessWidget {
+  const _SharkyGuideContentV1({
+    required this.eyebrow,
+    required this.line,
+    required this.detailText,
+    required this.tone,
+    required this.badgeLabel,
+    required this.compact,
+  });
+
+  final String eyebrow;
+  final String line;
+  final String detailText;
+  final Color tone;
+  final String? badgeLabel;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final detailBlocks = _splitSharkyGuideDetailBlocksV1(
+      detailText,
+      compact: compact,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          eyebrow,
+          key: const Key('act0_shell_sharky_guide_eyebrow'),
+          style: Act0ShellTokensV1.label.copyWith(
+            color: tone,
+            letterSpacing: 0.4,
+          ),
+        ),
+        if (badgeLabel != null && badgeLabel!.trim().isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _GuideBadgeV1(label: badgeLabel!, tone: tone),
+          ),
+        ],
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          _formatSharkyGuideCopyV1(line),
+          key: const Key('act0_shell_sharky_guide_line'),
+          style: Act0ShellTokensV1.body.copyWith(
+            fontWeight: FontWeight.w900,
+            fontSize: compact ? 14 : 16,
+            height: 1.18,
+            color: Act0ShellTokensV1.text,
+          ),
+        ),
+        if (detailBlocks.isNotEmpty) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          KeyedSubtree(
+            key: const Key('act0_shell_sharky_guide_detail'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  eyebrow,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: tone,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-                if (badgeLabel != null && badgeLabel!.trim().isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: _GuideBadgeV1(label: badgeLabel!, tone: tone),
-                  ),
-                ],
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  line,
-                  maxLines: compact ? 3 : 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    fontWeight: FontWeight.w900,
-                    fontSize: compact ? 14 : 16,
-                    height: 1.18,
-                    color: Act0ShellTokensV1.text,
-                  ),
-                ),
-                if (detailText.isNotEmpty) ...[
-                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                for (var index = 0; index < detailBlocks.length; index++) ...[
+                  if (index > 0)
+                    SizedBox(height: compact ? 8 : Act0ShellTokensV1.gapSm),
                   Text(
-                    detailText,
-                    maxLines: compact ? 2 : 3,
-                    overflow: TextOverflow.ellipsis,
+                    detailBlocks[index],
+                    key: Key('act0_shell_sharky_guide_detail_block_$index'),
                     style: Act0ShellTokensV1.muted.copyWith(
                       color: Act0ShellTokensV1.textMuted,
                       height: 1.2,
@@ -103,7 +176,7 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ],
     );
   }
 }
@@ -116,7 +189,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
     this.tone,
     this.detail,
     this.textKey,
-    this.mascotSize = 56,
+    this.mascotSize = 64,
     this.bubblePadding,
   });
 
@@ -131,6 +204,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedTone = tone ?? act0SharkyToneForMoodV1(mood);
+    final resolvedLine = _resolveSharkyUtilityLineV1(line: line, mood: mood);
     final detailText = detail?.trim() ?? '';
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -189,7 +263,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      line,
+                      resolvedLine,
                       key: textKey,
                       style: Act0ShellTokensV1.body.copyWith(
                         color: resolvedTone,
@@ -216,6 +290,74 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
       ],
     );
   }
+}
+
+String _resolveSharkyUtilityLineV1({
+  required String line,
+  required Act0SharkyMoodV1 mood,
+}) {
+  final trimmed = line.trim();
+  if (trimmed.isEmpty) {
+    return _fallbackSharkyUtilityLineV1(mood);
+  }
+  final normalized = trimmed.toLowerCase();
+  const genericLines = <String>{
+    'good',
+    'nice',
+    'great',
+    'okay',
+    'ok',
+    'well done',
+    'good job',
+  };
+  if (genericLines.contains(normalized)) {
+    return _fallbackSharkyUtilityLineV1(mood);
+  }
+  return trimmed;
+}
+
+String _fallbackSharkyUtilityLineV1(Act0SharkyMoodV1 mood) {
+  return switch (mood) {
+    Act0SharkyMoodV1.repair =>
+      'Fix one pressure spot first. Then continue the route cleanly.',
+    Act0SharkyMoodV1.celebrate =>
+      'Keep the rhythm warm with one short clean rep now.',
+    Act0SharkyMoodV1.happy =>
+      'Lock this read in and carry it into the next hand.',
+    Act0SharkyMoodV1.thinking =>
+      'Take one calm read first, then choose one clear action.',
+    Act0SharkyMoodV1.neutral =>
+      'Start with the table read. Clean reads build real edge.',
+  };
+}
+
+String _formatSharkyGuideCopyV1(String text) {
+  final trimmed = text.trim();
+  if (trimmed.isEmpty) {
+    return trimmed;
+  }
+  final sentenceBreak = trimmed.indexOf('. ');
+  if (sentenceBreak > 18 && sentenceBreak < trimmed.length - 4) {
+    return '${trimmed.substring(0, sentenceBreak + 1)}\n'
+        '${trimmed.substring(sentenceBreak + 2)}';
+  }
+  final dashBreak = trimmed.indexOf(' - ');
+  if (dashBreak > 16 && dashBreak < trimmed.length - 4) {
+    return '${trimmed.substring(0, dashBreak)}\n'
+        '${trimmed.substring(dashBreak + 3)}';
+  }
+  return trimmed;
+}
+
+List<String> _splitSharkyGuideDetailBlocksV1(
+  String text, {
+  required bool compact,
+}) {
+  final blocks = act0BuildInstructionBlocksV1(text: text, compact: compact);
+  if (blocks.isEmpty) {
+    return const <String>[];
+  }
+  return blocks.map(_formatSharkyGuideCopyV1).toList();
 }
 
 class _SharkyMascotFrameV1 extends StatelessWidget {

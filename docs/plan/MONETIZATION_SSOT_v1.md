@@ -27,6 +27,7 @@ It is descriptive only for current state (R4 Batch v2a), not a redesign.
 - Product IDs declared in `PaymentService`:
   - `premium_pack`
   - `pro_subscription_monthly`
+  - `pro_subscription_annual`
   - `xp_booster`
   - `coins_pack_small`
   - `coins_pack_medium`
@@ -182,4 +183,3 @@ Current implementation has multiple entitlement-related stores. There is no sing
 - R4 v2b: make routing gates read only that SSOT service; remove duplicate heuristic gate decisions where possible.
 - R4 v2c: implement real receipt verification policy (server-side), and make `restore` converge to entitlement SSOT.
 - R4 v2c: add deterministic contract tests for entitlement transitions (buy, restore, premium/trial precedence, offline startup).
-

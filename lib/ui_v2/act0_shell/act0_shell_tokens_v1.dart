@@ -276,4 +276,50 @@ class Act0ShellTokensV1 {
       elevation: 0,
     );
   }
+
+  static bool isTabletWidth(BuildContext context) {
+    final media = MediaQuery.of(context);
+    return media.size.shortestSide >= 700;
+  }
+
+  static double pageHorizontalPaddingFor(BuildContext context) {
+    return isTabletWidth(context) ? 24 : pageX;
+  }
+
+  static double contentMaxWidthFor(
+    BuildContext context, {
+    double phone = 560,
+    double tablet = 980,
+  }) {
+    return isTabletWidth(context) ? tablet : phone;
+  }
+
+  static double narrowContentMaxWidthFor(
+    BuildContext context, {
+    double phone = 560,
+    double tablet = 860,
+  }) {
+    return isTabletWidth(context) ? tablet : phone;
+  }
+
+  static Widget centeredContent(
+    BuildContext context, {
+    required Widget child,
+    double phoneMaxWidth = 560,
+    double tabletMaxWidth = 980,
+  }) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: contentMaxWidthFor(
+            context,
+            phone: phoneMaxWidth,
+            tablet: tabletMaxWidth,
+          ),
+        ),
+        child: child,
+      ),
+    );
+  }
 }

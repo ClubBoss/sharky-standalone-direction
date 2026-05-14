@@ -33,9 +33,14 @@ import 'package:poker_analyzer/services/mastery_progress_v1.dart';
 import 'package:poker_analyzer/services/entitlement_sync_v1.dart';
 import 'package:poker_analyzer/services/placement_service_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
-import 'package:poker_analyzer/services/premium_restore_flow_v1.dart';
+import 'package:poker_analyzer/services/premium_route_boundary_v1.dart';
 import 'package:poker_analyzer/services/premium_value_package_v1.dart';
+import 'package:poker_analyzer/services/release_commerce_availability_v1.dart';
+import 'package:poker_analyzer/services/release_premium_access_action_v1.dart';
+import 'package:poker_analyzer/services/release_entitlement_surface_state_v1.dart';
+import 'package:poker_analyzer/services/subscription_surface_copy_v1.dart';
 import 'package:poker_analyzer/services/subscription_status_v1.dart';
+import 'package:poker_analyzer/services/trial_offer_policy_v1.dart';
 import 'package:poker_analyzer/services/entitlement_ssot_v1.dart';
 import 'package:poker_analyzer/services/trial_service_v1.dart';
 import 'package:poker_analyzer/services/today_router_v1.dart';
@@ -328,6 +333,7 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       unawaited(_refreshEntitlementStateV1());
+      unawaited(_refreshCampaignProgress());
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -340,12 +346,10 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
     final placementResult = await PlacementServiceV1.getLastResultV1();
     final placementRoute = await PlacementServiceV1.getLastRouteV1();
     final nowEpochMs = ProgressService.nowUtc().millisecondsSinceEpoch;
-    final trialStatus = await TrialServiceV1.getTrialStatusV1(
-      nowEpochMs: nowEpochMs,
-    );
-    final subscriptionStatus = await SubscriptionServiceV1.getStatusV1(
-      nowEpochMs: nowEpochMs,
-    );
+    final entitlementSurface =
+        await ReleaseEntitlementSurfaceStateServiceV1.readV1(
+          nowEpochMs: nowEpochMs,
+        );
     final freeRollRemaining = await ProgressService.getFreeRollRemainingV1();
     final spineCalibrationCompleted =
         await ProgressService.isSpineCalibrationCompletedV1();
@@ -425,8 +429,8 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
       _decisionStartedAt = DateTime.now().toUtc();
       _placementResultV1 = placementResult;
       _placementRouteV1 = placementRoute;
-      _trialStatusV1 = trialStatus;
-      _subscriptionStatusV1 = subscriptionStatus;
+      _trialStatusV1 = entitlementSurface.trialStatus;
+      _subscriptionStatusV1 = entitlementSurface.subscriptionStatus;
     });
     await _refreshTodayCompletedStateV1();
     if (intakeCompleted) {
@@ -459,16 +463,14 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
 
   Future<void> _refreshEntitlementStateV1() async {
     final nowEpochMs = ProgressService.nowUtc().millisecondsSinceEpoch;
-    final trialStatus = await TrialServiceV1.getTrialStatusV1(
-      nowEpochMs: nowEpochMs,
-    );
-    final subscriptionStatus = await SubscriptionServiceV1.getStatusV1(
-      nowEpochMs: nowEpochMs,
-    );
+    final entitlementSurface =
+        await ReleaseEntitlementSurfaceStateServiceV1.readV1(
+          nowEpochMs: nowEpochMs,
+        );
     if (!mounted) return;
     setState(() {
-      _trialStatusV1 = trialStatus;
-      _subscriptionStatusV1 = subscriptionStatus;
+      _trialStatusV1 = entitlementSurface.trialStatus;
+      _subscriptionStatusV1 = entitlementSurface.subscriptionStatus;
     });
   }
 
@@ -596,24 +598,11 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
   }
 
   String _todayPremiumStatusLineV1(SubscriptionStatusV1 status) {
-    return switch (status.accessState) {
-      SubscriptionAccessStateV1.premium =>
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
-      SubscriptionAccessStateV1.trial =>
-        'Trial active: ${status.trialRemainingDays} days left on premium-target Today routes and World 5+.',
-      SubscriptionAccessStateV1.free => kPremiumValuePackageV1.freeRuleLine,
-    };
+    return SubscriptionSurfaceCopyV1.todayStatusLine(status);
   }
 
   String _todayPremiumPreviewStatusLineV1(SubscriptionStatusV1 status) {
-    return switch (status.accessState) {
-      SubscriptionAccessStateV1.premium =>
-        'Premium is active now on this account.',
-      SubscriptionAccessStateV1.trial =>
-        'Trial is active now. Premium keeps premium-target Today routes and World 5+ open after the trial ends.',
-      SubscriptionAccessStateV1.free =>
-        'Free stays on the opening path plus one Today route per UTC day on current main.',
-    };
+    return SubscriptionSurfaceCopyV1.todayPreviewStatusLine(status);
   }
 
   Future<void> _maybeEmitTrialStatusTelemetryV1() async {
@@ -694,6 +683,8 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
     });
     if (!mounted) return;
     final paymentService = PaymentService();
+    final commerceAvailability =
+        await ReleaseCommerceAvailabilityServiceV1.readV1();
     var restoreInProgress = false;
     String? restoreMessage;
     await showModalBottomSheet<void>(
@@ -765,6 +756,19 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                           color: SharkyTokensV1.textPrimary,
                         ),
                       ),
+                      if (commerceAvailability.message case final message?) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          message,
+                          key: const Key(
+                            'today_plan_premium_preview_store_note_v1',
+                          ),
+                          style: AppTypography.caption.copyWith(
+                            color: SharkyTokensV1.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: AppSpacing.sm),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -772,16 +776,22 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                           key: const Key(
                             'today_plan_premium_preview_restore_cta_v1',
                           ),
-                          onPressed: restoreInProgress
+                          onPressed:
+                              restoreInProgress ||
+                                  !commerceAvailability.canRestore
                               ? null
                               : () async {
                                   setModalState(() {
                                     restoreInProgress = true;
                                     restoreMessage = null;
                                   });
-                                  final outcome =
-                                      await PremiumRestoreFlowV1.run(
-                                        entitlementBefore: status.isEntitled,
+                                  final result =
+                                      await ReleasePremiumAccessActionV1.restoreV1(
+                                        readStatusBefore: () async => status,
+                                        checkStoreAvailability: () async {
+                                          await paymentService.initialize();
+                                          return paymentService.isAvailable;
+                                        },
                                         performRestore:
                                             paymentService.restorePurchases,
                                         readEntitlementAfter: () {
@@ -792,13 +802,17 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                                         },
                                         readLastError: () =>
                                             paymentService.lastError,
+                                        readStatusAfter: () =>
+                                            SubscriptionServiceV1.getStatusV1(
+                                              nowEpochMs: nowEpochMs,
+                                            ),
                                       );
                                   if (!context.mounted) {
                                     return;
                                   }
                                   setModalState(() {
                                     restoreInProgress = false;
-                                    restoreMessage = outcome.message;
+                                    restoreMessage = result.message;
                                   });
                                 },
                           child: Text(
@@ -1061,7 +1075,13 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
     );
     final sharedRecentActivityRecommendation =
         await _resolveSharedRecentActivityRecommendationV1();
-    if (trialStatus.isEligible) {
+    final completedHandsInCampaign =
+        await ProgressService.completedHandsInCampaignV1();
+    final canShowMainTrialOffer = TrialOfferPolicyV1.showMainTrialOfferV1(
+      isEligible: trialStatus.isEligible,
+      completedHandsInCampaign: completedHandsInCampaign,
+    );
+    if (canShowMainTrialOffer) {
       final shouldEmitOffer =
           await TrialServiceV1.consumeOfferShownTelemetryTokenV1();
       if (shouldEmitOffer) {
@@ -1929,10 +1949,7 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
   }
 
   bool _isPremiumProgressionWorldV1(int? worldIndex) {
-    if (worldIndex == null) {
-      return false;
-    }
-    return worldIndex >= 5;
+    return PremiumRouteBoundaryV1.isPremiumProgressionWorldV1(worldIndex);
   }
 
   Future<String?> _peekNextPlacementSessionIdV1() async {
@@ -2043,28 +2060,40 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
     }
     final trialStatus = _trialStatusV1;
     final subscriptionStatus = _subscriptionStatusV1;
-    final isPremium =
-        subscriptionStatus?.accessState == SubscriptionAccessStateV1.premium;
-    final isTrialActive = trialStatus?.isTrialActive ?? false;
-    final isTrialEligible = trialStatus?.isEligible ?? false;
     final effectiveSubscriptionStatus =
         subscriptionStatus ??
         SubscriptionStatusV1(
           isPremium: false,
-          isEntitled: isTrialActive,
-          isTrialActive: isTrialActive,
+          isEntitled: trialStatus?.isTrialActive ?? false,
+          isTrialActive: trialStatus?.isTrialActive ?? false,
           trialRemainingDays: trialStatus?.remainingDays ?? 0,
-          source: isTrialActive
+          source: (trialStatus?.isTrialActive ?? false)
               ? SubscriptionSourceV1.trial
               : SubscriptionSourceV1.none,
-          accessState: isTrialActive
+          accessState: (trialStatus?.isTrialActive ?? false)
               ? SubscriptionAccessStateV1.trial
               : SubscriptionAccessStateV1.free,
         );
-    final showMonetizationRow =
-        (subscriptionStatus?.isEntitled ?? false) ||
-        isTrialActive ||
-        isTrialEligible;
+    final effectiveEntitlementSurface = ReleaseEntitlementSurfaceStateV1(
+      subscriptionStatus: effectiveSubscriptionStatus,
+      trialStatus:
+          trialStatus ??
+          const TrialStatusV1(
+            isPremium: false,
+            isTrialActive: false,
+            remainingDays: 0,
+            isEligible: false,
+            reason: 'unknown',
+          ),
+    );
+    final isPremium = effectiveEntitlementSurface.isPremium;
+    final isTrialActive = effectiveEntitlementSurface.isTrialActive;
+    final isTrialEligible = effectiveEntitlementSurface.isTrialEligible;
+    final canShowMainTrialOffer = TrialOfferPolicyV1.showMainTrialOfferV1(
+      isEligible: isTrialEligible,
+      completedHandsInCampaign: _campaignCompletedHands,
+    );
+    final showMonetizationRow = effectiveEntitlementSurface.showMonetizationRow;
     final sharedRecentActivityRecommendation =
         _sharedRecentActivityRecommendationV1;
     final sharedRecentActivityContinuation =
@@ -2547,7 +2576,7 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                                   ),
                                 ],
                               )
-                            else if (isTrialEligible)
+                            else if (canShowMainTrialOffer)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -2593,6 +2622,52 @@ class _UniversalIntakePlanScreenState extends State<UniversalIntakePlanScreen>
                                           color: SharkyTokensV1.brandPrimary,
                                           fontWeight: FontWeight.w700,
                                         ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      _todayPremiumStatusLineV1(
+                                        effectiveSubscriptionStatus,
+                                      ),
+                                      key: const Key(
+                                        'today_plan_trial_status_v1',
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.caption.copyWith(
+                                        color: SharkyTokensV1.textSecondary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.xs),
+                                  TextButton(
+                                    key: const Key(
+                                      'today_plan_premium_preview_cta_v1',
+                                    ),
+                                    onPressed: _openPremiumPreviewV1,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSpacing.xs,
+                                        vertical: 0,
+                                      ),
+                                      minimumSize: const Size(0, 28),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: Text(
+                                      'See premium access',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.caption.copyWith(
+                                        color: SharkyTokensV1.brandPrimary,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ),

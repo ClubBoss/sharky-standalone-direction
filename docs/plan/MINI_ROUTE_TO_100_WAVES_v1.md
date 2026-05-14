@@ -2,7 +2,7 @@
 
 Status: ACTIVE
 Purpose: compact execution document for taking the current Act0 product route
-from the calibrated `~81 / 100` product state toward practical `100 / 100`
+from the entry calibration baseline toward practical product `100 / 100`
 with the highest-EV wave order.
 Last updated: 2026-05-13
 
@@ -22,6 +22,12 @@ Use this file for:
 - closure criteria per wave
 - keeping the route to `100` in one durable place
 
+After Waves 1-6 are materially implemented, use:
+
+- `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
+  for the post-route proof pass from `~94 / 100` toward practical product
+  `100 / 100`
+
 Anti-drift note:
 
 - `docs/plan/DETACHED_ACT0_ROUTE_TO_100_WAVES_v1.md` is historical/reference
@@ -29,9 +35,12 @@ Anti-drift note:
 - the active execution note is `docs/plan/MINI_ROUTE_TO_100_WAVES_v1.md`
 - do not reimport old readiness block scoring into this mini route
 
-## Current Calibration
+## Entry Calibration Baseline
 
-Practical product state today:
+This section is the historical starting calibration for the 6-wave route, not
+the live post-wave state.
+
+Entry state when this route was defined:
 
 - product route estimate: `~81 / 100`
 - strongest area: `Content and world readiness`
@@ -50,6 +59,10 @@ Important distinction:
 - it is not the same as final store/distribution `100 / 100`
 - launch/store readiness still remains governed by
   `PROJECT_READINESS_EPICS_SSOT_v1.md`
+
+Current live calibration after the implemented waves and proof pass belongs in:
+
+- `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
 
 External report handling:
 

@@ -29,11 +29,13 @@ class Act0ProfileShellV1 extends StatelessWidget {
     super.key,
     required this.profile,
     required this.onRetakePlacement,
+    this.onReplayWelcome,
     this.onGoToHome,
   });
 
   final Act0ProfileStateV1 profile;
   final VoidCallback onRetakePlacement;
+  final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
 
   @override
@@ -79,7 +81,93 @@ class Act0ProfileShellV1 extends StatelessWidget {
           const SizedBox(height: Act0ShellTokensV1.gapLg),
           _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
         ],
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        _ProfileFirstStartToolsCardV1(
+          onRetakePlacement: onRetakePlacement,
+          onReplayWelcome: onReplayWelcome,
+        ),
       ],
+    );
+  }
+}
+
+class _ProfileFirstStartToolsCardV1 extends StatelessWidget {
+  const _ProfileFirstStartToolsCardV1({
+    required this.onRetakePlacement,
+    this.onReplayWelcome,
+  });
+
+  final VoidCallback onRetakePlacement;
+  final VoidCallback? onReplayWelcome;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_profile_first_start_tools'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2,
+        borderColor: Act0ShellTokensV1.info.withOpacity(0.20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _profileCopyV1(
+              context,
+              atomId: 'profile_first_start_tools_title',
+              fallback: 'First start tools',
+            ),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            _profileCopyV1(
+              context,
+              atomId: 'profile_first_start_tools_body',
+              fallback:
+                  'Replay the product intro or run placement again without touching your route progress.',
+            ),
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Wrap(
+            spacing: Act0ShellTokensV1.gapSm,
+            runSpacing: Act0ShellTokensV1.gapSm,
+            children: [
+              if (onReplayWelcome != null)
+                OutlinedButton.icon(
+                  key: const Key('act0_shell_profile_replay_welcome'),
+                  onPressed: onReplayWelcome,
+                  style: Act0ShellTokensV1.quietButtonStyle(),
+                  icon: const Icon(Icons.play_circle_outline_rounded),
+                  label: Text(
+                    _profileCopyV1(
+                      context,
+                      atomId: 'profile_first_start_replay_welcome',
+                      fallback: 'Replay welcome',
+                    ),
+                  ),
+                ),
+              OutlinedButton.icon(
+                key: const Key('act0_shell_profile_retake_placement'),
+                onPressed: onRetakePlacement,
+                style: Act0ShellTokensV1.quietButtonStyle(),
+                icon: const Icon(Icons.route_rounded),
+                label: Text(
+                  _profileCopyV1(
+                    context,
+                    atomId: 'profile_first_start_retake_placement',
+                    fallback: 'Retake placement',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -168,8 +256,8 @@ class _ProfileHeroCardV1 extends StatelessWidget {
           Text(
             summary.body,
             key: const Key('act0_shell_profile_identity_summary'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.text,
             ),
@@ -212,7 +300,7 @@ class _ProfileHeroCardV1 extends StatelessWidget {
       : _profileCopyV1(context, en: 'table basics', ru: 'база по столу');
   final gain = profile.recentSkillGains.isNotEmpty
       ? profile.recentSkillGains.first.label
-      : _profileCopyV1(context, en: 'recent reps', ru: 'недавние репы');
+      : _profileCopyV1(context, en: 'recent progress', ru: 'недавний прогресс');
   final headline = profile.strongCategories.isNotEmpty
       ? _profileCopyV1(
           context,
@@ -303,16 +391,16 @@ class _ProfileCurrentFocusCardV1 extends StatelessWidget {
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             profile.recommendedFocusTitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 4),
           Text(
             profile.recommendedFocusBody,
             key: const Key('act0_shell_profile_recommended_focus_body'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -467,8 +555,8 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
           Text(
             support,
             key: const Key('act0_shell_profile_consistency_support_text'),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+            overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -497,8 +585,8 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
             child: Text(
               momentumLine,
               key: const Key('act0_shell_profile_momentum_text'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.textMuted,
               ),
@@ -845,13 +933,17 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
         : _profileCopyV1(context, en: 'Recent reps', ru: 'Недавние повторы');
     final weak = profile.weakCategories.isNotEmpty
         ? profile.weakCategories.first
-        : _profileCopyV1(context, en: 'No live leak', ru: 'Явной протечки нет');
+        : _profileCopyV1(
+            context,
+            en: 'No live leak',
+            ru: 'Явных слабых мест нет',
+          );
     final focus = profile.recommendedFocusTitle.isNotEmpty
         ? profile.recommendedFocusTitle
         : _profileCopyV1(
             context,
             en: 'Keep the next clean rep simple.',
-            ru: 'Держи следующий чистый реп простым.',
+            ru: 'Пусть следующий шаг будет простым.',
           );
     final headline = profile.strongCategories.isNotEmpty
         ? _profileCopyV1(
@@ -867,7 +959,7 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
     final body = _profileCopyV1(
       context,
       en: 'You can already see what is steady, what is growing, and what still needs calm reps.',
-      ru: 'Уже видно, что у тебя стабильно, что растёт и где ещё нужны спокойные репы.',
+      ru: 'Уже видно, что у тебя стабильно, что растёт и где ещё нужен спокойный повтор.',
     );
     return Container(
       key: const Key('act0_shell_profile_identity_card'),
@@ -1340,16 +1432,16 @@ class _ProfileSkillCardV1 extends StatelessWidget {
             Text(
               stat.locked ? 'Opens later' : stat.nextLevelLabel,
               key: Key('act0_shell_profile_skill_value_${stat.label}'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.muted,
             ),
             if (gain != null) ...[
               const SizedBox(height: 2),
               Text(
                 gain!.source,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.textDim,
                   letterSpacing: 0.1,
@@ -1602,8 +1694,8 @@ class _AchievementCardV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Text(
               label,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 fontWeight: FontWeight.w800,
               ),

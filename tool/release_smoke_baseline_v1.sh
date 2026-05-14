@@ -18,7 +18,7 @@ echo "Step 2/8: onboarding starter-pack host smoke"
 echo "Step 3/8: intake to Today deterministic flow smoke"
 (
   cd "$workspace_root"
-  flutter test test/guards/world1_intake_plan_flow_contract_test.dart
+  flutter test test/guards/world1_app_root_startup_contract_test.dart
 )
 
 echo "Step 4/8: first-session result continuation smoke"

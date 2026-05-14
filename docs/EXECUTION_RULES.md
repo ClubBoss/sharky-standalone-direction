@@ -79,7 +79,7 @@ Historical execution protocol reference remains at:
 
 1. `flutter test test/guards/app_boot_release_smoke_test.dart`
 2. `flutter test test/ui_v2/onboarding_first_win_test.dart`
-3. `flutter test test/guards/world1_intake_plan_flow_contract_test.dart`
+3. `flutter test test/guards/world1_app_root_startup_contract_test.dart`
 4. `flutter test test/ui_v2/session_result_world1_onboarding_payoff_test.dart`
 5. `flutter test test/ui_v2/today_plan_entitlement_truth_v1_test.dart`
 6. `flutter test test/ui_v2/premium_hub_access_state_v1_test.dart`

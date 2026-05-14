@@ -29,7 +29,7 @@ human release review.
 - Onboarding starter pack host proof exists:
   `test/ui_v2/onboarding_first_win_test.dart`
 - Cold-start intake to Today/start proof exists:
-  `test/guards/world1_intake_plan_flow_contract_test.dart`
+  `test/guards/world1_app_root_startup_contract_test.dart`
 - Session-result continuation proof exists:
   `test/ui_v2/session_result_world1_onboarding_payoff_test.dart`
 - Premium-target gating truth exists on the canonical Today family:

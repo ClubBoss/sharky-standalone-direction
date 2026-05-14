@@ -64,6 +64,8 @@ class Act0HomeShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = Act0ShellTokensV1.isTabletWidth(context);
+    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final lesson = currentLesson ?? state.currentLesson;
     final title =
         nextActionTitle ?? act0LocalizedLessonTitleV1(context, lesson);
@@ -83,12 +85,167 @@ class Act0HomeShellV1 extends StatelessWidget {
     final dailyGoalCtaLabel = this.dailyGoalCtaLabel == 'Start practice'
         ? _shellCopyV1(context, en: 'Start practice', ru: 'Начать практику')
         : this.dailyGoalCtaLabel;
+    final heroCard = Container(
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.heroDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              key: const Key('act0_shell_home_primary_tap_target'),
+              onTap: onContinue,
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Act0ShellTokensV1.primary,
+                            borderRadius: BorderRadius.circular(
+                              Act0ShellTokensV1.radiusMd,
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: Act0ShellTokensV1.primary.withValues(
+                                  alpha: 0.38,
+                                ),
+                                blurRadius: 22,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.menu_book_rounded,
+                            color: Act0ShellTokensV1.onPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: Act0ShellTokensV1.gapMd),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                nextActionLabel,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: Act0ShellTokensV1.primary,
+                                ),
+                              ),
+                              const SizedBox(height: Act0ShellTokensV1.gapXs),
+                              Text(
+                                title,
+                                style: Act0ShellTokensV1.sectionTitle,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Act0ShellTokensV1.primary,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: Act0ShellTokensV1.gapSm),
+                    Text(
+                      subtitle,
+                      key: const Key('act0_shell_home_next_action_subtitle'),
+                      style: Act0ShellTokensV1.muted,
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          FilledButton(
+            key: const Key('act0_shell_main_cta'),
+            onPressed: onContinue,
+            style: Act0ShellTokensV1.primaryButtonStyle(),
+            child: Text(nextActionCtaLabel),
+          ),
+        ],
+      ),
+    );
+    final repairCard = showRepairPanel
+        ? _HomeRepairCardV1(
+            localeIsRu: _isRuLocaleV1(context),
+            embedded: true,
+            repairLabel: showRepairPanel ? repairLabel : null,
+            repairHeadline: showRepairPanel ? repairHeadline : null,
+            repairDetail: showRepairPanel ? repairDetail : null,
+            repairOutcome: showRepairPanel ? repairOutcome : null,
+            repairCtaLabel: showRepairPanel ? repairCtaLabel : null,
+            onStartRepair: showRepairPanel ? onStartRepair : null,
+          )
+        : null;
+    final dailyCard = _DailyGoalCardV1(
+      localeIsRu: _isRuLocaleV1(context),
+      state: state,
+      dailyGoalValue: dailyGoalValue,
+      dailyGoalCtaLabel: dailyGoalCtaLabel,
+      onStartDailyDrill: onStartDailyDrill,
+    );
+    final optionalHint = Text(
+      _shellCopyV1(
+        context,
+        en: 'One extra rep, only if you want it.',
+        ru: 'Один дополнительный реп, только если хочешь.',
+      ),
+      key: const Key('act0_shell_home_optional_practice_hint'),
+      maxLines: 2,
+      overflow: TextOverflow.fade,
+      style: Act0ShellTokensV1.muted.copyWith(color: Act0ShellTokensV1.textDim),
+    );
+    final sharkyFooter = _HomeFooterSharkyLineV1(
+      state: state,
+      sharky: sharky,
+      localeIsRu: _isRuLocaleV1(context),
+    );
+    final tabletBody = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 6,
+          child: Column(
+            children: [
+              heroCard,
+              if (repairCard != null) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                repairCard,
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapLg),
+        Expanded(
+          flex: 5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              dailyCard,
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              optionalHint,
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              sharkyFooter,
+            ],
+          ),
+        ),
+      ],
+    );
     return ListView(
       key: const Key('act0_shell_home_screen'),
-      padding: const EdgeInsets.fromLTRB(
-        Act0ShellTokensV1.pageX,
+      padding: EdgeInsets.fromLTRB(
+        pagePadding,
         Act0ShellTokensV1.gapLg,
-        Act0ShellTokensV1.pageX,
+        pagePadding,
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
@@ -124,139 +281,27 @@ class Act0HomeShellV1 extends StatelessWidget {
                 ),
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        Container(
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.heroDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  key: const Key('act0_shell_home_primary_tap_target'),
-                  onTap: onContinue,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusXl,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: Act0ShellTokensV1.primary,
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.radiusMd,
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                    color: Act0ShellTokensV1.primary.withValues(
-                                      alpha: 0.38,
-                                    ),
-                                    blurRadius: 22,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.menu_book_rounded,
-                                color: Act0ShellTokensV1.onPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: Act0ShellTokensV1.gapMd),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    nextActionLabel,
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: Act0ShellTokensV1.primary,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: Act0ShellTokensV1.gapXs,
-                                  ),
-                                  Text(
-                                    title,
-                                    style: Act0ShellTokensV1.sectionTitle,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Act0ShellTokensV1.primary,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapSm),
-                        Text(
-                          subtitle,
-                          key: const Key(
-                            'act0_shell_home_next_action_subtitle',
-                          ),
-                          style: Act0ShellTokensV1.muted,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
+        Act0ShellTokensV1.centeredContent(
+          context,
+          tabletMaxWidth: 1080,
+          child: isTablet
+              ? tabletBody
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    heroCard,
+                    if (repairCard != null) ...[
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      repairCard,
+                    ],
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    dailyCard,
+                    const SizedBox(height: Act0ShellTokensV1.gapSm),
+                    optionalHint,
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    sharkyFooter,
+                  ],
                 ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              FilledButton(
-                key: const Key('act0_shell_main_cta'),
-                onPressed: onContinue,
-                style: Act0ShellTokensV1.primaryButtonStyle(),
-                child: Text(nextActionCtaLabel),
-              ),
-            ],
-          ),
-        ),
-        if (showRepairPanel) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _HomeRepairCardV1(
-            localeIsRu: _isRuLocaleV1(context),
-            embedded: true,
-            repairLabel: showRepairPanel ? repairLabel : null,
-            repairHeadline: showRepairPanel ? repairHeadline : null,
-            repairDetail: showRepairPanel ? repairDetail : null,
-            repairOutcome: showRepairPanel ? repairOutcome : null,
-            repairCtaLabel: showRepairPanel ? repairCtaLabel : null,
-            onStartRepair: showRepairPanel ? onStartRepair : null,
-          ),
-        ],
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _DailyGoalCardV1(
-          localeIsRu: _isRuLocaleV1(context),
-          state: state,
-          dailyGoalValue: dailyGoalValue,
-          dailyGoalCtaLabel: dailyGoalCtaLabel,
-          onStartDailyDrill: onStartDailyDrill,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapSm),
-        Text(
-          _shellCopyV1(
-            context,
-            en: 'One extra rep, only if you want it.',
-            ru: 'Один дополнительный реп, только если хочешь.',
-          ),
-          key: const Key('act0_shell_home_optional_practice_hint'),
-          style: Act0ShellTokensV1.muted.copyWith(
-            color: Act0ShellTokensV1.textDim,
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _HomeFooterSharkyLineV1(
-          state: state,
-          sharky: sharky,
-          localeIsRu: _isRuLocaleV1(context),
         ),
       ],
     );
@@ -456,8 +501,9 @@ class _DailyGoalCardV1 extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 _dailyGoalSupportText(localeIsRu, goalValue),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                key: const Key('act0_shell_home_daily_support_line'),
+                maxLines: 2,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.muted.copyWith(
                   fontSize: 12.5,
                   color: Act0ShellTokensV1.textMuted,
@@ -551,8 +597,8 @@ class _HomeRepairCardV1 extends StatelessWidget {
                     Text(
                       normalizedRepairHeadline,
                       key: const Key('act0_shell_home_repair_headline'),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -572,8 +618,8 @@ class _HomeRepairCardV1 extends StatelessWidget {
                           child: Text(
                             normalizedRepairDetail,
                             key: const Key('act0_shell_home_repair_detail'),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            overflow: TextOverflow.fade,
                             style: Act0ShellTokensV1.muted.copyWith(
                               color: Act0ShellTokensV1.textDim,
                             ),
@@ -587,8 +633,8 @@ class _HomeRepairCardV1 extends StatelessWidget {
                     Text(
                       normalizedRepairOutcome,
                       key: const Key('act0_shell_home_repair_outcome'),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
                       style: Act0ShellTokensV1.muted.copyWith(
                         color: Act0ShellTokensV1.textMuted,
                       ),
@@ -643,8 +689,8 @@ class _HomeRepairCardV1 extends StatelessWidget {
                           Text(
                             normalizedRepairDetail,
                             key: const Key('act0_shell_home_repair_detail'),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            overflow: TextOverflow.fade,
                             style: Act0ShellTokensV1.muted.copyWith(
                               color: Act0ShellTokensV1.textMuted,
                             ),
@@ -679,7 +725,7 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
       mood: sharky.preSessionMood,
       tone: act0SharkyToneForMoodV1(sharky.preSessionMood),
       textKey: const Key('act0_shell_home_footer_sharky_line'),
-      mascotSize: 112,
+      mascotSize: 120,
       bubblePadding: const EdgeInsets.symmetric(
         horizontal: Act0ShellTokensV1.gapMd,
         vertical: 12,
@@ -690,39 +736,127 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
   String _footerLine() {
     switch (sharky.preSessionMood) {
       case Act0SharkyMoodV1.repair:
-        return localeIsRu
-            ? 'Сначала почини это место. Потом маршрут снова станет лёгким.'
-            : 'Fix this spot first. Then the route feels clean again.';
+        return _pickPaletteLineV1(
+          localeIsRu
+              ? <String>[
+                  'Сначала почини это место. Потом маршрут снова станет лёгким.',
+                  'Один чистый фикс сначала. Потом можно спокойно идти дальше.',
+                  'Почини этот узел первым. Остальное сразу станет проще.',
+                ]
+              : <String>[
+                  'Fix this spot first. Then the route feels clean again.',
+                  'One clean repair first. Then continue with a clear head.',
+                  'Repair this pressure point first. The rest gets easier right away.',
+                ],
+        );
       case Act0SharkyMoodV1.celebrate:
-        return localeIsRu
-            ? (state.streakDays > 0
-                  ? 'Место на завтра удержано. Один короткий чистый реп его продлит.'
-                  : sharky.summaryLine)
-            : (state.streakDays > 0
-                  ? 'Seat held for tomorrow. One short clean rep extends it.'
-                  : sharky.summaryLine);
+        if (state.streakDays > 0) {
+          return _pickPaletteLineV1(
+            localeIsRu
+                ? <String>[
+                    'Место на завтра удержано. Один короткий чистый реп его продлит.',
+                    'Ритм уже собран. Один короткий реп удержит ход.',
+                    'Темп держится. Один чистый проход и завтра остаётся тёплым.',
+                  ]
+                : <String>[
+                    'Seat held for tomorrow. One short clean rep extends it.',
+                    'Rhythm is locked in. One short rep keeps it alive.',
+                    'Pace is holding. One clean pass keeps tomorrow warm.',
+                  ],
+          );
+        }
+        return sharky.summaryLine;
       case Act0SharkyMoodV1.happy:
         if (state.streakDays >= 7) {
-          return localeIsRu
-              ? 'Серия уже настоящая. Один спокойный чистый реп держит её честной.'
-              : 'The streak is real now. One calm clean rep keeps it honest.';
+          return _pickPaletteLineV1(
+            localeIsRu
+                ? <String>[
+                    'Серия уже настоящая. Один спокойный чистый реп держит её честной.',
+                    'Серия собрана. Один аккуратный реп не даёт ей распасться.',
+                    'Это уже не случайность. Один чистый проход закрепит ритм.',
+                  ]
+                : <String>[
+                    'The streak is real now. One calm clean rep keeps it honest.',
+                    'This streak is earned. One tidy rep keeps it stable.',
+                    'This is not random anymore. One clean pass secures the rhythm.',
+                  ],
+          );
         }
         if (state.streakDays >= 3) {
-          return localeIsRu
-              ? '${state.streakDays} дня в ритме. Один чистый реп удерживает место тёплым.'
-              : '${state.streakDays} days running. One clean rep keeps the seat warm.';
+          return _pickPaletteLineV1(
+            localeIsRu
+                ? <String>[
+                    '${state.streakDays} дня в ритме. Один чистый реп удерживает место тёплым.',
+                    '${state.streakDays} дня подряд. Один короткий чистый реп и темп сохранён.',
+                    'Уже ${state.streakDays} дня в движении. Один точный реп держит курс.',
+                  ]
+                : <String>[
+                    '${state.streakDays} days running. One clean rep keeps the rhythm warm.',
+                    '${state.streakDays} days in a row. One short clean rep keeps the pace.',
+                    '${state.streakDays} days in motion already. One precise rep keeps the route steady.',
+                  ],
+          );
         }
-        return localeIsRu
-            ? 'Ты уже входишь в ритм. Один чистый реп задаст тон.'
-            : 'You are settling in. One clean rep sets the tone.';
+        return _pickPaletteLineV1(
+          localeIsRu
+              ? <String>[
+                  'Ты уже входишь в ритм. Один чистый реп задаст тон.',
+                  'Ритм уже появляется. Один точный проход его закрепит.',
+                  'Ты разогреваешься. Один спокойный реп задаёт правильный вектор.',
+                ]
+              : <String>[
+                  'You are settling in. One clean rep sets the tone.',
+                  'Rhythm is starting to form. One precise pass locks it in.',
+                  'You are warming up. One calm rep sets the right direction.',
+                ],
+        );
       case Act0SharkyMoodV1.thinking:
-        return localeIsRu
-            ? 'Один спокойный чистый реп сейчас лучше десяти спешных потом.'
-            : 'One calm clean rep now beats ten rushed ones later.';
+        return _pickPaletteLineV1(
+          localeIsRu
+              ? <String>[
+                  'Один спокойный чистый реп сейчас лучше десяти спешных потом.',
+                  'Сначала спокойное чтение, потом действие. Так меньше лишних ошибок.',
+                  'Не форсируй темп. Один чистый проход даёт больше, чем серия спешных.',
+                ]
+              : <String>[
+                  'One calm clean rep now beats ten rushed ones later.',
+                  'Read calmly first, then act. That removes avoidable mistakes.',
+                  'Do not force pace. One clean pass beats a rushed streak.',
+                ],
+        );
       case Act0SharkyMoodV1.neutral:
-        return localeIsRu
-            ? 'Не спеши. Чистые чтения собирают настоящее преимущество.'
-            : 'Stay patient. Clean reads build real edge.';
+        return _pickPaletteLineV1(
+          localeIsRu
+              ? <String>[
+                  'Не спеши. Чистые чтения собирают настоящее преимущество.',
+                  'Держи темп ровным. Сначала качество чтения, потом скорость.',
+                  'Спокойный ритм даёт лучший результат, чем спешка.',
+                ]
+              : <String>[
+                  'Stay patient. Clean reads build real edge.',
+                  'Keep the pace steady. Reading quality comes before speed.',
+                  'A calm rhythm outperforms rushed decisions.',
+                ],
+        );
     }
+  }
+
+  String _pickPaletteLineV1(List<String> variants) {
+    final cleaned = variants
+        .map((line) => line.trim())
+        .where((line) => line.isNotEmpty)
+        .toList(growable: false);
+    if (cleaned.isEmpty) {
+      return localeIsRu
+          ? 'Один чистый реп и дальше по маршруту.'
+          : 'One clean rep, then continue the route.';
+    }
+    final seed = state.streakDays.abs();
+    var index = seed % cleaned.length;
+    final previous = sharky.preSessionLine.trim().toLowerCase();
+    if (cleaned.length > 1 && cleaned[index].toLowerCase() == previous) {
+      index = (index + 1) % cleaned.length;
+    }
+    return cleaned[index];
   }
 }

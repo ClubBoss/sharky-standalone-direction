@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -117,6 +118,29 @@ class Act0BlockCompletionSummaryV1 {
       return 'Continue to ${nextLessonTitle!}.';
     }
     return 'All lessons done. Head to Review to track your progress.';
+  }
+
+  String get primaryCtaLabel {
+    if (!hasNextLesson) {
+      return 'Back to map';
+    }
+    if (!qualifiesForNextLesson) {
+      return 'Replay before next block';
+    }
+    if (deepLeakCount > 0) {
+      return 'Go to Review';
+    }
+    return 'Open next block';
+  }
+
+  String get replayCtaLabel {
+    if (!qualifiesForNextLesson) {
+      return 'Run this block again';
+    }
+    if (deepLeakCount > 0) {
+      return 'Run block before Review';
+    }
+    return 'Run this block again';
   }
 
   String get habitRewardLabel {
@@ -330,6 +354,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   List<String> _interactiveHighlightedCardIds = const <String>[];
   String _interactiveShowdownLine = '';
   int? _actionTrailFocusedIndex;
+  int _learningRailSupportSegmentIndex = 0;
+  String _learningRailSupportStepKey = '';
 
   @override
   void initState() {
@@ -341,6 +367,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   void didUpdateWidget(covariant Act0LessonRunnerShellV1 oldWidget) {
     super.didUpdateWidget(oldWidget);
     _syncTheoryAdvanceLock();
+    _syncLearningRailSupportSegment();
     final nextKey = _interactionKey(widget.runner);
     if (_showdownInteractionKey != nextKey) {
       _actionTrailFocusedIndex = null;
@@ -354,6 +381,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   void dispose() {
     _theoryUnlockTimer?.cancel();
     super.dispose();
+  }
+
+  void _syncLearningRailSupportSegment() {
+    final nextKey =
+        '${widget.runner.lessonId}|${widget.runner.beatIndex}|'
+        '${widget.runner.phase.name}|${widget.runner.teachingStepIndex}';
+    if (_learningRailSupportStepKey == nextKey) {
+      return;
+    }
+    _learningRailSupportStepKey = nextKey;
+    _learningRailSupportSegmentIndex = 0;
   }
 
   bool get _isRefinedDev2 =>
@@ -847,6 +885,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       fallback: runner.question,
       isRu: act0IsRuLocaleV1(context),
     );
+    final learningRailSupportSegments = act0BuildLearningRailSupportSegmentsV1(
+      hint: hint,
+      focusLabels: widget.showLearningRailFocusLabels
+          ? teachingStep?.focusLabels ?? const <String>[]
+          : const <String>[],
+      compact: isRefinedDev2,
+    );
+    final cappedSupportSegmentIndex = learningRailSupportSegments.isEmpty
+        ? 0
+        : _learningRailSupportSegmentIndex.clamp(
+            0,
+            learningRailSupportSegments.length - 1,
+          );
+    final hasNextSupportSegment =
+        cappedSupportSegmentIndex < learningRailSupportSegments.length - 1;
+    final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
     final learningRailProgress = _learningRailProgressLabel(runner);
     final taskRailLabel = act0RuntimeTaskRailLabelV1(
       context,
@@ -1026,8 +1080,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 isCorrect: true,
                 preferredLabel: preset.label,
                 quality: Act0FeedbackQualityV1.correct,
-                feedbackTitle: '',
-                feedbackReason: '',
+                feedbackTitle: 'Good choice.',
+                feedbackReason: 'That sizing strategy makes sense.',
               ),
             );
             setState(() {
@@ -1039,17 +1093,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               ? _LearningRailV1(
                   taskLabel: taskRailLabel,
                   prompt: prompt,
-                  hint: hint,
-                  focusLabels: widget.showLearningRailFocusLabels
-                      ? teachingStep?.focusLabels ?? const <String>[]
-                      : const <String>[],
+                  supportSegments: learningRailSupportSegments,
+                  activeSupportSegmentIndex: cappedSupportSegmentIndex,
                   progressLabel: learningRailProgress,
-                  canGoBack: runner.teachingStepIndex > 0,
-                  onBack: runner.teachingStepIndex > 0
-                      ? widget.onPreviousTheory
-                      : null,
+                  canGoBack:
+                      hasPreviousSupportSegment || runner.teachingStepIndex > 0,
+                  onBack: hasPreviousSupportSegment
+                      ? () => setState(() => _learningRailSupportSegmentIndex--)
+                      : (runner.teachingStepIndex > 0
+                            ? widget.onPreviousTheory
+                            : null),
                   canAdvance: _canAdvanceTheory,
-                  onAdvance: widget.onContinueTheory,
+                  onAdvance: hasNextSupportSegment
+                      ? () => setState(() => _learningRailSupportSegmentIndex++)
+                      : widget.onContinueTheory,
                   sharkyLine: runner.sharky.preSessionLine,
                   sharkyMood: runner.sharky.preSessionMood,
                 )
@@ -1586,8 +1643,8 @@ class _LearningRailV1 extends StatelessWidget {
   const _LearningRailV1({
     required this.taskLabel,
     required this.prompt,
-    required this.hint,
-    required this.focusLabels,
+    required this.supportSegments,
+    required this.activeSupportSegmentIndex,
     required this.progressLabel,
     required this.canGoBack,
     required this.onBack,
@@ -1599,8 +1656,8 @@ class _LearningRailV1 extends StatelessWidget {
 
   final String? taskLabel;
   final String prompt;
-  final String hint;
-  final List<String> focusLabels;
+  final List<String> supportSegments;
+  final int activeSupportSegmentIndex;
   final String? progressLabel;
   final bool canGoBack;
   final VoidCallback? onBack;
@@ -1627,7 +1684,7 @@ class _LearningRailV1 extends StatelessWidget {
         progressCurrent >= 1 &&
         progressCurrent <= progressTotal;
     final showTaskLabel = taskLabel != null && taskLabel!.trim().isNotEmpty;
-    final hasSupportLine = hint.isNotEmpty || focusLabels.isNotEmpty;
+    final hasSupportLine = supportSegments.isNotEmpty;
     final tone = canAdvance
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
@@ -1648,10 +1705,10 @@ class _LearningRailV1 extends StatelessWidget {
             ),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 110, maxHeight: 186),
+            constraints: const BoxConstraints(minHeight: 118, maxHeight: 212),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 138;
+                final compactRail = constraints.maxHeight <= 146;
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: compactRail ? 10 : 12,
@@ -1725,10 +1782,11 @@ class _LearningRailV1 extends StatelessWidget {
                                     SizedBox(height: compactRail ? 4 : 5),
                                   ],
                                   Text(
-                                    prompt,
+                                    _formatInstructionCopyV1(
+                                      prompt,
+                                      allowSingleClauseSplit: true,
+                                    ),
                                     key: const Key('act0_shell_runner_prompt'),
-                                    maxLines: compactRail ? 3 : 3,
-                                    overflow: TextOverflow.ellipsis,
                                     style: Act0ShellTokensV1.body.copyWith(
                                       color: Act0ShellTokensV1.text,
                                       fontSize: compactRail ? 15 : 16,
@@ -1740,8 +1798,9 @@ class _LearningRailV1 extends StatelessWidget {
                                     SizedBox(height: compactRail ? 4 : 6),
                                     Flexible(
                                       child: _LearningRailKeyIdeaV1(
-                                        hint: hint,
-                                        focusLabels: focusLabels,
+                                        supportSegments: supportSegments,
+                                        activeSegmentIndex:
+                                            activeSupportSegmentIndex,
                                         compact: compactRail,
                                       ),
                                     ),
@@ -1842,34 +1901,81 @@ class _LearningRailSharkyHeaderV1 extends StatelessWidget {
 
 class _LearningRailKeyIdeaV1 extends StatelessWidget {
   const _LearningRailKeyIdeaV1({
-    required this.hint,
-    required this.focusLabels,
+    required this.supportSegments,
+    required this.activeSegmentIndex,
     this.compact = false,
   });
 
-  final String hint;
-  final List<String> focusLabels;
+  final List<String> supportSegments;
+  final int activeSegmentIndex;
   final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    final hasHint = hint.trim().isNotEmpty;
-    final fallback = focusLabels.take(2).join(' · ');
-    final line = hasHint ? hint : fallback;
-    if (line.isEmpty) {
+    if (supportSegments.isEmpty) {
       return const SizedBox.shrink();
     }
-    return Text(
-      line,
-      key: const Key('act0_shell_learning_rail_support_line'),
-      maxLines: compact ? 3 : 4,
-      overflow: TextOverflow.ellipsis,
-      style: Act0ShellTokensV1.body.copyWith(
-        color: Act0ShellTokensV1.textMuted,
-        fontSize: compact ? 12 : 12.6,
-        height: 1.15,
-        fontWeight: FontWeight.w700,
-      ),
+    final safeIndex = activeSegmentIndex.clamp(0, supportSegments.length - 1);
+    final line = supportSegments[safeIndex];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          _formatInstructionCopyV1(line),
+          key: const Key('act0_shell_learning_rail_support_line'),
+          maxLines: compact ? 3 : null,
+          style: Act0ShellTokensV1.body.copyWith(
+            color: Act0ShellTokensV1.textMuted,
+            fontSize: compact ? 11.2 : 12.6,
+            height: compact ? 1.08 : 1.15,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        if (supportSegments.length > 1) ...[
+          SizedBox(height: compact ? 4 : 7),
+          _LearningRailSupportDotsV1(
+            key: const Key('act0_shell_learning_rail_support_dots'),
+            count: supportSegments.length,
+            current: safeIndex,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _LearningRailSupportDotsV1 extends StatelessWidget {
+  const _LearningRailSupportDotsV1({
+    super.key,
+    required this.count,
+    required this.current,
+  });
+
+  final int count;
+  final int current;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int i = 0; i < count; i++) ...[
+          if (i > 0) const SizedBox(width: 4),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            width: i == current ? 10 : 4,
+            height: 4,
+            decoration: BoxDecoration(
+              color: i == current
+                  ? Act0ShellTokensV1.primary
+                  : Act0ShellTokensV1.textMuted.withValues(alpha: 0.35),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -2253,11 +2359,9 @@ class _CoachCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            prompt,
+            _formatInstructionCopyV1(prompt, allowSingleClauseSplit: true),
             key: const Key('act0_shell_runner_prompt'),
             textAlign: refined ? TextAlign.left : TextAlign.center,
-            maxLines: refined ? 4 : 3,
-            overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontSize: compact ? 13 : 15,
@@ -2266,13 +2370,15 @@ class _CoachCardV1 extends StatelessWidget {
           ),
           if (hint.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              hint,
-              textAlign: refined ? TextAlign.left : TextAlign.center,
-              maxLines: refined ? 3 : 2,
-              overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.muted.copyWith(
-                fontSize: compact ? 11 : 13,
+            SingleChildScrollView(
+              primary: false,
+              physics: const ClampingScrollPhysics(),
+              child: Text(
+                _formatInstructionCopyV1(hint),
+                textAlign: refined ? TextAlign.left : TextAlign.center,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  fontSize: compact ? 11 : 13,
+                ),
               ),
             ),
           ],
@@ -2318,6 +2424,69 @@ class _CoachCardV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatInstructionCopyV1(
+  String text, {
+  bool allowSingleClauseSplit = false,
+}) {
+  final normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  if (normalized.isEmpty) {
+    return normalized;
+  }
+
+  final sentences = normalized
+      .split(RegExp(r'(?<=[.!?])\s+'))
+      .where((part) => part.trim().isNotEmpty)
+      .toList();
+
+  if (sentences.length >= 3) {
+    final midpoint = (sentences.length / 2).ceil();
+    return <String>[
+      sentences.take(midpoint).join(' '),
+      sentences.skip(midpoint).join(' '),
+    ].join('\n');
+  }
+
+  if (sentences.length == 2) {
+    return sentences.join('\n');
+  }
+
+  if (!allowSingleClauseSplit || normalized.length < 72) {
+    return normalized;
+  }
+
+  final breakpoints = <String>[' — ', ': ', '; ', ', '];
+  final middle = normalized.length ~/ 2;
+
+  int? bestIndex;
+  int bestDistance = normalized.length;
+  for (final marker in breakpoints) {
+    var start = 0;
+    while (true) {
+      final index = normalized.indexOf(marker, start);
+      if (index == -1) {
+        break;
+      }
+      final candidate = index + marker.length;
+      final distance = (candidate - middle).abs();
+      if (candidate > 24 && candidate < normalized.length - 18) {
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestIndex = candidate;
+        }
+      }
+      start = index + marker.length;
+    }
+  }
+
+  if (bestIndex == null) {
+    return normalized;
+  }
+
+  final first = normalized.substring(0, bestIndex).trimRight();
+  final second = normalized.substring(bestIndex).trimLeft();
+  return '$first\n$second';
 }
 
 class Act0FeedbackShellV1 extends StatelessWidget {
@@ -2374,12 +2543,19 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final sharkyTone = isWrong
         ? Act0ShellTokensV1.danger
         : (isSuboptimal ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary);
-    final reactionLine = _feedbackReactionLineV1(
-      sharkyLine: sharkyLine,
+    final resolvedTitle = _feedbackTitleFloorV1(
+      context,
       title: title,
       quality: quality,
+      contextLabels: contextLabels,
     );
-    final showVerdictTitle = title.isNotEmpty;
+    final reactionLine = _feedbackReactionLineV1(
+      sharkyLine: sharkyLine,
+      title: resolvedTitle,
+      quality: quality,
+      localeIsRu: Localizations.localeOf(context).languageCode == 'ru',
+    );
+    final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(context, quality);
     final actionLabel = act0RuntimeLocalizedOptionLabelV1(
       context,
@@ -2422,7 +2598,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         reactionLine,
                         key: const Key('act0_shell_sharky_outcome_reaction'),
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.fade,
                         style: Act0ShellTokensV1.muted.copyWith(
                           color: Act0ShellTokensV1.textMuted,
                           fontSize: 11.5,
@@ -2441,7 +2617,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                             child: Text(
                               act0RuntimeLocalizedGeneralLabelV1(
                                 context,
-                                title,
+                                resolvedTitle,
                               ),
                               style: Act0ShellTokensV1.cardTitle.copyWith(
                                 color: tone,
@@ -2461,7 +2637,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               act0RuntimeFeedbackSelectedLineV1(context, selectedLabel),
               key: const Key('act0_shell_feedback_selected_label'),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textMuted,
               ),
@@ -2472,8 +2648,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             Text(
               '$actionPrefix: $actionLabel',
               key: const Key('act0_shell_feedback_preferred_label'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.text,
                 fontSize: refined ? 17 : 18,
@@ -2494,8 +2670,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           Text(
             resolvedReason,
             key: const Key('act0_shell_feedback_reason'),
-            maxLines: refined ? 4 : 5,
-            overflow: TextOverflow.ellipsis,
+            maxLines: refined ? 5 : 6,
+            overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.textMuted,
               fontSize: 13,
@@ -2548,6 +2724,61 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+const Set<String> _genericFeedbackTitleFloorInputsV1 = <String>{
+  'Almost there.',
+  'Clean execution.',
+  'Close call.',
+  'Excellent spot.',
+  'Getting warmer.',
+  'Good.',
+  'Good direction.',
+  'Good instinct.',
+  'Nearly there.',
+  'Nice read.',
+  'On the right track.',
+  'One more step.',
+  'Playable instinct.',
+  'Playable move.',
+  'Sharp read.',
+  'Solid understanding.',
+  'Spot on.',
+  'Strong choice.',
+  'Very close.',
+  'Well done.',
+};
+
+String _feedbackTitleFloorV1(
+  BuildContext context, {
+  required String title,
+  required Act0FeedbackQualityV1 quality,
+  required List<String> contextLabels,
+}) {
+  final trimmedTitle = title.trim();
+  if (trimmedTitle.isEmpty ||
+      !_genericFeedbackTitleFloorInputsV1.contains(trimmedTitle)) {
+    return trimmedTitle;
+  }
+
+  final localeIsRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  final focusLabel = contextLabels.isEmpty
+      ? ''
+      : act0RuntimeLocalizedContextLabelV1(context, contextLabels.first).trim();
+
+  if (focusLabel.isNotEmpty) {
+    if (quality == Act0FeedbackQualityV1.correct) {
+      return focusLabel;
+    }
+    return localeIsRu ? '$focusLabel сначала' : '$focusLabel first';
+  }
+
+  if (quality == Act0FeedbackQualityV1.correct) {
+    return localeIsRu ? 'Верное чтение' : 'Correct read';
+  }
+  return localeIsRu ? 'Сначала перечитай спот' : 'Read the spot first';
 }
 
 String _feedbackReasonFloorV1(
@@ -2609,20 +2840,203 @@ String _feedbackReactionLineV1({
   required String sharkyLine,
   required String title,
   required Act0FeedbackQualityV1 quality,
+  required bool localeIsRu,
 }) {
-  final normalizedLine = sharkyLine.trim().toLowerCase();
+  final fingerprint =
+      '${quality.name}|${title.trim().toLowerCase()}|${sharkyLine.trim().toLowerCase()}';
+  if (_lastFeedbackReactionFingerprintV1 == fingerprint) {
+    return _lastFeedbackReactionOutputV1;
+  }
+  final trimmedLine = sharkyLine.trim();
+  final normalizedLine = trimmedLine.toLowerCase();
   final normalizedTitle = title.trim().toLowerCase();
-  if (normalizedLine.isEmpty) {
-    return '';
+  String resolved;
+  String resolvedCategory = 'none';
+  final generatedCandidates = _feedbackReactionCandidatesForQualityV1(
+    quality,
+    localeIsRu: localeIsRu,
+  );
+  if (trimmedLine.isEmpty) {
+    final selected = _pickFeedbackReactionCandidateV1(generatedCandidates);
+    resolved = selected.text(localeIsRu);
+    resolvedCategory = selected.category;
+    _lastFeedbackReactionFingerprintV1 = fingerprint;
+    _lastFeedbackReactionOutputV1 = resolved;
+    _lastFeedbackReactionCategoryV1 = resolvedCategory;
+    return resolved;
   }
   if (normalizedLine == normalizedTitle) {
+    _lastFeedbackReactionFingerprintV1 = fingerprint;
+    _lastFeedbackReactionOutputV1 = '';
+    _lastFeedbackReactionCategoryV1 = 'duplicate-title';
     return '';
   }
-  if (quality == Act0FeedbackQualityV1.correct && normalizedTitle.isNotEmpty) {
-    return sharkyLine;
+  const genericLines = <String>{
+    'good',
+    'nice',
+    'great',
+    'ok',
+    'okay',
+    'well done',
+    'good job',
+  };
+  if (genericLines.contains(normalizedLine)) {
+    final selected = _pickFeedbackReactionCandidateV1(generatedCandidates);
+    resolved = selected.text(localeIsRu);
+    resolvedCategory = selected.category;
+  } else {
+    resolved = trimmedLine;
+    resolvedCategory = _classifyFeedbackReactionCategoryV1(trimmedLine);
   }
-  return sharkyLine;
+
+  final previousNormalized = _lastFeedbackReactionOutputV1.trim().toLowerCase();
+  if (resolved.trim().toLowerCase() == previousNormalized) {
+    final selected = _pickFeedbackReactionCandidateV1(generatedCandidates);
+    resolved = selected.text(localeIsRu);
+    resolvedCategory = selected.category;
+  }
+
+  _lastFeedbackReactionFingerprintV1 = fingerprint;
+  _lastFeedbackReactionOutputV1 = resolved;
+  _lastFeedbackReactionCategoryV1 = resolvedCategory;
+  return resolved;
 }
+
+class _FeedbackReactionCandidateV1 {
+  const _FeedbackReactionCandidateV1({
+    required this.category,
+    required this.textEn,
+    required this.textRu,
+  });
+
+  final String category;
+  final String textEn;
+  final String textRu;
+
+  String text(bool localeIsRu) => localeIsRu ? textRu : textEn;
+}
+
+List<_FeedbackReactionCandidateV1> _feedbackReactionCandidatesForQualityV1(
+  Act0FeedbackQualityV1 quality, {
+  required bool localeIsRu,
+}) {
+  if (localeIsRu) {
+    return switch (quality) {
+      Act0FeedbackQualityV1.correct => const <_FeedbackReactionCandidateV1>[
+        _FeedbackReactionCandidateV1(
+          category: 'reinforce',
+          textEn: 'Sharp read. Keep this cue for the next hand.',
+          textRu: 'Хорошее чтение. Забери эту подсказку в следующую раздачу.',
+        ),
+        _FeedbackReactionCandidateV1(
+          category: 'repeat',
+          textEn: 'Sharp read. Repeat the same table cue one more time.',
+          textRu: 'Хорошее чтение. Повтори ту же подсказку ещё раз.',
+        ),
+      ],
+      Act0FeedbackQualityV1.suboptimal => const <_FeedbackReactionCandidateV1>[
+        _FeedbackReactionCandidateV1(
+          category: 'compare',
+          textEn: 'Good spot to fix. Compare your pick with the better line.',
+          textRu: 'Полезный разбор. Сравни свой выбор с более точной линией.',
+        ),
+        _FeedbackReactionCandidateV1(
+          category: 'slow-down',
+          textEn:
+              'Good spot to fix. Slow down and check both options once more.',
+          textRu: 'Полезный разбор. Замедлись и ещё раз проверь оба варианта.',
+        ),
+      ],
+      Act0FeedbackQualityV1.wrong => const <_FeedbackReactionCandidateV1>[
+        _FeedbackReactionCandidateV1(
+          category: 'reread',
+          textEn: 'Good spot to fix. Take one calm reread before the next tap.',
+          textRu:
+              'Полезный разбор. Спокойно перечитай спот перед следующим нажатием.',
+        ),
+        _FeedbackReactionCandidateV1(
+          category: 'reset',
+          textEn: 'Good spot to fix. Reset the table read and choose again.',
+          textRu:
+              'Полезный разбор. Ещё раз собери картину стола и выбери заново.',
+        ),
+      ],
+    };
+  }
+  return switch (quality) {
+    Act0FeedbackQualityV1.correct => const <_FeedbackReactionCandidateV1>[
+      _FeedbackReactionCandidateV1(
+        category: 'reinforce',
+        textEn: 'Sharp read. Keep this cue for the next hand.',
+        textRu: 'Хорошее чтение. Забери эту подсказку в следующую раздачу.',
+      ),
+      _FeedbackReactionCandidateV1(
+        category: 'repeat',
+        textEn: 'Sharp read. Repeat the same table cue one more time.',
+        textRu: 'Хорошее чтение. Повтори ту же подсказку ещё раз.',
+      ),
+    ],
+    Act0FeedbackQualityV1.suboptimal => const <_FeedbackReactionCandidateV1>[
+      _FeedbackReactionCandidateV1(
+        category: 'compare',
+        textEn: 'Good spot to fix. Compare your pick with the better line.',
+        textRu: 'Полезный разбор. Сравни свой выбор с более точной линией.',
+      ),
+      _FeedbackReactionCandidateV1(
+        category: 'slow-down',
+        textEn: 'Good spot to fix. Slow down and check both options once more.',
+        textRu: 'Полезный разбор. Замедлись и ещё раз проверь оба варианта.',
+      ),
+    ],
+    Act0FeedbackQualityV1.wrong => const <_FeedbackReactionCandidateV1>[
+      _FeedbackReactionCandidateV1(
+        category: 'reread',
+        textEn: 'Good spot to fix. Take one calm reread before the next tap.',
+        textRu:
+            'Полезный разбор. Спокойно перечитай спот перед следующим нажатием.',
+      ),
+      _FeedbackReactionCandidateV1(
+        category: 'reset',
+        textEn: 'Good spot to fix. Reset the table read and choose again.',
+        textRu:
+            'Полезный разбор. Ещё раз собери картину стола и выбери заново.',
+      ),
+    ],
+  };
+}
+
+_FeedbackReactionCandidateV1 _pickFeedbackReactionCandidateV1(
+  List<_FeedbackReactionCandidateV1> candidates,
+) {
+  if (candidates.isEmpty) {
+    return const _FeedbackReactionCandidateV1(
+      category: 'fallback',
+      textEn: 'Good spot to fix. Read once more, then continue.',
+      textRu: 'Полезный разбор. Ещё раз прочитай спот и затем продолжай.',
+    );
+  }
+  for (final candidate in candidates) {
+    if (candidate.category != _lastFeedbackReactionCategoryV1) {
+      return candidate;
+    }
+  }
+  return candidates.first;
+}
+
+String _classifyFeedbackReactionCategoryV1(String line) {
+  final normalized = line.trim().toLowerCase();
+  if (normalized.contains('compare')) return 'compare';
+  if (normalized.contains('slow')) return 'slow-down';
+  if (normalized.contains('reset')) return 'reset';
+  if (normalized.contains('reread')) return 'reread';
+  if (normalized.contains('repeat')) return 'repeat';
+  if (normalized.contains('keep')) return 'reinforce';
+  return 'authored';
+}
+
+String _lastFeedbackReactionFingerprintV1 = '';
+String _lastFeedbackReactionOutputV1 = '';
+String _lastFeedbackReactionCategoryV1 = '';
 
 class Act0BlockCompletionShellV1 extends StatelessWidget {
   const Act0BlockCompletionShellV1({
@@ -2750,6 +3164,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               Text(
                 summary.gateMessage,
                 key: const Key('act0_shell_block_summary_gate_message'),
+                maxLines: 4,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.body.copyWith(
                   color: Act0ShellTokensV1.textMuted,
                 ),
@@ -2813,6 +3229,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             key: const Key(
                               'act0_shell_block_summary_habit_reward_detail',
                             ),
+                            maxLines: 4,
+                            overflow: TextOverflow.fade,
                             style: Act0ShellTokensV1.body.copyWith(
                               color: Act0ShellTokensV1.textMuted,
                             ),
@@ -2842,6 +3260,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     Text(
                       summary.suggestedNextAction,
                       key: const Key('act0_shell_block_summary_suggested_next'),
+                      maxLines: 4,
+                      overflow: TextOverflow.fade,
                       style: Act0ShellTokensV1.body.copyWith(
                         color: Act0ShellTokensV1.text,
                         fontWeight: FontWeight.w800,
@@ -2860,7 +3280,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         textKey: const Key(
                           'act0_shell_block_summary_sharky_line',
                         ),
-                        mascotSize: 50,
+                        mascotSize: 68,
                         bubblePadding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 10,
@@ -2885,6 +3305,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               Text(
                 '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} errors',
                 key: const Key('act0_shell_block_summary_accuracy'),
+                maxLines: 2,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.textMuted,
                   fontWeight: FontWeight.w700,
@@ -2941,11 +3363,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ? (summary.qualifiesForNextLesson ? onContinue : null)
                     : onBackToMap,
                 style: Act0ShellTokensV1.primaryButtonStyle(),
-                child: Text(
-                  summary.hasNextLesson
-                      ? 'Continue to next block'
-                      : 'Back to map',
-                ),
+                child: Text(summary.primaryCtaLabel),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               OutlinedButton(
@@ -2955,7 +3373,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   tone: Act0ShellTokensV1.info,
                   fullWidth: true,
                 ),
-                child: const Text('Replay block'),
+                child: Text(summary.replayCtaLabel),
               ),
               if (summary.hasNextLesson) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -3298,8 +3716,8 @@ class _PotSweepMomentV1 extends StatelessWidget {
             Text(
               potLabel,
               key: const Key('act0_shell_pot_sweep_label'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.gold,
                 fontSize: 9.4,
@@ -3358,6 +3776,7 @@ class _Act0TableV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final seats = _visualSeatOrder(table.seats);
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
+    final isTablet = Act0ShellTokensV1.isTabletWidth(context);
     var tableMaxWidth = switch (table.density) {
       Act0TableDensityV1.compactLesson => Act0ShellTokensV1.runnerTableMaxWidth,
       Act0TableDensityV1.handView => Act0ShellTokensV1.handTableMaxWidth,
@@ -3366,6 +3785,12 @@ class _Act0TableV1 extends StatelessWidget {
         table.density == Act0TableDensityV1.compactLesson) {
       tableMaxWidth += 32;
     }
+    if (isTablet) {
+      tableMaxWidth = switch (table.density) {
+        Act0TableDensityV1.compactLesson => refined ? 560 : 520,
+        Act0TableDensityV1.handView => refined ? 600 : 560,
+      };
+    }
     var tableAspect = switch (table.density) {
       Act0TableDensityV1.compactLesson => Act0ShellTokensV1.tableAspect,
       Act0TableDensityV1.handView => Act0ShellTokensV1.handTableAspect,
@@ -3373,6 +3798,12 @@ class _Act0TableV1 extends StatelessWidget {
     if (visualVariant == Act0ShellTableVisualVariantV1.refinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson) {
       tableAspect = 0.69;
+    }
+    if (isTablet) {
+      tableAspect = switch (table.density) {
+        Act0TableDensityV1.compactLesson => refined ? 0.88 : 0.84,
+        Act0TableDensityV1.handView => refined ? 0.82 : 0.80,
+      };
     }
     return ConstrainedBox(
       key: const Key('act0_shell_table'),
@@ -3593,8 +4024,8 @@ class _TableRepairCalloutV1 extends StatelessWidget {
                 label,
                 key: const Key('act0_shell_table_repair_callout_text'),
                 textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.text,
                   fontSize: 9.4,
@@ -5722,60 +6153,84 @@ class _ActionPromptPanelV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formattedTaskLabel = _formatActionPromptCopyV1(
+      taskLabel,
+      shortThreshold: 32,
+    );
+    final formattedQuestion = _formatActionPromptCopyV1(
+      question,
+      shortThreshold: 58,
+    );
     return Column(
       key: const Key('act0_shell_action_prompt_panel'),
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (question.isNotEmpty) ...[
-          Row(
-            children: [
-              if (onBack != null) ...[
-                _DockBackButtonV1(
-                  key: const Key('act0_shell_interaction_back_cta'),
-                  onPressed: onBack!,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-              ],
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _DockStatusPillV1(
-                      key: Key('act0_shell_question_badge'),
-                      label: act0RuntimeQuestionBadgeLabelV1(context),
-                      icon: Icons.help_outline_rounded,
-                      tone: Act0ShellTokensV1.gold,
-                    ),
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(
-                      taskLabel,
-                      key: const Key('act0_shell_action_task_label'),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(
-                      question,
-                      key: const Key('act0_shell_action_question'),
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ],
-                ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(
+              Act0ShellTokensV1.gapMd,
+              Act0ShellTokensV1.gapSm,
+              Act0ShellTokensV1.gapMd,
+              Act0ShellTokensV1.gapMd,
+            ),
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.86),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+              border: Border.all(
+                color: Act0ShellTokensV1.info.withValues(alpha: 0.24),
               ),
-            ],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (onBack != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: _DockBackButtonV1(
+                      key: const Key('act0_shell_interaction_back_cta'),
+                      onPressed: onBack!,
+                    ),
+                  ),
+                  const SizedBox(width: Act0ShellTokensV1.gapSm),
+                ],
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _DockStatusPillV1(
+                        key: const Key('act0_shell_question_badge'),
+                        label: act0RuntimeQuestionBadgeLabelV1(context),
+                        icon: Icons.help_outline_rounded,
+                        tone: Act0ShellTokensV1.gold,
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapXs),
+                      Text(
+                        formattedTaskLabel,
+                        key: const Key('act0_shell_action_task_label'),
+                        textAlign: TextAlign.center,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.info,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapXs),
+                      Text(
+                        formattedQuestion,
+                        key: const Key('act0_shell_action_question'),
+                        textAlign: TextAlign.center,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          height: 1.12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
         ] else if (onBack != null) ...[
@@ -5792,6 +6247,14 @@ class _ActionPromptPanelV1 extends StatelessWidget {
       ],
     );
   }
+}
+
+String _formatActionPromptCopyV1(String text, {required int shortThreshold}) {
+  final normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  if (normalized.length <= shortThreshold) {
+    return normalized;
+  }
+  return _formatInstructionCopyV1(normalized, allowSingleClauseSplit: true);
 }
 
 class _DockStatusPillV1 extends StatelessWidget {

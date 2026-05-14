@@ -263,6 +263,9 @@ String act0RuntimeLocalizedGeneralLabelV1(BuildContext context, String label) {
   if (trimmed.isEmpty) {
     return trimmed;
   }
+  final localeIsRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
 
   final genericAtomId = act0RuntimeGenericLabelAtomByEnglishV1[trimmed];
   if (genericAtomId != null) {
@@ -287,13 +290,13 @@ String act0RuntimeLocalizedGeneralLabelV1(BuildContext context, String label) {
   }
 
   final comboMatch = RegExp(r'^(\d+) combos$').firstMatch(trimmed);
-  if (comboMatch != null) {
+  if (comboMatch != null && localeIsRu) {
     final count = int.tryParse(comboMatch.group(1)!) ?? 0;
     return '${comboMatch.group(1)!} ${_act0RuCombosWordV1(count)}';
   }
 
   final maxPlayersMatch = RegExp(r'^(\d+)-max$').firstMatch(trimmed);
-  if (maxPlayersMatch != null) {
+  if (maxPlayersMatch != null && localeIsRu) {
     return '${maxPlayersMatch.group(1)!}-макс';
   }
 
