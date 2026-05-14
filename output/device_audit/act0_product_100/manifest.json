@@ -1,0 +1,164 @@
+{
+  "artifact_dir": "output/device_audit/act0_product_100",
+  "viewports": [
+    "compact_phone",
+    "large_phone",
+    "tablet"
+  ],
+  "surfaces": [
+    "placement",
+    "home",
+    "learn",
+    "play",
+    "review",
+    "profile",
+    "table",
+    "result"
+  ],
+  "entries": [
+    {
+      "viewport": "compact_phone",
+      "surface": "placement",
+      "path": "output/device_audit/act0_product_100/compact_phone.placement.png",
+      "bytes": 367711
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "home",
+      "path": "output/device_audit/act0_product_100/compact_phone.home.png",
+      "bytes": 140701
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "learn",
+      "path": "output/device_audit/act0_product_100/compact_phone.learn.png",
+      "bytes": 278906
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "play",
+      "path": "output/device_audit/act0_product_100/compact_phone.play.png",
+      "bytes": 181945
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "review",
+      "path": "output/device_audit/act0_product_100/compact_phone.review.png",
+      "bytes": 183743
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "profile",
+      "path": "output/device_audit/act0_product_100/compact_phone.profile.png",
+      "bytes": 296060
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "table",
+      "path": "output/device_audit/act0_product_100/compact_phone.table.png",
+      "bytes": 430461
+    },
+    {
+      "viewport": "compact_phone",
+      "surface": "result",
+      "path": "output/device_audit/act0_product_100/compact_phone.result.png",
+      "bytes": 380988
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "placement",
+      "path": "output/device_audit/act0_product_100/large_phone.placement.png",
+      "bytes": 400653
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "home",
+      "path": "output/device_audit/act0_product_100/large_phone.home.png",
+      "bytes": 197726
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "learn",
+      "path": "output/device_audit/act0_product_100/large_phone.learn.png",
+      "bytes": 358489
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "play",
+      "path": "output/device_audit/act0_product_100/large_phone.play.png",
+      "bytes": 212215
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "review",
+      "path": "output/device_audit/act0_product_100/large_phone.review.png",
+      "bytes": 169631
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "profile",
+      "path": "output/device_audit/act0_product_100/large_phone.profile.png",
+      "bytes": 289028
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "table",
+      "path": "output/device_audit/act0_product_100/large_phone.table.png",
+      "bytes": 438366
+    },
+    {
+      "viewport": "large_phone",
+      "surface": "result",
+      "path": "output/device_audit/act0_product_100/large_phone.result.png",
+      "bytes": 457978
+    },
+    {
+      "viewport": "tablet",
+      "surface": "placement",
+      "path": "output/device_audit/act0_product_100/tablet.placement.png",
+      "bytes": 513981
+    },
+    {
+      "viewport": "tablet",
+      "surface": "home",
+      "path": "output/device_audit/act0_product_100/tablet.home.png",
+      "bytes": 228390
+    },
+    {
+      "viewport": "tablet",
+      "surface": "learn",
+      "path": "output/device_audit/act0_product_100/tablet.learn.png",
+      "bytes": 838000
+    },
+    {
+      "viewport": "tablet",
+      "surface": "play",
+      "path": "output/device_audit/act0_product_100/tablet.play.png",
+      "bytes": 332262
+    },
+    {
+      "viewport": "tablet",
+      "surface": "review",
+      "path": "output/device_audit/act0_product_100/tablet.review.png",
+      "bytes": 202302
+    },
+    {
+      "viewport": "tablet",
+      "surface": "profile",
+      "path": "output/device_audit/act0_product_100/tablet.profile.png",
+      "bytes": 341539
+    },
+    {
+      "viewport": "tablet",
+      "surface": "table",
+      "path": "output/device_audit/act0_product_100/tablet.table.png",
+      "bytes": 733662
+    },
+    {
+      "viewport": "tablet",
+      "surface": "result",
+      "path": "output/device_audit/act0_product_100/tablet.result.png",
+      "bytes": 754270
+    }
+  ]
+}
