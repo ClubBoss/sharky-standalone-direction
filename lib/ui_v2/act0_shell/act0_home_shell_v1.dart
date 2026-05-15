@@ -308,13 +308,30 @@ class Act0HomeShellV1 extends StatelessWidget {
   }
 }
 
+bool _isDailyGoalDoneValue(String goalValue) {
+  return goalValue.startsWith('Streak saved') ||
+      goalValue.startsWith('Seat held') ||
+      goalValue.startsWith('Saved') ||
+      goalValue.startsWith('Done') ||
+      goalValue.contains('3/3') ||
+      goalValue.startsWith('Завтра будет легко вернуться') ||
+      goalValue.startsWith('Ритм сохранён') ||
+      goalValue.startsWith('Сохранён') ||
+      goalValue.startsWith('На сегодня всё');
+}
+
 String _dailyGoalSupportText(bool localeIsRu, String goalValue) {
-  if (goalValue.startsWith('Streak saved')) {
+  if (goalValue.startsWith('Streak saved') ||
+      goalValue.startsWith('Seat held') ||
+      goalValue.startsWith('Saved') ||
+      goalValue.startsWith('Завтра будет легко вернуться') ||
+      goalValue.startsWith('Ритм сохранён') ||
+      goalValue.startsWith('Сохранён')) {
     return localeIsRu
         ? 'Фикс засчитан. Ты честно удержал ритм на завтра.'
         : 'Repair banked. You earned tomorrow\'s rhythm.';
   }
-  if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
+  if (_isDailyGoalDoneValue(goalValue)) {
     return localeIsRu
         ? 'Цель на сегодня закрыта. Завтрашнее возвращение уже стало легче.'
         : 'Goal complete. Tomorrow\'s return already feels lighter.';
@@ -334,7 +351,12 @@ String _dailyGoalTrustLineV1({
   required String goalValue,
   required int streakDays,
 }) {
-  if (goalValue.startsWith('Streak saved')) {
+  if (goalValue.startsWith('Streak saved') ||
+      goalValue.startsWith('Seat held') ||
+      goalValue.startsWith('Saved') ||
+      goalValue.startsWith('Завтра будет легко вернуться') ||
+      goalValue.startsWith('Ритм сохранён') ||
+      goalValue.startsWith('Сохранён')) {
     return localeIsRu
         ? (streakDays > 0
               ? '$streakDays дн. сохранены'
@@ -343,7 +365,7 @@ String _dailyGoalTrustLineV1({
               ? '$streakDays day rhythm held'
               : 'Momentum protected for tomorrow.');
   }
-  if (goalValue.startsWith('Done') || goalValue.contains('3/3')) {
+  if (_isDailyGoalDoneValue(goalValue)) {
     return localeIsRu
         ? (streakDays > 0
               ? '$streakDays дн. в порядке'
@@ -379,7 +401,7 @@ class _DailyGoalCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final goalValue = dailyGoalValue ?? state.dailyGoalValue;
-    final isDone = goalValue.startsWith('Done') || goalValue.contains('3/3');
+    final isDone = _isDailyGoalDoneValue(goalValue);
     final accentColor = isDone
         ? Act0ShellTokensV1.primary
         : (state.streakDays >= 3

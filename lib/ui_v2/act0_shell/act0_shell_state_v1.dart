@@ -922,6 +922,7 @@ class Act0MistakeCardV1 {
   const Act0MistakeCardV1({
     required this.taskId,
     required this.lessonId,
+    this.worldId = '',
     required this.title,
     required this.weaknessLabel,
     required this.selectedOptionId,
@@ -937,6 +938,7 @@ class Act0MistakeCardV1 {
 
   final String taskId;
   final String lessonId;
+  final String worldId;
   final String title;
   final String weaknessLabel;
   final String selectedOptionId;
@@ -1043,6 +1045,8 @@ class Act0PracticeGroupV1 {
     this.sessionLabel = '',
     this.durationLabel = '',
     this.isRecommended = false,
+    this.skipTeaching = false,
+    this.allowDrillBypass = false,
   });
 
   final String groupId;
@@ -1058,6 +1062,8 @@ class Act0PracticeGroupV1 {
   final String sessionLabel;
   final String durationLabel;
   final bool isRecommended;
+  final bool skipTeaching;
+  final bool allowDrillBypass;
 }
 
 class Act0PlacementQuestionV1 {

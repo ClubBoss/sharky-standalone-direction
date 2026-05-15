@@ -472,7 +472,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       (world) => world.worldId == widget.selectedWorldId,
       orElse: () => widget.worlds.first,
     );
-    final nextWorld = _nextWorldAfterV1(widget.worlds, selectedWorld);
     final worldTone = _learnWorldToneV1(selectedWorld.worldNumber);
     return TapRegionSurface(
       child: Stack(
@@ -568,22 +567,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                           ),
                         ),
                         const SizedBox(height: Act0ShellTokensV1.gapSm),
-                        Text(
-                          widget.moduleProgressLabel,
-                          style: Act0ShellTokensV1.muted,
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapMd),
-                        _LearnJourneyStripV1(
-                          worldNumber: selectedWorld.worldNumber,
-                          title: widget.moduleTitle,
-                          subtitle: selectedWorld.subtitle,
-                          lessonCount: widget.lessons.length,
-                          rewardXp: selectedWorld.rewardXp,
-                          nextLandmarkTitle: nextWorld?.title,
-                          accent: worldTone.accent,
-                          accentSoft: worldTone.accentSoft,
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapLg),
                       ],
                     ),
                   ),
@@ -2532,16 +2515,9 @@ class _ModuleHeaderV1 extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
                         style: Act0ShellTokensV1.cardTitle,
-                      ),
-                      const SizedBox(height: 1),
-                      Text(
-                        subtitle,
-                        style: Act0ShellTokensV1.muted.copyWith(fontSize: 10.6),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -2552,8 +2528,8 @@ class _ModuleHeaderV1 extends StatelessWidget {
                         ),
                         key: const Key('act0_shell_learn_route_board'),
                         style: Act0ShellTokensV1.muted.copyWith(fontSize: 10.8),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
                       ),
                     ],
                   ),
@@ -2939,29 +2915,18 @@ class _PathCardV1 extends StatelessWidget {
                           ),
                           const SizedBox(width: Act0ShellTokensV1.gapSm),
                           const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 5,
+                          Text(
+                            stateBadgeLabel,
+                            key: Key(
+                              'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                             ),
-                            decoration: BoxDecoration(
-                              color: stateColor.withValues(
-                                alpha: isCompleted ? 0.18 : 0.12,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusPill,
-                              ),
-                            ),
-                            child: Text(
-                              stateBadgeLabel,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: isCompleted
-                                    ? Act0ShellTokensV1.gold
-                                    : stateColor,
-                                letterSpacing: 0.15,
-                              ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: isCompleted
+                                  ? Act0ShellTokensV1.gold
+                                  : stateColor,
+                              letterSpacing: 0.15,
                             ),
                           ),
                         ],

@@ -348,8 +348,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 Text(
                   _placementAtomV1(
                     context,
-                    'placement_ready_three_fast_reads',
-                    fallback: 'Three fast reads',
+                    'placement_ready_five_quick_reads',
+                    fallback: 'Five quick reads',
                   ),
                   style: Act0ShellTokensV1.cardTitle,
                 ),
@@ -358,8 +358,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   icon: Icons.person_search_rounded,
                   label: _placementAtomV1(
                     context,
-                    'placement_ready_table_read_and_seat_orientation',
-                    fallback: 'Table read and seat orientation.',
+                    'placement_ready_live_table_scan',
+                    fallback: 'Live table scan with Hero, board, and pot.',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -367,8 +367,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   icon: Icons.view_kanban_rounded,
                   label: _placementAtomV1(
                     context,
-                    'placement_ready_board_and_street_basics',
-                    fallback: 'Board and street basics.',
+                    'placement_ready_private_vs_board',
+                    fallback: 'Private cards versus shared board.',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -378,6 +378,24 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     context,
                     'placement_ready_action_order',
                     fallback: 'Action order once the hand starts moving.',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _PlacementStepLineV1(
+                  icon: Icons.touch_app_rounded,
+                  label: _placementAtomV1(
+                    context,
+                    'placement_ready_legal_actions',
+                    fallback: 'One quick legal-action check under pressure.',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _PlacementStepLineV1(
+                  icon: Icons.timeline_rounded,
+                  label: _placementAtomV1(
+                    context,
+                    'placement_ready_position_value',
+                    fallback: 'Early versus late position value.',
                   ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),

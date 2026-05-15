@@ -82,7 +82,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
           _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
         ],
         const SizedBox(height: Act0ShellTokensV1.gapLg),
-        _ProfileFirstStartToolsCardV1(
+        _ProfileUtilityFooterV1(
           onRetakePlacement: onRetakePlacement,
           onReplayWelcome: onReplayWelcome,
         ),
@@ -91,8 +91,8 @@ class Act0ProfileShellV1 extends StatelessWidget {
   }
 }
 
-class _ProfileFirstStartToolsCardV1 extends StatelessWidget {
-  const _ProfileFirstStartToolsCardV1({
+class _ProfileUtilityFooterV1 extends StatelessWidget {
+  const _ProfileUtilityFooterV1({
     required this.onRetakePlacement,
     this.onReplayWelcome,
   });
@@ -102,71 +102,24 @@ class _ProfileFirstStartToolsCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: const Key('act0_shell_profile_first_start_tools'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2,
-        borderColor: Act0ShellTokensV1.info.withOpacity(0.20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _profileCopyV1(
-              context,
-              atomId: 'profile_first_start_tools_title',
-              fallback: 'First start tools',
-            ),
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.info,
-            ),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: OutlinedButton.icon(
+        key: const Key('act0_shell_profile_first_start_tools_button'),
+        onPressed: () => _showFirstStartToolsSheetV1(
+          context,
+          onRetakePlacement: onRetakePlacement,
+          onReplayWelcome: onReplayWelcome,
+        ),
+        style: Act0ShellTokensV1.quietButtonStyle(),
+        icon: const Icon(Icons.tune_rounded),
+        label: Text(
+          _profileCopyV1(
+            context,
+            atomId: 'profile_first_start_tools_title',
+            fallback: 'First start tools',
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            _profileCopyV1(
-              context,
-              atomId: 'profile_first_start_tools_body',
-              fallback:
-                  'Replay the product intro or run placement again without touching your route progress.',
-            ),
-            style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Wrap(
-            spacing: Act0ShellTokensV1.gapSm,
-            runSpacing: Act0ShellTokensV1.gapSm,
-            children: [
-              if (onReplayWelcome != null)
-                OutlinedButton.icon(
-                  key: const Key('act0_shell_profile_replay_welcome'),
-                  onPressed: onReplayWelcome,
-                  style: Act0ShellTokensV1.quietButtonStyle(),
-                  icon: const Icon(Icons.play_circle_outline_rounded),
-                  label: Text(
-                    _profileCopyV1(
-                      context,
-                      atomId: 'profile_first_start_replay_welcome',
-                      fallback: 'Replay welcome',
-                    ),
-                  ),
-                ),
-              OutlinedButton.icon(
-                key: const Key('act0_shell_profile_retake_placement'),
-                onPressed: onRetakePlacement,
-                style: Act0ShellTokensV1.quietButtonStyle(),
-                icon: const Icon(Icons.route_rounded),
-                label: Text(
-                  _profileCopyV1(
-                    context,
-                    atomId: 'profile_first_start_retake_placement',
-                    fallback: 'Retake placement',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -1044,40 +997,35 @@ class _IdentitySignalRowV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Act0ShellTokensV1.gapMd,
-        vertical: Act0ShellTokensV1.gapSm,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: color.withOpacity(0.26)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          margin: const EdgeInsets.only(top: 6),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        SizedBox(
+          width: 96,
+          child: Text(label, style: Act0ShellTokensV1.label.copyWith(color: color)),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body.copyWith(
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Text(label, style: Act0ShellTokensV1.label.copyWith(color: color)),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: Act0ShellTokensV1.body.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -1662,8 +1610,8 @@ class _AchievementCardV1 extends StatelessWidget {
       key: Key('act0_shell_profile_achievement_$achievementId'),
       opacity: locked ? 0.62 : 1,
       child: Container(
-        constraints: const BoxConstraints(minHeight: 94),
-        padding: const EdgeInsets.all(12),
+        constraints: const BoxConstraints(minHeight: 74),
+        padding: const EdgeInsets.all(10),
         decoration: Act0ShellTokensV1.surfaceDecoration(
           borderColor: locked
               ? Act0ShellTokensV1.border
@@ -1673,8 +1621,8 @@ class _AchievementCardV1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
                 color:
                     (locked
@@ -1688,13 +1636,13 @@ class _AchievementCardV1 extends StatelessWidget {
                 color: locked
                     ? Act0ShellTokensV1.textDim
                     : Act0ShellTokensV1.gold,
-                size: 20,
+                size: 16,
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: 8),
             Text(
               label,
-              maxLines: 3,
+              maxLines: 2,
               overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 fontWeight: FontWeight.w800,
@@ -1705,6 +1653,96 @@ class _AchievementCardV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showFirstStartToolsSheetV1(
+  BuildContext context, {
+  required VoidCallback onRetakePlacement,
+  required VoidCallback? onReplayWelcome,
+}) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          key: const Key('act0_shell_profile_first_start_tools'),
+          margin: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderColor: Act0ShellTokensV1.info.withOpacity(0.20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _profileCopyV1(
+                  context,
+                  atomId: 'profile_first_start_tools_title',
+                  fallback: 'First start tools',
+                ),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.info,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                _profileCopyV1(
+                  context,
+                  atomId: 'profile_first_start_tools_body',
+                  fallback:
+                      'Replay the product intro or run placement again without touching your route progress.',
+                ),
+                style: Act0ShellTokensV1.muted,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Wrap(
+                spacing: Act0ShellTokensV1.gapSm,
+                runSpacing: Act0ShellTokensV1.gapSm,
+                children: [
+                  if (onReplayWelcome != null)
+                    OutlinedButton.icon(
+                      key: const Key('act0_shell_profile_replay_welcome'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        onReplayWelcome();
+                      },
+                      style: Act0ShellTokensV1.quietButtonStyle(),
+                      icon: const Icon(Icons.play_circle_outline_rounded),
+                      label: Text(
+                        _profileCopyV1(
+                          context,
+                          atomId: 'profile_first_start_replay_welcome',
+                          fallback: 'Replay welcome',
+                        ),
+                      ),
+                    ),
+                  OutlinedButton.icon(
+                    key: const Key('act0_shell_profile_retake_placement'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onRetakePlacement();
+                    },
+                    style: Act0ShellTokensV1.quietButtonStyle(),
+                    icon: const Icon(Icons.route_rounded),
+                    label: Text(
+                      _profileCopyV1(
+                        context,
+                        atomId: 'profile_first_start_retake_placement',
+                        fallback: 'Retake placement',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
 
 class _TwoColumnStaggeredGridV1 extends StatelessWidget {

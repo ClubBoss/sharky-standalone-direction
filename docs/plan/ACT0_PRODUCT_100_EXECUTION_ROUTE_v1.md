@@ -815,6 +815,201 @@ Must not do:
 - no Play copy cleanup in the same wave
 - no broad visual polish as a substitute for truth repair
 
+#### Wave H2. Progress / Skill Truth Implementation
+
+Status:
+`closed green`
+
+Delivered:
+
+- dev reset now returns to real first-start zero-state instead of restoring an
+  already-advanced route shell
+- persisted progress schema now carries skill truth directly
+- skill gains and profile skill stats restore from persisted truth and fall back
+  to completed-task derivation only for older snapshots
+- lower feedback/growth clutter was reduced without dropping gain truth
+
+Proof:
+
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+- `flutter analyze`
+
+#### Wave H3. Play Contract Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- `Play` now keeps a separate contract from `Learn` instead of routing through
+  placeholder or lesson-like entry paths
+- active Play surface is reduced to `daily`, `weak spots`, and real topic-pack
+  drill lanes; `continue` and `placement` stay out of the main practice surface
+- starter daily reps now use real drill tasks, not intro placeholders
+- drill launch contract now bypasses lesson selectability when the launch target
+  is an admitted drill
+- mistake repair preserves world ownership so `Review` and `Home -> Fix next`
+  can reopen the correct drill owner instead of leaking into the current lesson
+- daily completion truth now tracks completed reps directly, so `Done for today`
+  and `Seat held for tomorrow` are driven by the real daily contract
+
+Proof:
+
+- focused Play / Review / Home daily tests updated to the new drill-first
+  contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+301`
+- `flutter analyze`
+
+#### Wave H4. Placement Truth Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- removed low-signal self-report filler from the pre-placement intake by
+  cutting the question set from `6` screens to `4`
+- dropped `age` and `frequency` from route-level placement truth because they
+  were adding surface bulk without improving the start decision
+- route outcome now depends primarily on the real table diagnostic instead of a
+  blended self-report score gate
+- placement still hands off through `Welcome` and into the selected `Home`
+  route without introducing a detached onboarding branch
+
+Proof:
+
+- focused placement tests updated to the new 4-question intake and diagnostic
+  handoff contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+301`
+- `flutter analyze`
+
+#### Wave H5. Learn Simplification Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- removed the attached top `current chapter` journey strip so Learn keeps one
+  dominant route header instead of a duplicated world-card stack
+- removed extra module progress copy above the route header to reduce chrome
+  noise before the lesson path begins
+- simplified lesson-card state presentation from pill badges to plain state
+  text, reducing visual clutter and uneven chip widths across the list
+- expanded the pinned route header title/meta headroom so current-route copy is
+  less likely to truncate harshly on compact paths
+
+Proof:
+
+- focused Learn simplification tests updated to the new one-header contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+302`
+- `flutter analyze`
+
+#### Wave H6. Profile Role Compression Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- removed the large first-start tools card from the main `You` surface and
+  moved replay/retake utilities behind one compact tools entry
+- fixed the replay/retake tools contract so the tools sheet dismisses before
+  the next route opens
+- simplified identity rows from boxed signal chips to lighter text rows
+- reduced empty-feeling achievement chrome by shrinking icon containers and
+  card height
+
+Proof:
+
+- focused Profile tests updated to the new compact-tools contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+303`
+- `flutter analyze`
+
+#### Wave H7. Welcome Presentation Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- welcome beats `1-3` now show product-facing visual previews instead of
+  relying on text-only empty space
+- intro and why-it-works beats now demonstrate the learning loop and the
+  table-adjacent model before the live demo spot starts
+- app-shape beat now uses a compact `2x2` role grid with icons instead of a
+  long vertical brochure list
+- presentation stays inside the existing welcome logic and demo flow; no new
+  route family or detached onboarding branch was introduced
+
+Proof:
+
+- focused Welcome tests updated to the new visual-preview contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+304`
+- `flutter analyze`
+
+#### Wave H8. Placement Diagnostic Content Truth Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- upgraded the placement diagnostic from `4` very basic checks to `5` more
+  route-splitting reads without opening a new owner family
+- replaced seat-only and street-count-only checks with stronger starter-world
+  tasks:
+  - live table scan transfer
+  - private-vs-board separation
+  - action order
+  - legal action under no-bet pressure
+  - early-vs-late position value
+- tightened placement thresholds so `ready for action basics` now requires a
+  stronger diagnostic signal instead of passing off one advanced hit on top of
+  the old softer route
+- updated the placement ready surface so it previews the real diagnostic shape
+  instead of an underselling `three fast reads` placeholder
+
+Proof:
+
+- focused placement-first-start and placement-result tests updated to the new
+  `5`-read contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+304`
+- `flutter analyze`
+
+#### Wave H9. Play Drill Inventory Truth Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- topic packs now target explicit representative drills instead of reading as
+  thin wrappers around whichever lesson-step happened to be first
+- topic-pack launch truth no longer depends on the current selected lesson
+  stack; packs now carry their own `targetWorldId` and resolve directly into
+  the intended drill owner
+- locked lesson chrome no longer disables drill-first packs; packs can launch
+  through the existing drill-bypass contract when the representative task is a
+  real drill
+- `Play`-launched drill back-navigation now returns to `Play` instead of
+  drifting into `Learn`
+- `Play` topic-pack copy was tightened around the actual representative drill
+  that opens, reducing placeholder feel at the surface level as well
+
+Proof:
+
+- focused Play tests updated to the new representative-drill contract
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+305`
+- `flutter analyze`
+
 Captured backlog inside Wave H (do not lose these when H1/H2 starts):
 
 1. `Learn`

@@ -202,6 +202,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
+  int _dailyCompletedRepCount = 0;
   int _persistedStreakDays = 0;
   String _lastDailyDate = '';
   String? _activePracticeGroupId;
@@ -870,6 +871,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               ? parsed.persistedStreakDays
               : 0)
         : parsed.persistedStreakDays;
+    final restoredSkillValues = parsed.profileSkillValues.isEmpty
+        ? _deriveSkillValuesFromCompletedTasks(completedTaskIds)
+        : parsed.profileSkillValues;
     setState(() {
       _completedTaskIds = completedTaskIds;
       _completedLessonIds = completedLessonIds;
@@ -880,6 +884,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..clear()
         ..addAll(skippedTaskIds);
       _earnedXp = parsed.earnedXp;
+      _profileSkillValues
+        ..clear()
+        ..addAll(restoredSkillValues);
+      _recentSkillGains
+        ..clear()
+        ..addAll(parsed.recentSkillGains.take(6));
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -891,11 +901,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _blockCompletionSummary = null;
       _persistedStreakDays = restoredStreakDays;
       _lastDailyDate = isNewDay ? today : parsed.lastActiveDay;
+      _dailyCompletedRepCount = isNewDay
+          ? 0
+          : parsed.dailyCompletedRepCount.clamp(0, 3);
       _dismissedHomeHandoffKey = parsed.dismissedHomeHandoffKey;
       _dismissedHomeHandoffDay = parsed.dismissedHomeHandoffDay;
       // Daily deck resets on new day
       if (isNewDay) {
         _dailyCompletedTaskIds.clear();
+        _dailyCompletedRepCount = 0;
       }
     });
   }
@@ -924,7 +938,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     final today = _todayDateString();
-    final dailyDone = _dailyCompletedTaskIds.length >= 3;
+    final dailyDone = _dailyCompletedRepCount >= 3;
     final currentStreak = dailyDone
         ? (_lastDailyDate == today
               ? _persistedStreakDays
@@ -940,7 +954,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedLessonId: _selectedLessonId,
       selectedTaskId: _selectedTaskId,
       earnedXp: _earnedXp,
+      profileSkillValues: _profileSkillValues,
+      recentSkillGains: _recentSkillGains,
       lastActiveDay: today,
+      dailyCompletedRepCount: _dailyCompletedRepCount,
       persistedStreakDays: currentStreak,
       resumeInRunner:
           _tab == Act0ShellTabV1.play &&
@@ -982,26 +999,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
   }) {
     final state = widget.state ?? Act0ShellStateV1.sample;
-    final completedLessonIds = <String>{
-      for (final world in state.worlds)
-        for (final lesson in world.lessons)
-          if (lesson.state == Act0LessonStateV1.completed) lesson.lessonId,
-    };
-    final completedTaskIds = <String>{
-      for (final world in state.worlds)
-        for (final lesson in world.lessons)
-          if (lesson.state == Act0LessonStateV1.completed)
-            for (final task in lesson.taskList) task.taskId,
-    };
+    final zeroProgressWorlds = _progressWorldsWithTaskIds(state, <String>{});
+    final zeroWorld = zeroProgressWorlds.firstWhere(
+      (world) => world.status == Act0WorldStateV1.current && world.isSelectable,
+      orElse: () => zeroProgressWorlds.first,
+    );
+    final zeroLesson = _firstPlayableLesson(zeroWorld);
+    final zeroTask = _firstIncompleteTask(zeroLesson);
     setState(() {
       _tab = tab;
       _phase = Act0LessonPhaseV1.theory;
-      _selectedWorldId = state.selectedWorldId;
-      _selectedLessonId = state.currentLesson.lessonId;
-      _selectedTaskId = _firstIncompleteTask(state.currentLesson).taskId;
+      _selectedWorldId = zeroWorld.worldId;
+      _selectedLessonId = zeroLesson.lessonId;
+      _selectedTaskId = zeroTask.taskId;
       _learnPopupTaskId = null;
-      _completedLessonIds = completedLessonIds;
-      _completedTaskIds = completedTaskIds;
+      _completedLessonIds = <String>{};
+      _completedTaskIds = <String>{};
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
       _showWorldMenu = false;
@@ -1024,11 +1037,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lessonRunQuickFixTaskIds.clear();
       _lessonRunDeepLeakTaskIds.clear();
       _dailyCompletedTaskIds.clear();
+      _dailyCompletedRepCount = 0;
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
       _blockCompletionSummary = null;
       _dismissedHomeHandoffKey = '';
       _dismissedHomeHandoffDay = '';
+      _persistedStreakDays = 0;
+      _lastDailyDate = '';
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;
@@ -1169,7 +1185,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!mounted) {
       return;
     }
-    _restorePreviewToFreshStart(showPlacement: false);
+    _restorePreviewToFreshStart(showPlacement: true);
     _persistProgress();
   }
 
@@ -1628,7 +1644,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         ),
                         sharkyOverride: _homeSharkyOverride(),
                         onOpenDevMenu: _openDevMenu,
-                        onStartDailyDrill: _dailyCompletedTaskIds.length < 3
+                        onStartDailyDrill: _dailyCompletedRepCount < 3
                             ? () => setState(() {
                                 final world = _worldById(
                                   _progressedWorlds(
@@ -2179,13 +2195,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _reviewConfidence = value;
                         }),
                         onFixMistake: (mistake) => setState(() {
-                          _startTaskByIds(
+                          _startMistakeRepair(
                             selectedWorld,
-                            mistake.lessonId,
-                            mistake.taskId,
+                            mistake,
+                            returnToPlayHub: false,
                           );
-                          _activeRepairTaskId = mistake.taskId;
-                          _teachingStepIndex = 0;
                         }),
                         onReplayFixedMistake: (mistake) => setState(() {
                           _startMistakeRepair(
@@ -2358,18 +2372,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         sessionLabel: weakSpot == null ? 'Quick fix' : 'Weak spot',
         durationLabel: '~4 min',
         isRecommended: recommendation.practiceGroupId == 'weak_spots',
+        skipTeaching: true,
+        allowDrillBypass: true,
       ),
       Act0PracticeGroupV1(
         groupId: 'daily',
-        title: _dailyCompletedTaskIds.length >= 3
+        title: _dailyCompletedRepCount >= 3
             ? _copyV1(en: 'Daily set complete', ru: 'Дневная серия закрыта')
             : _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
-        subtitle: _dailyCompletedTaskIds.length >= 3
+        subtitle: _dailyCompletedRepCount >= 3
             ? 'Nice. Keep going or repair weak spots next.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
             : 'Finish three short spots for today.',
-        ctaLabel: _dailyCompletedTaskIds.length >= 3
+        ctaLabel: _dailyCompletedRepCount >= 3
             ? _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDone)
             : _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDrill),
         categoryLabel: 'Daily',
@@ -2378,76 +2394,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         targetLessonId: dailyDeckEntry.lessonId,
         targetTaskId: dailyDeckEntry.taskId,
         countLabel: _dailyGoalValueLabel(),
-        sessionLabel: _dailyCompletedTaskIds.length >= 3
-            ? 'Complete'
-            : '3 spot set',
+        sessionLabel: _dailyCompletedRepCount >= 3 ? 'Complete' : '3 spot set',
         durationLabel: '~3 min',
         isRecommended: recommendation.practiceGroupId == 'daily',
+        skipTeaching: true,
+        allowDrillBypass: true,
       ),
-      _groupForLesson(
-        world,
-        groupId: 'actions',
-        lessonId: 'fold_check_call_raise',
-        title: 'Actions',
-        subtitle: 'Fold, check, call, and raise in context.',
-        ctaLabel: 'Practice',
-        categoryLabel: 'Action',
-        preferDrill: true,
-        sessionLabel: 'Core drill',
-        durationLabel: '~3 min',
-        isRecommended: recommendation.practiceGroupId == 'actions',
-      ),
-      _groupForLesson(
-        world,
-        groupId: 'positions',
-        lessonId: 'positions',
-        title: 'Positions',
-        subtitle: 'Find seats and action order faster.',
-        ctaLabel: 'Practice',
-        categoryLabel: 'Seats',
-        preferDrill: true,
-        sessionLabel: 'Seat drill',
-        durationLabel: '~2 min',
-        isRecommended: recommendation.practiceGroupId == 'positions',
-      ),
-      _groupForLesson(
-        world,
-        groupId: 'streets',
-        lessonId: 'your_first_hand',
-        title: 'Streets',
-        subtitle: 'Preflop, flop, turn, river, showdown.',
-        ctaLabel: 'Practice',
-        categoryLabel: 'Hand flow',
-        preferDrill: true,
-        sessionLabel: 'Street drill',
-        durationLabel: '~2 min',
-        isRecommended: recommendation.practiceGroupId == 'streets',
-      ),
-      _groupForLesson(
-        world,
-        groupId: 'rankings',
-        lessonId: 'hand_rankings_table',
-        title: 'Hand rankings',
-        subtitle: 'Read made hands on the board.',
-        ctaLabel: 'Practice',
-        categoryLabel: 'Cards',
-        preferDrill: true,
-        sessionLabel: 'Card drill',
-        durationLabel: '~2 min',
-        isRecommended: recommendation.practiceGroupId == 'rankings',
-      ),
-      _groupForLesson(
-        world,
-        groupId: 'showdown',
-        lessonId: 'showdown_winning',
-        title: 'Showdown',
-        subtitle: 'Reveal, compare, and split pots.',
-        ctaLabel: 'Practice',
-        categoryLabel: 'Winning',
-        preferDrill: true,
-        sessionLabel: 'Finish drill',
-        durationLabel: '~2 min',
-        isRecommended: recommendation.practiceGroupId == 'showdown',
+      ..._topicPackSpecsV1.map(
+        (spec) => _groupForTaskPack(
+          world,
+          spec: spec,
+          isRecommended: recommendation.practiceGroupId == spec.groupId,
+        ),
       ),
     ];
   }
@@ -2459,8 +2417,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     final deck = _dailyDeckEntries(state);
     if (deck.isEmpty) {
+      final starterDeck = _starterDailyDeckEntries(fallbackWorld);
+      if (starterDeck.isNotEmpty) {
+        return starterDeck.firstWhere(
+          (entry) => !_dailyCompletedTaskIds.contains(entry.taskId),
+          orElse: () => starterDeck.first,
+        );
+      }
       final fallbackTask =
-          _preferredPracticeTask(fallbackLesson, preferDrill: true) ??
+          _playLaunchTaskForLesson(fallbackLesson, preferDrill: true) ??
           _firstIncompleteTask(fallbackLesson);
       return _Act0DailyDeckEntryV1(
         worldId: fallbackWorld.worldId,
@@ -2532,6 +2497,61 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
     return deck;
+  }
+
+  List<_Act0DailyDeckEntryV1> _starterDailyDeckEntries(
+    Act0WorldCardV1 fallbackWorld,
+  ) {
+    const preferredTaskIds = <String>[
+      'actions_legal_context',
+      'blinds_posts_drill',
+      'positions_button',
+    ];
+    final starterDeck = <_Act0DailyDeckEntryV1>[];
+    final seenTaskIds = <String>{};
+    for (final taskId in preferredTaskIds) {
+      for (final lesson in fallbackWorld.lessons) {
+        final taskIndex = lesson.taskList.indexWhere(
+          (candidate) => candidate.taskId == taskId,
+        );
+        if (taskIndex < 0) {
+          continue;
+        }
+        final task = lesson.taskList[taskIndex];
+        if (!seenTaskIds.add(task.taskId)) {
+          continue;
+        }
+        starterDeck.add(
+          _Act0DailyDeckEntryV1(
+            worldId: fallbackWorld.worldId,
+            lessonId: lesson.lessonId,
+            taskId: task.taskId,
+            isSpaced: false,
+          ),
+        );
+        break;
+      }
+    }
+    for (final lesson in fallbackWorld.lessons) {
+      for (final task in lesson.taskList) {
+        if (task.phase != Act0LessonPhaseV1.drill ||
+            !seenTaskIds.add(task.taskId)) {
+          continue;
+        }
+        starterDeck.add(
+          _Act0DailyDeckEntryV1(
+            worldId: fallbackWorld.worldId,
+            lessonId: lesson.lessonId,
+            taskId: task.taskId,
+            isSpaced: false,
+          ),
+        );
+        if (starterDeck.length >= 3) {
+          return starterDeck;
+        }
+      }
+    }
+    return starterDeck;
   }
 
   _Act0LearningRecommendationV1 _learningRecommendation({
@@ -2620,7 +2640,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
     final currentTask = _firstIncompleteTask(selectedLesson);
 
-    if (_dailyCompletedTaskIds.length >= 3 && _openMistakes().isEmpty) {
+    if (_dailyCompletedRepCount >= 3 && _openMistakes().isEmpty) {
       final streakSaved = _streakSaveEarned();
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
@@ -2692,7 +2712,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
 
-    if (_dailyCompletedTaskIds.length < 3) {
+    if (_dailyCompletedRepCount < 3) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
@@ -2721,7 +2741,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
 
-    if (_dailyCompletedTaskIds.length >= 3 && _openMistakes().isEmpty) {
+    if (_dailyCompletedRepCount >= 3 && _openMistakes().isEmpty) {
       final streakSaved = _streakSaveEarned();
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDone,
@@ -3121,7 +3141,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String _dailyGoalValueLabel() {
-    final count = _dailyCompletedTaskIds.length.clamp(0, 3);
+    final count = _dailyCompletedRepCount.clamp(0, 3);
     if (count < 3) {
       return _copyV1(en: '$count/3 daily spots', ru: '$count/3 дневных спота');
     }
@@ -3134,7 +3154,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String _compactDailyLabel() {
-    final count = _dailyCompletedTaskIds.length.clamp(0, 3);
+    final count = _dailyCompletedRepCount.clamp(0, 3);
     if (count < 3) {
       return _copyV1(en: 'Today $count/3', ru: 'Сегодня $count/3');
     }
@@ -3144,8 +3164,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _streakSaveEarned() {
-    return _dailyCompletedTaskIds.length >= 3 &&
-        _resolvedMistakeTaskIds.isNotEmpty;
+    return _dailyCompletedRepCount >= 3 && _resolvedMistakeTaskIds.isNotEmpty;
   }
 
   Act0SharkyCueV1? _homeSharkyOverride() {
@@ -3165,7 +3184,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
 
     // Daily goal complete — highest priority
-    if (_dailyCompletedTaskIds.length >= 3) {
+    if (_dailyCompletedRepCount >= 3) {
       return const Act0SharkyCueV1(
         preSessionLine: 'Good work. This seat stays warm for tomorrow.',
         correctReaction: 'Sharp read.',
@@ -3190,7 +3209,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
 
     // Streak milestone — 3+ day streak and daily not yet done
-    if (state.streakDays >= 3 && _dailyCompletedTaskIds.isEmpty) {
+    if (state.streakDays >= 3 && _dailyCompletedRepCount == 0) {
       return Act0SharkyCueV1(
         preSessionLine:
             '${state.streakDays} days running. One clean rep keeps it alive.',
@@ -3289,6 +3308,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String durationLabel = '',
     bool preferDrill = false,
     bool isRecommended = false,
+    bool skipTeaching = false,
+    bool allowDrillBypass = false,
   }) {
     final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
       (candidate) => candidate?.lessonId == lessonId,
@@ -3296,7 +3317,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     final task = lesson == null
         ? null
-        : _preferredPracticeTask(lesson, preferDrill: preferDrill);
+        : _playLaunchTaskForLesson(lesson, preferDrill: preferDrill);
     return Act0PracticeGroupV1(
       groupId: groupId,
       title: title,
@@ -3312,6 +3333,45 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sessionLabel: sessionLabel,
       durationLabel: durationLabel,
       isRecommended: isRecommended,
+      skipTeaching: skipTeaching,
+      allowDrillBypass: allowDrillBypass,
+    );
+  }
+
+  Act0PracticeGroupV1 _groupForTaskPack(
+    Act0WorldCardV1 world, {
+    required _Act0TopicPackSpecV1 spec,
+    bool isRecommended = false,
+  }) {
+    final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
+      (candidate) => candidate?.lessonId == spec.lessonId,
+      orElse: () => null,
+    );
+    final task = lesson == null
+        ? null
+        : lesson.taskList.cast<Act0LessonTaskV1?>().firstWhere(
+            (candidate) => candidate?.taskId == spec.taskId,
+            orElse: () => null,
+          );
+    final drillBypass = task != null && task.phase == Act0LessonPhaseV1.drill;
+    return Act0PracticeGroupV1(
+      groupId: spec.groupId,
+      title: spec.title,
+      subtitle: spec.subtitle,
+      ctaLabel: 'Practice',
+      categoryLabel: spec.categoryLabel,
+      isEnabled:
+          lesson != null &&
+          task != null &&
+          (_taskAvailable(lesson, task.taskId) || drillBypass),
+      targetWorldId: world.worldId,
+      targetLessonId: lesson?.lessonId,
+      targetTaskId: task?.taskId,
+      sessionLabel: spec.sessionLabel,
+      durationLabel: spec.durationLabel,
+      isRecommended: isRecommended,
+      skipTeaching: true,
+      allowDrillBypass: true,
     );
   }
 
@@ -3329,6 +3389,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           _taskAvailable(lesson, task.taskId),
       orElse: () => firstIncomplete,
     );
+  }
+
+  Act0LessonTaskV1? _playLaunchTaskForLesson(
+    Act0LessonCardV1 lesson, {
+    bool preferDrill = false,
+  }) {
+    if (!preferDrill) {
+      return _firstIncompleteTask(lesson);
+    }
+    for (final task in lesson.taskList) {
+      if (task.phase == Act0LessonPhaseV1.drill) {
+        return task;
+      }
+    }
+    return _firstIncompleteTask(lesson);
   }
 
   String _recommendedPlayTitle() {
@@ -3532,6 +3607,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           weakSpot,
           returnToPlayHub: true,
           practiceGroupId: group.groupId,
+          skipTeaching: group.skipTeaching,
+          allowDrillBypass: group.allowDrillBypass,
         );
         return;
       }
@@ -3544,6 +3621,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           quickFix,
           returnToPlayHub: true,
           practiceGroupId: group.groupId,
+          skipTeaching: group.skipTeaching,
+          allowDrillBypass: group.allowDrillBypass,
         );
         return;
       }
@@ -3555,7 +3634,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final baseState = widget.state ?? Act0ShellStateV1.sample;
       launchWorld = _worldById(_progressedWorlds(baseState), targetWorldId);
     }
-    _startTaskByIds(launchWorld, lessonId, taskId);
+    _startTaskByIds(
+      launchWorld,
+      lessonId,
+      taskId,
+      skipTeaching: group.skipTeaching,
+      allowDrillBypass: group.allowDrillBypass,
+    );
+    _returnToPlayHubOnBack = true;
     _activePracticeGroupId = group.groupId;
   }
 
@@ -3564,12 +3650,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0MistakeCardV1 mistake, {
     required bool returnToPlayHub,
     String? practiceGroupId,
+    bool skipTeaching = false,
+    bool allowDrillBypass = false,
   }) {
-    _startTaskByIds(selectedWorld, mistake.lessonId, mistake.taskId);
+    final launchWorld = mistake.worldId.trim().isEmpty
+        ? selectedWorld
+        : _worldById(
+            _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+            mistake.worldId,
+          );
+    final launchLesson = _lessonById(launchWorld.lessons, mistake.lessonId);
+    final launchTask = _taskById(launchLesson, mistake.taskId);
+    _startTaskByIds(
+      launchWorld,
+      mistake.lessonId,
+      mistake.taskId,
+      skipTeaching: skipTeaching,
+      allowDrillBypass:
+          allowDrillBypass || launchTask.phase == Act0LessonPhaseV1.drill,
+    );
     _activeRepairTaskId = mistake.taskId;
     _returnToPlayHubOnBack = returnToPlayHub;
     _activePracticeGroupId = practiceGroupId;
-    _teachingStepIndex = 0;
   }
 
   void _startRecommendation(
@@ -3847,12 +3949,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         .where((spot) => !spot.isFoundation)
         .where((spot) => _placementDiagnosticHitSignals.contains(spot.signalId))
         .length;
-    final score = profileScore + _placementDiagnosticScore;
     final foundationPerfect = foundationCorrect == foundationTotal;
     final diagnosticMostlyClean =
-        foundationMisses <= 1 && _placementDiagnosticCorrect >= 2;
+        foundationMisses <= 1 && _placementDiagnosticCorrect >= 3;
 
-    if (foundationPerfect && advancedCorrect >= 1 && score >= 6) {
+    if (foundationPerfect &&
+        advancedCorrect >= 1 &&
+        _placementDiagnosticCorrect >= 4) {
       return Act0PlacementResultV1(
         level: Act0PlacementResultLevelV1.readyForBasics,
         levelLabel: 'Ready for action basics',
@@ -3909,7 +4012,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ],
       );
     }
-    if (diagnosticMostlyClean && score >= 4) {
+    if (diagnosticMostlyClean) {
       return Act0PlacementResultV1(
         level: Act0PlacementResultLevelV1.rustyBeginner,
         levelLabel: 'Rusty beginner',
@@ -4140,16 +4243,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return 'an early-stage poker profile';
   }
 
-  String _placementRhythmRead() {
-    if (_placementHasSelection('frequency', 'often')) {
-      return 'current repetition is high enough for faster action reps';
-    }
-    if (_placementHasSelection('frequency', 'weekly')) {
-      return 'you have some rhythm, but fundamentals still need anchoring';
-    }
-    return 'the app should assume low repetition and explain the table cleanly';
-  }
-
   String _placementReportHeadline(Act0PlacementResultLevelV1 level) {
     return switch (level) {
       Act0PlacementResultLevelV1.newPlayer => 'Foundation before decisions',
@@ -4210,7 +4303,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         Act0PlacementResultLevelV1.readyForBasics => 'Action-ready entry',
       },
       _placementPrimaryLabel('experience', 'New'),
-      _placementPrimaryLabel('frequency', 'Rarely'),
       if (_placementHasSelection('format', 'home_games'))
         'Home-game confidence',
       if (_placementHasSelection('format', 'cash')) 'Cash-game examples',
@@ -4283,8 +4375,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         return 'Board read';
       case 'action_order':
         return 'Action order';
+      case 'action_menu':
+        return 'Legal action';
       case 'position_pressure':
-        return 'Position pressure';
+        return 'Position value';
       default:
         return 'Placement read';
     }
@@ -4296,7 +4390,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : 'Live check flagged ${_placementWeakSpotsFor(level).join(', ').toLowerCase()} as the first friction points.';
     return <String>[
       'Experience read: ${_placementExperienceRead()}.',
-      'Current rhythm: ${_placementRhythmRead()}.',
       'Main friction area: ${_placementConfusionRead()}.',
       'Preferred use case: ${_placementFormatRead()}.',
       'Best coaching fit: ${_placementCoachingRead()}.',
@@ -4426,13 +4519,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _startTaskByIds(
     Act0WorldCardV1 selectedWorld,
     String lessonId,
-    String taskId,
-  ) {
+    String taskId, {
+    bool skipTeaching = false,
+    bool allowDrillBypass = false,
+  }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
-    if (!lesson.isSelectable || !_taskAvailable(lesson, taskId)) {
+    final task = _taskById(lesson, taskId);
+    final drillBypass =
+        allowDrillBypass && task.phase == Act0LessonPhaseV1.drill;
+    final lessonAvailable = lesson.isSelectable || drillBypass;
+    final taskAvailable = _taskAvailable(lesson, taskId) || drillBypass;
+    if (!lessonAvailable || !taskAvailable) {
       return;
     }
-    final task = _taskById(lesson, taskId);
     _selectedWorldId = selectedWorld.worldId;
     _selectedLessonId = lesson.lessonId;
     _selectedTaskId = task.taskId;
@@ -4442,7 +4541,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeGroupId = null;
     _phase = task.phase;
     _selectedOptionId = null;
-    _teachingStepIndex = 0;
+    _teachingStepIndex = skipTeaching && task.phase == Act0LessonPhaseV1.drill
+        ? task.runner.teachingSteps.length
+        : 0;
     _blockCompletionSummary = null;
   }
 
@@ -4453,6 +4554,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) {
     if (_activePracticeGroupId == 'daily') {
       _dailyCompletedTaskIds.add(selectedTask.taskId);
+      _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
     }
     final category = _categoryForLesson(selectedLesson.lessonId);
     final contextLabels = _repairContextLabels(selectedTask.runner, option);
@@ -4484,6 +4586,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _mistakeRecords[selectedTask.taskId] = _Act0MistakeRecordV1(
       taskId: selectedTask.taskId,
       lessonId: selectedLesson.lessonId,
+      worldId: _selectedWorldId,
       title: _localizedTaskTitleV1(selectedTask),
       weaknessLabel: category,
       selectedOptionId: option.id,
@@ -5011,6 +5114,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  Map<String, int> _deriveSkillValuesFromCompletedTasks(Set<String> taskIds) {
+    final values = <String, int>{};
+    for (final taskId in taskIds) {
+      final lesson = _lessonForTaskId(taskId);
+      final task = lesson == null ? null : _taskForId(taskId);
+      if (lesson == null || task == null) {
+        continue;
+      }
+      final deltas = _skillDeltaForTask(lesson.lessonId, task.taskId);
+      for (final entry in deltas.entries) {
+        values[entry.key] = ((values[entry.key] ?? 0) + entry.value).clamp(
+          0,
+          99,
+        );
+      }
+    }
+    return values;
+  }
+
   Map<String, int> _skillDeltaForTask(String lessonId, String taskId) {
     return switch (lessonId) {
       'what_poker_is' => <String, int>{'Table sense': 5},
@@ -5037,67 +5159,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonCardV1 selectedLesson,
     Act0LessonTaskV1 selectedTask,
   ) {
-    final deltas = <String, int>{
-      ..._skillDeltaForTask(selectedLesson.lessonId, selectedTask.taskId),
-    };
-
-    final question = selectedTask.runner.question.toLowerCase();
-    final title = selectedTask.title.toLowerCase();
-    final signals = <String>[
-      selectedTask.runner.question,
-      selectedTask.title,
-      selectedTask.summary ?? '',
-      ...selectedTask.runner.reviewContextLabels,
-    ].join(' ').toLowerCase();
-
-    void bump(String label, int amount) {
-      deltas[label] = (deltas[label] ?? 0) + amount;
-    }
-
-    if (question.contains('seat') ||
-        question.contains('button') ||
-        question.contains('utg') ||
-        question.contains('cutoff') ||
-        title.contains('seat')) {
-      bump('Position play', 2);
-      bump('Table sense', 1);
-    }
-
-    if (signals.contains('blind') || question.contains('bb')) {
-      bump('Blind play', 2);
-      bump('Table sense', 1);
-    }
-
-    if (question.contains('flop') ||
-        question.contains('turn') ||
-        question.contains('river') ||
-        question.contains('board') ||
-        signals.contains('board cards')) {
-      bump('Board reading', 2);
-    }
-
-    if (question.contains('hand ranks') ||
-        question.contains('hand is stronger') ||
-        question.contains('ranks higher') ||
-        question.contains('showdown')) {
-      bump('Hand reading', 2);
-    }
-
-    if (question.contains('action') ||
-        question.contains('check') ||
-        question.contains('call') ||
-        question.contains('raise') ||
-        question.contains('fold')) {
-      bump('Betting decisions', 2);
-    }
-
-    if (signals.contains('to call') ||
-        signals.contains('pot') ||
-        signals.contains('hero acts')) {
-      bump('Betting decisions', 1);
-    }
-
-    return deltas;
+    return _skillDeltaForTask(selectedLesson.lessonId, selectedTask.taskId);
   }
 
   void _pushRecentSkillGain({
@@ -5135,9 +5197,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Act0SkillGainV1> _profileRecentSkillGains(
     List<Act0SkillGainV1> baseGains,
   ) {
-    return _recentSkillGains.isEmpty
-        ? baseGains
-        : _recentSkillGains.take(4).toList();
+    if (_recentSkillGains.isNotEmpty) {
+      return _recentSkillGains.take(4).toList();
+    }
+    return _usesPersistedProgress ? const <Act0SkillGainV1>[] : baseGains;
   }
 
   List<Act0PlacementSkillStatV1> _profileSkillStats(
@@ -5153,8 +5216,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
 
     final seededValues = <String, int>{
-      for (final stat in baseStats)
-        _canonicalSkillLabel(stat.label): stat.value,
+      if (!_usesPersistedProgress)
+        for (final stat in baseStats)
+          _canonicalSkillLabel(stat.label): stat.value,
       ..._profileSkillValues,
     };
 
@@ -5728,13 +5792,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_persistedStreakDays > 0) {
       // Persisted streak is source of truth once the user has prior data
       final today = _todayDateString();
-      if (_dailyCompletedTaskIds.length >= 3 && _lastDailyDate != today) {
+      if (_dailyCompletedRepCount >= 3 && _lastDailyDate != today) {
         return (_persistedStreakDays + 1).clamp(0, 365);
       }
       return _persistedStreakDays;
     }
     // Fall back to state-provided streak (preview / no-prefs mode)
-    return _dailyCompletedTaskIds.length >= 3
+    return _dailyCompletedRepCount >= 3
         ? (base.streakDays + 1).clamp(0, 365)
         : base.streakDays;
   }
@@ -5761,6 +5825,91 @@ class _Act0DailyDeckEntryV1 {
   final bool isSpaced;
 }
 
+class _Act0TopicPackSpecV1 {
+  const _Act0TopicPackSpecV1({
+    required this.groupId,
+    required this.lessonId,
+    required this.taskId,
+    required this.title,
+    required this.subtitle,
+    required this.categoryLabel,
+    required this.sessionLabel,
+    required this.durationLabel,
+  });
+
+  final String groupId;
+  final String lessonId;
+  final String taskId;
+  final String title;
+  final String subtitle;
+  final String categoryLabel;
+  final String sessionLabel;
+  final String durationLabel;
+}
+
+const _topicPackSpecsV1 = <_Act0TopicPackSpecV1>[
+  _Act0TopicPackSpecV1(
+    groupId: 'actions',
+    lessonId: 'fold_check_call_raise',
+    taskId: 'actions_legal_context',
+    title: 'Actions',
+    subtitle: 'Read the price and choose the legal action fast.',
+    categoryLabel: 'Action',
+    sessionLabel: 'Action drill',
+    durationLabel: '~2 min',
+  ),
+  _Act0TopicPackSpecV1(
+    groupId: 'blinds',
+    lessonId: 'blinds_action_order',
+    taskId: 'blinds_first_actor',
+    title: 'Blinds',
+    subtitle: 'Track the blinds and who acts first preflop.',
+    categoryLabel: 'Preflop',
+    sessionLabel: 'Blind drill',
+    durationLabel: '~2 min',
+  ),
+  _Act0TopicPackSpecV1(
+    groupId: 'positions',
+    lessonId: 'positions',
+    taskId: 'positions_early_late',
+    title: 'Positions',
+    subtitle: 'Separate early seats from late seats at a glance.',
+    categoryLabel: 'Seats',
+    sessionLabel: 'Seat drill',
+    durationLabel: '~2 min',
+  ),
+  _Act0TopicPackSpecV1(
+    groupId: 'streets',
+    lessonId: 'your_first_hand',
+    taskId: 'your_first_hand_action_trail',
+    title: 'Streets',
+    subtitle: 'Follow the hand in order instead of losing the street.',
+    categoryLabel: 'Hand flow',
+    sessionLabel: 'Street drill',
+    durationLabel: '~2 min',
+  ),
+  _Act0TopicPackSpecV1(
+    groupId: 'rankings',
+    lessonId: 'hand_rankings_table',
+    taskId: 'hand_rankings_best_five_drill',
+    title: 'Hand rankings',
+    subtitle: 'Choose the best five cards on a real board.',
+    categoryLabel: 'Cards',
+    sessionLabel: 'Card drill',
+    durationLabel: '~2 min',
+  ),
+  _Act0TopicPackSpecV1(
+    groupId: 'showdown',
+    lessonId: 'showdown_winning',
+    taskId: 'showdown_best_hand_drill',
+    title: 'Showdown',
+    subtitle: 'Compare the final hands and settle the pot cleanly.',
+    categoryLabel: 'Winning',
+    sessionLabel: 'Finish drill',
+    durationLabel: '~2 min',
+  ),
+];
+
 class _Act0PlacementSkipPlanV1 {
   const _Act0PlacementSkipPlanV1({
     required this.taskIds,
@@ -5780,7 +5929,10 @@ class _Act0PersistedProgressV1 {
     required this.selectedLessonId,
     required this.selectedTaskId,
     required this.earnedXp,
+    this.profileSkillValues = const <String, int>{},
+    this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
+    this.dailyCompletedRepCount = 0,
     this.persistedStreakDays = 0,
     this.resumeInRunner = false,
     this.resumePhase = '',
@@ -5797,7 +5949,10 @@ class _Act0PersistedProgressV1 {
   final String selectedLessonId;
   final String selectedTaskId;
   final int earnedXp;
+  final Map<String, int> profileSkillValues;
+  final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
+  final int dailyCompletedRepCount;
   final int persistedStreakDays;
   final bool resumeInRunner;
   final String resumePhase;
@@ -5810,8 +5965,10 @@ class _Act0PersistedProgressV1 {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
     final sortedSkippedTaskIds = skippedTaskIds.toList(growable: false)..sort();
     final sortedLessonIds = completedLessonIds.toList(growable: false)..sort();
+    final sortedSkillKeys = profileSkillValues.keys.toList(growable: false)
+      ..sort();
     return jsonEncode(<String, Object>{
-      'schemaVersion': 5,
+      'schemaVersion': 7,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -5819,7 +5976,19 @@ class _Act0PersistedProgressV1 {
       'selectedLessonId': selectedLessonId,
       'selectedTaskId': selectedTaskId,
       'earnedXp': earnedXp,
+      'profileSkillValues': <String, int>{
+        for (final key in sortedSkillKeys) key: profileSkillValues[key]!,
+      },
+      'recentSkillGains': <Map<String, Object>>[
+        for (final gain in recentSkillGains.take(6))
+          <String, Object>{
+            'label': gain.label,
+            'gain': gain.gain,
+            'source': gain.source,
+          },
+      ],
       'lastActiveDay': lastActiveDay,
+      'dailyCompletedRepCount': dailyCompletedRepCount,
       'persistedStreakDays': persistedStreakDays,
       'resumeInRunner': resumeInRunner,
       'resumePhase': resumePhase,
@@ -5843,12 +6012,14 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v5 as the shell snapshot evolves.
+    // Accept v1-v7 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
         schemaVersion != 4 &&
-        schemaVersion != 5) {
+        schemaVersion != 5 &&
+        schemaVersion != 6 &&
+        schemaVersion != 7) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -5861,8 +6032,15 @@ class _Act0PersistedProgressV1 {
     final earnedXp = earnedXpRaw is int
         ? earnedXpRaw
         : int.tryParse(earnedXpRaw?.toString() ?? '') ?? 0;
+    final profileSkillValues = _intMap(map['profileSkillValues']);
+    final recentSkillGains = _skillGainList(map['recentSkillGains']);
     // v2 fields — gracefully default for v1 records
     final lastActiveDay = (map['lastActiveDay'] ?? '').toString();
+    final dailyCompletedRepCountRaw = map['dailyCompletedRepCount'];
+    final dailyCompletedRepCount = dailyCompletedRepCountRaw is int
+        ? dailyCompletedRepCountRaw
+        : int.tryParse(dailyCompletedRepCountRaw?.toString() ?? '') ??
+              completedTaskIds.length.clamp(0, 3);
     final streakRaw = map['persistedStreakDays'];
     final persistedStreakDays = streakRaw is int
         ? streakRaw
@@ -5894,7 +6072,10 @@ class _Act0PersistedProgressV1 {
       selectedLessonId: selectedLessonId,
       selectedTaskId: selectedTaskId,
       earnedXp: earnedXp < 0 ? 0 : earnedXp,
+      profileSkillValues: profileSkillValues,
+      recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,
+      dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       resumeInRunner: resumeInRunner,
       resumePhase: resumePhase,
@@ -5916,12 +6097,52 @@ class _Act0PersistedProgressV1 {
         .where((value) => value.isNotEmpty)
         .toSet();
   }
+
+  static Map<String, int> _intMap(Object? raw) {
+    if (raw is! Map) {
+      return <String, int>{};
+    }
+    final map = <String, int>{};
+    for (final entry in raw.entries) {
+      final key = entry.key.toString().trim();
+      if (key.isEmpty) continue;
+      final value = entry.value;
+      final parsed = value is int
+          ? value
+          : int.tryParse(value?.toString() ?? '');
+      if (parsed == null || parsed < 0) continue;
+      map[key] = parsed;
+    }
+    return map;
+  }
+
+  static List<Act0SkillGainV1> _skillGainList(Object? raw) {
+    if (raw is! List) {
+      return const <Act0SkillGainV1>[];
+    }
+    final gains = <Act0SkillGainV1>[];
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final label = (item['label'] ?? '').toString().trim();
+      final source = (item['source'] ?? '').toString().trim();
+      final gainRaw = item['gain'];
+      final gain = gainRaw is int
+          ? gainRaw
+          : int.tryParse(gainRaw?.toString() ?? '');
+      if (label.isEmpty || source.isEmpty || gain == null || gain <= 0) {
+        continue;
+      }
+      gains.add(Act0SkillGainV1(label: label, gain: gain, source: source));
+    }
+    return gains;
+  }
 }
 
 class _Act0MistakeRecordV1 {
   const _Act0MistakeRecordV1({
     required this.taskId,
     required this.lessonId,
+    required this.worldId,
     required this.title,
     required this.weaknessLabel,
     required this.selectedOptionId,
@@ -5935,6 +6156,7 @@ class _Act0MistakeRecordV1 {
 
   final String taskId;
   final String lessonId;
+  final String worldId;
   final String title;
   final String weaknessLabel;
   final String selectedOptionId;
@@ -5949,6 +6171,7 @@ class _Act0MistakeRecordV1 {
     return Act0MistakeCardV1(
       taskId: taskId,
       lessonId: lessonId,
+      worldId: worldId,
       title: title,
       weaknessLabel: weaknessLabel,
       selectedOptionId: selectedOptionId,
@@ -6216,44 +6439,6 @@ String _navItemKeyLabelV1(Act0ShellTabV1 tab) {
 
 const _placementQuestionsV1 = <Act0PlacementQuestionV1>[
   Act0PlacementQuestionV1(
-    questionId: 'age',
-    eyebrow: 'Start with you',
-    title: 'What sounds most like you right now?',
-    subtitle:
-        'This helps Sharky sound more like coaching and less like a setup form.',
-    helper:
-        'No wrong answer here. It only changes tone, pacing, and examples in the first steps.',
-    icon: Icons.person_search_rounded,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'age_18_24',
-        label: 'I am brand new and want this to feel simple',
-        score: 0,
-        profileTag: 'NewSimple',
-        subtitle: 'Keep it calm, clear, and step by step from the start.',
-        icon: Icons.spa_rounded,
-        badge: 'Best first start',
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'age_25_34',
-        label: 'I know some words, but real hands still feel messy',
-        score: 0,
-        profileTag: 'KnowsSome',
-        subtitle: 'Use practical examples and tighten the flow of a hand.',
-        icon: Icons.hub_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'age_35_plus',
-        label: 'I can follow poker, but I want sharper decisions',
-        score: 0,
-        profileTag: 'SharperDecisions',
-        subtitle:
-            'Move faster where possible, but keep the reasoning explicit.',
-        icon: Icons.track_changes_rounded,
-      ),
-    ],
-  ),
-  Act0PlacementQuestionV1(
     questionId: 'experience',
     eyebrow: 'Starting point',
     title: 'Where are you starting from?',
@@ -6298,44 +6483,6 @@ const _placementQuestionsV1 = <Act0PlacementQuestionV1>[
             'Skip part of the intro and move faster into action language.',
         icon: Icons.insights_rounded,
         badge: 'Faster start',
-      ),
-    ],
-  ),
-  Act0PlacementQuestionV1(
-    questionId: 'frequency',
-    eyebrow: 'Current rhythm',
-    title: 'How often do you play?',
-    subtitle: 'This helps Sharky choose between warm-up and sharper reps.',
-    helper:
-        'If poker is not in your hands often, the app should not assume hidden muscle memory.',
-    icon: Icons.calendar_today_rounded,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'rarely',
-        label: 'Almost never or not yet',
-        score: 0,
-        profileTag: 'Rarely',
-        subtitle:
-            'Lean into table basics and a very clean first-hand structure.',
-        icon: Icons.hourglass_bottom_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'weekly',
-        label: 'On and off, some weeks yes and some weeks no',
-        score: 1,
-        profileTag: 'Weekly',
-        subtitle:
-            'There is some rhythm, but fundamentals still need anchoring.',
-        icon: Icons.view_week_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'often',
-        label: 'Pretty regularly',
-        score: 2,
-        profileTag: 'Frequent',
-        subtitle:
-            'You can handle tighter reps and a faster move into decisions.',
-        icon: Icons.speed_rounded,
       ),
     ],
   ),
@@ -6530,14 +6677,14 @@ const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
     lessonId: 'what_poker_is',
-    taskId: 'what_poker_is_find_hero',
+    taskId: 'what_poker_is_table_read_transfer',
     signalId: 'table_read',
     isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'your_first_hand',
-    taskId: 'your_first_hand_flop',
+    lessonId: 'cards_ranks_suits',
+    taskId: 'cards_ranks_suits_private_board',
     signalId: 'board_read',
     isFoundation: true,
   ),
@@ -6550,8 +6697,14 @@ const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    taskId: 'actions_legal_context',
+    signalId: 'action_menu',
+  ),
+  _Act0PlacementDiagnosticSpotV1(
+    worldId: 'world_1',
     lessonId: 'positions',
-    taskId: 'positions_button',
+    taskId: 'positions_early_late',
     signalId: 'position_pressure',
   ),
 ];

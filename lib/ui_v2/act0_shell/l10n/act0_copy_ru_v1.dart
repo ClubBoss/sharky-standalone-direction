@@ -758,6 +758,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'play_badge_route': Act0SurfaceAtomCopyV1(text: 'Маршрут'),
   'play_badge_skill_check': Act0SurfaceAtomCopyV1(text: 'Проверка базы'),
   'play_badge_decisions': Act0SurfaceAtomCopyV1(text: 'Решения'),
+  'play_badge_blinds': Act0SurfaceAtomCopyV1(text: 'Блайнды'),
   'play_badge_seats': Act0SurfaceAtomCopyV1(text: 'Позиции'),
   'play_badge_streets': Act0SurfaceAtomCopyV1(text: 'Улицы'),
   'play_badge_rankings': Act0SurfaceAtomCopyV1(text: 'Ранги'),
@@ -770,6 +771,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Сначала быстрые дриллы. Ниже паки, когда нужен точечный сет.',
   ),
   'play_return_loop_label': Act0SurfaceAtomCopyV1(text: 'Возвратный цикл'),
+  'play_quick_drills_label': Act0SurfaceAtomCopyV1(text: 'Быстрые дриллы'),
   'play_return_loop_hint': Act0SurfaceAtomCopyV1(
     text: 'Один короткий повтор сейчас. Потом обратно в маршрут.',
   ),
@@ -798,6 +800,9 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   ),
   'play_topic_actions_subtitle': Act0SurfaceAtomCopyV1(
     text: 'Быстрее выбирай пас, чек, колл или рейз.',
+  ),
+  'play_topic_blinds_subtitle': Act0SurfaceAtomCopyV1(
+    text: 'Ставь блайнды и сразу отслеживай, кто ходит первым.',
   ),
   'play_topic_positions_subtitle': Act0SurfaceAtomCopyV1(
     text: 'Чисто читай позиции и порядок хода.',
@@ -1421,17 +1426,23 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'placement_ready_best_place_to_begin': Act0SurfaceAtomCopyV1(
     text: 'Одна короткая живая проверка. Потом Шарки закрепит лучший старт.',
   ),
-  'placement_ready_three_fast_reads': Act0SurfaceAtomCopyV1(
-    text: 'Три быстрых чтения',
+  'placement_ready_five_quick_reads': Act0SurfaceAtomCopyV1(
+    text: 'Пять быстрых проверок',
   ),
-  'placement_ready_table_read_and_seat_orientation': Act0SurfaceAtomCopyV1(
-    text: 'Чтение стола и ориентация по местам.',
+  'placement_ready_live_table_scan': Act0SurfaceAtomCopyV1(
+    text: 'Живое чтение стола: место Hero, борд и банк.',
   ),
-  'placement_ready_board_and_street_basics': Act0SurfaceAtomCopyV1(
-    text: 'База по борду и улицам.',
+  'placement_ready_private_vs_board': Act0SurfaceAtomCopyV1(
+    text: 'Приватные карты против общего борда.',
   ),
   'placement_ready_action_order': Act0SurfaceAtomCopyV1(
     text: 'Порядок действий, когда раздача начинает двигаться.',
+  ),
+  'placement_ready_legal_actions': Act0SurfaceAtomCopyV1(
+    text: 'Одна короткая проверка: какие действия тут вообще доступны.',
+  ),
+  'placement_ready_position_value': Act0SurfaceAtomCopyV1(
+    text: 'Разница между ранней и поздней позицией.',
   ),
   'placement_ready_start_proves_itself_early': Act0SurfaceAtomCopyV1(
     text:

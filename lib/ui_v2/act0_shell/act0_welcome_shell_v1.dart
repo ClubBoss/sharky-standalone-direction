@@ -153,6 +153,15 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         mood: Act0SharkyMoodV1.happy,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
+        visual: _WelcomeVisualPreviewCardV1(
+          title: _copyV1(en: 'One clear loop', ru: 'Один ясный цикл'),
+          body: _copyV1(
+            en: 'Read the table, answer once, get one reason, keep moving.',
+            ru: 'Прочитай стол, ответь один раз, пойми причину, иди дальше.',
+          ),
+          accent: Act0ShellTokensV1.primary,
+          child: _WelcomeLoopStripV1(copy: _copyV1),
+        ),
         ctaLabel: _atomV1('welcome_intro_cta', fallback: 'See why it works'),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.whyEasier),
       ),
@@ -177,6 +186,15 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         mood: Act0SharkyMoodV1.thinking,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
+        visual: _WelcomeVisualPreviewCardV1(
+          title: _copyV1(en: 'Why it feels lighter', ru: 'Почему здесь легче'),
+          body: _copyV1(
+            en: 'The table stays visible, the question stays narrow, and the feedback stays close.',
+            ru: 'Стол остаётся перед глазами, вопрос узкий, а разбор приходит сразу.',
+          ),
+          accent: Act0ShellTokensV1.info,
+          child: _WelcomeMiniTableCalloutV1(copy: _copyV1),
+        ),
         ctaLabel: _atomV1('welcome_why_cta', fallback: 'Show me the app shape'),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.appShape),
       ),
@@ -259,6 +277,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
     required this.replayMode,
     required this.onNext,
     required this.ctaLabel,
+    this.visual,
     this.onClose,
   });
 
@@ -272,6 +291,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   final bool replayMode;
   final VoidCallback onNext;
   final String ctaLabel;
+  final Widget? visual;
   final VoidCallback? onClose;
 
   @override
@@ -295,16 +315,26 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
               onClose: onClose,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Text(title, style: Act0ShellTokensV1.sectionTitle),
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Act0SharkyGuideCardV1(
-              eyebrow: eyebrow,
-              line: line,
-              detail: blocks.join(' '),
-              mood: mood,
-              compact: true,
+            Expanded(
+              child: ListView(
+                children: [
+                  Text(title, style: Act0ShellTokensV1.sectionTitle),
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+                  if (visual != null) ...[
+                    visual!,
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                  ],
+                  Act0SharkyGuideCardV1(
+                    eyebrow: eyebrow,
+                    line: line,
+                    detail: blocks.join(' '),
+                    mood: mood,
+                    compact: true,
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
+            const SizedBox(height: Act0ShellTokensV1.gapLg),
             SizedBox(
               width: double.infinity,
               child: FilledButton(
@@ -361,9 +391,26 @@ class _WelcomeAppShapeBeatV1 extends StatelessWidget {
               ),
               style: Act0ShellTokensV1.sectionTitle,
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            _WelcomeVisualPreviewCardV1(
+              title: copy(
+                en: 'One machine, four surfaces',
+                ru: 'Один маршрут, четыре поверхности',
+              ),
+              body: copy(
+                en: 'Nothing competes for attention. Each tab handles one kind of move.',
+                ru: 'Ничего не спорит за внимание. У каждой вкладки только одна роль.',
+              ),
+              accent: Act0ShellTokensV1.gold,
+              child: const SizedBox.shrink(),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
             Expanded(
-              child: ListView(
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: Act0ShellTokensV1.gapSm,
+                crossAxisSpacing: Act0ShellTokensV1.gapSm,
+                childAspectRatio: 1.08,
                 children: [
                   _WelcomeRoleCardV1(
                     keyName: 'home',
@@ -373,8 +420,8 @@ class _WelcomeAppShapeBeatV1 extends StatelessWidget {
                       ru: 'Показывает следующий полезный шаг прямо сейчас.',
                     ),
                     tone: Act0ShellTokensV1.primary,
+                    icon: Icons.home_rounded,
                   ),
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
                   _WelcomeRoleCardV1(
                     keyName: 'learn',
                     title: 'Learn',
@@ -383,8 +430,8 @@ class _WelcomeAppShapeBeatV1 extends StatelessWidget {
                       ru: 'Держит маршрут на виду, чтобы ничего важного не терялось.',
                     ),
                     tone: Act0ShellTokensV1.info,
+                    icon: Icons.menu_book_rounded,
                   ),
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
                   _WelcomeRoleCardV1(
                     keyName: 'play',
                     title: 'Play',
@@ -393,8 +440,8 @@ class _WelcomeAppShapeBeatV1 extends StatelessWidget {
                       ru: 'Даёт больше практики, когда хочется ещё немного.',
                     ),
                     tone: Act0ShellTokensV1.gold,
+                    icon: Icons.play_circle_fill_rounded,
                   ),
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
                   _WelcomeRoleCardV1(
                     keyName: 'review',
                     title: 'Review',
@@ -403,6 +450,7 @@ class _WelcomeAppShapeBeatV1 extends StatelessWidget {
                       ru: 'Возвращает к ошибкам сразу, чтобы они не копились.',
                     ),
                     tone: Act0ShellTokensV1.danger,
+                    icon: Icons.refresh_rounded,
                   ),
                 ],
               ),
@@ -435,12 +483,14 @@ class _WelcomeRoleCardV1 extends StatelessWidget {
     required this.title,
     required this.body,
     required this.tone,
+    required this.icon,
   });
 
   final String keyName;
   final String title;
   final String body;
   final Color tone;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -454,10 +504,230 @@ class _WelcomeRoleCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: tone.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            ),
+            child: Icon(icon, color: tone, size: 16),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(title, style: Act0ShellTokensV1.label.copyWith(color: tone)),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(body, style: Act0ShellTokensV1.body),
+          Text(
+            body,
+            maxLines: 4,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body,
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
+  const _WelcomeVisualPreviewCardV1({
+    required this.title,
+    required this.body,
+    required this.accent,
+    required this.child,
+  });
+
+  final String title;
+  final String body;
+  final Color accent;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_welcome_visual_preview'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.heroDecoration().copyWith(
+        border: Border.all(color: accent.withOpacity(0.22)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Act0ShellTokensV1.label.copyWith(color: accent),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(body, style: Act0ShellTokensV1.muted),
+          if (child is! SizedBox) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            child,
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _WelcomeLoopStripV1 extends StatelessWidget {
+  const _WelcomeLoopStripV1({required this.copy});
+
+  final String Function({required String en, required String ru}) copy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: Act0ShellTokensV1.gapSm,
+      runSpacing: Act0ShellTokensV1.gapSm,
+      children: [
+        _WelcomeLoopChipV1(
+          label: copy(en: 'Read', ru: 'Рид'),
+          tone: Act0ShellTokensV1.primary,
+        ),
+        _WelcomeLoopChipV1(
+          label: copy(en: 'Answer', ru: 'Ответ'),
+          tone: Act0ShellTokensV1.info,
+        ),
+        _WelcomeLoopChipV1(
+          label: copy(en: 'Reason', ru: 'Причина'),
+          tone: Act0ShellTokensV1.gold,
+        ),
+        _WelcomeLoopChipV1(
+          label: copy(en: 'Move on', ru: 'Дальше'),
+          tone: Act0ShellTokensV1.primary,
+        ),
+      ],
+    );
+  }
+}
+
+class _WelcomeLoopChipV1 extends StatelessWidget {
+  const _WelcomeLoopChipV1({required this.label, required this.tone});
+
+  final String label;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: tone.withOpacity(0.22)),
+      ),
+      child: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(color: tone, letterSpacing: 0.15),
+      ),
+    );
+  }
+}
+
+class _WelcomeMiniTableCalloutV1 extends StatelessWidget {
+  const _WelcomeMiniTableCalloutV1({required this.copy});
+
+  final String Function({required String en, required String ru}) copy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 76,
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.surface2.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+              border: Border.all(
+                color: Act0ShellTokensV1.primary.withOpacity(0.18),
+              ),
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 14,
+                  right: 14,
+                  top: 16,
+                  bottom: 16,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Act0ShellTokensV1.surface3,
+                      borderRadius: BorderRadius.circular(26),
+                      border: Border.all(
+                        color: Act0ShellTokensV1.primary.withOpacity(0.16),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 26,
+                  bottom: 10,
+                  child: _WelcomeSeatDotV1(
+                    label: copy(en: 'Hero', ru: 'Hero'),
+                    active: true,
+                  ),
+                ),
+                Positioned(
+                  right: 26,
+                  top: 10,
+                  child: _WelcomeSeatDotV1(
+                    label: copy(en: 'Spot', ru: 'Спот'),
+                    active: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        SizedBox(
+          width: 124,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                copy(en: 'Table stays visible', ru: 'Стол остаётся на виду'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.primary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                copy(
+                  en: 'You do not leave the scene to understand the move.',
+                  ru: 'Чтобы понять ход, не нужно уходить со сцены.',
+                ),
+                maxLines: 4,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.muted,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _WelcomeSeatDotV1 extends StatelessWidget {
+  const _WelcomeSeatDotV1({required this.label, required this.active});
+
+  final String label;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = active ? Act0ShellTokensV1.primary : Act0ShellTokensV1.info;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(active ? 0.22 : 0.12),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: tone.withOpacity(0.24)),
+      ),
+      child: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(color: tone),
       ),
     );
   }

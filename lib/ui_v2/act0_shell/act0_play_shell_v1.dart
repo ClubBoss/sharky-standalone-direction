@@ -78,6 +78,7 @@ String _playTileBadgeV1(BuildContext context, Act0PracticeGroupV1 group) {
       'play_badge_decisions',
       fallback: 'Decisions',
     ),
+    'blinds' => _playCopyV1(context, 'play_badge_blinds', fallback: 'Blinds'),
     'positions' => _playCopyV1(context, 'play_badge_seats', fallback: 'Seats'),
     'streets' => _playCopyV1(
       context,
@@ -116,11 +117,7 @@ String _playTileTitleV1(BuildContext context, Act0PracticeGroupV1 group) {
 
 List<String> _playTileFactsV1(Act0PracticeGroupV1 group) {
   return switch (group.groupId) {
-    'daily' || 'weak_spots' || 'continue' || 'placement' => [
-      if (group.countLabel.isNotEmpty) group.countLabel,
-      if (group.sessionLabel.isNotEmpty) group.sessionLabel,
-      if (group.durationLabel.isNotEmpty) group.durationLabel,
-    ],
+    'daily' || 'weak_spots' || 'continue' || 'placement' => const <String>[],
     _ => [if (group.durationLabel.isNotEmpty) group.durationLabel],
   };
 }
@@ -158,19 +155,14 @@ class Act0PlayShellV1 extends StatefulWidget {
 class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   @override
   Widget build(BuildContext context) {
-    final featuredGroup = _groupById(widget.groups, widget.recommendedGroupId);
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
-    final placementGroup = _groupById(widget.groups, 'placement');
     final excludedGroupIds = <String>{
       if (quickDrillGroup != null) quickDrillGroup.groupId,
       if (fixLeakGroup != null) fixLeakGroup.groupId,
       'placement',
       'continue',
     };
-    if (featuredGroup != null) {
-      excludedGroupIds.add(featuredGroup.groupId);
-    }
     final topicGroups =
         widget.groups
             .where((group) => !excludedGroupIds.contains(group.groupId))
@@ -187,10 +179,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             }
             return a.title.compareTo(b.title);
           });
-    final activeGroups = <Act0PracticeGroupV1>[
+    final primaryGroups = <Act0PracticeGroupV1>[
       if (quickDrillGroup != null) quickDrillGroup,
       if (fixLeakGroup != null) fixLeakGroup,
-    ].where((group) => featuredGroup?.groupId != group.groupId).toList();
+    ];
     final topicShelfGroups = <Act0PracticeGroupV1>[...topicGroups];
 
     return ListView(
@@ -216,59 +208,20 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             fallback: 'Quick practice',
           ),
         ),
-        if (featuredGroup != null) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _FeaturedPracticeCardV1(
-            group: featuredGroup,
-            title: widget.recommendedTitle,
-            subtitle: widget.recommendedSubtitle,
-            reasonLabel: widget.recommendedReasonLabel,
-            outcomeLead: widget.recommendedOutcomeLead,
-            outcome: widget.recommendedOutcome,
-            masteryLabel: widget.masteryLabel,
-            onStartGroup: widget.onStartGroup,
-          ),
-          if (featuredGroup.groupId == 'weak_spots' &&
-              !featuredGroup.isEnabled) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
-          ],
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-        ] else ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _PlayIntroCardV1(
-            title: _playCopyV1(
-              context,
-              'play_intro_title',
-              fallback: 'Train without reopening lessons.',
-            ),
-            body: _playCopyV1(
-              context,
-              'play_intro_body',
-              fallback:
-                  'Quick drills first. Topic packs when you want a focused set.',
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapLg),
-        ],
-        if (activeGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
-          if (activeGroups.isNotEmpty) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        if (primaryGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
+          if (primaryGroups.isNotEmpty) ...[
             _SectionHeaderV1(
               label: _playCopyV1(
                 context,
-                'play_return_loop_label',
-                fallback: 'Return loop',
-              ),
-              hint: _playCopyV1(
-                context,
-                'play_return_loop_hint',
-                fallback: 'One short rep now. Then go back to the route.',
+                'play_quick_drills_label',
+                fallback: 'Quick drills',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             _PlayGridSectionV1(
               sectionKey: const Key('act0_shell_play_active_hub'),
-              groups: activeGroups,
+              groups: primaryGroups,
               staggerOddTiles: false,
               builder: (group) => _PracticeTileCardV1(
                 group: group,
@@ -287,11 +240,6 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
                 context,
                 'play_topic_packs_label',
                 fallback: 'Topic packs',
-              ),
-              hint: _playCopyV1(
-                context,
-                'play_topic_packs_hint',
-                fallback: 'Choose one skill family and run a focused set.',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -325,6 +273,11 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   String _topicFamilyForGroup(BuildContext context, Act0PracticeGroupV1 group) {
     return switch (group.groupId) {
       'actions' => _playCopyV1(
+        context,
+        'play_topic_preflop',
+        fallback: 'Preflop',
+      ),
+      'blinds' => _playCopyV1(
         context,
         'play_topic_preflop',
         fallback: 'Preflop',
@@ -1104,27 +1057,32 @@ class _TopicPracticeCardV1 extends StatelessWidget {
       'actions' => _playCopyV1(
         context,
         'play_topic_actions_subtitle',
-        fallback: 'Choose fold, check, call, or raise faster.',
+        fallback: 'Read the price and choose the legal action fast.',
+      ),
+      'blinds' => _playCopyV1(
+        context,
+        'play_topic_blinds_subtitle',
+        fallback: 'Track the blinds and who acts first preflop.',
       ),
       'positions' => _playCopyV1(
         context,
         'play_topic_positions_subtitle',
-        fallback: 'Read seats and action order cleanly.',
+        fallback: 'Separate early seats from late seats at a glance.',
       ),
       'streets' => _playCopyV1(
         context,
         'play_topic_streets_subtitle',
-        fallback: 'Read the hand street by street.',
+        fallback: 'Follow the hand in order instead of losing the street.',
       ),
       'rankings' => _playCopyV1(
         context,
         'play_topic_rankings_subtitle',
-        fallback: 'Compare hand strength on real boards.',
+        fallback: 'Choose the best five cards on a real board.',
       ),
       'showdown' => _playCopyV1(
         context,
         'play_topic_showdown_subtitle',
-        fallback: 'Settle the pot cleanly at the end.',
+        fallback: 'Compare the final hands and settle the pot cleanly.',
       ),
       _ => group.subtitle,
     };
@@ -1238,22 +1196,15 @@ class _TopicPracticeCardV1 extends StatelessWidget {
 }
 
 class _SectionHeaderV1 extends StatelessWidget {
-  const _SectionHeaderV1({required this.label, this.hint});
+  const _SectionHeaderV1({required this.label});
 
   final String label;
-  final String? hint;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: Act0ShellTokensV1.sectionTitle),
-        if (hint != null && hint!.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(hint!, style: Act0ShellTokensV1.muted),
-        ],
-      ],
+      children: [Text(label, style: Act0ShellTokensV1.sectionTitle)],
     );
   }
 }

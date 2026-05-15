@@ -2570,7 +2570,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       betterLabel: betterLabel,
       contextLabels: contextLabels,
     );
-    final growthLabel = completionSummary?.growthLabel ?? '';
     return Container(
       key: const Key('act0_shell_feedback_card'),
       padding: EdgeInsets.all(refined ? 10 : 12),
@@ -2658,14 +2657,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-          ],
-          if (growthLabel.isNotEmpty) ...[
-            _GrowthHighlightV1(
-              key: const Key('act0_shell_feedback_growth_highlight'),
-              label: growthLabel,
-              tone: Act0ShellTokensV1.primary,
-            ),
-            const SizedBox(height: 8),
           ],
           Text(
             resolvedReason,
