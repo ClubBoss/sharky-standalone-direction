@@ -94,13 +94,35 @@ String act0RuntimeFeedbackSelectedLineV1(
 
 String act0RuntimeFeedbackActionPrefixV1(
   BuildContext context,
-  Act0FeedbackQualityV1 quality,
+  Act0FeedbackQualityV1 quality, {
+  Act0TaskFamilyV1? taskFamily,
+  bool hasSeatTargets = false,
+}
 ) {
   if (quality == Act0FeedbackQualityV1.wrong) {
     return act0RuntimeLocalizedGeneralLabelV1(context, 'Better option');
   }
   if (quality == Act0FeedbackQualityV1.suboptimal) {
     return act0RuntimeLocalizedGeneralLabelV1(context, 'Sharper line');
+  }
+  if (hasSeatTargets) {
+    return act0RuntimeLocalizedGeneralLabelV1(context, 'Correct answer');
+  }
+  switch (taskFamily) {
+    case Act0TaskFamilyV1.decision:
+    case Act0TaskFamilyV1.sizing:
+    case Act0TaskFamilyV1.repair:
+      return act0RuntimeLocalizedGeneralLabelV1(context, 'Best play');
+    case Act0TaskFamilyV1.transfer:
+    case Act0TaskFamilyV1.review:
+      return act0RuntimeLocalizedGeneralLabelV1(context, 'Clean read');
+    case Act0TaskFamilyV1.learn:
+    case Act0TaskFamilyV1.recognition:
+    case Act0TaskFamilyV1.compare:
+    case Act0TaskFamilyV1.counting:
+      return act0RuntimeLocalizedGeneralLabelV1(context, 'Correct answer');
+    case null:
+      break;
   }
   return act0RuntimeLocalizedGeneralLabelV1(context, 'Best play');
 }
@@ -319,6 +341,9 @@ String act0RuntimeLocalizedGeneralLabelV1(BuildContext context, String label) {
     final privateCards = tableReadMatch.group(1)!;
     final boardCards = tableReadMatch.group(2)!;
     final potAmount = tableReadMatch.group(3)!;
+    if (!localeIsRu) {
+      return '$privateCards private cards, $boardCards board cards, $potAmount in the pot';
+    }
     return '$privateCards закрытые карты, $boardCards общие карты, в банке $potAmount';
   }
 

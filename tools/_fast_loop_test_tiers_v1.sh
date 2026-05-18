@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
 # Tier-1 suites that run only when related paths change.
+# Keep this aligned to the current Act0 canonical route rather than archived
+# map/result seams.
 FAST_LOOP_TIER1_UI_V2_TESTS_V1=(
-  test/ui_v2/session_result_screen_contract_test.dart
-  test/ui_v2/world1_map_node_states_contract_test.dart
+  test/ui_v2/act0_shell_preview_screen_v1_test.dart
+  test/ui_v2/act0_play_shell_v1_test.dart
+  test/ui_v2/act0_shell_state_v1_feedback_test.dart
 )
 
 FAST_LOOP_TIER1_SERVICES_TESTS_V1=(

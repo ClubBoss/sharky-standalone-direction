@@ -24,53 +24,92 @@ class Act0ShellScreenHeaderV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final normalizedEyebrow = eyebrow?.trim() ?? '';
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (normalizedEyebrow.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+        border: Border.all(color: eyebrowTone.withOpacity(0.18)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            eyebrowTone.withOpacity(0.14),
+            Act0ShellTokensV1.surface,
+            Act0ShellTokensV1.info.withOpacity(0.06),
+          ],
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: eyebrowTone.withOpacity(0.10),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (normalizedEyebrow.isNotEmpty) ...[
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: eyebrowTone.withOpacity(0.88),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                      const SizedBox(width: Act0ShellTokensV1.gapSm),
+                      Flexible(
+                        child: Text(
+                          normalizedEyebrow,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: eyebrowTone,
+                            letterSpacing: 0.28,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  decoration: BoxDecoration(
-                    color: eyebrowTone.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPill,
-                    ),
-                    border: Border.all(color: eyebrowTone.withOpacity(0.22)),
-                  ),
-                  child: Text(
-                    normalizedEyebrow,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: eyebrowTone,
-                      letterSpacing: 0.2,
-                    ),
+                  const SizedBox(height: Act0ShellTokensV1.gapSm),
+                ],
+                Text(
+                  title,
+                  key: titleKey,
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.screenTitle.copyWith(
+                    fontSize: 23,
+                    height: 1.1,
                   ),
                 ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(
+                  subtitle,
+                  key: subtitleKey,
+                  maxLines: 3,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted,
+                ),
               ],
-              Text(title, key: titleKey, style: Act0ShellTokensV1.screenTitle),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
-              Text(
-                subtitle,
-                key: subtitleKey,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Act0ShellTokensV1.muted,
-              ),
-            ],
+            ),
           ),
-        ),
-        if (trailing != null) ...[
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          trailing!,
+          if (trailing != null) ...[
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            trailing!,
+          ],
         ],
-      ],
+      ),
     );
   }
 }

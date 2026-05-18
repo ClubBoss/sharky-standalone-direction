@@ -53,6 +53,7 @@ void main(List<String> args) async {
     'placement',
     'home',
     'learn',
+    'learn_detail',
     'play',
     'review',
     'profile',
@@ -208,6 +209,57 @@ void main() {
     throw StateError('Teaching steps did not reveal a drill surface.');
   }
 
+  Finder findLessonCardsV1() {
+    return find.byWidgetPredicate((widget) {
+      final key = widget.key;
+      return key != null && key.toString().contains('act0_shell_lesson_');
+    });
+  }
+
+  Future<void> openLearnDetailIfNeededV1(WidgetTester tester) async {
+    if (find.byKey(const Key('act0_shell_selected_lesson_panel')).evaluate().isNotEmpty) {
+      return;
+    }
+    final lessonCards = findLessonCardsV1();
+    if (lessonCards.evaluate().isEmpty) {
+      throw StateError('Missing learn lesson cards.');
+    }
+    await tester.ensureVisible(lessonCards.first);
+    await tester.tap(lessonCards.first);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pumpAndSettle();
+    if (find.byKey(const Key('act0_shell_selected_lesson_panel')).evaluate().isEmpty) {
+      throw StateError('Learn detail panel did not open.');
+    }
+  }
+
+  Future<void> openPracticeRunV1(WidgetTester tester) async {
+    final featuredCta = find.byKey(const Key('act0_shell_play_featured_cta'));
+    if (featuredCta.evaluate().isNotEmpty) {
+      await tester.ensureVisible(featuredCta);
+      await tester.tap(featuredCta);
+      await tester.pumpAndSettle();
+      return;
+    }
+
+    const fallbackKeys = <Key>[
+      Key('act0_shell_practice_group_daily'),
+      Key('act0_shell_practice_group_continue'),
+      Key('act0_shell_practice_group_weak_spots'),
+    ];
+    for (final key in fallbackKeys) {
+      final finder = find.byKey(key);
+      if (finder.evaluate().isNotEmpty) {
+        await tester.ensureVisible(finder);
+        await tester.tap(finder);
+        await tester.pumpAndSettle();
+        return;
+      }
+    }
+    throw StateError('Missing practice launch entry.');
+  }
+
   Future<void> captureBoundary(
     WidgetTester tester,
     Key boundaryKey,
@@ -304,6 +356,18 @@ void main() {
         tester,
         viewportName,
         size,
+        'learn_detail',
+        () async {
+          await openLearnDetailIfNeededV1(tester);
+        },
+        false,
+        Act0ShellTabV1.learn,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
         'play',
         () async {
           await openBottomTabByIndexV1(tester, 2);
@@ -334,25 +398,13 @@ void main() {
 
       await captureSurface(tester, viewportName, size, 'table', () async {
         await openBottomTabByIndexV1(tester, 2);
-        final dailyGroup = find.byKey(const Key('act0_shell_practice_group_daily'));
-        if (dailyGroup.evaluate().isEmpty) {
-          throw StateError('Missing daily group tile.');
-        }
-        await tester.ensureVisible(dailyGroup);
-        await tester.tap(dailyGroup);
-        await tester.pumpAndSettle();
+        await openPracticeRunV1(tester);
         await advanceTeachingToDrill(tester);
       }, false, Act0ShellTabV1.home);
 
       await captureSurface(tester, viewportName, size, 'result', () async {
         await openBottomTabByIndexV1(tester, 2);
-        final dailyGroup = find.byKey(const Key('act0_shell_practice_group_daily'));
-        if (dailyGroup.evaluate().isEmpty) {
-          throw StateError('Missing daily group tile.');
-        }
-        await tester.ensureVisible(dailyGroup);
-        await tester.tap(dailyGroup);
-        await tester.pumpAndSettle();
+        await openPracticeRunV1(tester);
         await advanceTeachingToDrill(tester);
 
         const optionKeys = <Key>[

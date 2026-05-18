@@ -1540,6 +1540,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Up next: Review missed spots'), findsOneWidget);
+    expect(find.text('Clear.'), findsOneWidget);
+    expect(
+      find.text('Review the missed spot, then replay for perfect when ready.'),
+      findsOneWidget,
+    );
     final why = tester.widget<Text>(
       find.byKey(const Key('session_result_why_line_v1')),
     );
@@ -1741,13 +1746,7 @@ void main() {
       );
       expect(statusFinder, findsOneWidget);
       final statusText = (tester.widget<Text>(statusFinder).data ?? '').trim();
-      expect(
-        <String>{
-          'Session complete',
-          'Keep building consistency',
-        }.contains(statusText),
-        isTrue,
-      );
+      expect(statusText, 'Clear.');
 
       final whyFinder = find.byKey(const Key('session_result_why_line_v1'));
       expect(whyFinder, findsOneWidget);
@@ -1758,12 +1757,48 @@ void main() {
         normalizedWhy.contains('focus:') || normalizedWhy.contains('map'),
         isTrue,
       );
+      expect(find.text('Perfect path open'), findsOneWidget);
+      expect(find.textContaining('Accuracy:'), findsNothing);
+      expect(find.textContaining('mistake'), findsNothing);
+      expect(find.textContaining('failed'), findsNothing);
+      expect(find.textContaining('repaired'), findsNothing);
+      expect(find.textContaining('cleared with error'), findsNothing);
 
       expect(find.text('BACK TO MAP'), findsOneWidget);
       expect(find.text('NEXT LESSON'), findsNothing);
       expect(find.text('REVIEW'), findsNothing);
       expect(find.text('FINISH'), findsNothing);
       expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'perfect result shows perfect clear payoff without grade framing',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SessionResultScreen(
+            correctCount: 5,
+            totalCount: 5,
+            moduleId: 'intro_welcome',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final statusFinder = find.byKey(
+        const Key('session_result_status_header_v1'),
+      );
+      expect(statusFinder, findsOneWidget);
+      final statusText = (tester.widget<Text>(statusFinder).data ?? '').trim();
+      expect(statusText, 'Perfect clear complete.');
+      expect(find.textContaining('Accuracy:'), findsNothing);
+      expect(find.textContaining('mistake'), findsNothing);
+      expect(find.textContaining('failed'), findsNothing);
+      expect(find.textContaining('repaired'), findsNothing);
+      expect(find.textContaining('cleared with error'), findsNothing);
     },
   );
 

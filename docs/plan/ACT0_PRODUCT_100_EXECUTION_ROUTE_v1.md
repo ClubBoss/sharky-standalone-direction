@@ -1010,11 +1010,786 @@ Proof:
   -> `+305`
 - `flutter analyze`
 
-Captured backlog inside Wave H (do not lose these when H1/H2 starts):
+#### Wave H10. Skill And XP Taxonomy Truth Closure
+
+Status:
+`closed green`
+
+Delivered:
+
+- moved skill-growth truth onto a centralized `taskId -> skill delta` seam
+  instead of relying mostly on broad lesson-level heuristics
+- representative drill families now feed matching skills:
+  - action drills -> `Betting decisions`
+  - blind drills -> `Blind play`
+  - position drills -> `Position play`
+  - best-five / showdown drills -> `Hand reading` plus `Board reading`
+- kept safe fallback rules for uncatalogued tasks so persistence and future
+  content do not collapse into zero-growth behavior
+- retained persisted-skill compatibility while making new gains materially
+  closer to the task the learner actually solved
+
+Proof:
+
+- focused skill-taxonomy tests now cover both persistence and multi-family drill
+  gains
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+306`
+- `flutter analyze`
+
+#### Wave H Exit Verdict
+
+Status:
+`closed green`
+
+Closed inside `Wave H`:
+
+- `progress / skill truth`
+- `Play contract`
+- `Placement truth`
+- `Learn simplification`
+- `Profile role compression`
+- `Welcome presentation`
+- `Play drill inventory truth`
+- `skill / xp taxonomy truth`
+
+What `Wave H` no longer owns:
+
+- novice-proof
+- final device refresh
+- app-wide premium consistency beyond the active route
+- premium / trial conversion depth
+- shell/runtime coherence as a structural architecture seam
+- telemetry / observability scale
+
+#### Wave I. Proof And Full-Product Coherence
+
+Goal:
+Move from a strong, internally coherent route to a product that is externally
+credible, premium-consistent, and structurally ready for broader review.
+
+Priority ladder inside this block:
+
+1. `novice / device proof closure`
+2. `launch-surface premium consistency`
+3. `commerce / value packaging truth`
+4. `shell-runtime coherence audit`
+5. `telemetry / observability truth`
+6. `localization expansion after shape hold`
+
+Why this order:
+
+- the external audit mostly confirmed a shift we had already reached: the
+  biggest remaining issues are no longer placeholder drills or weak shell
+  roles, but proof, premium consistency, and cross-surface coherence
+- the English consumer-copy and alpha-residue family is now closed, so the
+  next strongest remaining work is back to proof, premium consistency, and
+  cross-surface coherence
+- `Wave H` already removed the highest-EV product-truth residue inside Act0, so
+  reopening those families would now be churn
+- the strongest surviving structural signal is the split between the polished
+  Act0 shell and the deeper runner/runtime ownership stack
+- value packaging and telemetry still lag the learner-route maturity, but they
+  should be approached after proof calibration rather than as blind redesign
+
+Admitted first wave:
+
+#### Wave I1. Proof Closure Calibration
+
+Goal:
+Produce one exact post-H truth map for:
+
+- novice-proof status
+- device-refresh residue
+- final launch-surface premium gaps
+- whether any `Wave H` family still has real reopening evidence
+
+Exit:
+
+- one exact proof verdict
+- one dominant next family inside `Wave I`
+- no reopening of `Wave H` without concrete new evidence
+
+#### Wave I1 Exit Verdict
+
+Status:
+`closed green` for the automated current-route floor
+
+Closed inside `Wave I1`:
+
+- recalibrated `fast_loop` and `checkpoint` selection to the current Act0
+  canonical route instead of archived map/result seams
+- removed stale auto-appended UI test owners from the active fast-loop proof
+  floor
+- repaired `act0_product_100_proof_capture_v1.dart` for the current Practice
+  owner and added Learn-detail screenshot evidence capture for visual audits
+- restored one honest automated gate for the current learner-facing route:
+  analyze + Act0 preview/play/guard suites + current pack/feedback guards
+
+Proof:
+
+- `./tools/fast_loop_world1_v1.sh --force-tests`
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+- `flutter test test/ui_v2/act0_play_shell_v1_test.dart -r compact`
+- `flutter test test/ui_v2/act0_en_alpha_residue_guard_test.dart -r compact`
+- `flutter test test/ui_v2/act0_ru_surface_no_unapproved_latin_test.dart -r compact`
+- `flutter analyze`
+
+Honest remainder:
+
+- `Wave I1` is not fully done at the human/release level
+- remaining proof residue is manual:
+  - novice walkthrough proof
+  - device-refresh / physical-device polish
+  - any final human-observed reopen evidence
+
+#### Wave I1a. English Consumer-Copy And Alpha-Residue Audit
+
+Goal:
+Audit active learner-facing English across the current route and runtime for
+alpha/debug/operator residue that still lowers product feel without reopening
+already-closed route-truth families.
+
+Target seams:
+
+- `lib/ui_v2/screens/modern_table_screen_v1.dart`
+- active learner-facing copy inside `lib/ui_v2/act0_shell/*`
+- any surviving route/taxonomy-heavy phrasing in the current shell/runtime
+
+Examples of the exact residue class:
+
+- `Scenario Loader`
+- `Clarity: tactical focus`
+- `Back to map`
+- `Skill gain`
+- other operator-ish, debug-ish, or overly internal English in the live route
+
+Exit:
+
+- one exact residue list
+- one owner verdict
+- if the family is connected, one bounded implementation wave plus full proof
+
+#### Wave I1a Exit Verdict
+
+Status:
+`closed green`
+
+Closed inside `Wave I1a`:
+
+- active runtime/table alpha residue in `modern_table_screen_v1.dart`
+- consumer-copy cleanup for the most visible operator-ish English in active
+  shell/runtime seams
+- regression guard against the exact banned residue class
+
+Proof:
+
+- `flutter test test/ui_v2/act0_en_alpha_residue_guard_test.dart -r compact`
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+306`
+- `flutter analyze`
+
+#### Wave I2. Launch-Surface Premium Consistency
+
+Goal:
+Tighten the visible launch-surface feel without reopening route-truth or
+content-truth seams.
+
+Admitted sub-wave:
+
+`shared header chrome closure`
+
+Additional landed sub-waves:
+
+- `home chrome density cleanup`
+- `learn premium visual redesign`
+- `learn density and expanded-panel coherence`
+- `play chrome density cleanup`
+- `profile premium hierarchy closure`
+- `profile mid-surface density cleanup`
+- `review chrome density cleanup`
+- `global top-strip role reduction`
+- `table center-stack de-layering`
+- `table runtime chrome density cleanup`
+
+Closed inside this sub-wave:
+
+- replaced loud eyebrow pills in shared screen headers with a calmer dot-plus-
+  label treatment
+- gave shared launch headers softer title/subtitle wrapping and less abrupt
+  truncation
+- tightened Learn list density, reduced pinned-header bulk, and constrained the
+  expanded lesson/sublesson panel so large/tablet widths stay closer to the
+  rest of the shell rhythm
+- improved premium consistency across Home / Play / Review / Profile / Welcome
+  without changing route ownership
+- rebuilt `Learn` away from pseudo-map / floating-card chrome toward a calmer
+  premium curriculum list with a quieter sticky header and simpler lesson
+  hierarchy
+- simplified `Home` by removing the optional extra-practice helper line,
+  flattening daily status chrome, and reducing repair-card meta noise
+- simplified `Play` tiles by removing facts rows, reducing badge chrome, and
+  replacing CTA pills with calmer text-plus-arrow affordances
+- simplified `Profile` by flattening rhythm meta, removing extra explanatory
+  copy from milestones/recent-progress cards, and keeping mid-surface story
+  lighter without touching stats truth
+- closed the remaining `Profile` hierarchy residue by removing the duplicate
+  identity-story card from the main surface, moving next focus directly under
+  the hero, calming hero fact chrome, flattening rhythm/milestones grammar, and
+  reducing dashboard-like stacking across the screen
+- simplified `Review` mistake cards by removing attempts/context-count badges
+  while preserving the repair story and dominant action
+- reduced the shell-global top strip from a mini-dashboard into one calmer
+  route-status rail by removing decorative brand chrome, keeping `Today` as
+  the dominant signal, demoting XP to supporting text, and softening streak
+  into a quieter token
+- tightened the active table runtime chrome by slimming the center-info stack,
+  calming seat-node glow/typography, and reducing feedback-panel bulk without
+  changing route or runtime truth
+- de-layered the compact table center stack further by softening the action
+  trail, switching narrow review playback controls into a stacked compact
+  layout, and scale-fitting center board cards so refined compact widths stay
+  clean without content loss
+
+Proof:
+
+- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+  -> `+306`
+- `flutter analyze`
+
+Sizing / replay control verdict:
+
+- `Replay` is an active maturity seam, not a dormant concept:
+  - review/fixed-mistake replay is live inside the Act0 route
+  - the current contract is functional and route-coherent, but not yet a full
+    premium table-control finish
+  - keep replay inside release-grade route-truth grammar and polish it as a
+    real visible control when the route returns to table/result maturity
+- `Sizing / slider` is still a dormant final-scope seam, not an active release
+  tool:
+  - existing slider proof lives in `ModernTableScreenV1` and isolated tests,
+    not in the current canonical Act0 release route
+  - current active route already has explicit proof that slider/sizing is
+    outside the live release slice
+  - before a true `100 / 100` claim, the product must either:
+    - ship one canonical release-grade sizing interaction
+    - or explicitly replace slider with another approved sizing-control owner
+
+Current owner verdict:
+
+- `Replay` can be improved now as a bounded premium/control polish family
+- `Slider / sizing` should not be cosmetically polished in isolation before a
+  canonical activation decision
+
+Recommended next order inside this family:
+
+1. `Replay premium/control polish`
+   - landed
+   - fixed-mistake and quick-fix replay CTAs now use calmer replay grammar
+   - block-summary replay CTA grammar now matches the same replay family
+   - static posted blinds no longer animate on plain table mount
+   - bet-chip motion now only runs during real trail playback and uses gentler
+     blind-post timing
+   - proof floor:
+     - `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart -r compact`
+     - `flutter analyze`
+2. `Canonical sizing interaction decision`
+   - decide whether slider remains the final sizing owner
+   - otherwise replace it with a different canonical sizing interaction before
+     polishing visuals
+
+Deep audit verdict:
+
+- the biggest live replay risk is not route correctness but maturity:
+  - replay controls are functional but still read like utilitarian session
+    controls instead of finished premium table tools
+  - blind-post / bet-chip / table-reset motion has proof for layout safety, but
+    not yet a fully authored smoothness/timing closure
+- the biggest sizing risk is ownership:
+  - `ModernTableScreenV1` proves a slider prototype and isolated testable
+    behavior
+  - the active Act0 route still does not prove sizing/slider as a canonical
+    learner-facing control
+
+Canonical sizing decision:
+
+- `pure percentage slider` is **not** the approved final learner-facing owner
+- approved direction is:
+  - `preset-first sizing control`
+  - plus optional secondary `fine-tune drag` only when the spot truly benefits
+    from it
+
+Why this is the better final direction:
+
+- current learner curriculum already teaches named size buckets:
+  - `one-third`
+  - `half-pot`
+  - `pot-size`
+- a raw percentage slider is flexible, but it is not the best first control
+  for a beginner-safe guided product
+- preset-first sizing is:
+  - faster to scan
+  - easier to act on
+  - easier to localize
+  - easier to verify
+  - calmer on compact screens
+- optional fine-tune still preserves final-scope depth without forcing every
+  learner into an abstract percentage-first interaction
+
+Approved final shape:
+
+1. primary sizing row:
+   - `1/3 pot`
+   - `1/2 pot`
+   - `pot`
+   - one conditional extra size only where genuinely needed
+     - e.g. `2x`, `jam`, or `all-in`
+2. secondary control:
+   - compact fine-tune slider/scrubber
+   - visually subordinate
+   - not the main beginner action
+3. primary CTA:
+   - reflects the chosen named size
+   - not only a raw percent string
+
+Implementation implication:
+
+- do **not** polish the current pure slider in place as the final canonical
+  tool
+- the next honest sizing wave is:
+  - replace primary ownership with preset-first sizing
+  - keep drag/fine-tune only if it still earns its place after that
+
+Preset-first sizing control spec:
+
+Goal:
+
+- make sizing feel like a premium teaching control, not a sandbox widget
+- keep the first decision legible, fast, and beginner-safe
+- preserve advanced flexibility without making it the main surface
+
+Primary UX contract:
+
+1. the learner first sees named sizes, not a raw percentage
+2. only legal and context-relevant sizes are active
+3. the active choice updates the main action CTA immediately
+4. fine-tune is secondary and never required for the basic learning flow
+
+Primary control layout:
+
+- one horizontal preset row above the main action CTA
+- each preset uses one short label only:
+  - `1/3 pot`
+  - `1/2 pot`
+  - `pot`
+  - optional extra:
+    - `2x`
+    - `jam`
+    - `all-in`
+- only one preset can be selected at a time
+- selected preset must be visually dominant without becoming a heavy card
+- disabled presets remain visible only when their absence would be confusing;
+  otherwise hide them entirely
+
+Secondary control layout:
+
+- compact fine-tune scrubber/slider hidden behind the selected preset state
+  or an explicit expand affordance
+- use it only in spots where micro-adjustment has real teaching value
+- never place the fine-tune control visually above the preset row
+- never make fine-tune the only way to express a standard named size
+
+CTA contract:
+
+- primary CTA must reflect the chosen size in learner language
+- preferred grammar:
+  - `Bet 1/3 pot`
+  - `Bet 1/2 pot`
+  - `Bet pot`
+  - `Raise 2x`
+  - `Jam`
+- avoid:
+  - raw `%` as the only visible decision truth
+  - solver-ish abbreviations
+  - abstract labels that detach from the table state
+
+Spot-activation rules:
+
+- beginner/default spots:
+  - show only named standard buckets
+  - hide fine-tune
+- intermediate sizing lessons:
+  - show named buckets first
+  - allow secondary fine-tune if the lesson is explicitly about comparing close
+    sizings
+- extreme-stack / shove spots:
+  - expose `jam` or `all-in` as a named primary preset
+- non-sizing spots:
+  - the entire sizing control family must be absent
+
+Visual quality bar:
+
+- no oversized pills, no control stack inside decorative cards
+- the selected size should read premium and precise, not gamey
+- control density must stay stable on compact phones
+- labels must never truncate into unreadable `%` fragments
+
+Implementation owner verdict:
+
+- approved owner direction:
+  - refine the existing `Act0-owned reusable sizing surface`
+  - keep `ModernTableScreenV1` as donor/prototype reference only
+
+Current active owner seam already exists:
+
+- state/config owner:
+  - `Act0SizingConfigV1`
+  - `Act0SizingPresetV1`
+  - `Act0SizingUiModeV1`
+  - in [act0_shell_state_v1.dart](/Users/elmarsalimzade/Sharky_1.0/lib/ui_v2/act0_shell/act0_shell_state_v1.dart)
+- active runtime surface:
+  - `_SizingPresetsLaneV1`
+  - `_SizingPresetButtonV1`
+  - in [act0_lesson_runner_shell_v1.dart](/Users/elmarsalimzade/Sharky_1.0/lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart)
+- donor/prototype only:
+  - `lib/ui_v2/screens/modern_table_screen_v1.dart`
+
+Why this owner is correct:
+
+- active product boundary already says the canonical learner-facing product is
+  the Act0 shell route and its direct support seams
+- sizing is part of the learning route itself, not a detached table sandbox
+- the curriculum already anchors sizing through Act0 content truth:
+  - `World 5 / Bet Purpose And Price`
+  - named buckets:
+    - `one-third`
+    - `half-pot`
+    - `pot-size`
+- keeping final ownership inside Act0 makes it easier to:
+  - align with lesson copy
+  - align with task-family activation rules
+  - hide sizing controls in non-sizing spots
+  - keep localization and proof in one active route family
+
+Content guard:
+
+- the control must follow curriculum truth, not invent its own sizing grammar
+- starter sizing labels must stay consistent with current W5 teaching language
+- later worlds may extend the preset family for advanced spots, but must not
+  break the beginner W5 naming contract
+- this is a staged-control decision, not a content cut:
+  - beginner release presets are intentionally narrow
+  - full 36-world curriculum still keeps advanced sizing families live
+
+Coverage guard for the full curriculum:
+
+- W5 beginner/home sizing:
+  - `1/3 pot`
+  - `1/2 pot`
+  - `pot`
+- later extensions must still preserve important advanced sizing families where
+  the curriculum calls for them:
+  - `overbet`
+  - `underbet / block bet`
+  - `river jam`
+  - `2x / 2.5x / 3x` style preflop/open sizing
+  - positional 3-bet sizing
+  - SPR/commitment-driven geometric sizing
+- advanced sizing should appear only in the worlds that own that concept, not
+  leak into the early beginner control family
+
+Planned sizing-control expansion by route depth:
+
+1. W5:
+   - purpose-and-price starter buckets only
+2. W14-W16:
+   - postflop sizing logic expands into small/merged/big/pot/overbet and
+     turn-river commitment patterns
+3. W17:
+   - 3-bet sizing by position and stack depth
+4. W23+:
+   - modern open sizing variations
+5. later advanced worlds:
+   - exploitative and live-pattern sizing expansion where the concept map
+     already assigns ownership
+
+Exact later sizing activation ladder:
+
+1. `W5` — beginner starter sizing
+   - control mode:
+     - `presetsOnly`
+   - approved visible buckets:
+     - `One-third`
+     - `Half-pot`
+     - `Pot-size`
+   - hidden:
+     - slider / fine-tune
+     - overbet
+     - jam / all-in
+     - modern open sizes
+     - positional 3-bet sizes
+
+2. `W14` — SPR / geometry / commitment setup
+   - control mode:
+     - `presetsOnly` by default
+     - `presetsWithSlider` only for explicitly geometry-comparison drills
+   - approved visible buckets:
+     - `Half-pot`
+     - `Pot-size`
+     - `Overbet`
+   - notes:
+     - this is the first honest home for `overbet` as a strategic pressure
+       tool rather than a raw amount curiosity
+     - slider must stay secondary and only appear in lessons about close
+       multi-street planning, not generic postflop reps
+
+3. `W16` — turn / river sizing special tools
+   - control mode:
+     - `presetsOnly`
+   - approved visible buckets by spot:
+     - turn pressure spots:
+       - `Half-pot`
+       - `Pot-size`
+       - `Overbet`
+     - river defensive/merge spots:
+       - `Block bet`
+       - `Half-pot`
+       - `Jam`
+   - notes:
+     - `block bet` first appears only when the content explicitly teaches it
+     - `jam` is allowed only in true commitment endpoints, not as a generic
+       early-world CTA
+
+4. `W17` — positional 3-bet sizing
+   - control mode:
+     - `presetsOnly`
+   - approved visible buckets:
+     - `3.5x`
+     - `4x`
+     - `4.5x`
+   - activation rule:
+     - exact set depends on `IP` vs `OOP` and stack depth
+   - notes:
+     - no raw percentage UI here
+     - this is a preflop raise-family sizing surface, not a reused postflop
+       pot-fraction surface
+
+5. `W23+` — modern open sizing variations
+   - control mode:
+     - `presetsOnly`
+   - approved visible buckets:
+     - `2x`
+     - `2.5x`
+     - `3x`
+   - notes:
+     - activation only in worlds that explicitly compare open-size tradeoffs
+     - no slider needed
+
+6. `W26+` and later commitment-heavy tournament/live branches
+   - control mode:
+     - `presetsOnly`
+   - approved visible buckets by spot:
+     - `Jam`
+     - `All-in`
+     - world-specific short-stack raise/jam splits
+   - notes:
+     - jam/all-in controls are owned by stack-pressure worlds, not by W5-W17
+       default surfaces
+
+7. non-sizing spots at any route depth
+   - control mode:
+     - hidden
+   - rule:
+     - no dormant sizing chrome should render when the task is about action,
+       seat order, hand reading, counting, or transfer without an explicit
+       sizing decision
+
+Implementation guard for later waves:
+
+- do not activate a later-world sizing family just because the control can
+  render it
+- activation requires all three:
+  1. world ownership from the curriculum map
+  2. learner-facing content already teaching that bucket
+  3. a focused test proving the control appears only on the intended task
+     family and remains hidden elsewhere
+
+W14 sizing activation audit verdict:
+
+- long-horizon ownership is clear:
+  - `W14` owns bet sizing as message, SPR commitment heuristics, and pot
+    geometry
+- active production is not there yet:
+  - the current route has playable `W5` sizing tasks and `W8` SPR/commitment
+    tasks
+  - the current `W8` SPR tasks are concept drills about room vs commitment,
+    not explicit sizing-selection drills
+  - they do not yet carry `Act0TaskFamilyV1.sizing` or learner-facing named
+    size buckets like `Half-pot`, `Pot-size`, or `Overbet`
+
+Stop rule:
+
+- do **not** activate `W14` sizing controls in runtime until production content
+  actually exposes:
+  1. a playable world/task owner for `W14`
+  2. explicit size-choice drills that teach those buckets
+  3. focused proof that the controls appear only on those tasks
+
+Next honest frontier after W5:
+
+- either:
+  - a bounded production-content wave that brings `W14` sizing lessons/tasks
+    into the active route
+- or:
+  - a bounded `W8` content-bridge wave if the product deliberately wants an
+    earlier transitional step from `SPR feel` into `size as commitment signal`
+
+- not:
+  - activating advanced sizing chrome on current `W8` tasks that only test SPR
+    intuition
+
+Correction:
+
+- the next wave should **not** invent a second sizing family
+- it should promote and complete the current Act0 sizing seam
+- it should **not** reopen already-landed W5 sizing content, lesson order, or
+  concept coverage unless new evidence proves a content error
+
+Non-duplication rule for this frontier:
+
+- content truth is already admitted:
+  - W5 owns beginner sizing buckets and purpose/price teaching
+  - later worlds own advanced sizing expansion
+- the remaining work is control truth only:
+  - how the learner selects a size
+  - how named sizing appears in the active runner UI
+  - how CTA/state/rendering reflect the selected size
+- do not spend the next wave rewriting:
+  - W5 lesson titles
+  - W5 concept ordering
+  - W5 sizing labels
+  - long-horizon coverage ownership
+- reopen content only if implementation reveals a concrete contradiction with
+  the existing curriculum truth
+
+Next implementation wave should own:
+
+1. refine `Act0SizingConfigV1` so spot-family rules are explicit
+2. refine `_SizingPresetsLaneV1` into the approved premium/minimal preset-first surface
+3. wire CTA integration so named size drives the action text truth
+4. add explicit no-render contract for non-sizing spots
+5. keep `presetsWithSlider` secondary and subordinate rather than primary
+
+Code-facing implementation ladder:
+
+Phase 1 — state contract
+
+- extend `Act0SizingConfigV1` from a simple `mode + presets` holder into an
+  explicit control contract for active spots:
+  - `mode`
+  - `presets`
+  - `showGuidance`
+  - selected CTA verb or action family if needed
+  - optional `allowFineTune`
+  - optional `hideWhenInactive`
+- keep `Act0SizingPresetV1` lightweight, but strong enough to drive CTA truth:
+  - `id`
+  - `label`
+  - `potFraction`
+  - optional `ctaLabel`
+  - optional `isPrimary`
+
+Phase 2 — runner UI contract
+
+- refine `_SizingPresetsLaneV1` so it becomes the primary decision control for
+  `Act0TaskFamilyV1.sizing` drills
+- when sizing presets are active for the spot:
+  - do not show the generic action-option row as a competing primary control
+  - keep the runner dock visually stable
+  - keep preset labels on one line and premium/minimal
+- if `mode == presetsWithSlider`, render fine-tune only as a subordinate second
+  row or expand affordance
+
+Phase 3 — selection/state truth
+
+- remove the current surrogate preset flow that fabricates a generic
+  `preset_<id>` option in the runner UI layer
+- replace it with an explicit preset-selection contract:
+  - selecting a preset updates `selectedPresetId`
+  - selected preset drives CTA copy
+  - selected preset maps deterministically to the correct sizing outcome for the
+    task
+- keep review/feedback truth intact:
+  - the selected size must still resolve to the existing correct/wrong teaching
+    outcome
+  - but the learner-facing control should no longer feel like a disguised
+    multiple-choice row
+
+Phase 4 — task migration
+
+- migrate current W5 sizing drills onto the canonical sizing-control path
+  without changing lesson content:
+  - `w4_small_bet`
+  - `w4_half_pot_bet`
+  - `w4_pot_bet`
+- these tasks should keep the same:
+  - purpose
+  - labels
+  - correct answers
+  - feedback reasons
+- only the control surface and state binding change
+
+Phase 5 — non-sizing guard
+
+- add one explicit rule:
+  - if task family is not `Act0TaskFamilyV1.sizing`, no sizing control renders
+- no dormant preset lane on action drills, compare drills, counting drills, or
+  generic review spots
+
+Phase 6 — advanced extension hold
+
+- keep `presetsWithSlider` dormant or secondary for now
+- do not activate advanced sizing controls broadly until the owning later worlds
+  need them
+- when later worlds reopen this family:
+  - extend presets per world-owned concept
+  - do not mutate the W5 starter contract
+
+Suggested first runtime implementation slice:
+
+1. W5 sizing drills only
+2. `presetsOnly` mode only
+3. CTA bound to named preset
+4. generic option row hidden for these sizing tasks
+5. focused tests first, then full preview suite
+
+Acceptance gates for the future implementation wave:
+
+1. preset-first sizing works on compact phone without overflow or drift
+2. only relevant/legal sizes appear for the current spot
+3. primary CTA reflects the named selected size
+4. fine-tune control is secondary, optional, and visually subordinate
+5. non-sizing spots do not show dormant sizing chrome
+6. proof covers both:
+   - visual/layout safety
+   - action/state correctness
+
+Suggested proof ladder:
+
+- focused control tests:
+  - preset selection changes CTA
+  - irrelevant presets stay hidden
+  - fine-tune does not appear in beginner/default spots
+- compact layout tests
+- route-grade integration test once the control is active in the canonical
+  route
+
+Historical backlog captured before Wave H closures (keep for context only, do
+not treat as active undone work):
 
 1. `Learn`
-   - dev reset currently does not return the map to a real zero-state
-   - excess pills / micro-labels / duplicated chapter cues create clutter
+  - dev reset currently does not return the map to a real zero-state
+  - excess pills / micro-labels / duplicated chapter cues create clutter
    - some visible truncation still remains
    - current chapter / world-card signaling feels duplicated
 2. `Play`
@@ -1040,11 +1815,11 @@ Captured backlog inside Wave H (do not lose these when H1/H2 starts):
    - future redesign should demonstrate product power through better
      presentation, not extra explanation walls
 6. `Progress / skills / gains`
-   - XP and skill growth must reflect real task families, not decorative local
-     counters
-   - bottom-block gain presentation on the table is too heavy for the value it
-     adds
-   - stats must track real taught skills, not just look plausible
+  - XP and skill growth must reflect real task families, not decorative local
+    counters
+  - bottom-block gain presentation on the table is too heavy for the value it
+    adds
+  - stats must track real taught skills, not just look plausible
 
 Exit:
 
@@ -1213,6 +1988,129 @@ Live status:
     behavior and updates the old fresh-mount runner test to preserve progress
     truth without keeping the outdated auto-resume contract; full shared preview
     proof and `flutter analyze` stayed green after the owner-family change
+
+## Practice Contract Closure
+
+Status:
+`closed green`
+
+Why this family is now reopened:
+
+- the earlier `Play` waves closed route separation, drill-launch truth, and
+  representative pack ownership
+- current live product evidence shows that the deeper reinforcement contract is
+  still incomplete
+- the surface is no longer broken as a route, but it is still underpowered as
+  a true practice system
+
+Exact product verdict:
+
+- `Practice` must stay a separate surface from `Review`
+- `Review` remains the repair lane
+- `Practice` owns optional repetition of already-taught material
+- if the current `Play` surface shape blocks that contract, it may be rebuilt
+  rather than cosmetically preserved
+
+Hard rules:
+
+1. no unseen content in `Practice`
+2. no lesson grammar in `Practice`
+3. every lane must have one explicit purpose
+4. advanced packs must follow curriculum ownership, not jump ahead of it
+
+Required lane contract:
+
+- `Daily`
+  - short return reps
+  - only from completed / already-seen content
+- `Fix`
+  - one weak spot or quick repair rep
+  - still separate from the deeper `Review` lane
+- `Packs`
+  - one already-taught skill family at a time
+  - unlocked only after the concept family has been taught on the main route
+
+Rapid-drill runtime contract:
+
+- no teaching rail
+- no support/explanation wall
+- no full review card after every answer
+- answer -> micro verdict -> next rep
+- one compact batch-end summary only
+
+Landed inside this family so far:
+
+1. seen-only gating
+   - `Daily` no longer falls back to starter/unseen reps
+   - topic packs only launch already-cleared drill families
+   - `Home` no longer routes into fake practice before route truth exists
+2. rapid practice loop for learner-safe practice lanes
+   - `Daily` now auto-chains short reps without a full feedback stop
+   - topic packs now auto-return to the hub after one clean rep
+   - `Review` / repair grammar stays explicit and is not collapsed into the
+     same rapid loop
+3. learner-facing naming and featured-first hub shape
+   - visible `Play` entry now uses `Practice`
+   - the surface now leads with one featured next rep instead of a flat
+     undifferentiated grid
+   - the featured recommendation appears once and is not duplicated lower in
+     the hub
+   - weak-spot repair can surface as the featured `Practice` action without
+     collapsing `Review` into the same owner
+4. compact return summary and `Fix` lane ownership
+   - rapid `Daily` and one-rep pack runs now return with one compact closure
+     card instead of a dead stop or silent jump
+   - `Fix` inside `Practice` is now quick-refresh-only and can no longer stand
+     in for unresolved repair work
+   - deeper open mistakes stay owned by `Review`, while `Practice` keeps only
+     one light reinforcement lane ready
+5. final surface-shape closure
+   - the approved `Practice` surface now keeps one featured recommendation,
+     one calm quick-lane list, and one separate skill-pack shelf
+   - quick reinforcement lanes no longer read like another equal-weight card
+     catalog beside pack browsing
+   - the final shape stays visibly secondary to `Learn` while still being
+     clear and useful in a few seconds
+
+Exit verdict:
+
+- `Practice` stays separate from `Review`
+- reinforcement truth is now honest end-to-end:
+  - seen-only
+  - rapid reps
+  - quick-refresh fix lane
+  - compact return summary
+- current featured-first + lane-list + pack-shelf shape is approved for this
+  route slice
+- reopen this family only with concrete new evidence from real usage, not for
+  speculative chrome churn
+
+Implementation ladder:
+
+1. seen-only gating:
+   - every `Practice` entry must derive from already completed or already-seen
+     route content
+2. practice launch mode:
+   - separate mode flag for practice-launched reps
+3. rapid-drill shell:
+   - micro verdict
+   - auto-advance
+   - compact batch-end summary
+4. pack unlock contract:
+   - topic families only appear after their curriculum owner has landed
+5. later optional modes:
+   - timed drills
+   - until-first-miss
+   - generated family packs
+   - only after the base reinforcement contract is proven
+
+Explicit non-goals for the first wave:
+
+- do not merge `Practice` and `Review`
+- do not generate advanced packs before curriculum ownership
+- do not ship a broad infinite-practice system first
+- do not keep the current surface shape if it blocks the right reinforcement
+  contract
 
 ## Stop Rules
 

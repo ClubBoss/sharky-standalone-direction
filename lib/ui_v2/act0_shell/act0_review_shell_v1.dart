@@ -369,7 +369,7 @@ String _reviewSharkyLineV1({
                     'Queue is clear. The repair has actually landed.',
                   ]
                 : <String>[
-                    'Board is clean. Keep the route moving.',
+                    'Board is clean. Keep the next step easy.',
                     'Everything is clear right now. Keep rhythm with one calm rep.',
                     'Nothing urgent is pending. Continue with a steady pass.',
                   ]),
@@ -533,12 +533,12 @@ class _ReviewBoardV1 extends StatelessWidget {
               ? _reviewCopyV1(
                   context,
                   atomId: 'review_board_support_clean_empty',
-                  fallback: 'Nothing to fix yet. Keep the route moving.',
+                  fallback: 'Nothing to fix yet. Keep the next step easy.',
                 )
               : _reviewCopyV1(
                   context,
                   atomId: 'review_board_support_clean_strong',
-                  fallback: 'You are clean right now. Keep the route moving.',
+                  fallback: 'You are clean right now. Keep the next step easy.',
                 ));
 
     return Container(
@@ -788,19 +788,6 @@ class _MistakeCardV1 extends StatelessWidget {
                     ? Icons.flag_rounded
                     : Icons.radio_button_checked_rounded,
               ),
-              const Spacer(),
-              _ReviewBoardMetricPillV1(
-                key: prominent
-                    ? const Key('act0_shell_mistake_attempts_badge')
-                    : Key(
-                        'act0_shell_mistake_attempts_badge_${mistake.taskId}',
-                      ),
-                label: mistake.attempts == 1
-                    ? '1 miss'
-                    : '${mistake.attempts} misses',
-                tone: Act0ShellTokensV1.gold,
-                icon: Icons.replay_rounded,
-              ),
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -881,19 +868,6 @@ class _MistakeCardV1 extends StatelessWidget {
           ),
           if (mistake.contextLabels.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            _ReviewBoardMetricPillV1(
-              key: prominent
-                  ? const Key('act0_shell_mistake_context_count_badge')
-                  : Key(
-                      'act0_shell_mistake_context_count_badge_${mistake.taskId}',
-                    ),
-              label: mistake.contextLabels.length == 1
-                  ? '1 table cue'
-                  : '${mistake.contextLabels.length} table cues',
-              tone: Act0ShellTokensV1.info,
-              icon: Icons.visibility_rounded,
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
             Wrap(
               key: const Key('act0_shell_mistake_context_labels'),
               spacing: 6,
@@ -967,6 +941,50 @@ class _FixedMistakeCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final completionState = mistake.completionState;
+    final badgeLabel = switch (completionState) {
+      Act0CompletionDisplayStateV1.perfect => _reviewCopyV1(
+        context,
+        en: 'Perfect',
+        ru: 'Идеально',
+      ),
+      Act0CompletionDisplayStateV1.clear => _reviewCopyV1(
+        context,
+        en: 'Clear',
+        ru: 'Пройдено',
+      ),
+      _ => mistake.severityLabel,
+    };
+    final badgeTone = completionState == Act0CompletionDisplayStateV1.perfect
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.primary;
+    final detailLine = mistake.qualityLine.isNotEmpty
+        ? mistake.qualityLine
+        : mistake.repairActionLabel;
+    final replayLabel = switch (completionState) {
+      Act0CompletionDisplayStateV1.perfect => _reviewCopyV1(
+        context,
+        en: 'Review this spot',
+        ru: 'Разобрать этот спот',
+      ),
+      Act0CompletionDisplayStateV1.clear => _reviewCopyV1(
+        context,
+        en: 'Replay for perfect',
+        ru: 'Повторить для идеала',
+      ),
+      _ =>
+        quick
+            ? _reviewCopyV1(
+                context,
+                en: 'Replay quick fix',
+                ru: 'Повторить быстрый фикс',
+              )
+            : _reviewCopyV1(
+                context,
+                en: 'Replay this spot',
+                ru: 'Повторить этот спот',
+              ),
+    };
     return Container(
       key: Key('act0_shell_fixed_mistake_${mistake.taskId}'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -1007,15 +1025,17 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                 key: quick
                     ? Key('act0_shell_quick_fix_badge_${mistake.taskId}')
                     : Key('act0_shell_fixed_mistake_badge_${mistake.taskId}'),
-                label: mistake.severityLabel,
-                tone: Act0ShellTokensV1.primary,
-                icon: Icons.trending_up_rounded,
+                label: badgeLabel,
+                tone: badgeTone,
+                icon: completionState == Act0CompletionDisplayStateV1.perfect
+                    ? Icons.auto_awesome_rounded
+                    : Icons.trending_up_rounded,
               ),
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
-            mistake.repairActionLabel,
+            detailLine,
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.textMuted,
               letterSpacing: 0.2,
@@ -1031,7 +1051,7 @@ class _FixedMistakeCardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.primaryButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
-              child: Text(quick ? 'Run quick fix again' : 'Run this fix again'),
+              child: Text(replayLabel),
             ),
           ],
         ],

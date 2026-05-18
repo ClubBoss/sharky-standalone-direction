@@ -1062,6 +1062,78 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
     await _handleBackToMapAction();
   }
 
+  bool get _localeIsRuV1 => Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+
+  String _resultCopyV1({required String en, required String ru}) =>
+      _localeIsRuV1 ? ru : en;
+
+  _SessionResultQualityStateV1 _resultQualityStateV1() {
+    if (widget.totalCount <= 0) {
+      return _SessionResultQualityStateV1.unknown;
+    }
+    if (widget.correctCount >= widget.totalCount) {
+      return _SessionResultQualityStateV1.perfect;
+    }
+    return _SessionResultQualityStateV1.clear;
+  }
+
+  bool _hasReplayForPerfectPathV1({
+    required LearningContinuationV1? sharedContinuation,
+    required FocusRecommendationV1? recommendation,
+  }) {
+    if (_hasReviewQueueForPack) {
+      return true;
+    }
+    if (recommendation?.kind == FocusRecommendationKindV1.repeatPack) {
+      return true;
+    }
+    final continuationCta = sharedContinuation?.ctaLabel.trim().toLowerCase();
+    return continuationCta == 'replay' || continuationCta == 'repeat pack';
+  }
+
+  String? _resultQualityStatusHeaderV1() => switch (_resultQualityStateV1()) {
+    _SessionResultQualityStateV1.perfect => _resultCopyV1(
+      en: 'Perfect clear complete.',
+      ru: 'Идеально пройдено.',
+    ),
+    _SessionResultQualityStateV1.clear => _resultCopyV1(
+      en: 'Clear.',
+      ru: 'Пройдено.',
+    ),
+    _SessionResultQualityStateV1.unknown => null,
+  };
+
+  String? _resultQualityContinuationLineV1({
+    required bool hasPrimaryNext,
+    required LearningContinuationV1? sharedContinuation,
+    required FocusRecommendationV1? recommendation,
+  }) {
+    if (_resultQualityStateV1() != _SessionResultQualityStateV1.clear) {
+      return null;
+    }
+    if (_hasReviewQueueForPack) {
+      return _resultCopyV1(
+        en: 'Review the missed spot, then replay for perfect when ready.',
+        ru: 'Разбери промах, потом повтори для идеала, когда будешь готов.',
+      );
+    }
+    if (_hasReplayForPerfectPathV1(
+      sharedContinuation: sharedContinuation,
+      recommendation: recommendation,
+    )) {
+      return _resultCopyV1(
+        en: 'Replay for perfect when ready.',
+        ru: 'Повтори для идеала, когда будешь готов.',
+      );
+    }
+    if (hasPrimaryNext) {
+      return null;
+    }
+    return _resultCopyV1(en: 'Perfect path open', ru: 'Идеал открыт');
+  }
+
   String _summaryLinePrimary() {
     final xpEarned = widget.correctCount * 10;
     final accuracy = widget.totalCount <= 0
@@ -1200,13 +1272,18 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
       weaknessAssessment: _weaknessConfidenceAssessmentV1,
       worldMasteryLevel: _worldMastery?.level,
     );
+    final sharedContinuation = _sharedContinuationV1();
+    final recommendation = _focusRecommendation;
     final continuationLine =
+        _resultQualityContinuationLineV1(
+          hasPrimaryNext: hasPrimaryNext,
+          sharedContinuation: sharedContinuation,
+          recommendation: recommendation,
+        ) ??
         firstSessionAhaContract?.continuationLine ??
         recoveryReadiness?.deltaSignal ??
         masteryProgress?.deltaSignal ??
         completionSurfaceContractV1?.bodyText;
-    final sharedContinuation = _sharedContinuationV1();
-    final recommendation = _focusRecommendation;
     final nextUpLine = _hasReviewQueueForPack
         ? learnerJourneyReviewQueueHeadlineTextV1(reviewRequired: true)
         : _isSpinePackSession
@@ -1343,6 +1420,7 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
         ? 'Focus: ${recommendation.reason}'
         : nextUpLine;
     final visibleStatusHeader = earlyEntryPayoff?.nextUpHeadlineText.trim();
+    final qualityStatusHeader = _resultQualityStatusHeaderV1();
     final primaryCtaLabel =
         completionSurfaceContractV1?.primaryCtaLabel ??
         _primaryCtaLabelV1(hasPrimaryNext: hasPrimaryNext);
@@ -1368,10 +1446,11 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
     return _SessionResultSurfaceContractV1(
       completionContractV1: completionSurfaceContractV1,
       statusHeader:
-          visibleStatusHeader != null && visibleStatusHeader.isNotEmpty
-          ? visibleStatusHeader
-          : (completionSurfaceContractV1?.statusHeader ??
-                _resultStatusHeaderV1()),
+          qualityStatusHeader ??
+          (visibleStatusHeader != null && visibleStatusHeader.isNotEmpty
+              ? visibleStatusHeader
+              : (completionSurfaceContractV1?.statusHeader ??
+                    _resultStatusHeaderV1())),
       whyLine: whyLine,
       continuationLine: continuationLine,
       sharkyLine: firstSessionAhaContract?.sharkyLine,
@@ -1875,7 +1954,7 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
                                     Text(
                                       statusHeader,
                                       key: const Key(
-                                        'session_result_whats_next_value',
+                                        'session_result_status_header_v1',
                                       ),
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
@@ -1888,11 +1967,6 @@ class _SessionResultScreenState extends State<SessionResultScreen> {
                                     const SizedBox.shrink(
                                       key: Key(
                                         'session_result_finish_label_v1',
-                                      ),
-                                    ),
-                                    const SizedBox.shrink(
-                                      key: Key(
-                                        'session_result_status_header_v1',
                                       ),
                                     ),
                                     if (whyLine != null) ...[
@@ -2204,3 +2278,5 @@ enum _SessionResultContinuationMeaningV1 {
 enum _SessionResultPrimaryExecutionIntentV1 { continueNext, review, backToMap }
 
 enum _SessionResultReturnShellTargetV1 { intakePlan, progressMap, localPop }
+
+enum _SessionResultQualityStateV1 { unknown, clear, perfect }

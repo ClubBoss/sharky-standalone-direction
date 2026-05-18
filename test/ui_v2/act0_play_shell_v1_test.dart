@@ -4,7 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  testWidgets('Play surfaces one featured recommended group first', (
+  testWidgets('Practice surfaces one featured recommended group first', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -63,9 +63,13 @@ void main() {
       find.byKey(const Key('act0_shell_play_featured_cta')),
       findsOneWidget,
     );
+    expect(find.text('Practice'), findsOneWidget);
     expect(find.text('Quick daily drill'), findsOneWidget);
-    expect(find.text('Return loop'), findsOneWidget);
-    expect(find.text('Start daily set'), findsOneWidget);
+    expect(find.text('Route step'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_cta')),
+      findsOneWidget,
+    );
     expect(
       find.textContaining('3 crisp reps, no extra noise.'),
       findsOneWidget,
@@ -78,7 +82,6 @@ void main() {
       find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsOneWidget,
     );
-    expect(find.text('~3 min'), findsWidgets);
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_practice_group_actions')),
       180,

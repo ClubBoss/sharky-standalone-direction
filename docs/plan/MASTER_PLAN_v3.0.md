@@ -438,60 +438,100 @@ full-app maturity, not only route coherence.
 
 Current next-wave order:
 
-1. `Progress / skill truth closure`
-2. `Play contract closure`
-3. `Placement truth closure`
-4. `Learn simplification closure`
-5. `Profile role compression`
-6. `Welcome presentation closure`
-7. `Proof closure`
-8. `Commerce/store truth closure`
-9. `Late maturity closure`
+1. `Proof closure`
+2. `Launch-surface premium consistency`
+3. `Commerce / value packaging truth`
+4. `Shell-runtime coherence audit`
+5. `Telemetry / observability truth`
+6. `Localization expansion after product-shape hold`
 
 Why this order:
 
-- the highest remaining EV is no longer localization polish or broad visual
-  cleanup; it is product-truth work where the app can still feel decorative or
-  placeholder-driven
-- `Learn` reset truth, `XP / skill` meaning, `Play` placeholder drills, and
-  weak `Placement` questions all weaken trust more than another surface-level
-  polish pass would help
-- `Play` must stop reading like a second route and start reading like true
-  quick-return practice with real drills and minimal chrome
-- `Learn` and `You` still need simplification, but those surfaces should be
-  compressed after route truth is fixed rather than used to hide it
-- `Welcome` presentation still matters, but it should be redesigned after the
-  first-start and progress systems are trustworthy, not before
-- proof, commerce truth, and late architecture closure still matter, but they
-  no longer outrank the active product-truth seams above
+- the `Product-Truth And Surface-Role Closure` block is now materially landed,
+  so the highest remaining EV is no longer placeholder-truth cleanup
+- the English consumer-copy and alpha-residue closure is now landed, so the
+  highest remaining EV is back to proof, premium consistency, and full-product
+  coherence
+- current live evidence reopens one exact owner family inside the previously
+  landed Play lane: the surface is route-correct, but the full reinforcement
+  contract is still incomplete
+- the strongest open risks are now external-facing: real novice proof,
+  device-level polish, premium conversion truth, and whole-product coherence
+- app-wide premium feel and shell/runtime consistency now outrank another local
+  chrome wave inside already-closed Act0 families
+- localization still matters, but it should follow stable product shape rather
+  than reopen active route decisions mid-flight
 
 Immediate execution rule:
 
-1. do not jump between `Learn`, `Play`, `You`, `Placement`, and `Welcome` for
-   isolated symptoms
-2. close one dominant owner family at a time
-3. the next admitted family is `progress / skill truth`
-4. the first wave inside that family is audit-only:
-   - reset-to-zero truth
-   - XP award derivation
-   - skill-gain derivation
-   - gain presentation ownership
-   - profile-stat source truth
-5. only after that audit proves a coherent owner seam should implementation
-   begin
+1. treat `Wave H` as closed unless concrete new evidence reopens one exact
+   owner family
+2. do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, or
+   skill-taxonomy seams for cosmetic drift
+3. the next admitted family is `Proof closure`
+4. do not reopen `Practice` without concrete new evidence from real usage
+5. if manual proof is still unavailable, prefer a calibration or premium
+   consistency family over reopening landed copy cleanup
+6. current status of `Proof closure`:
+   - automated Act0 proof floor is now recalibrated and green
+   - honest remaining residue is human/device proof, not stale fast-loop
+     automation drift
+
+Sizing-control hold:
+
+- preserve sizing/slider in final `100 / 100` scope
+- do not treat the current `ModernTableScreenV1` percentage slider as the
+  approved final learner-facing owner
+- approved direction is `preset-first sizing` with optional secondary
+  fine-tune drag only where the spot truly needs it
+- next sizing wave should be an implementation-spec / owner-selection wave,
+  not a cosmetic slider-polish pass
+- approved owner direction is an `Act0-owned reusable sizing surface`
+  already present in Act0 seams, with `ModernTableScreenV1` retained only as
+  donor/prototype reference
+- first runtime implementation slice should stay bounded:
+  - W5 sizing drills only
+  - `presetsOnly` mode only
+  - no broad advanced sizing activation yet
+- early preset-first sizing is a staged beginner control, not a reduction of
+  the full 36-world sizing curriculum; advanced sizing families like overbet,
+  block bet, jam, modern open sizing, and positional 3-bet sizing stay owned
+  by their later worlds
+- later sizing activation must follow an explicit route-depth ladder rather
+  than ad hoc control expansion:
+  - `W5` -> one-third / half-pot / pot-size
+  - `W14-W16` -> overbet / block bet / commitment sizing only where content
+    explicitly owns it
+  - `W17` -> positional 3-bet sizing
+  - `W23+` -> modern open sizing
+  - `W26+` -> jam / all-in and short-stack commitment branches
+- later sizing families must stay `presetsOnly` by default; secondary
+  fine-tune is allowed only for explicit geometry-comparison lessons, not as a
+  general learner-facing control
+- current audit verdict:
+  - `W14` sizing ownership is documented and valid in the long-horizon plan
+  - active production currently exposes `W5` sizing and `W8 SPR`, but not yet
+    a true `W14` size-selection lesson surface
+  - therefore the next honest move after `W5` sizing closure is not immediate
+    advanced-control activation; it is either `W14` production content arrival
+    or an explicit `W8 -> W14` bridge-content decision
+5. external audits may add new fronts, but only if they survive comparison
+   against already-landed Wave H closures
 
 Captured current product signals for this lane:
 
-- `Learn`: reset is not truly zero-state; chrome/pills and duplicated chapter
-  signaling still create clutter
-- `Play`: quick-return role still mixes with route-learning and placeholder
-  drill inventory
-- `You`: identity surface is too text-heavy and over-signaled
-- `Placement`: question set still reads placeholder-like rather than
-  route-separating
-- `Welcome`: visual/presentation quality is below the desired premium bar
-- `Progress / skills`: XP, skill growth, and gain presentation still need one
-  truthful ownership pass before later surface simplification
+- `Wave H` closed the strongest internal placeholder/product-truth signals:
+  progress reset, skill truth, Play contract, Placement truth, Learn clutter,
+  Profile role compression, Welcome presentation
+- the app now needs external proof and full-app coherence more than another
+  local route repair
+- the remaining likely risks are:
+  - novice proof still open
+  - device-level polish still needs a near-final refresh
+  - premium / value packaging still reads thinner than the learner route
+  - shell/runtime layering is still more complex than the product quality bar
+  - localization scale and telemetry remain later-block seams, not current
+    route blockers
 
 ## What Still Separates 96-97 From 100
 
@@ -538,6 +578,45 @@ Keep these signals:
 3. **Profile must stay one quick-scroll identity mirror.**
    Skills, streak, and achievements should stay compact and legible; no return
    to dashboard bloat.
+
+## External Audit Synthesis (2026-05-15)
+
+An external repo audit was useful as a broad stress test, but it mixed
+current-state truth with stale pre-Wave-H residue.
+
+Keep these conclusions:
+
+1. **The active app is still a hybrid of a polished Act0 shell and a deeper
+   runner/runtime stack.**
+   This is now the strongest structural signal that survived recent product
+   closures.
+2. **Premium/value packaging is real but still thin.**
+   The route proves value better than before, but conversion surfaces still lag
+   behind learner-route maturity.
+3. **Localization is structurally improved, but not yet broad multi-language
+   product truth.**
+   This remains a later scale lane after the product shape holds.
+4. **Telemetry/observability is less mature than the learner route itself.**
+   Runtime reliability has guards and fallback behavior, but app-wide product
+   telemetry is still not a visibly unified seam.
+5. **Final app-wide premium consistency still needs one full-pass verdict.**
+   The active shell is much stronger, but full-product polish is still a
+   system-level closure, not a single-screen tweak.
+6. **The active runtime/table English alpha-residue family was real, but it is
+   now closed.**
+   It should not be reopened without concrete new evidence.
+
+Treat these external findings as already outdated and do not reopen them as new
+fronts:
+
+- generic claims that `Play` still routes like placeholder practice
+- generic claims that `Placement` is still mostly filler
+- generic claims that `Welcome` is still a text-only intro
+- generic claims that `Profile` is still a utility dump
+- generic claims that `XP` / skills are still purely decorative
+
+Those signals were valid before the landed `Wave H` sequence, but they are no
+longer the active highest-EV route.
 4. **A real-device screenshot pass is mandatory before external review.**
    Visual coherence cannot be trusted from code alone. After shell consistency,
    run a device sweep across compact phone, large phone, and tablet classes.

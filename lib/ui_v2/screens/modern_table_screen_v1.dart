@@ -606,12 +606,12 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Scenario Loader'),
+          title: const Text('Table setup'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Inline JSON'),
+                const Text('Table JSON'),
                 const SizedBox(height: 6),
                 TextField(
                   key: const Key('modern_table_loader_field'),
@@ -619,18 +619,18 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                   maxLines: 4,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Paste scenario JSON here',
+                    hintText: 'Paste table JSON here',
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text('Asset path'),
+                const Text('Preset path'),
                 const SizedBox(height: 6),
                 TextField(
                   key: const Key('modern_table_loader_asset'),
                   controller: _assetLoaderController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'assets/scenarios/demo.json',
+                    hintText: 'assets/scenarios/demo_hu.json',
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -641,7 +641,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Quick picks',
+                        'Presets',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
@@ -680,7 +680,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                 _handleLoaderLoadAsset(_assetLoaderController.text);
                 Navigator.of(context).pop();
               },
-              child: const Text('Load Asset'),
+              child: const Text('Load preset'),
             ),
             TextButton(
               key: const Key('modern_table_loader_clear'),
@@ -688,7 +688,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                 _handleLoaderClear();
                 Navigator.of(context).pop();
               },
-              child: const Text('Clear'),
+              child: const Text('Reset'),
             ),
             ElevatedButton(
               key: const Key('modern_table_loader_load'),
@@ -696,7 +696,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                 _handleLoaderLoad();
                 Navigator.of(context).pop();
               },
-              child: const Text('Load JSON'),
+              child: const Text('Apply JSON'),
             ),
           ],
         );
@@ -980,7 +980,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                                       ],
                                     ),
                                     child: Text(
-                                      'Clarity: tactical focus',
+                                      'Focus: one decision',
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall
@@ -1014,7 +1014,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
                                   ),
                                 ),
                                 child: Text(
-                                  'Scenario: $scenarioName',
+                                  'Table: $scenarioName',
                                   key: const Key('modern_table_scenario_label'),
                                   maxLines: 1,
                                   softWrap: false,
@@ -1641,7 +1641,7 @@ class ModernTableScreenV1State extends State<ModernTableScreenV1> {
             IconButton(
               key: const Key('modern_table_loader_open'),
               icon: const Icon(Icons.developer_mode),
-              tooltip: 'Scenario Loader',
+              tooltip: 'Table setup',
               onPressed: _showScenarioLoaderDialog,
             ),
         ],

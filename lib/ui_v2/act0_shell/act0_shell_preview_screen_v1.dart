@@ -115,6 +115,8 @@ enum _Act0LearningNextActionKindV1 {
   dailyDone,
 }
 
+const Set<String> _kPracticePrimaryGroupIdsV1 = <String>{'daily', 'weak_spots'};
+
 class _Act0LearningRecommendationV1 {
   const _Act0LearningRecommendationV1({
     required this.kind,
@@ -143,6 +145,28 @@ class _Act0LearningRecommendationV1 {
   final String? practiceGroupId;
 }
 
+class _Act0PracticeSurfaceRecommendationV1 {
+  const _Act0PracticeSurfaceRecommendationV1({
+    required this.groupId,
+    required this.title,
+    required this.subtitle,
+    required this.reasonLabel,
+    required this.outcomeLead,
+    required this.outcome,
+    required this.masteryLabel,
+    required this.screenSubtitle,
+  });
+
+  final String groupId;
+  final String title;
+  final String subtitle;
+  final String reasonLabel;
+  final String outcomeLead;
+  final String outcome;
+  final String masteryLabel;
+  final String screenSubtitle;
+}
+
 class Act0ShellPreviewScreenV1 extends StatefulWidget {
   const Act0ShellPreviewScreenV1({
     super.key,
@@ -169,6 +193,11 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
 class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
+  static const Set<String> _w5SizingDrillTaskIds = <String>{
+    'w4_small_bet',
+    'w4_half_pot_bet',
+    'w4_pot_bet',
+  };
 
   late Act0ShellTabV1 _tab;
   late Act0LessonPhaseV1 _phase;
@@ -184,6 +213,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _learnDetailWorldId;
   String? _learnDetailLessonId;
   String? _selectedOptionId;
+  String? _selectedPresetId;
+  String? _selectedPresetTaskId;
   String? _reviewConfidence;
   int _teachingStepIndex = 0;
   int _earnedXp = 0;
@@ -203,12 +234,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
   int _dailyCompletedRepCount = 0;
+  bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
   String _lastDailyDate = '';
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeLessonWrapUpTaskId;
   String? _lessonRunWrapUpAnchorTaskId;
+  String? _practiceCompletionTitle;
+  String? _practiceCompletionBody;
   Act0BlockCompletionSummaryV1? _blockCompletionSummary;
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
@@ -761,10 +795,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _learnLessonOpenSequenceV1++;
     setState(() {
+      _learnPopupTaskId = null;
       if (lesson.isSelectable) {
         _selectedLessonId = lessonId;
         _selectedTaskId = _firstIncompleteTask(lesson).taskId;
-        _learnPopupTaskId = null;
         _teachingStepIndex = 0;
         _resetLessonRunMetrics();
       }
@@ -910,6 +944,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (isNewDay) {
         _dailyCompletedTaskIds.clear();
         _dailyCompletedRepCount = 0;
+        _rapidPracticeLoop = false;
       }
     });
   }
@@ -1038,6 +1073,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lessonRunDeepLeakTaskIds.clear();
       _dailyCompletedTaskIds.clear();
       _dailyCompletedRepCount = 0;
+      _rapidPracticeLoop = false;
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
       _blockCompletionSummary = null;
@@ -1462,6 +1498,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld.lessons,
       _selectedLessonId,
     );
+    final practiceGroups = _practiceGroups(
+      state: state,
+      world: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    final practiceSurfaceRecommendation = _practiceSurfaceRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+      groups: practiceGroups,
+    );
     final isPlayTab = _tab == Act0ShellTabV1.play;
     final isPlayRunner =
         isPlayTab && !_showPlayHub && _blockCompletionSummary == null;
@@ -1480,6 +1526,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 beatCount: selectedLesson.taskList.length,
                 phase: _phase,
                 selectedOptionId: _selectedOptionId,
+                sizingConfig: _activeSizingConfigV1(
+                  selectedLesson,
+                  playSelectedTask,
+                ),
+                selectedPresetId: _activeSelectedPresetIdV1(playSelectedTask),
                 teachingStepIndex: _teachingStepIndex,
                 nextLessonId: _nextLessonId(
                   selectedWorld.lessons,
@@ -1516,9 +1567,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _bootSurfaceReady &&
         !_showPlacement &&
         !_showWelcome &&
-        !(_tab == Act0ShellTabV1.play &&
-            widget.tableVisualVariant ==
-                Act0ShellTableVisualVariantV1.refinedDev2);
+        !isPlayRunner;
     return Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
@@ -1704,6 +1753,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         selectedTaskId: _selectedTaskId,
                         activePopupTaskId: _learnPopupTaskId,
                         completedTaskIds: _completedTaskIds,
+                        perfectTaskIds: _perfectTaskIds(),
                         skippedTaskIds: _visibleSkippedTaskIds,
                         pathClosedTaskIds: _pathClosedTaskIds,
                         detailLessonId: _learnDetailLessonId,
@@ -1783,9 +1833,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           )) {
                             return;
                           }
+                          final isSamePopupTask =
+                              _learnDetailLessonId == lessonId &&
+                              _learnPopupTaskId == taskId;
+                          if (isSamePopupTask) {
+                            setState(() {
+                              _learnPopupTaskId = null;
+                            });
+                            return;
+                          }
                           final taskAvailable = _taskAvailable(lesson, taskId);
                           setState(() {
-                            if (taskAvailable) {
+                            if (lesson.isSelectable && taskAvailable) {
                               _selectedLessonId = lessonId;
                               _selectedTaskId = taskId;
                               _selectedOptionId = null;
@@ -1827,41 +1886,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       Act0ShellTabV1.play =>
                         _showPlayHub && _blockCompletionSummary == null
                             ? Act0PlayShellV1(
-                                groups: _practiceGroups(
-                                  state: state,
-                                  world: selectedWorld,
-                                  selectedLesson: selectedLesson,
-                                ),
+                                groups: practiceGroups,
                                 recommendedGroupId:
-                                    _learningRecommendation(
-                                      selectedWorld: selectedWorld,
-                                      selectedLesson: selectedLesson,
-                                    ).practiceGroupId ??
-                                    'daily',
-                                recommendedTitle: _recommendedPlayTitle(),
-                                recommendedSubtitle: _recommendedPlaySubtitle(
-                                  selectedLesson,
-                                  playSelectedTask!,
-                                ),
+                                    practiceSurfaceRecommendation.groupId,
+                                recommendedTitle:
+                                    practiceSurfaceRecommendation.title,
+                                recommendedSubtitle:
+                                    practiceSurfaceRecommendation.subtitle,
                                 recommendedReasonLabel:
-                                    _recommendedPlayReasonLabel(
-                                      selectedWorld,
-                                      selectedLesson,
-                                    ),
-                                recommendedOutcome: _recommendedPlayOutcome(
-                                  selectedWorld,
-                                  selectedLesson,
-                                ),
+                                    practiceSurfaceRecommendation.reasonLabel,
+                                recommendedOutcome:
+                                    practiceSurfaceRecommendation.outcome,
                                 recommendedOutcomeLead:
-                                    _recommendedPlayOutcomeLead(
-                                      selectedWorld,
-                                      selectedLesson,
-                                    ),
-                                masteryLabel: _playMasteryLabel(),
-                                screenSubtitle: _playScreenSubtitle(
-                                  selectedWorld,
-                                  selectedLesson,
-                                ),
+                                    practiceSurfaceRecommendation.outcomeLead,
+                                masteryLabel:
+                                    practiceSurfaceRecommendation.masteryLabel,
+                                screenSubtitle: practiceSurfaceRecommendation
+                                    .screenSubtitle,
+                                completionTitle: _practiceCompletionTitle,
+                                completionBody: _practiceCompletionBody,
                                 onStartGroup: (group) => setState(() {
                                   _startPracticeGroup(group, selectedWorld);
                                 }),
@@ -2050,8 +2093,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     );
                                   }
                                   _selectedOptionId = option.id;
+                                  _selectedPresetId = null;
+                                  _selectedPresetTaskId = null;
                                   _phase = Act0LessonPhaseV1.review;
                                   _teachingStepIndex = 0;
+                                }),
+                                onSelectSizingPreset: (preset) => setState(() {
+                                  _selectedPresetId = preset.id;
+                                  _selectedPresetTaskId =
+                                      playSelectedTask.taskId;
+                                }),
+                                onConfirmSizingPreset: () => setState(() {
+                                  _confirmSizingPresetAnswerV1(
+                                    selectedLesson: selectedLesson,
+                                    selectedTask: playSelectedTask,
+                                  );
                                 }),
                                 onChooseSeat: (seatId) => setState(() {
                                   for (final option in playRunner.options) {
@@ -2065,12 +2121,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         );
                                       }
                                       _selectedOptionId = option.id;
+                                      _selectedPresetId = null;
+                                      _selectedPresetTaskId = null;
                                       _phase = Act0LessonPhaseV1.review;
                                       _teachingStepIndex = 0;
                                       return;
                                     }
                                   }
                                 }),
+                                rapidReviewMode: _rapidPracticeLoop,
                                 onContinueReview: () => setState(() {
                                   if (_placementDiagnosticActive) {
                                     final spot = _placementDiagnosticSpotsV1
@@ -2119,6 +2178,51 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
+                                    _rapidPracticeLoop = false;
+                                    return;
+                                  }
+                                  if (_rapidPracticeLoop &&
+                                      _activePracticeGroupId == 'daily') {
+                                    _completeCurrentTask(playSelectedTask);
+                                    final nextDailyEntry = _nextDailyDeckEntry(
+                                      state:
+                                          widget.state ??
+                                          Act0ShellStateV1.sample,
+                                    );
+                                    if (_dailyCompletedRepCount < 3 &&
+                                        nextDailyEntry != null) {
+                                      final launchWorld = _worldById(
+                                        _progressedWorlds(
+                                          widget.state ??
+                                              Act0ShellStateV1.sample,
+                                        ),
+                                        nextDailyEntry.worldId,
+                                      );
+                                      _startTaskByIds(
+                                        launchWorld,
+                                        nextDailyEntry.lessonId,
+                                        nextDailyEntry.taskId,
+                                        skipTeaching: true,
+                                        allowDrillBypass: true,
+                                        rapidPracticeLoop: true,
+                                      );
+                                      _activePracticeGroupId = 'daily';
+                                      _showPlayHub = false;
+                                      _returnToPlayHubOnBack = true;
+                                      return;
+                                    }
+                                    _finishRapidPracticeLoopToHub(
+                                      completedLessonId:
+                                          selectedLesson.lessonId,
+                                    );
+                                    return;
+                                  }
+                                  if (_rapidPracticeLoop) {
+                                    _completeCurrentTask(playSelectedTask);
+                                    _finishRapidPracticeLoopToHub(
+                                      completedLessonId:
+                                          selectedLesson.lessonId,
+                                    );
                                     return;
                                   }
                                   if (_activeLessonWrapUpTaskId ==
@@ -2239,6 +2343,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _placementHandoffActive = false;
                 }
                 if (tab != Act0ShellTabV1.play) {
+                  _practiceCompletionTitle = null;
+                  _practiceCompletionBody = null;
                   _phase = Act0LessonPhaseV1.theory;
                   _selectedOptionId = null;
                   _teachingStepIndex = 0;
@@ -2300,20 +2406,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonCardV1 selectedLesson,
   }) {
     final currentTask = _firstIncompleteTask(selectedLesson);
-    final weakSpot = _topOpenMistake();
     final quickFix = _quickFixMistakes().isEmpty
         ? null
         : _quickFixMistakes().first;
-    final openMistakeCount = _openMistakes().length;
     final recommendation = _learningRecommendation(
       selectedWorld: world,
       selectedLesson: selectedLesson,
     );
-    final dailyDeckEntry = _nextDailyDeckEntry(
-      state: state,
-      fallbackWorld: world,
-      fallbackLesson: selectedLesson,
-    );
+    final dailyDeckEntry = _nextDailyDeckEntry(state: state);
     return <Act0PracticeGroupV1>[
       Act0PracticeGroupV1(
         groupId: 'continue',
@@ -2348,39 +2448,49 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       Act0PracticeGroupV1(
         groupId: 'weak_spots',
         title:
-            weakSpot?.title ??
             quickFix?.title ??
-            _copyV1(en: 'Fix weak spots', ru: 'Исправь слабые споты'),
-        subtitle: weakSpot == null && quickFix == null
-            ? 'Mistakes you make will appear here.'
-            : weakSpot?.reason ??
-                  'One light review keeps this quick fix stable.',
-        ctaLabel: weakSpot != null
-            ? _recommendationCtaLabel(
-                _Act0LearningNextActionKindV1.repairWeakSpot,
+            _copyV1(
+              en: 'Review one quick fix',
+              ru: 'Сделай один лёгкий повтор',
+            ),
+        subtitle: quickFix == null
+            ? _copyV1(
+                en: 'Quick fixes unlock after you repair one spot in Review.',
+                ru: 'Лёгкие повторы откроются после одного разбора во вкладке Разбор.',
               )
-            : (quickFix != null
-                  ? _recommendationCtaLabel(
-                      _Act0LearningNextActionKindV1.reviewQuickFix,
-                    )
-                  : 'Review'),
+            : 'One light review keeps this quick fix stable.',
+        ctaLabel: quickFix != null
+            ? _recommendationCtaLabel(
+                _Act0LearningNextActionKindV1.reviewQuickFix,
+              )
+            : 'Review',
         categoryLabel: 'Repair',
-        isEnabled: weakSpot != null || quickFix != null,
-        targetLessonId: weakSpot?.lessonId ?? quickFix?.lessonId,
-        targetTaskId: weakSpot?.taskId ?? quickFix?.taskId,
-        countLabel: openMistakeCount == 0 ? '' : '$openMistakeCount open',
-        sessionLabel: weakSpot == null ? 'Quick fix' : 'Weak spot',
+        isEnabled: quickFix != null,
+        targetLessonId: quickFix?.lessonId,
+        targetTaskId: quickFix?.taskId,
+        countLabel: quickFix == null
+            ? ''
+            : '${_quickFixMistakes().length} ready',
+        sessionLabel: 'Quick fix',
         durationLabel: '~4 min',
         isRecommended: recommendation.practiceGroupId == 'weak_spots',
         skipTeaching: true,
         allowDrillBypass: true,
+        useRapidPracticeLoop: false,
       ),
       Act0PracticeGroupV1(
         groupId: 'daily',
-        title: _dailyCompletedRepCount >= 3
+        title: dailyDeckEntry == null
+            ? _copyV1(en: 'Daily practice', ru: 'Дневная практика')
+            : _dailyCompletedRepCount >= 3
             ? _copyV1(en: 'Daily set complete', ru: 'Дневная серия закрыта')
             : _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
-        subtitle: _dailyCompletedRepCount >= 3
+        subtitle: dailyDeckEntry == null
+            ? _copyV1(
+                en: 'Unlock after one route drill.',
+                ru: 'Откроется после одного дрилла на маршруте.',
+              )
+            : _dailyCompletedRepCount >= 3
             ? 'Nice. Keep going or repair weak spots next.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
@@ -2389,20 +2499,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDone)
             : _recommendationCtaLabel(_Act0LearningNextActionKindV1.dailyDrill),
         categoryLabel: 'Daily',
-        isEnabled: true,
-        targetWorldId: dailyDeckEntry.worldId,
-        targetLessonId: dailyDeckEntry.lessonId,
-        targetTaskId: dailyDeckEntry.taskId,
+        isEnabled: dailyDeckEntry != null,
+        targetWorldId: dailyDeckEntry?.worldId,
+        targetLessonId: dailyDeckEntry?.lessonId,
+        targetTaskId: dailyDeckEntry?.taskId,
         countLabel: _dailyGoalValueLabel(),
         sessionLabel: _dailyCompletedRepCount >= 3 ? 'Complete' : '3 spot set',
         durationLabel: '~3 min',
         isRecommended: recommendation.practiceGroupId == 'daily',
         skipTeaching: true,
         allowDrillBypass: true,
+        useRapidPracticeLoop: true,
       ),
       ..._topicPackSpecsV1.map(
         (spec) => _groupForTaskPack(
-          world,
+          state,
           spec: spec,
           isRecommended: recommendation.practiceGroupId == spec.groupId,
         ),
@@ -2410,29 +2521,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
   }
 
-  _Act0DailyDeckEntryV1 _nextDailyDeckEntry({
+  _Act0DailyDeckEntryV1? _nextDailyDeckEntry({
     required Act0ShellStateV1 state,
-    required Act0WorldCardV1 fallbackWorld,
-    required Act0LessonCardV1 fallbackLesson,
   }) {
     final deck = _dailyDeckEntries(state);
     if (deck.isEmpty) {
-      final starterDeck = _starterDailyDeckEntries(fallbackWorld);
-      if (starterDeck.isNotEmpty) {
-        return starterDeck.firstWhere(
-          (entry) => !_dailyCompletedTaskIds.contains(entry.taskId),
-          orElse: () => starterDeck.first,
-        );
-      }
-      final fallbackTask =
-          _playLaunchTaskForLesson(fallbackLesson, preferDrill: true) ??
-          _firstIncompleteTask(fallbackLesson);
-      return _Act0DailyDeckEntryV1(
-        worldId: fallbackWorld.worldId,
-        lessonId: fallbackLesson.lessonId,
-        taskId: fallbackTask.taskId,
-        isSpaced: false,
-      );
+      return null;
     }
     return deck.firstWhere(
       (entry) => !_dailyCompletedTaskIds.contains(entry.taskId),
@@ -2441,25 +2535,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   List<_Act0DailyDeckEntryV1> _dailyDeckEntries(Act0ShellStateV1 state) {
-    final completedWorlds = _progressedWorlds(state)
-        .where(
-          (world) =>
-              world.status == Act0WorldStateV1.completed &&
-              world.worldNumber <= 6,
-        )
-        .toList(growable: false);
-    if (completedWorlds.isEmpty) {
+    final practiceWorlds = _progressedWorlds(
+      state,
+    ).where((world) => world.worldNumber <= 6).toList(growable: false);
+    if (practiceWorlds.isEmpty) {
       return const <_Act0DailyDeckEntryV1>[];
     }
     final tasksByWorldId = <String, List<_Act0DailyDeckEntryV1>>{};
-    for (final world in completedWorlds) {
+    for (final world in practiceWorlds) {
       final entries = <_Act0DailyDeckEntryV1>[];
       for (final lesson in world.lessons) {
         if (!lesson.isSelectable) {
           continue;
         }
         for (final task in lesson.taskList) {
-          if (task.phase != Act0LessonPhaseV1.drill) {
+          if (task.phase != Act0LessonPhaseV1.drill ||
+              !_completedTaskIds.contains(task.taskId)) {
             continue;
           }
           entries.add(
@@ -2479,7 +2570,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (tasksByWorldId.isEmpty) {
       return const <_Act0DailyDeckEntryV1>[];
     }
-    final worldOrder = completedWorlds
+    final worldOrder = practiceWorlds
         .map((world) => world.worldId)
         .where(tasksByWorldId.containsKey)
         .toList(growable: false);
@@ -2497,61 +2588,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
     return deck;
-  }
-
-  List<_Act0DailyDeckEntryV1> _starterDailyDeckEntries(
-    Act0WorldCardV1 fallbackWorld,
-  ) {
-    const preferredTaskIds = <String>[
-      'actions_legal_context',
-      'blinds_posts_drill',
-      'positions_button',
-    ];
-    final starterDeck = <_Act0DailyDeckEntryV1>[];
-    final seenTaskIds = <String>{};
-    for (final taskId in preferredTaskIds) {
-      for (final lesson in fallbackWorld.lessons) {
-        final taskIndex = lesson.taskList.indexWhere(
-          (candidate) => candidate.taskId == taskId,
-        );
-        if (taskIndex < 0) {
-          continue;
-        }
-        final task = lesson.taskList[taskIndex];
-        if (!seenTaskIds.add(task.taskId)) {
-          continue;
-        }
-        starterDeck.add(
-          _Act0DailyDeckEntryV1(
-            worldId: fallbackWorld.worldId,
-            lessonId: lesson.lessonId,
-            taskId: task.taskId,
-            isSpaced: false,
-          ),
-        );
-        break;
-      }
-    }
-    for (final lesson in fallbackWorld.lessons) {
-      for (final task in lesson.taskList) {
-        if (task.phase != Act0LessonPhaseV1.drill ||
-            !seenTaskIds.add(task.taskId)) {
-          continue;
-        }
-        starterDeck.add(
-          _Act0DailyDeckEntryV1(
-            worldId: fallbackWorld.worldId,
-            lessonId: lesson.lessonId,
-            taskId: task.taskId,
-            isSpaced: false,
-          ),
-        );
-        if (starterDeck.length >= 3) {
-          return starterDeck;
-        }
-      }
-    }
-    return starterDeck;
   }
 
   _Act0LearningRecommendationV1 _learningRecommendation({
@@ -2580,8 +2616,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Этот спот уже дважды не дался. Разбери его, прежде чем идти дальше.',
               )
             : _copyV1(
-                en: 'Fix this mistake before it becomes a habit.',
-                ru: 'Разбери эту ошибку, пока она не закрепилась.',
+                en: 'Fix this spot before it becomes a habit.',
+                ru: 'Разбери этот спот, пока он не закрепился.',
               ),
         ctaLabel: _recommendationCtaLabel(
           isDeep
@@ -2617,8 +2653,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         label: _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор'),
         title: _copyV1(en: 'Review a quick fix', ru: 'Сделай лёгкий повтор'),
         subtitle: _copyV1(
-          en: 'You repaired this once. One light review keeps it stable.',
-          ru: 'Ты уже один раз разобрал этот спот. Один лёгкий повтор поможет его закрепить.',
+          en: 'You already brought this spot back under control. One light review keeps it stable.',
+          ru: 'Этот спот уже снова под контролем. Один лёгкий повтор поможет его закрепить.',
         ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.reviewQuickFix,
@@ -2712,7 +2748,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
 
-    if (_dailyCompletedRepCount < 3) {
+    final dailyDeckEntry = _nextDailyDeckEntry(
+      state: widget.state ?? Act0ShellStateV1.sample,
+    );
+    if (_dailyCompletedRepCount < 3 && dailyDeckEntry != null) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
@@ -2732,11 +2771,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           en: 'Daily set: 3 crisp reps, no extra noise.',
           ru: 'Дневной набор: 3 чётких спота без лишнего шума.',
         ),
-        lessonId: selectedLesson.lessonId,
-        taskId: _preferredPracticeTask(
-          selectedLesson,
-          preferDrill: true,
-        )?.taskId,
+        lessonId: dailyDeckEntry.lessonId,
+        taskId: dailyDeckEntry.taskId,
         practiceGroupId: 'daily',
       );
     }
@@ -2763,10 +2799,35 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
 
-    final actionsLesson = _lessonById(
-      selectedWorld.lessons,
-      'fold_check_call_raise',
+    final categoryPracticeTarget = _topicPackLaunchTarget(
+      widget.state ?? Act0ShellStateV1.sample,
+      _topicPackSpecsV1.first,
     );
+    if (categoryPracticeTarget == null) {
+      return _Act0LearningRecommendationV1(
+        kind: _Act0LearningNextActionKindV1.continueLesson,
+        label: _copyV1(en: 'Keep going', ru: 'Продолжай'),
+        title: _localizedLessonTitleV1(selectedLesson),
+        subtitle: _copyV1(
+          en: 'Practice unlocks from reps you already cleared on the route.',
+          ru: 'Практика открывается из спотов, которые ты уже закрыл на маршруте.',
+        ),
+        ctaLabel: _recommendationCtaLabel(
+          _Act0LearningNextActionKindV1.continueLesson,
+        ),
+        hint: _copyV1(
+          en: 'Clear one more route rep first.',
+          ru: 'Сначала закрой ещё один спот на маршруте.',
+        ),
+        outcome: _copyV1(
+          en: 'On return: Practice will repeat what you already know.',
+          ru: 'Когда вернёшься, Практика будет повторять то, что ты уже знаешь.',
+        ),
+        lessonId: selectedLesson.lessonId,
+        taskId: currentTask.taskId,
+        practiceGroupId: 'continue',
+      );
+    }
     return _Act0LearningRecommendationV1(
       kind: _Act0LearningNextActionKindV1.categoryPractice,
       label: _copyV1(en: 'Keep going', ru: 'Продолжай'),
@@ -2786,8 +2847,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         en: 'Category practice: keep your strongest reads warm.',
         ru: 'Практика по категории: закрепи то, что уже хорошо читается.',
       ),
-      lessonId: actionsLesson.lessonId,
-      taskId: _preferredPracticeTask(actionsLesson, preferDrill: true)?.taskId,
+      lessonId: categoryPracticeTarget.lessonId,
+      taskId: categoryPracticeTarget.taskId,
       practiceGroupId: 'actions',
     );
   }
@@ -3088,56 +3149,112 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return null;
   }
 
-  String _playMasteryLabel() {
-    final topMistake = _topOpenMistake();
-    if (topMistake?.severityLabel == 'Deep leak') {
-      return _copyV1(en: 'Deep leak', ru: 'Серьёзная ошибка');
+  _Act0PracticeSurfaceRecommendationV1 _practiceSurfaceRecommendation({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonCardV1 selectedLesson,
+    required List<Act0PracticeGroupV1> groups,
+  }) {
+    Act0PracticeGroupV1? groupById(String groupId) {
+      for (final group in groups) {
+        if (group.groupId == groupId) {
+          return group;
+        }
+      }
+      return null;
     }
-    if (topMistake != null) {
-      return _copyV1(en: 'Needs work', ru: 'Нужно подтянуть');
-    }
-    if (_quickFixMistakes().isNotEmpty) {
-      return _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор');
-    }
-    if (_cleanTaskIds.length >= 3) {
-      return _copyV1(en: 'Clean pass', ru: 'Чистый проход');
-    }
-    if (_completedTaskIds.isNotEmpty) {
-      return _copyV1(en: 'Solid', ru: 'Уверенно');
-    }
-    return _copyV1(en: 'Learning', ru: 'Обучение');
-  }
 
-  String _playScreenSubtitle(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
-  ) {
-    final recommendation = _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
+    final topMistake = _topOpenMistake();
+    final quickFixGroup = groupById('weak_spots');
+    final dailyGroup = groupById('daily');
+    final firstPack = groups.firstWhere(
+      (group) =>
+          group.isEnabled &&
+          !_kPracticePrimaryGroupIdsV1.contains(group.groupId) &&
+          group.groupId != 'continue' &&
+          group.groupId != 'placement',
+      orElse: () => dailyGroup ?? groups.first,
     );
-    return switch (recommendation.kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
-        en: 'Repair first. Extra reps can wait.',
-        ru: 'Сначала разбор. Дополнительная практика подождёт.',
+
+    if (quickFixGroup != null && quickFixGroup.isEnabled) {
+      return _Act0PracticeSurfaceRecommendationV1(
+        groupId: quickFixGroup.groupId,
+        title: _copyV1(
+          en: 'Review one quick fix',
+          ru: 'Сделай один лёгкий повтор',
+        ),
+        subtitle: _copyV1(
+          en: 'Keep one repaired spot stable without dropping back into Review.',
+          ru: 'Закрепи один уже разобранный спот, не возвращаясь в полный режим Разбора.',
+        ),
+        reasonLabel: _copyV1(en: 'Quick refresh', ru: 'Лёгкий повтор'),
+        outcomeLead: _copyV1(en: 'One calm rep.', ru: 'Один спокойный повтор.'),
+        outcome: _copyV1(
+          en: 'Then move back into daily reps or a skill pack.',
+          ru: 'После этого можно вернуться к дневной серии или к одному паку.',
+        ),
+        masteryLabel: _copyV1(en: 'Quick refresh', ru: 'Лёгкий повтор'),
+        screenSubtitle: _copyV1(
+          en: 'Repeat what you already know. Repairs stay light here.',
+          ru: 'Здесь повторяем только уже знакомое. Разборы остаются лёгкими.',
+        ),
+      );
+    }
+
+    if (dailyGroup != null && dailyGroup.isEnabled) {
+      final repairStillOpen = topMistake != null;
+      return _Act0PracticeSurfaceRecommendationV1(
+        groupId: dailyGroup.groupId,
+        title: dailyGroup.title,
+        subtitle: repairStillOpen
+            ? _copyV1(
+                en: 'Deeper repair stays in Review. Practice keeps one short set ready here.',
+                ru: 'Глубокий разбор остаётся во вкладке Разбор. Здесь держим только короткую серию повторов.',
+              )
+            : dailyGroup.subtitle,
+        reasonLabel: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
+        outcomeLead: repairStillOpen
+            ? _copyV1(en: 'After Review:', ru: 'После Разбора:')
+            : _copyV1(en: 'Daily set:', ru: 'Эта серия:'),
+        outcome: repairStillOpen
+            ? _copyV1(
+                en: 'keep one clean repetition lane ready while Review owns the repair.',
+                ru: 'удержит под рукой одну чистую дорожку повторения, пока Разбор забирает ошибки на себя.',
+              )
+            : _copyV1(
+                en: 'three short reps keep the route warm without extra drag.',
+                ru: 'три коротких повтора удержат маршрут в тонусе без лишней паузы.',
+              ),
+        masteryLabel: repairStillOpen
+            ? _copyV1(en: 'Review first', ru: 'Сначала разбор')
+            : _copyV1(en: 'Daily set', ru: 'Дневная серия'),
+        screenSubtitle: repairStillOpen
+            ? _copyV1(
+                en: 'Repair stays in Review. Practice keeps extra reps light here.',
+                ru: 'Разбор остаётся во вкладке Разбор. Здесь — только лёгкая дополнительная практика.',
+              )
+            : _copyV1(
+                en: 'Repeat what you already know.',
+                ru: 'Повторяй то, что уже видел.',
+              ),
+      );
+    }
+
+    return _Act0PracticeSurfaceRecommendationV1(
+      groupId: firstPack.groupId,
+      title: firstPack.title,
+      subtitle: firstPack.subtitle,
+      reasonLabel: _copyV1(en: 'Practice focus', ru: 'Фокус практики'),
+      outcomeLead: _copyV1(en: 'One clean rep.', ru: 'Один чистый повтор.'),
+      outcome: _copyV1(
+        en: 'Keep one known skill family warm without reopening lesson mode.',
+        ru: 'Закрепи одну уже знакомую семью навыков без возврата в режим урока.',
       ),
-      _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
-        en: 'Fix one leak or run a few extra reps.',
-        ru: 'Разбери одно слабое место или сделай ещё пару полезных повторов.',
+      masteryLabel: _copyV1(en: 'Practice focus', ru: 'Фокус практики'),
+      screenSubtitle: _copyV1(
+        en: 'Repeat what you already know.',
+        ru: 'Повторяй то, что уже видел.',
       ),
-      _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
-        en: 'Run one light review or choose a lane.',
-        ru: 'Сделай один лёгкий повтор или выбери дорожку.',
-      ),
-      _Act0LearningNextActionKindV1.dailyDone => _copyV1(
-        en: 'Daily set done. Extra reps stay optional.',
-        ru: 'Дневной набор закрыт. Дополнительная практика остаётся по желанию.',
-      ),
-      _ => _copyV1(
-        en: 'Extra reps live here.',
-        ru: 'Здесь можно сделать дополнительную практику.',
-      ),
-    };
+    );
   }
 
   String _dailyGoalValueLabel() {
@@ -3339,40 +3456,59 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0PracticeGroupV1 _groupForTaskPack(
-    Act0WorldCardV1 world, {
+    Act0ShellStateV1 state, {
     required _Act0TopicPackSpecV1 spec,
     bool isRecommended = false,
   }) {
-    final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
-      (candidate) => candidate?.lessonId == spec.lessonId,
-      orElse: () => null,
-    );
-    final task = lesson == null
-        ? null
-        : lesson.taskList.cast<Act0LessonTaskV1?>().firstWhere(
-            (candidate) => candidate?.taskId == spec.taskId,
-            orElse: () => null,
-          );
-    final drillBypass = task != null && task.phase == Act0LessonPhaseV1.drill;
+    final target = _topicPackLaunchTarget(state, spec);
     return Act0PracticeGroupV1(
       groupId: spec.groupId,
       title: spec.title,
-      subtitle: spec.subtitle,
+      subtitle: target == null
+          ? _copyV1(
+              en: 'Clear it on the route first.',
+              ru: 'Сначала закрой это на маршруте.',
+            )
+          : spec.subtitle,
       ctaLabel: 'Practice',
       categoryLabel: spec.categoryLabel,
-      isEnabled:
-          lesson != null &&
-          task != null &&
-          (_taskAvailable(lesson, task.taskId) || drillBypass),
-      targetWorldId: world.worldId,
-      targetLessonId: lesson?.lessonId,
-      targetTaskId: task?.taskId,
+      isEnabled: target != null,
+      targetWorldId: target?.worldId,
+      targetLessonId: target?.lessonId,
+      targetTaskId: target?.taskId,
       sessionLabel: spec.sessionLabel,
       durationLabel: spec.durationLabel,
       isRecommended: isRecommended,
       skipTeaching: true,
       allowDrillBypass: true,
+      useRapidPracticeLoop: true,
     );
+  }
+
+  _Act0PracticeLaunchTargetV1? _topicPackLaunchTarget(
+    Act0ShellStateV1 state,
+    _Act0TopicPackSpecV1 spec,
+  ) {
+    for (final world in _progressedWorlds(state)) {
+      for (final lesson in world.lessons) {
+        if (lesson.lessonId != spec.lessonId) {
+          continue;
+        }
+        for (final task in lesson.taskList) {
+          if (task.taskId != spec.taskId ||
+              task.phase != Act0LessonPhaseV1.drill ||
+              !_completedTaskIds.contains(task.taskId)) {
+            continue;
+          }
+          return _Act0PracticeLaunchTargetV1(
+            worldId: world.worldId,
+            lessonId: lesson.lessonId,
+            taskId: task.taskId,
+          );
+        }
+      }
+    }
+    return null;
   }
 
   Act0LessonTaskV1? _preferredPracticeTask(
@@ -3404,86 +3540,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
     return _firstIncompleteTask(lesson);
-  }
-
-  String _recommendedPlayTitle() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
-    final selectedWorld = _worldById(
-      _progressedWorlds(state),
-      _selectedWorldId,
-    );
-    final selectedLesson = _lessonById(
-      selectedWorld.lessons,
-      _selectedLessonId,
-    );
-    return _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    ).title;
-  }
-
-  String _recommendedPlaySubtitle(
-    Act0LessonCardV1 selectedLesson,
-    Act0LessonTaskV1 selectedTask,
-  ) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
-    final selectedWorld = _worldById(
-      _progressedWorlds(state),
-      _selectedWorldId,
-    );
-    return _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    ).subtitle;
-  }
-
-  String _recommendedPlayOutcome(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
-  ) {
-    return _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    ).outcome;
-  }
-
-  String _recommendedPlayReasonLabel(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
-  ) {
-    final recommendation = _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    );
-    return switch (recommendation.kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak => 'Repair first',
-      _Act0LearningNextActionKindV1.repairWeakSpot => 'Repair first',
-      _Act0LearningNextActionKindV1.reviewQuickFix => 'Quick review',
-      _Act0LearningNextActionKindV1.dailyDrill => 'Daily set',
-      _Act0LearningNextActionKindV1.categoryPractice => 'Practice focus',
-      _Act0LearningNextActionKindV1.continueLesson => 'Best next from Learn',
-      _Act0LearningNextActionKindV1.dailyDone => 'Seat held',
-    };
-  }
-
-  String _recommendedPlayOutcomeLead(
-    Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
-  ) {
-    final recommendation = _learningRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    );
-    return switch (recommendation.kind) {
-      _Act0LearningNextActionKindV1.repairDeepLeak => 'Fix this first.',
-      _Act0LearningNextActionKindV1.repairWeakSpot => 'Fix this now.',
-      _Act0LearningNextActionKindV1.reviewQuickFix => 'Review this now.',
-      _Act0LearningNextActionKindV1.dailyDrill => 'Daily set first.',
-      _Act0LearningNextActionKindV1.categoryPractice => 'Practice this now.',
-      _Act0LearningNextActionKindV1.continueLesson =>
-        'Start with the main path.',
-      _Act0LearningNextActionKindV1.dailyDone => 'Tomorrow is ready.',
-    };
   }
 
   String _learnGuideTitle(
@@ -3594,6 +3650,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0PracticeGroupV1 group,
     Act0WorldCardV1 selectedWorld,
   ) {
+    _practiceCompletionTitle = null;
+    _practiceCompletionBody = null;
     final lessonId = group.targetLessonId;
     final taskId = group.targetTaskId;
     if (!group.isEnabled || lessonId == null || taskId == null) {
@@ -3609,6 +3667,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           practiceGroupId: group.groupId,
           skipTeaching: group.skipTeaching,
           allowDrillBypass: group.allowDrillBypass,
+          rapidPracticeLoop: group.useRapidPracticeLoop,
         );
         return;
       }
@@ -3623,6 +3682,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           practiceGroupId: group.groupId,
           skipTeaching: group.skipTeaching,
           allowDrillBypass: group.allowDrillBypass,
+          rapidPracticeLoop: group.useRapidPracticeLoop,
         );
         return;
       }
@@ -3640,9 +3700,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       taskId,
       skipTeaching: group.skipTeaching,
       allowDrillBypass: group.allowDrillBypass,
+      rapidPracticeLoop: group.useRapidPracticeLoop,
     );
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = group.groupId;
+    _rapidPracticeLoop = group.useRapidPracticeLoop;
   }
 
   void _startMistakeRepair(
@@ -3652,6 +3714,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String? practiceGroupId,
     bool skipTeaching = false,
     bool allowDrillBypass = false,
+    bool rapidPracticeLoop = false,
   }) {
     final launchWorld = mistake.worldId.trim().isEmpty
         ? selectedWorld
@@ -3668,10 +3731,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       skipTeaching: skipTeaching,
       allowDrillBypass:
           allowDrillBypass || launchTask.phase == Act0LessonPhaseV1.drill,
+      rapidPracticeLoop: rapidPracticeLoop,
     );
     _activeRepairTaskId = mistake.taskId;
     _returnToPlayHubOnBack = returnToPlayHub;
     _activePracticeGroupId = practiceGroupId;
+    _rapidPracticeLoop = rapidPracticeLoop;
+    _practiceCompletionTitle = null;
+    _practiceCompletionBody = null;
   }
 
   void _startRecommendation(
@@ -4522,6 +4589,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String taskId, {
     bool skipTeaching = false,
     bool allowDrillBypass = false,
+    bool rapidPracticeLoop = false,
   }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
     final task = _taskById(lesson, taskId);
@@ -4539,6 +4607,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _showPlayHub = false;
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = null;
+    _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.phase;
     _selectedOptionId = null;
     _teachingStepIndex = skipTeaching && task.phase == Act0LessonPhaseV1.drill
@@ -4601,6 +4670,125 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       repairActionLabel: _repairActionLabel(selectedTask),
       attempts: (previous?.attempts ?? 0) + 1,
     );
+  }
+
+  bool _usesSizingPresetControlsV1(
+    Act0LessonCardV1 selectedLesson,
+    Act0LessonTaskV1 selectedTask,
+  ) {
+    return selectedLesson.lessonId == 'small_half_pot' &&
+        selectedTask.phase == Act0LessonPhaseV1.drill &&
+        selectedTask.resolvedTaskFamily == Act0TaskFamilyV1.sizing &&
+        _w5SizingDrillTaskIds.contains(selectedTask.taskId);
+  }
+
+  Act0SizingConfigV1 _activeSizingConfigV1(
+    Act0LessonCardV1 selectedLesson,
+    Act0LessonTaskV1 selectedTask,
+  ) {
+    if (_phase != Act0LessonPhaseV1.drill ||
+        !_usesSizingPresetControlsV1(selectedLesson, selectedTask)) {
+      return const Act0SizingConfigV1.disabled();
+    }
+    return Act0SizingConfigV1(
+      mode: Act0SizingUiModeV1.presetsOnly,
+      showGuidance: false,
+      presets: selectedTask.runner.options
+          .map(
+            (option) => Act0SizingPresetV1(
+              id: option.id,
+              label: option.label,
+              potFraction: _potFractionFromSizingLabelV1(option.label),
+              displayLabel: _sizingDisplayLabelV1(option.label),
+              detailLabel: option.label,
+              ctaLabel: 'Lock ${_sizingDisplayLabelV1(option.label)}',
+              isPrimary: option.isCorrect,
+            ),
+          )
+          .toList(growable: false),
+    );
+  }
+
+  String? _activeSelectedPresetIdV1(Act0LessonTaskV1 selectedTask) {
+    if (_phase != Act0LessonPhaseV1.drill ||
+        _selectedPresetTaskId != selectedTask.taskId) {
+      return null;
+    }
+    return _selectedPresetId;
+  }
+
+  double _potFractionFromSizingLabelV1(String label) {
+    final match = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(label);
+    final amount = double.tryParse(match?.group(1) ?? '');
+    if (amount == null || amount <= 0) {
+      return 0;
+    }
+    return amount / 6;
+  }
+
+  String _sizingDisplayLabelV1(String label) {
+    switch (label) {
+      case '2 BB':
+        return 'One-third';
+      case '3 BB':
+        return 'Half-pot';
+      case '6 BB':
+        return 'Pot-size';
+      default:
+        return label;
+    }
+  }
+
+  void _confirmSizingPresetAnswerV1({
+    required Act0LessonCardV1 selectedLesson,
+    required Act0LessonTaskV1 selectedTask,
+  }) {
+    final presetId = _activeSelectedPresetIdV1(selectedTask);
+    if (presetId == null) {
+      return;
+    }
+    final option = _optionById(selectedTask.runner.options, presetId);
+    if (option == null) {
+      return;
+    }
+    _fireAnswerEffects(option);
+    if (!_placementDiagnosticActive) {
+      _recordAnswer(selectedLesson, selectedTask, option);
+    }
+    _selectedOptionId = option.id;
+    _phase = Act0LessonPhaseV1.review;
+    _teachingStepIndex = 0;
+  }
+
+  void _finishRapidPracticeLoopToHub({String? completedLessonId}) {
+    final groupId = _activePracticeGroupId;
+    if (groupId == 'daily') {
+      _practiceCompletionTitle = _copyV1(
+        en: 'Daily set complete',
+        ru: 'Дневная серия закрыта',
+      );
+      _practiceCompletionBody = _copyV1(
+        en: 'Three short reps landed. Pick one more lane or head back to Home.',
+        ru: 'Три коротких повтора готовы. Можешь взять ещё одну дорожку или вернуться домой.',
+      );
+    } else if (completedLessonId != null) {
+      final family = _playDrillTitleForLesson(completedLessonId);
+      _practiceCompletionTitle = _copyV1(
+        en: 'Rep complete',
+        ru: 'Повтор готов',
+      );
+      _practiceCompletionBody = _copyV1(
+        en: '$family stayed warm. Pick another pack when you want one more clean rep.',
+        ru: '$family закреплены. Возьми другой пак, когда захочешь ещё один чистый повтор.',
+      );
+    }
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = true;
+    _selectedOptionId = null;
+    _selectedPresetId = null;
+    _selectedPresetTaskId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _teachingStepIndex = 0;
   }
 
   String _hardenMistakeReason({
@@ -4701,11 +4889,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _repairActionLabel(Act0LessonTaskV1 task) {
     return switch (task.stepKind) {
-      Act0LessonStepKindV1.learn => 'Replay the concept slowly',
-      Act0LessonStepKindV1.practice => 'Replay this practice spot',
-      Act0LessonStepKindV1.fixMistakes => 'Repair the weak spot',
-      Act0LessonStepKindV1.review => 'Review the takeaway',
-      Act0LessonStepKindV1.proveIt => 'Prove it again',
+      Act0LessonStepKindV1.learn => 'Replay the idea once',
+      Act0LessonStepKindV1.practice => 'Replay this spot once',
+      Act0LessonStepKindV1.fixMistakes => 'Replay the repair spot',
+      Act0LessonStepKindV1.review => 'Replay the key spot',
+      Act0LessonStepKindV1.proveIt => 'Replay the final check',
     };
   }
 
@@ -4916,6 +5104,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final accuracy = totalAttempts == 0
         ? base.accuracyLine
         : '${((_cleanTaskIds.length / totalAttempts) * 100).round()}% practice accuracy';
+    final perfectClearCount = _completedTaskIds.where((taskId) {
+      if (!_cleanTaskIds.contains(taskId)) {
+        return false;
+      }
+      return !_hasOpenMistakeRecord(taskId);
+    }).length;
+    final qualityLine = _profileQualityLineV1(
+      perfectClearCount: perfectClearCount,
+      completedCount: completedCount,
+    );
     final streakDays = _effectiveStreakDays(state);
     final streakSaved = _streakSaveEarned();
     final focusTitle = recommendation.title.trim().isNotEmpty
@@ -4938,6 +5136,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           '${progress.xp} / ${(widget.state ?? Act0ShellStateV1.sample).xpTarget} XP',
       lessonsLine: '$completedCount of $totalTasks tasks complete',
       accuracyLine: accuracy,
+      qualityLine: qualityLine,
       streakLine: streakDays == 0
           ? 'No streak yet'
           : streakSaved
@@ -4992,9 +5191,48 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       totalWorldsCount: _progressedWorlds(state).length,
       mistakesFixedLine: _resolvedMistakeTaskIds.isEmpty
           ? ''
-          : 'Fixed ${_resolvedMistakeTaskIds.length} mistake${_resolvedMistakeTaskIds.length == 1 ? '' : 's'}',
+          : _copyV1(
+              en: _resolvedMistakeTaskIds.length == 1
+                  ? '1 spot stabilized'
+                  : '${_resolvedMistakeTaskIds.length} spots stabilized',
+              ru: _resolvedMistakeTaskIds.length == 1
+                  ? '1 спот закреплён'
+                  : '${_resolvedMistakeTaskIds.length} спота закреплены',
+            ),
     );
   }
+
+  String _profileQualityLineV1({
+    required int perfectClearCount,
+    required int completedCount,
+  }) {
+    if (perfectClearCount > 0) {
+      return _copyV1(
+        en: perfectClearCount == 1
+            ? '1 perfect clear'
+            : '$perfectClearCount perfect clears',
+        ru: perfectClearCount == 1
+            ? '1 идеальный проход'
+            : '$perfectClearCount идеальных прохода',
+      );
+    }
+    if (completedCount > 0) {
+      return _copyV1(en: 'Perfect path open', ru: 'Идеал открыт');
+    }
+    return _copyV1(en: 'Clean progress started', ru: 'Чистый прогресс начат');
+  }
+
+  Set<String> _perfectTaskIds() {
+    return <String>{
+      for (final taskId in _completedTaskIds)
+        if (_cleanTaskIds.contains(taskId) && !_hasOpenMistakeRecord(taskId))
+          taskId,
+    };
+  }
+
+  bool _hasOpenMistakeRecord(String taskId) =>
+      _mistakeRecords.containsKey(taskId) &&
+      !_resolvedMistakeTaskIds.contains(taskId);
 
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
@@ -5029,7 +5267,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Act0MistakeCardV1> _fixedMistakes() => [
     for (final record in _mistakeRecords.values)
       if (_resolvedMistakeTaskIds.contains(record.taskId))
-        record.toCard(resolved: true),
+        record.toCard(
+          resolved: true,
+          completionState: _perfectTaskIds().contains(record.taskId)
+              ? Act0CompletionDisplayStateV1.perfect
+              : (_cleanTaskIds.contains(record.taskId)
+                    ? Act0CompletionDisplayStateV1.clear
+                    : null),
+          qualityLine: _perfectTaskIds().contains(record.taskId)
+              ? _copyV1(en: 'Perfect clear complete.', ru: 'Идеально пройдено.')
+              : (_cleanTaskIds.contains(record.taskId)
+                    ? _copyV1(
+                        en: 'Clear path still open.',
+                        ru: 'Путь к идеалу открыт.',
+                      )
+                    : ''),
+        ),
   ];
 
   List<Act0MistakeCardV1> _quickFixMistakes() => [
@@ -5045,8 +5298,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<String> _strongCategories() {
     final categories = <String>{};
     for (final taskId in _cleanTaskIds) {
-      if (_mistakeRecords.containsKey(taskId) &&
-          !_resolvedMistakeTaskIds.contains(taskId)) {
+      if (_hasOpenMistakeRecord(taskId)) {
         continue;
       }
       final lesson = _lessonForTaskId(taskId);
@@ -5134,9 +5386,48 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Map<String, int> _skillDeltaForTask(String lessonId, String taskId) {
+    final exact = _taskSkillDeltasV1[taskId];
+    if (exact != null) {
+      return exact;
+    }
+    if (taskId.startsWith('positions_')) {
+      return const <String, int>{'Position play': 4, 'Table sense': 2};
+    }
+    if (taskId.startsWith('blinds_')) {
+      return const <String, int>{'Blind play': 4, 'Table sense': 2};
+    }
+    if (taskId.startsWith('actions_') ||
+        taskId.contains('fold') ||
+        taskId.contains('check') ||
+        taskId.contains('call') ||
+        taskId.contains('raise') ||
+        taskId.contains('bet')) {
+      return const <String, int>{'Betting decisions': 4, 'Table sense': 1};
+    }
+    if (taskId.startsWith('hand_rankings_') || taskId.startsWith('showdown_')) {
+      return taskId.contains('best_five') ||
+              taskId.contains('straight') ||
+              taskId.contains('flush')
+          ? const <String, int>{'Hand reading': 3, 'Board reading': 2}
+          : const <String, int>{'Hand reading': 4, 'Board reading': 1};
+    }
+    if (taskId.contains('board') ||
+        taskId.contains('river') ||
+        taskId.contains('flop') ||
+        taskId.contains('turn')) {
+      return const <String, int>{'Board reading': 4, 'Hand reading': 1};
+    }
     return switch (lessonId) {
       'what_poker_is' => <String, int>{'Table sense': 5},
-      'your_first_hand' => <String, int>{'Board reading': 3, 'Hand reading': 3},
+      'cards_ranks_suits' => <String, int>{
+        'Board reading': 3,
+        'Hand reading': 2,
+      },
+      'your_first_hand' => <String, int>{
+        'Table sense': 2,
+        'Board reading': 2,
+        'Betting decisions': 1,
+      },
       'fold_check_call_raise' => <String, int>{
         'Betting decisions': 4,
         'Table sense': 1,
@@ -5593,8 +5884,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _phase = normalizedTask.phase;
     }
 
+    final popupOwnerLesson =
+        _learnDetailLessonId != null &&
+            normalizedWorld.lessons.any(
+              (lesson) => lesson.lessonId == _learnDetailLessonId,
+            )
+        ? _lessonById(normalizedWorld.lessons, _learnDetailLessonId!)
+        : normalizedLesson;
     if (_learnPopupTaskId != null &&
-        !normalizedLesson.taskList.any(
+        !popupOwnerLesson.taskList.any(
           (task) => task.taskId == _learnPopupTaskId,
         )) {
       _learnPopupTaskId = null;
@@ -5767,6 +6065,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         xpLine: '${progress.xp} / ${base.xpTarget} XP',
         lessonsLine: base.profile.lessonsLine,
         accuracyLine: base.profile.accuracyLine,
+        qualityLine: base.profile.qualityLine,
         streakLine: base.profile.streakLine,
         streakDays: base.profile.streakDays,
         consistencyActiveDays: base.profile.consistencyActiveDays,
@@ -5825,6 +6124,18 @@ class _Act0DailyDeckEntryV1 {
   final bool isSpaced;
 }
 
+class _Act0PracticeLaunchTargetV1 {
+  const _Act0PracticeLaunchTargetV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+  });
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+}
+
 class _Act0TopicPackSpecV1 {
   const _Act0TopicPackSpecV1({
     required this.groupId,
@@ -5846,6 +6157,36 @@ class _Act0TopicPackSpecV1 {
   final String sessionLabel;
   final String durationLabel;
 }
+
+const _taskSkillDeltasV1 = <String, Map<String, int>>{
+  'what_poker_is_table_read_transfer': <String, int>{
+    'Table sense': 4,
+    'Board reading': 1,
+  },
+  'cards_ranks_suits_private_board': <String, int>{
+    'Board reading': 3,
+    'Hand reading': 2,
+  },
+  'your_first_hand_action_trail': <String, int>{
+    'Table sense': 2,
+    'Board reading': 2,
+    'Betting decisions': 1,
+  },
+  'actions_legal_context': <String, int>{
+    'Betting decisions': 4,
+    'Table sense': 1,
+  },
+  'blinds_first_actor': <String, int>{'Blind play': 4, 'Table sense': 2},
+  'positions_early_late': <String, int>{'Position play': 4, 'Table sense': 2},
+  'hand_rankings_best_five_drill': <String, int>{
+    'Hand reading': 3,
+    'Board reading': 2,
+  },
+  'showdown_best_hand_drill': <String, int>{
+    'Hand reading': 3,
+    'Board reading': 2,
+  },
+};
 
 const _topicPackSpecsV1 = <_Act0TopicPackSpecV1>[
   _Act0TopicPackSpecV1(
@@ -6167,7 +6508,11 @@ class _Act0MistakeRecordV1 {
   final String repairActionLabel;
   final int attempts;
 
-  Act0MistakeCardV1 toCard({bool resolved = false}) {
+  Act0MistakeCardV1 toCard({
+    bool resolved = false,
+    Act0CompletionDisplayStateV1? completionState,
+    String qualityLine = '',
+  }) {
     return Act0MistakeCardV1(
       taskId: taskId,
       lessonId: lessonId,
@@ -6182,13 +6527,15 @@ class _Act0MistakeRecordV1 {
       severityLabel: resolved
           ? attempts <= 1
                 ? 'Quick fix'
-                : 'Repaired'
+                : 'Clear'
           : attempts >= 2
           ? 'Deep leak'
           : 'Needs repair',
       contextLabels: contextLabels,
       repairActionLabel: repairActionLabel,
       resolved: resolved,
+      completionState: completionState,
+      qualityLine: qualityLine,
     );
   }
 }
@@ -6201,52 +6548,43 @@ class _TopBarV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final streakTone = state.streakDays > 0
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.textDim;
     return Container(
       key: const Key('act0_shell_top_bar'),
-      height: Act0ShellTokensV1.topBarHeight,
+      height: 50,
       padding: const EdgeInsets.symmetric(horizontal: Act0ShellTokensV1.pageX),
       decoration: Act0ShellTokensV1.glassDecoration(),
       child: Row(
         children: [
-          Container(
-            width: Act0ShellTokensV1.brandTile,
-            height: Act0ShellTokensV1.brandTile,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary,
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.34),
-                  blurRadius: 18,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.spa_rounded,
-              color: Act0ShellTokensV1.onPrimary,
-              size: 17,
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
-          Text(
-            goalLabel,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${state.xp} XP',
-                  style: Act0ShellTokensV1.muted.copyWith(fontSize: 11),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        goalLabel,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
+                    Text(
+                      '${state.xp} XP',
+                      style: Act0ShellTokensV1.muted.copyWith(fontSize: 11),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusPill,
@@ -6263,17 +6601,17 @@ class _TopBarV1 extends StatelessWidget {
           ),
           const SizedBox(width: Act0ShellTokensV1.gapMd),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface2,
+              color: streakTone.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-              border: Border.all(color: Act0ShellTokensV1.border),
+              border: Border.all(color: streakTone.withValues(alpha: 0.28)),
             ),
             child: Text(
               '${state.streakDays}d',
               style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.gold,
-                fontWeight: FontWeight.w900,
+                color: streakTone,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
@@ -6324,7 +6662,7 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.play,
               current: current,
               icon: Icons.spa_rounded,
-              label: isRu ? 'Практика' : 'Play',
+              label: isRu ? 'Практика' : 'Practice',
               onSelected: onSelected,
             ),
             _NavItemV1(

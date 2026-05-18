@@ -135,12 +135,12 @@ class Act0BlockCompletionSummaryV1 {
 
   String get replayCtaLabel {
     if (!qualifiesForNextLesson) {
-      return 'Run this block again';
+      return 'Replay this block';
     }
     if (deepLeakCount > 0) {
-      return 'Run block before Review';
+      return 'Replay block before Review';
     }
-    return 'Run this block again';
+    return 'Replay this block';
   }
 
   String get habitRewardLabel {
@@ -311,12 +311,15 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onPreviousTheory,
     this.onUndoInteraction,
     required this.onChooseOption,
+    this.onSelectSizingPreset,
+    this.onConfirmSizingPreset,
     this.onChooseSeat,
     required this.onContinueReview,
     this.completionSummary,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
     this.relaxTheoryAdvanceLock = false,
     this.showLearningRailFocusLabels = false,
+    this.rapidReviewMode = false,
   });
 
   final Act0RunnerStateV1 runner;
@@ -327,12 +330,15 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback? onPreviousTheory;
   final VoidCallback? onUndoInteraction;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
+  final ValueChanged<Act0SizingPresetV1>? onSelectSizingPreset;
+  final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
   final bool relaxTheoryAdvanceLock;
   final bool showLearningRailFocusLabels;
+  final bool rapidReviewMode;
 
   @override
   State<Act0LessonRunnerShellV1> createState() =>
@@ -348,8 +354,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   );
 
   Timer? _theoryUnlockTimer;
+  Timer? _rapidReviewTimer;
   bool _canAdvanceTheory = true;
   String _advanceLockKey = '';
+  String _rapidReviewKey = '';
   String _showdownInteractionKey = '';
   List<String> _interactiveHighlightedCardIds = const <String>[];
   String _interactiveShowdownLine = '';
@@ -361,6 +369,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   void initState() {
     super.initState();
     _syncTheoryAdvanceLock(initial: true);
+    _syncRapidReviewAdvance();
   }
 
   @override
@@ -368,6 +377,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     super.didUpdateWidget(oldWidget);
     _syncTheoryAdvanceLock();
     _syncLearningRailSupportSegment();
+    _syncRapidReviewAdvance();
     final nextKey = _interactionKey(widget.runner);
     if (_showdownInteractionKey != nextKey) {
       _actionTrailFocusedIndex = null;
@@ -380,7 +390,32 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   @override
   void dispose() {
     _theoryUnlockTimer?.cancel();
+    _rapidReviewTimer?.cancel();
     super.dispose();
+  }
+
+  void _syncRapidReviewAdvance() {
+    final shouldAutoAdvance =
+        widget.rapidReviewMode &&
+        _isReview &&
+        widget.runner.selectedOptionId != null;
+    if (!shouldAutoAdvance) {
+      _rapidReviewTimer?.cancel();
+      _rapidReviewKey = '';
+      return;
+    }
+    final nextKey = _interactionKey(widget.runner);
+    if (_rapidReviewKey == nextKey) {
+      return;
+    }
+    _rapidReviewTimer?.cancel();
+    _rapidReviewKey = nextKey;
+    _rapidReviewTimer = Timer(const Duration(milliseconds: 650), () {
+      if (!mounted) {
+        return;
+      }
+      widget.onContinueReview();
+    });
   }
 
   void _syncLearningRailSupportSegment() {
@@ -953,6 +988,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       }
     }
     final interactiveCallout = _interactiveShowdownLine;
+    final selectedSeatId = runner.selectedOption?.seatId?.trim();
+    final selectedSeatFeedbackState = switch (runner.reviewQuality) {
+      Act0FeedbackQualityV1.wrong => _SeatSelectionFeedbackStateV1.wrong,
+      Act0FeedbackQualityV1.correct ||
+      Act0FeedbackQualityV1.suboptimal => selectedSeatId != null &&
+              selectedSeatId.isNotEmpty
+          ? _SeatSelectionFeedbackStateV1.confirmed
+          : _SeatSelectionFeedbackStateV1.none,
+    };
     return Column(
       key: const Key('act0_shell_runner_screen'),
       children: [
@@ -1009,13 +1053,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     onBoardCardTap: _onBoardTappedForShowdown,
                     onChooseSeat: widget.onChooseSeat,
                     visualVariant: widget.tableVisualVariant,
+                    showFocusBadge: !_showBottomLearningRail,
+                    showRepairCallout: !_isReview,
                     playbackActiveSeatId: playbackActiveSeatId,
+                    animateBetMotion: trailPlaybackEnabled,
                     betOverride: betOverride,
                     potLabelOverride: playbackPotLabel,
                     streetLabelOverride: playbackStreetLabel,
                     completionSummary: showCompletionToast
                         ? widget.completionSummary
                         : null,
+                    selectedSeatId: selectedSeatId,
+                    selectedSeatFeedbackState: selectedSeatFeedbackState,
                   ),
                 ),
                 if (interactiveCallout.isNotEmpty) ...[
@@ -1071,24 +1120,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               ? runner.sizingConfig.presets
               : null,
           selectedPresetId: runner.selectedPresetId,
-          onSelectPreset: (preset) {
-            widget.onChooseOption(
-              Act0RunnerOptionV1(
-                id: 'preset_${preset.id}',
-                label: preset.label,
-                amountLabel: '',
-                isCorrect: true,
-                preferredLabel: preset.label,
-                quality: Act0FeedbackQualityV1.correct,
-                feedbackTitle: 'Good choice.',
-                feedbackReason: 'That sizing strategy makes sense.',
-              ),
-            );
-            setState(() {
-              // Store selected preset in runner state via onChooseOption
-              // The preset selection is tracked through the runner state update
-            });
-          },
+          onSelectPreset: widget.onSelectSizingPreset,
           child: _showBottomLearningRail
               ? _LearningRailV1(
                   taskLabel: taskRailLabel,
@@ -1136,6 +1168,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         options: runner.options,
                         onBack: null,
                       )
+                    : runner.sizingConfig.isEnabled
+                    ? _ActionPromptPanelV1(
+                        taskLabel: taskRailLabel,
+                        question: question,
+                        onBack: null,
+                        child: _SizingConfirmPanelV1(
+                          selectedPreset: runner.selectedPreset,
+                          onConfirm: widget.onConfirmSizingPreset,
+                        ),
+                      )
                     : _ActionPromptPanelV1(
                         taskLabel: taskRailLabel,
                         question: question,
@@ -1168,12 +1210,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       selectedLabel: runner.reviewSelectedLabel,
                       preferredLabel: runner.reviewPreferredLabel,
                       betterLabel: runner.reviewBetterLabel,
+                      taskFamily: widget.selectedTaskFamily,
+                      hasSeatTargets: runner.options.any(
+                        (option) => option.seatId != null,
+                      ),
                       potLabel: runner.table.potLabel,
                       showPotSweep: _shouldShowPotSweep(runner),
                       contextLabels: runner.reviewContextLabels,
                       refined: isRefinedDev2,
-                      completionSummary: widget.completionSummary,
+                      completionSummary: null,
                       onBack: null,
+                      rapidMode: widget.rapidReviewMode,
                       onContinue: widget.onContinueReview,
                     ),
                   ],
@@ -1252,7 +1299,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
           children: [
             if (taskRailLabel != null && taskRailLabel!.isNotEmpty) ...[
               _TaskRailV1(label: taskRailLabel!),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              const SizedBox(height: 6),
             ],
             if (hasSizingPresets) ...[
               _SizingPresetsLaneV1(
@@ -1288,7 +1335,7 @@ class _SizingPresetsLaneV1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Bet amount',
+          'Sizing',
           key: Key('act0_shell_sizing_presets_label'),
           style: TextStyle(
             fontSize: 12,
@@ -1315,6 +1362,34 @@ class _SizingPresetsLaneV1 extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _SizingConfirmPanelV1 extends StatelessWidget {
+  const _SizingConfirmPanelV1({
+    required this.selectedPreset,
+    required this.onConfirm,
+  });
+
+  final Act0SizingPresetV1? selectedPreset;
+  final VoidCallback? onConfirm;
+
+  @override
+  Widget build(BuildContext context) {
+    final preset = selectedPreset;
+    final canConfirm = preset != null && onConfirm != null;
+    final label = preset == null
+        ? 'Select one size'
+        : preset.ctaLabel ?? 'Lock ${preset.displayLabel ?? preset.label}';
+
+    return FilledButton(
+      key: const Key('act0_shell_sizing_confirm_cta'),
+      onPressed: canConfirm ? onConfirm : null,
+      style: Act0ShellTokensV1.primaryButtonStyle(
+        height: Act0ShellTokensV1.compactCtaHeight,
+      ),
+      child: Text(label),
     );
   }
 }
@@ -1355,9 +1430,28 @@ class _SizingPresetButtonV1 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            preset.label,
+            preset.displayLabel ?? preset.label,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            softWrap: false,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
           ),
+          if ((preset.detailLabel ?? '').isNotEmpty)
+            Text(
+              preset.detailLabel!,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color:
+                    (isSelected
+                            ? Act0ShellTokensV1.primary
+                            : Act0ShellTokensV1.textMuted)
+                        .withValues(alpha: isSelected ? 0.92 : 0.9),
+              ),
+            ),
         ],
       ),
     );
@@ -1668,23 +1762,12 @@ class _LearningRailV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progressMatch = progressLabel == null
-        ? null
-        : RegExp(r'^(\d+)/(\d+)$').firstMatch(progressLabel!);
-    final progressCurrent = progressMatch == null
-        ? null
-        : int.tryParse(progressMatch.group(1)!);
-    final progressTotal = progressMatch == null
-        ? null
-        : int.tryParse(progressMatch.group(2)!);
-    final showProgressDots =
-        progressCurrent != null &&
-        progressTotal != null &&
-        progressTotal > 2 &&
-        progressCurrent >= 1 &&
-        progressCurrent <= progressTotal;
     final showTaskLabel = taskLabel != null && taskLabel!.trim().isNotEmpty;
     final hasSupportLine = supportSegments.isNotEmpty;
+    final showRailProgress =
+        progressLabel != null && progressLabel!.trim().isNotEmpty;
+    final fallbackCoachLine = sharkyLine.trim();
+    final showFallbackCoachLine = !hasSupportLine && fallbackCoachLine.isNotEmpty;
     final tone = canAdvance
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
@@ -1705,120 +1788,169 @@ class _LearningRailV1 extends StatelessWidget {
             ),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 118, maxHeight: 212),
+            constraints: const BoxConstraints(minHeight: 74, maxHeight: 136),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 146;
+                final compactRail = constraints.maxHeight <= 132;
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: compactRail ? 10 : 12,
-                    vertical: compactRail ? 10 : 11,
+                    vertical: compactRail ? 4 : 6,
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (showTaskLabel || progressLabel != null) ...[
+                      if (showTaskLabel || showRailProgress) ...[
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             if (showTaskLabel)
-                              Text(
-                                taskLabel!,
-                                key: const Key(
-                                  'act0_shell_learning_rail_task_label',
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Act0SharkyMascotV1(
+                                      mood: sharkyMood,
+                                      tone: Act0ShellTokensV1.textMuted,
+                                      size: compactRail ? 13 : 16,
+                                    ),
+                                    SizedBox(width: compactRail ? 4 : 6),
+                                    Expanded(
+                                      child: Text(
+                                        taskLabel!,
+                                        key: const Key(
+                                          'act0_shell_learning_rail_task_label',
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          color: Act0ShellTokensV1.textMuted,
+                                          letterSpacing: 0.16,
+                                          fontSize: compactRail ? 9.2 : 10.2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              )
+                            else
+                              const Spacer(),
+                            if (showRailProgress)
+                              Text(
+                                progressLabel!,
+                                key: const Key(
+                                  'act0_shell_learning_rail_progress',
+                                ),
                                 style: Act0ShellTokensV1.label.copyWith(
-                                  color: Act0ShellTokensV1.textMuted,
-                                  letterSpacing: 0.2,
-                                  fontSize: compactRail ? 10 : 10.5,
+                                  color: Act0ShellTokensV1.textDim,
+                                  fontSize: compactRail ? 9.0 : 10.0,
+                                  letterSpacing: 0.12,
+                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
-                            const Spacer(),
-                            if (progressLabel != null)
-                              showProgressDots
-                                  ? _RailProgressDotsV1(
-                                      key: const Key(
-                                        'act0_shell_learning_rail_progress',
-                                      ),
-                                      count: progressTotal,
-                                      current: progressCurrent - 1,
-                                    )
-                                  : _DockStatusPillV1(
-                                      key: const Key(
-                                        'act0_shell_learning_rail_progress',
-                                      ),
-                                      label: progressLabel!,
-                                      icon: Icons.notes_rounded,
-                                      tone: Act0ShellTokensV1.primary,
-                                    ),
                           ],
                         ),
-                        SizedBox(height: compactRail ? 5 : 6),
+                        SizedBox(height: compactRail ? 2 : 4),
                       ],
                       Expanded(
-                        child: Row(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            _LearningRailNavButtonV1(
-                              icon: Icons.arrow_back_ios_new_rounded,
-                              buttonKey: const Key('act0_shell_previous_cta'),
-                              enabled: canGoBack,
-                              onPressed: onBack,
-                              compact: compactRail,
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: Text(
+                                _formatInstructionCopyV1(
+                                  prompt,
+                                  allowSingleClauseSplit: true,
+                                ),
+                                key: const Key('act0_shell_runner_prompt'),
+                                maxLines: compactRail ? 1 : null,
+                                overflow: compactRail
+                                    ? TextOverflow.ellipsis
+                                    : null,
+                                style: Act0ShellTokensV1.body.copyWith(
+                                  color: Act0ShellTokensV1.text,
+                                  fontSize: compactRail ? 12.6 : 14.6,
+                                  height: compactRail ? 1.0 : 1.06,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                             ),
+                            if (hasSupportLine) ...[
+                              SizedBox(height: compactRail ? 1 : 4),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: _LearningRailKeyIdeaV1(
+                                  supportSegments: supportSegments,
+                                  activeSegmentIndex: activeSupportSegmentIndex,
+                                  compact: compactRail,
+                                ),
+                              ),
+                            ] else if (showFallbackCoachLine) ...[
+                              SizedBox(height: compactRail ? 1 : 4),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Text(
+                                  fallbackCoachLine,
+                                  key: const Key(
+                                    'act0_shell_learning_rail_support_line',
+                                  ),
+                                  maxLines: compactRail ? 1 : 2,
+                                  overflow: compactRail
+                                      ? TextOverflow.ellipsis
+                                      : null,
+                                  style: Act0ShellTokensV1.body.copyWith(
+                                    color: Act0ShellTokensV1.textMuted,
+                                    fontSize: compactRail ? 9.8 : 11.8,
+                                    height: compactRail ? 1.0 : 1.08,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: compactRail ? 4 : 6),
+                      Row(
+                        children: [
+                          _LearningRailNavButtonV1(
+                            icon: Icons.arrow_back_ios_new_rounded,
+                            buttonKey: const Key('act0_shell_previous_cta'),
+                            enabled: canGoBack,
+                            onPressed: onBack,
+                            compact: compactRail,
+                          ),
+                          if (supportSegments.length > 1) ...[
                             const SizedBox(width: Act0ShellTokensV1.gapSm),
                             Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (sharkyLine.isNotEmpty) ...[
-                                    _LearningRailSharkyHeaderV1(
-                                      line: sharkyLine,
-                                      mood: sharkyMood,
-                                      compact: compactRail,
-                                    ),
-                                    SizedBox(height: compactRail ? 4 : 5),
-                                  ],
-                                  Text(
-                                    _formatInstructionCopyV1(
-                                      prompt,
-                                      allowSingleClauseSplit: true,
-                                    ),
-                                    key: const Key('act0_shell_runner_prompt'),
-                                    style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.text,
-                                      fontSize: compactRail ? 15 : 16,
-                                      height: 1.08,
-                                      fontWeight: FontWeight.w900,
-                                    ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: _LearningRailSupportDotsV1(
+                                  key: const Key(
+                                    'act0_shell_learning_rail_support_dots',
                                   ),
-                                  if (hasSupportLine) ...[
-                                    SizedBox(height: compactRail ? 4 : 6),
-                                    Flexible(
-                                      child: _LearningRailKeyIdeaV1(
-                                        supportSegments: supportSegments,
-                                        activeSegmentIndex:
-                                            activeSupportSegmentIndex,
-                                        compact: compactRail,
-                                      ),
-                                    ),
-                                  ],
-                                ],
+                                  count: supportSegments.length,
+                                  current: activeSupportSegmentIndex.clamp(
+                                    0,
+                                    supportSegments.length - 1,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(width: Act0ShellTokensV1.gapSm),
-                            _LearningRailNavButtonV1(
-                              icon: Icons.arrow_forward_ios_rounded,
-                              buttonKey: const Key('act0_shell_continue_cta'),
-                              enabled: canAdvance,
-                              onPressed: canAdvance ? onAdvance : null,
-                              tone: tone,
-                              compact: compactRail,
-                            ),
-                          ],
-                        ),
+                          ] else
+                            const Spacer(),
+                          _LearningRailNavButtonV1(
+                            icon: Icons.arrow_forward_ios_rounded,
+                            buttonKey: const Key('act0_shell_continue_cta'),
+                            enabled: canAdvance,
+                            onPressed: canAdvance ? onAdvance : null,
+                            tone: tone,
+                            compact: compactRail,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -1860,45 +1992,6 @@ class _RailFocusChipV1 extends StatelessWidget {
   }
 }
 
-class _LearningRailSharkyHeaderV1 extends StatelessWidget {
-  const _LearningRailSharkyHeaderV1({
-    required this.line,
-    required this.mood,
-    this.compact = false,
-  });
-
-  final String line;
-  final Act0SharkyMoodV1 mood;
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Act0SharkyMascotV1(
-          mood: mood,
-          tone: Act0ShellTokensV1.primary,
-          size: compact ? 24 : 28,
-        ),
-        SizedBox(width: compact ? 5 : 6),
-        Expanded(
-          child: Text(
-            line,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-              fontSize: compact ? 10.5 : 11,
-              height: 1.0,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _LearningRailKeyIdeaV1 extends StatelessWidget {
   const _LearningRailKeyIdeaV1({
     required this.supportSegments,
@@ -1917,30 +2010,17 @@ class _LearningRailKeyIdeaV1 extends StatelessWidget {
     }
     final safeIndex = activeSegmentIndex.clamp(0, supportSegments.length - 1);
     final line = supportSegments[safeIndex];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          _formatInstructionCopyV1(line),
-          key: const Key('act0_shell_learning_rail_support_line'),
-          maxLines: compact ? 3 : null,
-          style: Act0ShellTokensV1.body.copyWith(
-            color: Act0ShellTokensV1.textMuted,
-            fontSize: compact ? 11.2 : 12.6,
-            height: compact ? 1.08 : 1.15,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        if (supportSegments.length > 1) ...[
-          SizedBox(height: compact ? 4 : 7),
-          _LearningRailSupportDotsV1(
-            key: const Key('act0_shell_learning_rail_support_dots'),
-            count: supportSegments.length,
-            current: safeIndex,
-          ),
-        ],
-      ],
+    return Text(
+      _formatInstructionCopyV1(line),
+      key: const Key('act0_shell_learning_rail_support_line'),
+      maxLines: compact ? 1 : null,
+      overflow: compact ? TextOverflow.ellipsis : null,
+      style: Act0ShellTokensV1.body.copyWith(
+        color: Act0ShellTokensV1.textMuted,
+        fontSize: compact ? 9.8 : 12.0,
+        height: compact ? 1.0 : 1.10,
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }
@@ -1980,41 +2060,6 @@ class _LearningRailSupportDotsV1 extends StatelessWidget {
   }
 }
 
-class _RailProgressDotsV1 extends StatelessWidget {
-  const _RailProgressDotsV1({
-    super.key,
-    required this.count,
-    required this.current,
-  });
-
-  final int count;
-  final int current;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int i = 0; i < count; i++) ...[
-          if (i > 0) const SizedBox(width: 4),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOutCubic,
-            width: i == current ? 12 : 5,
-            height: 5,
-            decoration: BoxDecoration(
-              color: i == current
-                  ? Act0ShellTokensV1.primary
-                  : Act0ShellTokensV1.textMuted.withValues(alpha: 0.35),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
 class _LearningRailNavButtonV1 extends StatelessWidget {
   const _LearningRailNavButtonV1({
     required this.icon,
@@ -2035,8 +2080,8 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: compact ? 36 : 40,
-      height: compact ? 36 : 40,
+      width: compact ? 32 : 40,
+      height: compact ? 32 : 40,
       decoration: BoxDecoration(
         color: enabled
             ? tone.withValues(alpha: 0.12)
@@ -2051,11 +2096,11 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
       child: IconButton(
         key: buttonKey,
         onPressed: enabled ? onPressed : null,
-        splashRadius: compact ? 18 : 20,
+        splashRadius: compact ? 16 : 20,
         padding: EdgeInsets.zero,
         icon: Icon(
           icon,
-          size: compact ? 14 : 16,
+          size: compact ? 12 : 16,
           color: enabled ? tone : Act0ShellTokensV1.textDim,
         ),
       ),
@@ -2071,11 +2116,16 @@ class _RunnerTableStageV1 extends StatelessWidget {
     required this.onBoardCardTap,
     required this.onChooseSeat,
     required this.visualVariant,
+    this.showFocusBadge = true,
+    this.showRepairCallout = true,
     this.playbackActiveSeatId,
+    this.animateBetMotion = false,
     this.betOverride,
     this.potLabelOverride,
     this.streetLabelOverride,
     this.completionSummary,
+    this.selectedSeatId,
+    this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
   });
 
   final Act0TableStateV1 table;
@@ -2084,38 +2134,36 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final ValueChanged<Act0TableStateV1> onBoardCardTap;
   final ValueChanged<String>? onChooseSeat;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final bool showFocusBadge;
+  final bool showRepairCallout;
   final String? playbackActiveSeatId;
+  final bool animateBetMotion;
   final Act0SeatBetStateV1? betOverride;
   final String? potLabelOverride;
   final String? streetLabelOverride;
   final Act0RunnerCompletionSummaryV1? completionSummary;
+  final String? selectedSeatId;
+  final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.topCenter,
-      children: [
-        _Act0TableV1(
-          table: table,
-          highlightedCardIds: highlightedCardIds,
-          interactiveCalloutLabel: interactiveCalloutLabel,
-          onBoardCardTap: onBoardCardTap,
-          onChooseSeat: onChooseSeat,
-          visualVariant: visualVariant,
-          playbackActiveSeatId: playbackActiveSeatId,
-          betOverride: betOverride,
-          potLabelOverride: potLabelOverride,
-          streetLabelOverride: streetLabelOverride,
-        ),
-        if (completionSummary != null)
-          Positioned(
-            top: 16,
-            child: IgnorePointer(
-              child: _CompletionToastV1(summary: completionSummary!),
-            ),
-          ),
-      ],
+    return _Act0TableV1(
+      table: table,
+      highlightedCardIds: highlightedCardIds,
+      interactiveCalloutLabel: interactiveCalloutLabel,
+      onBoardCardTap: onBoardCardTap,
+      onChooseSeat: onChooseSeat,
+      visualVariant: visualVariant,
+      showFocusBadge: showFocusBadge,
+      showRepairCallout: showRepairCallout,
+      playbackActiveSeatId: playbackActiveSeatId,
+      animateBetMotion: animateBetMotion,
+      betOverride: betOverride,
+      potLabelOverride: potLabelOverride,
+      streetLabelOverride: streetLabelOverride,
+      completionSummary: completionSummary,
+      selectedSeatId: selectedSeatId,
+      selectedSeatFeedbackState: selectedSeatFeedbackState,
     );
   }
 }
@@ -2257,60 +2305,63 @@ class _SeatTapPromptV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_seat_tap_prompt'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 9),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.surface2,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (onBack != null) ...[
             _DockBackButtonV1(onPressed: onBack!),
             const SizedBox(width: Act0ShellTokensV1.gapSm),
           ] else
-            const Icon(
-              Icons.touch_app_rounded,
-              color: Act0ShellTokensV1.primary,
-              size: 20,
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Icon(
+                Icons.touch_app_rounded,
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.92),
+                size: 18,
+              ),
             ),
-          if (onBack == null) const SizedBox(width: Act0ShellTokensV1.gapSm),
+          if (onBack == null) const SizedBox(width: 7),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                _DockStatusPillV1(
-                  key: Key('act0_shell_action_required_badge'),
-                  label: act0RuntimeSeatTapStatusLabelV1(context),
-                  icon: Icons.touch_app_rounded,
-                  tone: Act0ShellTokensV1.gold,
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
                 Text(
                   taskLabel,
                   key: const Key('act0_shell_seat_tap_task_label'),
-                  maxLines: 3,
+                  maxLines: 2,
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
                     letterSpacing: 0.2,
+                    fontSize: 9.4,
                   ),
                 ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                const SizedBox(height: 3),
                 if (question.isNotEmpty)
                   Text(
                     question,
                     key: const Key('act0_shell_action_question'),
-                    maxLines: 4,
+                    maxLines: 3,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
-                      fontSize: 15,
+                      fontSize: 14,
+                      height: 1.06,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
+                const SizedBox(height: 2),
                 Text(
                   act0RuntimeSeatTapHelperLabelV1(context),
                   key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 3,
+                  maxLines: 2,
                   style: Act0ShellTokensV1.muted.copyWith(
                     fontWeight: FontWeight.w800,
+                    fontSize: 11.5,
+                    height: 1.08,
                   ),
                 ),
               ],
@@ -2500,12 +2551,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     required this.selectedLabel,
     required this.preferredLabel,
     required this.betterLabel,
+    this.taskFamily,
+    this.hasSeatTargets = false,
     this.potLabel = '',
     this.showPotSweep = false,
     this.contextLabels = const <String>[],
     this.refined = false,
     this.completionSummary,
     this.onBack,
+    this.rapidMode = false,
     required this.onContinue,
   });
 
@@ -2517,12 +2571,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String selectedLabel;
   final String preferredLabel;
   final String betterLabel;
+  final Act0TaskFamilyV1? taskFamily;
+  final bool hasSeatTargets;
   final String potLabel;
   final bool showPotSweep;
   final List<String> contextLabels;
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final VoidCallback? onBack;
+  final bool rapidMode;
   final VoidCallback onContinue;
 
   @override
@@ -2556,10 +2613,27 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       localeIsRu: Localizations.localeOf(context).languageCode == 'ru',
     );
     final showVerdictTitle = resolvedTitle.isNotEmpty;
-    final actionPrefix = act0RuntimeFeedbackActionPrefixV1(context, quality);
+    final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
+      context,
+      quality,
+      taskFamily: taskFamily,
+      hasSeatTargets: hasSeatTargets,
+    );
     final actionLabel = act0RuntimeLocalizedOptionLabelV1(
       context,
       isWrong ? betterLabel : preferredLabel,
+    );
+    final localizedContextLabels = [
+      for (final label in (refined ? contextLabels.take(1) : contextLabels))
+        act0RuntimeLocalizedContextLabelV1(context, label).trim(),
+    ];
+    final visibleContextLabels = _dedupedFeedbackContextLabelsV1(
+      localizedContextLabels,
+      preferredLine: actionLabel,
+      selectedLine: isWrong || isSuboptimal ? selectedLabel : '',
+      statusLine: showVerdictTitle
+          ? act0RuntimeLocalizedGeneralLabelV1(context, resolvedTitle).trim()
+          : '',
     );
     final resolvedReason = _feedbackReasonFloorV1(
       context,
@@ -2572,9 +2646,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     );
     return Container(
       key: const Key('act0_shell_feedback_card'),
-      padding: EdgeInsets.all(refined ? 10 : 12),
+      padding: EdgeInsets.all(rapidMode ? 8 : (refined ? 8 : 10)),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: tone.withValues(alpha: 0.46),
+        borderColor: tone.withValues(alpha: refined ? 0.32 : 0.46),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2585,9 +2659,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               Act0SharkyMascotV1(
                 mood: sharkyMood,
                 tone: sharkyTone,
-                size: refined ? 48 : 52,
+                size: refined ? 34 : 40,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2596,125 +2670,181 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       Text(
                         reactionLine,
                         key: const Key('act0_shell_sharky_outcome_reaction'),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.fade,
                         style: Act0ShellTokensV1.muted.copyWith(
                           color: Act0ShellTokensV1.textMuted,
-                          fontSize: 11.5,
-                          height: 1.12,
+                          fontSize: refined ? 10.0 : 10.5,
+                          height: 1.06,
                           fontWeight: FontWeight.w700,
                         ),
-                      ),
-                    if (reactionLine.isNotEmpty && showVerdictTitle)
-                      const SizedBox(height: 5),
-                    if (showVerdictTitle)
-                      Row(
-                        children: [
-                          Icon(icon, key: iconKey, color: tone, size: 18),
-                          const SizedBox(width: 7),
-                          Expanded(
-                            child: Text(
-                              act0RuntimeLocalizedGeneralLabelV1(
-                                context,
-                                resolvedTitle,
-                              ),
-                              style: Act0ShellTokensV1.cardTitle.copyWith(
-                                color: tone,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 9),
-          if ((isWrong || isSuboptimal) && selectedLabel.isNotEmpty) ...[
-            Text(
-              act0RuntimeFeedbackSelectedLineV1(context, selectedLabel),
-              key: const Key('act0_shell_feedback_selected_label'),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
+          if (!rapidMode) const SizedBox(height: 8),
           if (actionLabel.isNotEmpty) ...[
             Text(
               '$actionPrefix: $actionLabel',
               key: const Key('act0_shell_feedback_preferred_label'),
-              maxLines: 3,
+              maxLines: rapidMode ? 2 : 2,
               overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.text,
-                fontSize: refined ? 17 : 18,
-                height: 1.08,
+                fontSize: rapidMode ? 15 : (refined ? 15.5 : 16.5),
+                height: 1.06,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: rapidMode ? 0 : 6),
           ],
-          Text(
-            resolvedReason,
-            key: const Key('act0_shell_feedback_reason'),
-            maxLines: refined ? 5 : 6,
-            overflow: TextOverflow.fade,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-              fontSize: 13,
-              height: 1.2,
+          if (!rapidMode &&
+              (isWrong || isSuboptimal) &&
+              selectedLabel.isNotEmpty) ...[
+            Text(
+              act0RuntimeFeedbackSelectedLineV1(context, selectedLabel),
+              key: const Key('act0_shell_feedback_selected_label'),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontSize: refined ? 11.5 : 12.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          if (showPotSweep && potLabel.isNotEmpty) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
+          ],
+          if (!rapidMode)
+            Text(
+              resolvedReason,
+              key: const Key('act0_shell_feedback_reason'),
+              maxLines: refined ? 3 : 4,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontSize: refined ? 12.0 : 12.5,
+                height: 1.16,
+              ),
+            ),
+          if (!rapidMode && showVerdictTitle) ...[
+            const SizedBox(height: 7),
+            Row(
+              children: [
+                Icon(icon, key: iconKey, color: tone, size: 15),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    act0RuntimeLocalizedGeneralLabelV1(context, resolvedTitle),
+                    key: const Key('act0_shell_feedback_status_label'),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: tone.withValues(alpha: 0.92),
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
+            const SizedBox(height: 9),
             _PotSweepMomentV1(potLabel: potLabel),
           ],
-          if (contextLabels.isNotEmpty) ...[
-            const SizedBox(height: 8),
+          if (!rapidMode && visibleContextLabels.isNotEmpty) ...[
+            const SizedBox(height: 7),
             Wrap(
               key: const Key('act0_shell_feedback_context_labels'),
               spacing: 6,
               runSpacing: 5,
               children: [
-                for (final label in contextLabels)
+                for (final label in visibleContextLabels)
                   _DockStatusPillV1(
-                    label: act0RuntimeLocalizedContextLabelV1(context, label),
+                    label: label,
                     icon: Icons.check_rounded,
                     tone: tone,
-                  ),
+                ),
               ],
             ),
           ],
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              if (onBack != null) ...[
-                _DockBackButtonV1(
-                  key: const Key('act0_shell_interaction_back_cta'),
-                  onPressed: onBack!,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-              ],
-              Expanded(
-                child: FilledButton(
-                  key: const Key('act0_shell_feedback_continue_cta'),
-                  onPressed: onContinue,
-                  style: Act0ShellTokensV1.primaryButtonStyle(
-                    height: Act0ShellTokensV1.compactCtaHeight,
-                  ),
-                  child: const Text('Continue'),
-                ),
+          if (!rapidMode && completionSummary != null) ...[
+            const SizedBox(height: 8),
+            _CompletionToastV1(summary: completionSummary!),
+          ],
+          if (rapidMode) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Next spot...',
+              key: const Key('act0_shell_feedback_auto_advance_label'),
+              textAlign: TextAlign.center,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: tone,
+                letterSpacing: 0.2,
               ),
-            ],
-          ),
+            ),
+          ] else ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                if (onBack != null) ...[
+                  _DockBackButtonV1(
+                    key: const Key('act0_shell_interaction_back_cta'),
+                    onPressed: onBack!,
+                  ),
+                  const SizedBox(width: Act0ShellTokensV1.gapSm),
+                ],
+                Expanded(
+                  child: FilledButton(
+                    key: const Key('act0_shell_feedback_continue_cta'),
+                    onPressed: onContinue,
+                    style: Act0ShellTokensV1.primaryButtonStyle(
+                      height: Act0ShellTokensV1.compactCtaHeight,
+                    ),
+                    child: const Text('Continue'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
   }
+}
+
+List<String> _dedupedFeedbackContextLabelsV1(
+  List<String> labels, {
+  required String preferredLine,
+  required String selectedLine,
+  required String statusLine,
+}) {
+  final seen = <String>{};
+  final normalizedSelected = _normalizeFeedbackLabelV1(selectedLine);
+  final blocked = <String>{
+    _normalizeFeedbackLabelV1(preferredLine),
+    _normalizeFeedbackLabelV1(statusLine),
+  }..remove('');
+  final result = <String>[];
+  for (final label in labels) {
+    final normalized = _normalizeFeedbackLabelV1(label);
+    if (normalized.isEmpty ||
+        blocked.contains(normalized) ||
+        (normalizedSelected.isNotEmpty &&
+            (normalized == normalizedSelected ||
+                normalized.startsWith('$normalizedSelected '))) ||
+        !seen.add(normalized)) {
+      continue;
+    }
+    result.add(label);
+  }
+  return result;
+}
+
+String _normalizeFeedbackLabelV1(String label) {
+  return label.trim().toLowerCase();
 }
 
 const Set<String> _genericFeedbackTitleFloorInputsV1 = <String>{
@@ -3550,15 +3680,19 @@ Act0RunnerCompletionSummaryV1 _blockSummaryProgressAtGain(
 }
 
 class _CompletionToastV1 extends StatelessWidget {
-  const _CompletionToastV1({required this.summary});
+  const _CompletionToastV1({
+    required this.summary,
+    this.overlayStyle = _CompletionToastOverlayStyleV1.standard,
+  });
 
   final Act0RunnerCompletionSummaryV1 summary;
+  final _CompletionToastOverlayStyleV1 overlayStyle;
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 2200),
+      duration: const Duration(milliseconds: 1800),
       curve: Curves.easeOutCubic,
       builder: (context, value, child) {
         final appear = Curves.easeOut.transform((value / 0.18).clamp(0.0, 1.0));
@@ -3568,76 +3702,102 @@ class _CompletionToastV1 extends StatelessWidget {
         final opacity = (appear * (1 - disappear)).clamp(0.0, 1.0);
         final animatedGain = (summary.xpGain * appear).round();
         final progress = _feedbackProgressAtGain(summary, animatedGain);
+        final tone = summary.leveledUp
+            ? Act0ShellTokensV1.gold
+            : Act0ShellTokensV1.primary;
+        final onTableOverlay =
+            overlayStyle == _CompletionToastOverlayStyleV1.table;
         return Opacity(
           opacity: opacity,
           child: Transform.translate(
-            offset: Offset(0, (1 - appear) * -6),
+            offset: Offset(0, (1 - appear) * (onTableOverlay ? 5 : 6)),
             child: Container(
               key: const Key('act0_shell_completion_toast'),
-              constraints: const BoxConstraints(minWidth: 94, maxWidth: 118),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+              constraints: BoxConstraints(
+                minWidth: onTableOverlay ? 164 : 176,
+                maxWidth: onTableOverlay ? 204 : 220,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: onTableOverlay ? 11 : 12,
+                vertical: onTableOverlay ? 8 : 10,
+              ),
               decoration: BoxDecoration(
-                color: Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
+                color: onTableOverlay
+                    ? Act0ShellTokensV1.surface2.withValues(alpha: 0.88)
+                    : Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
                 borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
                 border: Border.all(
-                  color: summary.leveledUp
-                      ? Act0ShellTokensV1.gold.withValues(alpha: 0.44)
-                      : Act0ShellTokensV1.primary.withValues(alpha: 0.34),
+                  color: tone.withValues(alpha: onTableOverlay ? 0.24 : 0.34),
                 ),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.24),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
+                    color: Colors.black.withValues(
+                      alpha: onTableOverlay ? 0.10 : 0.24,
+                    ),
+                    blurRadius: onTableOverlay ? 8 : 18,
+                    offset: Offset(0, onTableOverlay ? 3 : 8),
                   ),
                 ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '+$animatedGain XP · ${summary.toastRewardLabel}',
+                          key: const Key(
+                            'act0_shell_completion_toast_reward_label',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: tone,
+                            letterSpacing: onTableOverlay ? 0.16 : 0.25,
+                            fontSize: onTableOverlay ? 9.0 : null,
+                          ),
+                        ),
+                      ),
+                      if (summary.leveledUp)
+                        Text(
+                          'Level ${summary.endLevel}',
+                          key: const Key(
+                            'act0_shell_completion_toast_level_up',
+                          ),
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.gold,
+                            fontWeight: FontWeight.w900,
+                            fontSize: onTableOverlay ? 10.5 : 11.5,
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: onTableOverlay ? 2 : 3),
                   Text(
-                    summary.toastRewardLabel,
-                    key: const Key('act0_shell_completion_toast_reward_label'),
-                    textAlign: TextAlign.center,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: summary.leveledUp
-                          ? Act0ShellTokensV1.gold
-                          : Act0ShellTokensV1.primary,
-                      letterSpacing: 0.4,
+                    '${progress.endXp}/${summary.xpTarget} XP',
+                    key: const Key('act0_shell_completion_toast_total'),
+                    style: Act0ShellTokensV1.body.copyWith(
+                      fontWeight: FontWeight.w900,
+                      fontSize: onTableOverlay ? 10.8 : 11.5,
                     ),
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    '+$animatedGain XP',
-                    key: const Key('act0_shell_completion_toast_xp'),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
-                      letterSpacing: 0.4,
+                  SizedBox(height: onTableOverlay ? 5 : 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    child: LinearProgressIndicator(
+                      key: const Key('act0_shell_completion_toast_progress'),
+                      minHeight: onTableOverlay ? 5 : 6,
+                      value: summary.xpTarget <= 0
+                          ? 0
+                          : (progress.endXp / summary.xpTarget).clamp(0, 1),
+                      backgroundColor: Act0ShellTokensV1.surface3,
+                      color: tone,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  if (summary.leveledUp)
-                    Text(
-                      'Level ${summary.endLevel}',
-                      key: const Key('act0_shell_completion_toast_level_up'),
-                      textAlign: TextAlign.center,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.gold,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                      ),
-                    )
-                  else
-                    Text(
-                      '${progress.endXp}/${summary.xpTarget} XP',
-                      key: const Key('act0_shell_completion_toast_total'),
-                      textAlign: TextAlign.center,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -3647,6 +3807,8 @@ class _CompletionToastV1 extends StatelessWidget {
     );
   }
 }
+
+enum _CompletionToastOverlayStyleV1 { standard, table }
 
 class _PotSweepMomentV1 extends StatelessWidget {
   const _PotSweepMomentV1({required this.potLabel});
@@ -3746,10 +3908,16 @@ class _Act0TableV1 extends StatelessWidget {
     required this.onBoardCardTap,
     this.onChooseSeat,
     this.visualVariant = Act0ShellTableVisualVariantV1.classic,
+    this.showFocusBadge = true,
+    this.showRepairCallout = true,
     this.playbackActiveSeatId,
+    this.animateBetMotion = false,
     this.betOverride,
     this.potLabelOverride,
     this.streetLabelOverride,
+    this.completionSummary,
+    this.selectedSeatId,
+    this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
   });
 
   final Act0TableStateV1 table;
@@ -3758,10 +3926,16 @@ class _Act0TableV1 extends StatelessWidget {
   final ValueChanged<Act0TableStateV1> onBoardCardTap;
   final ValueChanged<String>? onChooseSeat;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final bool showFocusBadge;
+  final bool showRepairCallout;
   final String? playbackActiveSeatId;
+  final bool animateBetMotion;
   final Act0SeatBetStateV1? betOverride;
   final String? potLabelOverride;
   final String? streetLabelOverride;
+  final Act0RunnerCompletionSummaryV1? completionSummary;
+  final String? selectedSeatId;
+  final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
 
   @override
   Widget build(BuildContext context) {
@@ -3774,7 +3948,7 @@ class _Act0TableV1 extends StatelessWidget {
     };
     if (visualVariant == Act0ShellTableVisualVariantV1.refinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson) {
-      tableMaxWidth += 32;
+      tableMaxWidth += 44;
     }
     if (isTablet) {
       tableMaxWidth = switch (table.density) {
@@ -3810,6 +3984,15 @@ class _Act0TableV1 extends StatelessWidget {
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
                 ? playbackActiveSeatId
                 : _resolveActiveSeatId(table);
+            final resolvedSelectedSeatId = (selectedSeatId ?? table.selectedSeatId)
+                ?.trim();
+            final focusResolution = _resolvePrimarySeatFocusV1(
+              activeSeatId: activeSeatId,
+              highlightedSeatIds: table.highlightedSeatIds,
+              selectableSeatIds: table.selectableSeatIds,
+              selectedSeatId: resolvedSelectedSeatId,
+              selectionFeedbackState: selectedSeatFeedbackState,
+            );
             return Container(
               padding: const EdgeInsets.all(10),
               decoration: Act0ShellTokensV1.tableRimDecoration(),
@@ -3867,26 +4050,27 @@ class _Act0TableV1 extends StatelessWidget {
                     child: IgnorePointer(
                       child: Align(
                         child: FractionallySizedBox(
-                          widthFactor: refined ? 0.66 : 0.61,
-                          heightFactor: refined ? 0.38 : 0.34,
+                          widthFactor: refined ? 0.56 : 0.52,
+                          heightFactor: refined ? 0.20 : 0.18,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
                                 Act0ShellTokensV1.radiusPill,
                               ),
-                              border: Border.all(
-                                color: Act0ShellTokensV1.feltLine.withValues(
-                                  alpha: refined ? 0.34 : 0.24,
-                                ),
-                                width: refined ? 1.4 : 1.0,
+                              gradient: RadialGradient(
+                                center: const Alignment(0, -0.12),
+                                radius: refined ? 1.12 : 1.04,
+                                colors: <Color>[
+                                  Colors.white.withValues(
+                                    alpha: refined ? 0.032 : 0.024,
+                                  ),
+                                  Colors.transparent,
+                                  Colors.black.withValues(
+                                    alpha: refined ? 0.09 : 0.06,
+                                  ),
+                                ],
+                                stops: const <double>[0, 0.62, 1],
                               ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.22),
-                                  blurRadius: 24,
-                                  spreadRadius: -18,
-                                ),
-                              ],
                             ),
                           ),
                         ),
@@ -3899,12 +4083,14 @@ class _Act0TableV1 extends StatelessWidget {
                       highlightedCardIds: highlightedCardIds,
                       onBoardCardTap: () => onBoardCardTap(table),
                       visualVariant: visualVariant,
+                      showFocusBadge: showFocusBadge,
                       potLabelOverride: potLabelOverride,
                       streetLabelOverride: streetLabelOverride,
                     ),
                   ),
-                  if (table.focusCalloutLabel.isNotEmpty ||
-                      interactiveCalloutLabel.isNotEmpty)
+                  if (showRepairCallout &&
+                      (table.focusCalloutLabel.isNotEmpty ||
+                          interactiveCalloutLabel.isNotEmpty))
                     Positioned(
                       key: const Key('act0_shell_table_repair_callout'),
                       left: width * 0.20,
@@ -3914,6 +4100,22 @@ class _Act0TableV1 extends StatelessWidget {
                         label: table.focusCalloutLabel.isNotEmpty
                             ? table.focusCalloutLabel
                             : interactiveCalloutLabel,
+                        ),
+                    ),
+                  if (completionSummary != null)
+                    Positioned(
+                      key: const Key('act0_shell_completion_reward_lane'),
+                      left: width * 0.29,
+                      right: width * 0.29,
+                      top: height * (refined ? 0.205 : 0.17),
+                      child: IgnorePointer(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: _CompletionToastV1(
+                            summary: completionSummary!,
+                            overlayStyle: _CompletionToastOverlayStyleV1.table,
+                          ),
+                        ),
                       ),
                     ),
                   for (var slot = 0; slot < seats.length; slot++)
@@ -3923,6 +4125,10 @@ class _Act0TableV1 extends StatelessWidget {
                       betOverride: activeSeatId == seats[slot].seatId
                           ? betOverride
                           : null,
+                      animateMotion:
+                          animateBetMotion &&
+                          activeSeatId == seats[slot].seatId &&
+                          betOverride != null,
                       tableWidth: width,
                       tableHeight: height,
                       chipSlots: chipSlots,
@@ -3945,7 +4151,18 @@ class _Act0TableV1 extends StatelessWidget {
                       selectable: table.selectableSeatIds.contains(
                         seats[slot].seatId,
                       ),
-                      selected: table.selectedSeatId == seats[slot].seatId,
+                      visualState: _resolveSeatVisualStateV1(
+                        seatId: seats[slot].seatId,
+                        hero: seats[slot].isHero ||
+                            seats[slot].seatId == table.heroSeatId,
+                        selectable: table.selectableSeatIds.contains(
+                          seats[slot].seatId,
+                        ),
+                        selected:
+                            resolvedSelectedSeatId == seats[slot].seatId,
+                        selectionFeedbackState: selectedSeatFeedbackState,
+                        focusResolution: focusResolution,
+                      ),
                       onChooseSeat: onChooseSeat,
                       tableWidth: width,
                       tableHeight: height,
@@ -4133,6 +4350,7 @@ class _CenterPotV1 extends StatelessWidget {
     required this.highlightedCardIds,
     required this.onBoardCardTap,
     required this.visualVariant,
+    this.showFocusBadge = true,
     this.potLabelOverride,
     this.streetLabelOverride,
   });
@@ -4141,19 +4359,30 @@ class _CenterPotV1 extends StatelessWidget {
   final List<String> highlightedCardIds;
   final VoidCallback onBoardCardTap;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final bool showFocusBadge;
   final String? potLabelOverride;
   final String? streetLabelOverride;
 
   @override
   Widget build(BuildContext context) {
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
+    final shouldShowFocusBadge =
+        showFocusBadge &&
+        table.centerLabel.isNotEmpty &&
+        !(refined &&
+            (table.centerLabel == 'Blinds posted' ||
+                table.centerLabel == 'Action on hero'));
+    final streetLabel = act0RuntimeLocalizedStreetLabelV1(
+      context,
+      streetLabelOverride ?? table.streetLabel,
+    ).toUpperCase();
     return Center(
       child: Container(
         key: const Key('act0_shell_center_info_card'),
-        width: Act0ShellTokensV1.centerInfoWidth,
+        width: refined ? 182 : Act0ShellTokensV1.centerInfoWidth,
         padding: EdgeInsets.symmetric(
-          horizontal: refined ? 7 : 4,
-          vertical: refined ? 5 : 3,
+          horizontal: refined ? 6 : 4,
+          vertical: refined ? 4 : 3,
         ),
         decoration: refined
             ? BoxDecoration(
@@ -4161,20 +4390,20 @@ class _CenterPotV1 extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Colors.white.withValues(alpha: 0.04),
-                    Colors.black.withValues(alpha: 0.15),
-                    Colors.black.withValues(alpha: 0.20),
+                    Colors.white.withValues(alpha: 0.03),
+                    Colors.black.withValues(alpha: 0.13),
+                    Colors.black.withValues(alpha: 0.18),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(
                   Act0ShellTokensV1.radiusCard,
                 ),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.03)),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.14),
-                    blurRadius: 14,
-                    offset: const Offset(0, 7),
+                    color: Colors.black.withValues(alpha: 0.10),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               )
@@ -4187,7 +4416,7 @@ class _CenterPotV1 extends StatelessWidget {
               spacing: 6,
               runSpacing: 4,
               children: [
-                if (table.centerLabel.isNotEmpty)
+                if (shouldShowFocusBadge)
                   _CenterInfoPillV1(
                     key: const Key('act0_shell_center_focus_badge'),
                     label: act0RuntimeLocalizedCenterLabelV1(
@@ -4198,41 +4427,60 @@ class _CenterPotV1 extends StatelessWidget {
                     icon: Icons.visibility_rounded,
                     compact: refined,
                   ),
-                _CenterInfoPillV1(
-                  key: const Key('act0_shell_center_street_badge'),
-                  label: act0RuntimeLocalizedStreetLabelV1(
-                    context,
-                    streetLabelOverride ?? table.streetLabel,
-                  ).toUpperCase(),
-                  tone: Act0ShellTokensV1.gold,
-                  icon: Icons.layers_rounded,
-                  compact: refined,
-                ),
+                if (refined)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                      vertical: 1,
+                    ),
+                    child: Text(
+                      streetLabel,
+                      key: const Key('act0_shell_center_street_badge'),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.gold.withValues(alpha: 0.92),
+                        fontSize: 8.1,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  )
+                else
+                  _CenterInfoPillV1(
+                    key: const Key('act0_shell_center_street_badge'),
+                    label: streetLabel,
+                    tone: Act0ShellTokensV1.gold,
+                    icon: Icons.layers_rounded,
+                    compact: refined,
+                  ),
               ],
             ),
             if (table.boardCards.isNotEmpty) ...[
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var i = 0; i < table.boardCards.length; i++) ...[
-                    _BoardCardV1(
-                      card: table.boardCards[i],
-                      cardId: 'board_$i',
-                      highlighted: highlightedCardIds.contains('board_$i'),
-                      onTap: onBoardCardTap,
-                    ),
-                    if (i < table.boardCards.length - 1)
-                      const SizedBox(width: 5),
+              const SizedBox(height: 5),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (var i = 0; i < table.boardCards.length; i++) ...[
+                      _BoardCardV1(
+                        card: table.boardCards[i],
+                        cardId: 'board_$i',
+                        highlighted: highlightedCardIds.contains('board_$i'),
+                        onTap: onBoardCardTap,
+                      ),
+                      if (i < table.boardCards.length - 1)
+                        const SizedBox(width: 5),
+                    ],
                   ],
-                ],
+                ),
               ),
             ],
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: 6),
             Wrap(
               alignment: WrapAlignment.center,
-              spacing: 6,
-              runSpacing: 4,
+              spacing: 5,
+              runSpacing: 3,
               children: [
                 _CenterInfoPillV1(
                   key: const Key('act0_shell_center_pot_stat'),
@@ -4288,17 +4536,17 @@ class _CenterInfoPillV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final pill = Container(
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8 : 10,
-        vertical: compact ? 4 : 5,
+        horizontal: compact ? 7 : 9,
+        vertical: compact ? 3.5 : 4.5,
       ),
       decoration: BoxDecoration(
         color: filled
-            ? tone.withValues(alpha: 0.12)
+            ? tone.withValues(alpha: 0.10)
             : Colors.black.withValues(alpha: compact ? 0.24 : 0.34),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
         border: Border.all(
           color: filled
-              ? tone.withValues(alpha: 0.24)
+              ? tone.withValues(alpha: 0.20)
               : Colors.white.withValues(alpha: 0.06),
         ),
       ),
@@ -4310,11 +4558,11 @@ class _CenterInfoPillV1 extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              maxLines: 3,
+              maxLines: 2,
               style: Act0ShellTokensV1.label.copyWith(
                 color: filled ? tone : Act0ShellTokensV1.text,
                 fontSize: compact ? 8.6 : 9.2,
-                letterSpacing: compact ? 0.2 : 0.4,
+                letterSpacing: compact ? 0.1 : 0.3,
               ),
             ),
           ),
@@ -4363,6 +4611,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
     required this.chipSlots,
     required this.seatSlots,
     required this.visualVariant,
+    required this.animateMotion,
     this.betOverride,
   });
 
@@ -4373,6 +4622,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
   final List<Offset> chipSlots;
   final List<Offset> seatSlots;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final bool animateMotion;
 
   /// When non-null, shown instead of seat.bet (used during action trail playback).
   final Act0SeatBetStateV1? betOverride;
@@ -4395,11 +4645,27 @@ class _BetChipPlacementV1 extends StatelessWidget {
     final safeSlot = slot.clamp(0, chipSlots.length - 1);
     final chipPoint = chipSlots[safeSlot];
     final seatPoint = seatSlots[safeSlot.clamp(0, seatSlots.length - 1)];
+    final child = _BetChipV1(
+      bet: bet,
+      compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
+    );
+    if (!animateMotion) {
+      return Positioned(
+        left: tableWidth * chipPoint.dx,
+        top: tableHeight * chipPoint.dy,
+        child: FractionalTranslation(
+          translation: const Offset(-0.5, -0.5),
+          child: IgnorePointer(child: child),
+        ),
+      );
+    }
     return TweenAnimationBuilder<double>(
-      key: Key('act0_shell_bet_chip_motion_${bet.label}'),
+      key: Key('act0_shell_bet_chip_motion_${seat.seatId}_${bet.label}'),
       tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 520),
-      curve: Curves.easeOutCubic,
+      duration: _chipMotionDuration(bet.kind),
+      curve: bet.kind == Act0SeatBetKindV1.post
+          ? Curves.easeInOutCubic
+          : Curves.easeOutCubic,
       builder: (context, value, child) {
         final point = Offset.lerp(seatPoint, chipPoint, value) ?? chipPoint;
         return Positioned(
@@ -4416,11 +4682,18 @@ class _BetChipPlacementV1 extends StatelessWidget {
           ),
         );
       },
-      child: _BetChipV1(
-        bet: bet,
-        compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
-      ),
+      child: child,
     );
+  }
+
+  Duration _chipMotionDuration(Act0SeatBetKindV1 kind) {
+    return switch (kind) {
+      Act0SeatBetKindV1.post => const Duration(milliseconds: 380),
+      Act0SeatBetKindV1.call => const Duration(milliseconds: 360),
+      Act0SeatBetKindV1.bet ||
+      Act0SeatBetKindV1.raise ||
+      Act0SeatBetKindV1.allIn => const Duration(milliseconds: 440),
+    };
   }
 }
 
@@ -4435,6 +4708,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     required this.hero,
     required this.selectable,
     required this.selected,
+    required this.selectionFeedbackState,
     required this.onChooseSeat,
     required this.tableWidth,
     required this.tableHeight,
@@ -4451,6 +4725,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final bool hero;
   final bool selectable;
   final bool selected;
+  final _SeatSelectionFeedbackStateV1 selectionFeedbackState;
   final ValueChanged<String>? onChooseSeat;
   final double tableWidth;
   final double tableHeight;
@@ -4483,6 +4758,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           hero: hero,
           selectable: selectable,
           selected: selected,
+          selectionFeedbackState: selectionFeedbackState,
           visualVariant: visualVariant,
           onTap: selectable && onChooseSeat != null
               ? () => onChooseSeat!(seat.seatId)
@@ -4504,6 +4780,7 @@ class _SeatNodeV1 extends StatelessWidget {
     required this.hero,
     required this.selectable,
     required this.selected,
+    required this.selectionFeedbackState,
     required this.visualVariant,
     this.onTap,
     this.compact = false,
@@ -4517,6 +4794,7 @@ class _SeatNodeV1 extends StatelessWidget {
   final bool hero;
   final bool selectable;
   final bool selected;
+  final _SeatSelectionFeedbackStateV1 selectionFeedbackState;
   final Act0ShellTableVisualVariantV1 visualVariant;
   final VoidCallback? onTap;
   final bool compact;
@@ -4524,7 +4802,16 @@ class _SeatNodeV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
-    final highlighted = active || emphasized || selected;
+    final seatVisualState = _resolveSeatVisualStateV1(
+      hero: hero,
+      active: active,
+      emphasized: emphasized,
+      selectable: selectable,
+      selected: selected,
+      selectionFeedbackState: selectionFeedbackState,
+    );
+    final highlighted = seatVisualState != _SeatVisualStateV1.passive &&
+        seatVisualState != _SeatVisualStateV1.selectable;
     final showsMarkerCluster =
         seat.isDealerButton ||
         seat.isLastAggressor ||
@@ -4533,13 +4820,10 @@ class _SeatNodeV1 extends StatelessWidget {
         hero;
     final useSlimRefinedSeat = refined && !hero;
     final folded = seat.isFolded;
-    final borderColor = highlighted
-        ? Act0ShellTokensV1.gold
-        : hero
-        ? Act0ShellTokensV1.primary
-        : selectable && refined
-        ? Act0ShellTokensV1.info.withValues(alpha: 0.86)
-        : Act0ShellTokensV1.border;
+    final borderColor = _seatBorderColorV1(seatVisualState, refined: refined);
+    final ringColor = _seatRingColorV1(seatVisualState);
+    final shouldShowRing = seatVisualState != _SeatVisualStateV1.passive &&
+        seatVisualState != _SeatVisualStateV1.selectable;
     final visibleCards = hero ? heroCards : seat.holeCards;
     final showFaceDown =
         !hero &&
@@ -4629,7 +4913,7 @@ class _SeatNodeV1 extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: refined
-                        ? (hero
+                        ? (seatVisualState == _SeatVisualStateV1.hero
                               ? Act0ShellTokensV1.runnerPanelSurface
                               : highlighted
                               ? Act0ShellTokensV1.surface2
@@ -4647,22 +4931,22 @@ class _SeatNodeV1 extends StatelessWidget {
                       width: refined ? 1.15 : 1,
                     ),
                     boxShadow: <BoxShadow>[
-                      if (highlighted)
+                      if (shouldShowRing)
                         BoxShadow(
-                          color: Act0ShellTokensV1.gold.withValues(alpha: 0.24),
-                          blurRadius: refined ? 14 : 18,
+                          color: ringColor.withValues(
+                            alpha: seatVisualState == _SeatVisualStateV1.hero
+                                ? 0.12
+                                : 0.16,
+                          ),
+                          blurRadius: refined ? 10 : 14,
                         ),
-                      if (!highlighted && hero)
+                      if (!shouldShowRing &&
+                          seatVisualState == _SeatVisualStateV1.hero)
                         BoxShadow(
                           color: Act0ShellTokensV1.primary.withValues(
-                            alpha: 0.20,
+                            alpha: 0.15,
                           ),
-                          blurRadius: refined ? 12 : 16,
-                        ),
-                      if (selectable && !highlighted)
-                        BoxShadow(
-                          color: Act0ShellTokensV1.info.withValues(alpha: 0.16),
-                          blurRadius: refined ? 14 : 12,
+                          blurRadius: refined ? 9 : 12,
                         ),
                     ],
                   ),
@@ -4681,15 +4965,22 @@ class _SeatNodeV1 extends StatelessWidget {
                           color: hero
                               ? Act0ShellTokensV1.primary
                               : refined
-                              ? Act0ShellTokensV1.surface2
+                              ? (seatVisualState ==
+                                          _SeatVisualStateV1.selectable
+                                      ? Act0ShellTokensV1.info.withValues(
+                                          alpha: 0.10,
+                                        )
+                                      : Act0ShellTokensV1.surface2)
                               : Act0ShellTokensV1.surface3,
                           borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
+                            refined
+                                ? Act0ShellTokensV1.radiusXs
+                                : Act0ShellTokensV1.radiusPill,
                           ),
                           border: refined && !hero
                               ? Border.all(
                                   color: Act0ShellTokensV1.border.withValues(
-                                    alpha: 0.9,
+                                    alpha: 0.72,
                                   ),
                                 )
                               : null,
@@ -4710,7 +5001,12 @@ class _SeatNodeV1 extends StatelessWidget {
                                 size: useSlimRefinedSeat
                                     ? 11
                                     : (refined ? 12 : 13),
-                                color: refined
+                                color: seatVisualState ==
+                                        _SeatVisualStateV1.selectable
+                                    ? Act0ShellTokensV1.info.withValues(
+                                        alpha: 0.56,
+                                      )
+                                    : refined
                                     ? Act0ShellTokensV1.textDim
                                     : Act0ShellTokensV1.textMuted,
                               ),
@@ -4733,9 +5029,9 @@ class _SeatNodeV1 extends StatelessWidget {
                                   ? Act0ShellTokensV1.textMuted
                                   : Act0ShellTokensV1.text,
                               fontSize: useSlimRefinedSeat
-                                  ? 8.8
-                                  : (refined ? 9.2 : 10),
-                              letterSpacing: refined ? 0.2 : 0.4,
+                                  ? 8.5
+                                  : (refined ? 9.0 : 10),
+                              letterSpacing: refined ? 0.1 : 0.4,
                             ),
                           ),
                           if (_seatSubLabel(context, seat) != null)
@@ -4762,7 +5058,7 @@ class _SeatNodeV1 extends StatelessWidget {
                     hero: hero,
                     visualVariant: visualVariant,
                   ),
-                if (highlighted)
+                if (shouldShowRing)
                   Positioned.fill(
                     child: IgnorePointer(
                       child: DecoratedBox(
@@ -4772,9 +5068,7 @@ class _SeatNodeV1 extends StatelessWidget {
                             Act0ShellTokensV1.radiusSm,
                           ),
                           border: Border.all(
-                            color: Act0ShellTokensV1.gold.withValues(
-                              alpha: 0.42,
-                            ),
+                            color: ringColor.withValues(alpha: 0.42),
                             width: 2,
                           ),
                         ),
@@ -4783,6 +5077,14 @@ class _SeatNodeV1 extends StatelessWidget {
                             'act0_shell_active_seat_ring_${seat.seatId}',
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                if (seatVisualState != _SeatVisualStateV1.passive)
+                  Positioned(
+                    child: SizedBox(
+                      key: Key(
+                        'act0_shell_seat_state_${seat.seatId}_${seatVisualState.name}',
                       ),
                     ),
                   ),
@@ -4813,6 +5115,77 @@ class _SeatNodeV1 extends StatelessWidget {
       seat: seat,
     );
   }
+}
+
+enum _SeatSelectionFeedbackStateV1 { none, wrong, confirmed }
+
+enum _SeatVisualStateV1 {
+  wrongSelected,
+  confirmedSelected,
+  hero,
+  active,
+  target,
+  selectable,
+  passive,
+}
+
+_SeatVisualStateV1 _resolveSeatVisualStateV1({
+  required bool hero,
+  required bool active,
+  required bool emphasized,
+  required bool selectable,
+  required bool selected,
+  required _SeatSelectionFeedbackStateV1 selectionFeedbackState,
+}) {
+  if (selected && selectionFeedbackState == _SeatSelectionFeedbackStateV1.wrong) {
+    return _SeatVisualStateV1.wrongSelected;
+  }
+  if (selected &&
+      selectionFeedbackState == _SeatSelectionFeedbackStateV1.confirmed) {
+    return _SeatVisualStateV1.confirmedSelected;
+  }
+  if (hero) {
+    return _SeatVisualStateV1.hero;
+  }
+  if (active) {
+    return _SeatVisualStateV1.active;
+  }
+  if (emphasized) {
+    return _SeatVisualStateV1.target;
+  }
+  if (selectable) {
+    return _SeatVisualStateV1.selectable;
+  }
+  return _SeatVisualStateV1.passive;
+}
+
+Color _seatBorderColorV1(
+  _SeatVisualStateV1 state, {
+  required bool refined,
+}) {
+  return switch (state) {
+    _SeatVisualStateV1.wrongSelected => Act0ShellTokensV1.danger,
+    _SeatVisualStateV1.confirmedSelected => Act0ShellTokensV1.primary,
+    _SeatVisualStateV1.hero => Act0ShellTokensV1.primary,
+    _SeatVisualStateV1.active => Act0ShellTokensV1.gold,
+    _SeatVisualStateV1.target => Act0ShellTokensV1.gold,
+    _SeatVisualStateV1.selectable => refined
+        ? Act0ShellTokensV1.info.withValues(alpha: 0.42)
+        : Act0ShellTokensV1.info.withValues(alpha: 0.58),
+    _SeatVisualStateV1.passive => Act0ShellTokensV1.border,
+  };
+}
+
+Color _seatRingColorV1(_SeatVisualStateV1 state) {
+  return switch (state) {
+    _SeatVisualStateV1.wrongSelected => Act0ShellTokensV1.danger,
+    _SeatVisualStateV1.confirmedSelected => Act0ShellTokensV1.primary,
+    _SeatVisualStateV1.hero => Act0ShellTokensV1.primary,
+    _SeatVisualStateV1.active => Act0ShellTokensV1.gold,
+    _SeatVisualStateV1.target => Act0ShellTokensV1.gold,
+    _SeatVisualStateV1.selectable => Act0ShellTokensV1.info,
+    _SeatVisualStateV1.passive => Act0ShellTokensV1.border,
+  };
 }
 
 class _ActionTrailV1 extends StatefulWidget {
@@ -4977,195 +5350,261 @@ class _ActionTrailV1State extends State<_ActionTrailV1> {
     final text = items.map((item) => item.label).join('  .  ');
     return Container(
       key: const Key('act0_shell_action_trail'),
-      constraints: BoxConstraints(maxWidth: refined ? 354 : 370),
+      constraints: BoxConstraints(maxWidth: refined ? 332 : 370),
       padding: EdgeInsets.symmetric(
-        horizontal: refined ? 9 : 11,
-        vertical: refined ? 5 : 7,
+        horizontal: refined ? 8 : 11,
+        vertical: refined ? 4 : 7,
       ),
       decoration: BoxDecoration(
         color: refined
-            ? Act0ShellTokensV1.surface.withValues(alpha: 0.34)
+            ? Act0ShellTokensV1.surface.withValues(alpha: 0.26)
             : Act0ShellTokensV1.surface2.withValues(alpha: 0.58),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
         border: Border.all(
           color: Act0ShellTokensV1.border.withValues(
-            alpha: refined ? 0.22 : 0.44,
+            alpha: refined ? 0.16 : 0.44,
           ),
         ),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: refined ? 24 : 26,
-            height: refined ? 24 : 26,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface3.withValues(
-                alpha: refined ? 0.46 : 0.62,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final stackControls =
+              items.length > 1 && refined && constraints.maxWidth < 206;
+          final trailControls = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _TrailPlaybackButtonV1(
+                icon: Icons.skip_previous_rounded,
+                onTap: () {
+                  _playbackTimer?.cancel();
+                  if (_isAutoPlaying) {
+                    setState(() => _isAutoPlaying = false);
+                  }
+                  _focusStep(focusedIndex - 1);
+                },
+                compact: refined,
               ),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-              border: Border.all(
-                color: Act0ShellTokensV1.border.withValues(alpha: 0.40),
+              SizedBox(width: refined ? 4 : 5),
+              _TrailPlaybackButtonV1(
+                icon: _isAutoPlaying
+                    ? Icons.pause_circle_filled_rounded
+                    : Icons.play_circle_fill_rounded,
+                onTap: _toggleAutoPlay,
+                active: _isAutoPlaying,
+                compact: refined,
               ),
-            ),
-            child: Icon(
-              Icons.timeline_rounded,
-              key: const Key('act0_shell_action_trail_icon'),
-              size: refined ? 13 : 14,
-              color: Act0ShellTokensV1.textMuted.withValues(
-                alpha: refined ? 0.72 : 0.82,
+              SizedBox(width: refined ? 4 : 5),
+              _TrailPlaybackButtonV1(
+                icon: Icons.skip_next_rounded,
+                onTap: () {
+                  _playbackTimer?.cancel();
+                  if (_isAutoPlaying) {
+                    setState(() => _isAutoPlaying = false);
+                  }
+                  _focusStep(focusedIndex + 1);
+                },
+                compact: refined,
               ),
-            ),
-          ),
-          SizedBox(width: refined ? 7 : 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox.shrink(
-                  child: Text(
-                    text,
-                    key: const Key('act0_shell_action_trail_text'),
+              const SizedBox(width: 6),
+              Text(
+                '${focusedIndex + 1}/${items.length}',
+                style: TextStyle(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontSize: refined ? 8.5 : 9.5,
+                  fontWeight: FontWeight.w700,
+                  fontFeatures: const <FontFeature>[
+                    FontFeature.tabularFigures(),
+                  ],
+                ),
+              ),
+            ],
+          );
+          final trailMain = Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: refined ? 22 : 26,
+                height: refined ? 22 : 26,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.surface3.withValues(
+                    alpha: refined ? 0.28 : 0.62,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    refined
+                        ? Act0ShellTokensV1.radiusXs
+                        : Act0ShellTokensV1.radiusPill,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.border.withValues(
+                      alpha: refined ? 0.20 : 0.28,
+                    ),
                   ),
                 ),
-                Row(
+                child: Icon(
+                  Icons.timeline_rounded,
+                  key: const Key('act0_shell_action_trail_icon'),
+                  size: refined ? 12 : 14,
+                  color: Act0ShellTokensV1.textMuted.withValues(
+                    alpha: refined ? 0.66 : 0.82,
+                  ),
+                ),
+              ),
+              SizedBox(width: refined ? 6 : 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (streetLabel.isNotEmpty) ...[
-                      Container(
-                        key: const Key('act0_shell_action_trail_street_badge'),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Act0ShellTokensV1.info.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: Act0ShellTokensV1.info.withValues(
-                              alpha: 0.34,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          streetLabel,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            fontSize: 7.6,
-                            color: Act0ShellTokensV1.info,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
+                    SizedBox.shrink(
+                      child: Text(
+                        text,
+                        key: const Key('act0_shell_action_trail_text'),
                       ),
-                      SizedBox(width: refined ? 6 : 7),
-                    ],
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        child: Row(
+                    ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final badgeWidth = streetLabel.isNotEmpty
+                            ? (refined ? 54.0 : 58.0)
+                            : 0.0;
+                        final scrollerWidth = streetLabel.isNotEmpty
+                            ? (constraints.maxWidth -
+                                      badgeWidth -
+                                      (refined ? 5 : 7))
+                                  .clamp(80.0, constraints.maxWidth)
+                            : constraints.maxWidth;
+                        return Wrap(
+                          spacing: refined ? 5 : 7,
+                          runSpacing: 4,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            for (var i = 0; i < visibleCount; i++) ...[
-                              if (i > 0 &&
-                                  _streetNameFromLabel(items[i].label) != null)
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    right: refined ? 4 : 5,
-                                  ),
-                                  child: _TrailStreetDividerV1(
-                                    label: _streetNameFromLabel(
-                                      items[i].label,
-                                    )!,
-                                    refined: refined,
-                                  ),
-                                ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: i == visibleCount - 1
-                                      ? 0
-                                      : (refined ? 4 : 5),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _playbackTimer?.cancel();
-                                    if (_isAutoPlaying) {
-                                      setState(() => _isAutoPlaying = false);
-                                    }
-                                    _focusStep(i);
-                                  },
-                                  child: _ActionTrailStepV1(
-                                    item: items[i],
-                                    index: i,
-                                    isLatest: i == focusedIndex,
-                                    refined: refined,
-                                  ),
+                            if (streetLabel.isNotEmpty)
+                              refined
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 1,
+                                        vertical: 1,
+                                      ),
+                                      child: Text(
+                                        streetLabel,
+                                        key: const Key(
+                                          'act0_shell_action_trail_street_badge',
+                                        ),
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          fontSize: 7.1,
+                                          color: Act0ShellTokensV1.info
+                                              .withValues(alpha: 0.84),
+                                          letterSpacing: 0.25,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      key: const Key(
+                                        'act0_shell_action_trail_street_badge',
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2.5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Act0ShellTokensV1.info
+                                            .withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(
+                                          Act0ShellTokensV1.radiusPill,
+                                        ),
+                                        border: Border.all(
+                                          color: Act0ShellTokensV1.info
+                                              .withValues(alpha: 0.34),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        streetLabel,
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          fontSize: 7.2,
+                                          color: Act0ShellTokensV1.info,
+                                          letterSpacing: 0.1,
+                                        ),
+                                      ),
+                                    ),
+                            SizedBox(
+                              width: scrollerWidth,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                child: Row(
+                                  children: [
+                                    for (var i = 0; i < visibleCount; i++) ...[
+                                      if (i > 0 &&
+                                          _streetNameFromLabel(
+                                                items[i].label,
+                                              ) !=
+                                              null)
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            right: refined ? 4 : 5,
+                                          ),
+                                          child: _TrailStreetDividerV1(
+                                            label: _streetNameFromLabel(
+                                              items[i].label,
+                                            )!,
+                                            refined: refined,
+                                          ),
+                                        ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          right: i == visibleCount - 1
+                                              ? 0
+                                              : (refined ? 4 : 5),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _playbackTimer?.cancel();
+                                            if (_isAutoPlaying) {
+                                              setState(
+                                                () => _isAutoPlaying = false,
+                                              );
+                                            }
+                                            _focusStep(i);
+                                          },
+                                          child: _ActionTrailStepV1(
+                                            item: items[i],
+                                            index: i,
+                                            isLatest: i == focusedIndex,
+                                            refined: refined,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ],
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
                 ),
+              ),
+              if (items.length > 1 && !stackControls) ...[
+                SizedBox(width: refined ? 7 : 8),
+                trailControls,
               ],
-            ),
-          ),
-          if (items.length > 1) ...[
-            SizedBox(width: refined ? 7 : 8),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _TrailPlaybackButtonV1(
-                  icon: Icons.skip_previous_rounded,
-                  onTap: () {
-                    _playbackTimer?.cancel();
-                    if (_isAutoPlaying) {
-                      setState(() => _isAutoPlaying = false);
-                    }
-                    _focusStep(focusedIndex - 1);
-                  },
-                  compact: refined,
-                ),
-                SizedBox(width: refined ? 4 : 5),
-                _TrailPlaybackButtonV1(
-                  icon: _isAutoPlaying
-                      ? Icons.pause_circle_filled_rounded
-                      : Icons.play_circle_fill_rounded,
-                  onTap: _toggleAutoPlay,
-                  active: _isAutoPlaying,
-                  compact: refined,
-                ),
-                SizedBox(width: refined ? 4 : 5),
-                _TrailPlaybackButtonV1(
-                  icon: Icons.skip_next_rounded,
-                  onTap: () {
-                    _playbackTimer?.cancel();
-                    if (_isAutoPlaying) {
-                      setState(() => _isAutoPlaying = false);
-                    }
-                    _focusStep(focusedIndex + 1);
-                  },
-                  compact: refined,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '${focusedIndex + 1}/${items.length}',
-                  style: TextStyle(
-                    color: Act0ShellTokensV1.textMuted,
-                    fontSize: refined ? 8.5 : 9.5,
-                    fontWeight: FontWeight.w700,
-                    fontFeatures: const <FontFeature>[
-                      FontFeature.tabularFigures(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
+            ],
+          );
+          if (!stackControls) {
+            return trailMain;
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              trailMain,
+              SizedBox(height: refined ? 6 : 8),
+              Align(alignment: Alignment.centerRight, child: trailControls),
+            ],
+          );
+        },
       ),
     );
   }
@@ -5215,22 +5654,30 @@ class _TrailPlaybackButtonV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radius = compact
+        ? Act0ShellTokensV1.radiusXs
+        : Act0ShellTokensV1.radiusPill;
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(radius),
         child: Container(
-          padding: EdgeInsets.all(compact ? 3 : 4),
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 5 : 4,
+            vertical: compact ? 3 : 4,
+          ),
           decoration: BoxDecoration(
             color: active
-                ? Act0ShellTokensV1.primary.withValues(alpha: 0.20)
-                : Colors.white.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(999),
+                ? Act0ShellTokensV1.primary.withValues(alpha: 0.16)
+                : Colors.white.withValues(alpha: compact ? 0.025 : 0.04),
+            borderRadius: BorderRadius.circular(radius),
             border: Border.all(
               color: active
-                  ? Act0ShellTokensV1.primary.withValues(alpha: 0.62)
-                  : Act0ShellTokensV1.border.withValues(alpha: 0.44),
+                  ? Act0ShellTokensV1.primary.withValues(alpha: 0.48)
+                  : Act0ShellTokensV1.border.withValues(
+                      alpha: compact ? 0.28 : 0.44,
+                    ),
             ),
           ),
           child: Icon(
@@ -5514,6 +5961,10 @@ class _BetChipV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showLabelPill =
+        !(compact &&
+            bet.kind == Act0SeatBetKindV1.post &&
+            (bet.label == 'SB' || bet.label == 'BB'));
     final color = switch (bet.kind) {
       Act0SeatBetKindV1.post => Act0ShellTokensV1.gold,
       Act0SeatBetKindV1.call => Act0ShellTokensV1.info,
@@ -5561,29 +6012,30 @@ class _BetChipV1 extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: compact ? 3 : 4,
-                  vertical: 1,
-                ),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              if (showLabelPill)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: compact ? 3 : 4,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                  ),
+                  child: Text(
+                    bet.label,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: compact ? 5.6 : 6.1,
+                      height: 0.95,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.2,
+                    ),
                   ),
                 ),
-                child: Text(
-                  bet.label,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: compact ? 5.6 : 6.1,
-                    height: 0.95,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-              SizedBox(height: compact ? 1 : 2),
+              if (showLabelPill) SizedBox(height: compact ? 1 : 2),
               Text(
                 bet.amountLabel,
                 style: TextStyle(

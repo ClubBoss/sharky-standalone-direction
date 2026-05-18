@@ -12,6 +12,8 @@ enum Act0LessonStepKindV1 { learn, practice, fixMistakes, review, proveIt }
 
 enum Act0FeedbackQualityV1 { correct, wrong, suboptimal }
 
+enum Act0CompletionDisplayStateV1 { locked, current, clear, perfect }
+
 enum Act0MasteryStatusV1 { learning, needsReview, solid, cleanPass }
 
 enum Act0TableDensityV1 { compactLesson, handView }
@@ -71,6 +73,28 @@ List<String> act0CanonicalSeatOrderForFormatV1(Act0TableFormatV1 format) =>
 
 int act0ExpectedPlayerCountForFormatV1(Act0TableFormatV1 format) =>
     act0CanonicalSeatOrderForFormatV1(format).length;
+
+Act0CompletionDisplayStateV1 act0ResolveTaskCompletionDisplayStateV1({
+  required String taskId,
+  required bool isLocked,
+  required bool isCurrent,
+  required Set<String> completedTaskIds,
+  required Set<String> perfectTaskIds,
+}) {
+  if (isLocked) {
+    return Act0CompletionDisplayStateV1.locked;
+  }
+  if (isCurrent) {
+    return Act0CompletionDisplayStateV1.current;
+  }
+  if (perfectTaskIds.contains(taskId)) {
+    return Act0CompletionDisplayStateV1.perfect;
+  }
+  if (completedTaskIds.contains(taskId)) {
+    return Act0CompletionDisplayStateV1.clear;
+  }
+  return Act0CompletionDisplayStateV1.current;
+}
 
 String act0TableFormatLabelV1(Act0TableFormatV1 format) => switch (format) {
   Act0TableFormatV1.sixMax => '6-max',
@@ -187,6 +211,7 @@ class Act0ShellStateV1 {
       xpLine: '120 / 200 XP',
       lessonsLine: '3 lessons complete',
       accuracyLine: '82% practice accuracy',
+      qualityLine: 'Perfect path open',
       consistencyActiveDays: 11,
       streakLast7: const <bool>[false, false, false, false, true, true, true],
       achievements: <Act0AchievementV1>[
@@ -397,12 +422,18 @@ class Act0SizingPresetV1 {
     required this.id,
     required this.label,
     required this.potFraction,
+    this.displayLabel,
+    this.detailLabel,
+    this.ctaLabel,
     this.isPrimary = false,
   });
 
   final String id;
   final String label;
   final double potFraction;
+  final String? displayLabel;
+  final String? detailLabel;
+  final String? ctaLabel;
   final bool isPrimary;
 }
 
@@ -934,6 +965,8 @@ class Act0MistakeCardV1 {
     this.contextLabels = const <String>[],
     this.repairActionLabel = 'Run the spot again',
     this.resolved = false,
+    this.completionState,
+    this.qualityLine = '',
   });
 
   final String taskId;
@@ -950,6 +983,8 @@ class Act0MistakeCardV1 {
   final List<String> contextLabels;
   final String repairActionLabel;
   final bool resolved;
+  final Act0CompletionDisplayStateV1? completionState;
+  final String qualityLine;
 }
 
 class Act0ProfileStateV1 {
@@ -959,6 +994,7 @@ class Act0ProfileStateV1 {
     required this.xpLine,
     required this.lessonsLine,
     required this.accuracyLine,
+    this.qualityLine = '',
     required this.consistencyActiveDays,
     required this.achievements,
     this.streakLine = '',
@@ -983,6 +1019,7 @@ class Act0ProfileStateV1 {
   final String xpLine;
   final String lessonsLine;
   final String accuracyLine;
+  final String qualityLine;
   final int consistencyActiveDays;
   final String streakLine;
   final List<bool> streakLast7;
@@ -1047,6 +1084,7 @@ class Act0PracticeGroupV1 {
     this.isRecommended = false,
     this.skipTeaching = false,
     this.allowDrillBypass = false,
+    this.useRapidPracticeLoop = false,
   });
 
   final String groupId;
@@ -1064,6 +1102,7 @@ class Act0PracticeGroupV1 {
   final bool isRecommended;
   final bool skipTeaching;
   final bool allowDrillBypass;
+  final bool useRapidPracticeLoop;
 }
 
 class Act0PlacementQuestionV1 {

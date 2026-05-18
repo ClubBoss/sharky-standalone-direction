@@ -205,21 +205,36 @@ It should not:
 - repeat the same repair signal through duplicate badges, labels, and helper rows
 - become a second curriculum browser
 
-### Play
+### Practice
 
-`Play` is the optional practice branch.
+`Practice` is the optional practice branch.
 
 It should:
 
 - be obviously secondary to Learn
 - be understandable in a few seconds
 - offer quick, useful extra reps
+- reinforce only concepts the learner has already seen on the main route
+- separate three jobs clearly:
+  - `Daily` -> short return reps
+  - `Fix` -> one already-repaired quick refresh, not unresolved repair ownership
+  - `Packs` -> focused repetition by one already-taught skill family
+- favor rapid repetition over lesson pacing:
+  - no teaching rail
+  - no explanation wall
+  - no full review stop after every rep
+  - one compact batch-end summary instead of constant interruption
+- use one featured next rep, one calm quick-lane list, and one separate
+  skill-pack shelf
 
 It should not:
 
 - compete with Learn as another main route
 - become a mode catalog
 - recreate a second map of the product
+- unlock unseen content
+- become a second Review lane
+- force lesson grammar onto optional practice reps
 
 ### You
 

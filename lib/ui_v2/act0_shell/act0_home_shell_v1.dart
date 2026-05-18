@@ -193,17 +193,6 @@ class Act0HomeShellV1 extends StatelessWidget {
       dailyGoalCtaLabel: dailyGoalCtaLabel,
       onStartDailyDrill: onStartDailyDrill,
     );
-    final optionalHint = Text(
-      _shellCopyV1(
-        context,
-        en: 'One extra rep, only if you want it.',
-        ru: 'Один дополнительный реп, только если хочешь.',
-      ),
-      key: const Key('act0_shell_home_optional_practice_hint'),
-      maxLines: 2,
-      overflow: TextOverflow.fade,
-      style: Act0ShellTokensV1.muted.copyWith(color: Act0ShellTokensV1.textDim),
-    );
     final sharkyFooter = _HomeFooterSharkyLineV1(
       state: state,
       sharky: sharky,
@@ -231,8 +220,6 @@ class Act0HomeShellV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               dailyCard,
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              optionalHint,
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               sharkyFooter,
             ],
@@ -296,8 +283,6 @@ class Act0HomeShellV1 extends StatelessWidget {
                     ],
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                     dailyCard,
-                    const SizedBox(height: Act0ShellTokensV1.gapSm),
-                    optionalHint,
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                     sharkyFooter,
                   ],
@@ -472,50 +457,21 @@ class _DailyGoalCardV1 extends StatelessWidget {
                     ),
                   ),
                   if (isDone)
-                    Container(
+                    Text(
+                      localeIsRu ? 'Готово' : 'Done',
                       key: const Key('act0_shell_home_daily_done_badge'),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 9,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Act0ShellTokensV1.primary.withValues(
-                          alpha: 0.10,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusMd,
-                        ),
-                      ),
-                      child: Text(
-                        localeIsRu ? 'Готово' : 'Done',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.primary,
-                          letterSpacing: 0.2,
-                        ),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.primary,
+                        letterSpacing: 0.1,
                       ),
                     )
                   else if (trustLine.isNotEmpty)
-                    Container(
+                    Text(
+                      trustLine,
                       key: const Key('act0_shell_home_daily_trust_line'),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusMd,
-                        ),
-                        border: Border.all(
-                          color: accentColor.withValues(alpha: 0.16),
-                        ),
-                      ),
-                      child: Text(
-                        trustLine,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: accentColor,
-                          letterSpacing: 0.1,
-                        ),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: accentColor,
+                        letterSpacing: 0.1,
                       ),
                     ),
                 ],
@@ -628,26 +584,14 @@ class _HomeRepairCardV1 extends StatelessWidget {
                   ],
                   if (normalizedRepairDetail != null) ...[
                     const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.history_rounded,
-                          size: 14,
-                          color: Act0ShellTokensV1.textDim,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            normalizedRepairDetail,
-                            key: const Key('act0_shell_home_repair_detail'),
-                            maxLines: 3,
-                            overflow: TextOverflow.fade,
-                            style: Act0ShellTokensV1.muted.copyWith(
-                              color: Act0ShellTokensV1.textDim,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      normalizedRepairDetail,
+                      key: const Key('act0_shell_home_repair_detail'),
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textDim,
+                      ),
                     ),
                   ],
                   if (normalizedRepairOutcome != null) ...[

@@ -2919,7 +2919,7 @@ void main() {
     final label = find.byKey(const Key('modern_table_scenario_label'));
     expect(chip, findsOneWidget);
     expect(label, findsOneWidget);
-    expect(tester.widget<Text>(label).data?.contains('Scenario:'), isTrue);
+    expect(tester.widget<Text>(label).data?.contains('Table:'), isTrue);
 
     await tester.tap(chip);
     await tester.pump();

@@ -48,7 +48,7 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
     'continue' => _playCopyV1(
       context,
       'play_action_resume_route',
-      fallback: 'Resume route',
+      fallback: 'Continue lesson',
     ),
     'placement' => _playCopyV1(
       context,
@@ -109,16 +109,9 @@ String _playTileTitleV1(BuildContext context, Act0PracticeGroupV1 group) {
     'continue' => _playCopyV1(
       context,
       'play_action_resume_route',
-      fallback: 'Resume route',
+      fallback: 'Continue lesson',
     ),
     _ => group.title,
-  };
-}
-
-List<String> _playTileFactsV1(Act0PracticeGroupV1 group) {
-  return switch (group.groupId) {
-    'daily' || 'weak_spots' || 'continue' || 'placement' => const <String>[],
-    _ => [if (group.durationLabel.isNotEmpty) group.durationLabel],
   };
 }
 
@@ -134,7 +127,9 @@ class Act0PlayShellV1 extends StatefulWidget {
     required this.recommendedOutcomeLead,
     required this.masteryLabel,
     required this.onStartGroup,
-    this.screenSubtitle = 'Start one rep. Keep the route moving.',
+    this.screenSubtitle = 'Repeat what you already know.',
+    this.completionTitle,
+    this.completionBody,
   });
 
   final List<Act0PracticeGroupV1> groups;
@@ -147,6 +142,8 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
   final String screenSubtitle;
+  final String? completionTitle;
+  final String? completionBody;
 
   @override
   State<Act0PlayShellV1> createState() => _Act0PlayShellV1State();
@@ -157,7 +154,13 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   Widget build(BuildContext context) {
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
+    final featuredGroup =
+        _groupById(widget.groups, widget.recommendedGroupId) ??
+        quickDrillGroup ??
+        fixLeakGroup ??
+        (widget.groups.isEmpty ? null : widget.groups.first);
     final excludedGroupIds = <String>{
+      if (featuredGroup != null) featuredGroup.groupId,
       if (quickDrillGroup != null) quickDrillGroup.groupId,
       if (fixLeakGroup != null) fixLeakGroup.groupId,
       'placement',
@@ -180,8 +183,11 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             return a.title.compareTo(b.title);
           });
     final primaryGroups = <Act0PracticeGroupV1>[
-      if (quickDrillGroup != null) quickDrillGroup,
-      if (fixLeakGroup != null) fixLeakGroup,
+      if (quickDrillGroup != null &&
+          quickDrillGroup.groupId != featuredGroup?.groupId)
+        quickDrillGroup,
+      if (fixLeakGroup != null && fixLeakGroup.groupId != featuredGroup?.groupId)
+        fixLeakGroup,
     ];
     final topicShelfGroups = <Act0PracticeGroupV1>[...topicGroups];
 
@@ -195,12 +201,8 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       ),
       children: [
         Act0ShellScreenHeaderV1(
-          title: _playCopyV1(context, 'play_title', fallback: 'Play'),
-          subtitle: _playCopyV1(
-            context,
-            'play_screen_subtitle',
-            fallback: 'Fast drills and focused packs.',
-          ),
+          title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
+          subtitle: widget.screenSubtitle,
           subtitleKey: const Key('act0_shell_play_subtitle'),
           eyebrow: _playCopyV1(
             context,
@@ -209,21 +211,40 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           ),
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
+        if (featuredGroup != null) ...[
+          _FeaturedPracticeCardV1(
+            group: featuredGroup,
+            title: widget.recommendedTitle,
+            subtitle: widget.recommendedSubtitle,
+            reasonLabel: widget.recommendedReasonLabel,
+            outcomeLead: widget.recommendedOutcomeLead,
+            outcome: widget.recommendedOutcome,
+            masteryLabel: widget.masteryLabel,
+            onStartGroup: widget.onStartGroup,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ],
+        if (widget.completionTitle != null && widget.completionBody != null) ...[
+          _PlayIntroCardV1(
+            title: widget.completionTitle!,
+            body: widget.completionBody!,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ],
         if (primaryGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
           if (primaryGroups.isNotEmpty) ...[
             _SectionHeaderV1(
               label: _playCopyV1(
                 context,
                 'play_quick_drills_label',
-                fallback: 'Quick drills',
+                fallback: 'Quick reps',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            _PlayGridSectionV1(
+            _PlayLaneListV1(
               sectionKey: const Key('act0_shell_play_active_hub'),
               groups: primaryGroups,
-              staggerOddTiles: false,
-              builder: (group) => _PracticeTileCardV1(
+              builder: (group) => _PracticeGroupCardV1(
                 group: group,
                 onStartGroup: widget.onStartGroup,
               ),
@@ -239,7 +260,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
               label: _playCopyV1(
                 context,
                 'play_topic_packs_label',
-                fallback: 'Topic packs',
+                fallback: 'Skill packs',
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -804,6 +825,38 @@ class _PlayGridSectionV1 extends StatelessWidget {
   }
 }
 
+class _PlayLaneListV1 extends StatelessWidget {
+  const _PlayLaneListV1({
+    required this.sectionKey,
+    required this.groups,
+    required this.builder,
+  });
+
+  final Key sectionKey;
+  final List<Act0PracticeGroupV1> groups;
+  final Widget Function(Act0PracticeGroupV1 group) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: sectionKey,
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2,
+      ),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+      child: Column(
+        children: [
+          for (var index = 0; index < groups.length; index += 1) ...[
+            builder(groups[index]),
+            if (index != groups.length - 1)
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _PracticeTileCardV1 extends StatelessWidget {
   const _PracticeTileCardV1({required this.group, required this.onStartGroup});
 
@@ -814,8 +867,8 @@ class _PracticeTileCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = group.isEnabled;
     final accentColor = _groupIconColor(group.groupId);
-    final facts = _playTileFactsV1(group);
     final compactSubtitle = switch (group.groupId) {
+      'daily' when !enabled => group.subtitle,
       'daily' => _playCopyV1(
         context,
         'play_tile_daily_subtitle',
@@ -870,26 +923,11 @@ class _PracticeTileCardV1 extends StatelessWidget {
                   ),
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: accentColor.withOpacity(0.10),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusPill,
-                        ),
-                        border: Border.all(
-                          color: accentColor.withOpacity(0.18),
-                        ),
-                      ),
-                      child: Text(
-                        _playTileBadgeV1(context, group),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: accentColor,
-                          letterSpacing: 0.2,
-                        ),
+                    child: Text(
+                      _playTileBadgeV1(context, group),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: accentColor,
+                        letterSpacing: 0.35,
                       ),
                     ),
                   ),
@@ -912,64 +950,29 @@ class _PracticeTileCardV1 extends StatelessWidget {
                   style: Act0ShellTokensV1.muted,
                 ),
               ),
-              if (facts.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (final fact in facts)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Act0ShellTokensV1.surface2,
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                          border: Border.all(color: Act0ShellTokensV1.border),
-                        ),
-                        child: Text(
-                          fact,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.textDim,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ],
               const SizedBox(height: 4),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Act0ShellTokensV1.gapSm,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: enabled
-                      ? accentColor.withOpacity(0.10)
-                      : Act0ShellTokensV1.surface2,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _playActionLabelV1(context, group),
+                      textAlign: TextAlign.left,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: enabled
+                            ? accentColor
+                            : Act0ShellTokensV1.textDim,
+                        letterSpacing: 0.25,
+                      ),
+                    ),
                   ),
-                  border: Border.all(
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16,
                     color: enabled
-                        ? accentColor.withOpacity(0.24)
-                        : Act0ShellTokensV1.border,
+                        ? accentColor.withOpacity(0.92)
+                        : Act0ShellTokensV1.textDim,
                   ),
-                ),
-                child: Text(
-                  _playActionLabelV1(context, group),
-                  textAlign: TextAlign.center,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: enabled ? accentColor : Act0ShellTokensV1.textDim,
-                    letterSpacing: 0.2,
-                  ),
-                ),
+                ],
               ),
             ],
           ),
@@ -1048,7 +1051,9 @@ class _TopicPracticeCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = group.isEnabled;
     final accentColor = Act0ShellTokensV1.info;
-    final compactSubtitle = switch (group.groupId) {
+    final compactSubtitle = !enabled
+        ? group.subtitle
+        : switch (group.groupId) {
       'placement' => _playCopyV1(
         context,
         'play_topic_placement_subtitle',
@@ -1111,32 +1116,12 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                   _GroupIconV1(groupId: group.groupId),
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: accentColor.withOpacity(0.10),
-                            borderRadius: BorderRadius.circular(
-                              Act0ShellTokensV1.radiusPill,
-                            ),
-                            border: Border.all(
-                              color: accentColor.withOpacity(0.18),
-                            ),
-                          ),
-                          child: Text(
-                            _playTileBadgeV1(context, group),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: accentColor,
-                              letterSpacing: 0.2,
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      _playTileBadgeV1(context, group),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: accentColor,
+                        letterSpacing: 0.35,
+                      ),
                     ),
                   ),
                 ],
@@ -1159,33 +1144,28 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Act0ShellTokensV1.gapSm,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: enabled
-                      ? accentColor.withOpacity(0.10)
-                      : Act0ShellTokensV1.surface2,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _playActionLabelV1(context, group),
+                      textAlign: TextAlign.left,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: enabled
+                            ? accentColor
+                            : Act0ShellTokensV1.textDim,
+                        letterSpacing: 0.25,
+                      ),
+                    ),
                   ),
-                  border: Border.all(
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16,
                     color: enabled
-                        ? accentColor.withOpacity(0.24)
-                        : Act0ShellTokensV1.border,
+                        ? accentColor.withOpacity(0.92)
+                        : Act0ShellTokensV1.textDim,
                   ),
-                ),
-                child: Text(
-                  _playActionLabelV1(context, group),
-                  textAlign: TextAlign.center,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: enabled ? accentColor : Act0ShellTokensV1.textDim,
-                    letterSpacing: 0.2,
-                  ),
-                ),
+                ],
               ),
             ],
           ),
@@ -1294,31 +1274,25 @@ class _PracticeGroupCardV1 extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Act0ShellTokensV1.gapSm,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: enabled
-                      ? accentColor.withOpacity(0.10)
-                      : Act0ShellTokensV1.surface3,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _playActionLabelV1(context, group),
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: enabled ? accentColor : Act0ShellTokensV1.textDim,
+                      letterSpacing: 0.2,
+                    ),
                   ),
-                  border: Border.all(
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16,
                     color: enabled
-                        ? accentColor.withOpacity(0.24)
-                        : Act0ShellTokensV1.border,
+                        ? accentColor.withOpacity(0.92)
+                        : Act0ShellTokensV1.textDim,
                   ),
-                ),
-                child: Text(
-                  _playActionLabelV1(context, group),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: enabled ? accentColor : Act0ShellTokensV1.textDim,
-                    letterSpacing: 0.2,
-                  ),
-                ),
+                ],
               ),
             ],
           ),
