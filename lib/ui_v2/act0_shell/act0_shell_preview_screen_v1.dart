@@ -1514,6 +1514,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
+    final playTaskAlreadyCompleted =
+        playSelectedTask != null &&
+        _completedTaskIds.contains(playSelectedTask.taskId);
+    final playTaskAwardXp = playSelectedTask == null || playTaskAlreadyCompleted
+        ? 0
+        : playSelectedTask.rewardXp;
     final playRunner = isPlayRunner
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
@@ -1540,34 +1546,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ),
           )
         : null;
+    final suppressTaskCompletionToast =
+        isPlayRunner &&
+        playSelectedTask != null &&
+        _isTaskCompletingLessonMilestoneV1(
+          lesson: selectedLesson,
+          taskId: playSelectedTask.taskId,
+        );
     final completionSummary =
         isPlayRunner &&
             widget.tableVisualVariant ==
-                Act0ShellTableVisualVariantV1.refinedDev2
+                Act0ShellTableVisualVariantV1.refinedDev2 &&
+            playTaskAwardXp > 0 &&
+            !suppressTaskCompletionToast
         ? Act0RunnerCompletionSummaryV1(
-            xpGain: playSelectedTask!.rewardXp,
+            xpGain: playTaskAwardXp,
             startLevel: progress.level,
             endLevel: _progressSnapshot(
               baseState,
-              earnedXpDelta: _earnedXp + playSelectedTask.rewardXp,
+              earnedXpDelta: _earnedXp + playTaskAwardXp,
             ).level,
             startXp: progress.xp,
             endXp: _progressSnapshot(
               baseState,
-              earnedXpDelta: _earnedXp + playSelectedTask.rewardXp,
+              earnedXpDelta: _earnedXp + playTaskAwardXp,
             ).xp,
             xpTarget: baseState.xpTarget,
             skillGains: _skillGainsFromMapV1(
-              _skillDeltaForAnswer(selectedLesson, playSelectedTask),
+              _skillDeltaForAnswer(selectedLesson, playSelectedTask!),
               source: playSelectedTask.title,
             ),
           )
         : null;
     final showTopBar =
-        _bootSurfaceReady &&
-        !_showPlacement &&
-        !_showWelcome &&
-        !isPlayRunner;
+        _bootSurfaceReady && !_showPlacement && !_showWelcome && !isPlayRunner;
     return Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
@@ -1923,6 +1935,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _selectedOptionId = null;
                                   _teachingStepIndex = 0;
                                   _resetLessonRunMetrics();
+                                }),
+                                onOpenReview: () => setState(() {
+                                  _tab = Act0ShellTabV1.review;
+                                  _showPlayHub = true;
+                                  _returnToPlayHubOnBack = false;
+                                  _learnDetailLessonId = null;
+                                  _learnDetailWorldId = null;
+                                  _showWorldMenu = false;
+                                  _blockCompletionSummary = null;
                                 }),
                                 onBackToMap: () => setState(() {
                                   _tab = Act0ShellTabV1.learn;
@@ -5485,6 +5506,72 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
   }
 
+  bool _isTaskCompletingLessonMilestoneV1({
+    required Act0LessonCardV1 lesson,
+    required String taskId,
+  }) {
+    if (_nextTask(lesson, taskId) == null) {
+      return true;
+    }
+    return _activeLessonWrapUpTaskId == taskId;
+  }
+
+  Map<String, int> _aggregateSkillDeltasForWorldV1(Act0WorldCardV1 world) {
+    final totals = <String, int>{};
+    for (final lesson in world.lessons) {
+      for (final task in lesson.taskList) {
+        _mergeSkillGainCountsV1(
+          totals,
+          _skillDeltaForTask(lesson.lessonId, task.taskId),
+        );
+      }
+    }
+    return totals;
+  }
+
+  int _completedTaskCountForWorldV1(Act0WorldCardV1 world) {
+    var count = 0;
+    for (final lesson in world.lessons) {
+      for (final task in lesson.taskList) {
+        if (_completedTaskIds.contains(task.taskId)) {
+          count += 1;
+        }
+      }
+    }
+    return count;
+  }
+
+  int _perfectTaskCountForWorldV1(Act0WorldCardV1 world) {
+    final perfectTaskIds = _perfectTaskIds();
+    var count = 0;
+    for (final lesson in world.lessons) {
+      for (final task in lesson.taskList) {
+        if (perfectTaskIds.contains(task.taskId)) {
+          count += 1;
+        }
+      }
+    }
+    return count;
+  }
+
+  int _openMistakeCountForLessonV1(Act0LessonCardV1 lesson) {
+    var count = 0;
+    for (final task in lesson.taskList) {
+      if (_hasOpenMistakeRecord(task.taskId)) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  int _openMistakeCountForWorldV1(Act0WorldCardV1 world) {
+    var count = 0;
+    for (final lesson in world.lessons) {
+      count += _openMistakeCountForLessonV1(lesson);
+    }
+    return count;
+  }
+
   List<Act0SkillGainV1> _profileRecentSkillGains(
     List<Act0SkillGainV1> baseGains,
   ) {
@@ -5708,6 +5795,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_nextTask(selectedLesson, _selectedTaskId) != null) {
       return false;
     }
+    final progressedWorlds = _progressWorlds(
+      widget.state ?? Act0ShellStateV1.sample,
+    );
+    final progressedWorld = _worldById(progressedWorlds, selectedWorld.worldId);
+    final nextLessonId = _nextLessonId(
+      selectedWorld.lessons,
+      selectedLesson.lessonId,
+    );
+    final nextWorld = _nextSelectableWorld(
+      progressedWorlds,
+      selectedWorld.worldId,
+    );
+    final isWorldComplete =
+        nextLessonId == null &&
+        progressedWorld.status == Act0WorldStateV1.completed;
+    final lessonPerfectClearCount = _perfectTaskIds()
+        .where(
+          (taskId) =>
+              selectedLesson.taskList.any((task) => task.taskId == taskId),
+        )
+        .length;
+    final lessonOpenMistakeCount = _openMistakeCountForLessonV1(selectedLesson);
+    final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
@@ -5734,37 +5844,49 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ).xp,
       xpTarget: (widget.state ?? Act0ShellStateV1.sample).xpTarget,
       sharkyLine: selectedTask.runner.sharky.summaryLine,
-      nextLessonTitle: () {
-        final progressedWorlds = _progressWorlds(
-          widget.state ?? Act0ShellStateV1.sample,
-        );
-        final nextLessonId = _nextLessonId(
-          selectedWorld.lessons,
-          selectedLesson.lessonId,
-        );
-        if (nextLessonId != null) {
-          return _lessonById(
-            progressedWorlds
-                .firstWhere((world) => world.worldId == selectedWorld.worldId)
-                .lessons,
-            nextLessonId,
-          ).title;
-        }
-        final nextWorld = _nextSelectableWorld(
-          progressedWorlds,
-          selectedWorld.worldId,
-        );
-        if (nextWorld == null) {
-          return null;
-        }
-        return _firstPlayableLesson(nextWorld).title;
-      }(),
+      nextLessonTitle: nextLessonId == null
+          ? null
+          : act0LocalizedLessonTitleAtomByIdV1(
+              nextLessonId,
+              fallback: _lessonById(
+                progressedWorld.lessons,
+                nextLessonId,
+              ).title,
+              isRu: _isRuLocaleV1,
+            ),
       quickFixCount: _lessonRunQuickFixTaskIds.length,
       deepLeakCount: _lessonRunDeepLeakTaskIds.length,
-      skillGains: _skillGainsFromMapV1(
-        _lessonRunSkillGainCounts,
-        source: _localizedLessonTitleV1(selectedLesson),
-      ),
+      skillGains: isWorldComplete
+          ? _skillGainsFromMapV1(
+              _aggregateSkillDeltasForWorldV1(progressedWorld),
+              source: act0LocalizedWorldTitleV1(context, progressedWorld),
+            )
+          : _skillGainsFromMapV1(
+              _lessonRunSkillGainCounts,
+              source: _localizedLessonTitleV1(selectedLesson),
+            ),
+      milestoneTier: isWorldComplete
+          ? Act0ProgressMilestoneTierV1.world
+          : Act0ProgressMilestoneTierV1.lesson,
+      worldNumber: progressedWorld.worldNumber,
+      worldTitle: act0LocalizedWorldTitleV1(context, progressedWorld),
+      nextWorldNumber: nextWorld?.worldNumber,
+      nextWorldTitle: nextWorld == null
+          ? null
+          : act0LocalizedWorldTitleV1(context, nextWorld),
+      perfectClearCount: isWorldComplete
+          ? _perfectTaskCountForWorldV1(progressedWorld)
+          : lessonPerfectClearCount,
+      completedClearCount: isWorldComplete
+          ? _completedTaskCountForWorldV1(progressedWorld)
+          : selectedLesson.taskList.length,
+      hasSafeReviewTarget: isWorldComplete
+          ? worldOpenMistakeCount > 0
+          : lessonOpenMistakeCount > 0,
+      hasReplayForPerfectTarget:
+          !isWorldComplete &&
+          lessonOpenMistakeCount == 0 &&
+          lessonPerfectClearCount < selectedLesson.taskList.length,
     );
     _fireBlockCompletionEffects(_blockCompletionSummary!);
     return true;

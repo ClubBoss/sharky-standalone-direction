@@ -91,10 +91,50 @@ _ruLessonCopyByIdV1 = <String, Act0LessonDisplayCopyV1>{
     subtitle:
         'Сначала разложи руку по простой группе, а уже потом вкладывай фишки.',
   ),
+  'fold_discipline': Act0LessonDisplayCopyV1(
+    title: 'Дисциплина фолда',
+    subtitle: 'Слабые руки часто экономят фишки именно пасом.',
+  ),
+  'weak_ace_warning': Act0LessonDisplayCopyV1(
+    title: 'Слабый туз под вопросом',
+    subtitle: 'Знакомая рука всё ещё может быть доминирована.',
+  ),
+  'continue_or_let_go': Act0LessonDisplayCopyV1(
+    title: 'Продолжать или отпустить',
+    subtitle: 'Отделяй чистое продолжение от пустой надежды.',
+  ),
   'hand_discipline_apply': Act0LessonDisplayCopyV1(
     title: 'Дисциплина за столом',
     subtitle:
         'Сначала группа руки, потом место и ситуация. Дальше решение проще.',
+  ),
+  'discipline_checkpoint': Act0LessonDisplayCopyV1(
+    title: 'Проверка дисциплины рук',
+    subtitle: 'Сначала группа руки, потом защита стека.',
+  ),
+  'position_six_seats': Act0LessonDisplayCopyV1(
+    title: 'Шесть позиций',
+    subtitle: 'У каждого места есть имя и свой порядок хода.',
+  ),
+  'button_advantage': Act0LessonDisplayCopyV1(
+    title: 'Преимущество баттона',
+    subtitle: 'Баттон часто действует последним и видит больше.',
+  ),
+  'early_vs_late': Act0LessonDisplayCopyV1(
+    title: 'Ранние и поздние места',
+    subtitle: 'Ранние места решают с меньшим объёмом информации.',
+  ),
+  'same_hand_different_seat': Act0LessonDisplayCopyV1(
+    title: 'Одна рука, разные места',
+    subtitle: 'Место за столом меняет комфорт одной и той же руки.',
+  ),
+  'position_apply': Act0LessonDisplayCopyV1(
+    title: 'Позиция за столом',
+    subtitle: 'Место за столом меняет решение ещё до действия.',
+  ),
+  'position_checkpoint': Act0LessonDisplayCopyV1(
+    title: 'Проверка позиции',
+    subtitle: 'Сначала прочитай место за столом, потом выбирай действие.',
   ),
 };
 
@@ -617,6 +657,226 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         'Когда рука быстро попадает в нужную группу, префлоп-решения становятся спокойнее и чище.',
     runnerQuestion: 'Какая префлоп-привычка здесь первая?',
   ),
+  'fold_discipline_discipline_intro': Act0TaskDisplayCopyV1(
+    title: 'Фолд — это инструмент',
+    runnerPrompt: 'HJ поставил, а рука слабая.',
+    runnerSupport:
+        'Если продолжение не стоит цены, фолд просто экономит фишки.',
+    runnerQuestion: 'Какое действие выбрасывает руку?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Ставка создаёт цену.',
+        body: 'Если рука не стоит этой цены, фолд просто сохраняет стек.',
+      ),
+    ],
+  ),
+  'fold_discipline_early_fold': Act0TaskDisplayCopyV1(
+    title: 'Слабая рука рано',
+    runnerPrompt: 'Банк не открыт. Hero в ранней позиции с J8o.',
+    runnerSupport: 'Ранняя позиция убирает комфорт у слабой оффсьют-руки.',
+    runnerQuestion: 'Какое действие здесь самое чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Дисциплина уместна.',
+        body: 'Слабые ранние открытия слишком часто создают тяжёлые споты.',
+      ),
+    ],
+  ),
+  'fold_discipline_facing_fold': Act0TaskDisplayCopyV1(
+    title: 'Перед давлением',
+    runnerPrompt: 'CO открылся. Hero на BTN с J8o.',
+    runnerSupport:
+        'Позиция помогает, но эта рука всё ещё слишком слабая для продолжения.',
+    runnerQuestion: 'Какой ответ здесь самый чистый?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Позиция — не пропуск.',
+        body: 'J8o всё ещё уходит в пас, если сама рука слишком слаба.',
+      ),
+    ],
+  ),
+  'fold_discipline_discipline_stack_protect': Act0TaskDisplayCopyV1(
+    title: 'Береги стек',
+    runnerPrompt: 'CO открылся. Hero на BTN с A7o.',
+    runnerSupport:
+        'Здесь легко попасть под более сильных тузов, так что фолд чистый.',
+    runnerQuestion: 'Какой ответ здесь будет дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Осторожно со слабым тузом.',
+        body: 'A7o часто доминирован, когда кто-то открылся раньше.',
+      ),
+    ],
+  ),
+  'fold_discipline_fold_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по дисциплине',
+    runnerPrompt: 'Знакомые карты всё равно требуют контекста.',
+    runnerSupport:
+        'Не продолжай раздачу только потому, что одна карта выглядит высокой.',
+    runnerQuestion: 'Чего должны избегать слабые знакомые руки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по проблемным рукам.',
+        body: 'Одной высокой карты мало. Читай и опен, и группу руки.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_w3_dominated_intro': Act0TaskDisplayCopyV1(
+    title: 'Проблемные руки',
+    runnerPrompt:
+        'Некоторые знакомые руки становятся проблемой против более сильных версий.',
+    runnerSupport: 'Слабый туз легко упирается в лучшего туза.',
+    runnerQuestion: 'Какие руки требуют осторожности?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Знакомо не значит безопасно.',
+        body: 'Слабые тузы и слабые бродвеи часто натыкаются на лучшие версии.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_w3_dominated_fold': Act0TaskDisplayCopyV1(
+    title: 'Пас от проблемы',
+    runnerPrompt: 'CO открылся. Hero на BTN с A7o.',
+    runnerSupport:
+        'Здесь легко оказаться позади более сильных тузов, поэтому фолд чистый.',
+    runnerQuestion: 'Какой ответ здесь будет дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Осторожно со слабым тузом.',
+        body: 'A7o часто доминирован, когда кто-то открылся раньше.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_w3_strong_continue': Act0TaskDisplayCopyV1(
+    title: 'Сильное продолжение',
+    runnerPrompt: 'HJ открылся. Hero на BTN с KQo.',
+    runnerSupport:
+        'Опен идёт на место раньше, а у тебя остаётся позиция и играбельный бродвей.',
+    runnerQuestion: 'Какое продолжение здесь самое простое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Играбельный бродвей против более тайтового опена.',
+        body:
+            'KQo всё ещё продолжает в позиции, хотя место опенера стало чуть сильнее.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_weak_ace_pressure_fold': Act0TaskDisplayCopyV1(
+    title: 'Пас под давлением',
+    runnerPrompt: 'CO открылся. Hero на BTN с J8o.',
+    runnerSupport: 'Поздняя позиция даёт комфорт, но не право продолжать всё.',
+    runnerQuestion: 'Что здесь говорит дисциплина?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Комфорт не спасает руку.',
+        body: 'J8o остаётся слишком слабой даже на баттоне против опена.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_weak_ace_kicker_compare': Act0TaskDisplayCopyV1(
+    title: 'Спот A7 против KQ',
+    runnerPrompt: 'CO открылся. Hero на BTN с KQo вместо A7o.',
+    runnerSupport:
+        'То же место, но другой класс руки и гораздо меньше риска доминации.',
+    runnerQuestion: 'Почему KQo продолжает чище?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сравни класс руки.',
+        body:
+            'У KQo остаётся сила бродвея, а A7o слишком часто упирается в лучшего туза.',
+      ),
+    ],
+  ),
+  'weak_ace_warning_w3_dominated_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по дисциплине',
+    runnerPrompt: 'Знакомые карты всё равно требуют контекста.',
+    runnerSupport:
+        'Не продолжай раздачу только потому, что одна карта выглядит высокой.',
+    runnerQuestion: 'Чего должны избегать слабые знакомые руки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по проблемным рукам.',
+        body: 'Одной высокой карты мало. Читай и опен, и группу руки.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_continue_intro': Act0TaskDisplayCopyV1(
+    title: 'Хватит ли силы',
+    runnerPrompt: 'Префлоп начинается с простой группы руки.',
+    runnerSupport:
+        'Сначала премиум, сильная, средняя или мусор. Чарты сейчас не нужны.',
+    runnerQuestion: 'Что нужно назвать до действия?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала группа.',
+        body: 'Назови группу руки до выбора между опеном, коллом и фолдом.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_premium_continue': Act0TaskDisplayCopyV1(
+    title: 'Премиум продолжает',
+    runnerPrompt: 'AA — премиум-рука на префлопе.',
+    runnerSupport: 'Премиум чаще всего хочет строить банк.',
+    runnerQuestion: 'Какая группа у АА?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Премиум — это верхняя группа.',
+        body: 'AA попадает в премиум ещё до того, как контекст всё уточнит.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_medium_open': Act0TaskDisplayCopyV1(
+    title: 'Средняя рука открывается',
+    runnerPrompt: 'BTN. Банк не открыт. У Hero KQo.',
+    runnerSupport: 'Средняя рука в лучшем месте. Рейз здесь чище лимпа.',
+    runnerQuestion: 'Какое первое действие здесь лучше всего?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Средняя рука, хорошее место.',
+        body: 'KQo — средняя группа. Баттон лучший. Откройся рейзом.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_weak_let_go': Act0TaskDisplayCopyV1(
+    title: 'Слабое отпускаем',
+    runnerPrompt: 'CO открылся. Hero на BTN с J8o.',
+    runnerSupport:
+        'Позиция помогает, но эта рука всё ещё слишком слабая для продолжения.',
+    runnerQuestion: 'Какой ответ здесь самый чистый?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Позиция — не пропуск.',
+        body: 'J8o всё ещё уходит в пас, если сама рука слишком слаба.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_medium_call_or_fold': Act0TaskDisplayCopyV1(
+    title: 'Средняя рука против опена',
+    runnerPrompt: 'CO открылся. Hero на BTN с KQo.',
+    runnerSupport:
+        'Играбельная рука в позиции: колл спокойно оставляет её в игре.',
+    runnerQuestion: 'Какой ответ здесь самый простой?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Играбельно и в позиции.',
+        body:
+            'KQo спокойно коллирует простой опен, когда Hero действует после CO.',
+      ),
+    ],
+  ),
+  'continue_or_let_go_continue_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по продолжению',
+    runnerPrompt: 'Оппонент открылся — значит, у решения уже есть цена.',
+    runnerSupport:
+        'Играбельные руки могут коллировать, а слабые всё ещё спокойно уходят в пас.',
+    runnerQuestion: 'Что создаёт опенер?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка против опена.',
+        body: 'Смотри на группу руки, позицию и цену продолжения.',
+      ),
+    ],
+  ),
   'apply_intro': Act0TaskDisplayCopyV1(
     title: 'Привычка в три шага',
     summary:
@@ -671,6 +931,417 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         'Хорошая дисциплина не ищет подвигов. Она снова и снова приводит к чистому решению по понятным причинам.',
     runnerQuestion: 'Чего должны избегать знакомые, но слабые руки?',
   ),
+  'discipline_checkpoint_checkpoint_intro': Act0TaskDisplayCopyV1(
+    title: 'Сначала группа',
+    runnerPrompt:
+        'Сначала разложи руку по группе, а уже потом выбирай действие.',
+    runnerSupport:
+        'Премиум, сильная, средняя или мусор — это первый префлоп-фильтр.',
+    runnerQuestion: 'Какая префлоп-привычка здесь первая?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по группе.',
+        body: 'Назови группу руки, а потом уже читай позицию и рамку спота.',
+      ),
+    ],
+  ),
+  'discipline_checkpoint_checkpoint_premium': Act0TaskDisplayCopyV1(
+    title: 'Премиум-рука',
+    runnerPrompt: 'AA — премиум-рука на префлопе.',
+    runnerSupport: 'Премиум чаще всего хочет строить банк.',
+    runnerQuestion: 'Какая группа у АА?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Премиум — это верхняя группа.',
+        body: 'AA попадает в премиум ещё до того, как контекст всё уточнит.',
+      ),
+    ],
+  ),
+  'discipline_checkpoint_checkpoint_fold': Act0TaskDisplayCopyV1(
+    title: 'Дисциплинированный пас',
+    runnerPrompt: 'CO открылся. Hero на BTN с A7o.',
+    runnerSupport:
+        'Здесь легко оказаться позади более сильных тузов, поэтому фолд чистый.',
+    runnerQuestion: 'Какой ответ здесь будет дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Осторожно со слабым тузом.',
+        body: 'A7o часто доминирован, когда кто-то открылся раньше.',
+      ),
+    ],
+  ),
+  'discipline_checkpoint_checkpoint_borderline_continue': Act0TaskDisplayCopyV1(
+    title: 'Пограничное продолжение',
+    runnerPrompt: 'CO открылся. Hero на BTN с QJs.',
+    runnerSupport:
+        'Играбельный одномастный бродвей может продолжать, но причина всё та же: место плюс класс руки.',
+    runnerQuestion: 'Какое продолжение здесь самое простое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'На грани, но играбельно.',
+        body:
+            'QJs продолжает с баттона, когда позиция и играбельность совпадают.',
+      ),
+    ],
+  ),
+  'discipline_checkpoint_checkpoint_table_discipline': Act0TaskDisplayCopyV1(
+    title: 'Дисциплина на живом столе',
+    runnerPrompt: 'Живой стол. Hero в HJ с J4o, банк не открыт.',
+    runnerSupport: 'Сначала группа руки, а не надежда или любопытство.',
+    runnerQuestion: 'Какое чтение дисциплины здесь самое чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала группа руки.',
+        body: 'J4o остаётся мусором, даже если банк пока чистый.',
+      ),
+    ],
+  ),
+  'discipline_checkpoint_checkpoint_review': Act0TaskDisplayCopyV1(
+    title: 'Повтор по дисциплине',
+    runnerPrompt: 'Сначала дисциплина, потом действие.',
+    runnerSupport:
+        'Следующий мир добавит позицию: та же группа руки может меняться по месту.',
+    runnerQuestion: 'Что идёт сразу после группы руки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Переход к следующему фильтру.',
+        body: 'После группы руки сразу смотри на место за столом.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_theory': Act0TaskDisplayCopyV1(
+    title: 'Шесть мест',
+    runnerPrompt: 'Шесть мест за столом: UTG, HJ, CO, BTN, SB и BB.',
+    runnerSupport: 'После флопа баттон чаще всего действует последним.',
+    runnerQuestion: 'Какое место здесь называется баттоном?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала названия мест.',
+        body: 'Имя места сразу подсказывает порядок хода и объём информации.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_button': Act0TaskDisplayCopyV1(
+    title: 'Нажми на баттон',
+    runnerPrompt: 'Баттон — место дилера в этой раздаче.',
+    runnerSupport: 'Нажми на метку BTN.',
+    runnerQuestion: 'Нажми на баттон.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'BTN отмечает баттон.',
+        body: 'Фишка дилера показывает позднее место именно в этой раздаче.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_utg': Act0TaskDisplayCopyV1(
+    title: 'Нажми на UTG',
+    runnerPrompt: 'UTG — самое раннее место на префлопе.',
+    runnerSupport: 'Нажми на UTG.',
+    runnerQuestion: 'Нажми на UTG.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'UTG начинает рано.',
+        body: 'UTG действует первым и получает меньше всего информации.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_cutoff': Act0TaskDisplayCopyV1(
+    title: 'Нажми на cutoff',
+    runnerPrompt: 'CO — это cutoff. Он сидит прямо перед баттоном.',
+    runnerSupport: 'Нажми на CO.',
+    runnerQuestion: 'Нажми на cutoff.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Cutoff идёт перед баттоном.',
+        body: 'Это уже позднее место, но не последнее в очереди.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_late_seat': Act0TaskDisplayCopyV1(
+    title: 'Что даёт поздняя позиция',
+    runnerPrompt: 'Поздние места видят больше действий до решения.',
+    runnerSupport: 'Баттон — самый наглядный пример позднего места.',
+    runnerQuestion: 'Какое место действует позже всех после флопа?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Поздно — значит информированнее.',
+        body: 'Поздние места успевают увидеть больше чужих решений.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_early_late': Act0TaskDisplayCopyV1(
+    title: 'Рано против поздно',
+    runnerPrompt: 'Ранние места действуют с меньшим объёмом информации.',
+    runnerSupport: 'UTG — раннее место. BTN — позднее.',
+    runnerQuestion: 'Какое место рано на префлопе?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Ранние места решают раньше.',
+        body: 'UTG действует до того, как увидит решения большинства игроков.',
+      ),
+    ],
+  ),
+  'position_six_seats_seat_order_decision': Act0TaskDisplayCopyV1(
+    title: 'Кто ходит раньше?',
+    runnerPrompt: 'UTG и BTN видны сразу, но до префлопа один ходит раньше.',
+    runnerSupport: 'Кто действует раньше, тот получает меньше информации.',
+    runnerQuestion: 'Какое место ходит раньше BTN?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Порядок важнее комфорта.',
+        body:
+            'UTG ходит до BTN и не может опереться на тот же информационный запас.',
+      ),
+    ],
+  ),
+  'position_six_seats_positions_review': Act0TaskDisplayCopyV1(
+    title: 'Повтор по позиции',
+    runnerPrompt: 'Позиция меняет количество информации перед решением.',
+    runnerSupport:
+        'Ранние места решают раньше. Поздние успевают увидеть больше.',
+    runnerQuestion: 'Какое место здесь самое позднее после флопа?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Вывод по позиции.',
+        body: 'Имя места подсказывает и порядок хода, и уровень удобства.',
+      ),
+    ],
+  ),
+  'button_advantage_button_intro': Act0TaskDisplayCopyV1(
+    title: 'Лучшее место',
+    runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
+    runnerSupport: 'Поздние места действуют после большего числа решений.',
+    runnerQuestion: 'Почему поздняя позиция помогает?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Позиция — это информация.',
+        body:
+            'Ранние места решают раньше. Поздние видят больше до своего хода.',
+      ),
+    ],
+  ),
+  'button_advantage_find_button': Act0TaskDisplayCopyV1(
+    title: 'Нажми BTN',
+    runnerPrompt: 'Баттон — место дилера в этой раздаче.',
+    runnerSupport: 'Нажми на BTN.',
+    runnerQuestion: 'Нажми на баттон.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'BTN отмечает баттон.',
+        body: 'Фишка дилера показывает позднее место именно в этой раздаче.',
+      ),
+    ],
+  ),
+  'button_advantage_button_open': Act0TaskDisplayCopyV1(
+    title: 'BTN открывается первым',
+    runnerPrompt: 'До BTN все выбросили, у тебя KTs.',
+    runnerSupport:
+        'Первый вход и поздняя позиция делают опен самым чистым действием.',
+    runnerQuestion: 'Какое первое действие здесь самое простое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Играбельная рука поздно.',
+        body:
+            'KTs на баттоне спокойно открывается, если до тебя никто не вошёл.',
+      ),
+    ],
+  ),
+  'button_advantage_button_last': Act0TaskDisplayCopyV1(
+    title: 'Ходит последним',
+    runnerPrompt: 'После флопа баттон часто действует последним.',
+    runnerSupport: 'Нажми на BTN.',
+    runnerQuestion: 'Нажми на последнего игрока на постфлопе.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Постфлоп меняет порядок.',
+        body: 'После флопа блайнды ходят рано, а баттон часто закрывает круг.',
+      ),
+    ],
+  ),
+  'button_advantage_button_vs_cutoff': Act0TaskDisplayCopyV1(
+    title: 'BTN против CO',
+    runnerPrompt: 'CO уже поздно, но BTN всё равно действует после него.',
+    runnerSupport: 'Сравни два самых поздних места напрямую.',
+    runnerQuestion: 'Какое место позже CO?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'У поздней позиции тоже есть уровни.',
+        body:
+            'Cutoff уже поздний, но баттон получает ещё один уровень преимущества.',
+      ),
+    ],
+  ),
+  'button_advantage_button_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по баттону',
+    runnerPrompt: 'Цена руки зависит и от места за столом.',
+    runnerSupport:
+        'Более позднее место обычно даёт больше информации перед выбором.',
+    runnerQuestion: 'Какое место обычно видит больше первым?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по ценности позиции.',
+        body: 'Назови место, вспомни порядок хода и только потом оцени руку.',
+      ),
+    ],
+  ),
+  'early_vs_late_w2_position_intro': Act0TaskDisplayCopyV1(
+    title: 'Информация меняется',
+    runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
+    runnerSupport: 'Поздние места действуют после большего числа решений.',
+    runnerQuestion: 'Почему поздняя позиция помогает?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Позиция — это информация.',
+        body:
+            'Ранние места решают раньше. Поздние видят больше до своего хода.',
+      ),
+    ],
+  ),
+  'early_vs_late_w2_late_position': Act0TaskDisplayCopyV1(
+    title: 'Позднее место',
+    runnerPrompt: 'Поздние места видят больше действий до решения.',
+    runnerSupport: 'Баттон — самый наглядный пример позднего места.',
+    runnerQuestion: 'Какое место действует позже всех после флопа?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Поздно — значит видеть больше.',
+        body: 'Поздние места собирают больше подсказок до своего решения.',
+      ),
+    ],
+  ),
+  'early_vs_late_w2_early_position': Act0TaskDisplayCopyV1(
+    title: 'Раннее место',
+    runnerPrompt: 'Ранние места действуют с меньшим объёмом информации.',
+    runnerSupport: 'UTG — раннее место. BTN — позднее.',
+    runnerQuestion: 'Какое место рано на префлопе?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Ранние места решают раньше.',
+        body: 'UTG действует до того, как увидит решения большинства игроков.',
+      ),
+    ],
+  ),
+  'early_vs_late_early_pressure_choice': Act0TaskDisplayCopyV1(
+    title: 'Давление ранней позиции',
+    runnerPrompt: 'UTG действует до HJ, CO, BTN, SB и BB.',
+    runnerSupport: 'Чем больше игроков позади, тем строже должен быть старт.',
+    runnerQuestion: 'Почему UTG требует большей дисциплины?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Рано — значит под давлением.',
+        body:
+            'UTG ещё не видел решения большинства стола, поэтому запас нужен крепче.',
+      ),
+    ],
+  ),
+  'early_vs_late_late_info_choice': Act0TaskDisplayCopyV1(
+    title: 'Инфо-плюс поздно',
+    runnerPrompt: 'CO уже увидел фолды от UTG и HJ до своего хода.',
+    runnerSupport:
+        'Поздний комфорт приходит из-за меньшего числа игроков позади.',
+    runnerQuestion: 'Что даёт CO больше комфорта, чем UTG?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Поздний перевес практичен.',
+        body: 'Два фолда до CO — это уже больше информации, чем получает UTG.',
+      ),
+    ],
+  ),
+  'early_vs_late_w2_position_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по позиции',
+    runnerPrompt: 'Цена руки зависит и от места за столом.',
+    runnerSupport:
+        'Более позднее место обычно даёт больше информации перед выбором.',
+    runnerQuestion: 'Какое место обычно видит больше первым?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по ценности позиции.',
+        body: 'Назови место, вспомни порядок хода и только потом оцени руку.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_w3_same_hand_intro': Act0TaskDisplayCopyV1(
+    title: 'Сначала контекст',
+    runnerPrompt:
+        'Одна и та же рука может менять действие вместе с рамкой спота.',
+    runnerSupport:
+        'Первый вход, игра против опена и ранняя позиция — это разные рамки.',
+    runnerQuestion: 'Что нужно перепроверить?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Постоянного ответа нет.',
+        body:
+            'Каждый раз заново проверь группу руки, место и то, был ли уже опен.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_w3_same_hand_open': Act0TaskDisplayCopyV1(
+    title: 'Рамка опена',
+    runnerPrompt: 'До CO все выбросили, у тебя AJo.',
+    runnerSupport:
+        'Cutoff уже поздний, но баттон и блайнды ещё остаются позади.',
+    runnerQuestion: 'Какое первое действие из CO здесь чище?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Поздно, но ещё не последним.',
+        body: 'AJo может открываться из CO, но баттон за спиной всё ещё важен.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_w3_same_hand_call': Act0TaskDisplayCopyV1(
+    title: 'Рамка колла',
+    runnerPrompt: 'HJ открылся. Hero на CO с KQo.',
+    runnerSupport:
+        'Та же рука, место на шаг раньше и всё ещё игра против опена.',
+    runnerQuestion: 'Какой ответ из CO здесь чище?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Та же рука, более тесное место.',
+        body:
+            'KQo всё ещё продолжает, но на одно место раньше комфорта уже меньше.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_same_hand_early_fold': Act0TaskDisplayCopyV1(
+    title: 'Пас с раннего места',
+    runnerPrompt: 'Банк не открыт. Hero в ранней позиции с ATo.',
+    runnerSupport: 'Та же рука чувствует себя заметно хуже из ранней позиции.',
+    runnerQuestion: 'Какое действие здесь будет дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Та же рука, худшее место.',
+        body: 'Ранняя позиция легко превращает пограничную руку в фолд.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_same_hand_late_open': Act0TaskDisplayCopyV1(
+    title: 'Опен с позднего места',
+    runnerPrompt: 'Банк не открыт. Hero в поздней позиции с ATo.',
+    runnerSupport:
+        'Поздняя позиция поддерживает чистый опен с такой играбельной рукой.',
+    runnerQuestion: 'Какое действие здесь самое простое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Играбельная рука поздно.',
+        body:
+            'ATo в поздней позиции уже получает достаточно комфорта для чистого опена.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_w3_same_hand_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по рамке',
+    runnerPrompt:
+        'Контекст может менять само действие, а не только ощущение от руки.',
+    runnerSupport:
+        'Одна и та же рука может открываться, коллировать или уходить в пас в другой рамке.',
+    runnerQuestion: 'Что не даёт скатиться в правило одна рука — один ответ?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по рамке.',
+        body: 'Всегда проверяй, чистый ли банк и был ли уже рейз до тебя.',
+      ),
+    ],
+  ),
   'position_apply_intro': Act0TaskDisplayCopyV1(
     title: 'Позиция меняет решение',
     runnerPrompt: 'Позиция заранее подсказывает, насколько руке будет удобно.',
@@ -713,6 +1384,87 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Поздние места помогают, ранние требуют более крепкой руки и более чистой причины продолжать.',
     runnerQuestion: 'На что нужно смотреть сразу после группы руки?',
+  ),
+  'position_checkpoint_position_checkpoint_intro': Act0TaskDisplayCopyV1(
+    title: 'Сначала место',
+    runnerPrompt: 'Одна и та же рука ощущается иначе рано и поздно.',
+    runnerSupport: 'Поздние места действуют после большего числа решений.',
+    runnerQuestion: 'Почему поздняя позиция помогает?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Позиция — это информация.',
+        body:
+            'Ранние места решают раньше. Поздние видят больше до своего хода.',
+      ),
+    ],
+  ),
+  'position_checkpoint_position_checkpoint_late_open': Act0TaskDisplayCopyV1(
+    title: 'Поздняя позиция: открыть или зайти пассивно?',
+    runnerPrompt: 'Банк не открыт. Hero в поздней позиции с ATo.',
+    runnerSupport:
+        'Поздняя позиция поддерживает чистый опен с такой играбельной рукой.',
+    runnerQuestion: 'Какое действие здесь самое простое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Играбельная рука поздно.',
+        body:
+            'ATo в поздней позиции уже получает достаточно комфорта для чистого опена.',
+      ),
+    ],
+  ),
+  'position_checkpoint_position_checkpoint_early_fold': Act0TaskDisplayCopyV1(
+    title: 'Ранняя позиция: та же рука уходит в пас',
+    runnerPrompt: 'Банк не открыт. Hero в UTG с A9o.',
+    runnerSupport:
+        'Даже заманчивый туз всё ещё требует ранней проверки на дисциплину.',
+    runnerQuestion: 'Какое действие здесь будет дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Заманчивый туз, та же дисциплина.',
+        body:
+            'A9o всё ещё уходит в пас рано, потому что место слишком открыто для тонкого опена.',
+      ),
+    ],
+  ),
+  'position_checkpoint_position_checkpoint_btn_call': Act0TaskDisplayCopyV1(
+    title: 'BTN: колл в удобном споте',
+    runnerPrompt: 'HJ открылся. Hero на BTN с KJs.',
+    runnerSupport:
+        'Поздняя позиция помогает, когда рука сама по себе остаётся играбельной.',
+    runnerQuestion: 'Какой ответ здесь самый простой?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Место плюс класс руки.',
+        body:
+            'KJs продолжает не из-за позиции одной, а потому что рука тоже достаточно удобна.',
+      ),
+    ],
+  ),
+  'position_checkpoint_position_checkpoint_table_notice': Act0TaskDisplayCopyV1(
+    title: 'Чтение места на живом столе',
+    runnerPrompt: 'Живой стол. Hero на CO с QJs, а после тебя ещё три места.',
+    runnerSupport: 'До действия сначала прочитай, что тебе даёт порядок мест.',
+    runnerQuestion: 'Какое чтение места здесь самое чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала место, потом действие.',
+        body:
+            'Поздняя позиция помогает, но в cutoff за спиной всё ещё остаются баттон и блайнды.',
+      ),
+    ],
+  ),
+  'position_checkpoint_position_checkpoint_review': Act0TaskDisplayCopyV1(
+    title: 'Повтор по позиции',
+    runnerPrompt: 'Позиция меняет комфорт ещё до префлоп-решения.',
+    runnerSupport:
+        'Поздняя позиция помогает. Ранняя требует более крепкой руки и более чистой причины продолжать.',
+    runnerQuestion: 'На что нужно смотреть сразу после группы руки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Памятка по позиции.',
+        body: 'Сначала группа руки, потом место и только потом действие.',
+      ),
+    ],
   ),
 };
 

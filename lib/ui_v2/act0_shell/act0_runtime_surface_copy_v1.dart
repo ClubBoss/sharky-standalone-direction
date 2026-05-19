@@ -9,6 +9,7 @@ String act0RuntimeTaskRailLabelV1(
   required bool isTheory,
   required bool isDrill,
   required bool isReview,
+  required bool isTrailHistory,
   required bool hasSeatTargets,
   Act0TaskFamilyV1? taskFamily,
 }) {
@@ -32,6 +33,9 @@ String act0RuntimeTaskRailLabelV1(
       'runner_task_tap_correct_seat',
       fallback: 'Tap the correct seat',
     );
+  }
+  if (isDrill && isTrailHistory) {
+    return act0RuntimeTrailTaskLabelV1(context);
   }
   if (isDrill) {
     if (taskFamily == Act0TaskFamilyV1.sizing) {
@@ -64,6 +68,13 @@ String act0RuntimeTaskRailLabelV1(
   return '';
 }
 
+String act0RuntimeTrailTaskLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Проверь историю раздачи' : 'Trail check';
+}
+
 String act0RuntimeSeatTapStatusLabelV1(BuildContext context) =>
     act0LocalizedSurfaceAtomV1(
       context,
@@ -78,8 +89,198 @@ String act0RuntimeSeatTapHelperLabelV1(BuildContext context) =>
       fallback: 'Read the table, then tap one seat.',
     );
 
-String act0RuntimeQuestionBadgeLabelV1(BuildContext context) =>
-    act0RuntimeLocalizedGeneralLabelV1(context, 'Spot check');
+String act0RuntimeTheoryCoachLineV1(
+  BuildContext context, {
+  required String authoredLine,
+  required String lessonId,
+  required int beatIndex,
+  required int teachingStepIndex,
+  Act0TaskFamilyV1? taskFamily,
+  required String prompt,
+  required String supportLine,
+}) {
+  final localizedAuthored = act0RuntimeLocalizedGeneralLabelV1(
+    context,
+    authoredLine,
+  ).trim();
+  if (_shouldKeepAuthoredCoachLineV1(localizedAuthored)) {
+    return localizedAuthored;
+  }
+  final candidates = _theoryCoachCandidatesV1(
+    context,
+    taskFamily: taskFamily,
+    prompt: prompt,
+    supportLine: supportLine,
+  );
+  return _pickDeterministicCoachLineV1(
+    candidates,
+    seed:
+        'theory|$lessonId|$beatIndex|$teachingStepIndex|${taskFamily?.name ?? 'none'}|$prompt|$supportLine',
+  );
+}
+
+String act0RuntimePromptCoachLineV1(
+  BuildContext context, {
+  required String lessonId,
+  required int beatIndex,
+  required String question,
+  Act0TaskFamilyV1? taskFamily,
+  required bool hasSeatTargets,
+  required bool isTrailHistory,
+}) {
+  if (isTrailHistory) {
+    return '';
+  }
+  final candidates = _promptCoachCandidatesV1(
+    context,
+    question: question,
+    taskFamily: taskFamily,
+    hasSeatTargets: hasSeatTargets,
+  );
+  return _pickDeterministicCoachLineV1(
+    candidates,
+    seed:
+        'prompt|$lessonId|$beatIndex|${taskFamily?.name ?? 'none'}|$hasSeatTargets|$question',
+  );
+}
+
+String act0RuntimeFeedbackCoachLineV1(
+  BuildContext context, {
+  required String authoredLine,
+  required String title,
+  required Act0FeedbackQualityV1 quality,
+  required String variationSeed,
+  Act0TaskFamilyV1? taskFamily,
+}) {
+  final localizedAuthored = act0RuntimeLocalizedGeneralLabelV1(
+    context,
+    authoredLine,
+  ).trim();
+  final normalizedAuthored = localizedAuthored.toLowerCase();
+  final normalizedTitle = act0RuntimeLocalizedGeneralLabelV1(
+    context,
+    title,
+  ).trim().toLowerCase();
+  if (localizedAuthored.isNotEmpty &&
+      normalizedAuthored != normalizedTitle &&
+      !_isGenericFeedbackCoachLineV1(normalizedAuthored)) {
+    return localizedAuthored;
+  }
+  final candidates = _feedbackCoachCandidatesV1(
+    context,
+    quality: quality,
+    taskFamily: taskFamily,
+  );
+  return _pickDeterministicCoachLineV1(
+    candidates,
+    seed: 'feedback|$variationSeed|${quality.name}|${taskFamily?.name ?? 'none'}',
+  );
+}
+
+String act0RuntimeQuestionBadgeLabelV1(
+  BuildContext context, {
+  bool isTrailHistory = false,
+}
+) {
+  if (isTrailHistory) {
+    final isRu = Localizations.localeOf(
+      context,
+    ).languageCode.toLowerCase().startsWith('ru');
+    return isRu ? 'История раздачи' : 'Hand history';
+  }
+  return act0RuntimeLocalizedGeneralLabelV1(context, 'Spot check');
+}
+
+String act0RuntimeTrailPromptSupportLineV1(
+  BuildContext context, {
+  required String currentStreetLabel,
+  required String trailStreetLabel,
+}) {
+  final currentStreet = currentStreetLabel.trim().isEmpty
+      ? ''
+      : act0RuntimeLocalizedStreetLabelV1(context, currentStreetLabel.trim());
+  final trailStreet = trailStreetLabel.trim().isEmpty
+      ? ''
+      : act0RuntimeLocalizedStreetLabelV1(context, trailStreetLabel.trim());
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  if (currentStreet.isNotEmpty &&
+      trailStreet.isNotEmpty &&
+      currentStreet.toLowerCase() != trailStreet.toLowerCase()) {
+    return isRu
+        ? 'Сейчас на столе: $currentStreet · В истории: $trailStreet'
+        : 'Current street: $currentStreet · Trail item: $trailStreet';
+  }
+  return isRu ? 'Смотри историю раздачи.' : 'Read the hand history.';
+}
+
+String act0RuntimeTrailFeedbackContextLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'История раздачи' : 'Hand history';
+}
+
+String act0RuntimeNeutralBucketCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Проверка группы' : 'Bucket check';
+}
+
+String act0RuntimeNeutralHandReadCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Чтение руки' : 'Hand read';
+}
+
+String act0RuntimeNeutralTableReadCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Чтение стола' : 'Table read';
+}
+
+String act0RuntimeNeutralDecisionCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Решение' : 'Decision spot';
+}
+
+String act0RuntimeNeutralFacingPriceCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Цена колла' : 'Facing price';
+}
+
+String act0RuntimeNeutralPotAndPriceCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Банк и цена' : 'Pot and price';
+}
+
+String act0RuntimeNeutralSizingCueLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Размер ставки' : 'Sizing spot';
+}
+
+String act0RuntimeNeutralFacingActorCueLabelV1(
+  BuildContext context, {
+  required String actor,
+  required String amount,
+}) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Против $actor $amount' : 'Facing $actor $amount';
+}
 
 String act0RuntimeLocalizedOptionLabelV1(BuildContext context, String label) =>
     act0RuntimeLocalizedGeneralLabelV1(context, label);
@@ -146,6 +347,178 @@ String act0RuntimeLocalizedCenterLabelV1(BuildContext context, String label) {
   }
   return act0LocalizedSurfaceAtomV1(context, atomId, fallback: trimmed);
 }
+
+bool _shouldKeepAuthoredCoachLineV1(String line) {
+  final normalized = line.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return false;
+  }
+  return !_genericCoachLineInputsV1.contains(normalized);
+}
+
+bool _isGenericFeedbackCoachLineV1(String line) {
+  if (line.trim().isEmpty) {
+    return true;
+  }
+  return _genericFeedbackCoachLineInputsV1.contains(line);
+}
+
+List<String> _theoryCoachCandidatesV1(
+  BuildContext context, {
+  required Act0TaskFamilyV1? taskFamily,
+  required String prompt,
+  required String supportLine,
+}) {
+  final normalizedPrompt = prompt.toLowerCase();
+  final normalizedSupport = supportLine.toLowerCase();
+  if (normalizedPrompt.contains('board') ||
+      normalizedSupport.contains('board') ||
+      normalizedSupport.contains('pot') ||
+      normalizedSupport.contains('price')) {
+    return <String>[
+      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+      _coachLineV1(context, en: 'Board, price, then action.', ru: 'Сначала борд, цена, потом действие.'),
+      _coachLineV1(context, en: 'One clean read, then decide.', ru: 'Одно чистое чтение, потом решение.'),
+    ];
+  }
+  if (taskFamily == Act0TaskFamilyV1.counting ||
+      normalizedPrompt.contains('count') ||
+      normalizedPrompt.contains('how many')) {
+    return <String>[
+      _coachLineV1(context, en: 'Count what the table shows.', ru: 'Считай то, что показывает стол.'),
+      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+      _coachLineV1(context, en: 'Read once, then name it.', ru: 'Сначала прочитай, потом назови.'),
+    ];
+  }
+  return <String>[
+    _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
+    _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+    _coachLineV1(context, en: 'One clean read, then decide.', ru: 'Одно чистое чтение, потом решение.'),
+  ];
+}
+
+List<String> _promptCoachCandidatesV1(
+  BuildContext context, {
+  required String question,
+  required Act0TaskFamilyV1? taskFamily,
+  required bool hasSeatTargets,
+}) {
+  final normalizedQuestion = question.toLowerCase();
+  if (hasSeatTargets) {
+    return <String>[
+      _coachLineV1(context, en: 'Read the table, then tap one seat.', ru: 'Сначала прочитай стол, потом нажми одно место.'),
+      _coachLineV1(context, en: 'Find the seat, then choose.', ru: 'Сначала найди место, потом выбери.'),
+      _coachLineV1(context, en: 'One clean read, then tap.', ru: 'Одно чистое чтение, потом нажми.'),
+    ];
+  }
+  if (taskFamily == Act0TaskFamilyV1.decision ||
+      taskFamily == Act0TaskFamilyV1.sizing ||
+      normalizedQuestion.contains('call') ||
+      normalizedQuestion.contains('raise') ||
+      normalizedQuestion.contains('fold')) {
+    return <String>[
+      _coachLineV1(context, en: 'Check the price before acting.', ru: 'Сначала проверь цену решения.'),
+      _coachLineV1(context, en: 'One clean read, then choose.', ru: 'Одно чистое чтение, потом выбор.'),
+      _coachLineV1(context, en: 'Start with the table, not memory.', ru: 'Сначала стол, а не память.'),
+    ];
+  }
+  if (normalizedQuestion.contains('bucket') ||
+      normalizedQuestion.contains('hand') ||
+      normalizedQuestion.contains('board')) {
+    return <String>[
+      _coachLineV1(context, en: 'Use the board, not memory.', ru: 'Смотри на борд, а не на память.'),
+      _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
+      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+    ];
+  }
+  return <String>[
+    _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
+    _coachLineV1(context, en: 'One clean read, then choose.', ru: 'Одно чистое чтение, потом выбор.'),
+    _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+  ];
+}
+
+List<String> _feedbackCoachCandidatesV1(
+  BuildContext context, {
+  required Act0FeedbackQualityV1 quality,
+  required Act0TaskFamilyV1? taskFamily,
+}) {
+  switch (quality) {
+    case Act0FeedbackQualityV1.correct:
+      return <String>[
+        _coachLineV1(context, en: 'Sharp read.', ru: 'Хорошее чтение.'),
+        _coachLineV1(context, en: 'Clean read.', ru: 'Чистое чтение.'),
+        _coachLineV1(context, en: 'Good table check.', ru: 'Хорошая проверка стола.'),
+        if (taskFamily == Act0TaskFamilyV1.review ||
+            taskFamily == Act0TaskFamilyV1.transfer)
+          _coachLineV1(context, en: 'Keep that cue.', ru: 'Сохрани эту подсказку.'),
+      ];
+    case Act0FeedbackQualityV1.suboptimal:
+      return <String>[
+        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
+        _coachLineV1(context, en: 'Slow down the cue.', ru: 'Замедлись и проверь подсказку.'),
+        _coachLineV1(context, en: 'One clean reread.', ru: 'Ещё одно чистое перечитывание.'),
+      ];
+    case Act0FeedbackQualityV1.wrong:
+      return <String>[
+        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
+        _coachLineV1(context, en: 'This is repairable.', ru: 'Это легко починить.'),
+        _coachLineV1(context, en: 'Use the table, then retry.', ru: 'Вернись к столу и попробуй снова.'),
+        _coachLineV1(context, en: 'One calm retry.', ru: 'Одна спокойная попытка ещё раз.'),
+      ];
+  }
+}
+
+String _pickDeterministicCoachLineV1(List<String> candidates, {required String seed}) {
+  final usable = candidates.where((line) => line.trim().isNotEmpty).toList();
+  if (usable.isEmpty) {
+    return '';
+  }
+  final index = _deterministicCoachIndexV1(seed, usable.length);
+  return usable[index];
+}
+
+int _deterministicCoachIndexV1(String seed, int length) {
+  if (length <= 1) {
+    return 0;
+  }
+  var hash = 17;
+  for (final codeUnit in seed.codeUnits) {
+    hash = 37 * hash + codeUnit;
+  }
+  return hash.abs() % length;
+}
+
+String _coachLineV1(
+  BuildContext context, {
+  required String en,
+  required String ru,
+}) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? ru : en;
+}
+
+const Set<String> _genericCoachLineInputsV1 = <String>{
+  'read the table first',
+  'one clear read, then one clear action.',
+  'one clear read, then one clear action',
+  'one clean read, then decide.',
+  'one clean read, then decide',
+  'start with what is visible.',
+  'start with what is visible',
+};
+
+const Set<String> _genericFeedbackCoachLineInputsV1 = <String>{
+  '',
+  'sharp read.',
+  'sharp read',
+  'good spot to fix.',
+  'good spot to fix',
+  'clean read.',
+  'clean read',
+};
 
 String act0RuntimeLocalizedPotLabelV1(BuildContext context, String label) {
   final match = RegExp(r'^Pot (.+)$').firstMatch(label.trim());

@@ -23,6 +23,333 @@ import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+List<Act0LessonTaskV1> _allAct0TasksV1([Act0ShellStateV1? state]) {
+  final resolvedState = state ?? Act0ShellStateV1.sample;
+  final tasks = <Act0LessonTaskV1>[];
+  for (var index = 1; index <= 12; index++) {
+    tasks.addAll(
+      resolvedState
+          .worldById('world_$index')
+          .lessons
+          .expand((lesson) => lesson.taskList),
+    );
+  }
+  return tasks;
+}
+
+bool _isAllowlistedDuplicateRoleV1(Act0LessonTaskV1 task) {
+  final taskId = task.taskId.toLowerCase();
+  final lessonId = task.runner.lessonId.toLowerCase();
+  return task.phase == Act0LessonPhaseV1.review ||
+      task.resolvedTaskFamily == Act0TaskFamilyV1.transfer ||
+      taskId.contains('checkpoint') ||
+      lessonId.contains('checkpoint') ||
+      taskId.contains('recap') ||
+      lessonId.contains('recap');
+}
+
+Map<(String, String, String), List<Act0LessonTaskV1>>
+_duplicateDrillTripletClustersV1([Act0ShellStateV1? state]) {
+  final clusters = <(String, String, String), List<Act0LessonTaskV1>>{};
+  for (final task in _allAct0TasksV1(state)) {
+    if (task.phase != Act0LessonPhaseV1.drill ||
+        _isAllowlistedDuplicateRoleV1(task)) {
+      continue;
+    }
+    final key = (
+      task.runner.caption.trim(),
+      task.runner.hint.trim(),
+      task.runner.question.trim(),
+    );
+    clusters.putIfAbsent(key, () => <Act0LessonTaskV1>[]).add(task);
+  }
+  clusters.removeWhere((_, tasks) => tasks.length < 2);
+  return clusters;
+}
+
+int _countDrillTripletMatchesV1(
+  String caption,
+  String hint,
+  String question, [
+  Act0ShellStateV1? state,
+]) {
+  return _duplicateDrillTripletClustersV1(
+        state,
+      )[(caption.trim(), hint.trim(), question.trim())]?.length ??
+      0;
+}
+
+Act0LessonTaskV1 _taskByIdV1(List<Act0LessonTaskV1> tasks, String taskId) {
+  return tasks.firstWhere((candidate) => candidate.taskId == taskId);
+}
+
+bool _isExplanationStyleOptionLabelV1(String label) {
+  final normalized = label.toLowerCase();
+  return normalized.contains('because') ||
+      normalized.contains('so that') ||
+      normalized.contains('even though');
+}
+
+bool _isCompactThreeOptionRiskLabelV1(
+  Act0LessonTaskV1 task,
+  Act0RunnerOptionV1 option,
+) {
+  if (task.runner.options.length != 3) {
+    return false;
+  }
+  final wordCount = option.label.trim().split(RegExp(r'\s+')).length;
+  return _isExplanationStyleOptionLabelV1(option.label) ||
+      option.label.length >= 40 ||
+      wordCount >= 7;
+}
+
+List<(Act0LessonTaskV1, Act0RunnerOptionV1)> _threeOptionRiskLabelsV1([
+  Act0ShellStateV1? state,
+]) {
+  final rows = <(Act0LessonTaskV1, Act0RunnerOptionV1)>[];
+  for (final task in _allAct0TasksV1(state)) {
+    for (final option in task.runner.options) {
+      if (_isCompactThreeOptionRiskLabelV1(task, option)) {
+        rows.add((task, option));
+      }
+    }
+  }
+  return rows;
+}
+
+List<Act0LessonTaskV1> _simplifiedPreflopContinueCandidatesV1([
+  Act0ShellStateV1? state,
+]) {
+  final tasks = _allAct0TasksV1(state);
+  return <String>[
+    'continue_or_let_go_medium_call_or_fold',
+    'weak_ace_warning_w3_strong_continue',
+    'discipline_checkpoint_checkpoint_borderline_continue',
+    'position_checkpoint_position_checkpoint_btn_call',
+    'open_call_fold_frame_call',
+  ].map((taskId) => _taskByIdV1(tasks, taskId)).toList(growable: false);
+}
+
+int _wordCountV1(String text) {
+  return RegExp(r"[A-Za-z0-9+'-]+").allMatches(text).length;
+}
+
+bool _containsTeachingStepJargonV1(String text) {
+  final normalized = text.toLowerCase();
+  return normalized.contains('combos') ||
+      normalized.contains('blockers') ||
+      normalized.contains('spr') ||
+      normalized.contains('chip-ev');
+}
+
+List<(Act0LessonTaskV1, Act0TeachingStepV1)> _admittedTeachingStepBudgetRowsV1([
+  Act0ShellStateV1? state,
+]) {
+  final tasks = _allAct0TasksV1(state);
+  return <String>[
+        'w4_purpose_intro',
+        'w4_value_intro',
+        'w4_protection_intro',
+        'w6_combo_counts_intro',
+        'w6_ak_combos',
+        'w7_spr_intro',
+      ]
+      .expand((taskId) {
+        final task = _taskByIdV1(tasks, taskId);
+        return task.runner.teachingSteps.map((step) => (task, step));
+      })
+      .toList(growable: false);
+}
+
+List<(Act0LessonTaskV1, Act0TeachingStepV1, String)> _teachingStepJargonRowsV1([
+  Act0ShellStateV1? state,
+]) {
+  final rows = <(Act0LessonTaskV1, Act0TeachingStepV1, String)>[];
+  for (final task in _allAct0TasksV1(state)) {
+    for (final step in task.runner.teachingSteps) {
+      if (_containsTeachingStepJargonV1(step.body)) {
+        rows.add((task, step, step.body));
+      }
+    }
+  }
+  return rows;
+}
+
+List<
+  ({
+    String worldId,
+    String lessonId,
+    String? taskId,
+    bool hasRuLesson,
+    bool hasRuTaskTitle,
+    bool hasRuPrompt,
+    bool hasRuSupport,
+    bool hasRuQuestion,
+    bool hasRuTeachingSteps,
+  })
+>
+_ruLearnerSurfaceCoverageRowsV1([Act0ShellStateV1? state]) {
+  final resolvedState = state ?? Act0ShellStateV1.sample;
+  final bundle = act0CopyBundleForLanguageCodeV1('ru');
+  final rows =
+      <
+        ({
+          String worldId,
+          String lessonId,
+          String? taskId,
+          bool hasRuLesson,
+          bool hasRuTaskTitle,
+          bool hasRuPrompt,
+          bool hasRuSupport,
+          bool hasRuQuestion,
+          bool hasRuTeachingSteps,
+        })
+      >[];
+
+  if (bundle == null) {
+    return rows;
+  }
+
+  for (var worldIndex = 1; worldIndex <= 12; worldIndex++) {
+    final world = resolvedState.worldById('world_$worldIndex');
+    for (final lesson in world.lessons) {
+      final localizedLesson = bundle.lessons[lesson.lessonId];
+      final hasRuLesson =
+          localizedLesson != null &&
+          localizedLesson.title.isNotEmpty &&
+          localizedLesson.subtitle.isNotEmpty;
+      rows.add((
+        worldId: world.worldId,
+        lessonId: lesson.lessonId,
+        taskId: null,
+        hasRuLesson: hasRuLesson,
+        hasRuTaskTitle: true,
+        hasRuPrompt: true,
+        hasRuSupport: true,
+        hasRuQuestion: true,
+        hasRuTeachingSteps: true,
+      ));
+      for (final task in lesson.taskList) {
+        final localizedTask = bundle.tasks[task.taskId];
+        final expectedTeachingStepCount = task.runner.teachingSteps.length;
+        final localizedTeachingSteps = localizedTask?.teachingSteps;
+        final hasRuTeachingSteps =
+            expectedTeachingStepCount == 0 ||
+            (localizedTeachingSteps != null &&
+                localizedTeachingSteps.length == expectedTeachingStepCount &&
+                localizedTeachingSteps.every(
+                  (step) =>
+                      (step.title ?? '').trim().isNotEmpty &&
+                      (step.body ?? '').trim().isNotEmpty,
+                ));
+        rows.add((
+          worldId: world.worldId,
+          lessonId: lesson.lessonId,
+          taskId: task.taskId,
+          hasRuLesson: hasRuLesson,
+          hasRuTaskTitle: (localizedTask?.title ?? '').trim().isNotEmpty,
+          hasRuPrompt: (localizedTask?.runnerPrompt ?? '').trim().isNotEmpty,
+          hasRuSupport: (localizedTask?.runnerSupport ?? '').trim().isNotEmpty,
+          hasRuQuestion: (localizedTask?.runnerQuestion ?? '')
+              .trim()
+              .isNotEmpty,
+          hasRuTeachingSteps: hasRuTeachingSteps,
+        ));
+      }
+    }
+  }
+  return rows;
+}
+
+String _formatRuCoverageRowV1(
+  ({
+    String worldId,
+    String lessonId,
+    String? taskId,
+    bool hasRuLesson,
+    bool hasRuTaskTitle,
+    bool hasRuPrompt,
+    bool hasRuSupport,
+    bool hasRuQuestion,
+    bool hasRuTeachingSteps,
+  })
+  row,
+) {
+  return '${row.worldId}/${row.lessonId}/${row.taskId ?? 'lesson'} '
+      'lesson=${row.hasRuLesson} title=${row.hasRuTaskTitle} '
+      'prompt=${row.hasRuPrompt} support=${row.hasRuSupport} '
+      'question=${row.hasRuQuestion} steps=${row.hasRuTeachingSteps}';
+}
+
+void _expectHeroOwnershipAlignmentV1(
+  Act0LessonTaskV1 task,
+  String expectedHeroSeatId,
+) {
+  final table = task.runner.table;
+  final heroSeats = table.seats.where((seat) => seat.isHero).toList();
+
+  expect(
+    table.heroSeatId,
+    expectedHeroSeatId,
+    reason: '${task.taskId} should move hero ownership to $expectedHeroSeatId',
+  );
+  expect(
+    table.activeSeatId,
+    expectedHeroSeatId,
+    reason:
+        '${task.taskId} should keep the active decision seat on $expectedHeroSeatId',
+  );
+  expect(
+    heroSeats,
+    hasLength(1),
+    reason: '${task.taskId} should expose exactly one hero-marked seat',
+  );
+  expect(heroSeats.single.seatId, expectedHeroSeatId);
+  expect(heroSeats.single.displayName, 'Hero');
+  expect(
+    heroSeats.single.holeCards.map((card) => card.label).toList(),
+    table.heroCards.map((card) => card.label).toList(),
+    reason: '${task.taskId} should show the hero cards on the hero-owned seat',
+  );
+}
+
+void _expectNoBtnHeroResidueV1(Act0LessonTaskV1 task) {
+  final btnSeat = task.runner.table.seats.firstWhere(
+    (seat) => seat.seatId == 'btn',
+  );
+
+  expect(
+    btnSeat.isHero,
+    isFalse,
+    reason: '${task.taskId} should not keep BTN as Hero',
+  );
+  expect(
+    btnSeat.displayName,
+    isNot('Hero'),
+    reason: '${task.taskId} should clear the stale BTN Hero label',
+  );
+  expect(
+    btnSeat.cardsVisibleMode,
+    isNot(Act0CardsVisibleModeV1.faceUp),
+    reason: '${task.taskId} should not keep hero-visible cards on BTN',
+  );
+}
+
+String _finalActionTrailActorSeatIdV1(Act0LessonTaskV1 task) {
+  final trail = task.runner.table.actionTrail;
+  if (trail.isEmpty) {
+    return '';
+  }
+  final lastLabel = trail.last.label.trim();
+  for (final seat in task.runner.table.seats) {
+    final seatLabel = seat.seatLabel.trim();
+    if (seatLabel.isNotEmpty && lastLabel.startsWith('$seatLabel ')) {
+      return seat.seatId;
+    }
+  }
+  return '';
+}
+
 void main() {
   _registerPotCalcTests();
 
@@ -128,7 +455,9 @@ void main() {
     );
 
     final betterTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_feedback_preferred_label')))
+        .getTopLeft(
+          find.byKey(const Key('act0_shell_feedback_preferred_label')),
+        )
         .dy;
     final pickedTop = tester
         .getTopLeft(find.byKey(const Key('act0_shell_feedback_selected_label')))
@@ -167,40 +496,46 @@ void main() {
 
     expect(find.text('Correct answer: CO'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_feedback_status_label')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_status_label')),
+      findsOneWidget,
+    );
     expect(find.text('Nice read.'), findsNothing);
   });
 
-  testWidgets('Feedback shell keeps table-read answers in English on English locale', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0FeedbackShellV1(
-            title: 'Sharp read.',
-            reason: 'Private cards, board cards, then pot.',
-            quality: Act0FeedbackQualityV1.correct,
-            sharkyLine: 'Sharp read.',
-            sharkyMood: Act0SharkyMoodV1.happy,
-            selectedLabel: '2 private cards, 3 board cards, 6 BB in the pot',
-            preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
-            betterLabel: '2 private cards, 3 board cards, 6 BB in the pot',
-            taskFamily: Act0TaskFamilyV1.transfer,
-            contextLabels: const <String>['Table read'],
-            onContinue: () {},
+  testWidgets(
+    'Feedback shell keeps table-read answers in English on English locale',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Sharp read.',
+              reason: 'Private cards, board cards, then pot.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Sharp read.',
+              sharkyMood: Act0SharkyMoodV1.happy,
+              selectedLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+              preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+              betterLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+              taskFamily: Act0TaskFamilyV1.transfer,
+              contextLabels: const <String>['Table read'],
+              onContinue: () {},
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(
-      find.text('Clean read: 2 private cards, 3 board cards, 6 BB in the pot'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('закрытые карты'), findsNothing);
-    expect(find.textContaining('общие карты'), findsNothing);
-  });
+      expect(
+        find.text(
+          'Clean read: 2 private cards, 3 board cards, 6 BB in the pot',
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('закрытые карты'), findsNothing);
+      expect(find.textContaining('общие карты'), findsNothing);
+    },
+  );
 
   Widget host({
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
@@ -2749,18 +3084,159 @@ void main() {
         ),
       );
 
-      final fallbackRuA = find.text(
-        'Полезный разбор. Спокойно перечитай спот перед следующим нажатием.',
+      final reaction = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_sharky_outcome_reaction')),
       );
-      final fallbackRuB = find.text(
-        'Полезный разбор. Ещё раз собери картину стола и выбери заново.',
-      );
+      expect(reaction.data, isNotNull);
       expect(
-        fallbackRuA.evaluate().isNotEmpty || fallbackRuB.evaluate().isNotEmpty,
+        <String>{
+          'Полезный разбор.',
+          'Замедлись и проверь подсказку.',
+          'Ещё одно чистое перечитывание.',
+          'Это легко починить.',
+          'Вернись к столу и попробуй снова.',
+          'Одна спокойная попытка ещё раз.',
+        }.contains(reaction.data),
         isTrue,
       );
       expect(find.textContaining('Sharp read'), findsNothing);
       expect(find.textContaining('Good spot to fix'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Coach voice helpers stay deterministic and vary by safe context',
+    (tester) async {
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              final sameA = act0RuntimeFeedbackCoachLineV1(
+                context,
+                authoredLine: 'Sharp read.',
+                title: 'Correct read',
+                quality: Act0FeedbackQualityV1.correct,
+                variationSeed: 'review|same',
+                taskFamily: Act0TaskFamilyV1.review,
+              );
+              final sameB = act0RuntimeFeedbackCoachLineV1(
+                context,
+                authoredLine: 'Sharp read.',
+                title: 'Correct read',
+                quality: Act0FeedbackQualityV1.correct,
+                variationSeed: 'review|same',
+                taskFamily: Act0TaskFamilyV1.review,
+              );
+              final variedA = act0RuntimeFeedbackCoachLineV1(
+                context,
+                authoredLine: 'Good spot to fix.',
+                title: 'Read the spot first',
+                quality: Act0FeedbackQualityV1.wrong,
+                variationSeed: 'wrong|a',
+                taskFamily: Act0TaskFamilyV1.repair,
+              );
+              final variedB = act0RuntimeFeedbackCoachLineV1(
+                context,
+                authoredLine: 'Good spot to fix.',
+                title: 'Read the spot first',
+                quality: Act0FeedbackQualityV1.wrong,
+                variationSeed: 'wrong|b',
+                taskFamily: Act0TaskFamilyV1.repair,
+              );
+              return Column(
+                children: <Widget>[
+                  Text(sameA, key: const Key('coach_voice_same_a')),
+                  Text(sameB, key: const Key('coach_voice_same_b')),
+                  Text(variedA, key: const Key('coach_voice_varied_a')),
+                  Text(variedB, key: const Key('coach_voice_varied_b')),
+                ],
+              );
+            },
+          ),
+        ),
+      );
+
+      final sameA = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_same_a')),
+      );
+      final sameB = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_same_b')),
+      );
+      final variedA = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_varied_a')),
+      );
+      final variedB = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_varied_b')),
+      );
+
+      expect(sameA.data, sameB.data);
+      expect(variedA.data, isNot(variedB.data));
+      expect(variedA.data!.toLowerCase().contains('failed'), isFalse);
+      expect(variedA.data!.toLowerCase().contains('shame'), isFalse);
+      expect(variedB.data!.toLowerCase().contains('failed'), isFalse);
+      expect(variedB.data!.toLowerCase().contains('shame'), isFalse);
+    },
+  );
+
+  testWidgets(
+    'Prompt coach line stays process-first and does not leak answers',
+    (tester) async {
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Builder(
+            builder: (context) => Column(
+              children: <Widget>[
+                Text(
+                  act0RuntimePromptCoachLineV1(
+                    context,
+                    lessonId: 'bucket_lesson',
+                    beatIndex: 3,
+                    question: 'Which bucket is JJ?',
+                    taskFamily: Act0TaskFamilyV1.recognition,
+                    hasSeatTargets: false,
+                    isTrailHistory: false,
+                  ),
+                  key: const Key('coach_voice_bucket_prompt'),
+                ),
+                Text(
+                  act0RuntimePromptCoachLineV1(
+                    context,
+                    lessonId: 'seat_lesson',
+                    beatIndex: 2,
+                    question: 'Which seat is the hero seat?',
+                    taskFamily: Act0TaskFamilyV1.recognition,
+                    hasSeatTargets: true,
+                    isTrailHistory: false,
+                  ),
+                  key: const Key('coach_voice_seat_prompt'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final bucketLine = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_bucket_prompt')),
+      );
+      final seatLine = tester.widget<Text>(
+        find.byKey(const Key('coach_voice_seat_prompt')),
+      );
+
+      expect(bucketLine.data!.toLowerCase().contains('strong'), isFalse);
+      expect(bucketLine.data!.toLowerCase().contains('premium'), isFalse);
+      expect(bucketLine.data!.toLowerCase().contains('medium'), isFalse);
+      expect(seatLine.data!.toLowerCase().contains('big blind'), isFalse);
+      expect(
+        <String>{
+          'Read the table, then tap one seat.',
+          'Find the seat, then choose.',
+          'One clean read, then tap.',
+        }.contains(seatLine.data),
+        isTrue,
+      );
     },
   );
 
@@ -2984,6 +3460,267 @@ void main() {
     expect(find.text('Какая группа у АА?'), findsOneWidget);
   });
 
+  testWidgets(
+    'Bucket active prompt neutralizes premium answer-bearing table cue',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_2')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'hand_discipline_buckets')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'hand_discipline_buckets_premium',
+          );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Which bucket is AA?'), findsOneWidget);
+      expect(find.text('Premium bucket'), findsNothing);
+      expect(find.text('Bucket check'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Bucket active prompt neutralizes strong answer-bearing table cue',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_2')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'hand_discipline_buckets')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'hand_discipline_buckets_strong',
+          );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Which bucket is JJ?'), findsOneWidget);
+      expect(find.text('Strong bucket'), findsNothing);
+      expect(find.text('Bucket check'), findsOneWidget);
+      expect(find.text('PREFLOP'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Bucket feedback can restore the revealed answer-bearing cue', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_2')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'hand_discipline_buckets')
+        .taskList
+        .firstWhere(
+          (entry) => entry.taskId == 'hand_discipline_buckets_strong',
+        );
+    final runner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      selectedOptionId: 'strong',
+      teachingSteps: const <Act0TeachingStepV1>[],
+    );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            selectedTaskId: task.taskId,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_center_focus_badge')),
+        matching: find.text('Strong bucket'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Bucket check'), findsNothing);
+  });
+
+  testWidgets('Leading decision cue is neutralized during active prompt', (
+    tester,
+  ) async {
+    final runner = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .firstWhere(
+          (entry) => entry.runner.table.centerLabel == 'Weak continue?',
+        )
+        .runner
+        .copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Weak continue?'), findsNothing);
+    expect(find.text('Facing CO 2.5 BB'), findsOneWidget);
+    expect(find.text('Decision spot'), findsOneWidget);
+    expect(find.text('Pot 4 BB'), findsOneWidget);
+    expect(find.text('To call 2.5 BB'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_action_context_line')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Non-answer table context remains visible during active prompt', (
+    tester,
+  ) async {
+    final runner = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .firstWhere(
+          (entry) => entry.runner.caption.contains('Hero is BTN with KQo'),
+        )
+        .runner
+        .copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('CO opened'), findsOneWidget);
+    expect(find.text('Bucket check'), findsNothing);
+    expect(find.text('Pot 4 BB'), findsOneWidget);
+    expect(find.text('To call 2.5 BB'), findsOneWidget);
+  });
+
+  testWidgets(
+    'Decision prompt does not fake facing context when no safe actor source exists',
+    (tester) async {
+      final runner = Act0ShellStateV1.sample.currentLesson.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        question: 'What should Hero do here?',
+        teachingSteps: const <Act0TeachingStepV1>[],
+        options: const <Act0RunnerOptionV1>[
+          Act0RunnerOptionV1(
+            id: 'fold',
+            label: 'Fold',
+            preferredLabel: 'Fold',
+            isCorrect: false,
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Not this time.',
+            feedbackReason: 'Folding gives up too much equity here.',
+          ),
+          Act0RunnerOptionV1(
+            id: 'call',
+            label: 'Call',
+            preferredLabel: 'Call',
+            isCorrect: true,
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Keep going.',
+            feedbackReason: 'Calling keeps the price in line.',
+          ),
+        ],
+        table: Act0ShellStateV1.sample.currentLesson.runner.table.copyWith(
+          centerLabel: 'Call spot?',
+          potLabel: 'Pot 5 BB',
+          toCallLabel: 'To call 2 BB',
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'Preflop action'),
+          ],
+        ),
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskFamily: Act0TaskFamilyV1.decision,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Call spot?'), findsNothing);
+      expect(find.text('Pot 5 BB'), findsOneWidget);
+      expect(find.text('To call 2 BB'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_action_context_line')),
+        findsNothing,
+      );
+      expect(find.textContaining('Facing '), findsNothing);
+    },
+  );
+
   testWidgets('Runner localizes seat-tap table chrome in Russian', (
     tester,
   ) async {
@@ -3021,18 +3758,18 @@ void main() {
       ),
     );
 
-    expect(find.text('Твой ход'), findsOneWidget);
     expect(find.text('Нажми на правильное место'), findsOneWidget);
     expect(
       find.text('Сначала прочитай стол, потом нажми на одно место.'),
       findsOneWidget,
     );
-    expect(find.text('Блайнды поставлены'), findsOneWidget);
+    expect(find.text('Блайнды поставлены'), findsNothing);
     expect(find.text('Банк 1.5 BB'), findsOneWidget);
-    expect(find.text('Ход: 1 BB'), findsOneWidget);
-    expect(find.text('SB блайнд 0.5 BB'), findsOneWidget);
-    expect(find.text('BB блайнд 1 BB'), findsOneWidget);
-    expect(find.text('Your move'), findsNothing);
+    expect(find.text('Ход: 1 BB'), findsNothing);
+    expect(find.text('SB блайнд 0.5 BB'), findsNothing);
+    expect(find.text('BB блайнд 1 BB'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_bet_chip_SB')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_bet_chip_BB')), findsOneWidget);
     expect(find.text('Tap the correct seat'), findsNothing);
     expect(find.text('Read the table, then tap one seat.'), findsNothing);
     expect(find.text('Blinds posted'), findsNothing);
@@ -3259,6 +3996,7 @@ void main() {
         home: Builder(
           builder: (context) => Column(
             children: <Widget>[
+              Text(act0LocalizedLessonTitleV1(context, lesson)),
               Text(act0LocalizedTaskTitleV1(context, task)),
               Text(
                 act0LocalizedRunnerQuestionAtomByTaskIdV1(
@@ -3273,9 +4011,138 @@ void main() {
       ),
     );
 
+    expect(find.text('Позиция за столом'), findsOneWidget);
     expect(find.text('Позиция меняет решение'), findsOneWidget);
     expect(find.text('Почему позиция так важна за столом?'), findsOneWidget);
+    expect(find.text('Position at the table'), findsNothing);
   });
+
+  test(
+    'RU active beginner slice keeps explicit learner copy through W1 to W3',
+    () {
+      final missingRows = _ruLearnerSurfaceCoverageRowsV1()
+          .where(
+            (row) =>
+                row.worldId == 'world_1' ||
+                row.worldId == 'world_2' ||
+                row.worldId == 'world_3',
+          )
+          .where(
+            (row) =>
+                !row.hasRuLesson || (row.taskId != null && !row.hasRuTaskTitle),
+          )
+          .map(_formatRuCoverageRowV1)
+          .toList(growable: false);
+
+      expect(
+        missingRows,
+        isEmpty,
+        reason:
+            'Active RU W1-W3 learner surfaces should not fall back to English.\n${missingRows.join('\n')}',
+      );
+    },
+  );
+
+  test(
+    'RU coverage report keeps W4 to W12 fallback explicit instead of silent',
+    () {
+      final fallbackRows = _ruLearnerSurfaceCoverageRowsV1()
+          .where(
+            (row) =>
+                row.worldId != 'world_1' &&
+                row.worldId != 'world_2' &&
+                row.worldId != 'world_3',
+          )
+          .where(
+            (row) =>
+                row.taskId != null && (!row.hasRuLesson || !row.hasRuTaskTitle),
+          )
+          .toList(growable: false);
+
+      expect(
+        fallbackRows,
+        isNotEmpty,
+        reason:
+            'Unsupported later worlds should stay visibly fallback-backed until a separate translation wave lands.',
+      );
+      expect(
+        fallbackRows.map((row) => row.worldId).toSet(),
+        equals(<String>{
+          'world_4',
+          'world_5',
+          'world_6',
+          'world_7',
+          'world_8',
+          'world_9',
+          'world_10',
+          'world_11',
+          'world_12',
+        }),
+      );
+      expect(
+        fallbackRows.any((row) => row.worldId == 'world_4'),
+        isTrue,
+        reason:
+            'World 4 should remain explicit fallback in RU after this slice-only wave.',
+      );
+    },
+  );
+
+  testWidgets(
+    'Runner localizes newly covered W2 fold discipline copy in Russian',
+    (tester) async {
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_2')
+          .lessons
+          .firstWhere((entry) => entry.lessonId == 'fold_discipline');
+      final task = lesson.taskList.firstWhere(
+        (entry) => entry.taskId == 'fold_discipline_early_fold',
+      );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          locale: const Locale('ru'),
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Builder(
+            builder: (context) => Column(
+              children: <Widget>[
+                Text(act0LocalizedLessonTitleV1(context, lesson)),
+                Text(act0LocalizedTaskTitleV1(context, task)),
+                Text(
+                  act0LocalizedRunnerPromptAtomByTaskIdV1(
+                    task.taskId,
+                    fallback: task.runner.caption,
+                    isRu: act0IsRuLocaleV1(context),
+                  ),
+                ),
+                Text(
+                  act0LocalizedRunnerQuestionAtomByTaskIdV1(
+                    task.taskId,
+                    fallback: task.runner.question,
+                    isRu: act0IsRuLocaleV1(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Дисциплина фолда'), findsOneWidget);
+      expect(find.text('Слабая рука рано'), findsOneWidget);
+      expect(
+        find.text('Банк не открыт. Hero в ранней позиции с J8o.'),
+        findsOneWidget,
+      );
+      expect(find.text('Какое действие здесь самое чистое?'), findsOneWidget);
+    },
+  );
 
   testWidgets('World 1 positions residue localizes through stable ids', (
     tester,
@@ -3733,8 +4600,10 @@ void main() {
         find.byKey(const Key('act0_shell_learning_rail_support_line')),
       );
 
-      expect(prompt.overflow, isNot(TextOverflow.ellipsis));
-      expect(support.overflow, isNot(TextOverflow.ellipsis));
+      expect(prompt.maxLines, 2);
+      expect(prompt.overflow, TextOverflow.fade);
+      expect(support.maxLines, 2);
+      expect(support.overflow, TextOverflow.fade);
       expect(
         find.byKey(const Key('act0_shell_learning_rail_support_scroll')),
         findsNothing,
@@ -3792,6 +4661,8 @@ void main() {
       final firstSupport = tester.widget<Text>(
         find.byKey(const Key('act0_shell_learning_rail_support_line')),
       );
+      expect(firstSupport.maxLines, 2);
+      expect(firstSupport.overflow, TextOverflow.fade);
       expect(
         firstSupport.data,
         contains('Each player gets 2 private hole cards.'),
@@ -3809,6 +4680,8 @@ void main() {
       final secondSupport = tester.widget<Text>(
         find.byKey(const Key('act0_shell_learning_rail_support_line')),
       );
+      expect(secondSupport.maxLines, 2);
+      expect(secondSupport.overflow, TextOverflow.fade);
       expect(
         secondSupport.data,
         contains('You build the best 5-card hand from those 7.'),
@@ -3822,6 +4695,8 @@ void main() {
       final thirdSupport = tester.widget<Text>(
         find.byKey(const Key('act0_shell_learning_rail_support_line')),
       );
+      expect(thirdSupport.maxLines, 2);
+      expect(thirdSupport.overflow, TextOverflow.fade);
       expect(
         thirdSupport.data,
         contains('This course starts with No-Limit Hold\'em cash'),
@@ -3835,6 +4710,66 @@ void main() {
         maxTaps: 8,
       );
       expect(continueCalls, 1);
+    },
+  );
+
+  testWidgets(
+    'Compact theory rail gives prompt and support two-line readability without overflow',
+    (tester) async {
+      final baseTask = Act0ShellStateV1.sample.currentLesson.taskList.first;
+      final runner = baseTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingSteps: const <Act0TeachingStepV1>[
+          Act0TeachingStepV1(
+            title: 'Read the table first before you name the action.',
+            body:
+                'The support line explains why the action word matters before you continue to the next teaching beat.',
+          ),
+        ],
+        teachingStepIndex: 0,
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: baseTask.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+
+      final prompt = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_runner_prompt')),
+      );
+      final support = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+      final railRect = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail')),
+      );
+      final tableRect = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      final ctaRect = tester.getRect(
+        find.byKey(const Key('act0_shell_continue_cta')),
+      );
+
+      expect(prompt.maxLines, 2);
+      expect(prompt.overflow, TextOverflow.fade);
+      expect(support.maxLines, 2);
+      expect(support.overflow, TextOverflow.fade);
+      expect(railRect.height, lessThanOrEqualTo(146));
+      expect(tableRect.overlaps(ctaRect), isFalse);
+      expect(ctaRect.bottom, lessThanOrEqualTo(812));
     },
   );
 
@@ -5371,21 +6306,7 @@ void main() {
     expect(find.byKey(const Key('act0_shell_bet_chip_SB')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_bet_chip_BB')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_empty_board_label')), findsNothing);
-    expect(find.byKey(const Key('act0_shell_action_trail')), findsOneWidget);
-    final actionTrailText = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_action_trail_text')),
-    );
-    expect(actionTrailText.data, contains('SB blind 0.5 BB'));
-    expect(actionTrailText.data, contains('BB blind 1 BB'));
-    expect(actionTrailText.data, contains('  .  '));
-    expect(
-      find.byKey(const Key('act0_shell_action_trail_step_0')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_action_trail_latest_step')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('act0_shell_action_trail')), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_center_pot_pulse_Pot 1.5 BB')),
       findsOneWidget,
@@ -5414,18 +6335,15 @@ void main() {
       final tableRect = tester.getRect(
         find.byKey(const Key('act0_shell_table')),
       );
-      final actionTrail = tester.getRect(
-        find.byKey(const Key('act0_shell_action_trail')),
-      );
       final ctaRect = tester.getRect(
         find.byKey(const Key('act0_shell_continue_cta')),
       );
       expect(tableRect.top, greaterThanOrEqualTo(0));
-      expect(tableRect.height, lessThanOrEqualTo(560));
+      expect(tableRect.height, lessThanOrEqualTo(640));
       expect(tableRect.bottom, lessThanOrEqualTo(812));
       expect(ctaRect.bottom, lessThanOrEqualTo(812));
       expect(tableRect.overlaps(ctaRect), isFalse);
-      expect(actionTrail.overlaps(ctaRect), isFalse);
+      expect(find.byKey(const Key('act0_shell_action_trail')), findsNothing);
     },
   );
 
@@ -5477,6 +6395,72 @@ void main() {
       );
       expect(tableRect.bottom, lessThanOrEqualTo(812));
       expect(optionRect.bottom, lessThanOrEqualTo(812));
+    },
+  );
+
+  testWidgets(
+    'Compact drill stacks long 3-option answer labels when the row budget is exceeded',
+    (tester) async {
+      Future<void> pumpTask(Act0LessonTaskV1 task) async {
+        await pumpCompact(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: task.runner.copyWith(
+                  phase: Act0LessonPhaseV1.drill,
+                  teachingSteps: const <Act0TeachingStepV1>[],
+                ),
+                selectedTaskId: task.taskId,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+      }
+
+      final tasks = <Act0LessonTaskV1>[
+        _taskByIdV1(
+          _allAct0TasksV1(),
+          'discipline_checkpoint_checkpoint_table_discipline',
+        ),
+        _taskByIdV1(_allAct0TasksV1(), 'w7_ajs_btn_25bb_transfer'),
+        _taskByIdV1(_allAct0TasksV1(), 'w12_pretty_hand_bad_price_fold'),
+      ];
+
+      for (final task in tasks) {
+        await pumpTask(task);
+        final optionRects = task.runner.options
+            .map(
+              (option) => tester.getRect(
+                find.byKey(Key('act0_shell_option_${option.id}')),
+              ),
+            )
+            .toList(growable: false);
+        final topSet = optionRects.map((rect) => rect.top).toSet();
+        final heights = optionRects.map((rect) => rect.height).toList();
+        final heightSpread =
+            heights.reduce((a, b) => a > b ? a : b) -
+            heights.reduce((a, b) => a < b ? a : b);
+
+        expect(
+          topSet.length,
+          greaterThan(1),
+          reason: '${task.taskId} should stack long 3-option labels vertically',
+        );
+        expect(
+          heightSpread,
+          lessThanOrEqualTo(24),
+          reason:
+              '${task.taskId} should keep compact option heights near parity after fallback',
+        );
+        for (final rect in optionRects) {
+          expect(rect.bottom, lessThanOrEqualTo(812));
+        }
+      }
     },
   );
 
@@ -5612,7 +6596,9 @@ void main() {
       );
 
       final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
-      final utg = tester.getRect(find.byKey(const Key('act0_shell_seat_node_utg')));
+      final utg = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_node_utg')),
+      );
       final center = tester.getRect(
         find.byKey(const Key('act0_shell_center_info_card')),
       );
@@ -5663,7 +6649,51 @@ void main() {
       expect(find.byKey(const Key('act0_shell_task_rail')), findsNothing);
       expect(find.byKey(const Key('act0_shell_phase_tracker')), findsNothing);
       expect(rail.top, greaterThan(table.bottom));
+      expect(rail.top - table.bottom, lessThanOrEqualTo(44));
+      expect(rail.height, greaterThanOrEqualTo(104));
       expect(find.text('♠'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'Live compact portrait runner prioritizes table and readable rail',
+    (tester) async {
+      await pumpCompact(tester, host());
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_home_daily_goal_card')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_top_bar')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_bottom_nav')), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_learning_rail')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsNothing,
+      );
+
+      final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      final bottomPanel = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+      );
+      final prompt = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_action_question')),
+      );
+
+      expect(table.top, lessThanOrEqualTo(72));
+      expect(table.height, greaterThanOrEqualTo(520));
+      expect(bottomPanel.top, greaterThan(table.bottom));
+      expect(bottomPanel.top - table.bottom, lessThanOrEqualTo(28));
+      expect(bottomPanel.height, greaterThanOrEqualTo(124));
+      expect(prompt.style?.fontSize, greaterThanOrEqualTo(13.0));
     },
   );
 
@@ -5867,6 +6897,7 @@ void main() {
       );
 
       expect(next.top - support.bottom, lessThanOrEqualTo(18));
+      expect(rail.height, lessThanOrEqualTo(124));
       expect(previousRect.center.dx, lessThan(rail.center.dx));
       expect(next.center.dx, greaterThan(rail.center.dx));
       expect(previous.onPressed, isNull);
@@ -5960,8 +6991,13 @@ void main() {
 
     final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
     final progress = tester.getRect(find.byType(LinearProgressIndicator));
+    final rail = tester.getRect(
+      find.byKey(const Key('act0_shell_learning_rail')),
+    );
 
+    expect(table.top - progress.bottom, greaterThanOrEqualTo(0));
     expect(table.top - progress.bottom, lessThanOrEqualTo(32));
+    expect(rail.top - table.bottom, lessThanOrEqualTo(44));
   });
 
   testWidgets(
@@ -5980,7 +7016,9 @@ void main() {
         find.byKey(const Key('act0_shell_completion_toast')),
       );
       final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
-      final utg = tester.getRect(find.byKey(const Key('act0_shell_seat_node_utg')));
+      final utg = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_node_utg')),
+      );
       final center = tester.getRect(
         find.byKey(const Key('act0_shell_center_info_card')),
       );
@@ -6037,17 +7075,62 @@ void main() {
   testWidgets(
     'Canonical detached shell review shows level up when XP crosses the target',
     (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample.currentLesson;
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_legal_context',
+      );
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+      final baseState = stateWithLessons(<Act0LessonCardV1>[lesson]);
+      final rewardState = Act0ShellStateV1(
+        courseTitle: baseState.courseTitle,
+        courseSubtitle: baseState.courseSubtitle,
+        levelLabel: 'Level 1',
+        xp: 195,
+        xpTarget: baseState.xpTarget,
+        streakDays: baseState.streakDays,
+        dailyGoalLabel: baseState.dailyGoalLabel,
+        dailyGoalValue: baseState.dailyGoalValue,
+        pathProgressLabel: baseState.pathProgressLabel,
+        selectedWorldId: baseState.selectedWorldId,
+        worlds: baseState.worlds,
+        lessons: baseState.lessons,
+        review: baseState.review,
+        profile: Act0ProfileStateV1(
+          playerName: baseState.profile.playerName,
+          level: 'Level 1',
+          xpLine: '195 / 200 XP',
+          lessonsLine: baseState.profile.lessonsLine,
+          accuracyLine: baseState.profile.accuracyLine,
+          qualityLine: baseState.profile.qualityLine,
+          consistencyActiveDays: baseState.profile.consistencyActiveDays,
+          achievements: baseState.profile.achievements,
+          strongCategories: baseState.profile.strongCategories,
+          weakCategories: baseState.profile.weakCategories,
+          recentProgress: baseState.profile.recentProgress,
+          recentSkillGains: baseState.profile.recentSkillGains,
+          skillStats: baseState.profile.skillStats,
+          recommendedFocusTitle: baseState.profile.recommendedFocusTitle,
+          recommendedFocusBody: baseState.profile.recommendedFocusBody,
+          recommendedFocusCtaLabel: baseState.profile.recommendedFocusCtaLabel,
+        ),
+      );
+
       await pumpCompact(
         tester,
         host(
           tab: Act0ShellTabV1.play,
-          phase: Act0LessonPhaseV1.theory,
-          state: stateWithProgress(xp: 193, level: 1),
+          phase: Act0LessonPhaseV1.drill,
+          state: rewardState,
         ),
       );
-      await completeVisibleTheoryTask(tester);
       await advanceTeachingToDrill(tester);
-
       await tester.tap(find.byKey(const Key('act0_shell_option_check')));
       await tester.pump(const Duration(milliseconds: 120));
 
@@ -6055,8 +7138,43 @@ void main() {
         find.byKey(const Key('act0_shell_completion_toast_level_up')),
         findsOneWidget,
       );
-      expect(find.text('Level up'), findsOneWidget);
+      expect(find.textContaining('Level up'), findsOneWidget);
       expect(find.text('Level 2'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Canonical detached shell does not show replay XP toast for completed task replays',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final currentLesson = sample.currentLesson;
+      final replayTaskId = currentLesson.taskList[1].taskId;
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'act0_shell_progress_v1': jsonEncode(<String, Object>{
+          'schemaVersion': 7,
+          'completedTaskIds': <String>[replayTaskId],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': sample.selectedWorldId,
+          'selectedLessonId': currentLesson.lessonId,
+          'selectedTaskId': replayTaskId,
+          'earnedXp': 5,
+        }),
+      });
+
+      await pumpCompact(
+        tester,
+        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.drill),
+      );
+      await tester.tap(find.byKey(const Key('act0_shell_seat_node_btn')));
+      await tester.pump(const Duration(milliseconds: 120));
+
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsNothing,
+      );
+      expect(find.textContaining('Clean rep'), findsNothing);
+      expect(find.textContaining('+5 XP'), findsNothing);
     },
   );
 
@@ -6082,14 +7200,23 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('act0_shell_block_summary_replay_cta')),
-        findsOneWidget,
-      );
-      expect(
         find.byKey(const Key('act0_shell_block_summary_continue_cta')),
         findsOneWidget,
       );
-      expect(find.text('Open next block'), findsOneWidget);
+      expect(find.text('Open next lesson'), findsOneWidget);
+      expect(find.text('Lesson complete'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_replay_cta')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_unlock_label')),
+        findsOneWidget,
+      );
       expect(
         find.byKey(const Key('act0_shell_block_summary_map_cta')),
         findsOneWidget,
@@ -6103,6 +7230,10 @@ void main() {
         findsOneWidget,
       );
 
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(
         find.byKey(const Key('act0_shell_block_summary_continue_cta')),
       );
@@ -6151,9 +7282,11 @@ void main() {
       const Offset(0, -280),
     );
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const Key('act0_shell_block_summary_continue_cta')),
-    );
+    tester
+        .widget<FilledButton>(
+          find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+        )
+        .onPressed!();
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
@@ -6222,14 +7355,19 @@ void main() {
             find.byKey(const Key('act0_shell_block_summary_continue_cta')),
           )
           .onPressed,
-      isNull,
+      isNotNull,
     );
-    expect(find.text('Replay before next block'), findsOneWidget);
-    expect(find.text('Replay this block'), findsOneWidget);
+    expect(find.text('Replay before next lesson'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+      findsNothing,
+    );
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_block_summary_replay_cta')),
-    );
+    tester
+        .widget<FilledButton>(
+          find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+        )
+        .onPressed!();
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('act0_shell_block_summary_map_cta')));
     await tester.pumpAndSettle();
@@ -6295,11 +7433,24 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_card')),
       findsOneWidget,
     );
-    expect(find.textContaining(world2Lesson.title), findsWidgets);
-
-    await tester.tap(
-      find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+    expect(find.text('World 1 complete'), findsOneWidget);
+    expect(find.text('Poker from Zero'), findsOneWidget);
+    expect(
+      find.text('Unlocked now: World 2 - Hand Discipline'),
+      findsOneWidget,
     );
+    expect(find.text('Open next world'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+      findsNothing,
+    );
+    expect(find.textContaining(world2Lesson.title), findsNothing);
+
+    tester
+        .widget<FilledButton>(
+          find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+        )
+        .onPressed!();
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
@@ -6323,6 +7474,8 @@ void main() {
     expect(find.text('BB'), findsAtLeastNWidgets(1));
     expect(find.byKey(const Key('act0_shell_marker_cluster_sb')), findsNothing);
     expect(find.byKey(const Key('act0_shell_marker_cluster_bb')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_seat_sublabel_sb')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_seat_sublabel_bb')), findsNothing);
   });
 
   testWidgets('Blind bet chips stay clear of center info card', (tester) async {
@@ -6531,7 +7684,18 @@ void main() {
       find.byKey(const Key('act0_shell_sharky_mascot_repair')),
       findsOneWidget,
     );
-    expect(find.textContaining('Good spot to fix'), findsOneWidget);
+    final wrongReaction = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_sharky_outcome_reaction')),
+    );
+    expect(
+      <String>{
+        'Good spot to fix.',
+        'This is repairable.',
+        'Use the table, then retry.',
+        'One calm retry.',
+      }.contains(wrongReaction.data),
+      isTrue,
+    );
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_icon_wrong')),
@@ -7255,7 +8419,18 @@ void main() {
       find.byKey(const Key('act0_shell_sharky_mascot_happy')),
       findsOneWidget,
     );
-    expect(find.textContaining('Sharp read'), findsOneWidget);
+    final correctReaction = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_sharky_outcome_reaction')),
+    );
+    expect(
+      <String>{
+        'Sharp read.',
+        'Clean read.',
+        'Good table check.',
+        'Keep that cue.',
+      }.contains(correctReaction.data),
+      isTrue,
+    );
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
     expect(find.text('Button open'), findsWidgets);
     expect(
@@ -7630,11 +8805,15 @@ void main() {
     expect(find.text('2 chips'), findsWidgets);
     expect(find.text('4 chips'), findsOneWidget);
     expect(find.text('120 chips'), findsOneWidget);
-    final customTrailText = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_action_trail_text')),
+    expect(find.byKey(const Key('act0_shell_action_trail')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_action_context_line')),
+      findsNothing,
     );
-    expect(customTrailText.data, contains('XSB calls 2'));
-    expect(customTrailText.data, contains('XCO raises'));
+    expect(
+      find.byKey(const Key('act0_shell_action_prompt_integrated_surface')),
+      findsNothing,
+    );
     expect(
       find.byKey(const Key('act0_shell_active_seat_ring')),
       findsOneWidget,
@@ -7801,88 +8980,100 @@ void main() {
     );
   });
 
-  testWidgets('Active non-hero seat shows To act together with bet amount', (
-    tester,
-  ) async {
-    final activeSeatRunner = Act0ShellStateV1
-        .sample
-        .currentLesson
-        .taskList
-        .first
-        .runner
-        .copyWith(
-          table: Act0ShellStateV1
-              .sample
-              .currentLesson
-              .taskList
-              .first
-              .runner
-              .table
-              .copyWith(
-                seats: <Act0SeatStateV1>[
-                  const Act0SeatStateV1(
-                    seatId: 'hero_btn',
-                    seatLabel: 'BTN',
-                    displayName: 'Hero',
-                    isHero: true,
-                    stackLabel: '100 BB',
-                    holeCards: <Act0CardStateV1>[
-                      Act0CardStateV1(rank: 'A', suit: 's'),
-                      Act0CardStateV1(
-                        rank: 'Q',
-                        suit: 'h',
-                        tone: Act0CardToneV1.red,
-                      ),
-                    ],
-                    cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-                  ),
-                  const Act0SeatStateV1(
-                    seatId: 'sb_active',
-                    seatLabel: 'SB',
-                    displayName: 'Small blind',
-                    isSmallBlind: true,
-                    isActive: true,
-                    blindAmountLabel: '0.5 BB',
-                    currentBetLabel: '0.5 BB',
-                    bet: Act0SeatBetStateV1(
-                      kind: Act0SeatBetKindV1.post,
-                      label: 'POST',
-                      amountLabel: '0.5 BB',
+  testWidgets(
+    'Active non-hero seat uses Act marker when center already owns decision price',
+    (tester) async {
+      final activeSeatRunner = Act0ShellStateV1
+          .sample
+          .currentLesson
+          .taskList
+          .first
+          .runner
+          .copyWith(
+            table: Act0ShellStateV1
+                .sample
+                .currentLesson
+                .taskList
+                .first
+                .runner
+                .table
+                .copyWith(
+                  seats: <Act0SeatStateV1>[
+                    const Act0SeatStateV1(
+                      seatId: 'hero_btn',
+                      seatLabel: 'BTN',
+                      displayName: 'Hero',
+                      isHero: true,
+                      stackLabel: '100 BB',
+                      holeCards: <Act0CardStateV1>[
+                        Act0CardStateV1(rank: 'A', suit: 's'),
+                        Act0CardStateV1(
+                          rank: 'Q',
+                          suit: 'h',
+                          tone: Act0CardToneV1.red,
+                        ),
+                      ],
+                      cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                     ),
-                    holeCards: <Act0CardStateV1>[
-                      Act0CardStateV1(rank: '?', suit: ''),
-                      Act0CardStateV1(rank: '?', suit: ''),
-                    ],
-                  ),
-                ],
-                heroSeatId: 'hero_btn',
-                activeSeatId: 'sb_active',
-                highlightedSeatIds: <String>['sb_active'],
-              ),
-        );
+                    const Act0SeatStateV1(
+                      seatId: 'sb_active',
+                      seatLabel: 'SB',
+                      displayName: 'Small blind',
+                      isSmallBlind: true,
+                      isActive: true,
+                      blindAmountLabel: '0.5 BB',
+                      currentBetLabel: '0.5 BB',
+                      bet: Act0SeatBetStateV1(
+                        kind: Act0SeatBetKindV1.post,
+                        label: 'POST',
+                        amountLabel: '0.5 BB',
+                      ),
+                      holeCards: <Act0CardStateV1>[
+                        Act0CardStateV1(rank: '?', suit: ''),
+                        Act0CardStateV1(rank: '?', suit: ''),
+                      ],
+                    ),
+                  ],
+                  heroSeatId: 'hero_btn',
+                  activeSeatId: 'sb_active',
+                  highlightedSeatIds: <String>['sb_active'],
+                ),
+          );
 
-    await pumpTall(
-      tester,
-      MaterialApp(
-        home: Scaffold(
-          body: Act0LessonRunnerShellV1(
-            runner: activeSeatRunner,
-            onBack: () {},
-            onContinueTheory: () {},
-            onChooseOption: (_) {},
-            onContinueReview: () {},
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: activeSeatRunner,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(
-      find.byKey(const Key('act0_shell_active_seat_ring_sb_active')),
-      findsOneWidget,
-    );
-    expect(find.text('To act: 0.5 BB'), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_bet_chip_POST')), findsOneWidget);
-  });
+      expect(
+        find.byKey(const Key('act0_shell_active_seat_ring_sb_active')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_marker_sb_active_act')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_seat_sublabel_sb_active')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_bet_chip_POST')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_center_to_call_stat')),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets(
     'Highlighted seat does not show To act when another seat is active',
@@ -7959,15 +9150,23 @@ void main() {
         ),
       );
 
-      expect(find.text('To act: 1 BB'), findsOneWidget);
+      expect(find.text('To act: 1 BB'), findsNothing);
       expect(find.text('To act: 0.5 BB'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_active_seat_ring_bb_active')),
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('act0_shell_active_seat_ring_sb_highlight')),
+        find.byKey(const Key('act0_shell_marker_bb_active_act')),
         findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_seat_sublabel_bb_active')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_active_seat_ring_sb_highlight')),
+        findsNothing,
       );
     },
   );
@@ -8047,14 +9246,164 @@ void main() {
       ),
     );
 
-    expect(find.text('To act: 1 BB'), findsOneWidget);
+    expect(find.text('To act: 1 BB'), findsNothing);
     expect(find.text('To act: 0.5 BB'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_active_seat_ring_bb_current')),
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_marker_bb_current_act')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_seat_sublabel_bb_current')),
+      findsNothing,
+    );
+    expect(
       find.byKey(const Key('act0_shell_active_seat_ring_sb_stale')),
+      findsNothing,
+    );
+  });
+
+  testWidgets(
+    'Active seat keeps To act sublabel only when center does not already own price',
+    (tester) async {
+      final runner = Act0ShellStateV1.sample.currentLesson.taskList.first.runner
+          .copyWith(
+            table: Act0ShellStateV1
+                .sample
+                .currentLesson
+                .taskList
+                .first
+                .runner
+                .table
+                .copyWith(
+                  toCallLabel: '',
+                  seats: <Act0SeatStateV1>[
+                    const Act0SeatStateV1(
+                      seatId: 'hero_btn',
+                      seatLabel: 'BTN',
+                      displayName: 'Hero',
+                      isHero: true,
+                      stackLabel: '100 BB',
+                      holeCards: <Act0CardStateV1>[
+                        Act0CardStateV1(rank: 'A', suit: 's'),
+                        Act0CardStateV1(
+                          rank: 'Q',
+                          suit: 'h',
+                          tone: Act0CardToneV1.red,
+                        ),
+                      ],
+                      cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                    ),
+                    const Act0SeatStateV1(
+                      seatId: 'co_active',
+                      seatLabel: 'CO',
+                      displayName: 'Cutoff',
+                      isActive: true,
+                      currentBetLabel: '2.5 BB',
+                    ),
+                  ],
+                  heroSeatId: 'hero_btn',
+                  activeSeatId: 'co_active',
+                  highlightedSeatIds: <String>['co_active'],
+                ),
+          );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_marker_co_active_act')),
+        findsOneWidget,
+      );
+      expect(find.text('To act: 2.5 BB'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_seat_sublabel_co_active')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_center_to_call_stat')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('Dealer puck stays visible while dealer sublabel stays quiet', (
+    tester,
+  ) async {
+    final runner = Act0ShellStateV1.sample.currentLesson.taskList.first.runner
+        .copyWith(
+          table: Act0ShellStateV1
+              .sample
+              .currentLesson
+              .taskList
+              .first
+              .runner
+              .table
+              .copyWith(
+                seats: <Act0SeatStateV1>[
+                  const Act0SeatStateV1(
+                    seatId: 'hero_sb',
+                    seatLabel: 'SB',
+                    displayName: 'Hero',
+                    isHero: true,
+                    stackLabel: '100 BB',
+                    holeCards: <Act0CardStateV1>[
+                      Act0CardStateV1(rank: 'A', suit: 's'),
+                      Act0CardStateV1(
+                        rank: 'Q',
+                        suit: 'h',
+                        tone: Act0CardToneV1.red,
+                      ),
+                    ],
+                    cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  ),
+                  const Act0SeatStateV1(
+                    seatId: 'btn_dealer',
+                    seatLabel: 'BTN',
+                    displayName: 'Dealer',
+                    isDealerButton: true,
+                  ),
+                ],
+                heroSeatId: 'hero_sb',
+              ),
+        );
+
+    await pumpTall(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_marker_btn_dealer_dealer')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_seat_sublabel_btn_dealer')),
       findsNothing,
     );
   });
@@ -8064,7 +9413,13 @@ void main() {
     (tester) async {
       final runner = Act0ShellStateV1.sample.currentLesson.taskList.first.runner
           .copyWith(
-            table: Act0ShellStateV1.sample.currentLesson.taskList.first.runner.table
+            table: Act0ShellStateV1
+                .sample
+                .currentLesson
+                .taskList
+                .first
+                .runner
+                .table
                 .copyWith(
                   seats: <Act0SeatStateV1>[
                     const Act0SeatStateV1(
@@ -8075,7 +9430,11 @@ void main() {
                       stackLabel: '100 BB',
                       holeCards: <Act0CardStateV1>[
                         Act0CardStateV1(rank: 'A', suit: 's'),
-                        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+                        Act0CardStateV1(
+                          rank: 'Q',
+                          suit: 'h',
+                          tone: Act0CardToneV1.red,
+                        ),
                       ],
                       cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                     ),
@@ -8100,7 +9459,10 @@ void main() {
                   ],
                   heroSeatId: 'hero_btn',
                   activeSeatId: null,
-                  selectableSeatIds: const <String>['utg_target', 'co_selectable'],
+                  selectableSeatIds: const <String>[
+                    'utg_target',
+                    'co_selectable',
+                  ],
                   highlightedSeatIds: const <String>['utg_target'],
                 ),
           );
@@ -8125,7 +9487,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('act0_shell_seat_state_utg_target_target')),
+        find.byKey(const Key('act0_shell_seat_state_utg_target_targetFocus')),
         findsOneWidget,
       );
       expect(
@@ -8171,7 +9533,13 @@ void main() {
                 feedbackReason: 'UTG is the target seat in this spot.',
               ),
             ],
-            table: Act0ShellStateV1.sample.currentLesson.taskList.first.runner.table
+            table: Act0ShellStateV1
+                .sample
+                .currentLesson
+                .taskList
+                .first
+                .runner
+                .table
                 .copyWith(
                   seats: <Act0SeatStateV1>[
                     const Act0SeatStateV1(
@@ -8182,7 +9550,11 @@ void main() {
                       stackLabel: '100 BB',
                       holeCards: <Act0CardStateV1>[
                         Act0CardStateV1(rank: 'A', suit: 's'),
-                        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+                        Act0CardStateV1(
+                          rank: 'Q',
+                          suit: 'h',
+                          tone: Act0CardToneV1.red,
+                        ),
                       ],
                       cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                     ),
@@ -8222,7 +9594,87 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('act0_shell_seat_state_utg_target_target')),
+        find.byKey(const Key('act0_shell_seat_state_utg_target_targetFocus')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'Active actor keeps the single amber focus when generic highlights also exist',
+    (tester) async {
+      final runner = Act0ShellStateV1.sample.currentLesson.taskList.first.runner
+          .copyWith(
+            table: Act0ShellStateV1
+                .sample
+                .currentLesson
+                .taskList
+                .first
+                .runner
+                .table
+                .copyWith(
+                  seats: <Act0SeatStateV1>[
+                    const Act0SeatStateV1(
+                      seatId: 'hero_btn',
+                      seatLabel: 'BTN',
+                      displayName: 'Hero',
+                      isHero: true,
+                      stackLabel: '100 BB',
+                      holeCards: <Act0CardStateV1>[
+                        Act0CardStateV1(rank: 'A', suit: 's'),
+                        Act0CardStateV1(
+                          rank: 'Q',
+                          suit: 'h',
+                          tone: Act0CardToneV1.red,
+                        ),
+                      ],
+                      cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                    ),
+                    const Act0SeatStateV1(
+                      seatId: 'hj_active',
+                      seatLabel: 'HJ',
+                      displayName: 'Hijack',
+                      isActive: true,
+                      currentBetLabel: '2 BB',
+                    ),
+                    const Act0SeatStateV1(
+                      seatId: 'co_other',
+                      seatLabel: 'CO',
+                      displayName: 'Cutoff',
+                    ),
+                  ],
+                  heroSeatId: 'hero_btn',
+                  activeSeatId: 'hj_active',
+                  highlightedSeatIds: const <String>['hj_active', 'co_other'],
+                  selectableSeatIds: const <String>['co_other'],
+                ),
+          );
+
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_seat_state_hj_active_activeFocus')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_seat_state_co_other_targetFocus')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_seat_state_co_other_selectable')),
         findsOneWidget,
       );
     },
@@ -8568,12 +10020,14 @@ void main() {
     final world2 = Act0ShellStateV1.sample.worldById('world_2');
     final world5 = Act0ShellStateV1.sample.worldById('world_5');
     final world1 = Act0ShellStateV1.sample.worldById('world_1');
+    final tasks = _allAct0TasksV1();
 
     final dominatedLesson = world2.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'weak_ace_warning',
     );
-    final dominatedTask = dominatedLesson.taskList.firstWhere(
-      (candidate) => candidate.runner.caption.contains('Hero is BTN with A7o'),
+    final dominatedTask = _taskByIdV1(
+      tasks,
+      'weak_ace_warning_w3_dominated_fold',
     );
 
     expect(
@@ -8598,11 +10052,14 @@ void main() {
     );
     expect(twoPairTask.runner.teachingSteps.first.body, contains('two pair'));
 
-    final kqoContinueTask = dominatedLesson.taskList.firstWhere(
-      (candidate) => candidate.runner.caption.contains('Hero is BTN with KQo'),
+    final kqoContinueTask = _taskByIdV1(
+      tasks,
+      'continue_or_let_go_medium_call_or_fold',
     );
 
     expect(kqoContinueTask.runner.caption, contains('Hero is BTN with KQo'));
+    expect(kqoContinueTask.runner.table.streetLabel, 'Preflop');
+    expect(kqoContinueTask.runner.table.boardCards, isEmpty);
     expect(
       kqoContinueTask.runner.teachingSteps.first.body,
       contains('call a simple open'),
@@ -8629,6 +10086,446 @@ void main() {
           .firstWhere((option) => option.id == 'value')
           .feedbackReason,
       contains('Hero missed'),
+    );
+  });
+
+  test(
+    'Active W1-W12 runner tasks keep street and board-card counts aligned',
+    () {
+      final state = Act0ShellStateV1.sample;
+
+      for (var index = 1; index <= 12; index++) {
+        final world = state.worldById('world_$index');
+        for (final lesson in world.lessons) {
+          for (final task in lesson.taskList) {
+            final table = task.runner.table;
+            final boardCount = table.boardCards.length;
+            switch (table.streetLabel) {
+              case 'Preflop':
+                expect(
+                  boardCount,
+                  0,
+                  reason:
+                      '${task.taskId} should show no board cards on Preflop',
+                );
+              case 'Flop':
+                expect(
+                  boardCount,
+                  3,
+                  reason: '${task.taskId} should show 3 board cards on Flop',
+                );
+              case 'Turn':
+                expect(
+                  boardCount,
+                  4,
+                  reason: '${task.taskId} should show 4 board cards on Turn',
+                );
+              case 'River':
+                expect(
+                  boardCount,
+                  5,
+                  reason: '${task.taskId} should show 5 board cards on River',
+                );
+              default:
+                fail(
+                  '${task.taskId} uses unexpected street label '
+                  '${table.streetLabel}',
+                );
+            }
+          }
+        }
+      }
+    },
+  );
+
+  test('Known preflop inherited-board leak family keeps empty boards', () {
+    final matchingTasks = <Act0LessonTaskV1>[
+      _taskByIdV1(_allAct0TasksV1(), 'continue_or_let_go_medium_call_or_fold'),
+      _taskByIdV1(_allAct0TasksV1(), 'fold_discipline_facing_fold'),
+      _taskByIdV1(_allAct0TasksV1(), 'weak_ace_warning_w3_dominated_fold'),
+      _taskByIdV1(
+        _allAct0TasksV1(),
+        'preflop_framework_checkpoint_checkpoint_table_frame',
+      ),
+      _taskByIdV1(_allAct0TasksV1(), 'w6_checkpoint_table_combo_weight'),
+      _taskByIdV1(_allAct0TasksV1(), 'w7_ajs_btn_25bb_transfer'),
+      _taskByIdV1(_allAct0TasksV1(), 'w7_ajs_btn_100bb_transfer'),
+    ];
+
+    for (final task in matchingTasks) {
+      expect(task.runner.table.streetLabel, 'Preflop');
+      expect(
+        task.runner.table.boardCards,
+        isEmpty,
+        reason:
+            '${task.runner.lessonId}/${task.taskId} should not inherit flop cards into a preflop spot',
+      );
+    }
+  });
+
+  test(
+    'Early-seat hero-action runners keep prompt, active, and hero ownership aligned',
+    () {
+      final tasks = _allAct0TasksV1();
+
+      final expectedHeroSeatByTaskId = <String, String>{
+        'hand_discipline_buckets_trash': 'utg',
+        'fold_discipline_early_fold': 'utg',
+        'apply_utg_fold': 'utg',
+        'discipline_checkpoint_checkpoint_table_discipline': 'hj',
+        'position_apply_early_fold': 'utg',
+      };
+
+      for (final entry in expectedHeroSeatByTaskId.entries) {
+        _expectHeroOwnershipAlignmentV1(
+          _taskByIdV1(tasks, entry.key),
+          entry.value,
+        );
+      }
+    },
+  );
+
+  test('No BTN Hero residue remains in early-seat hero-action runners', () {
+    final tasks = _allAct0TasksV1();
+
+    for (final taskId in const <String>[
+      'hand_discipline_buckets_trash',
+      'fold_discipline_early_fold',
+      'apply_utg_fold',
+      'discipline_checkpoint_checkpoint_table_discipline',
+      'position_apply_early_fold',
+    ]) {
+      _expectNoBtnHeroResidueV1(_taskByIdV1(tasks, taskId));
+    }
+  });
+
+  test('Early-seat unopened actionTrail aligns with active and hero ownership', () {
+    final tasks = _allAct0TasksV1();
+
+    final expectedActorSeatByTaskId = <String, String>{
+      'hand_discipline_buckets_trash': 'utg',
+      'fold_discipline_early_fold': 'utg',
+      'apply_utg_fold': 'utg',
+      'same_hand_different_seat_same_hand_early_fold': 'utg',
+      'position_apply_early_fold': 'utg',
+      'position_apply_hj_fold': 'hj',
+      'position_checkpoint_position_checkpoint_early_fold': 'utg',
+      'preflop_first_in_open_w3_early_fold': 'utg',
+      'preflop_framework_checkpoint_w3_checkpoint_fold': 'utg',
+    };
+
+    for (final entry in expectedActorSeatByTaskId.entries) {
+      final task = _taskByIdV1(tasks, entry.key);
+      final table = task.runner.table;
+      expect(
+        _finalActionTrailActorSeatIdV1(task),
+        entry.value,
+        reason:
+            '${task.taskId} should end its trail on the visible acting seat',
+      );
+      expect(
+        table.activeSeatId,
+        entry.value,
+        reason:
+            '${task.taskId} should keep activeSeatId aligned with the final trail actor',
+      );
+      expect(
+        table.heroSeatId,
+        entry.value,
+        reason:
+            '${task.taskId} should keep hero ownership aligned with the final trail actor',
+      );
+    }
+  });
+
+  test(
+    'Inherited feedback titles stay aligned with the active decision family',
+    () {
+      final state = Act0ShellStateV1.sample;
+      final tasks = <Act0LessonTaskV1>[];
+      for (var index = 1; index <= 12; index++) {
+        tasks.addAll(
+          state
+              .worldById('world_$index')
+              .lessons
+              .expand((lesson) => lesson.taskList),
+        );
+      }
+
+      final expectations =
+          <({String taskId, Act0FeedbackQualityV1 quality, String title})>[
+            (
+              taskId: 'w4_bluff_pressure',
+              quality: Act0FeedbackQualityV1.suboptimal,
+              title: 'Legal, but betting is sharper.',
+            ),
+            (
+              taskId: 'w4_bad_bluff',
+              quality: Act0FeedbackQualityV1.correct,
+              title: 'Check is the cleaner line.',
+            ),
+            (
+              taskId: 'w9_m_ratio_green_zone',
+              quality: Act0FeedbackQualityV1.correct,
+              title: 'Green zone gives room.',
+            ),
+            (
+              taskId: 'w9_checkpoint_review',
+              quality: Act0FeedbackQualityV1.correct,
+              title: 'Pressure comes first.',
+            ),
+            (
+              taskId: 'w10_overbluff_punish',
+              quality: Act0FeedbackQualityV1.correct,
+              title: 'Selective bluff-catch works.',
+            ),
+          ];
+
+      for (final entry in expectations) {
+        final task = tasks.firstWhere(
+          (candidate) => candidate.taskId == entry.taskId,
+        );
+        final option = task.runner.options.firstWhere(
+          (candidate) => candidate.quality == entry.quality,
+        );
+
+        expect(option.feedbackTitle, entry.title);
+        expect(
+          option.feedbackTitle,
+          isNot(
+            anyOf(
+              'Raise is the clean open.',
+              'Limp is legal, but raise is sharper.',
+              'Effective stack: correct.',
+              '6-max: wider open.',
+              'Full ring: tighten early.',
+            ),
+          ),
+          reason:
+              '${entry.taskId} should not keep an inherited title from another concept family',
+        );
+      }
+    },
+  );
+
+  test(
+    'Preflop facing-open feedback stays specific without adding branch bloat',
+    () {
+      final tasks = _allAct0TasksV1();
+
+      final kqoTask = _taskByIdV1(
+        tasks,
+        'continue_or_let_go_medium_call_or_fold',
+      );
+      final j8oTask = _taskByIdV1(tasks, 'fold_discipline_facing_fold');
+      final a7oTask = _taskByIdV1(tasks, 'weak_ace_warning_w3_dominated_fold');
+
+      final kqoCorrect = kqoTask.runner.options.firstWhere(
+        (option) => option.isCorrect,
+      );
+      final kqoWrong = kqoTask.runner.options.firstWhere(
+        (option) => option.quality == Act0FeedbackQualityV1.wrong,
+      );
+      expect(kqoCorrect.feedbackReason, contains('CO open'));
+      expect(kqoCorrect.feedbackReason, contains('beginner baseline'));
+      expect(kqoWrong.feedbackReason, contains('Folding is too tight'));
+      expect(kqoWrong.feedbackReason, isNot(contains('playable enough')));
+
+      final j8oCorrect = j8oTask.runner.options.firstWhere(
+        (option) => option.isCorrect,
+      );
+      final j8oWrong = j8oTask.runner.options.firstWhere(
+        (option) => option.quality == Act0FeedbackQualityV1.wrong,
+      );
+      expect(j8oCorrect.feedbackReason, contains('CO open'));
+      expect(j8oCorrect.feedbackReason, contains('J8o'));
+      expect(j8oWrong.feedbackReason, contains('Late position helps'));
+      expect(j8oWrong.feedbackReason, contains('CO open'));
+
+      final a7oCorrect = a7oTask.runner.options.firstWhere(
+        (option) => option.isCorrect,
+      );
+      final a7oWrong = a7oTask.runner.options.firstWhere(
+        (option) => option.quality == Act0FeedbackQualityV1.wrong,
+      );
+      expect(a7oCorrect.feedbackReason, contains('better aces'));
+      expect(a7oCorrect.feedbackReason, contains('domination'));
+      expect(a7oWrong.feedbackReason, contains('ace looks tempting'));
+      expect(a7oWrong.feedbackReason, contains('dominated'));
+    },
+  );
+
+  test(
+    'Simplified preflop continue binaries keep beginner-baseline framing when aggressive options are omitted',
+    () {
+      for (final task in _simplifiedPreflopContinueCandidatesV1()) {
+        final correct = task.runner.options.firstWhere(
+          (option) => option.isCorrect,
+        );
+        expect(
+          task.runner.question.toLowerCase(),
+          contains('simple'),
+          reason:
+              '${task.taskId} should scope the binary spot as a simple beginner response',
+        );
+        expect(
+          correct.feedbackReason,
+          contains('beginner baseline'),
+          reason:
+              '${task.taskId} should frame the omitted aggressive branch as outside the beginner baseline',
+        );
+        expect(
+          correct.feedbackReason,
+          contains('simple continue'),
+          reason:
+              '${task.taskId} should name the continue as the simple baseline action',
+        );
+      }
+    },
+  );
+
+  test(
+    'Three-option labels avoid explanation-style copy outside the allowlist',
+    () {
+      final explanationLabels = _threeOptionRiskLabelsV1()
+          .where(
+            (row) =>
+                _isExplanationStyleOptionLabelV1(row.$2.label) &&
+                row.$1.runner.options.length == 3,
+          )
+          .toList();
+
+      expect(
+        explanationLabels,
+        isEmpty,
+        reason:
+            'Three-option answer labels should name the choice, not embed the reason inside the button.',
+      );
+    },
+  );
+
+  test(
+    'Representative compact three-option tasks stay inside the answer-label budget',
+    () {
+      final tasks = <Act0LessonTaskV1>[
+        _taskByIdV1(
+          _allAct0TasksV1(),
+          'discipline_checkpoint_checkpoint_table_discipline',
+        ),
+        _taskByIdV1(_allAct0TasksV1(), 'w7_ajs_btn_25bb_transfer'),
+        _taskByIdV1(_allAct0TasksV1(), 'w12_pretty_hand_bad_price_fold'),
+      ];
+
+      for (final task in tasks) {
+        for (final option in task.runner.options) {
+          expect(
+            _isExplanationStyleOptionLabelV1(option.label),
+            isFalse,
+            reason:
+                '${task.taskId} should keep reasons in feedback, not labels',
+          );
+          expect(
+            option.label.length,
+            lessThanOrEqualTo(28),
+            reason:
+                '${task.taskId}/${option.id} should stay inside the compact 3-option label budget',
+          );
+        }
+      }
+    },
+  );
+
+  test(
+    'Admitted W5 to W8 teaching-step intro bodies stay inside the cognitive-load budget',
+    () {
+      for (final (task, step) in _admittedTeachingStepBudgetRowsV1()) {
+        expect(
+          _wordCountV1(step.body),
+          lessThanOrEqualTo(18),
+          reason:
+              '${task.taskId}/${step.title} should teach one idea without turning into a paragraph block',
+        );
+      }
+    },
+  );
+
+  test('Teaching-step jargon helper finds only current advanced-term rows', () {
+    final rows = _teachingStepJargonRowsV1();
+    expect(rows, isNotEmpty);
+    expect(
+      rows.map((row) => row.$1.taskId),
+      containsAll(<String>[
+        'w6_combo_counts_intro',
+        'w6_ak_combos',
+        'w7_spr_intro',
+      ]),
+    );
+  });
+
+  test(
+    'Active drill triplets stay below the thin-repetition threshold outside allowlist',
+    () {
+      final offenders = _duplicateDrillTripletClustersV1().entries
+          .where((entry) => entry.value.length > 3)
+          .toList();
+
+      expect(
+        offenders,
+        isEmpty,
+        reason: offenders
+            .map(
+              (entry) =>
+                  '${entry.value.length}x ${entry.key.$1} | ${entry.key.$2} | ${entry.key.$3}',
+            )
+            .join('\n'),
+      );
+    },
+  );
+
+  test('C1 to C4 early-route duplicate clusters stay compressed', () {
+    expect(
+      _countDrillTripletMatchesV1(
+        'CO opened. Hero is BTN with KQo.',
+        'Playable hand in position: call keeps the hand in.',
+        'What is the simple response?',
+      ),
+      lessThanOrEqualTo(3),
+    );
+
+    expect(
+      _countDrillTripletMatchesV1(
+        'Folded to BTN with KTs.',
+        'First in and late position: opening is the clean action.',
+        'What is the simple first-in action?',
+      ),
+      lessThanOrEqualTo(3),
+    );
+
+    expect(
+      _countDrillTripletMatchesV1(
+        'Late seats see more actions before deciding.',
+        'Button is the clearest late seat.',
+        'Which seat acts latest after the flop?',
+      ),
+      lessThanOrEqualTo(3),
+    );
+
+    expect(
+      _countDrillTripletMatchesV1(
+        'Early seats act with less information than late seats.',
+        'UTG is early. BTN is late.',
+        'Which seat is early preflop?',
+      ),
+      lessThanOrEqualTo(3),
+    );
+
+    expect(
+      _countDrillTripletMatchesV1(
+        'Unopened pot. Hero is early with ATo.',
+        'The same hand is less comfortable from early position.',
+        'What is the disciplined action?',
+      ),
+      lessThanOrEqualTo(2),
     );
   });
 
@@ -8800,10 +10697,8 @@ void main() {
   );
 
   testWidgets(
-    'Action trail highlights the latest step without pot sweep on review',
+    'Trail history drill embeds temporal context into the prompt owner',
     (tester) async {
-      // Phase 1: verify trail icon and latest badge using a runner that has
-      // actionTrail items (the action-trail drill task in your_first_hand).
       final trailTask = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
@@ -8815,7 +10710,67 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Act0LessonRunnerShellV1(
-              runner: trailTask.runner,
+              runner: trailTask.runner.copyWith(
+                phase: Act0LessonPhaseV1.drill,
+                teachingStepIndex: trailTask.runner.teachingSteps.length,
+              ),
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const Key('act0_shell_action_trail')), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_center_focus_badge')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_action_prompt_integrated_surface')),
+        findsOneWidget,
+      );
+      expect(find.text('Trail check'), findsOneWidget);
+      final contextLine = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_action_context_line')),
+      );
+      expect(contextLine.data, contains('Current street: River'));
+      expect(contextLine.data, contains('Trail item: Flop'));
+      expect(find.text('Hand history'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(
+            const Key('act0_shell_action_prompt_integrated_surface'),
+          ),
+          matching: find.byKey(const Key('act0_shell_action_panel')),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'Review action trail keeps replay controls without pot sweep on review',
+    (tester) async {
+      final trailTask = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((l) => l.lessonId == 'your_first_hand')
+          .taskList
+          .firstWhere((t) => t.taskId == 'your_first_hand_action_trail');
+      final reviewRunner = trailTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: 'bb_check',
+      );
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: reviewRunner,
               tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
               onBack: () {},
               onContinueTheory: () {},
@@ -8834,6 +10789,11 @@ void main() {
         find.byKey(const Key('act0_shell_action_trail_latest_badge')),
         findsOneWidget,
       );
+      expect(
+        find.byKey(const Key('act0_shell_action_trail_replay_controls')),
+        findsOneWidget,
+      );
+      expect(find.textContaining('latest action'), findsOneWidget);
 
       // Phase 2: verify that answering a drill shows completion toast but no
       // pot-sweep overlay. Use the stateful host on the check-action drill.
@@ -8865,7 +10825,9 @@ void main() {
       final toast = tester.getRect(
         find.byKey(const Key('act0_shell_completion_toast')),
       );
-      final utg = tester.getRect(find.byKey(const Key('act0_shell_seat_node_utg')));
+      final utg = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_node_utg')),
+      );
       final center = tester.getRect(
         find.byKey(const Key('act0_shell_center_info_card')),
       );
@@ -8934,6 +10896,7 @@ void main() {
 
     final notifier = ValueNotifier<Act0RunnerStateV1>(
       trailTask.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
         table: trailTask.runner.table.copyWith(
           actionTrail: allSteps.take(2).toList(growable: false),
         ),
@@ -8967,6 +10930,7 @@ void main() {
     );
 
     notifier.value = trailTask.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
       table: trailTask.runner.table.copyWith(
         actionTrail: allSteps.take(3).toList(growable: false),
       ),
@@ -9513,6 +11477,70 @@ void main() {
     },
   );
 
+  test('World 5 call-price lesson includes expanded caller-side examples', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final priceLesson = world5.lessons.firstWhere(
+      (candidate) => candidate.lessonId == 'call_price',
+    );
+
+    expect(priceLesson.taskList.length, greaterThanOrEqualTo(6));
+    expect(
+      priceLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w4_good_price_call',
+        'w4_bad_price_fold',
+        'w4_cheap_price_marginal_call',
+        'w4_big_price_marginal_fold',
+      ]),
+    );
+  });
+
+  test('World 5 call-price drills teach cheap-vs-big price contrast', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final priceLesson = world5.lessons.firstWhere(
+      (candidate) => candidate.lessonId == 'call_price',
+    );
+
+    final cheapTask = priceLesson.taskList.firstWhere(
+      (candidate) => candidate.taskId == 'w4_cheap_price_marginal_call',
+    );
+    final bigTask = priceLesson.taskList.firstWhere(
+      (candidate) => candidate.taskId == 'w4_big_price_marginal_fold',
+    );
+
+    expect(cheapTask.runner.table.potLabel, 'Pot 10 BB');
+    expect(cheapTask.runner.table.toCallLabel, 'To call 1 BB');
+    expect(cheapTask.runner.table.centerLabel, 'Cheap price, middle pair');
+    expect(
+      cheapTask.runner.options
+          .firstWhere((option) => option.id == 'call')
+          .feedbackReason,
+      allOf(contains('Pot 10 BB'), contains('to call is only 1 BB')),
+    );
+    expect(
+      cheapTask.runner.options
+          .firstWhere((option) => option.id == 'raise')
+          .quality,
+      Act0FeedbackQualityV1.suboptimal,
+    );
+
+    expect(bigTask.runner.table.potLabel, 'Pot 9 BB');
+    expect(bigTask.runner.table.toCallLabel, 'To call 6 BB');
+    expect(bigTask.runner.table.centerLabel, 'Top pair, big price');
+    expect(
+      bigTask.runner.options
+          .firstWhere((option) => option.id == 'fold')
+          .feedbackReason,
+      allOf(contains('Pot 9 BB'), contains('risking 6 BB')),
+    );
+    expect(
+      bigTask.runner.options
+          .firstWhere((option) => option.id == 'call')
+          .feedbackReason,
+      allOf(contains('To call 6 BB'), contains('marginal hand')),
+    );
+  });
+
   test('World 5 content covers purpose and price without math overload', () {
     final content = _worldContentText('world_5').toLowerCase();
     for (final topic in const <String>[
@@ -9625,6 +11653,35 @@ void main() {
     expect(bridgeText, contains('board'));
     expect(bridgeText, contains('purpose'));
     expect(bridgeText, contains('price'));
+  });
+
+  test('World 5 checkpoint includes a real-table price transfer rep', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final checkpointLesson = world5.lessons.firstWhere(
+      (lesson) => lesson.lessonId == 'price_checkpoint',
+    );
+    final transferTask = checkpointLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w4_checkpoint_table_price',
+    );
+
+    expect(transferTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+    expect(transferTask.runner.caption, contains('Real table.'));
+    expect(transferTask.runner.table.potLabel, 'Pot 7 BB');
+    expect(transferTask.runner.table.toCallLabel, 'To call 2 BB');
+    expect(transferTask.runner.table.centerLabel, 'Second pair, live table');
+    expect(
+      transferTask.runner.options
+          .firstWhere((option) => option.id == 'call')
+          .feedbackReason,
+      allOf(contains('Pot 7 BB'), contains('To call is only 2 BB')),
+    );
+    expect(
+      transferTask.runner.teachingSteps.first.body,
+      allOf(
+        contains('Pot tells what you can win'),
+        contains('To call tells what you must risk'),
+      ),
+    );
   });
 
   test('World 6 has a real board-and-draws spine', () {
@@ -9958,6 +12015,95 @@ void main() {
     );
   });
 
+  test(
+    'World 7 combo-counting has spaced reinforcement beyond the intro lesson',
+    () {
+      final checkpoint = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_checkpoint',
+          );
+
+      expect(
+        checkpoint.taskList.map((task) => task.taskId),
+        containsAll(<String>[
+          'w6_suited_offsuit_weight_compare',
+          'w6_pair_vs_suited_weight_compare',
+          'w6_checkpoint_table_combo_weight',
+        ]),
+      );
+    },
+  );
+
+  test(
+    'World 7 combo reinforcement keeps suited-offsuit and pair-weight contrast',
+    () {
+      final checkpoint = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_checkpoint',
+          );
+      final suitedTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_suited_offsuit_weight_compare',
+      );
+      final pairTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_pair_vs_suited_weight_compare',
+      );
+
+      final suitedText = [
+        suitedTask.runner.hint,
+        ...suitedTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(suitedText, contains('offsuit'));
+      expect(suitedText, contains('suited'));
+      expect(suitedText, contains('12'));
+      expect(suitedText, contains('4'));
+      expect(suitedText, contains('more often'));
+
+      final pairText = [
+        pairTask.runner.hint,
+        ...pairTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(pairText, contains('pocket'));
+      expect(pairText, contains('suited'));
+      expect(pairText, contains('6'));
+      expect(pairText, contains('4'));
+      expect(pairText, contains('appears more often'));
+    },
+  );
+
+  test(
+    'World 7 combo reinforcement includes practical transfer and why copy',
+    () {
+      final checkpoint = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_checkpoint',
+          );
+      final transferTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_checkpoint_table_combo_weight',
+      );
+
+      expect(transferTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+      expect(transferTask.stepKind, Act0LessonStepKindV1.proveIt);
+
+      final transferText = [
+        transferTask.runner.caption,
+        transferTask.runner.hint,
+        ...transferTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(transferText, contains('real table'));
+      expect(transferText, contains('opening range'));
+      expect(transferText, contains('12'));
+      expect(transferText, contains('6'));
+      expect(transferText, contains('more often'));
+      expect(transferText, contains('range'));
+    },
+  );
+
   test('World 7 checkpoint bridges to stack-depth risk thinking', () {
     final world7 = Act0ShellStateV1.sample.worldById('world_7');
     final checkpoint = world7.lessons
@@ -9975,6 +12121,86 @@ void main() {
     expect(bridgeText, contains('stack depth'));
     expect(bridgeText, contains('risk'));
   });
+
+  test('World 7 checkpoint adds spaced made-hand reinforcement after W1', () {
+    final checkpoint = Act0ShellStateV1.sample
+        .worldById('world_7')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'range_thinking_checkpoint');
+
+    expect(
+      checkpoint.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w6_kicker_showdown_compare',
+        'w6_board_pair_strength_compare',
+        'w6_checkpoint_table_best_five',
+      ]),
+    );
+  });
+
+  test(
+    'World 7 made-hand reinforcement keeps kicker and board-context why copy',
+    () {
+      final checkpoint = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_checkpoint',
+          );
+      final kickerTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_kicker_showdown_compare',
+      );
+      final boardTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_board_pair_strength_compare',
+      );
+
+      final kickerText = [
+        kickerTask.runner.hint,
+        ...kickerTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(kickerText, contains('kicker'));
+      expect(kickerText, contains('best five'));
+      expect(kickerText, contains('pair'));
+
+      final boardText = [
+        boardTask.runner.hint,
+        ...boardTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(boardText, contains('board'));
+      expect(boardText, contains('trips'));
+      expect(boardText, contains('two pair'));
+      expect(boardText, contains('best five'));
+    },
+  );
+
+  test(
+    'World 7 made-hand reinforcement includes a live-table best-five transfer rep',
+    () {
+      final checkpoint = Act0ShellStateV1.sample
+          .worldById('world_7')
+          .lessons
+          .firstWhere(
+            (lesson) => lesson.lessonId == 'range_thinking_checkpoint',
+          );
+      final transferTask = checkpoint.taskList.firstWhere(
+        (task) => task.taskId == 'w6_checkpoint_table_best_five',
+      );
+
+      expect(transferTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+      expect(transferTask.stepKind, Act0LessonStepKindV1.proveIt);
+
+      final transferText = [
+        transferTask.runner.caption,
+        transferTask.runner.hint,
+        transferTask.runner.feedbackReason,
+        ...transferTask.runner.options.map((option) => option.feedbackReason),
+      ].join(' ').toLowerCase();
+      expect(transferText, contains('real table showdown'));
+      expect(transferText, contains('best five'));
+      expect(transferText, contains('split'));
+      expect(transferText, contains('board'));
+    },
+  );
 
   test('World 8 is locked but has a real stack-depth scaffold', () {
     final state = Act0ShellStateV1.sample;
@@ -10052,6 +12278,93 @@ void main() {
       reason:
           'World 8 should have enough real choices before tournament-pressure world',
     );
+  });
+
+  test('World 8 includes expanded stack-depth transfer density', () {
+    final world8 = Act0ShellStateV1.sample.worldById('world_8');
+    final transferTasks = world8.lessons
+        .expand((lesson) => lesson.taskList)
+        .where((task) => task.resolvedTaskFamily == Act0TaskFamilyV1.transfer)
+        .toList();
+
+    expect(
+      transferTasks.map((task) => task.taskId),
+      containsAll(<String>[
+        'w7_table_effective_notice',
+        'w7_40bb_middle',
+        'w7_spr4_middle',
+        'w7_format_table_notice',
+        'w7_ajs_btn_25bb_transfer',
+        'w7_ajs_btn_100bb_transfer',
+        'w7_top_pair_spr8_transfer',
+      ]),
+    );
+  });
+
+  test('World 8 includes same-hand different-stack contrast', () {
+    final depthLesson = Act0ShellStateV1.sample
+        .worldById('world_8')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'same_hand_different_depth');
+
+    expect(
+      depthLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w7_20bb_wider',
+        'w7_100bb_tighter',
+        'w7_ajs_btn_25bb_transfer',
+        'w7_ajs_btn_100bb_transfer',
+      ]),
+    );
+
+    final shallowTask = depthLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w7_ajs_btn_25bb_transfer',
+    );
+    final deepTask = depthLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w7_ajs_btn_100bb_transfer',
+    );
+
+    final shallowText = [
+      shallowTask.runner.caption,
+      shallowTask.runner.hint,
+      ...shallowTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(shallowText, contains('25 bb'));
+    expect(shallowText, contains('a-j suited'));
+    expect(shallowText, contains('less risk'));
+
+    final deepText = [
+      deepTask.runner.caption,
+      deepTask.runner.hint,
+      ...deepTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(deepText, contains('100 bb'));
+    expect(deepText, contains('a-j suited'));
+    expect(deepText, contains('more room'));
+    expect(deepText, contains('more risk'));
+  });
+
+  test('World 8 includes mixed-concept stack-depth transfer with why copy', () {
+    final sprLesson = Act0ShellStateV1.sample
+        .worldById('world_8')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'spr_and_commitment');
+    final mixedTask = sprLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w7_top_pair_spr8_transfer',
+    );
+
+    expect(mixedTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+
+    final mixedText = [
+      mixedTask.runner.caption,
+      mixedTask.runner.hint,
+      ...mixedTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(mixedText, contains('top pair'));
+    expect(mixedText, contains('spr 8'));
+    expect(mixedText, contains('future-street risk'));
+    expect(mixedText, contains('board'));
+    expect(mixedText, contains('tempting'));
   });
 
   test('World 8 checkpoint bridges to tournament pressure', () {
@@ -10358,6 +12671,96 @@ void main() {
     expect(bridgeText, contains('review'));
   });
 
+  test('World 11 includes expanded real-play transfer density', () {
+    final world11 = Act0ShellStateV1.sample.worldById('world_11');
+    final transferTasks = world11.lessons
+        .expand((lesson) => lesson.taskList)
+        .where((task) => task.resolvedTaskFamily == Act0TaskFamilyV1.transfer)
+        .toList();
+
+    expect(
+      transferTasks.map((task) => task.taskId),
+      containsAll(<String>[
+        'w11_trigger_small_price_continue',
+        'w11_trigger_bad_price_fold',
+        'w11_checkpoint_review_line',
+        'w11_checkpoint_mixed_table_line',
+      ]),
+    );
+  });
+
+  test('World 11 includes a close-decision real-play contrast', () {
+    final triggerLesson = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'table_trigger_reads');
+
+    expect(
+      triggerLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w11_trigger_small_price_continue',
+        'w11_trigger_bad_price_fold',
+      ]),
+    );
+
+    final smallPriceTask = triggerLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w11_trigger_small_price_continue',
+    );
+    final badPriceTask = triggerLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w11_trigger_bad_price_fold',
+    );
+
+    final smallText = [
+      smallPriceTask.runner.caption,
+      ...smallPriceTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(smallText, contains('q-j suited'));
+    expect(
+      smallPriceTask.runner.table.toCallLabel.toLowerCase(),
+      'to call 2 bb',
+    );
+    expect(smallText, contains('position'));
+    expect(smallText, contains('cheap price'));
+
+    final badText = [
+      badPriceTask.runner.caption,
+      ...badPriceTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(badText, contains('same hand again'));
+    expect(
+      badPriceTask.runner.table.toCallLabel.toLowerCase(),
+      'to call 12 bb',
+    );
+    expect(badText, contains('deep'));
+    expect(badText, contains('tempting'));
+  });
+
+  test('World 11 includes mixed-concept transfer with why feedback', () {
+    final checkpointLesson = Act0ShellStateV1.sample
+        .worldById('world_11')
+        .lessons
+        .firstWhere(
+          (lesson) => lesson.lessonId == 'real_play_transfer_checkpoint',
+        );
+    final mixedTask = checkpointLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w11_checkpoint_mixed_table_line',
+    );
+
+    expect(mixedTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+
+    final mixedText = [
+      mixedTask.runner.caption,
+      mixedTask.runner.hint,
+      ...mixedTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(mixedText, contains('a-j suited'));
+    expect(mixedText, contains('position'));
+    expect(mixedText, contains('two-tone'));
+    expect(mixedText, contains('30 bb'));
+    expect(mixedText, contains('price'));
+    expect(mixedText, contains('full table read'));
+  });
+
   test('World 12 is locked but has a real mindset-bridge scaffold', () {
     final state = Act0ShellStateV1.sample;
     final world12 = state.worldById('world_12');
@@ -10420,6 +12823,447 @@ void main() {
     expect(bridgeText, contains('postflop'));
     expect(bridgeText, contains('process'));
     expect(bridgeText, contains('discipline'));
+  });
+
+  test('World 12 includes added mindset and discipline transfer density', () {
+    final world12 = Act0ShellStateV1.sample.worldById('world_12');
+    final transferTasks = world12.lessons
+        .expand((lesson) => lesson.taskList)
+        .where((task) => task.resolvedTaskFamily == Act0TaskFamilyV1.transfer)
+        .toList();
+
+    expect(
+      transferTasks.map((task) => task.taskId),
+      containsAll(<String>[
+        'w12_bad_call_good_result',
+        'w12_after_mistake_reset',
+        'w12_discipline_under_pressure',
+        'w12_pretty_hand_bad_price_fold',
+        'w12_revenge_raise_trap',
+        'w12_checkpoint_full_loop_line',
+      ]),
+    );
+    expect(transferTasks.length, greaterThanOrEqualTo(6));
+  });
+
+  test('World 12 includes a close temptation contrast', () {
+    final disciplineLesson = Act0ShellStateV1.sample
+        .worldById('world_12')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'confidence_and_discipline');
+
+    expect(
+      disciplineLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w12_pretty_hand_bad_price_fold',
+        'w12_revenge_raise_trap',
+      ]),
+    );
+
+    final prettyHandTask = disciplineLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w12_pretty_hand_bad_price_fold',
+    );
+    final revengeTask = disciplineLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w12_revenge_raise_trap',
+    );
+
+    final prettyHandText = [
+      prettyHandTask.runner.caption,
+      prettyHandTask.runner.hint,
+      ...prettyHandTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(prettyHandText, contains('k-q'));
+    expect(
+      prettyHandTask.runner.table.toCallLabel.toLowerCase(),
+      'to call 18 bb',
+    );
+    expect(prettyHandText, contains('tempting'));
+    expect(prettyHandText, contains('bad river price'));
+
+    final revengeText = [
+      revengeTask.runner.caption,
+      revengeTask.runner.hint,
+      ...revengeTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(revengeText, contains('q-j suited'));
+    expect(revengeTask.runner.table.toCallLabel.toLowerCase(), 'to call 2 bb');
+    expect(revengeText, contains('take control'));
+    expect(revengeText, contains('noise'));
+  });
+
+  test('World 12 includes mixed-concept discipline with why feedback', () {
+    final checkpointLesson = Act0ShellStateV1.sample
+        .worldById('world_12')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'mindset_bridge_checkpoint');
+    final mixedTask = checkpointLesson.taskList.firstWhere(
+      (task) => task.taskId == 'w12_checkpoint_full_loop_line',
+    );
+
+    expect(mixedTask.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+
+    final mixedText = [
+      mixedTask.runner.caption,
+      mixedTask.runner.hint,
+      ...mixedTask.runner.options.map((option) => option.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(mixedText, contains('a-j suited'));
+    expect(mixedText, contains('two-tone'));
+    expect(mixedText, contains('25 bb'));
+    expect(mixedText, contains('price'));
+    expect(mixedText, contains('same decision loop'));
+    expect(mixedText, contains('after a mistake'));
+  });
+
+  test('World 8 to 12 keep suboptimal literacy as non-punitive growth', () {
+    for (final worldId in const <String>[
+      'world_8',
+      'world_9',
+      'world_10',
+      'world_11',
+      'world_12',
+    ]) {
+      final world = Act0ShellStateV1.sample.worldById(worldId);
+      final suboptimalOptions = world.lessons
+          .expand((lesson) => lesson.taskList)
+          .expand((task) => task.runner.options)
+          .where((option) => option.quality == Act0FeedbackQualityV1.suboptimal)
+          .toList();
+
+      expect(
+        suboptimalOptions,
+        isNotEmpty,
+        reason: '$worldId needs at least one playable-but-sharper line',
+      );
+
+      final hasGrowthFraming = suboptimalOptions.any((option) {
+        final copy = '${option.feedbackTitle} ${option.feedbackReason}'
+            .toLowerCase();
+        return copy.contains('tempting') ||
+            copy.contains('playable') ||
+            copy.contains('safe') ||
+            copy.contains('common') ||
+            copy.contains('part of the picture') ||
+            copy.contains('protective') ||
+            copy.contains('reactive') ||
+            copy.contains('cautious');
+      });
+      expect(
+        hasGrowthFraming,
+        isTrue,
+        reason:
+            '$worldId suboptimal feedback should explain a tempting but weaker line, not punish it',
+      );
+    }
+  });
+
+  test(
+    'World 8 to 12 transfer checkpoints keep explanatory wrong and suboptimal branches',
+    () {
+      final state = Act0ShellStateV1.sample;
+      final taskIds = <String>[
+        'w7_table_effective_notice',
+        'w9_checkpoint_table_notice',
+        'w10_checkpoint_table_notice',
+        'w11_checkpoint_review_line',
+        'w12_checkpoint_process_line',
+      ];
+
+      final tasks = <Act0LessonTaskV1>[];
+      for (final worldId in const <String>[
+        'world_8',
+        'world_9',
+        'world_10',
+        'world_11',
+        'world_12',
+      ]) {
+        tasks.addAll(
+          state.worldById(worldId).lessons.expand((l) => l.taskList),
+        );
+      }
+
+      for (final taskId in taskIds) {
+        final task = tasks.firstWhere(
+          (candidate) => candidate.taskId == taskId,
+        );
+        final wrongOptions = task.runner.options
+            .where((option) => option.quality == Act0FeedbackQualityV1.wrong)
+            .toList();
+        final suboptimalOptions = task.runner.options
+            .where(
+              (option) => option.quality == Act0FeedbackQualityV1.suboptimal,
+            )
+            .toList();
+
+        expect(
+          wrongOptions,
+          isNotEmpty,
+          reason: '$taskId needs a wrong branch',
+        );
+        expect(
+          suboptimalOptions,
+          isNotEmpty,
+          reason: '$taskId needs a suboptimal branch',
+        );
+
+        final wrongText = wrongOptions
+            .map((option) => option.feedbackReason.toLowerCase())
+            .join(' ');
+        final suboptimalText = suboptimalOptions
+            .map((option) => option.feedbackReason.toLowerCase())
+            .join(' ');
+
+        expect(
+          wrongText,
+          anyOf(contains('tempting'), contains('dominant cue')),
+          reason:
+              '$taskId wrong feedback should explain why the miss is attractive and what should dominate instead',
+        );
+        expect(
+          suboptimalText,
+          anyOf(
+            contains('tempting'),
+            contains('cleaner read'),
+            contains('cleaner bridge'),
+            contains('looks useful'),
+            contains('dominant cue'),
+            contains('protective'),
+          ),
+          reason:
+              '$taskId suboptimal feedback should explain the weaker instinct without shame',
+        );
+      }
+    },
+  );
+
+  test('First 12 worlds keep integrity-matrix structural invariants', () {
+    final state = Act0ShellStateV1.sample;
+    for (var index = 1; index <= 12; index++) {
+      final world = state.worldById('world_$index');
+      expect(
+        world.lessons,
+        isNotEmpty,
+        reason: 'world_$index needs at least one lesson',
+      );
+
+      final tasks = world.lessons.expand((lesson) => lesson.taskList).toList();
+      expect(tasks, isNotEmpty, reason: 'world_$index needs at least one task');
+      expect(
+        tasks.where((task) => task.phase == Act0LessonPhaseV1.theory),
+        isNotEmpty,
+        reason: 'world_$index needs theory ownership',
+      );
+      expect(
+        tasks.where((task) => task.phase == Act0LessonPhaseV1.drill),
+        isNotEmpty,
+        reason: 'world_$index needs practice ownership',
+      );
+      expect(
+        tasks.where((task) => task.phase == Act0LessonPhaseV1.review),
+        isNotEmpty,
+        reason: 'world_$index needs recap ownership',
+      );
+      expect(
+        tasks.where(
+          (task) =>
+              task.resolvedTaskFamily == Act0TaskFamilyV1.transfer ||
+              task.stepKind == Act0LessonStepKindV1.proveIt,
+        ),
+        isNotEmpty,
+        reason: 'world_$index needs a transfer or prove-it seam',
+      );
+      expect(
+        tasks.where((task) => task.runner.options.isNotEmpty),
+        isNotEmpty,
+        reason: 'world_$index needs answer-bearing drills',
+      );
+
+      for (final lesson in world.lessons) {
+        expect(
+          lesson.taskList,
+          isNotEmpty,
+          reason: '${lesson.lessonId} cannot be empty',
+        );
+        expect(
+          lesson.taskList.first.phase,
+          Act0LessonPhaseV1.theory,
+          reason: '${lesson.lessonId} should start with theory',
+        );
+        expect(
+          lesson.taskList.last.phase,
+          Act0LessonPhaseV1.review,
+          reason: '${lesson.lessonId} should end with review',
+        );
+      }
+    }
+  });
+
+  test(
+    'Prefixed W5-W12 task ids follow the current allowlisted owner convention',
+    () {
+      final state = Act0ShellStateV1.sample;
+      final allowedPrefixesByWorld = <String, String>{
+        'world_5': 'w4_',
+        'world_6': 'w5_',
+        'world_7': 'w6_',
+        'world_8': 'w7_',
+        'world_9': 'w9_',
+        'world_10': 'w10_',
+        'world_11': 'w11_',
+        'world_12': 'w12_',
+      };
+
+      for (final entry in allowedPrefixesByWorld.entries) {
+        final world = state.worldById(entry.key);
+        final taskIds = world.lessons
+            .expand((lesson) => lesson.taskList)
+            .map((task) => task.taskId)
+            .toList();
+        final prefixedIds = taskIds
+            .where(
+              (taskId) =>
+                  taskId.startsWith(entry.value) ||
+                  taskId.contains('_${entry.value}'),
+            )
+            .toList();
+
+        expect(
+          prefixedIds,
+          isNotEmpty,
+          reason: '${entry.key} should keep stable prefixed authored ids',
+        );
+        for (final taskId in taskIds) {
+          if (!taskId.contains('_w') && !taskId.startsWith('w')) {
+            continue;
+          }
+          expect(
+            taskId.startsWith(entry.value) ||
+                taskId.contains('_${entry.value}'),
+            isTrue,
+            reason:
+                '${entry.key} uses unexpected prefixed task id $taskId; keep legacy owner prefix explicit or rename in a dedicated wave',
+          );
+        }
+      }
+    },
+  );
+
+  test('Key concept concern seams keep minimum mastery coverage', () {
+    final state = Act0ShellStateV1.sample;
+
+    final bucketsWorld = state.worldById('world_2');
+    final bucketTasks = bucketsWorld.lessons
+        .where(
+          (lesson) => <String>[
+            'hand_discipline_buckets',
+            'continue_or_let_go',
+            'hand_discipline_apply',
+            'discipline_checkpoint',
+          ].contains(lesson.lessonId),
+        )
+        .expand((lesson) => lesson.taskList)
+        .toList();
+    expect(
+      bucketTasks.map((task) => task.taskId),
+      containsAll(<String>[
+        'hand_discipline_buckets_premium',
+        'hand_discipline_buckets_strong',
+        'hand_discipline_buckets_medium',
+        'hand_discipline_buckets_trash',
+      ]),
+    );
+    expect(
+      bucketTasks
+          .where((task) => task.resolvedTaskFamily == Act0TaskFamilyV1.transfer)
+          .map((task) => task.taskId),
+      contains('discipline_checkpoint_checkpoint_table_discipline'),
+    );
+
+    final showdownLesson = state
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'showdown_winning');
+    final rankingLesson = state
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'hand_rankings_table');
+    expect(
+      showdownLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'showdown_best_hand_drill',
+        'showdown_kicker_drill',
+        'showdown_board_plays_drill',
+        'showdown_tie_drill',
+      ]),
+    );
+    expect(
+      rankingLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'hand_rankings_pair_drill',
+        'hand_rankings_two_pair_drill',
+        'hand_rankings_trips_drill',
+        'hand_rankings_straight_drill',
+        'hand_rankings_flush_drill',
+        'hand_rankings_best_five_drill',
+      ]),
+    );
+
+    final madeHandCheckpoint = state
+        .worldById('world_7')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'range_thinking_checkpoint');
+    expect(
+      madeHandCheckpoint.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w6_kicker_showdown_compare',
+        'w6_board_pair_strength_compare',
+        'w6_checkpoint_table_best_five',
+      ]),
+    );
+    expect(
+      madeHandCheckpoint.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w6_suited_offsuit_weight_compare',
+        'w6_pair_vs_suited_weight_compare',
+        'w6_checkpoint_table_combo_weight',
+      ]),
+    );
+
+    final comboLesson = state
+        .worldById('world_7')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'range_combo_counts');
+    expect(comboLesson.taskList.length, greaterThanOrEqualTo(5));
+    expect(
+      comboLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w6_ak_combos',
+        'w6_pair_combos',
+        'w6_combo_weight_compare',
+      ]),
+    );
+
+    final priceLesson = state
+        .worldById('world_5')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'call_price');
+    expect(
+      priceLesson.taskList.map((task) => task.taskId),
+      containsAll(<String>[
+        'w4_good_price_call',
+        'w4_bad_price_fold',
+        'w4_cheap_price_marginal_call',
+        'w4_big_price_marginal_fold',
+      ]),
+    );
+    final priceCheckpoint = state
+        .worldById('world_5')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'price_checkpoint');
+    expect(
+      priceCheckpoint.taskList.map((task) => task.taskId),
+      contains('w4_checkpoint_table_price'),
+    );
   });
 
   test('World 5 and 6 recap tasks use real takeaway copy', () {
@@ -12066,6 +14910,8 @@ void main() {
                   source: 'Action words',
                 ),
               ],
+              perfectClearCount: 4,
+              completedClearCount: 4,
             ),
             onReplay: () {},
             onContinue: () {},
@@ -12077,6 +14923,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Clean pass'), findsOneWidget);
+    expect(find.text('Lesson complete'), findsOneWidget);
+    expect(find.text('Action words'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_suggested_next')),
       findsOneWidget,
@@ -12099,7 +14947,13 @@ void main() {
       find.text('Betting decisions +6  •  Table sense +2'),
       findsOneWidget,
     );
+    expect(find.text('Unlocked now: Blinds and action order'), findsOneWidget);
+    expect(find.text('Perfect path'), findsOneWidget);
     expect(find.text('Continue to Blinds and action order.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+      findsNothing,
+    );
     final gateMessage = tester.widget<Text>(
       find.byKey(const Key('act0_shell_block_summary_gate_message')),
     );
@@ -12120,6 +14974,172 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('World completion summary surfaces unlock and clean progress', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0BlockCompletionShellV1(
+            summary: const Act0BlockCompletionSummaryV1(
+              lessonTitle: 'Showdown winning',
+              xpEarned: 24,
+              errorCount: 0,
+              taskCount: 4,
+              correctCount: 4,
+              startLevel: 1,
+              endLevel: 2,
+              startXp: 188,
+              endXp: 12,
+              xpTarget: 200,
+              sharkyLine: 'You closed the first world cleanly.',
+              skillGains: <Act0SkillGainV1>[
+                Act0SkillGainV1(
+                  label: 'Hand reading',
+                  gain: 8,
+                  source: 'Poker from Zero',
+                ),
+                Act0SkillGainV1(
+                  label: 'Table sense',
+                  gain: 5,
+                  source: 'Poker from Zero',
+                ),
+              ],
+              milestoneTier: Act0ProgressMilestoneTierV1.world,
+              worldNumber: 1,
+              worldTitle: 'Poker from Zero',
+              nextWorldNumber: 2,
+              nextWorldTitle: 'Hand Discipline',
+              perfectClearCount: 12,
+              completedClearCount: 12,
+            ),
+            onReplay: () {},
+            onContinue: () {},
+            onBackToMap: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('World 1 complete'), findsOneWidget);
+    expect(find.text('Poker from Zero'), findsOneWidget);
+    expect(
+      find.text('Unlocked now: World 2 - Hand Discipline'),
+      findsOneWidget,
+    );
+    expect(find.text('Perfect path'), findsOneWidget);
+    expect(find.text('Open next world'), findsOneWidget);
+    expect(find.text('Continue to Hand Discipline.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+      findsNothing,
+    );
+
+    final detailTitle = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_detail_title')),
+    );
+    final unlock = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_block_summary_unlock_label')),
+    );
+    expect(detailTitle.maxLines, 2);
+    expect(detailTitle.overflow, TextOverflow.fade);
+    expect(unlock.maxLines, 2);
+    expect(unlock.overflow, TextOverflow.fade);
+  });
+
+  testWidgets(
+    'World completion with imperfect clear shows optional Review for perfect when safe',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0BlockCompletionShellV1(
+              summary: const Act0BlockCompletionSummaryV1(
+                lessonTitle: 'Showdown winning',
+                xpEarned: 24,
+                errorCount: 1,
+                taskCount: 4,
+                correctCount: 4,
+                startLevel: 1,
+                endLevel: 2,
+                startXp: 188,
+                endXp: 12,
+                xpTarget: 200,
+                milestoneTier: Act0ProgressMilestoneTierV1.world,
+                worldNumber: 1,
+                worldTitle: 'Poker from Zero',
+                nextWorldNumber: 2,
+                nextWorldTitle: 'Hand Discipline',
+                perfectClearCount: 10,
+                completedClearCount: 12,
+                hasSafeReviewTarget: true,
+              ),
+              onReplay: () {},
+              onOpenReview: () {},
+              onContinue: () {},
+              onBackToMap: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Open next world'), findsOneWidget);
+      expect(find.text('Review for perfect'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'World completion without safe review target hides Review for perfect',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0BlockCompletionShellV1(
+              summary: const Act0BlockCompletionSummaryV1(
+                lessonTitle: 'Showdown winning',
+                xpEarned: 24,
+                errorCount: 0,
+                taskCount: 4,
+                correctCount: 4,
+                startLevel: 1,
+                endLevel: 2,
+                startXp: 188,
+                endXp: 12,
+                xpTarget: 200,
+                milestoneTier: Act0ProgressMilestoneTierV1.world,
+                worldNumber: 1,
+                worldTitle: 'Poker from Zero',
+                nextWorldNumber: 2,
+                nextWorldTitle: 'Hand Discipline',
+                perfectClearCount: 10,
+                completedClearCount: 12,
+                hasSafeReviewTarget: false,
+              ),
+              onReplay: () {},
+              onOpenReview: () {},
+              onContinue: () {},
+              onBackToMap: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Open next world'), findsOneWidget);
+      expect(find.text('Review for perfect'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets('Block summary separates quick fixes from deep leaks', (
     tester,
@@ -12142,6 +15162,9 @@ void main() {
               nextLessonTitle: 'Blinds and action order',
               quickFixCount: 1,
               deepLeakCount: 0,
+              perfectClearCount: 4,
+              completedClearCount: 5,
+              hasReplayForPerfectTarget: true,
             ),
             onReplay: () {},
             onContinue: () {},
@@ -12163,6 +15186,11 @@ void main() {
     );
     expect(
       find.text('Continue now, then check quick fixes in Review.'),
+      findsOneWidget,
+    );
+    expect(find.text('Replay for perfect'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
       findsOneWidget,
     );
     expect(
@@ -12206,8 +15234,14 @@ void main() {
               nextLessonTitle: 'Blinds and action order',
               quickFixCount: 0,
               deepLeakCount: 1,
+              perfectClearCount: 4,
+              completedClearCount: 5,
+              hasSafeReviewTarget: true,
             ),
             onReplay: () {},
+            onOpenReview: () {
+              continued += 100;
+            },
             onContinue: () {
               continued += 1;
             },
@@ -12227,8 +15261,12 @@ void main() {
     expect(find.text('Deep leaks: 1'), findsOneWidget);
     expect(find.text('Go to Review and fix the deep leak.'), findsOneWidget);
     expect(find.textContaining('Deep leak saved for Review.'), findsOneWidget);
-    expect(find.text('Go to Review'), findsOneWidget);
-    expect(find.text('Replay block before Review'), findsOneWidget);
+    expect(find.text('Review first'), findsOneWidget);
+    expect(find.text('Open next lesson'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_quality_cta')),
+      findsOneWidget,
+    );
     final habitDetail = tester.widget<Text>(
       find.byKey(const Key('act0_shell_block_summary_habit_reward_detail')),
     );
@@ -12239,7 +15277,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_continue_cta')),
     );
     await tester.pumpAndSettle();
-    expect(continued, 1);
+    expect(continued, 100);
   });
 
   testWidgets('Review and Profile shells feel app-like and avoid taxonomy', (
