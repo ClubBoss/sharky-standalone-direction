@@ -13,12 +13,62 @@ enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
 
 enum Act0ProgressMilestoneTierV1 { lesson, world }
 
+enum Act0TheoryPresentationRoleV1 {
+  tableReading,
+  conceptIntro,
+  actionPrep,
+  recapCheck,
+  denseSynthesis,
+}
+
 enum Act0MilestoneCtaKindV1 {
   continueForward,
   replayForPerfect,
   reviewFirst,
   reviewForPerfect,
   backToMap,
+}
+
+Act0TheoryPresentationRoleV1 resolveAct0TheoryPresentationRoleV1({
+  String? taskId,
+  required Act0RunnerStateV1 runner,
+  required int teachingStepIndex,
+}) {
+  final normalizedTaskId =
+      (taskId?.trim().isNotEmpty == true ? taskId!.trim() : runner.lessonId)
+          .toLowerCase();
+  if (normalizedTaskId.endsWith('what_poker_is_theory')) {
+    return teachingStepIndex <= 0
+        ? Act0TheoryPresentationRoleV1.conceptIntro
+        : Act0TheoryPresentationRoleV1.tableReading;
+  }
+  if (normalizedTaskId.endsWith('your_first_hand_preflop') ||
+      normalizedTaskId.endsWith('blinds_theory')) {
+    return Act0TheoryPresentationRoleV1.tableReading;
+  }
+  if (normalizedTaskId.endsWith('seat_order_decision')) {
+    return Act0TheoryPresentationRoleV1.denseSynthesis;
+  }
+  if (normalizedTaskId.endsWith('actions_theory') ||
+      normalizedTaskId.endsWith('hand_discipline_buckets_intro') ||
+      normalizedTaskId.endsWith('continue_intro') ||
+      normalizedTaskId.endsWith('discipline_intro') ||
+      normalizedTaskId.endsWith('position_apply_intro')) {
+    return Act0TheoryPresentationRoleV1.actionPrep;
+  }
+  if (normalizedTaskId.endsWith('apply_intro') ||
+      normalizedTaskId.endsWith('checkpoint_intro') ||
+      normalizedTaskId.endsWith('showdown_theory')) {
+    return Act0TheoryPresentationRoleV1.recapCheck;
+  }
+  if (normalizedTaskId.endsWith('cards_ranks_suits_theory') ||
+      normalizedTaskId.endsWith('positions_theory') ||
+      normalizedTaskId.endsWith('button_intro') ||
+      normalizedTaskId.endsWith('position_checkpoint_intro') ||
+      normalizedTaskId.endsWith('hand_rankings_theory')) {
+    return Act0TheoryPresentationRoleV1.conceptIntro;
+  }
+  return Act0TheoryPresentationRoleV1.tableReading;
 }
 
 class Act0RunnerCompletionSummaryV1 {
@@ -458,6 +508,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     required this.runner,
     this.selectedTaskId,
     this.selectedTaskFamily,
+    this.theoryRecallStep,
     required this.onBack,
     required this.onContinueTheory,
     this.onPreviousTheory,
@@ -477,6 +528,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerStateV1 runner;
   final String? selectedTaskId;
   final Act0TaskFamilyV1? selectedTaskFamily;
+  final Act0TeachingStepV1? theoryRecallStep;
   final VoidCallback onBack;
   final VoidCallback onContinueTheory;
   final VoidCallback? onPreviousTheory;
@@ -1000,6 +1052,27 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     return '${widget.runner.lessonId}|${widget.runner.beatIndex}|${widget.runner.phase.name}|${widget.runner.teachingStepIndex}|${widget.runner.selectedOptionId ?? ''}';
   }
 
+  Future<void> _openTheoryRecallSheet() async {
+    final step = widget.theoryRecallStep;
+    if (step == null) {
+      return;
+    }
+    final bodyBlocks = act0BuildInstructionBlocksV1(
+      text: step.body,
+      compact: true,
+    );
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: false,
+      builder: (context) => _TheoryRecallSheetV1(
+        label: act0RuntimeTheoryRecallLabelV1(context),
+        title: step.title,
+        bodyBlocks: bodyBlocks,
+      ),
+    );
+  }
+
   void _syncTheoryAdvanceLock({bool initial = false}) {
     _theoryUnlockTimer?.cancel();
     final nextKey = _currentAdvanceLockKey;
@@ -1088,7 +1161,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final hasNextSupportSegment =
         cappedSupportSegmentIndex < learningRailSupportSegments.length - 1;
     final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
-    final learningRailProgress = _learningRailProgressLabel(runner);
+    final learningRailProgress = isRefinedDev2
+        ? null
+        : _learningRailProgressLabel(runner);
+    final theoryPresentationRole = _showBottomLearningRail
+        ? resolveAct0TheoryPresentationRoleV1(
+            taskId: widget.selectedTaskId,
+            runner: runner,
+            teachingStepIndex: runner.teachingStepIndex,
+          )
+        : null;
     final hasSeatTargets = runner.options.any(
       (option) => option.seatId != null,
     );
@@ -1107,6 +1189,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       hasSeatTargets: hasSeatTargets,
       taskFamily: widget.selectedTaskFamily,
     );
+    final compactBottomDockClearance =
+        isRefinedDev2 &&
+        table.density == Act0TableDensityV1.compactLesson &&
+        bottomContext.owner != _RunnerBottomOwnerV1.feedback;
     final centerLabelOverride = _resolveTableCueDisplayV1(
       context: context,
       runner: runner,
@@ -1155,6 +1241,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         bottomContext.promptSupportLine?.trim().isNotEmpty == true
         ? bottomContext.promptSupportLine
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
+    final theoryRecallLabel = widget.theoryRecallStep == null
+        ? null
+        : act0RuntimeTheoryRecallLabelV1(context);
     final showStepIntro =
         isTeaching && runner.teachingStepIndex == 0 && runner.beatIndex > 1;
     final showTopInstructionCard = !isRefinedDev2;
@@ -1287,6 +1376,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                             : null,
                         selectedSeatId: selectedSeatId,
                         selectedSeatFeedbackState: selectedSeatFeedbackState,
+                        compactBottomDockClearance: compactBottomDockClearance,
                       ),
                     ),
                     if (interactiveCallout.isNotEmpty) ...[
@@ -1370,6 +1460,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       : widget.onContinueTheory,
                   sharkyLine: theoryCoachLine,
                   sharkyMood: runner.sharky.preSessionMood,
+                  emphasizePrompt:
+                      theoryPresentationRole ==
+                          Act0TheoryPresentationRoleV1.conceptIntro ||
+                      theoryPresentationRole ==
+                          Act0TheoryPresentationRoleV1.actionPrep ||
+                      theoryPresentationRole ==
+                          Act0TheoryPresentationRoleV1.recapCheck,
                 )
               : isTeaching
               ? FilledButton(
@@ -1397,6 +1494,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         helperLine: promptCoachLine,
                         options: runner.options,
                         onBack: null,
+                        recallLabel: theoryRecallLabel,
+                        onRecall: widget.theoryRecallStep == null
+                            ? null
+                            : _openTheoryRecallSheet,
                       )
                     : runner.sizingConfig.isEnabled
                     ? _ActionPromptPanelV1(
@@ -1406,6 +1507,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         embedChildInSurface: bottomContext.isTrailHistory,
                         question: question,
                         onBack: null,
+                        recallLabel: theoryRecallLabel,
+                        onRecall: widget.theoryRecallStep == null
+                            ? null
+                            : _openTheoryRecallSheet,
                         child: _SizingConfirmPanelV1(
                           selectedPreset: runner.selectedPreset,
                           onConfirm: widget.onConfirmSizingPreset,
@@ -1418,6 +1523,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         embedChildInSurface: bottomContext.isTrailHistory,
                         question: question,
                         onBack: null,
+                        recallLabel: theoryRecallLabel,
+                        onRecall: widget.theoryRecallStep == null
+                            ? null
+                            : _openTheoryRecallSheet,
                         child: _ActionPanelV1(
                           options: runner.options,
                           selectedOptionId: runner.selectedOptionId,
@@ -1985,6 +2094,7 @@ class _LearningRailV1 extends StatelessWidget {
     required this.onAdvance,
     required this.sharkyLine,
     required this.sharkyMood,
+    this.emphasizePrompt = false,
   });
 
   final String? taskLabel;
@@ -1998,6 +2108,7 @@ class _LearningRailV1 extends StatelessWidget {
   final VoidCallback onAdvance;
   final String sharkyLine;
   final Act0SharkyMoodV1 sharkyMood;
+  final bool emphasizePrompt;
 
   @override
   Widget build(BuildContext context) {
@@ -2028,16 +2139,24 @@ class _LearningRailV1 extends StatelessWidget {
             ),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 104, maxHeight: 156),
+            constraints: const BoxConstraints(minHeight: 124, maxHeight: 168),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 156;
+                final compactRail = constraints.maxHeight <= 168;
                 final promptMaxLines = compactRail ? 2 : null;
                 final supportMaxLines = compactRail ? 2 : null;
+                final promptFontSize = emphasizePrompt
+                    ? (compactRail ? 15.0 : 15.2)
+                    : (compactRail ? 14.2 : 14.6);
+                final supportFontSize = emphasizePrompt
+                    ? (compactRail ? 12.2 : 12.2)
+                    : (compactRail ? 12.0 : 12.0);
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: compactRail ? 10 : 12,
-                    vertical: compactRail ? 3 : 6,
+                    horizontal: compactRail ? 12 : 12,
+                    vertical: emphasizePrompt
+                        ? (compactRail ? 9 : 7)
+                        : (compactRail ? 8 : 6),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -2053,10 +2172,10 @@ class _LearningRailV1 extends StatelessWidget {
                                   children: [
                                     Act0SharkyMascotV1(
                                       mood: sharkyMood,
-                                      tone: Act0ShellTokensV1.textMuted,
-                                      size: compactRail ? 12 : 16,
+                                      tone: Act0ShellTokensV1.info,
+                                      size: compactRail ? 16 : 16,
                                     ),
-                                    SizedBox(width: compactRail ? 3 : 6),
+                                    SizedBox(width: compactRail ? 6 : 6),
                                     Expanded(
                                       child: Text(
                                         taskLabel!,
@@ -2066,9 +2185,10 @@ class _LearningRailV1 extends StatelessWidget {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: Act0ShellTokensV1.label.copyWith(
-                                          color: Act0ShellTokensV1.textMuted,
+                                          color: Act0ShellTokensV1.info,
                                           letterSpacing: 0.16,
-                                          fontSize: compactRail ? 8.9 : 10.2,
+                                          fontSize: compactRail ? 10.2 : 10.2,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
@@ -2092,7 +2212,7 @@ class _LearningRailV1 extends StatelessWidget {
                               ),
                           ],
                         ),
-                        SizedBox(height: compactRail ? 1 : 4),
+                        SizedBox(height: compactRail ? 4 : 4),
                       ],
                       Text(
                         _formatInstructionCopyV1(
@@ -2105,13 +2225,13 @@ class _LearningRailV1 extends StatelessWidget {
                         softWrap: true,
                         style: Act0ShellTokensV1.body.copyWith(
                           color: Act0ShellTokensV1.text,
-                          fontSize: compactRail ? 12.6 : 14.6,
-                          height: compactRail ? 1.04 : 1.06,
+                          fontSize: promptFontSize,
+                          height: compactRail ? 1.05 : 1.06,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
                       if (hasSupportLine) ...[
-                        SizedBox(height: compactRail ? 2 : 4),
+                        SizedBox(height: compactRail ? 4 : 4),
                         _LearningRailKeyIdeaV1(
                           supportSegments: supportSegments,
                           activeSegmentIndex: activeSupportSegmentIndex,
@@ -2119,7 +2239,7 @@ class _LearningRailV1 extends StatelessWidget {
                           maxLines: supportMaxLines,
                         ),
                       ] else if (showFallbackCoachLine) ...[
-                        SizedBox(height: compactRail ? 2 : 4),
+                        SizedBox(height: compactRail ? 4 : 4),
                         Text(
                           fallbackCoachLine,
                           key: const Key(
@@ -2130,13 +2250,13 @@ class _LearningRailV1 extends StatelessWidget {
                           softWrap: true,
                           style: Act0ShellTokensV1.body.copyWith(
                             color: Act0ShellTokensV1.textMuted,
-                            fontSize: compactRail ? 9.8 : 11.8,
-                            height: compactRail ? 1.04 : 1.08,
+                            fontSize: supportFontSize,
+                            height: compactRail ? 1.08 : 1.08,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
-                      SizedBox(height: compactRail ? 3 : 6),
+                      SizedBox(height: compactRail ? 6 : 6),
                       Row(
                         children: [
                           _LearningRailNavButtonV1(
@@ -2244,8 +2364,8 @@ class _LearningRailKeyIdeaV1 extends StatelessWidget {
       softWrap: true,
       style: Act0ShellTokensV1.body.copyWith(
         color: Act0ShellTokensV1.textMuted,
-        fontSize: compact ? 9.5 : 12.0,
-        height: compact ? 1.04 : 1.10,
+        fontSize: compact ? 12.0 : 12.0,
+        height: compact ? 1.08 : 1.10,
         fontWeight: FontWeight.w700,
       ),
     );
@@ -2355,6 +2475,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     this.completionSummary,
     this.selectedSeatId,
     this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
+    this.compactBottomDockClearance = false,
   });
 
   final Act0TableStateV1 table;
@@ -2375,6 +2496,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? selectedSeatId;
   final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
+  final bool compactBottomDockClearance;
 
   @override
   Widget build(BuildContext context) {
@@ -2397,6 +2519,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
       completionSummary: completionSummary,
       selectedSeatId: selectedSeatId,
       selectedSeatFeedbackState: selectedSeatFeedbackState,
+      compactBottomDockClearance: compactBottomDockClearance,
     );
   }
 }
@@ -2528,6 +2651,8 @@ class _SeatTapPromptV1 extends StatelessWidget {
     required this.helperLine,
     required this.options,
     this.onBack,
+    this.recallLabel,
+    this.onRecall,
   });
 
   final String taskLabel;
@@ -2535,6 +2660,8 @@ class _SeatTapPromptV1 extends StatelessWidget {
   final String helperLine;
   final List<Act0RunnerOptionV1> options;
   final VoidCallback? onBack;
+  final String? recallLabel;
+  final VoidCallback? onRecall;
 
   @override
   Widget build(BuildContext context) {
@@ -2584,7 +2711,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
                     maxLines: 3,
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
-                      fontSize: 15,
+                      fontSize: 15.4,
                       height: 1.08,
                       fontWeight: FontWeight.w900,
                     ),
@@ -2596,10 +2723,14 @@ class _SeatTapPromptV1 extends StatelessWidget {
                   maxLines: 2,
                   style: Act0ShellTokensV1.muted.copyWith(
                     fontWeight: FontWeight.w800,
-                    fontSize: 12.2,
+                    fontSize: 12.6,
                     height: 1.10,
                   ),
                 ),
+                if (onRecall != null && recallLabel != null) ...[
+                  const SizedBox(height: 6),
+                  _TheoryRecallCtaV1(label: recallLabel!, onPressed: onRecall!),
+                ],
               ],
             ),
           ),
@@ -4036,6 +4167,7 @@ class _Act0TableV1 extends StatelessWidget {
     this.completionSummary,
     this.selectedSeatId,
     this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
+    this.compactBottomDockClearance = false,
   });
 
   final Act0TableStateV1 table;
@@ -4056,6 +4188,7 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? selectedSeatId;
   final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
+  final bool compactBottomDockClearance;
 
   @override
   Widget build(BuildContext context) {
@@ -4099,8 +4232,14 @@ class _Act0TableV1 extends StatelessWidget {
           builder: (context, constraints) {
             final width = constraints.maxWidth;
             final height = constraints.maxHeight;
-            final seatSlots = _seatSlotsForVariant(visualVariant);
-            final chipSlots = _chipSlotsForVariant(visualVariant);
+            final seatSlots = _seatSlotsForVariant(
+              visualVariant,
+              compactBottomDockClearance: compactBottomDockClearance,
+            );
+            final chipSlots = _chipSlotsForVariant(
+              visualVariant,
+              compactBottomDockClearance: compactBottomDockClearance,
+            );
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
                 ? playbackActiveSeatId
                 : _resolveActiveSeatId(table);
@@ -4398,11 +4537,24 @@ class _DockBackButtonV1 extends StatelessWidget {
   }
 }
 
-List<Offset> _seatSlotsForVariant(Act0ShellTableVisualVariantV1 variant) {
+List<Offset> _seatSlotsForVariant(
+  Act0ShellTableVisualVariantV1 variant, {
+  bool compactBottomDockClearance = false,
+}) {
   switch (variant) {
     case Act0ShellTableVisualVariantV1.classic:
       return _SeatPlacementV1.defaultSlots;
     case Act0ShellTableVisualVariantV1.refinedDev2:
+      if (compactBottomDockClearance) {
+        return const <Offset>[
+          Offset(0.50, 0.84),
+          Offset(0.12, 0.68),
+          Offset(0.12, 0.33),
+          Offset(0.50, 0.12),
+          Offset(0.88, 0.33),
+          Offset(0.88, 0.68),
+        ];
+      }
       return const <Offset>[
         Offset(0.50, 0.91),
         Offset(0.12, 0.75),
@@ -4414,11 +4566,24 @@ List<Offset> _seatSlotsForVariant(Act0ShellTableVisualVariantV1 variant) {
   }
 }
 
-List<Offset> _chipSlotsForVariant(Act0ShellTableVisualVariantV1 variant) {
+List<Offset> _chipSlotsForVariant(
+  Act0ShellTableVisualVariantV1 variant, {
+  bool compactBottomDockClearance = false,
+}) {
   switch (variant) {
     case Act0ShellTableVisualVariantV1.classic:
       return _BetChipPlacementV1.defaultChipSlots;
     case Act0ShellTableVisualVariantV1.refinedDev2:
+      if (compactBottomDockClearance) {
+        return const <Offset>[
+          Offset(0.50, 0.64),
+          Offset(0.24, 0.58),
+          Offset(0.26, 0.30),
+          Offset(0.50, 0.29),
+          Offset(0.74, 0.30),
+          Offset(0.76, 0.58),
+        ];
+      }
       return const <Offset>[
         Offset(0.50, 0.71),
         Offset(0.24, 0.64),
@@ -7531,6 +7696,8 @@ class _ActionPromptPanelV1 extends StatelessWidget {
     this.contextLine,
     this.embedChildInSurface = false,
     this.onBack,
+    this.recallLabel,
+    this.onRecall,
   });
 
   final String taskLabel;
@@ -7540,6 +7707,8 @@ class _ActionPromptPanelV1 extends StatelessWidget {
   final String? contextLine;
   final bool embedChildInSurface;
   final VoidCallback? onBack;
+  final String? recallLabel;
+  final VoidCallback? onRecall;
 
   @override
   Widget build(BuildContext context) {
@@ -7611,6 +7780,14 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                     height: 1.12,
                   ),
                 ),
+                if (onRecall != null && recallLabel != null) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                  _TheoryRecallCtaV1(
+                    label: recallLabel!,
+                    onPressed: onRecall!,
+                    centered: true,
+                  ),
+                ],
                 if (integrated) ...[
                   const SizedBox(height: Act0ShellTokensV1.gapSm),
                   Container(
@@ -7683,6 +7860,141 @@ class _ActionPromptPanelV1 extends StatelessWidget {
         ],
         if (!embedChildInSurface) child,
       ],
+    );
+  }
+}
+
+class _TheoryRecallCtaV1 extends StatelessWidget {
+  const _TheoryRecallCtaV1({
+    required this.label,
+    required this.onPressed,
+    this.centered = false,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final bool centered;
+
+  @override
+  Widget build(BuildContext context) {
+    final button = TextButton.icon(
+      key: const Key('act0_shell_theory_recall_cta'),
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+        minimumSize: const Size(0, 28),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        foregroundColor: Act0ShellTokensV1.info,
+      ),
+      icon: const Icon(Icons.auto_stories_rounded, size: 16),
+      label: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(
+          color: Act0ShellTokensV1.info,
+          fontSize: 11.6,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.12,
+        ),
+      ),
+    );
+    if (centered) {
+      return Align(alignment: Alignment.center, child: button);
+    }
+    return Align(alignment: Alignment.centerLeft, child: button);
+  }
+}
+
+class _TheoryRecallSheetV1 extends StatelessWidget {
+  const _TheoryRecallSheetV1({
+    required this.label,
+    required this.title,
+    required this.bodyBlocks,
+  });
+
+  final String label;
+  final String title;
+  final List<String> bodyBlocks;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+        child: Container(
+          key: const Key('act0_shell_theory_recall_sheet'),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+            border: Border.all(
+              color: Act0ShellTokensV1.info.withValues(alpha: 0.26),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.info,
+                        fontSize: 10.4,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.18,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    key: const Key('act0_shell_theory_recall_close_cta'),
+                    onPressed: () => Navigator.of(context).pop(),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints.tightFor(
+                      width: 28,
+                      height: 28,
+                    ),
+                    icon: const Icon(Icons.close_rounded, size: 18),
+                    color: Act0ShellTokensV1.textMuted,
+                  ),
+                ],
+              ),
+              if (title.trim().isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  title.trim(),
+                  key: const Key('act0_shell_theory_recall_title'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontSize: 16,
+                    height: 1.08,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+              for (var i = 0; i < bodyBlocks.length; i++) ...[
+                SizedBox(height: i == 0 ? 8 : 6),
+                Text(
+                  bodyBlocks[i],
+                  key: i == 0
+                      ? const Key('act0_shell_theory_recall_body')
+                      : null,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontSize: 13,
+                    height: 1.14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

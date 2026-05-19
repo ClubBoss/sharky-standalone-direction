@@ -1578,6 +1578,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ),
           )
         : null;
+    final showTheoryRecallAffordance =
+        isPlayRunner &&
+        playSelectedTask != null &&
+        _phase == Act0LessonPhaseV1.drill &&
+        _selectedOptionId == null &&
+        !_rapidPracticeLoop &&
+        !_placementDiagnosticActive &&
+        _activeRepairTaskId != playSelectedTask.taskId &&
+        !_lessonRunRetriedTaskIds.contains(playSelectedTask.taskId) &&
+        playRunner!.teachingSteps.isNotEmpty &&
+        _teachingStepIndex >= playRunner.teachingSteps.length;
+    final theoryRecallStep = showTheoryRecallAffordance
+        ? playRunner.teachingSteps.last
+        : null;
     final showTopBar =
         _bootSurfaceReady && !_showPlacement && !_showWelcome && !isPlayRunner;
     return Scaffold(
@@ -2024,6 +2038,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 selectedTaskId: playSelectedTask?.taskId,
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
+                                theoryRecallStep: theoryRecallStep,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
                                 relaxTheoryAdvanceLock: _completedTaskIds

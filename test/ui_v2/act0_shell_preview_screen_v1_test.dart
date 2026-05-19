@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
@@ -81,6 +82,15 @@ int _countDrillTripletMatchesV1(
 
 Act0LessonTaskV1 _taskByIdV1(List<Act0LessonTaskV1> tasks, String taskId) {
   return tasks.firstWhere((candidate) => candidate.taskId == taskId);
+}
+
+Act0LessonTaskV1 _taskBySuffixV1(
+  List<Act0LessonTaskV1> tasks,
+  String taskIdSuffix,
+) {
+  return tasks.firstWhere(
+    (candidate) => candidate.taskId.endsWith(taskIdSuffix),
+  );
 }
 
 bool _isExplanationStyleOptionLabelV1(String label) {
@@ -4716,7 +4726,10 @@ void main() {
   testWidgets(
     'Compact theory rail gives prompt and support two-line readability without overflow',
     (tester) async {
-      final baseTask = Act0ShellStateV1.sample.currentLesson.taskList.first;
+      final baseTask = _taskByIdV1(
+        _allAct0TasksV1(),
+        'your_first_hand_preflop',
+      );
       final runner = baseTask.runner.copyWith(
         phase: Act0LessonPhaseV1.theory,
         teachingSteps: const <Act0TeachingStepV1>[
@@ -4759,6 +4772,9 @@ void main() {
       final tableRect = tester.getRect(
         find.byKey(const Key('act0_shell_table')),
       );
+      final heroSeatRect = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_node_btn')),
+      );
       final ctaRect = tester.getRect(
         find.byKey(const Key('act0_shell_continue_cta')),
       );
@@ -4768,8 +4784,392 @@ void main() {
       expect(support.maxLines, 2);
       expect(support.overflow, TextOverflow.fade);
       expect(railRect.height, lessThanOrEqualTo(146));
+      expect(railRect.top - heroSeatRect.bottom, greaterThanOrEqualTo(48));
       expect(tableRect.overlaps(ctaRect), isFalse);
       expect(ctaRect.bottom, lessThanOrEqualTo(812));
+      expect(prompt.style?.fontSize, greaterThanOrEqualTo(13.0));
+      expect(support.style?.fontSize, greaterThanOrEqualTo(10.2));
+    },
+  );
+
+  testWidgets(
+    'Compact theory rail gives the teaching bite premium prompt-card hierarchy',
+    (tester) async {
+      final task = _allAct0TasksV1().firstWhere(
+        (task) => task.taskId.endsWith('seat_order_decision'),
+      );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Read the table first'), findsOneWidget);
+      expect(find.text('Order matters before comfort.'), findsOneWidget);
+      expect(find.text('UTG acts before BTN.'), findsOneWidget);
+
+      final rail = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail')),
+      );
+      final taskLabel = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_task_label')),
+      );
+      final title = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_runner_prompt')),
+      );
+      final body = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_learning_rail_support_line')),
+      );
+      expect(rail.height, greaterThanOrEqualTo(124));
+      expect(rail.height, lessThanOrEqualTo(168));
+      expect(taskLabel.style?.fontSize, greaterThanOrEqualTo(10.0));
+      expect(taskLabel.style?.fontWeight, FontWeight.w800);
+      expect(title.style?.fontSize, greaterThanOrEqualTo(14.2));
+      expect(body.style?.fontSize, greaterThanOrEqualTo(12.0));
+      expect(body.maxLines, 2);
+      expect(body.overflow, TextOverflow.fade);
+    },
+  );
+
+  test(
+    'Compact theory rail teaching bodies stay inside one-bite segment budget',
+    () {
+      final offenders = <String>[];
+
+      for (final task in _allAct0TasksV1()) {
+        final runner = task.runner;
+        for (var index = 0; index < runner.teachingSteps.length; index++) {
+          final body = runner.teachingSteps[index].body.trim();
+          if (body.isEmpty) {
+            continue;
+          }
+          final segments = act0BuildInstructionBlocksV1(
+            text: body,
+            compact: true,
+          );
+          for (
+            var segmentIndex = 0;
+            segmentIndex < segments.length;
+            segmentIndex++
+          ) {
+            final segment = segments[segmentIndex];
+            final words = _wordCountV1(segment);
+            final sentenceCount = RegExp(r'[.!?]').allMatches(segment).length;
+            if (words > 24 || sentenceCount > 4) {
+              offenders.add(
+                '${task.taskId} teachingSteps[$index] '
+                'segment ${segmentIndex + 1}: $words words, '
+                '$sentenceCount sentences',
+              );
+            }
+          }
+        }
+      }
+
+      expect(offenders, isEmpty, reason: offenders.join('\n'));
+    },
+  );
+
+  test(
+    'Known order-comfort theory seam is split into beginner micro-bites',
+    () {
+      final task = _allAct0TasksV1().firstWhere(
+        (task) => task.taskId.endsWith('seat_order_decision'),
+      );
+      final steps = task.runner.teachingSteps;
+
+      expect(steps, hasLength(greaterThanOrEqualTo(2)));
+      expect(steps.first.title, 'Order matters before comfort.');
+      expect(steps.first.body, 'UTG acts before BTN.');
+      expect(
+        steps[1].body,
+        isNot(
+          contains(
+            'so it cannot rely on the same late-position information edge',
+          ),
+        ),
+      );
+      for (final step in steps.take(2)) {
+        final segments = act0BuildInstructionBlocksV1(
+          text: step.body,
+          compact: true,
+        );
+        expect(segments, hasLength(1));
+        expect(
+          _wordCountV1(segments.single),
+          lessThanOrEqualTo(18),
+          reason: step.body,
+        );
+        expect(
+          RegExp(r'[.!?]').allMatches(segments.single).length,
+          lessThanOrEqualTo(1),
+          reason: step.body,
+        );
+      }
+    },
+  );
+
+  testWidgets(
+    'Split order-comfort theory bite keeps rail progress and table context',
+    (tester) async {
+      final task = _allAct0TasksV1().firstWhere(
+        (task) => task.taskId.endsWith('seat_order_decision'),
+      );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onPreviousTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_learning_rail')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_previous_cta')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_continue_cta')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_progress')),
+        findsNothing,
+      );
+      expect(find.text('Order matters before comfort.'), findsOneWidget);
+      expect(find.text('UTG acts before BTN.'), findsOneWidget);
+      expect(
+        find.textContaining('late-position information edge'),
+        findsNothing,
+      );
+    },
+  );
+
+  test(
+    'W1-W3 theory role classification stays stable for role-aware presentation',
+    () {
+      final tasks = _allAct0TasksV1();
+
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'what_poker_is_theory').taskId,
+          runner: _taskByIdV1(tasks, 'what_poker_is_theory').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.conceptIntro,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'what_poker_is_theory').taskId,
+          runner: _taskByIdV1(tasks, 'what_poker_is_theory').runner,
+          teachingStepIndex: 1,
+        ),
+        Act0TheoryPresentationRoleV1.tableReading,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'cards_ranks_suits_theory').taskId,
+          runner: _taskByIdV1(tasks, 'cards_ranks_suits_theory').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.conceptIntro,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'your_first_hand_preflop').taskId,
+          runner: _taskByIdV1(tasks, 'your_first_hand_preflop').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.tableReading,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'actions_theory').taskId,
+          runner: _taskByIdV1(tasks, 'actions_theory').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.actionPrep,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskByIdV1(tasks, 'apply_intro').taskId,
+          runner: _taskByIdV1(tasks, 'apply_intro').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.recapCheck,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskBySuffixV1(tasks, 'button_intro').taskId,
+          runner: _taskBySuffixV1(tasks, 'button_intro').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.conceptIntro,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskBySuffixV1(tasks, 'position_apply_intro').taskId,
+          runner: _taskBySuffixV1(tasks, 'position_apply_intro').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.actionPrep,
+      );
+      expect(
+        resolveAct0TheoryPresentationRoleV1(
+          taskId: _taskBySuffixV1(tasks, 'seat_order_decision').taskId,
+          runner: _taskBySuffixV1(tasks, 'seat_order_decision').runner,
+          teachingStepIndex: 0,
+        ),
+        Act0TheoryPresentationRoleV1.denseSynthesis,
+      );
+    },
+  );
+
+  testWidgets(
+    'Compact non-visual W1-W3 theory avoids article chrome and stays rail-anchored',
+    (tester) async {
+      final task = _taskByIdV1(_allAct0TasksV1(), 'what_poker_is_theory');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      final rail = find.byKey(const Key('act0_shell_learning_rail'));
+      final table = find.byKey(const Key('act0_shell_table'));
+
+      expect(
+        find.byKey(const Key('act0_shell_learning_first_theory_card')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_controls_only')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_progress')),
+        findsNothing,
+      );
+      expect(find.text('1/4'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_teaching_focus_labels')),
+        findsNothing,
+      );
+      expect(find.text('We start with Hold\'em cash.'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const Key('act0_shell_learning_rail_support_line')),
+            )
+            .data,
+        contains('Each player gets 2 private hole cards'),
+      );
+      expect(table, findsOneWidget);
+      expect(rail, findsOneWidget);
+
+      final tableRect = tester.getRect(table);
+      final railRect = tester.getRect(rail);
+      final prompt = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_runner_prompt')),
+      );
+
+      expect(tableRect.bottom, lessThan(railRect.top));
+      expect(railRect.top - tableRect.bottom, lessThanOrEqualTo(44));
+      expect(tableRect.height, greaterThanOrEqualTo(520));
+      expect(prompt.style?.fontSize, greaterThanOrEqualTo(15.0));
+    },
+  );
+
+  testWidgets(
+    'Compact table-reading theory keeps the table-first learning rail model',
+    (tester) async {
+      final task = _taskByIdV1(_allAct0TasksV1(), 'your_first_hand_preflop');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_learning_first_theory_card')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_controls_only')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_learning_rail')), findsOneWidget);
+      expect(find.text('A hand starts preflop.'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const Key('act0_shell_learning_rail_support_line')),
+            )
+            .data,
+        contains('You get two private cards'),
+      );
+
+      final tableRect = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      final railRect = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail')),
+      );
+      expect(tableRect.bottom, lessThan(railRect.top));
     },
   );
 
@@ -6629,9 +7029,26 @@ void main() {
   testWidgets(
     'Canonical detached shell keeps theory guidance in one place and readable suits',
     (tester) async {
+      final task = _taskByIdV1(_allAct0TasksV1(), 'your_first_hand_preflop');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      );
+
       await pumpCompact(
         tester,
-        host(tab: Act0ShellTabV1.play, phase: Act0LessonPhaseV1.theory),
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
       );
 
       final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
@@ -6698,6 +7115,83 @@ void main() {
   );
 
   testWidgets(
+    'Compact seat-tap prompt keeps active table targets above the bottom dock',
+    (tester) async {
+      final task = _taskByIdV1(_allAct0TasksV1(), 'positions_late_seat');
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      );
+
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onChooseSeat: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.text('Which seat acts latest after the flop?'),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_seat_tap_btn')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_seat_tap_utg')), findsOneWidget);
+
+      final dockTop = tester
+          .getRect(find.byKey(const Key('act0_shell_seat_tap_prompt')))
+          .top;
+      final heroSeat = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_node_btn')),
+      );
+      final btnTarget = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_btn')),
+      );
+      final utgTarget = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_utg')),
+      );
+      final question = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_action_question')),
+      );
+      final helper = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_seat_tap_prompt_text')),
+      );
+
+      expect(
+        dockTop - heroSeat.bottom,
+        greaterThanOrEqualTo(48),
+        reason: 'Hero/lower seat node must clear the compact bottom prompt.',
+      );
+      expect(
+        dockTop - btnTarget.bottom,
+        greaterThanOrEqualTo(48),
+        reason:
+            'The correct active BTN tap target must not sit under the dock.',
+      );
+      expect(
+        dockTop - utgTarget.bottom,
+        greaterThanOrEqualTo(24),
+        reason: 'Alternative seat tap targets must remain visually tappable.',
+      );
+      expect(question.style?.fontSize, greaterThanOrEqualTo(15));
+      expect(helper.style?.fontSize, greaterThanOrEqualTo(12.2));
+    },
+  );
+
+  testWidgets(
     'Canonical detached shell shows teaching prompt during drill teaching states',
     (tester) async {
       final runner = Act0ShellStateV1.sample.currentLesson.runner.copyWith(
@@ -6745,7 +7239,7 @@ void main() {
   );
 
   testWidgets(
-    'Canonical detached shell shows long teaching progress at the rail top right',
+    'Compact theory suppresses local teaching progress even on longer sequences',
     (tester) async {
       final runner = Act0ShellStateV1.sample.currentLesson.runner.copyWith(
         phase: Act0LessonPhaseV1.theory,
@@ -6773,19 +7267,11 @@ void main() {
         ),
       );
 
-      final rail = tester.getRect(
-        find.byKey(const Key('act0_shell_learning_rail')),
-      );
-      final progress = tester.getRect(
-        find.byKey(const Key('act0_shell_learning_rail_progress')),
-      );
-
       expect(
         find.byKey(const Key('act0_shell_learning_rail_progress')),
-        findsOneWidget,
+        findsNothing,
       );
-      expect(progress.center.dx, greaterThan(rail.center.dx));
-      expect(progress.center.dy, lessThan(rail.center.dy));
+      expect(find.text('2/4'), findsNothing);
     },
   );
 
@@ -8626,6 +9112,207 @@ void main() {
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'First related action drill shows a read-only theory recall affordance',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_raise_drill',
+      );
+      final recallStep = drillTask.runner.teachingSteps.last;
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
+      await pumpCompact(
+        tester,
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
+      );
+
+      await advanceTeachingToDrill(tester);
+
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+      expect(find.text('Review idea'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_cta')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_option_raise')), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('act0_shell_theory_recall_cta')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_sheet')),
+        findsOneWidget,
+      );
+      expect(find.text(recallStep.title), findsOneWidget);
+      expect(find.text(recallStep.body), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsNothing);
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_theory_recall_close_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_sheet')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_option_raise')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_option_fold')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_action_question')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'First related seat-tap drill restores the same table targets after recall close',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'positions');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'positions_late_seat',
+      );
+      final recallStep = drillTask.runner.teachingSteps.last;
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
+      await pumpCompact(
+        tester,
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
+      );
+
+      await advanceTeachingToDrill(tester);
+
+      expect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_seat_tap_btn')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_seat_tap_utg')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_cta')),
+        findsOneWidget,
+      );
+
+      final promptRectBefore = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+      );
+      final btnRectBefore = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_btn')),
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_theory_recall_cta')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_sheet')),
+        findsOneWidget,
+      );
+      expect(find.text(recallStep.title), findsOneWidget);
+      expect(find.text(recallStep.body), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_theory_recall_close_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      final promptRectAfter = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_prompt')),
+      );
+      final btnRectAfter = tester.getRect(
+        find.byKey(const Key('act0_shell_seat_tap_btn')),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_sheet')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_seat_tap_btn')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_seat_tap_utg')), findsOneWidget);
+      expect(promptRectAfter, equals(promptRectBefore));
+      expect(btnRectAfter, equals(btnRectBefore));
+    },
+  );
+
+  testWidgets(
+    'Inside-lesson retry keeps current continue flow and does not show recall affordance',
+    (tester) async {
+      final sample = Act0ShellStateV1.sample;
+      final baseLesson = sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise');
+      final drillTask = baseLesson.taskList.firstWhere(
+        (task) => task.taskId == 'actions_raise_drill',
+      );
+      final lesson = baseLesson.copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+        primaryCtaLabel: 'Open lesson',
+        tasks: <Act0LessonTaskV1>[drillTask],
+      );
+
+      await pumpCompact(
+        tester,
+        host(
+          tab: Act0ShellTabV1.play,
+          phase: Act0LessonPhaseV1.drill,
+          state: stateWithLessons(<Act0LessonCardV1>[lesson]),
+        ),
+      );
+
+      await advanceTeachingToDrill(tester);
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_cta')),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_cta')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsNothing);
     },
   );
 
@@ -10733,12 +11420,12 @@ void main() {
         find.byKey(const Key('act0_shell_action_prompt_integrated_surface')),
         findsOneWidget,
       );
-      expect(find.text('Trail check'), findsOneWidget);
+      expect(find.text('Read what happened'), findsOneWidget);
       final contextLine = tester.widget<Text>(
         find.byKey(const Key('act0_shell_action_context_line')),
       );
       expect(contextLine.data, contains('Current street: River'));
-      expect(contextLine.data, contains('Trail item: Flop'));
+      expect(contextLine.data, contains('Previous action: Flop'));
       expect(find.text('Hand history'), findsOneWidget);
       expect(
         find.descendant(
@@ -10749,6 +11436,71 @@ void main() {
         ),
         findsOneWidget,
       );
+    },
+  );
+
+  test(
+    'W1 beginner intro and positions path decodes seat abbreviations locally',
+    () {
+      final world1 = Act0ShellStateV1.sample.worldById('world_1');
+      final meetTable = world1.lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere((task) => task.taskId == 'what_poker_is_theory')
+          .runner;
+      final positions = world1.lessons
+          .firstWhere((lesson) => lesson.lessonId == 'positions')
+          .taskList
+          .firstWhere((task) => task.taskId == 'positions_theory')
+          .runner;
+
+      final meetTableCopy = meetTable.teachingSteps
+          .map((step) => '${step.title} ${step.body}')
+          .join(' ');
+      final positionsCopy = positions.teachingSteps
+          .map((step) => '${step.title} ${step.body}')
+          .join(' ');
+
+      expect(meetTableCopy, contains('BTN is your button seat.'));
+      expect(meetTableCopy, contains('SB and BB are the blind seats.'));
+      expect(positionsCopy, contains('UTG is under the gun.'));
+      expect(positionsCopy, contains('HJ is hijack.'));
+      expect(positionsCopy, contains('CO is cutoff.'));
+      expect(positionsCopy, contains('BTN is button.'));
+      expect(positionsCopy, contains('SB and BB are the blinds.'));
+    },
+  );
+
+  test(
+    'Beginner route learner-facing copy avoids trail wording in the active hand-history seam',
+    () {
+      final state = Act0ShellStateV1.sample;
+      final world1TrailTask = state
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'your_first_hand')
+          .taskList
+          .firstWhere((task) => task.taskId == 'your_first_hand_action_trail');
+      final activeTasks = <Act0LessonTaskV1>[world1TrailTask];
+      final offenders = <String>[];
+
+      for (final task in activeTasks) {
+        final runner = task.runner;
+        final copy = <String>[
+          runner.lessonTitle,
+          runner.lessonSubtitle,
+          runner.caption,
+          runner.hint,
+          runner.question,
+          runner.feedbackReason,
+          for (final step in runner.teachingSteps) ...[step.title, step.body],
+        ].join(' ');
+        if (RegExp(r'\btrail\b', caseSensitive: false).hasMatch(copy)) {
+          offenders.add(task.taskId);
+        }
+      }
+
+      expect(offenders, isEmpty, reason: offenders.join(', '));
     },
   );
 
@@ -10794,6 +11546,20 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('latest action'), findsOneWidget);
+      final reviewCenter = tester.getRect(
+        find.byKey(const Key('act0_shell_center_info_card')),
+      );
+      final reviewFeedback = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_card')),
+      );
+      final reviewCta = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      expect(
+        reviewFeedback.top - reviewCenter.bottom,
+        greaterThanOrEqualTo(24),
+      );
+      expect(reviewCta.bottom, lessThanOrEqualTo(812));
 
       // Phase 2: verify that answering a drill shows completion toast but no
       // pot-sweep overlay. Use the stateful host on the check-action drill.
@@ -11018,7 +11784,11 @@ void main() {
     expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_card_hero_0')), findsNothing);
     expect(find.byKey(const Key('act0_shell_card_hero_1')), findsNothing);
-    expect(find.text('Blinds posted'), findsWidgets);
+    expect(find.text('Pot 1.5 BB'), findsWidgets);
+    expect(find.text('0.5 BB'), findsWidgets);
+    expect(find.text('1 BB'), findsWidgets);
+    expect(find.byKey(const Key('act0_shell_bet_chip_SB')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_bet_chip_BB')), findsOneWidget);
   });
 
   test('World 2 content covers hand discipline without strategy jumps', () {

@@ -1629,7 +1629,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'your_first_hand_action_trail',
-        title: 'Action trail',
+        title: 'Action history',
         phase: Act0LessonPhaseV1.drill,
         runner: _actionTrailRunner,
         rewardXp: 6,
@@ -6002,7 +6002,8 @@ const _meetTableRunner = Act0RunnerStateV1(
     ),
     Act0TeachingStepV1(
       title: 'This is a poker table.',
-      body: 'You are the hero. The other seats are opponents.',
+      body:
+          'BTN is your button seat. SB and BB are the blind seats. UTG, HJ, and CO are the other positions.',
       focusSeatIds: <String>['btn', 'hj', 'sb', 'bb'],
       focusLabels: <String>['Hero', 'Opponents'],
     ),
@@ -7182,7 +7183,8 @@ final _positionsRunner = _meetTableRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Seats have names.',
-      body: 'UTG, HJ, CO, BTN, SB, and BB describe table position.',
+      body:
+          'UTG is under the gun. HJ is hijack. CO is cutoff. BTN is button. SB and BB are the blinds.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
     Act0TeachingStepV1(
@@ -7817,9 +7819,9 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
 final _actionTrailRunner = _riverBoardRunner.copyWith(
   lessonId: 'action_trail',
   lessonTitle: 'Your first hand, dealt',
-  caption: 'The action trail records what happened street by street.',
+  caption: 'The action history records what happened street by street.',
   hint: 'Read it left to right.',
-  question: 'Which trail item happened last?',
+  question: 'Which previous action happened last?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'bb_check',
@@ -7828,7 +7830,7 @@ final _actionTrailRunner = _riverBoardRunner.copyWith(
       preferredLabel: 'Flop: BB checks',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'CO is the cutoff seat.',
-      feedbackReason: 'The last trail item is the latest action.',
+      feedbackReason: 'The last action in the history is the latest one.',
     ),
     Act0RunnerOptionV1(
       id: 'sb_post',
@@ -7851,7 +7853,7 @@ final _actionTrailRunner = _riverBoardRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Action trail is history.',
+      title: 'Action history shows the hand.',
       body: 'Read left to right to see what already happened.',
       focusLabels: <String>['Oldest -> newest'],
     ),
@@ -7867,7 +7869,7 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
   question: 'Which street comes after the turn?',
   feedbackTitle: 'Street takeaway.',
   feedbackReason:
-      'A hand moves forward street by street. The action trail records what already happened.',
+      'A hand moves forward street by street. The action history records what already happened.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'river',
@@ -8625,8 +8627,8 @@ final _world2InitiativeRecapRunner = _world2InitiativeDrillRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Initiative checklist.',
       body:
-          'Read the action trail, find the last bet or raise, then find who acts now.',
-      focusLabels: <String>['Trail', 'Aggressor', 'Active seat'],
+          'Read the action history, find the last bet or raise, then find who acts now.',
+      focusLabels: <String>['History', 'Aggressor', 'Active seat'],
     ),
   ],
 );
@@ -8637,7 +8639,7 @@ final _world2CheckpointIntroRunner = _world2ShowdownIntroRunner.copyWith(
   lessonTitle: 'Hand value checkpoint',
   lessonSubtitle: 'Hand Value And Position',
   caption: 'Checkpoint: compare hand, position, and initiative together.',
-  hint: 'Keep it simple: hand first, seat second, action trail third.',
+  hint: 'Keep it simple: hand first, seat second, action history third.',
   question: 'What three checks matter here?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -9948,10 +9950,15 @@ final _w3SeatOrderDecisionRunner = _earlyLatePositionRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Order matters before comfort.',
-      body:
-          'UTG acts before BTN, so it cannot rely on the same late-position information edge.',
+      body: 'UTG acts before BTN.',
       focusSeatIds: <String>['utg', 'btn'],
       focusLabels: <String>['UTG first', 'BTN later'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Information arrives later.',
+      body: 'BTN can use more late-position information.',
+      focusSeatIds: <String>['btn'],
+      focusLabels: <String>['BTN sees more'],
     ),
   ],
 );

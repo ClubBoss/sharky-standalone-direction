@@ -72,7 +72,7 @@ String act0RuntimeTrailTaskLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Проверь историю раздачи' : 'Trail check';
+  return isRu ? 'Проверь историю раздачи' : 'Read what happened';
 }
 
 String act0RuntimeSeatTapStatusLabelV1(BuildContext context) =>
@@ -88,6 +88,13 @@ String act0RuntimeSeatTapHelperLabelV1(BuildContext context) =>
       'runner_prompt_read_table_then_tap',
       fallback: 'Read the table, then tap one seat.',
     );
+
+String act0RuntimeTheoryRecallLabelV1(BuildContext context) {
+  final isRu = Localizations.localeOf(
+    context,
+  ).languageCode.toLowerCase().startsWith('ru');
+  return isRu ? 'Повторить идею' : 'Review idea';
+}
 
 String act0RuntimeTheoryCoachLineV1(
   BuildContext context, {
@@ -173,15 +180,15 @@ String act0RuntimeFeedbackCoachLineV1(
   );
   return _pickDeterministicCoachLineV1(
     candidates,
-    seed: 'feedback|$variationSeed|${quality.name}|${taskFamily?.name ?? 'none'}',
+    seed:
+        'feedback|$variationSeed|${quality.name}|${taskFamily?.name ?? 'none'}',
   );
 }
 
 String act0RuntimeQuestionBadgeLabelV1(
   BuildContext context, {
   bool isTrailHistory = false,
-}
-) {
+}) {
   if (isTrailHistory) {
     final isRu = Localizations.localeOf(
       context,
@@ -210,7 +217,7 @@ String act0RuntimeTrailPromptSupportLineV1(
       currentStreet.toLowerCase() != trailStreet.toLowerCase()) {
     return isRu
         ? 'Сейчас на столе: $currentStreet · В истории: $trailStreet'
-        : 'Current street: $currentStreet · Trail item: $trailStreet';
+        : 'Current street: $currentStreet · Previous action: $trailStreet';
   }
   return isRu ? 'Смотри историю раздачи.' : 'Read the hand history.';
 }
@@ -298,8 +305,7 @@ String act0RuntimeFeedbackActionPrefixV1(
   Act0FeedbackQualityV1 quality, {
   Act0TaskFamilyV1? taskFamily,
   bool hasSeatTargets = false,
-}
-) {
+}) {
   if (quality == Act0FeedbackQualityV1.wrong) {
     return act0RuntimeLocalizedGeneralLabelV1(context, 'Better option');
   }
@@ -376,24 +382,60 @@ List<String> _theoryCoachCandidatesV1(
       normalizedSupport.contains('pot') ||
       normalizedSupport.contains('price')) {
     return <String>[
-      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
-      _coachLineV1(context, en: 'Board, price, then action.', ru: 'Сначала борд, цена, потом действие.'),
-      _coachLineV1(context, en: 'One clean read, then decide.', ru: 'Одно чистое чтение, потом решение.'),
+      _coachLineV1(
+        context,
+        en: 'Start with what is visible.',
+        ru: 'Сначала смотри на то, что видно.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Board, price, then action.',
+        ru: 'Сначала борд, цена, потом действие.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'One clean read, then decide.',
+        ru: 'Одно чистое чтение, потом решение.',
+      ),
     ];
   }
   if (taskFamily == Act0TaskFamilyV1.counting ||
       normalizedPrompt.contains('count') ||
       normalizedPrompt.contains('how many')) {
     return <String>[
-      _coachLineV1(context, en: 'Count what the table shows.', ru: 'Считай то, что показывает стол.'),
-      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
-      _coachLineV1(context, en: 'Read once, then name it.', ru: 'Сначала прочитай, потом назови.'),
+      _coachLineV1(
+        context,
+        en: 'Count what the table shows.',
+        ru: 'Считай то, что показывает стол.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Start with what is visible.',
+        ru: 'Сначала смотри на то, что видно.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Read once, then name it.',
+        ru: 'Сначала прочитай, потом назови.',
+      ),
     ];
   }
   return <String>[
-    _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
-    _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
-    _coachLineV1(context, en: 'One clean read, then decide.', ru: 'Одно чистое чтение, потом решение.'),
+    _coachLineV1(
+      context,
+      en: 'Read the table first.',
+      ru: 'Сначала прочитай стол.',
+    ),
+    _coachLineV1(
+      context,
+      en: 'Start with what is visible.',
+      ru: 'Сначала смотри на то, что видно.',
+    ),
+    _coachLineV1(
+      context,
+      en: 'One clean read, then decide.',
+      ru: 'Одно чистое чтение, потом решение.',
+    ),
   ];
 }
 
@@ -406,9 +448,21 @@ List<String> _promptCoachCandidatesV1(
   final normalizedQuestion = question.toLowerCase();
   if (hasSeatTargets) {
     return <String>[
-      _coachLineV1(context, en: 'Read the table, then tap one seat.', ru: 'Сначала прочитай стол, потом нажми одно место.'),
-      _coachLineV1(context, en: 'Find the seat, then choose.', ru: 'Сначала найди место, потом выбери.'),
-      _coachLineV1(context, en: 'One clean read, then tap.', ru: 'Одно чистое чтение, потом нажми.'),
+      _coachLineV1(
+        context,
+        en: 'Read the table, then tap one seat.',
+        ru: 'Сначала прочитай стол, потом нажми одно место.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Find the seat, then choose.',
+        ru: 'Сначала найди место, потом выбери.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'One clean read, then tap.',
+        ru: 'Одно чистое чтение, потом нажми.',
+      ),
     ];
   }
   if (taskFamily == Act0TaskFamilyV1.decision ||
@@ -417,24 +471,60 @@ List<String> _promptCoachCandidatesV1(
       normalizedQuestion.contains('raise') ||
       normalizedQuestion.contains('fold')) {
     return <String>[
-      _coachLineV1(context, en: 'Check the price before acting.', ru: 'Сначала проверь цену решения.'),
-      _coachLineV1(context, en: 'One clean read, then choose.', ru: 'Одно чистое чтение, потом выбор.'),
-      _coachLineV1(context, en: 'Start with the table, not memory.', ru: 'Сначала стол, а не память.'),
+      _coachLineV1(
+        context,
+        en: 'Check the price before acting.',
+        ru: 'Сначала проверь цену решения.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'One clean read, then choose.',
+        ru: 'Одно чистое чтение, потом выбор.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Start with the table, not memory.',
+        ru: 'Сначала стол, а не память.',
+      ),
     ];
   }
   if (normalizedQuestion.contains('bucket') ||
       normalizedQuestion.contains('hand') ||
       normalizedQuestion.contains('board')) {
     return <String>[
-      _coachLineV1(context, en: 'Use the board, not memory.', ru: 'Смотри на борд, а не на память.'),
-      _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
-      _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+      _coachLineV1(
+        context,
+        en: 'Use the board, not memory.',
+        ru: 'Смотри на борд, а не на память.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Read the table first.',
+        ru: 'Сначала прочитай стол.',
+      ),
+      _coachLineV1(
+        context,
+        en: 'Start with what is visible.',
+        ru: 'Сначала смотри на то, что видно.',
+      ),
     ];
   }
   return <String>[
-    _coachLineV1(context, en: 'Read the table first.', ru: 'Сначала прочитай стол.'),
-    _coachLineV1(context, en: 'One clean read, then choose.', ru: 'Одно чистое чтение, потом выбор.'),
-    _coachLineV1(context, en: 'Start with what is visible.', ru: 'Сначала смотри на то, что видно.'),
+    _coachLineV1(
+      context,
+      en: 'Read the table first.',
+      ru: 'Сначала прочитай стол.',
+    ),
+    _coachLineV1(
+      context,
+      en: 'One clean read, then choose.',
+      ru: 'Одно чистое чтение, потом выбор.',
+    ),
+    _coachLineV1(
+      context,
+      en: 'Start with what is visible.',
+      ru: 'Сначала смотри на то, что видно.',
+    ),
   ];
 }
 
@@ -448,28 +538,59 @@ List<String> _feedbackCoachCandidatesV1(
       return <String>[
         _coachLineV1(context, en: 'Sharp read.', ru: 'Хорошее чтение.'),
         _coachLineV1(context, en: 'Clean read.', ru: 'Чистое чтение.'),
-        _coachLineV1(context, en: 'Good table check.', ru: 'Хорошая проверка стола.'),
+        _coachLineV1(
+          context,
+          en: 'Good table check.',
+          ru: 'Хорошая проверка стола.',
+        ),
         if (taskFamily == Act0TaskFamilyV1.review ||
             taskFamily == Act0TaskFamilyV1.transfer)
-          _coachLineV1(context, en: 'Keep that cue.', ru: 'Сохрани эту подсказку.'),
+          _coachLineV1(
+            context,
+            en: 'Keep that cue.',
+            ru: 'Сохрани эту подсказку.',
+          ),
       ];
     case Act0FeedbackQualityV1.suboptimal:
       return <String>[
         _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
-        _coachLineV1(context, en: 'Slow down the cue.', ru: 'Замедлись и проверь подсказку.'),
-        _coachLineV1(context, en: 'One clean reread.', ru: 'Ещё одно чистое перечитывание.'),
+        _coachLineV1(
+          context,
+          en: 'Slow down the cue.',
+          ru: 'Замедлись и проверь подсказку.',
+        ),
+        _coachLineV1(
+          context,
+          en: 'One clean reread.',
+          ru: 'Ещё одно чистое перечитывание.',
+        ),
       ];
     case Act0FeedbackQualityV1.wrong:
       return <String>[
         _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
-        _coachLineV1(context, en: 'This is repairable.', ru: 'Это легко починить.'),
-        _coachLineV1(context, en: 'Use the table, then retry.', ru: 'Вернись к столу и попробуй снова.'),
-        _coachLineV1(context, en: 'One calm retry.', ru: 'Одна спокойная попытка ещё раз.'),
+        _coachLineV1(
+          context,
+          en: 'This is repairable.',
+          ru: 'Это легко починить.',
+        ),
+        _coachLineV1(
+          context,
+          en: 'Use the table, then retry.',
+          ru: 'Вернись к столу и попробуй снова.',
+        ),
+        _coachLineV1(
+          context,
+          en: 'One calm retry.',
+          ru: 'Одна спокойная попытка ещё раз.',
+        ),
       ];
   }
 }
 
-String _pickDeterministicCoachLineV1(List<String> candidates, {required String seed}) {
+String _pickDeterministicCoachLineV1(
+  List<String> candidates, {
+  required String seed,
+}) {
   final usable = candidates.where((line) => line.trim().isNotEmpty).toList();
   if (usable.isEmpty) {
     return '';
