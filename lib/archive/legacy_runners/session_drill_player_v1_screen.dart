@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/canonical/progression_handoff_context_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/canonical_terminal_session_drill_surfaced_runner_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
 
 class SessionDrillPlayerV1Screen extends StatelessWidget {
   const SessionDrillPlayerV1Screen({

@@ -2462,7 +2462,9 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
             Act0CompletionDisplayStateV1.locked => Icons.lock_rounded,
             Act0CompletionDisplayStateV1.clear => Icons.check_rounded,
             Act0CompletionDisplayStateV1.perfect => Icons.check_rounded,
-            Act0CompletionDisplayStateV1.current => _stepIcon(widget.task.stepKind),
+            Act0CompletionDisplayStateV1.current => _stepIcon(
+              widget.task.stepKind,
+            ),
           };
     final statusLabel = switch (completionState) {
       Act0CompletionDisplayStateV1.current => 'Now',
@@ -2645,13 +2647,17 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                               alpha: widget.isDone ? 1 : 0.24,
                                             ),
                                             rowAccent.withValues(
-                                              alpha: widget.isDone ? 0.82 : 0.08,
+                                              alpha: widget.isDone
+                                                  ? 0.82
+                                                  : 0.08,
                                             ),
                                           ],
                                         ),
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: rowAccent.withValues(alpha: 0.46),
+                                          color: rowAccent.withValues(
+                                            alpha: 0.46,
+                                          ),
                                         ),
                                       ),
                                       child: Icon(
@@ -2880,12 +2886,13 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                               ),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: Act0ShellTokensV1.label.copyWith(
-                                                color: widget.isPerfect
-                                                    ? Act0ShellTokensV1.gold
-                                                    : rowAccent,
-                                                letterSpacing: 0.04,
-                                              ),
+                                              style: Act0ShellTokensV1.label
+                                                  .copyWith(
+                                                    color: widget.isPerfect
+                                                        ? Act0ShellTokensV1.gold
+                                                        : rowAccent,
+                                                    letterSpacing: 0.04,
+                                                  ),
                                             ),
                                           ],
                                           const SizedBox(height: 5),
@@ -2991,13 +2998,18 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                                       'act0_shell_selected_lesson_quality_detail',
                                                     ),
                                                     maxLines: 2,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: Act0ShellTokensV1.label.copyWith(
-                                                      color: widget.isPerfect
-                                                          ? Act0ShellTokensV1.gold
-                                                          : rowAccent,
-                                                      letterSpacing: 0.04,
-                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Act0ShellTokensV1
+                                                        .label
+                                                        .copyWith(
+                                                          color:
+                                                              widget.isPerfect
+                                                              ? Act0ShellTokensV1
+                                                                    .gold
+                                                              : rowAccent,
+                                                          letterSpacing: 0.04,
+                                                        ),
                                                   ),
                                                 ],
                                               ],
@@ -3811,8 +3823,8 @@ String _selectedTaskDetail({
   }
   if (isSkipped) {
     return _isRuLocaleV1(context)
-        ? 'Этот шаг был пропущен во время плейсмента. Пройди его сейчас, чтобы закрыть путь полностью.'
-        : 'Skipped during placement. Run it now to convert it into a full clear.';
+        ? 'Этот шаг доступен в любой момент. Плейсмент просто провёл тебя дальше; пройди его сейчас, чтобы путь стал полностью чистым.'
+        : 'Available anytime. Placement started you later; run it now to turn this path into a full clear.';
   }
   if (isDone) {
     return isPerfect

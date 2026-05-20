@@ -171,8 +171,12 @@ class Act0ShellStateV1 {
   Act0LessonCardV1 get currentLesson =>
       lessons.firstWhere((lesson) => lesson.state == Act0LessonStateV1.current);
 
-  Act0LessonCardV1 lessonById(String lessonId) =>
-      lessons.firstWhere((lesson) => lesson.lessonId == lessonId);
+  Act0LessonCardV1 lessonById(String lessonId) => lessons.firstWhere(
+    (lesson) => lesson.lessonId == lessonId,
+    orElse: () => worlds
+        .expand((world) => world.lessons)
+        .firstWhere((lesson) => lesson.lessonId == lessonId),
+  );
 
   Act0RunnerStateV1 runnerFor(String lessonId) => lessonById(lessonId).runner;
 
@@ -187,7 +191,7 @@ class Act0ShellStateV1 {
     streakDays: 3,
     dailyGoalLabel: 'Daily goal',
     dailyGoalValue: '5 minutes today',
-    pathProgressLabel: '3 of 8 lessons complete',
+    pathProgressLabel: '4 of 9 lessons complete',
     selectedWorldId: 'world_1',
     worlds: _act0PreviewWorlds,
     lessons: _pokerFromZeroLessons,
@@ -1422,51 +1426,97 @@ class Act0PlacementSkillStatV1 {
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
-    title: 'What poker is',
-    subtitle: 'Meet the table, the players, and the goal.',
+    title: 'First Table Guide',
+    subtitle: 'Learn the table, answer once, and see why.',
     state: Act0LessonStateV1.completed,
-    phaseLabel: 'Table',
+    phaseLabel: 'Start',
     primaryCtaLabel: 'Replay',
     isSelectable: true,
     isLocked: false,
-    rewardXp: 15,
-    runner: _meetTableRunner,
+    rewardXp: 20,
+    runner: _firstTableGuideMeetTableRunner,
     tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'what_poker_is_theory',
         title: 'Meet the table',
         phase: Act0LessonPhaseV1.theory,
-        runner: _meetTableRunner,
+        runner: _firstTableGuideMeetTableRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
         summary:
-            'Get the basic layout: seats, chips, cards, and what the table is trying to decide.',
+            'Start with one calm read: hero, blinds, table, and the Sharky loop.',
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_find_hero',
         title: 'Find your seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _findHeroSeatRunner,
+        runner: _firstTableGuideFindHeroRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Spot where Hero sits before anything else starts moving.',
       ),
       Act0LessonTaskV1(
-        taskId: 'what_poker_is_pot_stack',
-        title: 'Pot and stack',
+        taskId: 'what_poker_is_table_read_transfer',
+        title: 'Read the table',
         phase: Act0LessonPhaseV1.drill,
-        runner: _potStackRunner,
+        runner: _firstTableGuideReadTableRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.transfer,
+        summary:
+            'Read one live-looking spot: your cards, the board, and the pot.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'first_table_guide_one_clear_choice',
+        title: 'Make one choice',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _firstTableGuideActionRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
-            'Separate chips in the middle from chips still in a player stack.',
+            'Answer once in one clean beginner spot, then let Sharky show the reason.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'first_table_guide_route_roles',
+        title: 'Where to go next',
+        phase: Act0LessonPhaseV1.review,
+        runner: _firstTableGuideRouteRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+        summary:
+            'Lock in what Home, Learn, Practice, Review, and You do after the first loop.',
+      ),
+    ],
+  ),
+  Act0LessonCardV1(
+    lessonId: 'what_poker_is_content',
+    title: 'What poker is',
+    subtitle: 'How the pot, folds, and showdown decide the hand.',
+    state: Act0LessonStateV1.completed,
+    phaseLabel: 'Poker',
+    primaryCtaLabel: 'Replay',
+    isSelectable: true,
+    isLocked: false,
+    rewardXp: 15,
+    runner: _potStackRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'what_poker_is_pot_stack',
+        title: 'Pot and stack',
+        phase: Act0LessonPhaseV1.theory,
+        runner: _potStackRunner,
+        rewardXp: 4,
+        stepKind: Act0LessonStepKindV1.learn,
+        summary:
+            'Separate chips in the middle from chips that still belong to a player.',
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_win_ways',
         title: 'How pots are won',
         phase: Act0LessonPhaseV1.drill,
         runner: _winWaysRunner,
-        rewardXp: 5,
+        rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'See the two basic ways a hand ends: folds or showdown.',
       ),
@@ -1475,30 +1525,30 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Win at showdown',
         phase: Act0LessonPhaseV1.drill,
         runner: _showdownBestHandRunner,
-        rewardXp: 5,
+        rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Pick which hand wins once the cards are all face up.',
       ),
       Act0LessonTaskV1(
-        taskId: 'what_poker_is_table_read_transfer',
-        title: 'Real-table first read',
+        taskId: 'what_poker_is_live_win_transfer',
+        title: 'Live win paths',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1TableReadTransferRunner,
-        rewardXp: 5,
+        runner: _w1LiveWinTransferRunner,
+        rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
         summary:
-            'Carry the first table scan into a live-looking spot: private cards, board, then pot.',
+            'Carry folds and showdown into one live table frame before strategy starts.',
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_review',
-        title: 'Table recap',
+        title: 'Poker recap',
         phase: Act0LessonPhaseV1.review,
         runner: _tableRecapRunner,
-        rewardXp: 5,
+        rewardXp: 3,
         stepKind: Act0LessonStepKindV1.proveIt,
         summary:
-            'Run the full table read once clean, from seat to pot to finish.',
+            'Close the lesson by separating hero, pot, folds, and showdown cleanly.',
       ),
     ],
   ),
@@ -3757,6 +3807,15 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
+        taskId: 'w4_checkpoint_table_purpose_price',
+        title: 'Live purpose and price',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world4PurposePriceTableTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w4_checkpoint_review',
         title: 'Price recap',
         phase: Act0LessonPhaseV1.review,
@@ -3939,6 +3998,26 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     subtitle: 'Outs are cards that can improve a hand.',
     phaseLabel: 'Outs',
     rewardXp: 35,
+    extraDrills: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'w5_table_outs_flush_transfer',
+        title: 'Live heart outs',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5TableOutsFlushTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_table_outs_straight_transfer',
+        title: 'Live straight outs',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5TableOutsStraightTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+    ],
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_outs_intro',
@@ -3980,6 +4059,26 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     subtitle: 'Later streets can complete or miss a draw.',
     phaseLabel: 'Street changes',
     rewardXp: 40,
+    extraDrills: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'w5_turn_texture_shift_transfer',
+        title: 'Turn changes the texture',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5TurnTextureShiftTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_river_draw_story_transfer',
+        title: 'River keeps the draw story honest',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5RiverDrawStoryTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+    ],
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_street_change_intro',
@@ -4178,6 +4277,24 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         runner: _w6MissedHandActionRunner,
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w6_table_value_line_transfer',
+        title: 'Live-table value line',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w6TableValueLineTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w6_turn_pressure_shift_transfer',
+        title: 'Turn pressure shift',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w6TurnPressureShiftTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
         taskId: 'w6_wet_board_repair',
@@ -4544,6 +4661,15 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
+        taskId: 'w7_top_pair_spr2_transfer',
+        title: 'Top pair at SPR 2',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w7TopPairSprTwoRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w7_top_pair_spr8_transfer',
         title: 'Top pair at SPR 8',
         phase: Act0LessonPhaseV1.drill,
@@ -4726,6 +4852,15 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         runner: _w9MZoneYellowRunner,
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w9_m_ratio_table_window_transfer',
+        title: 'Yellow-zone table read',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w9MTableWindowTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
@@ -5549,7 +5684,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     title: 'Poker from Zero',
     subtitle: 'Table literacy: cards, seats, blinds, stack, and pot.',
     status: Act0WorldStateV1.current,
-    progressLabel: '3 of 8 lessons complete',
+    progressLabel: '4 of 9 lessons complete',
     primaryCtaLabel: 'Open lessons',
     unlockLabel: 'Current world',
     isSelectable: true,
@@ -6505,9 +6640,10 @@ final _deckIntroRunner = _cardsRanksRunner.copyWith(
 final _potStackRunner = _meetTableRunner.copyWith(
   lessonId: 'pot_stack',
   lessonTitle: 'What poker is',
-  lessonSubtitle: 'Pot and stack are separate numbers.',
-  caption: 'Stack is your chips. Pot is what players fight for.',
-  hint: 'Do not mix your stack with the pot.',
+  lessonSubtitle: 'Texas Hold\'em cash starts with stable table reads.',
+  caption:
+      'Texas Hold\'em gives you 2 private cards, up to 5 community cards, and one pot to win.',
+  hint: 'Best 5 wins at showdown. Folds can win the pot earlier.',
   question: 'Which label shows the chips in the middle?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -6533,7 +6669,25 @@ final _potStackRunner = _meetTableRunner.copyWith(
     centerLabel: 'Pot vs stack',
     potLabel: 'Pot 1.5 BB',
   ),
+  feedbackReason:
+      'The pot is the chips in the middle. In Texas Hold\'em, you build the best 5-card hand from 2 private cards and 5 community cards.',
   teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Texas Hold\'em first.',
+      body:
+          'You start with 2 private cards. The table can share up to 5 community cards. At showdown, the best 5-card hand wins.',
+      focusLabels: <String>['2 private', '5 community', 'Best 5-card hand'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Cash-style fundamentals first.',
+      body:
+          'Sharky starts with cash-style fundamentals because cards, position, pot, action, and reason stay stable hand to hand. Tournament pressure comes later.',
+      focusLabels: <String>[
+        'Cash-style fundamentals',
+        'Stable reads',
+        'Tournaments later',
+      ],
+    ),
     Act0TeachingStepV1(
       title: 'Pot and stack are different.',
       body: 'The pot is in the middle. Your stack stays with your seat.',
@@ -7184,7 +7338,7 @@ final _positionsRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Seats have names.',
       body:
-          'UTG is under the gun. HJ is hijack. CO is cutoff. BTN is button. SB and BB are the blinds.',
+          'UTG starts the hand. HJ is hijack. CO is cutoff. BTN is button, and SB plus BB are the blinds.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
     Act0TeachingStepV1(
@@ -7715,6 +7869,185 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
       body:
           'Real tables still start with the same simple scan: your two cards, the shared board, and how many chips sit in the pot.',
       focusLabels: <String>['2 private', '3 board', 'Pot'],
+    ),
+  ],
+);
+
+final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
+  lessonId: 'w1_live_win_transfer',
+  lessonTitle: 'What poker is',
+  lessonSubtitle: 'Poker from Zero',
+  caption:
+      'Real table. Hero is BTN, blinds are posted, and the pot starts at 1.5 BB.',
+  hint: 'After the first read, remember how this pot can still finish.',
+  question: 'In this live hand, what can still decide the pot?',
+  feedbackTitle: 'That is the live loop.',
+  feedbackReason:
+      'A real table still closes the same two clean ways: everyone folds, or players reach showdown and the best hand wins.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'fold_or_showdown',
+      label: 'A fold or a showdown',
+      isCorrect: true,
+      preferredLabel: 'A fold or a showdown',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exactly.',
+      feedbackReason:
+          'The live frame changes the look, not the ending. The pot still closes by fold or by best hand at showdown.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'button_wins_now',
+      label: 'The button wins automatically',
+      isCorrect: false,
+      preferredLabel: 'A fold or a showdown',
+      betterAnswerLabel: 'A fold or a showdown',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'One more read.',
+      feedbackReason:
+          'BTN tells you Hero acts late. The seat does not win the pot by itself.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'hero_cards_decide_now',
+      label: 'Hero cards decide it immediately',
+      isCorrect: false,
+      preferredLabel: 'A fold or a showdown',
+      betterAnswerLabel: 'A fold or a showdown',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Partly right.',
+      feedbackReason:
+          'Hero cards matter if the hand reaches showdown, but the pot can still end earlier when everyone else folds.',
+    ),
+  ],
+  table: _tableObjectsRunner.table.copyWith(
+    centerLabel: 'BTN, blinds, pot',
+    potLabel: 'Pot 1.5 BB',
+    selectableSeatIds: const <String>[],
+    highlightedSeatIds: const <String>['btn', 'sb', 'bb'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Live table, same endings.',
+      body:
+          'Even in a live-looking hand, the pot still ends one of two ways: everyone folds or players reach showdown.',
+      focusLabels: <String>['Fold', 'Showdown', 'Pot 1.5 BB'],
+    ),
+  ],
+);
+
+final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
+  lessonId: 'first_table_guide_meet_table',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: 'Read one spot, answer once, and see why.',
+  beatIndex: 1,
+  beatCount: 5,
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'One loop first.',
+      body:
+          'Sharky teaches one spot at a time: read the table, answer once, then get one clear why.',
+      focusLabels: <String>['Read', 'Answer', 'Why'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Start with the table.',
+      body:
+          'Hero is you, blinds start the pot, and the table stays readable before the route speeds up.',
+      focusSeatIds: <String>['btn', 'sb', 'bb'],
+      focusLabels: <String>['Hero', 'Blinds', 'Table first'],
+    ),
+  ],
+);
+
+final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
+  lessonId: 'first_table_guide_find_hero',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: 'Read one spot, answer once, and see why.',
+  beatIndex: 2,
+  beatCount: 5,
+);
+
+final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
+  lessonId: 'first_table_guide_read_table',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: 'Read one spot, answer once, and see why.',
+  beatIndex: 3,
+  beatCount: 5,
+);
+
+final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
+  lessonId: 'first_table_guide_one_clear_choice',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: 'Read one spot, answer once, and see why.',
+  beatIndex: 4,
+  beatCount: 5,
+  caption: 'One clear beginner choice is enough for the first Sharky loop.',
+  hint: 'Read the spot, choose once, then let the reason land.',
+  feedbackTitle: 'That is the Sharky loop.',
+  feedbackReason:
+      'You read one spot, chose one action, and got one reason back. That is the foundation the rest of the route keeps reusing.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'One answer is enough.',
+      body:
+          'Sharky is not asking for a long explanation. Read the spot, choose once, then compare the reason.',
+      focusSeatIds: <String>['btn', 'sb', 'bb'],
+      focusLabels: <String>['One spot', 'One answer', 'One reason'],
+    ),
+  ],
+);
+
+final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
+  lessonId: 'first_table_guide_route_roles',
+  lessonTitle: 'First Table Guide',
+  lessonSubtitle: 'Read one spot, answer once, and see why.',
+  beatIndex: 5,
+  beatCount: 5,
+  phase: Act0LessonPhaseV1.review,
+  caption: 'After the first loop, each surface has one clear job.',
+  hint: 'Use Review to fix misses. The rest of the tabs support the route.',
+  question: 'Where do you go to fix mistakes after a miss?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'review',
+      label: 'Review',
+      isCorrect: true,
+      preferredLabel: 'Review',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exactly.',
+      feedbackReason:
+          'Review fixes mistakes. Home shows the next move, Learn keeps the route visible, Practice gives extra reps, and You shows progress and settings.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'practice',
+      label: 'Practice',
+      isCorrect: false,
+      preferredLabel: 'Review',
+      betterAnswerLabel: 'Review',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Close, but one tab is sharper.',
+      feedbackReason:
+          'Practice is for extra reps after the route teaches the concept. Review is where a miss gets fixed first.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'learn',
+      label: 'Learn',
+      isCorrect: false,
+      preferredLabel: 'Review',
+      betterAnswerLabel: 'Review',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'One more distinction.',
+      feedbackReason:
+          'Learn keeps the route visible. Review is the tab that turns a mistake into the next repair step.',
+    ),
+  ],
+  feedbackTitle: 'Route roles locked in.',
+  feedbackReason:
+      'Home shows the next move, Learn keeps the route, Practice gives extra reps, Review fixes mistakes, and You shows progress and settings.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Know the five jobs.',
+      body:
+          'Home shows what to do now. Learn keeps the route visible. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.',
+      focusLabels: <String>['Home', 'Learn', 'Practice', 'Review', 'You'],
     ),
   ],
 );
@@ -9329,7 +9662,7 @@ final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
       preferredLabel: 'It keeps position and avoids weak-ace domination',
       betterAnswerLabel: 'It keeps position and avoids weak-ace domination',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'The clean reason is not auto-continue. It is the mix of position and lower domination risk.',
     ),
@@ -11798,6 +12131,77 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
   ],
 );
 
+final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
+  lessonId: 'w4_purpose_price_table_transfer',
+  caption:
+      'Real table. Pot is 6 BB. BTN bets 2 BB with top pair on a dry flop.',
+  hint:
+      'Read both halves together: the bet has a value purpose, and the small size gives BB a cheap continue price.',
+  question: 'What is the clean read?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'small_value_price',
+      label: 'Small value bet that sets a cheap continue price',
+      isCorrect: true,
+      preferredLabel: 'Small value bet that sets a cheap continue price',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exactly.',
+      feedbackReason:
+          'Top pair wants calls from worse hands, and the 2 BB size keeps the continue price cheap instead of forcing a huge decision.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'pot_bluff',
+      label: 'Pot-size bluff trying to force folds',
+      isCorrect: false,
+      preferredLabel: 'Small value bet that sets a cheap continue price',
+      betterAnswerLabel: 'Small value bet that sets a cheap continue price',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not this frame.',
+      feedbackReason:
+          'The action is too small for a pot-size bluff story. With top pair, the cleaner read is value plus a manageable price.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'random_size',
+      label: 'Random bet with no clear job',
+      isCorrect: false,
+      preferredLabel: 'Small value bet that sets a cheap continue price',
+      betterAnswerLabel: 'Small value bet that sets a cheap continue price',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Look one layer deeper.',
+      feedbackReason:
+          'The size is not random once you connect purpose and price. The 2 BB bet keeps weaker hands in while still charging them to continue.',
+    ),
+  ],
+  table: _world4ValueBetRunner.table.copyWith(
+    potLabel: 'Pot 6 BB',
+    toCallLabel: 'To call 2 BB',
+    centerLabel: 'Value plus price',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 's'),
+      Act0CardStateV1(rank: 'Q', suit: 'd'),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '7', suit: 'c'),
+      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'BB acts'),
+    ],
+    highlightedSeatIds: const <String>['btn', 'bb'],
+    highlightedCardIds: const <String>['hero_0', 'board_0'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Purpose and price travel together.',
+      body:
+          'A live bet is clearer when you name both the job and the price it creates. Here top pair wants calls, and 2 BB keeps that continue cheap.',
+      focusLabels: <String>['Value', '2 BB', 'Cheap price'],
+    ),
+  ],
+);
+
 final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w4_checkpoint_review',
@@ -12360,6 +12764,158 @@ final _world5OutsRecapRunner = _world5OutsIntroRunner.copyWith(
   ],
 );
 
+final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_table_outs_flush_transfer',
+  caption:
+      'Real table. Pot 10 BB. Hero has A-heart and 7-heart on T-heart, 4-heart, 2-club, 9-spade.',
+  hint:
+      'Before calling a small bet, name the live improvement cards that still help.',
+  question: 'Which improvement cards still matter first?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'heart_outs',
+      label: 'Any heart still completes the flush',
+      isCorrect: true,
+      preferredLabel: 'Any heart still completes the flush',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Live outs first.',
+      feedbackReason:
+          'That is the clean transfer. Hero still has heart outs, so naming those improvement cards comes before judging whether the 2 BB price is worth it in a 10 BB pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'ace_only',
+      label: 'Only an ace matters now',
+      isCorrect: false,
+      preferredLabel: 'Any heart still completes the flush',
+      betterAnswerLabel: 'Any heart still completes the flush',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too narrow.',
+      feedbackReason:
+          'The live draw story still matters more. Hearts are the real outs here, so start by naming the flush improvement cards before inventing a one-pair rescue line.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'price_only',
+      label: 'Only the small price matters',
+      isCorrect: false,
+      preferredLabel: 'Any heart still completes the flush',
+      betterAnswerLabel: 'Any heart still completes the flush',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Sequence first.',
+      feedbackReason:
+          'Price matters after the draw read. On a real table, name the heart outs first, then decide whether paying 2 BB into Pot 10 BB is worth it.',
+    ),
+  ],
+  table: _world5FlushDrawRunner.table.copyWith(
+    streetLabel: 'Turn',
+    potLabel: 'Pot 10 BB',
+    toCallLabel: 'To call 2 BB',
+    centerLabel: 'Live heart outs',
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '2', suit: 'c'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
+      Act0ActionTrailItemV1(label: 'Turn: 9 spades'),
+      Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'Hero acts'),
+    ],
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Name outs before price.',
+      body:
+          'A live table adds pressure, but the same transfer rule still holds: name the cards that improve Hero first, then judge the price.',
+      focusLabels: <String>['Real table', 'Heart outs', 'Price second'],
+    ),
+  ],
+);
+
+final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_table_outs_straight_transfer',
+  caption:
+      'Real table. Pot 9 BB. Hero has 6-spade and 5-diamond on 8-club, 7-heart, 2-spade, K-diamond.',
+  hint:
+      'Keep the same rank ladder and ask which cards still finish it on a live turn.',
+  question: 'Which improvement cards still matter first?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'four_or_nine',
+      label: 'A 4 or 9 still completes the straight',
+      isCorrect: true,
+      preferredLabel: 'A 4 or 9 still completes the straight',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct transfer.',
+      feedbackReason:
+          'The same ladder still works on a real table. A 4 or 9 completes the straight, so those remain the live outs before you judge the 3 BB decision.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'king_pairs',
+      label: 'Only a king can help now',
+      isCorrect: false,
+      preferredLabel: 'A 4 or 9 still completes the straight',
+      betterAnswerLabel: 'A 4 or 9 still completes the straight',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Wrong improvement story.',
+      feedbackReason:
+          'Pairing the king is not the draw lesson here. The transfer is keep the same straight ladder and name the 4 or 9 outs first.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'blank_turn_killed',
+      label: 'No outs matter because the turn blanked',
+      isCorrect: false,
+      preferredLabel: 'A 4 or 9 still completes the straight',
+      betterAnswerLabel: 'A 4 or 9 still completes the straight',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Do not drop the ladder.',
+      feedbackReason:
+          'A blank turn does not erase the draw. The live-table transfer is keep following the same 4 or 9 straight outs before making the next choice.',
+    ),
+  ],
+  table: _world5StraightDrawRunner.table.copyWith(
+    streetLabel: 'Turn',
+    potLabel: 'Pot 9 BB',
+    toCallLabel: 'To call 3 BB',
+    centerLabel: 'Live straight outs',
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: '8', suit: 'c'),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '2', suit: 's'),
+      Act0CardStateV1(rank: 'K', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Flop: 8-7-2'),
+      Act0ActionTrailItemV1(label: 'Turn: K diamonds'),
+      Act0ActionTrailItemV1(label: 'BTN bets 3 BB'),
+      Act0ActionTrailItemV1(label: 'Hero acts'),
+    ],
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Blank turns do not erase outs.',
+      body:
+          'A live turn card can miss without killing the draw. Keep the same straight ladder in mind and name the 4 or 9 outs before deciding.',
+      focusLabels: <String>['Real table', 'Rank ladder', '4 or 9'],
+    ),
+  ],
+);
+
 final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w5_street_change_intro',
@@ -12522,6 +13078,159 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
       body:
           'Turn and river are not cosmetic. If the board got more connected or completed a draw, re-read the whole story before acting.',
       focusLabels: <String>['Turn change', 'Repair read', 'One-pair caution'],
+    ),
+  ],
+);
+
+final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_turn_texture_shift_transfer',
+  caption:
+      'Real table. Flop K-9-2 looked calm, but the turn brings the T of hearts.',
+  hint:
+      'Do not replay the flop read. Ask what the new turn card changed first.',
+  question: 'What changed first on the turn?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'board_got_wetter',
+      label: 'The board got wetter and more connected',
+      isCorrect: true,
+      preferredLabel: 'The board got wetter and more connected',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean transfer read.',
+      feedbackReason:
+          'That is the first real-table update. The heart and connected turn card make the same board more dangerous before you copy the flop plan.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'nothing_changed',
+      label: 'Nothing changed, so keep the same easy plan',
+      isCorrect: false,
+      preferredLabel: 'The board got wetter and more connected',
+      betterAnswerLabel: 'The board got wetter and more connected',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'One more street read.',
+      feedbackReason:
+          'Turn cards are not cosmetic. The new card changes texture and future-card pressure, so the flop story cannot stay frozen.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'size_only_changed',
+      label: 'Only the bet size matters now',
+      isCorrect: false,
+      preferredLabel: 'The board got wetter and more connected',
+      betterAnswerLabel: 'The board got wetter and more connected',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Part of the picture.',
+      feedbackReason:
+          'Size matters, but not before the board read. The turn changed texture first, so action should start from that update.',
+    ),
+  ],
+  table: _world5StreetChangeIntroRunner.table.copyWith(
+    streetLabel: 'Turn',
+    potLabel: 'Pot 8 BB',
+    centerLabel: 'Turn texture shift',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 'c'),
+      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '2', suit: 's'),
+      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'BB checks flop'),
+      Act0ActionTrailItemV1(label: 'BTN bets'),
+      Act0ActionTrailItemV1(label: 'BB calls'),
+      Act0ActionTrailItemV1(label: 'Turn: T hearts'),
+    ],
+    highlightedCardIds: const <String>['board_1', 'board_3'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Street changes can change texture.',
+      body:
+          'On a real table, a turn card can make the same board wetter, more connected, and less comfortable for one-pair autopilot.',
+      focusLabels: <String>[
+        'Real table',
+        'Turn card',
+        'Wetter board',
+        'Reconnect the story',
+      ],
+    ),
+  ],
+);
+
+final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_river_draw_story_transfer',
+  caption:
+      'Real table. The flop and turn showed a heart draw, but the river bricks with the black 3.',
+  hint:
+      'Keep the same draw story in mind and decide whether it finished or missed.',
+  question: 'What is the clean river read first?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'draw_missed_story',
+      label: 'The same draw story missed',
+      isCorrect: true,
+      preferredLabel: 'The same draw story missed',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exactly.',
+      feedbackReason:
+          'No heart arrived, so the same draw story missed. The clean read is keep the same story all the way to the river instead of inventing a new one.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'river_restarts_story',
+      label: 'The river starts a new story from zero',
+      isCorrect: false,
+      preferredLabel: 'The same draw story missed',
+      betterAnswerLabel: 'The same draw story missed',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too disconnected.',
+      feedbackReason:
+          'River reads do not reset the hand. The right transfer is keep following the same draw story and mark it as a miss when the suit never lands.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'draw_hit_anyway',
+      label: 'The draw probably got there anyway',
+      isCorrect: false,
+      preferredLabel: 'The same draw story missed',
+      betterAnswerLabel: 'The same draw story missed',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Tempting shortcut.',
+      feedbackReason:
+          'That guess skips the board. The clean recheck is simpler: no heart means the same draw story missed.',
+    ),
+  ],
+  table: _world5StreetChangeIntroRunner.table.copyWith(
+    streetLabel: 'River',
+    potLabel: 'Pot 10 BB',
+    centerLabel: 'River draw story',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '2', suit: 'c'),
+      Act0CardStateV1(rank: '9', suit: 's'),
+      Act0CardStateV1(rank: '3', suit: 'c'),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
+      Act0ActionTrailItemV1(label: 'Turn: draw still live'),
+      Act0ActionTrailItemV1(label: 'River: black 3'),
+    ],
+    highlightedCardIds: const <String>['board_0', 'board_1', 'board_4'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'One draw story across all streets.',
+      body:
+          'Do not start over on the river. Follow the same draw story through flop, turn, and river, then say clearly whether it hit or missed.',
+      focusLabels: <String>['Same story', 'Flop-turn-river', 'Hit or missed'],
     ),
   ],
 );
@@ -13202,6 +13911,152 @@ final _w6MissedHandActionRunner = _w6PressureLinesIntroRunner.copyWith(
   ],
 );
 
+final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
+  lessonId: 'w6_table_value_line_transfer',
+  caption:
+      'Real table. K-8-4 rainbow. Hero holds K-J on the button after BB checks.',
+  hint:
+      'Bucket first, then line: top pair is value, so the clean action is bet for value.',
+  question: 'What is the clean flop action?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'bet_value',
+      label: 'Bet for value',
+      isCorrect: true,
+      preferredLabel: 'Bet for value',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean transfer.',
+      feedbackReason:
+          'On a real table, K-J on K-8-4 lands in the value bucket. Once the bucket is clear, the clean line is bet for value.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'check_back',
+      label: 'Check back',
+      isCorrect: false,
+      preferredLabel: 'Bet for value',
+      betterAnswerLabel: 'Bet for value',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Playable, but passive.',
+      feedbackReason:
+          'Checking is legal, but it leaves value behind. Top pair on a dry board wants a value line more often than a quiet check.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_bluff',
+      label: 'Bet as a bluff',
+      isCorrect: false,
+      preferredLabel: 'Bet for value',
+      betterAnswerLabel: 'Bet for value',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Right action, wrong reason.',
+      feedbackReason:
+          'The bet is fine, but the reason matters. This is not bluff pressure. It is a value line because top pair can get called by worse.',
+    ),
+  ],
+  table: _w6ValueRangeActionRunner.table.copyWith(
+    potLabel: 'Pot 6 BB',
+    centerLabel: 'Real table value line',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'c'),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '4', suit: 'c'),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'BB checks'),
+      Act0ActionTrailItemV1(label: 'BTN acts'),
+    ],
+    activeSeatId: 'btn',
+    highlightedSeatIds: const <String>['btn', 'bb'],
+    highlightedCardIds: const <String>['hero_0', 'board_0'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Bucket first, line second.',
+      body:
+          'On a real table, top pair on a dry board belongs to value. Once the bucket is clear, the clean line is bet for value instead of guessing.',
+      focusLabels: <String>['Real table', 'Value bucket', 'Bet for value'],
+    ),
+  ],
+);
+
+final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
+  lessonId: 'w6_turn_pressure_shift_transfer',
+  caption:
+      'Real table. Flop K-7-2 made A-Q a bluff candidate. BB called, and the turn pairs the 2.',
+  hint:
+      'When the board pairs and the first bluff gets called, some pressure lines cool off.',
+  question: 'What is the cleaner turn plan now?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'check_more',
+      label: 'Check more often',
+      isCorrect: true,
+      preferredLabel: 'Check more often',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Good pressure reset.',
+      feedbackReason:
+          'The flop bluff candidate lost momentum. After the call and paired turn, the cleaner pressure line is check more often instead of forcing another barrel.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'barrel_big',
+      label: 'Barrel big again',
+      isCorrect: false,
+      preferredLabel: 'Check more often',
+      betterAnswerLabel: 'Check more often',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Tempting, but noisy.',
+      feedbackReason:
+          'Big pressure can happen sometimes, but the paired turn and called flop reduce the clean bluff story. Checking is the calmer transfer read here.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bet_value',
+      label: 'Bet for value',
+      isCorrect: false,
+      preferredLabel: 'Check more often',
+      betterAnswerLabel: 'Check more often',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Wrong bucket now.',
+      feedbackReason:
+          'A-Q still has no made hand on K-7-2-2. This is not a value line. The better read is that the bluff pressure cooled off.',
+    ),
+  ],
+  table: _w6BluffCandidateRunner.table.copyWith(
+    streetLabel: 'Turn',
+    potLabel: 'Pot 11 BB',
+    centerLabel: 'Turn pressure shift',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 's'),
+      Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 'c'),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '2', suit: 's'),
+      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'BTN bets flop'),
+      Act0ActionTrailItemV1(label: 'BB calls'),
+      Act0ActionTrailItemV1(label: 'BB checks turn'),
+      Act0ActionTrailItemV1(label: 'BTN acts'),
+    ],
+    activeSeatId: 'btn',
+    highlightedSeatIds: const <String>['btn', 'bb'],
+    highlightedCardIds: const <String>['board_2', 'board_3'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Street changes can cool pressure.',
+      body:
+          'A bluff candidate is not a forever-barrel pass. On a paired turn after a call, the cleaner transfer can be slow down and check more often.',
+      focusLabels: <String>['Paired turn', 'Called flop', 'Check more often'],
+    ),
+  ],
+);
+
 final _w6PressureLinesRecapRunner = _w6PressureLinesIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w6_pressure_lines_recap',
@@ -13781,7 +14636,7 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
       preferredLabel: 'Villain K-8',
       betterAnswerLabel: 'Villain K-8',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost there.',
+      feedbackTitle: 'Not quite.',
       feedbackReason:
           'The board is paired, but both players did not land on the same best five. Villain improves beyond the shared board.',
     ),
@@ -14509,6 +15364,63 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
   ],
 );
 
+final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w7_top_pair_spr2_transfer',
+  caption: 'Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 2.',
+  hint:
+      'The hand did not change from the deeper version. Read what the low SPR changes first.',
+  question: 'What does low SPR add to this top-pair spot?',
+  table: _w6ValueRangeActionRunner.table.copyWith(
+    streetLabel: 'Flop',
+    potLabel: 'Pot 8 BB',
+    toCallLabel: 'To call 3 BB',
+    centerLabel: 'SPR 2, top pair',
+  ),
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'faster_commitment',
+      label: 'Less room, more commitment pressure',
+      isCorrect: true,
+      preferredLabel: 'Less room, more commitment pressure',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean SPR contrast.',
+      feedbackReason:
+          'That is the low-SPR transfer. Top pair still needs board discipline, but SPR 2 leaves much less room and makes one bet push the hand closer to commitment.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'same_as_spr8',
+      label: 'Treat it like SPR 8',
+      isCorrect: false,
+      preferredLabel: 'Less room, more commitment pressure',
+      betterAnswerLabel: 'Less room, more commitment pressure',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Depth changed the job.',
+      feedbackReason:
+          'The board and hand stayed the same, but SPR did not. At SPR 2, low room changes the pressure and makes the hand much closer to commitment than at SPR 8.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'ignore_stack_pressure',
+      label: 'Top pair matters, so stack pressure can wait',
+      isCorrect: false,
+      preferredLabel: 'Less room, more commitment pressure',
+      betterAnswerLabel: 'Less room, more commitment pressure',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Only part of the picture.',
+      feedbackReason:
+          'Top pair is the made hand, but low SPR is the pressure clue. Name the reduced room first, then judge how willing the hand is to keep money flowing.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Same top pair, tighter room.',
+      body:
+          'Compare this directly with the SPR 8 version. Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.',
+      focusLabels: <String>['Top pair', 'SPR 2', 'Less room', 'Commitment'],
+    ),
+  ],
+);
+
 final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w7_top_pair_spr8_transfer',
@@ -15109,6 +16021,67 @@ final _w9MZoneYellowRunner = _w9MRatioIntroRunner.copyWith(
       feedbackTitle: 'Too rushed.',
       feedbackReason:
           'Yellow zone needs sharper planning, not panic. You still want selective aggression with room for better spots.',
+    ),
+  ],
+);
+
+final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_m_ratio_table_window_transfer',
+  caption: 'Real table. Hero is BTN with A-J offsuit at 12 BB in yellow zone.',
+  hint:
+      'This is not red-zone panic yet, but the stack should not drift. Read what yellow-zone urgency changes first.',
+  question: 'What is the cleaner first zone adjustment here?',
+  table: _w9MRatioIntroRunner.table.copyWith(
+    heroCards: _heroAjCards,
+    streetLabel: 'Preflop',
+    potLabel: 'Pot 1.5 BB',
+    toCallLabel: 'To call 0 BB',
+    centerLabel: 'BTN, 12 BB, yellow zone',
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Folded to BTN'),
+    ],
+  ),
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'prepare_now',
+      label: 'Plan a practical action window now',
+      isCorrect: true,
+      preferredLabel: 'Plan a practical action window now',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Sharp transfer.',
+      feedbackReason:
+          'That is the live-table yellow-zone transfer. You still have a little room, but urgency is real enough that you should prepare an action window before the stack slips into red zone.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'wait_for_red',
+      label: 'Wait until red zone before changing anything',
+      isCorrect: false,
+      preferredLabel: 'Plan a practical action window now',
+      betterAnswerLabel: 'Plan a practical action window now',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too late.',
+      feedbackReason:
+          'Yellow zone is where urgency starts to matter. If you wait for red zone, you lose cleaner timing and let the stack drift into panic decisions.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'panic_now',
+      label: 'Treat yellow zone like instant all-in panic',
+      isCorrect: false,
+      preferredLabel: 'Plan a practical action window now',
+      betterAnswerLabel: 'Plan a practical action window now',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Right idea, wrong speed.',
+      feedbackReason:
+          'Urgency is real, but yellow zone still leaves some room. The cleaner read is plan practical action windows before red-zone panic, not force every spot immediately.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Yellow zone starts the countdown.',
+      body:
+          'This is the changed frame: same M-ratio idea, live table now. Yellow zone is not freeze mode and not red-zone panic. It is the spot where urgency becomes actionable before the stack gets desperate.',
+      focusLabels: <String>['Yellow zone', '12 BB', 'Urgency', 'Plan early'],
     ),
   ],
 );

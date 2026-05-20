@@ -207,28 +207,54 @@ class Act0ShellTokensV1 {
 
   static BoxDecoration tableRimDecoration() {
     return BoxDecoration(
-      color: const Color(0xFF050807),
+      color: const Color(0xFF0C1014),
       borderRadius: BorderRadius.circular(tableOuterRadius),
+      border: Border.all(color: const Color(0xFF1E2832), width: 1.5),
       boxShadow: const <BoxShadow>[
+        // Outer drop shadow
         BoxShadow(
-          color: Color(0xAA000000),
-          blurRadius: 44,
-          offset: Offset(0, 24),
+          color: Color(0xD8000000),
+          blurRadius: 50,
+          offset: Offset(0, 30),
         ),
-        BoxShadow(color: Color(0xFF05090A), blurRadius: 0, spreadRadius: 6),
-        BoxShadow(color: Color(0x554F3B18), blurRadius: 0, spreadRadius: 8),
+        // Faux 3D bevel / rim lip
+        BoxShadow(
+          color: Color(0xFF2C3946),
+          blurRadius: 4,
+          spreadRadius: 0,
+          offset: Offset(0, 2),
+        ),
+        BoxShadow(
+          color: Color(0xFF05080A),
+          blurRadius: 10,
+          spreadRadius: 6,
+          offset: Offset(0, 6),
+        ),
       ],
+      gradient: const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF14191F), // Top rim highlight
+          Color(0xFF080B0D), // Bottom rim shadow
+        ],
+      ),
     );
   }
 
   static BoxDecoration feltDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(tableInnerRadius),
-      border: Border.all(color: feltLine.withOpacity(0.46), width: 1.2),
+      border: Border.all(color: const Color(0xFF123423), width: 2),
       gradient: const RadialGradient(
-        radius: 0.96,
-        colors: <Color>[Color(0xFF153C2D), Color(0xFF0D1E1C), feltDark],
-        stops: <double>[0, 0.58, 1],
+        center: Alignment(0, -0.1), // Spotlight slightly shifted up
+        radius: 1.0,
+        colors: <Color>[
+          Color(0xFF1C4C38), // Bright center spotlight
+          Color(0xFF102E23), // Mid table
+          Color(0xFF05120E), // Very dark edges
+        ],
+        stops: <double>[0, 0.5, 1],
       ),
     );
   }

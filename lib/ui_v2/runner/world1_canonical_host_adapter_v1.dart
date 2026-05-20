@@ -8,7 +8,7 @@ import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_host_contract_v1.
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_state_entry_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_shell_controller_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 class World1CanonicalHostLaunchInputV1 {
   const World1CanonicalHostLaunchInputV1({

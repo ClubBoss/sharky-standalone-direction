@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/modern_table_screen_v1.dart';
 
 class DebugDrillRuntimeAdapterV1Screen extends StatefulWidget {
   const DebugDrillRuntimeAdapterV1Screen({

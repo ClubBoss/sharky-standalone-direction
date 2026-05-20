@@ -73,17 +73,13 @@ Purpose: primary orientation layer for future agents before repo investigation.
 
 ## 2. Runtime families
 
-- Runtime first-open set:
-  - `lib/ui_v2/runner/canonical_launch_boundary_runner_surface_v1.dart`
-  - `lib/ui_v2/runner/canonical_terminal_runner_surface_v1.dart`
-  - `lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart`
-  - `lib/ui_v2/runner/world1_modern_table_adapter_v1.dart`
-
-- Canonical embedded ModernTable path:
-  - `lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart`
-  - `lib/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart`
-  - embedded table leaf: `lib/ui_v2/screens/modern_table_screen_v1.dart`
-  - adaptation seam: `lib/ui_v2/runner/world1_modern_table_adapter_v1.dart`
+- Archived ModernTable & World1 Runner paths (Legacy):
+  - Moved to `lib/archive/legacy_runners/`
+  - `lib/archive/legacy_runners/modern_table_screen_v1.dart`
+  - `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart`
+  - `lib/archive/legacy_runners/canonical_terminal_session_drill_surfaced_runner_v1.dart`
+  - `lib/archive/legacy_runners/world1_modern_table_adapter_v1.dart`
+  - These are preserved for compilation but are no longer active runtime surfaces.
 
 - Legacy table path:
   - `lib/ui_v2/screens/drill_runner_screen.dart`
@@ -101,8 +97,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
     - boundary-preserved legacy launch surfaces
 
 - Canonical vs legacy-only:
-  - canonical learner-facing runtime truth is the launch-boundary / terminal-surface / shared-shell path feeding embedded `ModernTableScreenV1`
-  - legacy paths are compatibility lanes only; do not copy new learner/runtime ownership back into `DrillRunnerScreen` or `table_surface.dart`
+  - canonical learner-facing runtime truth is the **Act0 shell route** (`lib/ui_v2/act0_shell/*`)
+  - legacy paths (World1 runners, ModernTable) are archived and no longer active
 
 ## 2a. Active app boundary
 

@@ -32,7 +32,7 @@ import 'package:poker_analyzer/ui_v2/runner/shared_learner_feedback_explanation_
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_family_extras_slots_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_local_policy_boundary_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_teaching_grammar_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/shared_embedded_table_visual_family_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/shared_embedded_table_visual_family_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_teaching_header_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_teaching_prompt_details_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_prompt_reveal_launcher_v1.dart';
@@ -64,9 +64,9 @@ import 'package:poker_analyzer/ui_v2/runner/shared_learner_action_area_contract_
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_shell_controller_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_state_entry_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/modern_table_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/visual/campaign_ui_kit_v1.dart';
 import 'package:poker_analyzer/theme/app_colors.dart';
 

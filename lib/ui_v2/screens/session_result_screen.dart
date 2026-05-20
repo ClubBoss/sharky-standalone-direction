@@ -45,7 +45,7 @@ import 'package:poker_analyzer/ui_v2/screens/module_summary_screen.dart';
 import 'package:poker_analyzer/ui_v2/screens/table_first_navigation.dart';
 import 'package:poker_analyzer/ui_v2/screens/universal_intake_plan_screen.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 import 'package:poker_analyzer/ui_v2/runner/runner_completion_surface_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/visual/campaign_ui_kit_v1.dart';

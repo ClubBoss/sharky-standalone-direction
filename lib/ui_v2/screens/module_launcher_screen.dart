@@ -19,7 +19,7 @@ import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/audit_hub_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/table_first_navigation.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 import '../components/design_launcher_tile.dart';
 import '../components/design_panel.dart';

@@ -4,8 +4,8 @@ import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_legacy_drill_runn
 import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_phase1_runner_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_phase2_runner_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_phase3_runner_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/canonical_terminal_session_drill_surfaced_runner_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 class CanonicalTerminalRunnerSurfaceV1 extends StatelessWidget {
   const CanonicalTerminalRunnerSurfaceV1({

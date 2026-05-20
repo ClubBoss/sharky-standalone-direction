@@ -1,7 +1,7 @@
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 enum CanonicalTrainingSessionLaunchFamilyV1 {
   canonicalWorld1Runner,

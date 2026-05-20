@@ -54,7 +54,7 @@ import 'package:poker_analyzer/ui_v2/map/progress_map_world1_determinism.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/table_first_navigation.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/visual/campaign_ui_kit_v1.dart';

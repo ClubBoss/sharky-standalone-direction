@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/canonical_learning_path_practice_launch_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 import '../models/learning_path_stage_model.dart';
 import '../models/stage_type.dart';

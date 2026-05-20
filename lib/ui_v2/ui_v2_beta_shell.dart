@@ -5,7 +5,7 @@ import 'package:poker_analyzer/canonical/canonical_truth_map_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/table_first_navigation.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 class UiV2BetaShell extends StatefulWidget {
   const UiV2BetaShell({super.key});

@@ -21,6 +21,9 @@ String _placementAtomV1(
   required String fallback,
 }) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
+bool _placementKeepFullSupportCopyV1(String questionId) =>
+    questionId == 'experience';
+
 class Act0PlacementShellV1 extends StatelessWidget {
   const Act0PlacementShellV1({
     super.key,
@@ -29,7 +32,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
     required this.currentQuestionIndex,
     required this.selectedOptionIds,
     required this.result,
-    required this.trialPreviewSelected,
     required this.onSelectOption,
     required this.onStartPlacement,
     required this.onBack,
@@ -37,7 +39,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
     required this.onStartDiagnostic,
     required this.onStartRecommended,
     required this.onStartFromZero,
-    required this.onStartTrialPreview,
   });
 
   final List<Act0PlacementQuestionV1> questions;
@@ -45,7 +46,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
   final int currentQuestionIndex;
   final Map<String, Set<String>> selectedOptionIds;
   final Act0PlacementResultV1? result;
-  final bool trialPreviewSelected;
   final void Function(Act0PlacementQuestionV1 question, String optionId)
   onSelectOption;
   final VoidCallback onStartPlacement;
@@ -54,7 +54,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
   final VoidCallback onStartDiagnostic;
   final VoidCallback onStartRecommended;
   final VoidCallback onStartFromZero;
-  final VoidCallback onStartTrialPreview;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +67,9 @@ class Act0PlacementShellV1 extends StatelessWidget {
       final currentQuestionSelections = currentQuestion == null
           ? const <String>{}
           : selectedOptionIds[currentQuestion.questionId] ?? const <String>{};
+      final explicitBeginnerStart =
+          currentQuestion?.questionId == 'experience' &&
+          currentQuestionSelections.contains('new');
       final minimumCount = currentQuestion == null
           ? 0
           : (currentQuestion.minSelections <= 0
@@ -159,6 +161,10 @@ class Act0PlacementShellV1 extends StatelessWidget {
                 ? (localeIsRu
                       ? 'Две минуты. Потом Шарки покажет, с чего начать.'
                       : 'Two minutes. Then Sharky shows where to start.')
+                : explicitBeginnerStart
+                ? (localeIsRu
+                      ? 'Начни с нуля и пропусти живую проверку.'
+                      : 'Start from zero and skip the live check.')
                 : currentQuestionIndex >= questions.length
                 ? (localeIsRu
                       ? 'Один короткий живой чек — и первый полезный старт готов.'
@@ -177,11 +183,15 @@ class Act0PlacementShellV1 extends StatelessWidget {
             ),
             buttonLabel: showIntro
                 ? (localeIsRu ? 'Начать плейсмент' : 'Start placement')
+                : explicitBeginnerStart
+                ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
                 : currentQuestionIndex >= questions.length
                 ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
                 : (localeIsRu ? 'Продолжить' : 'Continue'),
             onPressed: showIntro
                 ? onStartPlacement
+                : explicitBeginnerStart
+                ? onStartFromZero
                 : currentQuestionIndex >= questions.length
                 ? onStartDiagnostic
                 : (allowNext ? onNext : null),
@@ -256,11 +266,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
           ),
         ),
         _PlacementResultActionBarV1(
-          result: placementResult,
-          trialPreviewSelected: trialPreviewSelected,
           onStartRecommended: onStartRecommended,
           onStartFromZero: onStartFromZero,
-          onStartTrialPreview: onStartTrialPreview,
         ),
       ],
     );
@@ -326,87 +333,23 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  _placementAtomV1(
+                  _placementCopyV1(
                     context,
-                    'placement_ready_best_place_to_begin',
-                    fallback:
-                        'One short live check. Then Sharky locks the best place to begin.',
-                  ),
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.text,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _PlacementSectionCardV1(
-            key: const Key('act0_shell_placement_ready_steps'),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _placementAtomV1(
-                    context,
-                    'placement_ready_five_quick_reads',
-                    fallback: 'Five quick reads',
+                    en: 'One short live check.',
+                    ru: 'Одна короткая живая проверка.',
                   ),
                   style: Act0ShellTokensV1.cardTitle,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementStepLineV1(
-                  icon: Icons.person_search_rounded,
-                  label: _placementAtomV1(
-                    context,
-                    'placement_ready_live_table_scan',
-                    fallback: 'Live table scan with Hero, board, and pot.',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _PlacementStepLineV1(
-                  icon: Icons.view_kanban_rounded,
-                  label: _placementAtomV1(
-                    context,
-                    'placement_ready_private_vs_board',
-                    fallback: 'Private cards versus shared board.',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _PlacementStepLineV1(
-                  icon: Icons.alt_route_rounded,
-                  label: _placementAtomV1(
-                    context,
-                    'placement_ready_action_order',
-                    fallback: 'Action order once the hand starts moving.',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _PlacementStepLineV1(
-                  icon: Icons.touch_app_rounded,
-                  label: _placementAtomV1(
-                    context,
-                    'placement_ready_legal_actions',
-                    fallback: 'One quick legal-action check under pressure.',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _PlacementStepLineV1(
-                  icon: Icons.timeline_rounded,
-                  label: _placementAtomV1(
-                    context,
-                    'placement_ready_position_value',
-                    fallback: 'Early versus late position value.',
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
-                  _placementAtomV1(
+                  _placementCopyV1(
                     context,
-                    'placement_ready_start_proves_itself_early',
-                    fallback:
-                        'Then you land in one start that fits, opens fast, and proves itself early.',
+                    en: 'Answer a few table reads so Sharky can place you better.',
+                    ru: 'Ответь на несколько чтений стола, и Шарки точнее выберет старт.',
                   ),
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.text,
+                  ),
                 ),
               ],
             ),
@@ -419,8 +362,11 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
     final selectedIds =
         selectedOptionIds[question.questionId] ?? const <String>{};
     final selectedCount = selectedIds.length;
+    final keepFullSupportCopy = _placementKeepFullSupportCopyV1(
+      question.questionId,
+    );
     final choiceLabel = question.allowsMultiple
-        ? 'Choose anything that fits'
+        ? 'Choose what fits'
         : 'Choose one';
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 320),
@@ -515,8 +461,13 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Text(question.title, style: Act0ShellTokensV1.sectionTitle),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(question.subtitle, style: Act0ShellTokensV1.muted),
-            if (question.helper != null) ...[
+            Text(
+              question.subtitle,
+              style: Act0ShellTokensV1.muted,
+              maxLines: keepFullSupportCopy ? null : 2,
+              overflow: keepFullSupportCopy ? null : TextOverflow.fade,
+            ),
+            if (keepFullSupportCopy && question.helper != null) ...[
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
                 question.helper!,
@@ -568,6 +519,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 option: option,
                 selected: selectedIds.contains(option.optionId),
                 multiSelect: question.allowsMultiple,
+                showBadge: keepFullSupportCopy,
+                showSubtitle: keepFullSupportCopy,
                 onTap: () => onSelectOption(question, option.optionId),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -584,108 +537,34 @@ class _PlacementIntroViewV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          key: const Key('act0_shell_placement_intro_card'),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.heroDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _placementAtomV1(
-                  context,
-                  'placement_intro_route_check',
-                  fallback: 'Route check',
-                ),
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.primary,
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
-              Text(
-                _placementAtomV1(
-                  context,
-                  'placement_intro_quick_route_check',
-                  fallback: 'Quick route check. No long setup.',
-                ),
-                style: Act0ShellTokensV1.screenTitle,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                _placementAtomV1(
-                  context,
-                  'placement_intro_best_place_to_begin',
-                  fallback:
-                      'Sharky uses this to pick the best place to begin and skip the wrong opener.',
-                ),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.text,
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementMiniBannerV1(
-                key: const Key('act0_shell_placement_intro_reassurance'),
-                icon: Icons.verified_rounded,
-                text: _placementAtomV1(
-                  context,
-                  'placement_intro_no_payment_choice_first',
-                  fallback:
-                      'No payment choice first. You see where to start and your first hand before any premium prompt.',
-                ),
-              ),
-            ],
+    return Container(
+      key: const Key('act0_shell_placement_intro_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.heroDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _placementAtomV1(
+              context,
+              'placement_intro_route_check',
+              fallback: 'Route check',
+            ),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.primary,
+            ),
           ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_intro_for_who'),
-          borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _placementAtomV1(
-                  context,
-                  'placement_intro_what_happens_next',
-                  fallback: 'What happens next',
-                ),
-                style: Act0ShellTokensV1.cardTitle,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementStepLineV1(
-                icon: Icons.route_rounded,
-                label: _placementAtomV1(
-                  context,
-                  'placement_intro_clear_place_to_start',
-                  fallback:
-                      'One clear place to start instead of a generic opener.',
-                ),
-              ),
-              const SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.play_circle_rounded,
-                label: _placementAtomV1(
-                  context,
-                  'placement_intro_short_live_check',
-                  fallback: 'One short live check using real table spots.',
-                ),
-              ),
-              const SizedBox(height: 10),
-              _PlacementStepLineV1(
-                icon: Icons.looks_3_rounded,
-                label: _placementAtomV1(
-                  context,
-                  'placement_intro_start_module_now',
-                  fallback: 'A start module you can open immediately.',
-                ),
-              ),
-            ],
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            _placementCopyV1(
+              context,
+              en: 'A few fast answers help Sharky choose your first hand.',
+              ru: 'Пара быстрых ответов помогут Шарки выбрать твою первую раздачу.',
+            ),
+            style: Act0ShellTokensV1.screenTitle,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -695,13 +574,11 @@ class _PlacementInstructionBlocksV1 extends StatelessWidget {
     required this.text,
     required this.keyBase,
     required this.style,
-    this.textAlign,
   });
 
   final String text;
   final String keyBase;
   final TextStyle style;
-  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -720,7 +597,6 @@ class _PlacementInstructionBlocksV1 extends StatelessWidget {
               blocks[index],
               key: Key('${keyBase}_block_$index'),
               style: style,
-              textAlign: textAlign,
             ),
           ],
         ],
@@ -740,336 +616,47 @@ class _PlacementResultViewV1 extends StatelessWidget {
       key: const Key('act0_shell_placement_result'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _PlacementMiniBannerV1(
-          key: const Key('act0_shell_placement_right_place_banner'),
-          icon: Icons.place_rounded,
-          text: _rightPlaceLineV1(result),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapSm),
-        Container(
-          key: const Key('act0_shell_placement_report_panel'),
-          padding: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Act0ShellTokensV1.primary.withOpacity(0.24),
-                Act0ShellTokensV1.info.withOpacity(0.16),
-                Act0ShellTokensV1.gold.withOpacity(0.12),
-              ],
-            ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Act0ShellTokensV1.primary.withOpacity(0.12),
-                blurRadius: 28,
-                offset: const Offset(0, 16),
-              ),
-            ],
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                Act0ShellTokensV1.radiusXl - 1,
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-                  Act0ShellTokensV1.surface2,
-                  Act0ShellTokensV1.surface,
-                  Act0ShellTokensV1.placementReportSurface,
-                ],
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 34,
-                      height: 34,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Act0ShellTokensV1.primary.withOpacity(0.16),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusBase,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.auto_graph_rounded,
-                        size: 18,
-                        color: Act0ShellTokensV1.primary,
-                      ),
-                    ),
-                    const SizedBox(width: Act0ShellTokensV1.gapSm),
-                    Expanded(
-                      child: Text(
-                        'Sharky recommendation',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.primary,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '${result.levelLabel} · ${result.diagnosticCorrect}/${result.diagnosticTotal}',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                Text(result.summary, style: Act0ShellTokensV1.screenTitle),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementInstructionBlocksV1(
-                  keyBase: 'act0_shell_placement_report_body',
-                  text: result.reportBody,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    height: 1.45,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Act0ShellTokensV1.gapMd,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.03),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusLg,
-                    ),
-                    border: Border.all(color: Colors.white.withOpacity(0.06)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.radar_rounded,
-                        size: 16,
-                        color: Act0ShellTokensV1.gold,
-                      ),
-                      const SizedBox(width: Act0ShellTokensV1.gapSm),
-                      Expanded(
-                        child: Text(
-                          result.reportHeadline,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                _PlacementInstructionBlocksV1(
-                  keyBase: 'act0_shell_placement_destination_trust_line',
-                  text: result.routeTrustLine,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                Act0SharkyGuideCardV1(
-                  eyebrow: 'Sharky',
-                  line: result.coachLine,
-                  mood: _placementMoodForResult(result),
-                  tone: _placementToneForResult(result),
-                  compact: true,
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
         _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_destination_card'),
-          borderColor: Act0ShellTokensV1.primary.withOpacity(0.34),
+          key: const Key('act0_shell_placement_start_handoff'),
+          borderColor: _placementToneForResult(result).withOpacity(0.34),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.18),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusBase,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.flag_rounded,
-                      size: 16,
-                      color: Act0ShellTokensV1.primary,
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Text(
-                    _placementAtomV1(
-                      context,
-                      'placement_sheet_start_here',
-                      fallback: 'Start here',
-                    ),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
-                    ),
-                  ),
-                ],
+              Text(
+                _placementCopyV1(context, en: 'Your start', ru: 'Твой старт'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: _placementToneForResult(result),
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                '${_placementCopyV1(context, en: 'Your start:', ru: 'Твой старт:')} ${result.levelLabel}',
+                style: Act0ShellTokensV1.sectionTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(result.recommendedTitle, style: Act0ShellTokensV1.cardTitle),
-              const SizedBox(height: 6),
-              _PlacementInstructionBlocksV1(
-                keyBase: 'act0_shell_placement_recommended_reason',
-                text: result.recommendedReason,
+              Text(
+                _placementCompactReasonLineV1(context, result),
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                   height: 1.4,
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Container(
-                key: const Key('act0_shell_placement_first_win_card'),
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.surface,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusLg,
-                  ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.gold.withOpacity(0.24),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'What should feel better first',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.gold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      _firstRepProofLineV1(result),
-                      style: Act0ShellTokensV1.muted.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        height: 1.38,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (result.firstSessionPlan.isNotEmpty) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementMicroStepV1(
-                  index: 1,
-                  text: result.firstSessionPlan.first,
-                ),
-              ],
-              if (result.firstSessionPlan.length > 1) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                Container(
-                  key: const Key('act0_shell_placement_next_10_block'),
-                  padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                  decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.surface,
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusLg,
-                    ),
-                    border: Border.all(
-                      color: Act0ShellTokensV1.info.withOpacity(0.24),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Right after that',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.info,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      _PlacementInstructionBlocksV1(
-                        keyBase: 'act0_shell_placement_next_10_blocks',
-                        text: result.firstSessionPlan[1],
-                        style: Act0ShellTokensV1.muted.copyWith(
-                          color: Act0ShellTokensV1.text,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _PlacementSectionCardV1(
-          key: const Key('act0_shell_placement_skill_stats'),
-          borderColor: Act0ShellTokensV1.border,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.info.withOpacity(0.14),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusBase,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.tune_rounded,
-                      size: 18,
-                      color: Act0ShellTokensV1.info,
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Core poker skills',
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.info,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
               Text(
-                'Your first reads and action habits start here.',
+                '${_placementCopyV1(context, en: 'First hand:', ru: 'Первая раздача:')} ${_firstRepProofLineV1(result)}',
                 style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
+                  color: Act0ShellTokensV1.text,
+                  height: 1.38,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Wrap(
-                spacing: Act0ShellTokensV1.gapSm,
-                runSpacing: Act0ShellTokensV1.gapSm,
-                children: [
-                  for (final stat in result.skillStats.take(4))
-                    _PlacementSkillCardV1(stat: stat),
-                ],
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              Text(
+                '${_placementCopyV1(context, en: 'Open with:', ru: 'Начни с:')} ${result.recommendedTitle}',
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.text,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -1077,6 +664,29 @@ class _PlacementResultViewV1 extends StatelessWidget {
       ],
     );
   }
+}
+
+String _placementCompactReasonLineV1(
+  BuildContext context,
+  Act0PlacementResultV1 result,
+) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer => _placementCopyV1(
+      context,
+      en: 'Start from the table itself before any faster decision work.',
+      ru: 'Начни с самого стола, прежде чем ускорять решения.',
+    ),
+    Act0PlacementResultLevelV1.rustyBeginner => _placementCopyV1(
+      context,
+      en: 'Start with hand flow before speed.',
+      ru: 'Сначала верни ясный ход раздачи, потом скорость.',
+    ),
+    Act0PlacementResultLevelV1.readyForBasics => _placementCopyV1(
+      context,
+      en: 'Start on action basics while the table structure stays visible.',
+      ru: 'Начни с базовых действий, пока структура стола остаётся ясной.',
+    ),
+  };
 }
 
 Act0SharkyMoodV1 _placementMoodForResult(Act0PlacementResultV1 result) {
@@ -1131,68 +741,14 @@ class _PlacementSectionCardV1 extends StatelessWidget {
   }
 }
 
-class _PlacementMetricTileV1 extends StatelessWidget {
-  const _PlacementMetricTileV1({
-    required this.label,
-    required this.value,
-    required this.accent,
-  });
-
-  final String label;
-  final String value;
-  final Color accent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(minWidth: 102, maxWidth: 168),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: accent.withOpacity(0.24)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: Act0ShellTokensV1.label.copyWith(color: accent)),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(value, style: Act0ShellTokensV1.body),
-        ],
-      ),
-    );
-  }
-}
-
 class _PlacementResultActionBarV1 extends StatelessWidget {
   const _PlacementResultActionBarV1({
-    required this.result,
-    required this.trialPreviewSelected,
     required this.onStartRecommended,
     required this.onStartFromZero,
-    required this.onStartTrialPreview,
   });
 
-  final Act0PlacementResultV1 result;
-  final bool trialPreviewSelected;
   final VoidCallback onStartRecommended;
   final VoidCallback onStartFromZero;
-  final VoidCallback onStartTrialPreview;
-
-  void _showRecommendedPathSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _PlacementRecommendedPathSheetV1(
-        result: result,
-        trialPreviewSelected: trialPreviewSelected,
-        onStartRecommended: onStartRecommended,
-        onStartFromZero: onStartFromZero,
-        onStartTrialPreview: onStartTrialPreview,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1229,269 +785,31 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           FilledButton(
-            key: const Key('act0_shell_placement_open_recommended_path'),
-            onPressed: () => _showRecommendedPathSheet(context),
+            key: const Key('act0_shell_placement_start_recommended'),
+            onPressed: onStartRecommended,
             style: Act0ShellTokensV1.primaryButtonStyle(),
             child: Text(
               _placementAtomV1(
                 context,
-                'placement_result_see_where_to_start',
-                fallback: 'See where to start',
+                'placement_sheet_start_first_hand',
+                fallback: 'Start first hand',
+              ),
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          OutlinedButton(
+            key: const Key('act0_shell_placement_start_zero'),
+            onPressed: onStartFromZero,
+            style: Act0ShellTokensV1.quietButtonStyle(),
+            child: Text(
+              _placementAtomV1(
+                context,
+                'placement_sheet_start_from_zero',
+                fallback: 'Start from zero',
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PlacementRecommendedPathSheetV1 extends StatelessWidget {
-  const _PlacementRecommendedPathSheetV1({
-    required this.result,
-    required this.trialPreviewSelected,
-    required this.onStartRecommended,
-    required this.onStartFromZero,
-    required this.onStartTrialPreview,
-  });
-
-  final Act0PlacementResultV1 result;
-  final bool trialPreviewSelected;
-  final VoidCallback onStartRecommended;
-  final VoidCallback onStartFromZero;
-  final VoidCallback onStartTrialPreview;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Container(
-        key: const Key('act0_shell_placement_recommended_sheet'),
-        margin: const EdgeInsets.only(top: 28),
-        padding: const EdgeInsets.all(1),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: <Color>[
-              Act0ShellTokensV1.primary.withOpacity(0.22),
-              Act0ShellTokensV1.info.withOpacity(0.14),
-              Act0ShellTokensV1.gold.withOpacity(0.14),
-            ],
-          ),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Container(
-          margin: const EdgeInsets.only(top: 0),
-          padding: const EdgeInsets.fromLTRB(
-            Act0ShellTokensV1.pageX,
-            Act0ShellTokensV1.gapLg,
-            Act0ShellTokensV1.pageX,
-            Act0ShellTokensV1.gapLg,
-          ),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(27)),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(
-                  child: Container(
-                    width: 42,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.surface3,
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapLg),
-                Text(
-                  _placementAtomV1(
-                    context,
-                    'placement_sheet_start_here',
-                    fallback: 'Start here',
-                  ),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.primary,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  result.recommendedTitle,
-                  style: Act0ShellTokensV1.sectionTitle,
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementInstructionBlocksV1(
-                  keyBase: 'act0_shell_placement_sheet_recommended_reason',
-                  text: result.recommendedReason,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    height: 1.38,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementMiniBannerV1(
-                  key: const Key(
-                    'act0_shell_placement_recommended_proof_banner',
-                  ),
-                  icon: Icons.flash_on_rounded,
-                  text: _firstRepProofLineV1(result),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapLg),
-                _PlacementSectionCardV1(
-                  borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _placementAtomV1(
-                          context,
-                          'placement_sheet_first_sessions',
-                          fallback: 'First sessions',
-                        ),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
-                        ),
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      for (
-                        var i = 0;
-                        i < result.firstSessionPlan.length;
-                        i++
-                      ) ...[
-                        _PlacementMicroStepV1(
-                          index: i + 1,
-                          text: result.firstSessionPlan[i],
-                        ),
-                        if (i < result.firstSessionPlan.length - 1)
-                          const SizedBox(height: Act0ShellTokensV1.gapXs),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                _PlacementInstructionBlocksV1(
-                  keyBase: 'act0_shell_placement_recommended_trust_line',
-                  text: result.routeTrustLine,
-                  style: Act0ShellTokensV1.muted,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-                _PlacementSectionCardV1(
-                  borderColor: Act0ShellTokensV1.gold.withOpacity(0.18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.workspace_premium_rounded,
-                            color: Act0ShellTokensV1.gold,
-                            size: 18,
-                          ),
-                          const SizedBox(width: Act0ShellTokensV1.gapSm),
-                          Text(
-                            _placementAtomV1(
-                              context,
-                              'placement_sheet_premium_trial',
-                              fallback: 'Premium trial',
-                            ),
-                            style: Act0ShellTokensV1.cardTitle.copyWith(
-                              color: Act0ShellTokensV1.gold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      _PlacementInstructionBlocksV1(
-                        keyBase: 'act0_shell_placement_premium_pitch',
-                        text: result.premiumPitch,
-                        style: Act0ShellTokensV1.muted,
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      for (final point in result.trialValuePoints.take(2)) ...[
-                        _PlacementStepLineV1(
-                          icon: Icons.check_circle_rounded,
-                          label: point,
-                        ),
-                        const SizedBox(height: 6),
-                      ],
-                      if (trialPreviewSelected) ...[
-                        const SizedBox(height: Act0ShellTokensV1.gapXs),
-                        Text(
-                          _placementAtomV1(
-                            context,
-                            'placement_sheet_trial_preview_saved',
-                            fallback:
-                                'Trial preview saved. You can still continue free.',
-                          ),
-                          style: Act0ShellTokensV1.muted,
-                        ),
-                      ],
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      OutlinedButton(
-                        key: const Key('act0_shell_placement_trial_cta'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onStartTrialPreview();
-                        },
-                        style: Act0ShellTokensV1.tonalButtonStyle(
-                          tone: Act0ShellTokensV1.gold,
-                          height: 40,
-                          fullWidth: true,
-                        ),
-                        child: Text(
-                          _placementAtomV1(
-                            context,
-                            'placement_sheet_preview_trial',
-                            fallback: 'Preview 7-day trial',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapLg),
-                FilledButton(
-                  key: const Key('act0_shell_placement_start_recommended'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    onStartRecommended();
-                  },
-                  style: Act0ShellTokensV1.primaryButtonStyle(),
-                  child: Text(
-                    _placementAtomV1(
-                      context,
-                      'placement_sheet_start_first_hand',
-                      fallback: 'Start first hand',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                OutlinedButton(
-                  key: const Key('act0_shell_placement_start_zero'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    onStartFromZero();
-                  },
-                  style: Act0ShellTokensV1.quietButtonStyle(),
-                  child: Text(
-                    _placementAtomV1(
-                      context,
-                      'placement_sheet_start_from_zero',
-                      fallback: 'Start from zero',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -1553,58 +871,6 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
       ),
     );
   }
-}
-
-class _PlacementMiniBannerV1 extends StatelessWidget {
-  const _PlacementMiniBannerV1({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Act0ShellTokensV1.gapMd,
-        vertical: 10,
-      ),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.18)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Act0ShellTokensV1.primary, size: 18),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Text(
-              text,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.primary,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-String _rightPlaceLineV1(Act0PlacementResultV1 result) {
-  return switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer =>
-      'You are in the right place. We start by making the table feel calm before any strategy load.',
-    Act0PlacementResultLevelV1.rustyBeginner =>
-      'You are in the right place. We steady hand flow first, then speed you back up.',
-    Act0PlacementResultLevelV1.readyForBasics =>
-      'You are in the right place. We can start on actions while structure stays visible.',
-  };
 }
 
 String _firstRepProofLineV1(Act0PlacementResultV1 result) {
@@ -1796,12 +1062,16 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
     required this.option,
     required this.selected,
     required this.multiSelect,
+    required this.showBadge,
+    required this.showSubtitle,
     required this.onTap,
   });
 
   final Act0PlacementOptionV1 option;
   final bool selected;
   final bool multiSelect;
+  final bool showBadge;
+  final bool showSubtitle;
   final VoidCallback onTap;
 
   @override
@@ -1861,7 +1131,7 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                           style: Act0ShellTokensV1.body,
                         ),
                       ),
-                      if (option.badge != null)
+                      if (showBadge && option.badge != null)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -1886,7 +1156,7 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                         ),
                     ],
                   ),
-                  if (option.subtitle != null) ...[
+                  if (showSubtitle && option.subtitle != null) ...[
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
                     Text(option.subtitle!, style: Act0ShellTokensV1.muted),
                   ],
@@ -2032,230 +1302,6 @@ class _PlacementPlanCardV1 extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _PlacementMicroStepV1 extends StatelessWidget {
-  const _PlacementMicroStepV1({required this.index, required this.text});
-
-  final int index;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface3,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(color: Act0ShellTokensV1.gold.withOpacity(0.16)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 24,
-            height: 24,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.gold.withOpacity(0.14),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            ),
-            child: Text(
-              '$index',
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.gold,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Text(
-              text,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.muted,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlacementSkillCardV1 extends StatelessWidget {
-  const _PlacementSkillCardV1({required this.stat});
-
-  final Act0PlacementSkillStatV1 stat;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = stat.locked
-        ? Act0ShellTokensV1.textDim
-        : stat.level >= 3
-        ? Act0ShellTokensV1.primary
-        : stat.level >= 2
-        ? Act0ShellTokensV1.info
-        : Act0ShellTokensV1.gold;
-
-    return SizedBox(
-      width: 154,
-      child: InkWell(
-        key: Key('act0_shell_placement_skill_stat_${stat.label}'),
-        onTap: () => _showPlacementSkillDetailsSheet(context, stat),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        child: Container(
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface,
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-            border: Border.all(
-              color: stat.locked
-                  ? Act0ShellTokensV1.border
-                  : tone.withOpacity(0.24),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(stat.label, style: Act0ShellTokensV1.body),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapXs),
-                  Icon(
-                    stat.locked
-                        ? Icons.lock_rounded
-                        : Icons.info_outline_rounded,
-                    size: 16,
-                    color: stat.locked ? Act0ShellTokensV1.textMuted : tone,
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                stat.locked ? 'Locked' : stat.levelLabel,
-                style: Act0ShellTokensV1.label.copyWith(color: tone),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                stat.locked ? 'Unlock later' : stat.nextLevelLabel,
-                style: Act0ShellTokensV1.muted,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
-                ),
-                child: LinearProgressIndicator(
-                  minHeight: 8,
-                  value: stat.nextLevelProgress,
-                  backgroundColor: Act0ShellTokensV1.surface3,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    stat.locked ? Act0ShellTokensV1.textDim : tone,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-void _showPlacementSkillDetailsSheet(
-  BuildContext context,
-  Act0PlacementSkillStatV1 stat,
-) {
-  showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return SafeArea(
-        child: Container(
-          margin: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration: Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface,
-            borderColor: Act0ShellTokensV1.info.withOpacity(0.24),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      stat.label,
-                      style: Act0ShellTokensV1.sectionTitle,
-                    ),
-                  ),
-                  Text(
-                    stat.locked
-                        ? 'Locked'
-                        : '${stat.levelLabel}  ${stat.nextLevelLabel}',
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: stat.locked
-                          ? Act0ShellTokensV1.textMuted
-                          : Act0ShellTokensV1.info,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              _PlacementSkillDetailBlockV1(
-                title: 'What it means',
-                text: stat.meaning,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementSkillDetailBlockV1(
-                title: 'What it affects',
-                text: stat.affects,
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlacementSkillDetailBlockV1(
-                title: 'Why it matters',
-                text: stat.whyImportant,
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-class _PlacementSkillDetailBlockV1 extends StatelessWidget {
-  const _PlacementSkillDetailBlockV1({required this.title, required this.text});
-
-  final String title;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Act0ShellTokensV1.label.copyWith(
-            color: Act0ShellTokensV1.info,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          text,
-          style: Act0ShellTokensV1.muted.copyWith(
-            color: Act0ShellTokensV1.text,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
@@ -123,6 +124,8 @@ class Act0BlockCompletionSummaryV1 {
     this.completedClearCount = 0,
     this.hasSafeReviewTarget = false,
     this.hasReplayForPerfectTarget = false,
+    this.futureRecheckCount = 0,
+    this.futureProveCount = 0,
   });
 
   static const int unlockAccuracyPercent = 80;
@@ -151,6 +154,8 @@ class Act0BlockCompletionSummaryV1 {
   final int completedClearCount;
   final bool hasSafeReviewTarget;
   final bool hasReplayForPerfectTarget;
+  final int futureRecheckCount;
+  final int futureProveCount;
 
   bool get hasNextLesson =>
       nextLessonTitle != null && nextLessonTitle!.isNotEmpty;
@@ -229,6 +234,80 @@ class Act0BlockCompletionSummaryV1 {
       return 'Repairs recovered';
     }
     return masteryLabel;
+  }
+
+  List<String> get ownershipHighlights {
+    if (!isWorldComplete) {
+      return const <String>[];
+    }
+    final lines = <String>[];
+    final seen = <String>{};
+    for (final gain in skillGains) {
+      final line = _ownershipLineForSkillLabelV1(gain.label);
+      if (line == null || !seen.add(line)) {
+        continue;
+      }
+      lines.add(line);
+      if (lines.length >= 3) {
+        break;
+      }
+    }
+    return lines;
+  }
+
+  String? get primarySkillFocusLabel {
+    if (!isWorldComplete || skillGains.isEmpty) {
+      return null;
+    }
+    final ranked = skillGains.where((gain) => gain.gain > 0).toList();
+    if (ranked.isEmpty) {
+      return null;
+    }
+    ranked.sort((a, b) {
+      final gainCompare = b.gain.compareTo(a.gain);
+      if (gainCompare != 0) {
+        return gainCompare;
+      }
+      return a.label.compareTo(b.label);
+    });
+    return ranked.first.label.trim().isEmpty ? null : ranked.first.label.trim();
+  }
+
+  List<String> get masteryPackLines {
+    if (!isWorldComplete) {
+      return const <String>[];
+    }
+    final lines = <String>[];
+    final focus = primarySkillFocusLabel;
+    if (focus != null) {
+      lines.add('This week: $focus');
+    }
+    if (futureRecheckCount > 0) {
+      final noun = futureRecheckCount == 1 ? 'spot' : 'spots';
+      lines.add('Recheck soon: $futureRecheckCount quick $noun.');
+    }
+    if (futureProveCount > 0) {
+      final noun = futureProveCount == 1 ? 'skill' : 'skills';
+      lines.add('Prove next: $futureProveCount $noun still holds.');
+    }
+    return lines;
+  }
+
+  bool get hasMasteryPack => masteryPackLines.isNotEmpty;
+
+  bool get hasReturnPlan => futureRecheckCount > 0 || futureProveCount > 0;
+
+  String get returnPlanLabel {
+    if (futureRecheckCount > 0 && futureProveCount > 0) {
+      return 'Recheck $futureRecheckCount quick spots and prove $futureProveCount skill still holds.';
+    }
+    if (futureRecheckCount > 0) {
+      return 'Recheck $futureRecheckCount quick spots to keep this world warm.';
+    }
+    if (futureProveCount > 0) {
+      return 'Prove $futureProveCount skill still holds.';
+    }
+    return 'One short return tomorrow keeps the world active.';
   }
 
   bool get shouldReviewFirst =>
@@ -409,6 +488,18 @@ String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
       .take(2)
       .map((gain) => '${gain.label} +${gain.gain}')
       .join('  •  ');
+}
+
+String? _ownershipLineForSkillLabelV1(String label) {
+  return switch (label) {
+    'Table sense' => 'read the table and find your seat',
+    'Board reading' => 'separate your cards from the board',
+    'Hand reading' => 'compare the best hand at showdown',
+    'Betting decisions' => 'make a first clean action',
+    'Position play' => 'tell early seats from late seats',
+    'Blind play' => 'track the blinds and first action',
+    _ => null,
+  };
 }
 
 // ── Pure pot-calculation helpers (top-level so they are unit-testable) ────────
@@ -2757,18 +2848,33 @@ class _CoachCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: EdgeInsets.symmetric(
         horizontal: refined ? 14 : (compact ? 11 : 12),
         vertical: refined ? 6 : (compact ? 8 : 10),
       ),
       decoration: refined
           ? BoxDecoration(
-              color: Act0ShellTokensV1.surface.withValues(alpha: 0.68),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[
+                  Act0ShellTokensV1.surface.withValues(alpha: 0.82),
+                  Act0ShellTokensV1.surface.withValues(alpha: 0.62),
+                ],
+              ),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
               border: Border.all(
-                color: Act0ShellTokensV1.border.withValues(alpha: 0.8),
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 1.0,
               ),
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
             )
           : Act0ShellTokensV1.surfaceDecoration(
               color: Act0ShellTokensV1.surface2,
@@ -2796,6 +2902,7 @@ class _CoachCardV1 extends StatelessWidget {
                 textAlign: refined ? TextAlign.left : TextAlign.center,
                 style: Act0ShellTokensV1.muted.copyWith(
                   fontSize: compact ? 11 : 13,
+                  color: Act0ShellTokensV1.textDim,
                 ),
               ),
             ),
@@ -2841,6 +2948,16 @@ class _CoachCardV1 extends StatelessWidget {
         ],
       ),
     );
+
+    return refined
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: card,
+            ),
+          )
+        : card;
   }
 }
 
@@ -3664,6 +3781,38 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   tone: celebrateTone,
                 ),
               ],
+              if (summary.ownershipHighlights.isNotEmpty) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                _BlockSummaryListCardV1(
+                  cardKey: const Key('act0_shell_block_summary_ownership_card'),
+                  title: 'You can now',
+                  lines: summary.ownershipHighlights,
+                  tone: celebrateTone,
+                  icon: Icons.workspace_premium_rounded,
+                ),
+              ],
+              if (summary.hasMasteryPack) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                _BlockSummaryListCardV1(
+                  cardKey: const Key(
+                    'act0_shell_block_summary_mastery_pack_card',
+                  ),
+                  title: 'Keep sharp',
+                  lines: summary.masteryPackLines,
+                  tone: celebrateTone,
+                  icon: Icons.track_changes_rounded,
+                ),
+              ],
+              if (summary.hasReturnPlan) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                _BlockSummaryListCardV1(
+                  cardKey: const Key('act0_shell_block_summary_return_card'),
+                  title: 'Tomorrow',
+                  lines: <String>[summary.returnPlanLabel],
+                  tone: celebrateTone,
+                  icon: Icons.event_repeat_rounded,
+                ),
+              ],
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -3901,6 +4050,77 @@ class _GrowthHighlightV1 extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BlockSummaryListCardV1 extends StatelessWidget {
+  const _BlockSummaryListCardV1({
+    required this.cardKey,
+    required this.title,
+    required this.lines,
+    required this.tone,
+    required this.icon,
+  });
+
+  final Key cardKey;
+  final String title;
+  final List<String> lines;
+  final Color tone;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: cardKey,
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.24)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: tone.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            ),
+            child: Icon(icon, size: 17, color: tone),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    letterSpacing: 0.35,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                for (final line in lines) ...[
+                  Text(
+                    line,
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (line != lines.last)
+                    const SizedBox(height: Act0ShellTokensV1.gapXs),
+                ],
               ],
             ),
           ),
@@ -4663,7 +4883,7 @@ class _CenterPotV1 extends StatelessWidget {
     final resolvedCenterLabel = (centerLabelOverride ?? table.centerLabel)
         .trim();
     final shouldShowFocusBadge =
-        showFocusBadge &&
+        (showFocusBadge || _isSafePriorActionTableCueV1(resolvedCenterLabel)) &&
         resolvedCenterLabel.isNotEmpty &&
         !(refined &&
             (resolvedCenterLabel == 'Blinds posted' ||
@@ -4674,141 +4894,147 @@ class _CenterPotV1 extends StatelessWidget {
     ).toUpperCase();
     final resolvedToCallLabel = (toCallLabelOverride ?? table.toCallLabel)
         .trim();
-    return Center(
-      child: Container(
-        key: const Key('act0_shell_center_info_card'),
-        width: refined ? 182 : Act0ShellTokensV1.centerInfoWidth,
-        padding: EdgeInsets.symmetric(
-          horizontal: refined ? 6 : 4,
-          vertical: refined ? 4 : 3,
-        ),
-        decoration: refined
-            ? BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Colors.white.withValues(alpha: 0.03),
-                    Colors.black.withValues(alpha: 0.13),
-                    Colors.black.withValues(alpha: 0.18),
-                  ],
+    final centerCard = Container(
+      key: const Key('act0_shell_center_info_card'),
+      width: refined ? 182 : Act0ShellTokensV1.centerInfoWidth,
+      padding: EdgeInsets.symmetric(
+        horizontal: refined ? 6 : 4,
+        vertical: refined ? 4 : 3,
+      ),
+      decoration: refined
+          ? BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.20),
+                  blurRadius: 12,
+                  offset: const Offset(0, 5),
                 ),
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusCard,
-                ),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.03)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              )
-            : null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 6,
-              runSpacing: 4,
-              children: [
-                if (shouldShowFocusBadge)
-                  _CenterInfoPillV1(
-                    key: const Key('act0_shell_center_focus_badge'),
-                    label: act0RuntimeLocalizedCenterLabelV1(
-                      context,
-                      resolvedCenterLabel,
-                    ),
-                    tone: Act0ShellTokensV1.primary,
-                    icon: Icons.visibility_rounded,
-                    compact: refined,
-                  ),
-                if (refined)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
-                      vertical: 1,
-                    ),
-                    child: Text(
-                      streetLabel,
-                      key: const Key('act0_shell_center_street_badge'),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.gold.withValues(alpha: 0.92),
-                        fontSize: 8.1,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  )
-                else
-                  _CenterInfoPillV1(
-                    key: const Key('act0_shell_center_street_badge'),
-                    label: streetLabel,
-                    tone: Act0ShellTokensV1.gold,
-                    icon: Icons.layers_rounded,
-                    compact: refined,
-                  ),
               ],
-            ),
-            if (table.boardCards.isNotEmpty) ...[
-              const SizedBox(height: 5),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (var i = 0; i < table.boardCards.length; i++) ...[
-                      _BoardCardV1(
-                        card: table.boardCards[i],
-                        cardId: 'board_$i',
-                        highlighted: highlightedCardIds.contains('board_$i'),
-                        onTap: onBoardCardTap,
-                      ),
-                      if (i < table.boardCards.length - 1)
-                        const SizedBox(width: 5),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-            const SizedBox(height: 6),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 5,
-              runSpacing: 3,
-              children: [
+            )
+          : null,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 6,
+            runSpacing: 4,
+            children: [
+              if (shouldShowFocusBadge)
                 _CenterInfoPillV1(
-                  key: const Key('act0_shell_center_pot_stat'),
-                  label: act0RuntimeLocalizedPotLabelV1(
+                  key: const Key('act0_shell_center_focus_badge'),
+                  label: act0RuntimeLocalizedCenterLabelV1(
                     context,
-                    potLabelOverride ?? table.potLabel,
+                    resolvedCenterLabel,
                   ),
-                  tone: Act0ShellTokensV1.text,
-                  icon: Icons.casino_rounded,
+                  tone: Act0ShellTokensV1.primary,
+                  icon: Icons.visibility_rounded,
                   compact: refined,
-                  filled: true,
-                  pulse: table.actionTrail.isNotEmpty,
                 ),
-                if (resolvedToCallLabel.isNotEmpty)
-                  _CenterInfoPillV1(
-                    key: const Key('act0_shell_center_to_call_stat'),
-                    label: act0RuntimeLocalizedToCallLabelV1(
-                      context,
-                      resolvedToCallLabel,
-                    ),
-                    tone: Act0ShellTokensV1.info,
-                    icon: Icons.arrow_downward_rounded,
-                    compact: refined,
+              if (refined)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 2,
+                    vertical: 1,
                   ),
-              ],
+                  child: Text(
+                    streetLabel,
+                    key: const Key('act0_shell_center_street_badge'),
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
+                      fontSize: 8.1,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w900,
+                      shadows: <Shadow>[
+                        Shadow(
+                          color: Act0ShellTokensV1.gold.withValues(alpha: 0.4),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                _CenterInfoPillV1(
+                  key: const Key('act0_shell_center_street_badge'),
+                  label: streetLabel,
+                  tone: Act0ShellTokensV1.gold,
+                  icon: Icons.layers_rounded,
+                  compact: refined,
+                ),
+            ],
+          ),
+          if (table.boardCards.isNotEmpty) ...[
+            const SizedBox(height: 5),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var i = 0; i < table.boardCards.length; i++) ...[
+                    _BoardCardV1(
+                      card: table.boardCards[i],
+                      cardId: 'board_$i',
+                      highlighted: highlightedCardIds.contains('board_$i'),
+                      onTap: onBoardCardTap,
+                    ),
+                    if (i < table.boardCards.length - 1)
+                      const SizedBox(width: 5),
+                  ],
+                ],
+              ),
             ),
           ],
-        ),
+          const SizedBox(height: 6),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 5,
+            runSpacing: 3,
+            children: [
+              _CenterInfoPillV1(
+                key: const Key('act0_shell_center_pot_stat'),
+                label: act0RuntimeLocalizedPotLabelV1(
+                  context,
+                  potLabelOverride ?? table.potLabel,
+                ),
+                tone: Act0ShellTokensV1.text,
+                icon: Icons.casino_rounded,
+                compact: refined,
+                filled: true,
+                pulse: table.actionTrail.isNotEmpty,
+              ),
+              if (resolvedToCallLabel.isNotEmpty)
+                _CenterInfoPillV1(
+                  key: const Key('act0_shell_center_to_call_stat'),
+                  label: act0RuntimeLocalizedToCallLabelV1(
+                    context,
+                    resolvedToCallLabel,
+                  ),
+                  tone: Act0ShellTokensV1.info,
+                  icon: Icons.arrow_downward_rounded,
+                  compact: refined,
+                ),
+            ],
+          ),
+        ],
       ),
     );
+
+    final resolvedCenterCard = refined
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: centerCard,
+            ),
+          )
+        : centerCard;
+
+    return Center(child: resolvedCenterCard);
   }
 }
 
@@ -5172,8 +5398,11 @@ class _SeatNodeV1 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < visibleCards.length; i++) ...[
-                    const _MiniCardBackV1(),
-                    if (i < visibleCards.length - 1) const SizedBox(width: 3),
+                    Transform.rotate(
+                      angle: i == 0 ? -0.06 : 0.06,
+                      child: const _MiniCardBackV1(),
+                    ),
+                    if (i < visibleCards.length - 1) const SizedBox(width: 2),
                   ],
                 ],
               ),
@@ -5258,8 +5487,18 @@ class _SeatNodeV1 extends StatelessWidget {
                             : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
+                          gradient: hero
+                              ? const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Act0ShellTokensV1.runnerTagBlue,
+                                    Act0ShellTokensV1.runnerSharkBlueDark,
+                                  ],
+                                )
+                              : null,
                           color: hero
-                              ? Act0ShellTokensV1.primary
+                              ? null
                               : refined
                               ? (seatVisualState ==
                                         _SeatVisualStateV1.selectable
@@ -5273,12 +5512,24 @@ class _SeatNodeV1 extends StatelessWidget {
                                 ? Act0ShellTokensV1.radiusXs
                                 : Act0ShellTokensV1.radiusPill,
                           ),
-                          border: refined && !hero
-                              ? Border.all(
-                                  color: Act0ShellTokensV1.border.withValues(
+                          border: Border.all(
+                            color: hero
+                                ? Act0ShellTokensV1.gold.withValues(alpha: 0.86)
+                                : refined
+                                ? Act0ShellTokensV1.border.withValues(
                                     alpha: 0.72,
+                                  )
+                                : Colors.transparent,
+                            width: hero ? 1.2 : 1.0,
+                          ),
+                          boxShadow: hero
+                              ? const <BoxShadow>[
+                                  BoxShadow(
+                                    color: Act0ShellTokensV1.shadowSoftStrong,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 1.5),
                                   ),
-                                )
+                                ]
                               : null,
                         ),
                         child: hero
@@ -5646,7 +5897,7 @@ Color _seatBorderColorV1(_SeatVisualStateV1 state, {required bool refined}) {
   return switch (state) {
     _SeatVisualStateV1.wrongSelected => Act0ShellTokensV1.danger,
     _SeatVisualStateV1.confirmedSelected => Act0ShellTokensV1.primary,
-    _SeatVisualStateV1.hero => Act0ShellTokensV1.primary,
+    _SeatVisualStateV1.hero => Act0ShellTokensV1.gold,
     _SeatVisualStateV1.activeFocus => Act0ShellTokensV1.gold,
     _SeatVisualStateV1.targetFocus => Act0ShellTokensV1.gold,
     _SeatVisualStateV1.selectable =>
@@ -5860,6 +6111,31 @@ bool _isAnswerLeadingTableCueV1(
   return false;
 }
 
+bool _isSafePriorActionTableCueV1(String cueLabel) {
+  final label = cueLabel.trim();
+  if (label.isEmpty) {
+    return false;
+  }
+  return RegExp(
+    r'^[A-Z0-9]+\s+(?:opens?|opened|raises?|raised|bets?|bet|calls?|called|checks?|checked|folds?|folded|all[- ]?in|goes\s+all(?:\s+in)?)\b',
+    caseSensitive: false,
+  ).hasMatch(label);
+}
+
+String? _safePriorActionCueV1(Act0TableStateV1 table) {
+  final candidates = <String>[
+    table.centerLabel,
+    for (final item in table.actionTrail.reversed) item.label,
+  ];
+  for (final candidate in candidates) {
+    final label = candidate.trim();
+    if (_isSafePriorActionTableCueV1(label)) {
+      return label;
+    }
+  }
+  return null;
+}
+
 String? _deriveFacingActorCueV1(
   BuildContext context, {
   required Act0TableStateV1 table,
@@ -5931,7 +6207,8 @@ String? _resolveDecisionPromptSupportLineV1(
   )) {
     return null;
   }
-  return _deriveFacingActorCueV1(context, table: table);
+  return _safePriorActionCueV1(table) ??
+      _deriveFacingActorCueV1(context, table: table);
 }
 
 String _neutralizeAnswerBearingCueV1({
@@ -5981,6 +6258,9 @@ String _resolveTableCueDisplayV1({
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
     return '';
+  }
+  if (_isSafePriorActionTableCueV1(rawCue)) {
+    return rawCue;
   }
   if (_isAnswerBearingTableCueV1(
     cueLabel: rawCue,
@@ -6924,15 +7204,7 @@ class _SeatMarkersV1 extends StatelessWidget {
         for (final marker in markers)
           KeyedSubtree(
             key: Key('act0_shell_marker_${seatId}_${marker.name}'),
-            child: _MarkerDotV1(
-              label: switch (marker) {
-                _SeatMarkerKindV1.dealer => 'D',
-                _SeatMarkerKindV1.smallBlind => 'SB',
-                _SeatMarkerKindV1.bigBlind => 'BB',
-                _SeatMarkerKindV1.aggressor => 'Agg',
-                _SeatMarkerKindV1.act => 'Act',
-              },
-            ),
+            child: _MarkerDotV1(marker: marker),
           ),
       ],
     );
@@ -6982,55 +7254,40 @@ class _MiniCardBackV1 extends StatelessWidget {
       width: 18,
       height: 26,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            Act0ShellTokensV1.runnerTagBlue,
-            Act0ShellTokensV1.info.withValues(alpha: 0.58),
-            Act0ShellTokensV1.feltLine.withValues(alpha: 0.34),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radius3xs),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.26)),
         boxShadow: const <BoxShadow>[
           BoxShadow(
-            color: Act0ShellTokensV1.shadowSoft,
-            blurRadius: 6,
+            color: Act0ShellTokensV1.shadowSoftStrong,
+            blurRadius: 4,
             offset: Offset(0, 2),
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radius2xs,
-                  ),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.12),
-                  ),
-                ),
-              ),
+      child: Padding(
+        padding: const EdgeInsets.all(1.5),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                Act0ShellTokensV1.runnerSharkBlueDark,
+                Act0ShellTokensV1.runnerTagBlue,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(
+              Act0ShellTokensV1.radius3xs - 1.5,
             ),
           ),
-          Align(
-            child: Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.22),
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
-                ),
-              ),
+          child: Center(
+            child: Icon(
+              Icons.diamond_outlined,
+              size: 10,
+              color: Colors.white.withValues(alpha: 0.3),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -7055,82 +7312,76 @@ class _BetChipV1 extends StatelessWidget {
       Act0SeatBetKindV1.raise => Act0ShellTokensV1.primary,
       Act0SeatBetKindV1.allIn => Act0ShellTokensV1.danger,
     };
-    return Container(
+    return ClipRRect(
       key: Key('act0_shell_bet_chip_${bet.label}'),
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 5 : 6,
-        vertical: compact ? 3 : 4,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            Act0ShellTokensV1.runnerGlass.withValues(alpha: 0.96),
-            Act0ShellTokensV1.surface.withValues(alpha: 0.94),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: color.withValues(alpha: 0.78), width: 1),
-        boxShadow: <BoxShadow>[
-          const BoxShadow(
-            color: Act0ShellTokensV1.shadowSoftStrong,
-            blurRadius: 10,
-            offset: Offset(0, 3),
+      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 5 : 6,
+            vertical: compact ? 3 : 4,
           ),
-          BoxShadow(
-            color: color.withValues(alpha: 0.20),
-            blurRadius: 12,
-            spreadRadius: -4,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _ChipStackIconV1(color: color, compact: compact),
-          SizedBox(width: compact ? 3 : 4),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (showLabelPill)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: compact ? 3 : 4,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.16),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPill,
-                    ),
-                  ),
-                  child: Text(
-                    bet.label,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: compact ? 5.6 : 6.1,
-                      height: 0.95,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-              if (showLabelPill) SizedBox(height: compact ? 1 : 2),
-              Text(
-                bet.amountLabel,
-                style: TextStyle(
-                  color: Act0ShellTokensV1.text,
-                  fontSize: compact ? 7.0 : 7.8,
-                  height: 0.98,
-                  fontWeight: FontWeight.w900,
-                ),
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.surface.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            border: Border.all(color: color.withValues(alpha: 0.8), width: 1.2),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: color.withValues(alpha: 0.15),
+                blurRadius: 8,
+                spreadRadius: 2,
               ),
             ],
           ),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _ChipStackIconV1(color: color, compact: compact),
+              SizedBox(width: compact ? 3 : 4),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (showLabelPill)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: compact ? 3 : 4,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(
+                          Act0ShellTokensV1.radiusPill,
+                        ),
+                      ),
+                      child: Text(
+                        bet.label,
+                        style: TextStyle(
+                          color: color,
+                          fontSize: compact ? 5.6 : 6.1,
+                          height: 0.95,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ),
+                  if (showLabelPill) SizedBox(height: compact ? 1 : 2),
+                  Text(
+                    bet.amountLabel,
+                    style: TextStyle(
+                      color: Act0ShellTokensV1.text,
+                      fontSize: compact ? 7.0 : 7.8,
+                      height: 0.98,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -7144,27 +7395,26 @@ class _ChipStackIconV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double size = compact ? 12 : 14;
     return SizedBox(
-      width: compact ? 12 : 14,
-      height: compact ? 14 : 16,
+      width: size,
+      height: size + 4,
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
         children: [
           Positioned(
             bottom: 0,
-            child: _ChipDiscV1(
-              color: color.withValues(alpha: 0.56),
-              compact: compact,
-            ),
+            child: _ChipDiscV1(color: color, compact: compact, isBottom: true),
           ),
           Positioned(
-            top: 1,
-            child: _ChipDiscV1(
-              color: color.withValues(alpha: 0.78),
-              compact: compact,
-            ),
+            bottom: 2,
+            child: _ChipDiscV1(color: color, compact: compact, isBottom: true),
           ),
-          _ChipDiscV1(color: color, compact: compact),
+          Positioned(
+            bottom: 4,
+            child: _ChipDiscV1(color: color, compact: compact),
+          ),
         ],
       ),
     );
@@ -7172,43 +7422,72 @@ class _ChipStackIconV1 extends StatelessWidget {
 }
 
 class _ChipDiscV1 extends StatelessWidget {
-  const _ChipDiscV1({required this.color, this.compact = false});
+  const _ChipDiscV1({
+    required this.color,
+    this.compact = false,
+    this.isBottom = false,
+  });
 
   final Color color;
   final bool compact;
+  final bool isBottom;
 
   @override
   Widget build(BuildContext context) {
+    final double size = compact ? 12 : 14;
     return Container(
-      width: compact ? 10 : 12,
-      height: compact ? 10 : 12,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
-        gradient: RadialGradient(
-          colors: <Color>[Colors.white.withValues(alpha: 0.14), color],
-          stops: const <double>[0, 0.72],
-        ),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        color: color,
+        gradient: isBottom
+            ? LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  color.withValues(alpha: 0.6),
+                  color.withValues(alpha: 0.3),
+                ],
+              )
+            : RadialGradient(
+                center: const Alignment(-0.2, -0.4),
+                radius: 0.8,
+                colors: <Color>[Colors.white.withValues(alpha: 0.4), color],
+              ),
+        borderRadius: BorderRadius.circular(size / 2),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.28),
-          width: 1,
+          color: Colors.white.withValues(alpha: isBottom ? 0.1 : 0.8),
+          width: isBottom ? 0.5 : 1.2,
         ),
-        boxShadow: const <BoxShadow>[
-          BoxShadow(
-            color: Act0ShellTokensV1.shadowSoft,
-            blurRadius: 5,
-            offset: Offset(0, 1),
-          ),
+        boxShadow: [
+          if (isBottom)
+            const BoxShadow(
+              color: Color(0x66000000),
+              blurRadius: 3,
+              offset: Offset(0, 2),
+            )
+          else
+            const BoxShadow(
+              color: Color(0xAA000000),
+              blurRadius: 2,
+              offset: Offset(0, 1),
+            ),
         ],
       ),
       child: Center(
-        child: Container(
-          width: compact ? 3 : 4,
-          height: compact ? 3 : 4,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.36),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-          ),
-        ),
+        child: isBottom
+            ? null
+            : Container(
+                width: size * 0.4,
+                height: size * 0.4,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.4),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(size),
+                ),
+              ),
       ),
     );
   }
@@ -7242,24 +7521,101 @@ class _FoldedBadgeV1 extends StatelessWidget {
 }
 
 class _MarkerDotV1 extends StatelessWidget {
-  const _MarkerDotV1({required this.label});
+  const _MarkerDotV1({required this.marker});
 
-  final String label;
+  final _SeatMarkerKindV1 marker;
 
   @override
   Widget build(BuildContext context) {
+    if (marker == _SeatMarkerKindV1.dealer) {
+      return Container(
+        width: 16,
+        height: 16,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[Colors.white, Color(0xFFE2E8F0)],
+          ),
+          border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
+          boxShadow: const <BoxShadow>[
+            BoxShadow(
+              color: Colors.black38,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
+        child: const Text(
+          'D',
+          style: TextStyle(
+            color: Color(0xFF1E293B),
+            fontSize: 9,
+            fontWeight: FontWeight.w900,
+            height: 1.0,
+          ),
+        ),
+      );
+    }
+
+    final localizedActLabel =
+        Localizations.localeOf(
+          context,
+        ).languageCode.toLowerCase().startsWith('ru')
+        ? 'Ход'
+        : 'Act';
+    final (color, label, isCircle) = switch (marker) {
+      _SeatMarkerKindV1.dealer => (Colors.white, 'D', true),
+      _SeatMarkerKindV1.smallBlind => (
+        Act0ShellTokensV1.runnerTagBlue,
+        'SB',
+        true,
+      ),
+      _SeatMarkerKindV1.bigBlind => (Act0ShellTokensV1.gold, 'BB', true),
+      _SeatMarkerKindV1.aggressor => (Act0ShellTokensV1.danger, 'Agg', false),
+      _SeatMarkerKindV1.act => (
+        Act0ShellTokensV1.primary,
+        localizedActLabel,
+        false,
+      ),
+    };
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
+      width: isCircle ? 16 : null,
+      height: isCircle ? 16 : null,
+      padding: isCircle
+          ? EdgeInsets.zero
+          : const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      alignment: isCircle ? Alignment.center : null,
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.gold.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle
+            ? null
+            : BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[color, color.withValues(alpha: 0.78)],
+        ),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 3,
+            offset: Offset(0, 1.5),
+          ),
+        ],
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: Act0ShellTokensV1.runnerHintWarm,
-          fontSize: 6.5,
+        style: TextStyle(
+          color: marker == _SeatMarkerKindV1.bigBlind
+              ? const Color(0xFF5C3A21)
+              : Colors.white,
+          fontSize: isCircle ? 6.5 : 7.0,
           fontWeight: FontWeight.w900,
+          height: 1.0,
         ),
       ),
     );
@@ -7295,42 +7651,35 @@ class _CardV1 extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Colors.white.withValues(alpha: 0.28),
+                    Colors.white.withValues(alpha: 0.8),
                     Colors.transparent,
                     Colors.black.withValues(alpha: 0.05),
                   ],
-                  stops: const <double>[0, 0.28, 1],
+                  stops: const <double>[0, 0.4, 1],
                 ),
               ),
             ),
           ),
           Positioned(
-            left: 4,
-            top: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  card.rank,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 15,
-                    height: 0.9,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+            left: 3,
+            top: 2,
+            child: Text(
+              card.rank,
+              style: TextStyle(
+                color: color,
+                fontSize: 18,
+                height: 1.0,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
-          Align(
+          Positioned(
+            right: 3,
+            bottom: 2,
             child: Text(
-              suit.isEmpty ? card.rank : suit,
-              style: TextStyle(
-                color: color.withValues(alpha: 0.88),
-                fontSize: 23,
-                height: 1,
-                fontWeight: FontWeight.w900,
-              ),
+              suit.isEmpty ? '' : suit,
+              style: TextStyle(color: color, fontSize: 28, height: 1.0),
             ),
           ),
         ],
@@ -7376,42 +7725,35 @@ class _BoardCardV1 extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Colors.white.withValues(alpha: 0.22),
+                    Colors.white.withValues(alpha: 0.8),
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.04),
+                    Colors.black.withValues(alpha: 0.05),
                   ],
-                  stops: const <double>[0, 0.26, 1],
+                  stops: const <double>[0, 0.4, 1],
                 ),
               ),
             ),
           ),
           Positioned(
-            left: 4,
-            top: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  card.rank,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: color,
-                    fontSize: 13,
-                    height: 0.9,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+            left: 3,
+            top: 1,
+            child: Text(
+              card.rank,
+              style: TextStyle(
+                color: color,
+                fontSize: 16,
+                height: 1.0,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
-          Align(
+          Positioned(
+            right: 3,
+            bottom: 2,
             child: Text(
-              suit.isEmpty ? card.rank : suit,
-              style: TextStyle(
-                color: color.withValues(alpha: 0.90),
-                fontSize: 19,
-                height: 1,
-                fontWeight: FontWeight.w900,
-              ),
+              suit.isEmpty ? '' : suit,
+              style: TextStyle(color: color, fontSize: 24, height: 1.0),
             ),
           ),
         ],
@@ -7457,43 +7799,26 @@ BoxDecoration _playingCardDecorationV1({
   bool highlighted = false,
 }) {
   return BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: board
-          ? const <Color>[
-              Act0ShellTokensV1.runnerSheetWarmStart,
-              Act0ShellTokensV1.runnerSheetWarmEnd,
-            ]
-          : const <Color>[
-              Act0ShellTokensV1.runnerSheetNeutralStart,
-              Act0ShellTokensV1.runnerSheetNeutralEnd,
-            ],
-    ),
+    color: Colors.white,
     borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXs),
     border: Border.all(
       color: highlighted
-          ? Act0ShellTokensV1.gold.withValues(alpha: 0.72)
-          : Colors.black.withValues(alpha: 0.08),
+          ? Act0ShellTokensV1.gold.withValues(alpha: 0.90)
+          : const Color(0xFFD1D8E0),
       width: highlighted ? 1.6 : 1,
     ),
     boxShadow: <BoxShadow>[
-      const BoxShadow(
-        color: Act0ShellTokensV1.shadowSoft,
-        blurRadius: 7,
-        offset: Offset(0, 2),
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.12),
+        blurRadius: 5,
+        offset: const Offset(0, 2),
       ),
       if (highlighted)
         BoxShadow(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.18),
-          blurRadius: 10,
-          spreadRadius: 0.6,
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.35),
+          blurRadius: 8,
+          spreadRadius: 1.0,
         ),
-      BoxShadow(
-        color: Colors.white.withValues(alpha: 0.18),
-        blurRadius: 0,
-        spreadRadius: -0.2,
-      ),
     ],
   );
 }

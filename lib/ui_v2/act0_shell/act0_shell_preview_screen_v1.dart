@@ -67,7 +67,7 @@ Act0RunnerStateV1 normalizeAct0SeatTapRunnerV1(Act0RunnerStateV1 runner) {
             preferredLabel: correctOption.preferredLabel,
             betterAnswerLabel: correctOption.betterAnswerLabel,
             quality: Act0FeedbackQualityV1.wrong,
-            feedbackTitle: 'Almost there.',
+            feedbackTitle: 'Not quite.',
             feedbackReason:
                 '${seat.seatLabel} is not the target seat in this spot.',
             repairFocusSeatIds: <String>[seat.seatId.trim(), correctSeatId],
@@ -237,8 +237,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
   String _lastDailyDate = '';
+  int _retentionSequence = 0;
+  final Map<String, _Act0RetentionMemoryEntryV1> _retentionMemoryByTaskId =
+      <String, _Act0RetentionMemoryEntryV1>{};
+  static const int _agedRecheckSequenceThresholdV1 = 6;
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
+  String? _activeRepairSourceTaskId;
   String? _activeLessonWrapUpTaskId;
   String? _lessonRunWrapUpAnchorTaskId;
   String? _practiceCompletionTitle;
@@ -247,7 +252,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _showPlacement = false;
   bool _placementDiagnosticActive = false;
   bool _placementIntroVisible = true;
-  bool _placementTrialPreviewSelected = false;
   int _placementQuestionIndex = 0;
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
@@ -839,6 +843,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       for (final world in state.worlds)
         for (final lesson in world.lessons) lesson.lessonId,
     };
+    final validWorldIds = <String>{
+      for (final world in state.worlds) world.worldId,
+    };
     final completedTaskIds = parsed.completedTaskIds
         .where(validTaskIds.contains)
         .toSet();
@@ -848,6 +855,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedLessonIds = parsed.completedLessonIds
         .where(validLessonIds.contains)
         .toSet();
+    final compatLessonIds = _legacyCompatAutoCompletedLessonIdsV1(
+      parsed: parsed,
+      state: state,
+    );
+    final compatTaskIds = <String>{
+      for (final lessonId in compatLessonIds)
+        for (final task in state.lessonById(lessonId).taskList) task.taskId,
+    }.where(validTaskIds.contains).toSet();
+    completedTaskIds.addAll(compatTaskIds);
+    completedLessonIds.addAll(compatLessonIds.where(validLessonIds.contains));
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
     final worldsAfterProgress = _progressWorldsWithTaskIds(
       state,
@@ -938,6 +955,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _dailyCompletedRepCount = isNewDay
           ? 0
           : parsed.dailyCompletedRepCount.clamp(0, 3);
+      _retentionSequence = parsed.retentionSequence;
+      _retentionMemoryByTaskId
+        ..clear()
+        ..addEntries(
+          parsed.retentionMemory
+              .where((entry) {
+                return validTaskIds.contains(entry.taskId) &&
+                    validLessonIds.contains(entry.lessonId) &&
+                    validWorldIds.contains(entry.worldId);
+              })
+              .map(
+                (entry) => MapEntry<String, _Act0RetentionMemoryEntryV1>(
+                  entry.taskId,
+                  entry,
+                ),
+              ),
+        );
+      _refreshRetentionMemoryStatusesV1();
       _dismissedHomeHandoffKey = parsed.dismissedHomeHandoffKey;
       _dismissedHomeHandoffDay = parsed.dismissedHomeHandoffDay;
       // Daily deck resets on new day
@@ -994,6 +1029,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastActiveDay: today,
       dailyCompletedRepCount: _dailyCompletedRepCount,
       persistedStreakDays: currentStreak,
+      retentionSequence: _retentionSequence,
+      retentionMemory: _retentionMemoryByTaskId.values.toList(growable: false),
       resumeInRunner:
           _tab == Act0ShellTabV1.play &&
           !_showPlayHub &&
@@ -1074,8 +1111,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _dailyCompletedTaskIds.clear();
       _dailyCompletedRepCount = 0;
       _rapidPracticeLoop = false;
+      _retentionSequence = 0;
+      _retentionMemoryByTaskId.clear();
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
+      _activeRepairSourceTaskId = null;
       _blockCompletionSummary = null;
       _dismissedHomeHandoffKey = '';
       _dismissedHomeHandoffDay = '';
@@ -1087,7 +1127,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
-      _placementTrialPreviewSelected = false;
       _placementQuestionIndex = 0;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
@@ -1110,7 +1149,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = false;
-      _placementTrialPreviewSelected = false;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
       _placementDiagnosticScore = 0;
@@ -1132,7 +1170,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
-      _placementTrialPreviewSelected = false;
       _placementQuestionIndex = 0;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
@@ -1151,6 +1188,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _returnToPlayHubOnBack = false;
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
+      _activeRepairSourceTaskId = null;
       _blockCompletionSummary = null;
     });
   }
@@ -1170,12 +1208,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
-      _placementTrialPreviewSelected = false;
       _tab = tab;
       _showPlayHub = tab == Act0ShellTabV1.play ? showPlayHub : true;
       _returnToPlayHubOnBack = false;
       _blockCompletionSummary = null;
       _activeRepairTaskId = null;
+      _activeRepairSourceTaskId = null;
       _selectedOptionId = null;
       _phase = selectedTask.phase;
       _teachingStepIndex = 0;
@@ -1438,28 +1476,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  void _previewPlacementTrial() {
-    final result = _placementResult;
-    setState(() {
-      _placementTrialPreviewSelected = true;
-    });
-    if (result == null) {
-      return;
-    }
-    unawaited(
-      _openPremiumPreviewSheet(
-        eyebrow: 'Premium preview',
-        title: 'See the guided week before you ever upgrade.',
-        summary: result.premiumPitch,
-        valuePoints: result.trialValuePoints,
-        trustLine:
-            'The free route stays intact. Premium only expands the work after Sharky has already shown value.',
-        footerLine:
-            'Nothing here replaces the core path. It only adds sharper follow-up after real reps.',
-      ),
-    );
-  }
-
   void _previewLockedWorldPremium(Act0WorldCardV1 world) {
     final worldTitle = act0LocalizedWorldTitleV1(context, world);
     final worldSubtitle = act0LocalizedWorldSubtitleV1(context, world);
@@ -1594,6 +1610,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : null;
     final showTopBar =
         _bootSurfaceReady && !_showPlacement && !_showWelcome && !isPlayRunner;
+    final effectiveLearnDetailLessonId = _learnDetailWorldId == null
+        ? (_learnDetailLessonId ?? _selectedLessonId)
+        : _learnDetailLessonId;
     return Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
@@ -1614,7 +1633,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       result: _placementResult == null
                           ? null
                           : _localizedPlacementResultV1(_placementResult!),
-                      trialPreviewSelected: _placementTrialPreviewSelected,
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
                       }),
@@ -1640,22 +1658,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         _startPlacementDiagnostic(_progressWorlds(baseState));
                       }),
                       onStartRecommended: () {
-                        unawaited(
-                          _startPlacementRecommendation(
-                            _progressWorlds(baseState),
-                            fromZero: false,
-                          ),
-                        );
+                        setState(() {
+                          unawaited(
+                            _startPlacementRecommendation(
+                              _progressWorlds(baseState),
+                              fromZero: false,
+                            ),
+                          );
+                        });
                       },
                       onStartFromZero: () {
-                        unawaited(
-                          _startPlacementRecommendation(
-                            _progressWorlds(baseState),
-                            fromZero: true,
-                          ),
-                        );
+                        setState(() {
+                          unawaited(
+                            _startPlacementRecommendation(
+                              _progressWorlds(baseState),
+                              fromZero: true,
+                            ),
+                          );
+                        });
                       },
-                      onStartTrialPreview: _previewPlacementTrial,
                     )
                   : _showWelcome
                   ? Act0WelcomeShellV1(
@@ -1671,6 +1692,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   : switch (_tab) {
                       Act0ShellTabV1.home => Act0HomeShellV1(
                         state: state,
+                        showChecklist: _showHomeChecklistV1(),
                         currentLesson: _firstPlayableLesson(selectedWorld),
                         pathProgressLabel: selectedWorld.progressLabel,
                         nextActionLabel: _homeNextActionLabel(),
@@ -1705,7 +1727,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
-                        showRepairPanel: true,
+                        showRepairPanel: _showHomeRepairPanel(
+                          selectedWorld,
+                          _firstPlayableLesson(selectedWorld),
+                        ),
                         onStartRepair: () => setState(() {
                           _startHomeRepairAction(
                             selectedWorld,
@@ -1717,8 +1742,51 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
+                        weeklyFocus: _showHomeChecklistV1()
+                            ? _homeWeeklyFocus(
+                                selectedWorld,
+                                _firstPlayableLesson(selectedWorld),
+                              )
+                            : null,
+                        dailyPlanJobs: _homeDailyPlanJobs(
+                          selectedWorld,
+                          _firstPlayableLesson(selectedWorld),
+                        ),
+                        onOpenDailyPlanJob: (jobId) => setState(() {
+                          _startHomeDailyPlanJob(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                            jobId,
+                          );
+                        }),
+                        onOpenLearnContext: () => setState(() {
+                          _tab = Act0ShellTabV1.learn;
+                          _showPlayHub = true;
+                          _returnToPlayHubOnBack = false;
+                          _showWorldMenu = false;
+                          _blockCompletionSummary = null;
+                        }),
+                        onOpenPracticeContext: () => setState(() {
+                          _tab = Act0ShellTabV1.play;
+                          _showPlayHub = true;
+                          _returnToPlayHubOnBack = false;
+                          _learnDetailLessonId = null;
+                          _learnDetailWorldId = null;
+                          _showWorldMenu = false;
+                          _blockCompletionSummary = null;
+                        }),
+                        onOpenReviewContext: () => setState(() {
+                          _tab = Act0ShellTabV1.review;
+                          _showPlayHub = true;
+                          _returnToPlayHubOnBack = false;
+                          _learnDetailLessonId = null;
+                          _learnDetailWorldId = null;
+                          _showWorldMenu = false;
+                          _blockCompletionSummary = null;
+                        }),
                         sharkyOverride: _homeSharkyOverride(),
                         onOpenDevMenu: _openDevMenu,
+                        completionEarnedStreak: _streakSaveEarned(),
                         onStartDailyDrill: _dailyCompletedRepCount < 3
                             ? () => setState(() {
                                 final world = _worldById(
@@ -1733,6 +1801,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   world.lessons,
                                   _selectedLessonId,
                                 );
+                                final effectiveLearnDetailLessonId =
+                                    _learnDetailWorldId == null
+                                    ? (_learnDetailLessonId ??
+                                          _selectedLessonId)
+                                    : _learnDetailLessonId;
                                 final groups = _practiceGroups(
                                   state: baseState,
                                   world: world,
@@ -1782,7 +1855,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         perfectTaskIds: _perfectTaskIds(),
                         skippedTaskIds: _visibleSkippedTaskIds,
                         pathClosedTaskIds: _pathClosedTaskIds,
-                        detailLessonId: _learnDetailLessonId,
+                        detailLessonId: effectiveLearnDetailLessonId,
                         lessonOutcomeLabels: _lessonOutcomeLabels(
                           selectedWorld.lessons,
                         ),
@@ -2066,6 +2139,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _showPlayHub = true;
                                     _returnToPlayHubOnBack = false;
                                     _activeRepairTaskId = null;
+                                    _activeRepairSourceTaskId = null;
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -2206,11 +2280,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         false;
                                     if (repaired) {
                                       _completeCurrentTask(playSelectedTask);
+                                      if (_activeRepairSourceTaskId != null &&
+                                          _activeRepairSourceTaskId !=
+                                              playSelectedTask.taskId) {
+                                        _closeTaskWithoutRewardV1(
+                                          _activeRepairSourceTaskId!,
+                                        );
+                                      }
                                     }
                                     _tab = Act0ShellTabV1.review;
                                     _showPlayHub = true;
                                     _returnToPlayHubOnBack = false;
                                     _activeRepairTaskId = null;
+                                    _activeRepairSourceTaskId = null;
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -2387,6 +2469,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _blockCompletionSummary = null;
                   _showPlayHub = true;
                   _activeRepairTaskId = null;
+                  _activeRepairSourceTaskId = null;
                 }
                 if (tab != Act0ShellTabV1.home) {
                   _placementHandoffActive = false;
@@ -3083,6 +3166,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     };
   }
 
+  bool _showHomeRepairPanel(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: currentLesson,
+    );
+    return recommendation.mistake != null ||
+        recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix;
+  }
+
+  bool _showHomeChecklistV1() {
+    return _completedTaskIds.isNotEmpty ||
+        _dailyCompletedRepCount > 0 ||
+        _openMistakes().isNotEmpty ||
+        _retentionMemoryByTaskId.isNotEmpty;
+  }
+
   String _homeDailyGoalCtaLabel(
     Act0WorldCardV1 _selectedWorld,
     Act0LessonCardV1 _currentLesson,
@@ -3183,6 +3285,158 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _copyV1(en: 'Open Review', ru: 'Открыть разбор');
     }
     return null;
+  }
+
+  List<Act0HomePlanJobV1> _homeDailyPlanJobs(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final jobs = <Act0HomePlanJobV1>[];
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: currentLesson,
+    );
+    final openTaskIds = _openMistakes()
+        .map((mistake) => mistake.taskId)
+        .toSet();
+    final hasRepairJob = recommendation.mistake != null;
+    final agedRecheck = _topRetentionReplayCardV1(
+      _Act0RetentionMemoryStatusV1.agedRecheck,
+      excludedTaskIds: openTaskIds,
+    );
+    final ownedCandidate = _topRetentionReplayCardV1(
+      _Act0RetentionMemoryStatusV1.ownedCandidate,
+      excludedTaskIds: openTaskIds,
+    );
+    final hasPlanMix =
+        hasRepairJob || agedRecheck != null || ownedCandidate != null;
+    if (hasPlanMix) {
+      final continueLabel = _dailyCompletedRepCount >= 3
+          ? _copyV1(en: 'Continue if you want', ru: 'Продолжай, если хочешь')
+          : (_cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
+                ? _copyV1(en: 'New hand', ru: 'Новая раздача')
+                : _copyV1(en: 'Continue route', ru: 'Продолжить маршрут'));
+      final continueDetail = _dailyCompletedRepCount >= 3
+          ? _copyV1(
+              en: 'Today is already banked. One fresh route spot is still open if you want it.',
+              ru: 'Сегодняшний ритм уже засчитан. Но один новый спот всё ещё открыт, если хочешь.',
+            )
+          : _copyV1(
+              en: 'One fresh route step is still open.',
+              ru: 'Сохрани движение маршрута через один новый спот.',
+            );
+      jobs.add(
+        Act0HomePlanJobV1(
+          jobId: 'continue',
+          label: continueLabel,
+          title: _localizedLessonTitleV1(currentLesson),
+          detail: continueDetail,
+        ),
+      );
+    }
+    if (hasRepairJob) {
+      jobs.add(
+        Act0HomePlanJobV1(
+          jobId: 'repair:${recommendation.mistake!.taskId}',
+          label: _copyV1(en: 'Repair one mistake', ru: 'Разбери одну ошибку'),
+          title: recommendation.mistake!.title,
+          detail: recommendation.subtitle,
+        ),
+      );
+      openTaskIds.add(recommendation.mistake!.taskId);
+    }
+    if (agedRecheck != null) {
+      jobs.add(
+        Act0HomePlanJobV1(
+          jobId: 'recheck:${agedRecheck.taskId}',
+          label: _copyV1(en: 'Recheck old spot', ru: 'Повтори старый спот'),
+          title: agedRecheck.title,
+          detail: _copyV1(
+            en: 'Still yours? One calm replay keeps it honest.',
+            ru: 'Ещё твоё? Один спокойный повтор это подтвердит.',
+          ),
+        ),
+      );
+      openTaskIds.add(agedRecheck.taskId);
+    }
+    if (ownedCandidate != null) {
+      final ownedEntry = _retentionMemoryByTaskId[ownedCandidate.taskId];
+      final stableProof =
+          ownedEntry != null && _isStableOwnedCandidateV1(ownedEntry);
+      jobs.add(
+        Act0HomePlanJobV1(
+          jobId: 'prove:${ownedCandidate.taskId}',
+          label: stableProof
+              ? _copyV1(en: 'Keep sharp', ru: 'Держи острым')
+              : _copyV1(en: 'Prove it', ru: 'Подтверди'),
+          title: ownedCandidate.title,
+          detail: stableProof
+              ? _copyV1(
+                  en: 'Skill holding. One calm replay keeps it honest.',
+                  ru: 'Навык держится. Один спокойный повтор это подтвердит.',
+                )
+              : _copyV1(
+                  en: 'Run it clean once more to keep the spot sharp.',
+                  ru: 'Пройди его ещё раз чисто, чтобы место оставалось острым.',
+                ),
+        ),
+      );
+    }
+    return jobs;
+  }
+
+  Act0HomeWeeklyFocusV1? _homeWeeklyFocus(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: currentLesson,
+    );
+    if (recommendation.mistake != null) {
+      final title = recommendation.mistake!.weaknessLabel.trim();
+      if (title.isEmpty) {
+        return null;
+      }
+      return Act0HomeWeeklyFocusV1(
+        label: _copyV1(en: 'Focus today', ru: 'Фокус сегодня'),
+        title: title,
+        detail: _copyV1(
+          en: 'Repair this idea in fresh frames today.',
+          ru: 'Сегодня закрепи эту идею в новых фреймах.',
+        ),
+      );
+    }
+    final agedRecheck = _topRetentionReplayCardV1(
+      _Act0RetentionMemoryStatusV1.agedRecheck,
+      excludedTaskIds: _openMistakes().map((mistake) => mistake.taskId).toSet(),
+    );
+    if (agedRecheck != null) {
+      final title = agedRecheck.weaknessLabel.trim();
+      if (title.isEmpty) {
+        return null;
+      }
+      return Act0HomeWeeklyFocusV1(
+        label: _copyV1(en: 'Focus today', ru: 'Фокус сегодня'),
+        title: title,
+        detail: _copyV1(
+          en: 'Bring this idea back today.',
+          ru: 'Вернись к этой идее сегодня.',
+        ),
+      );
+    }
+    final fallbackTitle = _localizedLessonTitleV1(currentLesson).trim();
+    if (fallbackTitle.isEmpty) {
+      return null;
+    }
+    return Act0HomeWeeklyFocusV1(
+      label: _copyV1(en: 'Focus today', ru: 'Фокус сегодня'),
+      title: fallbackTitle,
+      detail: _copyV1(
+        en: 'Keep the route clean through this next spot.',
+        ru: 'Держи маршрут чистым через следующий спот.',
+      ),
+    );
   }
 
   _Act0PracticeSurfaceRecommendationV1 _practiceSurfaceRecommendation({
@@ -3446,6 +3700,52 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (recommendation.kind == _Act0LearningNextActionKindV1.reviewQuickFix) {
       _tab = Act0ShellTabV1.review;
     }
+  }
+
+  void _startHomeDailyPlanJob(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+    String jobId,
+  ) {
+    if (jobId == 'continue') {
+      _startHomeNextAction(selectedWorld);
+      return;
+    }
+    if (jobId.startsWith('repair:')) {
+      _startHomeRepairAction(selectedWorld, currentLesson);
+      return;
+    }
+    if (jobId.startsWith('recheck:')) {
+      final taskId = jobId.substring('recheck:'.length);
+      final mistake = _topRetentionReplayCardV1(
+        _Act0RetentionMemoryStatusV1.agedRecheck,
+      );
+      if (mistake != null && mistake.taskId == taskId) {
+        _startMistakeRepair(
+          selectedWorld,
+          mistake,
+          returnToPlayHub: false,
+          practiceGroupId: 'weak_spots',
+        );
+      }
+      return;
+    }
+    if (jobId.startsWith('prove:')) {
+      final taskId = jobId.substring('prove:'.length);
+      final mistake = _topRetentionReplayCardV1(
+        _Act0RetentionMemoryStatusV1.ownedCandidate,
+      );
+      if (mistake != null && mistake.taskId == taskId) {
+        _startMistakeRepair(
+          selectedWorld,
+          mistake,
+          returnToPlayHub: false,
+          practiceGroupId: 'weak_spots',
+        );
+      }
+      return;
+    }
+    _startHomeRepairAction(selectedWorld, currentLesson);
   }
 
   Act0PracticeGroupV1 _groupForLesson(
@@ -3752,6 +4052,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     bool allowDrillBypass = false,
     bool rapidPracticeLoop = false,
   }) {
+    final sourceTaskId = mistake.taskId;
+    final retentionStatus = _retentionMemoryByTaskId[sourceTaskId]?.status;
+    final isRetentionReplay =
+        retentionStatus == _Act0RetentionMemoryStatusV1.agedRecheck ||
+        retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
+    final repairTaskId = isRetentionReplay
+        ? sourceTaskId
+        : (_repairVariantTaskIdForSourceV1(sourceTaskId) ?? sourceTaskId);
     final launchWorld = mistake.worldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
@@ -3759,17 +4067,37 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             mistake.worldId,
           );
     final launchLesson = _lessonById(launchWorld.lessons, mistake.lessonId);
-    final launchTask = _taskById(launchLesson, mistake.taskId);
+    final launchTask = _taskById(launchLesson, repairTaskId);
+    if (!isRetentionReplay) {
+      _mistakeRecords.putIfAbsent(
+        sourceTaskId,
+        () => _Act0MistakeRecordV1(
+          taskId: sourceTaskId,
+          lessonId: mistake.lessonId,
+          worldId: mistake.worldId,
+          title: mistake.title,
+          weaknessLabel: mistake.weaknessLabel,
+          selectedOptionId: mistake.selectedOptionId,
+          selectedLabel: mistake.selectedLabel,
+          betterLabel: mistake.betterLabel,
+          reason: mistake.reason,
+          contextLabels: mistake.contextLabels,
+          repairActionLabel: mistake.repairActionLabel,
+          attempts: mistake.attempts,
+        ),
+      );
+    }
     _startTaskByIds(
       launchWorld,
       mistake.lessonId,
-      mistake.taskId,
+      repairTaskId,
       skipTeaching: skipTeaching,
       allowDrillBypass:
           allowDrillBypass || launchTask.phase == Act0LessonPhaseV1.drill,
       rapidPracticeLoop: rapidPracticeLoop,
     );
-    _activeRepairTaskId = mistake.taskId;
+    _activeRepairTaskId = repairTaskId;
+    _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
     _returnToPlayHubOnBack = returnToPlayHub;
     _activePracticeGroupId = practiceGroupId;
     _rapidPracticeLoop = rapidPracticeLoop;
@@ -3886,14 +4214,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) async {
     final world = _worldById(worlds, 'world_1');
     final result = _placementResult;
-    final lessonId = fromZero || result == null
-        ? 'what_poker_is'
+    final guideLesson = _lessonById(world.lessons, 'what_poker_is');
+    final guideTask = guideLesson.taskList.first;
+    final recommendedLessonId = fromZero || result == null
+        ? guideLesson.lessonId
         : result.recommendedLessonId;
-    final lesson = _lessonById(world.lessons, lessonId);
-    final taskId = fromZero || result == null
-        ? lesson.taskList.first.taskId
+    final recommendedLesson = _lessonById(world.lessons, recommendedLessonId);
+    final recommendedTaskId = fromZero || result == null
+        ? guideTask.taskId
         : result.recommendedTaskId;
-    final task = _taskByIdWithTaskIds(lesson, taskId, _pathClosedTaskIds);
+    final recommendedTask = _taskByIdWithTaskIds(
+      recommendedLesson,
+      recommendedTaskId,
+      _pathClosedTaskIds,
+    );
+    _completedTaskIds.clear();
+    _completedLessonIds.clear();
     if (fromZero) {
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
@@ -3901,16 +4237,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!fromZero && result != null) {
       final skipPlan = _buildPlacementSkipPlan(
         world: world,
-        recommendedLessonId: lesson.lessonId,
-        recommendedTaskId: task.taskId,
+        recommendedLessonId: recommendedLesson.lessonId,
+        recommendedTaskId: recommendedTask.taskId,
       );
       _skippedTaskIds.addAll(skipPlan.taskIds);
       _visibleSkippedTaskIds.removeAll(skipPlan.taskIds);
       unawaited(_animatePlacementSkipReveal(skipPlan.orderedTaskIds));
     }
     _selectedWorldId = world.worldId;
-    _selectedLessonId = lesson.lessonId;
-    _selectedTaskId = task.taskId;
+    _selectedLessonId = guideLesson.lessonId;
+    _selectedTaskId = guideTask.taskId;
     _showPlacement = false;
     _showWelcome = !_welcomeCompletedV1;
     _placementDiagnosticActive = false;
@@ -3923,7 +4259,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnDetailWorldId = null;
     _learnDetailLessonId = null;
     _learnPopupTaskId = null;
-    _phase = task.phase;
+    _phase = guideTask.phase;
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     _resetLessonRunMetrics();
@@ -3980,6 +4316,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required String recommendedTaskId,
   }) {
     final orderedTaskIds = <String>[];
+    final guideLessonId = 'what_poker_is';
     final lessonIndex = world.lessons.indexWhere(
       (lesson) => lesson.lessonId == recommendedLessonId,
     );
@@ -3992,6 +4329,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
     for (var i = 0; i < lessonIndex; i++) {
       final lesson = world.lessons[i];
+      if (lesson.lessonId == guideLessonId) {
+        continue;
+      }
       for (final task in lesson.taskList) {
         orderedTaskIds.add(task.taskId);
       }
@@ -4027,6 +4367,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _visibleSkippedTaskIds.add(taskId);
       });
     }
+  }
+
+  Set<String> _legacyCompatAutoCompletedLessonIdsV1({
+    required _Act0PersistedProgressV1 parsed,
+    required Act0ShellStateV1 state,
+  }) {
+    if (parsed.selectedWorldId != 'world_1') {
+      return const <String>{};
+    }
+    if (parsed.selectedLessonId == 'what_poker_is' ||
+        parsed.selectedLessonId == 'what_poker_is_content') {
+      return const <String>{};
+    }
+    final worldOne = state.worldById('world_1');
+    final guideTaskIds = <String>{
+      for (final task in worldOne.lessons.first.taskList) task.taskId,
+    };
+    final hasProgressBeyondGuide =
+        parsed.completedTaskIds.any(
+          (taskId) => !guideTaskIds.contains(taskId),
+        ) ||
+        parsed.skippedTaskIds.any((taskId) => !guideTaskIds.contains(taskId));
+    if (!hasProgressBeyondGuide) {
+      return const <String>{};
+    }
+    return const <String>{'what_poker_is_content'};
   }
 
   Act0PlacementResultV1 _buildPlacementResult() {
@@ -4202,11 +4568,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       weakSpots: _placementWeakSpotsFor(Act0PlacementResultLevelV1.newPlayer),
       recommendedLessonId: 'what_poker_is',
       recommendedTaskId: 'what_poker_is_theory',
-      recommendedTitle: 'What poker is',
+      recommendedTitle: 'First Table Guide',
       recommendedReason:
-          'The live check says the app should still teach the table itself before asking for harder decisions.',
+          'The live check says the route should teach the Sharky loop first, then move into the poker foundations.',
       routeTrustLine:
-          'The start stays at the table on purpose, so nothing important is hidden under speed.',
+          'Every fresh start still opens with the same short guide, so no core route truth goes missing.',
       premiumPitch:
           'Premium can add personal repair drills and a seven-day guided plan after this foundation.',
       trialValuePoints: <String>[
@@ -4255,7 +4621,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0PlacementQuestionV1? _placementQuestionById(String questionId) {
-    for (final question in _placementQuestionsV1) {
+    for (final question in _placementQuestionBankV1) {
       if (question.questionId == questionId) {
         return question;
       }
@@ -4289,6 +4655,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return fallback;
     }
     return options.first.label;
+  }
+
+  bool _placementHasAnySelection(String questionId) {
+    final selectedIds = _placementAnswerIds[questionId];
+    return selectedIds != null && selectedIds.isNotEmpty;
   }
 
   String _placementJoinedLabels(String questionId, String fallback) {
@@ -4494,8 +4865,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return <String>[
       'Experience read: ${_placementExperienceRead()}.',
       'Main friction area: ${_placementConfusionRead()}.',
-      'Preferred use case: ${_placementFormatRead()}.',
-      'Best coaching fit: ${_placementCoachingRead()}.',
+      if (_placementHasAnySelection('format'))
+        'Preferred use case: ${_placementFormatRead()}.',
+      if (_placementHasAnySelection('goal'))
+        'Best coaching fit: ${_placementCoachingRead()}.',
       liveCheckRead,
       if (level == Act0PlacementResultLevelV1.readyForBasics)
         'Diagnostic confirms enough table comfort to begin with action vocabulary.',
@@ -4643,6 +5016,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _showPlayHub = false;
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = null;
+    _activeRepairSourceTaskId = null;
     _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.phase;
     _selectedOptionId = null;
@@ -4657,42 +5031,67 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
+    final repairSourceTaskId = _activeRepairTaskId == selectedTask.taskId
+        ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
+        : selectedTask.taskId;
+    final repairSourceRecord = _mistakeRecords[repairSourceTaskId];
+    final repairSourceLessonId =
+        repairSourceRecord?.lessonId ?? selectedLesson.lessonId;
+    final repairSourceWorldId = repairSourceRecord?.worldId ?? _selectedWorldId;
     if (_activePracticeGroupId == 'daily') {
       _dailyCompletedTaskIds.add(selectedTask.taskId);
       _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
     }
-    final category = _categoryForLesson(selectedLesson.lessonId);
+    final category = _categoryForLesson(repairSourceLessonId);
     final contextLabels = _repairContextLabels(selectedTask.runner, option);
+    final retentionEntry = _retentionMemoryByTaskId[repairSourceTaskId];
     if (option.isCorrect) {
       _incrementSkillStatsForCorrectAnswer(selectedLesson, selectedTask);
       _cleanTaskIds.add(selectedTask.taskId);
+      _cleanTaskIds.add(repairSourceTaskId);
       _lessonRunPendingRetryTaskIds.remove(selectedTask.taskId);
-      if (_mistakeRecords.containsKey(selectedTask.taskId)) {
-        _resolvedMistakeTaskIds.add(selectedTask.taskId);
+      _lessonRunPendingRetryTaskIds.remove(repairSourceTaskId);
+      if (retentionEntry?.status == _Act0RetentionMemoryStatusV1.agedRecheck ||
+          retentionEntry?.status ==
+              _Act0RetentionMemoryStatusV1.ownedCandidate) {
+        _retentionMemoryByTaskId[repairSourceTaskId] = retentionEntry!.copyWith(
+          status: _Act0RetentionMemoryStatusV1.ownedCandidate,
+          lastRecheckSequence: _retentionSequence,
+          successfulRecheckCount: retentionEntry.successfulRecheckCount + 1,
+        );
+      } else if (_mistakeRecords.containsKey(repairSourceTaskId)) {
+        _resolvedMistakeTaskIds.add(repairSourceTaskId);
+        _retentionMemoryByTaskId[repairSourceTaskId] = _updatedRetentionEntryV1(
+          taskId: repairSourceTaskId,
+          lessonId: repairSourceLessonId,
+          worldId: repairSourceWorldId,
+          status: _Act0RetentionMemoryStatusV1.fixedRecent,
+        );
         if (_activeRepairTaskId != selectedTask.taskId &&
-            _lessonRunRetriedTaskIds.contains(selectedTask.taskId)) {
-          _lessonRunQuickFixTaskIds.add(selectedTask.taskId);
-          _lessonRunDeepLeakTaskIds.remove(selectedTask.taskId);
+            _lessonRunRetriedTaskIds.contains(repairSourceTaskId)) {
+          _lessonRunQuickFixTaskIds.add(repairSourceTaskId);
+          _lessonRunDeepLeakTaskIds.remove(repairSourceTaskId);
         }
       }
+      _refreshRetentionMemoryStatusesV1();
       return;
     }
-    _lessonRunMistakeTaskIds.add(selectedTask.taskId);
+    _lessonRunMistakeTaskIds.add(repairSourceTaskId);
     if (_activeRepairTaskId != selectedTask.taskId &&
-        !_lessonRunRetriedTaskIds.contains(selectedTask.taskId)) {
-      _lessonRunPendingRetryTaskIds.add(selectedTask.taskId);
+        !_lessonRunRetriedTaskIds.contains(repairSourceTaskId)) {
+      _lessonRunPendingRetryTaskIds.add(repairSourceTaskId);
     } else if (_activeRepairTaskId != selectedTask.taskId &&
-        _lessonRunRetriedTaskIds.contains(selectedTask.taskId)) {
-      _lessonRunDeepLeakTaskIds.add(selectedTask.taskId);
-      _lessonRunQuickFixTaskIds.remove(selectedTask.taskId);
+        _lessonRunRetriedTaskIds.contains(repairSourceTaskId)) {
+      _lessonRunDeepLeakTaskIds.add(repairSourceTaskId);
+      _lessonRunQuickFixTaskIds.remove(repairSourceTaskId);
     }
-    _resolvedMistakeTaskIds.remove(selectedTask.taskId);
-    final previous = _mistakeRecords[selectedTask.taskId];
-    _mistakeRecords[selectedTask.taskId] = _Act0MistakeRecordV1(
-      taskId: selectedTask.taskId,
-      lessonId: selectedLesson.lessonId,
-      worldId: _selectedWorldId,
-      title: _localizedTaskTitleV1(selectedTask),
+    _resolvedMistakeTaskIds.remove(repairSourceTaskId);
+    final previous = _mistakeRecords[repairSourceTaskId];
+    _mistakeRecords[repairSourceTaskId] = _Act0MistakeRecordV1(
+      taskId: repairSourceTaskId,
+      lessonId: repairSourceLessonId,
+      worldId: repairSourceWorldId,
+      title: previous?.title ?? _localizedTaskTitleV1(selectedTask),
       weaknessLabel: category,
       selectedOptionId: option.id,
       selectedLabel: option.label,
@@ -4703,8 +5102,171 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         contextLabels: contextLabels,
       ),
       contextLabels: contextLabels,
-      repairActionLabel: _repairActionLabel(selectedTask),
+      repairActionLabel:
+          _activeRepairTaskId == selectedTask.taskId &&
+              _activeRepairSourceTaskId != null &&
+              _activeRepairSourceTaskId != selectedTask.taskId
+          ? _copyV1(en: 'Try a similar spot', ru: 'Попробуй похожий спот')
+          : _repairActionLabel(selectedTask),
       attempts: (previous?.attempts ?? 0) + 1,
+    );
+    _retentionMemoryByTaskId[repairSourceTaskId] = _updatedRetentionEntryV1(
+      taskId: repairSourceTaskId,
+      lessonId: repairSourceLessonId,
+      worldId: repairSourceWorldId,
+      status: _Act0RetentionMemoryStatusV1.openRepair,
+    );
+    _refreshRetentionMemoryStatusesV1();
+  }
+
+  _Act0RetentionMemoryEntryV1 _updatedRetentionEntryV1({
+    required String taskId,
+    required String lessonId,
+    required String worldId,
+    required String status,
+  }) {
+    final previous = _retentionMemoryByTaskId[taskId];
+    final nextAttempts = status == _Act0RetentionMemoryStatusV1.openRepair
+        ? (previous?.attempts ?? 0) + 1
+        : (previous?.attempts ?? 0);
+    final fixedAtSequence = status == _Act0RetentionMemoryStatusV1.fixedRecent
+        ? _retentionSequence
+        : previous?.fixedAtSequence ?? 0;
+    return _Act0RetentionMemoryEntryV1(
+      taskId: taskId,
+      lessonId: lessonId,
+      worldId: worldId,
+      status: status,
+      attempts: nextAttempts,
+      fixedAtSequence: fixedAtSequence,
+      lastRecheckSequence: previous?.lastRecheckSequence ?? 0,
+      successfulRecheckCount: previous?.successfulRecheckCount ?? 0,
+    );
+  }
+
+  String? _repairVariantTaskIdForSourceV1(String taskId) {
+    const repairVariantTaskIds = <String, String>{
+      'turn_river_changes_w5_turn_hits':
+          'turn_river_changes_w5_turn_texture_shift_transfer',
+      'turn_river_changes_w5_street_repair':
+          'turn_river_changes_w5_turn_texture_shift_transfer',
+      'turn_river_changes_w5_river_misses':
+          'turn_river_changes_w5_river_draw_story_transfer',
+      'w6_value_range_action': 'w6_table_value_line_transfer',
+      'w6_bluff_candidate': 'w6_turn_pressure_shift_transfer',
+      'w6_wet_board_repair': 'w6_turn_pressure_shift_transfer',
+    };
+    return repairVariantTaskIds[taskId];
+  }
+
+  void _refreshRetentionMemoryStatusesV1() {
+    for (final entry in _retentionMemoryByTaskId.values.toList()) {
+      if (entry.status != _Act0RetentionMemoryStatusV1.fixedRecent) {
+        continue;
+      }
+      if (!_isEligibleForAgedRecheckV1(entry)) {
+        continue;
+      }
+      _retentionMemoryByTaskId[entry.taskId] = entry.copyWith(
+        status: _Act0RetentionMemoryStatusV1.agedRecheck,
+      );
+    }
+  }
+
+  bool _isEligibleForAgedRecheckV1(_Act0RetentionMemoryEntryV1 entry) {
+    if (entry.status != _Act0RetentionMemoryStatusV1.fixedRecent) {
+      return false;
+    }
+    return _retentionSequence - entry.fixedAtSequence >=
+        _agedRecheckSequenceThresholdV1;
+  }
+
+  bool _isStableOwnedCandidateV1(_Act0RetentionMemoryEntryV1 entry) {
+    return entry.status == _Act0RetentionMemoryStatusV1.ownedCandidate &&
+        entry.successfulRecheckCount >= 2;
+  }
+
+  _Act0WorldRetentionSeedResultV1 _seedWorldCompletionRetentionTargetsV1(
+    Act0WorldCardV1 world,
+  ) {
+    final candidates = <({String lessonId, String taskId, int weight})>[];
+    for (final lesson in world.lessons) {
+      for (final task in lesson.taskList) {
+        if (!_completedTaskIds.contains(task.taskId)) {
+          continue;
+        }
+        final deltas = _skillDeltaForTask(lesson.lessonId, task.taskId);
+        final weight = deltas.values.fold<int>(0, (sum, gain) => sum + gain);
+        if (weight <= 0) {
+          continue;
+        }
+        candidates.add((
+          lessonId: lesson.lessonId,
+          taskId: task.taskId,
+          weight: weight,
+        ));
+      }
+    }
+    candidates.sort((a, b) {
+      final weightCompare = b.weight.compareTo(a.weight);
+      if (weightCompare != 0) {
+        return weightCompare;
+      }
+      return a.taskId.compareTo(b.taskId);
+    });
+
+    var recheckCount = 0;
+    var proveCount = 0;
+    var emittedCount = 0;
+    var changed = false;
+
+    for (final candidate in candidates) {
+      if (emittedCount >= 2) {
+        break;
+      }
+      final existing = _retentionMemoryByTaskId[candidate.taskId];
+      if (existing?.status == _Act0RetentionMemoryStatusV1.openRepair) {
+        continue;
+      }
+      if (existing?.status == _Act0RetentionMemoryStatusV1.agedRecheck) {
+        recheckCount += 1;
+        emittedCount += 1;
+        continue;
+      }
+      if (existing?.status == _Act0RetentionMemoryStatusV1.ownedCandidate) {
+        proveCount += 1;
+        emittedCount += 1;
+        continue;
+      }
+      if (existing?.status == _Act0RetentionMemoryStatusV1.fixedRecent) {
+        _retentionMemoryByTaskId[candidate.taskId] = existing!.copyWith(
+          status: _Act0RetentionMemoryStatusV1.agedRecheck,
+        );
+        recheckCount += 1;
+        emittedCount += 1;
+        changed = true;
+        continue;
+      }
+      _retentionMemoryByTaskId[candidate.taskId] = _Act0RetentionMemoryEntryV1(
+        taskId: candidate.taskId,
+        lessonId: candidate.lessonId,
+        worldId: world.worldId,
+        status: _Act0RetentionMemoryStatusV1.agedRecheck,
+        attempts: existing?.attempts ?? 0,
+        fixedAtSequence: (_retentionSequence - _agedRecheckSequenceThresholdV1)
+            .clamp(0, _retentionSequence),
+        lastRecheckSequence: existing?.lastRecheckSequence ?? 0,
+        successfulRecheckCount: existing?.successfulRecheckCount ?? 0,
+      );
+      recheckCount += 1;
+      emittedCount += 1;
+      changed = true;
+    }
+
+    return _Act0WorldRetentionSeedResultV1(
+      recheckCount: recheckCount,
+      proveCount: proveCount,
+      changed: changed,
     );
   }
 
@@ -4995,8 +5557,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : const <Act0TeachingStepV1>[],
       );
     }
+    final repairSourceTaskId = _activeRepairTaskId == selectedTask.taskId
+        ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
+        : selectedTask.taskId;
     final record = _activeRepairTaskId == selectedTask.taskId
-        ? _mistakeRecords[selectedTask.taskId]
+        ? _mistakeRecords[repairSourceTaskId]
         : null;
     if (record == null) {
       return selectedTask.runner;
@@ -5019,9 +5584,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       table: focusTable,
       teachingSteps: <Act0TeachingStepV1>[
         Act0TeachingStepV1(
-          title: 'Repair this spot',
-          body:
-              'You chose ${record.selectedLabel}. Better: ${record.betterLabel}.',
+          title: repairSourceTaskId == selectedTask.taskId
+              ? 'Repair this spot'
+              : 'Try a similar spot',
+          body: repairSourceTaskId == selectedTask.taskId
+              ? 'You chose ${record.selectedLabel}. Better: ${record.betterLabel}.'
+              : 'Same idea, new frame. You chose ${record.selectedLabel}. Better: ${record.betterLabel}.',
           table: focusTable,
           focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
           focusCardIds: option?.repairFocusCardIds ?? const <String>[],
@@ -5294,32 +5862,196 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final severity = switch (mistake.severityLabel) {
       'Deep leak' => 300,
       'Needs repair' => 200,
+      'Recheck' => 150,
       'Quick fix' => 100,
       _ => 0,
     };
     return severity + mistake.attempts.clamp(0, 99);
   }
 
-  List<Act0MistakeCardV1> _fixedMistakes() => [
-    for (final record in _mistakeRecords.values)
-      if (_resolvedMistakeTaskIds.contains(record.taskId))
-        record.toCard(
-          resolved: true,
-          completionState: _perfectTaskIds().contains(record.taskId)
-              ? Act0CompletionDisplayStateV1.perfect
-              : (_cleanTaskIds.contains(record.taskId)
-                    ? Act0CompletionDisplayStateV1.clear
-                    : null),
-          qualityLine: _perfectTaskIds().contains(record.taskId)
-              ? _copyV1(en: 'Perfect clear complete.', ru: 'Идеально пройдено.')
-              : (_cleanTaskIds.contains(record.taskId)
-                    ? _copyV1(
-                        en: 'Clear path still open.',
-                        ru: 'Путь к идеалу открыт.',
-                      )
-                    : ''),
+  List<Act0MistakeCardV1> _fixedMistakes() {
+    final fixed = <Act0MistakeCardV1>[];
+    final emittedTaskIds = <String>{};
+    for (final record in _mistakeRecords.values) {
+      if (!_resolvedMistakeTaskIds.contains(record.taskId)) {
+        continue;
+      }
+      fixed.add(
+        _retentionReviewCardForTaskV1(
+          taskId: record.taskId,
+          record: record,
+          entry: _retentionMemoryByTaskId[record.taskId],
         ),
-  ];
+      );
+      emittedTaskIds.add(record.taskId);
+    }
+    for (final entry in _retentionMemoryByTaskId.values) {
+      if (emittedTaskIds.contains(entry.taskId) ||
+          entry.status == _Act0RetentionMemoryStatusV1.openRepair) {
+        continue;
+      }
+      fixed.add(
+        _retentionReviewCardForTaskV1(taskId: entry.taskId, entry: entry),
+      );
+      emittedTaskIds.add(entry.taskId);
+    }
+    fixed.sort((a, b) {
+      final priority = _fixedReviewPriorityV1(
+        b,
+      ).compareTo(_fixedReviewPriorityV1(a));
+      if (priority != 0) {
+        return priority;
+      }
+      return a.taskId.compareTo(b.taskId);
+    });
+    return fixed;
+  }
+
+  int _fixedReviewPriorityV1(Act0MistakeCardV1 mistake) {
+    return switch (mistake.severityLabel) {
+      'Recheck' => 300,
+      'Quick fix' => 100,
+      _ => 200,
+    };
+  }
+
+  Act0MistakeCardV1? _topRetentionReplayCardV1(
+    String status, {
+    Set<String>? excludedTaskIds,
+  }) {
+    final blockedTaskIds = excludedTaskIds ?? const <String>{};
+    final entries = _retentionMemoryByTaskId.values
+        .where((entry) {
+          return entry.status == status &&
+              !blockedTaskIds.contains(entry.taskId);
+        })
+        .toList(growable: false);
+    if (entries.isEmpty) {
+      return null;
+    }
+    entries.sort((a, b) {
+      final primary = switch (status) {
+        _Act0RetentionMemoryStatusV1.agedRecheck => a.fixedAtSequence.compareTo(
+          b.fixedAtSequence,
+        ),
+        _Act0RetentionMemoryStatusV1.ownedCandidate =>
+          a.lastRecheckSequence.compareTo(b.lastRecheckSequence),
+        _ => a.taskId.compareTo(b.taskId),
+      };
+      if (primary != 0) {
+        return primary;
+      }
+      return a.taskId.compareTo(b.taskId);
+    });
+    final entry = entries.first;
+    return _retentionReviewCardForTaskV1(taskId: entry.taskId, entry: entry);
+  }
+
+  Act0MistakeCardV1 _retentionReviewCardForTaskV1({
+    required String taskId,
+    _Act0MistakeRecordV1? record,
+    _Act0RetentionMemoryEntryV1? entry,
+  }) {
+    if (record != null &&
+        entry?.status != _Act0RetentionMemoryStatusV1.agedRecheck &&
+        entry?.status != _Act0RetentionMemoryStatusV1.ownedCandidate) {
+      return record.toCard(
+        resolved: true,
+        completionState: _perfectTaskIds().contains(record.taskId)
+            ? Act0CompletionDisplayStateV1.perfect
+            : (_cleanTaskIds.contains(record.taskId)
+                  ? Act0CompletionDisplayStateV1.clear
+                  : null),
+        qualityLine: _perfectTaskIds().contains(record.taskId)
+            ? _copyV1(en: 'Perfect clear complete.', ru: 'Идеально пройдено.')
+            : (_cleanTaskIds.contains(record.taskId)
+                  ? _copyV1(
+                      en: 'Clear path still open.',
+                      ru: 'Путь к идеалу открыт.',
+                    )
+                  : ''),
+      );
+    }
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final lessonId = entry?.lessonId ?? record?.lessonId ?? '';
+    final lesson = state.lessonById(lessonId);
+    final task = lesson.taskList.firstWhere(
+      (candidate) => candidate.taskId == taskId,
+      orElse: () => lesson.taskList.first,
+    );
+    final correctOption = task.runner.options.firstWhere(
+      (option) => option.isCorrect,
+      orElse: () => task.runner.options.isEmpty
+          ? const Act0RunnerOptionV1(
+              id: '',
+              label: '',
+              isCorrect: true,
+              preferredLabel: '',
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: '',
+              feedbackReason: '',
+            )
+          : task.runner.options.first,
+    );
+    final replayStatus = entry?.status;
+    final stableOwned = entry != null && _isStableOwnedCandidateV1(entry);
+    final completionState =
+        replayStatus == _Act0RetentionMemoryStatusV1.ownedCandidate
+        ? (_perfectTaskIds().contains(taskId)
+              ? Act0CompletionDisplayStateV1.perfect
+              : Act0CompletionDisplayStateV1.clear)
+        : null;
+    return Act0MistakeCardV1(
+      taskId: taskId,
+      lessonId: lesson.lessonId,
+      worldId: entry?.worldId ?? record?.worldId ?? '',
+      title: _localizedTaskTitleV1(task),
+      weaknessLabel: _categoryForLesson(lesson.lessonId),
+      selectedOptionId: record?.selectedOptionId ?? '',
+      selectedLabel:
+          record?.selectedLabel ?? _copyV1(en: 'Review', ru: 'Повтор'),
+      betterLabel: record?.betterLabel ?? correctOption.betterAnswerLabel,
+      reason: record?.reason ?? correctOption.feedbackReason,
+      attempts: entry?.attempts ?? record?.attempts ?? 0,
+      severityLabel: replayStatus == _Act0RetentionMemoryStatusV1.agedRecheck
+          ? 'Recheck'
+          : replayStatus == _Act0RetentionMemoryStatusV1.ownedCandidate &&
+                stableOwned
+          ? 'Kept sharp'
+          : (record?.attempts == 1 ? 'Quick fix' : 'Clear'),
+      contextLabels: record?.contextLabels ?? const <String>[],
+      repairActionLabel:
+          replayStatus == _Act0RetentionMemoryStatusV1.agedRecheck
+          ? _copyV1(en: 'Prove it again', ru: 'Подтверди ещё раз')
+          : replayStatus == _Act0RetentionMemoryStatusV1.ownedCandidate &&
+                stableOwned
+          ? _copyV1(en: 'Keep sharp', ru: 'Держи острым')
+          : _repairActionLabel(task),
+      resolved: true,
+      completionState: completionState,
+      qualityLine: switch (replayStatus) {
+        _Act0RetentionMemoryStatusV1.agedRecheck => _copyV1(
+          en: 'Still yours? Run this spot once more.',
+          ru: 'Ещё твоё? Пройди этот спот ещё раз.',
+        ),
+        _Act0RetentionMemoryStatusV1.ownedCandidate => _copyV1(
+          en: stableOwned
+              ? 'Skill holding. One light replay keeps it sharp.'
+              : 'Proved once. One more clean replay will keep it honest.',
+          ru: stableOwned
+              ? 'Навык держится. Один лёгкий повтор сохранит остроту.'
+              : 'Один раз подтверждено. Ещё один чистый повтор закрепит это.',
+        ),
+        _ =>
+          _perfectTaskIds().contains(taskId)
+              ? _copyV1(en: 'Perfect clear complete.', ru: 'Идеально пройдено.')
+              : _copyV1(
+                  en: 'Clear path still open.',
+                  ru: 'Путь к идеалу открыт.',
+                ),
+      },
+    );
+  }
 
   List<Act0MistakeCardV1> _quickFixMistakes() => [
     for (final mistake in _fixedMistakes())
@@ -5780,7 +6512,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!alreadyCompleted) {
       _earnedXp += selectedTask.rewardXp;
       _lessonRunXp += selectedTask.rewardXp;
+      _retentionSequence += 1;
     }
+    _refreshRetentionMemoryStatusesV1();
     final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
     final world = _worldById(worlds, _selectedWorldId);
     final lesson = _lessonById(world.lessons, _selectedLessonId);
@@ -5825,6 +6559,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final isWorldComplete =
         nextLessonId == null &&
         progressedWorld.status == Act0WorldStateV1.completed;
+    final worldRetentionSeed = isWorldComplete
+        ? _seedWorldCompletionRetentionTargetsV1(progressedWorld)
+        : const _Act0WorldRetentionSeedResultV1();
     final lessonPerfectClearCount = _perfectTaskIds()
         .where(
           (taskId) =>
@@ -5902,7 +6639,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           !isWorldComplete &&
           lessonOpenMistakeCount == 0 &&
           lessonPerfectClearCount < selectedLesson.taskList.length,
+      futureRecheckCount: worldRetentionSeed.recheckCount,
+      futureProveCount: worldRetentionSeed.proveCount,
     );
+    if (isWorldComplete && worldRetentionSeed.changed) {
+      _persistProgress();
+    }
     _fireBlockCompletionEffects(_blockCompletionSummary!);
     return true;
   }
@@ -6129,6 +6871,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  void _closeTaskWithoutRewardV1(String taskId) {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    for (final world in _progressWorlds(state)) {
+      for (final lesson in world.lessons) {
+        if (!lesson.taskList.any((task) => task.taskId == taskId)) {
+          continue;
+        }
+        _skippedTaskIds.remove(taskId);
+        _visibleSkippedTaskIds.remove(taskId);
+        _completedTaskIds.add(taskId);
+        if (_lessonCompleteWithTaskIds(lesson, _completedTaskIds)) {
+          _completedLessonIds.add(lesson.lessonId);
+        }
+        _persistProgress();
+        return;
+      }
+    }
+  }
+
   int _lessonIndex(List<Act0LessonCardV1> lessons, String lessonId) {
     final index = lessons.indexWhere((lesson) => lesson.lessonId == lessonId);
     return index < 0 ? 0 : index;
@@ -6245,6 +7006,18 @@ class _Act0ProgressSnapshotV1 {
 
   final int level;
   final int xp;
+}
+
+class _Act0WorldRetentionSeedResultV1 {
+  const _Act0WorldRetentionSeedResultV1({
+    this.recheckCount = 0,
+    this.proveCount = 0,
+    this.changed = false,
+  });
+
+  final int recheckCount;
+  final int proveCount;
+  final bool changed;
 }
 
 class _Act0DailyDeckEntryV1 {
@@ -6412,6 +7185,8 @@ class _Act0PersistedProgressV1 {
     this.lastActiveDay = '',
     this.dailyCompletedRepCount = 0,
     this.persistedStreakDays = 0,
+    this.retentionSequence = 0,
+    this.retentionMemory = const <_Act0RetentionMemoryEntryV1>[],
     this.resumeInRunner = false,
     this.resumePhase = '',
     this.resumeTeachingStepIndex = 0,
@@ -6432,6 +7207,8 @@ class _Act0PersistedProgressV1 {
   final String lastActiveDay;
   final int dailyCompletedRepCount;
   final int persistedStreakDays;
+  final int retentionSequence;
+  final List<_Act0RetentionMemoryEntryV1> retentionMemory;
   final bool resumeInRunner;
   final String resumePhase;
   final int resumeTeachingStepIndex;
@@ -6445,8 +7222,10 @@ class _Act0PersistedProgressV1 {
     final sortedLessonIds = completedLessonIds.toList(growable: false)..sort();
     final sortedSkillKeys = profileSkillValues.keys.toList(growable: false)
       ..sort();
+    final sortedRetentionMemory = retentionMemory.toList(growable: false)
+      ..sort((a, b) => a.taskId.compareTo(b.taskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 7,
+      'schemaVersion': 8,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -6468,6 +7247,10 @@ class _Act0PersistedProgressV1 {
       'lastActiveDay': lastActiveDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'persistedStreakDays': persistedStreakDays,
+      'retentionSequence': retentionSequence,
+      'retentionMemory': <Map<String, Object>>[
+        for (final entry in sortedRetentionMemory) entry.toJson(),
+      ],
       'resumeInRunner': resumeInRunner,
       'resumePhase': resumePhase,
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
@@ -6490,14 +7273,15 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v7 as the shell snapshot evolves.
+    // Accept v1-v8 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
         schemaVersion != 4 &&
         schemaVersion != 5 &&
         schemaVersion != 6 &&
-        schemaVersion != 7) {
+        schemaVersion != 7 &&
+        schemaVersion != 8) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -6523,6 +7307,12 @@ class _Act0PersistedProgressV1 {
     final persistedStreakDays = streakRaw is int
         ? streakRaw
         : int.tryParse(streakRaw?.toString() ?? '') ?? 0;
+    final retentionSequenceRaw = map['retentionSequence'];
+    final retentionSequence = retentionSequenceRaw is int
+        ? retentionSequenceRaw
+        : int.tryParse(retentionSequenceRaw?.toString() ?? '') ??
+              completedTaskIds.length;
+    final retentionMemory = _retentionMemoryList(map['retentionMemory']);
     final resumeInRunner = map['resumeInRunner'] == true;
     final resumePhase = (map['resumePhase'] ?? '').toString();
     final resumeTeachingStepRaw = map['resumeTeachingStepIndex'];
@@ -6555,6 +7345,8 @@ class _Act0PersistedProgressV1 {
       lastActiveDay: lastActiveDay,
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
+      retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
+      retentionMemory: retentionMemory,
       resumeInRunner: resumeInRunner,
       resumePhase: resumePhase,
       resumeTeachingStepIndex: resumeTeachingStepIndex < 0
@@ -6613,6 +7405,135 @@ class _Act0PersistedProgressV1 {
       gains.add(Act0SkillGainV1(label: label, gain: gain, source: source));
     }
     return gains;
+  }
+
+  static List<_Act0RetentionMemoryEntryV1> _retentionMemoryList(Object? raw) {
+    if (raw is! List) {
+      return const <_Act0RetentionMemoryEntryV1>[];
+    }
+    final entries = <_Act0RetentionMemoryEntryV1>[];
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final parsed = _Act0RetentionMemoryEntryV1.tryParse(item);
+      if (parsed != null) {
+        entries.add(parsed);
+      }
+    }
+    entries.sort((a, b) => a.taskId.compareTo(b.taskId));
+    return entries;
+  }
+}
+
+class _Act0RetentionMemoryStatusV1 {
+  static const String openRepair = 'openRepair';
+  static const String fixedRecent = 'fixedRecent';
+  static const String agedRecheck = 'agedRecheck';
+  static const String ownedCandidate = 'ownedCandidate';
+
+  static bool isKnown(String value) {
+    return value == openRepair ||
+        value == fixedRecent ||
+        value == agedRecheck ||
+        value == ownedCandidate;
+  }
+}
+
+class _Act0RetentionMemoryEntryV1 {
+  const _Act0RetentionMemoryEntryV1({
+    required this.taskId,
+    required this.lessonId,
+    required this.worldId,
+    required this.status,
+    required this.attempts,
+    required this.fixedAtSequence,
+    required this.lastRecheckSequence,
+    required this.successfulRecheckCount,
+  });
+
+  final String taskId;
+  final String lessonId;
+  final String worldId;
+  final String status;
+  final int attempts;
+  final int fixedAtSequence;
+  final int lastRecheckSequence;
+  final int successfulRecheckCount;
+
+  _Act0RetentionMemoryEntryV1 copyWith({
+    String? taskId,
+    String? lessonId,
+    String? worldId,
+    String? status,
+    int? attempts,
+    int? fixedAtSequence,
+    int? lastRecheckSequence,
+    int? successfulRecheckCount,
+  }) {
+    return _Act0RetentionMemoryEntryV1(
+      taskId: taskId ?? this.taskId,
+      lessonId: lessonId ?? this.lessonId,
+      worldId: worldId ?? this.worldId,
+      status: status ?? this.status,
+      attempts: attempts ?? this.attempts,
+      fixedAtSequence: fixedAtSequence ?? this.fixedAtSequence,
+      lastRecheckSequence: lastRecheckSequence ?? this.lastRecheckSequence,
+      successfulRecheckCount:
+          successfulRecheckCount ?? this.successfulRecheckCount,
+    );
+  }
+
+  Map<String, Object> toJson() {
+    return <String, Object>{
+      'taskId': taskId,
+      'lessonId': lessonId,
+      'worldId': worldId,
+      'status': status,
+      'attempts': attempts,
+      'fixedAtSequence': fixedAtSequence,
+      'lastRecheckSequence': lastRecheckSequence,
+      'successfulRecheckCount': successfulRecheckCount,
+    };
+  }
+
+  static _Act0RetentionMemoryEntryV1? tryParse(Map raw) {
+    final taskId = (raw['taskId'] ?? '').toString().trim();
+    final lessonId = (raw['lessonId'] ?? '').toString().trim();
+    final worldId = (raw['worldId'] ?? '').toString().trim();
+    final status = (raw['status'] ?? '').toString().trim();
+    final attempts = _nonNegativeInt(raw['attempts']);
+    final fixedAtSequence = _nonNegativeInt(raw['fixedAtSequence']);
+    final lastRecheckSequence = _nonNegativeInt(raw['lastRecheckSequence']);
+    final successfulRecheckCount = _nonNegativeInt(
+      raw['successfulRecheckCount'],
+    );
+    if (taskId.isEmpty ||
+        lessonId.isEmpty ||
+        worldId.isEmpty ||
+        !_Act0RetentionMemoryStatusV1.isKnown(status) ||
+        attempts == null ||
+        fixedAtSequence == null ||
+        lastRecheckSequence == null ||
+        successfulRecheckCount == null) {
+      return null;
+    }
+    return _Act0RetentionMemoryEntryV1(
+      taskId: taskId,
+      lessonId: lessonId,
+      worldId: worldId,
+      status: status,
+      attempts: attempts,
+      fixedAtSequence: fixedAtSequence,
+      lastRecheckSequence: lastRecheckSequence,
+      successfulRecheckCount: successfulRecheckCount,
+    );
+  }
+
+  static int? _nonNegativeInt(Object? raw) {
+    final parsed = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
+    if (parsed == null || parsed < 0) {
+      return null;
+    }
+    return parsed;
   }
 }
 
@@ -6912,224 +7833,235 @@ String _navItemKeyLabelV1(Act0ShellTabV1 tab) {
   };
 }
 
+const _placementQuestionExperienceV1 = Act0PlacementQuestionV1(
+  questionId: 'experience',
+  eyebrow: 'Starting point',
+  title: 'Where are you starting from?',
+  subtitle: 'Be honest. This only changes where Sharky should begin.',
+  helper:
+      'The goal is not to rank you. The goal is to avoid wasting your first sessions.',
+  icon: Icons.flag_rounded,
+  options: <Act0PlacementOptionV1>[
+    Act0PlacementOptionV1(
+      optionId: 'new',
+      label: 'I have not really played yet',
+      score: 0,
+      profileTag: 'New',
+      subtitle: 'Start from zero and build the table language cleanly.',
+      icon: Icons.school_rounded,
+      badge: 'Best for zero',
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'friends',
+      label: 'I played casually, mostly guessing with friends',
+      score: 1,
+      profileTag: 'Casual',
+      subtitle:
+          'You know some words, but the structure still needs tightening.',
+      icon: Icons.groups_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'watching',
+      label: 'I watch poker content, but real decisions still freeze me',
+      score: 1,
+      profileTag: 'Watching',
+      subtitle:
+          'Translate passive knowledge into something usable at the table.',
+      icon: Icons.live_tv_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'online',
+      label: 'I have played online or live and want sharper structure',
+      score: 3,
+      profileTag: 'Played',
+      subtitle: 'Skip part of the intro and move faster into action language.',
+      icon: Icons.insights_rounded,
+      badge: 'Faster start',
+    ),
+  ],
+);
+
+const _placementQuestionFormatV1 = Act0PlacementQuestionV1(
+  questionId: 'format',
+  eyebrow: 'Your use case',
+  title: 'What do you want poker for?',
+  subtitle:
+      'This shapes examples, language, and the kind of situations Sharky shows first.',
+  helper:
+      'Choose everything that feels true right now. Sharky will look for the dominant pattern, not force a single lane.',
+  icon: Icons.route_rounded,
+  allowsMultiple: true,
+  options: <Act0PlacementOptionV1>[
+    Act0PlacementOptionV1(
+      optionId: 'basics',
+      label: 'I want the game to finally make sense',
+      score: 0,
+      profileTag: 'Basics',
+      subtitle: 'Start with table literacy before strategy words and jargon.',
+      icon: Icons.menu_book_rounded,
+      badge: 'Core',
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'cash',
+      label: 'I want to feel confident in cash-game spots',
+      score: 2,
+      profileTag: 'Cash',
+      subtitle:
+          'Bias examples toward chips, pressure, and practical decisions.',
+      icon: Icons.attach_money_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'tournaments',
+      label: 'I care more about tournament decisions',
+      score: 2,
+      profileTag: 'Tournament',
+      subtitle:
+          'Bias examples toward survival, pressure, and changing leverage.',
+      icon: Icons.emoji_events_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'home_games',
+      label: 'I do not want to feel lost in home games',
+      score: 1,
+      profileTag: 'HomeGames',
+      subtitle:
+          'Focus on hand flow, confidence, and keeping up with the table.',
+      icon: Icons.table_restaurant_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'content',
+      label: 'I want poker videos and hand talk to stop sounding cryptic',
+      score: 1,
+      profileTag: 'Content',
+      subtitle:
+          'Use examples that decode table language instead of assuming it.',
+      icon: Icons.subscriptions_rounded,
+    ),
+  ],
+);
+
+const _placementQuestionConfidenceV1 = Act0PlacementQuestionV1(
+  questionId: 'confidence',
+  eyebrow: 'Where to help first',
+  title: 'What feels most confusing?',
+  subtitle: 'Pick the part that makes you hesitate most.',
+  helper:
+      'Sharky will use this to bias your first explanations, review hints, and early repair spots.',
+  icon: Icons.lightbulb_rounded,
+  options: <Act0PlacementOptionV1>[
+    Act0PlacementOptionV1(
+      optionId: 'rules',
+      label: 'Knowing whose turn it is and how a hand even moves',
+      score: 0,
+      profileTag: 'Rules',
+      subtitle:
+          'You want the table flow, blinds, and action order to stop feeling fuzzy.',
+      icon: Icons.account_tree_rounded,
+      badge: 'Foundation',
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'cards',
+      label: 'Reading cards, pairs, and hand strength fast enough',
+      score: 1,
+      profileTag: 'Cards',
+      subtitle:
+          'You want stronger recognition and more confidence at showdown.',
+      icon: Icons.style_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'decisions',
+      label: 'Knowing when to fold, call, or raise without second-guessing',
+      score: 2,
+      profileTag: 'Decisions',
+      subtitle:
+          'You mostly want help making the right action at the right time.',
+      icon: Icons.touch_app_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'board',
+      label: 'Seeing what changed on the flop, turn, or river',
+      score: 1,
+      profileTag: 'Board',
+      subtitle: 'You want the board to feel readable instead of noisy.',
+      icon: Icons.view_module_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'pressure',
+      label: 'Staying clear when people bet and pressure starts building',
+      score: 2,
+      profileTag: 'Pressure',
+      subtitle:
+          'You want calmer decisions when the table stops feeling passive.',
+      icon: Icons.local_fire_department_rounded,
+    ),
+  ],
+);
+
+const _placementQuestionGoalV1 = Act0PlacementQuestionV1(
+  questionId: 'goal',
+  eyebrow: 'Coaching style',
+  title: 'How should Sharky coach you?',
+  subtitle: 'Choose the style that would keep you coming back.',
+  helper:
+      'Choose everything that sounds motivating. Sharky should feel like the right kind of pressure, not the wrong kind.',
+  icon: Icons.favorite_rounded,
+  allowsMultiple: true,
+  options: <Act0PlacementOptionV1>[
+    Act0PlacementOptionV1(
+      optionId: 'guided',
+      label: 'Keep me calm and guided at the start',
+      score: 0,
+      profileTag: 'Guided',
+      subtitle:
+          'Short explanations first, then gentle practice that makes sense.',
+      icon: Icons.explore_rounded,
+      badge: 'Calm start',
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'practice',
+      label: 'Let me learn mostly by doing',
+      score: 1,
+      profileTag: 'Practice',
+      subtitle: 'Less talking, more repetition once the concept is visible.',
+      icon: Icons.fitness_center_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'diagnose',
+      label: 'Show me quickly where I leak',
+      score: 2,
+      profileTag: 'Diagnostic',
+      subtitle: 'Surface weak spots quickly and keep repair close by.',
+      icon: Icons.search_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'daily_plan',
+      label: 'Give me a short plan I can actually stick to',
+      score: 1,
+      profileTag: 'DailyPlan',
+      subtitle: 'A compact habit loop with one clear next step each day.',
+      icon: Icons.today_rounded,
+    ),
+    Act0PlacementOptionV1(
+      optionId: 'honest',
+      label: 'Be direct with me when I am guessing',
+      score: 1,
+      profileTag: 'Direct',
+      subtitle: 'More clarity and sharper feedback, without turning harsh.',
+      icon: Icons.record_voice_over_rounded,
+    ),
+  ],
+);
+
+const _placementQuestionBankV1 = <Act0PlacementQuestionV1>[
+  _placementQuestionExperienceV1,
+  _placementQuestionFormatV1,
+  _placementQuestionConfidenceV1,
+  _placementQuestionGoalV1,
+];
+
 const _placementQuestionsV1 = <Act0PlacementQuestionV1>[
-  Act0PlacementQuestionV1(
-    questionId: 'experience',
-    eyebrow: 'Starting point',
-    title: 'Where are you starting from?',
-    subtitle: 'Be honest. This only changes where Sharky should begin.',
-    helper:
-        'The goal is not to rank you. The goal is to avoid wasting your first sessions.',
-    icon: Icons.flag_rounded,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'new',
-        label: 'I have not really played yet',
-        score: 0,
-        profileTag: 'New',
-        subtitle: 'Start from zero and build the table language cleanly.',
-        icon: Icons.school_rounded,
-        badge: 'Best for zero',
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'friends',
-        label: 'I played casually, mostly guessing with friends',
-        score: 1,
-        profileTag: 'Casual',
-        subtitle:
-            'You know some words, but the structure still needs tightening.',
-        icon: Icons.groups_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'watching',
-        label: 'I watch poker content, but real decisions still freeze me',
-        score: 1,
-        profileTag: 'Watching',
-        subtitle:
-            'Translate passive knowledge into something usable at the table.',
-        icon: Icons.live_tv_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'online',
-        label: 'I have played online or live and want sharper structure',
-        score: 3,
-        profileTag: 'Played',
-        subtitle:
-            'Skip part of the intro and move faster into action language.',
-        icon: Icons.insights_rounded,
-        badge: 'Faster start',
-      ),
-    ],
-  ),
-  Act0PlacementQuestionV1(
-    questionId: 'format',
-    eyebrow: 'Your use case',
-    title: 'What do you want poker for?',
-    subtitle:
-        'This shapes examples, language, and the kind of situations Sharky shows first.',
-    helper:
-        'Choose everything that feels true right now. Sharky will look for the dominant pattern, not force a single lane.',
-    icon: Icons.route_rounded,
-    allowsMultiple: true,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'basics',
-        label: 'I want the game to finally make sense',
-        score: 0,
-        profileTag: 'Basics',
-        subtitle: 'Start with table literacy before strategy words and jargon.',
-        icon: Icons.menu_book_rounded,
-        badge: 'Core',
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'cash',
-        label: 'I want to feel confident in cash-game spots',
-        score: 2,
-        profileTag: 'Cash',
-        subtitle:
-            'Bias examples toward chips, pressure, and practical decisions.',
-        icon: Icons.attach_money_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'tournaments',
-        label: 'I care more about tournament decisions',
-        score: 2,
-        profileTag: 'Tournament',
-        subtitle:
-            'Bias examples toward survival, pressure, and changing leverage.',
-        icon: Icons.emoji_events_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'home_games',
-        label: 'I do not want to feel lost in home games',
-        score: 1,
-        profileTag: 'HomeGames',
-        subtitle:
-            'Focus on hand flow, confidence, and keeping up with the table.',
-        icon: Icons.table_restaurant_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'content',
-        label: 'I want poker videos and hand talk to stop sounding cryptic',
-        score: 1,
-        profileTag: 'Content',
-        subtitle:
-            'Use examples that decode table language instead of assuming it.',
-        icon: Icons.subscriptions_rounded,
-      ),
-    ],
-  ),
-  Act0PlacementQuestionV1(
-    questionId: 'confidence',
-    eyebrow: 'Where to help first',
-    title: 'What feels most confusing?',
-    subtitle: 'Pick every part that makes you hesitate or guess.',
-    helper:
-        'Sharky will use this to bias your first explanations, review hints, and early repair spots.',
-    icon: Icons.lightbulb_rounded,
-    allowsMultiple: true,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'rules',
-        label: 'Knowing whose turn it is and how a hand even moves',
-        score: 0,
-        profileTag: 'Rules',
-        subtitle:
-            'You want the table flow, blinds, and action order to stop feeling fuzzy.',
-        icon: Icons.account_tree_rounded,
-        badge: 'Foundation',
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'cards',
-        label: 'Reading cards, pairs, and hand strength fast enough',
-        score: 1,
-        profileTag: 'Cards',
-        subtitle:
-            'You want stronger recognition and more confidence at showdown.',
-        icon: Icons.style_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'decisions',
-        label: 'Knowing when to fold, call, or raise without second-guessing',
-        score: 2,
-        profileTag: 'Decisions',
-        subtitle:
-            'You mostly want help making the right action at the right time.',
-        icon: Icons.touch_app_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'board',
-        label: 'Seeing what changed on the flop, turn, or river',
-        score: 1,
-        profileTag: 'Board',
-        subtitle: 'You want the board to feel readable instead of noisy.',
-        icon: Icons.view_module_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'pressure',
-        label: 'Staying clear when people bet and pressure starts building',
-        score: 2,
-        profileTag: 'Pressure',
-        subtitle:
-            'You want calmer decisions when the table stops feeling passive.',
-        icon: Icons.local_fire_department_rounded,
-      ),
-    ],
-  ),
-  Act0PlacementQuestionV1(
-    questionId: 'goal',
-    eyebrow: 'Coaching style',
-    title: 'How should Sharky coach you?',
-    subtitle: 'Choose the style that would keep you coming back.',
-    helper:
-        'Choose everything that sounds motivating. Sharky should feel like the right kind of pressure, not the wrong kind.',
-    icon: Icons.favorite_rounded,
-    allowsMultiple: true,
-    options: <Act0PlacementOptionV1>[
-      Act0PlacementOptionV1(
-        optionId: 'guided',
-        label: 'Keep me calm and guided at the start',
-        score: 0,
-        profileTag: 'Guided',
-        subtitle:
-            'Short explanations first, then gentle practice that makes sense.',
-        icon: Icons.explore_rounded,
-        badge: 'Calm start',
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'practice',
-        label: 'Let me learn mostly by doing',
-        score: 1,
-        profileTag: 'Practice',
-        subtitle: 'Less talking, more repetition once the concept is visible.',
-        icon: Icons.fitness_center_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'diagnose',
-        label: 'Show me quickly where I leak',
-        score: 2,
-        profileTag: 'Diagnostic',
-        subtitle: 'Surface weak spots quickly and keep repair close by.',
-        icon: Icons.search_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'daily_plan',
-        label: 'Give me a short plan I can actually stick to',
-        score: 1,
-        profileTag: 'DailyPlan',
-        subtitle: 'A compact habit loop with one clear next step each day.',
-        icon: Icons.today_rounded,
-      ),
-      Act0PlacementOptionV1(
-        optionId: 'honest',
-        label: 'Be direct with me when I am guessing',
-        score: 1,
-        profileTag: 'Direct',
-        subtitle: 'More clarity and sharper feedback, without turning harsh.',
-        icon: Icons.record_voice_over_rounded,
-      ),
-    ],
-  ),
+  _placementQuestionExperienceV1,
+  _placementQuestionConfidenceV1,
 ];
 
 class _Act0PlacementDiagnosticSpotV1 {

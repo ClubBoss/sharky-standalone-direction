@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
 import 'package:poker_analyzer/engine_v2/model/action_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 const _world1ActionablePackIdsV1 = <String>[
   'world1_spine_campaign_v1',

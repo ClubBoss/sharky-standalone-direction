@@ -26,7 +26,7 @@ import 'canonical_training_session_launch_plan_v1.dart';
 import 'canonical_legacy_training_launch_v1.dart';
 import '../ui_v2/runner/canonical_launcher_api_v1.dart';
 import '../ui_v2/screens/viral_proof_v1.dart';
-import '../ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import '../archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 typedef TrainingSessionLaunchHandler =
     Future<void> Function(

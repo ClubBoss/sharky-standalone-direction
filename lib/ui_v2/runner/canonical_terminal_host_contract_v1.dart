@@ -4,7 +4,7 @@ import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_state_entry_ad
 import 'package:poker_analyzer/canonical/progression_handoff_context_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 enum CanonicalTerminalFamilyV1 {
   world1Microtask,

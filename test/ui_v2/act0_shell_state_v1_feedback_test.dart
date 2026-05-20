@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Act0 feedback source contract', () {
-    final sourcePath =
-        'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
+    final sourcePath = 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
     final titlePattern = RegExp(r"feedbackTitle:\s*'((?:\\'|[^'])*)'");
     final reasonPattern = RegExp(r"feedbackReason:\s*'((?:\\'|[^'])*)'");
@@ -86,7 +85,8 @@ void main() {
       expect(
         presentBanned,
         isEmpty,
-        reason: 'Banned feedbackTitle values found: ${presentBanned.join(', ')}',
+        reason:
+            'Banned feedbackTitle values found: ${presentBanned.join(', ')}',
       );
     });
   });

@@ -4,7 +4,7 @@ Status: ACTIVE
 Purpose: one practical execution file for driving the current Act0 product
 route from today's mixed product/proof state toward practical `100 / 100`
 with the highest-EV order, clear bottlenecks, and low token waste.
-Last updated: 2026-05-14
+Last updated: 2026-05-20
 
 ## Authority
 
@@ -86,6 +86,167 @@ Meaning:
 - the remaining gap to release-ready 100 is dominated by novice proof, launch-surface maturity, commerce truth, and final release proof
 - parallel work is active in the tree, so route claims must keep using live command verification rather than stale snapshots
 
+## 2026-05-21 Screen / Layer Readiness Snapshot
+
+Status: active audit snapshot, not a `100 / 100` claim.
+
+This replaces older route-only optimism when discussing current practical
+Act0 readiness. The active route is strong and usable, but it is not production
+complete. Home composition is closed unless a concrete runtime, screenshot, or
+novice-proof blocker appears. The user-facing pacing model remains a daily
+training command center; `30-day` / monthly Home framing stays deferred.
+
+Fresh proof signals used for this snapshot:
+
+- `flutter analyze` is expected to remain required before any new route claim.
+- `test/ui_v2/act0_en_alpha_residue_guard_test.dart` is green after the
+  `Keep the route moving` residue repair.
+- `test/ui_v2/act0_ru_surface_no_unapproved_latin_test.dart` is still red on
+  real RU residue: `Poker from Zero`, `II`, `III`, and `pressure`.
+- `Non-answer table context remains visible during active prompt` is still red
+  on the missing `CO opened` context proof.
+- the fast loop also shows Learn selected-lesson-panel proof drift; current
+  tests expect `act0_shell_selected_lesson_panel` in several Learn paths and
+  the widget is not found.
+- The current fast-loop tail is not a reason to reopen Home; it points at RU /
+  compact-layout proof, Learn panel proof, prompt/context proof, and remaining
+  non-route tail.
+
+Strict current Act0 product-route readiness estimate:
+
+- `86 / 100`
+- not `100 / 100`
+- not launch/store-ready `100 / 100`
+
+### Weighted Screen Model
+
+| Screen / surface | Weight | Now | Contribution | Why not 100 | Highest-EV missing work | Est. delta | Status |
+| --- | ---: | ---: | ---: | --- | --- | ---: | --- |
+| Home | 7% | 92 | 6.44 | novice proof and final screenshots still missing | verify with novice walkthrough; do not redesign | +1 | closed |
+| Learn / route | 5% | 88 | 4.40 | world-feel and compact RU title proof are not final | compact RU proof plus novice Learn clarity | +2 | active |
+| Practice / Play | 4% | 88 | 3.52 | return-loop usefulness is internally judged | novice quick-return proof | +1 | closed_watch |
+| Review | 5% | 88 | 4.40 | pattern-level coaching and novice trust not proven | Review usefulness proof; pattern grouping later | +2 | active |
+| Runner / Table / Feedback | 7% | 89 | 6.23 | prompt-context proof tail and final device proof remain | prompt/context repair; device proof refresh | +2 | active |
+| First Table Guide | 4% | 88 | 3.52 | guide-first comprehension is not novice-proven | novice proof on guide handoff | +2 | active |
+| Placement / Welcome | 4% | 87 | 3.48 | fast first value is internally proven, not human-proven | novice first-start proof | +2 | active |
+| World completion / mastery payoff | 3% | 88 | 2.64 | payoff is compact but not human-validated | proof of "got better today" feeling | +1 | active |
+| You / Profile | 3% | 84 | 2.52 | progress identity is useful but still thin | bounded progress-payoff pass after proof | +2 | deferred |
+| Bottom nav / shell cohesion | 3% | 90 | 2.70 | route roles are clear but final device proof remains | device/screenshot sweep | +1 | closed_watch |
+
+### Weighted Learning / System Layer Model
+
+| Layer | Weight | Now | Contribution | Why not 100 | Highest-EV missing work | Est. delta | Status |
+| --- | ---: | ---: | ---: | --- | --- | ---: | --- |
+| First-run foundation | 5% | 88 | 4.40 | novice comprehension still unproven | bounded novice walkthrough | +3 | active |
+| Poker-content correctness / ownership | 4% | 90 | 3.60 | content ownership is strong but not fully human-proofed | novice + content-owner spot audit | +1 | closed_watch |
+| Core lesson interaction baseline | 5% | 89 | 4.45 | prompt/context tail remains | prompt/context proof repair | +2 | active |
+| Retention memory + spaced recheck | 5% | 88 | 4.40 | v1 is deterministic but not long-term validated | longer return-loop proof | +2 | active |
+| Review / mistake repair / prove-owned | 5% | 88 | 4.40 | pattern-level coaching is still shallow | pattern grouping after novice proof | +2 | active |
+| Content depth / transfer density | 5% | 86 | 4.30 | W5/W6 gains landed, broader depth still thin | next transfer-density wave | +4 | active |
+| Long-term habit / anti-binge pacing | 4% | 84 | 3.36 | daily model exists; longer-horizon frame deferred | under-the-hood pacing proof; no monthly Home | +3 | active |
+| World mastery payoff | 3% | 88 | 2.64 | payoff needs real-user validation | mastery payoff proof in walkthrough | +1 | active |
+| Full-route novice QA | 5% | 78 | 3.90 | biggest unknown: real first-user comprehension | full-route novice QA/proof pass | +5 | active_blocker |
+| Localization / copy trust | 4% | 78 | 3.12 | RU guard is red and compact RU layout is not final | RU proof cleanup, no broad rewrite | +3 | active |
+| Telemetry / learning-loop events | 3% | 70 | 2.10 | improvement loop is not instrumented end-to-end | telemetry truth map and minimal events | +3 | deferred |
+| Visual / UI premium consistency | 3% | 85 | 2.55 | Home is stronger; cross-screen device proof remains | active-shell screenshot sweep | +3 | active |
+| Technical proof / dirty-tree status | 3% | 78 | 2.34 | fast loop red and worktree dirty | proof-tail split; avoid broad cleanup | +2 | active |
+| Monetization / value packaging | 1% | 75 | 0.75 | not release-store proven | store/package proof later | +2 | deferred |
+
+Weighted total: `86.16 / 100`, reported as `86 / 100`.
+
+### Bottlenecks To 100
+
+1. Full-route novice QA is still open.
+2. Content depth and transfer density are still below the long-term product
+   ambition.
+3. RU/localization trust is red on real residue.
+4. Learn compact RU layout proof is still open.
+5. Learn selected-lesson-panel proof drift is visible in the fast loop.
+6. Prompt/context proof still has a live `CO opened` failure.
+7. Profile / You payoff is useful but not yet emotionally strong.
+8. Cross-screen visual/premium consistency still needs a device proof sweep.
+9. Telemetry / learning-loop events lag the product route.
+10. Technical proof is still noisy because the tree is dirty and fast-loop is red.
+11. Monetization/value packaging is not final-store proven.
+
+### Highest-EV Next Bounded Waves
+
+1. `Full-route novice QA / proof capture v1`
+   - likely delta: `+5` if it validates the current route and produces only
+     bounded fixes
+   - owns: first-session clarity, first value, "I got better today", Review
+     naturalness, Learn/Practice/Review/You role comprehension
+2. `Content depth / transfer-density lift v2`
+   - likely delta: `+4`
+   - owns: shallow early-route depth, more transfer reps, more repair variants
+3. `RU and compact Learn proof cleanup v1`
+   - likely delta: `+3`
+   - owns: RU residue, compact RU title wrapping, Learn selected-panel proof,
+     supported-locale trust
+4. `Prompt/context proof repair v1`
+   - likely delta: `+1-2`
+   - owns: the `CO opened` active-prompt context failure
+5. `Profile / You payoff + minimal telemetry truth map v1`
+   - likely delta: `+2-3`
+   - owns: progress identity, visible improvement proof, event truth
+
+Immediate recommendation:
+
+- run `Full-route novice QA / proof capture v1` next
+- do not reopen Home
+- if a code wave must come first for proof hygiene, make it
+  `Prompt/context proof repair v1`, not a broad test-tail cleanup
+
+### Readiness Units / Block Progress Model v1
+
+2026-05-21 correction:
+
+- Act0 route mechanics can be high while full-product readiness stays lower.
+- Route mechanics after the bounded W4 transfer-density lift are estimated at
+  `90 / 100`.
+- Full-product readiness must now be tracked through units, not only route
+  percentages.
+- Home composition remains closed unless new concrete evidence appears.
+- `30-day` / monthly Home framing remains deferred.
+
+Starting unit model after the W4 purpose-price transfer wave:
+
+| Block | Units Now | Status | Notes |
+| --- | ---: | --- | --- |
+| EN Core Route Proof | 8.5 / 14 | active | route feels strong, novice proof still open |
+| Home / Daily Command Center | 9 / 10 | closed_watch | do not reopen without fresh blocker |
+| Learn Route Clarity | 8 / 10 | active | selected-panel proof is fixed; broader Learn proof still mixed |
+| Runner / Feedback Proof | 8 / 12 | active | core prompt proof is better; broad proof tail remains |
+| Review / Retention / Prove | 9 / 12 | active | deterministic and useful, still not final pattern depth |
+| Practice / Daily Reps | 5 / 9 | active | useful lane, still thin on breadth and payoff |
+| Content Depth / Transfer | 6.5 / 16 | active | was `5.5 / 16` before this W4 wave |
+| First-Run / Foundation | 8.5 / 11 | active | beginner-safe but not human-validated |
+| World Completion / Mastery | 5 / 9 | active | payoff exists, still under-proven |
+| Profile / You Payoff | 3 / 10 | deferred | progress identity still thin |
+| Visual Premium / Cross-Screen | 5 / 12 | active | Home is stronger; cross-screen finish still mixed |
+| RU / Localization | 2.5 / 12 | deferred | do not confuse deferred RU debt with EN route completion |
+| Telemetry / Learning Events | 1 / 8 | deferred | no real event truth map yet |
+| Technical Proof / CI | 5.5 / 12 | active | focused proofs green, fast-loop tail still red |
+| Monetization / Commercial | 2 / 10 | deferred | not release/store proven |
+
+Scoring rules for future bounded reports:
+
+- `+0`: audit / proof classification only
+- `+0.5`: proof cleanup without product change
+- `+1`: small real UX/content improvement
+- `+2`: meaningful bounded content family
+- `+3`: major route / learning block closed
+- `+4+`: rare multi-surface wave only
+
+Future report requirement:
+
+1. percentage readiness delta
+2. unit-based block delta
+3. which blocks changed
+4. which blocks stayed unchanged
+5. which remaining units are highest EV
+6. whether the current lane should continue or switch
+
 ## Big-Picture Correction
 
 The previous route view became too tunnel-focused on proof and commerce.
@@ -135,6 +296,327 @@ when the route is coherent:
    as the route spine when the one-time onboarding layer lands.
 8. Practical product `100 / 100` is not the same as store/commercial `100 / 100`.
 
+## 2026-05-20 Queue Refresh
+
+This section records the live Act0 queue after the recent placement, Welcome,
+copy-density, and guard-pass closures. Use it as the current continuation list
+instead of older route notes that still assume those families are open.
+
+### Active near-term queue
+
+1. `active` Act0 / World 1 starter orientation architecture
+   - Why:
+     - Welcome now stays short by design
+     - the route must not create a canonical `World 0`
+     - current World 1 content appears to carry most table-orientation truth,
+       but the starter-guide framing is still unclear
+   - Landed model:
+     - `First Table Guide` is now the first normal World 1 lesson
+     - no canonical `World 0`
+     - no numeric `Lesson 0`
+     - fresh users pass through the guide before adaptive route branching
+     - `What poker is` stays as the next poker-content lesson
+     - `First Table Guide` owns Sharky/product/table literacy, not the primary
+       Hold'em format explanation
+     - `What poker is` owns Texas Hold'em orientation plus the cash-first route
+       rationale
+     - app-menu orientation lands only at the end of the guide, not in Welcome
+   - Must verify / close:
+     - novice proof on the landed guide-first route
+     - whether skipped-basics presentation feels calm and replayable for
+       stronger users
+     - whether Learn state language such as repeated `Now` creates first-use
+       orientation noise
+   - Non-goals:
+     - no canonical `World 0`
+     - no long Welcome manual
+     - no broad route rewrite
+
+2. `active_residue` Welcome minimal bridge + orientation gap
+   - Why:
+     - the 2-beat Welcome fixed pre-value overload
+     - screenshots and recent audits still show that Welcome can feel visually
+       sparse and does not explain the app model by itself
+   - Principle:
+     - keep Welcome short
+     - move deeper orientation into the Act0 / World 1 starter guide or a
+       later contextual layer
+   - Non-goals:
+     - do not restore the old 5-beat Welcome without new evidence
+
+3. `active` Home support-layer compression
+   - Why:
+     - Home still risks stacking too many support layers at once:
+       hero subtitle, repair support, daily-goal support, and Sharky/footer
+       framing
+   - Goal:
+     - one primary next useful action
+     - progress proof over explanatory prose
+   - Non-goals:
+     - no sterile empty Home
+     - no removal of necessary recovery guidance
+
+4. `active_followup` Learning proof / felt progress
+   - Why:
+     - the route should prove learning through visible gains, not repeated
+       promises
+   - Candidate proof signals:
+     - mistake repaired
+     - next focus
+     - cue spotted
+     - skill gained
+     - fixed on retry
+     - reason understood
+   - Goal:
+     - improve retention, trust, first-purchase readiness, and LTV
+
+5. `active_p1_readiness` Retention Spine architecture
+   - Why:
+     - the current W1-W12 route is interactive and credible, but the latest
+       time model still lands far below practical `100 / 100` retention depth
+     - current estimates are:
+       - W1-W12 base active time: `6.1-7.4 hours`
+       - W1-W12 effective time with current retry/repair overhead:
+         `7.3-9.9 hours`
+       - W1-W36 projected base time at current density: `18.4-22.1 hours`
+       - W1-W36 projected effective time at current density:
+         `22.0-29.8 hours`
+     - this is materially below the target model:
+       - 12 worlds: `18-30` base hours
+       - 36 worlds: `60-100` base hours
+       - with review/pacing: `90-150+` effective hours
+       - calendar duration: `3-12 months`
+   - Required architecture:
+     - daily plan separation: new learning vs review vs repair vs recheck
+     - mistake-memory carry-forward beyond the immediate repair moment
+     - deterministic spaced resurfacing by task family / concept family
+     - soft mastery gates at lesson/world boundaries
+     - world-completion payoff that emits future review targets
+   - Landed substrate:
+     - persisted progress now stores `retentionSequence`
+     - persisted progress now stores durable review-memory entries with
+       `openRepair`, `fixedRecent`, `agedRecheck`, and `ownedCandidate`
+       statuses
+     - old snapshots migrate safely with empty retention memory
+     - this substrate does not yet imply full resurfacing behavior by itself
+   - Landed spaced recheck v1:
+     - `fixedRecent` now promotes to `agedRecheck` with a deterministic
+       sequence-gap rule
+     - successful rechecks can promote to `ownedCandidate`
+     - Review now owns both recent repair and aged recheck
+     - Home daily-plan split remains a follow-up wave, not part of v1
+   - Landed Home daily training dashboard v1:
+     - Home keeps one primary route action
+     - Home now surfaces compact retention jobs for `repair`, `recheck`, and
+       `prove` when those jobs actually exist
+     - Review owns repair / recheck detail; Home owns compact daily routing
+   - Landed soft daily training contract v2:
+     - Home now makes the daily mix explicit when secondary work exists:
+       `continue`, `repair`, `recheck`, `prove / keep sharp`
+     - missing job types collapse cleanly instead of showing fake empty rows
+     - the daily plan is recommended, not mandatory; the primary route CTA
+       remains available and there are no hard blocks or cooldown gates
+     - preferred user-facing pacing model is now a simple daily training
+       checklist, not a visible month-long obligation
+     - canonical checklist shape:
+       `Learn / Continue one lesson`, `Practice / Practice quick spots`,
+       `Review old spots`, `Fix mistake / Keep sharp`
+     - after the daily minimum is complete, the route should reward closure,
+       streak credit, and `continue if you want`, not fear-based pressure
+   - Landed weekly focus contract v1:
+     - Home now derives one advisory weekly focus from current state without
+       adding a new persistence layer
+     - selection priority is deterministic:
+       open repair concept -> aged recheck concept -> current route lesson
+     - weekly focus is advisory only and should sit under the daily checklist
+       as context, not as a second heavy obligation
+     - daily jobs remain primary and there are no hard locks, timers, or
+       cooldown rules
+   - Landed world-completion payoff v1:
+     - world completion now acts as a compact skill milestone, not only a
+       route-forward summary
+     - world completion now states what the learner can now do and why
+       tomorrow still matters
+     - world completion may emit at most a small deterministic set of future
+       recheck targets into the retention spine
+     - Review and Home may surface those targets later without flooding the
+       route
+   - Landed world-end mastery pack v1:
+     - world completion now adds a compact mastery-direction pack on top of
+       the existing payoff
+     - the pack stays modest: `Keep sharp`, `This week`, `Recheck soon`, and
+       `Prove next` when those lines are actually supported by runtime data
+     - no hard mastery lock, no cooldown, and no route blocking were added
+   - Landed Home Daily Training Checklist v1:
+     - Home now replaces the old stacked support-card composition with one
+       checklist-centered daily-training surface after the first real training
+       loop
+     - v1 intentionally uses a premium 4-row checklist, not a 2x2 square,
+       because portrait clarity beats novelty at this stage
+     - checklist rows are: `Learn`, `Practice`, `Review`, and
+       `Fix / Keep sharp`
+     - activated Home now uses a compact route strip above the checklist
+       instead of a large route hero / Continue button
+     - Home row ownership is intentionally bounded: Learn opens the existing
+       Learn context, Practice opens the existing Practice hub, Review opens
+       the existing Review context for due rechecks, and Fix may still launch
+       direct repair / prove behavior through existing safe seams
+     - Weekly Focus now renders as lightweight context above the checklist,
+       not as a separate obligation card
+     - if no mistake is due, the fix lane falls back to calm clean-state /
+       keep-sharp language instead of fake error duty
+     - before first value, Home stays simple and route-first
+   - User-facing pacing direction locked:
+     - do not lead learner UX with `30-day plan`, `month-long plan`, or
+       similar obligation framing
+     - long-term retention and pacing should work mostly under the hood until
+       a richer monthly layer is proven safe
+     - Home stays daily-first; Profile may later hold longer-horizon pathing
+       if needed
+     - full daily-checklist framing should only become the main Home structure
+       after the learner has completed the first real training loop
+     - if there are no mistakes due, collapse the `fix` obligation cleanly or
+       shift to a clean-state / keep-sharp variant instead of showing fake work
+   - Future visual direction:
+     - `Daily Training Square`
+     - four compact blocks in a 2x2 square form the daily minimum
+     - completed state should resolve into one premium finished square/card
+       with subtle shine or glow, not childish celebration
+   - Landed soft mastery / prove-owned v1:
+     - `ownedCandidate` is now treated as prove-it input, not as final mastery
+     - a successful prove-it updates deterministic proof counts without adding
+       a new persisted status
+     - once proof count is strong enough, Home / Review may shift to modest
+       `keep sharp` / `skill holding` language
+     - v1 remains soft and evidence-based with no hard route blocking
+   - Structural rules:
+     - `100 / 100` requires durable retention, not only route completion
+     - content expansion alone is not enough
+     - lessons should support `teach -> try -> feedback/proof -> transfer /
+       checkpoint` where relevant
+     - pacing / review / mastery is a separate readiness layer, not optional
+       polish
+   - Non-goals:
+     - no broad content rewrite
+     - no new worlds in the first retention wave
+     - no ML dependency
+     - no monetization rewrite in the architecture pass
+   - Next bounded implementation:
+     - `Content Density Expansion / Transfer Drill Lift v1`
+   - Landed first density-lift class:
+     - `W6 range-fit / pressure-line transfer variants`
+     - first landed tasks:
+       - `w6_table_value_line_transfer`
+       - `w6_turn_pressure_shift_transfer`
+     - rule:
+       - add real frame-change transfer material that can feed repair /
+         recheck / prove, not recap duplication or filler duration
+   - Landed second density-lift class:
+     - `W5 street-change / draw-story transfer variants`
+     - first landed tasks:
+       - `turn_river_changes_w5_turn_texture_shift_transfer`
+       - `turn_river_changes_w5_river_draw_story_transfer`
+     - rule:
+       - keep the same draw story alive across streets and recheck it through
+         new turn / river frames rather than recap copy
+   - Landed first mistake-review variant class:
+     - `W5 street-change / draw-story repair variants`
+     - first landed review path:
+       - `turn_river_changes_w5_turn_hits`
+         -> `turn_river_changes_w5_turn_texture_shift_transfer`
+     - rule:
+       - Review may repair a weak concept through one nearby fresh frame, but
+         only when the mapping stays deterministic, concept-linked, and
+         bounded
+       - keep exact replay intact for unmapped mistakes and retention replay
+         jobs
+   - Landed second mistake-review variant class:
+     - `W6 range-fit / pressure-line repair variants`
+     - first landed review paths:
+       - `w6_value_range_action`
+         -> `w6_table_value_line_transfer`
+       - `w6_bluff_candidate`
+         -> `w6_turn_pressure_shift_transfer`
+     - rule:
+       - the original weak concept remains the repair source of truth even
+         when Review launches a nearby transfer frame
+       - successful variant repair must fix the original weak concept without
+         seeding fake open-repair residue for recheck / prove replay
+   - Next density candidates:
+     - remaining W4 transfer family
+     - world-end mastery follow-up / broader mastery-pack depth
+     - weekly focus follow-up / broader pacing layer
+     - monthly / 30-day framing remains deferred until it can be layered on
+       top of the daily checklist without feeling like a scary obligation
+     - third mistake-review variant family only if the second family stays
+       clean under broader proof
+     - W11 durable mastery reinforcement
+
+### Important deferred backlog
+
+1. `deferred` Practice theory recall / learning recovery
+   - Needs future audit:
+     - review previous teaching
+     - contextual hint / theory recall
+     - expandable micro-bite
+     - mistake-driven recovery
+   - Non-goal:
+     - do not break practice/drill focus
+
+2. `deferred` Beginner term introduction / glossary support
+   - Why:
+     - early unexplained terms such as `SB`, `BB`, `BTN`, and `UTG` can still
+       confuse true beginners
+   - Needs future audit:
+     - term-introduction guard
+     - optional local definitions / glossary support
+     - first-use explanations before local jargon is trusted
+
+3. `deferred_quality` RU human copy quality
+   - Why:
+     - RU W1-W3 coverage improved, but some phrasing still reads as mechanical
+       rather than premium human copy
+   - Known examples to preserve:
+     - `Poziciya menyaet komfort...`
+     - `Kakoe chtenie mesta...`
+     - `ramka spota`
+   - Non-goal:
+     - not a current top priority unless RU launch becomes the active lane
+
+4. `deferred_architecture` ModernTableScreenV1 ownership / legacy cleanup
+   - Why:
+     - the active Act0 runner route is not owned by `ModernTableScreenV1`
+     - lingering references should be audited before any keep/archive/delete
+       verdict
+   - Non-goal:
+     - no deletion without repo-proof
+
+5. `deferred_visual` Vertical rhythm / empty-space calibration
+   - Why:
+     - copy compression exposed large empty spaces in some placement / Welcome /
+       result surfaces
+   - Principle:
+     - do not add text just to fill space
+     - calibrate layout only after structural placement/orientation decisions
+       are settled
+
+### Recently closed; do not reopen without new evidence
+
+- `closed` complete-beginner shortcut before diagnostics
+- `closed` placement intake reduced to `experience -> confidence -> live check`
+- `closed` `confidence` simplified to single-choice
+- `closed` `format` and `goal` deferred from required first-run intake with
+  safe defaults
+- `closed` visible premium/payment framing removed before first value
+- `closed` placement result compressed to a compact start handoff
+- `closed` Welcome compressed to 2 beats; orientation gap tracked separately
+- `closed` placement diagnostic first-impression compact portrait guard pass
+- `closed` W5-W8 teaching-step cognitive-load compression
+- `closed` RU W1-W3 mixed-language coverage class
+- `closed` action/result feedback consistency with no P0/P1 mismatch proven
+- `closed` world-objective/task-family consistency with no P0/P1 contradiction
+  proven
+
 ## Block Status
 
 ### 1. First Start and Placement
@@ -147,12 +629,14 @@ when the route is coherent:
 - What still blocks 100:
   - no real novice proof yet
   - first-start confidence is still unproven with real novice walkthroughs
-  - the route still lacks one compact post-placement onboarding layer that
-    demonstrates how Sharky works before normal World 1 flow begins
+  - Welcome is now intentionally minimal, but the route still needs a clearer
+    starter-orientation architecture inside the existing Act0 / World 1 path
 - To reach 100:
   - run novice walkthrough proof
-  - if needed, add one bounded post-placement onboarding family
-  - keep that family outside the Learn map as product onboarding, not `World 0`
+  - settle the first-use starter-guide framing between Welcome and the first
+    World 1 block
+  - keep orientation inside the existing route and outside the Learn map as
+    onboarding, not `World 0`
 
 ### 2. Home, Navigation, and Re-entry
 
@@ -164,10 +648,11 @@ when the route is coherent:
   - daily/return grammar is better
 - What still blocks 100:
   - first-return trust is still internally judged, not novice-proven
-  - feedback-source maturity still affects how premium the return loop feels
+  - Home still risks stacking too many support layers before the next useful
+    action is obvious
 - To reach 100:
   - confirm Home clarity in novice walkthroughs
-  - keep Home return copy aligned with final feedback/coaching tone
+  - compress support layers without stripping necessary recovery guidance
 
 ### 3. Learn Path and World Map
 
@@ -179,8 +664,12 @@ when the route is coherent:
 - What still blocks 100:
   - final world-feel polish still lacks novice proof
   - compact inline hub maturity is strong but not yet externally validated
+  - the first World 1 block is not yet framed clearly enough as the starter
+    guide / first table guide for full beginners
 - To reach 100:
   - prove the map/hub feels clear and non-heavy to first-time users
+  - clarify the starter-guide framing for the first World 1 block without
+    creating a canonical `World 0`
   - keep device-proof current on the compact layout that now passes tests
 
 ### 4. Play Quick Return

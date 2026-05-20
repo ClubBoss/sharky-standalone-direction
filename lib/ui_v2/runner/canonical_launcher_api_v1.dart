@@ -12,8 +12,8 @@ import 'package:poker_analyzer/ui_v2/runner/phase1_canonical_host_launch_contrac
 import 'package:poker_analyzer/ui_v2/runner/phase2_canonical_host_launch_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/phase3_canonical_host_launch_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_canonical_host_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 enum CanonicalLauncherFamilyV1 { phase1, phase2, phase3, sessionDrill }
 

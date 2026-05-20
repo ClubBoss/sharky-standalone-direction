@@ -71,7 +71,7 @@ import 'package:poker_analyzer/ui_v2/runner/world1_canonical_top_panel_contract_
 import 'package:poker_analyzer/ui_v2/runner/runner_host_prompt_reveal_presentation_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/runner_prompt_status_capsule_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_feedback_explanation_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/shared_embedded_table_visual_family_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/shared_embedded_table_visual_family_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/runner_host_section_responsibility_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_action_surface_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/shared_learner_action_area_contract_v1.dart';
@@ -105,12 +105,12 @@ import 'package:poker_analyzer/ui_v2/runner/world1_surfaced_table_runtime_feed_v
 import 'package:poker_analyzer/ui_v2/runner/world1_details_surface_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/world1_intro_prelude_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/world1_modern_table_adapter_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_modern_table_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/runner_seat_state_badge_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/surfaced_learner_host_shell_v1.dart';
 import 'package:poker_analyzer/personalization/phase1_error_to_focus_map_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/campaign_action_pot_invariants_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/modern_table_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/screens/session_result_screen.dart';
 import 'package:poker_analyzer/ui_v2/screens/viral_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/table/table_surface.dart';

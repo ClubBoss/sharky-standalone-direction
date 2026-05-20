@@ -61,7 +61,7 @@ import '../services/adaptive_progression_service.dart';
 import '../services/firebase_lite_telemetry_service.dart';
 import '../ui_v2/screens/table_first_navigation.dart';
 import '../ui_v2/screens/viral_proof_v1.dart';
-import '../ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import '../archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 
 class _EndlessStats {
   int total = 0;
