@@ -1,0 +1,28 @@
+- generic [active] [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic [ref=e24]:
+              - generic: Сегодня 0/3
+            - generic [ref=e25]:
+              - generic: 120 XP
+            - generic [ref=e26]:
+              - generic: 3d
+            - generic [ref=e27]:
+              - generic: 60%
+            - generic:
+              - group:
+                - 'group "Активный мир: Покер с нуля Главная Ниже тебя ждёт один ясный следующий шаг."':
+                  - button "Меню разработчика" [ref=e28]
+                - group "0 of 9 lessons complete Не спеши. Чистые чтения собирают настоящее преимущество.":
+                  - button "Начни здесь Что такое покер Познакомься со столом, игроками и целью раздачи. Одно нажатие откроет первую раздачу, выбранную по результату плейсмента." [ref=e30]
+                  - button "Начать первую раздачу" [ref=e31]
+                  - group "Опциональный реп 0/3 дневных спота 3 дня Один чистый спот запускает день." [ref=e32]:
+                    - button "Начать практику" [ref=e33]
+            - button "Главная" [ref=e34]
+            - button "Обучение" [ref=e35]
+            - button "Практика" [ref=e36]
+            - button "Разбор" [ref=e37]
+            - button "Ты" [ref=e38]

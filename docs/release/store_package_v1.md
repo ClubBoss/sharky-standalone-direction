@@ -34,7 +34,7 @@ For every platform set the filenames to follow `<platform>-<set>-<index>.png` (e
 - Canonical submission-only metadata owner: `docs/release/submission_metadata_truth_v1.md`
 - **App Subtitle (iOS/Android)**: concise benefit line (e.g., "Precision training for serious poker players").
 - **Keywords (App Store)**: "poker training, hand analysis, betting coach, live poker, adaptive replay".
-- **Privacy Labels**: reference `docs/IAP_CONFIGURATION.md` for purchase indicators and point to `assets/store/privacy_labels/README.md` if it exists in the current repo snapshot (some release flows keep these assets/docs outside the repo and import later).
+- **Privacy Labels**: reference `docs/release/IAP_CONFIGURATION.md` for purchase indicators and point to `assets/store/privacy_labels/README.md` if it exists in the current repo snapshot (some release flows keep these assets/docs outside the repo and import later).
 - **Support contact (current main runtime truth)**: `support@sharky.app`.
 - **Privacy / Terms runtime truth**: the current build ships in-app legal surfaces via `lib/ui_v2/settings/legal_screen_v1.dart`; do not point runtime copy at placeholder web pages.
 - **Support URL / Marketing URL for store submission**: see `docs/release/submission_metadata_truth_v1.md`; unresolved on current main.
@@ -162,8 +162,8 @@ _Example entry_: `StorePackageV1 - 2026-01-22 - Updated by EL`.
 - Canonical repo proof artifact: `out/modern_table_screenshots_v1.zip`
 - Canonical repo proof notes: `docs/release/store_assets_v1.md`
 - Optional import layout: `assets/store/` (see `assets/store/README.md`).
-- Metadata guidance: `docs/IAP_CONFIGURATION.md`.
-- Release notes: `docs/RELEASE_NOTES.md`.
+- Metadata guidance: `docs/release/IAP_CONFIGURATION.md`.
+- Release notes: `docs/release/RELEASE_NOTES.md`.
 
 ## Current Bounded Proof On Main
 

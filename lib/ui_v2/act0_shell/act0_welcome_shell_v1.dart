@@ -73,7 +73,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         ),
         ctaLabel: _copyV1(
           en: 'Open Poker from Zero',
-          ru: 'Открыть Poker from Zero',
+          ru: 'Открыть «Покер с нуля»',
         ),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.handoff),
       ),
@@ -89,7 +89,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
               : 'You are ready for Poker from Zero.',
           ru: widget.replayMode
               ? 'Ты можешь открыть это снова в любой момент.'
-              : 'Ты готов к Poker from Zero.',
+              : 'Ты готов к «Покеру с нуля».',
         ),
         eyebrow: _atomV1('welcome_handoff_eyebrow', fallback: 'Next step'),
         line: _copyV1(
@@ -113,7 +113,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         onClose: widget.onClose,
         ctaLabel: _copyV1(
           en: widget.replayMode ? 'Back to profile' : 'Open Poker from Zero',
-          ru: widget.replayMode ? 'Назад в профиль' : 'Открыть Poker from Zero',
+          ru: widget.replayMode ? 'Назад в профиль' : 'Открыть «Покер с нуля»',
         ),
         onNext: widget.onCompleted,
       ),

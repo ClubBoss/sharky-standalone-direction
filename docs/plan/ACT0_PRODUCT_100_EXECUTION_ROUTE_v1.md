@@ -25,6 +25,16 @@ Use this file for:
 - current block scores and honest residue
 - bottleneck-first task order
 - the next execution waves after the major 6-wave product route
+- route-facing interpretation of the broader readiness ledger
+
+Whole-product readiness authority:
+
+- `docs/plan/FULL_PRODUCT_READINESS_LEDGER_v1.md`
+  - use this when the question is broader than `How strong is the Act0 route?`
+  - it prevents route scores from being mistaken for whole-product readiness
+- `docs/plan/EXECUTION_POLICY_SSOT_v1.md`
+  - use this for compact execution-policy defaults, deferred-lane rules, and
+    the reopen / rebuild gate
 
 Do not use this file for:
 
@@ -248,6 +258,12 @@ Future report requirement:
 6. whether the current lane should continue or switch
 
 ## Big-Picture Correction
+
+2026-05-21 note:
+
+- `./tools/fast_loop_world1_v1.sh` is now clean again
+- use `FULL_PRODUCT_READINESS_LEDGER_v1.md` for current whole-product scoring
+  rather than treating route-weighted views here as whole-product truth
 
 The previous route view became too tunnel-focused on proof and commerce.
 

@@ -127,7 +127,7 @@ class Act0PlayShellV1 extends StatefulWidget {
     required this.recommendedOutcomeLead,
     required this.masteryLabel,
     required this.onStartGroup,
-    this.screenSubtitle = 'Repeat what you already know.',
+    this.screenSubtitle = 'Short reps keep today\'s skill sharp.',
     this.completionTitle,
     this.completionBody,
   });
@@ -186,7 +186,8 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       if (quickDrillGroup != null &&
           quickDrillGroup.groupId != featuredGroup?.groupId)
         quickDrillGroup,
-      if (fixLeakGroup != null && fixLeakGroup.groupId != featuredGroup?.groupId)
+      if (fixLeakGroup != null &&
+          fixLeakGroup.groupId != featuredGroup?.groupId)
         fixLeakGroup,
     ];
     final topicShelfGroups = <Act0PracticeGroupV1>[...topicGroups];
@@ -224,7 +225,8 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
-        if (widget.completionTitle != null && widget.completionBody != null) ...[
+        if (widget.completionTitle != null &&
+            widget.completionBody != null) ...[
           _PlayIntroCardV1(
             title: widget.completionTitle!,
             body: widget.completionBody!,
@@ -1054,43 +1056,44 @@ class _TopicPracticeCardV1 extends StatelessWidget {
     final compactSubtitle = !enabled
         ? group.subtitle
         : switch (group.groupId) {
-      'placement' => _playCopyV1(
-        context,
-        'play_topic_placement_subtitle',
-        fallback: 'Short check before you tune your route.',
-      ),
-      'actions' => _playCopyV1(
-        context,
-        'play_topic_actions_subtitle',
-        fallback: 'Read the price and choose the legal action fast.',
-      ),
-      'blinds' => _playCopyV1(
-        context,
-        'play_topic_blinds_subtitle',
-        fallback: 'Track the blinds and who acts first preflop.',
-      ),
-      'positions' => _playCopyV1(
-        context,
-        'play_topic_positions_subtitle',
-        fallback: 'Separate early seats from late seats at a glance.',
-      ),
-      'streets' => _playCopyV1(
-        context,
-        'play_topic_streets_subtitle',
-        fallback: 'Follow the hand in order instead of losing the street.',
-      ),
-      'rankings' => _playCopyV1(
-        context,
-        'play_topic_rankings_subtitle',
-        fallback: 'Choose the best five cards on a real board.',
-      ),
-      'showdown' => _playCopyV1(
-        context,
-        'play_topic_showdown_subtitle',
-        fallback: 'Compare the final hands and settle the pot cleanly.',
-      ),
-      _ => group.subtitle,
-    };
+            'placement' => _playCopyV1(
+              context,
+              'play_topic_placement_subtitle',
+              fallback: 'Short check before you tune your route.',
+            ),
+            'actions' => _playCopyV1(
+              context,
+              'play_topic_actions_subtitle',
+              fallback: 'Read the price and choose the legal action fast.',
+            ),
+            'blinds' => _playCopyV1(
+              context,
+              'play_topic_blinds_subtitle',
+              fallback: 'Track the blinds and who acts first preflop.',
+            ),
+            'positions' => _playCopyV1(
+              context,
+              'play_topic_positions_subtitle',
+              fallback: 'Separate early seats from late seats at a glance.',
+            ),
+            'streets' => _playCopyV1(
+              context,
+              'play_topic_streets_subtitle',
+              fallback:
+                  'Follow the hand in order instead of losing the street.',
+            ),
+            'rankings' => _playCopyV1(
+              context,
+              'play_topic_rankings_subtitle',
+              fallback: 'Choose the best five cards on a real board.',
+            ),
+            'showdown' => _playCopyV1(
+              context,
+              'play_topic_showdown_subtitle',
+              fallback: 'Compare the final hands and settle the pot cleanly.',
+            ),
+            _ => group.subtitle,
+          };
     return Opacity(
       opacity: enabled ? 1 : 0.56,
       child: InkWell(

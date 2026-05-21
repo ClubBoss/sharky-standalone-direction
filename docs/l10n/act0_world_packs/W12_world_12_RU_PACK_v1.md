@@ -9,12 +9,12 @@ subtitle_ru: Собери дисциплину, ясность и устойчи
 
 ## Coverage
 - Lessons: 0/4
-- Tasks: 0/17
-- Runner prompts: 0/16
-- Runner supports: 0/16
-- Runner questions: 0/16
-- Teaching step titles: 0/16
-- Teaching step bodies: 0/16
+- Tasks: 0/20
+- Runner prompts: 0/19
+- Runner supports: 0/19
+- Runner questions: 0/19
+- Teaching step titles: 0/19
+- Teaching step bodies: 0/19
 
 ## Translator Rules
 - Keep ids unchanged.
@@ -245,6 +245,42 @@ subtitle_ru: Играй уверенно, но не скатывайся в уп
   runnerSupport_ru: Дисциплина здесь значит замедлять только по-настоящему важные споты.
   runnerQuestion_ru: Какая подстройка под давление здесь будет лучшей?
 
+- taskId: w12_pretty_hand_bad_price_fold
+  status: missing
+  title_en: Pretty hand, bad price
+  phase: drill
+  stepKind: practice
+  runner: _w12PrettyHandBadPriceFoldRunner
+  runnerPrompt_en: Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. Hero holds K-Q at 100 BB effective.
+  runnerSupport_en: Do not hero call only because the hand looks pretty.
+  runnerQuestion_en: What is the cleaner disciplined action?
+  teachingStep0_title_en: Pretty hands still obey price.
+  teachingStep0_body_en: Use the same loop even when the hand looks attractive: seat, hand, board, price, stack and action, then the clean action.
+  teachingStep0_title_ru:
+  teachingStep0_body_ru:
+  title_ru:
+  runnerPrompt_ru:
+  runnerSupport_ru:
+  runnerQuestion_ru:
+
+- taskId: w12_revenge_raise_trap
+  status: missing
+  title_en: Do not raise to take control
+  phase: drill
+  stepKind: practice
+  runner: _w12RevengeRaiseTrapRunner
+  runnerPrompt_en: The same villain bluffed you last orbit and needles you now. New hand: Hero holds Q-J suited on J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.
+  runnerSupport_en: Do not raise just to take control when the table read says stay simple.
+  runnerQuestion_en: What is the clean discipline line?
+  teachingStep0_title_en: Noise is not a cue.
+  teachingStep0_body_en: Real play rewards stable decisions more than dramatic decisions. Ignore ego hooks and return to the table read.
+  teachingStep0_title_ru:
+  teachingStep0_body_ru:
+  title_ru:
+  runnerPrompt_ru:
+  runnerSupport_ru:
+  runnerQuestion_ru:
+
 - taskId: w12_confidence_recap
   status: missing
   title_en: Confidence recap
@@ -331,6 +367,24 @@ subtitle_ru: Забери процесс, перезагрузку и дисци
   runnerPrompt_ru: Игрок пытается поддеть тебя и втянуть в пограничные, высокодисперсионные споты.
   runnerSupport_ru: Дисциплина здесь значит ставить факты выше эмоций.
   runnerQuestion_ru: Какая линия здесь будет самой сильной?
+
+- taskId: w12_checkpoint_full_loop_line
+  status: missing
+  title_en: Full loop line
+  phase: drill
+  stepKind: practice
+  runner: _w12CheckpointFullLoopLineRunner
+  runnerPrompt_en: You made a loose bluff last orbit. New hand: CO opens, Hero calls BTN with A-J suited at 25 BB effective. Flop is A-8-4 two-tone. CO bets 2 BB into 8 BB.
+  runnerSupport_en: Use the same decision loop even after a mistake: seat, hand, board, price, stack and action, then the clean action.
+  runnerQuestion_en: What keeps the next decision stable?
+  teachingStep0_title_en: Stable loop beats emotional correction.
+  teachingStep0_body_en: A prior mistake should not rewrite the next decision. Real play gets stronger when the same clean loop survives noise, temptation, and regret.
+  teachingStep0_title_ru:
+  teachingStep0_body_ru:
+  title_ru:
+  runnerPrompt_ru:
+  runnerSupport_ru:
+  runnerQuestion_ru:
 
 - taskId: w12_checkpoint_review
   status: missing

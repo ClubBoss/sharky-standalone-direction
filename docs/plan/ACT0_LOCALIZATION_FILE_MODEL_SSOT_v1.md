@@ -1,7 +1,12 @@
 # Act0 Localization File Model SSOT v1
 
 Status: ACTIVE  
-Last updated: 2026-05-11
+Last updated: 2026-05-21
+
+See also:
+
+- `docs/l10n/TRANSLATION_SSOT_v1.md` for the current active/helper/archive
+  classification
 
 ## Purpose
 
@@ -65,11 +70,16 @@ Future languages should follow the same shape:
 - `docs/l10n/act0_world_packs/ACT0_RU_TRANSLATION_MASTER_v1.md`
 - `docs/l10n/act0_world_packs/W##_world_X_RU_PACK_v1.md`
 
-These pack docs are not archive artifacts.
+These pack docs are active helper/reference artifacts.
 
 They are working translation/editing documents that may be improved by a human
 or a translation-focused agent, then brought back into the language file via
 the ingest flow.
+
+Historical editorial handoff packets are not part of this active file-model
+set and now live under:
+
+- `docs/archive/legacy_translation/`
 
 ## Stable-id truth
 
@@ -123,6 +133,7 @@ Preferred structure:
 - one Act0 language file per language
 - one generated master workbook per language
 - one generated world-pack set per language
+- separate historical editorial handoff packets only in archive
 
 That is enough structure to scale, but still small enough to stay navigable.
 

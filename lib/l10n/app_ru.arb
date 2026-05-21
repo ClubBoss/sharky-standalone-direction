@@ -2,13 +2,13 @@
   "@@locale": "ru",
   "favorites": "Избранное",
   "recommended": "Рекомендовано",
-  "starterPacks": "Стартовые паки",
-  "builtInPacks": "Встроенные паки",
-  "yourPacks": "Ваши паки",
+  "starterPacks": "Стартовые наборы",
+  "builtInPacks": "Встроенные наборы",
+  "yourPacks": "Ваши наборы",
   "recentPacks": "Недавняя практика",
-  "popularPacks": "\ud83d\udd25 \u041f\u043e\u043f\u0443\u043b\u044f\u0440\u043d\u043e\u0435",
-  "newPacks": "\ud83c\udd95 \u041d\u043e\u0432\u044b\u0435"
-  ,"starterBadge": "\u0421\u0442\u0430\u0440\u0442\u0435\u0440"
+  "popularPacks": "🔥 Популярное",
+  "newPacks": "🆕 Новые"
+  ,"starterBadge": "Стартовый"
   ,"newBadge": "\u041d\u043e\u0432\u043e\u0435"
   ,"masteredBadge": "\u2705 \u041e\u0441\u0432\u043e\u0435\u043d\u043e"
   ,"hands": "\u0440\u0443\u043a"
@@ -42,28 +42,28 @@
   "packPushFold15": "Пуш/Фолд 15ББ (без анте)",
   "packPushFold10": "Пуш/Фолд 10ББ (без анте)"
   ,"packPushFold20": "Пуш/Фолд 20ББ (без анте)",
-  "presetBtn10bb": "BTN 10BB Push/Fold",
-  "presetBtn11bb": "BTN 11BB Push/Fold",
-  "presetBtn12bb": "BTN 12BB Push/Fold",
-  "presetBtn13bb": "BTN 13BB Push/Fold",
-  "presetBtn14bb": "BTN 14BB Push/Fold",
-  "presetBtn15bb": "BTN 15BB Push/Fold",
-  "presetBtn16bb": "BTN 16BB Push/Fold",
-  "presetBtn17bb": "BTN 17BB Push/Fold",
-  "presetBtn18bb": "BTN 18BB Push/Fold",
-  "presetBtn19bb": "BTN 19BB Push/Fold",
-  "presetBtn20bb": "BTN 20BB Push/Fold",
-  "presetSb10bb": "SB 10BB Push/Fold",
-  "presetSb11bb": "SB 11BB Push/Fold",
-  "presetSb12bb": "SB 12BB Push/Fold",
-  "presetSb13bb": "SB 13BB Push/Fold",
-  "presetSb14bb": "SB 14BB Push/Fold",
-  "presetSb15bb": "SB 15BB Push/Fold",
-  "presetSb16bb": "SB 16BB Push/Fold",
-  "presetSb17bb": "SB 17BB Push/Fold",
-  "presetSb18bb": "SB 18BB Push/Fold",
-  "presetSb19bb": "SB 19BB Push/Fold",
-  "presetSb20bb": "SB 20BB Push/Fold"
+  "presetBtn10bb": "BTN 10ББ Пуш/Фолд",
+  "presetBtn11bb": "BTN 11ББ Пуш/Фолд",
+  "presetBtn12bb": "BTN 12ББ Пуш/Фолд",
+  "presetBtn13bb": "BTN 13ББ Пуш/Фолд",
+  "presetBtn14bb": "BTN 14ББ Пуш/Фолд",
+  "presetBtn15bb": "BTN 15ББ Пуш/Фолд",
+  "presetBtn16bb": "BTN 16ББ Пуш/Фолд",
+  "presetBtn17bb": "BTN 17ББ Пуш/Фолд",
+  "presetBtn18bb": "BTN 18ББ Пуш/Фолд",
+  "presetBtn19bb": "BTN 19ББ Пуш/Фолд",
+  "presetBtn20bb": "BTN 20ББ Пуш/Фолд",
+  "presetSb10bb": "SB 10ББ Пуш/Фолд",
+  "presetSb11bb": "SB 11ББ Пуш/Фолд",
+  "presetSb12bb": "SB 12ББ Пуш/Фолд",
+  "presetSb13bb": "SB 13ББ Пуш/Фолд",
+  "presetSb14bb": "SB 14ББ Пуш/Фолд",
+  "presetSb15bb": "SB 15ББ Пуш/Фолд",
+  "presetSb16bb": "SB 16ББ Пуш/Фолд",
+  "presetSb17bb": "SB 17ББ Пуш/Фолд",
+  "presetSb18bb": "SB 18ББ Пуш/Фолд",
+  "presetSb19bb": "SB 19ББ Пуш/Фолд",
+  "presetSb20bb": "SB 20ББ Пуш/Фолд"
   ,"generateSpots": "Сгенерировать раздачи"
   ,"noContent": "Нет контента"
   ,"unsupportedSpot": "Неподдерживаемая раздача"
@@ -80,15 +80,15 @@
   ,"accuracyPercent": "Точность"
   ,"ev": "EV"
   ,"icm": "ICM"
-  ,"spotDetails": "Spot Details"
-  ,"heroPosition": "Hero position: {pos}"
-  ,"heroCards": "Hero cards: {cards}"
-  ,"boardLabel": "Board: {cards}"
-  ,"yourAction": "Your action: {action}"
+  ,"spotDetails": "Детали раздачи"
+  ,"heroPosition": "Позиция Hero: {pos}"
+  ,"heroCards": "Карты Hero: {cards}"
+  ,"boardLabel": "Борд: {cards}"
+  ,"yourAction": "Твое действие: {action}"
   ,"evIcm": "EV {ev}  ICM {icm}"
-  ,"packCreated": "Pack \"{name}\" created"
-  ,"resetPackPrompt": "Reset progress for '{name}'?"
-  ,"resetStagePrompt": "Reset stage '{name}'?"
+  ,"packCreated": "Набор \"{name}\" создан"
+  ,"resetPackPrompt": "Сбросить прогресс для \"{name}\"?"
+  ,"resetStagePrompt": "Сбросить стадию \"{name}\"?"
   ,"resetStage": "Сбросить стадию"
   ,"cancel": "Отмена"
   ,"reset": "Сбросить"
@@ -105,9 +105,9 @@
   ,"legalScreenTitle": "Правила и данные"
   ,"legalPoliciesSectionTitle": "Документы"
   ,"legalDataSectionTitle": "Данные"
-  ,"privacyPolicy": "Privacy Policy"
+  ,"privacyPolicy": "Политика конфиденциальности"
   ,"privacyPolicySubtitle": "Как мы работаем с данными игрока"
-  ,"termsOfUse": "Terms of Use"
+  ,"termsOfUse": "Условия использования"
   ,"termsOfUseSubtitle": "Правила использования сервиса"
   ,"legalDeleteDataTitle": "Удалить данные / аккаунт"
   ,"legalDeleteDataSubtitle": "Удалить локальный прогресс, снимки и историю сессий"
@@ -117,22 +117,22 @@
   ,"legalDeleteFailure": "Не удалось удалить локальные данные"
   ,"playerType": "Тип игрока"
   ,"selectAction": "Выберите действие"
-  ,"fold": "Fold"
-  ,"call": "Call"
-  ,"raise": "Raise"
-  ,"push": "Push"
+  ,"fold": "Пас"
+  ,"call": "Колл"
+  ,"raise": "Рейз"
+  ,"push": "Пуш"
   ,"amount": "Сумма"
   ,"confirm": "Подтвердить"
   ,"clear": "Очистить"
   ,"ok": "OK"
-  ,"entrants": "Entrants"
+  ,"entrants": "Участники"
   ,"gameType": "Тип игры"
   ,"holdemNl": "Hold'em NL"
   ,"omahaPl": "Omaha PL"
   ,"otherGameType": "Другое"
-  ,"spotsLabel": "Spots: {value}"
-  ,"accuracyLabel": "Accuracy: {value}%"
-  ,"evBb": "EV: {value} BB"
+  ,"spotsLabel": "Раздачи: {value}"
+  ,"accuracyLabel": "Точность: {value}%"
+  ,"evBb": "EV: {value} ББ"
   ,"icmLabel": "ICM: {value}"
   ,"exportWeaknessReport": "Экспортировать отчёт о слабых местах"
   ,"packsShown": "Показано {count} паков"
@@ -140,26 +140,26 @@
   ,"resetFilters": "Сбросить фильтры"
   ,"sortLabel": "Сортировка:"
   ,"sortPopular": "Сначала популярные"
-  ,"sortRating": "Rating (High \u2192 Low)"
-  ,"sortCoverage": "Coverage (High \u2192 Low)"
+  ,"sortRating": "По рейтингу"
+  ,"sortCoverage": "По покрытию"
   ,"filtersSelected": "\u0424\u0438\u043b\u044c\u0442\u0440\u044b: {count} \u0432\u044b\u0431\u0440\u0430\u043d\u043e"
   ,"filtersNone": "\u0424\u0438\u043b\u044c\u0442\u0440\u044b: \u043d\u0435\u0442"
   ,"progress": "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441"
   ,"packsCompleted": "\u041f\u0430\u043a\u043e\u0432 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e"
   ,"averageAccuracy": "\u0421\u0440\u0435\u0434\u043d\u044f\u044f \u0442\u043e\u0447\u043d\u043e\u0441\u0442\u044c"
   ,"averageEv": "\u0421\u0440\u0435\u0434\u043d\u0438\u0439 EV"
-  ,"dailyStreak": "\u0421\u0442\u0440\u0438\u043a"
-  ,"best": "\u0420\u0435\u043a\u043e\u0440\u0434"
-  ,"pinnedPacks": "\ud83d\udccc \u0418\u0437\u0431\u0440\u0430\u043d\u043d\u044b\u0435 \u0448\u0430\u0431\u043b\u043e\u043d\u044b"
-  ,"weakAreas": "\u0418\u0437\u0431\u0440\u0430\u043d\u043d\u044b\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438"
+  ,"dailyStreak": "Серия"
+  ,"best": "Рекорд"
+  ,"pinnedPacks": "📌 Избранные шаблоны"
+  ,"weakAreas": "Слабые места"
   ,"packOfDay": "\ud83c\udfb2 \u041f\u0430\u043a \u0434\u043d\u044f"
-  ,"streakChipLabel": "Streak: {count}"
-  ,"dailyHandLabel": "Daily Hand #{index}"
+  ,"streakChipLabel": "Серия: {count}"
+  ,"dailyHandLabel": "Раздача дня #{index}"
   ,"levelGoalTitle": "\u0426\u0435\u043b\u044c \u0443\u0440\u043e\u0432\u043d\u044f"
-  ,"samplePreviewHint": "\u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0441\u043d\u0430\u0447\u0430\u043b\u0430 \u043e\u0431\u0440\u0430\u0437\u0435\u0446 \u043f\u0430\u043a\u0430"
-  ,"samplePreviewPrompt": "This pack is large. Preview a quick sample first?"
-  ,"previewSample": "Preview Sample"
-  ,"autoSampleToast": "Quick preview launched automatically for faster start."
+  ,"samplePreviewHint": "Попробуйте сначала демо-версию набора"
+  ,"samplePreviewPrompt": "Этот набор очень большой. Пройти короткую демо-версию?"
+  ,"previewSample": "Пройти демо"
+  ,"autoSampleToast": "Демо-версия запущена автоматически для быстрого старта."
   ,"plannerBadge": "{count} \u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c"
   ,"unfinishedSession": "\u0423 \u0432\u0430\u0441 \u0435\u0441\u0442\u044c \u043d\u0435\u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d\u043d\u0430\u044f \u0441\u0435\u0441\u0441\u0438\u044f"
   ,"resume": "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c"
@@ -497,14 +497,14 @@
   ,"rewardShopPurchase": "Купить"
   ,"rewardShopUnlocked": "{name} разблокирован!"
   ,"rewardShopInsufficient": "Недостаточно фишек для {name}.",
-  "feedbackExportDiagnostics": "Export diagnostics file",
-  "feedbackExportSuccess": "Diagnostics exported",
-  "feedbackExportFailure": "Failed to export diagnostics",
-  "settingsReportProblemTitle": "Report a problem",
-  "settingsReportProblemSubtitle": "Share diagnostics with support",
-  "feedbackSheetTitle": "Report a problem",
-  "feedbackSheetSubtitle": "Copy diagnostics for support",
-  "feedbackDiagnosticsHeader": "Diagnostics payload",
-  "feedbackCopyDiagnostics": "Copy diagnostics to clipboard",
-  "feedbackCopySuccess": "Diagnostics copied to clipboard"
+  "feedbackExportDiagnostics": "Экспортировать файл диагностики",
+  "feedbackExportSuccess": "Диагностика экспортирована",
+  "feedbackExportFailure": "Не удалось экспортировать диагностику",
+  "settingsReportProblemTitle": "Сообщить о проблеме",
+  "settingsReportProblemSubtitle": "Отправить диагностику в поддержку",
+  "feedbackSheetTitle": "Сообщить о проблеме",
+  "feedbackSheetSubtitle": "Скопировать диагностику для поддержки",
+  "feedbackDiagnosticsHeader": "Диагностические данные",
+  "feedbackCopyDiagnostics": "Скопировать диагностику в буфер обмена",
+  "feedbackCopySuccess": "Диагностика скопирована в буфер обмена"
 }

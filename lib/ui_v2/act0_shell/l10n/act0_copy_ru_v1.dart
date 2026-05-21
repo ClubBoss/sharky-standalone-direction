@@ -136,6 +136,35 @@ _ruLessonCopyByIdV1 = <String, Act0LessonDisplayCopyV1>{
     title: 'Проверка позиции',
     subtitle: 'Сначала прочитай место за столом, потом выбирай действие.',
   ),
+  'why_bets_happen': Act0LessonDisplayCopyV1(
+    title: 'Зачем вообще ставят',
+    subtitle: 'У каждой ставки должна быть простая и понятная цель.',
+  ),
+  'value_bets': Act0LessonDisplayCopyV1(
+    title: 'Вэлью-ставки',
+    subtitle: 'Ставь, когда руки хуже ещё готовы платить.',
+  ),
+  'bluff_pressure': Act0LessonDisplayCopyV1(
+    title: 'Давление блефом',
+    subtitle: 'Блеф работает тогда, когда руки лучше ещё могут выбросить.',
+  ),
+  'protection_and_denial': Act0LessonDisplayCopyV1(
+    title: 'Защита от бесплатной карты',
+    subtitle: 'Ставь так, чтобы следующая карта не доставалась даром.',
+  ),
+  'small_half_pot': Act0LessonDisplayCopyV1(
+    title: 'Маленькая, полбанка, банк',
+    subtitle: 'Размер ставки задаёт, сколько давления и цены ты создаёшь.',
+  ),
+  'call_price': Act0LessonDisplayCopyV1(
+    title: 'Цена колла',
+    subtitle: 'Любая ставка задаёт цену, за которую ты можешь продолжать.',
+  ),
+  'price_checkpoint': Act0LessonDisplayCopyV1(
+    title: 'Проверка цели, размера и цены',
+    subtitle:
+        'Перед действием прочитай цель ставки, её размер и цену продолжения.',
+  ),
 };
 
 const Map<String, String> _ruLessonTitleByEnglishV1 = <String, String>{
@@ -420,15 +449,107 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Собери всё вместе: прочитай стол, отсеки невозможное и назови лучшее действие.',
   ),
-  'blinds_theory': Act0TaskDisplayCopyV1(title: 'Блайнды ставятся первыми'),
-  'blinds_posts_drill': Act0TaskDisplayCopyV1(title: 'Кто ставит 1 BB'),
-  'blinds_first_actor': Act0TaskDisplayCopyV1(title: 'Первый на префлопе'),
-  'blinds_last_actor': Act0TaskDisplayCopyV1(title: 'Последний на префлопе'),
+  'blinds_button_moves': Act0TaskDisplayCopyV1(
+    title: 'Баттон двигается',
+    runnerPrompt: 'Баттон сдвигается на одно место после каждой раздачи.',
+    runnerSupport:
+        'Это позволяет позициям блайндов и поздних мест постоянно меняться.',
+    runnerQuestion: 'Какой маркер указывает на баттон дилера в этой раздаче?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Кнопка баттона перемещается.',
+        body:
+            'После каждой раздачи кнопка баттона сдвигается на одно место по часовой стрелке, благодаря чему позиции блайндов тоже меняются.',
+      ),
+    ],
+  ),
+  'blinds_first_actor': Act0TaskDisplayCopyV1(
+    title: 'Первый на префлопе',
+    runnerPrompt: 'Действие на префлопе начинается слева от большого блайнда.',
+    runnerSupport: 'Нажми на место игрока, который ходит первым на префлопе.',
+    runnerQuestion: 'Нажми на UTG.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Торговля на префлопе начинается после BB.',
+        body:
+            'Первое место слева от большого блайнда называется UTG (под прицелом). Именно этот игрок ходит первым.',
+      ),
+    ],
+  ),
+  'blinds_last_actor': Act0TaskDisplayCopyV1(
+    title: 'Последний на префлопе',
+    runnerPrompt:
+        'Большой блайнд закрывает торговлю на префлопе, если не было рейзов.',
+    runnerSupport:
+        'Нажми на игрока, который принимает решение последним на префлопе.',
+    runnerQuestion: 'Нажми на BB.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'BB закрывает первый круг торговли.',
+        body:
+            'Если до большого блайнда никто не сделал рейз, то игрок на BB принимает решение последним на префлопе.',
+      ),
+    ],
+  ),
   'blinds_postflop_button': Act0TaskDisplayCopyV1(
     title: 'Последний на постфлопе',
+    runnerPrompt: 'После флопа баттон чаще всего действует последним.',
+    runnerSupport: 'Нажми на BTN.',
+    runnerQuestion: 'Нажми на игрока, который ходит последним на постфлопе.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Порядок хода после флопа меняется.',
+        body:
+            'После выхода флопа блайнды ходят первыми (в ранней позиции), а баттон (BTN) часто принимает решение последним.',
+      ),
+    ],
   ),
-  'blinds_button_moves': Act0TaskDisplayCopyV1(title: 'Баттон двигается'),
-  'blinds_review': Act0TaskDisplayCopyV1(title: 'Повтор по порядку'),
+  'blinds_posts_drill': Act0TaskDisplayCopyV1(
+    title: 'Кто ставит 1 BB',
+    runnerPrompt: 'Большой блайнд ставит полную обязательную ставку в 1 BB.',
+    runnerSupport: 'Малый блайнд ставит половину — 0.5 BB.',
+    runnerQuestion: 'Нажми на большой блайнд (BB).',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Большой блайнд — это полная ставка.',
+        body:
+            'Найди место с меткой BB, где ставится полный блайнд размером в 1 BB.',
+      ),
+    ],
+  ),
+  'blinds_review': Act0TaskDisplayCopyV1(
+    title: 'Повтор по порядку',
+    runnerPrompt: 'Главный вывод урока: блайнды задают порядок хода.',
+    runnerSupport:
+        'Малый блайнд ставит 0.5, большой — 1, после чего начинается игра по кругу.',
+    runnerQuestion: 'Кто ходит первым на префлопе после блайндов?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Главное о порядке хода.',
+        body:
+            'Сначала ставятся блайнды. Затем на каждой следующей улице торговля идёт по стандартному кругу.',
+      ),
+    ],
+  ),
+  'blinds_theory': Act0TaskDisplayCopyV1(
+    title: 'Блайнды ставятся первыми',
+    runnerPrompt: 'Малый и большой блайнды ставятся до раздачи карт.',
+    runnerSupport:
+        'Первое решение на префлопе принимается сразу после большого блайнда.',
+    runnerQuestion: 'Какой блайнд равен 1 BB?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Блайнды формируют начальный банк.',
+        body:
+            'Блайнды — это обязательные ставки вслепую, которые ставятся до раздачи карт. Игроки считают их в больших блайндах (BB), так как это самый простой ориентир для цены.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Торговля начинается после BB.',
+        body:
+            'Если большой блайнд равен 1 BB, то открытие в 3 BB означает три таких блайнда. На префлопе первое слово за столом после блайндов принадлежит позиции UTG.',
+      ),
+    ],
+  ),
   'positions_theory': Act0TaskDisplayCopyV1(
     title: 'Шесть мест за столом',
     runnerPrompt:
@@ -1463,6 +1584,472 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       Act0TeachingStepDisplayCopyV1(
         title: 'Памятка по позиции.',
         body: 'Сначала группа руки, потом место и только потом действие.',
+      ),
+    ],
+  ),
+  'w4_bad_bluff': Act0TaskDisplayCopyV1(
+    title: 'Плохое давление',
+    runnerPrompt:
+        'Соперник уже много вложил и не выглядит готовым выбрасывать.',
+    runnerSupport:
+        'Когда пас маловероятен, блеф становится заметно хуже для новичка.',
+    runnerQuestion: 'Какое действие здесь безопаснее для новичка?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Плохой блеф не работает.',
+        body:
+            'Если соперник уже показал готовность платить, давление на пас становится заметно слабее.',
+      ),
+    ],
+  ),
+  'w4_bad_price_fold': Act0TaskDisplayCopyV1(
+    title: 'Пас на высокой цене',
+    runnerPrompt: 'В банке 8 BB. За колл нужно 7 BB, а у тебя слабая пара.',
+    runnerSupport:
+        'Цена слишком высокая, а рука слишком слабая для такого продолжения.',
+    runnerQuestion: 'Какое действие лучше всего соответствует этой цене?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цена продолжения.',
+        body:
+            'Когда цена почти догоняет банк, а рука слабая, продолжение становится слишком дорогим.',
+      ),
+    ],
+  ),
+  'w4_big_price_marginal_fold': Act0TaskDisplayCopyV1(
+    title: 'Высокая цена, слабая рука',
+    runnerPrompt:
+        'В банке 9 BB. За колл нужно 6 BB с топ-парой при слабом кикере.',
+    runnerSupport:
+        'Дорогой колл требует сильных аргументов. Одной лишь силы топ-пары здесь уже недостаточно.',
+    runnerQuestion: 'Какое действие лучше всего соответствует цене?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Высокая цена требует большего.',
+        body:
+            'Топ-пара — это не автоматический колл. При банке 9 BB и цене колла 6 BB твоей руке нужна очень веская причина, чтобы продолжать.',
+      ),
+    ],
+  ),
+  'w4_bluff_intro': Act0TaskDisplayCopyV1(
+    title: 'Давление на пас',
+    runnerPrompt:
+        'Блеф пытается выиграть банк тогда, когда лучшая рука выбрасывает.',
+    runnerSupport: 'Без реального шанса на пас чистого блефа не получается.',
+    runnerQuestion: 'Что обязательно нужно блефу?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Блефу нужен пас.',
+        body:
+            'Блеф — это не случайная ставка, а история, за которой стоят фишки. Если лучшая рука не собирается выбрасывать, чистого блефа здесь уже нет.',
+      ),
+    ],
+  ),
+  'w4_bluff_pressure': Act0TaskDisplayCopyV1(
+    title: 'Дай давление',
+    runnerPrompt: 'Ты не попал, но BB чекнул и ещё может выбросить.',
+    runnerSupport:
+        'Небольшая ставка здесь может дать давление без лишнего риска.',
+    runnerQuestion: 'Какое действие лучше совпадает с целью блефа?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Блеф хочет выбить.',
+        body:
+            'Если у тебя нет пары, ставка работает только тогда, когда соперник сдаётся под давлением.',
+      ),
+    ],
+  ),
+  'w4_bluff_purpose': Act0TaskDisplayCopyV1(
+    title: 'Причина для блефа',
+    runnerPrompt: 'Ты не попал. Ставка пытается забрать банк пасом соперника.',
+    runnerSupport: 'Блеф держится на давлении на пас, а не на готовой руке.',
+    runnerQuestion: 'Какая здесь главная цель ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Блеф хочет пас.',
+        body:
+            'Если у тебя ничего не собрано, ставка работает только тогда, когда соперник выбрасывает.',
+      ),
+    ],
+  ),
+  'w4_bluff_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по блефу',
+    runnerPrompt:
+        'Вывод простой: блефовать стоит только там, где пас реально возможен.',
+    runnerSupport:
+        'Давление важно, но не каждый промах обязан превращаться в ставку.',
+    runnerQuestion: 'Что именно пытается создать блеф?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка на блеф.',
+        body:
+            'Перед ставкой с промахом сначала спроси себя, могут ли руки лучше реально выбросить.',
+      ),
+    ],
+  ),
+  'w4_cheap_price_marginal_call': Act0TaskDisplayCopyV1(
+    title: 'Дешёвый колл со средней парой',
+    runnerPrompt: 'В банке 10 BB. За колл нужно 1 BB со средней парой.',
+    runnerSupport:
+        'Дешёвый колл может быть хорош, когда банк достаточно велик, а у руки всё ещё есть шоудаун-вэлью.',
+    runnerQuestion: 'Какое действие лучше всего соответствует цене?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Дешёвая цена, нормальная рука.',
+        body:
+            'Не поддавайся страху. Банк 10 BB при цене колла всего в 1 BB делает продолжение со средней парой математически выгодным и спокойным решением.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_intro': Act0TaskDisplayCopyV1(
+    title: 'Три чтения',
+    runnerPrompt: 'Контрольная точка: цель, размер и цена работают вместе.',
+    runnerSupport:
+        'Тот, кто ставит, создаёт давление. Тот, кто думает о колле, читает цену.',
+    runnerQuestion: 'Какие три чтения собирает World 5?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Три чтения.',
+        body:
+            'Цель объясняет зачем, размер создаёт давление, а цена отвечает, стоит ли продолжать.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_price': Act0TaskDisplayCopyV1(
+    title: 'Колл или пас',
+    runnerPrompt: 'В банке 8 BB. За колл нужно 7 BB, а у тебя слабая пара.',
+    runnerSupport:
+        'Цена высокая, а рука слишком слабая, чтобы продолжать с комфортом.',
+    runnerQuestion: 'Какое действие лучше всего соответствует этой цене?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цена продолжения.',
+        body:
+            'Колл — это всегда плата за продолжение. Когда цена слишком велика для силы руки, спокойный пас лучше.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_review': Act0TaskDisplayCopyV1(
+    title: 'Повтор по цене и смыслу',
+    runnerPrompt: 'Вывод простой: ставка читается через цель и цену вместе.',
+    runnerSupport:
+        'Вэлью, блеф, защита и цена колла теперь складываются в одну систему.',
+    runnerQuestion: 'Что делает ставку понятнее для игрока?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Контрольная точка World 5.',
+        body:
+            'Сначала прочитай, чего ставка хочет, потом посмотри, какой размер она создаёт и сколько стоит продолжение.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_table_price': Act0TaskDisplayCopyV1(
+    title: 'Чтение цены за живым столом',
+    runnerPrompt:
+        'Живой стол. В банке 7 BB. За колл нужно 2 BB. У тебя вторая пара.',
+    runnerSupport:
+        'Не смотри только на карту. Всегда сравнивай силу руки с ценой продолжения, прежде чем нажать кнопку.',
+    runnerQuestion: 'Какое действие на тёрне будет самым чистым?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Чтение цены за столом.',
+        body:
+            'Банк показывает, сколько можно выиграть, а цена колла — сколько нужно рискнуть. Сопоставь оба значения со своей второй парой перед принятием решения.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_table_purpose_price': Act0TaskDisplayCopyV1(
+    title: 'Цель и цена в реальной раздаче',
+    runnerPrompt:
+        'Живой стол. В банке 6 BB. BTN ставит 2 BB с топ-парой на сухом флопе.',
+    runnerSupport:
+        'Читай обе половины вместе: у ставки есть цель (добор), а её небольшой размер даёт BB дешёвую цену для продолжения.',
+    runnerQuestion: 'Какое чтение ситуации будет самым точным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цель и цена идут вместе.',
+        body:
+            'Любую ставку проще читать, если назвать её задачу и цену, которую она создаёт. Здесь топ-пара соперника хочет добрать (вэлью), а ставка 2 BB оставляет колл дешёвым.',
+      ),
+    ],
+  ),
+  'w4_checkpoint_value': Act0TaskDisplayCopyV1(
+    title: 'Вэлью или блеф',
+    runnerPrompt: 'У тебя топ-пара. Руки слабее ещё могут платить.',
+    runnerSupport: 'Эта ставка нужна не для шума, а для коллов от рук хуже.',
+    runnerQuestion: 'Какая здесь главная цель ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Вэлью хочет колл.',
+        body:
+            'С топ-парой хуже ещё платит, значит цель ставки здесь остаётся простой и чистой.',
+      ),
+    ],
+  ),
+  'w4_good_price_call': Act0TaskDisplayCopyV1(
+    title: 'Колл по хорошей цене',
+    runnerPrompt: 'В банке 8 BB. За колл нужно 1 BB, а у тебя пара.',
+    runnerSupport:
+        'Маленькая цена и готовая рука делают колл здесь нормальным продолжением.',
+    runnerQuestion: 'Какое действие лучше всего соответствует этой цене?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цена продолжения.',
+        body:
+            'Маленькая цена с готовой рукой часто позволяет спокойно продолжить.',
+      ),
+    ],
+  ),
+  'w4_half_pot_bet': Act0TaskDisplayCopyV1(
+    title: 'Ставка в полбанка',
+    runnerPrompt: 'В банке 6 BB. Ты хочешь выбрать чистый средний размер.',
+    runnerSupport:
+        'Полбанка — это половина банка, а не самый маленький и не самый тяжёлый размер.',
+    runnerQuestion: 'Какой размер здесь равен половине банка?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Размер — это давление.',
+        body:
+            'Полбанка — это средний и самый универсальный учебный размер между маленьким и тяжёлым давлением.',
+      ),
+    ],
+  ),
+  'w4_pot_bet': Act0TaskDisplayCopyV1(
+    title: 'Ставка в банк',
+    runnerPrompt:
+        'В банке 6 BB. Ставка размером в банк — это уже тяжёлое давление.',
+    runnerSupport:
+        'Размер в банк означает, что ставка по величине равна самому банку.',
+    runnerQuestion: 'Какой размер здесь равен банку?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Размер — это давление.',
+        body:
+            'Ставка в банк создаёт тяжёлое давление, потому что цена продолжения становится самой жёсткой в этой базовой тройке.',
+      ),
+    ],
+  ),
+  'w4_price_intro': Act0TaskDisplayCopyV1(
+    title: 'Перед тобой цена',
+    runnerPrompt: 'Когда соперник ставит, он задаёт цену твоего продолжения.',
+    runnerSupport:
+        'Маленькая цена чаще тянет на колл, большая уже часто толкает к пасу.',
+    runnerQuestion: 'Что даёт ставка тому, кто думает о колле?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Цена продолжения.',
+        body:
+            'Колл значит, что ты платишь указанную цену за то, чтобы увидеть следующие карты и остаться в раздаче.',
+      ),
+    ],
+  ),
+  'w4_price_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по цене',
+    runnerPrompt: 'Вывод простой: у каждого колла есть своя цена.',
+    runnerSupport:
+        'Сравни цену с силой руки и тем, что может случиться дальше.',
+    runnerQuestion: 'Что нужно прочитать перед коллом?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Короткая проверка цены.',
+        body:
+            'Перед коллом сначала прочитай банк, цену продолжения и силу своей руки.',
+      ),
+    ],
+  ),
+  'w4_protection_bet': Act0TaskDisplayCopyV1(
+    title: 'Защитить пару',
+    runnerPrompt:
+        'У тебя топ-пара. Чек отдаёт сопернику бесплатную следующую карту.',
+    runnerSupport:
+        'Ставка защищает твоё вэлью, потому что бесплатной карты уже не будет.',
+    runnerQuestion: 'Какое действие лучше всего подходит для защиты?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Не давай бесплатную карту.',
+        body:
+            'Если следующая карта может усилить соперника, ставка заставляет его платить за просмотр этой карты.',
+      ),
+    ],
+  ),
+  'w4_protection_check': Act0TaskDisplayCopyV1(
+    title: 'Риск бесплатной карты',
+    runnerPrompt: 'Ты чекаешь. Соперник получает бесплатную следующую карту.',
+    runnerSupport: 'Именно этот риск и пытаются убрать защитные ставки.',
+    runnerQuestion: 'Что именно позволил чек?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Чек отдал карту даром.',
+        body:
+            'Когда ты чекаешь, соперник может увидеть следующую карту бесплатно, даже если она опасна для твоей руки.',
+      ),
+    ],
+  ),
+  'w4_protection_intro': Act0TaskDisplayCopyV1(
+    title: 'Не дать карту бесплатно',
+    runnerPrompt: 'Защита делает следующую карту платной.',
+    runnerSupport:
+        'Это рядом с вэлью, но здесь ключевое слово именно лишить бесплатного усиления.',
+    runnerQuestion: 'Чего именно лишает защитная ставка?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Не давай бесплатную карту.',
+        body:
+            'Если следующая карта может усилить соперника, ставка заставляет его платить за это улучшение. На доске Qh-9h-4c чек позволяет третьей черве прийти бесплатно. Ставка в 3 BB в банк 6 BB делает это улучшение платным и всё ещё может добрать, когда соперник не попал.',
+      ),
+    ],
+  ),
+  'w4_protection_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по защите',
+    runnerPrompt:
+        'Вывод простой: защита не даёт следующей карте прийти бесплатно.',
+    runnerSupport:
+        'Лишить бесплатной карты — это уже полноценная причина для ставки.',
+    runnerQuestion: 'Чего лишает защитная ставка?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка на защиту.',
+        body:
+            'Сначала спроси себя, не отдаёт ли чек следующую карту слишком дёшево.',
+      ),
+    ],
+  ),
+  'w4_purpose_intro': Act0TaskDisplayCopyV1(
+    title: 'Смысл ставки',
+    runnerPrompt: 'У ставки должна быть причина раньше, чем размер.',
+    runnerSupport: 'Начни с цели: вэлью, блеф или защита.',
+    runnerQuestion: 'Что нужно назвать до размера ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала цель.',
+        body:
+            'До выбора размера сначала пойми, что ставка пытается сделать. На флопе в банке 6 BB. Ты ставишь, чтобы добрать с рук хуже, выбить руки лучше или заставить следующую карту стоить денег. Сначала назови цель, потом выбирай размер.',
+      ),
+    ],
+  ),
+  'w4_purpose_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по цели ставки',
+    runnerPrompt: 'Главное правило: сначала цель, потом размер.',
+    runnerSupport:
+        'Вэлью добирает, блеф выбивает, защита не даёт увидеть карту бесплатно.',
+    runnerQuestion: 'Что должно появиться раньше размера ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Короткая проверка цели.',
+        body:
+            'Сначала пойми, чего хочет ставка, и только потом думай, какого она должна быть размера.',
+      ),
+    ],
+  ),
+  'w4_sizing_intro': Act0TaskDisplayCopyV1(
+    title: 'Язык размеров',
+    runnerPrompt: 'Размер ставки меняет и давление, и цену.',
+    runnerSupport:
+        'Треть банка лёгкая, полбанка стандартная, банк уже тяжёлый размер.',
+    runnerQuestion: 'Что именно меняет размер ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Размер — это давление.',
+        body:
+            'Ставки в треть банка, полбанка и банк создают разную цену и разное давление. Треть банка — лёгкий пробный размер, полбанка — середина, банк — уже тяжёлое давление.',
+      ),
+    ],
+  ),
+  'w4_sizing_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по размерам',
+    runnerPrompt: 'Вывод простой: размер задаёт давление и цену.',
+    runnerSupport:
+        'Маленький, полбанка и банк должны совпадать с тем, чего ты хочешь от ставки.',
+    runnerQuestion: 'С чем должен совпадать размер ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка по размеру.',
+        body:
+            'Сначала назови цель ставки, а потом подбери под неё лёгкий, средний или тяжёлый размер.',
+      ),
+    ],
+  ),
+  'w4_small_bet': Act0TaskDisplayCopyV1(
+    title: 'Ставка в треть банка',
+    runnerPrompt: 'В банке 6 BB. Ты хочешь дать лёгкое давление.',
+    runnerSupport:
+        'Треть банка здесь — самый маленький из простых размеров давления.',
+    runnerQuestion: 'Какой размер здесь равен трети банка?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Размер — это давление.',
+        body:
+            'Треть банка создаёт самый лёгкий и дешёвый вариант давления в этой базовой линейке.',
+      ),
+    ],
+  ),
+  'w4_value_bet': Act0TaskDisplayCopyV1(
+    title: 'Ставка с топ-парой',
+    runnerPrompt: 'Топ-пара на безопасном флопе. BB может платить хуже.',
+    runnerSupport:
+        'Полбанка здесь выглядит как простой и чистый размер на вэлью.',
+    runnerQuestion: 'Какое действие лучше всего соответствует этой цели?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Вэлью хочет колл.',
+        body:
+            'С топ-парой хуже ещё может заплатить, поэтому ставка здесь выглядит естественно.',
+      ),
+    ],
+  ),
+  'w4_value_intro': Act0TaskDisplayCopyV1(
+    title: 'Колл от рук слабее',
+    runnerPrompt:
+        'Вэлью-ставка нацелена на руки слабее, которые ещё могут коллировать.',
+    runnerSupport:
+        'Если хуже уже не платит, вэлью становится тонким или исчезает совсем.',
+    runnerQuestion: 'Кто должен платить в ответ на вэлью-ставку?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Вэлью добирает с рук хуже.',
+        body:
+            'Вэлью простое: ты ставишь, потому что руки хуже ещё заплатят. У тебя топ-пара с AQ на доске A-7-2. Банк 6 BB. Более слабые тузы и младшие пары ещё могут вложить фишки, которые ты будешь выигрывать в среднем.',
+      ),
+    ],
+  ),
+  'w4_value_missed': Act0TaskDisplayCopyV1(
+    title: 'Не прячь добор',
+    runnerPrompt: 'У тебя топ-пара. Чек отдаёт шанс на добор.',
+    runnerSupport:
+        'Если хуже может платить, ставка и есть главный учебный вывод.',
+    runnerQuestion: 'Какое действие здесь упускает вэлью?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Не прячь вэлью.',
+        body:
+            'Если руки хуже готовы платить, чек часто просто отдаёт им бесплатный выход.',
+      ),
+    ],
+  ),
+  'w4_value_purpose': Act0TaskDisplayCopyV1(
+    title: 'Причина для вэлью',
+    runnerPrompt: 'У тебя топ-пара. Руки слабее могут заплатить.',
+    runnerSupport:
+        'Эта ставка нужна не для шума, а чтобы руки хуже продолжали за деньги.',
+    runnerQuestion: 'Какая здесь главная цель ставки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Вэлью хочет колл.',
+        body:
+            'С топ-парой хуже могут платить: более слабые пары и худшие тузы ещё часто продолжают.',
+      ),
+    ],
+  ),
+  'w4_value_recap': Act0TaskDisplayCopyV1(
+    title: 'Повтор по вэлью',
+    runnerPrompt: 'Вывод простой: вэлью значит, что хуже ещё платит.',
+    runnerSupport: 'Не прячь сильные, но оплачиваемые руки слишком часто.',
+    runnerQuestion: 'Что делает ставку именно вэлью-ставкой?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка на вэлью.',
+        body:
+            'До выбора размера сначала спроси себя, какие руки хуже реально могут платить.',
       ),
     ],
   ),

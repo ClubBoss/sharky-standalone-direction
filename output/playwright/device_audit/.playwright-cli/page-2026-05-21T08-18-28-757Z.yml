@@ -1,0 +1,59 @@
+- generic [active] [ref=e5]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic [ref=e119]:
+              - generic: Сегодня 0/3
+            - generic [ref=e120]:
+              - generic: 120 XP
+            - generic [ref=e121]:
+              - generic: 3d
+            - generic [ref=e122]:
+              - generic: 60%
+            - generic:
+              - group "1 Мир 1 · Poker from Zero 0% 9 уроков · 0 of 9 lessons complete 0%" [ref=e123]:
+                - button "Миры" [ref=e124]
+              - group:
+                - generic [ref=e125]:
+                  - generic: Маршрут
+                - generic [ref=e126]:
+                  - generic: ОБУЧЕНИЕ
+                - generic [ref=e127]:
+                  - generic: "1"
+                - button "Lesson 1 Now Что такое покер 5 steps ready" [ref=e128]
+                - generic [ref=e129]:
+                  - generic: Познакомься со столом, игроками и целью раздачи.
+                - generic [ref=e130]:
+                  - generic: "Дальше: Знакомство со столом"
+                - button "Знакомство со столом Now" [ref=e131]
+                - button "Найди своё место" [ref=e132]
+                - button "Первое чтение живого стола" [ref=e133]
+                - button "Make one choice" [ref=e134]
+                - button "Where to go next" [ref=e135]
+                - generic [ref=e136]:
+                  - generic: "On clear: unlock What poker is."
+                - generic [ref=e137]:
+                  - generic: "2"
+                - button "Lesson 2 Next What poker is Заверши урок 1, чтобы открыть" [ref=e138]
+                - generic [ref=e139]:
+                  - generic: "3"
+                - button "Lesson 3 Locked Карты, ранги и масти" [ref=e140]
+                - generic [ref=e141]:
+                  - generic: "4"
+                - button "Lesson 4 Locked Твоя первая раздача" [ref=e142]
+                - generic [ref=e143]:
+                  - generic: "5"
+                - button "Lesson 5 Locked Фолд, чек, колл, рейз" [ref=e144]
+                - generic [ref=e145]:
+                  - generic: "6"
+                - button "Lesson 6 Locked Блайнды и порядок действий" [ref=e146]
+                - generic [ref=e147]:
+                  - generic: "7"
+                - button "Lesson 7 Locked 6 позиций за столом" [ref=e148]
+            - button "Главная" [ref=e149]
+            - button "Обучение" [ref=e150]
+            - button "Практика" [ref=e151]
+            - button "Разбор" [ref=e152]
+            - button "Ты" [ref=e153]

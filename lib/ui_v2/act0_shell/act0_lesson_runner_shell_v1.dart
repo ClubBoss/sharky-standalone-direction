@@ -280,15 +280,15 @@ class Act0BlockCompletionSummaryV1 {
     final lines = <String>[];
     final focus = primarySkillFocusLabel;
     if (focus != null) {
-      lines.add('This week: $focus');
+      lines.add('Skill in motion: $focus');
     }
     if (futureRecheckCount > 0) {
       final noun = futureRecheckCount == 1 ? 'spot' : 'spots';
-      lines.add('Recheck soon: $futureRecheckCount quick $noun.');
+      lines.add('Keep ready: $futureRecheckCount quick $noun.');
     }
     if (futureProveCount > 0) {
       final noun = futureProveCount == 1 ? 'skill' : 'skills';
-      lines.add('Prove next: $futureProveCount $noun still holds.');
+      lines.add('Prove again: $futureProveCount $noun without hints.');
     }
     return lines;
   }
@@ -298,16 +298,37 @@ class Act0BlockCompletionSummaryV1 {
   bool get hasReturnPlan => futureRecheckCount > 0 || futureProveCount > 0;
 
   String get returnPlanLabel {
+    final focus = primarySkillFocusLabel;
+    final opener = focus == null
+        ? 'Tomorrow starts warmer because this world is already in motion.'
+        : 'Tomorrow starts warmer because $focus is already in motion.';
     if (futureRecheckCount > 0 && futureProveCount > 0) {
-      return 'Recheck $futureRecheckCount quick spots and prove $futureProveCount skill still holds.';
+      final spotNoun = futureRecheckCount == 1 ? 'spot' : 'spots';
+      final skillNoun = futureProveCount == 1 ? 'skill' : 'skills';
+      return '$opener Recheck $futureRecheckCount quick $spotNoun and prove $futureProveCount $skillNoun once.';
     }
     if (futureRecheckCount > 0) {
-      return 'Recheck $futureRecheckCount quick spots to keep this world warm.';
+      final noun = futureRecheckCount == 1 ? 'spot' : 'spots';
+      return '$opener Recheck $futureRecheckCount quick $noun.';
     }
     if (futureProveCount > 0) {
-      return 'Prove $futureProveCount skill still holds.';
+      final noun = futureProveCount == 1 ? 'skill' : 'skills';
+      return '$opener Prove $futureProveCount $noun once.';
     }
-    return 'One short return tomorrow keeps the world active.';
+    return '$opener One short return keeps it sharp.';
+  }
+
+  String? get nextUnlockReasonLabel {
+    if (!isWorldComplete ||
+        nextWorldTitle == null ||
+        nextWorldTitle!.trim().isEmpty) {
+      return null;
+    }
+    final focus = primarySkillFocusLabel;
+    if (focus == null) {
+      return '$nextWorldTitle is next because this base is now in place.';
+    }
+    return '$nextWorldTitle is next because $focus is already in motion.';
   }
 
   bool get shouldReviewFirst =>
@@ -3749,6 +3770,19 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
+                    if (summary.nextUnlockReasonLabel != null) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        summary.nextUnlockReasonLabel!,
+                        key: const Key('act0_shell_block_summary_next_reason'),
+                        maxLines: 3,
+                        overflow: TextOverflow.fade,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                     if (summary.sharkyLine.isNotEmpty) ...[
                       const SizedBox(height: 6),
                       Act0SharkyPresenceBubbleV1(
@@ -3776,7 +3810,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 _GrowthHighlightV1(
                   key: const Key('act0_shell_block_summary_growth_highlight'),
-                  title: 'What moved',
+                  title: summary.isWorldComplete
+                      ? 'What improved'
+                      : 'What moved',
                   label: summary.growthLabel,
                   tone: celebrateTone,
                 ),

@@ -139,70 +139,70 @@ class AppLocalizationsZh extends AppLocalizations {
   String get packPushFold20 => 'Пуш/Фолд 20ББ (без анте)';
 
   @override
-  String get presetBtn10bb => 'BTN 10BB Push/Fold';
+  String get presetBtn10bb => 'BTN 10ББ Пуш/Фолд';
 
   @override
-  String get presetBtn11bb => 'BTN 11BB Push/Fold';
+  String get presetBtn11bb => 'BTN 11ББ Пуш/Фолд';
 
   @override
-  String get presetBtn12bb => 'BTN 12BB Push/Fold';
+  String get presetBtn12bb => 'BTN 12ББ Пуш/Фолд';
 
   @override
-  String get presetBtn13bb => 'BTN 13BB Push/Fold';
+  String get presetBtn13bb => 'BTN 13ББ Пуш/Фолд';
 
   @override
-  String get presetBtn14bb => 'BTN 14BB Push/Fold';
+  String get presetBtn14bb => 'BTN 14ББ Пуш/Фолд';
 
   @override
-  String get presetBtn15bb => 'BTN 15BB Push/Fold';
+  String get presetBtn15bb => 'BTN 15ББ Пуш/Фолд';
 
   @override
-  String get presetBtn16bb => 'BTN 16BB Push/Fold';
+  String get presetBtn16bb => 'BTN 16ББ Пуш/Фолд';
 
   @override
-  String get presetBtn17bb => 'BTN 17BB Push/Fold';
+  String get presetBtn17bb => 'BTN 17ББ Пуш/Фолд';
 
   @override
-  String get presetBtn18bb => 'BTN 18BB Push/Fold';
+  String get presetBtn18bb => 'BTN 18ББ Пуш/Фолд';
 
   @override
-  String get presetBtn19bb => 'BTN 19BB Push/Fold';
+  String get presetBtn19bb => 'BTN 19ББ Пуш/Фолд';
 
   @override
-  String get presetBtn20bb => 'BTN 20BB Push/Fold';
+  String get presetBtn20bb => 'BTN 20ББ Пуш/Фолд';
 
   @override
-  String get presetSb10bb => 'SB 10BB Push/Fold';
+  String get presetSb10bb => 'SB 10ББ Пуш/Фолд';
 
   @override
-  String get presetSb11bb => 'SB 11BB Push/Fold';
+  String get presetSb11bb => 'SB 11ББ Пуш/Фолд';
 
   @override
-  String get presetSb12bb => 'SB 12BB Push/Fold';
+  String get presetSb12bb => 'SB 12ББ Пуш/Фолд';
 
   @override
-  String get presetSb13bb => 'SB 13BB Push/Fold';
+  String get presetSb13bb => 'SB 13ББ Пуш/Фолд';
 
   @override
-  String get presetSb14bb => 'SB 14BB Push/Fold';
+  String get presetSb14bb => 'SB 14ББ Пуш/Фолд';
 
   @override
-  String get presetSb15bb => 'SB 15BB Push/Fold';
+  String get presetSb15bb => 'SB 15ББ Пуш/Фолд';
 
   @override
-  String get presetSb16bb => 'SB 16BB Push/Fold';
+  String get presetSb16bb => 'SB 16ББ Пуш/Фолд';
 
   @override
-  String get presetSb17bb => 'SB 17BB Push/Fold';
+  String get presetSb17bb => 'SB 17ББ Пуш/Фолд';
 
   @override
-  String get presetSb18bb => 'SB 18BB Push/Fold';
+  String get presetSb18bb => 'SB 18ББ Пуш/Фолд';
 
   @override
-  String get presetSb19bb => 'SB 19BB Push/Fold';
+  String get presetSb19bb => 'SB 19ББ Пуш/Фолд';
 
   @override
-  String get presetSb20bb => 'SB 20BB Push/Fold';
+  String get presetSb20bb => 'SB 20ББ Пуш/Фолд';
 
   @override
   String get generateSpots => 'Сгенерировать раздачи';
@@ -253,26 +253,26 @@ class AppLocalizationsZh extends AppLocalizations {
   String get icm => 'ICM';
 
   @override
-  String get spotDetails => 'Spot Details';
+  String get spotDetails => 'Детали раздачи';
 
   @override
   String heroPosition(Object pos) {
-    return 'Hero position: $pos';
+    return 'Позиция Hero: $pos';
   }
 
   @override
   String heroCards(Object cards) {
-    return 'Hero cards: $cards';
+    return 'Карты Hero: $cards';
   }
 
   @override
   String boardLabel(Object cards) {
-    return 'Board: $cards';
+    return 'Борд: $cards';
   }
 
   @override
   String yourAction(Object action) {
-    return 'Your action: $action';
+    return 'Твое действие: $action';
   }
 
   @override
@@ -282,17 +282,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String packCreated(Object name) {
-    return 'Pack \"$name\" created';
+    return 'Набор \"$name\" создан';
   }
 
   @override
   String resetPackPrompt(Object name) {
-    return 'Reset progress for \'$name\'?';
+    return 'Сбросить прогресс для \"$name\"?';
   }
 
   @override
   String resetStagePrompt(Object name) {
-    return 'Reset stage \'$name\'?';
+    return 'Сбросить стадию \"$name\"?';
   }
 
   @override
@@ -386,16 +386,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectAction => 'Выберите действие';
 
   @override
-  String get fold => 'Fold';
+  String get fold => 'Пас';
 
   @override
-  String get call => 'Call';
+  String get call => 'Колл';
 
   @override
-  String get raise => 'Raise';
+  String get raise => 'Рейз';
 
   @override
-  String get push => 'Push';
+  String get push => 'Пуш';
 
   @override
   String get amount => 'Сумма';
@@ -410,7 +410,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get entrants => 'Entrants';
+  String get entrants => 'Участники';
 
   @override
   String get gameType => 'Тип игры';
@@ -426,17 +426,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String spotsLabel(Object value) {
-    return 'Spots: $value';
+    return 'Раздачи: $value';
   }
 
   @override
   String accuracyLabel(Object value) {
-    return 'Accuracy: $value%';
+    return 'Точность: $value%';
   }
 
   @override
   String evBb(Object value) {
-    return 'EV: $value BB';
+    return 'EV: $value ББ';
   }
 
   @override
@@ -465,10 +465,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sortPopular => 'Сначала популярные';
 
   @override
-  String get sortRating => 'Rating (High → Low)';
+  String get sortRating => 'По рейтингу';
 
   @override
-  String get sortCoverage => 'Coverage (High → Low)';
+  String get sortCoverage => 'По покрытию';
 
   @override
   String filtersSelected(Object count) {
@@ -491,7 +491,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get averageEv => 'Средний EV';
 
   @override
-  String get dailyStreak => 'Стрик';
+  String get dailyStreak => 'Серия';
 
   @override
   String get best => 'Рекорд';
@@ -500,7 +500,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pinnedPacks => '📌 Избранные шаблоны';
 
   @override
-  String get weakAreas => 'Избранные категории';
+  String get weakAreas => 'Слабые места';
 
   @override
   String get packOfDay => '🎲 Пак дня';
@@ -519,18 +519,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get levelGoalTitle => 'Цель уровня';
 
   @override
-  String get samplePreviewHint => 'Попробуйте сначала образец пака';
+  String get samplePreviewHint => 'Попробуйте сначала демо-версию набора';
 
   @override
   String get samplePreviewPrompt =>
-      'This pack is large. Preview a quick sample first?';
+      'Этот набор очень большой. Пройти короткую демо-версию?';
 
   @override
-  String get previewSample => 'Preview Sample';
+  String get previewSample => 'Пройти демо';
 
   @override
   String get autoSampleToast =>
-      'Quick preview launched automatically for faster start.';
+      'Демо-версия запущена автоматически для быстрого старта.';
 
   @override
   String plannerBadge(Object count) {

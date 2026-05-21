@@ -11,6 +11,7 @@ Last updated: 2026-05-20
 2. `docs/plan/MASTER_PLAN_v3.0.md`
 3. `docs/plan/ACT0_PRODUCT_100_EXECUTION_ROUTE_v1.md`
 4. this file
+5. `docs/plan/EXECUTION_POLICY_SSOT_v1.md`
 
 ## Current Truth
 
@@ -59,6 +60,18 @@ Current calibration:
   - unit-based block delta
 - unit-model reporting is now the preferred way to avoid overstating
   full-product readiness while EN route mechanics improve
+- `docs/plan/FULL_PRODUCT_READINESS_LEDGER_v1.md` is now the canonical
+  full-product ledger for separating route strength from whole-product,
+  release, and commercial readiness
+- `docs/plan/EXECUTION_POLICY_SSOT_v1.md` is now the compact execution-policy
+  wrapper for future prompt reuse, deferred-lane discipline, and rebuild-gate
+  rules
+
+2026-05-21 floor update:
+
+- `./tools/fast_loop_world1_v1.sh` now reports `FAST LOOP PASS`
+- this improves proof confidence, but it does not mean full-product readiness
+  equals Act0 route mechanics
 
 ## What Was Just Finished
 
@@ -76,6 +89,14 @@ Recent bounded maturity waves already landed:
 4. action dock prompt readability
    - action prompt panel now uses a proper compact card and keeps drill
      questions readable without forced truncation
+5. world completion / mastery payoff v2
+   - world completion now frames skill gain, keep-sharp direction, tomorrow
+     value, and next-unlock reason more clearly without fake mastery or
+     monthly-pressure language
+6. Profile / You payoff v2
+   - Profile now shows stronger progress evidence for what improved, what is
+     getting stronger, what got fixed, and why the next session starts warmer
+     without turning into a heavy dashboard
 
 ## What Is Not Done Yet
 

@@ -3469,23 +3469,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0PracticeSurfaceRecommendationV1(
         groupId: quickFixGroup.groupId,
         title: _copyV1(
-          en: 'Review one quick fix',
-          ru: 'Сделай один лёгкий повтор',
+          en: 'Sharpen one repaired spot',
+          ru: 'Закрепи уже исправленный спот',
         ),
         subtitle: _copyV1(
-          en: 'Keep one repaired spot stable without dropping back into Review.',
-          ru: 'Закрепи один уже разобранный спот, не возвращаясь в полный режим Разбора.',
+          en: 'Keep one fixed idea stable without dropping back into full Review.',
+          ru: 'Закрепи одну уже исправленную идею без возврата в полный режим Разбора.',
         ),
-        reasonLabel: _copyV1(en: 'Quick refresh', ru: 'Лёгкий повтор'),
-        outcomeLead: _copyV1(en: 'One calm rep.', ru: 'Один спокойный повтор.'),
+        reasonLabel: _copyV1(en: 'Keep it sharp', ru: 'Удержи в тонусе'),
+        outcomeLead: _copyV1(en: 'One calm rep:', ru: 'Один спокойный повтор:'),
         outcome: _copyV1(
-          en: 'Then move back into daily reps or a skill pack.',
-          ru: 'После этого можно вернуться к дневной серии или к одному паку.',
+          en: 'stabilize the fix, then move back into today\'s reps or one skill pack.',
+          ru: 'закрепи исправление, а потом вернись к сегодняшним повторам или к одному паку.',
         ),
-        masteryLabel: _copyV1(en: 'Quick refresh', ru: 'Лёгкий повтор'),
+        masteryLabel: _copyV1(en: 'Light repair rep', ru: 'Лёгкий повтор'),
         screenSubtitle: _copyV1(
-          en: 'Repeat what you already know. Repairs stay light here.',
-          ru: 'Здесь повторяем только уже знакомое. Разборы остаются лёгкими.',
+          en: 'Practice keeps repaired ideas sharp. Review still owns deeper fixes.',
+          ru: 'Практика удерживает исправленные идеи в тонусе. Более глубокий разбор всё ещё живёт во вкладке Разбор.',
         ),
       );
     }
@@ -3497,34 +3497,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         title: dailyGroup.title,
         subtitle: repairStillOpen
             ? _copyV1(
-                en: 'Deeper repair stays in Review. Practice keeps one short set ready here.',
-                ru: 'Глубокий разбор остаётся во вкладке Разбор. Здесь держим только короткую серию повторов.',
+                en: 'Review owns the repair. Practice keeps one short sharpening set ready after that.',
+                ru: 'Разбор забирает ошибку на себя. Практика держит здесь короткую серию закрепляющих повторов на потом.',
               )
             : dailyGroup.subtitle,
-        reasonLabel: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
+        reasonLabel: _copyV1(en: 'Today\'s reps', ru: 'Сегодняшние повторы'),
         outcomeLead: repairStillOpen
             ? _copyV1(en: 'After Review:', ru: 'После Разбора:')
-            : _copyV1(en: 'Daily set:', ru: 'Эта серия:'),
+            : _copyV1(en: 'Sharpens today:', ru: 'Сегодня укрепляет:'),
         outcome: repairStillOpen
             ? _copyV1(
-                en: 'keep one clean repetition lane ready while Review owns the repair.',
-                ru: 'удержит под рукой одну чистую дорожку повторения, пока Разбор забирает ошибки на себя.',
+                en: 'run one clean set to keep today\'s read warm without reopening the lesson.',
+                ru: 'проведи одну чистую серию, чтобы удержать сегодняшнее чтение в тонусе без возврата в урок.',
               )
             : _copyV1(
-                en: 'three short reps keep the route warm without extra drag.',
-                ru: 'три коротких повтора удержат маршрут в тонусе без лишней паузы.',
+                en: 'three short spots keep the current route sharp without opening a full lesson.',
+                ru: 'три коротких спота удержат текущий маршрут в тонусе без открытия полного урока.',
               ),
         masteryLabel: repairStillOpen
             ? _copyV1(en: 'Review first', ru: 'Сначала разбор')
-            : _copyV1(en: 'Daily set', ru: 'Дневная серия'),
+            : _copyV1(en: 'Today\'s reps', ru: 'Сегодняшние повторы'),
         screenSubtitle: repairStillOpen
             ? _copyV1(
-                en: 'Repair stays in Review. Practice keeps extra reps light here.',
-                ru: 'Разбор остаётся во вкладке Разбор. Здесь — только лёгкая дополнительная практика.',
+                en: 'Short reps stay light here. Review fixes the leak first.',
+                ru: 'Здесь повторы остаются лёгкими. Ошибку сначала чинит Разбор.',
               )
             : _copyV1(
-                en: 'Repeat what you already know.',
-                ru: 'Повторяй то, что уже видел.',
+                en: 'Short reps keep today\'s skill sharp. Learn adds new ideas. Review fixes misses.',
+                ru: 'Короткие повторы удерживают сегодняшний навык в тонусе. Уроки добавляют новое. Разбор чинит ошибки.',
               ),
       );
     }
@@ -3534,15 +3534,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       title: firstPack.title,
       subtitle: firstPack.subtitle,
       reasonLabel: _copyV1(en: 'Practice focus', ru: 'Фокус практики'),
-      outcomeLead: _copyV1(en: 'One clean rep.', ru: 'Один чистый повтор.'),
+      outcomeLead: _copyV1(en: 'One clean rep:', ru: 'Один чистый повтор:'),
       outcome: _copyV1(
-        en: 'Keep one known skill family warm without reopening lesson mode.',
-        ru: 'Закрепи одну уже знакомую семью навыков без возврата в режим урока.',
+        en: 'keep one known skill family sharp without reopening lesson mode.',
+        ru: 'удержи одну уже знакомую семью навыков в тонусе без возврата в режим урока.',
       ),
       masteryLabel: _copyV1(en: 'Practice focus', ru: 'Фокус практики'),
       screenSubtitle: _copyV1(
-        en: 'Repeat what you already know.',
-        ru: 'Повторяй то, что уже видел.',
+        en: 'Short reps keep known skills sharp between Learn and Review.',
+        ru: 'Короткие повторы удерживают знакомые навыки в тонусе между Уроками и Разбором.',
       ),
     );
   }
@@ -5366,8 +5366,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Дневная серия закрыта',
       );
       _practiceCompletionBody = _copyV1(
-        en: 'Three short reps landed. Pick one more lane or head back to Home.',
-        ru: 'Три коротких повтора готовы. Можешь взять ещё одну дорожку или вернуться домой.',
+        en: 'Three short reps landed. Today\'s reads stay sharp. Pick one more lane or head back Home.',
+        ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
     } else if (completedLessonId != null) {
       final family = _playDrillTitleForLesson(completedLessonId);
@@ -5376,8 +5376,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтор готов',
       );
       _practiceCompletionBody = _copyV1(
-        en: '$family stayed warm. Pick another pack when you want one more clean rep.',
-        ru: '$family закреплены. Возьми другой пак, когда захочешь ещё один чистый повтор.',
+        en: '$family stayed sharp. Pick another pack when you want one more clean rep.',
+        ru: '$family остаются в тонусе. Возьми другой пак, когда захочешь ещё один чистый повтор.',
       );
     }
     _showPlayHub = true;

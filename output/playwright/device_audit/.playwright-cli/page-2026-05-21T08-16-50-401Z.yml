@@ -1,0 +1,29 @@
+- generic [active] [ref=e5]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - group:
+              - button [ref=e103]
+              - generic [ref=e104]:
+                - generic: 20%
+              - generic [ref=e105]:
+                - generic: 1/5
+              - button "UTG" [ref=e106]
+              - button "BB" [ref=e107]
+              - generic [ref=e108]:
+                - generic: 1 BB
+              - button "HJ" [ref=e109]
+              - generic [ref=e110]:
+                - generic: ПРЕФЛОП
+              - generic [ref=e111]:
+                - generic: Банк 1.5 BB
+              - generic [ref=e112]:
+                - generic: 0.5 BB
+              - button "SB" [ref=e113]
+              - button "CO" [ref=e114]
+              - button "Y BTN Ты 100 BB D" [ref=e115]
+            - group "Sharky mascot Сначала прочитай стол Начинаем с кэш-игры в холдем. У каждого игрока 2 закрытые карты. На стол выходят 5 общих карт." [ref=e116]:
+              - button [disabled] [ref=e117]
+              - button [ref=e118]

@@ -1061,7 +1061,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       ),
       _VolumePillModelV1(
         id: 'volume_ii',
-        label: _learnCopyV1(context, en: 'Volume II', ru: 'Том II'),
+        label: _learnCopyV1(context, en: 'Volume II', ru: 'Том 2'),
         subtitle: _learnCopyV1(context, en: 'Strategy', ru: 'Стратегия'),
         stateLabel: _learnCopyV1(context, en: 'Locked', ru: 'Закрыт'),
         color: Act0ShellTokensV1.textDim,
@@ -1078,19 +1078,19 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       ),
       _VolumePillModelV1(
         id: 'volume_iii',
-        label: _learnCopyV1(context, en: 'Volume III', ru: 'Том III'),
+        label: _learnCopyV1(context, en: 'Volume III', ru: 'Том 3'),
         subtitle: _learnCopyV1(context, en: 'Mastery', ru: 'Мастерство'),
         stateLabel: _learnCopyV1(context, en: 'Locked', ru: 'Закрыт'),
         color: Act0ShellTokensV1.textDim,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'Unlocks after Volume II.',
-          ru: 'Откроется после Тома II.',
+          ru: 'Откроется после Тома 2.',
         ),
         previewLine: _learnCopyV1(
           context,
           en: 'Preview: pressure spots, adjustments, and review loops.',
-          ru: 'Внутри: pressure-споты, подстройки и циклы разбора.',
+          ru: 'Внутри: споты давления, подстройки и циклы разбора.',
         ),
       ),
     ];

@@ -123,19 +123,19 @@ abstract class AppLocalizations {
   /// No description provided for @starterPacks.
   ///
   /// In ru, this message translates to:
-  /// **'Стартовые паки'**
+  /// **'Стартовые наборы'**
   String get starterPacks;
 
   /// No description provided for @builtInPacks.
   ///
   /// In ru, this message translates to:
-  /// **'Встроенные паки'**
+  /// **'Встроенные наборы'**
   String get builtInPacks;
 
   /// No description provided for @yourPacks.
   ///
   /// In ru, this message translates to:
-  /// **'Ваши паки'**
+  /// **'Ваши наборы'**
   String get yourPacks;
 
   /// No description provided for @recentPacks.
@@ -159,7 +159,7 @@ abstract class AppLocalizations {
   /// No description provided for @starterBadge.
   ///
   /// In ru, this message translates to:
-  /// **'Стартер'**
+  /// **'Стартовый'**
   String get starterBadge;
 
   /// No description provided for @newBadge.
@@ -363,133 +363,133 @@ abstract class AppLocalizations {
   /// No description provided for @presetBtn10bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 10BB Push/Fold'**
+  /// **'BTN 10ББ Пуш/Фолд'**
   String get presetBtn10bb;
 
   /// No description provided for @presetBtn11bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 11BB Push/Fold'**
+  /// **'BTN 11ББ Пуш/Фолд'**
   String get presetBtn11bb;
 
   /// No description provided for @presetBtn12bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 12BB Push/Fold'**
+  /// **'BTN 12ББ Пуш/Фолд'**
   String get presetBtn12bb;
 
   /// No description provided for @presetBtn13bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 13BB Push/Fold'**
+  /// **'BTN 13ББ Пуш/Фолд'**
   String get presetBtn13bb;
 
   /// No description provided for @presetBtn14bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 14BB Push/Fold'**
+  /// **'BTN 14ББ Пуш/Фолд'**
   String get presetBtn14bb;
 
   /// No description provided for @presetBtn15bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 15BB Push/Fold'**
+  /// **'BTN 15ББ Пуш/Фолд'**
   String get presetBtn15bb;
 
   /// No description provided for @presetBtn16bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 16BB Push/Fold'**
+  /// **'BTN 16ББ Пуш/Фолд'**
   String get presetBtn16bb;
 
   /// No description provided for @presetBtn17bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 17BB Push/Fold'**
+  /// **'BTN 17ББ Пуш/Фолд'**
   String get presetBtn17bb;
 
   /// No description provided for @presetBtn18bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 18BB Push/Fold'**
+  /// **'BTN 18ББ Пуш/Фолд'**
   String get presetBtn18bb;
 
   /// No description provided for @presetBtn19bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 19BB Push/Fold'**
+  /// **'BTN 19ББ Пуш/Фолд'**
   String get presetBtn19bb;
 
   /// No description provided for @presetBtn20bb.
   ///
   /// In ru, this message translates to:
-  /// **'BTN 20BB Push/Fold'**
+  /// **'BTN 20ББ Пуш/Фолд'**
   String get presetBtn20bb;
 
   /// No description provided for @presetSb10bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 10BB Push/Fold'**
+  /// **'SB 10ББ Пуш/Фолд'**
   String get presetSb10bb;
 
   /// No description provided for @presetSb11bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 11BB Push/Fold'**
+  /// **'SB 11ББ Пуш/Фолд'**
   String get presetSb11bb;
 
   /// No description provided for @presetSb12bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 12BB Push/Fold'**
+  /// **'SB 12ББ Пуш/Фолд'**
   String get presetSb12bb;
 
   /// No description provided for @presetSb13bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 13BB Push/Fold'**
+  /// **'SB 13ББ Пуш/Фолд'**
   String get presetSb13bb;
 
   /// No description provided for @presetSb14bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 14BB Push/Fold'**
+  /// **'SB 14ББ Пуш/Фолд'**
   String get presetSb14bb;
 
   /// No description provided for @presetSb15bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 15BB Push/Fold'**
+  /// **'SB 15ББ Пуш/Фолд'**
   String get presetSb15bb;
 
   /// No description provided for @presetSb16bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 16BB Push/Fold'**
+  /// **'SB 16ББ Пуш/Фолд'**
   String get presetSb16bb;
 
   /// No description provided for @presetSb17bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 17BB Push/Fold'**
+  /// **'SB 17ББ Пуш/Фолд'**
   String get presetSb17bb;
 
   /// No description provided for @presetSb18bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 18BB Push/Fold'**
+  /// **'SB 18ББ Пуш/Фолд'**
   String get presetSb18bb;
 
   /// No description provided for @presetSb19bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 19BB Push/Fold'**
+  /// **'SB 19ББ Пуш/Фолд'**
   String get presetSb19bb;
 
   /// No description provided for @presetSb20bb.
   ///
   /// In ru, this message translates to:
-  /// **'SB 20BB Push/Fold'**
+  /// **'SB 20ББ Пуш/Фолд'**
   String get presetSb20bb;
 
   /// No description provided for @generateSpots.
@@ -591,31 +591,31 @@ abstract class AppLocalizations {
   /// No description provided for @spotDetails.
   ///
   /// In ru, this message translates to:
-  /// **'Spot Details'**
+  /// **'Детали раздачи'**
   String get spotDetails;
 
   /// No description provided for @heroPosition.
   ///
   /// In ru, this message translates to:
-  /// **'Hero position: {pos}'**
+  /// **'Позиция Hero: {pos}'**
   String heroPosition(Object pos);
 
   /// No description provided for @heroCards.
   ///
   /// In ru, this message translates to:
-  /// **'Hero cards: {cards}'**
+  /// **'Карты Hero: {cards}'**
   String heroCards(Object cards);
 
   /// No description provided for @boardLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Board: {cards}'**
+  /// **'Борд: {cards}'**
   String boardLabel(Object cards);
 
   /// No description provided for @yourAction.
   ///
   /// In ru, this message translates to:
-  /// **'Your action: {action}'**
+  /// **'Твое действие: {action}'**
   String yourAction(Object action);
 
   /// No description provided for @evIcm.
@@ -627,19 +627,19 @@ abstract class AppLocalizations {
   /// No description provided for @packCreated.
   ///
   /// In ru, this message translates to:
-  /// **'Pack \"{name}\" created'**
+  /// **'Набор \"{name}\" создан'**
   String packCreated(Object name);
 
   /// No description provided for @resetPackPrompt.
   ///
   /// In ru, this message translates to:
-  /// **'Reset progress for \'{name}\'?'**
+  /// **'Сбросить прогресс для \"{name}\"?'**
   String resetPackPrompt(Object name);
 
   /// No description provided for @resetStagePrompt.
   ///
   /// In ru, this message translates to:
-  /// **'Reset stage \'{name}\'?'**
+  /// **'Сбросить стадию \"{name}\"?'**
   String resetStagePrompt(Object name);
 
   /// No description provided for @resetStage.
@@ -741,7 +741,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyPolicy.
   ///
   /// In ru, this message translates to:
-  /// **'Privacy Policy'**
+  /// **'Политика конфиденциальности'**
   String get privacyPolicy;
 
   /// No description provided for @privacyPolicySubtitle.
@@ -753,7 +753,7 @@ abstract class AppLocalizations {
   /// No description provided for @termsOfUse.
   ///
   /// In ru, this message translates to:
-  /// **'Terms of Use'**
+  /// **'Условия использования'**
   String get termsOfUse;
 
   /// No description provided for @termsOfUseSubtitle.
@@ -813,25 +813,25 @@ abstract class AppLocalizations {
   /// No description provided for @fold.
   ///
   /// In ru, this message translates to:
-  /// **'Fold'**
+  /// **'Пас'**
   String get fold;
 
   /// No description provided for @call.
   ///
   /// In ru, this message translates to:
-  /// **'Call'**
+  /// **'Колл'**
   String get call;
 
   /// No description provided for @raise.
   ///
   /// In ru, this message translates to:
-  /// **'Raise'**
+  /// **'Рейз'**
   String get raise;
 
   /// No description provided for @push.
   ///
   /// In ru, this message translates to:
-  /// **'Push'**
+  /// **'Пуш'**
   String get push;
 
   /// No description provided for @amount.
@@ -861,7 +861,7 @@ abstract class AppLocalizations {
   /// No description provided for @entrants.
   ///
   /// In ru, this message translates to:
-  /// **'Entrants'**
+  /// **'Участники'**
   String get entrants;
 
   /// No description provided for @gameType.
@@ -891,19 +891,19 @@ abstract class AppLocalizations {
   /// No description provided for @spotsLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Spots: {value}'**
+  /// **'Раздачи: {value}'**
   String spotsLabel(Object value);
 
   /// No description provided for @accuracyLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Accuracy: {value}%'**
+  /// **'Точность: {value}%'**
   String accuracyLabel(Object value);
 
   /// No description provided for @evBb.
   ///
   /// In ru, this message translates to:
-  /// **'EV: {value} BB'**
+  /// **'EV: {value} ББ'**
   String evBb(Object value);
 
   /// No description provided for @icmLabel.
@@ -951,13 +951,13 @@ abstract class AppLocalizations {
   /// No description provided for @sortRating.
   ///
   /// In ru, this message translates to:
-  /// **'Rating (High → Low)'**
+  /// **'По рейтингу'**
   String get sortRating;
 
   /// No description provided for @sortCoverage.
   ///
   /// In ru, this message translates to:
-  /// **'Coverage (High → Low)'**
+  /// **'По покрытию'**
   String get sortCoverage;
 
   /// No description provided for @filtersSelected.
@@ -999,7 +999,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyStreak.
   ///
   /// In ru, this message translates to:
-  /// **'Стрик'**
+  /// **'Серия'**
   String get dailyStreak;
 
   /// No description provided for @best.
@@ -1017,7 +1017,7 @@ abstract class AppLocalizations {
   /// No description provided for @weakAreas.
   ///
   /// In ru, this message translates to:
-  /// **'Избранные категории'**
+  /// **'Слабые места'**
   String get weakAreas;
 
   /// No description provided for @packOfDay.
@@ -1029,13 +1029,13 @@ abstract class AppLocalizations {
   /// No description provided for @streakChipLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Streak: {count}'**
+  /// **'Серия: {count}'**
   String streakChipLabel(Object count);
 
   /// No description provided for @dailyHandLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Daily Hand #{index}'**
+  /// **'Раздача дня #{index}'**
   String dailyHandLabel(Object index);
 
   /// No description provided for @levelGoalTitle.
@@ -1047,25 +1047,25 @@ abstract class AppLocalizations {
   /// No description provided for @samplePreviewHint.
   ///
   /// In ru, this message translates to:
-  /// **'Попробуйте сначала образец пака'**
+  /// **'Попробуйте сначала демо-версию набора'**
   String get samplePreviewHint;
 
   /// No description provided for @samplePreviewPrompt.
   ///
   /// In ru, this message translates to:
-  /// **'This pack is large. Preview a quick sample first?'**
+  /// **'Этот набор очень большой. Пройти короткую демо-версию?'**
   String get samplePreviewPrompt;
 
   /// No description provided for @previewSample.
   ///
   /// In ru, this message translates to:
-  /// **'Preview Sample'**
+  /// **'Пройти демо'**
   String get previewSample;
 
   /// No description provided for @autoSampleToast.
   ///
   /// In ru, this message translates to:
-  /// **'Quick preview launched automatically for faster start.'**
+  /// **'Демо-версия запущена автоматически для быстрого старта.'**
   String get autoSampleToast;
 
   /// No description provided for @plannerBadge.
@@ -2223,61 +2223,61 @@ abstract class AppLocalizations {
   /// No description provided for @feedbackExportDiagnostics.
   ///
   /// In ru, this message translates to:
-  /// **'Export diagnostics file'**
+  /// **'Экспортировать файл диагностики'**
   String get feedbackExportDiagnostics;
 
   /// No description provided for @feedbackExportSuccess.
   ///
   /// In ru, this message translates to:
-  /// **'Diagnostics exported'**
+  /// **'Диагностика экспортирована'**
   String get feedbackExportSuccess;
 
   /// No description provided for @feedbackExportFailure.
   ///
   /// In ru, this message translates to:
-  /// **'Failed to export diagnostics'**
+  /// **'Не удалось экспортировать диагностику'**
   String get feedbackExportFailure;
 
   /// No description provided for @settingsReportProblemTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Report a problem'**
+  /// **'Сообщить о проблеме'**
   String get settingsReportProblemTitle;
 
   /// No description provided for @settingsReportProblemSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Share diagnostics with support'**
+  /// **'Отправить диагностику в поддержку'**
   String get settingsReportProblemSubtitle;
 
   /// No description provided for @feedbackSheetTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Report a problem'**
+  /// **'Сообщить о проблеме'**
   String get feedbackSheetTitle;
 
   /// No description provided for @feedbackSheetSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Copy diagnostics for support'**
+  /// **'Скопировать диагностику для поддержки'**
   String get feedbackSheetSubtitle;
 
   /// No description provided for @feedbackDiagnosticsHeader.
   ///
   /// In ru, this message translates to:
-  /// **'Diagnostics payload'**
+  /// **'Диагностические данные'**
   String get feedbackDiagnosticsHeader;
 
   /// No description provided for @feedbackCopyDiagnostics.
   ///
   /// In ru, this message translates to:
-  /// **'Copy diagnostics to clipboard'**
+  /// **'Скопировать диагностику в буфер обмена'**
   String get feedbackCopyDiagnostics;
 
   /// No description provided for @feedbackCopySuccess.
   ///
   /// In ru, this message translates to:
-  /// **'Diagnostics copied to clipboard'**
+  /// **'Диагностика скопирована в буфер обмена'**
   String get feedbackCopySuccess;
 }
 

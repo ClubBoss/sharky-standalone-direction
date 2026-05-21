@@ -1,0 +1,14 @@
+- generic [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic [ref=e16]:
+              - generic: 2/2
+            - generic:
+              - group:
+                - generic [ref=e17]:
+                  - generic: Ты готов к «Покеру с нуля».
+                - 'img "Следующий шаг Теперь маршрут может быть простым: Home показывает, что делать сейчас, а Learn держит путь на виду. Цикл уже понятен. Дальше идёт первый настоящий урок." [ref=e23]'
+            - button "Открыть «Покер с нуля»" [active] [ref=e22]

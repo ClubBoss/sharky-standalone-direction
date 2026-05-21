@@ -53,6 +53,13 @@ class Act0ProfileShellV1 extends StatelessWidget {
         const SizedBox(height: Act0ShellTokensV1.gapSm),
         _ProfileHeroCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
+        if (profile.recentSkillGains.isNotEmpty ||
+            profile.mistakesFixedLine.isNotEmpty ||
+            profile.streakLine.isNotEmpty ||
+            profile.qualityLine.isNotEmpty) ...[
+          _ProfileRecentGainsCardV1(profile: profile),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+        ],
         if (profile.recommendedFocusTitle.isNotEmpty) ...[
           _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -95,17 +102,37 @@ class _ProfileHeaderBandV1 extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            _profileCopyV1(
-              context,
-              en: '${profile.level} · Progress profile',
-              ru: '${profile.level} · Профиль прогресса',
-            ),
+            _profileHeaderSublineV1(context, profile),
             style: Act0ShellTokensV1.muted,
           ),
         ],
       ),
     );
   }
+}
+
+String _profileHeaderSublineV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+  final strongest = recentGains.isNotEmpty
+      ? recentGains.first.label
+      : (profile.strongCategories.isNotEmpty
+            ? profile.strongCategories.first
+            : '');
+  if (strongest.isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: '${profile.level} · $strongest is getting stronger',
+      ru: '${profile.level} · $strongest укрепляется',
+    );
+  }
+  return _profileCopyV1(
+    context,
+    en: '${profile.level} · Your game is taking shape',
+    ru: '${profile.level} · Твоя игра начинает обретать форму',
+  );
 }
 
 class _ProfileUtilityFooterV1 extends StatelessWidget {
@@ -411,6 +438,45 @@ String _profileSkillInsightBodyV1(BuildContext context, String label) {
     context,
     en: 'That is the base for cleaner decisions.',
     ru: 'Это база для более чистых решений.',
+  );
+}
+
+String _profileStrengthPayoffTitleV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+  if (recentGains.isNotEmpty) {
+    return recentGains.first.label;
+  }
+  if (profile.strongCategories.isNotEmpty) {
+    return profile.strongCategories.first;
+  }
+  return _profileCopyV1(context, en: 'Table basics', ru: 'Основы стола');
+}
+
+String _profileStrengthPayoffBodyV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+  if (recentGains.isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: 'This skill is starting to hold up in more clean spots.',
+      ru: 'Этот навык начинает держаться в большем числе чистых спотов.',
+    );
+  }
+  final strong = profile.strongCategories.isNotEmpty
+      ? profile.strongCategories.first
+      : '';
+  if (strong.isNotEmpty) {
+    return _profileStrongSkillSupportBodyV1(context, strong);
+  }
+  return _profileCopyV1(
+    context,
+    en: 'This part of your game is beginning to feel steadier.',
+    ru: 'Эта часть твоей игры начинает чувствоваться увереннее.',
   );
 }
 
@@ -933,6 +999,13 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+    final showStrength =
+        recentGains.isNotEmpty || profile.strongCategories.isNotEmpty;
+    final showFixed = profile.mistakesFixedLine.trim().isNotEmpty;
+    final showReturnValue =
+        profile.streakLine.trim().isNotEmpty ||
+        profile.qualityLine.trim().isNotEmpty;
     return Container(
       key: const Key('act0_shell_profile_recent_skill_gains'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
@@ -947,22 +1020,202 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
             _profileCopyV1(
               context,
               en: 'Recent progress',
-              ru: 'Последний рост',
+              ru: 'Последний прогресс',
             ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.info,
             ),
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            _profileCopyV1(
+              context,
+              en: 'See what improved, what is getting stronger, and why the next session starts warmer.',
+              ru: 'Здесь видно, что улучшилось, что укрепляется и почему следующий заход начнётся теплее.',
+            ),
+            style: Act0ShellTokensV1.muted,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           for (
             var index = 0;
-            index < profile.recentSkillGains.take(3).length;
+            index < recentGains.take(2).length;
             index += 1
           ) ...[
-            _RecentSkillGainRowV1(gain: profile.recentSkillGains[index]),
-            if (index < profile.recentSkillGains.take(3).length - 1)
+            _ProfilePayoffRowV1(
+              label: _profileCopyV1(context, en: 'Improved', ru: 'Улучшилось'),
+              title: '${recentGains[index].label} +${recentGains[index].gain}',
+              body: _profileGainPayoffBodyV1(context, recentGains[index]),
+              tone: Act0ShellTokensV1.info,
+            ),
+            if (index < recentGains.take(2).length - 1 ||
+                showStrength ||
+                showFixed ||
+                showReturnValue)
               const SizedBox(height: Act0ShellTokensV1.gapMd),
           ],
+          if (showStrength) ...[
+            _ProfilePayoffRowV1(
+              label: _profileCopyV1(
+                context,
+                en: 'Getting stronger',
+                ru: 'Становится сильнее',
+              ),
+              title: _profileStrengthPayoffTitleV1(context, profile),
+              body: _profileStrengthPayoffBodyV1(context, profile),
+              tone: Act0ShellTokensV1.primary,
+            ),
+            if (showFixed || showReturnValue)
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+          ],
+          if (showFixed) ...[
+            _ProfilePayoffRowV1(
+              label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
+              title: profile.mistakesFixedLine,
+              body: _profileFixedSupportBodyV1(
+                context,
+                profile.mistakesFixedLine,
+              ),
+              tone: Act0ShellTokensV1.primary,
+            ),
+            if (showReturnValue)
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+          ],
+          if (showReturnValue) ...[
+            _ProfilePayoffRowV1(
+              label: _profileCopyV1(
+                context,
+                en: 'Return value',
+                ru: 'Зачем вернуться',
+              ),
+              title: _profileReturnValueTitleV1(context, profile),
+              body: _profileReturnValueBodyV1(context, profile),
+              tone: Act0ShellTokensV1.gold,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+String _profileGainPayoffBodyV1(BuildContext context, Act0SkillGainV1 gain) {
+  final source = gain.source.trim();
+  if (source.isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: 'Started sticking in $source.',
+      ru: 'Начало закрепляться в $source.',
+    );
+  }
+  return _profileSkillInsightBodyV1(context, gain.label);
+}
+
+String _profileFixedSupportBodyV1(BuildContext context, String fixedLine) {
+  if (fixedLine.startsWith('1 ') || fixedLine.startsWith('1\u00A0')) {
+    return _profileCopyV1(
+      context,
+      en: 'That repaired spot is back under control.',
+      ru: 'Этот спот снова под контролем.',
+    );
+  }
+  return _profileCopyV1(
+    context,
+    en: 'Those repaired spots are back under control.',
+    ru: 'Эти споты снова под контролем.',
+  );
+}
+
+String _profileReturnValueTitleV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  if (profile.streakLine.trim().isNotEmpty) {
+    return profile.streakLine;
+  }
+  if (profile.qualityLine.trim().isNotEmpty) {
+    return profile.qualityLine;
+  }
+  return _profileCopyV1(
+    context,
+    en: 'One clean return still matters.',
+    ru: 'Один чистый возврат всё ещё важен.',
+  );
+}
+
+String _profileReturnValueBodyV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+  final hasKeptSharpSignal =
+      profile.qualityLine.trim().isNotEmpty || recentGains.isNotEmpty;
+  if (profile.streakDays >= 3) {
+    return _profileCopyV1(
+      context,
+      en: hasKeptSharpSignal
+          ? 'Returning tomorrow starts warmer because recent clean reps already kept this skill live.'
+          : 'Returning tomorrow starts warmer because your rhythm is already live.',
+      ru: hasKeptSharpSignal
+          ? 'Вернуться завтра будет проще, потому что недавние чистые повторы уже удержали этот навык живым.'
+          : 'Вернуться завтра будет проще, потому что ритм уже живой.',
+    );
+  }
+  if (profile.streakLine.trim().isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: hasKeptSharpSignal
+          ? 'One more clean return keeps this skill feeling familiar instead of distant.'
+          : 'One more clean return turns repetition into feel.',
+      ru: hasKeptSharpSignal
+          ? 'Ещё одно чистое возвращение удержит этот навык знакомым, а не далёким.'
+          : 'Ещё одно чистое возвращение превращает повторение в ощущение.',
+    );
+  }
+  return _profileCopyV1(
+    context,
+    en: 'A short return tomorrow keeps today from fading back into noise.',
+    ru: 'Короткое возвращение завтра не даст сегодняшнему дню снова раствориться в шуме.',
+  );
+}
+
+class _ProfilePayoffRowV1 extends StatelessWidget {
+  const _ProfilePayoffRowV1({
+    required this.label,
+    required this.title,
+    required this.body,
+    required this.tone,
+  });
+
+  final String label;
+  final String title;
+  final String body;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(color: tone.withOpacity(0.16)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: Act0ShellTokensV1.label.copyWith(color: tone)),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            title,
+            style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            body,
+            style: Act0ShellTokensV1.muted,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+          ),
         ],
       ),
     );

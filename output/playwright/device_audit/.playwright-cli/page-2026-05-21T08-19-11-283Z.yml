@@ -1,0 +1,20 @@
+- generic [active] [ref=e5]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - group:
+              - generic [ref=e160]:
+                - generic: Язык предпросмотра Русский
+              - button "Русский" [disabled] [ref=e161]
+              - button "English" [ref=e162]
+              - button "Сбросить прогресс приложения Очистить настройки приложения и вернуться на главный экран." [ref=e163]
+              - button "Открыть плейсмент Войти в поток плейсмента вручную." [ref=e164]
+              - button "Открыть главный экран" [ref=e165]
+              - button "Открыть карту обучения Перейти в обучение и пропустить плейсмент." [ref=e166]
+              - button "Открыть хаб практики" [ref=e167]
+              - button "Открыть текущий раннер" [ref=e168]
+              - button "Открыть разбор" [ref=e169]
+              - button "Открыть профиль" [ref=e170]
+        - button "Маска" [ref=e171]

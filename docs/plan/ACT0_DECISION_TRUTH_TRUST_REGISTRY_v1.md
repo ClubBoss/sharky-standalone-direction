@@ -14,6 +14,13 @@ Authority: does not replace `MASTER_PLAN_v3.0`
 This file is a tracking registry, not proof by itself. Proven classes still
 require tests and runtime guards.
 
+Whole-product scoring note:
+
+- this registry tracks trust classes and reopen rules
+- it is not the canonical whole-product readiness ledger
+- use `docs/plan/FULL_PRODUCT_READINESS_LEDGER_v1.md` when the question is
+  broader than active trust-class status
+
 ## Current closed classes
 
 - `closed` W1-W12 content mastery arc at repo-proof level

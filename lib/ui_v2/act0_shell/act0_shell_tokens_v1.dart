@@ -3,43 +3,44 @@ import 'package:flutter/material.dart';
 class Act0ShellTokensV1 {
   const Act0ShellTokensV1._();
 
-  static const Color background = Color(0xFF0F1117);
-  static const Color surface = Color(0xFF171B24);
-  static const Color surface2 = Color(0xFF1D2430);
-  static const Color surface3 = Color(0xFF252B36);
-  static const Color border = Color(0xFF2B323E);
-  static const Color text = Color(0xFFF3F6FA);
-  static const Color textMuted = Color(0xFFA0A7B5);
-  static const Color textDim = Color(0xFF667085);
-  static const Color primary = Color(0xFF2FC77D);
-  static const Color primaryDark = Color(0xFF0F2C20);
-  static const Color onPrimary = Color(0xFF082015);
-  static const Color gold = Color(0xFFF7B83E);
-  static const Color info = Color(0xFF4EA3F8);
-  static const Color danger = Color(0xFFE94F55);
-  static const Color felt = Color(0xFF10261F);
-  static const Color feltDark = Color(0xFF070C0F);
-  static const Color feltLine = Color(0xFF1D5C42);
-  static const Color placementReportSurface = Color(0xFF15202C);
-  static const Color placementCoachSurface = Color(0xFF171A21);
-  static const Color learnPathTaskSurface = Color(0xFF161C29);
+  static const Color background = Color(0xFF06090D);
+  static const Color surface = Color(0xFF0B1119);
+  static const Color surface2 = Color(0xFF101724);
+  static const Color surface3 = Color(0xFF152030);
+  static const Color border = Color(0xFF1F2E43);
+  static const Color text = Color(0xFFEBF1F5);
+  static const Color textMuted = Color(0xFFB0C0CC);
+  static const Color textDim = Color(0xFF8092A3);
+  static const Color primary = Color(0xFF0A8FA8);
+  static const Color primaryDark = Color(0xFF05262E);
+  static const Color onPrimary = Color(0xFFFFFFFF);
+  static const Color gold = Color(0xFFD4AF37);
+  static const Color info = Color(0xFF0EA5C6);
+  static const Color danger = Color(0xFFE05252);
+  static const Color felt = Color(0xFF0B4A38);
+  static const Color feltDark = Color(0xFF052B20);
+  static const Color feltLine = Color(0xFF157053);
+  static const Color feltHighlight = Color(0xFF1C7A5A);
+  static const Color placementReportSurface = Color(0xFF06090D);
+  static const Color placementCoachSurface = Color(0xFF0B1119);
+  static const Color learnPathTaskSurface = Color(0xFF0B1119);
   static const Color shadowSoft = Color(0x66000000);
   static const Color shadowSoftStrong = Color(0x77000000);
-  static const Color runnerSharkBlue = Color(0xFF22A7E8);
+  static const Color runnerSharkBlue = Color(0xFF18C7E8);
   static const Color runnerSharkBlueDark = Color(0xFF06457B);
-  static const Color runnerSharkGradientStart = Color(0xFF27C7F2);
-  static const Color runnerSharkGradientEnd = Color(0xFF0878C9);
+  static const Color runnerSharkGradientStart = Color(0xFF18C7E8);
+  static const Color runnerSharkGradientEnd = Color(0xFF0EA5C6);
   static const Color runnerSharkHighlight = Color(0xFFE9FCFF);
   static const Color runnerSharkEye = Color(0xFF07111F);
-  static const Color runnerPanelSurface = Color(0xFF1C2330);
+  static const Color runnerPanelSurface = Color(0xFF0B1119);
   static const Color runnerTagBlue = Color(0xFF385B94);
-  static const Color runnerGlass = Color(0xFF212936);
+  static const Color runnerGlass = Color(0xFF101724);
   static const Color runnerHintWarm = Color(0xFF241600);
   static const Color runnerSheetWarmStart = Color(0xFFFFFBF5);
   static const Color runnerSheetWarmEnd = Color(0xFFF4EFE6);
   static const Color runnerSheetNeutralStart = Color(0xFFFFFEFB);
   static const Color runnerSheetNeutralEnd = Color(0xFFF3EEE5);
-  static const Color runnerAnswerDanger = Color(0xFFB3132B);
+  static const Color runnerAnswerDanger = Color(0xFFC93B3B);
   static const Color runnerAnswerText = Color(0xFF0B1324);
 
   static const double pageX = 16;
@@ -156,7 +157,7 @@ class Act0ShellTokensV1 {
         ),
         if (glow)
           BoxShadow(
-            color: primary.withOpacity(0.22),
+            color: primary.withOpacity(0.08),
             blurRadius: 34,
             offset: const Offset(0, 14),
           ),
@@ -185,19 +186,24 @@ class Act0ShellTokensV1 {
   static BoxDecoration heroDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(radiusXl),
-      border: Border.all(color: primary.withOpacity(0.32)),
+      border: Border.all(color: primary.withOpacity(0.18)),
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: <Color>[
-          primary.withOpacity(0.24),
+          primary.withOpacity(0.06),
           surface,
-          info.withOpacity(0.10),
+          info.withOpacity(0.02),
         ],
       ),
       boxShadow: <BoxShadow>[
+        const BoxShadow(
+          color: Color(0x55000000),
+          blurRadius: 18,
+          offset: Offset(0, 10),
+        ),
         BoxShadow(
-          color: primary.withOpacity(0.22),
+          color: primary.withOpacity(0.06),
           blurRadius: 36,
           offset: const Offset(0, 14),
         ),
@@ -245,14 +251,14 @@ class Act0ShellTokensV1 {
   static BoxDecoration feltDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(tableInnerRadius),
-      border: Border.all(color: const Color(0xFF123423), width: 2),
+      border: Border.all(color: feltLine, width: 2),
       gradient: const RadialGradient(
         center: Alignment(0, -0.1), // Spotlight slightly shifted up
         radius: 1.0,
         colors: <Color>[
-          Color(0xFF1C4C38), // Bright center spotlight
-          Color(0xFF102E23), // Mid table
-          Color(0xFF05120E), // Very dark edges
+          feltHighlight, // Bright center spotlight
+          felt, // Mid table
+          feltDark, // Very dark edges
         ],
         stops: <double>[0, 0.5, 1],
       ),

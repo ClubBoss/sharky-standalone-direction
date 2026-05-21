@@ -451,7 +451,7 @@ List<String> _promptCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Read the table, then tap one seat.',
-        ru: 'Сначала прочитай стол, потом нажми одно место.',
+        ru: 'Сначала прочитай стол, потом нажми на одно место.',
       ),
       _coachLineV1(
         context,

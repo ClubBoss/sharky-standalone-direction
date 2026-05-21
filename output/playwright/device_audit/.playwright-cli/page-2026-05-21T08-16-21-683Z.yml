@@ -1,0 +1,37 @@
+- generic [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic [ref=e24]:
+              - generic: Сегодня 0/3
+            - generic [ref=e25]:
+              - generic: 120 XP
+            - generic [ref=e26]:
+              - generic: 3d
+            - generic [ref=e27]:
+              - generic: 60%
+            - generic:
+              - group:
+                - generic [ref=e81]:
+                  - generic: Ты Level 1 · Твоя игра начинает обретать форму
+                - generic [ref=e83]:
+                  - generic: New player Level 1 Твоя покерная база уже начинает ощущаться реальной. 120 / 200 XP Ниже видно навыки, ритм и доказательства того, что уже закрепилось. Чистый прогресс начат 0 заданий завершено
+                - generic [ref=e85]:
+                  - generic: Последний прогресс Здесь видно, что улучшилось, что укрепляется и почему следующий заход начнётся теплее. Зачем вернуться 3 day streak Вернуться завтра будет проще, потому что недавние чистые повторы уже удержали этот навык живым.
+                - button "Следующий фокус Что такое покер Познакомься со столом, игроками и целью раздачи. Продолжить" [ref=e87]
+                - group "Покерные навыки Это и есть те навыки, из которых реально состоит твоя игра.":
+                  - button "Table sense Позже 0%" [ref=e89]
+                  - button "Board reading Позже 0%" [ref=e90]
+                  - button "Hand reading Позже 0%" [ref=e91]
+                  - button "Betting decisions Позже 0%" [ref=e92]
+                  - button "Position play Позже 0%" [ref=e93]
+                  - button "Blind play Позже 0%" [ref=e94]
+                - generic [ref=e96]:
+                  - generic: Ритм 11 активных дней 3 day streak Постоянство уже начинает превращаться в ощущение. Пн Вт Ср Чт Пт Сб Вс
+            - button "Главная" [ref=e34]
+            - button "Обучение" [ref=e35]
+            - button "Практика" [ref=e36]
+            - button "Разбор" [ref=e37]
+            - button "Ты" [active] [ref=e38]

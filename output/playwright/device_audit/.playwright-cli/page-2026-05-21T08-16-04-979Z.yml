@@ -1,0 +1,24 @@
+- generic [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic [ref=e24]:
+              - generic: Сегодня 0/3
+            - generic [ref=e25]:
+              - generic: 120 XP
+            - generic [ref=e26]:
+              - generic: 3d
+            - generic [ref=e27]:
+              - generic: 60%
+            - generic:
+              - group:
+                - generic [ref=e78]:
+                  - generic: Стол чист Разбор ошибок Разбери один промах, прежде чем двигаться дальше.
+                - img "Шарки Стол чист. Держи маршрут в движении. Сейчас путь не тянет ни в какой срочный фикс. Повтор Сейчас всё чисто Срочных ошибок сейчас нет. Один спокойный повтор поможет так и оставить. Сейчас разбирать нечего. Просто продолжай по маршруту. No weak spots yet. Finish a drill to build your review list." [ref=e80]
+            - button "Главная" [ref=e34]
+            - button "Обучение" [ref=e35]
+            - button "Практика" [ref=e36]
+            - button "Разбор" [active] [ref=e37]
+            - button "Ты" [ref=e38]

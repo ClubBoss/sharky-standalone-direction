@@ -5096,6 +5096,15 @@ final _playerAdjustmentLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
+        taskId: 'w10_table_value_vs_caller_transfer',
+        title: 'Value shift at the table',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w10TableValueVsCallerTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w10_one_lever_recap',
         title: 'One-lever recap',
         phase: Act0LessonPhaseV1.review,
@@ -6703,7 +6712,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
   lessonSubtitle: 'A pot can end before showdown or at showdown.',
   caption: 'You win when others fold or when your hand wins showdown.',
   hint: 'Early lessons only need these two endings.',
-  question: 'Which is a way to win a pot?',
+  question: 'Which is a way to win the pot before showdown?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'everyone_folds',
@@ -6711,17 +6720,30 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Everyone folds',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'UTG acts first.',
-      feedbackReason: 'If everyone folds, the last player wins the pot.',
+      feedbackTitle: 'That is the early ending.',
+      feedbackReason:
+          'If everyone folds, the hand ends before showdown and the last player standing wins the pot immediately.',
     ),
     Act0RunnerOptionV1(
       id: 'largest_stack',
       label: 'Largest stack',
       isCorrect: false,
       preferredLabel: 'Everyone folds',
+      betterAnswerLabel: 'Everyone folds',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
       feedbackReason: 'A larger stack does not automatically win the pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'best_hand_showdown',
+      label: 'Best hand at showdown',
+      isCorrect: false,
+      preferredLabel: 'Everyone folds',
+      betterAnswerLabel: 'Everyone folds',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'That is the other ending.',
+      feedbackReason:
+          'Best hand at showdown is a real way to win, but this question asks for the early ending before cards are revealed.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -7338,7 +7360,7 @@ final _positionsRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Seats have names.',
       body:
-          'UTG starts the hand. HJ is hijack. CO is cutoff. BTN is button, and SB plus BB are the blinds.',
+          'UTG means under the gun, the first seat to act. HJ is hijack. CO is cutoff. BTN is button, and SB plus BB are the blinds.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
     Act0TeachingStepV1(
@@ -7688,16 +7710,29 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       preferredLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'The best hand wins at showdown.',
+      feedbackReason:
+          'At showdown, players use the best five-card hand they can make from private cards plus the shared board.',
     ),
     Act0RunnerOptionV1(
       id: 'first_actor',
       label: 'First actor',
       isCorrect: false,
       preferredLabel: 'Best hand',
+      betterAnswerLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
       feedbackReason: 'Acting first does not win a showdown.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'hero_cards_only',
+      label: 'Hero cards only',
+      isCorrect: false,
+      preferredLabel: 'Best hand',
+      betterAnswerLabel: 'Best hand',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Only part of the hand.',
+      feedbackReason:
+          'Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -12872,7 +12907,7 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
     ),
     Act0RunnerOptionV1(
       id: 'blank_turn_killed',
-      label: 'No outs matter because the turn blanked',
+      label: 'Blank turn means give up',
       isCorrect: false,
       preferredLabel: 'A 4 or 9 still completes the straight',
       betterAnswerLabel: 'A 4 or 9 still completes the straight',
@@ -16035,6 +16070,7 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
   table: _w9MRatioIntroRunner.table.copyWith(
     heroCards: _heroAjCards,
     streetLabel: 'Preflop',
+    boardCards: const <Act0CardStateV1>[],
     potLabel: 'Pot 1.5 BB',
     toCallLabel: 'To call 0 BB',
     centerLabel: 'BTN, 12 BB, yellow zone',
@@ -16804,6 +16840,75 @@ final _w10VsStickyDefenderTightenStealsRunner = _w10OneLeverIntroRunner.copyWith
       feedbackTitle: 'Safe default.',
       feedbackReason:
           'Massive samples are not required for a light one-lever adjustment. Repeated sticky defense is enough to trim the weakest steals.',
+    ),
+  ],
+);
+
+final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w10_table_value_vs_caller_transfer',
+  caption:
+      'Real table. BTN opens K-Q, BB calls too wide, and the flop is K-7-2 rainbow.',
+  hint:
+      'Call-heavy opponents pay value more often. Ask what changes first before adding more bluffs.',
+  question: 'What is the cleaner first adjustment here?',
+  table: _w6ValueRangeActionRunner.table.copyWith(
+    heroCards: _heroKqCards,
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 's'),
+      Act0CardStateV1(rank: '7', suit: 'd'),
+      Act0CardStateV1(rank: '2', suit: 'c'),
+    ],
+    streetLabel: 'Flop',
+    potLabel: 'Pot 6 BB',
+    toCallLabel: 'To call 2 BB',
+    centerLabel: 'Top pair vs caller',
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB calls'),
+      Act0ActionTrailItemV1(label: 'BB checks'),
+    ],
+  ),
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'lean_value',
+      label: 'Lean value, bluff less',
+      isCorrect: true,
+      preferredLabel: 'Lean value, bluff less',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Sharp live adjustment.',
+      feedbackReason:
+          'That is the real-table transfer. If BB calls too wide, top pair gets paid by weaker hands more often, so value rises and bluff frequency should shrink.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bluff_more',
+      label: 'Bluff more versus passive BB',
+      isCorrect: false,
+      preferredLabel: 'Lean value, bluff less',
+      betterAnswerLabel: 'Lean value, bluff less',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Wrong mix shift.',
+      feedbackReason:
+          'Passive callers do not fold enough to make extra bluffs clean. The better first lever is value heavier, bluff lighter.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'force_big_pot',
+      label: 'Make every top pair hand huge immediately',
+      isCorrect: false,
+      preferredLabel: 'Lean value, bluff less',
+      betterAnswerLabel: 'Lean value, bluff less',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Too coarse.',
+      feedbackReason:
+          'The exploit is not to inflate every pot blindly. Keep the shift controlled: extract more value from callers without turning one read into a reckless line.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Caller changes the mix.',
+      body:
+          'This is the changed frame: same one-lever idea, now at a live table. When BB calls too wide, value hands move up in priority and bluffs move down.',
+      focusLabels: <String>['Real table', 'Calls too wide', 'Value', 'Bluff'],
     ),
   ],
 );
