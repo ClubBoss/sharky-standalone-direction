@@ -1807,6 +1807,17 @@ void main() {
       find.text('A few fast answers help Sharky choose your first hand.'),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_placement_launch_path')),
+      findsOneWidget,
+    );
+    expect(find.text('Answer'), findsWidgets);
+    expect(find.text('Quick check'), findsWidgets);
+    expect(find.text('First hand'), findsWidgets);
+    expect(
+      find.byKey(const Key('act0_shell_placement_intro_preview')),
+      findsOneWidget,
+    );
     expect(find.text('What happens next'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_placement_intro_reassurance')),
@@ -1848,6 +1859,10 @@ void main() {
       findsNothing,
     );
     expect(find.text('One short live check.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_placement_ready_preview')),
+      findsOneWidget,
+    );
     expect(
       find.text('Answer a few table reads so Sharky can place you better.'),
       findsOneWidget,
@@ -2068,6 +2083,14 @@ void main() {
       expect(find.text('Start here'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_placement_start_handoff')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_placement_launch_path')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_placement_result_preview')),
         findsOneWidget,
       );
       expect(find.textContaining('Your start:'), findsWidgets);
@@ -6584,6 +6607,10 @@ void main() {
       find.byKey(const Key('act0_shell_welcome_visual_preview')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_welcome_launch_path')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsNothing);
     expect(find.text('Each tab has one clear job.'), findsNothing);
 
@@ -6592,6 +6619,10 @@ void main() {
 
     expect(find.text('2/2'), findsOneWidget);
     expect(find.text('You are ready for Poker from Zero.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_welcome_handoff_preview')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsNothing);
     expect(find.text('Open Poker from Zero'), findsOneWidget);
   });

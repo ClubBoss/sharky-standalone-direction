@@ -1,0 +1,17 @@
+<anonymous_script>:1
+### Error
+^
+
+SyntaxError: Unexpected token '#', "### Error
+"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at [eval]:2:20
+    at runScriptInThisContext (node:internal/vm:218:10)
+    at node:internal/process/execution:456:12
+    at [eval]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:454:60)
+    at evalFunction (node:internal/process/execution:286:30)
+    at evalTypeScript (node:internal/process/execution:298:3)
+    at node:internal/main/eval_string:71:3
+
+Node.js v24.2.0

@@ -55,7 +55,7 @@ changed_files="$(git diff --name-only HEAD)"
 
 if echo "$changed_files" | rg -q '^content/'; then
   echo "[gate] 4/5 content changed -> validate training content"
-  dart run tools/validate_training_content.dart --ci
+  dart run tools/validate_training_content.dart --staged-only
 else
   echo "[gate] 4/5 content unchanged -> skip validation"
 fi

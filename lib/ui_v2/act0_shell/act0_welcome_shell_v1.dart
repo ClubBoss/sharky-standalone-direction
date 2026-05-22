@@ -63,12 +63,13 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'One clear loop', ru: 'Один ясный цикл'),
+          title: _copyV1(en: 'One guided start', ru: 'Один направленный старт'),
           body: _copyV1(
-            en: 'Read the table, answer once, get one reason, keep moving.',
-            ru: 'Прочитай стол, ответь один раз, пойми причину, иди дальше.',
+            en: 'Placement is done. One clear hand is next, and Sharky keeps the first move obvious.',
+            ru: 'Плейсмент завершён. Дальше одна ясная раздача, и Шарки держит первый шаг очевидным.',
           ),
           accent: Act0ShellTokensV1.primary,
+          bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           child: _WelcomeLoopStripV1(copy: _copyV1),
         ),
         ctaLabel: _copyV1(
@@ -111,6 +112,21 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         mood: Act0SharkyMoodV1.celebrate,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
+        visual: _WelcomeVisualPreviewCardV1(
+          title: _copyV1(en: 'First hand ready', ru: 'Первая раздача готова'),
+          body: _copyV1(
+            en: widget.replayMode
+                ? 'The route stays in place. Reopen the next hand whenever you want to continue.'
+                : 'The route is set. Home opens one clear spot, and Learn keeps the next path visible.',
+            ru: widget.replayMode
+                ? 'Маршрут остаётся на месте. Открой следующую раздачу, когда захочешь продолжить.'
+                : 'Маршрут готов. Home открывает один ясный спот, а Learn держит следующий путь на виду.',
+          ),
+          accent: Act0ShellTokensV1.gold,
+          bridge: _WelcomeLaunchPathV1(copy: _copyV1),
+          previewKey: const Key('act0_shell_welcome_handoff_preview'),
+          child: _WelcomeLoopStripV1(copy: _copyV1),
+        ),
         ctaLabel: _copyV1(
           en: widget.replayMode ? 'Back to profile' : 'Open Poker from Zero',
           ru: widget.replayMode ? 'Назад в профиль' : 'Открыть «Покер с нуля»',
@@ -213,17 +229,21 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
     required this.body,
     required this.accent,
     required this.child,
+    this.bridge,
+    this.previewKey = const Key('act0_shell_welcome_visual_preview'),
   });
 
   final String title;
   final String body;
   final Color accent;
   final Widget child;
+  final Widget? bridge;
+  final Key previewKey;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: const Key('act0_shell_welcome_visual_preview'),
+      key: previewKey,
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.heroDecoration().copyWith(
         border: Border.all(color: accent.withOpacity(0.22)),
@@ -231,6 +251,10 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (bridge != null) ...[
+            bridge!,
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+          ],
           Text(title, style: Act0ShellTokensV1.label.copyWith(color: accent)),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(body, style: Act0ShellTokensV1.muted),
@@ -238,6 +262,98 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             child,
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _WelcomeLaunchPathV1 extends StatelessWidget {
+  const _WelcomeLaunchPathV1({required this.copy});
+
+  final String Function({required String en, required String ru}) copy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_welcome_launch_path'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapSm,
+        vertical: Act0ShellTokensV1.gapSm,
+      ),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface.withOpacity(0.44),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.14)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _WelcomeLaunchStepV1(
+              label: copy(en: 'Answer', ru: 'Ответы'),
+              state: _WelcomeLaunchVisualStateV1.complete,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapXs),
+          Expanded(
+            child: _WelcomeLaunchStepV1(
+              label: copy(en: 'Quick check', ru: 'Быстрая проверка'),
+              state: _WelcomeLaunchVisualStateV1.complete,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapXs),
+          Expanded(
+            child: _WelcomeLaunchStepV1(
+              label: copy(en: 'First hand', ru: 'Первая раздача'),
+              state: _WelcomeLaunchVisualStateV1.active,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _WelcomeLaunchVisualStateV1 { complete, active }
+
+class _WelcomeLaunchStepV1 extends StatelessWidget {
+  const _WelcomeLaunchStepV1({required this.label, required this.state});
+
+  final String label;
+  final _WelcomeLaunchVisualStateV1 state;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = state == _WelcomeLaunchVisualStateV1.complete
+        ? Act0ShellTokensV1.primary
+        : Act0ShellTokensV1.gold;
+    final icon = state == _WelcomeLaunchVisualStateV1.complete
+        ? Icons.check_rounded
+        : Icons.play_arrow_rounded;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: tone.withOpacity(0.22)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 14, color: tone),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: tone,
+                letterSpacing: 0.12,
+              ),
+            ),
+          ),
         ],
       ),
     );

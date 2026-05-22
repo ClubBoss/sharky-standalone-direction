@@ -24,6 +24,8 @@ String _placementAtomV1(
 bool _placementKeepFullSupportCopyV1(String questionId) =>
     questionId == 'experience';
 
+enum _PlacementLaunchStepV1 { answer, quickCheck, firstHand }
+
 class Act0PlacementShellV1 extends StatelessWidget {
   const Act0PlacementShellV1({
     super.key,
@@ -107,6 +109,13 @@ class Act0PlacementShellV1 extends StatelessWidget {
                           en: 'A few fast answers, then Sharky picks where to begin.',
                           ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
                         ),
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapSm),
+                      _PlacementLaunchPathV1(
+                        currentStep:
+                            showIntro || currentQuestionIndex < questions.length
+                            ? _PlacementLaunchStepV1.answer
+                            : _PlacementLaunchStepV1.quickCheck,
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapMd),
                       AnimatedSwitcher(
@@ -231,6 +240,10 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
                       ),
                     ),
+                    const SizedBox(height: Act0ShellTokensV1.gapSm),
+                    const _PlacementLaunchPathV1(
+                      currentStep: _PlacementLaunchStepV1.firstHand,
+                    ),
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 420),
@@ -350,6 +363,38 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
                   ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                _PlacementLaunchSupportCardV1(
+                  key: const Key('act0_shell_placement_ready_preview'),
+                  tone: Act0ShellTokensV1.info,
+                  title: _placementCopyV1(
+                    context,
+                    en: 'Quick check before the first hand',
+                    ru: 'Короткая проверка перед первой раздачей',
+                  ),
+                  body: _placementCopyV1(
+                    context,
+                    en: 'This is one short table read, then Sharky opens the first useful hand in the right place.',
+                    ru: 'Это одна короткая проверка стола, а потом Шарки откроет первую полезную раздачу в правильной точке.',
+                  ),
+                  chips: <String>[
+                    _placementCopyV1(
+                      context,
+                      en: 'Short table read',
+                      ru: 'Короткий рид стола',
+                    ),
+                    _placementCopyV1(
+                      context,
+                      en: 'No long setup',
+                      ru: 'Без долгой подготовки',
+                    ),
+                    _placementCopyV1(
+                      context,
+                      en: 'First hand after',
+                      ru: 'Дальше первая раздача',
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -563,7 +608,292 @@ class _PlacementIntroViewV1 extends StatelessWidget {
             ),
             style: Act0ShellTokensV1.screenTitle,
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(
+            _placementCopyV1(
+              context,
+              en: 'Find the right starting point first, then move straight into one clear poker spot.',
+              ru: 'Сначала найди правильную стартовую точку, а потом сразу переходи к одному ясному покерному споту.',
+            ),
+            key: const Key('act0_shell_placement_intro_support'),
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.text,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Wrap(
+            spacing: Act0ShellTokensV1.gapSm,
+            runSpacing: Act0ShellTokensV1.gapSm,
+            children: [
+              _PlacementIntroChipV1(
+                label: _placementCopyV1(
+                  context,
+                  en: '2 quick answers',
+                  ru: '2 быстрых ответа',
+                ),
+                tone: Act0ShellTokensV1.primary,
+              ),
+              _PlacementIntroChipV1(
+                label: _placementCopyV1(
+                  context,
+                  en: '1 short table check',
+                  ru: '1 короткая проверка стола',
+                ),
+                tone: Act0ShellTokensV1.info,
+              ),
+              _PlacementIntroChipV1(
+                label: _placementCopyV1(
+                  context,
+                  en: 'First hand ready',
+                  ru: 'Первая раздача готова',
+                ),
+                tone: Act0ShellTokensV1.gold,
+              ),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _PlacementLaunchSupportCardV1(
+            key: const Key('act0_shell_placement_intro_preview'),
+            tone: Act0ShellTokensV1.primary,
+            title: _placementCopyV1(
+              context,
+              en: 'One guided start',
+              ru: 'Один направленный старт',
+            ),
+            body: _placementCopyV1(
+              context,
+              en: 'Answer, do one quick table check if needed, then Sharky opens the first hand that makes sense.',
+              ru: 'Ответь, при необходимости пройди одну быструю проверку стола, а потом Шарки откроет первую осмысленную раздачу.',
+            ),
+            chips: <String>[
+              _placementCopyV1(
+                context,
+                en: 'No wrong opener',
+                ru: 'Без неверного старта',
+              ),
+              _placementCopyV1(
+                context,
+                en: 'Fast handoff',
+                ru: 'Быстрый переход',
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _PlacementLaunchPathV1 extends StatelessWidget {
+  const _PlacementLaunchPathV1({required this.currentStep});
+
+  final _PlacementLaunchStepV1 currentStep;
+
+  @override
+  Widget build(BuildContext context) {
+    final steps = <(_PlacementLaunchStepV1, String)>[
+      (
+        _PlacementLaunchStepV1.answer,
+        _placementCopyV1(context, en: 'Answer', ru: 'Ответы'),
+      ),
+      (
+        _PlacementLaunchStepV1.quickCheck,
+        _placementCopyV1(context, en: 'Quick check', ru: 'Быстрая проверка'),
+      ),
+      (
+        _PlacementLaunchStepV1.firstHand,
+        _placementCopyV1(context, en: 'First hand', ru: 'Первая раздача'),
+      ),
+    ];
+    final currentIndex = steps.indexWhere((step) => step.$1 == currentStep);
+    return Container(
+      key: const Key('act0_shell_placement_launch_path'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapMd,
+        vertical: Act0ShellTokensV1.gapSm,
+      ),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.84),
+        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.16),
+      ),
+      child: Row(
+        children: [
+          for (var index = 0; index < steps.length; index++) ...[
+            Expanded(
+              child: _PlacementLaunchStepChipV1(
+                label: steps[index].$2,
+                state: index < currentIndex
+                    ? _PlacementLaunchVisualStateV1.complete
+                    : index == currentIndex
+                    ? _PlacementLaunchVisualStateV1.active
+                    : _PlacementLaunchVisualStateV1.upcoming,
+              ),
+            ),
+            if (index < steps.length - 1)
+              Container(
+                width: Act0ShellTokensV1.gapMd,
+                height: 1,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: Act0ShellTokensV1.gapXs,
+                ),
+                color: index < currentIndex
+                    ? Act0ShellTokensV1.primary.withValues(alpha: 0.34)
+                    : Act0ShellTokensV1.border,
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+enum _PlacementLaunchVisualStateV1 { upcoming, active, complete }
+
+class _PlacementLaunchStepChipV1 extends StatelessWidget {
+  const _PlacementLaunchStepChipV1({required this.label, required this.state});
+
+  final String label;
+  final _PlacementLaunchVisualStateV1 state;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = switch (state) {
+      _PlacementLaunchVisualStateV1.complete => Act0ShellTokensV1.primary,
+      _PlacementLaunchVisualStateV1.active => Act0ShellTokensV1.gold,
+      _PlacementLaunchVisualStateV1.upcoming => Act0ShellTokensV1.textMuted,
+    };
+    final background = switch (state) {
+      _PlacementLaunchVisualStateV1.complete => tone.withValues(alpha: 0.14),
+      _PlacementLaunchVisualStateV1.active => tone.withValues(alpha: 0.16),
+      _PlacementLaunchVisualStateV1.upcoming =>
+        Act0ShellTokensV1.surface3.withValues(alpha: 0.72),
+    };
+    final border = switch (state) {
+      _PlacementLaunchVisualStateV1.complete => tone.withValues(alpha: 0.28),
+      _PlacementLaunchVisualStateV1.active => tone.withValues(alpha: 0.30),
+      _PlacementLaunchVisualStateV1.upcoming => Act0ShellTokensV1.border,
+    };
+    final icon = switch (state) {
+      _PlacementLaunchVisualStateV1.complete => Icons.check_rounded,
+      _PlacementLaunchVisualStateV1.active => Icons.play_arrow_rounded,
+      _PlacementLaunchVisualStateV1.upcoming => Icons.circle_outlined,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: Act0ShellTokensV1.gapXs,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: border),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: tone),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: tone,
+                letterSpacing: 0.12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlacementLaunchSupportCardV1 extends StatelessWidget {
+  const _PlacementLaunchSupportCardV1({
+    super.key,
+    required this.tone,
+    required this.title,
+    required this.body,
+    required this.chips,
+  });
+
+  final Color tone;
+  final String title;
+  final String body;
+  final List<String> chips;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration:
+          Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface.withValues(alpha: 0.68),
+            borderColor: tone.withValues(alpha: 0.18),
+          ).copyWith(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[
+                tone.withValues(alpha: 0.08),
+                Act0ShellTokensV1.surface.withValues(alpha: 0.76),
+                Act0ShellTokensV1.surface2.withValues(alpha: 0.92),
+              ],
+            ),
+          ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Act0ShellTokensV1.label.copyWith(color: tone)),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            body,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.text,
+            ),
+          ),
+          if (chips.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Wrap(
+              spacing: Act0ShellTokensV1.gapSm,
+              runSpacing: Act0ShellTokensV1.gapSm,
+              children: [
+                for (final chip in chips)
+                  _PlacementIntroChipV1(label: chip, tone: tone),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _PlacementIntroChipV1 extends StatelessWidget {
+  const _PlacementIntroChipV1({required this.label, required this.tone});
+
+  final String label;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.11),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: tone.withValues(alpha: 0.22)),
+      ),
+      child: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(
+          color: tone,
+          letterSpacing: 0.15,
+        ),
       ),
     );
   }
@@ -657,6 +987,22 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   color: Act0ShellTokensV1.text,
                   fontWeight: FontWeight.w700,
                 ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              _PlacementLaunchSupportCardV1(
+                key: const Key('act0_shell_placement_result_preview'),
+                tone: _placementToneForResult(result),
+                title: _placementCopyV1(
+                  context,
+                  en: 'First hand ready next',
+                  ru: 'Следом готова первая раздача',
+                ),
+                body: _placementCopyV1(
+                  context,
+                  en: 'The route is done. Open one clear hand and let the next action words attach to a real table spot.',
+                  ru: 'Маршрут готов. Открой одну ясную раздачу и дай следующим словам действия привязаться к живому столу.',
+                ),
+                chips: <String>[result.levelLabel, result.recommendedTitle],
               ),
             ],
           ),

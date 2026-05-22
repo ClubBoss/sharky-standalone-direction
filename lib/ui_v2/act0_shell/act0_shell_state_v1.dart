@@ -196,7 +196,7 @@ class Act0ShellStateV1 {
     worlds: _act0PreviewWorlds,
     lessons: _pokerFromZeroLessons,
     review: Act0ReviewStateV1(
-      title: 'Repair board',
+      title: 'What to fix next',
       subtitle: 'Clean up one decision before moving on.',
       weaknessLabel: 'Calling and raising still feel close.',
       reason:
@@ -4919,6 +4919,15 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
+        taskId: 'w9_bubble_table_risk_transfer',
+        title: 'Bubble risk at a real table',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w9BubbleTableRiskTransferRunner,
+        rewardXp: 12,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w9_bubble_recap',
         title: 'Bubble recap',
         phase: Act0LessonPhaseV1.review,
@@ -5271,6 +5280,15 @@ final _realPlayTransferLessons = <Act0LessonCardV1>[
         runner: _w11PlanAvoidOverloadRunner,
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w11_plan_table_focus_transfer',
+        title: 'Real-table focus plan',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w11PlanTableFocusTransferRunner,
+        rewardXp: 12,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
       ),
       Act0LessonTaskV1(
         taskId: 'w11_session_plan_recap',
@@ -6020,6 +6038,86 @@ const _boardA84TwoToneCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: '4', suit: 'c'),
 ];
 
+const _heroKhQhCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _boardFlushHearts = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'c'),
+  Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+];
+
+const _boardThreeQueens = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'Q', suit: 'c'),
+  Act0CardStateV1(rank: '7', suit: 'c'),
+  Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'c'),
+  Act0CardStateV1(rank: '4', suit: 's'),
+];
+
+const _opponentAh7hCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _opponentJd7hCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _hero89Cards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '9', suit: 's'),
+];
+
+const _boardStraight = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '6', suit: 'c'),
+  Act0CardStateV1(rank: '7', suit: 's'),
+  Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+];
+
+const _opponentKhJhCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _boardAce = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'c'),
+  Act0CardStateV1(rank: '7', suit: 'c'),
+  Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'c'),
+  Act0CardStateV1(rank: '4', suit: 's'),
+];
+
+const _heroAsKhCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 's'),
+  Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _opponentAdQdCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+];
+
+const _boardRoyalFlush = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 's'),
+  Act0CardStateV1(rank: 'K', suit: 's'),
+  Act0CardStateV1(rank: 'Q', suit: 's'),
+  Act0CardStateV1(rank: 'J', suit: 's'),
+  Act0CardStateV1(rank: 'T', suit: 's'),
+];
+
+const _heroQcQdCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'Q', suit: 'c'),
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+];
+
 const _meetTableRunner = Act0RunnerStateV1(
   lessonId: 'meet_table',
   lessonTitle: 'Meet the table',
@@ -6671,7 +6769,8 @@ final _potStackRunner = _meetTableRunner.copyWith(
       preferredLabel: 'Pot',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'Your stack is your chips, not the middle pot.',
+      feedbackReason:
+          'Your stack stays with your seat. The pot is the shared chips in the middle that everyone is playing for.',
     ),
   ],
   table: _meetTableRunner.table.copyWith(
@@ -6732,7 +6831,8 @@ final _winWaysRunner = _meetTableRunner.copyWith(
       betterAnswerLabel: 'Everyone folds',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more step.',
-      feedbackReason: 'A larger stack does not automatically win the pot.',
+      feedbackReason:
+          'A larger stack can apply pressure later, but it does not end this pot by itself. Before showdown, you win only when everyone else folds.',
     ),
     Act0RunnerOptionV1(
       id: 'best_hand_showdown',
@@ -6813,7 +6913,8 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
       preferredLabel: 'Board cards',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
-      feedbackReason: 'Private cards belong only to one player.',
+      feedbackReason:
+          'Private cards belong only to one player. Board cards sit in the middle as shared cards, so everyone still in the hand can use them.',
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -7528,6 +7629,17 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       feedbackReason: 'A matching rank makes a pair.',
     ),
   ],
+  table: _readBoardRunner.table.copyWith(
+    heroCards: _heroAkCards,
+    highlightedCardIds: const <String>['hero_0', 'board_0'],
+    seats: _readBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(seat, holeCards: _heroAkCards)
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Hands use the best five cards.',
@@ -7571,8 +7683,9 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flush',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason: 'A flush ranks above a straight.',
+      feedbackTitle: 'Flush found.',
+      feedbackReason:
+          'Start with the suit match: five cards of one suit make a flush, and a flush ranks above a straight.',
     ),
     Act0RunnerOptionV1(
       id: 'straight',
@@ -7581,9 +7694,29 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       preferredLabel: 'Flush',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
-      feedbackReason: 'A straight is strong, but a flush ranks higher.',
+      feedbackReason:
+          'A straight uses connected ranks, but it does not need five cards of one suit, so it stays below a flush.',
     ),
   ],
+  table: _readBoardRunner.table.copyWith(
+    streetLabel: 'River',
+    heroCards: _heroKhQhCards,
+    boardCards: _boardFlushHearts,
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
+    seats: _readBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(seat, holeCards: _heroKhQhCards)
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Flush means same suit.',
@@ -7607,8 +7740,9 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Two pair',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Button acts last postflop.',
-      feedbackReason: 'Two pair ranks above one pair.',
+      feedbackTitle: 'Two pair spotted.',
+      feedbackReason:
+          'Count the matching ranks in the best five first: Hero makes two pair, and two pair outranks one pair.',
     ),
     Act0RunnerOptionV1(
       id: 'one_pair',
@@ -7617,7 +7751,8 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       preferredLabel: 'Two pair',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Very close.',
-      feedbackReason: 'Two pair beats one pair, so this hand is second best.',
+      feedbackReason:
+          'Count the matching ranks before judging the hand: one pair uses only one match, so it stays below Hero two pair in the best five.',
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
@@ -7721,7 +7856,8 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
       betterAnswerLabel: 'Best hand',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'Acting first does not win a showdown.',
+      feedbackReason:
+          'Seat order decides who acts first, not who wins at showdown. Once cards are revealed, players compare the best full hand they can make from private cards plus the shared board.',
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_only',
@@ -7735,6 +7871,25 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
           'Private cards matter, but showdown uses the whole five-card result. The shared board can help both players, so the best full hand decides it.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentKhJhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
@@ -7770,6 +7925,35 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
       feedbackReason: 'Seat name does not break a tied hand.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroAsKhCards,
+    boardCards: _boardAce,
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'co_0',
+      'co_1',
+    ],
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroAsKhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentAdQdCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Kickers break some ties.',
@@ -7979,7 +8163,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'One loop first.',
       body:
-          'Sharky teaches one spot at a time: read the table, answer once, then get one clear why.',
+          'Sharky teaches one spot at a time. Read, answer, and get a clear why.',
       focusLabels: <String>['Read', 'Answer', 'Why'],
     ),
     Act0TeachingStepV1(
@@ -8156,6 +8340,15 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
       feedbackReason: 'You may see seven cards, but only five form the hand.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_3',
+    ],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Seven seen, five count.',
@@ -8496,6 +8689,28 @@ final _tripsRankRunner = _riverBoardRunner.copyWith(
       feedbackReason: 'Two pair is below three of a kind.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    boardCards: _boardThreeQueens,
+    highlightedCardIds: const <String>['hero_0', 'hero_1', 'board_0'],
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroQqCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentJd7hCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Three of a kind is above two pair.',
@@ -8531,6 +8746,28 @@ final _straightRankRunner = _riverBoardRunner.copyWith(
       feedbackReason: 'Same suit makes a flush, not a straight.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _hero89Cards,
+    boardCards: _boardStraight,
+    highlightedCardIds: const <String>[
+      'board_0',
+      'board_1',
+      'board_2',
+      'hero_0',
+      'hero_1',
+    ],
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _hero89Cards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Straight means sequence.',
@@ -8618,6 +8855,28 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
       feedbackReason: 'Seat position does not win when the same hand plays.',
     ),
   ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroQcQdCards,
+    boardCards: _boardRoyalFlush,
+    highlightedCardIds: const <String>[
+      'board_0',
+      'board_1',
+      'board_2',
+      'board_3',
+      'board_4',
+    ],
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroQcQdCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Sometimes the board plays.',
@@ -16285,6 +16544,76 @@ final _w9BubbleShortStackRunner = _w9BubblePressureIntroRunner.copyWith(
   ],
 );
 
+final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w9_bubble_table_risk_transfer',
+  caption:
+      'Real table. Hero is BTN with A-J offsuit as a medium stack near the bubble.',
+  hint:
+      'The covering big blind can hurt you more than you can hurt them. Name the bubble risk premium before acting.',
+  question: 'What is the cleaner first bubble adjustment here?',
+  table: _w9BubblePressureIntroRunner.table.copyWith(
+    heroCards: _heroAjCards,
+    streetLabel: 'Preflop',
+    boardCards: const <Act0CardStateV1>[],
+    potLabel: 'Pot 2.5 BB',
+    toCallLabel: 'To call 15.5 BB',
+    centerLabel: 'BTN, medium stack, bubble pressure',
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'CO folds'),
+      Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BB shoves 18 BB'),
+    ],
+  ),
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'tighten_stackoff',
+      label: 'Tighten thin stack-offs versus the covering blind',
+      isCorrect: true,
+      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Strong transfer.',
+      feedbackReason:
+          'That is the live-table bubble transfer. Against a covering big blind, a medium stack feels extra risk premium before calling off, so thin chip-EV stack-offs tighten first.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call_chip_ev',
+      label: 'Call as wide as normal chip EV allows',
+      isCorrect: false,
+      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
+      betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too loose for bubble pressure.',
+      feedbackReason:
+          'Pure chip-EV calls miss the tournament tax here. A covering big blind creates real bubble pressure, so medium stacks need more hand strength before risking tournament life.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'fold_anything_close',
+      label: 'Over-fold every close hand',
+      isCorrect: false,
+      preferredLabel: 'Tighten thin stack-offs versus the covering blind',
+      betterAnswerLabel: 'Tighten thin stack-offs versus the covering blind',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Right caution, too extreme.',
+      feedbackReason:
+          'Risk premium is not total shutdown. The real-table bubble read is selective tightening for a medium stack, not folding every playable spot just because the big blind covers you.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Bubble pressure changes the stack-off bar.',
+      body:
+          'Real table, same concept, clearer transfer. A medium stack near the bubble cannot call off like pure chip EV when the big blind covers them. Bubble risk premium means tighter stack-offs first, not panic folds everywhere.',
+      focusLabels: <String>[
+        'Real table',
+        'Bubble',
+        'Medium stack',
+        'Big blind leverage',
+      ],
+    ),
+  ],
+);
+
 final _w9BubbleRecapRunner = _w9BubblePressureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'w9_bubble_recap',
@@ -17423,6 +17752,58 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       feedbackTitle: 'Too passive.',
       feedbackReason:
           'Removing goals avoids overload but also weakens deliberate transfer. Keep one simple target.',
+    ),
+  ],
+);
+
+final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w11_plan_table_focus_transfer',
+  caption:
+      'Real table. You have one hour before a tired evening session starts and the first orbit will move fast.',
+  hint:
+      'Pick one focus you can notice as a trigger during the session and review after the session ends.',
+  question: 'What is the cleaner session plan here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'one_focus_loop',
+      label: 'Pick one focus for the session',
+      isCorrect: true,
+      preferredLabel: 'Pick one focus for the session',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean transfer plan.',
+      feedbackReason:
+          'That is the real-table transfer. One focus keeps the session executable, gives you one trigger to notice live, and leaves one clean review target after the session.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'many_focuses_now',
+      label: 'Track every leak from the start',
+      isCorrect: false,
+      preferredLabel: 'Pick one focus for the session',
+      betterAnswerLabel: 'Pick one focus for the session',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too noisy.',
+      feedbackReason:
+          'A crowded plan weakens transfer. If the session starts with too many goals, the live trigger is harder to see and the review becomes blur instead of one actionable output.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'no_focus_until_review',
+      label: 'Play first and decide later',
+      isCorrect: false,
+      preferredLabel: 'Pick one focus for the session',
+      betterAnswerLabel: 'Pick one focus for the session',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Too loose a loop.',
+      feedbackReason:
+          'Review still matters, but the loop is weaker without a one-focus plan. Real table transfer is stronger when the session starts with one focus, then checks one trigger, then closes with one review note.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Plan the loop before the cards fly.',
+      body:
+          'Real table transfer starts before the first hand. One focus sets the session goal, one trigger tells you when to apply it, and one review note closes the loop after play.',
+      focusLabels: <String>['Real table', 'One focus', 'Trigger', 'Review'],
     ),
   ],
 );

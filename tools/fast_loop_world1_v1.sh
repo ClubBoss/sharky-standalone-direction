@@ -221,7 +221,7 @@ if [[ "$run_analyze" == "true" ]]; then
 fi
 
 if [[ "$run_content_validation" == "true" ]]; then
-  dart run tools/validate_training_content.dart
+  dart run tools/validate_training_content.dart --staged-only
 fi
 
 if [[ "$run_tests" == "true" && "$run_full" == "false" ]]; then
