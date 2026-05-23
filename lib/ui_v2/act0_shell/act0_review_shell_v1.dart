@@ -88,24 +88,20 @@ class Act0ReviewShellV1 extends StatelessWidget {
         onFixMistake: onFixMistake,
       ),
     ];
-    final rightColumn = <Widget>[
+    final activeRepairColumn = <Widget>[
       if (review.mistakes.isEmpty)
         _ReviewEmptyStateV1(review: review)
       else ...[
         Text(
-          _reviewCopyV1(
-            context,
-            atomId: 'review_fix_next_label',
-            fallback: 'Fix next',
-          ),
+          _reviewCopyV1(context, fallback: 'Start here'),
           style: Act0ShellTokensV1.sectionTitle,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapXs),
         Text(
           _reviewCopyV1(
             context,
-            en: 'Start with the highest-pressure miss first.',
-            ru: 'Сначала почини самую давящую ошибку.',
+            en: 'Start with one calm repair rep. Fix this spot first and the rest of the board gets lighter again.',
+            ru: 'Начни с одного спокойного ремонтного повтора. Сначала закрепи этот спот, и остальная доска снова станет легче.',
           ),
           style: Act0ShellTokensV1.muted,
         ),
@@ -127,11 +123,11 @@ class Act0ReviewShellV1 extends StatelessWidget {
             child: Text(
               localeIsRu
                   ? (review.mistakes.length == 2
-                        ? 'После этого ждёт ещё один фикс.'
-                        : 'После этого ждут ещё ${review.mistakes.length - 1} фикса.')
+                        ? 'Начни с этого. Когда он стабилизируется, следующий спот тоже станет легче.'
+                        : 'Начни с этого. Когда он стабилизируется, остальные ${review.mistakes.length - 1} спота тоже станут легче по одному.')
                   : (review.mistakes.length == 2
-                        ? '1 more repair is waiting after this one.'
-                        : '${review.mistakes.length - 1} more repairs are waiting after this one.'),
+                        ? 'Start here. Once this settles, the next spot gets easier too.'
+                        : 'Start here. Once this settles, the next ${review.mistakes.length - 1} spots get easier one by one.'),
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textDim,
               ),
@@ -139,6 +135,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
           ),
         ],
       ],
+    ];
+    final recoveredColumn = <Widget>[
       if (recovered.isNotEmpty) ...[
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         Text(
@@ -171,6 +169,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ],
       ],
     ];
+    final rightColumn = <Widget>[...activeRepairColumn, ...recoveredColumn];
     return ListView(
       key: const Key('act0_shell_review_screen'),
       padding: EdgeInsets.fromLTRB(
@@ -227,9 +226,16 @@ class Act0ReviewShellV1 extends StatelessWidget {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...leftColumn,
-                    const SizedBox(height: Act0ShellTokensV1.gapLg),
-                    ...rightColumn,
+                    if (review.mistakes.isEmpty) ...[
+                      ...leftColumn,
+                      const SizedBox(height: Act0ShellTokensV1.gapLg),
+                      ...rightColumn,
+                    ] else ...[
+                      ...activeRepairColumn,
+                      const SizedBox(height: Act0ShellTokensV1.gapLg),
+                      ...leftColumn,
+                      ...recoveredColumn,
+                    ],
                   ],
                 ),
         ),
@@ -497,11 +503,7 @@ class _ReviewBoardV1 extends StatelessWidget {
     final hasRepair = nextMistake != null;
     final tone = hasRepair ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary;
     final title = hasRepair
-        ? _reviewCopyV1(
-            context,
-            atomId: 'review_board_title_fix',
-            fallback: 'Fix next',
-          )
+        ? _reviewCopyV1(context, fallback: 'Recovery plan')
         : _reviewCopyV1(
             context,
             atomId: 'review_board_title_clean',
@@ -525,9 +527,8 @@ class _ReviewBoardV1 extends StatelessWidget {
     final support = hasRepair
         ? _reviewCopyV1(
             context,
-            atomId: 'review_board_support_fix',
             fallback:
-                'One clean fix here matters more than scanning the whole board.',
+                'Stabilize this spot first. Then come back for the next check.',
           )
         : (review.strongSpots.isEmpty
               ? _reviewCopyV1(
@@ -668,11 +669,7 @@ class _ReviewBoardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.quietButtonStyle(),
               icon: const Icon(Icons.build_rounded, size: 18),
               label: Text(
-                _reviewCopyV1(
-                  context,
-                  atomId: 'review_board_fix_cta',
-                  fallback: 'Fix now',
-                ),
+                _reviewCopyV1(context, fallback: 'Review repair cue'),
               ),
             ),
           ],
@@ -689,45 +686,82 @@ class _ReviewEmptyStateV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final compact = !Act0ShellTokensV1.isTabletWidth(context);
+    final iconTile = Container(
+      width: compact ? 38 : 42,
+      height: compact ? 38 : 42,
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.primary.withOpacity(0.14),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+      ),
+      child: const Icon(
+        Icons.check_circle_rounded,
+        color: Act0ShellTokensV1.primary,
+      ),
+    );
+
     return Container(
       key: const Key('act0_shell_review_empty_state'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: EdgeInsets.all(
+        compact ? Act0ShellTokensV1.gapMd : Act0ShellTokensV1.gapLg,
+      ),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         borderColor: Act0ShellTokensV1.primary.withOpacity(0.34),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary.withOpacity(0.14),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-            ),
-            child: const Icon(
-              Icons.check_circle_rounded,
-              color: Act0ShellTokensV1.primary,
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
-          Expanded(
-            child: Column(
+      child: compact
+          ? Column(
+              key: const Key('act0_shell_review_empty_state_layout'),
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(review.emptyTitle, style: Act0ShellTokensV1.cardTitle),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    iconTile,
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
+                    Expanded(
+                      child: Text(
+                        review.emptyTitle,
+                        style: Act0ShellTokensV1.cardTitle,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
                   review.emptyBody,
                   key: const Key('act0_shell_review_empty_body'),
-                  maxLines: 3,
+                  maxLines: 4,
                   overflow: TextOverflow.fade,
                   style: Act0ShellTokensV1.muted,
                 ),
               ],
+            )
+          : Row(
+              key: const Key('act0_shell_review_empty_state_layout'),
+              children: [
+                iconTile,
+                const SizedBox(width: Act0ShellTokensV1.gapMd),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.emptyTitle,
+                        style: Act0ShellTokensV1.cardTitle,
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapXs),
+                      Text(
+                        review.emptyBody,
+                        key: const Key('act0_shell_review_empty_body'),
+                        maxLines: 3,
+                        overflow: TextOverflow.fade,
+                        style: Act0ShellTokensV1.muted,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -920,7 +954,7 @@ class _MistakeCardV1 extends StatelessWidget {
             style: Act0ShellTokensV1.primaryButtonStyle(
               height: Act0ShellTokensV1.compactCtaHeight,
             ),
-            child: Text(prominent ? 'Repair next' : 'Fix this spot'),
+            child: Text(prominent ? 'Start repair rep' : 'Repair this spot'),
           ),
         ],
       ),

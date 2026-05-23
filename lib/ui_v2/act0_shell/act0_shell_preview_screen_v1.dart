@@ -17,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
@@ -167,6 +168,38 @@ class _Act0PracticeSurfaceRecommendationV1 {
   final String screenSubtitle;
 }
 
+enum Act0ControlledDemoCaptureModeV1 { walkthrough, directState }
+
+enum Act0ControlledDemoCaptureSurfaceV1 {
+  placement,
+  welcome,
+  home,
+  learn,
+  runnerTheory,
+  runnerDrill,
+  runnerFeedback,
+  review,
+  practice,
+  profile,
+  worldCompletion,
+}
+
+class Act0ShellDebugHarnessEntryV1 {
+  const Act0ShellDebugHarnessEntryV1({
+    required this.mode,
+    required this.surface,
+    this.worldId,
+    this.lessonId,
+    this.taskId,
+  });
+
+  final Act0ControlledDemoCaptureModeV1 mode;
+  final Act0ControlledDemoCaptureSurfaceV1 surface;
+  final String? worldId;
+  final String? lessonId;
+  final String? taskId;
+}
+
 class Act0ShellPreviewScreenV1 extends StatefulWidget {
   const Act0ShellPreviewScreenV1({
     super.key,
@@ -174,6 +207,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.initialPhase = Act0LessonPhaseV1.theory,
     this.state,
     this.showPlacementOnStart = true,
+    this.debugHarnessEntry,
+    this.telemetrySink,
     // Dev2 is now the canonical detached Act0 shell. The classic variant stays
     // available for explicit fallback comparisons.
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
@@ -183,6 +218,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0LessonPhaseV1 initialPhase;
   final Act0ShellStateV1? state;
   final bool showPlacementOnStart;
+  final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
+  final Act0TelemetrySinkV1? telemetrySink;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
 
   @override
@@ -244,6 +281,118 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeRepairSourceTaskId;
+
+  void _recordTelemetryEventV1(String name, Map<String, Object?> fields) {
+    final sink = widget.telemetrySink;
+    if (sink == null) {
+      return;
+    }
+    try {
+      sink.record(Act0TelemetryEventV1(name: name, fields: fields));
+    } catch (_) {
+      // Telemetry must never interrupt the learner route.
+    }
+  }
+
+  void _emitRepairCompletedTelemetryV1({
+    required String sourceTaskId,
+    required String repairTaskId,
+    required bool repaired,
+  }) {
+    _recordTelemetryEventV1('repair_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'sourceTaskId': sourceTaskId,
+      'repairTaskId': repairTaskId,
+      'result': repaired ? 'correct' : 'incorrect',
+      'attemptOrdinal': 1,
+      'repairStatus': repaired ? 'fixed' : 'open',
+    });
+  }
+
+  void _emitRepairStartedTelemetryV1({
+    required String sourceTaskId,
+    required String repairTaskId,
+  }) {
+    _recordTelemetryEventV1('repair_started', <String, Object?>{
+      'schemaVersion': 1,
+      'sourceTaskId': sourceTaskId,
+      'repairTaskId': repairTaskId,
+      'attemptOrdinal': 1,
+    });
+  }
+
+  int _dailyCleanRepCountV1() {
+    return _dailyCompletedTaskIds
+        .where(_cleanTaskIds.contains)
+        .length
+        .clamp(0, 3);
+  }
+
+  void _emitPracticeCompletedTelemetryV1({
+    required String practiceGroupId,
+    required int completedRepCount,
+    required int cleanRepCount,
+    required String resultSummary,
+  }) {
+    _recordTelemetryEventV1('practice_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'practiceGroupId': practiceGroupId,
+      'completedRepCount': completedRepCount,
+      'cleanRepCount': cleanRepCount,
+      'resultSummary': resultSummary,
+    });
+  }
+
+  void _emitPracticeStartedTelemetryV1({required String practiceGroupId}) {
+    _recordTelemetryEventV1('practice_started', <String, Object?>{
+      'schemaVersion': 1,
+      'practiceGroupId': practiceGroupId,
+    });
+  }
+
+  void _emitRecheckCompletedTelemetryV1({
+    required String taskId,
+    required bool completedCorrectly,
+    required int successfulRecheckCount,
+  }) {
+    _recordTelemetryEventV1('recheck_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'taskId': taskId,
+      'result': completedCorrectly ? 'correct' : 'incorrect',
+      'attemptOrdinal': 1,
+      'retentionStatus': completedCorrectly
+          ? _Act0RetentionMemoryStatusV1.ownedCandidate
+          : _Act0RetentionMemoryStatusV1.agedRecheck,
+      'successfulRecheckCount': successfulRecheckCount,
+    });
+  }
+
+  void _emitProveCompletedTelemetryV1({
+    required String taskId,
+    required bool completedCorrectly,
+  }) {
+    _recordTelemetryEventV1('prove_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'taskId': taskId,
+      'result': completedCorrectly ? 'correct' : 'incorrect',
+      'attemptOrdinal': 1,
+      'retentionStatus': completedCorrectly
+          ? _Act0RetentionMemoryStatusV1.ownedCandidate
+          : _Act0RetentionMemoryStatusV1.openRepair,
+    });
+  }
+
+  void _emitLessonStartedTelemetryV1({
+    required String lessonId,
+    required String taskId,
+  }) {
+    _recordTelemetryEventV1('lesson_started', <String, Object?>{
+      'schemaVersion': 1,
+      'lessonId': lessonId,
+      'taskId': taskId,
+    });
+  }
+
   String? _activeLessonWrapUpTaskId;
   String? _lessonRunWrapUpAnchorTaskId;
   String? _practiceCompletionTitle;
@@ -715,7 +864,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ..._skippedTaskIds,
   };
 
-  bool get _usesPersistedProgress => widget.state == null;
+  bool get _usesPersistedProgress =>
+      widget.state == null && widget.debugHarnessEntry == null;
 
   @override
   void initState() {
@@ -743,6 +893,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedTaskId = _firstIncompleteTask(state.currentLesson).taskId;
     _learnPopupTaskId = null;
     _resetLessonRunMetrics();
+    if (widget.debugHarnessEntry case final entry?) {
+      _applyDebugHarnessEntry(entry, state);
+      return;
+    }
     unawaited(_bootstrapFirstStartRouteV1());
   }
 
@@ -785,10 +939,239 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  void _applyDebugHarnessEntry(
+    Act0ShellDebugHarnessEntryV1 entry,
+    Act0ShellStateV1 state,
+  ) {
+    _bootSurfaceReady = true;
+    switch (entry.surface) {
+      case Act0ControlledDemoCaptureSurfaceV1.placement:
+        _applyDebugPlacementSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.welcome:
+        _applyDebugWelcomeSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.home:
+        _applyDebugHomeSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.learn:
+        _applyDebugLearnSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.runnerTheory:
+        _applyDebugRunnerSurface(state, phase: Act0LessonPhaseV1.theory);
+      case Act0ControlledDemoCaptureSurfaceV1.runnerDrill:
+        _applyDebugRunnerSurface(state, phase: Act0LessonPhaseV1.drill);
+      case Act0ControlledDemoCaptureSurfaceV1.runnerFeedback:
+        _applyDebugRunnerSurface(state, phase: Act0LessonPhaseV1.review);
+      case Act0ControlledDemoCaptureSurfaceV1.review:
+        _applyDebugReviewSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.practice:
+        _applyDebugPracticeSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.profile:
+        _applyDebugProfileSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.worldCompletion:
+        _applyDebugWorldCompletionSurface();
+    }
+  }
+
+  void _resetDebugSurfaceChrome() {
+    _showPlacement = false;
+    _showWelcome = false;
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = false;
+    _showWorldMenu = false;
+    _learnDetailWorldId = null;
+    _learnDetailLessonId = null;
+    _learnPopupTaskId = null;
+    _selectedOptionId = null;
+    _teachingStepIndex = 0;
+    _blockCompletionSummary = null;
+    _activePracticeGroupId = null;
+    _activeRepairTaskId = null;
+    _activeRepairSourceTaskId = null;
+    _practiceCompletionTitle = null;
+    _practiceCompletionBody = null;
+    _mistakeRecords.clear();
+    _resolvedMistakeTaskIds.clear();
+    _cleanTaskIds.clear();
+    _retentionMemoryByTaskId.clear();
+    _placementDiagnosticActive = false;
+    _placementIntroVisible = true;
+    _placementQuestionIndex = 0;
+    _placementDiagnosticIndex = 0;
+    _placementDiagnosticCorrect = 0;
+    _placementDiagnosticScore = 0;
+    _placementHandoffActive = false;
+    _placementAnswerIds.clear();
+    _placementDiagnosticHitSignals.clear();
+    _placementDiagnosticMissSignals.clear();
+    _resetLessonRunMetrics();
+  }
+
+  void _applyDebugPlacementSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.home;
+    _showPlacement = true;
+    _welcomeCompletedV1 = false;
+  }
+
+  void _applyDebugWelcomeSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.home;
+    _showWelcome = true;
+    _welcomeCompletedV1 = false;
+  }
+
+  void _applyDebugHomeSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.home;
+  }
+
+  void _applyDebugLearnSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.learn;
+  }
+
+  void _applyDebugPracticeSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+  }
+
+  void _applyDebugProfileSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.profile;
+  }
+
+  void _applyDebugRunnerSurface(
+    Act0ShellStateV1 state, {
+    required Act0LessonPhaseV1 phase,
+  }) {
+    _resetDebugSurfaceChrome();
+    final targetWorldId = widget.debugHarnessEntry?.worldId ?? 'world_1';
+    final targetLessonId =
+        widget.debugHarnessEntry?.lessonId ?? 'what_poker_is';
+    final targetTaskId =
+        widget.debugHarnessEntry?.taskId ?? 'what_poker_is_theory';
+    final world =
+        state.worlds.any((candidate) => candidate.worldId == targetWorldId)
+        ? _worldById(state.worlds, targetWorldId)
+        : state.worldById(state.selectedWorldId);
+    if (!world.lessons.any((lesson) => lesson.lessonId == targetLessonId)) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    final lesson = _lessonById(world.lessons, targetLessonId);
+    if (!lesson.taskList.any((task) => task.taskId == targetTaskId)) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    _startTaskByIds(world, lesson.lessonId, targetTaskId);
+    _returnToPlayHubOnBack = false;
+    _phase = phase;
+    final task = _taskById(lesson, targetTaskId);
+    if (phase == Act0LessonPhaseV1.drill) {
+      _teachingStepIndex = task.runner.teachingSteps.length;
+    } else if (phase == Act0LessonPhaseV1.review) {
+      _teachingStepIndex = task.runner.teachingSteps.length;
+      final selectedOption = task.runner.options
+          .cast<Act0RunnerOptionV1?>()
+          .firstWhere(
+            (option) => option != null && !option.isCorrect,
+            orElse: () =>
+                task.runner.options.isEmpty ? null : task.runner.options.first,
+          );
+      _selectedOptionId = selectedOption?.id;
+    }
+  }
+
+  void _applyDebugReviewSurface(Act0ShellStateV1 state) {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.review;
+    final world = state.worldById('world_1');
+    final lesson = _lessonById(world.lessons, 'what_poker_is');
+    final task = _taskById(lesson, 'what_poker_is_theory');
+    final wrongOption = task.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => option != null && !option.isCorrect,
+          orElse: () =>
+              task.runner.options.isEmpty ? null : task.runner.options.first,
+        );
+    final betterOption = task.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => option != null && option.isCorrect,
+          orElse: () => wrongOption,
+        );
+    if (wrongOption == null || betterOption == null) {
+      return;
+    }
+    _selectedWorldId = world.worldId;
+    _selectedLessonId = lesson.lessonId;
+    _selectedTaskId = task.taskId;
+    _mistakeRecords[task.taskId] = _Act0MistakeRecordV1(
+      taskId: task.taskId,
+      lessonId: lesson.lessonId,
+      worldId: world.worldId,
+      title: task.title,
+      weaknessLabel: _categoryForLesson(lesson.lessonId),
+      selectedOptionId: wrongOption.id,
+      selectedLabel: wrongOption.label,
+      betterLabel: betterOption.betterAnswerLabel,
+      reason: wrongOption.feedbackReason,
+      contextLabels: _repairContextLabels(task.runner, wrongOption),
+      repairActionLabel: _repairActionLabel(task),
+      attempts: 1,
+    );
+  }
+
+  void _applyDebugWorldCompletionSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+    _blockCompletionSummary = const Act0BlockCompletionSummaryV1(
+      lessonTitle: 'Showdown winning',
+      xpEarned: 24,
+      errorCount: 0,
+      taskCount: 4,
+      correctCount: 4,
+      startLevel: 1,
+      endLevel: 2,
+      startXp: 188,
+      endXp: 12,
+      xpTarget: 200,
+      sharkyLine: 'You closed the first world cleanly.',
+      skillGains: <Act0SkillGainV1>[
+        Act0SkillGainV1(
+          label: 'Hand reading',
+          gain: 8,
+          source: 'Poker from Zero',
+        ),
+        Act0SkillGainV1(
+          label: 'Table sense',
+          gain: 5,
+          source: 'Poker from Zero',
+        ),
+      ],
+      milestoneTier: Act0ProgressMilestoneTierV1.world,
+      worldNumber: 1,
+      worldTitle: 'Poker from Zero',
+      nextWorldNumber: 2,
+      nextWorldTitle: 'Hand Discipline',
+      perfectClearCount: 12,
+      completedClearCount: 12,
+      futureRecheckCount: 2,
+    );
+  }
+
   bool _handleLearnLessonSelectV1({
     required Act0LessonCardV1 lesson,
     required String lessonId,
   }) {
+    if (!lesson.isSelectable) {
+      setState(() {
+        _learnPopupTaskId = null;
+        _learnPendingAutoOpenLessonIdV1 = null;
+      });
+      return false;
+    }
     if (_learnDetailLessonId == lessonId) {
       setState(() {
         _learnDetailLessonId = null;
@@ -1617,6 +2000,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
       body: SafeArea(
+        bottom: !isPlayRunner,
         child: Column(
           children: [
             if (showTopBar)
@@ -1965,6 +2349,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               !_taskAvailable(lesson, taskId)) {
                             return;
                           }
+                          _emitLessonStartedTelemetryV1(
+                            lessonId: lessonId,
+                            taskId: taskId,
+                          );
                           setState(() {
                             _selectedLessonId = lessonId;
                             _selectedTaskId = taskId;
@@ -2108,9 +2496,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               )
                             : Act0LessonRunnerShellV1(
                                 runner: playRunner!,
+                                selectedWorldId: selectedWorld.worldId,
+                                selectedLessonId: selectedLesson.lessonId,
                                 selectedTaskId: playSelectedTask?.taskId,
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
+                                telemetrySink: widget.telemetrySink,
                                 theoryRecallStep: theoryRecallStep,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
@@ -2278,6 +2669,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     final repaired =
                                         playRunner.selectedOption?.isCorrect ??
                                         false;
+                                    _emitRepairCompletedTelemetryV1(
+                                      sourceTaskId:
+                                          _activeRepairSourceTaskId ??
+                                          playSelectedTask.taskId,
+                                      repairTaskId: playSelectedTask.taskId,
+                                      repaired: repaired,
+                                    );
                                     if (repaired) {
                                       _completeCurrentTask(playSelectedTask);
                                       if (_activeRepairSourceTaskId != null &&
@@ -2332,6 +2730,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
+                                      completedRepCount: _dailyCompletedRepCount
+                                          .clamp(0, 3),
+                                      cleanRepCount: _dailyCleanRepCountV1(),
+                                      resultSummary:
+                                          _dailyCleanRepCountV1() >=
+                                              _dailyCompletedRepCount.clamp(
+                                                0,
+                                                3,
+                                              )
+                                          ? 'daily_clean_set_complete'
+                                          : 'daily_set_complete',
                                     );
                                     return;
                                   }
@@ -2340,6 +2749,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
+                                      completedRepCount: 1,
+                                      cleanRepCount:
+                                          playRunner
+                                                  .selectedOption
+                                                  ?.isCorrect ??
+                                              false
+                                          ? 1
+                                          : 0,
+                                      resultSummary:
+                                          playRunner
+                                                  .selectedOption
+                                                  ?.isCorrect ??
+                                              false
+                                          ? 'single_clean_rep_complete'
+                                          : 'single_rep_complete',
                                     );
                                     return;
                                   }
@@ -3511,8 +3935,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'проведи одну чистую серию, чтобы удержать сегодняшнее чтение в тонусе без возврата в урок.',
               )
             : _copyV1(
-                en: 'three short spots keep the current route sharp without opening a full lesson.',
-                ru: 'три коротких спота удержат текущий маршрут в тонусе без открытия полного урока.',
+                en: 'three short spots keep today\'s table reads and next decisions feeling ready without reopening a full lesson.',
+                ru: 'три коротких спота удержат сегодняшние чтения стола и следующие решения готовыми без открытия полного урока.',
               ),
         masteryLabel: repairStillOpen
             ? _copyV1(en: 'Review first', ru: 'Сначала разбор')
@@ -3523,8 +3947,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Здесь повторы остаются лёгкими. Ошибку сначала чинит Разбор.',
               )
             : _copyV1(
-                en: 'Short reps keep today\'s skill sharp. Learn adds new ideas. Review fixes misses.',
-                ru: 'Короткие повторы удерживают сегодняшний навык в тонусе. Уроки добавляют новое. Разбор чинит ошибки.',
+                en: 'Short reps keep today\'s skill ready for tomorrow\'s table decisions.',
+                ru: 'Короткие повторы удерживают сегодняшний навык готовым к завтрашним решениям за столом.',
               ),
       );
     }
@@ -4024,6 +4448,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       return;
     }
+    _emitPracticeStartedTelemetryV1(practiceGroupId: group.groupId);
     var launchWorld = selectedWorld;
     final targetWorldId = group.targetWorldId;
     if (targetWorldId != null) {
@@ -4095,6 +4520,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       allowDrillBypass:
           allowDrillBypass || launchTask.phase == Act0LessonPhaseV1.drill,
       rapidPracticeLoop: rapidPracticeLoop,
+    );
+    _emitRepairStartedTelemetryV1(
+      sourceTaskId: sourceTaskId,
+      repairTaskId: repairTaskId,
     );
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
@@ -5009,6 +5438,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!lessonAvailable || !taskAvailable) {
       return;
     }
+    _emitLessonStartedTelemetryV1(
+      lessonId: lesson.lessonId,
+      taskId: task.taskId,
+    );
     _selectedWorldId = selectedWorld.worldId;
     _selectedLessonId = lesson.lessonId;
     _selectedTaskId = task.taskId;
@@ -5045,6 +5478,26 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final category = _categoryForLesson(repairSourceLessonId);
     final contextLabels = _repairContextLabels(selectedTask.runner, option);
     final retentionEntry = _retentionMemoryByTaskId[repairSourceTaskId];
+    final completingAgedRecheck =
+        retentionEntry?.status == _Act0RetentionMemoryStatusV1.agedRecheck;
+    final completingOwnedCandidate =
+        retentionEntry?.status == _Act0RetentionMemoryStatusV1.ownedCandidate;
+    final nextSuccessfulRecheckCount = option.isCorrect
+        ? (retentionEntry?.successfulRecheckCount ?? 0) + 1
+        : (retentionEntry?.successfulRecheckCount ?? 0);
+    if (completingAgedRecheck) {
+      _emitRecheckCompletedTelemetryV1(
+        taskId: repairSourceTaskId,
+        completedCorrectly: option.isCorrect,
+        successfulRecheckCount: nextSuccessfulRecheckCount,
+      );
+    }
+    if (completingOwnedCandidate) {
+      _emitProveCompletedTelemetryV1(
+        taskId: repairSourceTaskId,
+        completedCorrectly: option.isCorrect,
+      );
+    }
     if (option.isCorrect) {
       _incrementSkillStatsForCorrectAnswer(selectedLesson, selectedTask);
       _cleanTaskIds.add(selectedTask.taskId);
@@ -5358,8 +5811,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _teachingStepIndex = 0;
   }
 
-  void _finishRapidPracticeLoopToHub({String? completedLessonId}) {
+  void _finishRapidPracticeLoopToHub({
+    String? completedLessonId,
+    int? completedRepCount,
+    int? cleanRepCount,
+    String? resultSummary,
+  }) {
     final groupId = _activePracticeGroupId;
+    if (groupId != null &&
+        completedRepCount != null &&
+        cleanRepCount != null &&
+        resultSummary != null) {
+      _emitPracticeCompletedTelemetryV1(
+        practiceGroupId: groupId,
+        completedRepCount: completedRepCount,
+        cleanRepCount: cleanRepCount,
+        resultSummary: resultSummary,
+      );
+    }
     if (groupId == 'daily') {
       _practiceCompletionTitle = _copyV1(
         en: 'Daily set complete',
@@ -5654,7 +6123,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? base.strongSpots
         : _strongCategories();
     return Act0ReviewStateV1(
-      title: 'Repair board',
+      title: 'What to fix next',
       subtitle: recommendation.subtitle,
       weaknessLabel: open.isEmpty
           ? base.weaknessLabel
@@ -6737,17 +7206,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
 
-    final normalizedLesson =
-        normalizedWorld.lessons.any(
-          (lesson) => lesson.lessonId == _selectedLessonId,
-        )
+    final selectedLessonExists = normalizedWorld.lessons.any(
+      (lesson) => lesson.lessonId == _selectedLessonId,
+    );
+    final candidateSelectedLesson = selectedLessonExists
         ? _lessonById(normalizedWorld.lessons, _selectedLessonId)
+        : null;
+    final enforcePlayableLessonSelection =
+        _tab == Act0ShellTabV1.learn && !_placementDiagnosticActive;
+    final normalizedLesson =
+        candidateSelectedLesson != null &&
+            (!enforcePlayableLessonSelection ||
+                candidateSelectedLesson.isSelectable)
+        ? candidateSelectedLesson
         : _firstPlayableLesson(normalizedWorld);
     final lessonChanged = _selectedLessonId != normalizedLesson.lessonId;
     if (lessonChanged) {
       _selectedLessonId = normalizedLesson.lessonId;
       _learnDetailLessonId = null;
       _learnPopupTaskId = null;
+    }
+
+    if (_learnDetailLessonId != null) {
+      final detailLessonExists = normalizedWorld.lessons.any(
+        (lesson) => lesson.lessonId == _learnDetailLessonId,
+      );
+      final detailLesson = detailLessonExists
+          ? _lessonById(normalizedWorld.lessons, _learnDetailLessonId!)
+          : null;
+      if (detailLesson == null ||
+          (enforcePlayableLessonSelection && !detailLesson.isSelectable)) {
+        _learnDetailLessonId = null;
+        _learnPopupTaskId = null;
+      }
     }
 
     final taskExists = normalizedLesson.taskList.any(

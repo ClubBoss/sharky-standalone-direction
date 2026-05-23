@@ -49,7 +49,7 @@ rm -rf build/unit_test_assets || true
 mkdir -p build || true
 
 echo "[gate] 3/5 fast loop (tier checks)"
-./tools/fast_loop_world1_v1.sh --force-tests
+./tools/fast_loop_world1_v1.sh --force-tests --all-selected-guards
 
 changed_files="$(git diff --name-only HEAD)"
 

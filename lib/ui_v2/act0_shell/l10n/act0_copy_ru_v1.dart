@@ -58,6 +58,10 @@ _ruLessonCopyByIdV1 = <String, Act0LessonDisplayCopyV1>{
     title: 'Что такое покер',
     subtitle: 'Познакомься со столом, игроками и целью раздачи.',
   ),
+  'what_poker_is_content': Act0LessonDisplayCopyV1(
+    title: 'Что такое покер',
+    subtitle: 'Как банк, фолды и шоудаун определяют исход раздачи.',
+  ),
   'cards_ranks_suits': Act0LessonDisplayCopyV1(
     title: 'Карты, ранги и масти',
     subtitle: '52 карты, 4 масти, 13 рангов.',
@@ -221,6 +225,39 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         'Привычка простая: сперва свои карты и своё место, потом всё остальное.',
     runnerQuestion: 'Какое место принадлежит тебе?',
   ),
+  'first_table_guide_one_clear_choice': Act0TaskDisplayCopyV1(
+    title: 'Сделай один выбор',
+    summary:
+        'Ответь один раз в простой ситуации для новичка, а затем разберись в логике решения.',
+    runnerPrompt:
+        'Одного понятного решения для новичка достаточно, чтобы понять первый цикл обучения.',
+    runnerSupport:
+        'Прочитай ситуацию, сделай один выбор и посмотри объяснение.',
+    runnerQuestion: 'Выбери своё первое действие.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Достаточно одного ответа.',
+        body:
+            'Тебе не нужно писать сложные объяснения. Просто изучи ситуацию, сделай выбор, а затем сопоставь его с логикой решения.',
+      ),
+    ],
+  ),
+  'first_table_guide_route_roles': Act0TaskDisplayCopyV1(
+    title: 'Куда идти дальше',
+    summary:
+        'Разберись, за что отвечают вкладки Главная, Обучение, Практика, Разбор и Профиль.',
+    runnerPrompt: 'Каждый раздел приложения выполняет свою важную задачу.',
+    runnerSupport:
+        'Раздел «Разбор» помогает исправить ошибки, остальные вкладки ведут тебя по маршруту.',
+    runnerQuestion: 'Куда нужно зайти, чтобы исправить сделанные ошибки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Запомни пять задач.',
+        body:
+            '«Главная» показывает следующий шаг. «Обучение» открывает весь маршрут. «Практика» даёт новые тренировки. «Разбор» исправляет ошибки. «Профиль» показывает успехи и настройки.',
+      ),
+    ],
+  ),
   'what_poker_is_pot_stack': Act0TaskDisplayCopyV1(
     title: 'Банк и стек',
     summary:
@@ -228,6 +265,23 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt: 'Стек — это твои фишки. Банк — то, за что сейчас борются.',
     runnerSupport: 'Не смешивай личные фишки игрока с фишками в центре стола.',
     runnerQuestion: 'Где лежат фишки, за которые идёт борьба?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Правила Холдема',
+        body:
+            'На старте ты получаешь 2 карманные карты, а на стол могут выдать до 5 общих карт. В конце раздачи (на шоудауне) побеждает лучшая комбинация из 5 карт.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Начнём с кэш-игры',
+        body:
+            'Мы начинаем с основ кэш-игры: здесь карты, позиции, банк и логика действий не меняются от раздачи к раздаче. Турнирное давление разберём позже.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Банк и стек — это разное',
+        body:
+            'Банк собирается в центре стола, а твой стек всегда остаётся перед тобой, за твоим местом.',
+      ),
+    ],
   ),
   'what_poker_is_win_ways': Act0TaskDisplayCopyV1(
     title: 'Как выигрывают банк',
@@ -238,6 +292,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'На старте достаточно держать в голове только эти два финала.',
     runnerQuestion: 'Как можно выиграть банк?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Два пути к победе',
+        body:
+            'Раздача заканчивается одним из двух способов: либо все соперники сбрасывают карты (фолдят), либо оставшиеся игроки сравнивают комбинации на шоудауне.',
+      ),
+    ],
   ),
   'what_poker_is_showdown_win': Act0TaskDisplayCopyV1(
     title: 'Победа на шоудауне',
@@ -245,6 +306,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerPrompt: 'На шоудауне банк уходит лучшей руке.',
     runnerSupport: 'Сравнивай не отдельные карты, а итоговые лучшие пять.',
     runnerQuestion: 'Что решает исход шоудауна?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Суть шоудауна',
+        body:
+            'Если после всех кругов торговли в игре осталось несколько участников, они открывают свои карты и сравнивают лучшие пятикарточные комбинации.',
+      ),
+    ],
   ),
   'what_poker_is_table_read_transfer': Act0TaskDisplayCopyV1(
     title: 'Первое чтение живого стола',
@@ -255,6 +323,29 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Этот порядок не даёт расплыться вниманию: свои карты, общие карты, потом размер банка.',
     runnerQuestion: 'С чего лучше начать быстрое чтение стола?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Перенеси первое чтение на живой стол.',
+        body:
+            'Даже на живом столе порядок тот же: сначала твои две карты, потом общий борд, потом размер банка.',
+      ),
+    ],
+  ),
+  'what_poker_is_live_win_transfer': Act0TaskDisplayCopyV1(
+    title: 'Победа в реальной игре',
+    summary: 'Перенеси понимание фолдов и шоудауна за реальный игровой стол.',
+    runnerPrompt:
+        'Реальный стол. Ты на баттоне (BTN), блайнды поставлены, банк составляет 1.5 BB.',
+    runnerSupport:
+        'После первого чтения стола вспомни, какими путями может завершиться эта раздача.',
+    runnerQuestion: 'Что в итоге может определить победителя в этой раздаче?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Те же правила для любого стола',
+        body:
+            'Даже в реальной раздаче финал всегда один из двух: либо все сбрасывают карты, либо дело доходит до шоудауна.',
+      ),
+    ],
   ),
   'what_poker_is_review': Act0TaskDisplayCopyV1(
     title: 'Повтор по столу',
@@ -264,6 +355,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Ты играешь из нижнего места, блайнды запускают первый банк, а стол подсказывает, что происходит.',
     runnerQuestion: 'Что такое банк?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Твой чек-лист за столом',
+        body:
+            'Перед любым решением быстро проверь: где твоё место, кто твои соперники, поставлены ли блайнды и каков размер банка.',
+      ),
+    ],
   ),
   'cards_ranks_suits_theory': Act0TaskDisplayCopyV1(
     title: 'Колода',
@@ -723,6 +821,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Этот первый фильтр убирает суету: премиум и сильные руки играются иначе, чем средние и мусорные.',
     runnerQuestion: 'Что лучше назвать до действия?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сначала группа.',
+        body:
+            'До открытия, колла или паса сначала назови группу руки. Этот порядок должен стать простым и повторяемым.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_premium': Act0TaskDisplayCopyV1(
     title: 'Премиум-рука',
@@ -732,6 +837,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Премиум-руки не требуют сложных оправданий: они чаще хотят строить банк, а не прятаться.',
     runnerQuestion: 'Какая группа у АА?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Премиум — это верхняя группа.',
+        body:
+            'AA сразу попадает в премиум. Здесь контекст уже потом уточняет линию, но не меняет базовую силу руки.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_strong': Act0TaskDisplayCopyV1(
     title: 'Сильная рука',
@@ -741,6 +853,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Сильная рука почти всегда играбельна, но это ещё не вершина диапазона.',
     runnerQuestion: 'Какая группа у JJ?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сильная, но не премиум.',
+        body:
+            'JJ — сильная рука, но не самый верх диапазона. Это вторая группа, а не абсолютная вершина.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_medium': Act0TaskDisplayCopyV1(
     title: 'Средняя рука',
@@ -750,6 +869,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Средняя рука не обязана лезть в каждый банк. Ей нужен более удобный спот, чем премиуму.',
     runnerQuestion: 'Какая группа у KQo?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Средней руке нужна опора.',
+        body:
+            'KQo играется, но не отовсюду одинаково хорошо. Средней руке важнее позиция и чистая ситуация.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_trash': Act0TaskDisplayCopyV1(
     title: 'Мусорная рука',
@@ -759,6 +885,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Если рука не тянет на продолжение, дисциплина экономит фишки простым фолдом.',
     runnerQuestion: 'К какой группе отнести J8o в ранней позиции?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Слабая рука рано — это проблема.',
+        body:
+            'У J8o слишком мало запаса, особенно когда ты ещё не видел действий остальных. Такой спот лучше не форсировать.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_borderline': Act0TaskDisplayCopyV1(
     title: 'Погранично сильная',
@@ -768,6 +901,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Эта группа всё ещё играет уверенно, но ей не нужно приписывать силу самого верха.',
     runnerQuestion: 'Какая группа здесь ближе всего?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сильная, но не верхняя.',
+        body:
+            'Такая рука всё ещё хороша, но ей не нужно приписывать силу абсолютного топа. Это просто крепкая вторая группа.',
+      ),
+    ],
   ),
   'hand_discipline_buckets_recap': Act0TaskDisplayCopyV1(
     title: 'Повтор по группам',
@@ -777,6 +917,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Когда рука быстро попадает в нужную группу, префлоп-решения становятся спокойнее и чище.',
     runnerQuestion: 'Какая префлоп-привычка здесь первая?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка по группе.',
+        body:
+            'Сначала назови группу руки, потом смотри на позицию и на то, кто уже вошёл в банк. Так префлоп читается заметно чище.',
+      ),
+    ],
   ),
   'fold_discipline_discipline_intro': Act0TaskDisplayCopyV1(
     title: 'Фолд — это инструмент',
@@ -1023,6 +1170,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Не усложняй спот. Если рука слабая и ты говоришь первым, фолд сохраняет фишки и внимание.',
     runnerQuestion: 'Какое действие здесь самое чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Мусор в ранней позиции.',
+        body:
+            '8♠4♦ из UTG — это чистый мусор. Никакой контекст здесь не обязан спасать такую руку.',
+      ),
+    ],
   ),
   'apply_btn_open': Act0TaskDisplayCopyV1(
     title: 'Баттон, сильная рука',
@@ -1032,6 +1186,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Когда до тебя все выбросили, поздняя позиция и хорошая рука дают чистый повод открыть раздачу.',
     runnerQuestion: 'Какое действие здесь самое чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Сильная рука, хорошее место.',
+        body:
+            'AJo — это сильная группа. Баттон действует позже остальных. Банк чистый, значит открытие выглядит естественно.',
+      ),
+    ],
   ),
   'apply_hj_decision': Act0TaskDisplayCopyV1(
     title: 'HJ, средняя рука',
@@ -1042,6 +1203,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Здесь важно не упрямство, а трезвый каркас: группа руки, место и ситуация должны дать чистую причину продолжать.',
     runnerQuestion: 'Какое решение здесь выглядит наиболее дисциплинированным?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Средняя рука просит честности.',
+        body:
+            'Средняя рука в неудобной ситуации не обязана продолжать только потому, что выглядит знакомо. Сначала каркас, потом амбиции.',
+      ),
+    ],
   ),
   'apply_recap': Act0TaskDisplayCopyV1(
     title: 'Дисциплина держится',
@@ -1051,6 +1219,13 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
     runnerSupport:
         'Хорошая дисциплина не ищет подвигов. Она снова и снова приводит к чистому решению по понятным причинам.',
     runnerQuestion: 'Чего должны избегать знакомые, но слабые руки?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Проверка проблемной руки.',
+        body:
+            'Одной высокой карты мало. Сначала смотри на открытие соперника и на группу руки, а уже потом решай продолжать ли.',
+      ),
+    ],
   ),
   'discipline_checkpoint_checkpoint_intro': Act0TaskDisplayCopyV1(
     title: 'Сначала группа',
@@ -2706,15 +2881,15 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Пройти плейсмент снова',
   ),
   'welcome_intro_title': Act0SurfaceAtomCopyV1(
-    text: 'Учись по одному споту за раз.',
+    text: 'Твой маршрут почти готов.',
   ),
   'welcome_intro_eyebrow': Act0SurfaceAtomCopyV1(text: 'Старт'),
   'welcome_intro_line': Act0SurfaceAtomCopyV1(
     text:
-        'Sharky делает следующий шаг очевидным: один взгляд на стол, один ответ, одно понятное почему.',
+        'Home откроет правильный первый спот. Sharky держит следующий шаг очевидным.',
   ),
   'welcome_intro_detail': Act0SurfaceAtomCopyV1(
-    text: 'Без длинной стены теории. Без догадок, что здесь важнее всего.',
+    text: 'Прочитай один живой стол, ответь один раз и сразу пойми почему.',
   ),
   'welcome_intro_cta': Act0SurfaceAtomCopyV1(
     text: 'Понять, почему это работает',

@@ -47,35 +47,32 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         beatCount: 2,
         title: _atomV1(
           'welcome_intro_title',
-          fallback: 'Learn one spot at a time.',
+          fallback: 'Your path is almost ready.',
         ),
         eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
         line: _atomV1(
           'welcome_intro_line',
           fallback:
-              'Sharky keeps the next move obvious: one table read, one answer, one clear why.',
+              'Home will open the right first spot. Sharky keeps the next move obvious.',
         ),
         detail: _atomV1(
           'welcome_intro_detail',
-          fallback: 'No long theory wall. No guessing what matters first.',
+          fallback: 'Read one real table, answer once, get one clear why.',
         ),
         mood: Act0SharkyMoodV1.happy,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'One guided start', ru: 'Один направленный старт'),
+          title: _copyV1(en: 'What you get next', ru: 'Что ты получишь дальше'),
           body: _copyV1(
-            en: 'Placement is done. One clear hand is next, and Sharky keeps the first move obvious.',
-            ru: 'Плейсмент завершён. Дальше одна ясная раздача, и Шарки держит первый шаг очевидным.',
+            en: 'One clear poker spot, one answer, one reason, then you move.',
+            ru: 'Один ясный покерный спот, один ответ, одна причина, и ты идёшь дальше.',
           ),
           accent: Act0ShellTokensV1.primary,
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           child: _WelcomeLoopStripV1(copy: _copyV1),
         ),
-        ctaLabel: _copyV1(
-          en: 'Open Poker from Zero',
-          ru: 'Открыть «Покер с нуля»',
-        ),
+        ctaLabel: _copyV1(en: 'See your start', ru: 'Посмотреть свой старт'),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.handoff),
       ),
       Act0WelcomeBeatV1.whyEasier ||
@@ -87,27 +84,27 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         title: _copyV1(
           en: widget.replayMode
               ? 'You can reopen this anytime.'
-              : 'You are ready for Poker from Zero.',
+              : 'Your path is ready.',
           ru: widget.replayMode
               ? 'Ты можешь открыть это снова в любой момент.'
-              : 'Ты готов к «Покеру с нуля».',
+              : 'Твой маршрут готов.',
         ),
         eyebrow: _atomV1('welcome_handoff_eyebrow', fallback: 'Next step'),
         line: _copyV1(
           en: widget.replayMode
               ? 'The route stays the same: Home shows what to do now, and Learn keeps the path visible.'
-              : 'Now the route can stay simple: Home shows what to do now, and Learn keeps the path visible.',
+              : 'Home opens with one clear poker spot, and Learn keeps the rest of the path visible.',
           ru: widget.replayMode
               ? 'Путь остаётся тем же: Home показывает, что делать сейчас, а Learn держит маршрут на виду.'
-              : 'Теперь маршрут может быть простым: Home показывает, что делать сейчас, а Learn держит путь на виду.',
+              : 'Home открывает один ясный покерный спот, а Learn держит остальной путь на виду.',
         ),
         detail: _copyV1(
           en: widget.replayMode
               ? 'Go back when you are ready. Your progress stays exactly where it was.'
-              : 'You already know the loop. Next comes the first real lesson.',
+              : 'You already know the loop. Open the start and take the first real lesson.',
           ru: widget.replayMode
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
-              : 'Цикл уже понятен. Дальше идёт первый настоящий урок.',
+              : 'Цикл уже понятен. Открой старт и перейди к первому настоящему уроку.',
         ),
         mood: Act0SharkyMoodV1.celebrate,
         replayMode: widget.replayMode,
@@ -128,8 +125,8 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           child: _WelcomeLoopStripV1(copy: _copyV1),
         ),
         ctaLabel: _copyV1(
-          en: widget.replayMode ? 'Back to profile' : 'Open Poker from Zero',
-          ru: widget.replayMode ? 'Назад в профиль' : 'Открыть «Покер с нуля»',
+          en: widget.replayMode ? 'Back to profile' : 'Open your start',
+          ru: widget.replayMode ? 'Назад в профиль' : 'Открыть свой старт',
         ),
         onNext: widget.onCompleted,
       ),

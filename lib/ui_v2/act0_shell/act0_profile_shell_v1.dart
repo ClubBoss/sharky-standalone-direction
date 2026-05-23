@@ -53,6 +53,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
         const SizedBox(height: Act0ShellTokensV1.gapSm),
         _ProfileHeroCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
+        if (profile.recommendedFocusTitle.isNotEmpty) ...[
+          _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+        ],
         if (profile.recentSkillGains.isNotEmpty ||
             profile.mistakesFixedLine.isNotEmpty ||
             profile.streakLine.isNotEmpty ||
@@ -60,15 +64,18 @@ class Act0ProfileShellV1 extends StatelessWidget {
           _ProfileRecentGainsCardV1(profile: profile),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
         ],
-        if (profile.recommendedFocusTitle.isNotEmpty) ...[
-          _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
-        if (profile.skillStats.isNotEmpty) ...[
-          _ProfileSkillStatsStripV1(profile: profile),
+        if (profile.recentSkillGains.isNotEmpty ||
+            profile.strongCategories.isNotEmpty ||
+            profile.weakCategories.isNotEmpty ||
+            profile.recommendedFocusTitle.isNotEmpty) ...[
+          _ProfileIdentityCardV1(profile: profile),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
         ],
         _ProfileConsistencyCardV1(profile: profile),
+        if (profile.skillStats.isNotEmpty) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ProfileSkillStatsStripV1(profile: profile),
+        ],
         if (profile.achievements.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileMilestonesCardV1(profile: profile),
@@ -307,8 +314,8 @@ class _ProfileHeroCardV1 extends StatelessWidget {
   final headline = gain.isNotEmpty
       ? _profileCopyV1(
           context,
-          en: '$gain moved recently.',
-          ru: '$gain сдвинулся недавно.',
+          en: 'You are getting better at $gain.',
+          ru: 'Ты становишься сильнее в $gain.',
         )
       : strong.isNotEmpty
       ? _profileCopyV1(
@@ -681,9 +688,11 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
     final recentGainByLabel = <String, Act0SkillGainV1>{
       for (final gain in recentGains) gain.label: gain,
     };
+    final inlineStats = visibleStats.take(2).toList(growable: false);
+    final hasMoreStats = visibleStats.length > inlineStats.length;
     return Container(
       key: const Key('act0_shell_profile_skill_stats'),
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(12),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.surface2,
         borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
@@ -702,11 +711,11 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
             _profileCopyV1(
               context,
               en: profile.recentSkillGains.isEmpty
-                  ? 'This is what your game is actually made of.'
-                  : 'Recent progress shows what is starting to stick right now.',
+                  ? 'Keep the key parts of your game in view without turning this into a report.'
+                  : 'Keep the sharpest skill signals in view. Open the full list when you want the deeper read.',
               ru: profile.recentSkillGains.isEmpty
-                  ? 'Это и есть те навыки, из которых реально состоит твоя игра.'
-                  : 'Последние приросты показывают, куда игра двигается прямо сейчас.',
+                  ? 'Главные части твоей игры остаются на виду, но экран не превращается в отчёт.'
+                  : 'Здесь видны самые живые сигналы навыков. Полный список можно открыть отдельно.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
@@ -732,16 +741,49 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 10),
-          _TwoColumnStaggeredGridV1(
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Column(
             children: [
-              for (final stat in visibleStats)
-                _ProfileSkillCardV1(
+              for (final stat in inlineStats) ...[
+                _ProfileSkillSummaryTileV1(
                   stat: stat,
                   gain: recentGainByLabel[stat.label],
                 ),
+                if (stat != inlineStats.last)
+                  const SizedBox(height: Act0ShellTokensV1.gapSm),
+              ],
             ],
           ),
+          if (hasMoreStats) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton(
+                key: const Key('act0_shell_profile_skills_button'),
+                onPressed: () => _showAllSkillsSheet(
+                  context,
+                  visibleStats,
+                  recentGainByLabel,
+                ),
+                style: Act0ShellTokensV1.quietButtonStyle().copyWith(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusMd,
+                      ),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  _profileCopyV1(
+                    context,
+                    en: 'View all skills',
+                    ru: 'Все навыки',
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -766,7 +808,7 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
     );
     return Container(
       key: const Key('act0_shell_profile_streak_nudge'),
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(12),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.surface3.withOpacity(0.78),
         borderColor: Act0ShellTokensV1.border,
@@ -856,8 +898,30 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
             ),
           ),
           if (profile.streakLast7.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _StreakCalendarV1(days: profile.streakLast7),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Row(
+              children: [
+                Expanded(
+                  child: _CompactStreakStripV1(days: profile.streakLast7),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                OutlinedButton(
+                  key: const Key('act0_shell_profile_rhythm_week_button'),
+                  onPressed: () => _showRhythmWeekSheet(context, profile),
+                  style: Act0ShellTokensV1.quietButtonStyle().copyWith(
+                    minimumSize: const WidgetStatePropertyAll(
+                      Size(0, Act0ShellTokensV1.compactCtaHeight),
+                    ),
+                    padding: const WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    ),
+                  ),
+                  child: Text(
+                    _profileCopyV1(context, en: 'View week', ru: 'Неделя'),
+                  ),
+                ),
+              ],
+            ),
           ],
         ],
       ),
@@ -999,6 +1063,7 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 420;
     final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
     final showStrength =
         recentGains.isNotEmpty || profile.strongCategories.isNotEmpty;
@@ -1006,9 +1071,20 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
     final showReturnValue =
         profile.streakLine.trim().isNotEmpty ||
         profile.qualityLine.trim().isNotEmpty;
+    final primaryGain = recentGains.isNotEmpty ? recentGains.first : null;
+    final supportRow = _profileRecentSupportRowV1(
+      context,
+      profile,
+      compact: compact,
+      showReturnValue: showReturnValue,
+      showStrength: showStrength,
+      showFixed: showFixed,
+    );
     return Container(
       key: const Key('act0_shell_profile_recent_skill_gains'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: EdgeInsets.all(
+        compact ? Act0ShellTokensV1.gapMd : Act0ShellTokensV1.gapLg,
+      ),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.surface2,
         borderColor: Act0ShellTokensV1.info.withOpacity(0.20),
@@ -1028,74 +1104,109 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            _profileCopyV1(
-              context,
-              en: 'See what improved, what is getting stronger, and why the next session starts warmer.',
-              ru: 'Здесь видно, что улучшилось, что укрепляется и почему следующий заход начнётся теплее.',
-            ),
+            compact
+                ? _profileRecentProgressSummaryV1(context, profile)
+                : _profileCopyV1(
+                    context,
+                    en: 'See what improved, what is getting stronger, and why the next session starts warmer.',
+                    ru: 'Здесь видно, что улучшилось, что укрепляется и почему следующий заход начнётся теплее.',
+                  ),
+            key: compact
+                ? const Key('act0_shell_profile_recent_progress_summary')
+                : null,
             style: Act0ShellTokensV1.muted,
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          for (
-            var index = 0;
-            index < recentGains.take(2).length;
-            index += 1
-          ) ...[
+          SizedBox(
+            height: compact ? Act0ShellTokensV1.gapSm : Act0ShellTokensV1.gapMd,
+          ),
+          if (primaryGain != null) ...[
             _ProfilePayoffRowV1(
               label: _profileCopyV1(context, en: 'Improved', ru: 'Улучшилось'),
-              title: '${recentGains[index].label} +${recentGains[index].gain}',
-              body: _profileGainPayoffBodyV1(context, recentGains[index]),
+              title: '${primaryGain.label} +${primaryGain.gain}',
+              body: _profileGainPayoffBodyV1(context, primaryGain),
               tone: Act0ShellTokensV1.info,
+              compact: compact,
             ),
-            if (index < recentGains.take(2).length - 1 ||
-                showStrength ||
-                showFixed ||
-                showReturnValue)
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-          ],
-          if (showStrength) ...[
-            _ProfilePayoffRowV1(
-              label: _profileCopyV1(
-                context,
-                en: 'Getting stronger',
-                ru: 'Становится сильнее',
+            if (supportRow != null)
+              SizedBox(
+                height: compact
+                    ? Act0ShellTokensV1.gapSm
+                    : Act0ShellTokensV1.gapMd,
               ),
-              title: _profileStrengthPayoffTitleV1(context, profile),
-              body: _profileStrengthPayoffBodyV1(context, profile),
-              tone: Act0ShellTokensV1.primary,
-            ),
-            if (showFixed || showReturnValue)
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
           ],
-          if (showFixed) ...[
-            _ProfilePayoffRowV1(
-              label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
-              title: profile.mistakesFixedLine,
-              body: _profileFixedSupportBodyV1(
-                context,
-                profile.mistakesFixedLine,
-              ),
-              tone: Act0ShellTokensV1.primary,
-            ),
-            if (showReturnValue)
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-          ],
-          if (showReturnValue) ...[
-            _ProfilePayoffRowV1(
-              label: _profileCopyV1(
-                context,
-                en: 'Return value',
-                ru: 'Зачем вернуться',
-              ),
-              title: _profileReturnValueTitleV1(context, profile),
-              body: _profileReturnValueBodyV1(context, profile),
-              tone: Act0ShellTokensV1.gold,
-            ),
-          ],
+          if (supportRow != null) supportRow,
         ],
       ),
     );
   }
+}
+
+Widget? _profileRecentSupportRowV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile, {
+  required bool compact,
+  required bool showReturnValue,
+  required bool showStrength,
+  required bool showFixed,
+}) {
+  if (showReturnValue) {
+    return _ProfilePayoffRowV1(
+      label: _profileCopyV1(context, en: 'Return value', ru: 'Зачем вернуться'),
+      title: _profileReturnValueTitleV1(context, profile),
+      body: _profileReturnValueBodyV1(context, profile),
+      tone: Act0ShellTokensV1.gold,
+      compact: compact,
+    );
+  }
+  if (showStrength) {
+    return _ProfilePayoffRowV1(
+      label: _profileCopyV1(
+        context,
+        en: 'Getting stronger',
+        ru: 'Становится сильнее',
+      ),
+      title: _profileStrengthPayoffTitleV1(context, profile),
+      body: _profileStrengthPayoffBodyV1(context, profile),
+      tone: Act0ShellTokensV1.primary,
+      compact: compact,
+    );
+  }
+  if (showFixed) {
+    return _ProfilePayoffRowV1(
+      label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
+      title: profile.mistakesFixedLine,
+      body: _profileFixedSupportBodyV1(context, profile.mistakesFixedLine),
+      tone: Act0ShellTokensV1.primary,
+      compact: compact,
+    );
+  }
+  return null;
+}
+
+String _profileRecentProgressSummaryV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+) {
+  final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+  if (recentGains.isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: '${recentGains.first.label} is starting to hold.',
+      ru: '${recentGains.first.label} начинает закрепляться.',
+    );
+  }
+  if (profile.mistakesFixedLine.trim().isNotEmpty) {
+    return _profileCopyV1(
+      context,
+      en: 'One repaired spot is back under control.',
+      ru: 'Один исправленный спот снова под контролем.',
+    );
+  }
+  return _profileCopyV1(
+    context,
+    en: 'Recent clean reps are keeping the skill live.',
+    ru: 'Недавние чистые повторы держат навык живым.',
+  );
 }
 
 String _profileGainPayoffBodyV1(BuildContext context, Act0SkillGainV1 gain) {
@@ -1103,8 +1214,8 @@ String _profileGainPayoffBodyV1(BuildContext context, Act0SkillGainV1 gain) {
   if (source.isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: 'Started sticking in $source.',
-      ru: 'Начало закрепляться в $source.',
+      en: '${gain.label} is starting to show up more naturally in $source.',
+      ru: '${gain.label} начинает естественнее проявляться в $source.',
     );
   }
   return _profileSkillInsightBodyV1(context, gain.label);
@@ -1149,14 +1260,19 @@ String _profileReturnValueBodyV1(
   final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
   final hasKeptSharpSignal =
       profile.qualityLine.trim().isNotEmpty || recentGains.isNotEmpty;
+  final hasFixedSignal = profile.mistakesFixedLine.trim().isNotEmpty;
   if (profile.streakDays >= 3) {
     return _profileCopyV1(
       context,
       en: hasKeptSharpSignal
-          ? 'Returning tomorrow starts warmer because recent clean reps already kept this skill live.'
+          ? hasFixedSignal
+                ? 'Returning tomorrow starts warmer because recent clean reps kept this skill live, that repaired spot stayed under control, and the next close decision should feel clearer.'
+                : 'Returning tomorrow starts warmer because recent clean reps already kept this skill live and the next close decision should feel clearer.'
           : 'Returning tomorrow starts warmer because your rhythm is already live.',
       ru: hasKeptSharpSignal
-          ? 'Вернуться завтра будет проще, потому что недавние чистые повторы уже удержали этот навык живым.'
+          ? hasFixedSignal
+                ? 'Вернуться завтра будет проще, потому что недавние чистые повторы удержали этот навык живым, исправленный спот остался под контролем, а следующее близкое решение должно читаться яснее.'
+                : 'Вернуться завтра будет проще, потому что недавние чистые повторы уже удержали этот навык живым, а следующее близкое решение должно читаться яснее.'
           : 'Вернуться завтра будет проще, потому что ритм уже живой.',
     );
   }
@@ -1164,10 +1280,10 @@ String _profileReturnValueBodyV1(
     return _profileCopyV1(
       context,
       en: hasKeptSharpSignal
-          ? 'One more clean return keeps this skill feeling familiar instead of distant.'
+          ? 'One more clean return keeps this skill feeling familiar, so the next close decision does not feel far away again.'
           : 'One more clean return turns repetition into feel.',
       ru: hasKeptSharpSignal
-          ? 'Ещё одно чистое возвращение удержит этот навык знакомым, а не далёким.'
+          ? 'Ещё одно чистое возвращение удержит этот навык знакомым, чтобы следующее близкое решение снова не казалось далёким.'
           : 'Ещё одно чистое возвращение превращает повторение в ощущение.',
     );
   }
@@ -1184,32 +1300,36 @@ class _ProfilePayoffRowV1 extends StatelessWidget {
     required this.title,
     required this.body,
     required this.tone,
+    this.compact = false,
   });
 
   final String label;
   final String title;
   final String body;
   final Color tone;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      padding: EdgeInsets.all(
+        compact ? Act0ShellTokensV1.gapSm : Act0ShellTokensV1.gapMd,
+      ),
       decoration: BoxDecoration(
-        color: tone.withOpacity(0.06),
+        color: tone.withOpacity(compact ? 0.035 : 0.06),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: tone.withOpacity(0.16)),
+        border: Border.all(color: tone.withOpacity(compact ? 0.10 : 0.16)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: Act0ShellTokensV1.label.copyWith(color: tone)),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          SizedBox(height: compact ? 3 : Act0ShellTokensV1.gapXs),
           Text(
             title,
             style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: 3),
+          SizedBox(height: compact ? 2 : 3),
           Text(
             body,
             style: Act0ShellTokensV1.muted,
@@ -1331,8 +1451,8 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
           );
     final body = _profileCopyV1(
       context,
-      en: 'You can already see what is steady, what is growing, and what still needs calm reps.',
-      ru: 'Уже видно, что у тебя стабильно, что растёт и где ещё нужен спокойный повтор.',
+      en: 'Recent reps are turning into steadier reads, clearer growth, and one calm next step.',
+      ru: 'Недавние повторы превращаются в более устойчивые чтения, более ясный рост и один спокойный следующий шаг.',
     );
     return Container(
       key: const Key('act0_shell_profile_identity_card'),
@@ -1879,6 +1999,124 @@ class _ProfileSkillCardV1 extends StatelessWidget {
   }
 }
 
+class _ProfileSkillSummaryTileV1 extends StatelessWidget {
+  const _ProfileSkillSummaryTileV1({required this.stat, this.gain});
+
+  final Act0PlacementSkillStatV1 stat;
+  final Act0SkillGainV1? gain;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = stat.locked
+        ? Act0ShellTokensV1.textMuted
+        : Act0ShellTokensV1.primary;
+    return InkWell(
+      key: Key('act0_shell_profile_skill_stat_${stat.label}'),
+      onTap: () => _showSkillDetailsSheet(context, stat),
+      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Act0ShellTokensV1.gapMd,
+          vertical: Act0ShellTokensV1.gapSm,
+        ),
+        decoration: Act0ShellTokensV1.surfaceDecoration(
+          color: Act0ShellTokensV1.surface3.withOpacity(0.54),
+          borderColor: stat.locked
+              ? Act0ShellTokensV1.border
+              : tone.withOpacity(gain == null ? 0.10 : 0.16),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(stat.label, style: Act0ShellTokensV1.body),
+                  const SizedBox(height: 2),
+                  Text(
+                    stat.locked
+                        ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
+                        : stat.levelLabel,
+                    style: Act0ShellTokensV1.label.copyWith(color: tone),
+                  ),
+                ],
+              ),
+            ),
+            if (gain != null) ...[
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.gold.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusMd,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.gold.withOpacity(0.16),
+                  ),
+                ),
+                child: Text(
+                  '+${gain!.gain}',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.gold,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CompactStreakStripV1 extends StatelessWidget {
+  const _CompactStreakStripV1({required this.days});
+
+  final List<bool> days;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_profile_rhythm_strip'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0ShellTokensV1.gapSm,
+        vertical: 10,
+      ),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.58),
+        borderColor: Act0ShellTokensV1.border.withOpacity(0.82),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < days.length; i++) ...[
+            Expanded(
+              child: Container(
+                height: 10,
+                decoration: BoxDecoration(
+                  color: days[i]
+                      ? Act0ShellTokensV1.primary.withOpacity(0.86)
+                      : Act0ShellTokensV1.surface3.withOpacity(0.88),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radius2xs,
+                  ),
+                  border: i == days.length - 1
+                      ? Border.all(
+                          color: Act0ShellTokensV1.gold.withOpacity(0.62),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            if (i != days.length - 1)
+              const SizedBox(width: Act0ShellTokensV1.gapXs),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
   showModalBottomSheet<void>(
     context: context,
@@ -1924,6 +2162,68 @@ void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
                           label: achievement.label,
                           icon: _achievementIconForAchievement(achievement),
                           locked: achievement.locked,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _showAllSkillsSheet(
+  BuildContext context,
+  List<Act0PlacementSkillStatV1> stats,
+  Map<String, Act0SkillGainV1> recentGainByLabel,
+) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          key: const Key('act0_shell_profile_skills_sheet'),
+          margin: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderColor: Act0ShellTokensV1.primary.withOpacity(0.22),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _profileCopyV1(
+                  context,
+                  en: 'Skill details',
+                  ru: 'Навыки подробно',
+                ),
+                style: Act0ShellTokensV1.sectionTitle,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                _profileCopyV1(
+                  context,
+                  en: 'All tracked skill families stay here when you want the full picture.',
+                  ru: 'Все отслеживаемые семьи навыков остаются здесь, когда нужен полный обзор.',
+                ),
+                style: Act0ShellTokensV1.muted,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: _TwoColumnStaggeredGridV1(
+                    children: [
+                      for (final stat in stats)
+                        _ProfileSkillCardV1(
+                          stat: stat,
+                          gain: recentGainByLabel[stat.label],
                         ),
                     ],
                   ),
@@ -2004,6 +2304,46 @@ void _showSkillDetailsSheet(
                 ),
                 text: stat.whyImportant,
               ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _showRhythmWeekSheet(BuildContext context, Act0ProfileStateV1 profile) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          margin: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+          decoration: Act0ShellTokensV1.surfaceDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderColor: Act0ShellTokensV1.gold.withOpacity(0.22),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _profileCopyV1(context, en: 'Weekly rhythm', ru: 'Ритм недели'),
+                style: Act0ShellTokensV1.sectionTitle,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                _profileCopyV1(
+                  context,
+                  en: 'Keep the week visible without letting it take over the whole screen.',
+                  ru: 'Неделя остаётся видимой, но не забирает на себя весь экран.',
+                ),
+                style: Act0ShellTokensV1.muted,
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              _StreakCalendarV1(days: profile.streakLast7),
             ],
           ),
         ),

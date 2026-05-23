@@ -66,6 +66,18 @@ Current calibration:
 - `docs/plan/EXECUTION_POLICY_SSOT_v1.md` is now the compact execution-policy
   wrapper for future prompt reuse, deferred-lane discipline, and rebuild-gate
   rules
+- `docs/plan/CONTROLLED_DEMO_PROOF_PACKET_v1.md` now owns the canonical
+  controlled internal demo path, pre-demo proof floor, known-gap list, and
+  pass/fail admission rules
+- 2026-05-21 scoring correction:
+  - future aggregate readiness should use the unit-based formulas and guardrails
+    in `docs/plan/FULL_PRODUCT_READINESS_LEDGER_v1.md`
+  - default delta is now `0` unless a wave materially reduces a named risk
+- 2026-05-21 DoD correction:
+  - `docs/plan/FULL_PRODUCT_READINESS_LEDGER_v1.md` now contains block-level
+    DoD criteria for future unit movement
+  - future summaries should cite the affected block criteria instead of treating
+    remaining units as tiny task tickets
 
 2026-05-21 floor update:
 

@@ -106,8 +106,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         ),
                         subtitle: _placementCopyV1(
                           context,
-                          en: 'A few fast answers, then Sharky picks where to begin.',
-                          ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                          en: 'Answer a few quick questions so Sharky can start you in the right place.',
+                          ru: 'Ответь на пару быстрых вопросов, и Шарки начнёт тебя с правильного места.',
                         ),
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -168,8 +168,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
           _PlacementFlowActionBarV1(
             title: showIntro
                 ? (localeIsRu
-                      ? 'Две минуты. Потом Шарки покажет, с чего начать.'
-                      : 'Two minutes. Then Sharky shows where to start.')
+                      ? 'Около двух минут. Потом первый урок будет готов.'
+                      : 'About two minutes. Then your first lesson is ready.')
                 : explicitBeginnerStart
                 ? (localeIsRu
                       ? 'Начни с нуля и пропусти живую проверку.'
@@ -191,7 +191,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
                   : 'act0_shell_placement_next_cta',
             ),
             buttonLabel: showIntro
-                ? (localeIsRu ? 'Начать плейсмент' : 'Start placement')
+                ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
                 : explicitBeginnerStart
                 ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
                 : currentQuestionIndex >= questions.length
@@ -357,8 +357,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 Text(
                   _placementCopyV1(
                     context,
-                    en: 'Answer a few table reads so Sharky can place you better.',
-                    ru: 'Ответь на несколько чтений стола, и Шарки точнее выберет старт.',
+                    en: 'A few table reads now make sure the first lesson starts in the right place.',
+                    ru: 'Пара чтений стола сейчас поможет точно запустить первый урок с нужного места.',
                   ),
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
@@ -603,8 +603,8 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           Text(
             _placementCopyV1(
               context,
-              en: 'A few fast answers help Sharky choose your first hand.',
-              ru: 'Пара быстрых ответов помогут Шарки выбрать твою первую раздачу.',
+              en: 'A few quick answers point Sharky to your first useful lesson.',
+              ru: 'Пара быстрых ответов направят Шарки к твоему первому полезному уроку.',
             ),
             style: Act0ShellTokensV1.screenTitle,
           ),
@@ -612,13 +612,11 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           Text(
             _placementCopyV1(
               context,
-              en: 'Find the right starting point first, then move straight into one clear poker spot.',
-              ru: 'Сначала найди правильную стартовую точку, а потом сразу переходи к одному ясному покерному споту.',
+              en: 'You skip the wrong opener and get to the first real table spot faster.',
+              ru: 'Так ты пропустишь лишний старт и быстрее попадёшь в первый живой покерный спот.',
             ),
             key: const Key('act0_shell_placement_intro_support'),
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.text,
-            ),
+            style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Wrap(
@@ -637,15 +635,15 @@ class _PlacementIntroViewV1 extends StatelessWidget {
                 label: _placementCopyV1(
                   context,
                   en: '1 short table check',
-                  ru: '1 короткая проверка стола',
+                  ru: '1 короткий чек стола',
                 ),
                 tone: Act0ShellTokensV1.info,
               ),
               _PlacementIntroChipV1(
                 label: _placementCopyV1(
                   context,
-                  en: 'First hand ready',
-                  ru: 'Первая раздача готова',
+                  en: 'Start first lesson',
+                  ru: 'Старт первого урока',
                 ),
                 tone: Act0ShellTokensV1.gold,
               ),

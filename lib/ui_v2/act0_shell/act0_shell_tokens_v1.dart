@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 class Act0ShellTokensV1 {
   const Act0ShellTokensV1._();
 
+  // Deep Ocean Gold v1.1 token guardrails:
+  // - Felt stays green and gameplay-owned.
+  // - Cyan is a focus/coach accent, not a general surface fill.
+  // - Gold is reserved for mastery, reward, and milestone emphasis.
+  // - Filled primary actions must keep safe contrast with their foreground.
   static const Color background = Color(0xFF06090D);
   static const Color surface = Color(0xFF0B1119);
   static const Color surface2 = Color(0xFF101724);
@@ -11,7 +16,7 @@ class Act0ShellTokensV1 {
   static const Color text = Color(0xFFEBF1F5);
   static const Color textMuted = Color(0xFFB0C0CC);
   static const Color textDim = Color(0xFF8092A3);
-  static const Color primary = Color(0xFF0A8FA8);
+  static const Color primary = Color(0xFF087B91);
   static const Color primaryDark = Color(0xFF05262E);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color gold = Color(0xFFD4AF37);

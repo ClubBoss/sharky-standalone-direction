@@ -513,8 +513,8 @@ class Act0HomeShellV1 extends StatelessWidget {
             label: _shellCopyV1(context, en: 'Review', ru: 'Повтор'),
             title: _shellCopyV1(
               context,
-              en: 'Recheck old spot',
-              ru: 'Повтори старый спот',
+              en: 'Check confidence',
+              ru: 'Проверь уверенность',
             ),
             detail: recheckJob.title,
             icon: Icons.refresh_rounded,

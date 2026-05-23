@@ -1,7 +1,7 @@
 import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
 import 'package:poker_analyzer/l10n/app_localizations.dart';
 import 'package:poker_analyzer/navigation/deep_link_target_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
@@ -32,6 +32,86 @@ const Set<String> _legacySurfaceRoutes = <String>{
   '/training',
   '/ui_v2/progress_map',
 };
+
+@visibleForTesting
+Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
+  final rawCapture = (uri.queryParameters['act0_capture'] ?? '')
+      .trim()
+      .toLowerCase();
+  switch (rawCapture) {
+    case 'placement':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.walkthrough,
+        surface: Act0ControlledDemoCaptureSurfaceV1.placement,
+      );
+    case 'welcome':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.walkthrough,
+        surface: Act0ControlledDemoCaptureSurfaceV1.welcome,
+      );
+    case 'home':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.walkthrough,
+        surface: Act0ControlledDemoCaptureSurfaceV1.home,
+      );
+    case 'learn':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.walkthrough,
+        surface: Act0ControlledDemoCaptureSurfaceV1.learn,
+      );
+    case 'runner_theory':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+      );
+    case 'runner_drill':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      );
+    case 'runner_feedback':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+      );
+    case 'review':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.review,
+      );
+    case 'practice':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.practice,
+      );
+    case 'profile':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.profile,
+      );
+    case 'world_completion':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.worldCompletion,
+      );
+    case 'runner':
+      final worldId = (uri.queryParameters['world'] ?? '').trim();
+      final lessonId = (uri.queryParameters['lesson'] ?? '').trim();
+      final taskId = (uri.queryParameters['task'] ?? '').trim();
+      if (worldId.isEmpty || lessonId.isEmpty || taskId.isEmpty) {
+        return null;
+      }
+      return Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+        worldId: worldId,
+        lessonId: lessonId,
+        taskId: taskId,
+      );
+    default:
+      return null;
+  }
+}
 
 Route<dynamic>? buildLegacySurfaceRedirectRoute(RouteSettings settings) {
   if (!_allowLegacySurfaces && _legacySurfaceRoutes.contains(settings.name)) {
@@ -390,6 +470,7 @@ class _EntryGateState extends State<_EntryGate> {
   bool _checked = false;
   bool _entryReady = false;
   bool _showPlacementOnStart = true;
+  Act0ShellDebugHarnessEntryV1? _debugHarnessEntry;
   bool _deepLinkHandled = false;
   final Set<String> _entryErrorsLogged = <String>{};
 
@@ -416,9 +497,15 @@ class _EntryGateState extends State<_EntryGate> {
     final onboardingCompleted =
         await OnboardingPreferencesService.hasCompletedOnboarding();
     final showPlacementOnStart = !onboardingCompleted;
+    final debugHarnessEntry = kReleaseMode
+        ? null
+        : parseAct0ControlledDemoHarnessEntryV1(Uri.base);
     if (!mounted) return;
     setState(() {
-      _showPlacementOnStart = showPlacementOnStart;
+      _debugHarnessEntry = debugHarnessEntry;
+      _showPlacementOnStart = debugHarnessEntry == null
+          ? showPlacementOnStart
+          : false;
       _entryReady = true;
     });
     await _safeStart('Deep link', _maybeHandleDeepLink);
@@ -438,6 +525,7 @@ class _EntryGateState extends State<_EntryGate> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Act0ShellPreviewScreenV1(
+      debugHarnessEntry: _debugHarnessEntry,
       showPlacementOnStart: _showPlacementOnStart,
     );
   }

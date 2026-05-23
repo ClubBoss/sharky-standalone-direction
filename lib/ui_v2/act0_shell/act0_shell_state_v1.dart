@@ -1985,6 +1985,57 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'hand_rankings_full_house_drill',
+        title: 'Full house shape',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _fullHouseRankRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_quads_drill',
+        title: 'Four of a kind',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _quadsRankRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_royal_flush_drill',
+        title: 'Royal flush check',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _royalFlushRankRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_full_house_vs_flush_drill',
+        title: 'Full house beats flush',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _fullHouseVsFlushRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_quads_vs_full_house_drill',
+        title: 'Quads beat full house',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _quadsVsFullHouseRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'hand_rankings_royal_vs_flush_drill',
+        title: 'Royal flush wins',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _royalFlushVsFlushRunner,
+        rewardXp: 7,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.compare,
+      ),
+      Act0LessonTaskV1(
         taskId: 'hand_rankings_best_five_drill',
         title: 'Choose best five',
         phase: Act0LessonPhaseV1.drill,
@@ -5901,6 +5952,16 @@ const _heroA7oCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
 ];
 
+const _heroAs7sCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 's'),
+  Act0CardStateV1(rank: '7', suit: 's'),
+];
+
+const _hero7s7hCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '7', suit: 's'),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+];
+
 const _heroAjCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: 'A', suit: 's'),
   Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
@@ -6051,6 +6112,54 @@ const _boardFlushHearts = <Act0CardStateV1>[
   Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
 ];
 
+const _boardFlushVsStraight = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'c'),
+  Act0CardStateV1(rank: 'T', suit: 'd', tone: Act0CardToneV1.red),
+];
+
+const _boardTripsAces = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'A', suit: 'c'),
+  Act0CardStateV1(rank: '2', suit: 'c'),
+  Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+];
+
+const _boardFullHouseVsFlush = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'A', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 'c'),
+];
+
+const _boardQuadsQueens = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'Q', suit: 'c'),
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'c'),
+  Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'c'),
+];
+
+const _boardQuadsVsFullHouse = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'Q', suit: 'c'),
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '7', suit: 'c'),
+  Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 's'),
+];
+
+const _boardRoyalFlushHearts = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '2', suit: 'c'),
+  Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+];
+
 const _boardThreeQueens = <Act0CardStateV1>[
   Act0CardStateV1(rank: 'Q', suit: 'c'),
   Act0CardStateV1(rank: '7', suit: 'c'),
@@ -6069,6 +6178,25 @@ const _opponentJd7hCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
 ];
 
+const _opponent8c9sCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '8', suit: 'c'),
+  Act0CardStateV1(rank: '9', suit: 's'),
+];
+
+const _opponentKhQhCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _opponentAc7hCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'A', suit: 'c'),
+  Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+];
+
+const _opponent9h3hCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: '3', suit: 'h', tone: Act0CardToneV1.red),
+];
 const _hero89Cards = <Act0CardStateV1>[
   Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
   Act0CardStateV1(rank: '9', suit: 's'),
@@ -7659,13 +7787,22 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'hand_ranking_intro',
   caption: 'Hand rank names describe made hands.',
-  hint: 'Start with the ladder: pair, two pair, trips, straight, flush.',
+  hint:
+      'Start with the ladder: pair, two pair, trips, straight, flush, full house, quads, straight flush.',
   question: 'What do hand rankings compare?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Ranking ladder.',
-      body: 'Hand names tell which made hand is stronger.',
-      focusLabels: <String>['Pair', 'Two pair', 'Straight', 'Flush'],
+      body:
+          'Hand names tell which made hand is stronger, all the way up to full house, quads, and straight flush.',
+      focusLabels: <String>[
+        'Pair',
+        'Two pair',
+        'Straight',
+        'Flush',
+        'Full house',
+        'Quads',
+      ],
     ),
   ],
 );
@@ -7701,7 +7838,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
   table: _readBoardRunner.table.copyWith(
     streetLabel: 'River',
     heroCards: _heroKhQhCards,
-    boardCards: _boardFlushHearts,
+    boardCards: _boardFlushVsStraight,
     highlightedCardIds: const <String>[
       'hero_0',
       'hero_1',
@@ -7709,10 +7846,22 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       'board_1',
       'board_2',
     ],
+    centerLabel: 'Hero flush beats CO straight',
     seats: _readBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'btn'
-              ? _act0CopySeatStateV1(seat, holeCards: _heroKhQhCards)
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroKhQhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponent8c9sCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
               : seat,
         )
         .toList(growable: false),
@@ -7721,8 +7870,429 @@ final _flushRankRunner = _readBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Flush means same suit.',
       body:
-          'Five cards of one suit make a flush. Flushes rank above straights because they are rarer: roughly 5,100 flush combinations exist in a deck versus about 10,200 straights. Rarer combinations rank higher.',
-      focusLabels: <String>['Same suit', 'Rarer = higher', '~5,100 combos'],
+          'Hero uses five hearts for a flush, while CO only reaches a 7-8-9-T-J straight. This is an ace-high flush, not a royal flush, because the hearts do not run T-J-Q-K-A together. Flushes rank above straights because they are rarer: roughly 5,100 flush combinations exist in a deck versus about 10,200 straights. Rarer combinations rank higher.',
+      focusLabels: <String>[
+        'Same suit',
+        'Ace-high flush',
+        'Not royal',
+        'Rarer = higher',
+      ],
+    ),
+  ],
+);
+
+final _fullHouseRankRunner = _riverBoardRunner.copyWith(
+  lessonId: 'full_house_rank',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'A full house is three of one rank plus two of another.',
+  hint: 'Trips plus a pair make a full house.',
+  question: 'What does hero have here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'full_house',
+      label: 'Full house',
+      isCorrect: true,
+      preferredLabel: 'Full house',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Full house found.',
+      feedbackReason:
+          'Hero uses A-A-A with 7-7, which makes a full house. That rank sits above a flush because the hand is stronger and rarer.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'trips',
+      label: 'Trips',
+      isCorrect: false,
+      preferredLabel: 'Full house',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'One pair short.',
+      feedbackReason:
+          'Trips are only part of the hand. Hero also has a pair of sevens, so the best five become a full house instead of bare trips.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _hero7s7hCards,
+    boardCards: _boardTripsAces,
+    highlightedCardIds: const <String>[
+      'board_0',
+      'board_1',
+      'board_2',
+      'hero_0',
+      'hero_1',
+    ],
+    centerLabel: 'A-A-A with 7-7',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _hero7s7hCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Full house = trips plus pair.',
+      body:
+          'The board gives Hero three aces, and Hero pocket sevens add the pair. That makes a full house, which outranks a flush.',
+      focusCardIds: <String>[
+        'board_0',
+        'board_1',
+        'board_2',
+        'hero_0',
+        'hero_1',
+      ],
+      focusLabels: <String>['A-A-A', '7-7', 'Full house'],
+    ),
+  ],
+);
+
+final _quadsRankRunner = _riverBoardRunner.copyWith(
+  lessonId: 'quads_rank',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'Four of a kind means all four cards of one rank.',
+  hint: 'Look for all four queens.',
+  question: 'What does hero have here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'quads',
+      label: 'Four of a kind',
+      isCorrect: true,
+      preferredLabel: 'Four of a kind',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Quads spotted.',
+      feedbackReason:
+          'Hero uses all four queens. Four of a kind ranks above a full house because no extra pair can beat all four cards of one rank.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'full_house',
+      label: 'Full house',
+      isCorrect: false,
+      preferredLabel: 'Four of a kind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Close on the ladder.',
+      feedbackReason:
+          'A full house needs three of one rank and two of another. Here Hero has all four queens, so the hand is four of a kind.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroQqCards,
+    boardCards: _boardQuadsQueens,
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+    ],
+    centerLabel: 'Four queens play',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroQqCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Quads mean all four cards.',
+      body:
+          'Hero uses Q-Q from hand and Q-Q from the board. All four queens count, so this hand outranks a full house.',
+      focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
+      focusLabels: <String>['Q-Q-Q-Q', 'Quads'],
+    ),
+  ],
+);
+
+final _royalFlushRankRunner = _riverBoardRunner.copyWith(
+  lessonId: 'royal_flush_rank',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'A royal flush is T-J-Q-K-A all in one suit.',
+  hint: 'A flush with an ace is not royal unless the ranks run to ace.',
+  question: 'What does hero have here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'royal_flush',
+      label: 'Royal flush',
+      isCorrect: true,
+      preferredLabel: 'Royal flush',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Top of the ladder.',
+      feedbackReason:
+          'Hero makes T-J-Q-K-A in hearts. That is a royal flush, which is the ace-high straight flush and beats every ordinary flush.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'ace_high_flush',
+      label: 'Ace-high flush',
+      isCorrect: false,
+      preferredLabel: 'Royal flush',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Same suit, but stronger.',
+      feedbackReason:
+          'Hero does have an ace-high flush, but the five hearts also run T-J-Q-K-A in sequence. That makes it the royal flush, not just a normal ace-high flush.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroKhQhCards,
+    boardCards: _boardRoyalFlushHearts,
+    highlightedCardIds: const <String>[
+      'board_0',
+      'board_1',
+      'board_2',
+      'hero_0',
+      'hero_1',
+    ],
+    centerLabel: 'A-K-Q-J-T hearts',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroKhQhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Royal flush is the ace-high straight flush.',
+      body:
+          'Hero uses T-J-Q-K-A in hearts. A normal ace-high flush is not enough unless the five suited cards also run in sequence to the ace.',
+      focusCardIds: <String>[
+        'board_0',
+        'board_1',
+        'board_2',
+        'hero_0',
+        'hero_1',
+      ],
+      focusLabels: <String>['T-J-Q-K-A', 'Same suit', 'Royal flush'],
+    ),
+  ],
+);
+
+final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
+  lessonId: 'full_house_vs_flush',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'At showdown, a full house beats a flush.',
+  hint: 'Build both best five hands before choosing the winner.',
+  question: 'Who wins at showdown?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hero_full_house',
+      label: 'Hero full house',
+      isCorrect: true,
+      preferredLabel: 'Hero full house',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct winner.',
+      feedbackReason:
+          'Hero makes A-A-A-7-7 for a full house. CO has a heart flush, but a full house ranks above a flush.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co_flush',
+      label: 'CO flush',
+      isCorrect: false,
+      preferredLabel: 'Hero full house',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Strong hand, lower rank.',
+      feedbackReason:
+          'CO does make a flush, but Hero full house is stronger. Always compare the hand rank before admiring a strong-looking suit pattern.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroAs7sCards,
+    boardCards: _boardFullHouseVsFlush,
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
+    centerLabel: 'Hero full house beats CO flush',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroAs7sCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentKhQhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Compare the full best five.',
+      body:
+          'Hero uses A-A-A with 7-7 for a full house. CO uses five hearts for a flush, but the full house wins because it ranks higher.',
+      focusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+      focusLabels: <String>['A-A-A', '7-7', 'Full house wins'],
+    ),
+  ],
+);
+
+final _quadsVsFullHouseRunner = _riverBoardRunner.copyWith(
+  lessonId: 'quads_vs_full_house',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'Four of a kind beats a full house.',
+  hint: 'One player has all four queens. The other only has a full house.',
+  question: 'Who wins at showdown?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hero_quads',
+      label: 'Hero four of a kind',
+      isCorrect: true,
+      preferredLabel: 'Hero four of a kind',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Top hand found.',
+      feedbackReason:
+          'Hero uses all four queens. CO makes a full house with three sevens and two queens, but quads rank above a full house.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co_full_house',
+      label: 'CO full house',
+      isCorrect: false,
+      preferredLabel: 'Hero four of a kind',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Close on the ladder.',
+      feedbackReason:
+          'CO does make a full house, but Hero holds all four queens. Four of a kind outranks a full house at showdown.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroQqCards,
+    boardCards: _boardQuadsVsFullHouse,
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
+    centerLabel: 'Hero quads beat CO full house',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroQqCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentAc7hCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Quads outrank a full house.',
+      body:
+          'Hero uses Q-Q-Q-Q with a seven kicker. CO uses 7-7-7 with Q-Q for a full house, but four of a kind still wins.',
+      focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
+      focusLabels: <String>['Q-Q-Q-Q', 'Quads win'],
+    ),
+  ],
+);
+
+final _royalFlushVsFlushRunner = _riverBoardRunner.copyWith(
+  lessonId: 'royal_flush_vs_flush',
+  lessonTitle: 'Hand rankings, on the table',
+  caption: 'A royal flush beats an ace-high flush.',
+  hint: 'Same suit is not enough. Check whether the cards also run T-J-Q-K-A.',
+  question: 'Which hand ranks higher?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hero_royal_flush',
+      label: 'Hero royal flush',
+      isCorrect: true,
+      preferredLabel: 'Hero royal flush',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exactly.',
+      feedbackReason:
+          'Hero has the royal flush because the hearts run T-J-Q-K-A. CO has only an ace-high flush, so Hero wins with the higher flush type.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co_ace_high_flush',
+      label: 'CO ace-high flush',
+      isCorrect: false,
+      preferredLabel: 'Hero royal flush',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Same suit, different ceiling.',
+      feedbackReason:
+          'CO does make an ace-high flush, but the five hearts do not run to the ace in sequence. Hero straight flushes all the way to A, so it is the royal flush.',
+    ),
+  ],
+  table: _riverBoardRunner.table.copyWith(
+    heroCards: _heroKhQhCards,
+    boardCards: _boardRoyalFlushHearts,
+    highlightedCardIds: const <String>[
+      'board_0',
+      'board_1',
+      'board_2',
+      'hero_0',
+      'hero_1',
+    ],
+    centerLabel: 'Hero royal flush beats CO ace-high flush',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroKhQhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponent9h3hCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Royal flush is more than ace-high.',
+      body:
+          'Hero uses T-J-Q-K-A in hearts. CO also has five hearts, but only Hero connects the ranks all the way to the ace.',
+      focusCardIds: <String>[
+        'board_0',
+        'board_1',
+        'board_2',
+        'hero_0',
+        'hero_1',
+      ],
+      focusLabels: <String>['T-J-Q-K-A', 'Royal flush wins'],
     ),
   ],
 );
@@ -7763,13 +8333,31 @@ final _twoPairRunner = _riverBoardRunner.copyWith(
       'board_0',
       'board_1',
     ],
-    centerLabel: 'A with A and 7 with 7',
+    centerLabel: 'Hero two pair beats CO one pair',
+    seats: _riverBoardRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroA7oCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _opponentKhJhCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
+              : seat,
+        )
+        .toList(growable: false),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Two pair uses two ranks.',
       body:
-          'Hero uses A with A and 7 with 7. That makes two pair, with the J as the fifth card.',
+          'Hero uses A with A and 7 with 7. CO only matches the J once, so Hero two pair is stronger than one pair.',
       focusCardIds: <String>['hero_0', 'hero_1', 'board_0', 'board_1'],
       focusLabels: <String>['A + A', '7 + 7', 'Two pair'],
     ),
@@ -7872,6 +8460,14 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     ),
   ],
   table: _riverBoardRunner.table.copyWith(
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_3',
+    ],
+    centerLabel: 'Hero pair of queens beats CO pair of jacks',
     seats: _riverBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'co'
@@ -7893,8 +8489,16 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
-      body: 'When players remain, reveal cards and compare best hands.',
-      focusLabels: <String>['Best hand wins'],
+      body:
+          'Hero best five are Q-Q-A-J-7, while CO best five are J-J-A-K-7. The bigger pair wins before the kicker matters.',
+      focusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_3',
+      ],
+      focusLabels: <String>['Q-Q-A-J-7', 'Hero wins'],
     ),
   ],
 );
@@ -7935,6 +8539,7 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
       'co_0',
       'co_1',
     ],
+    centerLabel: 'Hero A-K beats CO A-Q by kicker',
     seats: _riverBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'btn'
@@ -7957,8 +8562,10 @@ final _showdownKickerRunner = _riverBoardRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Kickers break some ties.',
-      body: 'If the main hand matches, the best side card can decide.',
-      focusLabels: <String>['Side card'],
+      body:
+          'Both players share a pair of aces from the board and one ace in hand. Hero K plays above CO Q, while the J and 7 stay the same for both best fives.',
+      focusCardIds: <String>['hero_1', 'co_1', 'board_0'],
+      focusLabels: <String>['K kicker', 'Q kicker', 'Same pair of aces'],
     ),
   ],
 );
@@ -8793,12 +9400,23 @@ final _bestFiveShowdownRunner = _bestFiveCardsRunner.copyWith(
       'board_3',
     ],
     centerLabel: 'Best five: A A 7 7 J',
+    seats: _bestFiveCardsRunner.table.seats
+        .map(
+          (seat) => seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _heroA7oCards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                )
+              : seat,
+        )
+        .toList(growable: false),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Extra cards are ignored.',
       body:
-          'Here the best five are A, A, 7, 7, and J. The 4 is visible, but it does not play.',
+          'Here the best five are A, A, 7, 7, and J. The 4 is still visible on the board, but it does not play because only the strongest five cards count.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -8873,6 +9491,13 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
                   holeCards: _heroQcQdCards,
                   cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
                 )
+              : seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  holeCards: _villainK4Cards,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+                  isActive: true,
+                )
               : seat,
         )
         .toList(growable: false),
@@ -8880,7 +9505,8 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Sometimes the board plays.',
-      body: 'If the same five board cards are best, private cards do not help.',
+      body:
+          'Hero and CO both use the same royal-flush board here, so private cards do not improve either player.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -8921,7 +9547,8 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Split means share.',
-      body: 'When tied players have the same best hand, they split the pot.',
+      body:
+          'Hero and CO share the same best five cards from the board, so they split the pot.',
       focusLabels: <String>['Split pot'],
     ),
   ],

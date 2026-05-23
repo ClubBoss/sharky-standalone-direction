@@ -23,13 +23,18 @@ readonly -a WORLD1_CONTRACTS_HIGH_RISK_PATHS_V1=(
   "lib/campaign/"
 )
 readonly WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1='^(lib/ui_v2/|lib/services/today_router_v1\.dart|lib/campaign/)'
+readonly WORLD1_SURFACE_PATH_REGEX_V1='^(lib/ui_v2/act0_shell/act0_play_shell_v1\.dart|test/ui_v2/act0_play_shell_v1_test\.dart)$'
+readonly WORLD1_EN_COPY_GUARD_REGEX_V1='^(lib/ui_v2/act0_shell/(act0_play_shell_v1|act0_profile_shell_v1|act0_review_shell_v1|act0_shell_preview_screen_v1)\.dart|test/ui_v2/act0_en_alpha_residue_guard_test\.dart)$'
+readonly WORLD1_RU_COPY_GUARD_REGEX_V1='^(lib/ui_v2/act0_shell/(l10n/act0_copy_ru_v1|act0_shell_preview_screen_v1|act0_profile_shell_v1|act0_welcome_shell_v1|act0_review_shell_v1|act0_play_shell_v1|act0_home_shell_v1|act0_learn_path_shell_v1|act0_lesson_runner_shell_v1|act0_placement_shell_v1)\.dart|test/ui_v2/act0_ru_surface_no_unapproved_latin_test\.dart)$'
+readonly WORLD1_FEEDBACK_GUARD_REGEX_V1='^(lib/ui_v2/act0_shell/act0_shell_state_v1\.dart|test/ui_v2/act0_shell_state_v1_feedback_test\.dart)$'
+readonly WORLD1_CAMPAIGN_GUARD_REGEX_V1='^(lib/campaign/|assets/packs/|content/|test/guards/campaign_pack_registry_invariants_test\.dart|test/guards/campaign_followup_pack_registry_invariants_test\.dart)'
 
 should_run_world1_contracts_checkpoint_v1() {
   local changed_files="$1"
   [[ -n "$changed_files" ]] && echo "$changed_files" | rg -q "$WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1"
 }
 
-selected_tests=("${WORLD1_SELECTED_TESTS_V1[@]}")
+selected_tests=("${WORLD1_SELECTED_TESTS_STATE_V1[@]}")
 if [[ -n "${FAST_LOOP_SELECTED_TESTS_V1:-}" ]]; then
   selected_tests=()
   while IFS= read -r line; do
@@ -47,6 +52,7 @@ force_tests=false
 force_world1_contracts=false
 print_plan=false
 run_content_validation=false
+include_all_selected_guards=false
 run_reason="default tier-0 selected guard list"
 tier_label="Tier0"
 policy_args=()
@@ -77,12 +83,15 @@ while [[ $# -gt 0 ]]; do
     --force-world1-contracts)
       force_world1_contracts=true
       ;;
+    --all-selected-guards)
+      include_all_selected_guards=true
+      ;;
     --print-plan)
       print_plan=true
       ;;
     *)
       echo "Unknown flag: $1"
-      echo "Usage: ./tools/fast_loop_world1_v1.sh [--full] [--checkpoint] [--no-analyze] [--no-tests] [--force] [--force-tests] [--force-world1-contracts] [--print-plan]"
+      echo "Usage: ./tools/fast_loop_world1_v1.sh [--full] [--checkpoint] [--no-analyze] [--no-tests] [--force] [--force-tests] [--force-world1-contracts] [--all-selected-guards] [--print-plan]"
       exit 2
       ;;
   esac
@@ -150,20 +159,40 @@ elif [[ "$run_tests" == "true" && "$run_full" == "false" && "$force_tests" == "f
     tests_status="skipped (changes outside lib/test/pubspec)"
     run_reason="NOOP: no relevant changes"
   else
+    if echo "$changed_files" | rg -q "$WORLD1_SURFACE_PATH_REGEX_V1"; then
+      fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_SURFACE_V1[@]}"
+    fi
+    if echo "$changed_files" | rg -q "$WORLD1_EN_COPY_GUARD_REGEX_V1"; then
+      fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[0]}"
+    fi
+    if echo "$changed_files" | rg -q "$WORLD1_RU_COPY_GUARD_REGEX_V1"; then
+      fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[1]}"
+    fi
+    if echo "$changed_files" | rg -q "$WORLD1_FEEDBACK_GUARD_REGEX_V1"; then
+      fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[2]}"
+    fi
+    if echo "$changed_files" | rg -q "$WORLD1_CAMPAIGN_GUARD_REGEX_V1"; then
+      fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_CAMPAIGN_GUARDS_V1[@]}"
+    fi
     if echo "$changed_files" | rg -q '^(lib/ui_v2/|test/ui_v2/)'; then
-      fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_UI_V2_TESTS_V1[@]}"
-      run_reason="tier-0 + tier-1(ui_v2) by changed files"
-      tier_label="Tier0+Tier1(ui_v2)"
+      run_reason="state-first fast loop + touched ui_v2 guards"
+      tier_label="Tier0(state)+ui_v2"
     fi
     if echo "$changed_files" | rg -q '^(lib/services/|test/services/)'; then
       fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_SERVICES_TESTS_V1[@]}"
-      run_reason="tier-0 + tier-1(services) by changed files"
-      tier_label="Tier0+Tier1(services)"
+      run_reason="state-first fast loop + touched services guards"
+      tier_label="Tier0(state)+services"
     fi
   fi
 elif [[ "$force_tests" == "true" ]]; then
   run_reason="forced tests (--force-tests)"
-  tier_label="Tier0 (forced)"
+  tier_label="Tier0(state) (forced)"
+fi
+
+if [[ "$run_tests" == "true" && "$include_all_selected_guards" == "true" ]]; then
+  fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_V1[@]}"
+  run_reason="${run_reason}; all selected guards enabled"
+  tier_label="${tier_label}+all-guards"
 fi
 
 full_status="disabled"
@@ -172,15 +201,20 @@ if [[ "$run_full" == "true" && "$run_tests" == "true" ]]; then
 fi
 
 run_world1_contracts_checkpoint=false
-world1_contracts_reason="no matching changes"
+world1_contracts_reason="default: duplicate rerun disabled"
 if [[ "$force_world1_contracts" == "true" ]]; then
   run_world1_contracts_checkpoint=true
   world1_contracts_reason="force flag"
+elif [[ "$TEST_POLICY_FULL_SUITE_V1" == "1" ]]; then
+  run_world1_contracts_checkpoint=true
+  world1_contracts_reason="checkpoint/full-suite policy"
+elif [[ "${FAST_LOOP_RUN_WORLD1_CONTRACTS_V1:-0}" == "1" ]]; then
+  run_world1_contracts_checkpoint=true
+  world1_contracts_reason="env FAST_LOOP_RUN_WORLD1_CONTRACTS_V1=1"
 elif [[ "$run_tests" == "true" && "$force_tests" == "false" ]]; then
   changed_files_for_checkpoint="$(fast_loop_collect_changed_files_v1 "$ROOT")"
   if should_run_world1_contracts_checkpoint_v1 "$changed_files_for_checkpoint"; then
-    run_world1_contracts_checkpoint=true
-    world1_contracts_reason="changed files match high-risk paths"
+    world1_contracts_reason="high-risk files detected but rerun stays opt-in"
   fi
 fi
 

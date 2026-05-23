@@ -187,9 +187,14 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           quickDrillGroup.groupId != featuredGroup?.groupId)
         quickDrillGroup,
       if (fixLeakGroup != null &&
+          fixLeakGroup.isEnabled &&
           fixLeakGroup.groupId != featuredGroup?.groupId)
         fixLeakGroup,
     ];
+    final hasRepairEmptyState =
+        fixLeakGroup != null &&
+        !fixLeakGroup.isEnabled &&
+        fixLeakGroup.groupId != featuredGroup?.groupId;
     final topicShelfGroups = <Act0PracticeGroupV1>[...topicGroups];
 
     return ListView(
@@ -233,8 +238,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
-        if (primaryGroups.isNotEmpty || topicShelfGroups.isNotEmpty) ...[
-          if (primaryGroups.isNotEmpty) ...[
+        if (primaryGroups.isNotEmpty ||
+            hasRepairEmptyState ||
+            topicShelfGroups.isNotEmpty) ...[
+          if (primaryGroups.isNotEmpty || hasRepairEmptyState) ...[
             _SectionHeaderV1(
               label: _playCopyV1(
                 context,
@@ -251,7 +258,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
                 onStartGroup: widget.onStartGroup,
               ),
             ),
-            if (fixLeakGroup != null && !fixLeakGroup.isEnabled) ...[
+            if (hasRepairEmptyState) ...[
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
             ],
@@ -410,10 +417,23 @@ class _FeaturedPracticeCardV1 extends StatelessWidget {
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
 
+  String? _repeatValueLineV1(BuildContext context) {
+    if (group.groupId != 'daily' || !group.isEnabled) {
+      return null;
+    }
+    return _playCopyV1(
+      context,
+      'play_featured_daily_repeat_value',
+      fallback:
+          'Tomorrow\'s short set keeps this skill feeling like part of your game.',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final enabled = group.isEnabled;
     final accentColor = _groupIconColor(group.groupId);
+    final repeatValueLine = _repeatValueLineV1(context);
     final metaLine = [
       if (group.sessionLabel.isNotEmpty) group.sessionLabel,
       if (group.durationLabel.isNotEmpty) group.durationLabel,
@@ -582,6 +602,19 @@ class _FeaturedPracticeCardV1 extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                           ),
                         ),
+                        if (repeatValueLine != null) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapXs),
+                          Text(
+                            repeatValueLine,
+                            key: const Key(
+                              'act0_shell_play_featured_repeat_value',
+                            ),
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.textDim,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -1127,6 +1160,12 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (!enabled)
+                    _DisabledPracticeChipV1(
+                      keyName:
+                          'act0_shell_practice_group_${group.groupId}_disabled_chip',
+                      label: _playActionLabelV1(context, group),
+                    ),
                 ],
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -1146,30 +1185,28 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                   style: Act0ShellTokensV1.muted,
                 ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _playActionLabelV1(context, group),
-                      textAlign: TextAlign.left,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: enabled
-                            ? accentColor
-                            : Act0ShellTokensV1.textDim,
-                        letterSpacing: 0.25,
+              if (enabled) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _playActionLabelV1(context, group),
+                        textAlign: TextAlign.left,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: accentColor,
+                          letterSpacing: 0.25,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 16,
-                    color: enabled
-                        ? accentColor.withOpacity(0.92)
-                        : Act0ShellTokensV1.textDim,
-                  ),
-                ],
-              ),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 16,
+                      color: accentColor.withOpacity(0.92),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -1277,28 +1314,59 @@ class _PracticeGroupCardV1 extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _playActionLabelV1(context, group),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: enabled ? accentColor : Act0ShellTokensV1.textDim,
-                      letterSpacing: 0.2,
+              enabled
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _playActionLabelV1(context, group),
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: accentColor,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16,
+                          color: accentColor.withOpacity(0.92),
+                        ),
+                      ],
+                    )
+                  : _DisabledPracticeChipV1(
+                      keyName:
+                          'act0_shell_practice_group_${group.groupId}_disabled_chip',
+                      label: _playActionLabelV1(context, group),
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 16,
-                    color: enabled
-                        ? accentColor.withOpacity(0.92)
-                        : Act0ShellTokensV1.textDim,
-                  ),
-                ],
-              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DisabledPracticeChipV1 extends StatelessWidget {
+  const _DisabledPracticeChipV1({required this.keyName, required this.label});
+
+  final String keyName;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: Key(keyName),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface3,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: Act0ShellTokensV1.border),
+      ),
+      child: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(
+          color: Act0ShellTokensV1.textDim,
+          letterSpacing: 0.2,
         ),
       ),
     );
