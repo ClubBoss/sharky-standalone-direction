@@ -250,16 +250,18 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            _PlayLaneListV1(
-              sectionKey: const Key('act0_shell_play_active_hub'),
-              groups: primaryGroups,
-              builder: (group) => _PracticeGroupCardV1(
-                group: group,
-                onStartGroup: widget.onStartGroup,
+            if (primaryGroups.isNotEmpty)
+              _PlayLaneListV1(
+                sectionKey: const Key('act0_shell_play_active_hub'),
+                groups: primaryGroups,
+                builder: (group) => _PracticeGroupCardV1(
+                  group: group,
+                  onStartGroup: widget.onStartGroup,
+                ),
               ),
-            ),
             if (hasRepairEmptyState) ...[
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              if (primaryGroups.isNotEmpty)
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
               _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
             ],
             const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -826,16 +828,21 @@ class _PlayGridSectionV1 extends StatelessWidget {
     return Container(
       key: sectionKey,
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2,
+        color: Act0ShellTokensV1.surface3.withOpacity(0.74),
+        borderColor: Act0ShellTokensV1.border.withOpacity(0.88),
+        glow: false,
       ),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final useTwoColumns = constraints.maxWidth >= 320;
-          final tileWidth = useTwoColumns
-              ? (constraints.maxWidth - Act0ShellTokensV1.gapSm) / 2
-              : constraints.maxWidth;
-          final diagonalOffset = useTwoColumns && staggerOddTiles
+          final columnCount = constraints.maxWidth >= 720
+              ? 3
+              : (constraints.maxWidth >= 320 ? 2 : 1);
+          final tileWidth =
+              (constraints.maxWidth -
+                  (Act0ShellTokensV1.gapSm * (columnCount - 1))) /
+              columnCount;
+          final diagonalOffset = columnCount == 2 && staggerOddTiles
               ? Act0ShellTokensV1.gapSm + 2
               : 0.0;
           return Wrap(
@@ -847,7 +854,7 @@ class _PlayGridSectionV1 extends StatelessWidget {
                   width: tileWidth,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: useTwoColumns && index.isOdd ? diagonalOffset : 0,
+                      top: columnCount == 2 && index.isOdd ? diagonalOffset : 0,
                     ),
                     child: builder(groups[index]),
                   ),
@@ -1128,7 +1135,7 @@ class _TopicPracticeCardV1 extends StatelessWidget {
             _ => group.subtitle,
           };
     return Opacity(
-      opacity: enabled ? 1 : 0.56,
+      opacity: enabled ? 0.94 : 0.50,
       child: InkWell(
         key: Key('act0_shell_practice_group_${group.groupId}'),
         onTap: enabled ? () => onStartGroup(group) : null,
@@ -1136,9 +1143,9 @@ class _TopicPracticeCardV1 extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface3,
+            color: Act0ShellTokensV1.surface2.withOpacity(0.72),
             borderColor: enabled
-                ? accentColor.withOpacity(0.24)
+                ? accentColor.withOpacity(0.16)
                 : Act0ShellTokensV1.border,
             glow: false,
           ),
@@ -1155,7 +1162,7 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                     child: Text(
                       _playTileBadgeV1(context, group),
                       style: Act0ShellTokensV1.label.copyWith(
-                        color: accentColor,
+                        color: accentColor.withOpacity(0.88),
                         letterSpacing: 0.35,
                       ),
                     ),
@@ -1194,7 +1201,7 @@ class _TopicPracticeCardV1 extends StatelessWidget {
                         _playActionLabelV1(context, group),
                         textAlign: TextAlign.left,
                         style: Act0ShellTokensV1.label.copyWith(
-                          color: accentColor,
+                          color: accentColor.withOpacity(0.90),
                           letterSpacing: 0.25,
                         ),
                       ),
@@ -1224,7 +1231,12 @@ class _SectionHeaderV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text(label, style: Act0ShellTokensV1.sectionTitle)],
+      children: [
+        Text(
+          label,
+          style: Act0ShellTokensV1.sectionTitle.copyWith(fontSize: 20),
+        ),
+      ],
     );
   }
 }

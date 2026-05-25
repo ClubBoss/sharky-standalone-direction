@@ -40,6 +40,17 @@ class Act0ProfileShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasFocus = profile.recommendedFocusTitle.isNotEmpty;
+    final hasRecentProgress =
+        profile.recentSkillGains.isNotEmpty ||
+        profile.mistakesFixedLine.isNotEmpty ||
+        profile.streakLine.isNotEmpty ||
+        profile.qualityLine.isNotEmpty;
+    final hasIdentityStory =
+        profile.recentSkillGains.isNotEmpty ||
+        profile.strongCategories.isNotEmpty ||
+        profile.weakCategories.isNotEmpty ||
+        profile.recommendedFocusTitle.isNotEmpty;
     return ListView(
       key: const Key('act0_shell_profile_screen'),
       padding: const EdgeInsets.fromLTRB(
@@ -52,26 +63,21 @@ class Act0ProfileShellV1 extends StatelessWidget {
         _ProfileHeaderBandV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapSm),
         _ProfileHeroCardV1(profile: profile),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        if (profile.recommendedFocusTitle.isNotEmpty) ...[
-          _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
+        if (hasFocus || hasRecentProgress) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
-        if (profile.recentSkillGains.isNotEmpty ||
-            profile.mistakesFixedLine.isNotEmpty ||
-            profile.streakLine.isNotEmpty ||
-            profile.qualityLine.isNotEmpty) ...[
-          _ProfileRecentGainsCardV1(profile: profile),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
-        if (profile.recentSkillGains.isNotEmpty ||
-            profile.strongCategories.isNotEmpty ||
-            profile.weakCategories.isNotEmpty ||
-            profile.recommendedFocusTitle.isNotEmpty) ...[
-          _ProfileIdentityCardV1(profile: profile),
+          _ProfileStorySupportBandV1(
+            profile: profile,
+            onGoToHome: onGoToHome,
+            showFocus: hasFocus,
+            showRecentProgress: hasRecentProgress,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
         ],
         _ProfileConsistencyCardV1(profile: profile),
+        if (hasIdentityStory) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ProfileIdentityCardV1(profile: profile),
+        ],
         if (profile.skillStats.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileSkillStatsStripV1(profile: profile),
@@ -86,6 +92,58 @@ class Act0ProfileShellV1 extends StatelessWidget {
           onReplayWelcome: onReplayWelcome,
         ),
       ],
+    );
+  }
+}
+
+class _ProfileStorySupportBandV1 extends StatelessWidget {
+  const _ProfileStorySupportBandV1({
+    required this.profile,
+    required this.showFocus,
+    required this.showRecentProgress,
+    this.onGoToHome,
+  });
+
+  final Act0ProfileStateV1 profile;
+  final bool showFocus;
+  final bool showRecentProgress;
+  final VoidCallback? onGoToHome;
+
+  @override
+  Widget build(BuildContext context) {
+    final cards = <Widget>[
+      if (showFocus)
+        _ProfileCurrentFocusCardV1(profile: profile, onGoToHome: onGoToHome),
+      if (showRecentProgress) _ProfileRecentGainsCardV1(profile: profile),
+    ];
+    if (cards.length == 1) {
+      return cards.first;
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final useWideRow = constraints.maxWidth >= 720;
+        if (!useWideRow) {
+          return Column(
+            key: const Key('act0_shell_profile_story_support_band'),
+            children: [
+              for (var i = 0; i < cards.length; i++) ...[
+                cards[i],
+                if (i != cards.length - 1)
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
+            ],
+          );
+        }
+        return Row(
+          key: const Key('act0_shell_profile_story_support_band'),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: cards.first),
+            const SizedBox(width: Act0ShellTokensV1.gapMd),
+            Expanded(child: cards.last),
+          ],
+        );
+      },
     );
   }
 }
@@ -683,6 +741,19 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
       if (leftGain != rightGain) {
         return rightGain.compareTo(leftGain);
       }
+      final leftPriority = left.label == 'Table sense'
+          ? 3
+          : (left.label == 'Betting decisions'
+                ? 2
+                : (left.label == 'Blind play' ? 1 : 0));
+      final rightPriority = right.label == 'Table sense'
+          ? 3
+          : (right.label == 'Betting decisions'
+                ? 2
+                : (right.label == 'Blind play' ? 1 : 0));
+      if (leftPriority != rightPriority) {
+        return rightPriority.compareTo(leftPriority);
+      }
       return right.value.compareTo(left.value);
     });
     final recentGainByLabel = <String, Act0SkillGainV1>{
@@ -1072,14 +1143,7 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
         profile.streakLine.trim().isNotEmpty ||
         profile.qualityLine.trim().isNotEmpty;
     final primaryGain = recentGains.isNotEmpty ? recentGains.first : null;
-    final supportRow = _profileRecentSupportRowV1(
-      context,
-      profile,
-      compact: compact,
-      showReturnValue: showReturnValue,
-      showStrength: showStrength,
-      showFixed: showFixed,
-    );
+    final showSecondarySignals = showStrength || showFixed;
     return Container(
       key: const Key('act0_shell_profile_recent_skill_gains'),
       padding: EdgeInsets.all(
@@ -1127,60 +1191,106 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
               tone: Act0ShellTokensV1.info,
               compact: compact,
             ),
-            if (supportRow != null)
+            if (showSecondarySignals || showReturnValue)
               SizedBox(
                 height: compact
                     ? Act0ShellTokensV1.gapSm
                     : Act0ShellTokensV1.gapMd,
               ),
           ],
-          if (supportRow != null) supportRow,
+          if (showSecondarySignals) ...[
+            _ProfileSecondarySignalsWrapV1(profile: profile, compact: compact),
+            if (showReturnValue)
+              SizedBox(
+                height: compact
+                    ? Act0ShellTokensV1.gapSm
+                    : Act0ShellTokensV1.gapMd,
+              ),
+          ],
+          if (showReturnValue)
+            _ProfilePayoffRowV1(
+              label: _profileCopyV1(
+                context,
+                en: 'Return value',
+                ru: 'Зачем вернуться',
+              ),
+              title: _profileReturnValueTitleV1(context, profile),
+              body: _profileReturnValueBodyV1(context, profile),
+              tone: Act0ShellTokensV1.gold,
+              compact: compact,
+            ),
         ],
       ),
     );
   }
 }
 
-Widget? _profileRecentSupportRowV1(
-  BuildContext context,
-  Act0ProfileStateV1 profile, {
-  required bool compact,
-  required bool showReturnValue,
-  required bool showStrength,
-  required bool showFixed,
-}) {
-  if (showReturnValue) {
-    return _ProfilePayoffRowV1(
-      label: _profileCopyV1(context, en: 'Return value', ru: 'Зачем вернуться'),
-      title: _profileReturnValueTitleV1(context, profile),
-      body: _profileReturnValueBodyV1(context, profile),
-      tone: Act0ShellTokensV1.gold,
-      compact: compact,
+class _ProfileSecondarySignalsWrapV1 extends StatelessWidget {
+  const _ProfileSecondarySignalsWrapV1({
+    required this.profile,
+    required this.compact,
+  });
+
+  final Act0ProfileStateV1 profile;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final signals = <Widget>[
+      if (profile.recentSkillGains.isNotEmpty ||
+          profile.strongCategories.isNotEmpty)
+        _ProfileMiniSignalTileV1(
+          label: _profileCopyV1(
+            context,
+            en: 'Getting stronger',
+            ru: 'Становится сильнее',
+          ),
+          title: _profileStrengthPayoffTitleV1(context, profile),
+          body: _profileStrengthPayoffBodyV1(context, profile),
+          tone: Act0ShellTokensV1.primary,
+          compact: compact,
+        ),
+      if (profile.mistakesFixedLine.trim().isNotEmpty)
+        _ProfileMiniSignalTileV1(
+          label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
+          title: profile.mistakesFixedLine,
+          body: _profileFixedSupportBodyV1(context, profile.mistakesFixedLine),
+          tone: Act0ShellTokensV1.info,
+          compact: compact,
+        ),
+    ];
+    if (signals.length == 1) {
+      return signals.first;
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final useWideRow = constraints.maxWidth >= 520;
+        if (!useWideRow) {
+          return Column(
+            children: [
+              for (var i = 0; i < signals.length; i++) ...[
+                signals[i],
+                if (i != signals.length - 1)
+                  SizedBox(
+                    height: compact
+                        ? Act0ShellTokensV1.gapSm
+                        : Act0ShellTokensV1.gapMd,
+                  ),
+              ],
+            ],
+          );
+        }
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: signals.first),
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            Expanded(child: signals.last),
+          ],
+        );
+      },
     );
   }
-  if (showStrength) {
-    return _ProfilePayoffRowV1(
-      label: _profileCopyV1(
-        context,
-        en: 'Getting stronger',
-        ru: 'Становится сильнее',
-      ),
-      title: _profileStrengthPayoffTitleV1(context, profile),
-      body: _profileStrengthPayoffBodyV1(context, profile),
-      tone: Act0ShellTokensV1.primary,
-      compact: compact,
-    );
-  }
-  if (showFixed) {
-    return _ProfilePayoffRowV1(
-      label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
-      title: profile.mistakesFixedLine,
-      body: _profileFixedSupportBodyV1(context, profile.mistakesFixedLine),
-      tone: Act0ShellTokensV1.primary,
-      compact: compact,
-    );
-  }
-  return null;
 }
 
 String _profileRecentProgressSummaryV1(
@@ -1342,6 +1452,59 @@ class _ProfilePayoffRowV1 extends StatelessWidget {
   }
 }
 
+class _ProfileMiniSignalTileV1 extends StatelessWidget {
+  const _ProfileMiniSignalTileV1({
+    required this.label,
+    required this.title,
+    required this.body,
+    required this.tone,
+    required this.compact,
+  });
+
+  final String label;
+  final String title;
+  final String body;
+  final Color tone;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(
+        compact ? Act0ShellTokensV1.gapSm : Act0ShellTokensV1.gapMd,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(0.035),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(color: tone.withOpacity(0.10)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: tone.withOpacity(0.92),
+            ),
+          ),
+          SizedBox(height: compact ? 3 : Act0ShellTokensV1.gapXs),
+          Text(
+            title,
+            style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
+          ),
+          SizedBox(height: compact ? 2 : 3),
+          Text(
+            body,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.muted,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 IconData _achievementIconForAchievement(Act0AchievementV1 achievement) {
   final normalizedId = achievement.stableId.toLowerCase();
   final normalizedLabel = achievement.label.toLowerCase();
@@ -1456,10 +1619,10 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
     );
     return Container(
       key: const Key('act0_shell_profile_identity_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2,
-        borderColor: Act0ShellTokensV1.primary.withOpacity(0.20),
+        color: Act0ShellTokensV1.surface3.withOpacity(0.78),
+        borderColor: Act0ShellTokensV1.border.withOpacity(0.92),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1471,7 +1634,7 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
               ru: 'Твоя игра сейчас',
             ),
             style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.primary,
+              color: Act0ShellTokensV1.textDim,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),

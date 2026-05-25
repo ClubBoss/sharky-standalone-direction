@@ -4,19 +4,39 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_DIR="${1:-$ROOT_DIR/output/playwright/controlled_demo}"
 APP_URL="${ACT0_CAPTURE_URL:-http://127.0.0.1:7357/}"
-VIEWPORT_WIDTH="${ACT0_CAPTURE_WIDTH:-393}"
-VIEWPORT_HEIGHT="${ACT0_CAPTURE_HEIGHT:-852}"
 CAPTURE_HOST="${ACT0_CAPTURE_HOST:-127.0.0.1}"
 CAPTURE_PORT="${ACT0_CAPTURE_PORT:-7357}"
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
 SESSION_ID="cd$(date +%s)"
 SERVER_LOG="$OUTPUT_DIR/flutter-web-server.log"
-VIEWPORT_JSON_FILE="$OUTPUT_DIR/viewport.json"
 MANIFEST_FILE="$OUTPUT_DIR/manifest.json"
-INITIAL_SNAPSHOT_FILE="$OUTPUT_DIR/initial_snapshot.txt"
+FLOW_ERROR_FILE="$OUTPUT_DIR/flow_error.txt"
+PLAYWRIGHT_CONFIG_FILE="$OUTPUT_DIR/playwright-cli.json"
+ENTRY_JSONL_FILE="$OUTPUT_DIR/.manifest_entries.jsonl"
+SURFACE_SCRIPT_FILE="$OUTPUT_DIR/.capture_surface.js"
 STARTED_SERVER=0
 SERVER_PID=""
+
+declare -a VIEWPORT_SPECS=(
+  "compact_phone:393:852"
+  "large_phone:430:932"
+  "tablet:834:1194"
+)
+
+declare -a SURFACE_SPECS=(
+  "placement:walkthrough:?act0_capture=placement"
+  "welcome:walkthrough:?act0_capture=welcome"
+  "home:walkthrough:?act0_capture=home"
+  "learn:walkthrough:?act0_capture=learn"
+  "runner_theory:direct_state:?act0_capture=runner_theory"
+  "runner_drill:direct_state:?act0_capture=runner_drill"
+  "runner_feedback_or_review:direct_state:?act0_capture=runner_feedback"
+  "review:direct_state:?act0_capture=review"
+  "practice:direct_state:?act0_capture=practice"
+  "profile:direct_state:?act0_capture=profile"
+  "world_completion:direct_state:?act0_capture=world_completion"
+)
 
 log() {
   printf '[controlled-demo-capture] %s\n' "$1"
@@ -28,6 +48,10 @@ fail() {
 }
 
 cleanup() {
+  (
+    cd "$OUTPUT_DIR" 2>/dev/null || exit 0
+    PLAYWRIGHT_CLI_SESSION="$SESSION_ID" "$PWCLI" close >/dev/null 2>&1 || true
+  )
   if [[ -n "$SERVER_PID" ]] && kill -0 "$SERVER_PID" >/dev/null 2>&1; then
     log "Stopping Flutter web server pid=$SERVER_PID"
     kill "$SERVER_PID" >/dev/null 2>&1 || true
@@ -52,6 +76,10 @@ pw_raw() {
     cd "$OUTPUT_DIR"
     PLAYWRIGHT_CLI_SESSION="$SESSION_ID" "$PWCLI" "$@" --raw
   )
+}
+
+json_quote() {
+  node -e 'process.stdout.write(JSON.stringify(process.argv[1]));' "$1"
 }
 
 decode_pw_json_string() {
@@ -92,297 +120,319 @@ ensure_server() {
   fail "Flutter web server did not become ready at $APP_URL"
 }
 
-mkdir -p "$OUTPUT_DIR"
-rm -f \
-  "$OUTPUT_DIR"/*.png \
-  "$OUTPUT_DIR"/capture_surfaces.js \
-  "$OUTPUT_DIR"/enable_accessibility.js \
-  "$OUTPUT_DIR"/flow_error.txt \
-  "$OUTPUT_DIR"/initial_snapshot.txt \
-  "$OUTPUT_DIR"/manifest.json \
-  "$OUTPUT_DIR"/playwright-cli.json \
-  "$OUTPUT_DIR"/seed_english.js \
-  "$OUTPUT_DIR"/viewport.json
-
-require_command npx
-require_command node
-require_command flutter
-require_command curl
-[[ -x "$PWCLI" ]] || fail "Playwright CLI wrapper not found at $PWCLI"
-
-cat >"$OUTPUT_DIR/playwright-cli.json" <<EOF
+write_playwright_config() {
+  cat >"$PLAYWRIGHT_CONFIG_FILE" <<'EOF'
 {
   "browser": {
     "launchOptions": {
       "headless": true
     },
     "contextOptions": {
-      "viewport": { "width": $VIEWPORT_WIDTH, "height": $VIEWPORT_HEIGHT },
       "deviceScaleFactor": 1,
-      "isMobile": true,
-      "hasTouch": true,
       "locale": "en-US"
     }
   }
 }
 EOF
-
-cat >"$OUTPUT_DIR/seed_english.js" <<'EOF'
-async page => {
-  await page.goto('about:blank');
-  await page.goto('http://127.0.0.1:7357/', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle').catch(() => {});
-  await page.evaluate(() => {
-    window.localStorage.setItem(
-      'flutter.app_language_code',
-      JSON.stringify('en'),
-    );
-  });
 }
-EOF
 
-cat >"$OUTPUT_DIR/enable_accessibility.js" <<'EOF'
-async page => {
-  const gate = page.locator(
-    'flt-semantics-placeholder[aria-label="Enable accessibility"]',
-  );
-  if (await gate.count()) {
-    await gate.evaluate(element => element.click());
-    await page.waitForTimeout(800);
-  }
+open_browser_session() {
+  local viewport_width="$1"
+  local viewport_height="$2"
+  pw close >/dev/null 2>&1 || true
+  pw open "$APP_URL" --config "$PLAYWRIGHT_CONFIG_FILE" >/dev/null
+  pw run-code "async page => {
+    await page.setViewportSize({ width: ${viewport_width}, height: ${viewport_height} });
+    return JSON.stringify({ ok: true, width: ${viewport_width}, height: ${viewport_height} });
+  }" --raw >/dev/null
+  pw localstorage-set flutter.app_language_code '"en"' >/dev/null
+  pw reload >/dev/null
 }
-EOF
 
-cat >"$OUTPUT_DIR/capture_surfaces.js" <<EOF
-async page => {
-  const outputDir = '.';
-  const baseUrl = "$APP_URL";
-  const viewportWidth = ${VIEWPORT_WIDTH};
-  const viewportHeight = ${VIEWPORT_HEIGHT};
-  const startedServer = ${STARTED_SERVER};
-  const surfaces = [
-    { name: 'placement', mode: 'walkthrough', query: '?act0_capture=placement' },
-    { name: 'welcome', mode: 'walkthrough', query: '?act0_capture=welcome' },
-    { name: 'home', mode: 'walkthrough', query: '?act0_capture=home' },
-    { name: 'learn', mode: 'walkthrough', query: '?act0_capture=learn' },
-    { name: 'runner_theory', mode: 'direct_state', query: '?act0_capture=runner_theory' },
-    { name: 'runner_drill', mode: 'direct_state', query: '?act0_capture=runner_drill' },
-    { name: 'runner_feedback_or_review', mode: 'direct_state', query: '?act0_capture=runner_feedback' },
-    { name: 'review', mode: 'direct_state', query: '?act0_capture=review' },
-    { name: 'practice', mode: 'direct_state', query: '?act0_capture=practice' },
-    { name: 'profile', mode: 'direct_state', query: '?act0_capture=profile' },
-    { name: 'world_completion', mode: 'direct_state', query: '?act0_capture=world_completion' },
-  ];
+capture_viewport_snapshot() {
+  local viewport_name="$1"
+  local viewport_width="$2"
+  local viewport_height="$3"
+  local viewport_file="$OUTPUT_DIR/.viewport_${viewport_name}.json"
+  local viewport_json_quoted
 
-  const normalizeText = text => text.replace(/\\s+/g, ' ').trim();
+  viewport_json_quoted="$(
+    pw_raw eval "({
+      href: location.href,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+      outerWidth: window.outerWidth,
+      outerHeight: window.outerHeight,
+      language: navigator.language,
+      storedLanguage: localStorage.getItem('flutter.app_language_code'),
+    })"
+  )"
+  decode_pw_json_string "$viewport_json_quoted" >"$viewport_file"
 
-  const inspectSurface = async () => {
-    const bodyText = normalizeText(
-      await page.locator('body').innerText().catch(() => ''),
-    );
-    const gateVisible = /Enable accessibility/i.test(bodyText);
-    const buttonNames = (await page.getByRole('button').allTextContents().catch(() => []))
-      .map(normalizeText)
-      .filter(Boolean);
-    return {
-      bodyText,
-      gateVisible,
-      blank: bodyText.length === 0,
-      buttonCount: buttonNames.length,
-      buttonNames,
-    };
-  };
-
-  const prepareSurface = async url => {
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
-    await page.waitForTimeout(1200);
-    const gate = page.locator(
-      'flt-semantics-placeholder[aria-label="Enable accessibility"]',
-    );
-    if (await gate.count()) {
-      await gate.evaluate(element => element.click());
-      await page.waitForTimeout(900);
-    }
-    await page.waitForTimeout(700);
-  };
-
-  const waitForWarmRuntime = async () => {
-    const warmUrl = baseUrl + '?act0_capture=learn';
-    for (let attempt = 0; attempt < 4; attempt += 1) {
-      await prepareSurface(warmUrl);
-      const inspection = await inspectSurface();
-      const warmShot = await page.screenshot({ fullPage: false });
-      if (!inspection.blank || warmShot.length >= 12000) {
-        return;
-      }
-      await page.waitForTimeout(1500);
-    }
-  };
-
-  await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle').catch(() => {});
-  await page.waitForTimeout(700);
-
-  const viewport = await page.evaluate(() => ({
-    href: location.href,
-    innerWidth: window.innerWidth,
-    innerHeight: window.innerHeight,
-    outerWidth: window.outerWidth,
-    outerHeight: window.outerHeight,
-    devicePixelRatio: window.devicePixelRatio,
-    language: navigator.language,
-    storedLanguage: localStorage.getItem('flutter.app_language_code'),
-  }));
-
-  const manifest = {
-    generatedAt: new Date().toISOString(),
-    appUrl: baseUrl,
-    outputDir,
-    viewport,
-    startedFlutterServer: Boolean(startedServer),
-    surfaces: [],
-  };
-
-  await waitForWarmRuntime();
-
-  for (const surface of surfaces) {
-    const timestamp = new Date().toISOString();
-    const url = baseUrl + surface.query;
-    const entry = {
-      surface: surface.name,
-      mode: surface.mode,
-      url,
-      viewportWidth,
-      viewportHeight,
-      captured: false,
-      blankCheck: false,
-      gatedCheck: false,
-      timestamp,
-    };
-
-    try {
-      await prepareSurface(url);
-      const inspection = await inspectSurface();
-      const file = outputDir + '/' + surface.name + '.png';
-      const screenshotBytes = await page.screenshot({
-        path: file,
-        fullPage: false,
-      });
-      const visualNonBlank = screenshotBytes.length >= 12000;
-      entry.blankCheck = !inspection.blank || visualNonBlank;
-      entry.gatedCheck = !inspection.gateVisible;
-      entry.buttonCount = inspection.buttonCount;
-      entry.excerpt = inspection.bodyText.slice(0, 220);
-      if (surface.name === 'learn') {
-        entry.forbiddenLessonSequenceChrome =
-          /\b\d+\s+Lesson\s+\d+\s+(Done|Now|Next|Locked)\b/.test(
-            inspection.bodyText,
-          );
-      }
-      entry.screenshotBytes = screenshotBytes.length;
-      entry.visualNonBlank = visualNonBlank;
-      if (!entry.blankCheck) {
-        throw new Error('Blank surface');
-      }
-      if (inspection.gateVisible) {
-        throw new Error('Accessibility gate still visible');
-      }
-      if (entry.forbiddenLessonSequenceChrome) {
-        throw new Error('Forbidden compact lesson sequence chrome visible');
-      }
-      entry.captured = true;
-      entry.file = file;
-    } catch (error) {
-      entry.failureReason = String(error && error.message ? error.message : error);
-    }
-
-    manifest.surfaces.push(entry);
-  }
-
-  return JSON.stringify(manifest);
-}
-EOF
-
-ensure_server
-
-pw close >/dev/null 2>&1 || true
-pw open "$APP_URL" >/dev/null
-pw resize "$VIEWPORT_WIDTH" "$VIEWPORT_HEIGHT" >/dev/null
-pw_raw snapshot >"$INITIAL_SNAPSHOT_FILE" || true
-pw run-code --filename seed_english.js >/dev/null
-pw reload >/dev/null
-pw resize "$VIEWPORT_WIDTH" "$VIEWPORT_HEIGHT" >/dev/null
-
-viewport_json_quoted="$(pw_raw eval "({
-  href: location.href,
-  innerWidth: window.innerWidth,
-  innerHeight: window.innerHeight,
-  outerWidth: window.outerWidth,
-  outerHeight: window.outerHeight,
-  language: navigator.language,
-  storedLanguage: localStorage.getItem('flutter.app_language_code'),
-})")"
-decode_pw_json_string "$viewport_json_quoted" >"$VIEWPORT_JSON_FILE"
-
-node -e '
+  node -e '
 const fs = require("fs");
 const data = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
 if (data.innerWidth !== Number(process.argv[2]) || data.innerHeight !== Number(process.argv[3])) {
   console.error(JSON.stringify(data, null, 2));
   process.exit(1);
 }
-' "$VIEWPORT_JSON_FILE" "$VIEWPORT_WIDTH" "$VIEWPORT_HEIGHT" || fail "Viewport was not ${VIEWPORT_WIDTH}x${VIEWPORT_HEIGHT}"
+' "$viewport_file" "$viewport_width" "$viewport_height" \
+    || fail "Viewport ${viewport_name} was not ${viewport_width}x${viewport_height}"
+}
 
-set +e
-manifest_json_quoted="$(pw_raw run-code --filename capture_surfaces.js 2>&1)"
-capture_status=$?
-set -e
+write_surface_probe_script() {
+  local viewport_name="$1"
+  local viewport_width="$2"
+  local viewport_height="$3"
+  local surface_name="$4"
+  local surface_mode="$5"
+  local surface_url="$6"
 
-if [[ $capture_status -ne 0 ]]; then
-  printf '%s\n' "$manifest_json_quoted" >"$OUTPUT_DIR/flow_error.txt"
-  fail "Controlled demo surface capture failed. See $OUTPUT_DIR/flow_error.txt"
-fi
+  cat >"$SURFACE_SCRIPT_FILE" <<EOF
+async page => {
+  const surfaceName = $(json_quote "$surface_name");
+  const surfaceMode = $(json_quote "$surface_mode");
+  const surfaceUrl = $(json_quote "$surface_url");
+  const viewportName = $(json_quote "$viewport_name");
+  const viewportWidth = Number($(json_quote "$viewport_width"));
+  const viewportHeight = Number($(json_quote "$viewport_height"));
 
-if ! decode_pw_json_string "$manifest_json_quoted" >"$MANIFEST_FILE"; then
-  printf '%s\n' "$manifest_json_quoted" >"$OUTPUT_DIR/flow_error.txt"
-  fail "Controlled demo surface capture returned non-JSON output. See $OUTPUT_DIR/flow_error.txt"
-fi
+  await page.goto(surfaceUrl, { waitUntil: 'domcontentloaded' });
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForTimeout(1200);
 
-node -e '
-const fs = require("fs");
-const manifest = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-const required = [
-  "home",
-  "learn",
-  "runner_theory",
-  "runner_drill",
-  "runner_feedback_or_review",
-  "review",
-  "practice",
-  "profile",
+  const gate = page.locator(
+    'flt-semantics-placeholder[aria-label="Enable accessibility"]',
+  );
+  if (await gate.count()) {
+    await gate.evaluate(element => element.click());
+    await page.waitForTimeout(900);
+  }
+  await page.waitForTimeout(700);
+
+  const bodyText = (await page.locator('body').innerText().catch(() => ''))
+    .replace(/\\s+/g, ' ')
+    .trim();
+  const buttonNames = (await page.getByRole('button').allTextContents().catch(() => []))
+    .map(text => text.replace(/\\s+/g, ' ').trim())
+    .filter(Boolean);
+
+  return JSON.stringify({
+    surface: surfaceName,
+    mode: surfaceMode,
+    url: surfaceUrl,
+    viewport: viewportName,
+    viewportWidth,
+    viewportHeight,
+    buttonCount: buttonNames.length,
+    excerpt: bodyText.slice(0, 220),
+    bodyTextLength: bodyText.length,
+    gateVisible: /Enable accessibility/i.test(bodyText),
+    blank: bodyText.length === 0,
+    forbiddenLessonSequenceChrome:
+      surfaceName === 'learn' && viewportName === 'compact_phone'
+        ? /\\b\\d+\\s+Lesson\\s+\\d+\\s+(Done|Now|Next|Locked)\\b/.test(bodyText)
+        : false,
+  });
+}
+EOF
+}
+
+record_surface_entry() {
+  local viewport_name="$1"
+  local viewport_width="$2"
+  local viewport_height="$3"
+  local surface_name="$4"
+  local surface_mode="$5"
+  local surface_query="$6"
+  local png_file_name="${viewport_name}.${surface_name}.png"
+  local png_path="$OUTPUT_DIR/$png_file_name"
+  local surface_url="${APP_URL}${surface_query}"
+  local probe_json_quoted
+  local decoded_probe_file="$OUTPUT_DIR/.entry.${viewport_name}.${surface_name}.json"
+
+  write_surface_probe_script \
+    "$viewport_name" \
+    "$viewport_width" \
+    "$viewport_height" \
+    "$surface_name" \
+    "$surface_mode" \
+    "$surface_url"
+
+  set +e
+  probe_json_quoted="$(pw_raw run-code --filename "$(basename "$SURFACE_SCRIPT_FILE")" 2>&1)"
+  local capture_status=$?
+  set -e
+
+  if [[ $capture_status -ne 0 ]]; then
+    printf '%s\n' "$probe_json_quoted" >"$FLOW_ERROR_FILE"
+    fail "Capture probe failed for ${viewport_name}/${surface_name}. See $FLOW_ERROR_FILE"
+  fi
+
+  if ! decode_pw_json_string "$probe_json_quoted" >"$decoded_probe_file"; then
+    printf '%s\n' "$probe_json_quoted" >"$FLOW_ERROR_FILE"
+    fail "Capture probe returned non-JSON output for ${viewport_name}/${surface_name}. See $FLOW_ERROR_FILE"
+  fi
+
+  pw screenshot --filename "$png_file_name" >/dev/null
+
+  node - "$decoded_probe_file" "$png_path" "$ROOT_DIR" <<'NODE' >>"$ENTRY_JSONL_FILE"
+const fs = require('fs');
+
+const decodedProbeFile = process.argv[2];
+const pngPath = process.argv[3];
+const rootDir = process.argv[4];
+
+const entry = JSON.parse(fs.readFileSync(decodedProbeFile, 'utf8'));
+const bytes = fs.existsSync(pngPath) ? fs.statSync(pngPath).size : 0;
+entry.file = pngPath.replace(`${rootDir}/`, './');
+entry.screenshotBytes = bytes;
+entry.visualNonBlank = bytes >= 12000;
+entry.blankCheck = !entry.blank || entry.visualNonBlank;
+entry.gatedCheck = !entry.gateVisible;
+entry.captured = Boolean(
+  entry.blankCheck &&
+    entry.gatedCheck &&
+    !entry.forbiddenLessonSequenceChrome &&
+    bytes > 0,
+);
+if (!entry.blankCheck) {
+  entry.failureReason = 'Blank surface';
+} else if (entry.gateVisible) {
+  entry.failureReason = 'Accessibility gate still visible';
+} else if (entry.forbiddenLessonSequenceChrome) {
+  entry.failureReason = 'Forbidden compact lesson sequence chrome visible';
+}
+process.stdout.write(`${JSON.stringify(entry)}\n`);
+NODE
+}
+
+write_manifest() {
+  node - "$ENTRY_JSONL_FILE" "$MANIFEST_FILE" "$OUTPUT_DIR" "$ROOT_DIR" "$APP_URL" "$STARTED_SERVER" <<'NODE'
+const fs = require('fs');
+
+const entryJsonlPath = process.argv[2];
+const manifestPath = process.argv[3];
+const outputDir = process.argv[4];
+const rootDir = process.argv[5];
+const appUrl = process.argv[6];
+const startedFlutterServer = process.argv[7] === '1';
+
+const entries = fs
+  .readFileSync(entryJsonlPath, 'utf8')
+  .split('\n')
+  .map(line => line.trim())
+  .filter(Boolean)
+  .map(line => JSON.parse(line));
+
+const surfaces = [...new Set(entries.map(entry => entry.surface))];
+const viewports = [...new Map(
+  entries.map(entry => [
+    entry.viewport,
+    {
+      id: entry.viewport,
+      width: entry.viewportWidth,
+      height: entry.viewportHeight,
+    },
+  ]),
+).values()];
+
+const manifest = {
+  generatedAt: new Date().toISOString(),
+  lane_type: 'literal_browser',
+  render_kind: 'active_route_browser',
+  appUrl,
+  artifact_dir: outputDir.replace(`${rootDir}/`, './'),
+  startedFlutterServer,
+  surfaces,
+  viewports,
+  entries,
+  done_for_today_supported: false,
+};
+
+fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+NODE
+}
+
+assert_manifest_complete() {
+  node - "$MANIFEST_FILE" <<'NODE'
+const fs = require('fs');
+
+const manifest = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+const requiredSurfaces = [
+  'placement',
+  'welcome',
+  'home',
+  'learn',
+  'runner_theory',
+  'runner_drill',
+  'runner_feedback_or_review',
+  'review',
+  'practice',
+  'profile',
+  'world_completion',
 ];
+const requiredViewports = ['compact_phone', 'large_phone', 'tablet'];
 const missing = [];
-for (const name of required) {
-  const entry = manifest.surfaces.find(surface => surface.surface === name);
-  if (!entry || !entry.captured) {
-    missing.push(name);
+
+for (const viewport of requiredViewports) {
+  for (const surface of requiredSurfaces) {
+    const entry = manifest.entries.find(candidate =>
+      candidate.viewport === viewport && candidate.surface === surface,
+    );
+    if (!entry || !entry.captured) {
+      missing.push(`${viewport}/${surface}`);
+    }
   }
 }
+
 if (missing.length > 0) {
   console.error(JSON.stringify({ missing }, null, 2));
   process.exit(1);
 }
-const learn = manifest.surfaces.find(surface => surface.surface === "learn");
-if (!learn) {
-  console.error(JSON.stringify({ missing: ["learn"] }, null, 2));
-  process.exit(1);
+NODE
 }
-if (learn.forbiddenLessonSequenceChrome) {
-  console.error(JSON.stringify({ learnAcceptance: "forbidden Lesson N label visible" }, null, 2));
-  process.exit(1);
-}
-' "$MANIFEST_FILE" || fail "Required controlled-demo captures are still missing. See $MANIFEST_FILE"
+
+mkdir -p "$OUTPUT_DIR"
+rm -f \
+  "$OUTPUT_DIR"/*.png \
+  "$OUTPUT_DIR"/.entry.*.json \
+  "$OUTPUT_DIR"/.manifest_entries.jsonl \
+  "$OUTPUT_DIR"/.capture_surface.js \
+  "$FLOW_ERROR_FILE" \
+  "$MANIFEST_FILE" \
+  "$PLAYWRIGHT_CONFIG_FILE"
+
+require_command curl
+require_command flutter
+require_command node
+require_command npx
+[[ -x "$PWCLI" ]] || fail "Playwright CLI wrapper not found at $PWCLI"
+
+write_playwright_config
+ensure_server
+: >"$ENTRY_JSONL_FILE"
+
+for viewport_spec in "${VIEWPORT_SPECS[@]}"; do
+  IFS=':' read -r viewport_name viewport_width viewport_height <<<"$viewport_spec"
+  open_browser_session "$viewport_width" "$viewport_height"
+  capture_viewport_snapshot "$viewport_name" "$viewport_width" "$viewport_height"
+  for surface_spec in "${SURFACE_SPECS[@]}"; do
+    IFS=':' read -r surface_name surface_mode surface_query <<<"$surface_spec"
+    record_surface_entry \
+      "$viewport_name" \
+      "$viewport_width" \
+      "$viewport_height" \
+      "$surface_name" \
+      "$surface_mode" \
+      "$surface_query"
+  done
+done
+
+write_manifest
+assert_manifest_complete || fail "Required controlled-demo browser captures are missing. See $MANIFEST_FILE"
+
+pw close >/dev/null 2>&1 || true
 
 log "Capture complete"
 log "Manifest: $MANIFEST_FILE"

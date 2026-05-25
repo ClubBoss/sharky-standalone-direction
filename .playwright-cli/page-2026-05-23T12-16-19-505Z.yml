@@ -1,0 +1,29 @@
+- generic [ref=e7] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - group:
+              - button [ref=e8]
+              - generic [ref=e9]:
+                - generic: 20%
+              - generic [ref=e10]:
+                - generic: 1/5
+              - button "UTG" [ref=e11]
+              - button "BB" [ref=e12]
+              - button "HJ" [ref=e13]
+              - generic [ref=e14]:
+                - generic: 1 BB
+              - generic [ref=e15]:
+                - generic: PREFLOP
+              - generic [ref=e16]:
+                - generic: Pot 1.5 BB
+              - generic [ref=e17]:
+                - generic: 0.5 BB
+              - button "SB" [ref=e18]
+              - button "CO" [ref=e19]
+              - button "Y BTN Hero 100 BB D" [ref=e20]
+            - group "Start with the table. Hero is you, blinds start the pot, and the table stays readable before the route speeds up." [ref=e24]:
+              - button [ref=e22]
+              - button "Continue" [active] [ref=e23]

@@ -11,6 +11,8 @@ String act0RuntimeTaskRailLabelV1(
   required bool isReview,
   required bool isTrailHistory,
   required bool hasSeatTargets,
+  required String question,
+  required List<Act0RunnerOptionV1> options,
   Act0TaskFamilyV1? taskFamily,
 }) {
   if (isReview) {
@@ -59,6 +61,24 @@ String act0RuntimeTaskRailLabelV1(
         fallback: 'Choose the correct count',
       );
     }
+    if (taskFamily == Act0TaskFamilyV1.recognition) {
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'runner_task_choose_correct_answer',
+        fallback: 'Choose the correct answer',
+      );
+    }
+    if (!_looksLikeActionDecisionDrillV1(
+      question: question,
+      options: options,
+      taskFamily: taskFamily,
+    )) {
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'runner_task_choose_correct_answer',
+        fallback: 'Choose the correct answer',
+      );
+    }
     return act0LocalizedSurfaceAtomV1(
       context,
       'runner_task_choose_best_action',
@@ -66,6 +86,65 @@ String act0RuntimeTaskRailLabelV1(
     );
   }
   return '';
+}
+
+bool _looksLikeActionDecisionDrillV1({
+  required String question,
+  required List<Act0RunnerOptionV1> options,
+  required Act0TaskFamilyV1? taskFamily,
+}) {
+  if (taskFamily == Act0TaskFamilyV1.sizing) {
+    return true;
+  }
+  final normalizedQuestion = question.trim().toLowerCase();
+  const actionQuestionPhrases = <String>[
+    'best action',
+    'simple action',
+    'clean action',
+    'disciplined action',
+    'simple response',
+    'clean response',
+    'disciplined response',
+    'first-in action',
+    'how to play',
+    'what should',
+    'what is cleaner',
+    'what is the cleaner',
+    'what is the clean action',
+    'what action',
+    'what response',
+    'fits the price',
+  ];
+  if (actionQuestionPhrases.any(normalizedQuestion.contains)) {
+    return true;
+  }
+
+  var actionLikeOptions = 0;
+  for (final option in options) {
+    final normalizedLabel = option.label.trim().toLowerCase();
+    if (normalizedLabel.isEmpty) {
+      continue;
+    }
+    if (normalizedLabel == 'fold' ||
+        normalizedLabel == 'call' ||
+        normalizedLabel == 'raise' ||
+        normalizedLabel == 'check' ||
+        normalizedLabel == 'bet' ||
+        normalizedLabel == 'jam' ||
+        normalizedLabel == 'shove' ||
+        normalizedLabel == 'open' ||
+        normalizedLabel.startsWith('fold ') ||
+        normalizedLabel.startsWith('call ') ||
+        normalizedLabel.startsWith('raise ') ||
+        normalizedLabel.startsWith('check ') ||
+        normalizedLabel.startsWith('bet ') ||
+        normalizedLabel.startsWith('jam ') ||
+        normalizedLabel.startsWith('shove ') ||
+        normalizedLabel.startsWith('open ')) {
+      actionLikeOptions += 1;
+    }
+  }
+  return actionLikeOptions >= 2;
 }
 
 String act0RuntimeTrailTaskLabelV1(BuildContext context) {

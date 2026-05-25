@@ -449,8 +449,8 @@ String _reviewSharkyDetailV1({
                   ])
           : (recoveredCount > 0
                 ? <String>[
-                    'Nothing urgent is pulling on the route right now.',
-                    'No urgent leaks are pulling on the route right now.',
+                    'Nothing urgent needs attention right now.',
+                    'No urgent leaks need attention right now.',
                   ]
                 : <String>[
                     'No urgent repair is pulling on the path right now.',

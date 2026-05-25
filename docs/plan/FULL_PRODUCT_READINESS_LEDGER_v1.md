@@ -139,12 +139,19 @@ Foundation-depth note:
 - a concept family may be present but still partial if it lacks visual table
   proof, adjacent comparison, decision transfer, best-five/showdown proof where
   relevant, misconception-specific feedback, or mistake-recovery reuse
-- `Concept.md` may be used as an external benchmark/checklist to detect this
-  coverage illusion, but must not be imported as a giant content backlog
+- `docs/curriculum/CONCEPT_BENCHMARK_v1.md` may be used as an external
+  benchmark/checklist to detect this coverage illusion, but must not be
+  imported as a giant content backlog
+- `docs/curriculum/LEARNING_UNIT_ACCEPTANCE_STANDARD_v1.md` now defines when a
+  concept is carried by a real byte, lesson, or world instead of a shallow
+  prompt fragment
 - after the Hand Strength W1 owner-seam repairs, that seam is strong enough to
   park locally; broader foundation depth is still not fully proven
-- the next active foundation-depth frontier is currently `Board Reading /
-  Draws` plus `Pot / Stack / All-in / Side-pot` truth
+- Board Reading / Draws is now parkable for the current beginner gate after
+  the bounded v1-v4 depth, transfer, and reuse lifts
+- Pot / Stack / All-in is improved but not parked
+- `Side pot` is the next candidate only if a clean chronology fit and honest
+  representation seam exist
 - novice-prep should wait until those key depth illusions are reduced
 
 ## Readiness Coverage Map
@@ -173,7 +180,7 @@ opening the next readiness level if a hard dependency gate is still closed.
 | Gate | Required evidence | Blocking conditions | Counts as |
 | --- | --- | --- | --- |
 | Route/proof gate | `flutter analyze`, fast loop, route/order guards, release gate when relevant | red fast loop, route-order drift, canonical entry drift, dirty proof command | additive units plus hard gate |
-| Content factory gate | W1-W12 depth/transfer floor, owner seams, content authoring pattern | thin transfer density, coverage illusion, unclear content owners, one-off content patches that do not scale | additive units plus W13-W24 hard gate |
+| Content factory gate | W1-W12 depth/transfer floor, owner seams, content authoring pattern, byte/lesson/world acceptance floor, and explicit unit placement / chronology safety | thin transfer density, coverage illusion, shallow byte/lesson/world structure, unclear content owners, placement drift, chronology drift, one-off content patches that do not scale | additive units plus W13-W24 hard gate |
 | Payoff/identity gate | Learn/Practice/Review/Profile/World Completion explain value and next reason | payoff feels procedural, utility/card-stack hierarchy dominates, learner identity is unclear | additive units plus demo/novice gate |
 | Visual/device gate | compact portrait proof, safe areas, CTA hierarchy, screenshot-grade surfaces | unreadable compact states, obvious alpha visuals, store screenshots would expose unfinished theme | additive units plus demo/store gate |
 | Telemetry/privacy gate | telemetry truth map, event contract, privacy posture, release decision | no event ownership, no data boundary, analytics would be improvised during release | hard gate for beta and learning-loop validation |
@@ -226,7 +233,7 @@ Future report rule:
 | Runner / Table / Feedback Truth | 8.5 / 12 | ACTIVE | runner proof clusters realigned; board/street truth closed; compact corrective feedback is calmer and less punitive in the demo packet | more device proof and premium polish | real-device table proof | Visual Cross-Screen / Device QA audit | hidden runtime trust regressions on real devices | Medium |
 | Review / Retention / Prove | 9.5 / 12 | ACTIVE | deterministic repair / recheck / prove loops and proofs are green; compact empty-state hierarchy improved; active repair now leads above secondary support chrome | deeper pattern coaching and long-term proof | high-volume coach-feel proof | Review / Pattern Coaching Audit v1 | repair loop may remain mechanically correct but emotionally flat | Medium |
 | Practice / Daily Reps | 6.5 / 9 | ACTIVE | featured recommendation, payoff framing, duplicate disabled repair cleanup, and daily return-value line landed | more visible return value and broader practice trust | repeated-session value proof | Practice payoff follow-through audit | Practice may still feel secondary over time | Medium |
-| Content Depth / Transfer | 11.5 / 16 | ACTIVE | W1/W4/W5/W6/W8 lifts remain landed; W9 bubble-risk owner transfer and W11 session-plan owner transfer are now added; W10 exploit guardrails was correctly no-op audited; answer labels cleaned; Hand Strength W1 owner seam is now substantially stronger across comparison, best-five, kicker, and high-rank transfer proof | more transfer families and mastery-linked depth, especially board-reading/draws and pot/stack/all-in/side-pot truth | foundation depth illusion beyond the repaired hand-strength seam | Board reading / draws depth wave, or Pot / Stack / All-in / Side-pot truth slice | route can feel polished but too thin at full-ladder scale | Medium |
+| Content Depth / Transfer | 11.5 / 16 | ACTIVE | W1/W4/W5/W6/W8 lifts remain landed; W9 bubble-risk owner transfer and W11 session-plan owner transfer are now added; W10 exploit guardrails was correctly no-op audited; answer labels cleaned; Hand Strength W1 owner seam is now substantially stronger across comparison, best-five, kicker, and high-rank transfer proof; Board Reading / Draws is now parkable for the current beginner gate after bounded depth/transfer/reuse lifts; Pot / Stack / All-in now has a surfaced beginner slice for pot-vs-stack, all-in meaning, and matched-chips truth | more transfer families and mastery-linked depth, especially side-pot truth after clean chronology and representation checks | foundation depth illusion beyond the repaired seams; shallow or misplaced byte/lesson/world structure must not be mistaken for readiness; placement and chronology drift now count as real blockers | Pot / Stack / All-in / Side-pot truth slice, with side-pot admitted only if chronology and representation are honest | route can feel polished but too thin at full-ladder scale | Medium |
 | First-Run / Foundation | 9.5 / 11 | ACTIVE | guide-first route, placement simplification, seat decode proof, first-start path strong | real novice confirmation after key foundation-depth illusions are reduced | novice evidence still risks measuring known thin concept families | Human Novice QA proof packet after board-reading/draws and pot/stack depth improve | first-session friction may remain hidden | Medium |
 | World Completion / Mastery Payoff | 6.5 / 9 | ACTIVE | world completion now shows stronger milestone wording, skill-in-motion, return-value, next-unlock reason, a distinct milestone panel, and a lighter top stack after the safe compact fold | stronger human-validated payoff and broader mastery depth | payoff still needs novice validation | Human Novice QA proof packet after controlled-demo gate | route completion may still feel lighter than the learning effort it summarizes | Medium |
 | Profile / You Payoff | 5.5 / 10 | ACTIVE | recent progress card now shows improved, stronger-skill, fixed, return-value evidence; hero identity and lower return-value story are stronger without dashboard bloat | deeper learner identity, novice validation, broader cross-session narrative | payoff is stronger but still compact | Profile payoff follow-through only with fresh evidence | improvement can still feel smaller than the work the learner is doing | Medium |

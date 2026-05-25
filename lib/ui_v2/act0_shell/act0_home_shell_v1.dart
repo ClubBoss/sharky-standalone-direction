@@ -242,8 +242,8 @@ class Act0HomeShellV1 extends StatelessWidget {
                                 checklistActive
                                     ? _shellCopyV1(
                                         context,
-                                        en: 'Continue route',
-                                        ru: 'Продолжить маршрут',
+                                        en: 'Continue path',
+                                        ru: 'Продолжить путь',
                                       )
                                     : nextActionLabel,
                                 style: Act0ShellTokensV1.label.copyWith(
@@ -261,8 +261,8 @@ class Act0HomeShellV1 extends StatelessWidget {
                                 Text(
                                   _shellCopyV1(
                                     context,
-                                    en: 'One fresh route step is still open.',
-                                    ru: 'Один новый шаг маршрута всё ещё открыт.',
+                                    en: 'One fresh lesson step is still open.',
+                                    ru: 'Один новый шаг урока всё ещё открыт.',
                                   ),
                                   style: Act0ShellTokensV1.muted.copyWith(
                                     color: Act0ShellTokensV1.textMuted,
@@ -381,6 +381,11 @@ class Act0HomeShellV1 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _HomeDashboardRowV1(
+                state: state,
+                localeIsRu: _isRuLocaleV1(context),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
               routeSurface,
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               if (showFocusStrip) ...[
@@ -557,7 +562,7 @@ class Act0HomeShellV1 extends StatelessWidget {
         icon: Icons.menu_book_rounded,
         accentColor: Act0ShellTokensV1.primary,
         tapKey: 'act0_shell_home_plan_job_continue',
-        onTap: onOpenLearnContext ?? onContinue,
+        onTap: continueJob == null ? null : (onOpenLearnContext ?? onContinue),
       ),
       Act0HomeChecklistRowV1(
         rowKey: 'drill',
@@ -599,6 +604,163 @@ class Act0HomeShellV1 extends StatelessWidget {
   }
 }
 
+class _HomeDashboardRowV1 extends StatelessWidget {
+  const _HomeDashboardRowV1({required this.state, required this.localeIsRu});
+
+  final Act0ShellStateV1 state;
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = state.xpProgress;
+    return Row(
+      children: [
+        // XP Progress Card
+        Expanded(
+          flex: 3,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Act0ShellTokensV1.gapMd,
+              vertical: 10,
+            ),
+            decoration: Act0ShellTokensV1.surfaceDecoration(
+              color: Act0ShellTokensV1.surface.withOpacity(0.7),
+              borderColor: Act0ShellTokensV1.primary.withOpacity(0.2),
+              glow: false,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        state.levelLabel,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.primary,
+                          fontSize: 8.5,
+                          letterSpacing: 0.5,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${state.xp}/${state.xpTarget} XP',
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w800,
+                        color: Act0ShellTokensV1.text,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Stack(
+                  children: [
+                    Container(
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Act0ShellTokensV1.surface3,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: progress,
+                      child: Container(
+                        height: 5,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Act0ShellTokensV1.primary,
+                              Act0ShellTokensV1.info,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Act0ShellTokensV1.info.withOpacity(0.38),
+                              blurRadius: 6,
+                              spreadRadius: 0.5,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        // Streak Card
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Act0ShellTokensV1.gapMd,
+              vertical: 10,
+            ),
+            decoration: Act0ShellTokensV1.surfaceDecoration(
+              color: Act0ShellTokensV1.surface.withOpacity(0.7),
+              borderColor: Act0ShellTokensV1.gold.withOpacity(0.2),
+              glow: false,
+            ),
+            child: Row(
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Colors.orange, Act0ShellTokensV1.gold],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ).createShader(bounds),
+                  child: const Icon(
+                    Icons.local_fire_department_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${state.streakDays}',
+                        style: Act0ShellTokensV1.cardTitle.copyWith(
+                          color: Act0ShellTokensV1.gold,
+                          height: 1.0,
+                          fontSize: 14.5,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        localeIsRu ? 'дн. подряд' : 'day streak',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          fontSize: 8,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _HomeCompactRouteStripV1 extends StatelessWidget {
   const _HomeCompactRouteStripV1({
     required this.contextTitle,
@@ -622,9 +784,9 @@ class _HomeCompactRouteStripV1 extends StatelessWidget {
             vertical: Act0ShellTokensV1.gapSm,
           ),
           decoration: Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.56),
-            borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
-            glow: false,
+            color: Act0ShellTokensV1.primary.withOpacity(0.04),
+            borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
+            glow: true,
           ),
           child: Row(
             children: [
@@ -632,7 +794,7 @@ class _HomeCompactRouteStripV1 extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
+                  color: Act0ShellTokensV1.primary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusSm,
                   ),
@@ -648,14 +810,15 @@ class _HomeCompactRouteStripV1 extends StatelessWidget {
                 child: Text(
                   _shellCopyV1(
                     context,
-                    en: 'Route open: $contextTitle',
-                    ru: 'Маршрут открыт: $contextTitle',
+                    en: 'Path open: $contextTitle',
+                    ru: 'Путь открыт: $contextTitle',
                   ),
                   key: const Key('act0_shell_home_compact_route_title'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   softWrap: false,
-                  style: Act0ShellTokensV1.label.copyWith(
+                  style: Act0ShellTokensV1.body.copyWith(
+                    fontWeight: FontWeight.w700,
                     color: Act0ShellTokensV1.textMuted,
                   ),
                 ),
@@ -687,13 +850,21 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int activeFocusIndex = -1;
+    for (int i = 0; i < rows.length; i++) {
+      if (rows[i].onTap != null) {
+        activeFocusIndex = i;
+        break;
+      }
+    }
+
     return Container(
       key: const Key('act0_shell_home_daily_plan_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface.withValues(alpha: 0.82),
-        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.16),
-        glow: false,
+        color: Act0ShellTokensV1.surface.withOpacity(0.82),
+        borderColor: Act0ShellTokensV1.primary.withOpacity(0.18),
+        glow: true,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -713,19 +884,17 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
               color: Act0ShellTokensV1.textMuted,
             ),
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          const SizedBox(height: Act0ShellTokensV1.gapLg),
           for (var i = 0; i < rows.length; i++) ...[
-            _HomeChecklistRowTileV1(row: rows[i]),
-            if (i + 1 < rows.length)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: Act0ShellTokensV1.gapSm,
-                ),
-                child: Divider(
-                  height: 1,
-                  color: Act0ShellTokensV1.textDim.withValues(alpha: 0.16),
-                ),
-              ),
+            _HomeChecklistRowTileV1(
+              row: rows[i],
+              isFirst: i == 0,
+              isLast: i == rows.length - 1,
+              isCompleted: activeFocusIndex != -1 && i < activeFocusIndex,
+              isActiveFocus: i == activeFocusIndex,
+              isPending: activeFocusIndex != -1 && i > activeFocusIndex,
+            ),
+            if (i + 1 < rows.length) const SizedBox(height: 10),
           ],
         ],
       ),
@@ -734,90 +903,265 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
 }
 
 class _HomeChecklistRowTileV1 extends StatelessWidget {
-  const _HomeChecklistRowTileV1({required this.row});
+  const _HomeChecklistRowTileV1({
+    required this.row,
+    required this.isFirst,
+    required this.isLast,
+    required this.isCompleted,
+    required this.isActiveFocus,
+    required this.isPending,
+  });
 
   final Act0HomeChecklistRowV1 row;
+  final bool isFirst;
+  final bool isLast;
+  final bool isCompleted;
+  final bool isActiveFocus;
+  final bool isPending;
 
   @override
   Widget build(BuildContext context) {
+    final opacity = isPending ? 0.55 : 1.0;
+
+    Widget circleWidget;
+    if (isCompleted) {
+      circleWidget = Container(
+        key: Key('act0_shell_home_checklist_step_${row.rowKey}'),
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: row.accentColor.withOpacity(0.12),
+          border: Border.all(
+            color: row.accentColor.withOpacity(0.5),
+            width: 1.5,
+          ),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Icon(Icons.check_rounded, color: row.accentColor, size: 18),
+        ),
+      );
+    } else if (isActiveFocus) {
+      circleWidget = Container(
+        key: Key('act0_shell_home_checklist_step_${row.rowKey}'),
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [row.accentColor, row.accentColor.withOpacity(0.85)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: row.accentColor.withOpacity(0.38),
+              blurRadius: 10,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            '${row.stepNumber}',
+            key: Key('act0_shell_home_checklist_step_label_${row.rowKey}'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+      );
+    } else {
+      circleWidget = Container(
+        key: Key('act0_shell_home_checklist_step_${row.rowKey}'),
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: Act0ShellTokensV1.surface3.withOpacity(0.5),
+          border: Border.all(
+            color: Act0ShellTokensV1.border.withOpacity(0.5),
+            width: 1.5,
+          ),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Text(
+            '${row.stepNumber}',
+            key: Key('act0_shell_home_checklist_step_label_${row.rowKey}'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.textDim.withOpacity(0.6),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final activeLineColor = row.accentColor.withOpacity(0.7);
+    final mutedLineColor = Act0ShellTokensV1.border.withOpacity(0.3);
+
     final content = Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            key: Key('act0_shell_home_checklist_step_${row.rowKey}'),
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              color: row.accentColor.withValues(alpha: 0.10),
-              border: Border.all(
-                color: row.accentColor.withValues(alpha: 0.28),
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                '${row.stepNumber}',
-                key: Key('act0_shell_home_checklist_step_label_${row.rowKey}'),
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: row.accentColor,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Column(
-              key: row.isRepairAction
-                  ? const Key('act0_shell_home_repair_panel')
-                  : null,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  row.label,
-                  key: Key('act0_shell_home_checklist_label_${row.rowKey}'),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: row.accentColor,
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Text(
-                  row.title,
-                  key: Key('act0_shell_home_checklist_title_${row.rowKey}'),
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (row.detail.trim().isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    row.detail,
-                    key: Key('act0_shell_home_checklist_detail_${row.rowKey}'),
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: 38,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  if (!isFirst)
+                    Positioned(
+                      top: 0,
+                      height: 25,
+                      child: Container(
+                        width: 2,
+                        color: isCompleted || isActiveFocus
+                            ? activeLineColor
+                            : mutedLineColor,
+                      ),
                     ),
-                  ),
+                  if (!isLast)
+                    Positioned(
+                      top: 25,
+                      bottom: 0,
+                      child: Container(
+                        width: 2,
+                        color: isCompleted ? activeLineColor : mutedLineColor,
+                      ),
+                    ),
+                  Positioned(top: 8, child: circleWidget),
                 ],
-              ],
+              ),
             ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Icon(
-            row.onTap == null
-                ? Icons.check_circle_outline_rounded
-                : Icons.arrow_forward_rounded,
-            color: row.onTap == null
-                ? Act0ShellTokensV1.textDim
-                : row.accentColor,
-            size: 18,
-          ),
-        ],
+            const SizedBox(width: Act0ShellTokensV1.gapMd),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                decoration: isActiveFocus
+                    ? BoxDecoration(
+                        color: row.accentColor.withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(
+                          Act0ShellTokensV1.radiusMd,
+                        ),
+                        border: Border.all(
+                          color: row.accentColor.withOpacity(0.16),
+                          width: 1,
+                        ),
+                      )
+                    : null,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Opacity(
+                        opacity: opacity,
+                        child: Column(
+                          key: row.isRepairAction
+                              ? const Key('act0_shell_home_repair_panel')
+                              : null,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  row.label,
+                                  key: Key(
+                                    'act0_shell_home_checklist_label_${row.rowKey}',
+                                  ),
+                                  style: Act0ShellTokensV1.label.copyWith(
+                                    color: row.accentColor,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                if (isActiveFocus)
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 1.5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: row.accentColor.withOpacity(0.16),
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: row.accentColor.withOpacity(0.3),
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      _shellCopyV1(
+                                        context,
+                                        en: 'NEXT',
+                                        ru: 'ШАГ',
+                                      ),
+                                      style: Act0ShellTokensV1.label.copyWith(
+                                        color: row.accentColor,
+                                        fontSize: 7.5,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              row.title,
+                              key: Key(
+                                'act0_shell_home_checklist_title_${row.rowKey}',
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.fade,
+                              style: Act0ShellTokensV1.body.copyWith(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13.5,
+                                color: isActiveFocus
+                                    ? Colors.white
+                                    : Act0ShellTokensV1.text,
+                              ),
+                            ),
+                            if (row.detail.trim().isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                row.detail,
+                                key: Key(
+                                  'act0_shell_home_checklist_detail_${row.rowKey}',
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.fade,
+                                style: Act0ShellTokensV1.muted.copyWith(
+                                  color: Act0ShellTokensV1.textMuted,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
+                    Opacity(
+                      opacity: opacity,
+                      child: Icon(
+                        row.onTap == null
+                            ? Icons.check_circle_outline_rounded
+                            : Icons.arrow_forward_rounded,
+                        color: row.onTap == null
+                            ? Act0ShellTokensV1.textDim
+                            : row.accentColor,
+                        size: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -834,6 +1178,42 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
     return KeyedSubtree(
       key: Key('act0_shell_home_checklist_row_${row.rowKey}'),
       child: tile,
+    );
+  }
+}
+
+class _HomeSharkyQuoteCardV1 extends StatelessWidget {
+  const _HomeSharkyQuoteCardV1({required this.localeIsRu});
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface3.withOpacity(0.4),
+        borderColor: Act0ShellTokensV1.textDim.withOpacity(0.1),
+        glow: false,
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.psychology_outlined,
+            color: Act0ShellTokensV1.textDim,
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: Text(
+              localeIsRu
+                  ? 'Маленькие шаги ведут к большим прыжкам.'
+                  : 'Small steps lead to big jumps.',
+              style: Act0ShellTokensV1.muted.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -856,8 +1236,8 @@ class _HomeWeeklyFocusStripV1 extends StatelessWidget {
         vertical: Act0ShellTokensV1.gapSm,
       ),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.56),
-        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
+        color: Act0ShellTokensV1.primary.withOpacity(0.04),
+        borderColor: Act0ShellTokensV1.primary.withOpacity(0.14),
         glow: false,
       ),
       child: Row(
@@ -1183,6 +1563,62 @@ class _DailyGoalCardV1 extends StatelessWidget {
                     ),
                 ],
               ),
+              () {
+                int completed = 0;
+                int total = 3;
+                final regExp = RegExp(r'(\d+)/(\d+)');
+                final match = regExp.firstMatch(goalValue);
+                bool hasPills = false;
+                if (match != null) {
+                  completed = int.tryParse(match.group(1) ?? '0') ?? 0;
+                  total = int.tryParse(match.group(2) ?? '3') ?? 3;
+                  hasPills = true;
+                } else if (isDone) {
+                  completed = 3;
+                  total = 3;
+                  hasPills = true;
+                }
+                if (!hasPills || total <= 0) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 4),
+                  child: Row(
+                    children: List.generate(total, (index) {
+                      final isFilled = index < completed;
+                      return Expanded(
+                        child: Container(
+                          height: 5,
+                          margin: EdgeInsets.only(
+                            right: index == total - 1 ? 0 : 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isFilled
+                                ? accentColor
+                                : Act0ShellTokensV1.surface3,
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: isFilled
+                                ? [
+                                    BoxShadow(
+                                      color: accentColor.withOpacity(0.38),
+                                      blurRadius: 6,
+                                      spreadRadius: 0.5,
+                                    ),
+                                  ]
+                                : null,
+                            border: isFilled
+                                ? null
+                                : Border.all(
+                                    color: Act0ShellTokensV1.border.withOpacity(
+                                      0.3,
+                                    ),
+                                    width: 1,
+                                  ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                );
+              }(),
               const SizedBox(height: 8),
               Text(
                 _dailyGoalSupportText(localeIsRu, goalValue),
@@ -1228,32 +1664,70 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final line = _footerLine();
+    final tone = act0SharkyToneForMoodV1(sharky.preSessionMood);
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Act0ShellTokensV1.gapMd,
-        vertical: Act0ShellTokensV1.gapSm,
-      ),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.52),
-        borderColor: Act0ShellTokensV1.textDim.withValues(alpha: 0.12),
-        glow: false,
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withOpacity(0.12),
+          width: 1,
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Act0ShellTokensV1.surface2.withOpacity(0.6),
+            Act0ShellTokensV1.surface.withOpacity(0.8),
+          ],
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.waves_rounded,
-            size: 16,
-            color: Act0ShellTokensV1.info.withValues(alpha: 0.92),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Text(
-              line,
-              key: const Key('act0_shell_home_footer_sharky_line'),
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
+          Container(
+            key: const Key('act0_shell_home_footer_sharky_presence'),
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: tone.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: Act0SharkyPresenceMascotV1(
+                key: const Key('act0_shell_home_footer_sharky_mascot'),
+                mood: sharky.preSessionMood,
+                tone: tone,
+                size: 24,
               ),
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _shellCopyV1(context, en: 'SHARKY CUE', ru: 'СОВЕТ Sharky'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.info,
+                    fontSize: 8.5,
+                    letterSpacing: 1.0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  line,
+                  key: const Key('act0_shell_home_footer_sharky_line'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    fontSize: 12.5,
+                    height: 1.35,
+                    color: Act0ShellTokensV1.textMuted,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -1272,7 +1746,7 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
                   'Почини этот узел первым. Остальное сразу станет проще.',
                 ]
               : <String>[
-                  'Fix this spot first. Then the route feels clean again.',
+                  'Fix this spot first. Then the next step feels clear again.',
                   'One clean repair first. Then continue with a clear head.',
                   'Repair this pressure point first. The rest gets easier right away.',
                 ],
@@ -1321,7 +1795,7 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
                 : <String>[
                     '${state.streakDays} days running. One clean rep keeps the rhythm warm.',
                     '${state.streakDays} days in a row. One short clean rep keeps the pace.',
-                    '${state.streakDays} days in motion already. One precise rep keeps the route steady.',
+                    '${state.streakDays} days in motion already. One precise rep keeps the rhythm steady.',
                   ],
           );
         }
@@ -1376,8 +1850,8 @@ class _HomeFooterSharkyLineV1 extends StatelessWidget {
         .toList(growable: false);
     if (cleaned.isEmpty) {
       return localeIsRu
-          ? 'Один чистый реп и дальше по маршруту.'
-          : 'One clean rep, then continue the route.';
+          ? 'Один чистый реп и дальше по пути.'
+          : 'One clean rep, then continue the path.';
     }
     final seed = state.streakDays.abs();
     var index = seed % cleaned.length;

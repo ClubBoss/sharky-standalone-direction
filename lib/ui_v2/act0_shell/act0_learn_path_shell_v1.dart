@@ -245,10 +245,10 @@ class Act0LearnPathShellV1 extends StatefulWidget {
 class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   static const bool _useCenteredLearnSpineLayoutV1 = true;
   static const Duration _inlineLessonHubExpandDurationV1 = Duration(
-    milliseconds: 660,
+    milliseconds: 380,
   );
   static const Duration _inlineLessonHubCollapseDurationV1 = Duration(
-    milliseconds: 420,
+    milliseconds: 320,
   );
   static const double _lessonTopGapUnderHeaderV1 = 2.0;
   static const double _learnPathCardWidthFactorV1 = 0.94;
@@ -265,6 +265,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   final ScrollController _learnScrollController = ScrollController();
   final Set<Timer> _pendingTimersV1 = <Timer>{};
   int _scrollEpochV1 = 0;
+  String? _dismissedDefaultTaskFocusLessonIdV1;
 
   @override
   void didUpdateWidget(covariant Act0LearnPathShellV1 oldWidget) {
@@ -333,25 +334,22 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
   }
 
   void _handleLessonOpenedV1(String newLessonId, {required String? from}) {
+    if (_dismissedDefaultTaskFocusLessonIdV1 != null &&
+        _dismissedDefaultTaskFocusLessonIdV1 != newLessonId) {
+      setState(() {
+        _dismissedDefaultTaskFocusLessonIdV1 = null;
+      });
+    }
     final epoch = ++_scrollEpochV1;
     unawaited(() async {
-      if (from != null) {
-        await _waitForLearnLayoutSettleV1(frames: 2);
-        await _waitWithCancelV1(
-          _inlineLessonHubCollapseDurationV1 + const Duration(milliseconds: 60),
-        );
-      }
-      if (epoch != _scrollEpochV1 || !mounted) {
-        return;
-      }
-      await _waitForLearnLayoutSettleV1(frames: 2);
+      await _waitForLearnLayoutSettleV1(frames: 1);
       if (epoch != _scrollEpochV1 || !mounted) {
         return;
       }
       await _scrollLessonHeaderToTopV1(
         newLessonId,
-        settleFrames: 2,
-        maxDurationMs: 760,
+        settleFrames: 1,
+        maxDurationMs: 350,
         maxAttempts: from == null ? 1 : 2,
       );
       if (epoch != _scrollEpochV1 || !mounted) {
@@ -373,8 +371,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
 
   Future<void> _scrollLessonHeaderToTopV1(
     String lessonId, {
-    int settleFrames = 2,
-    int maxDurationMs = 460,
+    int settleFrames = 1,
+    int maxDurationMs = 350,
     int maxAttempts = 1,
   }) async {
     if (!_learnScrollController.hasClients) {
@@ -393,17 +391,17 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       if (delta < 0.75) {
         return;
       }
-      final durationCap = attempt == 0 ? maxDurationMs : 240;
-      final durationMs = (160 + (delta * 0.2)).clamp(140, durationCap).round();
+      final durationCap = attempt == 0 ? maxDurationMs : 200;
+      final durationMs = (150 + (delta * 0.16)).clamp(140, durationCap).round();
       await _learnScrollController.animateTo(
         target,
         duration: Duration(milliseconds: durationMs),
-        curve: Curves.easeOutCubic,
+        curve: Curves.easeInOutCubic,
       );
       if (attempt == maxAttempts - 1) {
         return;
       }
-      await _waitForLearnLayoutSettleV1(frames: 1);
+      await _waitWithCancelV1(const Duration(milliseconds: 380));
       if (!mounted || !_learnScrollController.hasClients) {
         return;
       }
@@ -570,7 +568,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     if (!_learnScrollController.hasClients) {
       return;
     }
-    await _waitForLearnLayoutSettleV1(frames: 2);
+    await _waitForLearnLayoutSettleV1(frames: 1);
     if (!mounted ||
         !_learnScrollController.hasClients ||
         epoch != _scrollEpochV1 ||
@@ -614,7 +612,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     if (distance < 0.75) {
       return;
     }
-    final durationMs = (150 + (distance * 0.16)).clamp(150, 320).round();
+    final durationMs = (140 + (distance * 0.15)).clamp(140, 280).round();
     if (epoch != _scrollEpochV1 ||
         widget.detailLessonId != lessonId ||
         widget.activePopupTaskId != taskId) {
@@ -623,8 +621,36 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     await _learnScrollController.animateTo(
       target,
       duration: Duration(milliseconds: durationMs),
-      curve: Curves.easeOutCubic,
+      curve: Curves.easeInOutCubic,
     );
+  }
+
+  bool _shouldShowDefaultTaskFocusV1(Act0LessonCardV1 lesson) {
+    return lesson.state == Act0LessonStateV1.current &&
+        widget.detailLessonId == lesson.lessonId &&
+        widget.activePopupTaskId == null &&
+        _dismissedDefaultTaskFocusLessonIdV1 != lesson.lessonId;
+  }
+
+  void _dismissTaskFocusForLessonV1(String lessonId) {
+    final alreadyDismissed = _dismissedDefaultTaskFocusLessonIdV1 == lessonId;
+    if (!alreadyDismissed) {
+      setState(() {
+        _dismissedDefaultTaskFocusLessonIdV1 = lessonId;
+      });
+    }
+    if (widget.activePopupTaskId != null) {
+      widget.onDismissTaskPopup();
+    }
+  }
+
+  void _clearDefaultTaskFocusDismissalV1(String lessonId) {
+    if (_dismissedDefaultTaskFocusLessonIdV1 != lessonId) {
+      return;
+    }
+    setState(() {
+      _dismissedDefaultTaskFocusLessonIdV1 = null;
+    });
   }
 
   String? _routeBlockerTaskTitleV1(BuildContext context) {
@@ -702,6 +728,9 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       (world) => world.worldId == widget.selectedWorldId,
       orElse: () => widget.worlds.first,
     );
+    final detailLessonId = widget.detailLessonId;
+    final shouldShowDefaultTaskFocus =
+        detailLesson != null && _shouldShowDefaultTaskFocusV1(detailLesson);
     final worldTone = _learnWorldToneV1(selectedWorld.worldNumber);
     return TapRegionSurface(
       child: Stack(
@@ -722,8 +751,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               if (!isDirectionalScroll && !isDragUpdate) {
                 return false;
               }
-              if (widget.activePopupTaskId != null) {
-                widget.onDismissTaskPopup();
+              if (detailLessonId != null &&
+                  (widget.activePopupTaskId != null ||
+                      shouldShowDefaultTaskFocus)) {
+                _dismissTaskFocusForLessonV1(detailLessonId);
               }
               return false;
             },
@@ -905,6 +936,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                                         widget.selectedTaskId,
                                                     activePopupTaskId: widget
                                                         .activePopupTaskId,
+                                                    showDefaultTaskFocus:
+                                                        widget
+                                                                .lessons[i]
+                                                                .lessonId ==
+                                                            detailLessonId &&
+                                                        shouldShowDefaultTaskFocus,
                                                     completedTaskIds:
                                                         widget.completedTaskIds,
                                                     perfectTaskIds:
@@ -935,12 +972,32 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                                                               '${widget.lessons[i].lessonId}::$taskId',
                                                               GlobalKey.new,
                                                             ),
-                                                    onDismissTaskPopup: widget
-                                                        .onDismissTaskPopup,
+                                                    onDismissTaskPopup: () =>
+                                                        _dismissTaskFocusForLessonV1(
+                                                          widget
+                                                              .lessons[i]
+                                                              .lessonId,
+                                                        ),
                                                     onSelectTask:
-                                                        widget.onSelectTask,
+                                                        (lessonId, taskId) {
+                                                          _clearDefaultTaskFocusDismissalV1(
+                                                            lessonId,
+                                                          );
+                                                          widget.onSelectTask(
+                                                            lessonId,
+                                                            taskId,
+                                                          );
+                                                        },
                                                     onStartTask:
-                                                        widget.onStartTask,
+                                                        (lessonId, taskId) {
+                                                          _clearDefaultTaskFocusDismissalV1(
+                                                            lessonId,
+                                                          );
+                                                          widget.onStartTask(
+                                                            lessonId,
+                                                            taskId,
+                                                          );
+                                                        },
                                                   )
                                                 : null,
                                           ),
@@ -2064,6 +2121,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     required this.lesson,
     required this.selectedTaskId,
     required this.activePopupTaskId,
+    required this.showDefaultTaskFocus,
     required this.completedTaskIds,
     required this.perfectTaskIds,
     required this.skippedTaskIds,
@@ -2081,6 +2139,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
   final Act0LessonCardV1 lesson;
   final String selectedTaskId;
   final String? activePopupTaskId;
+  final bool showDefaultTaskFocus;
   final Set<String> completedTaskIds;
   final Set<String> perfectTaskIds;
   final Set<String> skippedTaskIds;
@@ -2127,6 +2186,9 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
         tasks.any((task) => task.taskId == selectedTaskId)
         ? selectedTaskId
         : nextTask.taskId;
+    final visibleTaskFocusId =
+        activePopupTaskId ??
+        (showDefaultTaskFocus ? fallbackSelectedTaskId : null);
 
     return Container(
       key: const Key('act0_shell_selected_lesson_panel'),
@@ -2138,119 +2200,125 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
       ),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: activePopupTaskId == null ? null : onDismissTaskPopup,
-        child: Container(
-          key: panelRenderKey,
-          padding: EdgeInsets.fromLTRB(
-            compactPanel ? 10 : 11,
-            compactPanel ? 8 : 9,
-            compactPanel ? 10 : 11,
-            compactPanel ? 6 : 7,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Color.alphaBlend(
-                  stateColor.withValues(alpha: 0.035),
-                  Act0ShellTokensV1.surface2.withValues(alpha: 0.54),
+        onTap: visibleTaskFocusId == null ? null : onDismissTaskPopup,
+        child: TapRegion(
+          onTapOutside: visibleTaskFocusId == null
+              ? null
+              : (_) => onDismissTaskPopup(),
+          child: Container(
+            key: panelRenderKey,
+            padding: EdgeInsets.fromLTRB(
+              compactPanel ? 10 : 11,
+              compactPanel ? 8 : 9,
+              compactPanel ? 10 : 11,
+              compactPanel ? 6 : 7,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+              border: Border.all(
+                color: stateColor.withValues(alpha: 0.16),
+                width: 1.0,
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                  stateColor.withValues(alpha: 0.04),
+                  Act0ShellTokensV1.surface2.withValues(alpha: 0.4),
+                ],
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (lessonSubtitleBlocks.isNotEmpty) ...<Widget>[
+                  for (
+                    var index = 0;
+                    index < lessonSubtitleBlocks.length;
+                    index++
+                  ) ...[
+                    Text(
+                      lessonSubtitleBlocks[index],
+                      key: index == 0
+                          ? const Key('act0_shell_selected_lesson_subtitle')
+                          : Key(
+                              'act0_shell_selected_lesson_subtitle_block_$index',
+                            ),
+                      maxLines: compactPanel ? 2 : 3,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        height: compactPanel ? 1.14 : 1.22,
+                      ),
+                    ),
+                    if (index != lessonSubtitleBlocks.length - 1)
+                      const SizedBox(height: 2),
+                  ],
+                  SizedBox(height: compactPanel ? 3 : Act0ShellTokensV1.gapXs),
+                ],
+                Container(
+                  key: const Key('act0_shell_selected_lesson_guidance'),
+                  constraints: BoxConstraints(
+                    maxWidth: widePanel ? 420 : double.infinity,
+                  ),
+                  child: Text(
+                    guidanceCopy,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: panelAccent.withValues(alpha: 0.82),
+                      letterSpacing: 0.04,
+                      fontSize: compactPanel ? 10.1 : 10.4,
+                      height: compactPanel ? 1.10 : 1.12,
+                    ),
+                  ),
                 ),
-                Act0ShellTokensV1.surface.withValues(alpha: 0.16),
+                SizedBox(height: compactPanel ? 3 : Act0ShellTokensV1.gapXs),
+                Column(
+                  key: const Key('act0_shell_lesson_hub_steps'),
+                  children: [
+                    for (var i = 0; i < tasks.length; i++) ...[
+                      _LessonHubStepV1(
+                        index: i + 1,
+                        link: taskLinkForId(tasks[i].taskId),
+                        lesson: lesson,
+                        task: tasks[i],
+                        isLast: i == tasks.length - 1,
+                        isDone: completedTaskIds.contains(tasks[i].taskId),
+                        isPerfect: perfectTaskIds.contains(tasks[i].taskId),
+                        isSkipped: skippedTaskIds.contains(tasks[i].taskId),
+                        isCurrent: tasks[i].taskId == nextTask.taskId,
+                        isSelected: activePopupTaskId == null
+                            ? tasks[i].taskId == fallbackSelectedTaskId
+                            : tasks[i].taskId == activePopupTaskId,
+                        showDetail: tasks[i].taskId == visibleTaskFocusId,
+                        isLocked:
+                            locked ||
+                            (!pathClosedTaskIds.contains(tasks[i].taskId) &&
+                                tasks[i].taskId != nextTask.taskId),
+                        routeBlockerTaskTitle: routeBlockerTaskTitle,
+                        detailKey: taskDetailKeyForId(tasks[i].taskId),
+                        onSelectTask: onSelectTask,
+                        onStartTask: onStartTask,
+                      ),
+                    ],
+                  ],
+                ),
+                if (completionOutcomeLabel != null) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                  Text(
+                    completionOutcomeLabel!,
+                    key: const Key('act0_shell_selected_lesson_outcome'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: stateColor,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ],
             ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (lessonSubtitleBlocks.isNotEmpty) ...<Widget>[
-                for (
-                  var index = 0;
-                  index < lessonSubtitleBlocks.length;
-                  index++
-                ) ...[
-                  Text(
-                    lessonSubtitleBlocks[index],
-                    key: index == 0
-                        ? const Key('act0_shell_selected_lesson_subtitle')
-                        : Key(
-                            'act0_shell_selected_lesson_subtitle_block_$index',
-                          ),
-                    maxLines: compactPanel ? 2 : 3,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      height: compactPanel ? 1.14 : 1.22,
-                    ),
-                  ),
-                  if (index != lessonSubtitleBlocks.length - 1)
-                    const SizedBox(height: 2),
-                ],
-                SizedBox(height: compactPanel ? 3 : Act0ShellTokensV1.gapXs),
-              ],
-              Container(
-                key: const Key('act0_shell_selected_lesson_guidance'),
-                constraints: BoxConstraints(
-                  maxWidth: widePanel ? 420 : double.infinity,
-                ),
-                child: Text(
-                  guidanceCopy,
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: panelAccent.withValues(alpha: 0.82),
-                    letterSpacing: 0.04,
-                    fontSize: compactPanel ? 10.1 : 10.4,
-                    height: compactPanel ? 1.10 : 1.12,
-                  ),
-                ),
-              ),
-              SizedBox(height: compactPanel ? 3 : Act0ShellTokensV1.gapXs),
-              Column(
-                key: const Key('act0_shell_lesson_hub_steps'),
-                children: [
-                  for (var i = 0; i < tasks.length; i++) ...[
-                    _LessonHubStepV1(
-                      index: i + 1,
-                      link: taskLinkForId(tasks[i].taskId),
-                      lesson: lesson,
-                      task: tasks[i],
-                      isLast: i == tasks.length - 1,
-                      isDone: completedTaskIds.contains(tasks[i].taskId),
-                      isPerfect: perfectTaskIds.contains(tasks[i].taskId),
-                      isSkipped: skippedTaskIds.contains(tasks[i].taskId),
-                      isCurrent: tasks[i].taskId == nextTask.taskId,
-                      isSelected: activePopupTaskId == null
-                          ? tasks[i].taskId == fallbackSelectedTaskId
-                          : tasks[i].taskId == activePopupTaskId,
-                      showDetail: tasks[i].taskId == activePopupTaskId,
-                      isLocked:
-                          locked ||
-                          (!pathClosedTaskIds.contains(tasks[i].taskId) &&
-                              tasks[i].taskId != nextTask.taskId),
-                      routeBlockerTaskTitle: routeBlockerTaskTitle,
-                      detailKey: taskDetailKeyForId(tasks[i].taskId),
-                      onSelectTask: onSelectTask,
-                      onStartTask: onStartTask,
-                    ),
-                  ],
-                ],
-              ),
-              if (completionOutcomeLabel != null) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  completionOutcomeLabel!,
-                  key: const Key('act0_shell_selected_lesson_outcome'),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: stateColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ],
           ),
         ),
       ),
@@ -2536,7 +2604,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                       child: Container(
                         width: 2,
                         decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.12),
+                          color: color.withValues(alpha: 0.18),
                           borderRadius: BorderRadius.circular(
                             Act0ShellTokensV1.radiusPill,
                           ),
@@ -2659,6 +2727,15 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                             alpha: 0.46,
                                           ),
                                         ),
+                                        boxShadow: [
+                                          if (widget.isCurrent)
+                                            BoxShadow(
+                                              color: rowAccent.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                              blurRadius: 6,
+                                            ),
+                                        ],
                                       ),
                                       child: Icon(
                                         icon,
@@ -3121,33 +3198,21 @@ class _ModuleHeaderV1 extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-          border: Border.all(color: accent.withValues(alpha: 0.22)),
+          border: Border.all(color: accent.withValues(alpha: 0.28), width: 1.0),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: <Color>[
-              Color.alphaBlend(
-                accent.withValues(alpha: 0.14),
-                Act0ShellTokensV1.surface2,
-              ),
-              Color.alphaBlend(
-                accentSoft.withValues(alpha: 0.28),
-                Act0ShellTokensV1.surface2,
-              ),
-              Act0ShellTokensV1.surface2,
+              accent.withValues(alpha: 0.08),
+              accentSoft.withValues(alpha: 0.04),
+              Act0ShellTokensV1.surface2.withValues(alpha: 0.6),
             ],
-            stops: const <double>[0.0, 0.48, 1.0],
           ),
           boxShadow: <BoxShadow>[
-            const BoxShadow(
-              color: Color(0x12000000),
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
             BoxShadow(
-              color: accent.withValues(alpha: 0.035),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
+              color: accent.withValues(alpha: 0.06),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
@@ -3248,15 +3313,13 @@ class _ModuleHeaderV1 extends StatelessWidget {
                               horizontal: compactHeader ? 7 : 8,
                             ),
                           ),
-                          foregroundColor: const WidgetStatePropertyAll(
-                            Act0ShellTokensV1.primary,
+                          foregroundColor: WidgetStatePropertyAll(
+                            accent.withValues(alpha: 0.95),
                           ),
                           backgroundColor: WidgetStatePropertyAll(
-                            Act0ShellTokensV1.surface.withValues(alpha: 0.12),
+                            accent.withValues(alpha: 0.08),
                           ),
-                          side: WidgetStatePropertyAll(
-                            BorderSide(color: accent.withValues(alpha: 0.18)),
-                          ),
+                          side: const WidgetStatePropertyAll(BorderSide.none),
                           shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -3271,7 +3334,11 @@ class _ModuleHeaderV1 extends StatelessWidget {
                             ),
                           ),
                         ),
-                    icon: const Icon(Icons.map_rounded, size: 13),
+                    icon: Icon(
+                      Icons.map_rounded,
+                      size: 14,
+                      color: accent.withValues(alpha: 0.95),
+                    ),
                     label: compactHeader
                         ? const SizedBox.shrink()
                         : Text(_learnCopyV1(context, en: 'Worlds', ru: 'Миры')),
@@ -3519,6 +3586,7 @@ class _PathCardV1 extends StatelessWidget {
     final isCompleted = lesson.state == Act0LessonStateV1.completed;
     final isCurrent = lesson.state == Act0LessonStateV1.current;
     final isLocked = lesson.state == Act0LessonStateV1.locked;
+    final isCompletedQuiet = isCompleted && !selected && !expanded;
     final isInProgress =
         isCurrent &&
         lesson.taskList.any((t) => pathClosedTaskIds.contains(t.taskId)) &&
@@ -3564,17 +3632,26 @@ class _PathCardV1 extends StatelessWidget {
     final nextAccent = Act0ShellTokensV1.gold;
     final cardTint = isExpandedFocus
         ? (isCurrent ? currentAccent : worldAccent).withValues(alpha: 0.028)
-        : (isHighlighted
-                  ? (isCurrent ? currentAccent : stateColor)
-                  : worldAccent)
-              .withValues(alpha: isHighlighted ? 0.06 : 0.035);
+        : isCurrent
+        ? currentAccent.withValues(alpha: 0.095)
+        : isCompletedQuiet
+        ? worldAccent.withValues(alpha: 0.018)
+        : (isHighlighted ? stateColor : worldAccent).withValues(
+            alpha: isHighlighted ? 0.048 : 0.032,
+          );
     final cardBorderColor = isExpandedFocus
-        ? Act0ShellTokensV1.border.withValues(alpha: 0.44)
+        ? (isCurrent ? currentAccent : Act0ShellTokensV1.border).withValues(
+            alpha: isCurrent ? 0.44 : 0.44,
+          )
+        : isCurrent
+        ? currentAccent.withValues(alpha: 0.30)
         : isHighlighted
-        ? (isCurrent ? currentAccent : stateColor).withValues(alpha: 0.22)
+        ? stateColor.withValues(alpha: 0.18)
         : Act0ShellTokensV1.border.withValues(alpha: 0.52);
     final cardGlowColor = isExpandedFocus
-        ? (isCurrent ? currentAccent : worldAccent).withValues(alpha: 0.04)
+        ? (isCurrent ? currentAccent : worldAccent).withValues(
+            alpha: isCurrent ? 0.11 : 0.04,
+          )
         : (isCurrent ? currentAccent : stateColor).withValues(alpha: 0.08);
     final leadColor = isExpandedFocus
         ? (isCurrent ? currentAccent : worldAccent).withValues(
@@ -3600,7 +3677,11 @@ class _PathCardV1 extends StatelessWidget {
     final cardRadius = BorderRadius.circular(Act0ShellTokensV1.radiusLg);
 
     return Opacity(
-      opacity: lesson.state == Act0LessonStateV1.locked ? 0.68 : 1,
+      opacity: lesson.state == Act0LessonStateV1.locked
+          ? 0.48
+          : isCompletedQuiet
+          ? 0.84
+          : 1.0,
       child: Material(
         borderRadius: cardRadius,
         clipBehavior: Clip.antiAlias,
@@ -3628,225 +3709,269 @@ class _PathCardV1 extends StatelessWidget {
                 ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
             children: [
-              InkWell(
-                key: Key('act0_shell_lesson_${lesson.title}'),
-                borderRadius: cardRadius,
-                onTap: () => onSelectLesson(lesson.lessonId),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(11, 8, 11, 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: isCompleted
-                              ? iconTint
-                              : iconTint.withValues(alpha: 0.09),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: iconTint.withValues(alpha: 0.20),
-                          ),
-                        ),
-                        child: Icon(
-                          icon,
-                          color: isCompleted
-                              ? Act0ShellTokensV1.onPrimary
-                              : iconTint,
-                          size: 16,
-                        ),
+              if (isCurrent)
+                Positioned(
+                  left: 0,
+                  top: 8,
+                  bottom: 8,
+                  width: 3.5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: currentAccent,
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(2.5),
+                        bottomRight: Radius.circular(2.5),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (compactLessonChrome)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      lessonTitle,
-                                      style: Act0ShellTokensV1.cardTitle
-                                          .copyWith(fontSize: 14.2),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.fade,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: badgeTint.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(
-                                        Act0ShellTokensV1.radiusPill,
-                                      ),
-                                      border: Border.all(
-                                        color: badgeTint.withValues(
-                                          alpha: 0.13,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      stateBadgeLabel,
-                                      key: Key(
-                                        'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
-                                      style: Act0ShellTokensV1.label.copyWith(
-                                        color: isCompleted
-                                            ? Act0ShellTokensV1.gold
-                                            : badgeTint,
-                                        letterSpacing: 0.06,
-                                        fontSize: 9.0,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 1),
-                                    child: AnimatedRotation(
-                                      turns: expanded ? 0.5 : 0.0,
-                                      duration: const Duration(
-                                        milliseconds: 280,
-                                      ),
-                                      curve: Curves.easeOutCubic,
-                                      child: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        size: 17,
-                                        color: badgeTint.withValues(
-                                          alpha: 0.62,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else ...[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Lesson $index',
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: badgeTint,
-                                      letterSpacing: 0.22,
-                                      fontSize: 9.6,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  AnimatedRotation(
-                                    turns: expanded ? 0.5 : 0.0,
-                                    duration: const Duration(milliseconds: 280),
-                                    curve: Curves.easeOutCubic,
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      size: 17,
-                                      color: badgeTint.withValues(alpha: 0.62),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 7,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: badgeTint.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(
-                                        Act0ShellTokensV1.radiusPill,
-                                      ),
-                                      border: Border.all(
-                                        color: badgeTint.withValues(
-                                          alpha: 0.13,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      stateBadgeLabel,
-                                      key: Key(
-                                        'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
-                                      style: Act0ShellTokensV1.label.copyWith(
-                                        color: isCompleted
-                                            ? Act0ShellTokensV1.gold
-                                            : badgeTint,
-                                        letterSpacing: 0.06,
-                                        fontSize: 9.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                lessonTitle,
-                                style: Act0ShellTokensV1.cardTitle.copyWith(
-                                  fontSize: 14.2,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ],
-                            if (stepSummary.isNotEmpty) ...[
-                              const SizedBox(height: 3),
-                              Text(
-                                stepSummary,
-                                style: Act0ShellTokensV1.muted.copyWith(
-                                  fontSize: 10.6,
-                                  color: isLocked
-                                      ? Act0ShellTokensV1.textDim
-                                      : Act0ShellTokensV1.textMuted,
-                                  height: 1.14,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ],
-                          ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: currentAccent.withValues(alpha: 0.4),
+                          blurRadius: 6,
+                          offset: const Offset(1, 0),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              ClipRect(
-                child: AnimatedSize(
-                  duration: const Duration(milliseconds: 430),
-                  reverseDuration: const Duration(milliseconds: 320),
-                  curve: Curves.easeInOutCubic,
-                  alignment: Alignment.topCenter,
-                  child: expandedBody == null
-                      ? const SizedBox.shrink()
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 11,
-                              ),
-                              child: Divider(
-                                height: 1,
-                                thickness: 1,
-                                color: badgeTint.withValues(alpha: 0.14),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    key: Key('act0_shell_lesson_${lesson.title}'),
+                    borderRadius: cardRadius,
+                    onTap: () => onSelectLesson(lesson.lessonId),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        isCurrent ? 14 : 11,
+                        8,
+                        11,
+                        8,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 34,
+                            height: 34,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isCompleted
+                                  ? iconTint
+                                  : iconTint.withValues(alpha: 0.09),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: iconTint.withValues(alpha: 0.20),
                               ),
                             ),
-                            expandedBody!,
-                          ],
-                        ),
-                ),
+                            child: Icon(
+                              icon,
+                              color: isCompleted
+                                  ? Act0ShellTokensV1.onPrimary
+                                  : iconTint,
+                              size: 16,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (compactLessonChrome)
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          lessonTitle,
+                                          style: Act0ShellTokensV1.cardTitle
+                                              .copyWith(fontSize: 14.2),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.fade,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 3,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: badgeTint.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            Act0ShellTokensV1.radiusPill,
+                                          ),
+                                          border: Border.all(
+                                            color: badgeTint.withValues(
+                                              alpha: 0.13,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          stateBadgeLabel,
+                                          key: Key(
+                                            'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.fade,
+                                          style: Act0ShellTokensV1.label
+                                              .copyWith(
+                                                color: isCompleted
+                                                    ? Act0ShellTokensV1.gold
+                                                    : badgeTint,
+                                                letterSpacing: 0.06,
+                                                fontSize: 9.0,
+                                              ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1),
+                                        child: AnimatedRotation(
+                                          turns: expanded ? 0.5 : 0.0,
+                                          duration: const Duration(
+                                            milliseconds: 280,
+                                          ),
+                                          curve: Curves.easeOutCubic,
+                                          child: Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            size: 17,
+                                            color: badgeTint.withValues(
+                                              alpha: 0.62,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                else ...[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Lesson $index',
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          color: badgeTint,
+                                          letterSpacing: 0.22,
+                                          fontSize: 9.6,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      AnimatedRotation(
+                                        turns: expanded ? 0.5 : 0.0,
+                                        duration: const Duration(
+                                          milliseconds: 280,
+                                        ),
+                                        curve: Curves.easeOutCubic,
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          size: 17,
+                                          color: badgeTint.withValues(
+                                            alpha: 0.62,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 7,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: badgeTint.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            Act0ShellTokensV1.radiusPill,
+                                          ),
+                                          border: Border.all(
+                                            color: badgeTint.withValues(
+                                              alpha: 0.13,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          stateBadgeLabel,
+                                          key: Key(
+                                            'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.fade,
+                                          style: Act0ShellTokensV1.label
+                                              .copyWith(
+                                                color: isCompleted
+                                                    ? Act0ShellTokensV1.gold
+                                                    : badgeTint,
+                                                letterSpacing: 0.06,
+                                                fontSize: 9.0,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    lessonTitle,
+                                    style: Act0ShellTokensV1.cardTitle.copyWith(
+                                      fontSize: 14.2,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ],
+                                if (stepSummary.isNotEmpty) ...[
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    stepSummary,
+                                    style: Act0ShellTokensV1.muted.copyWith(
+                                      fontSize: 10.6,
+                                      color: isLocked
+                                          ? Act0ShellTokensV1.textDim
+                                          : Act0ShellTokensV1.textMuted,
+                                      height: 1.14,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  ClipRect(
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 430),
+                      reverseDuration: const Duration(milliseconds: 320),
+                      curve: Curves.easeInOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: expandedBody == null
+                          ? const SizedBox.shrink()
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 11,
+                                  ),
+                                  child: Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: badgeTint.withValues(alpha: 0.14),
+                                  ),
+                                ),
+                                expandedBody!,
+                              ],
+                            ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

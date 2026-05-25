@@ -445,11 +445,31 @@ Coverage illusion:
 
 External benchmark rule:
 
-- `Concept.md` may be used as an external benchmark/checklist for detecting
-  coverage illusion
-- do not import all `Concept.md` items as a giant backlog
+- `docs/curriculum/CONCEPT_BENCHMARK_v1.md` may be used as an external
+  benchmark/checklist for detecting coverage illusion
+- do not import all items from
+  `docs/curriculum/CONCEPT_BENCHMARK_v1.md` as a giant backlog
 - use it to rank concept-family gaps by EV and choose the next bounded repair
   wave
+- use `docs/curriculum/LEARNING_UNIT_ACCEPTANCE_STANDARD_v1.md` when judging
+  whether a concept is carried by a real byte, lesson, or world instead of a
+  shallow prompt fragment
+- future content/depth waves must classify unit ownership, placement type,
+  prerequisites, and chronology fit before implementation
+
+Learning-unit rule:
+
+- do not treat one question as a real byte unless it forms a minimal reusable
+  skill loop
+- do not treat one byte as a full lesson unless it forms part of one practical
+  skill sequence
+- do not treat one lesson as a full world unless the world also proves staged
+  progression, transfer, review/recovery, and milestone payoff
+- if a learner-facing task renders a table/card scene, the learner action
+  should use that visible scene unless the task explicitly teaches notation
+- raw notation such as `Ah`, `Qh`, `h`, or `A` is not enough by itself for core
+  poker understanding; notation must be connected to visible cards and human
+  poker language
 
 ## 9. Agent Recommendation Rules
 

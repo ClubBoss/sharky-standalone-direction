@@ -1464,17 +1464,17 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
         summary:
-            'Read one live-looking spot: your cards, the board, and the pot.',
+            'Read one real table spot: your cards, the board, and the pot.',
       ),
       Act0LessonTaskV1(
         taskId: 'first_table_guide_one_clear_choice',
-        title: 'Make one choice',
+        title: 'Read the preflop setup',
         phase: Act0LessonPhaseV1.drill,
         runner: _firstTableGuideActionRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
-            'Answer once in one clean beginner spot, then let Sharky show the reason.',
+            'Carry the same scan into a preflop setup read before strategy choices start.',
       ),
       Act0LessonTaskV1(
         taskId: 'first_table_guide_route_roles',
@@ -1528,6 +1528,27 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Pick which hand wins once the cards are all face up.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'what_poker_is_all_in_meaning',
+        title: 'All-in meaning',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _allInMeaningRunner,
+        rewardXp: 4,
+        stepKind: Act0LessonStepKindV1.practice,
+        summary:
+            'See that all-in means all remaining chips are committed, not that the pot is automatically won.',
+      ),
+      Act0LessonTaskV1(
+        taskId: 'what_poker_is_matched_chips_transfer',
+        title: 'Matched chips',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _matchedChipsTransferRunner,
+        rewardXp: 4,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+        summary:
+            'A short stack can only win the chips that were actually matched in front of it.',
       ),
       Act0LessonTaskV1(
         taskId: 'what_poker_is_live_win_transfer',
@@ -1585,6 +1606,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Name a suit',
         phase: Act0LessonPhaseV1.drill,
         runner: _suitsRunner,
+        taskFamily: Act0TaskFamilyV1.recognition,
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1762,7 +1784,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'actions_raise_drill',
-        title: 'Open on the Button',
+        title: 'Raise on the Button',
         phase: Act0LessonPhaseV1.drill,
         runner: _whatYouCanDoRunner,
         rewardXp: 5,
@@ -1806,7 +1828,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'blinds_posts_drill',
-        title: 'Who posts 1 BB',
+        title: '1 BB baseline',
         phase: Act0LessonPhaseV1.drill,
         runner: _bigBlindPostRunner,
         rewardXp: 5,
@@ -3967,6 +3989,26 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     subtitle: 'Three or four cards of a suit make suit pressure visible.',
     phaseLabel: 'Flush draw',
     rewardXp: 35,
+    extraDrills: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'w5_made_hand_vs_flush_draw_transfer',
+        title: 'Made hand or future pressure',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5MadeHandVsFlushDrawTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_flush_draw_recheck_transfer',
+        title: 'Flush draw or made flush',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5FlushDrawRecheckTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+    ],
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_flush_intro',
@@ -4008,6 +4050,17 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
     subtitle: 'Neighboring ranks can point to a straight.',
     phaseLabel: 'Straight draw',
     rewardXp: 35,
+    extraDrills: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'w5_gutshot_contrast_transfer',
+        title: 'Gutshot or open-ended?',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5GutshotContrastTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+    ],
     sourceTasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
         taskId: 'w5_straight_intro',
@@ -4034,6 +4087,14 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
+        taskId: 'w5_gutshot_draw',
+        title: 'Gutshot draw',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5GutshotDrawRunner,
+        rewardXp: 9,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
         taskId: 'w5_straight_recap',
         title: 'Straight recap',
         phase: Act0LessonPhaseV1.review,
@@ -4055,6 +4116,15 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         title: 'Live heart outs',
         phase: Act0LessonPhaseV1.drill,
         runner: _world5TableOutsFlushTransferRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.proveIt,
+        taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'w5_clean_vs_risky_out_transfer',
+        title: 'Safer out or risky out',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _world5CleanVsRiskyOutTransferRunner,
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4710,6 +4780,16 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'what_poker_is_side_pot_intro',
+        title: 'Side pot basics',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _sidePotIntroRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.practice,
+        summary:
+            'After short-stack commitment is clear, separate the matched main pot from the extra side-pot chips.',
       ),
       Act0LessonTaskV1(
         taskId: 'w7_top_pair_spr2_transfer',
@@ -6401,7 +6481,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
   beatCount: 8,
   phase: Act0LessonPhaseV1.theory,
   caption: 'You are on the Button with KTs.',
-  hint: 'Folded to you. Opening can win blinds or build a pot.',
+  hint: 'Folded to you. Raising can win blinds or build a bigger pot.',
   question: 'Choose how to play your first action.',
   options: <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -6426,12 +6506,12 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       preferredLabel: 'Raise',
       betterAnswerLabel: 'Raise',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Limp is legal, but raise is sharper.',
+      feedbackTitle: 'Calling is legal, but raise is sharper.',
       feedbackReason:
-          'Calling is legal and not a disaster, but limping on the Button is passive. Raising wins blinds outright and builds better pots.',
+          'Calling is legal and not a disaster, but it starts passively on the Button. Raising can win the blinds right away and build a better pot.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Limp is legal', 'Raise sharper', 'Button'],
+      repairFocusLabels: <String>['Call is legal', 'Raise sharper', 'Button'],
     ),
     Act0RunnerOptionV1(
       id: 'raise',
@@ -6442,15 +6522,15 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
-          'First in on the Button, raising opens the pot and pressures the blinds.',
+          'First in on the Button, raising takes the lead and pressures the blinds.',
       repairFocusSeatIds: <String>['btn'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
-      repairFocusLabels: <String>['Button open', 'Hero acts'],
+      repairFocusLabels: <String>['Button raise', 'Hero acts'],
     ),
   ],
   feedbackTitle: 'Solid understanding.',
   feedbackReason:
-      'Raising is the clean first-in Button action; calling would only limp.',
+      'Raising is the clean first-in Button action; calling only matches the blind.',
   primaryCtaLabel: 'Continue',
   nextLessonId: 'read_board',
   returnTarget: 'learn',
@@ -6541,7 +6621,8 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     ),
     Act0TeachingStepV1(
       title: 'No one entered yet.',
-      body: 'Calling would limp. First in usually means raise or fold.',
+      body:
+          'Calling only matches the blind. First in usually means raise or fold.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['First in', 'Button'],
     ),
@@ -6851,8 +6932,9 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
     ),
     Act0TeachingStepV1(
       title: 'Ranks have an order.',
-      body: 'In this beginner drill, ace is higher than king.',
-      focusLabels: <String>['A beats K'],
+      body:
+          'The beginner order is 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A. Ace is highest for now, so ace beats king in this drill.',
+      focusLabels: <String>['2 ... 10', 'J Q K A', 'A beats K'],
     ),
   ],
 );
@@ -6866,8 +6948,15 @@ final _deckIntroRunner = _cardsRanksRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Deck first.',
-      body: 'Holdem uses a 52-card deck: 13 ranks across 4 suits.',
-      focusLabels: <String>['52 cards', '13 ranks', '4 suits'],
+      body:
+          'Holdem uses a 52-card deck: 13 ranks across 4 suits. Numbers run from 2 up to 10. J means Jack, Q means Queen, K means King, and A means Ace.',
+      focusLabels: <String>[
+        '52 cards',
+        '13 ranks',
+        '4 suits',
+        '2 ... 10',
+        'J Q K A',
+      ],
     ),
   ],
 );
@@ -6925,10 +7014,346 @@ final _potStackRunner = _meetTableRunner.copyWith(
       ],
     ),
     Act0TeachingStepV1(
+      title: 'BB also counts chips.',
+      body:
+          'BB also measures chips. Pot 8 BB = eight big blinds.\n\nIn a \$1/\$2 game, 1 BB = \$2.\n\nA \$200 stack there is 100 BB. BB works across stakes.',
+      focusLabels: <String>[
+        'Pot in BB',
+        '\$1/\$2 -> 1 BB = \$2',
+        '\$200 = 100 BB',
+      ],
+    ),
+    Act0TeachingStepV1(
       title: 'Pot and stack are different.',
       body: 'The pot is in the middle. Your stack stays with your seat.',
       focusSeatIds: <String>['btn'],
       focusLabels: <String>['Pot', 'Stack'],
+    ),
+  ],
+);
+
+final _allInMeaningRunner = _potStackRunner.copyWith(
+  lessonId: 'all_in_meaning',
+  caption:
+      'Hero is all-in for 20 BB. CO called 20 BB and still has chips behind.',
+  hint:
+      'All-in means one player has put in all remaining chips. The cards or folds still decide the pot.',
+  question: 'What does all-in mean here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'all_remaining_committed',
+      label: 'Hero put in all remaining chips',
+      isCorrect: true,
+      preferredLabel: 'Hero put in all remaining chips',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct table read.',
+      feedbackReason:
+          'All-in means Hero committed all remaining chips. It does not automatically win the pot, because cards or folds still decide what happens next.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'automatic_win',
+      label: 'Hero wins the pot automatically',
+      isCorrect: false,
+      preferredLabel: 'Hero put in all remaining chips',
+      betterAnswerLabel: 'Hero put in all remaining chips',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not a win condition.',
+      feedbackReason:
+          'All-in does not automatically win. If another player calls, the hand can still go to showdown and the cards still decide the pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'largest_stack_only',
+      label: 'Only the bigger stack matters now',
+      isCorrect: false,
+      preferredLabel: 'Hero put in all remaining chips',
+      betterAnswerLabel: 'Hero put in all remaining chips',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Stack size still has a role, but not that role.',
+      feedbackReason:
+          'CO covering Hero matters for how many chips can be matched, but all-in first means Hero has no chips left behind. The bigger stack does not win by size alone.',
+    ),
+  ],
+  table: _potStackRunner.table.copyWith(
+    centerLabel: 'All-in is all remaining chips',
+    potLabel: 'Pot 41.5 BB',
+    toCallLabel: '',
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
+      Act0ActionTrailItemV1(label: 'Hero shoves 20 BB'),
+      Act0ActionTrailItemV1(label: 'CO calls 20 BB'),
+    ],
+    highlightedSeatIds: const <String>['btn', 'co'],
+    seats: _potStackRunner.table.seats
+        .map<Act0SeatStateV1>(
+          (seat) => seat.seatId == 'btn'
+              ? Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: 'Hero',
+                  isHero: true,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isActive: seat.isActive,
+                  isTarget: seat.isTarget,
+                  isInHand: seat.isInHand,
+                  isFolded: seat.isFolded,
+                  hasActed: seat.hasActed,
+                  isLastAggressor: seat.isLastAggressor,
+                  isOccupied: seat.isOccupied,
+                  stackLabel: '0 BB',
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                  currentBetLabel: '20 BB',
+                  bet: const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.raise,
+                    label: 'All-in',
+                    amountLabel: '20 BB',
+                  ),
+                )
+              : seat.seatId == 'co'
+              ? Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: 'CO',
+                  isHero: seat.isHero,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isActive: true,
+                  isTarget: seat.isTarget,
+                  isInHand: seat.isInHand,
+                  isFolded: seat.isFolded,
+                  hasActed: seat.hasActed,
+                  isLastAggressor: seat.isLastAggressor,
+                  isOccupied: seat.isOccupied,
+                  stackLabel: '80 BB',
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                  currentBetLabel: '20 BB',
+                  bet: const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.call,
+                    label: 'Call',
+                    amountLabel: '20 BB',
+                  ),
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'All-in means no chips behind.',
+      body: '0 BB behind = all-in. Cards or folds still decide.',
+      focusLabels: <String>['0 BB behind', '20 BB in', 'Cards still decide'],
+    ),
+  ],
+);
+
+final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
+  lessonId: 'matched_chips_transfer',
+  caption:
+      'Real table. Hero is all-in for 20 BB. CO covers with 100 BB total but only called 20 BB.',
+  hint:
+      'Start with matched chips, not the biggest stack behind. Ask what Hero can actually contest right now.',
+  question: 'What can Hero win from CO first?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'matched_amount_only',
+      label: 'Only the chips CO matched against the 20 BB all-in',
+      isCorrect: true,
+      preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct beginner transfer.',
+      feedbackReason:
+          'Hero can only win the matched chips, not the extra 80 BB still behind CO. The short stack contests what got matched in front of it, not chips nobody put in.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'entire_covering_stack',
+      label: 'All 100 BB from the covering stack',
+      isCorrect: false,
+      preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
+      betterAnswerLabel: 'Only the chips CO matched against the 20 BB all-in',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too many chips counted.',
+      feedbackReason:
+          'Hero cannot win chips CO never matched. Extra chips behind a covering stack stay out of Hero\'s contest until they are actually committed.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'nothing_until_showdown',
+      label: 'Nothing counts until every stack is equal',
+      isCorrect: false,
+      preferredLabel: 'Only the chips CO matched against the 20 BB all-in',
+      betterAnswerLabel: 'Only the chips CO matched against the 20 BB all-in',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Matched already matters.',
+      feedbackReason:
+          'You do not need equal stacks everywhere first. Once Hero is all-in and CO matches 20 BB, those matched chips are already the honest contest.',
+    ),
+  ],
+  table: _allInMeaningRunner.table.copyWith(
+    centerLabel: 'Matched chips set the contest',
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Short stacks cannot win unmatched chips.',
+      body: 'Only matched chips count. CO\'s 80 BB behind stays out.',
+      focusLabels: <String>['Matched chips', '80 BB behind', 'Not contested'],
+    ),
+  ],
+);
+
+final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
+  lessonId: 'side_pot_intro',
+  caption:
+      'Hero is all-in for 20 BB. CO and BB each matched Hero for 20 BB, then each added 30 BB more against each other.',
+  hint:
+      'Start with the short stack truth first. Main pot: three matched 20 BB stacks plus the 1.5 BB blinds. Side pot: the extra 30 BB from CO and 30 BB from BB.',
+  question: 'Which statement is true here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hero_main_only',
+      label: 'Hero can win the main pot, but not the side pot',
+      isCorrect: true,
+      preferredLabel: 'Hero can win the main pot, but not the side pot',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct side-pot intro.',
+      feedbackReason:
+          'Hero matched only 20 BB, so Hero fights for the main pot. The extra 30 BB from CO and BB forms a side pot that only those bigger stacks can win.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'hero_wins_everything',
+      label: 'Hero can win every chip once all-in',
+      isCorrect: false,
+      preferredLabel: 'Hero can win the main pot, but not the side pot',
+      betterAnswerLabel: 'Hero can win the main pot, but not the side pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too many chips assigned.',
+      feedbackReason:
+          'All-in is not a claim on unmatched extra chips. Hero cannot win the side pot because Hero never matched those extra 30 BB between CO and BB.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'side_pot_is_penalty',
+      label: 'The side pot is a penalty for the short stack',
+      isCorrect: false,
+      preferredLabel: 'Hero can win the main pot, but not the side pot',
+      betterAnswerLabel: 'Hero can win the main pot, but not the side pot',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Not a penalty, just a separate contest.',
+      feedbackReason:
+          'A side pot is not punishment. It is just the extra chips that only the bigger stacks matched after the short stack was already all-in.',
+    ),
+  ],
+  table: _matchedChipsTransferRunner.table.copyWith(
+    centerLabel: 'Hero cannot win side pot',
+    potLabel: 'Main 60 BB + blinds 1.5 BB; side 60 BB',
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
+      Act0ActionTrailItemV1(label: 'Hero all-in 20 BB'),
+      Act0ActionTrailItemV1(label: 'CO matches Hero for 20 BB'),
+      Act0ActionTrailItemV1(label: 'BB matches Hero for 20 BB'),
+      Act0ActionTrailItemV1(label: 'CO adds 30 BB extra'),
+      Act0ActionTrailItemV1(label: 'BB adds 30 BB extra'),
+    ],
+    highlightedSeatIds: const <String>['btn', 'co', 'bb'],
+    seats: _matchedChipsTransferRunner.table.seats
+        .map<Act0SeatStateV1>(
+          (seat) => seat.seatId == 'btn'
+              ? Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: 'Hero',
+                  isHero: true,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isActive: seat.isActive,
+                  isTarget: seat.isTarget,
+                  isInHand: seat.isInHand,
+                  isFolded: seat.isFolded,
+                  hasActed: seat.hasActed,
+                  isLastAggressor: seat.isLastAggressor,
+                  isOccupied: seat.isOccupied,
+                  stackLabel: '0 BB',
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                  currentBetLabel: '20 BB',
+                  bet: const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.allIn,
+                    label: 'All-in',
+                    amountLabel: '20 BB',
+                  ),
+                )
+              : seat.seatId == 'co'
+              ? Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: 'CO',
+                  isHero: seat.isHero,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isActive: true,
+                  isTarget: seat.isTarget,
+                  isInHand: seat.isInHand,
+                  isFolded: seat.isFolded,
+                  hasActed: seat.hasActed,
+                  isLastAggressor: seat.isLastAggressor,
+                  isOccupied: seat.isOccupied,
+                  stackLabel: '50 BB',
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                  currentBetLabel: '50 BB',
+                  bet: const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.raise,
+                    label: 'Side pot',
+                    amountLabel: '50 BB',
+                  ),
+                )
+              : seat.seatId == 'bb'
+              ? Act0SeatStateV1(
+                  seatId: seat.seatId,
+                  seatLabel: seat.seatLabel,
+                  displayName: 'Big blind',
+                  isHero: seat.isHero,
+                  isDealerButton: seat.isDealerButton,
+                  isSmallBlind: seat.isSmallBlind,
+                  isBigBlind: seat.isBigBlind,
+                  blindAmountLabel: seat.blindAmountLabel,
+                  isActive: false,
+                  isTarget: seat.isTarget,
+                  isInHand: seat.isInHand,
+                  isFolded: seat.isFolded,
+                  hasActed: seat.hasActed,
+                  isLastAggressor: seat.isLastAggressor,
+                  isOccupied: seat.isOccupied,
+                  stackLabel: '50 BB',
+                  holeCards: seat.holeCards,
+                  cardsVisibleMode: seat.cardsVisibleMode,
+                  currentBetLabel: '50 BB',
+                  bet: const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.call,
+                    label: 'Side pot call',
+                    amountLabel: '50 BB',
+                  ),
+                )
+              : seat,
+        )
+        .toList(growable: false),
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Main pot first, side pot second.',
+      body: 'Main: 20 BB matched + blinds. Side: CO/BB add 30 BB.',
+      focusLabels: <String>[
+        'Main pot',
+        'Side pot',
+        'Hero did not match extra chips',
+      ],
     ),
   ],
 );
@@ -6986,24 +7411,24 @@ final _winWaysRunner = _meetTableRunner.copyWith(
 final _suitsRunner = _firstHandRunner.copyWith(
   lessonId: 'suits_drill',
   lessonTitle: 'Cards, ranks & suits',
-  caption: 'Each card has a rank and a suit.',
-  hint: 'We write suits as s, h, d, c here.',
-  question: 'In Ah, what is the suit?',
+  caption: 'Each card has a rank and a suit. Ah means ace of hearts.',
+  hint: 'A means ace. We write suits as s, h, d, c here, and h means hearts.',
+  question: 'In Ah, what suit does h mean?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'heart',
-      label: 'h',
+      label: 'Hearts',
       isCorrect: true,
-      preferredLabel: 'h',
+      preferredLabel: 'Hearts',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
+      feedbackTitle: 'One goal clears the noise.',
       feedbackReason: 'Card code check: A means ace and h means hearts.',
     ),
     Act0RunnerOptionV1(
       id: 'rank',
-      label: 'A',
+      label: 'Ace',
       isCorrect: false,
-      preferredLabel: 'h',
+      preferredLabel: 'Hearts',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
       feedbackReason: 'A is the rank. h is the suit.',
@@ -7012,8 +7437,9 @@ final _suitsRunner = _firstHandRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Suits are card families.',
-      body: 'Use s, h, d, and c for spades, hearts, diamonds, and clubs.',
-      focusLabels: <String>['s h d c'],
+      body:
+          'Card code uses s, h, d, and c for suits. A means ace, so Ah means ace of hearts.',
+      focusLabels: <String>['s h d c', 'A = Ace', 'Ah = Ace of hearts'],
     ),
   ],
 );
@@ -7031,7 +7457,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Board cards',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Overfold means widen.',
       feedbackReason: 'Board cards are shared by everyone still in the hand.',
     ),
     Act0RunnerOptionV1(
@@ -7083,7 +7509,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Four',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Callers want value.',
       feedbackReason: 'The turn is the fourth board card.',
     ),
     Act0RunnerOptionV1(
@@ -7137,7 +7563,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Pick the repeat leak.',
       feedbackReason: 'The river completes five board cards.',
     ),
     Act0RunnerOptionV1(
@@ -7192,7 +7618,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
+      feedbackTitle: 'Specific fix transfers.',
       feedbackReason: 'Checking keeps the hand going when no bet faces you.',
     ),
     Act0RunnerOptionV1(
@@ -7236,7 +7662,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
+      feedbackTitle: 'Low-energy plan first.',
       feedbackReason: 'Fold gives up the hand and saves the call.',
     ),
     Act0RunnerOptionV1(
@@ -7347,7 +7773,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
+      feedbackTitle: 'One trigger, one lever.',
       feedbackReason: 'Calling matches the current price.',
     ),
     Act0RunnerOptionV1(
@@ -7527,10 +7953,11 @@ final _lastPreflopActorRunner = _meetTableRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'BB closes the first round.',
-      body: 'If nobody raises, the big blind can act last preflop.',
+      title: 'Same BB, new job.',
+      body:
+          'After posting the full blind, the big blind can still act last preflop if nobody raises.',
       focusSeatIds: <String>['bb'],
-      focusLabels: <String>['Last preflop'],
+      focusLabels: <String>['BB last preflop'],
     ),
   ],
 );
@@ -7549,7 +7976,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Process beats reveal.',
       feedbackReason: 'Button acts last after the flop in this hand.',
     ),
     Act0RunnerOptionV1(
@@ -7615,7 +8042,7 @@ final _buttonSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Win can hide a leak.',
       feedbackReason: 'BTN is the dealer button and acts last postflop.',
     ),
     Act0RunnerOptionV1(
@@ -7658,7 +8085,7 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Reset before next hand.',
       feedbackReason:
           'UTG acts first preflop, so opening range should stay tighter.',
     ),
@@ -7702,7 +8129,7 @@ final _latePositionRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
+      feedbackTitle: 'Log it, then reset.',
       feedbackReason: 'BTN is late and often acts last after the flop.',
     ),
     Act0RunnerOptionV1(
@@ -7744,7 +8171,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Pair',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
+      feedbackTitle: 'Process ignores table talk.',
       feedbackReason: 'Hero has a pair with the board.',
     ),
     Act0RunnerOptionV1(
@@ -8635,8 +9062,7 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
   lessonId: 'w1_table_read_transfer',
   lessonTitle: 'What poker is',
   lessonSubtitle: 'Poker from Zero',
-  caption:
-      'Real table. Hero has two cards, flop has three board cards, pot is 6 BB.',
+  caption: 'Real table. 2 cards, flop 3, pot 6 BB.',
   hint: 'Separate private cards, board cards, and pot before any action.',
   question: 'What is the clean first table read?',
   feedbackTitle: 'Table read first.',
@@ -8693,7 +9119,7 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Carry the first table scan.',
       body:
-          'Real tables still start with the same simple scan: your two cards, the shared board, and how many chips sit in the pot.',
+          'Real tables use the same simple scan.\n\nFind your two cards and the shared board.\n\nThen check how many chips are already in the pot.',
       focusLabels: <String>['2 private', '3 board', 'Pot'],
     ),
   ],
@@ -8709,7 +9135,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
   question: 'In this live hand, what can still decide the pot?',
   feedbackTitle: 'That is the live loop.',
   feedbackReason:
-      'A real table still closes the same two clean ways: everyone folds, or players reach showdown and the best hand wins.',
+      'A real hand still ends the same two clean ways: everyone folds, or players reach showdown and the best hand wins.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_or_showdown',
@@ -8719,7 +9145,7 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'The live frame changes the look, not the ending. The pot still closes by fold or by best hand at showdown.',
+          'The table can look busier, but the pot still closes by fold or by best hand at showdown.',
     ),
     Act0RunnerOptionV1(
       id: 'button_wins_now',
@@ -8752,9 +9178,9 @@ final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Live table, same endings.',
+      title: 'Real hand, same endings.',
       body:
-          'Even in a live-looking hand, the pot still ends one of two ways: everyone folds or players reach showdown.',
+          'Even in a real hand, the pot still ends one of two ways: everyone folds, or players reach showdown.',
       focusLabels: <String>['Fold', 'Showdown', 'Pot 1.5 BB'],
     ),
   ],
@@ -8776,7 +9202,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'Hero is you, blinds start the pot, and the table stays readable before the route speeds up.',
+          'Hero is you. SB = Small Blind. BB = Big Blind.\n\nSB posts 0.5 BB. BB posts 1 BB.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['Hero', 'Blinds', 'Table first'],
     ),
@@ -8805,18 +9231,59 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
-  caption: 'One clear beginner choice is enough for the first Sharky loop.',
-  hint: 'Read the spot, choose once, then let the reason land.',
-  feedbackTitle: 'That is the Sharky loop.',
+  caption: 'Same scan, new spot: Hero is first in on the Button with KTs.',
+  hint: 'No board is out yet. Start with Hero, blinds, pot, and who acts next.',
+  question: 'What is the clean preflop setup here?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hero_btn_preflop_setup',
+      label: 'Hero is BTN, blinds are posted, and no board is out yet',
+      isCorrect: true,
+      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'That is the setup.',
+      feedbackReason:
+          'That is the clean first read. Hero is on the Button, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'co_still_acting',
+      label: 'CO is still in the hand and Hero must wait',
+      isCorrect: false,
+      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      betterAnswerLabel:
+          'Hero is BTN, blinds are posted, and no board is out yet',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Read one seat earlier.',
+      feedbackReason:
+          'CO already folded in this setup, so action is on Hero now. The next safe job is to name who acts, not to solve the whole hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'flop_already_out',
+      label: 'The flop is already out and this is postflop',
+      isCorrect: false,
+      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      betterAnswerLabel:
+          'Hero is BTN, blinds are posted, and no board is out yet',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Not yet.',
+      feedbackReason:
+          'No board cards are out yet, so this is still preflop. The clean setup read comes before any later action choice.',
+    ),
+  ],
+  feedbackTitle: 'Setup locked in.',
   feedbackReason:
-      'You read one spot, chose one action, and got one reason back. That is the foundation the rest of the route keeps reusing.',
+      'You read one spot, named the setup, and got one clear why back. That is the foundation later lessons keep reusing before action choices start.',
+  table: _whatYouCanDoRunner.table.copyWith(
+    toCallLabel: '',
+    centerLabel: 'Hero acts next',
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'One answer is enough.',
+      title: 'Same scan, simpler job.',
       body:
-          'Sharky is not asking for a long explanation. Read the spot, choose once, then compare the reason.',
+          'Preflop means no board yet. Read Hero, blinds, pot, and who acts next. Name the setup once.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['One spot', 'One answer', 'One reason'],
+      focusLabels: <String>['Hero acts next', 'Blinds posted', 'No board yet'],
     ),
   ],
 );
@@ -8828,8 +9295,9 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   beatIndex: 5,
   beatCount: 5,
   phase: Act0LessonPhaseV1.review,
-  caption: 'After the first loop, each surface has one clear job.',
-  hint: 'Use Review to fix misses. The rest of the tabs support the route.',
+  caption: 'After the first loop, each tab has one clear job.',
+  hint:
+      'Use Review to fix misses. The other tabs help you know what to do next.',
   question: 'Where do you go to fix mistakes after a miss?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -8840,7 +9308,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'Review fixes mistakes. Home shows the next move, Learn keeps the route visible, Practice gives extra reps, and You shows progress and settings.',
+          'Review fixes mistakes. Home shows the next step, Learn shows what to study next, Practice gives extra reps, and You shows progress and settings.',
     ),
     Act0RunnerOptionV1(
       id: 'practice',
@@ -8851,7 +9319,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close, but one tab is sharper.',
       feedbackReason:
-          'Practice is for extra reps after the route teaches the concept. Review is where a miss gets fixed first.',
+          'Practice is for extra reps after Learn teaches the concept. Review is where a miss gets fixed first.',
     ),
     Act0RunnerOptionV1(
       id: 'learn',
@@ -8862,17 +9330,17 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'One more distinction.',
       feedbackReason:
-          'Learn keeps the route visible. Review is the tab that turns a mistake into the next repair step.',
+          'Learn shows what to study next. Review is the tab that turns a mistake into the next repair step.',
     ),
   ],
-  feedbackTitle: 'Route roles locked in.',
+  feedbackTitle: 'Tab jobs locked in.',
   feedbackReason:
-      'Home shows the next move, Learn keeps the route, Practice gives extra reps, Review fixes mistakes, and You shows progress and settings.',
+      'Home shows the next step, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress and settings.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
       body:
-          'Home shows what to do now. Learn keeps the route visible. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.',
+          'Home shows what to do now. Learn shows what to study next. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.',
       focusLabels: <String>['Home', 'Learn', 'Practice', 'Review', 'You'],
     ),
   ],
@@ -8934,7 +9402,7 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
+      feedbackTitle: 'Pause on big nodes.',
       feedbackReason: 'Your final poker hand is the best five cards.',
     ),
     Act0RunnerOptionV1(
@@ -8997,8 +9465,9 @@ final _actionTrailRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flop: BB checks',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'CO is the cutoff seat.',
-      feedbackReason: 'The last action in the history is the latest one.',
+      feedbackTitle: 'Right timeline.',
+      feedbackReason:
+          'The last action in the history is the newest one, so Flop: BB checks comes after the blind posts and preflop action.',
     ),
     Act0RunnerOptionV1(
       id: 'sb_post',
@@ -9045,8 +9514,9 @@ final _streetOrderRecapRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'River',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
-      feedbackReason: 'The river comes after the turn.',
+      feedbackTitle: 'Correct order.',
+      feedbackReason:
+          'A hand moves preflop, flop, turn, then river. The river comes right after the turn.',
     ),
     Act0RunnerOptionV1(
       id: 'flop',
@@ -9118,15 +9588,40 @@ final _actionRecapRunner = _whatYouCanDoRunner.copyWith(
 final _bigBlindPostRunner = _tableObjectsRunner.copyWith(
   lessonId: 'big_blind_post',
   lessonTitle: 'Blinds & action order',
-  caption: 'BB posts the full 1 BB blind.',
-  hint: 'SB posts the smaller 0.5 BB blind.',
-  question: 'Tap the big blind.',
+  caption: 'BB sets the 1 BB baseline for the hand.',
+  hint: 'Later prices like 3 BB count from this post.',
+  question: 'Tap the blind that sets the 1 BB baseline.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'bb',
+      label: 'BB',
+      seatId: 'bb',
+      isCorrect: true,
+      preferredLabel: 'BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Right baseline.',
+      feedbackReason:
+          'BB posts the full 1 BB blind, so later prices count from that baseline.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'sb',
+      label: 'SB',
+      seatId: 'sb',
+      isCorrect: false,
+      preferredLabel: 'BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not the baseline.',
+      feedbackReason:
+          'SB posts only 0.5 BB. BB is the full 1 BB post players count from.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Big blind is the full blind.',
-      body: 'Find the seat marked BB with the 1 BB post.',
+      title: 'BB is the 1 BB baseline.',
+      body:
+          'Find the seat marked BB, because later prices like 3 BB count from that 1 BB post.',
       focusSeatIds: <String>['bb'],
-      focusLabels: <String>['BB 1 BB'],
+      focusLabels: <String>['1 BB baseline', 'Count from BB'],
     ),
   ],
 );
@@ -9180,7 +9675,7 @@ final _cutoffSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'CO',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Evidence beats respect.',
       feedbackReason: 'CO is the cutoff seat before the Button.',
     ),
     Act0RunnerOptionV1(
@@ -9475,7 +9970,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
   ],
   table: _riverBoardRunner.table.copyWith(
     heroCards: _heroQcQdCards,
-    boardCards: _boardRoyalFlush,
+    boardCards: _boardBroadwayCards,
     highlightedCardIds: const <String>[
       'board_0',
       'board_1',
@@ -9506,7 +10001,7 @@ final _boardPlaysRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Sometimes the board plays.',
       body:
-          'Hero and CO both use the same royal-flush board here, so private cards do not improve either player.',
+          'Hero and CO both use the same A-K-Q-J-T straight from the board here, so private cards do not improve either player.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
@@ -9548,7 +10043,7 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Split means share.',
       body:
-          'Hero and CO share the same best five cards from the board, so they split the pot.',
+          'Hero and CO share the same best five-card straight from the board, so they split the pot.',
       focusLabels: <String>['Split pot'],
     ),
   ],
@@ -9950,15 +10445,23 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Preflop Basics',
   caption: 'Preflop starts by sorting the hand into a simple bucket.',
   hint:
-      'Use premium, strong, medium, and trash before choosing. No charts needed at this stage.',
+      'Hand code writes the two ranks together. T means ten, s means suited, and o means offsuit.',
   question: 'What should you name before the action?',
   options: const <Act0RunnerOptionV1>[],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Bucket first.',
       body:
-          'Name the hand bucket before choosing open, call, or fold. Keep it simple and repeatable.',
-      focusLabels: <String>['Premium', 'Strong', 'Medium', 'Trash'],
+          'Name the hand bucket before choosing open, call, or fold. Hand code writes the two ranks together: T means ten, s means suited, and o means offsuit. So KTs is king-ten suited, and J8o is jack-eight offsuit.',
+      focusLabels: <String>[
+        'Premium',
+        'Strong',
+        'Medium',
+        'Trash',
+        'T = Ten',
+        's = Suited',
+        'o = Offsuit',
+      ],
     ),
   ],
 );
@@ -10471,7 +10974,7 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w2_strong_continue_kqo',
   caption: 'HJ opened. Hero is BTN with KQo.',
   hint:
-      'One seat earlier from the opener still leaves hero in position with a playable broadway.',
+      'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
   question: 'What is the simple continue?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -10552,10 +11055,10 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Playable broadway, tighter opener.',
       body:
-          'KQo still continues in position, but the opener seat is one step tighter now.',
+          'KQo is a broadway hand because both cards are broadway ranks. It still continues in position, but the opener seat is one step tighter now.',
       focusSeatIds: <String>['hj', 'btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['HJ opens', 'BTN calls'],
+      focusLabels: <String>['Broadway = T J Q K A', 'HJ opens', 'BTN calls'],
     ),
   ],
 );
@@ -12549,8 +13052,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Price to continue.',
-      body:
-          'Pot tells what you can win. To call tells what you must risk. Compare both to hand strength before calling.',
+      body: 'Pot = what you can win. To call = what you risk.',
       focusLabels: <String>['Pot', 'To call', 'Price'],
     ),
   ],
@@ -13232,7 +13734,8 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       preferredLabel: 'Wet',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'Connected ranks and two hearts create many changes.',
+      feedbackReason:
+          'The connected ranks and two hearts create many changes. Straight paths, heart pressure, and future cards can all change the next decision quickly.',
     ),
     Act0RunnerOptionV1(
       id: 'dry',
@@ -13242,7 +13745,8 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       betterAnswerLabel: 'Wet',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'This board is connected and suited enough to be wet.',
+      feedbackReason:
+          'This is not dry. Connected ranks plus two hearts mean future cards can change the story fast, so the board already carries wet pressure.',
     ),
   ],
   table: _world5TextureIntroRunner.table.copyWith(
@@ -13253,6 +13757,14 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
     ],
     centerLabel: 'Wet board',
   ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Wet boards can turn fast.',
+      body:
+          'When ranks connect and two cards share a suit, more turn and river cards can change who is comfortable. Read that pressure before you choose an easy autopilot line.',
+      focusLabels: <String>['Connected', 'Two hearts', 'Future cards'],
+    ),
+  ],
 );
 
 final _world5TextureRecapRunner = _world5TextureIntroRunner.copyWith(
@@ -13425,7 +13937,19 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       preferredLabel: 'Flush draw',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
-      feedbackReason: 'More hearts can complete a flush.',
+      feedbackReason:
+          'This is a flush draw, not a flush yet. Four hearts are visible, so one more heart can complete the hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_flush',
+      label: 'Made flush',
+      isCorrect: false,
+      preferredLabel: 'Flush draw',
+      betterAnswerLabel: 'Flush draw',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'On the right track.',
+      feedbackReason:
+          'Not complete yet. With four hearts showing, flush pressure is live, but a made flush needs five cards of the same suit.',
     ),
     Act0RunnerOptionV1(
       id: 'straight_draw',
@@ -13433,9 +13957,18 @@ final _world5FlushDrawRunner = _world5FlushIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Flush draw',
       betterAnswerLabel: 'Flush draw',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'On the right track.',
-      feedbackReason: 'The visible clue is same suit, not connected ranks.',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Suit clue first.',
+      feedbackReason:
+          'The visible clue is the four-heart story. Start with same-suit pressure before inventing a rank-ladder draw.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Four hearts is pressure, not a made hand.',
+      body:
+          'Do not stop at matching suits. Four hearts means the draw is live, and one more heart changes the hand. Until then, it is still only a draw.',
+      focusLabels: <String>['Four hearts', 'Not made yet', 'One more heart'],
     ),
   ],
 );
@@ -13484,6 +14017,148 @@ final _world5FlushRecapRunner = _world5FlushIntroRunner.copyWith(
       title: 'Flush checklist.',
       body: 'Same-suit cards show whether one more suit can change the hand.',
       focusLabels: <String>['Suits', 'One more card'],
+    ),
+  ],
+);
+
+final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_made_hand_vs_flush_draw_transfer',
+  caption:
+      'Real table. Hero holds A-spade and J-club on A-heart, 8-heart, 4-club.',
+  hint:
+      'Name what is already real now, then name the draw pressure that can still change the turn or river.',
+  question: 'What is the clean read first?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'made_hand_with_draw_pressure',
+      label:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      isCorrect: true,
+      preferredLabel:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct transfer.',
+      feedbackReason:
+          'Hero already has top pair. The heart draw matters, but it is not a made flush yet, so the clean read starts with the made hand plus future draw pressure.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_flush_now',
+      label: 'The heart draw is already a made flush',
+      isCorrect: false,
+      preferredLabel:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      betterAnswerLabel:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not made yet.',
+      feedbackReason:
+          'Two hearts on the board create pressure, but that is not a made flush yet. The draw is still future potential, not current value.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'draw_means_pair_does_not_count',
+      label: 'The draw matters, so the pair does not count yet',
+      isCorrect: false,
+      preferredLabel:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      betterAnswerLabel:
+          'Hero already has top pair, and the heart draw is still only pressure',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Current hand first.',
+      feedbackReason:
+          'The draw matters because later cards can change the danger, but Hero still has a real made hand right now. Start with what already exists on the flop.',
+    ),
+  ],
+  table: _world5FlushDrawRunner.table.copyWith(
+    potLabel: 'Pot 8 BB',
+    centerLabel: 'Top pair, heart draw live',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'c'),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '4', suit: 'c'),
+    ],
+    highlightedCardIds: const <String>['hero_0', 'board_0', 'board_1'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Made hand first, draw pressure second.',
+      body:
+          'Top pair is already real. The two-heart board adds future pressure, but it does not erase the made hand or turn the draw into a finished flush.',
+      focusLabels: <String>['Top pair', 'Two hearts', 'Not made yet'],
+    ),
+  ],
+);
+
+final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_flush_draw_recheck_transfer',
+  caption: 'Hero holds Q-heart and 7-heart on A-heart, 8-club, 2-heart.',
+  hint:
+      'Use the visible hearts on the table first. One more heart can change the hand, but it has not arrived yet.',
+  question: 'What is true right now?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'flush_draw_only',
+      label: 'Hero has a flush draw, not a made flush yet',
+      isCorrect: true,
+      preferredLabel: 'Hero has a flush draw, not a made flush yet',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct recovery.',
+      feedbackReason:
+          'There are four hearts visible, so Hero is one heart short of a flush. That keeps the hand in draw territory until one more heart appears.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_flush_now',
+      label: 'Hero already has a made flush',
+      isCorrect: false,
+      preferredLabel: 'Hero has a flush draw, not a made flush yet',
+      betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Still one card short.',
+      feedbackReason:
+          'Four hearts create strong pressure, but four hearts are still not a made flush yet. Hero needs one more heart before calling it complete.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'no_flush_pressure',
+      label: 'There is no flush pressure yet',
+      isCorrect: false,
+      preferredLabel: 'Hero has a flush draw, not a made flush yet',
+      betterAnswerLabel: 'Hero has a flush draw, not a made flush yet',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Count the hearts.',
+      feedbackReason:
+          'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
+    ),
+  ],
+  table: _world5FlushDrawRunner.table.copyWith(
+    potLabel: 'Pot 7 BB',
+    centerLabel: 'Four hearts, not home yet',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '8', suit: 'c'),
+      Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
+    ],
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_2',
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Four same-suit cards still mean draw, not made hand.',
+      body:
+          'Count the visible hearts before naming the hand. Four hearts mean one more heart can complete the flush, but the flush is not real yet.',
+      focusLabels: <String>['Four hearts', 'One more heart', 'Not made yet'],
     ),
   ],
 );
@@ -13543,6 +14218,132 @@ final _world5StraightDrawRunner = _world5StraightIntroRunner.copyWith(
     ],
     centerLabel: '4 or 9 helps',
   ),
+);
+
+final _world5GutshotDrawRunner = _world5StraightIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_gutshot_draw',
+  caption: 'Hero has 9-8 and the board shows K-7-5.',
+  hint: 'Only a 6 completes the missing middle rank.',
+  question: 'What draw is visible?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'gutshot',
+      label: 'Gutshot straight draw',
+      isCorrect: true,
+      preferredLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Exact read.',
+      feedbackReason:
+          'This is a gutshot. 5-7-8-9 are close, but only the 6 fills the missing middle rank.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'open_ended',
+      label: 'Open-ended straight draw',
+      isCorrect: false,
+      preferredLabel: 'Gutshot straight draw',
+      betterAnswerLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Close, but too wide.',
+      feedbackReason:
+          'Open-ended draws improve from either end. Here only the 6 works, so the draw is narrower than open-ended.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_straight',
+      label: 'Made straight',
+      isCorrect: false,
+      preferredLabel: 'Gutshot straight draw',
+      betterAnswerLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not complete yet.',
+      feedbackReason:
+          'The straight is not complete yet. The board and hand still miss the 6, so this stays a draw, not a made hand.',
+    ),
+  ],
+  table: _world5StraightIntroRunner.table.copyWith(
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: '9', suit: 's'),
+      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 'c'),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '5', suit: 's'),
+    ],
+    centerLabel: 'Only a 6 helps',
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Gutshot means one middle card is missing.',
+      body:
+          'A gutshot is still a straight draw, but it is thinner than open-ended. Read the exact missing rank before acting like the straight is already there.',
+      focusLabels: <String>['Gutshot', 'Only 6', 'Not complete yet'],
+    ),
+  ],
+);
+
+final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_gutshot_contrast_transfer',
+  caption: 'Hero has 9-8 and the board shows Q-7-5.',
+  hint:
+      'Read the exact missing rank before upgrading the draw. A gutshot is narrower than open-ended and still not a made straight.',
+  question: 'What is the clean read now?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'gutshot',
+      label: 'Gutshot straight draw',
+      isCorrect: true,
+      preferredLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct transfer.',
+      feedbackReason:
+          'Only the 6 completes the middle rank, so this stays a gutshot. The straight is close, but it is not open-ended and not complete yet.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'open_ended',
+      label: 'Open-ended straight draw',
+      isCorrect: false,
+      preferredLabel: 'Gutshot straight draw',
+      betterAnswerLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Too many outs claimed.',
+      feedbackReason:
+          'Open-ended draws improve from either end. Here only the 6 works, so the board does not give Hero either-end improvement.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'made_straight',
+      label: 'Made straight',
+      isCorrect: false,
+      preferredLabel: 'Gutshot straight draw',
+      betterAnswerLabel: 'Gutshot straight draw',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not there yet.',
+      feedbackReason:
+          'Hero still needs the 6 to finish five in a row. Until that card arrives, the straight is future potential, not a made hand.',
+    ),
+  ],
+  table: _world5GutshotDrawRunner.table.copyWith(
+    potLabel: 'Pot 6 BB',
+    centerLabel: 'Only a 6 fits',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: '9', suit: 's'),
+      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'Q', suit: 'c'),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '5', suit: 's'),
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Name the exact draw before acting on it.',
+      body:
+          'A gutshot uses one missing middle rank. If only the 6 completes the line, do not upgrade the hand into open-ended or treat it like a made straight.',
+      focusLabels: <String>['Only 6', 'Gutshot', 'Not made yet'],
+    ),
+  ],
 );
 
 final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
@@ -13757,6 +14558,85 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
       body:
           'A live table adds pressure, but the same transfer rule still holds: name the cards that improve Hero first, then judge the price.',
       focusLabels: <String>['Real table', 'Heart outs', 'Price second'],
+    ),
+  ],
+);
+
+final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'w5_clean_vs_risky_out_transfer',
+  caption:
+      'Real table. Turn board shows A-heart, 7-heart, 6-club, 2-diamond. Hero has 9-spade and 8-diamond.',
+  hint:
+      'Both a 5-club and a 5-heart complete Hero straight. Ask which one helps more cleanly and which one adds extra board danger.',
+  question: 'Which river is the safer out for Hero?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'five_clubs_cleaner',
+      label: '5-club is safer',
+      isCorrect: true,
+      preferredLabel: '5-club is safer',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Correct intro read.',
+      feedbackReason:
+          'Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'five_hearts_riskier',
+      label: '5-heart is just as clean',
+      isCorrect: false,
+      preferredLabel: '5-club is safer',
+      betterAnswerLabel: '5-club is safer',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'It still helps, but it is riskier.',
+      feedbackReason:
+          '5-heart still completes Hero straight, so it is not useless. But it is riskier because it also adds a third heart to the board, which makes the river more dangerous than 5-club.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'neither_helps',
+      label: 'Neither card helps yet',
+      isCorrect: false,
+      preferredLabel: '5-club is safer',
+      betterAnswerLabel: '5-club is safer',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The straight really does complete.',
+      feedbackReason:
+          'Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.',
+    ),
+  ],
+  table: _world5TableOutsStraightTransferRunner.table.copyWith(
+    potLabel: 'Pot 9 BB',
+    toCallLabel: 'River preview',
+    centerLabel: 'Some outs are safer',
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: '9', suit: 's'),
+      Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    boardCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: '6', suit: 'c'),
+      Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+    ],
+    actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'Flop: A hearts, 7 hearts, 6 clubs'),
+      Act0ActionTrailItemV1(label: 'Turn: 2 diamonds'),
+      Act0ActionTrailItemV1(label: 'River can bring a 5'),
+      Act0ActionTrailItemV1(label: 'Hero compares safer vs riskier'),
+    ],
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_1',
+      'board_2',
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Not every helping card is equally clean.',
+      body:
+          'A card can improve Hero and still make the board more dangerous. Start with simple language: safer out when the board stays calmer, riskier out when the board adds new danger.',
+      focusLabels: <String>['Safer card', 'Riskier card', 'Third heart'],
     ),
   ],
 );
@@ -14020,7 +14900,7 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean transfer read.',
       feedbackReason:
-          'That is the first real-table update. The heart and connected turn card make the same board more dangerous before you copy the flop plan.',
+          'That is the first real-table update. top pair is still real, but the heart and connected turn card make the same board more dangerous before you copy the flop plan.',
     ),
     Act0RunnerOptionV1(
       id: 'nothing_changed',
@@ -14071,7 +14951,7 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
     Act0TeachingStepV1(
       title: 'Street changes can change texture.',
       body:
-          'On a real table, a turn card can make the same board wetter, more connected, and less comfortable for one-pair autopilot.',
+          'On a real table, a turn card can make the same board wetter, more connected, and less comfortable for one-pair autopilot. top pair can stay ahead while still needing more caution.',
       focusLabels: <String>[
         'Real table',
         'Turn card',
@@ -16152,8 +17032,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Low room, high room.',
-      body:
-          'SPR means stack-to-pot ratio. Low SPR leaves little room. High SPR leaves more room.',
+      body: 'SPR = stack vs pot. Low = commitment. High = room.',
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
@@ -18354,7 +19233,7 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Narrow to one transfer goal next session',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
+      feedbackTitle: 'One goal clears the noise.',
       feedbackReason:
           'Transfer improves when you narrow scope and collect cleaner evidence on one behavior.',
     ),
@@ -18479,7 +19358,7 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Widen late steals slightly',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Overfold means widen.',
       feedbackReason:
           'This is a direct trigger-to-lever transfer with clear evidence and low complexity.',
     ),
@@ -18521,7 +19400,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Bet value heavier and trim bluffs',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Callers want value.',
       feedbackReason:
           'Against overcalls, value-heavy transfer lines outperform bluff-heavy defaults.',
     ),
@@ -18729,7 +19608,7 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Select one repeated leak as priority',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Pick the repeat leak.',
       feedbackReason:
           'Choosing one repeated leak gives the highest transfer value for the next focused session.',
     ),
@@ -18771,7 +19650,7 @@ final _w11ReviewDefineFixRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'If villain underbluffs, fold marginal bluff-catchers',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
+      feedbackTitle: 'Specific fix transfers.',
       feedbackReason:
           'Specific if-then repair targets transfer directly into live decisions better than generic intentions.',
     ),
@@ -18824,7 +19703,7 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Set one low-friction focus target',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
+      feedbackTitle: 'Low-energy plan first.',
       feedbackReason:
           'Low-energy sessions still transfer well when focus is clear, small, and measurable.',
     ),
@@ -18866,7 +19745,7 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Activate one trigger-action lever now',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
+      feedbackTitle: 'One trigger, one lever.',
       feedbackReason:
           'Single trigger-action execution keeps transfer disciplined and observable in real play.',
     ),
@@ -19096,7 +19975,7 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Review the decision process before judging result',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Process beats reveal.',
       feedbackReason:
           'One reveal does not invalidate disciplined logic. Process review protects you from outcome bias.',
     ),
@@ -19138,7 +20017,7 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Flag the loose call as a possible leak',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
+      feedbackTitle: 'Win can hide a leak.',
       feedbackReason:
           'Good results can mask weak process. Flagging the decision keeps your learning honest.',
     ),
@@ -19212,7 +20091,7 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Run short reset protocol before next major spot',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Well done.',
+      feedbackTitle: 'Reset before next hand.',
       feedbackReason:
           'A fast reset protects your next decisions from emotional carryover.',
     ),
@@ -19254,7 +20133,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Log leak briefly and reset to current hand',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
+      feedbackTitle: 'Log it, then reset.',
       feedbackReason:
           'Quick logging plus reset preserves learning without carrying emotional noise into next hands.',
     ),
@@ -19327,7 +20206,7 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Stick to process and planned exploit line',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
+      feedbackTitle: 'Process ignores table talk.',
       feedbackReason:
           'Process-led confidence ignores ego hooks and preserves decision quality.',
     ),
@@ -19369,7 +20248,7 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
       isCorrect: true,
       preferredLabel: 'Pause briefly on high-EV decision nodes',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
+      feedbackTitle: 'Pause on big nodes.',
       feedbackReason:
           'Small targeted pauses preserve discipline where it matters most without killing flow.',
     ),
@@ -19601,7 +20480,7 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
       isCorrect: true,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
+      feedbackTitle: 'Reset keeps quality steady.',
       feedbackReason:
           'Reset and re-anchor protects next decisions without derailing session rhythm.',
     ),
@@ -19643,7 +20522,7 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       isCorrect: true,
       preferredLabel: 'Take only evidence-backed lines',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
+      feedbackTitle: 'Evidence beats respect.',
       feedbackReason:
           'Evidence-first discipline is the stable bridge into deeper strategic worlds.',
     ),

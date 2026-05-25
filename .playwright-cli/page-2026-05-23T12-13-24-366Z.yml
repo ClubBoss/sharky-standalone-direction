@@ -1,0 +1,29 @@
+- generic [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - group:
+              - button [ref=e6]
+              - generic [ref=e7]:
+                - generic: 20%
+              - generic [ref=e8]:
+                - generic: 1/5
+              - button "UTG" [ref=e9]
+              - button "BB" [ref=e10]
+              - generic [ref=e11]:
+                - generic: 1 BB
+              - button "HJ" [ref=e12]
+              - generic [ref=e13]:
+                - generic: ПРЕФЛОП
+              - generic [ref=e14]:
+                - generic: Банк 1.5 BB
+              - generic [ref=e15]:
+                - generic: 0.5 BB
+              - button "SB" [ref=e16]
+              - button "Y BTN Ты 100 BB D" [ref=e17]
+              - button "CO" [ref=e18]
+            - group "Начинаем с кэш-игры в холдем. Лучшая рука собирается из любых пяти карт из этих семи. Мы начинаем с кэш-игры, где ценность фишек не меняется." [ref=e22]:
+              - button [ref=e20]
+              - button "Continue" [active] [ref=e21]

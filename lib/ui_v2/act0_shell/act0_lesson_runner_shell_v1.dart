@@ -442,6 +442,9 @@ class Act0BlockCompletionSummaryV1 {
     if (quickFixCount > 0) {
       return 'Miss recovered';
     }
+    if (!isWorldComplete && growthLabel.isNotEmpty) {
+      return 'Skill moved';
+    }
     if (errorCount == 0 && taskCount > 0) {
       return 'Clean read';
     }
@@ -458,13 +461,16 @@ class Act0BlockCompletionSummaryV1 {
     if (quickFixCount > 0) {
       return 'You corrected the miss inside the lesson. That recovery keeps tomorrow\'s seat intact.';
     }
+    if (!isWorldComplete && growthLabel.isNotEmpty) {
+      return '$growthLabel moved in this lesson. Clean work like this makes the next seat lighter.';
+    }
     if (errorCount == 0 && taskCount > 0) {
       return 'No repairs needed. Clean work like this makes tomorrow\'s first rep lighter.';
     }
     if (qualifiesForNextLesson) {
       return 'The block counts. One short clean return tomorrow is enough.';
     }
-    return 'Replay is the right move before adding new material. Clean it once and the route will feel lighter again.';
+    return 'Replay is the right move before adding new material. Clean it once and the next step will feel lighter again.';
   }
 
   String get gateMessage {
@@ -1017,16 +1023,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
-    // All-in: "BTN all-in" / "UTG goes all in"
+    // All-in: "BTN all-in" / "UTG goes all in 50 BB" / "Hero shoves 20 BB"
     final allInMatch = RegExp(
-      r'^(\w+)\s+(all[- ]?in|goes all)',
+      r'^(\w+)\s+(all[- ]?in|goes all(?:\s+in)?|shoves?|shoved)\s*(.*)?$',
       caseSensitive: false,
     ).firstMatch(stripped);
     if (allInMatch != null) {
+      final amt = (allInMatch.group(3) ?? '').trim();
       return Act0SeatBetStateV1(
         kind: Act0SeatBetKindV1.allIn,
         label: allInMatch.group(1)!.toUpperCase(),
-        amountLabel: 'all-in',
+        amountLabel: amt.isNotEmpty ? amt : 'all-in',
       );
     }
 
@@ -2397,25 +2404,25 @@ class _LearningRailV1 extends StatelessWidget {
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 102, maxHeight: 138),
+            constraints: const BoxConstraints(minHeight: 102, maxHeight: 144),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 138;
+                final compactRail = constraints.maxHeight <= 144;
                 final compactLaneMaxWidth = compactRail
                     ? 286.0
                     : double.infinity;
                 final showCompactHeader =
                     !compactRail && (showTaskLabel || showRailProgress);
                 final promptMaxLines = compactRail ? 2 : null;
-                final supportMaxLines = compactRail ? 2 : null;
+                final supportMaxLines = compactRail ? 3 : null;
                 final promptFontSize = compactRail ? 12.5 : 13.0;
-                final supportFontSize = compactRail ? 14.2 : 14.8;
+                final supportFontSize = compactRail ? 13.8 : 14.8;
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: compactRail ? 10 : 12,
                     vertical: emphasizePrompt
-                        ? (compactRail ? 6 : 7)
-                        : (compactRail ? 5 : 6),
+                        ? (compactRail ? 3 : 7)
+                        : (compactRail ? 2 : 6),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -2514,12 +2521,12 @@ class _LearningRailV1 extends StatelessWidget {
                                   style: Act0ShellTokensV1.body.copyWith(
                                     color: Act0ShellTokensV1.textMuted,
                                     fontSize: promptFontSize,
-                                    height: 1.30,
+                                    height: compactRail ? 1.24 : 1.30,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 if (hasSupportLine) ...[
-                                  const SizedBox(height: 6),
+                                  SizedBox(height: compactRail ? 2 : 6),
                                   _LearningRailKeyIdeaV1(
                                     supportSegments: supportSegments,
                                     activeSegmentIndex:
@@ -2528,16 +2535,14 @@ class _LearningRailV1 extends StatelessWidget {
                                     maxLines: supportMaxLines,
                                   ),
                                 ] else if (showFallbackCoachLine) ...[
-                                  const SizedBox(height: 6),
+                                  SizedBox(height: compactRail ? 4 : 6),
                                   Text(
                                     fallbackCoachLine,
                                     key: const Key(
                                       'act0_shell_learning_rail_support_line',
                                     ),
-                                    maxLines: compactRail ? 2 : 2,
-                                    overflow: compactRail
-                                        ? TextOverflow.ellipsis
-                                        : null,
+                                    maxLines: compactRail ? 3 : 2,
+                                    overflow: null,
                                     softWrap: true,
                                     style: Act0ShellTokensV1.body.copyWith(
                                       color: Act0ShellTokensV1.text,
@@ -2552,7 +2557,7 @@ class _LearningRailV1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: compactRail ? 3 : 8),
                       Row(
                         children: [
                           _LearningRailNavButtonV1(
@@ -2662,12 +2667,12 @@ class _LearningRailKeyIdeaV1 extends StatelessWidget {
       _formatInstructionCopyV1(line),
       key: const Key('act0_shell_learning_rail_support_line'),
       maxLines: maxLines,
-      overflow: compact ? TextOverflow.ellipsis : null,
+      overflow: null,
       softWrap: true,
       style: Act0ShellTokensV1.body.copyWith(
         color: Act0ShellTokensV1.text,
         fontSize: compact ? 14.2 : 14.8,
-        height: 1.35,
+        height: compact ? 1.28 : 1.35,
         fontWeight: FontWeight.w700,
       ),
     );
@@ -3240,6 +3245,9 @@ String _formatInstructionCopyV1(
   }
 
   if (sentences.length == 2) {
+    if (normalized.length < 72) {
+      return normalized;
+    }
     return sentences.join('\n');
   }
 
@@ -3474,8 +3482,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             Text(
               resolvedReason,
               key: const Key('act0_shell_feedback_reason'),
-              maxLines: isCompactRefinedFeedback ? 2 : (refined ? 3 : 4),
-              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.textMuted,
                 fontSize: refined ? 12.0 : 12.5,
@@ -4108,7 +4114,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ],
                 ),
               ),
-              if (summary.growthLabel.isNotEmpty) ...[
+              if (summary.isWorldComplete &&
+                  summary.growthLabel.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 _GrowthHighlightV1(
                   key: const Key('act0_shell_block_summary_growth_highlight'),
@@ -5513,9 +5520,12 @@ class _BetChipPlacementV1 extends StatelessWidget {
     final safeSlot = slot.clamp(0, chipSlots.length - 1);
     final chipPoint = chipSlots[safeSlot];
     final seatPoint = seatSlots[safeSlot.clamp(0, seatSlots.length - 1)];
-    final child = _BetChipV1(
-      bet: bet,
-      compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
+    final child = KeyedSubtree(
+      key: Key('act0_shell_bet_chip_owner_${seat.seatId}'),
+      child: _BetChipV1(
+        bet: bet,
+        compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
+      ),
     );
     if (!animateMotion) {
       return Positioned(
@@ -6771,6 +6781,8 @@ _RunnerBottomContextV1 _resolveRunnerBottomContextV1(
     isReview: isReview,
     isTrailHistory: isTrailHistory,
     hasSeatTargets: hasSeatTargets,
+    question: runner.question,
+    options: runner.options,
     taskFamily: taskFamily,
   );
   final tableStreet = table.streetLabel.trim();

@@ -1984,8 +1984,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _selectedOptionId == null &&
         !_rapidPracticeLoop &&
         !_placementDiagnosticActive &&
-        _activeRepairTaskId != playSelectedTask.taskId &&
-        !_lessonRunRetriedTaskIds.contains(playSelectedTask.taskId) &&
         playRunner!.teachingSteps.isNotEmpty &&
         _teachingStepIndex >= playRunner.teachingSteps.length;
     final theoryRecallStep = showTheoryRecallAffordance
@@ -5599,6 +5597,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String? _repairVariantTaskIdForSourceV1(String taskId) {
     const repairVariantTaskIds = <String, String>{
+      'flush_draws_w5_flush_draw_find':
+          'flush_draws_w5_flush_draw_recheck_transfer',
+      'straight_draws_w5_gutshot_draw':
+          'straight_draws_w5_gutshot_contrast_transfer',
       'turn_river_changes_w5_turn_hits':
           'turn_river_changes_w5_turn_texture_shift_transfer',
       'turn_river_changes_w5_street_repair':

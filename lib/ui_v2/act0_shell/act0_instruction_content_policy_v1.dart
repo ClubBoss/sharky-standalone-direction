@@ -24,6 +24,18 @@ List<String> act0BuildInstructionBlocksV1({
   required String text,
   required bool compact,
 }) {
+  final explicitParagraphs = text
+      .split(RegExp(r'\n\s*\n'))
+      .map((part) => part.trim())
+      .where((part) => part.isNotEmpty)
+      .toList();
+  if (explicitParagraphs.length > 1) {
+    return <String>[
+      for (final paragraph in explicitParagraphs)
+        ...act0BuildInstructionBlocksV1(text: paragraph, compact: compact),
+    ];
+  }
+
   final normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
   if (normalized.isEmpty) {
     return const <String>[];

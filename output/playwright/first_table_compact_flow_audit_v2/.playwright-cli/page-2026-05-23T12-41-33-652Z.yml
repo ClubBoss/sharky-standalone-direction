@@ -1,0 +1,54 @@
+- generic [ref=e5] [cursor=pointer]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - group:
+              - button [ref=e6]
+              - generic [ref=e7]:
+                - generic: 60%
+              - generic [ref=e8]:
+                - generic: 3/5
+              - generic [ref=e9]:
+                - generic: UTG
+              - generic [ref=e10]:
+                - generic: Act
+              - generic [ref=e11]:
+                - generic: BB
+              - generic [ref=e12]:
+                - generic: HJ
+              - generic [ref=e13]:
+                - generic: Big blind
+              - generic [ref=e14]:
+                - generic: To act
+              - generic [ref=e15]:
+                - generic: FLOP
+              - button "A ♥" [ref=e16]
+              - button "7 ♣" [ref=e17]
+              - button "2 ♦" [ref=e18]
+              - generic [ref=e19]:
+                - generic: Pot 6 BB
+              - generic [ref=e20]:
+                - generic: SB
+              - generic [ref=e21]:
+                - generic: Small blind
+              - generic [ref=e22]:
+                - generic: CO
+              - generic [ref=e23]:
+                - generic: A
+              - generic [ref=e24]:
+                - generic: ♠
+              - generic [ref=e25]:
+                - generic: K
+              - generic [ref=e26]:
+                - generic: ♦
+              - generic [ref=e27]:
+                - generic: "Y"
+              - generic [ref=e28]:
+                - generic: BTN Hero
+              - generic [ref=e29]:
+                - generic: D
+            - group "Real table. Hero has two cards, flop has three board cards, pot is 6 BB. Separate private cards, board cards, and pot before any action." [ref=e33]:
+              - button [ref=e31]
+              - button "Continue" [active] [ref=e32]

@@ -85,7 +85,7 @@ void main(List<String> args) async {
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'viewports': viewports, 'surfaces': surfaces, 'entries': entries})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': viewports, 'surfaces': surfaces, 'entries': entries})}\n',
   );
 }
 

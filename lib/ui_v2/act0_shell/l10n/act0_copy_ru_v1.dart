@@ -2352,10 +2352,10 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Один точный разбор здесь важнее, чем беглый взгляд на всё сразу.',
   ),
   'review_board_support_clean_empty': Act0SurfaceAtomCopyV1(
-    text: 'Сейчас разбирать нечего. Просто продолжай по маршруту.',
+    text: 'Сейчас разбирать нечего. Просто держи ровный ритм.',
   ),
   'review_board_support_clean_strong': Act0SurfaceAtomCopyV1(
-    text: 'Сейчас всё под контролем. Просто продолжай по маршруту.',
+    text: 'Сейчас всё под контролем. Просто держи ровный ритм.',
   ),
   'review_board_fix_cta': Act0SurfaceAtomCopyV1(text: 'Чинить сейчас'),
   'runner_badge_your_move': Act0SurfaceAtomCopyV1(text: 'Твой ход'),
@@ -2376,6 +2376,9 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   ),
   'runner_task_choose_correct_count': Act0SurfaceAtomCopyV1(
     text: 'Выбери правильный счёт',
+  ),
+  'runner_task_choose_correct_answer': Act0SurfaceAtomCopyV1(
+    text: 'Выбери правильный ответ',
   ),
   'runner_task_choose_best_action': Act0SurfaceAtomCopyV1(
     text: 'Выбери лучшее действие',

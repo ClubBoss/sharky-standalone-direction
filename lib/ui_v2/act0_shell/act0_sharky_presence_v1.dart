@@ -319,7 +319,7 @@ String _resolveSharkyUtilityLineV1({
 String _fallbackSharkyUtilityLineV1(Act0SharkyMoodV1 mood) {
   return switch (mood) {
     Act0SharkyMoodV1.repair =>
-      'Fix one pressure spot first. Then continue the route cleanly.',
+      'Fix one pressure spot first. Then continue with a clear head.',
     Act0SharkyMoodV1.celebrate =>
       'Keep the rhythm warm with one short clean rep now.',
     Act0SharkyMoodV1.happy =>

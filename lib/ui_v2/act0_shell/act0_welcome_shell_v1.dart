@@ -64,10 +64,6 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
           title: _copyV1(en: 'What you get next', ru: 'Что ты получишь дальше'),
-          body: _copyV1(
-            en: 'One clear poker spot, one answer, one reason, then you move.',
-            ru: 'Один ясный покерный спот, один ответ, одна причина, и ты идёшь дальше.',
-          ),
           accent: Act0ShellTokensV1.primary,
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           child: _WelcomeLoopStripV1(copy: _copyV1),
@@ -92,11 +88,11 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         eyebrow: _atomV1('welcome_handoff_eyebrow', fallback: 'Next step'),
         line: _copyV1(
           en: widget.replayMode
-              ? 'The route stays the same: Home shows what to do now, and Learn keeps the path visible.'
-              : 'Home opens with one clear poker spot, and Learn keeps the rest of the path visible.',
+              ? 'Home still shows what to do now, and Learn keeps the next lessons visible.'
+              : 'Home opens with one clear poker spot, and Learn keeps the next lessons visible.',
           ru: widget.replayMode
-              ? 'Путь остаётся тем же: Home показывает, что делать сейчас, а Learn держит маршрут на виду.'
-              : 'Home открывает один ясный покерный спот, а Learn держит остальной путь на виду.',
+              ? 'Home по-прежнему показывает, что делать сейчас, а Learn держит следующие уроки на виду.'
+              : 'Home открывает один ясный покерный спот, а Learn держит следующие уроки на виду.',
         ),
         detail: _copyV1(
           en: widget.replayMode
@@ -111,14 +107,6 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
           title: _copyV1(en: 'First hand ready', ru: 'Первая раздача готова'),
-          body: _copyV1(
-            en: widget.replayMode
-                ? 'The route stays in place. Reopen the next hand whenever you want to continue.'
-                : 'The route is set. Home opens one clear spot, and Learn keeps the next path visible.',
-            ru: widget.replayMode
-                ? 'Маршрут остаётся на месте. Открой следующую раздачу, когда захочешь продолжить.'
-                : 'Маршрут готов. Home открывает один ясный спот, а Learn держит следующий путь на виду.',
-          ),
           accent: Act0ShellTokensV1.gold,
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
@@ -223,7 +211,6 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
 class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
   const _WelcomeVisualPreviewCardV1({
     required this.title,
-    required this.body,
     required this.accent,
     required this.child,
     this.bridge,
@@ -231,7 +218,6 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
   });
 
   final String title;
-  final String body;
   final Color accent;
   final Widget child;
   final Widget? bridge;
@@ -253,8 +239,6 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapMd),
           ],
           Text(title, style: Act0ShellTokensV1.label.copyWith(color: accent)),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(body, style: Act0ShellTokensV1.muted),
           if (child is! SizedBox) ...[
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             child,
