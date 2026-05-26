@@ -1,5 +1,79 @@
 import 'package:flutter/material.dart';
 
+class Act0VisualCanonV1 {
+  Act0VisualCanonV1._();
+
+  static const Color deepNavy = Color(0xFF081220);
+  static const Color appBlack = Color(0xFF050B12);
+  static const Color navySurface = Color(0xFF101A2B);
+  static const Color navySurfaceSoft = Color(0xFF0D1726);
+  static const Color bluePrimary = Color(0xFF1598FF);
+  static const Color blueDeep = Color(0xFF0A64D8);
+  static const Color cyanAccent = Color(0xFF25E6F2);
+  static const Color goldAccent = Color(0xFFFFC84D);
+  static const Color greenTable = Color(0xFF16C784);
+  static const Color redDanger = Color(0xFFFF5A5A);
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFFB7C4D6);
+  static const Color textTertiary = Color(0xFF7F91A8);
+  static const Color textDisabled = Color(0xFF4E5D70);
+
+  static BoxDecoration primaryCtaDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(18),
+      gradient: const LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: <Color>[cyanAccent, bluePrimary],
+      ),
+      boxShadow: <BoxShadow>[
+        BoxShadow(
+          color: bluePrimary.withOpacity(0.34),
+          blurRadius: 22,
+          offset: const Offset(0, 10),
+        ),
+        BoxShadow(
+          color: cyanAccent.withOpacity(0.18),
+          blurRadius: 30,
+          offset: Offset.zero,
+        ),
+      ],
+    );
+  }
+}
+
+class Act0VisualMetricsV1 {
+  Act0VisualMetricsV1._();
+
+  static const double screenPaddingCompact = 16;
+  static const double screenPaddingLarge = 20;
+  static const double screenPaddingTablet = 24;
+  static const double sectionGap = 16;
+  static const double cardGap = 12;
+  static const double innerGap = 10;
+  static const double primaryRadius = 26;
+  static const double secondaryRadius = 20;
+  static const double chipRadius = 999;
+  static const double primaryCtaHeight = 60;
+  static const double secondaryCtaHeight = 46;
+  static const double compactHeroMinHeight = 245;
+  static const double compactHeroMaxHeight = 330;
+}
+
+class Act0TableFeltCanonV1 {
+  Act0TableFeltCanonV1._();
+
+  static const Color feltEdge = Color(0xFF041E1A);
+  static const Color feltOuter = Color(0xFF063827);
+  static const Color feltMid = Color(0xFF07583C);
+  static const Color feltInner = Color(0xFF08704D);
+  static const Color feltSoftLift = Color(0xFF0B8A5D);
+  static const Color railOuter = Color(0xFF050D18);
+  static const Color railMid = Color(0xFF0A1A2A);
+  static const Color railInner = Color(0xFF10283A);
+  static const Color railLine = Color(0xFF1A4960);
+}
+
 class Act0ShellTokensV1 {
   const Act0ShellTokensV1._();
 
@@ -8,27 +82,31 @@ class Act0ShellTokensV1 {
   // - Cyan is a focus/coach accent, not a general surface fill.
   // - Gold is reserved for mastery, reward, and milestone emphasis.
   // - Filled primary actions must keep safe contrast with their foreground.
-  static const Color background = Color(0xFF06090D);
-  static const Color surface = Color(0xFF0B1119);
-  static const Color surface2 = Color(0xFF101724);
-  static const Color surface3 = Color(0xFF152030);
+  static const Color background = Act0VisualCanonV1.deepNavy;
+  static const Color surface = Act0VisualCanonV1.navySurface;
+  static const Color surface2 = Act0VisualCanonV1.navySurfaceSoft;
+  static const Color surface3 = Act0VisualCanonV1.navySurface;
   static const Color border = Color(0xFF1F2E43);
-  static const Color text = Color(0xFFEBF1F5);
-  static const Color textMuted = Color(0xFFB0C0CC);
-  static const Color textDim = Color(0xFF8092A3);
-  static const Color primary = Color(0xFF087B91);
-  static const Color primaryDark = Color(0xFF05262E);
-  static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color gold = Color(0xFFD4AF37);
-  static const Color info = Color(0xFF0EA5C6);
-  static const Color danger = Color(0xFFE05252);
-  static const Color felt = Color(0xFF0B4A38);
-  static const Color feltDark = Color(0xFF052B20);
-  static const Color feltLine = Color(0xFF157053);
-  static const Color feltHighlight = Color(0xFF1C7A5A);
-  static const Color placementReportSurface = Color(0xFF06090D);
-  static const Color placementCoachSurface = Color(0xFF0B1119);
-  static const Color learnPathTaskSurface = Color(0xFF0B1119);
+  static const Color text = Act0VisualCanonV1.textPrimary;
+  static const Color textMuted = Act0VisualCanonV1.textSecondary;
+  static const Color textDim = Act0VisualCanonV1.textTertiary;
+  static const Color primary = Act0VisualCanonV1.bluePrimary;
+  static const Color primaryDark = Act0VisualCanonV1.deepNavy;
+  static const Color onPrimary = Act0VisualCanonV1.textPrimary;
+  static const Color actionBlue = Act0VisualCanonV1.bluePrimary;
+  static const Color actionCyan = Act0VisualCanonV1.cyanAccent;
+  static const Color actionNavy = Act0VisualCanonV1.navySurface;
+  static const Color actionDeep = Act0VisualCanonV1.deepNavy;
+  static const Color gold = Act0VisualCanonV1.goldAccent;
+  static const Color info = Act0VisualCanonV1.cyanAccent;
+  static const Color danger = Act0VisualCanonV1.redDanger;
+  static const Color felt = Act0TableFeltCanonV1.feltMid;
+  static const Color feltDark = Act0TableFeltCanonV1.feltEdge;
+  static const Color feltLine = Act0TableFeltCanonV1.railLine;
+  static const Color feltHighlight = Act0TableFeltCanonV1.feltInner;
+  static const Color placementReportSurface = Act0VisualCanonV1.deepNavy;
+  static const Color placementCoachSurface = Act0VisualCanonV1.navySurface;
+  static const Color learnPathTaskSurface = Act0VisualCanonV1.navySurface;
   static const Color shadowSoft = Color(0x66000000);
   static const Color shadowSoftStrong = Color(0x77000000);
   static const Color runnerSharkBlue = Color(0xFF18C7E8);
@@ -218,9 +296,9 @@ class Act0ShellTokensV1 {
 
   static BoxDecoration tableRimDecoration() {
     return BoxDecoration(
-      color: const Color(0xFF0C1014),
+      color: Act0TableFeltCanonV1.railOuter,
       borderRadius: BorderRadius.circular(tableOuterRadius),
-      border: Border.all(color: const Color(0xFF1E2832), width: 1.5),
+      border: Border.all(color: Act0TableFeltCanonV1.railLine, width: 1.5),
       boxShadow: const <BoxShadow>[
         // Outer drop shadow
         BoxShadow(
@@ -230,15 +308,15 @@ class Act0ShellTokensV1 {
         ),
         // Faux 3D bevel / rim lip
         BoxShadow(
-          color: Color(0xFF2C3946),
-          blurRadius: 4,
+          color: Act0TableFeltCanonV1.railLine,
+          blurRadius: 5,
           spreadRadius: 0,
           offset: Offset(0, 2),
         ),
         BoxShadow(
-          color: Color(0xFF05080A),
-          blurRadius: 10,
-          spreadRadius: 6,
+          color: Act0TableFeltCanonV1.railOuter,
+          blurRadius: 12,
+          spreadRadius: 5,
           offset: Offset(0, 6),
         ),
       ],
@@ -246,9 +324,11 @@ class Act0ShellTokensV1 {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Color(0xFF14191F), // Top rim highlight
-          Color(0xFF080B0D), // Bottom rim shadow
+          Act0TableFeltCanonV1.railInner,
+          Act0TableFeltCanonV1.railMid,
+          Act0TableFeltCanonV1.railOuter,
         ],
+        stops: [0, 0.48, 1],
       ),
     );
   }
@@ -257,15 +337,16 @@ class Act0ShellTokensV1 {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(tableInnerRadius),
       border: Border.all(color: feltLine, width: 2),
-      gradient: const RadialGradient(
-        center: Alignment(0, -0.1), // Spotlight slightly shifted up
-        radius: 1.0,
-        colors: <Color>[
-          feltHighlight, // Bright center spotlight
-          felt, // Mid table
-          feltDark, // Very dark edges
+      gradient: RadialGradient(
+        center: const Alignment(0, -0.12),
+        radius: 1.08,
+        colors: const <Color>[
+          Act0TableFeltCanonV1.feltInner,
+          Act0TableFeltCanonV1.feltMid,
+          Act0TableFeltCanonV1.feltOuter,
+          Act0TableFeltCanonV1.feltEdge,
         ],
-        stops: <double>[0, 0.5, 1],
+        stops: const <double>[0, 0.44, 0.76, 1],
       ),
     );
   }
@@ -280,6 +361,57 @@ class Act0ShellTokensV1 {
       ),
       textStyle: cta,
       elevation: 0,
+    );
+  }
+
+  static BoxDecoration premiumActionSurfaceDecoration({
+    double borderOpacity = 0.28,
+    double glowOpacity = 0.18,
+    bool compact = false,
+  }) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(compact ? radiusLg : radiusXl),
+      border: Border.all(color: actionCyan.withOpacity(borderOpacity)),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: <Color>[
+          actionBlue.withOpacity(compact ? 0.20 : 0.24),
+          actionCyan.withOpacity(compact ? 0.10 : 0.13),
+          actionNavy.withOpacity(compact ? 0.96 : 0.98),
+          actionDeep.withOpacity(0.99),
+        ],
+        stops: const <double>[0, 0.24, 0.7, 1],
+      ),
+      boxShadow: <BoxShadow>[
+        const BoxShadow(
+          color: Color(0x55000000),
+          blurRadius: 18,
+          offset: Offset(0, 10),
+        ),
+        BoxShadow(
+          color: actionBlue.withOpacity(glowOpacity),
+          blurRadius: compact ? 22 : 34,
+          offset: const Offset(0, 12),
+        ),
+      ],
+    );
+  }
+
+  static ButtonStyle premiumActionButtonStyle({
+    double height = primaryCtaHeight,
+  }) {
+    return FilledButton.styleFrom(
+      backgroundColor: actionBlue,
+      foregroundColor: onPrimary,
+      minimumSize: Size(double.infinity, height),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusBase),
+        side: BorderSide(color: actionCyan.withOpacity(0.42)),
+      ),
+      textStyle: cta,
+      elevation: 0,
+      shadowColor: actionBlue.withOpacity(0.26),
     );
   }
 

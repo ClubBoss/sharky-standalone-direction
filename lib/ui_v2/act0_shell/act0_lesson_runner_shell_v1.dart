@@ -695,6 +695,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   int? _actionTrailFocusedIndex;
   int _learningRailSupportSegmentIndex = 0;
   String _learningRailSupportStepKey = '';
+  bool _showTheoryPeek = false;
+  bool _showFullIdeaInTheoryPeek = false;
 
   @override
   void initState() {
@@ -718,6 +720,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       _showdownInteractionKey = nextKey;
       _interactiveHighlightedCardIds = const <String>[];
       _interactiveShowdownLine = '';
+      _showTheoryPeek = false;
+      _showFullIdeaInTheoryPeek = false;
     }
   }
 
@@ -1314,6 +1318,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     );
   }
 
+  void _openTheoryRecallPeek() {
+    if (widget.theoryRecallStep == null || _showTheoryPeek) {
+      return;
+    }
+    setState(() => _showTheoryPeek = true);
+  }
+
+  void _closeTheoryRecallPeek() {
+    if (!_showTheoryPeek) {
+      return;
+    }
+    setState(() {
+      _showTheoryPeek = false;
+      _showFullIdeaInTheoryPeek = false;
+    });
+  }
+
   void _syncTheoryAdvanceLock({bool initial = false}) {
     _theoryUnlockTimer?.cancel();
     final nextKey = _currentAdvanceLockKey;
@@ -1480,9 +1501,26 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         bottomContext.promptSupportLine?.trim().isNotEmpty == true
         ? bottomContext.promptSupportLine
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
-    final theoryRecallLabel = widget.theoryRecallStep == null
+    final decisionHint = _resolveDecisionHintV1(
+      taskFamily: widget.selectedTaskFamily,
+      runner: runner,
+      prompt: prompt,
+      question: question,
+      supportLine: promptContextLine ?? hint,
+      fullIdeaStep: widget.theoryRecallStep,
+    );
+    final theoryRecallPeek = decisionHint == null
         ? null
-        : act0RuntimeTheoryRecallLabelV1(context);
+        : _DecisionHintPeekV1(
+            quickHint: decisionHint.quickHint,
+            fullIdeaTitle: decisionHint.fullIdeaTitle,
+            fullIdeaBlocks: decisionHint.fullIdeaBlocks,
+            showFullIdea: _showFullIdeaInTheoryPeek,
+            onShowFullIdea: decisionHint.hasFullIdea
+                ? () => setState(() => _showFullIdeaInTheoryPeek = true)
+                : null,
+            onClose: _closeTheoryRecallPeek,
+          );
     final showStepIntro =
         isTeaching && runner.teachingStepIndex == 0 && runner.beatIndex > 1;
     final showTopInstructionCard = !isRefinedDev2;
@@ -1734,7 +1772,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         helperLine: promptCoachLine,
                         options: runner.options,
                         onBack: null,
-                        recallLabel: theoryRecallLabel,
+                        recallLabel: widget.theoryRecallStep == null
+                            ? null
+                            : 'Need a hint?',
                         onRecall: widget.theoryRecallStep == null
                             ? null
                             : _openTheoryRecallSheet,
@@ -1747,14 +1787,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         embedChildInSurface: bottomContext.isTrailHistory,
                         question: question,
                         onBack: null,
-                        recallLabel: theoryRecallLabel,
-                        onRecall: widget.theoryRecallStep == null
+                        recallLabel: decisionHint == null
                             ? null
-                            : _openTheoryRecallSheet,
-                        child: _SizingConfirmPanelV1(
-                          selectedPreset: runner.selectedPreset,
-                          onConfirm: widget.onConfirmSizingPreset,
-                        ),
+                            : 'Need a hint?',
+                        onRecall: decisionHint == null
+                            ? null
+                            : _openTheoryRecallPeek,
+                        child: _showTheoryPeek && theoryRecallPeek != null
+                            ? theoryRecallPeek
+                            : _SizingConfirmPanelV1(
+                                selectedPreset: runner.selectedPreset,
+                                onConfirm: widget.onConfirmSizingPreset,
+                              ),
                       )
                     : _ActionPromptPanelV1(
                         taskLabel: taskRailLabel,
@@ -1763,15 +1807,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         embedChildInSurface: bottomContext.isTrailHistory,
                         question: question,
                         onBack: null,
-                        recallLabel: theoryRecallLabel,
-                        onRecall: widget.theoryRecallStep == null
+                        recallLabel: decisionHint == null
                             ? null
-                            : _openTheoryRecallSheet,
-                        child: _ActionPanelV1(
-                          options: runner.options,
-                          selectedOptionId: runner.selectedOptionId,
-                          onChoose: _handleChooseOptionTelemetry,
-                        ),
+                            : 'Need a hint?',
+                        onRecall: decisionHint == null
+                            ? null
+                            : _openTheoryRecallPeek,
+                        child: _showTheoryPeek && theoryRecallPeek != null
+                            ? theoryRecallPeek
+                            : _ActionPanelV1(
+                                options: runner.options,
+                                selectedOptionId: runner.selectedOptionId,
+                                onChoose: _handleChooseOptionTelemetry,
+                              ),
                       )
               : isReview
               ? Column(
@@ -4862,8 +4910,8 @@ class _Act0TableV1 extends StatelessWidget {
                                 alpha: refined ? 0.06 : 0.04,
                               ),
                               Colors.transparent,
-                              Colors.black.withValues(
-                                alpha: refined ? 0.18 : 0.12,
+                              Act0VisualCanonV1.deepNavy.withValues(
+                                alpha: refined ? 0.14 : 0.10,
                               ),
                             ],
                             stops: const <double>[0, 0.34, 1],
@@ -4887,15 +4935,12 @@ class _Act0TableV1 extends StatelessWidget {
                                 center: const Alignment(0, -0.12),
                                 radius: refined ? 1.12 : 1.04,
                                 colors: <Color>[
-                                  Colors.white.withValues(
-                                    alpha: refined ? 0.032 : 0.024,
+                                  Act0TableFeltCanonV1.feltSoftLift.withValues(
+                                    alpha: refined ? 0.10 : 0.08,
                                   ),
                                   Colors.transparent,
-                                  Colors.black.withValues(
-                                    alpha: refined ? 0.09 : 0.06,
-                                  ),
                                 ],
-                                stops: const <double>[0, 0.62, 1],
+                                stops: const <double>[0, 1],
                               ),
                             ),
                           ),
@@ -5254,14 +5299,16 @@ class _CenterPotV1 extends StatelessWidget {
       ),
       decoration: refined
           ? BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.15),
+              color: Act0TableFeltCanonV1.railOuter.withValues(alpha: 0.22),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              border: Border.all(
+                color: Act0TableFeltCanonV1.railLine.withValues(alpha: 0.14),
+              ),
               boxShadow: <BoxShadow>[
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.20),
-                  blurRadius: 12,
-                  offset: const Offset(0, 5),
+                  color: Act0TableFeltCanonV1.railOuter.withValues(alpha: 0.14),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
                 ),
               ],
             )
@@ -8276,6 +8323,93 @@ class _PhaseTrackerV1 extends StatelessWidget {
   }
 }
 
+class _DecisionHintV1 {
+  const _DecisionHintV1({
+    required this.quickHint,
+    required this.fullIdeaTitle,
+    required this.fullIdeaBlocks,
+  });
+
+  final String quickHint;
+  final String fullIdeaTitle;
+  final List<String> fullIdeaBlocks;
+
+  bool get hasFullIdea =>
+      fullIdeaTitle.trim().isNotEmpty || fullIdeaBlocks.isNotEmpty;
+}
+
+_DecisionHintV1? _resolveDecisionHintV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required Act0RunnerStateV1 runner,
+  required String prompt,
+  required String question,
+  required String supportLine,
+  required Act0TeachingStepV1? fullIdeaStep,
+}) {
+  if (runner.phase != Act0LessonPhaseV1.drill || runner.options.isEmpty) {
+    return null;
+  }
+  final quickHint = _genericDecisionHintV1(
+    taskFamily: taskFamily,
+    text:
+        '$prompt $question $supportLine '
+        '${runner.lessonTitle} ${runner.lessonSubtitle}',
+  );
+  if (quickHint.isEmpty) {
+    return null;
+  }
+  return _DecisionHintV1(
+    quickHint: quickHint,
+    fullIdeaTitle: fullIdeaStep?.title.trim() ?? '',
+    fullIdeaBlocks: fullIdeaStep == null
+        ? const <String>[]
+        : act0BuildInstructionBlocksV1(text: fullIdeaStep.body, compact: true),
+  );
+}
+
+String _genericDecisionHintV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required String text,
+}) {
+  final normalized = text.toLowerCase();
+  if (taskFamily == Act0TaskFamilyV1.sizing ||
+      taskFamily == Act0TaskFamilyV1.counting ||
+      normalized.contains('pot') ||
+      normalized.contains('chip') ||
+      normalized.contains('matched')) {
+    return 'Count only chips that are actually in the pot or matched.';
+  }
+  if (normalized.contains('position') ||
+      normalized.contains('seat') ||
+      normalized.contains('button') ||
+      normalized.contains('btn') ||
+      normalized.contains('utg') ||
+      normalized.contains('blind')) {
+    return 'Start from the button, then follow seat order.';
+  }
+  if (taskFamily == Act0TaskFamilyV1.recognition ||
+      taskFamily == Act0TaskFamilyV1.compare ||
+      normalized.contains('board') ||
+      normalized.contains('card') ||
+      normalized.contains('flop') ||
+      normalized.contains('turn') ||
+      normalized.contains('river')) {
+    return 'Read the board cards before using memory.';
+  }
+  if (taskFamily == Act0TaskFamilyV1.decision ||
+      taskFamily == Act0TaskFamilyV1.transfer ||
+      taskFamily == Act0TaskFamilyV1.repair ||
+      normalized.contains('action') ||
+      normalized.contains('fold') ||
+      normalized.contains('check') ||
+      normalized.contains('call') ||
+      normalized.contains('raise') ||
+      normalized.contains('bet')) {
+    return 'Name the action before choosing what it means.';
+  }
+  return 'Start with what is visible on the table.';
+}
+
 class _ActionPanelV1 extends StatelessWidget {
   const _ActionPanelV1({
     required this.options,
@@ -8287,13 +8421,13 @@ class _ActionPanelV1 extends StatelessWidget {
   final String? selectedOptionId;
   final ValueChanged<Act0RunnerOptionV1> onChoose;
 
-  bool _shouldStackCompactOptionsV1(BuildContext context) {
-    if (options.length != 3) {
-      return false;
-    }
+  bool _shouldStackOptionsV1(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    if (screenWidth > 420) {
-      return false;
+    if (screenWidth <= 420) {
+      return true;
+    }
+    if (options.length > 3) {
+      return true;
     }
     var longestLabelLength = 0;
     for (final option in options) {
@@ -8305,30 +8439,65 @@ class _ActionPanelV1 extends StatelessWidget {
         longestLabelLength = localizedLabel.length;
       }
     }
-    return longestLabelLength > 24;
+    return longestLabelLength > 24 || options.length > 3;
   }
 
   @override
   Widget build(BuildContext context) {
-    final stackCompactOptions = _shouldStackCompactOptionsV1(context);
+    final stackOptions = _shouldStackOptionsV1(context);
     final unselectedForeground = Act0ShellTokensV1.text;
     final unselectedBackground = Act0ShellTokensV1.surface2.withValues(
-      alpha: 0.82,
+      alpha: stackOptions ? 0.88 : 0.82,
     );
-    final unselectedBorder = Act0ShellTokensV1.border.withValues(alpha: 0.92);
-    final buttons = options
-        .map((option) {
+    final unselectedBorder = stackOptions
+        ? Act0ShellTokensV1.info.withValues(alpha: 0.22)
+        : Act0ShellTokensV1.border.withValues(alpha: 0.92);
+    if (stackOptions) {
+      return Container(
+        key: const Key('act0_shell_action_panel'),
+        decoration: BoxDecoration(
+          color: Act0ShellTokensV1.surface2.withValues(alpha: 0.88),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: unselectedBorder),
+        ),
+        child: Column(
+          key: const Key('act0_shell_answer_sheet'),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final entry in options.indexed) ...[
+              _AnswerChoiceRowV1(
+                option: entry.$2,
+                optionIndex: entry.$1,
+                selected: entry.$2.id == selectedOptionId,
+                onChoose: onChoose,
+              ),
+              if (entry.$1 < options.length - 1)
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                ),
+            ],
+          ],
+        ),
+      );
+    }
+
+    final buttons = options.indexed
+        .map((entry) {
+          final optionIndex = entry.$1;
+          final option = entry.$2;
           final selected = option.id == selectedOptionId;
-          final actionTone = _ActionToneV1.fromOption(option);
           final tone = selected
               ? option.isCorrect
-                    ? Act0ShellTokensV1.primary
+                    ? Act0VisualCanonV1.greenTable
                     : Act0ShellTokensV1.danger
               : unselectedForeground;
           final background = selected
               ? tone.withValues(alpha: 0.16)
               : unselectedBackground;
-          final buttonHeight = stackCompactOptions ? 60.0 : 48.0;
+          final buttonHeight = stackOptions ? 62.0 : 48.0;
+          final marker = String.fromCharCode(65 + optionIndex);
           return OutlinedButton(
             key: Key('act0_shell_option_${option.id}'),
             onPressed: () => onChoose(option),
@@ -8343,66 +8512,137 @@ class _ActionPanelV1 extends StatelessWidget {
                       color: selected
                           ? tone.withValues(alpha: 0.92)
                           : unselectedBorder,
+                      width: selected ? 1.3 : 1,
                     ),
                   ),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(
-                      horizontal: stackCompactOptions ? 14 : 12,
-                      vertical: stackCompactOptions ? 10 : 8,
+                      horizontal: stackOptions ? 14 : 12,
+                      vertical: stackOptions ? 10 : 8,
                     ),
                   ),
-                  alignment: stackCompactOptions
+                  alignment: stackOptions
                       ? Alignment.centerLeft
                       : Alignment.center,
                 ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: stackCompactOptions
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.center,
-              children: [
-                Text(
-                  act0RuntimeLocalizedOptionLabelV1(context, option.label),
-                  textAlign: stackCompactOptions
-                      ? TextAlign.left
-                      : TextAlign.center,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: selected ? tone : unselectedForeground,
-                    fontWeight: FontWeight.w800,
-                    height: stackCompactOptions ? 1.18 : 1.12,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                SizedBox(
-                  height: 10,
-                  child: option.amountLabel.isNotEmpty
-                      ? Align(
-                          alignment: stackCompactOptions
-                              ? Alignment.centerLeft
-                              : Alignment.center,
-                          child: Text(
-                            option.amountLabel,
-                            textAlign: stackCompactOptions
-                                ? TextAlign.left
-                                : TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 9,
-                              height: 1.0,
-                              color: selected
-                                  ? tone.withValues(alpha: 0.9)
-                                  : Act0ShellTokensV1.textMuted,
-                              fontWeight: FontWeight.w700,
-                            ),
+            child: stackOptions
+                ? Row(
+                    children: [
+                      Container(
+                        key: Key('act0_shell_option_marker_${option.id}'),
+                        width: 28,
+                        height: 28,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? tone.withValues(alpha: 0.18)
+                              : Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusPill,
                           ),
-                        )
-                      : null,
-                ),
-              ],
-            ),
+                          border: Border.all(
+                            color: selected
+                                ? tone.withValues(alpha: 0.46)
+                                : Act0ShellTokensV1.info.withValues(
+                                    alpha: 0.24,
+                                  ),
+                          ),
+                        ),
+                        child: Text(
+                          marker,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: selected
+                                ? tone
+                                : Act0ShellTokensV1.info.withValues(
+                                    alpha: 0.92,
+                                  ),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: Act0ShellTokensV1.gapSm),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              act0RuntimeLocalizedOptionLabelV1(
+                                context,
+                                option.label,
+                              ),
+                              textAlign: TextAlign.left,
+                              style: Act0ShellTokensV1.body.copyWith(
+                                color: selected ? tone : unselectedForeground,
+                                fontWeight: FontWeight.w800,
+                                height: 1.18,
+                              ),
+                            ),
+                            if (option.amountLabel.isNotEmpty) ...[
+                              const SizedBox(height: 3),
+                              Text(
+                                option.amountLabel,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  height: 1.0,
+                                  color: selected
+                                      ? tone.withValues(alpha: 0.9)
+                                      : Act0ShellTokensV1.textMuted,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        act0RuntimeLocalizedOptionLabelV1(
+                          context,
+                          option.label,
+                        ),
+                        textAlign: TextAlign.center,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: selected ? tone : unselectedForeground,
+                          fontWeight: FontWeight.w800,
+                          height: 1.12,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      SizedBox(
+                        height: 10,
+                        child: option.amountLabel.isNotEmpty
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  option.amountLabel,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    height: 1.0,
+                                    color: selected
+                                        ? tone.withValues(alpha: 0.9)
+                                        : Act0ShellTokensV1.textMuted,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              )
+                            : null,
+                      ),
+                    ],
+                  ),
           );
         })
         .toList(growable: false);
-    if (buttons.length <= 3 && !stackCompactOptions) {
+    if (buttons.length <= 3 && !stackOptions) {
       return Row(
         key: const Key('act0_shell_action_panel'),
         children: [
@@ -8424,6 +8664,116 @@ class _ActionPanelV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapSm),
         ],
       ],
+    );
+  }
+}
+
+class _AnswerChoiceRowV1 extends StatelessWidget {
+  const _AnswerChoiceRowV1({
+    required this.option,
+    required this.optionIndex,
+    required this.selected,
+    required this.onChoose,
+  });
+
+  final Act0RunnerOptionV1 option;
+  final int optionIndex;
+  final bool selected;
+  final ValueChanged<Act0RunnerOptionV1> onChoose;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = selected
+        ? option.isCorrect
+              ? Act0VisualCanonV1.greenTable
+              : Act0ShellTokensV1.danger
+        : Act0ShellTokensV1.text;
+    final marker = String.fromCharCode(65 + optionIndex);
+    return Material(
+      color: selected ? tone.withValues(alpha: 0.12) : Colors.transparent,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        key: Key('act0_shell_option_${option.id}'),
+        onTap: () => onChoose(option),
+        borderRadius: BorderRadius.circular(18),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 52),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            child: Row(
+              children: [
+                Container(
+                  key: Key('act0_shell_option_marker_${option.id}'),
+                  width: 32,
+                  height: 32,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? tone.withValues(alpha: 0.18)
+                        : Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    border: Border.all(
+                      color: selected
+                          ? tone.withValues(alpha: 0.46)
+                          : Act0ShellTokensV1.info.withValues(alpha: 0.24),
+                    ),
+                  ),
+                  child: Text(
+                    marker,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: selected
+                          ? tone
+                          : Act0ShellTokensV1.info.withValues(alpha: 0.92),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        act0RuntimeLocalizedOptionLabelV1(
+                          context,
+                          option.label,
+                        ),
+                        textAlign: TextAlign.left,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: tone,
+                          fontSize: 13.2,
+                          fontWeight: FontWeight.w700,
+                          height: 1.14,
+                        ),
+                      ),
+                      if (option.amountLabel.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          option.amountLabel,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 9,
+                            height: 1.0,
+                            color: selected
+                                ? tone.withValues(alpha: 0.9)
+                                : Act0ShellTokensV1.textMuted,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -8648,6 +8998,150 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
       return Align(alignment: Alignment.center, child: button);
     }
     return Align(alignment: Alignment.centerLeft, child: button);
+  }
+}
+
+class _DecisionHintPeekV1 extends StatelessWidget {
+  const _DecisionHintPeekV1({
+    required this.quickHint,
+    required this.fullIdeaTitle,
+    required this.fullIdeaBlocks,
+    required this.showFullIdea,
+    required this.onShowFullIdea,
+    required this.onClose,
+  });
+
+  final String quickHint;
+  final String fullIdeaTitle;
+  final List<String> fullIdeaBlocks;
+  final bool showFullIdea;
+  final VoidCallback? onShowFullIdea;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasFullIdea =
+        fullIdeaTitle.trim().isNotEmpty || fullIdeaBlocks.isNotEmpty;
+    return Container(
+      key: const Key('act0_shell_theory_recall_sheet'),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface.withValues(alpha: 0.88),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.24),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Quick hint',
+                  key: const Key('act0_shell_hint_title'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.info,
+                    fontSize: 10.2,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.12,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                key: const Key('act0_shell_theory_recall_close_cta'),
+                onPressed: onClose,
+                style: TextButton.styleFrom(
+                  foregroundColor: Act0ShellTokensV1.info,
+                  minimumSize: const Size(0, 28),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                icon: const Icon(Icons.arrow_back_rounded, size: 15),
+                label: Text(
+                  'Back to choices',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.info,
+                    fontSize: 10.8,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            quickHint,
+            key: const Key('act0_shell_hint_body'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontSize: 12.6,
+              height: 1.14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (hasFullIdea && !showFullIdea) ...[
+            const SizedBox(height: 8),
+            TextButton.icon(
+              key: const Key('act0_shell_review_full_idea_cta'),
+              onPressed: onShowFullIdea,
+              style: TextButton.styleFrom(
+                foregroundColor: Act0ShellTokensV1.info,
+                minimumSize: const Size(0, 28),
+                padding: EdgeInsets.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              icon: const Icon(Icons.auto_stories_rounded, size: 15),
+              label: Text(
+                'Review full idea',
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.info,
+                  fontSize: 10.8,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+          if (hasFullIdea && showFullIdea) ...[
+            const SizedBox(height: 9),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: Act0ShellTokensV1.info.withValues(alpha: 0.14),
+            ),
+            if (fullIdeaTitle.trim().isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                fullIdeaTitle.trim(),
+                key: const Key('act0_shell_theory_recall_title'),
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.text,
+                  fontSize: 14.2,
+                  height: 1.08,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ],
+            for (var i = 0; i < fullIdeaBlocks.length; i++) ...[
+              SizedBox(height: i == 0 ? 7 : 5),
+              Text(
+                fullIdeaBlocks[i],
+                key: i == 0 ? const Key('act0_shell_theory_recall_body') : null,
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontSize: 12.4,
+                  height: 1.14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ],
+        ],
+      ),
+    );
   }
 }
 

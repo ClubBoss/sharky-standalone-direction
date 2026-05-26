@@ -1,0 +1,4 @@
+### Error
+Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:7357/?act0_capture=profile
+Call log:
+[2m  - navigating to "http://127.0.0.1:7357/?act0_capture=profile", waiting until "domcontentloaded"[22m

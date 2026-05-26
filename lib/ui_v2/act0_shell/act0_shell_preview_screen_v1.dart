@@ -853,7 +853,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _dismissedHomeHandoffKey = '';
   String _dismissedHomeHandoffDay = '';
   int _learnLessonOpenSequenceV1 = 0;
-  String? _learnPendingAutoOpenLessonIdV1;
   bool _showWelcome = false;
   bool _bootSurfaceReady = true;
   bool _welcomeCompletedV1 = false;
@@ -879,6 +878,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final state = widget.state ?? Act0ShellStateV1.sample;
     _selectedWorldId = state.selectedWorldId;
     _selectedLessonId = state.currentLesson.lessonId;
+    _learnDetailLessonId = null;
     _completedLessonIds = {
       for (final world in state.worlds)
         for (final lesson in world.lessons)
@@ -1026,6 +1026,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _applyDebugLearnSurface() {
     _resetDebugSurfaceChrome();
     _tab = Act0ShellTabV1.learn;
+    _seedLearnRouteFocusV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+  }
+
+  void _seedLearnRouteFocusV1({
+    required String lessonId,
+    required String taskId,
+  }) {
+    _selectedLessonId = lessonId;
+    _selectedTaskId = taskId;
+    _learnDetailLessonId = null;
+    _learnPopupTaskId = null;
   }
 
   void _applyDebugPracticeSurface() {
@@ -1165,18 +1179,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonCardV1 lesson,
     required String lessonId,
   }) {
+    final effectiveDetailLessonId = _learnDetailWorldId == null
+        ? _learnDetailLessonId
+        : null;
     if (!lesson.isSelectable) {
       setState(() {
         _learnPopupTaskId = null;
-        _learnPendingAutoOpenLessonIdV1 = null;
       });
       return false;
     }
-    if (_learnDetailLessonId == lessonId) {
+    if (effectiveDetailLessonId == lessonId) {
       setState(() {
         _learnDetailLessonId = null;
         _learnPopupTaskId = null;
-        _learnPendingAutoOpenLessonIdV1 = null;
       });
       return false;
     }
@@ -1189,21 +1204,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _teachingStepIndex = 0;
         _resetLessonRunMetrics();
       }
-      _learnDetailLessonId = null;
+      _learnDetailLessonId = lessonId;
       _learnDetailWorldId = null;
-      _learnPendingAutoOpenLessonIdV1 = lessonId;
     });
-    return true;
+    return false;
   }
 
   void _handleLearnLessonOpenAfterScrollV1(String lessonId) {
-    if (!mounted || _learnPendingAutoOpenLessonIdV1 != lessonId) {
-      return;
-    }
-    setState(() {
-      _learnDetailLessonId = lessonId;
-      _learnPendingAutoOpenLessonIdV1 = null;
-    });
+    if (!mounted) return;
   }
 
   Future<void> _restorePersistedProgress() async {
@@ -1327,6 +1335,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
+      if (widget.initialTab == Act0ShellTabV1.learn) {
+        _seedLearnRouteFocusV1(
+          lessonId: selectedLesson.lessonId,
+          taskId: selectedTask.taskId,
+        );
+      } else {
+        _learnDetailLessonId = null;
+      }
       _phase = selectedTask.phase;
       _selectedOptionId = null;
       _teachingStepIndex = 0;
@@ -1991,9 +2007,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : null;
     final showTopBar =
         _bootSurfaceReady && !_showPlacement && !_showWelcome && !isPlayRunner;
-    final effectiveLearnDetailLessonId = _learnDetailWorldId == null
-        ? (_learnDetailLessonId ?? _selectedLessonId)
-        : _learnDetailLessonId;
+    final effectiveLearnDetailLessonId = _learnDetailLessonId;
     return Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
@@ -2142,11 +2156,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           );
                         }),
                         onOpenLearnContext: () => setState(() {
+                          final lesson = _firstPlayableLesson(selectedWorld);
                           _tab = Act0ShellTabV1.learn;
                           _showPlayHub = true;
                           _returnToPlayHubOnBack = false;
                           _showWorldMenu = false;
                           _blockCompletionSummary = null;
+                          _seedLearnRouteFocusV1(
+                            lessonId: lesson.lessonId,
+                            taskId: _firstIncompleteTask(lesson).taskId,
+                          );
                         }),
                         onOpenPracticeContext: () => setState(() {
                           _tab = Act0ShellTabV1.play;
@@ -2183,11 +2202,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   world.lessons,
                                   _selectedLessonId,
                                 );
-                                final effectiveLearnDetailLessonId =
-                                    _learnDetailWorldId == null
-                                    ? (_learnDetailLessonId ??
-                                          _selectedLessonId)
-                                    : _learnDetailLessonId;
                                 final groups = _practiceGroups(
                                   state: baseState,
                                   world: world,
@@ -2246,23 +2260,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           setState(() {
                             if (world.isSelectable) {
                               final lesson = _firstPlayableLesson(world);
-                              _selectedWorldId = worldId;
-                              _selectedLessonId = lesson.lessonId;
-                              _selectedTaskId = _firstIncompleteTask(
+                              final selectedTaskId = _firstIncompleteTask(
                                 lesson,
                               ).taskId;
-                              _phase = _taskById(lesson, _selectedTaskId).phase;
+                              _selectedWorldId = worldId;
+                              _phase = _taskById(lesson, selectedTaskId).phase;
                               _selectedOptionId = null;
                               _teachingStepIndex = 0;
                               _showWorldMenu = false;
                               _learnDetailWorldId = null;
-                              _learnDetailLessonId = null;
-                              _learnPopupTaskId = null;
-                              _learnPendingAutoOpenLessonIdV1 = null;
+                              _seedLearnRouteFocusV1(
+                                lessonId: lesson.lessonId,
+                                taskId: selectedTaskId,
+                              );
                             } else {
                               _learnDetailWorldId = worldId;
                               _learnDetailLessonId = null;
-                              _learnPendingAutoOpenLessonIdV1 = null;
                             }
                           });
                         },
@@ -2270,7 +2283,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _showWorldMenu = true;
                           _learnDetailLessonId = null;
                           _learnPopupTaskId = null;
-                          _learnPendingAutoOpenLessonIdV1 = null;
                         }),
                         onCloseWorldMenu: () => setState(() {
                           _showWorldMenu = false;
@@ -2302,7 +2314,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         onDismissDetail: () => setState(() {
                           _learnDetailLessonId = null;
                           _learnPopupTaskId = null;
-                          _learnPendingAutoOpenLessonIdV1 = null;
                         }),
                         onSelectTask: (lessonId, taskId) {
                           final lesson = _lessonById(
@@ -2420,8 +2431,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                                 onBackToMap: () => setState(() {
                                   _tab = Act0ShellTabV1.learn;
-                                  _learnDetailLessonId = null;
-                                  _learnDetailWorldId = null;
+                                  final currentPlayableLesson =
+                                      _firstPlayableLesson(selectedWorld);
+                                  _seedLearnRouteFocusV1(
+                                    lessonId: currentPlayableLesson.lessonId,
+                                    taskId: _firstIncompleteTask(
+                                      currentPlayableLesson,
+                                    ).taskId,
+                                  );
                                   _showWorldMenu = false;
                                   _blockCompletionSummary = null;
                                 }),
@@ -2441,8 +2458,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     if (nextWorld == null) {
                                       _tab = Act0ShellTabV1.learn;
                                       _showPlayHub = true;
-                                      _learnDetailLessonId = null;
-                                      _learnDetailWorldId = null;
+                                      final currentPlayableLesson =
+                                          _firstPlayableLesson(selectedWorld);
+                                      _seedLearnRouteFocusV1(
+                                        lessonId:
+                                            currentPlayableLesson.lessonId,
+                                        taskId: _firstIncompleteTask(
+                                          currentPlayableLesson,
+                                        ).taskId,
+                                      );
                                       _showWorldMenu = false;
                                       _blockCompletionSummary = null;
                                       return;
@@ -2897,9 +2921,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _placementHandoffActive = false;
                 }
                 if (tab == Act0ShellTabV1.learn) {
-                  // Auto-expand the current lesson so new users see their
-                  // progress point immediately without extra taps.
-                  _learnDetailLessonId ??= _selectedLessonId;
+                  final learnLesson = _firstPlayableLesson(selectedWorld);
+                  _seedLearnRouteFocusV1(
+                    lessonId: learnLesson.lessonId,
+                    taskId: _firstIncompleteTask(learnLesson).taskId,
+                  );
                 }
                 if (tab != Act0ShellTabV1.learn) {
                   _learnDetailLessonId = null;
@@ -4732,6 +4758,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _tab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
       } else {
         _tab = Act0ShellTabV1.home;
+        final baseState = widget.state ?? Act0ShellStateV1.sample;
+        final worlds = _progressWorlds(baseState);
+        final selectedWorld = _worldById(worlds, _selectedWorldId);
+        final firstLesson = _firstPlayableLesson(selectedWorld);
+        final firstTask = _firstIncompleteTask(firstLesson);
+        _seedLearnRouteFocusV1(
+          lessonId: firstLesson.lessonId,
+          taskId: firstTask.taskId,
+        );
       }
       _welcomeReturnTabV1 = null;
     });
@@ -7187,12 +7222,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _selectedWorldId = nextWorld.worldId;
       }
     }
-    _selectedLessonId = nextLesson.lessonId;
-    _selectedTaskId = _firstIncompleteTask(nextLesson).taskId;
-    _phase = _taskById(nextLesson, _selectedTaskId).phase;
-    _teachingStepIndex = 0;
     _tab = Act0ShellTabV1.learn;
-    _learnDetailLessonId = null;
+    _seedLearnRouteFocusV1(
+      lessonId: nextLesson.lessonId,
+      taskId: _firstIncompleteTask(nextLesson).taskId,
+    );
     _learnDetailWorldId = null;
     _showWorldMenu = false;
     _persistProgress();
@@ -8144,7 +8178,7 @@ class _TopBarV1 extends StatelessWidget {
                     minHeight: Act0ShellTokensV1.progressHeight,
                     value: state.xpProgress,
                     backgroundColor: Act0ShellTokensV1.surface3,
-                    color: Act0ShellTokensV1.gold,
+                    color: Act0ShellTokensV1.actionBlue,
                   ),
                 ),
               ],
@@ -8259,7 +8293,7 @@ class _NavItemV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final selected = tab == current;
     final color = selected
-        ? Act0ShellTokensV1.primary
+        ? Act0VisualCanonV1.bluePrimary
         : Act0ShellTokensV1.textMuted;
     final hasBadge = showDot;
     return Expanded(
