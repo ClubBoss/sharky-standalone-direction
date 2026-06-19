@@ -5,6 +5,8 @@
 For project navigation and SSOT authority:
 - Read `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` first (defines doc hierarchy)
 - Then `docs/plan/MASTER_PLAN_v3.0.md` (active product-working master plan)
+- For top-1 / 10/10 / Runout / competitive-product attack planning, also read
+  `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
 
 This file preserves critical project constraints and canonical entry points.
 
@@ -30,6 +32,20 @@ These instructions apply to the entire repository.
 - It must not override `docs/plan/MASTER_PLAN_v3.0.md` for day-to-day product prioritization or next-wave selection.
 - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md` is historical only and must not be used as the active readiness authority.
 - Closed seams should not be reopened without concrete new evidence.
+
+## Top-1 Product Attack Map
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` is the companion strategy map for the top-1 / 10/10 commercial-product path.
+- Use it when the task asks about:
+  - top-1 app ambition;
+  - 10/10 product standard;
+  - Runout benchmark;
+  - first-week commercial proof;
+  - visible repair proof;
+  - best-in-class learning effect;
+  - premium/value packaging sequence.
+- It does not override `docs/plan/MASTER_PLAN_v3.0.md` for day-to-day product priority.
+- It does not override monetization SSOT or active route truth.
+- Review artifacts under `docs/_reviews/top1_*.md` are evidence logs, not new roadmap authority.
 
 ## Execution Mode
 - `docs/plan/MASTER_PLAN_v3.0.md` is the active execution-mode and route-order authority for current product work.
