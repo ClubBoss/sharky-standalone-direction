@@ -32,7 +32,7 @@ void main() {
 
       expect(outcome.status, PremiumRestoreOutcomeStatusV1.restored);
       expect(outcome.message, contains(kPremiumValuePackageV1.title));
-      expect(outcome.message, contains('World 5+'));
+      expect(outcome.message, contains('Optional table-clue practice'));
       expect(outcome.message, contains('store account'));
     },
   );

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:poker_analyzer/infra/telemetry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'entitlement_ledger_v1.dart';
 import 'entitlement_sync_v1.dart';
 import 'premium_service.dart';
 
@@ -106,6 +107,15 @@ class TrialServiceV1 {
         nowEpochMs < (lastSeenEpochMs - _rollbackSkewMs)) {
       rollbackDetected = true;
       await prefs.setBool(_clockRollbackDetectedKey, true);
+      final entitlement = _readEntitlementV1(prefs);
+      final placementCompleted = prefs.getBool(_placementCompletedKey) ?? false;
+      await EntitlementLedgerServiceV1.instance.recordTrialClockRollbackV1(
+        nowEpochMs: nowEpochMs,
+        startEpochMs: entitlement?.startEpochMs,
+        durationDays: entitlement?.durationDays,
+        lastSeenEpochMs: lastSeenEpochMs,
+        placementCompleted: placementCompleted,
+      );
       await Telemetry.logEvent(
         _clockRollbackTelemetryEventV1,
         <String, dynamic>{
@@ -189,6 +199,13 @@ class TrialServiceV1 {
     final prefs = await SharedPreferences.getInstance();
     final entitlement = TrialEntitlementV1(startEpochMs: nowEpochMs);
     await prefs.setString(_entitlementKey, jsonEncode(entitlement.toJson()));
+    await EntitlementLedgerServiceV1.instance.recordTrialStartedV1(
+      startEpochMs: entitlement.startEpochMs,
+      durationDays: entitlement.durationDays,
+      nowEpochMs: nowEpochMs,
+      placementCompleted: true,
+      lastSeenEpochMs: nowEpochMs,
+    );
     EntitlementSyncV1.markChanged();
     return getTrialStatusV1(nowEpochMs: nowEpochMs);
   }

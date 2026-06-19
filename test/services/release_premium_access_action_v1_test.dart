@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:poker_analyzer/services/entitlement_ledger_v1.dart';
 import 'package:poker_analyzer/services/release_premium_access_action_v1.dart';
 import 'package:poker_analyzer/services/subscription_status_v1.dart';
 
@@ -21,6 +24,15 @@ const _premiumStatus = SubscriptionStatusV1(
 );
 
 void main() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await EntitlementLedgerServiceV1.instance.debugClearLedgerForTestsOnlyV1();
+  });
+
+  tearDown(() async {
+    await EntitlementLedgerServiceV1.instance.debugClearLedgerForTestsOnlyV1();
+  });
+
   test('restore returns restored with refreshed premium status', () async {
     final result = await ReleasePremiumAccessActionV1.restoreV1(
       readStatusBefore: () async => _freeStatus,
@@ -34,6 +46,38 @@ void main() {
     expect(result.status, ReleasePremiumAccessActionStatusV1.restored);
     expect(result.subscriptionStatus.isPremium, isTrue);
     expect(result.message, isNotNull);
+    final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1();
+    final access = ledger.toAccess(
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
+    expect(ledger.source, EntitlementLedgerSourceV1.localRestore);
+    expect(ledger.restoreState, EntitlementLedgerRestoreStateV1.restored);
+    expect(access.canAccessPremium, isTrue);
+    expect(access.publicCommerceSafe, isFalse);
+  });
+
+  test('restore no-purchase records no-purchase without access', () async {
+    final result = await ReleasePremiumAccessActionV1.restoreV1(
+      readStatusBefore: () async => _freeStatus,
+      checkStoreAvailability: () async => true,
+      performRestore: () async {},
+      readEntitlementAfter: () async => false,
+      readLastError: () => null,
+      readStatusAfter: () async => _freeStatus,
+    );
+
+    expect(result.status, ReleasePremiumAccessActionStatusV1.noPurchaseFound);
+    final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1();
+    final access = ledger.toAccess(
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
+    expect(ledger.source, EntitlementLedgerSourceV1.localRestore);
+    expect(
+      ledger.restoreState,
+      EntitlementLedgerRestoreStateV1.noPurchaseFound,
+    );
+    expect(access.canAccessPremium, isFalse);
+    expect(access.publicCommerceSafe, isFalse);
   });
 
   test(
@@ -51,6 +95,15 @@ void main() {
       expect(result.status, ReleasePremiumAccessActionStatusV1.failed);
       expect(result.subscriptionStatus.isEntitled, isFalse);
       expect(result.message, contains('Store unavailable'));
+      final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1();
+      expect(ledger.restoreState, EntitlementLedgerRestoreStateV1.failed);
+      expect(ledger.lastErrorCode, 'restore_failed');
+      expect(
+        ledger
+            .toAccess(nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch)
+            .canAccessPremium,
+        isFalse,
+      );
     },
   );
 

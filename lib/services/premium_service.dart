@@ -7,6 +7,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'payment_gateway_service.dart';
 import 'entitlement_sync_v1.dart';
+import 'entitlement_ledger_v1.dart';
 
 /// Service for managing premium subscription status.
 ///
@@ -24,7 +25,7 @@ class PremiumService {
 
   /// Initialize SharedPreferences instance.
   Future<void> init() async {
-    _prefs ??= await SharedPreferences.getInstance();
+    _prefs = await SharedPreferences.getInstance();
   }
 
   /// Check if premium mode is currently active.
@@ -42,6 +43,10 @@ class PremiumService {
   Future<void> enablePremium() async {
     await init();
     await _prefs?.setBool(_keyIsPremium, true);
+    await EntitlementLedgerServiceV1.instance.recordDebugPremiumFlagV1(
+      active: true,
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
     EntitlementSyncV1.markChanged();
   }
 
@@ -51,6 +56,10 @@ class PremiumService {
   Future<void> disablePremium() async {
     await init();
     await _prefs?.setBool(_keyIsPremium, false);
+    await EntitlementLedgerServiceV1.instance.recordDebugPremiumFlagV1(
+      active: false,
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
     EntitlementSyncV1.markChanged();
   }
 
@@ -72,6 +81,10 @@ class PremiumService {
   Future<void> clear() async {
     await init();
     await _prefs?.remove(_keyIsPremium);
+    await EntitlementLedgerServiceV1.instance.recordDebugPremiumFlagV1(
+      active: false,
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
     EntitlementSyncV1.markChanged();
   }
 

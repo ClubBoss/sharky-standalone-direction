@@ -40,7 +40,7 @@ class PremiumRestoreFlowV1 {
       return PremiumRestoreOutcomeV1(
         status: PremiumRestoreOutcomeStatusV1.restored,
         message:
-            '$_premiumAccessTitle restored on this store account. Premium-target Today routes and World 5+ are available now.',
+            '$_premiumAccessTitle restored on this store account. Optional table-clue practice is available now.',
       );
     }
 

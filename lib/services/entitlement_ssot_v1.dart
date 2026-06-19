@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'premium_service.dart';
-import 'trial_service_v1.dart';
+import 'entitlement_ledger_v1.dart';
 
 @immutable
 class EntitlementStateV1 {
@@ -34,29 +31,21 @@ class EntitlementSSOTV1 {
 
   static final EntitlementSSOTV1 instance = EntitlementSSOTV1._();
 
-  static const String _migrationDoneKey = 'entitlement_ssot_migrated_v1';
-
   Future<void> migrateLegacyKeysIfNeededV1() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_migrationDoneKey) ?? false) {
-      return;
-    }
-    // v1 migration is intentionally no-op: keep legacy keys unchanged.
-    await prefs.setBool(_migrationDoneKey, true);
+    await EntitlementLedgerServiceV1.instance.readLedgerV1();
   }
 
   Future<EntitlementStateV1> readPremiumStateV1({int? nowEpochMs}) async {
-    await migrateLegacyKeysIfNeededV1();
     final safeNowEpochMs =
         nowEpochMs ?? DateTime.now().toUtc().millisecondsSinceEpoch;
-    final premiumActiveFlag = await PremiumService().isPremiumActive();
-    final trialStatus = await TrialServiceV1.getTrialStatusV1(
+    final access = await EntitlementLedgerServiceV1.instance.readAccessV1(
       nowEpochMs: safeNowEpochMs,
     );
     return EntitlementStateV1(
-      premiumActiveFlag: premiumActiveFlag,
-      trialActive: trialStatus.isTrialActive,
-      trialRemainingDays: trialStatus.remainingDays,
+      premiumActiveFlag:
+          access.entitlementStatus == EntitlementLedgerStatusV1.premiumActive,
+      trialActive: access.isTrialActive,
+      trialRemainingDays: access.trialRemainingDays,
     );
   }
 
