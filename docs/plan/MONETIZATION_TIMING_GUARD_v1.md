@@ -32,6 +32,34 @@ Operational meaning:
 - the learner must first experience a believable repeat-return loop
 - stronger monetization pressure must not arrive before trust, usefulness, and habit have been earned
 
+## Current Launch Timing Lock (2026-06-18)
+
+Current launch-facing timing decisions:
+
+- soft premium preview is allowed after completed daily/session learning value;
+- the soft preview is not a paywall, trial start, purchase CTA, restore surface,
+  or Premium Hub route;
+- no trial before placement, first hand, first feedback, first completion, or
+  the soft preview;
+- no trial inside the soft preview;
+- contextual 7-day trial is deferred to a future W5 locked-depth/paywall
+  attempt, or later high-intent proof, after commerce safety is
+  production-ready;
+- public hard paywall, pricing, purchase, restore, and Premium Hub exposure are
+  deferred until commerce safety is closed.
+
+Current route-boundary default:
+
+- `W1-W4` free public foundation;
+- `W5+` future paid-depth boundary;
+- W4 is a future challenger / A-B candidate, not launch-default;
+- W3 is not a launch-default paid gate.
+
+Premium preview copy must remain boundary-neutral until W4/W5 route/content
+truth is normalized. Do not encode `Unlock W4`, `Unlock W5`, `W5 is premium`,
+`Bet Purpose is premium`, or any world-number unlock promise into preview,
+paywall, or trial copy.
+
 ## Primary Principle
 
 Monetization may amplify a product that is already useful.
