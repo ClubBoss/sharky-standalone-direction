@@ -5,7 +5,7 @@ final RegExp _kSessionIndexLine = RegExp(r'^- ([A-Za-z0-9._-]+):');
 final RegExp _kPackIdLiteral = RegExp(r"'((world[0-4]_[a-z0-9_]+))'");
 
 const String _kRunnerFile =
-    'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';
+    'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
 const String _kProgressFile = 'lib/services/progress_service.dart';
 
 void main(List<String> args) {
