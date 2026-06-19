@@ -2,6 +2,10 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
+Last refreshed: 2026-06-19 after PR #6-#8 repair personalization
+foundation.
+Current active route: AI Personalization / Rule-Based Repair Layer v1 -
+visible learning value path.
 
 ## 1. Mission
 
@@ -15,6 +19,14 @@ The user should feel within 2-3 minutes:
 Sharky is not trying to be only a trainer, only a course, only a GTO app, or a
 Runout clone. The top-1 path is to prove learning value on the table before
 asking for deeper trust.
+
+10/10 interpretation:
+
+Sharky reaches `10 / 10` when the learner can feel in one session:
+
+`I made a mistake -> Sharky showed the table signal -> I repaired it -> I can do it better now.`
+
+This is deterministic table-signal coaching, not AI magic.
 
 Core positioning:
 
@@ -62,6 +74,12 @@ Sharky wins by making learning causality visible:
 
 `user choice -> visible table signal -> clear why -> repair or transfer`
 
+`mistake -> error type -> repair decision -> next useful hand -> repair result -> session proof`
+
+This is Sharky's answer to Runout's "AI finds leaks and fixes them"
+perception. Sharky must beat that promise by making the cause visible and
+auditable, not by claiming black-box AI or adaptivity.
+
 The required advantages:
 
 - honest value before paywall;
@@ -77,7 +95,7 @@ the rule, signal, or route cause that created the recommendation.
 
 ## 4. Current Accepted State
 
-Current accepted product/commercial proof:
+### 4.1 Commercial / monetization accepted state
 
 - First-week commercial proof is accepted around `9.0 / 10`.
 - Premium Value Preview Surface v1 is implemented.
@@ -113,6 +131,56 @@ Active launch route labels for monetization and commercial planning:
 Older authored/content docs that describe W4/W5 differently are secondary for
 monetization work until a dedicated route-normalization wave.
 
+### 4.2 Technical / infrastructure accepted state
+
+- Backup extraction is effectively complete for now.
+- PR #1-#5 restored the clean foundation:
+  - Act0 / repair / broad preview recovery;
+  - monetization entitlement safety;
+  - capture proof tooling source;
+  - SSOT route / monetization docs;
+  - CI workflow hygiene.
+- `main` is green.
+- Infrastructure cleanup is stopped unless a real blocker appears.
+- TestSprite remains external/non-blocking unless repo policy changes.
+- `external_competitors/` remains ignored/local and not part of product scope.
+
+### 4.3 AI Personalization / Repair accepted state
+
+- Decision contract: DONE via `Act0RuleBasedRepairDecisionV1`.
+- Builder: DONE via `buildAct0RuleBasedRepairDecisionV1(...)`.
+- Runtime consumption: DONE via the existing Act0 next-useful-hand / reason
+  receipt seam.
+- Telemetry truth: DONE for deterministic local `user_choice` before
+  `task_result`.
+- Required local payload now includes:
+  - `schemaVersion`
+  - `worldId`
+  - `lessonId`
+  - `taskId`
+  - `choiceId`
+  - `decisionTimeBucket`
+  - `attemptOrdinal`
+- Existing `task_result`, repair telemetry, and local sink ownership are
+  preserved.
+- No network telemetry, duplicate telemetry owner, UI copy, route, commerce,
+  AI/ML, table geometry, workflow, or Modern Table changes were introduced by
+  the foundation.
+
+### 4.4 Current strategic score
+
+- Foundation readiness: `9.1 / 10`
+- Visible user value: `8.8-9.0 / 10`
+- Runout-style personalization competitiveness: `8.8-9.0 / 10` after
+  runtime/telemetry foundation, not yet `9.5` because the repair reason is not
+  fully learner-visible.
+- Regression / deterministic delivery: `9.2+ / 10`
+
+The remaining gap is not foundation or visual polish. The remaining gap is the
+visible learning loop:
+
+`mistake -> repair reason -> successful repair -> session proof`
+
 ## 5. Target Scorecard
 
 Scores are directional product-strategy estimates from current proof and local
@@ -120,52 +188,107 @@ competitive reference evidence. They are not measured cohort data.
 
 | Dimension | Sharky current | Runout benchmark | Sharky target | Delta needed |
 | --- | ---: | ---: | ---: | --- |
-| First promise | 8.8 | 9.2 | 9.7 | Make the first job even sharper: one table read, one clear why. |
-| First value before paywall | 9.3 | 7.4 | 9.8 | Preserve proof-first route; never let monetization interrupt first value. |
+| First promise | 8.9 | 9.2 | 9.7 | Make the first personal mistake/repair moment visible within the first session. |
+| First value before paywall | 9.3 | 7.4 | 9.8 | Preserve value-first route; do not introduce commerce before repair value is visible. |
 | Beginner safety | 9.1 | 7.2 | 9.7 | Keep poker-native without GTO/solver pressure. |
 | Visual premium feel | 8.5 | 9.3 | 9.5 | Raise finish through table-first polish, not decorative breadth. |
-| Runner/table learning UX | 9.0 | 8.5 | 9.7 | Make every key feedback beat visibly tied to the table. |
+| Runner/table learning UX | 9.1 | 8.5 | 9.7 | Surface repair reason at the existing table/feedback seam without adding UI bloat. |
 | Onboarding/induction | 8.7 | 9.2 | 9.5 | Keep short, authored, and causally personal. |
-| Personalization credibility | 8.2 | 7.8 | 9.6 | Show answer -> route -> repair cause, not black-box claims. |
-| Feedback quality | 9.2 | 7.9 | 9.8 | Keep signal, why, repair, transfer compact and human. |
-| Progress/skill map | 7.9 | 9.0 | 9.4 | Add deterministic skill progress without dashboard bloat. |
-| Retention loop | 8.4 | 8.8 | 9.5 | Expand daily trainer and repair return from real signals. |
-| Monetization readiness | 7.8 | 9.2 | 9.4 | Close receipt/restore/entitlement safety before public commerce. |
+| Personalization credibility | 8.9 | 7.8 | 9.6 | Make repair cause visible to the learner: missed signal -> selected repair hand -> reason. |
+| Feedback quality | 9.3 | 7.9 | 9.8 | Move from correct/wrong feedback to visible mistake -> repair -> transfer. |
+| Progress/skill map | 8.2 | 9.0 | 9.4 | Convert repair outcomes into lightweight session receipts before any dashboard. |
+| Retention loop | 8.6 | 8.8 | 9.5 | Use real repaired/missed signals for next useful rep and return reason. |
+| Monetization readiness | 8.7 | 9.2 | 9.4 | Keep premium/value packaging after visible learning proof; do not launch public commerce yet. |
 | Trust | 9.3 | 7.6 | 9.8 | Protect value-first, free foundation, and no fake claims. |
 | Motion/animation | 7.2 | 9.0 | 9.2 | Animate table causality later; avoid generic celebration. |
-| Technical determinism | 9.4 | 7.0 | 9.8 | Keep every recommendation auditable from metadata. |
+| Technical determinism | 9.6 | 7.0 | 9.8 | Keep every repair recommendation auditable through decision, receipt, and telemetry fields. |
 | Feature breadth | 7.8 | 9.1 | 9.3 | Add breadth only after first-value and habit loops remain clear. |
-| Product coherence | 8.7 | 8.8 | 9.7 | Lock one calm coach rhythm across Home, table, Review, and premium preview. |
+| Product coherence | 8.9 | 8.8 | 9.7 | Align table feedback, repair reason, Review, and later summary around one causal rhythm. |
+
+Do not raise Personalization or First-week readiness to `9.5+` until the
+learner can actually see repair reason and repair outcome in product flow.
+
+Expected next jump:
+
+- after Visible Repair Reason Surface, personalization credibility can approach
+  `9.2-9.3`;
+- after Repair Result Receipt + Session Summary, first-week readiness can
+  approach `9.4-9.6`.
+
+## 5A. Current Delta To 10/10 By Block
+
+| Block | Sharky now | Runout benchmark | Target 10/10 | Core delta |
+| --- | --- | --- | --- | --- |
+| Foundation / deterministic app | 9.1 | 8.5-9.0 | 10 | Foundation is strong; visible EV is the remaining gap. |
+| AI personalization | 8.9 | 9.0+ perceived | 10 | Decision/runtime/telemetry are done; learner-visible repair is next. |
+| Learning effect | 8.5 | 9.0 | 10 | Mistake -> repair -> success must be visible in one session. |
+| First-week commercial | 8.9-9.0 | 9.0+ | 10 | Aha moment and compact proof packet, not more polish. |
+| Visual/table | 9.3 | 8.5-9.0 | 10 | Do not touch without regression; visual resource goes later to feedback rhythm only if EV-positive. |
+| Monetization readiness | 8.7 | 9.0 | 10 | Value before paywall; premium packaging after proof. |
+| Telemetry loop | 8.8 | 9.0 perceived | 10 | Local user_choice/time bucket fixed; now link repair outcomes to session proof. |
+| Content depth | 8.2 | 9.0 breadth | 10 | Depth, examples, spaced reps after visible repair loop; no broad content expansion now. |
+| CI/delivery | 9.1 | unknown | 10 | Good enough; stop infra unless blocker. |
+
+The shortest path is not more design, not more CI, not more docs.
+
+The shortest path is:
+
+1. Visible Repair Reason Surface
+2. Repair Result Receipt
+3. Session Repair Summary
+4. Compact First-Week Proof Packet
+5. Premium/value packaging later
 
 ## 6. Locked Arc Order
 
 ### Completed
 
 1. Monetization / Route Truth SSOT Lock v1.
+2. Infrastructure recovery and CI hygiene.
+3. AI Personalization foundation:
+   - deterministic repair decision contract;
+   - runtime consumption in Act0 next-useful-hand / reason receipt seam;
+   - Act0 telemetry truth alignment for local learning-loop fields.
 
 ### Immediate
 
-1. AI Personalization / Rule-Based Repair Layer v1.
+1. Act0 Rule-Based Repair Visible Reason Surface v1.
 
-Definition: build or audit a rule-based personalization layer that turns real
-mistakes, table signals, skill atoms, and repair outcomes into visible next
-steps. This must be causal and explainable. It must not make fake AI,
-adaptive, solver, GTO, optimal-frequency, guaranteed-result, or win-rate claims.
+Definition:
 
-### Then fork
+Make the existing deterministic repair decision visible to the learner in the
+smallest safe surface. The learner should understand:
 
-Choose one fork based on the next business bottleneck:
+- what table signal they missed;
+- why this next hand was selected;
+- what exact skill/signal this rep repairs.
 
-1. Commerce / Receipt / Entitlement Readiness if revenue infrastructure becomes
-   priority.
-2. Daily Trainer / Habit Loop Expansion and Learning Depth if product moat
-   becomes priority.
+Constraints:
+
+- no fake AI/adaptive claims;
+- no broad coach/chat system;
+- no new route;
+- no premium/paywall;
+- no Modern Table visual work;
+- no broad dashboard;
+- no new telemetry owner;
+- no generic encouragement replacing table-signal causality.
+
+### Then
+
+1. Repair Result Receipt v1
+   - shows fixed / repeated / needs another rep.
+2. Session Repair Summary v1
+   - shows mistakes found, repairs completed, skill improved, next skill.
+3. Compact First-Week Proof Packet v1
+   - first decision -> mistake -> repair -> success -> summary.
 
 ### Later
 
+- Premium/value packaging after visible learning value.
+- Daily Trainer / Habit Loop Expansion and Learning Depth.
 - W4/W5 Product Truth Normalization.
 - Paywall / Trial Design.
-- W4 vs W5 Boundary Experiment Planning.
 - App Store / Premium Packaging Arc.
 - Analytics / Leak Profile Lite.
 
@@ -173,7 +296,11 @@ Choose one fork based on the next business bottleneck:
 
 | Arc | EV | Why it matters | Runout impact | Dependencies | Not-now constraints |
 | --- | ---: | --- | --- | --- | --- |
-| AI Personalization / Rule-Based Repair Layer v1 | 9.5 | Converts Sharky's proof spine into a personal coach: mistake -> cause -> repair -> next best rep. | Beats black-box calibration with auditable personalization. | Repair queue, feedback signals, skill atoms, Home/Review repair state. | No fake AI claims, no solver/GTO claims, no broad dashboard, no opaque routing. |
+| AI Personalization / Rule-Based Repair Layer v1 | 9.5 | Converts Sharky's proof spine into a personal coach: mistake -> error type -> repair decision -> next useful hand -> repair result. | Beats black-box calibration with auditable table-signal personalization. | Repair decision contract, runtime reason receipt, telemetry truth, feedback surface. | No AI claims, no coach/chat, no broad analytics, no monetization gating, no visual polish. |
+| Visible Repair Reason Surface v1 | 9.6 | Turns internal deterministic personalization into user-visible learning value: missed signal -> why this rep -> what to repair. | Attacks Runout's "AI finds leaks" perception with auditable table-signal causality. | `Act0RuleBasedRepairDecisionV1`, next-useful-hand reason receipt, telemetry truth. | No new route, no chat coach, no premium gating, no generic dashboard, no Modern Table polish. |
+| Repair Result Receipt v1 | 9.4 | Closes the loop after a repair: fixed, repeated, or needs one more rep. | Turns leak-fixing promise into observable learning causality. | Visible Repair Reason Surface, repair decision, telemetry truth. | No broad progress dashboard, no streak pressure, no fake mastery claims. |
+| Session Repair Summary v1 | 9.5 | Gives one-session improvement proof: mistakes found, repairs completed, skill improved, next skill. | Competes with analytics/reporting through compact proof, not dashboard bloat. | Repair Result Receipt, local telemetry, skill atoms. | No full analytics dashboard, no public leak profile, no premium upsell before value proof. |
+| Compact First-Week Proof Packet v1 | 9.3 | Packages first decision -> mistake -> repair -> success -> summary as commercial proof. | Answers Runout packaging with proof-first Sharky flow. | Visible Repair Reason Surface, Repair Result Receipt, Session Repair Summary, capture tooling. | No generated output committed by default, no paywall-first story, no copied Runout assets. |
 | Commerce / Receipt / Entitlement Readiness | 8.8 | Enables safe future paywall/trial without mock purchase or restore risk. | Closes Runout's subscription-infrastructure advantage. | Entitlement ledger, receipt verification policy, restore truth, subscription copy. | No public paywall, pricing, trial start, Premium Hub exposure, or purchase UI until safety is proven. |
 | Daily Trainer / Habit Loop Expansion and Learning Depth | 9.0 | Turns first proof into D2/D7 return value with one useful table read or repair. | Answers Runout daily-session strength with deterministic table learning. | First-week loop, same-signal reps, repair queue, skill receipts. | No streak guilt, no broad dashboard, no random daily churn. |
 | W4/W5 Product Truth Normalization | 8.4 | Removes stale route-number ambiguity before paywall, trial, or store copy depends on W4/W5. | Prevents commercial confusion that Runout's packaging likely avoids. | Active route truth, authored content docs, monetization SSOT. | Do not combine with content expansion, paywall design, or route migration. |
@@ -195,6 +322,16 @@ Every strategic wave should use this loop:
 5. Implement a bounded wave.
 6. Prove with tests, simulator, screenshots, or review artifact as appropriate.
 7. Park or escalate based on evidence.
+
+Use larger end-to-end clean-scope cycles. Do not run micro-prompts for each tiny
+action. GitHub is used at the end of a clean scope for Actions/merge safety,
+not as constant ping-pong.
+
+For product work:
+
+`branch -> bounded product wave -> local checks -> PR -> repo-owned checks -> merge if green -> sync main`
+
+One branch = one homogeneous scope.
 
 ### Agent roles
 
@@ -220,22 +357,42 @@ Every strategic wave should use this loop:
 - English is the commercial product-quality SSOT.
 - Table readability and learning proof beat decorative polish.
 - One active bottleneck family at a time.
+- No more infrastructure cleanup unless a real blocker appears.
+- Telemetry supports learning-loop truth but must not become the product state
+  owner.
+- Visible repair UX must be causal and table-signal grounded, not generic
+  encouragement.
+- Do not claim personalization is AI/adaptive unless the exact rule or cause is
+  visible.
+- Do not use screenshot pipeline as a design iteration excuse.
+- Do not expand content breadth before the visible repair loop proves learning
+  value.
+- Do not move premium/value packaging ahead of first-session repair proof.
 
 ## 10. Deferred Ideas
 
 These ideas remain parked until their prerequisites are true:
 
+- Full AI coach/chat.
+- Full analytics dashboard.
+- Public leak profile surface.
+- AI/adaptive marketing language.
+- Premium repair-depth upsell.
+- App Store packaging.
+- Visual/motion layer.
+- Broad skill map.
+- Welcome/placement simplification.
+- Contextual glossary / tappable definitions.
+- Concept depth audit / spaced examples.
+- World/lesson completion reward layer.
 - W4 gate.
 - Dynamic or high-intent gate.
 - D2 or high-intent trial.
 - One-time starter pack.
-- Repair-depth premium.
-- Analytics / leak-profile upsell.
-- Motion / animation layer.
-- App Store store-page packaging.
 - Hand-history bridge.
-- Contextual table glossary.
-- Broader skill-map / progress-chart layer.
+
+Some of these are high-EV future items, not rejected. They are deferred until
+the visible repair loop and session proof are done.
 
 ## 11. Source Links
 
@@ -254,6 +411,10 @@ Accepted proof and strategy reviews:
 - `docs/_reviews/compact_english_premium_preview_proof_v1.md`
 - `docs/_reviews/monetization_route_truth_ssot_lock_v1.md`
 - `docs/_reviews/w1_w3_free_foundation_gate_readiness_audit_v1.md`
+- `docs/_reviews/ai_personalization_rule_based_repair_v1.md`
+- `docs/_reviews/act0_rule_based_repair_runtime_consumption_v1.md`
+- `docs/_reviews/act0_rule_based_repair_telemetry_truth_v1.md`
+- `docs/_reviews/ci_workflow_rationalization_v1.md`
 - `docs/_reviews/blind_monetization_strategy_challenge_v1.md`
 - `docs/_reviews/monetization_ev_scenario_analysis_v1.md`
 - `docs/_reviews/premium_monetization_existing_plan_reconciliation_v1.md`
