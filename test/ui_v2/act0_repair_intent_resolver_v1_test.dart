@@ -84,7 +84,9 @@ void main() {
     await _openReview(tester);
 
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsOneWidget,
     );
     final snapshot = _reviewSupportCopySnapshot(tester);
@@ -94,12 +96,15 @@ void main() {
     expect(snapshot?['selectionSource'], 'repair_intent_mapped');
     expect(
       snapshot?['renderedLine'],
-      'You missed No bet yet. This hand repairs the same clue.',
+      'You missed that nobody has bet yet. This hand repeats that table clue.',
     );
     expect(snapshot?['sourceTaskId'], 'actions_legal_context');
     expect(snapshot?['targetTaskId'], 'actions_check_drill');
     expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
-    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+    expect(
+      find.text('Replay this spot to fix the no-bet-yet clue.'),
+      findsNothing,
+    );
   });
 
   testWidgets('mapped repair reason is visible on Home next useful hand', (
@@ -113,7 +118,7 @@ void main() {
     await _answerOption(tester, 'fold');
 
     const visibleReason =
-        'You missed No bet yet. This hand repairs the same clue.';
+        'You missed that nobody has bet yet. This hand repeats that table clue.';
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
     expect(find.text(visibleReason), findsOneWidget);
@@ -134,45 +139,54 @@ void main() {
 
     await _openReview(tester);
 
-    expect(find.text('Replay this spot to fix No bet yet.'), findsOneWidget);
+    expect(
+      find.text('Replay this spot to fix the no-bet-yet clue.'),
+      findsOneWidget,
+    );
     final snapshot = _reviewSupportCopySnapshot(tester);
     expect(snapshot?['schemaVersion'], 1);
     expect(snapshot?['safeTemplateId'], 'repair_exact_replay_v1');
     expect(snapshot?['lineKind'], 'exact_replay_repair');
     expect(snapshot?['selectionSource'], 'repair_intent_exact_replay');
-    expect(snapshot?['renderedLine'], 'Replay this spot to fix No bet yet.');
+    expect(
+      snapshot?['renderedLine'],
+      'Replay this spot to fix the no-bet-yet clue.',
+    );
     expect(snapshot?['sourceTaskId'], 'actions_legal_context');
     expect(snapshot?['targetTaskId'], 'actions_legal_context');
     expect(snapshot?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsNothing,
     );
   });
 
-  testWidgets(
-    'exact replay reason is visible on Home without same-signal copy',
-    (tester) async {
-      await _pumpResolverHost(
-        tester,
-        taskIds: const <String>['actions_legal_context'],
-        taskId: 'actions_legal_context',
-      );
-      await _answerOption(tester, 'fold');
+  testWidgets('exact replay reason is visible on Home without same-signal copy', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
 
-      const visibleReason = 'Replay this spot to fix No bet yet.';
-      expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
-      await _pumpHomeWithReason(tester, visibleReason);
-      expect(find.text(visibleReason), findsOneWidget);
-      expect(
-        find.text('You missed No bet yet. This hand repairs the same clue.'),
-        findsNothing,
-      );
-      for (final token in _forbiddenVisibleReasonTokens) {
-        expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
-      }
-    },
-  );
+    const visibleReason = 'Replay this spot to fix the no-bet-yet clue.';
+    expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
+    await _pumpHomeWithReason(tester, visibleReason);
+    expect(find.text(visibleReason), findsOneWidget);
+    expect(
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
+      findsNothing,
+    );
+    for (final token in _forbiddenVisibleReasonTokens) {
+      expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
+    }
+  });
 
   testWidgets('same state resolves same repair intent target repeatedly', (
     tester,
@@ -237,10 +251,15 @@ void main() {
     await _openReview(tester);
     expect(_reviewSupportCopySnapshot(tester), isNull);
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsNothing,
     );
-    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+    expect(
+      find.text('Replay this spot to fix the no-bet-yet clue.'),
+      findsNothing,
+    );
 
     expect(_homeNextUsefulHandReasonLine(tester), isNull);
     await _pumpHomeWithReason(tester, null);
@@ -249,10 +268,15 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsNothing,
     );
-    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+    expect(
+      find.text('Replay this spot to fix the no-bet-yet clue.'),
+      findsNothing,
+    );
   });
 
   testWidgets('failed repair keeps resolver priority', (tester) async {
@@ -302,13 +326,15 @@ void main() {
     expect(snapshot?['selectionSource'], 'repair_intent_mapped');
     expect(
       snapshot?['renderedLine'],
-      'You missed No bet yet. This hand repairs the same clue.',
+      'You missed that nobody has bet yet. This hand repeats that table clue.',
     );
     expect(snapshot?['sourceTaskId'], 'actions_legal_context');
     expect(snapshot?['targetTaskId'], 'actions_check_drill');
     expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsOneWidget,
     );
   });
@@ -382,75 +408,79 @@ void main() {
     await _openReview(tester);
     expect(_reviewSupportCopySnapshot(tester), isNull);
     expect(
-      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
       findsNothing,
     );
-    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+    expect(
+      find.text('Replay this spot to fix the no-bet-yet clue.'),
+      findsNothing,
+    );
   });
 
-  testWidgets(
-    'rendered repair copy excludes forbidden terms and new surfaces',
-    (tester) async {
-      await _pumpResolverHost(
-        tester,
-        taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
-        taskId: 'actions_legal_context',
-      );
-      await _answerOption(tester, 'fold');
+  testWidgets('rendered repair copy excludes forbidden terms and new surfaces', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
 
-      await _openReview(tester);
+    await _openReview(tester);
 
-      final supportText = _reviewSupportLine(tester);
-      final snapshot = _reviewSupportCopySnapshot(tester);
+    final supportText = _reviewSupportLine(tester);
+    final snapshot = _reviewSupportCopySnapshot(tester);
+    expect(
+      supportText,
+      'You missed that nobody has bet yet. This hand repeats that table clue.',
+    );
+    expect(snapshot?['renderedLine'], supportText);
+    const forbidden = <String>{
+      'ai',
+      'ml',
+      'adaptive',
+      'solver',
+      'gto',
+      'optimal',
+      'win-rate',
+      'guaranteed',
+      'premium',
+      'paywall',
+      'trial',
+      'purchase',
+      'restore',
+    };
+    for (final token in forbidden) {
+      expect(_containsForbiddenTokenInText(supportText, token), isFalse);
       expect(
-        supportText,
-        'You missed No bet yet. This hand repairs the same clue.',
+        _containsForbiddenTokenInText(
+          (snapshot?['renderedLine'] ?? '').toString(),
+          token,
+        ),
+        isFalse,
       );
-      expect(snapshot?['renderedLine'], supportText);
-      const forbidden = <String>{
-        'ai',
-        'ml',
-        'adaptive',
-        'solver',
-        'gto',
-        'optimal',
-        'win-rate',
-        'guaranteed',
-        'premium',
-        'paywall',
-        'trial',
-        'purchase',
-        'restore',
-      };
-      for (final token in forbidden) {
-        expect(_containsForbiddenTokenInText(supportText, token), isFalse);
-        expect(
-          _containsForbiddenTokenInText(
-            (snapshot?['renderedLine'] ?? '').toString(),
-            token,
-          ),
-          isFalse,
-        );
-      }
-      expect(
-        find.byKey(const Key('act0_shell_review_board_support_line')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_review_board_fix_cta')),
-        findsOneWidget,
-      );
-      expect(
-        find.byWidgetPredicate((widget) {
-          final key = widget.key;
-          return key is ValueKey<String> &&
-              (key.value.contains('repair_intent_copy') ||
-                  key.value.contains('copy_bridge'));
-        }),
-        findsNothing,
-      );
-    },
-  );
+    }
+    expect(
+      find.byKey(const Key('act0_shell_review_board_support_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_review_board_fix_cta')),
+      findsOneWidget,
+    );
+    expect(
+      find.byWidgetPredicate((widget) {
+        final key = widget.key;
+        return key is ValueKey<String> &&
+            (key.value.contains('repair_intent_copy') ||
+                key.value.contains('copy_bridge'));
+      }),
+      findsNothing,
+    );
+  });
 
   testWidgets('resolver snapshot excludes forbidden AI and commerce fields', (
     tester,
