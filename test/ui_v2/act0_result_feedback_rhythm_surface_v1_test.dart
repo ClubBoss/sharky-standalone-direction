@@ -98,6 +98,19 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_label')),
+      findsOneWidget,
+    );
+    expect(find.text('Session proof'), findsOneWidget);
+    expect(
+      find.text('Today you repaired the no-bet-yet clue.'),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_feedback_verdict_pill')),
       findsNothing,
     );
@@ -144,7 +157,82 @@ void main() {
       find.byKey(const Key('act0_shell_session_summary_proof_block')),
       findsOneWidget,
     );
+    expect(find.text('Session proof'), findsOneWidget);
+    expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
+    expect(
+      find.text('Next focus: one more no-bet-yet repair hand.'),
+      findsOneWidget,
+    );
     expect(find.textContaining('mastered forever'), findsNothing);
     expect(find.textContaining('guarantee'), findsNothing);
+  });
+
+  testWidgets('exact replay summary uses replay-only ceremony copy', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Replay fixed.',
+            reason: 'This replay checks the same spot, not a broader signal.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Replay handled.',
+            sharkyMood: Act0SharkyMoodV1.celebrate,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            repairResultReceiptLine:
+                'Replay fixed: you handled this spot correctly.',
+            repairSessionSummaryLines: const <String>[
+              'Replay fixed: you handled that spot correctly.',
+            ],
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Session proof'), findsOneWidget);
+    expect(
+      find.text('Replay fixed: you handled that spot correctly.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('same-signal'), findsNothing);
+    expect(find.textContaining('general skill'), findsNothing);
+    expect(find.textContaining('no-bet-yet clue'), findsNothing);
+  });
+
+  testWidgets('non-repair feedback has no session ceremony block', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Good read.',
+            reason: 'You saw the table clue before choosing.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Keep using it.',
+            sharkyMood: Act0SharkyMoodV1.happy,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            firstValueReceiptLine: 'First read logged. Next: use it once more.',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_proof_block')),
+      findsNothing,
+    );
+    expect(find.text('Session proof'), findsNothing);
   });
 }
