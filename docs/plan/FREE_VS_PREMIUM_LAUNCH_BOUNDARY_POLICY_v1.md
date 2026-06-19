@@ -41,6 +41,41 @@ Not:
 2. pressure before first useful learning loop
 3. fake free value with the real product hidden behind the first wall
 
+## Current Launch Lock (2026-06-18)
+
+The current launch-default split is:
+
+1. `W1-W4` free public foundation
+2. `W5+` future paid-depth boundary
+3. soft premium value preview after completed daily/session learning value
+4. no public hard paywall until production commerce safety is closed
+
+Active launch route labels for monetization copy:
+
+| World | Launch-facing title |
+| --- | --- |
+| W1 | Poker from Zero |
+| W2 | Hand Discipline |
+| W3 | Position Thinking |
+| W4 | Preflop Framework |
+| W5 | Bet Purpose + Price |
+| W6 | Board and Draws |
+
+Older authored/content documents may still describe W4 as `Bet Purpose + Price`
+and W5 as `Board Awareness`. Those labels are stale or secondary for launch
+monetization until a dedicated route/content normalization wave changes the
+active route truth.
+
+W4 is a primary future challenger / A-B candidate, not current launch-default.
+W4 can graduate only after route truth normalization, W1-W3/W4 telemetry,
+time-to-decision/confidence evidence, and commerce readiness. W3 is not a
+launch-default paid gate.
+
+Current preview copy must remain boundary-neutral. It may say more reps, deeper
+repair, and longer route depth. It must not say `Unlock W4`, `Unlock W5`,
+`W5 is premium`, `Bet Purpose is premium`, `start trial`, `restore`, `price`,
+`purchase`, `upgrade now`, or `unlock all`.
+
 ## Launch Product Shape
 
 At launch, the user should experience the product as:
@@ -118,8 +153,13 @@ Launch trial policy:
 
 1. no trial before meaningful value is visible
 2. no trial as a substitute for basic free trust
-3. trial after placement or another real proof moment is acceptable
-4. trial must preview deeper sharpening, not rescue a blocked app
+3. no trial before placement, first hand, first feedback, first completion, or
+   the soft premium preview
+4. no trial inside the soft premium preview
+5. contextual 7-day trial belongs only at a future W5 locked-depth/paywall
+   attempt, or later high-intent proof, after commerce safety is
+   production-ready
+6. trial must preview deeper sharpening, not rescue a blocked app
 
 ## Hard Disallow List
 
@@ -161,10 +201,12 @@ Premium should then create:
 For the current app route:
 
 1. `W1-W12` remains the canonical launch route shape
-2. the free launch slice must still feel real and usable
-3. premium should be framed as deeper route access and stronger long-horizon
+2. `W1-W4` is the launch-default free public foundation
+3. `W5+` is the future paid-depth boundary
+4. the free launch slice must still feel real and usable
+5. premium should be framed as deeper route access and stronger long-horizon
    sharpening
-4. `W13+` are not the launch monetization answer; they are later expansion value
+6. `W13+` are not the launch monetization answer; they are later expansion value
 
 ## Bottom Line
 

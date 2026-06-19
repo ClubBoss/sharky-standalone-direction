@@ -11,6 +11,8 @@ This document is not the active product-routing authority.
 Use:
 
 - `docs/plan/MASTER_PLAN_v3.0.md` for what to build next
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` for the current top-1
+  product attack sequence and Sharky-vs-Runout strategy
 - `docs/plan/MINI_ROUTE_TO_100_WAVES_v1.md` for the practical route to product
   `100 / 100`
 
