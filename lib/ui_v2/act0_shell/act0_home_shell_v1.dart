@@ -86,6 +86,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.dailyGoalValue,
     this.dailyGoalCtaLabel = 'Start practice',
     this.dailyPlanTitle,
+    this.nextUsefulHandReasonLine,
     this.weeklyFocus,
     this.dailyPlanJobs = const <Act0HomePlanJobV1>[],
     this.onOpenDailyPlanJob,
@@ -118,6 +119,7 @@ class Act0HomeShellV1 extends StatelessWidget {
   final String? dailyGoalValue;
   final String dailyGoalCtaLabel;
   final String? dailyPlanTitle;
+  final String? nextUsefulHandReasonLine;
   final Act0HomeWeeklyFocusV1? weeklyFocus;
   final List<Act0HomePlanJobV1> dailyPlanJobs;
   final ValueChanged<String>? onOpenDailyPlanJob;
@@ -213,6 +215,7 @@ class Act0HomeShellV1 extends StatelessWidget {
                               'home_checklist_title',
                               fallback: 'Short table practice',
                             ),
+                        nextUsefulHandReasonLine: nextUsefulHandReasonLine,
                       ))
               else
                 const SizedBox.shrink(),
@@ -720,11 +723,13 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
     required this.rows,
     required this.localeIsRu,
     required this.title,
+    this.nextUsefulHandReasonLine,
   });
 
   final List<Act0HomeChecklistRowV1> rows;
   final bool localeIsRu;
   final String title;
+  final String? nextUsefulHandReasonLine;
 
   @override
   Widget build(BuildContext context) {
@@ -806,7 +811,9 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             Text(
-              localeIsRu
+              (nextUsefulHandReasonLine ?? '').trim().isNotEmpty
+                  ? nextUsefulHandReasonLine!.trim()
+                  : localeIsRu
                   ? 'Sharky уже держит твою следующую полезную раздачу готовой.'
                   : 'Sharky has your next useful hand ready.',
               key: const Key('act0_shell_home_week1_return_line'),

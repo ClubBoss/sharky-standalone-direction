@@ -818,6 +818,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   @visibleForTesting
+  String? debugHomeNextUsefulHandReasonLineV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final selectedWorld = _worldById(
+      _progressedWorlds(state),
+      _selectedWorldId,
+    );
+    final selectedLesson = _lessonById(
+      selectedWorld.lessons,
+      _selectedLessonId,
+    );
+    return _homeNextUsefulHandReasonLine(selectedWorld, selectedLesson);
+  }
+
+  @visibleForTesting
   Map<String, Object?>? debugReviewSupportCopySnapshotV1() {
     final mistake = _topOpenMistake();
     if (mistake == null) {
@@ -3050,6 +3064,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
+                        nextUsefulHandReasonLine: _homeNextUsefulHandReasonLine(
+                          selectedWorld,
+                          _firstPlayableLesson(selectedWorld),
+                        ),
                         weeklyFocus: _showHomeChecklistV1()
                             ? _homeWeeklyFocus(
                                 selectedWorld,
@@ -4551,6 +4569,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       taskId: currentTask.taskId,
       practiceGroupId: 'continue',
     );
+  }
+
+  String? _homeNextUsefulHandReasonLine(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 selectedLesson,
+  ) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    final receipt = _nextUsefulHandReasonReceiptV1(
+      recommendation: recommendation,
+      selectedWorld: selectedWorld,
+      state: widget.state ?? Act0ShellStateV1.sample,
+    );
+    if (receipt.selectionSource != 'repair_intent_mapped' &&
+        receipt.selectionSource != 'repair_intent_exact_replay') {
+      return null;
+    }
+    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
+    final renderedLine = bridge.renderedCopyLine.trim();
+    return renderedLine.isEmpty ? null : renderedLine;
   }
 
   String _homeRepairLabel(

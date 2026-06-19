@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -101,6 +102,26 @@ void main() {
     expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
   });
 
+  testWidgets('mapped repair reason is visible on Home next useful hand', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    const visibleReason =
+        'You missed No bet yet. This hand repairs the same clue.';
+    expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
+    await _pumpHomeWithReason(tester, visibleReason);
+    expect(find.text(visibleReason), findsOneWidget);
+    for (final token in _forbiddenVisibleReasonTokens) {
+      expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
+    }
+  });
+
   testWidgets('exact replay bridge renders exact-replay review copy', (
     tester,
   ) async {
@@ -128,6 +149,30 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets(
+    'exact replay reason is visible on Home without same-signal copy',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
+
+      const visibleReason = 'Replay this spot to fix No bet yet.';
+      expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
+      await _pumpHomeWithReason(tester, visibleReason);
+      expect(find.text(visibleReason), findsOneWidget);
+      expect(
+        find.text('You missed No bet yet. This hand repairs the same clue.'),
+        findsNothing,
+      );
+      for (final token in _forbiddenVisibleReasonTokens) {
+        expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
+      }
+    },
+  );
 
   testWidgets('same state resolves same repair intent target repeatedly', (
     tester,
@@ -191,6 +236,18 @@ void main() {
 
     await _openReview(tester);
     expect(_reviewSupportCopySnapshot(tester), isNull);
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsNothing,
+    );
+    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+
+    expect(_homeNextUsefulHandReasonLine(tester), isNull);
+    await _pumpHomeWithReason(tester, null);
+    expect(
+      find.text('Sharky has your next useful hand ready.'),
+      findsOneWidget,
+    );
     expect(
       find.text('You missed No bet yet. This hand repairs the same clue.'),
       findsNothing,
@@ -650,9 +707,32 @@ Future<void> _openReview(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _pumpHomeWithReason(
+  WidgetTester tester,
+  String? nextUsefulHandReasonLine,
+) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      home: Act0HomeShellV1(
+        state: Act0ShellStateV1.sample,
+        showChecklist: true,
+        nextUsefulHandReasonLine: nextUsefulHandReasonLine,
+        onContinue: () {},
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
 Map<String, Object?>? _nextUsefulHandTargetPayload(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>?;
+}
+
+String? _homeNextUsefulHandReasonLine(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugHomeNextUsefulHandReasonLineV1() as String?;
 }
 
 Map<String, Object?>? _repairDecisionPayload(Map<String, Object?>? target) {
@@ -699,3 +779,20 @@ bool _containsForbiddenTokenInText(String text, String token) {
       .where((part) => part.isNotEmpty)
       .contains(normalizedToken);
 }
+
+const Set<String> _forbiddenVisibleReasonTokens = <String>{
+  'ai',
+  'ml',
+  'adaptive',
+  'solver',
+  'gto',
+  'optimal',
+  'win-rate',
+  'guaranteed',
+  'premium',
+  'paywall',
+  'trial',
+  'purchase',
+  'restore',
+  'unlock',
+};
