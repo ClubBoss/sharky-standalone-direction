@@ -251,6 +251,59 @@ void main() {
   });
 
   testWidgets(
+    'Repair recommendation becomes the primary Practice reinforcement entry',
+    (tester) async {
+      final started = <String>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0PlayShellV1(
+              groups: const <Act0PracticeGroupV1>[
+                dailyGroup,
+                enabledRepairGroup,
+                ...topicGroups,
+              ],
+              recommendedGroupId: 'weak_spots',
+              recommendedTitle: 'Practice the no-bet-yet clue',
+              recommendedSubtitle: 'One same-clue rep will help lock this in.',
+              recommendedReasonLabel: 'Repair reinforcement',
+              recommendedOutcome: 'Keep the no-bet-yet clue warm.',
+              recommendedOutcomeLead: 'Repair reinforcement',
+              masteryLabel: 'Repair reinforcement',
+              onStartGroup: (group) => started.add(group.groupId),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+      expect(
+        find.descendant(
+          of: hero,
+          matching: find.text('Practice the no-bet-yet clue'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: hero,
+          matching: find.text('One same-clue rep will help lock this in.'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Repair reinforcement'), findsOneWidget);
+      expect(find.text('Session proof'), findsNothing);
+      expect(find.text('Review'), findsNothing);
+      expect(find.text('Learn'), findsNothing);
+      expect(find.text('Profile'), findsNothing);
+
+      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+      expect(started, <String>['weak_spots']);
+    },
+  );
+
+  testWidgets(
     'Skill packs render compact honest previews without locked-wall copy',
     (tester) async {
       await pumpPractice(

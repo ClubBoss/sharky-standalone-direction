@@ -145,6 +145,44 @@ void main() {
     }
   });
 
+  testWidgets('mapped repair reason becomes Practice reinforcement entry', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _openPractice(tester);
+
+    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+    expect(hero, findsOneWidget);
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('Practice the no-bet-yet clue'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('One same-clue rep will help lock this in.'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(find.text('Session proof'), findsNothing);
+    expect(find.text('Review'), findsOneWidget);
+    expect(find.text('Learn'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_review_screen')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_profile_screen')), findsNothing);
+    expect(find.textContaining('leak'), findsNothing);
+  });
+
   testWidgets('exact replay bridge renders exact-replay review copy', (
     tester,
   ) async {
@@ -214,6 +252,37 @@ void main() {
     for (final token in _forbiddenVisibleReasonTokens) {
       expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
     }
+  });
+
+  testWidgets('exact replay reason becomes replay Practice entry', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _openPractice(tester);
+
+    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+    expect(hero, findsOneWidget);
+    expect(
+      find.descendant(of: hero, matching: find.text('Replay this spot')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('Train the exact spot again.'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(find.textContaining('same-clue'), findsNothing);
+    expect(find.textContaining('same signal'), findsNothing);
+    expect(find.text('Session proof'), findsNothing);
   });
 
   testWidgets('same state resolves same repair intent target repeatedly', (
@@ -904,6 +973,21 @@ Future<void> _openReview(WidgetTester tester) async {
     find.descendant(
       of: find.byKey(const Key('act0_shell_bottom_nav')),
       matching: find.text('Review'),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openPractice(WidgetTester tester) async {
+  final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
+  if (runnerBack.evaluate().isNotEmpty) {
+    await tester.tap(runnerBack);
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(
+    find.descendant(
+      of: find.byKey(const Key('act0_shell_bottom_nav')),
+      matching: find.text('Practice'),
     ),
   );
   await tester.pumpAndSettle();

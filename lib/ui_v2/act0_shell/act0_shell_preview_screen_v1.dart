@@ -4996,6 +4996,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
 
     if (quickFixGroup != null && quickFixGroup.isEnabled) {
+      final repairPracticeRecommendation =
+          _repairPracticeSurfaceRecommendationV1(
+            selectedWorld: selectedWorld,
+            selectedLesson: selectedLesson,
+            quickFixGroup: quickFixGroup,
+          );
+      if (repairPracticeRecommendation != null) {
+        return repairPracticeRecommendation;
+      }
       return _Act0PracticeSurfaceRecommendationV1(
         groupId: quickFixGroup.groupId,
         title: _copyV1(
@@ -5075,6 +5084,82 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Короткие повторы удерживают знакомые навыки в тонусе между Уроками и Разбором.',
       ),
     );
+  }
+
+  _Act0PracticeSurfaceRecommendationV1? _repairPracticeSurfaceRecommendationV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonCardV1 selectedLesson,
+    required Act0PracticeGroupV1 quickFixGroup,
+  }) {
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    final receipt = _nextUsefulHandReasonReceiptV1(
+      recommendation: recommendation,
+      selectedWorld: selectedWorld,
+      state: widget.state ?? Act0ShellStateV1.sample,
+    );
+    if (receipt.source != 'repair_intent') {
+      return null;
+    }
+
+    final clue = _practiceRepairClueNameV1(receipt.missedSignalLabel);
+    final isExactReplay =
+        receipt.selectionSource == 'repair_intent_exact_replay';
+    return _Act0PracticeSurfaceRecommendationV1(
+      groupId: quickFixGroup.groupId,
+      title: isExactReplay
+          ? _copyV1(en: 'Replay this spot', ru: 'Повтори этот спот')
+          : _copyV1(en: 'Practice the $clue', ru: 'Закрепи подсказку $clue'),
+      subtitle: isExactReplay
+          ? _copyV1(
+              en: 'Train the exact spot again.',
+              ru: 'Повтори именно этот спот ещё раз.',
+            )
+          : _copyV1(
+              en: 'One same-clue rep will help lock this in.',
+              ru: 'Один повтор с той же подсказкой поможет закрепить её.',
+            ),
+      reasonLabel: _copyV1(
+        en: 'Repair reinforcement',
+        ru: 'Закрепление ремонта',
+      ),
+      outcomeLead: _copyV1(en: 'Practice now:', ru: 'Практика сейчас:'),
+      outcome: isExactReplay
+          ? _copyV1(
+              en: 'repeat the same spot once, then return to today\'s reps.',
+              ru: 'повтори тот же спот один раз, затем вернись к сегодняшним повторам.',
+            )
+          : _copyV1(
+              en: 'reinforce the missed clue before moving back to daily reps.',
+              ru: 'закрепи пропущенную подсказку перед возвратом к дневным повторам.',
+            ),
+      masteryLabel: _copyV1(
+        en: 'Repair reinforcement',
+        ru: 'Закрепление ремонта',
+      ),
+      screenSubtitle: _copyV1(
+        en: 'Practice reinforces the next useful hand. Review still owns deeper patterns.',
+        ru: 'Практика закрепляет следующую полезную руку. Глубокие паттерны остаются в Разборе.',
+      ),
+    );
+  }
+
+  String _practiceRepairClueNameV1(String missedSignalLabel) {
+    final normalized = missedSignalLabel
+        .trim()
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+        .replaceAll(RegExp(r'-+'), '-')
+        .replaceAll(RegExp(r'^-|-$'), '');
+    if (normalized.isEmpty) {
+      return 'table clue';
+    }
+    if (normalized.endsWith('-clue')) {
+      return normalized;
+    }
+    return '$normalized clue';
   }
 
   String _dailyGoalValueLabel() {
