@@ -349,6 +349,27 @@ The shortest path is:
 | 6. Content-depth follow-up gate | A focused audit shows which concepts lack examples, spaced reps, or beginner-safe terminology after the repair loop is visible. | Content expansion has direct learning EV. | No broad curriculum expansion, no W4/W5 route debate reopening. |
 | 7. Activation/Welcome/Placement follow-up gate | Evidence shows activation density blocks the first repair-proof moment. | Simplification improves time-to-first-useful-repair. | No placement rewrite before visible repair loop evidence exists. |
 
+### 5C. Full Surface 10/10 UX/UI Coherence Gate
+
+After Compact First-Week Proof Packet v1, the next product blocker is
+full-surface coherence across Home, Learn, Practice, Review, You,
+result/feedback, repair receipt, session summary, premium/value, onboarding,
+placement, and welcome.
+
+This gate blocks top-1, 10/10 UX/UI, commercial publish readiness, and App Store
+packaging claims until resolved.
+
+Operating constraints:
+
+- audit/spec first, implementation later;
+- pills, chips, badges, and status tags are not final by default and must be
+  researched against top-1 design quality;
+- redesign/rethink is allowed when an existing surface cannot reach the job
+  through polish;
+- Modern Table remains maintenance mode;
+- visual work is allowed later only when it improves repair proof, feedback
+  rhythm, session proof, activation, or commercial trust.
+
 ## 6. Locked Arc Order
 
 ### Completed
