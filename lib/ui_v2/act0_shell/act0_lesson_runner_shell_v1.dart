@@ -4386,7 +4386,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           '${quality.name}|${resolvedTitle.trim().toLowerCase()}|${resolvedSharkyLine.trim().toLowerCase()}',
       taskFamily: taskFamily,
     );
-    final rhythmVerdict = _feedbackRhythmVerdictV1(context, quality);
+    final primaryResultLabel = _feedbackPrimaryResultLabelV1(
+      quality: quality,
+      repairReceiptLine: repairResultReceiptLine,
+    );
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -4413,6 +4416,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       statusLine: showVerdictTitle
           ? act0RuntimeLocalizedGeneralLabelV1(context, resolvedTitle).trim()
           : '',
+      signalLabel: signalProof?.label ?? '',
+      proofLine: signalProof?.proofLine ?? '',
     );
     final resolvedReason = _feedbackReasonFloorV1(
       context,
@@ -4491,30 +4496,42 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!rapidMode && rhythmVerdict.isNotEmpty) ...[
+                    if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
                       Container(
-                        key: const Key('act0_shell_feedback_verdict_pill'),
+                        key: const Key(
+                          'act0_shell_feedback_primary_result_block',
+                        ),
                         padding: EdgeInsets.symmetric(
-                          horizontal: isCompactRefinedFeedback ? 7 : 8,
+                          horizontal: isCompactRefinedFeedback ? 8 : 9,
+                          vertical: isCompactRefinedFeedback ? 5 : 6,
                         ),
                         decoration: BoxDecoration(
                           color: tone.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(999),
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusBase,
+                          ),
                           border: Border.all(
                             color: tone.withValues(alpha: 0.24),
                           ),
                         ),
-                        child: Text(
-                          rhythmVerdict,
-                          key: const Key('act0_shell_feedback_rhythm_verdict'),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: tone,
-                            fontSize: 13.0,
-                            height: 1.0,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0,
+                        child: KeyedSubtree(
+                          key: const Key(
+                            'act0_shell_feedback_primary_result_label',
+                          ),
+                          child: Text(
+                            primaryResultLabel,
+                            key: const Key(
+                              'act0_shell_feedback_rhythm_verdict',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: tone,
+                              fontSize: 13.5,
+                              height: 1.04,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0,
+                            ),
                           ),
                         ),
                       ),
@@ -4658,88 +4675,102 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           ],
           if (!rapidMode && receiptTitle.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Container(
-              key: repairReceiptLine.isNotEmpty
-                  ? const Key('act0_shell_repair_result_receipt')
-                  : const Key('act0_shell_first_value_receipt'),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusBase,
+            _FeedbackProofKeyWrapperV1(
+              proofKey: repairReceiptLine.isNotEmpty
+                  ? const Key('act0_shell_repair_receipt_proof_block')
+                  : null,
+              child: Container(
+                key: repairReceiptLine.isNotEmpty
+                    ? const Key('act0_shell_repair_result_receipt')
+                    : const Key('act0_shell_first_value_receipt'),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
                 ),
-                border: Border.all(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    receiptTitle,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
-                      fontWeight: FontWeight.w800,
-                    ),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusBase,
                   ),
-                  if (receiptDetail.isNotEmpty) ...[
-                    const SizedBox(height: 3),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      receiptDetail,
+                      receiptTitle,
                       style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.textMuted,
+                        color: Act0ShellTokensV1.primary,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                  ],
-                  if (receiptNextLine.isNotEmpty) ...[
-                    const SizedBox(height: 3),
-                    Text(
-                      receiptNextLine,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.textMuted,
+                    if (receiptDetail.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        receiptDetail,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                        ),
                       ),
-                    ),
+                    ],
+                    if (receiptNextLine.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        receiptNextLine,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ],
           if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Container(
-              key: const Key('act0_shell_session_repair_summary'),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(
-                color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusBase,
+            _FeedbackProofKeyWrapperV1(
+              proofKey: const Key('act0_shell_session_summary_proof_block'),
+              child: Container(
+                key: const Key('act0_shell_session_repair_summary'),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
                 ),
-                border: Border.all(
-                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusBase,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (
-                    var index = 0;
-                    index < visibleRepairSessionSummaryLines.length;
-                    index++
-                  ) ...[
-                    if (index > 0) const SizedBox(height: 3),
-                    Text(
-                      visibleRepairSessionSummaryLines[index],
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: index == 0
-                            ? Act0ShellTokensV1.gold
-                            : Act0ShellTokensV1.textMuted,
-                        fontWeight: index == 0
-                            ? FontWeight.w800
-                            : FontWeight.w700,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (
+                      var index = 0;
+                      index < visibleRepairSessionSummaryLines.length;
+                      index++
+                    ) ...[
+                      if (index > 0) const SizedBox(height: 3),
+                      Text(
+                        visibleRepairSessionSummaryLines[index],
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: index == 0
+                              ? Act0ShellTokensV1.gold
+                              : Act0ShellTokensV1.textMuted,
+                          fontWeight: index == 0
+                              ? FontWeight.w800
+                              : FontWeight.w700,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ],
@@ -4793,6 +4824,25 @@ bool _shouldPreserveFullCompactFeedbackReasonV1(String reason) {
   }
   final sentenceCount = RegExp(r'[.!?](?:\s|$)').allMatches(normalized).length;
   return sentenceCount >= 2;
+}
+
+class _FeedbackProofKeyWrapperV1 extends StatelessWidget {
+  const _FeedbackProofKeyWrapperV1({
+    required this.child,
+    required this.proofKey,
+  });
+
+  final Widget child;
+  final Key? proofKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final key = proofKey;
+    if (key == null) {
+      return child;
+    }
+    return KeyedSubtree(key: key, child: child);
+  }
 }
 
 class _FeedbackSignalProofRowV1 extends StatelessWidget {
@@ -4854,7 +4904,34 @@ String _humanizedFeedbackProofLineV1(String proofLine) {
     return '';
   }
   final signalPrefix = RegExp(r'^signal:\s*', caseSensitive: false);
-  return line.replaceFirst(signalPrefix, '').trim();
+  final cleaned = line.replaceFirst(signalPrefix, '').trim();
+  if (_normalizeFeedbackLabelV1(cleaned) == 'no bet yet') {
+    return 'Nobody had bet yet - that was the clue.';
+  }
+  return cleaned;
+}
+
+String _feedbackPrimaryResultLabelV1({
+  required Act0FeedbackQualityV1 quality,
+  required String? repairReceiptLine,
+}) {
+  final receipt = repairReceiptLine?.trim().toLowerCase() ?? '';
+  if (receipt.startsWith('repair fixed:')) {
+    return 'Repair fixed';
+  }
+  if (receipt.startsWith('replay fixed:')) {
+    return 'Replay fixed';
+  }
+  if (receipt.startsWith('still missed:') ||
+      receipt.startsWith('repair missed:') ||
+      receipt.startsWith('replay missed:')) {
+    return 'Still fragile';
+  }
+  return switch (quality) {
+    Act0FeedbackQualityV1.correct => 'Correct',
+    Act0FeedbackQualityV1.suboptimal => 'Better clue',
+    Act0FeedbackQualityV1.wrong => 'Missed clue',
+  };
 }
 
 List<String> _dedupedFeedbackContextLabelsV1(
@@ -4862,12 +4939,19 @@ List<String> _dedupedFeedbackContextLabelsV1(
   required String preferredLine,
   required String selectedLine,
   required String statusLine,
+  required String signalLabel,
+  required String proofLine,
 }) {
   final seen = <String>{};
   final normalizedSelected = _normalizeFeedbackLabelV1(selectedLine);
   final blocked = <String>{
     _normalizeFeedbackLabelV1(preferredLine),
     _normalizeFeedbackLabelV1(statusLine),
+    _normalizeFeedbackLabelV1(signalLabel),
+    _normalizeFeedbackLabelV1(_humanizedFeedbackProofLineV1(proofLine)),
+    _normalizeFeedbackLabelV1(
+      proofLine.replaceFirst(RegExp(r'^signal:\s*', caseSensitive: false), ''),
+    ),
   }..remove('');
   final result = <String>[];
   for (final label in labels) {
@@ -4892,18 +4976,6 @@ String _normalizeFeedbackLabelV1(String label) {
 String _feedbackSelectedLineV1(BuildContext context, String selectedLabel) {
   final prefix = act0RuntimeLocalizedGeneralLabelV1(context, 'You picked');
   return '$prefix ${_premiumSafeFeedbackOptionLabelV1(act0RuntimeLocalizedOptionLabelV1(context, selectedLabel))}';
-}
-
-String _feedbackRhythmVerdictV1(
-  BuildContext context,
-  Act0FeedbackQualityV1 quality,
-) {
-  final label = switch (quality) {
-    Act0FeedbackQualityV1.correct => 'Good read',
-    Act0FeedbackQualityV1.suboptimal => 'Better clue',
-    Act0FeedbackQualityV1.wrong => 'Not quite',
-  };
-  return act0RuntimeLocalizedGeneralLabelV1(context, label).trim();
 }
 
 String _premiumSafeFeedbackOptionLabelV1(String label) {

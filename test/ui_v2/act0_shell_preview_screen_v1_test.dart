@@ -465,14 +465,14 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.byKey(const Key('act0_shell_feedback_verdict_pill')),
+      find.byKey(const Key('act0_shell_feedback_primary_result_block')),
       findsOneWidget,
     );
     final correctVerdict = tester.widget<Text>(
       find.byKey(const Key('act0_shell_feedback_rhythm_verdict')),
     );
     expect(correctVerdict.style?.fontSize, greaterThanOrEqualTo(13));
-    expect(find.text('Good read'), findsOneWidget);
+    expect(find.text('Correct'), findsOneWidget);
     expect(find.text('Table read improved'), findsOneWidget);
     expect(
       find.text(
@@ -531,20 +531,20 @@ void main() {
       ),
     );
 
-    expect(find.text('Good spot to repair'), findsOneWidget);
+    expect(find.text('Missed clue'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_rhythm_verdict')),
       findsOneWidget,
     );
     expect(
-      find.byKey(const Key('act0_shell_feedback_verdict_pill')),
+      find.byKey(const Key('act0_shell_feedback_primary_result_block')),
       findsOneWidget,
     );
     final wrongVerdict = tester.widget<Text>(
       find.byKey(const Key('act0_shell_feedback_rhythm_verdict')),
     );
     expect(wrongVerdict.style?.fontSize, greaterThanOrEqualTo(13));
-    expect(find.text('Not quite'), findsOneWidget);
+    expect(find.text('Missed clue'), findsOneWidget);
     expect(
       find.text('The missed table clue was Hero on the Button.'),
       findsOneWidget,
@@ -2944,7 +2944,7 @@ void main() {
       final proofLabel = tester.widget<Text>(
         find.byKey(const Key('act0_shell_feedback_signal_proof_label')),
       );
-      expect(proofLabel.data, 'No bet yet');
+      expect(proofLabel.data, 'Nobody had bet yet - that was the clue.');
       expect(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
         findsOneWidget,
@@ -2972,16 +2972,16 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-      expect(find.text('Not quite'), findsOneWidget);
+      expect(find.text('Missed clue'), findsOneWidget);
       expect(
-        find.text('The missed table clue was No bet yet.'),
+        find.text('Nobody had bet yet - that was the clue.'),
         findsOneWidget,
       );
       expect(find.text('Next: try this table clue once more.'), findsOneWidget);
       final proofLabel = tester.widget<Text>(
         find.byKey(const Key('act0_shell_feedback_signal_proof_label')),
       );
-      expect(proofLabel.data, 'No bet yet');
+      expect(proofLabel.data, 'Nobody had bet yet - that was the clue.');
       expect(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
         findsOneWidget,
@@ -3707,9 +3707,9 @@ void main() {
           .selectedTaskId;
       expect(firstTaskId, isNotNull);
       await answerVisiblePromptWrongly(tester);
-      expect(find.text('Good spot to repair'), findsOneWidget);
+      expect(find.text('Missed clue'), findsOneWidget);
       expect(
-        find.text('The missed table clue was No bet yet.'),
+        find.text('Nobody had bet yet - that was the clue.'),
         findsOneWidget,
       );
       expect(find.text('Repair: Action read'), findsNothing);
@@ -5313,7 +5313,10 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_signal_proof')),
       findsOneWidget,
     );
-    expect(find.text('No bet yet'), findsOneWidget);
+    expect(
+      find.text('Nobody had bet yet - that was the clue.'),
+      findsOneWidget,
+    );
     expect(find.text('Hero cards + board + pot'), findsNothing);
     expect(find.textContaining('Signal:'), findsNothing);
   });
@@ -5431,7 +5434,7 @@ void main() {
     final proofLabel = tester.widget<Text>(
       find.byKey(const Key('act0_shell_feedback_signal_proof_label')),
     );
-    expect(proofLabel.data, 'No bet yet');
+    expect(proofLabel.data, 'Nobody had bet yet - that was the clue.');
     expect(find.textContaining('Signal:'), findsNothing);
   });
 
@@ -16025,7 +16028,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.byKey(const Key('act0_shell_feedback_verdict_pill')),
+      find.byKey(const Key('act0_shell_feedback_primary_result_block')),
       findsOneWidget,
     );
     expect(find.text('Better clue'), findsOneWidget);
