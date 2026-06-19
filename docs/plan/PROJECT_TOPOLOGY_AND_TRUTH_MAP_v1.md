@@ -8,6 +8,10 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - `AGENTS.md`
   - this file
   - `docs/plan/MASTER_PLAN_v3.0.md` for active product-working route / block order
+  - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` when the task concerns
+    top-1 ambition, 10/10 product/commercial standard, Runout/competitor
+    positioning, first-week proof, visible repair proof, or best-in-class
+    product attack sequencing
   - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
   - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` when the task risks drifting into legacy, persona, AI-coach, or non-Act0 families
   - latest Audit Hub surfaces if routing depends on fresh live truth:
@@ -24,6 +28,10 @@ Purpose: primary orientation layer for future agents before repo investigation.
 
 - Fast next-frontier selection:
   - if the task is active product routing, use `docs/plan/MASTER_PLAN_v3.0.md` first
+  - if the task is about becoming top-1 / 10 out of 10 / Runout benchmark /
+    commercial-product attack path, use `docs/plan/MASTER_PLAN_v3.0.md` for
+    day-to-day priority and `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
+    for the top-1 operating map
   - if the task is post-route proof / "what still blocks product 100?", use
     `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
   - if the task is launch/readiness framing, use `docs/plan/MASTER_PLAN_v3.0.md` plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
@@ -36,6 +44,12 @@ Purpose: primary orientation layer for future agents before repo investigation.
   1. `docs/plan/MASTER_PLAN_v3.0.md`
      - active product-working master plan
      - owns current route order, launch-shape priorities, and bounded-wave sequencing
+     - companion layer: `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
+       - companion strategy SSOT for top-1 / 10/10 product attack planning
+       - owns Runout benchmark interpretation, 10/10 operating map, acceptance
+         gates, and current visible-repair attack sequence
+       - does not replace Master Plan, Monetization SSOT, readiness SSOT, or
+         active route truth
   2. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
      - auxiliary launch-readiness reference
      - use for release/store-prep framing, not day-to-day bottleneck selection
