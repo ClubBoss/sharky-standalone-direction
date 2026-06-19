@@ -122,6 +122,24 @@ void main() {
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
     expect(find.text(visibleReason), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_next_best_action_block')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_home_next_best_action_title')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair the no-bet-yet clue'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_next_best_action_reason')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+      findsNothing,
+    );
+    expect(find.text('Session proof'), findsNothing);
     for (final token in _forbiddenVisibleReasonTokens) {
       expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
     }
@@ -177,6 +195,16 @@ void main() {
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
     expect(find.text(visibleReason), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_next_best_action_block')),
+      findsOneWidget,
+    );
+    expect(find.text('Replay this spot'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+      findsNothing,
+    );
+    expect(find.text('Session proof'), findsNothing);
     expect(
       find.text(
         'You missed that nobody has bet yet. This hand repeats that table clue.',
@@ -279,9 +307,19 @@ void main() {
     expect(_homeNextUsefulHandReasonLine(tester), isNull);
     await _pumpHomeWithReason(tester, null);
     expect(
+      find.byKey(const Key('act0_shell_home_next_best_action_block')),
+      findsOneWidget,
+    );
+    expect(find.text('Continue your first lesson'), findsOneWidget);
+    expect(
       find.text('Sharky has your next useful hand ready.'),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+      findsNothing,
+    );
+    expect(find.text('Session proof'), findsNothing);
     expect(
       find.text(
         'You missed that nobody has bet yet. This hand repeats that table clue.',

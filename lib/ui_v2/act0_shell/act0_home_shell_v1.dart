@@ -740,6 +740,10 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
         break;
       }
     }
+    final nextBestAction = _homeNextBestActionCopyV1(
+      localeIsRu: localeIsRu,
+      nextUsefulHandReasonLine: nextUsefulHandReasonLine,
+    );
 
     return KeyedSubtree(
       key: const Key('act0_shell_home_daily_plan_card'),
@@ -810,15 +814,12 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              (nextUsefulHandReasonLine ?? '').trim().isNotEmpty
-                  ? nextUsefulHandReasonLine!.trim()
-                  : localeIsRu
-                  ? 'Sharky уже держит твою следующую полезную раздачу готовой.'
-                  : 'Sharky has your next useful hand ready.',
+            KeyedSubtree(
               key: const Key('act0_shell_home_week1_return_line'),
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textDim,
+              child: _HomeNextBestActionBlockV1(
+                title: nextBestAction.title,
+                reason: nextBestAction.reason,
+                repairAware: nextBestAction.repairAware,
               ),
             ),
             const SizedBox(height: 12),
@@ -835,6 +836,119 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+({String title, String reason, bool repairAware}) _homeNextBestActionCopyV1({
+  required bool localeIsRu,
+  required String? nextUsefulHandReasonLine,
+}) {
+  final reason = nextUsefulHandReasonLine?.trim() ?? '';
+  final normalized = reason.toLowerCase();
+  if (normalized.contains('replay this spot')) {
+    return (
+      title: localeIsRu ? 'Повтори этот спот' : 'Replay this spot',
+      reason: reason,
+      repairAware: true,
+    );
+  }
+  if (normalized.contains('no-bet-yet') ||
+      normalized.contains('nobody has bet yet') ||
+      normalized.contains('nobody had bet yet')) {
+    return (
+      title: localeIsRu
+          ? 'Почини подсказку no-bet-yet'
+          : 'Repair the no-bet-yet clue',
+      reason: reason,
+      repairAware: true,
+    );
+  }
+  if (reason.isNotEmpty) {
+    return (
+      title: localeIsRu ? 'Почини подсказку стола' : 'Repair the table clue',
+      reason: reason,
+      repairAware: true,
+    );
+  }
+  return (
+    title: localeIsRu ? 'Продолжи первый урок' : 'Continue your first lesson',
+    reason: localeIsRu
+        ? 'Sharky уже держит твою следующую полезную раздачу готовой.'
+        : 'Sharky has your next useful hand ready.',
+    repairAware: false,
+  );
+}
+
+class _HomeNextBestActionBlockV1 extends StatelessWidget {
+  const _HomeNextBestActionBlockV1({
+    required this.title,
+    required this.reason,
+    required this.repairAware,
+  });
+
+  final String title;
+  final String reason;
+  final bool repairAware;
+
+  @override
+  Widget build(BuildContext context) {
+    final tone = repairAware
+        ? Act0ShellTokensV1.primary
+        : Act0ShellTokensV1.actionCyan;
+    return Container(
+      key: const Key('act0_shell_home_next_best_action_block'),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+      decoration: BoxDecoration(
+        color: tone.withOpacity(repairAware ? 0.10 : 0.08),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(color: tone.withOpacity(0.22)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            repairAware
+                ? Icons.build_circle_outlined
+                : Icons.arrow_forward_rounded,
+            color: tone,
+            size: 18,
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  key: const Key('act0_shell_home_next_best_action_title'),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                    height: 1.18,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  reason,
+                  key: const Key('act0_shell_home_next_best_action_reason'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    height: 1.22,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
