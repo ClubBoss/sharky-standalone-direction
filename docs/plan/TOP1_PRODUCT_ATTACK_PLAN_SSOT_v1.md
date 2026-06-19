@@ -7,6 +7,16 @@ foundation.
 Current active route: AI Personalization / Rule-Based Repair Layer v1 -
 visible learning value path.
 
+Authority note:
+
+- `docs/plan/MASTER_PLAN_v3.0.md` remains the day-to-day product priority
+  authority.
+- This document is the active top-1 product attack planning SSOT.
+- If there is a conflict, `MASTER_PLAN_v3.0.md`,
+  `docs/plan/MONETIZATION_SSOT_v1.md`, and active route truth win.
+- This document constrains product attack direction; it does not replace the
+  Master Plan.
+
 ## 1. Mission
 
 Sharky is the best first-value poker coach: one real spot, one answer, one
@@ -191,7 +201,7 @@ competitive reference evidence. They are not measured cohort data.
 | First promise | 8.9 | 9.2 | 9.7 | Make the first personal mistake/repair moment visible within the first session. |
 | First value before paywall | 9.3 | 7.4 | 9.8 | Preserve value-first route; do not introduce commerce before repair value is visible. |
 | Beginner safety | 9.1 | 7.2 | 9.7 | Keep poker-native without GTO/solver pressure. |
-| Visual premium feel | 8.5 | 9.3 | 9.5 | Raise finish through table-first polish, not decorative breadth. |
+| Visual premium feel | 8.5 | 9.3 | 9.5 | Maintain current table quality; future visual uplift must serve repair feedback rhythm, result ceremony, or first-week proof, not table micro-polish. |
 | Runner/table learning UX | 9.1 | 8.5 | 9.7 | Surface repair reason at the existing table/feedback seam without adding UI bloat. |
 | Onboarding/induction | 8.7 | 9.2 | 9.5 | Keep short, authored, and causally personal. |
 | Personalization credibility | 8.9 | 7.8 | 9.6 | Make repair cause visible to the learner: missed signal -> selected repair hand -> reason. |
@@ -215,19 +225,25 @@ Expected next jump:
 - after Repair Result Receipt + Session Summary, first-week readiness can
   approach `9.4-9.6`.
 
-## 5A. Current Delta To 10/10 By Block
+## 5A. 10/10 Operating Map By Product Block
 
-| Block | Sharky now | Runout benchmark | Target 10/10 | Core delta |
-| --- | --- | --- | --- | --- |
-| Foundation / deterministic app | 9.1 | 8.5-9.0 | 10 | Foundation is strong; visible EV is the remaining gap. |
-| AI personalization | 8.9 | 9.0+ perceived | 10 | Decision/runtime/telemetry are done; learner-visible repair is next. |
-| Learning effect | 8.5 | 9.0 | 10 | Mistake -> repair -> success must be visible in one session. |
-| First-week commercial | 8.9-9.0 | 9.0+ | 10 | Aha moment and compact proof packet, not more polish. |
-| Visual/table | 9.3 | 8.5-9.0 | 10 | Do not touch without regression; visual resource goes later to feedback rhythm only if EV-positive. |
-| Monetization readiness | 8.7 | 9.0 | 10 | Value before paywall; premium packaging after proof. |
-| Telemetry loop | 8.8 | 9.0 perceived | 10 | Local user_choice/time bucket fixed; now link repair outcomes to session proof. |
-| Content depth | 8.2 | 9.0 breadth | 10 | Depth, examples, spaced reps after visible repair loop; no broad content expansion now. |
-| CI/delivery | 9.1 | unknown | 10 | Good enough; stop infra unless blocker. |
+| Product block | Where Sharky is now | What 10/10/top-1 looks like | Remaining gap | Next action | Acceptance signal | Not-now guardrail |
+| --- | --- | --- | --- | --- | --- | --- |
+| A. Foundation / deterministic app | Act0 route, repair foundation, monetization docs, capture tooling, and CI are stable enough for product work. | The app reliably turns one learner action into a clear table lesson without route or infra noise. | Foundation is not the bottleneck; visible EV is. | Stop foundation cleanup unless a real blocker appears. | Product waves can start from green `main` and pass R5 without scope repair. | No more backup mining or workflow cleanup as product work. |
+| B. AI personalization / repair | Decision contract, runtime reason receipt, and local `user_choice` telemetry are done. | The learner sees the missed signal, why the next hand was chosen, and whether the repair worked. | Repair reason and outcome are not learner-visible yet. | Build Visible Repair Reason Surface v1. | Existing surface shows missed signal -> selected repair hand -> reason. | No AI/adaptive claims, no coach/chat, no new route. |
+| C. Learning effect | Feedback is strong, but the complete mistake -> repair -> success loop is not yet explicit in one session. | In one session the learner can say: I missed this clue, fixed it, and can do it better now. | The outcome of repair is not packaged as proof. | Add Repair Result Receipt after visible reason. | A completed repair shows fixed / repeated / needs one more rep. | No fake mastery or guaranteed improvement claims. |
+| D. First-week commercial readiness | First-week proof is around `8.9-9.0`; premium preview is safe and post-value. | First week contains a compact proof arc strong enough to support later premium packaging. | The repair proof packet is not yet assembled. | Build Session Repair Summary, then proof packet. | First decision -> mistake -> repair -> success -> summary is explainable. | No paywall-first story or trial before repair proof. |
+| E. UX/UI sequencing | Home, table, Review, and Play are coherent, but repair causality is still partly internal. | The user always knows what to do, why it matters, and what improved. | Next useful hand needs visible causal context. | Use existing reason slots before adding surfaces. | No added route; current flow explains next useful hand. | No broad UI expansion or dashboard. |
+| F. Activation / Welcome / Placement | Placement works and remains value-first; density risk exists but is not the active blocker. | Activation feels short, personal, and immediately connected to first repair value. | Welcome/placement simplification may help, but not before visible repair loop. | Defer until repair proof exists. | Later audit can show onboarding is blocking visible value. | Do not reopen placement before repair surface. |
+| G. Review / Home / re-entry | Review and Home can route repairs and return reasons from real state. | Re-entry starts from the learner's real missed/repaired signal, not generic practice. | Return reason needs repair-outcome evidence. | Feed repaired/missed outcomes into summary and return copy later. | Home/Review can say why this rep matters without generic encouragement. | No streak pressure or random daily churn. |
+| H. Visual / Modern Table / feedback rhythm | Modern Table quality is good enough; visual work is maintenance-only. | Visuals serve repair causality, result ceremony, and first-week proof. | Feedback rhythm may need visual support after reason/outcome exists. | Leave table visuals untouched unless feedback proof needs it. | Any visual change directly improves repair understanding or proof. | No table micro-polish, screenshot-driven design loops, or motion for its own sake. |
+| I. Content density / curriculum depth | Current route has enough spine for first value; deeper examples and spaced reps are future leverage. | Each key concept has enough examples, spaced repair, and no unexplained jargon. | Broad content depth is not the current bottleneck. | Defer concept-depth audit until visible repair loop proves learning value. | A later audit identifies exact concepts needing spaced examples. | No broad content expansion now. |
+| J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Repair outcomes are not yet linked into session proof. | Add outcome receipts before new telemetry contracts. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
+| K. Monetization / premium value | Entitlement safety exists; public commerce remains blocked; premium preview is post-value. | Premium feels like deeper proven learning, not a hostage paywall. | Premium/value packaging needs visible learning proof first. | Keep premium/value packaging after proof packet. | Upgrade framing can point to real repair value already experienced. | No public price, purchase, trial, restore, Premium Hub, or route gate. |
+| L. Retention / habit loop | Daily/review loops exist and can use real repair signals. | Return reason comes from real missed/repaired signals, not streak pressure. | The repaired-signal history is not yet summarized into habit copy. | Build session summary before habit expansion. | D2/D7 return can reference a real skill or clue. | No guilt, fake scarcity, or random retention prompts. |
+| M. Proof packet / commercial evidence | Capture tooling source exists; generated outputs stay out by default. | Compact evidence shows first decision -> mistake -> repair -> success -> summary. | Proof packet awaits visible reason and result receipt. | Build proof packet after summary. | One compact flow can be captured without explaining internals. | No generated outputs committed by default; no copied Runout assets. |
+| N. Product coherence / brand promise | Mission is clear: one real spot, one answer, one clear why. | Every major beat repeats the same causal rhythm: choice -> clue -> why -> repair -> proof. | Some state is auditable internally but not yet experienced as one story. | Align repair reason, Review, Home, and summary around the same language. | Learner-facing surfaces do not contradict or dilute the causal rhythm. | No new competing roadmap or broad brand rewrite. |
+| O. Technical delivery / CI | R5, health, and verify are green; TestSprite is external/non-blocking unless policy changes. | Delivery stays boring: one homogeneous branch, local checks, PR checks, merge. | None unless a real blocker appears. | Continue clean-scope PR cycle. | Docs/product branches merge with repo-owned checks green. | No infrastructure cleanup unless a real blocker appears. |
 
 The shortest path is not more design, not more CI, not more docs.
 
@@ -238,6 +254,18 @@ The shortest path is:
 3. Session Repair Summary
 4. Compact First-Week Proof Packet
 5. Premium/value packaging later
+
+## 5B. 10/10 Acceptance Gates
+
+| Gate | Accepted when | Must prove | Must not do |
+| --- | --- | --- | --- |
+| 1. Visible Repair Reason Surface gate | The existing Act0 flow shows the missed table signal, selected repair hand, and deterministic reason in a safe current surface. | The learner can understand why this next hand is useful without seeing internal payloads. | No new route, no broad UI expansion, no AI/adaptive claim, no new telemetry owner. |
+| 2. Repair Result Receipt gate | A repair completion produces a compact state: fixed, repeated, or needs one more rep. | The app can close or continue the loop based on the learner's actual repair result. | No fake mastery, no streak pressure, no dashboard. |
+| 3. Session Repair Summary gate | The session can summarize mistakes found, repairs completed, skill improved, and next skill. | One-session improvement proof is visible without analytics bloat. | No full leak profile, no public analytics dashboard, no premium upsell before value proof. |
+| 4. Compact First-Week Proof Packet gate | The first-week flow can show first decision -> mistake -> repair -> success -> summary. | Commercial proof exists before stronger premium/value packaging. | No generated proof outputs committed by default, no copied Runout assets, no paywall-first story. |
+| 5. Premium/value packaging gate | Premium copy can point to already experienced repair value and deeper learning. | Upgrade feels like more proven coaching, not basic usefulness being withheld. | No public price, purchase, trial, restore, Premium Hub, or hard gate until commerce safety and copy safety are admitted. |
+| 6. Content-depth follow-up gate | A focused audit shows which concepts lack examples, spaced reps, or beginner-safe terminology after the repair loop is visible. | Content expansion has direct learning EV. | No broad curriculum expansion, no W4/W5 route debate reopening. |
+| 7. Activation/Welcome/Placement follow-up gate | Evidence shows activation density blocks the first repair-proof moment. | Simplification improves time-to-first-useful-repair. | No placement rewrite before visible repair loop evidence exists. |
 
 ## 6. Locked Arc Order
 
@@ -273,6 +301,18 @@ Constraints:
 - no broad dashboard;
 - no new telemetry owner;
 - no generic encouragement replacing table-signal causality.
+
+Next Wave Contract:
+
+- consume the existing private repair decision / reason receipt only where a
+  current surface already has a safe reason slot;
+- show missed signal, selected repair hand, and repair reason;
+- no new telemetry owner;
+- no session summary yet;
+- no AI/ML claims;
+- no commerce;
+- no broad UI expansion;
+- no Modern Table visual work.
 
 ### Then
 
@@ -396,6 +436,13 @@ the visible repair loop and session proof are done.
 
 ## 11. Source Links
 
+Source-link rule:
+
+- Keep only repo-present references as active links.
+- If `docs/competitive/runout/**` files are not present in the repo, treat them
+  as local competitive reference evidence, not active source links.
+- Do not restore competitive research files in this PR.
+
 Primary planning:
 
 - `docs/plan/MASTER_PLAN_v3.0.md`
@@ -419,11 +466,17 @@ Accepted proof and strategy reviews:
 - `docs/_reviews/monetization_ev_scenario_analysis_v1.md`
 - `docs/_reviews/premium_monetization_existing_plan_reconciliation_v1.md`
 
-Competitive reference:
+Local competitive reference evidence, not active source links:
 
-- `docs/competitive/runout/RUNOUT_REFERENCE_SUMMARY.md`
-- `docs/competitive/runout/RUNOUT_FEATURE_MATRIX.md`
-- `docs/competitive/runout/RUNOUT_ONBOARDING_PAYWALL_NOTES.md`
-- `docs/competitive/runout/RUNOUT_MOTION_VISUAL_PACKAGING_NOTES.md`
-- `docs/competitive/runout/RUNOUT_PROGRESS_RETENTION_NOTES.md`
-- `docs/competitive/runout/SHARKY_RESPONSE_OPPORTUNITIES.md`
+- `docs/competitive/runout/RUNOUT_REFERENCE_SUMMARY.md` is not present in this
+  repo.
+- `docs/competitive/runout/RUNOUT_FEATURE_MATRIX.md` is not present in this
+  repo.
+- `docs/competitive/runout/RUNOUT_ONBOARDING_PAYWALL_NOTES.md` is not present
+  in this repo.
+- `docs/competitive/runout/RUNOUT_MOTION_VISUAL_PACKAGING_NOTES.md` is not
+  present in this repo.
+- `docs/competitive/runout/RUNOUT_PROGRESS_RETENTION_NOTES.md` is not present
+  in this repo.
+- `docs/competitive/runout/SHARKY_RESPONSE_OPPORTUNITIES.md` is not present in
+  this repo.
