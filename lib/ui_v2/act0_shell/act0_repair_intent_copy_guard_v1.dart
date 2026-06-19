@@ -18,6 +18,10 @@ const Set<String> _act0RepairIntentForbiddenCopyTokensV1 = <String>{
   'trial',
   'purchase',
   'restore',
+  'unlock',
+  'guarantee',
+  'leak',
+  'detected',
 };
 
 String? act0RepairIntentCopyGuardLineV1({
@@ -49,10 +53,52 @@ String? act0RepairIntentCopyGuardLineV1({
   return line;
 }
 
+String? act0RepairResultReceiptCopyGuardLineV1({
+  required bool repaired,
+  required bool exactReplay,
+  required String clueLabel,
+}) {
+  final line = exactReplay
+      ? (repaired
+            ? 'Replay fixed: you handled this spot correctly.'
+            : 'Replay missed again: try the same spot once more.')
+      : _sameSignalRepairResultReceiptLineV1(
+          repaired: repaired,
+          clueLabel: clueLabel,
+        );
+  if (line == null || _containsForbiddenCopyTokenV1(line)) {
+    return null;
+  }
+  return line;
+}
+
+String? _sameSignalRepairResultReceiptLineV1({
+  required bool repaired,
+  required String clueLabel,
+}) {
+  final compactClue = _learnerFacingCompactClueV1(clueLabel);
+  final repeatedClue = _learnerFacingRepeatedMissClueV1(clueLabel);
+  if (repaired && compactClue.isNotEmpty) {
+    return 'Repair fixed: you caught $compactClue.';
+  }
+  if (!repaired && repeatedClue.isNotEmpty) {
+    return 'Still missed: $repeatedClue. One more repair hand will help.';
+  }
+  return null;
+}
+
 String _learnerFacingSameSignalClueV1(String clueLabel) {
   final normalized = _normalizedRepairClueLabelV1(clueLabel);
   return switch (normalized) {
     'no bet yet' => 'that nobody has bet yet',
+    _ => _learnerFacingCompactClueV1(clueLabel),
+  };
+}
+
+String _learnerFacingRepeatedMissClueV1(String clueLabel) {
+  final normalized = _normalizedRepairClueLabelV1(clueLabel);
+  return switch (normalized) {
+    'no bet yet' => 'nobody had bet yet',
     _ => _learnerFacingCompactClueV1(clueLabel),
   };
 }

@@ -35,6 +35,44 @@ void main() {
     );
   });
 
+  test('repair result receipt renders fixed and repeated same-signal copy', () {
+    expect(
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: true,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      ),
+      'Repair fixed: you caught the no-bet-yet clue.',
+    );
+    expect(
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: false,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      ),
+      'Still missed: nobody had bet yet. One more repair hand will help.',
+    );
+  });
+
+  test('repair result receipt renders exact replay copy', () {
+    expect(
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: true,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
+      'Replay fixed: you handled this spot correctly.',
+    );
+    expect(
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: false,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
+      'Replay missed again: try the same spot once more.',
+    );
+  });
+
   test('unknown template id does not render arbitrary copy', () {
     expect(
       act0RepairIntentCopyGuardLineV1(
@@ -88,6 +126,26 @@ void main() {
         clueLabel: 'No bet yet',
         skillLabel: 'Action read',
       )!,
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: true,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      )!,
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: false,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      )!,
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: true,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      )!,
+      act0RepairResultReceiptCopyGuardLineV1(
+        repaired: false,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      )!,
     ];
     const forbidden = <String>{
       'ai',
@@ -103,6 +161,10 @@ void main() {
       'trial',
       'purchase',
       'restore',
+      'unlock',
+      'guarantee',
+      'leak',
+      'detected',
     };
 
     for (final line in lines) {

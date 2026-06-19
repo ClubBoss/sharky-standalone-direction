@@ -732,6 +732,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     required this.onContinueReview,
     this.completionSummary,
     this.firstValueReceiptLine,
+    this.repairResultReceiptLine,
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
     this.relaxTheoryAdvanceLock = false,
@@ -757,6 +758,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
+  final String? repairResultReceiptLine;
   final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
   final bool relaxTheoryAdvanceLock;
@@ -1961,6 +1963,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     refined: isRefinedDev2,
                     completionSummary: null,
                     firstValueReceiptLine: widget.firstValueReceiptLine,
+                    repairResultReceiptLine: widget.repairResultReceiptLine,
                     onBack: null,
                     rapidMode: widget.rapidReviewMode,
                     coachVoiceSeed:
@@ -4297,6 +4300,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.refined = false,
     this.completionSummary,
     this.firstValueReceiptLine,
+    this.repairResultReceiptLine,
     this.onBack,
     this.rapidMode = false,
     this.coachVoiceSeed,
@@ -4320,6 +4324,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
+  final String? repairResultReceiptLine;
   final VoidCallback? onBack;
   final bool rapidMode;
   final String? coachVoiceSeed;
@@ -4419,7 +4424,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final skillReceipt = firstValueReceiptLine == null
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
-    final fallbackReceiptLine = firstValueReceiptLine?.trim();
+    final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
+    final fallbackReceiptLine = repairReceiptLine.isNotEmpty
+        ? repairReceiptLine
+        : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle =
         skillReceipt?.title ??
@@ -4642,7 +4650,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           if (!rapidMode && receiptTitle.isNotEmpty) ...[
             const SizedBox(height: 8),
             Container(
-              key: const Key('act0_shell_first_value_receipt'),
+              key: repairReceiptLine.isNotEmpty
+                  ? const Key('act0_shell_repair_result_receipt')
+                  : const Key('act0_shell_first_value_receipt'),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
                 color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
