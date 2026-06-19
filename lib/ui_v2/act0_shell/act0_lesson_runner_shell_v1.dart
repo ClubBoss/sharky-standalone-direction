@@ -4733,44 +4733,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(height: 8),
             _FeedbackProofKeyWrapperV1(
               proofKey: const Key('act0_shell_session_summary_proof_block'),
-              child: Container(
-                key: const Key('act0_shell_session_repair_summary'),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusBase,
-                  ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (
-                      var index = 0;
-                      index < visibleRepairSessionSummaryLines.length;
-                      index++
-                    ) ...[
-                      if (index > 0) const SizedBox(height: 3),
-                      Text(
-                        visibleRepairSessionSummaryLines[index],
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: index == 0
-                              ? Act0ShellTokensV1.gold
-                              : Act0ShellTokensV1.textMuted,
-                          fontWeight: index == 0
-                              ? FontWeight.w800
-                              : FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+              child: _FeedbackSessionSummaryCeremonyBlockV1(
+                lines: visibleRepairSessionSummaryLines,
               ),
             ),
           ],
@@ -4842,6 +4806,56 @@ class _FeedbackProofKeyWrapperV1 extends StatelessWidget {
       return child;
     }
     return KeyedSubtree(key: key, child: child);
+  }
+}
+
+class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
+  const _FeedbackSessionSummaryCeremonyBlockV1({required this.lines});
+
+  final List<String> lines;
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: const Key('act0_shell_session_summary_ceremony_block'),
+      child: Container(
+        key: const Key('act0_shell_session_repair_summary'),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+          border: Border.all(
+            color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Session proof',
+              key: const Key('act0_shell_session_summary_ceremony_label'),
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.gold,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 5),
+            for (var index = 0; index < lines.length; index++) ...[
+              if (index > 0) const SizedBox(height: 3),
+              Text(
+                lines[index],
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: index == 0
+                      ? Act0ShellTokensV1.gold
+                      : Act0ShellTokensV1.textMuted,
+                  fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }
 
