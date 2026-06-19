@@ -107,7 +107,6 @@ bool _looksLikeActionDecisionDrillV1({
     'disciplined response',
     'first-in action',
     'how to play',
-    'what should',
     'what is cleaner',
     'what is the cleaner',
     'what is the clean action',

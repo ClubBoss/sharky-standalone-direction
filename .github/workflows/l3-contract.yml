@@ -4,8 +4,12 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'lib/**'
-      - 'tool/**'
+      - 'tool/l3/**'
+      - 'tool/config/weights/**'
+      - 'tool/validators/l3/**'
+      - 'tool/validators/l3_demo_validator.dart'
+      - 'tool/autogen/l3/**'
+      - 'tool/autogen/l3_demo_sampler.dart'
       - 'test/l3_cli_runner_weights_parse_test.dart'
       - 'test/fixtures/l3/weights/**'
       - 'test/smoke/**'
@@ -13,8 +17,12 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'lib/**'
-      - 'tool/**'
+      - 'tool/l3/**'
+      - 'tool/config/weights/**'
+      - 'tool/validators/l3/**'
+      - 'tool/validators/l3_demo_validator.dart'
+      - 'tool/autogen/l3/**'
+      - 'tool/autogen/l3_demo_sampler.dart'
       - 'test/l3_cli_runner_weights_parse_test.dart'
       - 'test/fixtures/l3/weights/**'
       - 'test/smoke/**'
@@ -40,49 +48,56 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "Missing test/l3_cli_runner_weights_parse_test.dart. Skipping contract job.";
           fi
-      - name: Set up Flutter
-        if: steps.contract_test.outputs.exists == 'true'
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-      - name: Set up Flutter
-        if: steps.contract_test.outputs.exists == 'true'
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
+      - name: Detect L3 contract-relevant changes
+        id: l3_changes
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git fetch --no-tags --prune origin "${{ github.base_ref }}"
+            range="origin/${{ github.base_ref }}...HEAD"
+          else
+            range="${{ github.event.before }}...HEAD"
+          fi
+          changed="$(git diff --name-only "$range" || true)"
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -Eq '^(tool/l3/|tool/config/weights/|tool/validators/l3/|tool/validators/l3_demo_validator\.dart|tool/autogen/l3/|tool/autogen/l3_demo_sampler\.dart|test/l3_cli_runner_weights_parse_test\.dart|test/fixtures/l3/weights/|test/smoke/)'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            echo "L3 contract-relevant changes found."
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+            echo "No L3 contract-relevant changes; skipping contract execution."
+          fi
 
       - uses: subosito/flutter-action@v2
-        if: steps.contract_test.outputs.exists == 'true'
+        if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         with:
           channel: stable
-          flutter-version: '3.35.1'  # Dart 3.9.x
+          flutter-version: '3.35.0'  # Project Flutter pin from .fvmrc.
           cache: true
 
-      - if: steps.contract_test.outputs.exists == 'true'
+      - if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: flutter --version
-      - if: steps.contract_test.outputs.exists == 'true'
+      - if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: dart --version
 
       - name: Cache Pub dependencies
-        if: steps.contract_test.outputs.exists == 'true'
+        if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.pub-cache
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: ${{ runner.os }}-pub-
 
-      - if: steps.contract_test.outputs.exists == 'true'
+      - if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: flutter pub get
 
       - name: Precommit sanity
-        if: steps.contract_test.outputs.exists == 'true'
+        if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: bash tool/dev/precommit_sanity.sh
 
       # Контрактный тест (pure-Dart)
       - name: Run contract tests
-        if: steps.contract_test.outputs.exists == 'true'
+        if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: |
           if [ -f test/l3_cli_runner_weights_parse_test.dart ]; then
             dart test test/l3_cli_runner_weights_parse_test.dart -r expanded
@@ -92,7 +107,7 @@ jobs:
 
       # Flutter smoke отдельно через flutter test
       - name: Run Flutter smoke tests
-        if: steps.contract_test.outputs.exists == 'true'
+        if: steps.contract_test.outputs.exists == 'true' && steps.l3_changes.outputs.relevant == 'true'
         run: |
           if [ -f test/smoke/win_overlays_smoke_test.dart ]; then
             flutter test test/smoke/win_overlays_smoke_test.dart -r expanded

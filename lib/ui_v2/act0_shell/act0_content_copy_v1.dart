@@ -495,3 +495,23 @@ Act0TeachingStepDisplayCopyV1? _act0LocalizedTeachingStepByLanguageV1(
   }
   return teachingSteps[teachingStepIndex];
 }
+
+String act0RussianPluralV1(
+  int count,
+  String form1,
+  String form2,
+  String form5,
+) {
+  final rem10 = count % 10;
+  final rem100 = count % 100;
+  if (rem100 >= 11 && rem100 <= 19) {
+    return form5;
+  }
+  if (rem10 == 1) {
+    return form1;
+  }
+  if (rem10 >= 2 && rem10 <= 4) {
+    return form2;
+  }
+  return form5;
+}

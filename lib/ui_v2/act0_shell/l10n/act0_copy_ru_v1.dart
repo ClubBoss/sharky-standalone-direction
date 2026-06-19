@@ -331,6 +331,22 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       ),
     ],
   ),
+  'what_poker_is_table_read_recheck': Act0TaskDisplayCopyV1(
+    title: 'Повтор чтения стола',
+    summary:
+        'Повтори тот же порядок чтения: свои карты, общий борд, затем банк.',
+    runnerPrompt: 'Новая ситуация. Сначала свои карты, потом борд, потом банк.',
+    runnerSupport:
+        'Задача та же: отдели свои карты от общих карт и проверь размер банка.',
+    runnerQuestion: 'Какое чтение стола здесь чистое?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Повтори тот же скан.',
+        body:
+            'Прочитай две свои карты, затем общий борд, затем банк. Та же привычка, другая ситуация.',
+      ),
+    ],
+  ),
   'what_poker_is_live_win_transfer': Act0TaskDisplayCopyV1(
     title: 'Победа в реальной игре',
     summary: 'Перенеси понимание фолдов и шоудауна за реальный игровой стол.',
@@ -432,6 +448,20 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       Act0TeachingStepDisplayCopyV1(
         title: 'Закрытые карты принадлежат только тебе.',
         body: 'Эти две карты видишь и используешь только ты.',
+      ),
+    ],
+  ),
+  'your_first_hand_private_cards_recheck': Act0TaskDisplayCopyV1(
+    title: 'Повтор своих карт',
+    summary: 'Ещё раз найди две карты Hero до появления общих карт на борде.',
+    runnerPrompt: 'До борда у Hero есть две личные карты.',
+    runnerSupport: 'Они лежат рядом с местом Hero и принадлежат только тебе.',
+    runnerQuestion: 'Какие две карты твои?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Начни с карт Hero.',
+        body:
+            'До появления борда у Hero ровно две личные карты. Сначала прочитай именно их.',
       ),
     ],
   ),
@@ -1341,6 +1371,30 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       ),
     ],
   ),
+  'position_six_seats_position_repair_seat_id_btn': Act0TaskDisplayCopyV1(
+    title: 'Закрепи BTN',
+    runnerPrompt: 'Ремонт: BTN — место баттона.',
+    runnerSupport: 'Найди фишку дилера и нажми BTN.',
+    runnerQuestion: 'Нажми BTN ещё раз.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрепи место баттона.',
+        body: 'BTN — место, отмеченное фишкой дилера.',
+      ),
+    ],
+  ),
+  'position_six_seats_position_repair_seat_id_utg': Act0TaskDisplayCopyV1(
+    title: 'Закрепи UTG',
+    runnerPrompt: 'Ремонт: UTG — первое место на префлопе.',
+    runnerSupport: 'Найди самое раннее место и нажми UTG.',
+    runnerQuestion: 'Нажми UTG ещё раз.',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрепи место UTG.',
+        body: 'UTG действует первым после постановки блайндов.',
+      ),
+    ],
+  ),
   'position_six_seats_positions_cutoff': Act0TaskDisplayCopyV1(
     title: 'Нажми на cutoff',
     runnerPrompt: 'CO — это cutoff. Он сидит прямо перед баттоном.',
@@ -1387,6 +1441,20 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         title: 'Порядок важнее комфорта.',
         body:
             'UTG ходит до BTN и не может опереться на тот же информационный запас.',
+      ),
+    ],
+  ),
+  'position_six_seats_position_repair_early_late_order': Act0TaskDisplayCopyV1(
+    title: 'Закрепи раннее и позднее место',
+    runnerPrompt:
+        'Ремонт: сравни раннее и позднее место на этом столе на шесть игроков.',
+    runnerSupport: 'UTG ходит раньше. BTN видит больше перед решением.',
+    runnerQuestion: 'Какое место ходит раньше на этом столе на шесть?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрепи порядок мест.',
+        body:
+            'На этом столе на шесть игроков UTG — раннее место и ходит раньше; BTN — позднее и видит больше.',
       ),
     ],
   ),
@@ -1451,6 +1519,18 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
       Act0TeachingStepDisplayCopyV1(
         title: 'Постфлоп меняет порядок.',
         body: 'После флопа блайнды ходят рано, а баттон часто закрывает круг.',
+      ),
+    ],
+  ),
+  'button_advantage_position_repair_btn_last_postflop': Act0TaskDisplayCopyV1(
+    title: 'Закрепи BTN на постфлопе',
+    runnerPrompt: 'Ремонт: BTN действует последним после флопа.',
+    runnerSupport: 'Найди баттон на столе.',
+    runnerQuestion: 'Кто действует последним после флопа?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрепи порядок на постфлопе.',
+        body: 'После флопа баттон — позднее место и здесь действует последним.',
       ),
     ],
   ),
@@ -1527,6 +1607,18 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         title: 'Рано — значит под давлением.',
         body:
             'UTG ещё не видел решения большинства стола, поэтому запас нужен крепче.',
+      ),
+    ],
+  ),
+  'early_vs_late_position_repair_utg_players_behind': Act0TaskDisplayCopyV1(
+    title: 'Закрепи давление UTG',
+    runnerPrompt: 'Ремонт: после UTG ещё действуют пять игроков.',
+    runnerSupport: 'Посчитай, кто ещё ходит после UTG.',
+    runnerQuestion: 'Почему UTG под давлением здесь?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Закрепи раннее место.',
+        body: 'UTG ходит первым, а HJ, CO, BTN, SB и BB ещё остаются позади.',
       ),
     ],
   ),
@@ -1621,6 +1713,26 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         title: 'Играбельная рука поздно.',
         body:
             'ATo в поздней позиции уже получает достаточно комфорта для чистого опена.',
+      ),
+    ],
+  ),
+  'same_hand_different_seat_position_repair_same_hand_different_seat': Act0TaskDisplayCopyV1(
+    title: 'Ремонт: та же рука, другое место',
+    runnerPrompt:
+        'Ремонт: тот же ATo, но разные места за этим столом на шесть игроков.',
+    runnerSupport:
+        'Сначала посмотри, кто ещё ходит после Hero. Место меняет комфорт руки.',
+    runnerQuestion: 'Что сильнее всего изменилось между двумя рамками?',
+    teachingSteps: <Act0TeachingStepDisplayCopyV1>[
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Рамка один: раннее место.',
+        body:
+            'ATo из UTG видит больше игроков позади и меньше информации за этим столом на шесть.',
+      ),
+      Act0TeachingStepDisplayCopyV1(
+        title: 'Рамка два: более позднее место.',
+        body:
+            'Тот же ATo позже по порядку видит меньше игроков позади и получает больше информации перед решением.',
       ),
     ],
   ),
@@ -2232,6 +2344,79 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
 
 const Map<String, Act0SurfaceAtomCopyV1>
 _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
+  'home_checklist_title': Act0SurfaceAtomCopyV1(
+    text: 'Короткая практика за столом',
+  ),
+  'home_checklist_continue_label': Act0SurfaceAtomCopyV1(text: 'Продолжить'),
+  'home_checklist_learn_label': Act0SurfaceAtomCopyV1(text: 'Учись'),
+  'home_checklist_practice_label': Act0SurfaceAtomCopyV1(text: 'Практика'),
+  'home_checklist_review_label': Act0SurfaceAtomCopyV1(text: 'Повтор'),
+  'home_checklist_fix_label': Act0SurfaceAtomCopyV1(text: 'Ремонт'),
+  'home_checklist_keep_sharp_label': Act0SurfaceAtomCopyV1(
+    text: 'Держи острым',
+  ),
+  'home_checklist_fix_mistake_title': Act0SurfaceAtomCopyV1(
+    text: 'Закрепи этот сигнал',
+  ),
+  'home_checklist_clean_today_title': Act0SurfaceAtomCopyV1(
+    text: 'Сегодня чисто',
+  ),
+  'home_checklist_clean_today_detail': Act0SurfaceAtomCopyV1(
+    text: 'Явных сбоев нет. Просто держи навык в тонусе.',
+  ),
+  'home_checklist_check_confidence_title': Act0SurfaceAtomCopyV1(
+    text: 'Проверь уверенность',
+  ),
+  'home_checklist_no_old_spots_title': Act0SurfaceAtomCopyV1(
+    text: 'Старых спотов пока нет',
+  ),
+  'home_checklist_no_old_spots_detail': Act0SurfaceAtomCopyV1(
+    text: 'Сейчас нечего повторять.',
+  ),
+  'home_checklist_next_label': Act0SurfaceAtomCopyV1(text: 'Шаг'),
+  'home_daily_done_title': Act0SurfaceAtomCopyV1(text: 'Сегодня закрыто'),
+  'home_daily_done_streak_label': Act0SurfaceAtomCopyV1(text: '+1 к серии'),
+  'home_daily_done_warm_label': Act0SurfaceAtomCopyV1(text: 'Навык в тонусе'),
+  'home_daily_done_detail': Act0SurfaceAtomCopyV1(
+    text:
+        'Сегодняшняя подсказка за столом закрыта. Возвращайся за следующей полезной раздачей.',
+  ),
+  'home_daily_goal_done_title': Act0SurfaceAtomCopyV1(text: 'На сегодня всё'),
+  'home_daily_goal_streak_saved': Act0SurfaceAtomCopyV1(
+    text: 'Повтор засчитан. Серия сохранена на завтра.',
+  ),
+  'home_daily_goal_complete': Act0SurfaceAtomCopyV1(
+    text: 'Цель на сегодня выполнена. Завтра вернуться к занятиям будет проще.',
+  ),
+  'home_daily_goal_start_day': Act0SurfaceAtomCopyV1(
+    text: 'Один чистый повтор запускает день.',
+  ),
+  'home_daily_goal_keep_pace': Act0SurfaceAtomCopyV1(
+    text: 'Ещё один чистый повтор держит темп.',
+  ),
+
+  'review_you_chose_label': Act0SurfaceAtomCopyV1(text: 'Ты выбрал'),
+  'review_better_label': Act0SurfaceAtomCopyV1(text: 'Точнее'),
+  'review_start_repair_rep': Act0SurfaceAtomCopyV1(
+    text: 'Начать работу над ошибками',
+  ),
+  'review_repair_this_spot': Act0SurfaceAtomCopyV1(
+    text: 'Разобрать эту подсказку',
+  ),
+  'review_start_here_title': Act0SurfaceAtomCopyV1(
+    text: 'Разбери одну подсказку, пока она не закрепилась',
+  ),
+  'review_start_here_detail': Act0SurfaceAtomCopyV1(
+    text: 'Один спокойный перечит делает эту подсказку легче завтра.',
+  ),
+
+  'play_lanes_ready_plural_1': Act0SurfaceAtomCopyV1(text: 'линия готова'),
+  'play_lanes_ready_plural_2': Act0SurfaceAtomCopyV1(text: 'линии готовы'),
+  'play_lanes_ready_plural_5': Act0SurfaceAtomCopyV1(text: 'линий готовы'),
+  'play_lanes_noun_plural_1': Act0SurfaceAtomCopyV1(text: 'линия'),
+  'play_lanes_noun_plural_2': Act0SurfaceAtomCopyV1(text: 'линии'),
+  'play_lanes_noun_plural_5': Act0SurfaceAtomCopyV1(text: 'линий'),
+
   'play_title': Act0SurfaceAtomCopyV1(text: 'Практика'),
   'play_screen_subtitle': Act0SurfaceAtomCopyV1(
     text: 'Запусти один короткий сет и держи маршрут в движении.',
@@ -2339,7 +2524,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'review_recovered_lately_label': Act0SurfaceAtomCopyV1(
     text: 'Недавно восстановлено',
   ),
-  'review_board_title_fix': Act0SurfaceAtomCopyV1(text: 'Сначала разберём'),
+  'review_board_title_fix': Act0SurfaceAtomCopyV1(text: 'Один перечит'),
   'review_board_title_clean': Act0SurfaceAtomCopyV1(text: 'Повтор'),
   'review_board_headline_clean': Act0SurfaceAtomCopyV1(
     text: 'Сейчас всё чисто',
@@ -2883,16 +3068,14 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'profile_first_start_retake_placement': Act0SurfaceAtomCopyV1(
     text: 'Пройти плейсмент снова',
   ),
-  'welcome_intro_title': Act0SurfaceAtomCopyV1(
-    text: 'Твой маршрут почти готов.',
-  ),
+  'welcome_intro_title': Act0SurfaceAtomCopyV1(text: 'Найди свой старт'),
   'welcome_intro_eyebrow': Act0SurfaceAtomCopyV1(text: 'Старт'),
   'welcome_intro_line': Act0SurfaceAtomCopyV1(
     text:
-        'Home откроет правильный первый спот. Sharky держит следующий шаг очевидным.',
+        'Ответь на два коротких вопроса. Затем Шарки откроет первую полезную раздачу.',
   ),
   'welcome_intro_detail': Act0SurfaceAtomCopyV1(
-    text: 'Прочитай один живой стол, ответь один раз и сразу пойми почему.',
+    text: 'Около двух минут. Потом первый урок будет готов.',
   ),
   'welcome_intro_cta': Act0SurfaceAtomCopyV1(
     text: 'Понять, почему это работает',
@@ -2938,7 +3121,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Первый модуль, который можно открыть сразу.',
   ),
   'placement_ready_skill_check': Act0SurfaceAtomCopyV1(
-    text: 'Проверка на столе',
+    text: 'Быстрый чек стола',
   ),
   'placement_ready_best_place_to_begin': Act0SurfaceAtomCopyV1(
     text: 'Одна короткая живая проверка. Потом Шарки закрепит лучший старт.',
@@ -2966,7 +3149,7 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
         'Потом ты попадёшь в тот старт, который подходит именно тебе, быстро открывается и сразу доказывает свою пользу.',
   ),
   'placement_result_your_start_is_ready': Act0SurfaceAtomCopyV1(
-    text: 'Твой старт уже готов.',
+    text: 'Шарки нашёл твой старт.',
   ),
   'placement_result_see_where_to_start': Act0SurfaceAtomCopyV1(
     text: 'Посмотреть точку старта',
@@ -2986,10 +3169,22 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
     text: 'Посмотреть 7-дневный пробный период',
   ),
   'placement_sheet_start_first_hand': Act0SurfaceAtomCopyV1(
-    text: 'Открыть первую раздачу',
+    text: 'Начать с полезной раздачи',
   ),
   'placement_sheet_start_from_zero': Act0SurfaceAtomCopyV1(
-    text: 'Начать с нуля',
+    text: 'Начать с самого начала',
+  ),
+  'home_drill_checklist_title_0_of_3': Act0SurfaceAtomCopyV1(
+    text: '0 из 3 повторов сегодня',
+  ),
+  'home_drill_checklist_title_1_of_3': Act0SurfaceAtomCopyV1(
+    text: '1 из 3 повторов сегодня',
+  ),
+  'home_drill_checklist_title_2_of_3': Act0SurfaceAtomCopyV1(
+    text: '2 из 3 повторов сегодня',
+  ),
+  'home_daily_done_continue_hint': Act0SurfaceAtomCopyV1(
+    text: 'Продолжай, если хочешь',
   ),
 };
 

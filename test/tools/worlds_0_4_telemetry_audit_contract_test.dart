@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('worlds 0-4 telemetry audit scans the live runner emission owner', () {
+  test('worlds 0-4 telemetry audit scans the R2 emission owner', () {
     final audit = File(
       'tools/audit_worlds_0_4_telemetry_v1.dart',
     ).readAsStringSync();
@@ -11,7 +11,7 @@ void main() {
     expect(
       audit,
       contains(
-        "lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart",
+        "lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart",
       ),
     );
     expect(
