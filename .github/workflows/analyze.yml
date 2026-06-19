@@ -2,7 +2,7 @@
 name: Analyze
 on:
   push:
-    branches: [main, fix/content-ci-structure, chore/**]
+    branches: [main, fix/content-ci-structure, 'chore/**']
   workflow_dispatch:
 concurrency:
   group: analyze-${{ github.ref }}
@@ -23,7 +23,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.3'
+          flutter-version: '3.35.0'
           channel: stable
           cache: true
 
@@ -58,13 +58,13 @@ jobs:
         if: ${{ always() }}
         run: |
           cat <<'EOF' >> $GITHUB_STEP_SUMMARY
-## Tiered verification summary
-- **Tier 0**: `./tools/run_table_first_tiers.sh 0`
-- **Tier 1**: `./tools/run_table_first_tiers.sh 1` (guards: `test/table_first_order_guard_test.dart`, `test/theory_session_routing_test.dart`, `test/lesson_numeric_invariant_test.dart`)
-- **Manual Tier 2**: `TIER2_TIMEOUT=300 ./tools/run_table_first_tiers.sh 2`
-- **Docs**: See `docs/table_first_lessons.md` → “Table-first Verification Workflow”
-- **Manifest**: `./tools/tier_coverage_manifest.json` defines the Tier 1 guard list
-EOF
+          ## Tiered verification summary
+          - **Tier 0**: `./tools/run_table_first_tiers.sh 0`
+          - **Tier 1**: `./tools/run_table_first_tiers.sh 1` (guards: `test/table_first_order_guard_test.dart`, `test/theory_session_routing_test.dart`, `test/lesson_numeric_invariant_test.dart`)
+          - **Manual Tier 2**: `TIER2_TIMEOUT=300 ./tools/run_table_first_tiers.sh 2`
+          - **Docs**: See `docs/table_first_lessons.md` -> "Table-first Verification Workflow"
+          - **Manifest**: `./tools/tier_coverage_manifest.json` defines the Tier 1 guard list
+          EOF
 
   tier2-checkpoint:
     name: Tier 2 Checkpoint (manual)
@@ -81,7 +81,7 @@ EOF
         run: chmod +x ./tools/run_table_first_tiers.sh
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.3'
+          flutter-version: '3.35.0'
           channel: stable
           cache: true
       - name: Tier 2 (checkpoint)
