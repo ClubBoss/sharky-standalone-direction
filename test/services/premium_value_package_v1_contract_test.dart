@@ -8,11 +8,11 @@ void main() {
     expect(kPremiumValuePackageV1.title, 'Premium Access');
     expect(
       kPremiumValuePackageV1.freeRuleLine,
-      'Free includes the opening path and one Today route per UTC day.',
+      'Free keeps the opening path and first useful hand open.',
     );
     expect(
       kPremiumValuePackageV1.unlockLine,
-      'Trial or premium unlock premium-target Today routes and World 5+ progression on current main.',
+      'Premium is optional later: more table-clue practice after the free foundation.',
     );
     expect(
       kPremiumValuePackageV1.restoreLine,
@@ -21,6 +21,16 @@ void main() {
 
     expect(kPremiumValuePackageV1.freeRuleLine, isNot(contains('all worlds')));
     expect(kPremiumValuePackageV1.unlockLine, isNot(contains('all features')));
+    expect(kPremiumValuePackageV1.unlockLine, isNot(contains('World 5+')));
+    expect(
+      kPremiumValuePackageV1.unlockLine,
+      isNot(contains('premium-target')),
+    );
+    expect(kPremiumValuePackageV1.unlockLine, isNot(contains('seven-day')));
+    expect(
+      kPremiumValuePackageV1.unlockLine,
+      isNot(contains('progress insights')),
+    );
     expect(kPremiumValuePackageV1.restoreLine, isNot(contains('guarantees')));
     expect(kPremiumValuePackageV1.restoreLine, isNot(contains('always')));
 

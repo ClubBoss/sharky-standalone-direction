@@ -7,9 +7,9 @@ class SubscriptionSurfaceCopyV1 {
   static String todayStatusLine(SubscriptionStatusV1 status) {
     return switch (status.accessState) {
       SubscriptionAccessStateV1.premium =>
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
+        'Premium active: extra table-clue practice is available after the free foundation.',
       SubscriptionAccessStateV1.trial =>
-        'Trial active: ${status.trialRemainingDays} days left on premium-target Today routes and World 5+.',
+        'Trial active: ${status.trialRemainingDays} days left for optional table-clue practice after the free foundation.',
       SubscriptionAccessStateV1.free => kPremiumValuePackageV1.freeRuleLine,
     };
   }
@@ -19,20 +19,19 @@ class SubscriptionSurfaceCopyV1 {
       SubscriptionAccessStateV1.premium =>
         'Premium is active now on this account.',
       SubscriptionAccessStateV1.trial =>
-        'Trial is active now. Premium keeps premium-target Today routes and World 5+ open after the trial ends.',
-      SubscriptionAccessStateV1.free =>
-        'Free stays on the opening path plus one Today route per UTC day on current main.',
+        'Trial is active now. Premium keeps optional table-clue practice available after the trial ends.',
+      SubscriptionAccessStateV1.free => kPremiumValuePackageV1.freeRuleLine,
     };
   }
 
   static String hubStatusLine(SubscriptionStatusV1 status) {
     return switch (status.accessState) {
       SubscriptionAccessStateV1.premium =>
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
+        'Premium active: extra table-clue practice is available after the free foundation.',
       SubscriptionAccessStateV1.trial =>
-        'Trial active: premium-target Today routes and World 5+ stay open during the active trial.',
+        'Trial active: optional table-clue practice stays available during the active trial.',
       SubscriptionAccessStateV1.free =>
-        'Free access stays on the opening path plus one Today route per UTC day.',
+        'Free active: the opening path and first useful hand stay open.',
     };
   }
 
@@ -41,9 +40,9 @@ class SubscriptionSurfaceCopyV1 {
       SubscriptionAccessStateV1.premium =>
         'Your account already has premium access on current main.',
       SubscriptionAccessStateV1.trial =>
-        'Your account is on trial now. Premium keeps the same premium-target access after the trial ends.',
+        'Your account is on trial now. Premium keeps optional table-clue practice available after the trial ends.',
       SubscriptionAccessStateV1.free =>
-        'Premium adds premium-target Today routes and World 5+ progression on current main.',
+        'Premium can add more table-clue practice after the free foundation.',
     };
   }
 }

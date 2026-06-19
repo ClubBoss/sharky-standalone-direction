@@ -4,6 +4,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/user_action_logger.dart';
 import '../services/premium_service.dart';
+import '../services/entitlement_ledger_v1.dart';
 
 /// Service for handling in-app purchases on Android and iOS.
 ///
@@ -166,6 +167,11 @@ class PaymentService extends ChangeNotifier {
       if (!success) {
         _lastError = 'Failed to initiate purchase for ${product.id}';
         notifyListeners();
+      } else {
+        await EntitlementLedgerServiceV1.instance.recordPurchasePendingV1(
+          productId: product.id,
+          nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+        );
       }
 
       await UserActionLogger.instance.logEvent({
@@ -327,9 +333,15 @@ class PaymentService extends ChangeNotifier {
   static Future<void> syncCanonicalEntitlementForProductV1(
     String productId,
   ) async {
+    final grantsPremium = _isPremiumEntitlementProductV1(productId);
     if (_isPremiumEntitlementProductV1(productId)) {
       await PremiumService().enablePremium();
     }
+    await EntitlementLedgerServiceV1.instance.recordLocalProductConvergenceV1(
+      productId: productId,
+      grantsPremium: grantsPremium,
+      nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
   }
 
   /// Load purchased products from local storage.

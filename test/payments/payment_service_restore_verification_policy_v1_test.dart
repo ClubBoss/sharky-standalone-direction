@@ -5,6 +5,7 @@ import 'package:in_app_purchase_platform_interface/in_app_purchase_platform_inte
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/payments/payment_service.dart';
+import 'package:poker_analyzer/services/entitlement_ledger_v1.dart';
 import 'package:poker_analyzer/services/entitlement_ssot_v1.dart';
 import 'package:poker_analyzer/services/premium_service.dart';
 
@@ -30,6 +31,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     await PremiumService().clear();
+    await EntitlementLedgerServiceV1.instance.debugClearLedgerForTestsOnlyV1();
   });
 
   test(
@@ -49,6 +51,13 @@ void main() {
         nowEpochMs: 1700000000000,
       );
       expect(entitled, isTrue);
+      final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1(
+        nowEpochMs: 1700000000000,
+      );
+      final access = ledger.toAccess(nowEpochMs: 1700000000000);
+      expect(ledger.source, EntitlementLedgerSourceV1.localProductConvergence);
+      expect(ledger.storeProductId, PaymentService.productPremiumPack);
+      expect(access.publicCommerceSafe, isFalse);
     },
   );
 
@@ -69,6 +78,16 @@ void main() {
         nowEpochMs: 1700000000000,
       );
       expect(entitled, isTrue);
+      final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1(
+        nowEpochMs: 1700000000000,
+      );
+      expect(ledger.source, EntitlementLedgerSourceV1.localProductConvergence);
+      expect(ledger.storeProductId, PaymentService.productProSubscription);
+      expect(ledger.subscriptionState.verified, isFalse);
+      expect(
+        ledger.toAccess(nowEpochMs: 1700000000000).publicCommerceSafe,
+        isFalse,
+      );
     },
   );
 
@@ -87,6 +106,17 @@ void main() {
       nowEpochMs: 1700000000000,
     );
     expect(entitled, isFalse);
+    final ledger = await EntitlementLedgerServiceV1.instance.readLedgerV1(
+      nowEpochMs: 1700000000000,
+    );
+    expect(
+      ledger.productCacheProductIds,
+      contains(PaymentService.productCoinsPackSmall),
+    );
+    expect(
+      ledger.toAccess(nowEpochMs: 1700000000000).canAccessPremium,
+      isFalse,
+    );
   });
 
   test(
