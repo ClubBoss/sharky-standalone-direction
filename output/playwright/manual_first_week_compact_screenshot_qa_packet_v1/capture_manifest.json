@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-06-18T07:07:28.374Z",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "captures": [
+    {
+      "name": "first_week_home_compact",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_first_week_compact_screenshot_qa_packet_v1/first_week_home_compact.png",
+      "bytes": 45775,
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_home",
+      "title": "127.0.0.1:7357/?act0_capture=first_week_home"
+    },
+    {
+      "name": "first_week_review_open_repair_compact",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_first_week_compact_screenshot_qa_packet_v1/first_week_review_open_repair_compact.png",
+      "bytes": 40323,
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_review",
+      "title": "127.0.0.1:7357/?act0_capture=first_week_review"
+    },
+    {
+      "name": "first_week_learn_compact",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_first_week_compact_screenshot_qa_packet_v1/first_week_learn_compact.png",
+      "bytes": 47090,
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_learn",
+      "title": "127.0.0.1:7357/?act0_capture=first_week_learn"
+    },
+    {
+      "name": "first_week_profile_compact",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_first_week_compact_screenshot_qa_packet_v1/first_week_profile_compact.png",
+      "bytes": 43703,
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_profile",
+      "title": "127.0.0.1:7357/?act0_capture=first_week_profile"
+    }
+  ]
+}

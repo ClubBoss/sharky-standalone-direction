@@ -56,6 +56,38 @@ That means:
 4. long-term retention should come from mastery, resurfacing, and later route
    depth, not fake urgency
 
+## Current Launch Monetization Lock (2026-06-18)
+
+For the current Act0 launch route:
+
+- `W1-W4` are the free public foundation.
+- `W5+` is the future paid-depth boundary.
+- The accepted premium preview appears after completed daily/session value and
+  remains optional, secondary, boundary-neutral, and commerce-safe.
+- Public hard paywall, Premium Hub exposure, pricing, public trial start,
+  restore, purchase, and receipt verification remain deferred until production
+  commerce safety is closed.
+
+Active launch route labels for monetization work:
+
+| World | Launch-facing title |
+| --- | --- |
+| W1 | Poker from Zero |
+| W2 | Hand Discipline |
+| W3 | Position Thinking |
+| W4 | Preflop Framework |
+| W5 | Bet Purpose + Price |
+| W6 | Board and Draws |
+
+Older authored/content docs may still use stale W4/W5 meanings. Premium and
+trial work must follow the active launch route truth above. Until route/content
+normalization is complete, premium preview copy must avoid W4/W5 numbering and
+world unlock promises.
+
+W4 is a primary future challenger / A-B candidate only. It is not current
+launch-default and can graduate only after route truth normalization, W1-W3/W4
+telemetry, time-to-decision/confidence evidence, and commerce readiness.
+
 ## Strategy Hierarchy
 
 When monetization and retention decisions conflict, use this order:
@@ -226,7 +258,14 @@ Default rule:
 
 Current best fit in the app:
 
-- after placement or another meaningful value-confirming moment
+- no trial before placement, first hand, first feedback, first completion, or
+  the soft premium preview
+- no trial inside the soft premium preview
+- contextual 7-day trial at a future W5 locked-depth/paywall attempt, or later
+  high-intent proof, after commerce safety is production-ready
+- D2 return, preview-clicker, dynamic behavior, repair-depth, and
+  analytics/leak-profile trial timing are future experiments, not launch
+  default
 
 ### Trial job
 

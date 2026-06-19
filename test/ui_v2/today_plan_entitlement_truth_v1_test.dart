@@ -81,8 +81,8 @@ void main() {
       expect(statusFinder, findsOneWidget);
       final statusText = (tester.widget<Text>(statusFinder).data ?? '').trim();
       expect(statusText, contains('Trial active:'));
-      expect(statusText, contains('premium-target Today routes'));
-      expect(statusText, contains('World 5+'));
+      expect(statusText, contains('optional table-clue practice'));
+      expect(statusText, contains('free foundation'));
       expect(statusText, isNot(contains('Premium active')));
       final previewCta = find.byKey(
         const Key('today_plan_premium_preview_cta_v1'),
@@ -105,7 +105,7 @@ void main() {
       final previewStatusText =
           (tester.widget<Text>(previewStatusFinder).data ?? '').trim();
       expect(previewStatusText, contains('Trial is active now.'));
-      expect(previewStatusText, contains('World 5+'));
+      expect(previewStatusText, contains('optional table-clue practice'));
       expect(
         find.byKey(const Key('today_plan_premium_preview_free_line_v1')),
         findsOneWidget,
@@ -162,7 +162,7 @@ void main() {
 
       expect(find.textContaining('Trial active'), findsOneWidget);
       expect(
-        find.textContaining('premium-target Today routes'),
+        find.textContaining('optional table-clue practice'),
         findsOneWidget,
       );
       expect(
@@ -176,7 +176,7 @@ void main() {
 
       expect(
         find.textContaining(
-          'Premium active: premium-target Today routes and World 5+ are unlocked.',
+          'Premium active: extra table-clue practice is available after the free foundation.',
         ),
         findsOneWidget,
       );
@@ -219,9 +219,7 @@ void main() {
 
     expect(find.textContaining('Trial active:'), findsNothing);
     expect(
-      find.text(
-        'Free includes the opening path and one Today route per UTC day.',
-      ),
+      find.text('Free keeps the opening path and first useful hand open.'),
       findsOneWidget,
     );
     expect(
@@ -262,7 +260,7 @@ void main() {
 
     expect(
       find.textContaining(
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
+        'Premium active: extra table-clue practice is available after the free foundation.',
       ),
       findsOneWidget,
     );
@@ -366,9 +364,7 @@ void main() {
 
       expect(find.textContaining('Trial active:'), findsNothing);
       expect(
-        find.text(
-          'Free includes the opening path and one Today route per UTC day.',
-        ),
+        find.text('Free keeps the opening path and first useful hand open.'),
         findsOneWidget,
       );
       expect(

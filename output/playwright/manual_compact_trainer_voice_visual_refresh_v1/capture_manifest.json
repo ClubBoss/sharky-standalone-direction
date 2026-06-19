@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-06-18T07:30:09.049Z",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "captureMethod": "in_app_browser_manual_debug_urls_after_fresh_server_restart",
+  "entries": [
+    {
+      "surface": "home",
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_home",
+      "requestedUrl": "http://127.0.0.1:7357/?act0_capture=first_week_home",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_home_compact.png",
+      "relativeFile": "output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_home_compact.png",
+      "expected": "Week 1: train one table read",
+      "expectedTextVisible": false,
+      "bytes": 46642,
+      "excerpt": ""
+    },
+    {
+      "surface": "review",
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_review",
+      "requestedUrl": "http://127.0.0.1:7357/?act0_capture=first_week_review",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_review_open_repair_compact.png",
+      "relativeFile": "output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_review_open_repair_compact.png",
+      "expected": "Sharky repair",
+      "expectedTextVisible": false,
+      "bytes": 42574,
+      "excerpt": ""
+    },
+    {
+      "surface": "learn",
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_learn",
+      "requestedUrl": "http://127.0.0.1:7357/?act0_capture=first_week_learn",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_learn_compact.png",
+      "relativeFile": "output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_learn_compact.png",
+      "expected": "This week, see the table before choosing.",
+      "expectedTextVisible": false,
+      "bytes": 46931,
+      "excerpt": ""
+    },
+    {
+      "surface": "profile",
+      "url": "http://127.0.0.1:7357/?act0_capture=first_week_profile",
+      "requestedUrl": "http://127.0.0.1:7357/?act0_capture=first_week_profile",
+      "file": "/Users/elmarsalimzade/Sharky_1.0/output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_profile_compact.png",
+      "relativeFile": "output/playwright/manual_compact_trainer_voice_visual_refresh_v1/first_week_profile_compact.png",
+      "expected": "Week 1: short returns keep one table clue warm.",
+      "expectedTextVisible": false,
+      "bytes": 45239,
+      "excerpt": ""
+    }
+  ]
+}

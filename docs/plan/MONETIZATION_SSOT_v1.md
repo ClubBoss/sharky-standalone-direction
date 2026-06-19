@@ -1,5 +1,129 @@
 # MONETIZATION_SSOT_v1
 
+Status: ACTIVE for monetization truth.
+
+## 0) Launch monetization / route truth lock (2026-06-18)
+
+This section is the current launch-facing monetization and route-truth overlay.
+It supersedes any older local implementation notes below when planning public
+premium preview, paywall, trial, or route-gate work.
+
+### Active launch route truth
+
+The active Act0 launch route is:
+
+| World | Launch-facing title |
+| --- | --- |
+| W1 | Poker from Zero |
+| W2 | Hand Discipline |
+| W3 | Position Thinking |
+| W4 | Preflop Framework |
+| W5 | Bet Purpose + Price |
+| W6 | Board and Draws |
+
+Older authored/content documents may still describe W4 as `Bet Purpose + Price`
+and W5 as `Board Awareness`. Those meanings are stale or secondary for
+monetization work until a dedicated route/content normalization wave changes the
+active route truth. Premium, paywall, trial, and preview copy must follow the
+active launch route above.
+
+### Accepted preview status
+
+The current accepted public monetization surface is a soft premium value preview
+after completed daily/session learning value.
+
+Accepted state:
+
+- appears after the completed Practice/session result state;
+- keeps `Practice extra reps` as the dominant free/learning action;
+- shows `See what premium adds` as a secondary entry;
+- opens a boundary-neutral preview sheet;
+- does not expose commerce, price, purchase, trial, restore, Premium Hub,
+  entitlement change, or route gating;
+- does not mention W4, W5, world unlocks, AI/adaptive/GTO/solver, guaranteed
+  improvement, or win-rate claims.
+
+Accepted proof:
+
+- `docs/_reviews/compact_english_premium_preview_proof_v1.md`
+- `output/playwright/premium_preview_proof_v1/practice_complete_compact_en.png`
+- `output/playwright/premium_preview_proof_v1/premium_preview_sheet_compact_en.png`
+
+### Launch monetization default
+
+Launch default:
+
+- `W1-W4` are the free public foundation.
+- `W5+` is the future paid-depth boundary.
+- soft premium preview may appear only after completed learning value.
+- no hard paywall ships until production commerce safety is closed.
+
+W4 status:
+
+- W4 is a primary future challenger / A-B candidate, not the current launch
+  default hard gate.
+- W4 can graduate only after route truth normalization, W1-W3/W4 telemetry,
+  time-to-decision/confidence evidence, and commerce readiness.
+- W3 is not a launch-default paid gate.
+
+### Trial timing lock
+
+Launch trial default:
+
+- no trial before placement;
+- no trial on placement result;
+- no trial before first hand, first feedback, first completion, or the soft
+  premium preview;
+- no trial inside the soft premium preview;
+- contextual 7-day trial may be offered only at a future W5 locked-depth/paywall
+  attempt, or later high-intent proof, after commerce safety is production-ready.
+
+D2 return, high-intent, preview-clicker, dynamic behavior, repair-depth, and
+analytics/leak-profile trial/upsell timing are deferred experiments, not launch
+default.
+
+### Current forbidden preview/paywall copy
+
+Current preview copy may say:
+
+- more reps;
+- deeper repair/review;
+- longer route depth;
+- after the free foundation;
+- when you are ready.
+
+Current preview/paywall planning must not say:
+
+- `Unlock W4`;
+- `Unlock W5`;
+- `W5 is premium`;
+- `Bet Purpose is premium`;
+- `start trial`;
+- `restore`;
+- `price`;
+- `purchase`;
+- `upgrade now`;
+- `unlock all`;
+- AI/adaptive/GTO/solver/optimal/frequency;
+- guaranteed improvement or win-rate claims.
+
+### Deferred commerce work
+
+Still deferred / blocked until scoped separately:
+
+- public hard paywall;
+- Premium Hub public exposure;
+- pricing;
+- public trial start;
+- restore;
+- receipt verification;
+- W4/W5 A-B test;
+- one-time starter pack;
+- dynamic behavior gate;
+- repair-depth premium;
+- analytics/leak-profile upsell;
+- direct `practice_complete` capture URL productivity improvement.
+
 This document is the current single source of truth for monetization behavior implemented in code.
 It is descriptive only for current state (R4 Batch v2a), not a redesign.
 

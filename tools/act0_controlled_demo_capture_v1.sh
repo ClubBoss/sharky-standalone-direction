@@ -32,6 +32,7 @@ declare -a SURFACE_SPECS=(
   "runner_theory:direct_state:?act0_capture=runner_theory"
   "runner_drill:direct_state:?act0_capture=runner_drill"
   "runner_feedback_or_review:direct_state:?act0_capture=runner_feedback"
+  "runner_first_correct_feedback:direct_state:?act0_capture=runner_first_correct_feedback"
   "review:direct_state:?act0_capture=review"
   "practice:direct_state:?act0_capture=practice"
   "profile:direct_state:?act0_capture=profile"
@@ -210,9 +211,16 @@ async page => {
   }
   await page.waitForTimeout(700);
 
-  const bodyText = (await page.locator('body').innerText().catch(() => ''))
-    .replace(/\\s+/g, ' ')
-    .trim();
+  let bodyText = '';
+  for (let attempt = 0; attempt < 16; attempt += 1) {
+    bodyText = (await page.locator('body').innerText().catch(() => ''))
+      .replace(/\\s+/g, ' ')
+      .trim();
+    if (bodyText.length > 0) {
+      break;
+    }
+    await page.waitForTimeout(500);
+  }
   const buttonNames = (await page.getByRole('button').allTextContents().catch(() => []))
     .map(text => text.replace(/\\s+/g, ' ').trim())
     .filter(Boolean);
@@ -367,6 +375,7 @@ const requiredSurfaces = [
   'runner_theory',
   'runner_drill',
   'runner_feedback_or_review',
+  'runner_first_correct_feedback',
   'review',
   'practice',
   'profile',

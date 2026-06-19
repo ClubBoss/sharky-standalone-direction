@@ -18,10 +18,9 @@ class PremiumValuePackageV1 {
 // Canonical bounded premium value package truth for current main.
 const PremiumValuePackageV1 kPremiumValuePackageV1 = PremiumValuePackageV1(
   title: 'Premium Access',
-  freeRuleLine:
-      'Free includes the opening path and one Today route per UTC day.',
+  freeRuleLine: 'Free keeps the opening path and first useful hand open.',
   unlockLine:
-      'Trial or premium unlock premium-target Today routes and World 5+ progression on current main.',
+      'Premium is optional later: more table-clue practice after the free foundation.',
   restoreLine:
       'Restore checks this store account on this device and activates premium only if a past purchase is found.',
 );

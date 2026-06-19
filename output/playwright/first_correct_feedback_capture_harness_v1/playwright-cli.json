@@ -1,0 +1,11 @@
+{
+  "browser": {
+    "launchOptions": {
+      "headless": true
+    },
+    "contextOptions": {
+      "deviceScaleFactor": 1,
+      "locale": "en-US"
+    }
+  }
+}

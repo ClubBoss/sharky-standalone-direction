@@ -1331,6 +1331,20 @@ class _JourneyPreviewV5 extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          _learnCopyV1(
+            context,
+            en: 'This week, see the table before choosing.',
+            ru: 'На этой неделе смотри на стол перед выбором.',
+          ),
+          key: const Key('act0_shell_learn_week1_support_line'),
+          maxLines: 2,
+          overflow: TextOverflow.fade,
+          style: Act0ShellTokensV1.muted.copyWith(
+            color: Act0ShellTokensV1.textMuted,
+          ),
+        ),
         const SizedBox(height: 8),
         if (showFullPath)
           SizedBox(

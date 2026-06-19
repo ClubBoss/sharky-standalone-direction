@@ -74,6 +74,36 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
       );
+    case 'runner_first_correct_feedback':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
+      );
+    case 'runner_first_wrong_feedback':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+      );
+    case 'first_week_home':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
+      );
+    case 'first_week_review':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekReview,
+      );
+    case 'first_week_learn':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn,
+      );
+    case 'first_week_profile':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
+      );
     case 'review':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,
@@ -111,6 +141,15 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
     default:
       return null;
   }
+}
+
+@visibleForTesting
+Locale? act0CommercialProofLocaleOverrideV1(Uri uri) {
+  final hasCaptureEntry = parseAct0ControlledDemoHarnessEntryV1(uri) != null;
+  if (!hasCaptureEntry) return null;
+
+  final rawLocale = (uri.queryParameters['locale'] ?? '').trim().toLowerCase();
+  return rawLocale == 'en' ? const Locale('en') : null;
 }
 
 Route<dynamic>? buildLegacySurfaceRedirectRoute(RouteSettings settings) {
@@ -171,11 +210,14 @@ class _AppRootState extends State<AppRoot> {
 
   @override
   Widget build(BuildContext context) {
+    final proofLocaleOverride = kReleaseMode
+        ? null
+        : act0CommercialProofLocaleOverrideV1(Uri.base);
     return ChangeNotifierProvider<AppLanguageController>.value(
       value: _languageController,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        locale: _languageController.currentLocale,
+        locale: proofLocaleOverride ?? _languageController.currentLocale,
         // Providing a basic dark theme to ensure text is visible on dark backgrounds
         // defined in AppColors. Complex theme logic will be restored later.
         theme: ThemeData.dark(

@@ -142,7 +142,11 @@ class Act0HomeShellV1 extends StatelessWidget {
     final courseTitle = act0LocalizedWorldTitleV1(context, state.selectedWorld);
     final sharky = sharkyOverride ?? lesson.runner.sharky;
     final nextActionCtaLabel = this.nextActionCtaLabel == 'Continue'
-        ? _shellCopyV1(context, en: 'Continue', ru: 'Продолжить')
+        ? act0LocalizedSurfaceAtomV1(
+            context,
+            'home_checklist_continue_label',
+            fallback: 'Continue',
+          )
         : this.nextActionCtaLabel;
     final goalValue = dailyGoalValue ?? state.dailyGoalValue;
     final checklistActive =
@@ -204,24 +208,14 @@ class Act0HomeShellV1 extends StatelessWidget {
                         localeIsRu: _isRuLocaleV1(context),
                         title:
                             dailyPlanTitle ??
-                            _shellCopyV1(
+                            act0LocalizedSurfaceAtomV1(
                               context,
-                              en: "Today's focus",
-                              ru: 'Фокус сегодня',
+                              'home_checklist_title',
+                              fallback: 'Short table practice',
                             ),
                       ))
               else
-                _HomeChecklistSurfaceV1(
-                  rows: checklistRows,
-                  localeIsRu: _isRuLocaleV1(context),
-                  title:
-                      dailyPlanTitle ??
-                      _shellCopyV1(
-                        context,
-                        en: "Today's focus",
-                        ru: 'Фокус сегодня',
-                      ),
-                ),
+                const SizedBox.shrink(),
             ],
           ),
         ),
@@ -268,11 +262,15 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: _shellCopyV1(context, en: 'Fix', ru: 'Исправь'),
-            title: _shellCopyV1(
+            label: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'Fix one mistake',
-              ru: 'Исправь одну ошибку',
+              'home_checklist_fix_label',
+              fallback: 'Repair',
+            ),
+            title: act0LocalizedSurfaceAtomV1(
+              context,
+              'home_checklist_fix_mistake_title',
+              fallback: 'Repair this signal',
             ),
             detail: repairJob.title,
             icon: Icons.build_circle_outlined,
@@ -287,7 +285,11 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: _shellCopyV1(context, en: 'Keep sharp', ru: 'Держи острым'),
+            label: act0LocalizedSurfaceAtomV1(
+              context,
+              'home_checklist_keep_sharp_label',
+              fallback: 'Keep sharp',
+            ),
             title: proveJob.label,
             detail: proveJob.detail.trim().isNotEmpty
                 ? proveJob.detail
@@ -302,16 +304,20 @@ class Act0HomeShellV1 extends StatelessWidget {
         : Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: _shellCopyV1(context, en: 'Keep sharp', ru: 'Держи острым'),
-            title: _shellCopyV1(
+            label: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'Clean today',
-              ru: 'Сегодня чисто',
+              'home_checklist_keep_sharp_label',
+              fallback: 'Keep sharp',
             ),
-            detail: _shellCopyV1(
+            title: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'No leaks due. Keep the skill warm.',
-              ru: 'Явных сбоев нет. Просто держи навык тёплым.',
+              'home_checklist_clean_today_title',
+              fallback: 'Clean today',
+            ),
+            detail: act0LocalizedSurfaceAtomV1(
+              context,
+              'home_checklist_clean_today_detail',
+              fallback: 'No leaks due. Keep the skill warm.',
             ),
             icon: Icons.check_rounded,
             accentColor: Act0VisualCanonV1.greenTable,
@@ -320,11 +326,15 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'review',
             stepNumber: 3,
-            label: _shellCopyV1(context, en: 'Review', ru: 'Повтор'),
-            title: _shellCopyV1(
+            label: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'Check confidence',
-              ru: 'Проверь уверенность',
+              'home_checklist_review_label',
+              fallback: 'Review',
+            ),
+            title: act0LocalizedSurfaceAtomV1(
+              context,
+              'home_checklist_check_confidence_title',
+              fallback: 'Check confidence',
             ),
             detail: recheckJob.title,
             icon: Icons.refresh_rounded,
@@ -339,16 +349,20 @@ class Act0HomeShellV1 extends StatelessWidget {
         : Act0HomeChecklistRowV1(
             rowKey: 'review',
             stepNumber: 3,
-            label: _shellCopyV1(context, en: 'Review', ru: 'Повтор'),
-            title: _shellCopyV1(
+            label: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'No old spots due',
-              ru: 'Старых спотов пока нет',
+              'home_checklist_review_label',
+              fallback: 'Review',
             ),
-            detail: _shellCopyV1(
+            title: act0LocalizedSurfaceAtomV1(
               context,
-              en: 'Nothing to review right now.',
-              ru: 'Сейчас нечего повторять.',
+              'home_checklist_no_old_spots_title',
+              fallback: 'No old spots due',
+            ),
+            detail: act0LocalizedSurfaceAtomV1(
+              context,
+              'home_checklist_no_old_spots_detail',
+              fallback: 'Nothing to review right now.',
             ),
             icon: Icons.check_circle_outline_rounded,
             accentColor: Act0VisualCanonV1.greenTable,
@@ -358,7 +372,11 @@ class Act0HomeShellV1 extends StatelessWidget {
       Act0HomeChecklistRowV1(
         rowKey: 'learn',
         stepNumber: 1,
-        label: _shellCopyV1(context, en: 'Learn', ru: 'Учись'),
+        label: act0LocalizedSurfaceAtomV1(
+          context,
+          'home_checklist_learn_label',
+          fallback: 'Learn',
+        ),
         title:
             nextActionTitle ??
             currentLesson?.title ??
@@ -372,11 +390,15 @@ class Act0HomeShellV1 extends StatelessWidget {
       Act0HomeChecklistRowV1(
         rowKey: 'drill',
         stepNumber: 2,
-        label: _shellCopyV1(context, en: 'Practice', ru: 'Практика'),
-        title: _drillChecklistTitle(localeIsRu, goalValue),
+        label: act0LocalizedSurfaceAtomV1(
+          context,
+          'home_checklist_practice_label',
+          fallback: 'Practice',
+        ),
+        title: _drillChecklistTitle(context, goalValue),
         detail: checklistActive
             ? ''
-            : _dailyGoalSupportText(localeIsRu, goalValue),
+            : _dailyGoalSupportText(context, goalValue),
         icon: Icons.flash_on_rounded,
         accentColor: Act0ShellTokensV1.actionCyan,
         tapKey: onOpenPracticeContext == null && onStartDailyDrill == null
@@ -390,18 +412,34 @@ class Act0HomeShellV1 extends StatelessWidget {
     return rows;
   }
 
-  String _drillChecklistTitle(bool localeIsRu, String goalValue) {
+  String _drillChecklistTitle(BuildContext context, String goalValue) {
     if (_isDailyGoalDoneValue(goalValue)) {
-      return localeIsRu ? 'На сегодня всё' : 'Done for today';
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'home_daily_goal_done_title',
+        fallback: 'Done for today',
+      );
     }
     if (goalValue.startsWith('0/')) {
-      return localeIsRu ? '0/3 спота сегодня' : '0/3 daily spots';
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'home_drill_checklist_title_0_of_3',
+        fallback: '0/3 daily spots',
+      );
     }
     if (goalValue.startsWith('1/')) {
-      return localeIsRu ? '1/3 спота сегодня' : '1/3 daily spots';
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'home_drill_checklist_title_1_of_3',
+        fallback: '1/3 daily spots',
+      );
     }
     if (goalValue.startsWith('2/')) {
-      return localeIsRu ? '2/3 спота сегодня' : '2/3 daily spots';
+      return act0LocalizedSurfaceAtomV1(
+        context,
+        'home_drill_checklist_title_2_of_3',
+        fallback: '2/3 daily spots',
+      );
     }
     return goalValue;
   }
@@ -553,7 +591,7 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Expanded(
                   child: Text(
-                    localeIsRu ? 'Твой путь сегодня' : 'Your path today',
+                    localeIsRu ? 'Чтение стола сегодня' : 'Today\'s table read',
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.actionCyan,
                       fontWeight: FontWeight.w900,
@@ -588,8 +626,8 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               localeIsRu
-                  ? 'Sharky: начни с одного чистого чтения.'
-                  : 'Sharky: Start with one clean read.',
+                  ? 'Sharky держит одно чистое чтение готовым.'
+                  : 'Sharky has one clean read ready.',
               key: const Key('act0_shell_home_mission_sharky_line'),
               maxLines: 1,
               overflow: TextOverflow.fade,
@@ -733,7 +771,7 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                     border: Border.all(color: Act0ShellTokensV1.border),
                   ),
                   child: Text(
-                    '0 / ${rows.length}',
+                    localeIsRu ? 'Следующая раздача' : 'Next useful hand',
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.textDim,
                       fontSize: 10,
@@ -746,11 +784,34 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             Text(
               localeIsRu
-                  ? 'Точные шаги на сегодня.'
-                  : 'Useful steps for today.',
+                  ? 'Неделя 1: тренируй одно чтение стола'
+                  : 'Week 1: train one table read',
+              key: const Key('act0_shell_home_week1_title'),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.primary,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              localeIsRu
+                  ? 'Сегодня: держи одну подсказку стола в тонусе.'
+                  : 'Today: keep one table clue warm',
               key: const Key('act0_shell_home_daily_plan_support'),
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textMuted,
+              ),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              localeIsRu
+                  ? 'Sharky уже держит твою следующую полезную раздачу готовой.'
+                  : 'Sharky has your next useful hand ready.',
+              key: const Key('act0_shell_home_week1_return_line'),
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textDim,
               ),
             ),
             const SizedBox(height: 12),
@@ -798,7 +859,8 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
         : isPending
         ? Act0ShellTokensV1.textDim
         : row.accentColor;
-    final rowActionable = isActiveFocus && row.onTap != null;
+    final rowActionable =
+        row.onTap != null && (isActiveFocus || row.isRepairAction);
     final opacity = isPending ? 0.78 : 1.0;
     final content = Container(
       constraints: BoxConstraints(minHeight: isActiveFocus ? 56 : 52),
@@ -888,7 +950,11 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            _shellCopyV1(context, en: 'Next', ru: 'Шаг'),
+                            act0LocalizedSurfaceAtomV1(
+                              context,
+                              'home_checklist_next_label',
+                              fallback: 'Next',
+                            ),
                             style: Act0ShellTokensV1.label.copyWith(
                               color: Act0ShellTokensV1.actionCyan,
                               fontSize: 8,
@@ -1012,14 +1078,26 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      localeIsRu ? 'Сегодня закрыто' : 'Today complete',
+                      act0LocalizedSurfaceAtomV1(
+                        context,
+                        'home_daily_done_title',
+                        fallback: 'Session complete',
+                      ),
                       style: Act0ShellTokensV1.cardTitle.copyWith(height: 1.0),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       earnedStreak
-                          ? (localeIsRu ? '+1 к серии' : '+1 streak')
-                          : (localeIsRu ? 'Навык тёплый' : 'Skill kept warm'),
+                          ? act0LocalizedSurfaceAtomV1(
+                              context,
+                              'home_daily_done_streak_label',
+                              fallback: 'Table read improved',
+                            )
+                          : act0LocalizedSurfaceAtomV1(
+                              context,
+                              'home_daily_done_warm_label',
+                              fallback: 'Table read improved',
+                            ),
                       key: const Key('act0_shell_home_daily_done_badge'),
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.gold,
@@ -1032,9 +1110,12 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
-            localeIsRu
-                ? 'Ритм засчитан. Если хочешь, можно идти дальше спокойно.'
-                : 'The minimum is banked. Continue if you want.',
+            act0LocalizedSurfaceAtomV1(
+              context,
+              'home_daily_done_detail',
+              fallback:
+                  'One table clue warmed. Sharky has tomorrow\'s read ready.',
+            ),
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.textMuted,
             ),
@@ -1042,8 +1123,8 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
           if (streakDays > 0) ...[
             const SizedBox(height: 6),
             Text(
-              localeIsRu
-                  ? '$streakDays дн. уже собраны.'
+              _isRuLocaleV1(context)
+                  ? 'Серия держится: $streakDays ${act0RussianPluralV1(streakDays, 'день', 'дня', 'дней')}.'
                   : '$streakDays day streak is holding.',
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.textDim,
@@ -1052,7 +1133,11 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
           ],
           const SizedBox(height: 10),
           Text(
-            localeIsRu ? 'Продолжай, если хочешь' : 'Continue if you want',
+            act0LocalizedSurfaceAtomV1(
+              context,
+              'home_daily_done_continue_hint',
+              fallback: 'Come back tomorrow for the next useful hand',
+            ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
             ),
@@ -1075,28 +1160,36 @@ bool _isDailyGoalDoneValue(String goalValue) {
       goalValue.startsWith('На сегодня всё');
 }
 
-String _dailyGoalSupportText(bool localeIsRu, String goalValue) {
+String _dailyGoalSupportText(BuildContext context, String goalValue) {
   if (goalValue.startsWith('Streak saved') ||
       goalValue.startsWith('Seat held') ||
       goalValue.startsWith('Saved') ||
       goalValue.startsWith('Завтра будет легко вернуться') ||
       goalValue.startsWith('Ритм сохранён') ||
       goalValue.startsWith('Сохранён')) {
-    return localeIsRu
-        ? 'Фикс засчитан. Ты честно удержал ритм на завтра.'
-        : 'Repair banked. You earned tomorrow\'s rhythm.';
+    return act0LocalizedSurfaceAtomV1(
+      context,
+      'home_daily_goal_streak_saved',
+      fallback: 'Repair banked. You earned tomorrow\'s rhythm.',
+    );
   }
   if (_isDailyGoalDoneValue(goalValue)) {
-    return localeIsRu
-        ? 'Цель на сегодня закрыта. Завтрашнее возвращение уже стало легче.'
-        : 'Goal complete. Tomorrow\'s return already feels lighter.';
+    return act0LocalizedSurfaceAtomV1(
+      context,
+      'home_daily_goal_complete',
+      fallback: 'Goal complete. Tomorrow\'s return already feels lighter.',
+    );
   }
   if (goalValue.startsWith('0/')) {
-    return localeIsRu
-        ? 'Один чистый спот запускает день.'
-        : 'One clean spot starts the day.';
+    return act0LocalizedSurfaceAtomV1(
+      context,
+      'home_daily_goal_start_day',
+      fallback: 'One clean spot starts the day.',
+    );
   }
-  return localeIsRu
-      ? 'Ещё один чистый реп держит темп.'
-      : 'One more clean rep keeps the pace.';
+  return act0LocalizedSurfaceAtomV1(
+    context,
+    'home_daily_goal_keep_pace',
+    fallback: 'One more clean rep keeps the pace.',
+  );
 }

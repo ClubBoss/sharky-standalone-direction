@@ -68,13 +68,13 @@ void main() {
       );
       expect(
         find.text(
-          'Trial active: premium-target Today routes and World 5+ stay open during the active trial.',
+          'Trial active: optional table-clue practice stays available during the active trial.',
         ),
         findsOneWidget,
       );
       expect(
         find.text(
-          'Your account is on trial now. Premium keeps the same premium-target access after the trial ends.',
+          'Your account is on trial now. Premium keeps optional table-clue practice available after the trial ends.',
         ),
         findsOneWidget,
       );
@@ -87,7 +87,7 @@ void main() {
 
       expect(
         find.text(
-          'Premium active: premium-target Today routes and World 5+ are unlocked.',
+          'Premium active: extra table-clue practice is available after the free foundation.',
         ),
         findsOneWidget,
       );
@@ -101,46 +101,47 @@ void main() {
     },
   );
 
-  testWidgets('premium hub refreshes visible access state after lifecycle resume', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      'premium_is_active': false,
-    });
+  testWidgets(
+    'premium hub refreshes visible access state after lifecycle resume',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'premium_is_active': false,
+      });
 
-    await tester.pumpWidget(const MaterialApp(home: UiV2PremiumHub()));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpWidget(const MaterialApp(home: UiV2PremiumHub()));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
-    expect(
-      find.text(
-        'Free access stays on the opening path plus one Today route per UTC day.',
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.text(
-        'Premium adds premium-target Today routes and World 5+ progression on current main.',
-      ),
-      findsOneWidget,
-    );
+      expect(
+        find.text(
+          'Free active: the opening path and first useful hand stay open.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Premium can add more table-clue practice after the free foundation.',
+        ),
+        findsOneWidget,
+      );
 
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-    await tester.pump(const Duration(milliseconds: 40));
-    await PremiumService().enablePremium();
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 120));
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pump(const Duration(milliseconds: 40));
+      await PremiumService().enablePremium();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 120));
 
-    expect(
-      find.text(
-        'Premium active: premium-target Today routes and World 5+ are unlocked.',
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('Premium Activated'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(
+        find.text(
+          'Premium active: extra table-clue practice is available after the free foundation.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Premium Activated'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'premium hub gives premium precedence over an active trial from first load',
@@ -161,7 +162,7 @@ void main() {
 
       expect(
         find.text(
-          'Premium active: premium-target Today routes and World 5+ are unlocked.',
+          'Premium active: extra table-clue practice is available after the free foundation.',
         ),
         findsOneWidget,
       );
@@ -210,13 +211,13 @@ void main() {
       expect(find.textContaining('Trial active:'), findsNothing);
       expect(
         find.text(
-          'Free access stays on the opening path plus one Today route per UTC day.',
+          'Free active: the opening path and first useful hand stay open.',
         ),
         findsOneWidget,
       );
       expect(
         find.text(
-          'Premium adds premium-target Today routes and World 5+ progression on current main.',
+          'Premium can add more table-clue practice after the free foundation.',
         ),
         findsOneWidget,
       );

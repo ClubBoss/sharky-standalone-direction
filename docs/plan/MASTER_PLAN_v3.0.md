@@ -7,6 +7,10 @@ Launch-readiness reference:
 
 - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
 
+Top-1 product attack plan:
+
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
+
 Working-surface policy:
 
 - `docs/plan/DEV_MAIN_2_ACTIVE_CUTOVER_v1.md`

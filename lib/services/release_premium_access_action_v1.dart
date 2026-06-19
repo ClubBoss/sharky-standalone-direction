@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'entitlement_ledger_v1.dart';
 import 'premium_restore_flow_v1.dart';
 import 'subscription_status_v1.dart';
 
@@ -49,10 +50,20 @@ class ReleasePremiumAccessActionV1 {
     }
     final statusBefore = await readStatusBefore();
     if (checkStoreAvailability != null && !(await checkStoreAvailability())) {
+      await EntitlementLedgerServiceV1.instance.recordVerificationFailedV1(
+        nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
+        restoreState: EntitlementLedgerRestoreStateV1.failed,
+        errorCode: 'store_unavailable',
+      );
       return ReleasePremiumAccessActionResultV1(
         status: ReleasePremiumAccessActionStatusV1.failed,
         subscriptionStatus: statusBefore,
         message: readLastError() ?? 'Store not available on this device',
+      );
+    }
+    if (!statusBefore.isEntitled) {
+      await EntitlementLedgerServiceV1.instance.recordRestorePendingV1(
+        nowEpochMs: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
     }
     final outcome = await PremiumRestoreFlowV1.run(
@@ -61,6 +72,7 @@ class ReleasePremiumAccessActionV1 {
       readEntitlementAfter: readEntitlementAfter,
       readLastError: readLastError,
     );
+    await _recordRestoreOutcomeV1(outcome);
     final statusAfter = await readStatusAfter();
     return ReleasePremiumAccessActionResultV1(
       status: switch (outcome.status) {
@@ -123,5 +135,28 @@ class ReleasePremiumAccessActionV1 {
   static void debugResetOverridesV1() {
     debugOverrideRestoreV1 = null;
     debugOverrideUpgradeV1 = null;
+  }
+
+  static Future<void> _recordRestoreOutcomeV1(
+    PremiumRestoreOutcomeV1 outcome,
+  ) async {
+    final nowEpochMs = DateTime.now().toUtc().millisecondsSinceEpoch;
+    switch (outcome.status) {
+      case PremiumRestoreOutcomeStatusV1.restored:
+        await EntitlementLedgerServiceV1.instance.recordLocalRestoreSuccessV1(
+          nowEpochMs: nowEpochMs,
+        );
+      case PremiumRestoreOutcomeStatusV1.noPurchaseFound:
+        await EntitlementLedgerServiceV1.instance
+            .recordNoPurchaseFoundRestoreV1(nowEpochMs: nowEpochMs);
+      case PremiumRestoreOutcomeStatusV1.failed:
+        await EntitlementLedgerServiceV1.instance.recordVerificationFailedV1(
+          nowEpochMs: nowEpochMs,
+          restoreState: EntitlementLedgerRestoreStateV1.failed,
+          errorCode: 'restore_failed',
+        );
+      case PremiumRestoreOutcomeStatusV1.alreadyActive:
+        return;
+    }
   }
 }
