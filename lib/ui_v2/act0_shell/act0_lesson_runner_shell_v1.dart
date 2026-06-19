@@ -733,6 +733,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.completionSummary,
     this.firstValueReceiptLine,
     this.repairResultReceiptLine,
+    this.repairSessionSummaryLines = const <String>[],
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
     this.relaxTheoryAdvanceLock = false,
@@ -759,6 +760,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
   final String? repairResultReceiptLine;
+  final List<String> repairSessionSummaryLines;
   final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
   final bool relaxTheoryAdvanceLock;
@@ -1964,6 +1966,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     completionSummary: null,
                     firstValueReceiptLine: widget.firstValueReceiptLine,
                     repairResultReceiptLine: widget.repairResultReceiptLine,
+                    repairSessionSummaryLines: widget.repairSessionSummaryLines,
                     onBack: null,
                     rapidMode: widget.rapidReviewMode,
                     coachVoiceSeed:
@@ -4301,6 +4304,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.completionSummary,
     this.firstValueReceiptLine,
     this.repairResultReceiptLine,
+    this.repairSessionSummaryLines = const <String>[],
     this.onBack,
     this.rapidMode = false,
     this.coachVoiceSeed,
@@ -4325,6 +4329,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
   final String? repairResultReceiptLine;
+  final List<String> repairSessionSummaryLines;
   final VoidCallback? onBack;
   final bool rapidMode;
   final String? coachVoiceSeed;
@@ -4425,6 +4430,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
+    final visibleRepairSessionSummaryLines = [
+      for (final line in repairSessionSummaryLines)
+        if (line.trim().isNotEmpty) line.trim(),
+    ];
     final fallbackReceiptLine = repairReceiptLine.isNotEmpty
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
@@ -4688,6 +4697,45 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       receiptNextLine,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.textMuted,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+          if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Container(
+              key: const Key('act0_shell_session_repair_summary'),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(
+                  Act0ShellTokensV1.radiusBase,
+                ),
+                border: Border.all(
+                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (
+                    var index = 0;
+                    index < visibleRepairSessionSummaryLines.length;
+                    index++
+                  ) ...[
+                    if (index > 0) const SizedBox(height: 3),
+                    Text(
+                      visibleRepairSessionSummaryLines[index],
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: index == 0
+                            ? Act0ShellTokensV1.gold
+                            : Act0ShellTokensV1.textMuted,
+                        fontWeight: index == 0
+                            ? FontWeight.w800
+                            : FontWeight.w700,
                       ),
                     ),
                   ],

@@ -73,6 +73,50 @@ void main() {
     );
   });
 
+  test(
+    'session repair summary renders fixed and repeated same-signal copy',
+    () {
+      expect(
+        act0RepairSessionSummaryCopyGuardLinesV1(
+          repaired: true,
+          exactReplay: false,
+          clueLabel: 'No bet yet',
+        ),
+        <String>['Today you repaired the no-bet-yet clue.'],
+      );
+      expect(
+        act0RepairSessionSummaryCopyGuardLinesV1(
+          repaired: false,
+          exactReplay: false,
+          clueLabel: 'No bet yet',
+        ),
+        <String>[
+          'Still fragile: the no-bet-yet clue.',
+          'Next focus: one more no-bet-yet repair hand.',
+        ],
+      );
+    },
+  );
+
+  test('session repair summary renders exact replay copy', () {
+    expect(
+      act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: true,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
+      <String>['Replay fixed: you handled that spot correctly.'],
+    );
+    expect(
+      act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: false,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
+      <String>['Replay still missed: try the spot once more.'],
+    );
+  });
+
   test('unknown template id does not render arbitrary copy', () {
     expect(
       act0RepairIntentCopyGuardLineV1(
@@ -146,6 +190,26 @@ void main() {
         exactReplay: true,
         clueLabel: 'No bet yet',
       )!,
+      ...act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: true,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      ),
+      ...act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: false,
+        exactReplay: false,
+        clueLabel: 'No bet yet',
+      ),
+      ...act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: true,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
+      ...act0RepairSessionSummaryCopyGuardLinesV1(
+        repaired: false,
+        exactReplay: true,
+        clueLabel: 'No bet yet',
+      ),
     ];
     const forbidden = <String>{
       'ai',
@@ -165,6 +229,8 @@ void main() {
       'guarantee',
       'leak',
       'detected',
+      'mastered',
+      'forever',
     };
 
     for (final line in lines) {
