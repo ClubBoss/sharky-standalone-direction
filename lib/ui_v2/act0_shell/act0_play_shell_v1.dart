@@ -34,11 +34,14 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
     return _playCopyV1(context, 'play_later_cta', fallback: 'Later');
   }
   return switch (group.groupId) {
-    'daily' => _playCopyV1(
-      context,
-      'play_action_start_daily_set',
-      fallback: 'Start daily set',
-    ),
+    'daily' =>
+      _dailyGroupCompleteV1(group)
+          ? group.ctaLabel
+          : _playCopyV1(
+              context,
+              'play_action_start_daily_set',
+              fallback: 'Start daily set',
+            ),
     'weak_spots' => _playCopyV1(
       context,
       'play_action_fix_next_leak',
@@ -57,6 +60,10 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
     _ => _playCopyV1(context, 'play_action_open', fallback: 'Open'),
   };
 }
+
+bool _dailyGroupCompleteV1(Act0PracticeGroupV1 group) =>
+    group.groupId == 'daily' &&
+    group.sessionLabel.trim().toLowerCase() == 'complete';
 
 String _playTileBadgeV1(BuildContext context, Act0PracticeGroupV1 group) {
   return switch (group.groupId) {
@@ -150,6 +157,34 @@ String _topicPackSubtitleV1(BuildContext context, Act0PracticeGroupV1 group) {
   };
 }
 
+List<String> _dailyHeroMetaItemsV1(Act0PracticeGroupV1 group) {
+  final countLabel = group.countLabel.trim();
+  final sessionLabel = group.sessionLabel.trim();
+  final durationLabel = group.durationLabel.trim();
+  final items = <String>[];
+  final normalizedSession = _normalizedDailySessionMetaV1(sessionLabel);
+  final countLooksLikeProgress =
+      countLabel.contains('/') && countLabel.toLowerCase().contains('daily');
+
+  if (countLabel.isNotEmpty && !countLooksLikeProgress) {
+    items.add(countLabel);
+  } else if (normalizedSession != null) {
+    items.add(normalizedSession);
+  }
+  if (durationLabel.isNotEmpty) {
+    items.add(durationLabel);
+  }
+  return items;
+}
+
+String? _normalizedDailySessionMetaV1(String sessionLabel) {
+  final lower = sessionLabel.toLowerCase();
+  final spotCountMatch = RegExp(r'^(\d+)\s+spot').firstMatch(lower);
+  if (spotCountMatch == null) return null;
+  final count = spotCountMatch.group(1)!;
+  return count == '1' ? '1 spot' : '$count spots';
+}
+
 Color _topicAccentColorV1(String groupId) {
   return switch (groupId) {
     'actions' => Act0ShellTokensV1.actionCyan,
@@ -172,6 +207,7 @@ class Act0PlayShellV1 extends StatefulWidget {
     required this.recommendedOutcomeLead,
     required this.masteryLabel,
     required this.onStartGroup,
+    this.onOpenPremiumPreview,
     this.screenSubtitle = 'Short reps keep today\'s skill sharp.',
     this.completionTitle,
     this.completionBody,
@@ -186,6 +222,7 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String recommendedOutcomeLead;
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
+  final VoidCallback? onOpenPremiumPreview;
   final String screenSubtitle;
   final String? completionTitle;
   final String? completionBody;
@@ -251,7 +288,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       key: const Key('act0_shell_play_screen'),
       padding: const EdgeInsets.fromLTRB(
         Act0ShellTokensV1.pageX,
-        Act0ShellTokensV1.gapLg,
+        Act0ShellTokensV1.gapMd,
         Act0ShellTokensV1.pageX,
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
@@ -259,7 +296,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
         _PracticeHubHeaderV1(
           title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
         ),
-        const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+        const SizedBox(height: 12),
         if (featuredGroup != null) ...[
           _DailyTrainingHeroV1(
             group: featuredGroup,
@@ -274,6 +311,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           _PlayIntroCardV1(
             title: widget.completionTitle!,
             body: widget.completionBody!,
+            onOpenPremiumPreview: widget.onOpenPremiumPreview,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
@@ -510,160 +548,162 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
     final accentColor = isRepairGroup
         ? Act0ShellTokensV1.actionCyan
         : Act0ShellTokensV1.actionBlue;
-    final heroTitle = group.groupId == 'daily'
+    final dailyComplete = _dailyGroupCompleteV1(group);
+    final heroTitle = group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
             context,
             'play_daily_hero_title',
             fallback: 'Quick daily drill',
           )
         : title;
-    final heroSubtitle = group.groupId == 'daily'
+    final heroSubtitle = group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
             context,
             'play_daily_hero_support',
             fallback: 'Short spots from completed lessons.',
           )
         : subtitle;
-    final metaItems = <String>[
-      if (group.countLabel.isNotEmpty) group.countLabel,
-      if (group.sessionLabel.isNotEmpty) group.sessionLabel,
-      if (group.durationLabel.isNotEmpty) group.durationLabel,
-    ];
-    return Opacity(
-      opacity: enabled ? 1 : 0.64,
-      child: InkWell(
-        key: const Key('act0_shell_play_featured_card'),
-        onTap: enabled ? () => onStartGroup(group) : null,
-        borderRadius: BorderRadius.circular(Act0VisualMetricsV1.primaryRadius),
-        child: Container(
-          key: const Key('act0_shell_play_daily_hero'),
-          constraints: const BoxConstraints(minHeight: 238),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-          decoration:
-              Act0ShellTokensV1.premiumActionSurfaceDecoration(
-                borderOpacity: enabled ? 0.30 : 0.16,
-                glowOpacity: enabled ? 0.16 : 0.06,
-              ).copyWith(
-                borderRadius: BorderRadius.circular(
-                  Act0VisualMetricsV1.primaryRadius,
-                ),
-              ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _GroupIconV1(
-                    groupId: group.groupId,
-                    colorOverride: accentColor,
-                    large: true,
+    final metaItems = _dailyHeroMetaItemsV1(group);
+    return KeyedSubtree(
+      key: const Key('act0_shell_play_v1_featured_premium_card'),
+      child: Opacity(
+        opacity: enabled ? 1 : 0.64,
+        child: InkWell(
+          key: const Key('act0_shell_play_featured_card'),
+          onTap: enabled ? () => onStartGroup(group) : null,
+          borderRadius: BorderRadius.circular(
+            Act0VisualMetricsV1.primaryRadius,
+          ),
+          child: Container(
+            key: const Key('act0_shell_play_daily_hero'),
+            constraints: const BoxConstraints(minHeight: 214),
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+            decoration:
+                Act0ShellTokensV1.premiumActionSurfaceDecoration(
+                  borderOpacity: enabled ? 0.30 : 0.16,
+                  glowOpacity: enabled ? 0.16 : 0.06,
+                ).copyWith(
+                  borderRadius: BorderRadius.circular(
+                    Act0VisualMetricsV1.primaryRadius,
                   ),
-                  const SizedBox(width: Act0ShellTokensV1.gapMd),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _playCopyV1(
-                            context,
-                            'play_daily_hero_eyebrow',
-                            fallback: 'Today\'s training',
+                ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _GroupIconV1(
+                      groupId: group.groupId,
+                      colorOverride: accentColor,
+                      large: true,
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapMd),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _playCopyV1(
+                              context,
+                              'play_daily_hero_eyebrow',
+                              fallback: 'Today\'s training',
+                            ),
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.actionBlue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.25,
+                            ),
                           ),
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.actionBlue,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.25,
+                          const SizedBox(height: 6),
+                          Text(
+                            heroTitle,
+                            key: const Key('act0_shell_play_featured_title'),
+                            style: Act0ShellTokensV1.sectionTitle.copyWith(
+                              fontSize: 22,
+                              height: 1.08,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          heroTitle,
-                          key: const Key('act0_shell_play_featured_title'),
-                          style: Act0ShellTokensV1.sectionTitle.copyWith(
-                            fontSize: 22,
-                            height: 1.08,
-                          ),
-                        ),
-                        if (metaItems.isNotEmpty) ...[
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 6,
-                            children: [
-                              for (final item in metaItems)
-                                Text(
-                                  item,
-                                  style: Act0ShellTokensV1.body.copyWith(
-                                    color: Act0ShellTokensV1.textMuted,
-                                    fontWeight: FontWeight.w700,
+                          if (metaItems.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 6,
+                              children: [
+                                for (final item in metaItems)
+                                  Text(
+                                    item,
+                                    style: Act0ShellTokensV1.body.copyWith(
+                                      color: Act0ShellTokensV1.textMuted,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Text(
-                heroSubtitle,
-                key: const Key('act0_shell_play_featured_subtitle'),
-                maxLines: 2,
-                overflow: TextOverflow.fade,
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                  height: 1.24,
+                  ],
                 ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _PracticeProofChipV1(
-                    icon: Icons.timer_outlined,
-                    label: _playCopyV1(
-                      context,
-                      'play_daily_chip_short_set',
-                      fallback: 'Short set',
-                    ),
+                const SizedBox(height: 10),
+                Text(
+                  heroSubtitle,
+                  key: const Key('act0_shell_play_featured_subtitle'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    height: 1.24,
                   ),
-                  _PracticeProofChipV1(
-                    icon: Icons.menu_book_outlined,
-                    label: _playCopyV1(
-                      context,
-                      'play_daily_chip_no_lesson',
-                      fallback: 'No full lesson',
-                    ),
-                  ),
-                  _PracticeProofChipV1(
-                    icon: Icons.my_location_rounded,
-                    label: _playCopyV1(
-                      context,
-                      'play_daily_chip_table_reads',
-                      fallback: 'Table reads',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapLg),
-              SizedBox(
-                key: const Key('act0_shell_play_v1_featured_action_cta'),
-                width: double.infinity,
-                child: FilledButton(
-                  key: const Key('act0_shell_play_featured_cta'),
-                  onPressed: enabled ? () => onStartGroup(group) : null,
-                  style: Act0ShellTokensV1.premiumActionButtonStyle(
-                    height: Act0VisualMetricsV1.primaryCtaHeight,
-                  ),
-                  child: Text(_playActionLabelV1(context, group)),
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 7,
+                  runSpacing: 7,
+                  children: [
+                    _PracticeProofChipV1(
+                      icon: Icons.timer_outlined,
+                      label: _playCopyV1(
+                        context,
+                        'play_daily_chip_short_set',
+                        fallback: 'Short set',
+                      ),
+                    ),
+                    _PracticeProofChipV1(
+                      icon: Icons.menu_book_outlined,
+                      label: _playCopyV1(
+                        context,
+                        'play_daily_chip_no_lesson',
+                        fallback: 'No full lesson',
+                      ),
+                    ),
+                    _PracticeProofChipV1(
+                      icon: Icons.my_location_rounded,
+                      label: _playCopyV1(
+                        context,
+                        'play_daily_chip_table_reads',
+                        fallback: 'Table reads',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  key: const Key('act0_shell_play_v1_featured_action_cta'),
+                  width: double.infinity,
+                  child: FilledButton(
+                    key: const Key('act0_shell_play_featured_cta'),
+                    onPressed: enabled ? () => onStartGroup(group) : null,
+                    style: Act0ShellTokensV1.premiumActionButtonStyle(
+                      height: Act0VisualMetricsV1.primaryCtaHeight,
+                    ),
+                    child: Text(_playActionLabelV1(context, group)),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -680,8 +720,8 @@ class _PracticeProofChipV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 34),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      constraints: const BoxConstraints(minHeight: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: Act0ShellTokensV1.surface2.withOpacity(0.62),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
@@ -692,12 +732,13 @@ class _PracticeProofChipV1 extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 15, color: Act0ShellTokensV1.actionCyan),
-          const SizedBox(width: 6),
+          Icon(icon, size: 13, color: Act0ShellTokensV1.actionCyan),
+          const SizedBox(width: 5),
           Text(
             label,
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.text,
+              fontSize: 11,
               fontWeight: FontWeight.w800,
               letterSpacing: 0,
             ),
@@ -718,7 +759,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_play_repair_empty'),
       constraints: const BoxConstraints(minHeight: 78),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.surface2.withOpacity(0.72),
         borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
@@ -727,8 +768,8 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 32,
+            height: 32,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
@@ -740,7 +781,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
               size: 20,
             ),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -817,37 +858,65 @@ class _PlayGridIntroV1 extends StatelessWidget {
 }
 
 class _PlayIntroCardV1 extends StatelessWidget {
-  const _PlayIntroCardV1({required this.title, required this.body});
+  const _PlayIntroCardV1({
+    required this.title,
+    required this.body,
+    this.onOpenPremiumPreview,
+  });
 
   final String title;
   final String body;
+  final VoidCallback? onOpenPremiumPreview;
 
   @override
   Widget build(BuildContext context) {
+    final isDailyCompletion = title == 'Session complete';
     return Container(
       key: const Key('act0_shell_play_intro_card'),
-      padding: const EdgeInsets.symmetric(
-        horizontal: Act0ShellTokensV1.gapMd,
-        vertical: Act0ShellTokensV1.gapSm,
-      ),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2,
+        color: isDailyCompletion
+            ? Act0ShellTokensV1.surface3
+            : Act0ShellTokensV1.surface2,
+        borderColor: isDailyCompletion
+            ? Act0ShellTokensV1.primary.withOpacity(0.34)
+            : null,
+        glow: isDailyCompletion,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 38,
-            height: 38,
+            width: isDailyCompletion ? 44 : 38,
+            height: isDailyCompletion ? 44 : 38,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary.withOpacity(0.12),
+              gradient: isDailyCompletion
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[
+                        Act0ShellTokensV1.primary.withOpacity(0.24),
+                        Act0ShellTokensV1.info.withOpacity(0.12),
+                      ],
+                    )
+                  : null,
+              color: isDailyCompletion
+                  ? null
+                  : Act0ShellTokensV1.primary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+              border: isDailyCompletion
+                  ? Border.all(
+                      color: Act0ShellTokensV1.primary.withOpacity(0.34),
+                    )
+                  : null,
             ),
-            child: const Icon(
-              Icons.bolt_rounded,
+            child: Icon(
+              isDailyCompletion
+                  ? Icons.check_circle_rounded
+                  : Icons.bolt_rounded,
               color: Act0ShellTokensV1.primary,
-              size: 20,
+              size: isDailyCompletion ? 22 : 20,
             ),
           ),
           const SizedBox(width: Act0ShellTokensV1.gapMd),
@@ -855,23 +924,82 @@ class _PlayIntroCardV1 extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (isDailyCompletion) ...[
+                  _DoneForTodayPillV1(
+                    label: _playCopyV1(
+                      context,
+                      'play_result_done_for_today_label',
+                      fallback: 'Done for today',
+                    ),
+                  ),
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                ],
                 Text(
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.body,
+                  style: isDailyCompletion
+                      ? Act0ShellTokensV1.cardTitle.copyWith(fontSize: 17)
+                      : Act0ShellTokensV1.body,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
                 Text(
                   body,
-                  maxLines: 2,
+                  maxLines: isDailyCompletion ? 3 : 2,
                   overflow: TextOverflow.ellipsis,
                   style: Act0ShellTokensV1.muted,
                 ),
+                if (isDailyCompletion && onOpenPremiumPreview != null) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapSm),
+                  OutlinedButton(
+                    key: const Key('act0_shell_play_premium_preview_entry'),
+                    onPressed: onOpenPremiumPreview,
+                    style: Act0ShellTokensV1.quietButtonStyle(height: 38),
+                    child: const Text('See what premium adds'),
+                  ),
+                ],
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DoneForTodayPillV1 extends StatelessWidget {
+  const _DoneForTodayPillV1({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.primary.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.28)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.done_rounded,
+              color: Act0ShellTokensV1.primary,
+              size: 14,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                letterSpacing: 0,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1109,10 +1237,10 @@ class _PlayLaneIntroV1 extends StatelessWidget {
     );
     final subtitle = selectedTopic == allTopicsLabel
         ? (localeIsRu
-              ? '$visibleLaneCount линий готовы. Выбери одну и сделай несколько повторов.'
+              ? '$visibleLaneCount ${_playCopyV1(context, act0RussianPluralV1(visibleLaneCount, 'play_lanes_ready_plural_1', 'play_lanes_ready_plural_2', 'play_lanes_ready_plural_5'), fallback: 'линий готовы')}. Выбери одну и сделай несколько повторов.'
               : '$visibleLaneCount lanes ready. Pick one and run a few reps.')
         : (localeIsRu
-              ? '$visibleLaneCount ${visibleLaneCount == 1 ? 'линия' : 'линии'} внутри темы $selectedTopic.'
+              ? '$visibleLaneCount ${_playCopyV1(context, act0RussianPluralV1(visibleLaneCount, 'play_lanes_noun_plural_1', 'play_lanes_noun_plural_2', 'play_lanes_noun_plural_5'), fallback: 'линий')} по теме $selectedTopic.'
               : '$visibleLaneCount ${visibleLaneCount == 1 ? 'lane' : 'lanes'} inside $selectedTopic.');
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -1246,8 +1374,8 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
           Act0VisualMetricsV1.secondaryRadius,
         ),
         child: Container(
-          constraints: const BoxConstraints(minHeight: 112),
-          padding: const EdgeInsets.all(12),
+          constraints: const BoxConstraints(minHeight: 96),
+          padding: const EdgeInsets.all(10),
           decoration:
               Act0ShellTokensV1.surfaceDecoration(
                 color: Act0ShellTokensV1.surface2.withOpacity(
@@ -1282,17 +1410,17 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
                     colorOverride: accentColor,
                     compact: true,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   Text(
                     _playTileTitleV1(context, group),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 14),
+                    style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 13.5),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     _topicPackSubtitleV1(context, group),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.muted.copyWith(height: 1.18),
                   ),
@@ -1710,7 +1838,7 @@ class _GroupIconV1 extends StatelessWidget {
       _ => Icons.school_rounded,
     };
     final color = colorOverride ?? _groupIconColor(groupId);
-    final size = large ? 42.0 : (compact ? 34.0 : 38.0);
+    final size = large ? 38.0 : (compact ? 30.0 : 38.0);
     return Container(
       width: size,
       height: size,
@@ -1720,7 +1848,7 @@ class _GroupIconV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
         border: Border.all(color: color.withOpacity(0.30)),
       ),
-      child: Icon(icon, color: color, size: large ? 22 : 20),
+      child: Icon(icon, color: color, size: large ? 20 : (compact ? 17 : 20)),
     );
   }
 }

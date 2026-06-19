@@ -1,0 +1,660 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
+
+  testWidgets('open repair intent resolves next useful hand to stored target', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final target = _nextUsefulHandTargetPayload(tester);
+    final audit = _repairIntentAuditTrailPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+
+    expect(target?['source'], 'repair_intent');
+    expect(target?['selectionSource'], 'repair_intent_mapped');
+    expect(target?['sourceTaskId'], 'actions_legal_context');
+    expect(target?['targetTaskId'], 'actions_check_drill');
+    expect(target?['missedSignalId'], 'no_bet_yet');
+    expect(target?['skillAtomId'], 'action_read');
+    expect(target?['mappingType'], 'repair');
+    expect(target?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(audit.length, 2);
+    expect(audit.first['transition'], 'intent_created');
+    expect(audit.first['sourceTaskId'], 'actions_legal_context');
+    expect(audit.first['targetTaskId'], 'actions_check_drill');
+    expect(audit.first['mappingType'], 'repair');
+    expect(audit.last['transition'], 'mapped_selection');
+    expect(audit.last['sourceTaskId'], 'actions_legal_context');
+    expect(audit.last['targetTaskId'], 'actions_check_drill');
+    expect(audit.last['selectionSource'], 'repair_intent_mapped');
+    expect(audit.last['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(audit.last['mappingType'], 'repair');
+    expect(bridge['schemaVersion'], 1);
+    expect(bridge['lineKind'], 'missed_clue_repair_same_signal');
+    expect(bridge['safeTemplateId'], 'repair_same_clue_v1');
+    expect(bridge['sourceTaskId'], 'actions_legal_context');
+    expect(bridge['targetTaskId'], 'actions_check_drill');
+    expect(bridge['clueKey'], 'no_bet_yet');
+    expect(bridge['clueLabel'], 'No bet yet');
+    expect(bridge['skillKey'], 'action_read');
+    expect(bridge['skillLabel'], 'Action read');
+    expect(bridge['selectionSource'], 'repair_intent_mapped');
+    expect(bridge['reasonCode'], 'same_signal_action_read_no_bet_yet');
+  });
+
+  testWidgets('mapped repair bridge renders same-clue review copy', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _openReview(tester);
+
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsOneWidget,
+    );
+    final snapshot = _reviewSupportCopySnapshot(tester);
+    expect(snapshot?['schemaVersion'], 1);
+    expect(snapshot?['safeTemplateId'], 'repair_same_clue_v1');
+    expect(snapshot?['lineKind'], 'missed_clue_repair_same_signal');
+    expect(snapshot?['selectionSource'], 'repair_intent_mapped');
+    expect(
+      snapshot?['renderedLine'],
+      'You missed No bet yet. This hand repairs the same clue.',
+    );
+    expect(snapshot?['sourceTaskId'], 'actions_legal_context');
+    expect(snapshot?['targetTaskId'], 'actions_check_drill');
+    expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+  });
+
+  testWidgets('exact replay bridge renders exact-replay review copy', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _openReview(tester);
+
+    expect(find.text('Replay this spot to fix No bet yet.'), findsOneWidget);
+    final snapshot = _reviewSupportCopySnapshot(tester);
+    expect(snapshot?['schemaVersion'], 1);
+    expect(snapshot?['safeTemplateId'], 'repair_exact_replay_v1');
+    expect(snapshot?['lineKind'], 'exact_replay_repair');
+    expect(snapshot?['selectionSource'], 'repair_intent_exact_replay');
+    expect(snapshot?['renderedLine'], 'Replay this spot to fix No bet yet.');
+    expect(snapshot?['sourceTaskId'], 'actions_legal_context');
+    expect(snapshot?['targetTaskId'], 'actions_legal_context');
+    expect(snapshot?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('same state resolves same repair intent target repeatedly', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final first = _nextUsefulHandTargetPayload(tester);
+    final second = _nextUsefulHandTargetPayload(tester);
+    final firstBridge = _copyBridgePayload(tester);
+    final secondBridge = _copyBridgePayload(tester);
+    final audit = _repairIntentAuditTrailPayload(tester);
+
+    expect(first, second);
+    expect(firstBridge, secondBridge);
+    expect(second?['targetTaskId'], 'actions_check_drill');
+    expect(audit.length, 2);
+    expect(audit.last['transition'], 'mapped_selection');
+  });
+
+  testWidgets('successful repair clears resolver priority', (tester) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+    expect(
+      _nextUsefulHandTargetPayload(tester)?['targetTaskId'],
+      'actions_check_drill',
+    );
+
+    await _launchReviewRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    final target = _nextUsefulHandTargetPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+    final audit = _repairIntentAuditTrailPayload(tester);
+    expect(target?['source'], isNot('repair_intent'));
+    expect(target?['selectionSource'], 'existing_fallback');
+    expect(target?['targetTaskId'], isNot('actions_check_drill'));
+    expect(bridge['lineKind'], 'existing_fallback');
+    expect(bridge['safeTemplateId'], 'fallback_next_hand_v1');
+    expect(bridge['selectionSource'], 'existing_fallback');
+    expect(
+      audit.map((entry) => entry['transition']),
+      containsAllInOrder(<String>[
+        'intent_cleared',
+        'existing_fallback_selection',
+      ]),
+    );
+    expect(audit.last['transition'], 'existing_fallback_selection');
+    expect(audit.last['selectionSource'], 'existing_fallback');
+
+    await _openReview(tester);
+    expect(_reviewSupportCopySnapshot(tester), isNull);
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsNothing,
+    );
+    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+  });
+
+  testWidgets('failed repair keeps resolver priority', (tester) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _launchReviewRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerWrongly(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    final target = _nextUsefulHandTargetPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+    final audit = _repairIntentAuditTrailPayload(tester);
+    expect(target?['source'], 'repair_intent');
+    expect(target?['selectionSource'], 'repair_intent_mapped');
+    expect(target?['targetTaskId'], 'actions_check_drill');
+    expect(target?['missedSignalId'], 'no_bet_yet');
+    expect(target?['skillAtomId'], 'action_read');
+    expect(target?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(bridge['lineKind'], 'missed_clue_repair_same_signal');
+    expect(bridge['safeTemplateId'], 'repair_same_clue_v1');
+    expect(bridge['selectionSource'], 'repair_intent_mapped');
+    expect(bridge['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(
+      audit.map((entry) => entry['transition']),
+      contains('failed_repair_retained'),
+    );
+    expect(audit.last['transition'], 'mapped_selection');
+    expect(audit.last['selectionSource'], 'repair_intent_mapped');
+    expect(audit.last['reasonCode'], 'same_signal_action_read_no_bet_yet');
+
+    await _openReview(tester);
+    final snapshot = _reviewSupportCopySnapshot(tester);
+    expect(snapshot?['safeTemplateId'], 'repair_same_clue_v1');
+    expect(snapshot?['selectionSource'], 'repair_intent_mapped');
+    expect(
+      snapshot?['renderedLine'],
+      'You missed No bet yet. This hand repairs the same clue.',
+    );
+    expect(snapshot?['sourceTaskId'], 'actions_legal_context');
+    expect(snapshot?['targetTaskId'], 'actions_check_drill');
+    expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('unavailable mapped target falls back to exact replay target', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final target = _nextUsefulHandTargetPayload(tester);
+    final audit = _repairIntentAuditTrailPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+
+    expect(target?['source'], 'repair_intent');
+    expect(target?['selectionSource'], 'repair_intent_exact_replay');
+    expect(target?['sourceTaskId'], 'actions_legal_context');
+    expect(target?['targetTaskId'], 'actions_legal_context');
+    expect(target?['missedSignalId'], 'no_bet_yet');
+    expect(target?['skillAtomId'], 'action_read');
+    expect(target?['mappingType'], 'exact');
+    expect(target?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+    expect(audit.length, 2);
+    expect(audit.last['transition'], 'exact_replay_selection');
+    expect(audit.last['selectionSource'], 'repair_intent_exact_replay');
+    expect(audit.last['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+    expect(audit.last['mappingType'], 'exact');
+    expect(bridge['lineKind'], 'exact_replay_repair');
+    expect(bridge['safeTemplateId'], 'repair_exact_replay_v1');
+    expect(bridge['sourceTaskId'], 'actions_legal_context');
+    expect(bridge['targetTaskId'], 'actions_legal_context');
+    expect(bridge['selectionSource'], 'repair_intent_exact_replay');
+    expect(bridge['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+  });
+
+  testWidgets('correct answer does not override existing recommendation', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'check');
+
+    final target = _nextUsefulHandTargetPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+
+    expect(target?['source'], isNot('repair_intent'));
+    expect(target?['selectionSource'], 'existing_fallback');
+    expect(target?['sourceTaskId'], isNot('actions_legal_context'));
+    expect(bridge['lineKind'], 'existing_fallback');
+    expect(bridge['safeTemplateId'], 'fallback_next_hand_v1');
+    expect(bridge['selectionSource'], 'existing_fallback');
+
+    await _openReview(tester);
+    expect(_reviewSupportCopySnapshot(tester), isNull);
+    expect(
+      find.text('You missed No bet yet. This hand repairs the same clue.'),
+      findsNothing,
+    );
+    expect(find.text('Replay this spot to fix No bet yet.'), findsNothing);
+  });
+
+  testWidgets(
+    'rendered repair copy excludes forbidden terms and new surfaces',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
+
+      await _openReview(tester);
+
+      final supportText = _reviewSupportLine(tester);
+      final snapshot = _reviewSupportCopySnapshot(tester);
+      expect(
+        supportText,
+        'You missed No bet yet. This hand repairs the same clue.',
+      );
+      expect(snapshot?['renderedLine'], supportText);
+      const forbidden = <String>{
+        'ai',
+        'ml',
+        'adaptive',
+        'solver',
+        'gto',
+        'optimal',
+        'win-rate',
+        'guaranteed',
+        'premium',
+        'paywall',
+        'trial',
+        'purchase',
+        'restore',
+      };
+      for (final token in forbidden) {
+        expect(_containsForbiddenTokenInText(supportText, token), isFalse);
+        expect(
+          _containsForbiddenTokenInText(
+            (snapshot?['renderedLine'] ?? '').toString(),
+            token,
+          ),
+          isFalse,
+        );
+      }
+      expect(
+        find.byKey(const Key('act0_shell_review_board_support_line')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_board_fix_cta')),
+        findsOneWidget,
+      );
+      expect(
+        find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              (key.value.contains('repair_intent_copy') ||
+                  key.value.contains('copy_bridge'));
+        }),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('resolver snapshot excludes forbidden AI and commerce fields', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final payload = _nextUsefulHandTargetPayload(tester)!;
+    final audit = _repairIntentAuditTrailPayload(tester);
+    final bridge = _copyBridgePayload(tester);
+    const forbiddenKeys = <String>{
+      'ai',
+      'ml',
+      'adaptive',
+      'solver',
+      'gto',
+      'commerce',
+      'trial',
+      'paywall',
+      'premium',
+      'price',
+      'purchase',
+      'restore',
+      'premiumHub',
+      'optimal',
+      'win-rate',
+      'guaranteed',
+    };
+    for (final key in forbiddenKeys) {
+      expect(payload.containsKey(key), isFalse, reason: key);
+      expect(bridge.containsKey(key), isFalse, reason: key);
+      expect(_containsForbiddenToken(bridge, key), isFalse, reason: key);
+      for (final entry in audit) {
+        expect(entry.containsKey(key), isFalse, reason: key);
+      }
+    }
+  });
+}
+
+Future<void> _pumpResolverHost(
+  WidgetTester tester, {
+  required List<String> taskIds,
+  required String taskId,
+}) async {
+  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.play,
+        initialPhase: Act0LessonPhaseV1.drill,
+        showPlacementOnStart: false,
+        state: _stateForFoldCheckCallRaiseTasks(taskIds),
+        debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: taskId,
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Act0ShellStateV1 _stateForFoldCheckCallRaiseTasks(List<String> taskIds) {
+  final sample = Act0ShellStateV1.sample;
+  final baseWorld = sample.worldById('world_1');
+  final baseLesson = baseWorld.lessons.firstWhere(
+    (lesson) => lesson.lessonId == 'fold_check_call_raise',
+  );
+  final tasks = <Act0LessonTaskV1>[
+    for (final taskId in taskIds)
+      baseLesson.taskList.firstWhere((task) => task.taskId == taskId),
+  ];
+  final lesson = baseLesson.copyWith(
+    state: Act0LessonStateV1.current,
+    isSelectable: true,
+    isLocked: false,
+    primaryCtaLabel: 'Open lesson',
+    tasks: tasks,
+  );
+  final world = baseWorld.copyWith(
+    status: Act0WorldStateV1.current,
+    isSelectable: true,
+    isLocked: false,
+    lessons: <Act0LessonCardV1>[lesson],
+  );
+
+  return Act0ShellStateV1(
+    courseTitle: sample.courseTitle,
+    courseSubtitle: sample.courseSubtitle,
+    levelLabel: sample.levelLabel,
+    xp: sample.xp,
+    xpTarget: sample.xpTarget,
+    streakDays: sample.streakDays,
+    dailyGoalLabel: sample.dailyGoalLabel,
+    dailyGoalValue: sample.dailyGoalValue,
+    pathProgressLabel: sample.pathProgressLabel,
+    selectedWorldId: 'world_1',
+    worlds: <Act0WorldCardV1>[world],
+    lessons: <Act0LessonCardV1>[lesson],
+    review: sample.review,
+    profile: sample.profile,
+  );
+}
+
+Future<void> _answerOption(WidgetTester tester, String optionId) async {
+  final option = find.byKey(Key('act0_shell_option_$optionId'));
+  expect(option, findsOneWidget);
+  await tester.tap(option);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _advanceTeachingToDrill(WidgetTester tester) async {
+  for (var i = 0; i < 12; i++) {
+    if (_hasVisibleAnswer()) {
+      return;
+    }
+    final selectedLessonCta = find.byKey(
+      const Key('act0_shell_selected_lesson_cta'),
+    );
+    if (selectedLessonCta.evaluate().isNotEmpty) {
+      await tester.ensureVisible(selectedLessonCta);
+      await tester.tap(selectedLessonCta, warnIfMissed: false);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final luminousStartCta = find.byKey(
+      const Key('act0_shell_start_luminous_cta_v6'),
+    );
+    if (luminousStartCta.evaluate().isNotEmpty) {
+      await tester.ensureVisible(luminousStartCta);
+      await tester.tap(luminousStartCta, warnIfMissed: false);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final currentMissionCta = find.byKey(
+      const Key('act0_shell_current_mission_cta'),
+    );
+    if (currentMissionCta.evaluate().isNotEmpty) {
+      await tester.ensureVisible(currentMissionCta);
+      await tester.tap(currentMissionCta, warnIfMissed: false);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final featuredCta = find.byKey(const Key('act0_shell_play_featured_cta'));
+    if (featuredCta.evaluate().isNotEmpty) {
+      await tester.tap(featuredCta);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final dailyGroup = find.byKey(const Key('act0_shell_practice_group_daily'));
+    if (dailyGroup.evaluate().isNotEmpty) {
+      await tester.tap(dailyGroup);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final cta = find.byKey(const Key('act0_shell_runner_primary_cta'));
+    if (cta.evaluate().isNotEmpty) {
+      await tester.tap(cta);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final continueButton = find.byKey(const Key('act0_shell_continue_cta'));
+    if (continueButton.evaluate().isNotEmpty) {
+      await tester.tap(continueButton);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final continueCta = find.byKey(const Key('act0_shell_theory_continue_cta'));
+    if (continueCta.evaluate().isNotEmpty) {
+      await tester.tap(continueCta);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    await tester.pumpAndSettle();
+  }
+  if (_hasVisibleAnswer()) {
+    return;
+  }
+  fail('Runner did not reach a visible answer surface.');
+}
+
+bool _hasVisibleAnswer() {
+  return find
+          .byKey(const Key('act0_shell_action_panel'))
+          .evaluate()
+          .isNotEmpty ||
+      find
+          .byWidgetPredicate((widget) {
+            final key = widget.key;
+            return key is ValueKey<String> &&
+                key.value.startsWith('act0_shell_option_');
+          })
+          .evaluate()
+          .isNotEmpty;
+}
+
+Future<void> _answerCorrectly(WidgetTester tester) async {
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final option = runner.runner.options.firstWhere((option) => option.isCorrect);
+  await _answerOption(tester, option.id);
+}
+
+Future<void> _answerWrongly(WidgetTester tester) async {
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final option = runner.runner.options.firstWhere(
+    (option) => !option.isCorrect,
+  );
+  await _answerOption(tester, option.id);
+}
+
+Future<void> _launchReviewRepair(WidgetTester tester) async {
+  await _openReview(tester);
+  await tester.tap(find.byKey(const Key('act0_shell_review_fix_next_cta')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openReview(WidgetTester tester) async {
+  final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
+  if (runnerBack.evaluate().isNotEmpty) {
+    await tester.tap(runnerBack);
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(
+    find.descendant(
+      of: find.byKey(const Key('act0_shell_bottom_nav')),
+      matching: find.text('Review'),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Map<String, Object?>? _nextUsefulHandTargetPayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>?;
+}
+
+Map<String, Object?> _copyBridgePayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugNextUsefulHandCopyBridgePayloadV1() as Map<String, Object?>;
+}
+
+Map<String, Object?>? _reviewSupportCopySnapshot(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugReviewSupportCopySnapshotV1() as Map<String, Object?>?;
+}
+
+List<Map<String, Object?>> _repairIntentAuditTrailPayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  final raw = state.debugRepairIntentAuditTrailPayloadV1() as List<Object?>;
+  return raw.cast<Map<String, Object?>>();
+}
+
+bool _containsForbiddenToken(Map<String, Object?> payload, String token) {
+  final values = payload.values.join(' ').toLowerCase();
+  return _containsForbiddenTokenInText(values, token);
+}
+
+String _reviewSupportLine(WidgetTester tester) {
+  final text = tester.widget<Text>(
+    find.byKey(const Key('act0_shell_review_board_support_text')),
+  );
+  return text.data ?? '';
+}
+
+bool _containsForbiddenTokenInText(String text, String token) {
+  final values = text.toLowerCase();
+  final normalizedToken = token.toLowerCase();
+  return values
+      .split(RegExp(r'[^a-z0-9-]+'))
+      .where((part) => part.isNotEmpty)
+      .contains(normalizedToken);
+}

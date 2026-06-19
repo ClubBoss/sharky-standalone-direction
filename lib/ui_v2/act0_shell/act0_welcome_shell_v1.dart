@@ -45,30 +45,27 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
         beatCount: 2,
-        title: _atomV1(
-          'welcome_intro_title',
-          fallback: 'Your path is almost ready.',
-        ),
+        title: _atomV1('welcome_intro_title', fallback: 'Find your start'),
         eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
         line: _atomV1(
           'welcome_intro_line',
           fallback:
-              'Home will open the right first spot. Sharky keeps the next move obvious.',
+              'Answer two quick questions. Then Sharky opens the first useful hand.',
         ),
         detail: _atomV1(
           'welcome_intro_detail',
-          fallback: 'Read one real table, answer once, get one clear why.',
+          fallback: 'About two minutes. Then your first lesson is ready.',
         ),
         mood: Act0SharkyMoodV1.happy,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'What you get next', ru: 'Что ты получишь дальше'),
+          title: _copyV1(en: 'First hand after', ru: 'Потом первая раздача'),
           accent: Act0ShellTokensV1.primary,
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           child: _WelcomeLoopStripV1(copy: _copyV1),
         ),
-        ctaLabel: _copyV1(en: 'See your start', ru: 'Посмотреть свой старт'),
+        ctaLabel: _copyV1(en: 'Find my start', ru: 'Найти мой старт'),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.handoff),
       ),
       Act0WelcomeBeatV1.whyEasier ||

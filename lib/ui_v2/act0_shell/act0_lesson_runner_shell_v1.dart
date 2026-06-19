@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -97,6 +98,79 @@ class Act0RunnerCompletionSummaryV1 {
   String get toastRewardLabel => leveledUp ? 'Level up' : 'Clean rep';
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
+}
+
+class Act0FeedbackSignalProofV1 {
+  const Act0FeedbackSignalProofV1({
+    required this.signalId,
+    required this.label,
+    required this.proofLine,
+    this.seatIds = const <String>[],
+    this.cardIds = const <String>[],
+    this.statKeys = const <String>[],
+  });
+
+  final String signalId;
+  final String label;
+  final String proofLine;
+  final List<String> seatIds;
+  final List<String> cardIds;
+  final List<String> statKeys;
+}
+
+enum Act0SkillReceiptOutcomeV1 { learned, repairStarted, needsRep }
+
+class Act0SkillReceiptV1 {
+  const Act0SkillReceiptV1({
+    required this.skillAtomId,
+    required this.skillLabel,
+    required this.sourceSignalId,
+    required this.sourceSignalLabel,
+    required this.outcome,
+    required this.nextRepId,
+    required this.nextRepLabel,
+  });
+
+  final String skillAtomId;
+  final String skillLabel;
+  final String sourceSignalId;
+  final String sourceSignalLabel;
+  final Act0SkillReceiptOutcomeV1 outcome;
+  final String nextRepId;
+  final String nextRepLabel;
+
+  String get receiptId =>
+      '${skillAtomId}_${outcome.telemetryValue}_$sourceSignalId';
+
+  String get outcomeId => outcome.telemetryValue;
+
+  String get title {
+    return switch (outcome) {
+      Act0SkillReceiptOutcomeV1.learned =>
+        skillAtomId == 'action_read'
+            ? 'Table read improved'
+            : '$skillLabel improved',
+      Act0SkillReceiptOutcomeV1.repairStarted => 'Good spot to repair',
+      Act0SkillReceiptOutcomeV1.needsRep => 'One more read will help',
+    };
+  }
+
+  String get detail => switch (outcome) {
+    Act0SkillReceiptOutcomeV1.learned =>
+      'You noticed $sourceSignalLabel before choosing an action.',
+    Act0SkillReceiptOutcomeV1.repairStarted =>
+      'The missed table clue was $sourceSignalLabel.',
+    Act0SkillReceiptOutcomeV1.needsRep =>
+      'Notice $sourceSignalLabel once more before adding speed.',
+  };
+}
+
+extension on Act0SkillReceiptOutcomeV1 {
+  String get telemetryValue => switch (this) {
+    Act0SkillReceiptOutcomeV1.learned => 'learned',
+    Act0SkillReceiptOutcomeV1.repairStarted => 'repair_started',
+    Act0SkillReceiptOutcomeV1.needsRep => 'needs_rep',
+  };
 }
 
 class Act0BlockCompletionSummaryV1 {
@@ -456,19 +530,19 @@ class Act0BlockCompletionSummaryV1 {
 
   String get habitRewardDetail {
     if (deepLeakCount > 0) {
-      return 'A real weak spot was caught. Fixing it now keeps tomorrow from feeling heavier.';
+      return 'You found the miss. Review it once before adding speed.';
     }
     if (quickFixCount > 0) {
-      return 'You corrected the miss inside the lesson. That recovery keeps tomorrow\'s seat intact.';
+      return 'You fixed the miss inside the lesson.';
     }
     if (!isWorldComplete && growthLabel.isNotEmpty) {
-      return '$growthLabel moved in this lesson. Clean work like this makes the next seat lighter.';
+      return '$growthLabel moved in this lesson. This read will help in the next spot.';
     }
     if (errorCount == 0 && taskCount > 0) {
-      return 'No repairs needed. Clean work like this makes tomorrow\'s first rep lighter.';
+      return 'Clean run. This read will help in the next spot.';
     }
     if (qualifiesForNextLesson) {
-      return 'The block counts. One short clean return tomorrow is enough.';
+      return "The lesson counts. We'll keep the next step beginner-safe.";
     }
     return 'Replay is the right move before adding new material. Clean it once and the next step will feel lighter again.';
   }
@@ -481,7 +555,7 @@ class Act0BlockCompletionSummaryV1 {
         return 'Deep leak saved for Review. $nextWorldTitle is unlocked, but repair should be next.';
       }
       return hasNextLesson
-          ? 'Deep leak saved for Review. ${nextLessonTitle!} is unlocked, but repair should be next.'
+          ? 'Deep leak saved for Review. Next lesson unlocked: ${nextLessonTitle!}. Repair should be next.'
           : 'Deep leak saved for Review. Clean it up before moving on.';
     }
     if (isWorldComplete) {
@@ -492,7 +566,7 @@ class Act0BlockCompletionSummaryV1 {
     }
     return qualifiesForNextLesson
         ? hasNextLesson
-              ? 'Strong read. ${nextLessonTitle!} is unlocked.'
+              ? 'Next lesson unlocked: ${nextLessonTitle!}.'
               : 'Clean finish. You completed all lessons.'
         : 'Need $unlockAccuracyPercent% accuracy to unlock ${nextLessonTitle!}. Replay this block and tighten up the mistakes.';
   }
@@ -621,6 +695,23 @@ String act0FormatPotLabelV1(double bb) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+enum Act0RunnerFramingProfileV1 {
+  neutral,
+  boardHeroPot,
+  boardOnly,
+  heroAction,
+  seatFocus,
+}
+
+enum _RunnerInteractionModeV1 { answerListDecision, tableTapDecision, feedback }
+
+enum _RunnerViewportFamilyV1 {
+  neutral,
+  answerListBoardHeroPot,
+  answerListHeroAction,
+  tableTapSeatFocus,
+}
+
 class Act0LessonRunnerShellV1 extends StatefulWidget {
   const Act0LessonRunnerShellV1({
     super.key,
@@ -640,6 +731,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onChooseSeat,
     required this.onContinueReview,
     this.completionSummary,
+    this.firstValueReceiptLine,
+    this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
     this.relaxTheoryAdvanceLock = false,
     this.showLearningRailFocusLabels = false,
@@ -663,6 +756,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final ValueChanged<String>? onChooseSeat;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
+  final String? firstValueReceiptLine;
+  final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
   final bool relaxTheoryAdvanceLock;
   final bool showLearningRailFocusLabels;
@@ -860,6 +955,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           (option) => option?.id == selectedOptionId,
           orElse: () => null,
         );
+    final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
+      runner: widget.runner,
+      option: selectedOption,
+      taskFamily: widget.selectedTaskFamily,
+      hasSeatTargets: widget.runner.options.any(
+        (option) => option.seatId != null,
+      ),
+    );
+    final skillReceipt = widget.firstValueReceiptLine == null
+        ? null
+        : _skillReceiptForSignalProofV1(
+            proof: feedbackSignalProof,
+            quality: selectedOption?.quality ?? widget.runner.reviewQuality,
+          );
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'feedback_viewed',
@@ -871,6 +980,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'taskId': _stableTaskTelemetryId,
           if (selectedOption != null)
             'result': selectedOption.isCorrect ? 'correct' : 'incorrect',
+          if (feedbackSignalProof != null)
+            'feedbackSignal': feedbackSignalProof.signalId,
+          if (feedbackSignalProof != null)
+            'tableSignal': feedbackSignalProof.label,
+          if (skillReceipt != null) 'skillReceiptId': skillReceipt.receiptId,
+          if (skillReceipt != null) 'skillAtomId': skillReceipt.skillAtomId,
+          if (skillReceipt != null) 'nextRepId': skillReceipt.nextRepId,
+          if (skillReceipt != null)
+            'skillReceiptOutcome': skillReceipt.outcome.telemetryValue,
           'attemptOrdinal': 1,
         },
       ),
@@ -878,6 +996,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
+      runner: widget.runner.copyWith(selectedOptionId: option.id),
+      option: option,
+      taskFamily: widget.selectedTaskFamily,
+      hasSeatTargets: widget.runner.options.any(
+        (option) => option.seatId != null,
+      ),
+    );
+    final skillReceipt = widget.firstValueReceiptLine == null
+        ? null
+        : _skillReceiptForSignalProofV1(
+            proof: feedbackSignalProof,
+            quality: option.quality,
+          );
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'task_result',
@@ -890,6 +1022,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'choiceId': option.id,
           'result': option.isCorrect ? 'correct' : 'incorrect',
           'errorType': option.isCorrect ? 'none' : 'unknown',
+          if (feedbackSignalProof != null)
+            'feedbackSignal': feedbackSignalProof.signalId,
+          if (feedbackSignalProof != null)
+            'tableSignal': feedbackSignalProof.label,
+          if (skillReceipt != null) 'skillReceiptId': skillReceipt.receiptId,
+          if (skillReceipt != null) 'skillAtomId': skillReceipt.skillAtomId,
+          if (skillReceipt != null) 'nextRepId': skillReceipt.nextRepId,
+          if (skillReceipt != null)
+            'skillReceiptOutcome': skillReceipt.outcome.telemetryValue,
           'attemptOrdinal': 1,
           'repairStatus': 'none',
         },
@@ -1436,9 +1577,37 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final hasSeatTargets = runner.options.any(
       (option) => option.seatId != null,
     );
-    final table = isReview
+    final baseTable = isReview
         ? _repairTable(runner.table, runner.selectedOption)
         : _teachingTable(runner.table, teachingStep);
+    final feedbackSignalProof = isReview
+        ? _feedbackSignalProofForRunnerV1(
+            runner: runner,
+            option: runner.selectedOption,
+            taskFamily: widget.selectedTaskFamily,
+            hasSeatTargets: hasSeatTargets,
+          )
+        : null;
+    final table = feedbackSignalProof == null
+        ? baseTable
+        : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final interactionMode = _resolveRunnerInteractionModeV1(
+      isDrill: isDrill,
+      isReview: isReview,
+      hasSeatTargets: hasSeatTargets,
+    );
+    final framingProfile = _resolveRunnerFramingProfileV1(
+      requestedProfile: widget.framingProfile,
+      interactionMode: interactionMode,
+      runner: runner,
+      table: table,
+      taskFamily: widget.selectedTaskFamily,
+      hasSeatTargets: hasSeatTargets,
+    );
+    final viewportFamily = _resolveRunnerViewportFamilyV1(
+      framingProfile: framingProfile,
+      hasSeatTargets: hasSeatTargets,
+    );
     final bottomContext = _resolveRunnerBottomContextV1(
       context,
       runner: runner,
@@ -1561,7 +1730,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       }
     }
     final interactiveCallout = _interactiveShowdownLine;
-    final showActionTrail = bottomContext.showActionTrail;
+    final rawShowActionTrail = bottomContext.showActionTrail;
     final selectedSeatId = runner.selectedOption?.seatId?.trim();
     final selectedSeatFeedbackState = switch (runner.reviewQuality) {
       Act0FeedbackQualityV1.wrong => _SeatSelectionFeedbackStateV1.wrong,
@@ -1570,302 +1739,501 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             ? _SeatSelectionFeedbackStateV1.confirmed
             : _SeatSelectionFeedbackStateV1.none,
     };
-    return Column(
+    final compactAnswerListDecision = _usesCompactAnswerListDockV1(
+      context,
+      interactionMode: interactionMode,
+      framingProfile: framingProfile,
+    );
+    final viewportPressureReason = _stableViewportPressureReasonV1(
+      context,
+      viewportFamily: viewportFamily,
+    );
+    final coupleTableToDock =
+        viewportPressureReason != _compactAnswerListNoPressureReasonV1 &&
+        _viewportFamilyUsesAnswerListCompositionV1(viewportFamily);
+    final taskCycleEnvelope = _resolveRunnerTaskCycleViewportEnvelopeV1(
+      context,
+      viewportFamily: viewportFamily,
+      pressureReason: viewportPressureReason,
+    );
+    final showActionTrail =
+        rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
+    final hintCompact = compactAnswerListDecision && decisionHint != null;
+    Widget buildRunnerActionDock() {
+      return _RunnerActionDockV1(
+        pageX: pageX,
+        taskRailLabel: isRefinedDev2 || compactAnswerListDecision
+            ? null
+            : taskRailLabel,
+        sizingPresets: runner.sizingConfig.isEnabled
+            ? runner.sizingConfig.presets
+            : null,
+        selectedPresetId: runner.selectedPresetId,
+        onSelectPreset: widget.onSelectSizingPreset,
+        integratedLowerSurface: _showBottomLearningRail,
+        compactAnswerListDecision: compactAnswerListDecision,
+        scrollContentInEnvelope: taskCycleEnvelope.usesFixedLowerSlot,
+        protectFixedSlotBottom:
+            taskCycleEnvelope.usesFixedLowerSlot && isReview,
+        child: _showBottomLearningRail
+            ? _LearningRailV1(
+                taskLabel: taskRailLabel,
+                prompt: prompt,
+                supportSegments: learningRailSupportSegments,
+                activeSupportSegmentIndex: cappedSupportSegmentIndex,
+                progressLabel: learningRailProgress,
+                canGoBack:
+                    hasPreviousSupportSegment || runner.teachingStepIndex > 0,
+                onBack: hasPreviousSupportSegment
+                    ? () => setState(() => _learningRailSupportSegmentIndex--)
+                    : (runner.teachingStepIndex > 0
+                          ? widget.onPreviousTheory
+                          : null),
+                canAdvance: _canAdvanceTheory,
+                onAdvance: hasNextSupportSegment
+                    ? () => setState(() => _learningRailSupportSegmentIndex++)
+                    : widget.onContinueTheory,
+                sharkyLine: theoryCoachLine,
+                sharkyMood: runner.sharky.preSessionMood,
+                emphasizePrompt:
+                    theoryPresentationRole ==
+                        Act0TheoryPresentationRoleV1.conceptIntro ||
+                    theoryPresentationRole ==
+                        Act0TheoryPresentationRoleV1.actionPrep ||
+                    theoryPresentationRole ==
+                        Act0TheoryPresentationRoleV1.recapCheck,
+              )
+            : isTeaching
+            ? FilledButton(
+                key: const Key('act0_shell_continue_cta'),
+                onPressed: widget.onContinueTheory,
+                style: Act0ShellTokensV1.primaryButtonStyle(
+                  height: Act0ShellTokensV1.compactCtaHeight,
+                ),
+                child: Text(teachingStep!.ctaLabel),
+              )
+            : isTheory
+            ? FilledButton(
+                key: const Key('act0_shell_continue_cta'),
+                onPressed: widget.onContinueTheory,
+                style: Act0ShellTokensV1.primaryButtonStyle(
+                  height: Act0ShellTokensV1.compactCtaHeight,
+                ),
+                child: Text(runner.primaryCtaLabel),
+              )
+            : isDrill
+            ? runner.options.any((option) => option.seatId != null)
+                  ? _SeatTapPromptV1(
+                      taskLabel: taskRailLabel,
+                      question: question,
+                      helperLine: promptCoachLine,
+                      options: runner.options,
+                      onBack: null,
+                      recallLabel: widget.theoryRecallStep == null
+                          ? null
+                          : 'Need a hint?',
+                      onRecall: widget.theoryRecallStep == null
+                          ? null
+                          : _openTheoryRecallSheet,
+                    )
+                  : runner.sizingConfig.isEnabled
+                  ? _ActionPromptPanelV1(
+                      taskLabel: taskRailLabel,
+                      questionBadgeLabel: bottomContext.questionBadgeLabel,
+                      contextLine: promptContextLine,
+                      embedChildInSurface: bottomContext.isTrailHistory,
+                      compactDecision: compactAnswerListDecision,
+                      question: question,
+                      onBack: null,
+                      recallLabel: decisionHint == null ? null : 'Need a hint?',
+                      onRecall: decisionHint == null
+                          ? null
+                          : _openTheoryRecallPeek,
+                      child: _showTheoryPeek && theoryRecallPeek != null
+                          ? theoryRecallPeek
+                          : _SizingConfirmPanelV1(
+                              selectedPreset: runner.selectedPreset,
+                              onConfirm: widget.onConfirmSizingPreset,
+                            ),
+                    )
+                  : _ActionPromptPanelV1(
+                      taskLabel: taskRailLabel,
+                      questionBadgeLabel: bottomContext.questionBadgeLabel,
+                      contextLine: promptContextLine,
+                      embedChildInSurface: bottomContext.isTrailHistory,
+                      compactDecision: compactAnswerListDecision,
+                      question: question,
+                      onBack: null,
+                      recallLabel: decisionHint == null ? null : 'Need a hint?',
+                      onRecall: decisionHint == null
+                          ? null
+                          : _openTheoryRecallPeek,
+                      child: _showTheoryPeek && theoryRecallPeek != null
+                          ? theoryRecallPeek
+                          : _ActionPanelV1(
+                              options: runner.options,
+                              selectedOptionId: runner.selectedOptionId,
+                              onChoose: _handleChooseOptionTelemetry,
+                              compactDecision: compactAnswerListDecision,
+                            ),
+                    )
+            : isReview
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Act0FeedbackShellV1(
+                    title: runner.reviewTitle,
+                    reason: runner.reviewReason,
+                    quality: runner.reviewQuality,
+                    sharkyLine:
+                        runner.reviewQuality == Act0FeedbackQualityV1.correct
+                        ? runner.sharky.correctReaction
+                        : runner.sharky.wrongReaction,
+                    sharkyMood:
+                        runner.reviewQuality == Act0FeedbackQualityV1.correct
+                        ? runner.sharky.correctMood
+                        : (runner.reviewQuality ==
+                                  Act0FeedbackQualityV1.suboptimal
+                              ? Act0SharkyMoodV1.thinking
+                              : runner.sharky.wrongMood),
+                    selectedLabel: runner.reviewSelectedLabel,
+                    preferredLabel: runner.reviewPreferredLabel,
+                    betterLabel: runner.reviewBetterLabel,
+                    taskFamily: widget.selectedTaskFamily,
+                    hasSeatTargets: hasSeatTargets,
+                    potLabel: runner.table.potLabel,
+                    showPotSweep: _shouldShowPotSweep(runner),
+                    signalProof: feedbackSignalProof,
+                    contextLabels: <String>[
+                      ...bottomContext.feedbackContextLabels,
+                      ...runner.reviewContextLabels,
+                    ],
+                    refined: isRefinedDev2,
+                    completionSummary: null,
+                    firstValueReceiptLine: widget.firstValueReceiptLine,
+                    onBack: null,
+                    rapidMode: widget.rapidReviewMode,
+                    coachVoiceSeed:
+                        '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
+                    onContinue: widget.onContinueReview,
+                  ),
+                ],
+              )
+            : const SizedBox.shrink(),
+      );
+    }
+
+    Widget buildRunnerStage({double? maxTableHeight}) {
+      return LayoutBuilder(
+        builder: (context, _) {
+          final runnerStagePadding = EdgeInsets.fromLTRB(
+            pageX,
+            Act0ShellTokensV1.gapSm,
+            pageX,
+            coupleTableToDock ? 0 : Act0ShellTokensV1.gapMd,
+          );
+          final runnerStageColumn = Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+              SizedBox(
+                height: showTopInstructionCard
+                    ? Act0ShellTokensV1.gapSm
+                    : Act0ShellTokensV1.gapXs,
+              ),
+              if (!isRefinedDev2) ...[
+                _PhaseTrackerV1(phase: runner.phase),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+              ],
+              if (showTopInstructionCard) ...[
+                _RunnerInstructionSlotV1(
+                  showContent: true,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (showStepIntro) ...[
+                        _StepIntroPillV1(
+                          label: 'New step',
+                          title: '${runner.beatIndex}/${runner.beatCount}',
+                        ),
+                        const SizedBox(height: Act0ShellTokensV1.gapXs),
+                      ],
+                      _CoachCardV1(
+                        prompt: prompt,
+                        hint: hint,
+                        focusLabels:
+                            teachingStep?.focusLabels ?? const <String>[],
+                        compact: isRefinedDev2,
+                        refined: isRefinedDev2,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: isRefinedDev2
+                      ? Act0ShellTokensV1.gapSm
+                      : Act0ShellTokensV1.gapMd,
+                ),
+              ],
+              if (compactTableStageTopInset > 0)
+                SizedBox(height: compactTableStageTopInset),
+              if (coupleTableToDock && maxTableHeight == null) const Spacer(),
+              Center(
+                child: _RunnerTableStageV1(
+                  table: table,
+                  highlightedCardIds: mergedHighlightIds,
+                  interactiveCalloutLabel: interactiveCallout,
+                  onBoardCardTap: _onBoardTappedForShowdown,
+                  onChooseSeat: widget.onChooseSeat,
+                  visualVariant: widget.tableVisualVariant,
+                  showFocusBadge: !_showBottomLearningRail,
+                  showRepairCallout: !_isReview,
+                  playbackActiveSeatId: playbackActiveSeatId,
+                  animateBetMotion: trailPlaybackEnabled,
+                  betOverride: betOverride,
+                  centerLabelOverride: centerStatDisplay.centerCueLabel,
+                  potLabelOverride:
+                      playbackPotLabel ?? centerStatDisplay.potLabel,
+                  toCallLabelOverride: centerStatDisplay.toCallLabel,
+                  streetLabelOverride: playbackStreetLabel,
+                  completionSummary: showCompletionToast
+                      ? widget.completionSummary
+                      : null,
+                  selectedSeatId: selectedSeatId,
+                  selectedSeatFeedbackState: selectedSeatFeedbackState,
+                  compactBottomDockClearance: compactBottomDockClearance,
+                  interactionMode: interactionMode,
+                  framingProfile: framingProfile,
+                  viewportFamily: viewportFamily,
+                  maxTableHeight: maxTableHeight,
+                ),
+              ),
+              if (interactiveCallout.isNotEmpty) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                Container(
+                  key: const Key('act0_shell_showdown_explain_line'),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 9,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusBase,
+                    ),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.info.withValues(alpha: 0.34),
+                    ),
+                  ),
+                  child: Text(
+                    interactiveCallout,
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+              if (showActionTrail) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                _ActionTrailV1(
+                  items: table.actionTrail,
+                  variant:
+                      bottomContext.actionTrailVariant ??
+                      _ActionTrailVariantV1.compactContext,
+                  streetLabel: table.streetLabel,
+                  refined: isRefinedDev2,
+                  onFocusedIndexChanged: (index) {
+                    if (_actionTrailFocusedIndex == index) {
+                      return;
+                    }
+                    setState(() => _actionTrailFocusedIndex = index);
+                  },
+                ),
+              ],
+            ],
+          );
+          if (coupleTableToDock) {
+            return KeyedSubtree(
+              key: const Key('act0_shell_runner_scroll'),
+              child: Padding(
+                padding: runnerStagePadding,
+                child: runnerStageColumn,
+              ),
+            );
+          }
+          return SingleChildScrollView(
+            key: const Key('act0_shell_runner_scroll'),
+            padding: runnerStagePadding,
+            child: runnerStageColumn,
+          );
+        },
+      );
+    }
+
+    final runnerScreen = Column(
       key: const Key('act0_shell_runner_screen'),
       children: [
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, _) {
-              return SingleChildScrollView(
-                key: const Key('act0_shell_runner_scroll'),
-                padding: EdgeInsets.fromLTRB(
-                  pageX,
-                  Act0ShellTokensV1.gapSm,
-                  pageX,
-                  Act0ShellTokensV1.gapMd,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _RunnerProgressV1(runner: runner, onBack: widget.onBack),
-                    SizedBox(
-                      height: showTopInstructionCard
-                          ? Act0ShellTokensV1.gapSm
-                          : Act0ShellTokensV1.gapXs,
-                    ),
-                    if (!isRefinedDev2) ...[
-                      _PhaseTrackerV1(phase: runner.phase),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                    ],
-                    if (showTopInstructionCard) ...[
-                      _RunnerInstructionSlotV1(
-                        showContent: true,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (showStepIntro) ...[
-                              _StepIntroPillV1(
-                                label: 'New step',
-                                title:
-                                    '${runner.beatIndex}/${runner.beatCount}',
-                              ),
-                              const SizedBox(height: Act0ShellTokensV1.gapXs),
-                            ],
-                            _CoachCardV1(
-                              prompt: prompt,
-                              hint: hint,
-                              focusLabels:
-                                  teachingStep?.focusLabels ?? const <String>[],
-                              compact: isRefinedDev2,
-                              refined: isRefinedDev2,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: isRefinedDev2
-                            ? Act0ShellTokensV1.gapSm
-                            : Act0ShellTokensV1.gapMd,
-                      ),
-                    ],
-                    if (compactTableStageTopInset > 0)
-                      SizedBox(height: compactTableStageTopInset),
-                    Center(
-                      child: _RunnerTableStageV1(
-                        table: table,
-                        highlightedCardIds: mergedHighlightIds,
-                        interactiveCalloutLabel: interactiveCallout,
-                        onBoardCardTap: _onBoardTappedForShowdown,
-                        onChooseSeat: widget.onChooseSeat,
-                        visualVariant: widget.tableVisualVariant,
-                        showFocusBadge: !_showBottomLearningRail,
-                        showRepairCallout: !_isReview,
-                        playbackActiveSeatId: playbackActiveSeatId,
-                        animateBetMotion: trailPlaybackEnabled,
-                        betOverride: betOverride,
-                        centerLabelOverride: centerStatDisplay.centerCueLabel,
-                        potLabelOverride:
-                            playbackPotLabel ?? centerStatDisplay.potLabel,
-                        toCallLabelOverride: centerStatDisplay.toCallLabel,
-                        streetLabelOverride: playbackStreetLabel,
-                        completionSummary: showCompletionToast
-                            ? widget.completionSummary
-                            : null,
-                        selectedSeatId: selectedSeatId,
-                        selectedSeatFeedbackState: selectedSeatFeedbackState,
-                        compactBottomDockClearance: compactBottomDockClearance,
-                      ),
-                    ),
-                    if (interactiveCallout.isNotEmpty) ...[
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      Container(
-                        key: const Key('act0_shell_showdown_explain_line'),
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 9,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Act0ShellTokensV1.info.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusBase,
-                          ),
-                          border: Border.all(
-                            color: Act0ShellTokensV1.info.withValues(
-                              alpha: 0.34,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          interactiveCallout,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (showActionTrail) ...[
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      _ActionTrailV1(
-                        items: table.actionTrail,
-                        variant:
-                            bottomContext.actionTrailVariant ??
-                            _ActionTrailVariantV1.compactContext,
-                        streetLabel: table.streetLabel,
-                        refined: isRefinedDev2,
-                        onFocusedIndexChanged: (index) {
-                          if (_actionTrailFocusedIndex == index) {
-                            return;
-                          }
-                          setState(() => _actionTrailFocusedIndex = index);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              );
-            },
+        SizedBox.shrink(
+          key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
+        ),
+        SizedBox.shrink(
+          key: Key('act0_shell_runner_framing_${framingProfile.name}'),
+        ),
+        SizedBox.shrink(
+          key: Key('act0_shell_runner_viewport_${viewportFamily.name}'),
+        ),
+        SizedBox.shrink(
+          key: Key(
+            'act0_shell_runner_envelope_${taskCycleEnvelope.familyName}',
           ),
         ),
-        _RunnerActionDockV1(
-          pageX: pageX,
-          taskRailLabel: isRefinedDev2 ? null : taskRailLabel,
-          sizingPresets: runner.sizingConfig.isEnabled
-              ? runner.sizingConfig.presets
-              : null,
-          selectedPresetId: runner.selectedPresetId,
-          onSelectPreset: widget.onSelectSizingPreset,
-          integratedLowerSurface: _showBottomLearningRail,
-          child: _showBottomLearningRail
-              ? _LearningRailV1(
-                  taskLabel: taskRailLabel,
-                  prompt: prompt,
-                  supportSegments: learningRailSupportSegments,
-                  activeSupportSegmentIndex: cappedSupportSegmentIndex,
-                  progressLabel: learningRailProgress,
-                  canGoBack:
-                      hasPreviousSupportSegment || runner.teachingStepIndex > 0,
-                  onBack: hasPreviousSupportSegment
-                      ? () => setState(() => _learningRailSupportSegmentIndex--)
-                      : (runner.teachingStepIndex > 0
-                            ? widget.onPreviousTheory
-                            : null),
-                  canAdvance: _canAdvanceTheory,
-                  onAdvance: hasNextSupportSegment
-                      ? () => setState(() => _learningRailSupportSegmentIndex++)
-                      : widget.onContinueTheory,
-                  sharkyLine: theoryCoachLine,
-                  sharkyMood: runner.sharky.preSessionMood,
-                  emphasizePrompt:
-                      theoryPresentationRole ==
-                          Act0TheoryPresentationRoleV1.conceptIntro ||
-                      theoryPresentationRole ==
-                          Act0TheoryPresentationRoleV1.actionPrep ||
-                      theoryPresentationRole ==
-                          Act0TheoryPresentationRoleV1.recapCheck,
-                )
-              : isTeaching
-              ? FilledButton(
-                  key: const Key('act0_shell_continue_cta'),
-                  onPressed: widget.onContinueTheory,
-                  style: Act0ShellTokensV1.primaryButtonStyle(
-                    height: Act0ShellTokensV1.compactCtaHeight,
-                  ),
-                  child: Text(teachingStep!.ctaLabel),
-                )
-              : isTheory
-              ? FilledButton(
-                  key: const Key('act0_shell_continue_cta'),
-                  onPressed: widget.onContinueTheory,
-                  style: Act0ShellTokensV1.primaryButtonStyle(
-                    height: Act0ShellTokensV1.compactCtaHeight,
-                  ),
-                  child: Text(runner.primaryCtaLabel),
-                )
-              : isDrill
-              ? runner.options.any((option) => option.seatId != null)
-                    ? _SeatTapPromptV1(
-                        taskLabel: taskRailLabel,
-                        question: question,
-                        helperLine: promptCoachLine,
-                        options: runner.options,
-                        onBack: null,
-                        recallLabel: widget.theoryRecallStep == null
-                            ? null
-                            : 'Need a hint?',
-                        onRecall: widget.theoryRecallStep == null
-                            ? null
-                            : _openTheoryRecallSheet,
-                      )
-                    : runner.sizingConfig.isEnabled
-                    ? _ActionPromptPanelV1(
-                        taskLabel: taskRailLabel,
-                        questionBadgeLabel: bottomContext.questionBadgeLabel,
-                        contextLine: promptContextLine,
-                        embedChildInSurface: bottomContext.isTrailHistory,
-                        question: question,
-                        onBack: null,
-                        recallLabel: decisionHint == null
-                            ? null
-                            : 'Need a hint?',
-                        onRecall: decisionHint == null
-                            ? null
-                            : _openTheoryRecallPeek,
-                        child: _showTheoryPeek && theoryRecallPeek != null
-                            ? theoryRecallPeek
-                            : _SizingConfirmPanelV1(
-                                selectedPreset: runner.selectedPreset,
-                                onConfirm: widget.onConfirmSizingPreset,
-                              ),
-                      )
-                    : _ActionPromptPanelV1(
-                        taskLabel: taskRailLabel,
-                        questionBadgeLabel: bottomContext.questionBadgeLabel,
-                        contextLine: promptContextLine,
-                        embedChildInSurface: bottomContext.isTrailHistory,
-                        question: question,
-                        onBack: null,
-                        recallLabel: decisionHint == null
-                            ? null
-                            : 'Need a hint?',
-                        onRecall: decisionHint == null
-                            ? null
-                            : _openTheoryRecallPeek,
-                        child: _showTheoryPeek && theoryRecallPeek != null
-                            ? theoryRecallPeek
-                            : _ActionPanelV1(
-                                options: runner.options,
-                                selectedOptionId: runner.selectedOptionId,
-                                onChoose: _handleChooseOptionTelemetry,
-                              ),
-                      )
-              : isReview
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
+        SizedBox.shrink(
+          key: Key('act0_shell_runner_pressure_$viewportPressureReason'),
+        ),
+        SizedBox.shrink(
+          key: Key(
+            'act0_shell_runner_action_dock_compact_$compactAnswerListDecision',
+          ),
+        ),
+        SizedBox.shrink(
+          key: Key(
+            'act0_shell_runner_prompt_panel_compact_$compactAnswerListDecision',
+          ),
+        ),
+        SizedBox.shrink(
+          key: Key('act0_shell_runner_hint_compact_$hintCompact'),
+        ),
+        if (compactAnswerListDecision)
+          const SizedBox.shrink(
+            key: Key('act0_shell_compact_answer_list_branch'),
+          ),
+        if (taskCycleEnvelope.usesFixedLowerSlot)
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final lowerSlotHeight = taskCycleEnvelope.lowerSlotHeightFor(
+                  constraints.maxHeight,
+                );
+                final upperSlotHeight = math.max(
+                  0.0,
+                  constraints.maxHeight - lowerSlotHeight,
+                );
+                final tableMaxHeight = math.max(
+                  0.0,
+                  upperSlotHeight -
+                      _runnerUpperStageChromeHeightV1(
+                        showTopInstructionCard: showTopInstructionCard,
+                        isRefinedDev2: isRefinedDev2,
+                        compactTableStageTopInset: compactTableStageTopInset,
+                      ),
+                );
+                return Column(
                   children: [
-                    Act0FeedbackShellV1(
-                      title: runner.reviewTitle,
-                      reason: runner.reviewReason,
-                      quality: runner.reviewQuality,
-                      sharkyLine:
-                          runner.reviewQuality == Act0FeedbackQualityV1.correct
-                          ? runner.sharky.correctReaction
-                          : runner.sharky.wrongReaction,
-                      sharkyMood:
-                          runner.reviewQuality == Act0FeedbackQualityV1.correct
-                          ? runner.sharky.correctMood
-                          : (runner.reviewQuality ==
-                                    Act0FeedbackQualityV1.suboptimal
-                                ? Act0SharkyMoodV1.thinking
-                                : runner.sharky.wrongMood),
-                      selectedLabel: runner.reviewSelectedLabel,
-                      preferredLabel: runner.reviewPreferredLabel,
-                      betterLabel: runner.reviewBetterLabel,
-                      taskFamily: widget.selectedTaskFamily,
-                      hasSeatTargets: hasSeatTargets,
-                      potLabel: runner.table.potLabel,
-                      showPotSweep: _shouldShowPotSweep(runner),
-                      contextLabels: <String>[
-                        ...bottomContext.feedbackContextLabels,
-                        ...runner.reviewContextLabels,
-                      ],
-                      refined: isRefinedDev2,
-                      completionSummary: null,
-                      onBack: null,
-                      rapidMode: widget.rapidReviewMode,
-                      coachVoiceSeed:
-                          '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
-                      onContinue: widget.onContinueReview,
+                    SizedBox(
+                      height: upperSlotHeight,
+                      child: buildRunnerStage(maxTableHeight: tableMaxHeight),
+                    ),
+                    SizedBox(
+                      height: lowerSlotHeight,
+                      child: buildRunnerActionDock(),
                     ),
                   ],
-                )
-              : const SizedBox.shrink(),
-        ),
+                );
+              },
+            ),
+          )
+        else ...[
+          Expanded(child: buildRunnerStage()),
+          buildRunnerActionDock(),
+        ],
       ],
     );
+    return runnerScreen;
   }
+}
+
+class _RunnerTaskCycleViewportEnvelopeV1 {
+  const _RunnerTaskCycleViewportEnvelopeV1({
+    required this.familyName,
+    required this.usesFixedLowerSlot,
+    required this.targetLowerSlotHeight,
+    required this.minLowerSlotHeight,
+  });
+
+  final String familyName;
+  final bool usesFixedLowerSlot;
+  final double targetLowerSlotHeight;
+  final double minLowerSlotHeight;
+
+  double lowerSlotHeightFor(double availableHeight) {
+    if (!usesFixedLowerSlot) {
+      return 0;
+    }
+    final maxLowerSlotHeight = math.max(
+      minLowerSlotHeight,
+      availableHeight * _runnerEnvelopeMaxLowerSlotShareV1,
+    );
+    return targetLowerSlotHeight.clamp(minLowerSlotHeight, maxLowerSlotHeight);
+  }
+}
+
+_RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
+  BuildContext context, {
+  required _RunnerViewportFamilyV1 viewportFamily,
+  required String pressureReason,
+}) {
+  final usesFixedAnswerListEnvelope =
+      pressureReason != _compactAnswerListNoPressureReasonV1 &&
+      _viewportFamilyUsesAnswerListCompositionV1(viewportFamily);
+  if (usesFixedAnswerListEnvelope) {
+    final media = MediaQuery.sizeOf(context);
+    final safePadding = MediaQuery.viewPaddingOf(context).vertical > 0
+        ? MediaQuery.viewPaddingOf(context).vertical
+        : MediaQuery.paddingOf(context).vertical;
+    final usableHeight = media.height - safePadding;
+    final targetLowerSlotHeight =
+        (usableHeight * _runnerEnvelopeTargetLowerSlotShareV1).clamp(
+          _runnerEnvelopeMinLowerSlotHeightV1,
+          _runnerEnvelopeTargetLowerSlotHeightV1,
+        );
+    return _RunnerTaskCycleViewportEnvelopeV1(
+      familyName: viewportFamily.name,
+      usesFixedLowerSlot: true,
+      targetLowerSlotHeight: targetLowerSlotHeight,
+      minLowerSlotHeight: _runnerEnvelopeMinLowerSlotHeightV1,
+    );
+  }
+  return _RunnerTaskCycleViewportEnvelopeV1(
+    familyName: viewportFamily.name,
+    usesFixedLowerSlot: false,
+    targetLowerSlotHeight: 0,
+    minLowerSlotHeight: 0,
+  );
+}
+
+double _runnerUpperStageChromeHeightV1({
+  required bool showTopInstructionCard,
+  required bool isRefinedDev2,
+  required double compactTableStageTopInset,
+}) {
+  var height = Act0ShellTokensV1.gapSm;
+  height += _runnerProgressRowHeightV1;
+  height += showTopInstructionCard
+      ? Act0ShellTokensV1.gapSm
+      : Act0ShellTokensV1.gapXs;
+  if (!isRefinedDev2) {
+    height += Act0ShellTokensV1.gapSm;
+    height += 24;
+  }
+  if (showTopInstructionCard) {
+    height += Act0ShellTokensV1.refinedInstructionSlotHeight;
+    height += isRefinedDev2 ? Act0ShellTokensV1.gapSm : Act0ShellTokensV1.gapMd;
+  }
+  height += compactTableStageTopInset;
+  return height;
 }
 
 String? _learningRailProgressLabel(Act0RunnerStateV1 runner) {
@@ -1875,6 +2243,79 @@ String? _learningRailProgressLabel(Act0RunnerStateV1 runner) {
   }
   final current = runner.teachingStepIndex.clamp(0, total - 1) + 1;
   return '$current/$total';
+}
+
+_RunnerInteractionModeV1 _resolveRunnerInteractionModeV1({
+  required bool isDrill,
+  required bool isReview,
+  required bool hasSeatTargets,
+}) {
+  if (isReview) {
+    return _RunnerInteractionModeV1.feedback;
+  }
+  if (isDrill && hasSeatTargets) {
+    return _RunnerInteractionModeV1.tableTapDecision;
+  }
+  return _RunnerInteractionModeV1.answerListDecision;
+}
+
+Act0RunnerFramingProfileV1 _resolveRunnerFramingProfileV1({
+  required Act0RunnerFramingProfileV1 requestedProfile,
+  required _RunnerInteractionModeV1 interactionMode,
+  required Act0RunnerStateV1 runner,
+  required Act0TableStateV1 table,
+  required Act0TaskFamilyV1? taskFamily,
+  required bool hasSeatTargets,
+}) {
+  if (interactionMode == _RunnerInteractionModeV1.tableTapDecision ||
+      hasSeatTargets) {
+    return Act0RunnerFramingProfileV1.seatFocus;
+  }
+  if (requestedProfile != Act0RunnerFramingProfileV1.neutral) {
+    return requestedProfile;
+  }
+
+  final hasHeroCards =
+      table.heroCards.isNotEmpty ||
+      table.seats.any((seat) => seat.holeCards.isNotEmpty && seat.isHero);
+  final hasBoardCards = table.boardCards.isNotEmpty;
+  final hasPotOrPrice =
+      table.potLabel.trim().isNotEmpty ||
+      table.toCallLabel.trim().isNotEmpty ||
+      table.centerLabel.trim().isNotEmpty;
+
+  if (taskFamily == Act0TaskFamilyV1.decision ||
+      taskFamily == Act0TaskFamilyV1.sizing ||
+      taskFamily == Act0TaskFamilyV1.repair) {
+    return Act0RunnerFramingProfileV1.heroAction;
+  }
+  if (hasHeroCards && hasBoardCards && hasPotOrPrice) {
+    return Act0RunnerFramingProfileV1.boardHeroPot;
+  }
+  if (hasBoardCards) {
+    return Act0RunnerFramingProfileV1.boardOnly;
+  }
+  return Act0RunnerFramingProfileV1.neutral;
+}
+
+_RunnerViewportFamilyV1 _resolveRunnerViewportFamilyV1({
+  required Act0RunnerFramingProfileV1 framingProfile,
+  required bool hasSeatTargets,
+}) {
+  if (hasSeatTargets ||
+      framingProfile == Act0RunnerFramingProfileV1.seatFocus) {
+    return _RunnerViewportFamilyV1.tableTapSeatFocus;
+  }
+  return switch (framingProfile) {
+    Act0RunnerFramingProfileV1.boardHeroPot ||
+    Act0RunnerFramingProfileV1.boardOnly =>
+      _RunnerViewportFamilyV1.answerListBoardHeroPot,
+    Act0RunnerFramingProfileV1.heroAction =>
+      _RunnerViewportFamilyV1.answerListHeroAction,
+    Act0RunnerFramingProfileV1.seatFocus =>
+      _RunnerViewportFamilyV1.tableTapSeatFocus,
+    Act0RunnerFramingProfileV1.neutral => _RunnerViewportFamilyV1.neutral,
+  };
 }
 
 class _RunnerInstructionSlotV1 extends StatelessWidget {
@@ -1905,6 +2346,9 @@ class _RunnerActionDockV1 extends StatelessWidget {
     this.selectedPresetId,
     this.onSelectPreset,
     this.integratedLowerSurface = false,
+    this.compactAnswerListDecision = false,
+    this.scrollContentInEnvelope = false,
+    this.protectFixedSlotBottom = false,
   });
 
   final Widget child;
@@ -1914,31 +2358,49 @@ class _RunnerActionDockV1 extends StatelessWidget {
   final String? selectedPresetId;
   final ValueChanged<Act0SizingPresetV1>? onSelectPreset;
   final bool integratedLowerSurface;
+  final bool compactAnswerListDecision;
+  final bool scrollContentInEnvelope;
+  final bool protectFixedSlotBottom;
 
   @override
   Widget build(BuildContext context) {
     final hasSizingPresets = sizingPresets != null && sizingPresets!.isNotEmpty;
     final safeBottom = MediaQuery.viewPaddingOf(context).bottom;
-    final dockBody = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (taskRailLabel != null && taskRailLabel!.isNotEmpty) ...[
-          _TaskRailV1(label: taskRailLabel!),
-          const SizedBox(height: 6),
+    final effectiveTaskRailLabel = compactAnswerListDecision
+        ? null
+        : taskRailLabel;
+    final dockBody = _CompactAnswerListDecisionScopeV1(
+      compact: compactAnswerListDecision,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (effectiveTaskRailLabel != null &&
+              effectiveTaskRailLabel.isNotEmpty) ...[
+            _TaskRailV1(label: effectiveTaskRailLabel),
+            const SizedBox(height: 6),
+          ],
+          if (hasSizingPresets) ...[
+            _SizingPresetsLaneV1(
+              presets: sizingPresets!,
+              selectedPresetId: selectedPresetId,
+              onSelectPreset: onSelectPreset!,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
+          child,
         ],
-        if (hasSizingPresets) ...[
-          _SizingPresetsLaneV1(
-            presets: sizingPresets!,
-            selectedPresetId: selectedPresetId,
-            onSelectPreset: onSelectPreset!,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-        ],
-        child,
-      ],
+      ),
     );
-    return Container(
+    final effectiveDockBody = scrollContentInEnvelope
+        ? SingleChildScrollView(
+            primary: false,
+            physics: const ClampingScrollPhysics(),
+            child: dockBody,
+          )
+        : dockBody;
+    final visualDock = Container(
       key: const Key('act0_shell_runner_action_dock'),
+      width: double.infinity,
       constraints: const BoxConstraints(
         minHeight: Act0ShellTokensV1.runnerActionDockMinHeight,
       ),
@@ -1965,7 +2427,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
                     ],
                   ),
                 ),
-                child: dockBody,
+                child: effectiveDockBody,
               ),
             )
           : SafeArea(
@@ -1973,14 +2435,52 @@ class _RunnerActionDockV1 extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                   pageX,
-                  Act0ShellTokensV1.gapSm,
+                  compactAnswerListDecision ? 3 : Act0ShellTokensV1.gapSm,
                   pageX,
-                  Act0ShellTokensV1.gapMd,
+                  compactAnswerListDecision
+                      ? (protectFixedSlotBottom && safeBottom > 0
+                            ? safeBottom + 12
+                            : 0)
+                      : (scrollContentInEnvelope && safeBottom > 0
+                            ? safeBottom + 12
+                            : Act0ShellTokensV1.gapMd),
                 ),
-                child: dockBody,
+                child: protectFixedSlotBottom
+                    ? Align(
+                        alignment: Alignment.topCenter,
+                        child: effectiveDockBody,
+                      )
+                    : effectiveDockBody,
               ),
             ),
     );
+    if (compactAnswerListDecision && scrollContentInEnvelope) {
+      return Align(alignment: Alignment.topCenter, child: visualDock);
+    }
+    return visualDock;
+  }
+}
+
+class _CompactAnswerListDecisionScopeV1 extends InheritedWidget {
+  const _CompactAnswerListDecisionScopeV1({
+    required this.compact,
+    required super.child,
+  });
+
+  final bool compact;
+
+  static bool isCompact(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<
+              _CompactAnswerListDecisionScopeV1
+            >()
+            ?.compact ??
+        false;
+  }
+
+  @override
+  bool updateShouldNotify(_CompactAnswerListDecisionScopeV1 oldWidget) {
+    return compact != oldWidget.compact;
   }
 }
 
@@ -2875,6 +3375,10 @@ class _RunnerTableStageV1 extends StatelessWidget {
     this.selectedSeatId,
     this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
     this.compactBottomDockClearance = false,
+    required this.interactionMode,
+    required this.framingProfile,
+    required this.viewportFamily,
+    this.maxTableHeight,
   });
 
   final Act0TableStateV1 table;
@@ -2896,6 +3400,10 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final String? selectedSeatId;
   final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
   final bool compactBottomDockClearance;
+  final _RunnerInteractionModeV1 interactionMode;
+  final Act0RunnerFramingProfileV1 framingProfile;
+  final _RunnerViewportFamilyV1 viewportFamily;
+  final double? maxTableHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -2919,6 +3427,10 @@ class _RunnerTableStageV1 extends StatelessWidget {
       selectedSeatId: selectedSeatId,
       selectedSeatFeedbackState: selectedSeatFeedbackState,
       compactBottomDockClearance: compactBottomDockClearance,
+      interactionMode: interactionMode,
+      framingProfile: framingProfile,
+      viewportFamily: viewportFamily,
+      maxTableHeight: maxTableHeight,
     );
   }
 }
@@ -2998,6 +3510,385 @@ Act0TableStateV1 _repairTable(
         ? base.highlightedCardIds
         : option.repairFocusCardIds,
   );
+}
+
+Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
+  required Act0RunnerStateV1 runner,
+  required Act0RunnerOptionV1? option,
+  required Act0TaskFamilyV1? taskFamily,
+  required bool hasSeatTargets,
+}) {
+  final table = runner.table;
+  final selectedOption = option ?? runner.selectedOption;
+  final correctOption = runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
+    (candidate) => candidate?.isCorrect == true,
+    orElse: () => null,
+  );
+  final targetOption = selectedOption?.isCorrect == true
+      ? selectedOption
+      : correctOption;
+  if (selectedOption != null) {
+    final repairSeatIds = _trimmedUniqueStringsV1(
+      selectedOption.repairFocusSeatIds,
+    );
+    final repairCardIds = _trimmedUniqueStringsV1(
+      selectedOption.repairFocusCardIds,
+    );
+    final repairLabels = _trimmedUniqueStringsV1(
+      selectedOption.repairFocusLabels,
+    );
+    final repairTableProof = _proofFromTableSignalsV1(
+      table: table,
+      seatIds: repairSeatIds,
+      cardIds: repairCardIds,
+      repairLabels: repairLabels,
+    );
+    if (repairTableProof != null) {
+      return repairTableProof;
+    }
+  }
+
+  final targetSeatId = (targetOption?.seatId ?? '').trim();
+  if (targetSeatId.isNotEmpty) {
+    return _proofFromSeatSignalV1(table, targetSeatId);
+  }
+
+  if (hasSeatTargets) {
+    final activeSeatId = (table.activeSeatId ?? '').trim();
+    if (activeSeatId.isNotEmpty) {
+      return _proofFromSeatSignalV1(table, activeSeatId);
+    }
+  }
+
+  final tableText =
+      '${runner.lessonId} ${runner.lessonTitle} ${runner.caption} '
+              '${runner.hint} ${runner.question} ${runner.reviewReason} '
+              '${table.centerLabel} ${table.potLabel} ${table.toCallLabel}'
+          .toLowerCase();
+  final looksLikeTableRead =
+      taskFamily == Act0TaskFamilyV1.transfer ||
+      tableText.contains('table read') ||
+      (tableText.contains('board') && tableText.contains('pot'));
+  if (looksLikeTableRead &&
+      table.heroCards.isNotEmpty &&
+      table.boardCards.isNotEmpty &&
+      table.potLabel.trim().isNotEmpty) {
+    return _feedbackSignalProofV1(
+      signalId: 'hero_cards_board_pot',
+      label: 'Hero cards + board + pot',
+      cardIds: <String>[
+        for (var i = 0; i < table.heroCards.length; i++) 'hero_$i',
+        for (var i = 0; i < table.boardCards.length; i++) 'board_$i',
+      ],
+      statKeys: const <String>['pot'],
+    );
+  }
+
+  if (table.toCallLabel.trim().isNotEmpty) {
+    return _feedbackSignalProofV1(
+      signalId: 'pot_to_call',
+      label: 'Pot / to call',
+      statKeys: const <String>['pot', 'to_call'],
+    );
+  }
+
+  final centerLabel = table.centerLabel.trim().toLowerCase();
+  if (centerLabel.contains('no bet') || centerLabel.contains('check')) {
+    return _feedbackSignalProofV1(signalId: 'no_bet_yet', label: 'No bet yet');
+  }
+
+  if (table.boardCards.isNotEmpty) {
+    return _feedbackSignalProofV1(
+      signalId: 'board_cards',
+      label: 'Board cards',
+      cardIds: <String>[
+        for (var i = 0; i < table.boardCards.length; i++) 'board_$i',
+      ],
+    );
+  }
+
+  return null;
+}
+
+Act0SkillReceiptV1? _skillReceiptForSignalProofV1({
+  required Act0FeedbackSignalProofV1? proof,
+  required Act0FeedbackQualityV1 quality,
+}) {
+  if (proof == null) {
+    return null;
+  }
+  final sourceSignalLabel = proof.label.trim();
+  if (sourceSignalLabel.isEmpty) {
+    return null;
+  }
+  final spec = _skillReceiptSpecForSignalIdV1(proof.signalId);
+  return Act0SkillReceiptV1(
+    skillAtomId: spec.skillAtomId,
+    skillLabel: spec.skillLabel,
+    sourceSignalId: proof.signalId.trim().isEmpty
+        ? _feedbackSignalIdForLabelV1(sourceSignalLabel)
+        : proof.signalId.trim(),
+    sourceSignalLabel: sourceSignalLabel,
+    outcome: switch (quality) {
+      Act0FeedbackQualityV1.correct => Act0SkillReceiptOutcomeV1.learned,
+      Act0FeedbackQualityV1.wrong => Act0SkillReceiptOutcomeV1.repairStarted,
+      Act0FeedbackQualityV1.suboptimal => Act0SkillReceiptOutcomeV1.needsRep,
+    },
+    nextRepId: spec.nextRepId,
+    nextRepLabel: spec.nextRepLabel,
+  );
+}
+
+Act0SkillReceiptV1? act0FirstValueSkillReceiptForRunnerV1({
+  required Act0RunnerStateV1 runner,
+  required Act0RunnerOptionV1 option,
+  required Act0TaskFamilyV1? taskFamily,
+}) {
+  final proof = _feedbackSignalProofForRunnerV1(
+    runner: runner.copyWith(selectedOptionId: option.id),
+    option: option,
+    taskFamily: taskFamily,
+    hasSeatTargets: runner.options.any((option) => option.seatId != null),
+  );
+  return _skillReceiptForSignalProofV1(proof: proof, quality: option.quality);
+}
+
+({String skillAtomId, String skillLabel, String nextRepId, String nextRepLabel})
+_skillReceiptSpecForSignalIdV1(String signalId) {
+  return switch (signalId.trim()) {
+    'hero_button' => (
+      skillAtomId: 'table_position_read',
+      skillLabel: 'Table position read',
+      nextRepId: 'repeat_table_position_read',
+      nextRepLabel: 'use the same position read once more',
+    ),
+    'hero_cards' => (
+      skillAtomId: 'starting_hand_read',
+      skillLabel: 'Starting hand read',
+      nextRepId: 'repeat_starting_hand_read',
+      nextRepLabel: 'use the same hand read once more',
+    ),
+    'board_cards' => (
+      skillAtomId: 'board_read',
+      skillLabel: 'Board read',
+      nextRepId: 'repeat_board_read',
+      nextRepLabel: 'use the same board read once more',
+    ),
+    'no_bet_yet' => (
+      skillAtomId: 'action_read',
+      skillLabel: 'Action read',
+      nextRepId: 'repeat_action_read',
+      nextRepLabel: 'use the same action read once more',
+    ),
+    'pot_to_call' => (
+      skillAtomId: 'price_read',
+      skillLabel: 'Price read',
+      nextRepId: 'repeat_price_read',
+      nextRepLabel: 'use the same price read once more',
+    ),
+    _ => (
+      skillAtomId: 'table_read',
+      skillLabel: 'Table read',
+      nextRepId: 'repeat_table_read',
+      nextRepLabel: 'use the same table read once more',
+    ),
+  };
+}
+
+Act0TableStateV1 _tableWithFeedbackSignalProofV1(
+  Act0TableStateV1 table,
+  Act0FeedbackSignalProofV1 proof,
+) {
+  return table.copyWith(
+    highlightedSeatIds: _trimmedUniqueStringsV1(<String>[
+      ...table.highlightedSeatIds,
+      ...proof.seatIds,
+    ]),
+    highlightedCardIds: _trimmedUniqueStringsV1(<String>[
+      ...table.highlightedCardIds,
+      ...proof.cardIds,
+    ]),
+  );
+}
+
+Act0FeedbackSignalProofV1? _proofFromTableSignalsV1({
+  required Act0TableStateV1 table,
+  required List<String> seatIds,
+  required List<String> cardIds,
+  required List<String> repairLabels,
+}) {
+  final hasHeroCards = cardIds.any((id) => id.startsWith('hero_'));
+  final hasBoardCards = cardIds.any((id) => id.startsWith('board_'));
+  if (hasHeroCards && hasBoardCards && table.potLabel.trim().isNotEmpty) {
+    return _feedbackSignalProofV1(
+      signalId: 'hero_cards_board_pot',
+      label: 'Hero cards + board + pot',
+      seatIds: seatIds,
+      cardIds: cardIds,
+      statKeys: const <String>['pot'],
+    );
+  }
+  if (seatIds.isNotEmpty) {
+    return _proofFromSeatSignalV1(
+      table,
+      seatIds.first,
+      extraSeatIds: seatIds.skip(1),
+      cardIds: cardIds,
+    );
+  }
+  if (hasHeroCards) {
+    return _feedbackSignalProofV1(
+      signalId: 'hero_cards',
+      label: 'Hero cards',
+      cardIds: cardIds,
+    );
+  }
+  if (hasBoardCards) {
+    return _feedbackSignalProofV1(
+      signalId: 'board_cards',
+      label: 'Board cards',
+      cardIds: cardIds,
+    );
+  }
+  final repairLabel = repairLabels.isEmpty
+      ? ''
+      : _feedbackSignalLabelFromRepairLabelV1(repairLabels.first);
+  if (repairLabel.isEmpty) {
+    return null;
+  }
+  return _feedbackSignalProofV1(
+    signalId: _feedbackSignalIdForLabelV1(repairLabel),
+    label: repairLabel,
+  );
+}
+
+Act0FeedbackSignalProofV1? _proofFromSeatSignalV1(
+  Act0TableStateV1 table,
+  String seatId, {
+  Iterable<String> extraSeatIds = const <String>[],
+  List<String> cardIds = const <String>[],
+}) {
+  final cleanSeatId = seatId.trim();
+  if (cleanSeatId.isEmpty) {
+    return null;
+  }
+  final label = _feedbackSeatSignalLabelV1(table, cleanSeatId);
+  if (label.isEmpty) {
+    return null;
+  }
+  return _feedbackSignalProofV1(
+    signalId: _feedbackSignalIdForLabelV1(label),
+    label: label,
+    seatIds: _trimmedUniqueStringsV1(<String>[cleanSeatId, ...extraSeatIds]),
+    cardIds: cardIds,
+  );
+}
+
+Act0FeedbackSignalProofV1 _feedbackSignalProofV1({
+  required String signalId,
+  required String label,
+  List<String> seatIds = const <String>[],
+  List<String> cardIds = const <String>[],
+  List<String> statKeys = const <String>[],
+}) {
+  final cleanLabel = label.trim();
+  return Act0FeedbackSignalProofV1(
+    signalId: signalId.trim().isEmpty
+        ? _feedbackSignalIdForLabelV1(cleanLabel)
+        : signalId.trim(),
+    label: cleanLabel,
+    proofLine: 'Signal: $cleanLabel',
+    seatIds: _trimmedUniqueStringsV1(seatIds),
+    cardIds: _trimmedUniqueStringsV1(cardIds),
+    statKeys: _trimmedUniqueStringsV1(statKeys),
+  );
+}
+
+String _feedbackSeatSignalLabelV1(Act0TableStateV1 table, String seatId) {
+  final seat = table.seats.cast<Act0SeatStateV1?>().firstWhere(
+    (candidate) => candidate?.seatId == seatId,
+    orElse: () => null,
+  );
+  if (seat == null) {
+    return '';
+  }
+  if (seat.isHero && seat.isDealerButton) {
+    return 'Hero on the Button';
+  }
+  if (seat.isHero) {
+    return 'Hero seat';
+  }
+  if (seat.isDealerButton) {
+    return 'Button';
+  }
+  if (seat.isSmallBlind) {
+    return 'Small Blind';
+  }
+  if (seat.isBigBlind) {
+    return 'Big Blind';
+  }
+  final displayName = seat.displayName.trim();
+  if (displayName.isNotEmpty) {
+    return displayName;
+  }
+  return seat.seatLabel.trim();
+}
+
+String _feedbackSignalLabelFromRepairLabelV1(String label) {
+  final clean = _premiumSafeFeedbackOptionLabelV1(label.trim());
+  final lower = clean.toLowerCase();
+  if (lower == 'button' || lower == 'btn') {
+    return 'Hero on the Button';
+  }
+  if (lower.contains('no bet')) {
+    return 'No bet yet';
+  }
+  if (lower.contains('board')) {
+    return 'Board cards';
+  }
+  if (lower.contains('pot') || lower.contains('to call')) {
+    return 'Pot / to call';
+  }
+  return clean;
+}
+
+String _feedbackSignalIdForLabelV1(String label) {
+  final lower = label.trim().toLowerCase();
+  if (lower == 'hero on the button') {
+    return 'hero_button';
+  }
+  if (lower == 'hero cards + board + pot') {
+    return 'hero_cards_board_pot';
+  }
+  if (lower == 'pot / to call') {
+    return 'pot_to_call';
+  }
+  if (lower == 'no bet yet') {
+    return 'no_bet_yet';
+  }
+  if (lower == 'board cards') {
+    return 'board_cards';
+  }
+  if (lower == 'hero cards') {
+    return 'hero_cards';
+  }
+  final slug = lower
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+      .replaceAll(RegExp(r'^_+|_+$'), '');
+  return slug.isEmpty ? 'table_signal' : slug;
+}
+
+List<String> _trimmedUniqueStringsV1(Iterable<String> values) {
+  final seen = <String>{};
+  final result = <String>[];
+  for (final value in values) {
+    final clean = value.trim();
+    if (clean.isEmpty || !seen.add(clean)) {
+      continue;
+    }
+    result.add(clean);
+  }
+  return result;
 }
 
 class _RunnerProgressV1 extends StatelessWidget {
@@ -3351,9 +4242,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.hasSeatTargets = false,
     this.potLabel = '',
     this.showPotSweep = false,
+    this.signalProof,
     this.contextLabels = const <String>[],
     this.refined = false,
     this.completionSummary,
+    this.firstValueReceiptLine,
     this.onBack,
     this.rapidMode = false,
     this.coachVoiceSeed,
@@ -3372,9 +4265,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool hasSeatTargets;
   final String potLabel;
   final bool showPotSweep;
+  final Act0FeedbackSignalProofV1? signalProof;
   final List<String> contextLabels;
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
+  final String? firstValueReceiptLine;
   final VoidCallback? onBack;
   final bool rapidMode;
   final String? coachVoiceSeed;
@@ -3384,9 +4279,21 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final isWrong = quality == Act0FeedbackQualityV1.wrong;
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
-    final viewportHeight = MediaQuery.sizeOf(context).height;
+    final media = MediaQuery.of(context);
+    final view = View.of(context);
+    final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
+    final safeVertical = media.viewPadding.vertical > 0
+        ? media.viewPadding.vertical
+        : media.padding.vertical;
+    final usableHeight = media.size.height - safeVertical;
     final isCompactRefinedFeedback =
-        refined && !rapidMode && viewportHeight <= 900;
+        !rapidMode &&
+        ((refined &&
+                (usableHeight <= 900 ||
+                    (fullViewportHeight > 900 && fullViewportHeight <= 980))) ||
+            (!refined &&
+                fullViewportHeight > 900 &&
+                fullViewportHeight <= 980));
     final tone = isWrong
         ? Act0ShellTokensV1.danger
         : (isSuboptimal ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary);
@@ -3407,16 +4314,19 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       quality: quality,
       contextLabels: contextLabels,
     );
+    final resolvedSharkyLine =
+        _premiumSafeFeedbackTitleV1(sharkyLine.trim()) ?? sharkyLine;
     final reactionLine = act0RuntimeFeedbackCoachLineV1(
       context,
-      authoredLine: sharkyLine,
+      authoredLine: resolvedSharkyLine,
       title: resolvedTitle,
       quality: quality,
       variationSeed:
           coachVoiceSeed ??
-          '${quality.name}|${resolvedTitle.trim().toLowerCase()}|${sharkyLine.trim().toLowerCase()}',
+          '${quality.name}|${resolvedTitle.trim().toLowerCase()}|${resolvedSharkyLine.trim().toLowerCase()}',
       taskFamily: taskFamily,
     );
+    final rhythmVerdict = _feedbackRhythmVerdictV1(context, quality);
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -3424,13 +4334,17 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       taskFamily: taskFamily,
       hasSeatTargets: hasSeatTargets,
     );
-    final actionLabel = act0RuntimeLocalizedOptionLabelV1(
-      context,
-      isWrong ? betterLabel : preferredLabel,
+    final actionLabel = _premiumSafeFeedbackOptionLabelV1(
+      act0RuntimeLocalizedOptionLabelV1(
+        context,
+        isWrong ? betterLabel : preferredLabel,
+      ),
     );
     final localizedContextLabels = [
       for (final label in (refined ? contextLabels.take(1) : contextLabels))
-        act0RuntimeLocalizedContextLabelV1(context, label).trim(),
+        _premiumSafeFeedbackOptionLabelV1(
+          act0RuntimeLocalizedContextLabelV1(context, label),
+        ).trim(),
     ];
     final visibleContextLabels = _dedupedFeedbackContextLabelsV1(
       localizedContextLabels,
@@ -3449,15 +4363,52 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       betterLabel: betterLabel,
       contextLabels: contextLabels,
     );
+    final preserveFullCompactReason =
+        isCompactRefinedFeedback &&
+        _shouldPreserveFullCompactFeedbackReasonV1(resolvedReason);
+    final skillReceipt = firstValueReceiptLine == null
+        ? null
+        : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
+    final fallbackReceiptLine = firstValueReceiptLine?.trim();
+    final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
+    final receiptTitle =
+        skillReceipt?.title ??
+        (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
+            ? ''
+            : receiptSplitIndex < 0
+            ? fallbackReceiptLine
+            : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
+    final receiptDetail =
+        skillReceipt?.detail ??
+        (fallbackReceiptLine == null ||
+                fallbackReceiptLine.isEmpty ||
+                receiptSplitIndex < 0
+            ? ''
+            : fallbackReceiptLine.substring(receiptSplitIndex + 2).trim());
+    final receiptNextLine = skillReceipt == null
+        ? ''
+        : switch (skillReceipt.outcome) {
+            Act0SkillReceiptOutcomeV1.learned =>
+              'Next: practice the same table clue once more.',
+            Act0SkillReceiptOutcomeV1.repairStarted =>
+              'Next: try this table clue once more.',
+            Act0SkillReceiptOutcomeV1.needsRep =>
+              'Next: practice the same table clue once more.',
+          };
+    final showCompactInlineSignalProof =
+        !rapidMode && isCompactRefinedFeedback && signalProof != null;
     return Container(
       key: const Key('act0_shell_feedback_card'),
-      padding: EdgeInsets.all(rapidMode ? 8 : (refined ? 8 : 10)),
+      padding: EdgeInsets.all(
+        rapidMode ? 8 : (isCompactRefinedFeedback ? 5 : (refined ? 8 : 10)),
+      ),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         borderColor: tone.withValues(
           alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.46),
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
@@ -3473,7 +4424,37 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (reactionLine.isNotEmpty)
+                    if (!rapidMode && rhythmVerdict.isNotEmpty) ...[
+                      Container(
+                        key: const Key('act0_shell_feedback_verdict_pill'),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isCompactRefinedFeedback ? 7 : 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: tone.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(
+                            color: tone.withValues(alpha: 0.24),
+                          ),
+                        ),
+                        child: Text(
+                          rhythmVerdict,
+                          key: const Key('act0_shell_feedback_rhythm_verdict'),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: tone,
+                            fontSize: 13.0,
+                            height: 1.0,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                    ],
+                    if (reactionLine.isNotEmpty &&
+                        !showCompactInlineSignalProof)
                       Text(
                         reactionLine,
                         key: const Key('act0_shell_sharky_outcome_reaction'),
@@ -3486,12 +4467,18 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
+                    if (showCompactInlineSignalProof)
+                      _FeedbackSignalProofRowV1(
+                        proofLine: signalProof!.proofLine,
+                        tone: tone,
+                        compact: true,
+                      ),
                   ],
                 ),
               ),
             ],
           ),
-          if (!rapidMode) SizedBox(height: isCompactRefinedFeedback ? 6 : 8),
+          if (!rapidMode) SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
           if (actionLabel.isNotEmpty) ...[
             Text(
               '$actionPrefix: $actionLabel',
@@ -3506,7 +4493,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: rapidMode ? 0 : (isCompactRefinedFeedback ? 4 : 6),
+              height: rapidMode ? 0 : (isCompactRefinedFeedback ? 2 : 6),
             ),
           ],
           if (!rapidMode &&
@@ -3514,7 +4501,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               (isWrong || isSuboptimal) &&
               selectedLabel.isNotEmpty) ...[
             Text(
-              act0RuntimeFeedbackSelectedLineV1(context, selectedLabel),
+              _feedbackSelectedLineV1(context, selectedLabel),
               key: const Key('act0_shell_feedback_selected_label'),
               maxLines: 1,
               overflow: TextOverflow.fade,
@@ -3526,14 +4513,32 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             ),
             const SizedBox(height: 5),
           ],
+          if (!rapidMode &&
+              signalProof != null &&
+              !showCompactInlineSignalProof) ...[
+            _FeedbackSignalProofRowV1(
+              proofLine: signalProof!.proofLine,
+              tone: tone,
+              compact: isCompactRefinedFeedback,
+            ),
+            SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+          ],
           if (!rapidMode)
             Text(
               resolvedReason,
               key: const Key('act0_shell_feedback_reason'),
+              maxLines: isCompactRefinedFeedback && !preserveFullCompactReason
+                  ? 2
+                  : null,
+              overflow: isCompactRefinedFeedback && !preserveFullCompactReason
+                  ? TextOverflow.fade
+                  : null,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.textMuted,
-                fontSize: refined ? 12.0 : 12.5,
-                height: 1.16,
+                fontSize: isCompactRefinedFeedback
+                    ? 11.4
+                    : (refined ? 12.0 : 12.5),
+                height: isCompactRefinedFeedback ? 1.08 : 1.16,
               ),
             ),
           if (!rapidMode && showVerdictTitle && !isCompactRefinedFeedback) ...[
@@ -3584,6 +4589,52 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(height: 8),
             _CompletionToastV1(summary: completionSummary!),
           ],
+          if (!rapidMode && receiptTitle.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Container(
+              key: const Key('act0_shell_first_value_receipt'),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(
+                  Act0ShellTokensV1.radiusBase,
+                ),
+                border: Border.all(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    receiptTitle,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (receiptDetail.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      receiptDetail,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                      ),
+                    ),
+                  ],
+                  if (receiptNextLine.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      receiptNextLine,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
           if (rapidMode) ...[
             const SizedBox(height: 8),
             Text(
@@ -3596,7 +4647,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
           ] else ...[
-            const SizedBox(height: 10),
+            SizedBox(height: isCompactRefinedFeedback ? 4 : 10),
             Row(
               children: [
                 if (onBack != null) ...[
@@ -3611,7 +4662,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     key: const Key('act0_shell_feedback_continue_cta'),
                     onPressed: onContinue,
                     style: Act0ShellTokensV1.primaryButtonStyle(
-                      height: Act0ShellTokensV1.compactCtaHeight,
+                      height: isCompactRefinedFeedback
+                          ? 34
+                          : Act0ShellTokensV1.compactCtaHeight,
                     ),
                     child: const Text('Continue'),
                   ),
@@ -3623,6 +4676,77 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _shouldPreserveFullCompactFeedbackReasonV1(String reason) {
+  final normalized = reason.trim();
+  if (normalized.length < 96 || normalized.length > 180) {
+    return false;
+  }
+  final sentenceCount = RegExp(r'[.!?](?:\s|$)').allMatches(normalized).length;
+  return sentenceCount >= 2;
+}
+
+class _FeedbackSignalProofRowV1 extends StatelessWidget {
+  const _FeedbackSignalProofRowV1({
+    required this.proofLine,
+    required this.tone,
+    this.compact = false,
+  });
+
+  final String proofLine;
+  final Color tone;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = _humanizedFeedbackProofLineV1(proofLine);
+    if (line.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Container(
+      key: const Key('act0_shell_feedback_signal_proof'),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 8 : 9,
+        vertical: compact ? 5 : 6,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: compact ? 0.09 : 0.11),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+        border: Border.all(color: tone.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.visibility_rounded, color: tone, size: compact ? 12 : 13),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              line,
+              key: const Key('act0_shell_feedback_signal_proof_label'),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.text,
+                fontSize: compact ? 10.5 : 11.0,
+                fontWeight: FontWeight.w800,
+                height: 1.05,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _humanizedFeedbackProofLineV1(String proofLine) {
+  final line = proofLine.trim();
+  if (line.isEmpty) {
+    return '';
+  }
+  final signalPrefix = RegExp(r'^signal:\s*', caseSensitive: false);
+  return line.replaceFirst(signalPrefix, '').trim();
 }
 
 List<String> _dedupedFeedbackContextLabelsV1(
@@ -3657,6 +4781,33 @@ String _normalizeFeedbackLabelV1(String label) {
   return label.trim().toLowerCase();
 }
 
+String _feedbackSelectedLineV1(BuildContext context, String selectedLabel) {
+  final prefix = act0RuntimeLocalizedGeneralLabelV1(context, 'You picked');
+  return '$prefix ${_premiumSafeFeedbackOptionLabelV1(act0RuntimeLocalizedOptionLabelV1(context, selectedLabel))}';
+}
+
+String _feedbackRhythmVerdictV1(
+  BuildContext context,
+  Act0FeedbackQualityV1 quality,
+) {
+  final label = switch (quality) {
+    Act0FeedbackQualityV1.correct => 'Good read',
+    Act0FeedbackQualityV1.suboptimal => 'Better clue',
+    Act0FeedbackQualityV1.wrong => 'Not quite',
+  };
+  return act0RuntimeLocalizedGeneralLabelV1(context, label).trim();
+}
+
+String _premiumSafeFeedbackOptionLabelV1(String label) {
+  final trimmed = label.trim();
+  return switch (trimmed) {
+    'Bottom seat' => 'Hero on the Button',
+    'Hero is BTN, blinds are posted, and no board is out yet' =>
+      'Hero on the Button preflop',
+    _ => trimmed,
+  };
+}
+
 const Set<String> _genericFeedbackTitleFloorInputsV1 = <String>{
   'Almost there.',
   'Clean execution.',
@@ -3687,6 +4838,10 @@ String _feedbackTitleFloorV1(
   required List<String> contextLabels,
 }) {
   final trimmedTitle = title.trim();
+  final premiumSafeTitle = _premiumSafeFeedbackTitleV1(trimmedTitle);
+  if (premiumSafeTitle != null) {
+    return premiumSafeTitle;
+  }
   if (trimmedTitle.isEmpty ||
       !_genericFeedbackTitleFloorInputsV1.contains(trimmedTitle)) {
     return trimmedTitle;
@@ -3710,6 +4865,14 @@ String _feedbackTitleFloorV1(
     return localeIsRu ? 'Верное чтение' : 'Correct read';
   }
   return localeIsRu ? 'Сначала перечитай спот' : 'Read the spot first';
+}
+
+String? _premiumSafeFeedbackTitleV1(String title) {
+  return switch (title) {
+    'Specific fix transfers.' => 'Good. Use this read again.',
+    'One clean reread.' => 'One quick repair.',
+    _ => null,
+  };
 }
 
 String _feedbackReasonFloorV1(
@@ -3740,6 +4903,8 @@ String _feedbackReasonFloorV1(
     context,
     selectedLabel,
   ).trim();
+  final safeBetterLine = _premiumSafeFeedbackOptionLabelV1(betterLine);
+  final safePickedLine = _premiumSafeFeedbackOptionLabelV1(pickedLine);
 
   if (quality == Act0FeedbackQualityV1.correct) {
     if (focusLabel.isNotEmpty) {
@@ -3752,15 +4917,15 @@ String _feedbackReasonFloorV1(
         : 'Read is correct. Keep it and continue.';
   }
 
-  if (focusLabel.isNotEmpty && betterLine.isNotEmpty) {
+  if (focusLabel.isNotEmpty && safeBetterLine.isNotEmpty) {
     return localeIsRu
-        ? '$focusLabel сначала. Сравни это с $betterLine перед продолжением.'
-        : '$focusLabel first. Compare it with $betterLine before you continue.';
+        ? '$focusLabel сначала. Сравни это с $safeBetterLine перед продолжением.'
+        : '$focusLabel first. Compare it with $safeBetterLine before you continue.';
   }
-  if (pickedLine.isNotEmpty && betterLine.isNotEmpty) {
+  if (safePickedLine.isNotEmpty && safeBetterLine.isNotEmpty) {
     return localeIsRu
-        ? 'Сравни $pickedLine с $betterLine перед продолжением.'
-        : 'Compare $pickedLine with $betterLine before you continue.';
+        ? 'Сравни $safePickedLine с $safeBetterLine перед продолжением.'
+        : 'Compare $safePickedLine with $safeBetterLine before you continue.';
   }
   return localeIsRu
       ? 'Сделай паузу, прочитай спот ещё раз и затем продолжай.'
@@ -3802,6 +4967,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         : Act0ShellTokensV1.gold;
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
+    final showHabitReward =
+        !summary.isWorldComplete || summary.growthLabel.isEmpty;
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
@@ -3923,6 +5090,14 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: Act0ShellTokensV1.gapSm),
                     Text(
+                      'What finished',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: celebrateTone,
+                        letterSpacing: 0.35,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
                       summary.milestoneTitle,
                       key: const Key('act0_shell_block_summary_title'),
                       style: Act0ShellTokensV1.screenTitle.copyWith(
@@ -3981,6 +5156,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               if (!foldUnlockIntoMilestonePanel &&
+                  summary.isWorldComplete &&
                   (summary.unlockedLabel != null ||
                       summary.progressStatusLabel.isNotEmpty)) ...[
                 Container(
@@ -4030,77 +5206,79 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
-              Container(
-                key: const Key('act0_shell_block_summary_habit_reward'),
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusCard,
+              if (showHabitReward) ...[
+                Container(
+                  key: const Key('act0_shell_block_summary_habit_reward'),
+                  padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusCard,
+                    ),
+                    border: Border.all(
+                      color: celebrateTone.withValues(alpha: 0.20),
+                    ),
                   ),
-                  border: Border.all(
-                    color: celebrateTone.withValues(alpha: 0.20),
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 34,
-                      height: 34,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: celebrateTone.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusLg,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 34,
+                        height: 34,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: celebrateTone.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusLg,
+                          ),
+                        ),
+                        child: Icon(
+                          summary.deepLeakCount > 0
+                              ? Icons.build_circle_rounded
+                              : summary.quickFixCount > 0
+                              ? Icons.trending_up_rounded
+                              : summary.leveledUp
+                              ? Icons.auto_awesome_rounded
+                              : Icons.check_circle_rounded,
+                          size: 18,
+                          color: celebrateTone,
                         ),
                       ),
-                      child: Icon(
-                        summary.deepLeakCount > 0
-                            ? Icons.build_circle_rounded
-                            : summary.quickFixCount > 0
-                            ? Icons.trending_up_rounded
-                            : summary.leveledUp
-                            ? Icons.auto_awesome_rounded
-                            : Icons.check_circle_rounded,
-                        size: 18,
-                        color: celebrateTone,
+                      const SizedBox(width: Act0ShellTokensV1.gapSm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'What improved',
+                              key: const Key(
+                                'act0_shell_block_summary_habit_reward_label',
+                              ),
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: celebrateTone,
+                                letterSpacing: 0.35,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              summary.habitRewardDetail,
+                              key: const Key(
+                                'act0_shell_block_summary_habit_reward_detail',
+                              ),
+                              maxLines: 4,
+                              overflow: TextOverflow.fade,
+                              style: Act0ShellTokensV1.body.copyWith(
+                                color: Act0ShellTokensV1.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: Act0ShellTokensV1.gapSm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            summary.habitRewardLabel,
-                            key: const Key(
-                              'act0_shell_block_summary_habit_reward_label',
-                            ),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: celebrateTone,
-                              letterSpacing: 0.35,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            summary.habitRewardDetail,
-                            key: const Key(
-                              'act0_shell_block_summary_habit_reward_detail',
-                            ),
-                            maxLines: 4,
-                            overflow: TextOverflow.fade,
-                            style: Act0ShellTokensV1.body.copyWith(
-                              color: Act0ShellTokensV1.textMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
               Container(
                 key: const Key('act0_shell_block_summary_next_label'),
                 padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -4116,6 +5294,14 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      'What next',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: celebrateTone,
+                        letterSpacing: 0.35,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     Text(
                       summary.suggestedNextAction,
                       key: const Key('act0_shell_block_summary_suggested_next'),
@@ -4781,6 +5967,10 @@ class _Act0TableV1 extends StatelessWidget {
     this.selectedSeatId,
     this.selectedSeatFeedbackState = _SeatSelectionFeedbackStateV1.none,
     this.compactBottomDockClearance = false,
+    required this.interactionMode,
+    required this.framingProfile,
+    required this.viewportFamily,
+    this.maxTableHeight,
   });
 
   final Act0TableStateV1 table;
@@ -4802,6 +5992,10 @@ class _Act0TableV1 extends StatelessWidget {
   final String? selectedSeatId;
   final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
   final bool compactBottomDockClearance;
+  final _RunnerInteractionModeV1 interactionMode;
+  final Act0RunnerFramingProfileV1 framingProfile;
+  final _RunnerViewportFamilyV1 viewportFamily;
+  final double? maxTableHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -4822,19 +6016,48 @@ class _Act0TableV1 extends StatelessWidget {
         Act0TableDensityV1.handView => refined ? 600 : 560,
       };
     }
+    final usesCompactAnswerListComposition =
+        _usesCompactAnswerListCompositionV1(
+          context,
+          refined: refined,
+          isTablet: isTablet,
+          viewportFamily: viewportFamily,
+          density: table.density,
+        );
+    tableMaxWidth *= _compactDockTableScaleV1(
+      context,
+      refined: refined,
+      isTablet: isTablet,
+      compactBottomDockClearance: compactBottomDockClearance,
+      density: table.density,
+      compactAnswerListComposition: usesCompactAnswerListComposition,
+    );
+    if (usesCompactAnswerListComposition && !isTablet) {
+      tableMaxWidth = math.max(
+        tableMaxWidth,
+        MediaQuery.sizeOf(context).width - 16,
+      );
+    }
     var tableAspect = switch (table.density) {
       Act0TableDensityV1.compactLesson => Act0ShellTokensV1.tableAspect,
       Act0TableDensityV1.handView => Act0ShellTokensV1.handTableAspect,
     };
     if (visualVariant == Act0ShellTableVisualVariantV1.refinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson) {
-      tableAspect = 0.57;
+      tableAspect = 0.576;
     }
     if (isTablet) {
       tableAspect = switch (table.density) {
         Act0TableDensityV1.compactLesson => refined ? 0.88 : 0.84,
         Act0TableDensityV1.handView => refined ? 0.82 : 0.80,
       };
+    }
+    if (usesCompactAnswerListComposition) {
+      tableAspect = _compactAnswerListStageFillAspectV1;
+    }
+    final maxTableHeight = this.maxTableHeight;
+    if (maxTableHeight != null && maxTableHeight > 0) {
+      tableMaxWidth = math.min(tableMaxWidth, maxTableHeight * tableAspect);
     }
     return ConstrainedBox(
       key: const Key('act0_shell_table'),
@@ -4848,6 +6071,8 @@ class _Act0TableV1 extends StatelessWidget {
             final seatSlots = _seatSlotsForVariant(
               visualVariant,
               compactBottomDockClearance: compactBottomDockClearance,
+              useAnswerListPerimeterRing:
+                  _viewportFamilyUsesAnswerListCompositionV1(viewportFamily),
             );
             final chipSlots = _chipSlotsForVariant(
               visualVariant,
@@ -5129,6 +6354,168 @@ class _TableRepairCalloutV1 extends StatelessWidget {
   }
 }
 
+double _compactDockTableScaleV1(
+  BuildContext context, {
+  required bool refined,
+  required bool isTablet,
+  required bool compactBottomDockClearance,
+  required Act0TableDensityV1 density,
+  required bool compactAnswerListComposition,
+}) {
+  const compactSafeAreaTableScale = 0.832;
+  const compactAnswerListSafeAreaTableScale = 0.917;
+  if (!refined ||
+      isTablet ||
+      !compactBottomDockClearance ||
+      density != Act0TableDensityV1.compactLesson) {
+    return 1;
+  }
+
+  final media = MediaQuery.of(context);
+  final hasSystemBottomInset = media.viewPadding.bottom > 0;
+  final isCompactPortrait =
+      media.size.width < media.size.height && media.size.height <= 900;
+  if (!hasSystemBottomInset || !isCompactPortrait) {
+    return 1;
+  }
+
+  return compactAnswerListComposition
+      ? compactAnswerListSafeAreaTableScale
+      : compactSafeAreaTableScale;
+}
+
+bool _usesCompactAnswerListCompositionV1(
+  BuildContext context, {
+  required bool refined,
+  required bool isTablet,
+  required _RunnerViewportFamilyV1 viewportFamily,
+  required Act0TableDensityV1 density,
+}) {
+  if (!refined ||
+      isTablet ||
+      !_viewportFamilyUsesAnswerListCompositionV1(viewportFamily) ||
+      density != Act0TableDensityV1.compactLesson) {
+    return false;
+  }
+
+  return _stableViewportPressureReasonV1(
+        context,
+        viewportFamily: viewportFamily,
+      ) !=
+      _compactAnswerListNoPressureReasonV1;
+}
+
+bool _usesCompactAnswerListDockV1(
+  BuildContext context, {
+  required _RunnerInteractionModeV1 interactionMode,
+  required Act0RunnerFramingProfileV1 framingProfile,
+}) {
+  return _compactAnswerListPressureReasonV1(
+        context,
+        interactionMode: interactionMode,
+        framingProfile: framingProfile,
+      ) !=
+      _compactAnswerListNoPressureReasonV1;
+}
+
+bool _usesCompactAnswerListLeafFallbackV1(BuildContext context) {
+  final media = MediaQuery.of(context);
+  return media.size.width < media.size.height && media.size.height <= 900;
+}
+
+bool _viewportFamilyUsesAnswerListCompositionV1(
+  _RunnerViewportFamilyV1 viewportFamily,
+) {
+  return switch (viewportFamily) {
+    _RunnerViewportFamilyV1.answerListBoardHeroPot ||
+    _RunnerViewportFamilyV1.answerListHeroAction => true,
+    _RunnerViewportFamilyV1.tableTapSeatFocus ||
+    _RunnerViewportFamilyV1.neutral => false,
+  };
+}
+
+String _stableViewportPressureReasonV1(
+  BuildContext context, {
+  required _RunnerViewportFamilyV1 viewportFamily,
+}) {
+  return switch (viewportFamily) {
+    _RunnerViewportFamilyV1.answerListBoardHeroPot =>
+      _compactAnswerListPressureReasonV1(
+        context,
+        interactionMode: _RunnerInteractionModeV1.answerListDecision,
+        framingProfile: Act0RunnerFramingProfileV1.boardHeroPot,
+      ),
+    _RunnerViewportFamilyV1.answerListHeroAction =>
+      _compactAnswerListPressureReasonV1(
+        context,
+        interactionMode: _RunnerInteractionModeV1.answerListDecision,
+        framingProfile: Act0RunnerFramingProfileV1.heroAction,
+      ),
+    _RunnerViewportFamilyV1.tableTapSeatFocus ||
+    _RunnerViewportFamilyV1.neutral => _compactAnswerListNoPressureReasonV1,
+  };
+}
+
+const String _compactAnswerListNoPressureReasonV1 = 'none';
+const String _compactAnswerListTableDockPressureReasonV1 = 'tableDockPressure';
+const double _compactAnswerListPhoneMaxShortestSideV1 = 600;
+const double _compactAnswerListUsableHeightBudgetV1 = 900;
+const double _compactAnswerListStageFillAspectV1 = 0.66;
+const double _runnerProgressRowHeightV1 = 34;
+const double _runnerEnvelopeMinLowerSlotHeightV1 = 220;
+const double _runnerEnvelopeTargetLowerSlotHeightV1 = 284;
+const double _runnerEnvelopeTargetLowerSlotShareV1 = 0.329;
+const double _runnerEnvelopeMaxLowerSlotShareV1 = 0.36;
+
+String _compactAnswerListPressureReasonV1(
+  BuildContext context, {
+  required _RunnerInteractionModeV1 interactionMode,
+  required Act0RunnerFramingProfileV1 framingProfile,
+}) {
+  if (interactionMode != _RunnerInteractionModeV1.answerListDecision) {
+    return _compactAnswerListNoPressureReasonV1;
+  }
+  if (!_answerListProfileNeedsProtectedTableV1(framingProfile)) {
+    return _compactAnswerListNoPressureReasonV1;
+  }
+
+  final media = MediaQuery.of(context);
+  final isPortrait = media.size.width < media.size.height;
+  final isPhoneWidth =
+      media.size.shortestSide <= _compactAnswerListPhoneMaxShortestSideV1;
+  if (!isPortrait || !isPhoneWidth) {
+    return _compactAnswerListNoPressureReasonV1;
+  }
+
+  final view = View.maybeOf(context);
+  final viewPaddingVertical = view == null
+      ? 0.0
+      : (view.viewPadding.top + view.viewPadding.bottom) /
+            view.devicePixelRatio;
+  final safeAreaVertical = <double>[
+    media.viewPadding.top + media.viewPadding.bottom,
+    media.padding.top + media.padding.bottom,
+    viewPaddingVertical,
+  ].reduce((value, element) => value > element ? value : element);
+  final usableHeight = media.size.height - safeAreaVertical;
+  if (usableHeight <= _compactAnswerListUsableHeightBudgetV1) {
+    return _compactAnswerListTableDockPressureReasonV1;
+  }
+  return _compactAnswerListNoPressureReasonV1;
+}
+
+bool _answerListProfileNeedsProtectedTableV1(
+  Act0RunnerFramingProfileV1 framingProfile,
+) {
+  return switch (framingProfile) {
+    Act0RunnerFramingProfileV1.boardHeroPot ||
+    Act0RunnerFramingProfileV1.boardOnly ||
+    Act0RunnerFramingProfileV1.heroAction ||
+    Act0RunnerFramingProfileV1.seatFocus => true,
+    Act0RunnerFramingProfileV1.neutral => false,
+  };
+}
+
 class _DockBackButtonV1 extends StatelessWidget {
   const _DockBackButtonV1({super.key, required this.onPressed});
 
@@ -5156,17 +6543,19 @@ class _DockBackButtonV1 extends StatelessWidget {
 List<Offset> _seatSlotsForVariant(
   Act0ShellTableVisualVariantV1 variant, {
   bool compactBottomDockClearance = false,
+  bool useAnswerListPerimeterRing = false,
 }) {
   switch (variant) {
     case Act0ShellTableVisualVariantV1.classic:
       return _SeatPlacementV1.defaultSlots;
     case Act0ShellTableVisualVariantV1.refinedDev2:
       if (compactBottomDockClearance) {
-        return const <Offset>[
-          Offset(0.47, 0.80),
+        final heroY = useAnswerListPerimeterRing ? 0.86 : 0.80;
+        return <Offset>[
+          Offset(0.47, heroY),
           Offset(0.08, 0.69),
           Offset(0.08, 0.31),
-          Offset(0.47, 0.12),
+          Offset(0.47, 0.06),
           Offset(0.86, 0.31),
           Offset(0.86, 0.69),
         ];
@@ -8415,11 +9804,13 @@ class _ActionPanelV1 extends StatelessWidget {
     required this.options,
     required this.selectedOptionId,
     required this.onChoose,
+    this.compactDecision = false,
   });
 
   final List<Act0RunnerOptionV1> options;
   final String? selectedOptionId;
   final ValueChanged<Act0RunnerOptionV1> onChoose;
+  final bool compactDecision;
 
   bool _shouldStackOptionsV1(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -8444,7 +9835,17 @@ class _ActionPanelV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveCompactDecision =
+        compactDecision ||
+        _CompactAnswerListDecisionScopeV1.isCompact(context) ||
+        _usesCompactAnswerListLeafFallbackV1(context);
     final stackOptions = _shouldStackOptionsV1(context);
+    final hasLongStackedLabel = options.any(
+      (option) =>
+          act0RuntimeLocalizedOptionLabelV1(context, option.label).length >
+              16 ||
+          option.amountLabel.trim().isNotEmpty,
+    );
     final unselectedForeground = Act0ShellTokensV1.text;
     final unselectedBackground = Act0ShellTokensV1.surface2.withValues(
       alpha: stackOptions ? 0.88 : 0.82,
@@ -8453,11 +9854,44 @@ class _ActionPanelV1 extends StatelessWidget {
         ? Act0ShellTokensV1.info.withValues(alpha: 0.22)
         : Act0ShellTokensV1.border.withValues(alpha: 0.92);
     if (stackOptions) {
+      if (effectiveCompactDecision) {
+        return Column(
+          key: const Key('act0_shell_action_panel'),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(
+              key: const Key('act0_shell_answer_sheet'),
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final entry in options.indexed) ...[
+                  _AnswerChoiceRowV1(
+                    option: entry.$2,
+                    optionIndex: entry.$1,
+                    selected: entry.$2.id == selectedOptionId,
+                    onChoose: onChoose,
+                    compact: true,
+                    readableCompactHeight:
+                        options.length <= 3 && hasLongStackedLabel,
+                  ),
+                  if (entry.$1 < options.length - 1)
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Act0ShellTokensV1.info.withValues(alpha: 0.08),
+                    ),
+                ],
+              ],
+            ),
+          ],
+        );
+      }
       return Container(
         key: const Key('act0_shell_action_panel'),
         decoration: BoxDecoration(
           color: Act0ShellTokensV1.surface2.withValues(alpha: 0.88),
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(
+            effectiveCompactDecision ? 16 : 22,
+          ),
           border: Border.all(color: unselectedBorder),
         ),
         child: Column(
@@ -8470,6 +9904,11 @@ class _ActionPanelV1 extends StatelessWidget {
                 optionIndex: entry.$1,
                 selected: entry.$2.id == selectedOptionId,
                 onChoose: onChoose,
+                compact: effectiveCompactDecision,
+                readableCompactHeight:
+                    effectiveCompactDecision &&
+                    options.length <= 3 &&
+                    hasLongStackedLabel,
               ),
               if (entry.$1 < options.length - 1)
                 Divider(
@@ -8517,8 +9956,12 @@ class _ActionPanelV1 extends StatelessWidget {
                   ),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(
-                      horizontal: stackOptions ? 14 : 12,
-                      vertical: stackOptions ? 10 : 8,
+                      horizontal: effectiveCompactDecision
+                          ? 10
+                          : (stackOptions ? 14 : 12),
+                      vertical: effectiveCompactDecision
+                          ? 6
+                          : (stackOptions ? 10 : 8),
                     ),
                   ),
                   alignment: stackOptions
@@ -8674,20 +10117,28 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
     required this.optionIndex,
     required this.selected,
     required this.onChoose,
+    this.compact = false,
+    this.readableCompactHeight = false,
   });
 
   final Act0RunnerOptionV1 option;
   final int optionIndex;
   final bool selected;
   final ValueChanged<Act0RunnerOptionV1> onChoose;
+  final bool compact;
+  final bool readableCompactHeight;
 
   @override
   Widget build(BuildContext context) {
+    final actionVisual = _pokerActionChoiceVisualV1(option.label);
     final tone = selected
         ? option.isCorrect
               ? Act0VisualCanonV1.greenTable
               : Act0ShellTokensV1.danger
         : Act0ShellTokensV1.text;
+    final markerTone = selected
+        ? tone
+        : (actionVisual?.tone ?? Act0ShellTokensV1.info);
     final marker = String.fromCharCode(65 + optionIndex);
     return Material(
       color: selected ? tone.withValues(alpha: 0.12) : Colors.transparent,
@@ -8697,42 +10148,64 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
         onTap: () => onChoose(option),
         borderRadius: BorderRadius.circular(18),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 52),
+          constraints: BoxConstraints(
+            minHeight: compact ? (readableCompactHeight ? 56 : 44) : 52,
+          ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 10 : 14,
+              vertical: compact ? 5 : 10,
+            ),
             child: Row(
               children: [
                 Container(
                   key: Key('act0_shell_option_marker_${option.id}'),
-                  width: 32,
-                  height: 32,
+                  width: compact ? 26 : 32,
+                  height: compact ? 26 : 32,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: selected
                         ? tone.withValues(alpha: 0.18)
-                        : Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                        : markerTone.withValues(
+                            alpha: actionVisual == null ? 0.10 : 0.13,
+                          ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusPill,
                     ),
                     border: Border.all(
                       color: selected
                           ? tone.withValues(alpha: 0.46)
-                          : Act0ShellTokensV1.info.withValues(alpha: 0.24),
+                          : markerTone.withValues(
+                              alpha: actionVisual == null ? 0.24 : 0.34,
+                            ),
                     ),
                   ),
-                  child: Text(
-                    marker,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: selected
-                          ? tone
-                          : Act0ShellTokensV1.info.withValues(alpha: 0.92),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0,
-                    ),
-                  ),
+                  child: actionVisual == null
+                      ? Text(
+                          marker,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: selected
+                                ? tone
+                                : Act0ShellTokensV1.info.withValues(
+                                    alpha: 0.92,
+                                  ),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0,
+                          ),
+                        )
+                      : Icon(
+                          actionVisual.icon,
+                          key: Key(
+                            'act0_shell_poker_action_icon_${actionVisual.id}',
+                          ),
+                          size: compact ? 14 : 15,
+                          color: selected
+                              ? tone
+                              : markerTone.withValues(alpha: 0.96),
+                        ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: compact ? 8 : 10),
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -8746,9 +10219,9 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
                         textAlign: TextAlign.left,
                         style: Act0ShellTokensV1.body.copyWith(
                           color: tone,
-                          fontSize: 13.2,
+                          fontSize: compact ? 12.6 : 13.2,
                           fontWeight: FontWeight.w700,
-                          height: 1.14,
+                          height: compact ? 1.08 : 1.14,
                         ),
                       ),
                       if (option.amountLabel.isNotEmpty) ...[
@@ -8778,6 +10251,59 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
   }
 }
 
+class _PokerActionChoiceVisualV1 {
+  const _PokerActionChoiceVisualV1({
+    required this.id,
+    required this.icon,
+    required this.tone,
+  });
+
+  final String id;
+  final IconData icon;
+  final Color tone;
+}
+
+_PokerActionChoiceVisualV1? _pokerActionChoiceVisualV1(String label) {
+  final normalized = label.trim().toLowerCase();
+  if (normalized.isEmpty) {
+    return null;
+  }
+  final firstWord = normalized.split(RegExp(r'\s+')).first;
+  if (normalized == 'fold' || firstWord == 'fold') {
+    return const _PokerActionChoiceVisualV1(
+      id: 'fold',
+      icon: Icons.logout_rounded,
+      tone: Act0ShellTokensV1.danger,
+    );
+  }
+  if (normalized == 'check' || firstWord == 'check') {
+    return const _PokerActionChoiceVisualV1(
+      id: 'check',
+      icon: Icons.check_rounded,
+      tone: Act0VisualCanonV1.greenTable,
+    );
+  }
+  if (normalized == 'call' || firstWord == 'call') {
+    return const _PokerActionChoiceVisualV1(
+      id: 'call',
+      icon: Icons.call_received_rounded,
+      tone: Act0ShellTokensV1.primary,
+    );
+  }
+  if (normalized == 'raise' ||
+      normalized == 'bet' ||
+      normalized.endsWith('-bet') ||
+      firstWord == 'raise' ||
+      firstWord == 'bet') {
+    return const _PokerActionChoiceVisualV1(
+      id: 'raise',
+      icon: Icons.trending_up_rounded,
+      tone: Act0ShellTokensV1.gold,
+    );
+  }
+  return null;
+}
+
 class _ActionPromptPanelV1 extends StatelessWidget {
   const _ActionPromptPanelV1({
     required this.taskLabel,
@@ -8786,6 +10312,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
     required this.child,
     this.contextLine,
     this.embedChildInSurface = false,
+    this.compactDecision = false,
     this.onBack,
     this.recallLabel,
     this.onRecall,
@@ -8797,12 +10324,18 @@ class _ActionPromptPanelV1 extends StatelessWidget {
   final Widget child;
   final String? contextLine;
   final bool embedChildInSurface;
+  final bool compactDecision;
   final VoidCallback? onBack;
   final String? recallLabel;
   final VoidCallback? onRecall;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveCompactDecision =
+        !embedChildInSurface &&
+        (compactDecision ||
+            _CompactAnswerListDecisionScopeV1.isCompact(context) ||
+            _usesCompactAnswerListLeafFallbackV1(context));
     final formattedTaskLabel = _formatActionPromptCopyV1(
       taskLabel,
       shortThreshold: 32,
@@ -8811,6 +10344,10 @@ class _ActionPromptPanelV1 extends StatelessWidget {
       question,
       shortThreshold: 58,
     );
+    final compactContextLine = (contextLine ?? '').trim();
+    final showCompactContextLine =
+        compactContextLine.isNotEmpty &&
+        compactContextLine != 'Start with what is visible.';
     Widget buildPromptHeader({bool integrated = false}) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -8830,28 +10367,32 @@ class _ActionPromptPanelV1 extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: _DockStatusPillV1(
-                    key: const Key('act0_shell_question_badge'),
-                    label: questionBadgeLabel,
-                    icon: Icons.help_outline_rounded,
-                    tone: Act0ShellTokensV1.gold,
+                if (!effectiveCompactDecision) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: _DockStatusPillV1(
+                      key: const Key('act0_shell_question_badge'),
+                      label: questionBadgeLabel,
+                      icon: Icons.help_outline_rounded,
+                      tone: Act0ShellTokensV1.gold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  formattedTaskLabel,
-                  key: const Key('act0_shell_action_task_label'),
-                  textAlign: TextAlign.left,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.info,
-                    letterSpacing: 0.12,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10.6,
+                  const SizedBox(height: 6),
+                  Text(
+                    formattedTaskLabel,
+                    key: const Key('act0_shell_action_task_label'),
+                    textAlign: TextAlign.left,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.info,
+                      letterSpacing: 0.12,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10.6,
+                    ),
                   ),
-                ),
-                if (contextLine != null && contextLine!.trim().isNotEmpty) ...[
+                ],
+                if (!effectiveCompactDecision &&
+                    contextLine != null &&
+                    contextLine!.trim().isNotEmpty) ...[
                   const SizedBox(height: 6),
                   Text(
                     contextLine!,
@@ -8865,24 +10406,75 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                     ),
                   ),
                 ],
-                const SizedBox(height: 7),
-                Text(
-                  formattedQuestion,
-                  key: const Key('act0_shell_action_question'),
-                  textAlign: TextAlign.left,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontSize: 15.8,
-                    fontWeight: FontWeight.w900,
-                    height: 1.14,
+                if (!effectiveCompactDecision) const SizedBox(height: 7),
+                if (effectiveCompactDecision &&
+                    onRecall != null &&
+                    recallLabel != null)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          formattedQuestion,
+                          key: const Key('act0_shell_action_question'),
+                          textAlign: TextAlign.left,
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w900,
+                            height: 1.06,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      KeyedSubtree(
+                        key: const Key('act0_shell_compact_hint_inline'),
+                        child: _TheoryRecallCtaV1(
+                          label: recallLabel!,
+                          onPressed: onRecall!,
+                          centered: false,
+                          compact: true,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Text(
+                    formattedQuestion,
+                    key: const Key('act0_shell_action_question'),
+                    textAlign: TextAlign.left,
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontSize: effectiveCompactDecision ? 14.0 : 15.8,
+                      fontWeight: FontWeight.w900,
+                      height: effectiveCompactDecision ? 1.06 : 1.14,
+                    ),
                   ),
-                ),
-                if (onRecall != null && recallLabel != null) ...[
-                  const SizedBox(height: 6),
+                if (effectiveCompactDecision && showCompactContextLine) ...[
+                  const SizedBox(height: 1),
+                  Text(
+                    compactContextLine,
+                    key: const Key('act0_shell_action_context_line'),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontSize: 10.6,
+                      fontWeight: FontWeight.w700,
+                      height: 1.08,
+                    ),
+                  ),
+                ],
+                if (!effectiveCompactDecision &&
+                    onRecall != null &&
+                    recallLabel != null) ...[
+                  SizedBox(height: effectiveCompactDecision ? 2 : 6),
                   _TheoryRecallCtaV1(
                     label: recallLabel!,
                     onPressed: onRecall!,
                     centered: false,
+                    compact: effectiveCompactDecision,
                   ),
                 ],
                 if (integrated) ...[
@@ -8927,13 +10519,33 @@ class _ActionPromptPanelV1 extends StatelessWidget {
               children: [buildPromptHeader(integrated: true), child],
             ),
           ),
+        ] else if (question.isNotEmpty && effectiveCompactDecision) ...[
+          Container(
+            key: const Key('act0_shell_compact_decision_surface'),
+            padding: const EdgeInsets.fromLTRB(9, 3, 9, 4),
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.78),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Act0ShellTokensV1.info.withValues(alpha: 0.18),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                buildPromptHeader(),
+                Transform.translate(offset: const Offset(0, -2), child: child),
+              ],
+            ),
+          ),
         ] else if (question.isNotEmpty) ...[
           Container(
-            padding: const EdgeInsets.fromLTRB(
-              Act0ShellTokensV1.gapMd,
-              Act0ShellTokensV1.gapSm,
-              Act0ShellTokensV1.gapMd,
-              Act0ShellTokensV1.gapMd,
+            padding: EdgeInsets.fromLTRB(
+              effectiveCompactDecision ? 12 : Act0ShellTokensV1.gapMd,
+              effectiveCompactDecision ? 6 : Act0ShellTokensV1.gapSm,
+              effectiveCompactDecision ? 12 : Act0ShellTokensV1.gapMd,
+              effectiveCompactDecision ? 7 : Act0ShellTokensV1.gapMd,
             ),
             decoration: BoxDecoration(
               color: Act0ShellTokensV1.surface2.withValues(alpha: 0.86),
@@ -8944,7 +10556,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
             ),
             child: buildPromptHeader(),
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          SizedBox(
+            height: effectiveCompactDecision ? 5 : Act0ShellTokensV1.gapSm,
+          ),
         ] else if (onBack != null) ...[
           Align(
             alignment: Alignment.centerLeft,
@@ -8955,7 +10569,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
         ],
-        if (!embedChildInSurface) child,
+        if (!embedChildInSurface &&
+            !(question.isNotEmpty && effectiveCompactDecision))
+          child,
       ],
     );
   }
@@ -8966,29 +10582,51 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.centered = false,
+    this.compact = false,
   });
 
   final String label;
   final VoidCallback onPressed;
   final bool centered;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveCompact =
+        compact || _CompactAnswerListDecisionScopeV1.isCompact(context);
+    if (effectiveCompact) {
+      final button = IconButton(
+        key: const Key('act0_shell_theory_recall_cta'),
+        onPressed: onPressed,
+        tooltip: label,
+        constraints: const BoxConstraints(minWidth: 32, minHeight: 24),
+        padding: EdgeInsets.zero,
+        style: IconButton.styleFrom(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          foregroundColor: Act0ShellTokensV1.info,
+        ),
+        icon: const Icon(Icons.auto_stories_rounded, size: 15),
+      );
+      if (centered) {
+        return Align(alignment: Alignment.center, child: button);
+      }
+      return Align(alignment: Alignment.centerLeft, child: button);
+    }
     final button = TextButton.icon(
       key: const Key('act0_shell_theory_recall_cta'),
       onPressed: onPressed,
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-        minimumSize: const Size(0, 28),
+        minimumSize: Size(0, effectiveCompact ? 22 : 28),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: Act0ShellTokensV1.info,
       ),
-      icon: const Icon(Icons.auto_stories_rounded, size: 16),
+      icon: Icon(Icons.auto_stories_rounded, size: effectiveCompact ? 14 : 16),
       label: Text(
         label,
         style: Act0ShellTokensV1.label.copyWith(
           color: Act0ShellTokensV1.info,
-          fontSize: 11.6,
+          fontSize: effectiveCompact ? 10.6 : 11.6,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.12,
         ),

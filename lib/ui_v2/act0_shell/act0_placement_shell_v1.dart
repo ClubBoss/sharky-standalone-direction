@@ -22,7 +22,196 @@ String _placementAtomV1(
 }) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
 bool _placementKeepFullSupportCopyV1(String questionId) =>
-    questionId == 'experience';
+    questionId == 'experience' || questionId == 'confidence';
+
+String _placementQuestionTitleV1(
+  BuildContext context,
+  Act0PlacementQuestionV1 question,
+) {
+  return switch (question.questionId) {
+    'experience' => _placementCopyV1(
+      context,
+      en: 'Where are you starting from?',
+      ru: 'С чего ты начинаешь?',
+    ),
+    'confidence' => _placementCopyV1(
+      context,
+      en: 'How should Sharky start?',
+      ru: 'Как Шарки начать?',
+    ),
+    _ => question.title,
+  };
+}
+
+String _placementQuestionSubtitleV1(
+  BuildContext context,
+  Act0PlacementQuestionV1 question,
+) {
+  return switch (question.questionId) {
+    'experience' => _placementCopyV1(
+      context,
+      en: 'This is not a test. It only sets your pace.',
+      ru: 'Это не тест. Так Шарки просто подберёт темп.',
+    ),
+    'confidence' => _placementCopyV1(
+      context,
+      en: 'Pick the start that feels easiest.',
+      ru: 'Выбери самый простой старт.',
+    ),
+    _ => question.subtitle,
+  };
+}
+
+String? _placementQuestionHelperV1(
+  BuildContext context,
+  Act0PlacementQuestionV1 question,
+) {
+  return switch (question.questionId) {
+    'experience' => _placementCopyV1(
+      context,
+      en: 'No ranking. No pressure. Sharky can always start simple.',
+      ru: 'Без рейтинга и давления. Шарки всегда может начать просто.',
+    ),
+    'confidence' => _placementCopyV1(
+      context,
+      en: 'No poker knowledge needed. Let Sharky choose if unsure.',
+      ru: 'Знание покера не нужно. Если сомневаешься, пусть выберет Шарки.',
+    ),
+    _ => question.helper,
+  };
+}
+
+String _placementOptionLabelV1(
+  BuildContext context,
+  Act0PlacementQuestionV1 question,
+  Act0PlacementOptionV1 option,
+) {
+  if (question.questionId == 'experience') {
+    return switch (option.optionId) {
+      'new' => _placementCopyV1(
+        context,
+        en: 'I’m new to poker',
+        ru: 'Я новичок в покере',
+      ),
+      'friends' => _placementCopyV1(
+        context,
+        en: 'I’ve played casually',
+        ru: 'Я играл казуально',
+      ),
+      'watching' => _placementCopyV1(
+        context,
+        en: 'I watch poker but freeze in hands',
+        ru: 'Я смотрю покер, но теряюсь в раздачах',
+      ),
+      'online' => _placementCopyV1(
+        context,
+        en: 'I’ve played online or live',
+        ru: 'Я играл онлайн или вживую',
+      ),
+      _ => option.label,
+    };
+  }
+  if (question.questionId == 'confidence') {
+    return switch (option.optionId) {
+      'rules' => _placementCopyV1(
+        context,
+        en: 'Start from zero',
+        ru: 'Начать с нуля',
+      ),
+      'cards' => _placementCopyV1(
+        context,
+        en: 'Try one quick check',
+        ru: 'Попробовать быструю проверку',
+      ),
+      'decisions' => _placementCopyV1(
+        context,
+        en: 'Move a little faster',
+        ru: 'Идти чуть быстрее',
+      ),
+      'board' => _placementCopyV1(
+        context,
+        en: 'Let Sharky choose',
+        ru: 'Пусть Шарки выберет',
+      ),
+      'pressure' => _placementCopyV1(
+        context,
+        en: 'Betting pressure',
+        ru: 'Давление ставок',
+      ),
+      _ => option.label,
+    };
+  }
+  return option.label;
+}
+
+List<Act0PlacementOptionV1> _placementVisibleOptionsV1(
+  Act0PlacementQuestionV1 question,
+) {
+  if (question.questionId == 'confidence') {
+    return question.options
+        .where((option) => option.optionId != 'pressure')
+        .toList(growable: false);
+  }
+  return question.options;
+}
+
+String? _placementOptionSubtitleV1(
+  BuildContext context,
+  Act0PlacementQuestionV1 question,
+  Act0PlacementOptionV1 option,
+) {
+  if (question.questionId == 'experience') {
+    return switch (option.optionId) {
+      'new' => _placementCopyV1(
+        context,
+        en: 'Start from zero.',
+        ru: 'Начать с нуля.',
+      ),
+      'friends' => _placementCopyV1(
+        context,
+        en: 'Build structure without rushing.',
+        ru: 'Собрать структуру без спешки.',
+      ),
+      'watching' => _placementCopyV1(
+        context,
+        en: 'Turn passive knowledge into table decisions.',
+        ru: 'Превратить пассивные знания в решения за столом.',
+      ),
+      'online' => _placementCopyV1(
+        context,
+        en: 'Move faster through the basics.',
+        ru: 'Пройти основы быстрее.',
+      ),
+      _ => option.subtitle,
+    };
+  }
+  if (question.questionId == 'confidence') {
+    return switch (option.optionId) {
+      'rules' => _placementCopyV1(
+        context,
+        en: 'Learn the table language first.',
+        ru: 'Сначала язык стола.',
+      ),
+      'cards' => _placementCopyV1(
+        context,
+        en: 'One short read, no score.',
+        ru: 'Один короткий разбор без оценки.',
+      ),
+      'decisions' => _placementCopyV1(
+        context,
+        en: 'Skip basics if they feel easy.',
+        ru: 'Пропустить основы, если они лёгкие.',
+      ),
+      'board' => _placementCopyV1(
+        context,
+        en: 'Safe start, no pressure.',
+        ru: 'Безопасный старт без давления.',
+      ),
+      _ => option.subtitle,
+    };
+  }
+  return option.subtitle;
+}
 
 enum _PlacementLaunchStepV1 { answer, quickCheck, firstHand }
 
@@ -106,8 +295,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         ),
                         subtitle: _placementCopyV1(
                           context,
-                          en: 'Answer a few quick questions so Sharky can start you in the right place.',
-                          ru: 'Ответь на пару быстрых вопросов, и Шарки начнёт тебя с правильного места.',
+                          en: 'Answer two quick questions. Then Sharky opens the first useful hand.',
+                          ru: 'Ответь на два коротких вопроса. Затем Шарки откроет первую полезную раздачу.',
                         ),
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -172,17 +361,21 @@ class Act0PlacementShellV1 extends StatelessWidget {
                       : 'About two minutes. Then your first lesson is ready.')
                 : explicitBeginnerStart
                 ? (localeIsRu
-                      ? 'Начни с нуля и пропусти живую проверку.'
-                      : 'Start from zero and skip the live check.')
+                      ? 'Шарки начнёт просто.'
+                      : 'Sharky will start simple.')
                 : currentQuestionIndex >= questions.length
                 ? (localeIsRu
-                      ? 'Один короткий живой чек — и первый полезный старт готов.'
-                      : 'One short live check, then your first useful start is ready.')
+                      ? 'Три короткие проверки — и первая раздача готова.'
+                      : 'Three short checks, then your first hand is ready.')
                 : currentQuestion?.allowsMultiple == true
                 ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
+                : currentQuestion?.questionId == 'experience'
+                ? (localeIsRu
+                      ? 'Если сомневаешься, выбери «Я новичок в покере».'
+                      : 'If unsure, choose “I’m new to poker.”')
                 : (localeIsRu
-                      ? 'Отвечай быстро и двигайся дальше.'
-                      : 'Answer fast and keep moving.'),
+                      ? 'Выбери то, что ближе всего.'
+                      : 'Choose what feels closest.'),
             buttonKey: Key(
               showIntro
                   ? 'act0_shell_placement_intro_cta'
@@ -236,8 +429,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
                       ),
                       subtitle: _placementCopyV1(
                         context,
-                        en: 'A few fast answers, then Sharky picks where to begin.',
-                        ru: 'Пара быстрых ответов — и Шарки подберёт маршрут.',
+                        en: 'Your first hand is ready.',
+                        ru: 'Первая раздача готова.',
                       ),
                     ),
                     const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -331,7 +524,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                         _placementAtomV1(
                           context,
                           'placement_ready_skill_check',
-                          fallback: 'Skill check',
+                          fallback: 'Quick table check',
                         ),
                         style: Act0ShellTokensV1.sectionTitle,
                       ),
@@ -348,8 +541,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 Text(
                   _placementCopyV1(
                     context,
-                    en: 'One short live check.',
-                    ru: 'Одна короткая живая проверка.',
+                    en: 'Three short checks before your first hand.',
+                    ru: 'Три короткие проверки перед первой раздачей.',
                   ),
                   style: Act0ShellTokensV1.cardTitle,
                 ),
@@ -357,8 +550,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                 Text(
                   _placementCopyV1(
                     context,
-                    en: 'A few table reads now make sure the first lesson starts in the right place.',
-                    ru: 'Пара чтений стола сейчас поможет точно запустить первый урок с нужного места.',
+                    en: 'No score. Just read what is visible.',
+                    ru: 'Без оценки. Просто прочитай то, что видно.',
                   ),
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.text,
@@ -370,25 +563,21 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   tone: Act0ShellTokensV1.info,
                   title: _placementCopyV1(
                     context,
-                    en: 'Quick check before the first hand',
-                    ru: 'Короткая проверка перед первой раздачей',
+                    en: 'What you’ll do',
+                    ru: 'Что ты сделаешь',
                   ),
                   body: _placementCopyV1(
                     context,
-                    en: 'This is one short table read, then Sharky opens the first useful hand in the right place.',
-                    ru: 'Это одна короткая проверка стола, а потом Шарки откроет первую полезную раздачу в правильной точке.',
+                    en: 'Read hand, board, and first actions.',
+                    ru: 'Прочитай руку, борд и первые действия.',
                   ),
                   chips: <String>[
                     _placementCopyV1(
                       context,
-                      en: 'Short table read',
-                      ru: 'Короткий рид стола',
+                      en: 'Short checks',
+                      ru: 'Короткие проверки',
                     ),
-                    _placementCopyV1(
-                      context,
-                      en: 'No long setup',
-                      ru: 'Без долгой подготовки',
-                    ),
+                    _placementCopyV1(context, en: 'No score', ru: 'Без оценки'),
                     _placementCopyV1(
                       context,
                       en: 'First hand after',
@@ -410,6 +599,10 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
     final keepFullSupportCopy = _placementKeepFullSupportCopyV1(
       question.questionId,
     );
+    final displayTitle = _placementQuestionTitleV1(context, question);
+    final displaySubtitle = _placementQuestionSubtitleV1(context, question);
+    final displayHelper = _placementQuestionHelperV1(context, question);
+    final displayOptions = _placementVisibleOptionsV1(question);
     final choiceLabel = question.allowsMultiple
         ? 'Choose what fits'
         : 'Choose one';
@@ -504,18 +697,18 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Text(question.title, style: Act0ShellTokensV1.sectionTitle),
+            Text(displayTitle, style: Act0ShellTokensV1.sectionTitle),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             Text(
-              question.subtitle,
+              displaySubtitle,
               style: Act0ShellTokensV1.muted,
               maxLines: keepFullSupportCopy ? null : 2,
               overflow: keepFullSupportCopy ? null : TextOverflow.fade,
             ),
-            if (keepFullSupportCopy && question.helper != null) ...[
+            if (keepFullSupportCopy && displayHelper != null) ...[
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                question.helper!,
+                displayHelper,
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.textMuted,
                 ),
@@ -559,12 +752,22 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Act0ShellTokensV1.gapMd),
-            for (final option in question.options) ...[
+            for (final option in displayOptions) ...[
               _PlacementOptionButtonV1(
                 option: option,
+                displayLabel: _placementOptionLabelV1(
+                  context,
+                  question,
+                  option,
+                ),
+                displaySubtitle: _placementOptionSubtitleV1(
+                  context,
+                  question,
+                  option,
+                ),
                 selected: selectedIds.contains(option.optionId),
                 multiSelect: question.allowsMultiple,
-                showBadge: keepFullSupportCopy,
+                showBadge: question.questionId == 'experience',
                 showSubtitle: keepFullSupportCopy,
                 onTap: () => onSelectOption(question, option.optionId),
               ),
@@ -603,8 +806,8 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           Text(
             _placementCopyV1(
               context,
-              en: 'A few quick answers point Sharky to your first useful lesson.',
-              ru: 'Пара быстрых ответов направят Шарки к твоему первому полезному уроку.',
+              en: 'Fast start, no exam.',
+              ru: 'Быстрый старт без экзамена.',
             ),
             style: Act0ShellTokensV1.screenTitle,
           ),
@@ -612,42 +815,11 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           Text(
             _placementCopyV1(
               context,
-              en: 'You skip the wrong opener and get to the first real table spot faster.',
-              ru: 'Так ты пропустишь лишний старт и быстрее попадёшь в первый живой покерный спот.',
+              en: 'No long setup before the first hand.',
+              ru: 'Без долгой настройки перед первой раздачей.',
             ),
             key: const Key('act0_shell_placement_intro_support'),
             style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Wrap(
-            spacing: Act0ShellTokensV1.gapSm,
-            runSpacing: Act0ShellTokensV1.gapSm,
-            children: [
-              _PlacementIntroChipV1(
-                label: _placementCopyV1(
-                  context,
-                  en: '2 quick answers',
-                  ru: '2 быстрых ответа',
-                ),
-                tone: Act0ShellTokensV1.primary,
-              ),
-              _PlacementIntroChipV1(
-                label: _placementCopyV1(
-                  context,
-                  en: '1 short table check',
-                  ru: '1 короткий чек стола',
-                ),
-                tone: Act0ShellTokensV1.info,
-              ),
-              _PlacementIntroChipV1(
-                label: _placementCopyV1(
-                  context,
-                  en: 'Start first lesson',
-                  ru: 'Старт первого урока',
-                ),
-                tone: Act0ShellTokensV1.gold,
-              ),
-            ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _PlacementLaunchSupportCardV1(
@@ -655,19 +827,19 @@ class _PlacementIntroViewV1 extends StatelessWidget {
             tone: Act0ShellTokensV1.primary,
             title: _placementCopyV1(
               context,
-              en: 'One guided start',
-              ru: 'Один направленный старт',
+              en: 'No exam. Just your starting point.',
+              ru: 'Без экзамена. Только твоя точка старта.',
             ),
             body: _placementCopyV1(
               context,
-              en: 'Answer, do one quick table check if needed, then Sharky opens the first hand that makes sense.',
-              ru: 'Ответь, при необходимости пройди одну быструю проверку стола, а потом Шарки откроет первую осмысленную раздачу.',
+              en: 'Two answers and one short check are enough to open the first hand.',
+              ru: 'Двух ответов и короткого чека достаточно, чтобы открыть первую раздачу.',
             ),
             chips: <String>[
               _placementCopyV1(
                 context,
-                en: 'No wrong opener',
-                ru: 'Без неверного старта',
+                en: 'Beginner-safe',
+                ru: 'Безопасно для новичка',
               ),
               _placementCopyV1(
                 context,
@@ -940,6 +1112,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final focusChips = _placementFocusChipsV1(result);
     return Column(
       key: const Key('act0_shell_placement_result'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -952,19 +1125,25 @@ class _PlacementResultViewV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _placementCopyV1(context, en: 'Your start', ru: 'Твой старт'),
+                _placementCopyV1(
+                  context,
+                  en: 'Sharky found your start',
+                  ru: 'Шарки нашёл твой старт',
+                ),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: _placementToneForResult(result),
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapXs),
               Text(
-                '${_placementCopyV1(context, en: 'Your start:', ru: 'Твой старт:')} ${result.levelLabel}',
+                result.levelLabel,
+                key: const Key('act0_shell_placement_result_level'),
                 style: Act0ShellTokensV1.sectionTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                _placementCompactReasonLineV1(context, result),
+                result.recommendedReason,
+                key: const Key('act0_shell_placement_recommended_reason'),
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                   height: 1.4,
@@ -972,35 +1151,56 @@ class _PlacementResultViewV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                '${_placementCopyV1(context, en: 'First hand:', ru: 'Первая раздача:')} ${_firstRepProofLineV1(result)}',
+                _placementRouteTrustLineV1(context, result),
+                key: const Key('act0_shell_placement_destination_trust_line'),
                 style: Act0ShellTokensV1.muted.copyWith(
                   color: Act0ShellTokensV1.text,
                   height: 1.38,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                '${_placementCopyV1(context, en: 'Open with:', ru: 'Начни с:')} ${result.recommendedTitle}',
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.text,
-                  fontWeight: FontWeight.w700,
+              if (focusChips.isNotEmpty) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+                KeyedSubtree(
+                  key: const Key('act0_shell_placement_focus_chips'),
+                  child: Wrap(
+                    spacing: Act0ShellTokensV1.gapSm,
+                    runSpacing: Act0ShellTokensV1.gapSm,
+                    children: [
+                      for (final chip in focusChips)
+                        _PlacementIntroChipV1(
+                          label: chip,
+                          tone: _placementToneForResult(result),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               _PlacementLaunchSupportCardV1(
                 key: const Key('act0_shell_placement_result_preview'),
                 tone: _placementToneForResult(result),
                 title: _placementCopyV1(
                   context,
-                  en: 'First hand ready next',
-                  ru: 'Следом готова первая раздача',
+                  en: 'Useful first hand ready',
+                  ru: 'Полезная первая раздача готова',
                 ),
                 body: _placementCopyV1(
                   context,
-                  en: 'The route is done. Open one clear hand and let the next action words attach to a real table spot.',
-                  ru: 'Маршрут готов. Открой одну ясную раздачу и дай следующим словам действия привязаться к живому столу.',
+                  en: 'It opens one table clue before the first lesson starts.',
+                  ru: 'Она покажет одну подсказку стола перед первым уроком.',
                 ),
-                chips: <String>[result.levelLabel, result.recommendedTitle],
+                chips: <String>[
+                  _placementCopyV1(
+                    context,
+                    en: 'Beginner-safe',
+                    ru: 'Безопасно для новичка',
+                  ),
+                  _placementCopyV1(
+                    context,
+                    en: 'Fold, check, call, raise',
+                    ru: 'Фолд, чек, колл, рейз',
+                  ),
+                ],
               ),
             ],
           ),
@@ -1010,35 +1210,28 @@ class _PlacementResultViewV1 extends StatelessWidget {
   }
 }
 
-String _placementCompactReasonLineV1(
-  BuildContext context,
-  Act0PlacementResultV1 result,
-) {
-  return switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer => _placementCopyV1(
-      context,
-      en: 'Start from the table itself before any faster decision work.',
-      ru: 'Начни с самого стола, прежде чем ускорять решения.',
-    ),
-    Act0PlacementResultLevelV1.rustyBeginner => _placementCopyV1(
-      context,
-      en: 'Start with hand flow before speed.',
-      ru: 'Сначала верни ясный ход раздачи, потом скорость.',
-    ),
-    Act0PlacementResultLevelV1.readyForBasics => _placementCopyV1(
-      context,
-      en: 'Start on action basics while the table structure stays visible.',
-      ru: 'Начни с базовых действий, пока структура стола остаётся ясной.',
-    ),
-  };
-}
+List<String> _placementFocusChipsV1(Act0PlacementResultV1 result) {
+  final chips = <String>[];
+  void addChip(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty || chips.contains(trimmed)) {
+      return;
+    }
+    chips.add(trimmed);
+  }
 
-Act0SharkyMoodV1 _placementMoodForResult(Act0PlacementResultV1 result) {
-  return switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer => Act0SharkyMoodV1.thinking,
-    Act0PlacementResultLevelV1.rustyBeginner => Act0SharkyMoodV1.repair,
-    Act0PlacementResultLevelV1.readyForBasics => Act0SharkyMoodV1.happy,
-  };
+  for (final strength in result.strengths.take(2)) {
+    addChip(strength);
+  }
+  for (final weakSpot in result.weakSpots.take(1)) {
+    addChip(weakSpot);
+  }
+  addChip(switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer => 'Table basics',
+    Act0PlacementResultLevelV1.rustyBeginner => 'Hand flow',
+    Act0PlacementResultLevelV1.readyForBasics => 'Action basics',
+  });
+  return chips.take(4).toList(growable: false);
 }
 
 Color _placementToneForResult(Act0PlacementResultV1 result) {
@@ -1046,6 +1239,29 @@ Color _placementToneForResult(Act0PlacementResultV1 result) {
     Act0PlacementResultLevelV1.newPlayer => Act0ShellTokensV1.info,
     Act0PlacementResultLevelV1.rustyBeginner => Act0ShellTokensV1.gold,
     Act0PlacementResultLevelV1.readyForBasics => Act0ShellTokensV1.primary,
+  };
+}
+
+String _placementRouteTrustLineV1(
+  BuildContext context,
+  Act0PlacementResultV1 result,
+) {
+  return switch (result.level) {
+    Act0PlacementResultLevelV1.newPlayer => _placementCopyV1(
+      context,
+      en: "We'll start with the table first, so the first hand stays clear.",
+      ru: 'Начнем со стола, чтобы первая раздача оставалась понятной.',
+    ),
+    Act0PlacementResultLevelV1.rustyBeginner => _placementCopyV1(
+      context,
+      en: "We'll keep the hand flow visible before adding speed.",
+      ru: 'Сначала удержим движение раздачи видимым, а скорость добавим позже.',
+    ),
+    Act0PlacementResultLevelV1.readyForBasics => _placementCopyV1(
+      context,
+      en: 'Your first hand will teach one table clue.',
+      ru: 'Первая раздача научит одной подсказке стола.',
+    ),
   };
 }
 
@@ -1120,7 +1336,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
             _placementAtomV1(
               context,
               'placement_result_your_start_is_ready',
-              fallback: 'Your start is ready.',
+              fallback: 'Sharky found your start.',
             ),
             textAlign: TextAlign.center,
             style: Act0ShellTokensV1.muted.copyWith(
@@ -1136,7 +1352,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
               _placementAtomV1(
                 context,
                 'placement_sheet_start_first_hand',
-                fallback: 'Start first hand',
+                fallback: 'Start with the useful hand',
               ),
             ),
           ),
@@ -1149,7 +1365,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
               _placementAtomV1(
                 context,
                 'placement_sheet_start_from_zero',
-                fallback: 'Start from zero',
+                fallback: 'Start from the beginning',
               ),
             ),
           ),
@@ -1215,17 +1431,6 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
       ),
     );
   }
-}
-
-String _firstRepProofLineV1(Act0PlacementResultV1 result) {
-  return switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer =>
-      'By the end of the first hand, seats, blinds, and turn order should stop feeling random.',
-    Act0PlacementResultLevelV1.rustyBeginner =>
-      'By the end of the first hand, the hand should feel connected again from preflop to river.',
-    Act0PlacementResultLevelV1.readyForBasics =>
-      'By the end of the first hand, action words should attach to real table moments instead of floating as terms.',
-  };
 }
 
 class _PlacementHeroV1 extends StatelessWidget {
@@ -1404,6 +1609,8 @@ class _PlacementStepLineV1 extends StatelessWidget {
 class _PlacementOptionButtonV1 extends StatelessWidget {
   const _PlacementOptionButtonV1({
     required this.option,
+    required this.displayLabel,
+    required this.displaySubtitle,
     required this.selected,
     required this.multiSelect,
     required this.showBadge,
@@ -1412,6 +1619,8 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
   });
 
   final Act0PlacementOptionV1 option;
+  final String displayLabel;
+  final String? displaySubtitle;
   final bool selected;
   final bool multiSelect;
   final bool showBadge;
@@ -1471,7 +1680,7 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          option.label,
+                          displayLabel,
                           style: Act0ShellTokensV1.body,
                         ),
                       ),
@@ -1500,9 +1709,9 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                         ),
                     ],
                   ),
-                  if (showSubtitle && option.subtitle != null) ...[
+                  if (showSubtitle && displaySubtitle != null) ...[
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(option.subtitle!, style: Act0ShellTokensV1.muted),
+                    Text(displaySubtitle!, style: Act0ShellTokensV1.muted),
                   ],
                 ],
               ),

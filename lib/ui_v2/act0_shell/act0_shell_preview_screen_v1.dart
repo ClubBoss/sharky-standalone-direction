@@ -14,6 +14,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -23,6 +25,96 @@ import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
+
+({String worldId, String lessonId, String taskId, String mappingType})?
+act0FirstValueSameSignalRepMappingV1({
+  required String nextRepId,
+  required String skillAtomId,
+  required String sourceSignalId,
+  required String sourceTaskId,
+  required String receiptOutcome,
+}) {
+  final isRepair =
+      receiptOutcome == 'repair_started' || receiptOutcome == 'needs_rep';
+  if (nextRepId == 'repeat_action_read' &&
+      skillAtomId == 'action_read' &&
+      sourceSignalId == 'no_bet_yet' &&
+      sourceTaskId.trim() != 'actions_check_drill') {
+    return (
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_check_drill',
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+  if (nextRepId == 'repeat_board_read' &&
+      skillAtomId == 'board_read' &&
+      sourceSignalId == 'board_cards') {
+    if (sourceTaskId.trim() == 'your_first_hand_flop') {
+      return (
+        worldId: 'world_1',
+        lessonId: 'your_first_hand',
+        taskId: 'your_first_hand_turn',
+        mappingType: isRepair ? 'repair' : 'reinforcement',
+      );
+    }
+    if (sourceTaskId.trim() != 'cards_ranks_suits_board_count' &&
+        sourceTaskId.trim() != 'your_first_hand_turn') {
+      return (
+        worldId: 'world_1',
+        lessonId: 'cards_ranks_suits',
+        taskId: 'cards_ranks_suits_board_count',
+        mappingType: isRepair ? 'repair' : 'reinforcement',
+      );
+    }
+  }
+  if (nextRepId == 'repeat_price_read' &&
+      skillAtomId == 'price_read' &&
+      sourceSignalId == 'pot_to_call' &&
+      sourceTaskId.trim() != 'actions_call_drill') {
+    return (
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_call_drill',
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+  if (nextRepId == 'repeat_starting_hand_read' &&
+      skillAtomId == 'starting_hand_read' &&
+      sourceSignalId == 'hero_cards' &&
+      sourceTaskId.trim() != 'your_first_hand_private_cards_recheck') {
+    return (
+      worldId: 'world_1',
+      lessonId: 'your_first_hand',
+      taskId: 'your_first_hand_private_cards_recheck',
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'hero_cards_board_pot' &&
+      sourceTaskId.trim() != 'what_poker_is_table_read_recheck') {
+    return (
+      worldId: 'world_1',
+      lessonId: 'what_poker_is',
+      taskId: 'what_poker_is_table_read_recheck',
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+  if (nextRepId == 'repeat_table_position_read' &&
+      skillAtomId == 'table_position_read' &&
+      sourceSignalId == 'hero_button' &&
+      sourceTaskId.trim() !=
+          'position_checkpoint_position_checkpoint_table_notice') {
+    return (
+      worldId: 'world_3',
+      lessonId: 'position_checkpoint',
+      taskId: 'position_checkpoint_position_checkpoint_table_notice',
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+  return null;
+}
 
 Act0RunnerStateV1 normalizeAct0SeatTapRunnerV1(Act0RunnerStateV1 runner) {
   final seatOptions = runner.options
@@ -106,6 +198,349 @@ Act0RunnerStateV1 normalizeAct0DrillSeatHighlightPolicyV1(
   );
 }
 
+Act0RunnerOptionV1 _placementCorrectOptionV1({
+  required String id,
+  required String label,
+  required String feedbackTitle,
+  required String feedbackReason,
+  List<String> repairFocusSeatIds = const <String>[],
+  List<String> repairFocusCardIds = const <String>[],
+  List<String> repairFocusLabels = const <String>[],
+}) {
+  return Act0RunnerOptionV1(
+    id: id,
+    label: label,
+    isCorrect: true,
+    preferredLabel: label,
+    quality: Act0FeedbackQualityV1.correct,
+    feedbackTitle: feedbackTitle,
+    feedbackReason: feedbackReason,
+    repairFocusSeatIds: repairFocusSeatIds,
+    repairFocusCardIds: repairFocusCardIds,
+    repairFocusLabels: repairFocusLabels,
+  );
+}
+
+Act0RunnerOptionV1 _placementWrongOptionV1({
+  required String id,
+  required String label,
+  required String preferredLabel,
+  required String feedbackReason,
+  List<String> repairFocusSeatIds = const <String>[],
+  List<String> repairFocusCardIds = const <String>[],
+  List<String> repairFocusLabels = const <String>[],
+}) {
+  return Act0RunnerOptionV1(
+    id: id,
+    label: label,
+    isCorrect: false,
+    preferredLabel: preferredLabel,
+    betterAnswerLabel: preferredLabel,
+    quality: Act0FeedbackQualityV1.wrong,
+    feedbackTitle: 'Good check.',
+    feedbackReason: feedbackReason,
+    repairFocusSeatIds: repairFocusSeatIds,
+    repairFocusCardIds: repairFocusCardIds,
+    repairFocusLabels: repairFocusLabels,
+  );
+}
+
+Act0RunnerOptionV1 _placementUnsureOptionV1({
+  required String preferredLabel,
+  required bool isRu,
+  List<String> repairFocusSeatIds = const <String>[],
+  List<String> repairFocusCardIds = const <String>[],
+  List<String> repairFocusLabels = const <String>[],
+}) {
+  return Act0RunnerOptionV1(
+    id: 'not_sure_yet',
+    label: isRu ? 'Пока не уверен' : 'Not sure yet',
+    isCorrect: false,
+    preferredLabel: preferredLabel,
+    betterAnswerLabel: preferredLabel,
+    quality: Act0FeedbackQualityV1.suboptimal,
+    feedbackTitle: isRu ? 'Ничего страшного.' : 'No problem.',
+    feedbackReason: isRu ? 'Шарки начнёт проще.' : 'Sharky will start simple.',
+    repairFocusSeatIds: repairFocusSeatIds,
+    repairFocusCardIds: repairFocusCardIds,
+    repairFocusLabels: repairFocusLabels,
+  );
+}
+
+List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
+  String signalId, {
+  required bool isRu,
+}) {
+  return switch (signalId) {
+    'table_read' => <Act0RunnerOptionV1>[
+      _placementCorrectOptionV1(
+        id: 'hand_board_pot',
+        label: isRu ? 'Рука Hero, борд и банк' : 'Hero hand, board, and pot',
+        feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
+        feedbackReason: isRu
+            ? 'Ты сначала нашёл руку, борд и банк.'
+            : 'You found the hand, board, and pot first.',
+        repairFocusCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_0',
+          'board_1',
+          'board_2',
+        ],
+        repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
+      ),
+      _placementWrongOptionV1(
+        id: 'only_hero_cards',
+        label: isRu ? 'Только карты Hero' : 'Only Hero’s cards',
+        preferredLabel: isRu
+            ? 'Рука Hero, борд и банк'
+            : 'Hero hand, board, and pot',
+        feedbackReason: isRu
+            ? 'Лучше начать с руки, борда и банка.'
+            : 'Better first read: hand, board, and pot.',
+        repairFocusCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_0',
+          'board_1',
+          'board_2',
+        ],
+        repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
+      ),
+      _placementWrongOptionV1(
+        id: 'biggest_stack_first',
+        label: isRu ? 'Сначала самый большой стек' : 'The biggest stack first',
+        preferredLabel: isRu
+            ? 'Рука Hero, борд и банк'
+            : 'Hero hand, board, and pot',
+        feedbackReason: isRu
+            ? 'Стеки важны позже. Сначала рука, борд и банк.'
+            : 'Stacks matter later. First read hand, board, and pot.',
+        repairFocusCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_0',
+          'board_1',
+          'board_2',
+        ],
+        repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
+      ),
+      _placementUnsureOptionV1(
+        preferredLabel: isRu
+            ? 'Рука Hero, борд и банк'
+            : 'Hero hand, board, and pot',
+        isRu: isRu,
+        repairFocusCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_0',
+          'board_1',
+          'board_2',
+        ],
+        repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
+      ),
+    ],
+    'board_private_cards' => <Act0RunnerOptionV1>[
+      _placementCorrectOptionV1(
+        id: 'board_cards',
+        label: isRu ? 'Карты борда' : 'Board cards',
+        feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
+        feedbackReason: isRu
+            ? 'Карты борда доступны всем, кто ещё в раздаче.'
+            : 'Board cards are shared by everyone still in the hand.',
+        repairFocusCardIds: const <String>['board_0', 'board_1', 'board_2'],
+        repairFocusLabels: const <String>['Board cards'],
+      ),
+      _placementWrongOptionV1(
+        id: 'hero_private_cards',
+        label: isRu ? 'Личные карты Hero' : 'Hero’s private cards',
+        preferredLabel: isRu ? 'Карты борда' : 'Board cards',
+        feedbackReason: isRu
+            ? 'Личные карты Hero видит только Hero. Общие карты лежат на борде.'
+            : 'Hero’s private cards belong only to Hero. Board cards are shared.',
+        repairFocusCardIds: const <String>['board_0', 'board_1', 'board_2'],
+        repairFocusLabels: const <String>['Board cards'],
+      ),
+      _placementWrongOptionV1(
+        id: 'dealer_button',
+        label: isRu ? 'Кнопка дилера' : 'Dealer button',
+        preferredLabel: isRu ? 'Карты борда' : 'Board cards',
+        feedbackReason: isRu
+            ? 'Кнопка показывает позицию. Общие карты — это карты борда.'
+            : 'The button marks position. Shared cards are the board cards.',
+        repairFocusCardIds: const <String>['board_0', 'board_1', 'board_2'],
+        repairFocusLabels: const <String>['Board cards'],
+      ),
+      _placementUnsureOptionV1(
+        preferredLabel: isRu ? 'Карты борда' : 'Board cards',
+        isRu: isRu,
+        repairFocusCardIds: const <String>['board_0', 'board_1', 'board_2'],
+        repairFocusLabels: const <String>['Board cards'],
+      ),
+    ],
+    'action_basics' => <Act0RunnerOptionV1>[
+      _placementCorrectOptionV1(
+        id: 'check',
+        label: isRu ? 'Чек' : 'Check',
+        feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
+        feedbackReason: isRu
+            ? 'Перед Hero нет ставки, значит чек — бесплатное действие.'
+            : 'No bet faces Hero, so checking is the free action.',
+        repairFocusLabels: const <String>['No bet yet'],
+      ),
+      _placementWrongOptionV1(
+        id: 'call',
+        label: isRu ? 'Колл' : 'Call',
+        preferredLabel: isRu ? 'Чек' : 'Check',
+        feedbackReason: isRu
+            ? 'Колл отвечает на ставку. Здесь перед Hero ставки нет, поэтому чек бесплатный.'
+            : 'Calling matches a bet. Here no bet faces Hero, so checking is free.',
+        repairFocusLabels: const <String>['No bet yet'],
+      ),
+      _placementWrongOptionV1(
+        id: 'raise',
+        label: isRu ? 'Рейз' : 'Raise',
+        preferredLabel: isRu ? 'Чек' : 'Check',
+        feedbackReason: isRu
+            ? 'Рейз добавляет давление. Когда перед Hero нет ставки, бесплатное действие — чек.'
+            : 'Raising adds pressure. With no bet facing Hero, the free action is check.',
+        repairFocusLabels: const <String>['No bet yet'],
+      ),
+      _placementUnsureOptionV1(
+        preferredLabel: isRu ? 'Чек' : 'Check',
+        isRu: isRu,
+        repairFocusLabels: const <String>['No bet yet'],
+      ),
+    ],
+    _ => <Act0RunnerOptionV1>[
+      _placementUnsureOptionV1(
+        preferredLabel: isRu ? 'Начать проще' : 'Start simple',
+        isRu: isRu,
+      ),
+    ],
+  };
+}
+
+String _placementDiagnosticQuestionV1(String signalId, {required bool isRu}) {
+  return switch (signalId) {
+    'board_private_cards' =>
+      isRu ? 'Какие карты доступны всем?' : 'Which cards can everyone use?',
+    'action_basics' =>
+      isRu
+          ? 'Перед Hero нет ставки. Какое действие бесплатно?'
+          : 'No bet faces Hero. Which action is free?',
+    _ => isRu ? 'Что прочитать сначала?' : 'What should you read first?',
+  };
+}
+
+String _placementDiagnosticHintV1(String signalId, {required bool isRu}) {
+  return switch (signalId) {
+    'board_private_cards' =>
+      isRu
+          ? 'Общие карты лежат на борде.'
+          : 'Shared cards belong to the board.',
+    'action_basics' =>
+      isRu
+          ? 'Без ставки Hero может передать ход.'
+          : 'No bet means Hero can pass the action.',
+    _ => isRu ? 'Начни с того, что видно.' : 'Start with what is visible.',
+  };
+}
+
+String _placementDiagnosticCaptionV1(String signalId, {required bool isRu}) {
+  return switch (signalId) {
+    'board_private_cards' =>
+      isRu ? 'Найди общие карты.' : 'Read which cards are shared.',
+    'action_basics' =>
+      isRu
+          ? 'В этом споте перед Hero нет ставки.'
+          : 'No bet faces Hero in this spot.',
+    _ =>
+      isRu
+          ? 'Один раз прочитай руку, борд и банк.'
+          : 'Read hand, board, and pot once.',
+  };
+}
+
+Act0RunnerStateV1 placementQuickCheckRunnerV1(
+  Act0RunnerStateV1 runner, {
+  required String signalId,
+  required int checkIndex,
+  required int checkCount,
+  bool isRu = false,
+}) {
+  return runner.copyWith(
+    lessonTitle: isRu ? 'Быстрая проверка стола' : 'Quick table check',
+    lessonSubtitle: isRu
+        ? 'Три короткие проверки перед первой раздачей.'
+        : 'Three short checks before your first hand.',
+    beatIndex: checkIndex,
+    beatCount: checkCount,
+    caption: _placementDiagnosticCaptionV1(signalId, isRu: isRu),
+    hint: _placementDiagnosticHintV1(signalId, isRu: isRu),
+    question: _placementDiagnosticQuestionV1(signalId, isRu: isRu),
+    options: _placementDiagnosticOptionsV1(signalId, isRu: isRu),
+    feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
+    feedbackReason: isRu
+        ? 'Ты сначала нашёл руку, борд и банк.'
+        : 'You found hand, board, and pot first.',
+    primaryCtaLabel: isRu ? 'Продолжить' : 'Continue',
+    teachingSteps: const <Act0TeachingStepV1>[],
+    teachingStepIndex: 0,
+  );
+}
+
+Act0RunnerFramingProfileV1 placementQuickCheckFramingProfileV1(
+  String signalId,
+) {
+  return switch (signalId) {
+    'table_read' ||
+    'board_private_cards' => Act0RunnerFramingProfileV1.boardHeroPot,
+    'action_basics' => Act0RunnerFramingProfileV1.heroAction,
+    _ => Act0RunnerFramingProfileV1.neutral,
+  };
+}
+
+Act0RunnerFramingProfileV1 _runnerFramingProfileForTaskV1({
+  required Act0LessonTaskV1? task,
+  required Act0RunnerStateV1? runner,
+  required bool placementDiagnosticActive,
+  required String? placementSignalId,
+}) {
+  if (placementDiagnosticActive && placementSignalId != null) {
+    return placementQuickCheckFramingProfileV1(placementSignalId);
+  }
+  if (task == null || runner == null) {
+    return Act0RunnerFramingProfileV1.neutral;
+  }
+  if (runner.options.any((option) => option.seatId != null)) {
+    return Act0RunnerFramingProfileV1.seatFocus;
+  }
+  switch (task.resolvedTaskFamily) {
+    case Act0TaskFamilyV1.decision:
+    case Act0TaskFamilyV1.sizing:
+    case Act0TaskFamilyV1.repair:
+      return Act0RunnerFramingProfileV1.heroAction;
+    case Act0TaskFamilyV1.transfer:
+      final table = runner.table;
+      if (table.heroCards.isNotEmpty &&
+          table.boardCards.isNotEmpty &&
+          table.potLabel.trim().isNotEmpty) {
+        return Act0RunnerFramingProfileV1.boardHeroPot;
+      }
+      if (table.boardCards.isNotEmpty) {
+        return Act0RunnerFramingProfileV1.boardOnly;
+      }
+      return Act0RunnerFramingProfileV1.neutral;
+    case Act0TaskFamilyV1.learn:
+    case Act0TaskFamilyV1.recognition:
+    case Act0TaskFamilyV1.compare:
+    case Act0TaskFamilyV1.counting:
+    case Act0TaskFamilyV1.review:
+      return Act0RunnerFramingProfileV1.neutral;
+  }
+}
+
 enum _Act0LearningNextActionKindV1 {
   repairDeepLeak,
   repairWeakSpot,
@@ -182,6 +617,12 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   practice,
   profile,
   worldCompletion,
+  runnerFirstCorrectFeedback,
+  firstWeekHome,
+  firstWeekReview,
+  firstWeekLearn,
+  firstWeekProfile,
+  runnerFirstWrongFeedback,
 }
 
 class Act0ShellDebugHarnessEntryV1 {
@@ -260,6 +701,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _returnToPlayHubOnBack = false;
   final Map<String, _Act0MistakeRecordV1> _mistakeRecords =
       <String, _Act0MistakeRecordV1>{};
+  final Map<String, Act0RepairIntentV1> _openRepairIntentBySourceTaskId =
+      <String, Act0RepairIntentV1>{};
+  final List<_Act0RepairIntentAuditEntryV1> _repairIntentAuditTrailV1 =
+      <_Act0RepairIntentAuditEntryV1>[];
   final Set<String> _resolvedMistakeTaskIds = <String>{};
   final Set<String> _cleanTaskIds = <String>{};
   final Set<String> _lessonRunMistakeTaskIds = <String>{};
@@ -281,6 +726,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeRepairSourceTaskId;
+  _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
+  String _firstValueTodayShownTelemetryKey = '';
+  final Set<String> _repairItemShownTelemetryKeys = <String>{};
 
   void _recordTelemetryEventV1(String name, Map<String, Object?> fields) {
     final sink = widget.telemetrySink;
@@ -291,6 +739,170 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sink.record(Act0TelemetryEventV1(name: name, fields: fields));
     } catch (_) {
       // Telemetry must never interrupt the learner route.
+    }
+  }
+
+  @visibleForTesting
+  Map<String, Object?>? debugOpenRepairIntentPayloadForSourceTaskV1(
+    String sourceTaskId,
+  ) {
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId.trim()];
+    if (intent == null) {
+      return null;
+    }
+    return Map<String, Object?>.unmodifiable(intent.toPayload());
+  }
+
+  @visibleForTesting
+  int debugOpenRepairIntentCountV1() => _openRepairIntentBySourceTaskId.length;
+
+  @visibleForTesting
+  String debugSelectedTaskIdV1() => _selectedTaskId;
+
+  @visibleForTesting
+  List<Map<String, Object?>> debugRepairIntentAuditTrailPayloadV1() {
+    return List<Map<String, Object?>>.unmodifiable(
+      _repairIntentAuditTrailV1.map((entry) => entry.toPayload()),
+    );
+  }
+
+  @visibleForTesting
+  Map<String, Object?>? debugNextUsefulHandTargetPayloadV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final selectedWorld = _worldById(
+      _progressedWorlds(state),
+      _selectedWorldId,
+    );
+    final selectedLesson = _lessonById(
+      selectedWorld.lessons,
+      _selectedLessonId,
+    );
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    final receipt = _nextUsefulHandReasonReceiptV1(
+      recommendation: recommendation,
+      selectedWorld: selectedWorld,
+      state: state,
+    );
+    _recordRepairIntentAuditTransitionV1(
+      _auditTransitionForReceiptV1(receipt),
+      receipt: receipt,
+    );
+    return receipt.toPayload();
+  }
+
+  @visibleForTesting
+  Map<String, Object?> debugNextUsefulHandCopyBridgePayloadV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final selectedWorld = _worldById(
+      _progressedWorlds(state),
+      _selectedWorldId,
+    );
+    final selectedLesson = _lessonById(
+      selectedWorld.lessons,
+      _selectedLessonId,
+    );
+    final recommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    final receipt = _nextUsefulHandReasonReceiptV1(
+      recommendation: recommendation,
+      selectedWorld: selectedWorld,
+      state: state,
+    );
+    return _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt).toPayload();
+  }
+
+  @visibleForTesting
+  Map<String, Object?>? debugReviewSupportCopySnapshotV1() {
+    final mistake = _topOpenMistake();
+    if (mistake == null) {
+      return null;
+    }
+    final target = _openRepairIntentTargetForSourceTaskV1(mistake.taskId);
+    if (target == null) {
+      return null;
+    }
+    final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+      sourceTaskId: mistake.taskId,
+      target: target,
+    );
+    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
+    final renderedLine = bridge.renderedCopyLine.trim();
+    if (renderedLine.isEmpty) {
+      return null;
+    }
+    return bridge.toReviewSupportCopySnapshotPayload(
+      renderedLine: renderedLine,
+    );
+  }
+
+  _Act0NextUsefulHandReasonReceiptV1 _nextUsefulHandReasonReceiptV1({
+    required _Act0LearningRecommendationV1 recommendation,
+    required Act0WorldCardV1 selectedWorld,
+    Act0ShellStateV1? state,
+  }) {
+    final sourceTaskId = recommendation.mistake?.taskId;
+    final repairIntentTarget = sourceTaskId == null
+        ? null
+        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId, state: state);
+    if (repairIntentTarget != null) {
+      return _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+        sourceTaskId: sourceTaskId!,
+        target: repairIntentTarget,
+        practiceGroupId: recommendation.practiceGroupId,
+      );
+    }
+    return _Act0NextUsefulHandReasonReceiptV1.existingFallback(
+      sourceTaskId: sourceTaskId ?? '',
+      targetWorldId: selectedWorld.worldId,
+      targetLessonId: recommendation.lessonId ?? '',
+      targetTaskId: recommendation.taskId ?? '',
+      practiceGroupId: recommendation.practiceGroupId,
+    );
+  }
+
+  String _auditTransitionForReceiptV1(
+    _Act0NextUsefulHandReasonReceiptV1 receipt,
+  ) {
+    return switch (receipt.selectionSource) {
+      'repair_intent_mapped' => 'mapped_selection',
+      'repair_intent_exact_replay' => 'exact_replay_selection',
+      _ => 'existing_fallback_selection',
+    };
+  }
+
+  void _recordRepairIntentAuditTransitionV1(
+    String transition, {
+    required _Act0NextUsefulHandReasonReceiptV1 receipt,
+  }) {
+    _appendRepairIntentAuditEntryV1(
+      _Act0RepairIntentAuditEntryV1(
+        transition: transition,
+        sourceTaskId: receipt.sourceTaskId,
+        targetTaskId: receipt.targetTaskId,
+        selectionSource: receipt.selectionSource,
+        reasonCode: receipt.reasonCode,
+        mappingType: receipt.mappingType,
+      ),
+    );
+  }
+
+  void _appendRepairIntentAuditEntryV1(_Act0RepairIntentAuditEntryV1 entry) {
+    if (_repairIntentAuditTrailV1.isNotEmpty &&
+        _repairIntentAuditTrailV1.last.hasSamePayload(entry)) {
+      return;
+    }
+    _repairIntentAuditTrailV1.add(entry);
+    const maxEntries = 12;
+    if (_repairIntentAuditTrailV1.length > maxEntries) {
+      _repairIntentAuditTrailV1.removeRange(
+        0,
+        _repairIntentAuditTrailV1.length - maxEntries,
+      );
     }
   }
 
@@ -307,6 +919,93 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'attemptOrdinal': 1,
       'repairStatus': repaired ? 'fixed' : 'open',
     });
+  }
+
+  void _emitRepairItemShownTelemetryV1(Act0MistakeCardV1 mistake) {
+    final key = '${mistake.taskId}:${mistake.attempts}';
+    if (_repairItemShownTelemetryKeys.contains(key)) {
+      return;
+    }
+    _repairItemShownTelemetryKeys.add(key);
+    _recordTelemetryEventV1('repair_item_shown', <String, Object?>{
+      'schemaVersion': 1,
+      'repairItemId': 'repair:${mistake.taskId}',
+      'sourceTaskId': mistake.taskId,
+      'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
+      'missedSignal': _repairMissedSignalV1(mistake),
+      'tableSignal': _repairMissedSignalV1(mistake),
+      'createdFrom': 'mistake',
+      'status': 'open',
+    });
+  }
+
+  void _emitRepairItemStartedTelemetryV1({
+    required Act0MistakeCardV1 mistake,
+    required String targetTaskId,
+    required String mappingType,
+  }) {
+    _recordTelemetryEventV1('repair_item_started', <String, Object?>{
+      'schemaVersion': 1,
+      'repairItemId': 'repair:${mistake.taskId}',
+      'sourceTaskId': mistake.taskId,
+      'targetTaskId': targetTaskId,
+      'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
+      'missedSignal': _repairMissedSignalV1(mistake),
+      'tableSignal': _repairMissedSignalV1(mistake),
+      'createdFrom': 'mistake',
+      'status': 'in_progress',
+      'mappingType': mappingType,
+    });
+  }
+
+  void _emitRepairItemCompletedTelemetryV1({
+    required String sourceTaskId,
+    required String targetTaskId,
+    required bool repaired,
+    _Act0MistakeRecordV1? record,
+  }) {
+    _recordTelemetryEventV1('repair_item_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'repairItemId': 'repair:$sourceTaskId',
+      'sourceTaskId': sourceTaskId,
+      'targetTaskId': targetTaskId,
+      'skillAtomId': _repairSkillAtomIdV1(record?.weaknessLabel ?? ''),
+      'missedSignal': _repairMissedSignalFromRecordV1(record),
+      'tableSignal': _repairMissedSignalFromRecordV1(record),
+      'createdFrom': 'mistake',
+      'status': repaired ? 'repaired' : 'open',
+      'outcome': repaired ? 'repaired' : 'needs_repair',
+      'correct': repaired,
+    });
+  }
+
+  String _repairSkillAtomIdV1(String label) {
+    final normalized = label
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    return normalized.isEmpty ? 'repair_skill' : normalized;
+  }
+
+  String _repairMissedSignalV1(Act0MistakeCardV1 mistake) {
+    if (mistake.contextLabels.isNotEmpty) {
+      return mistake.contextLabels.first;
+    }
+    return mistake.weaknessLabel.trim().isEmpty
+        ? 'Unknown signal'
+        : mistake.weaknessLabel;
+  }
+
+  String _repairMissedSignalFromRecordV1(_Act0MistakeRecordV1? record) {
+    if (record == null) {
+      return 'Unknown signal';
+    }
+    if (record.contextLabels.isNotEmpty) {
+      return record.contextLabels.first;
+    }
+    return record.weaknessLabel.trim().isEmpty
+        ? 'Unknown signal'
+        : record.weaknessLabel;
   }
 
   void _emitRepairStartedTelemetryV1({
@@ -390,6 +1089,51 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'schemaVersion': 1,
       'lessonId': lessonId,
       'taskId': taskId,
+    });
+  }
+
+  void _emitFirstValueTodayShownTelemetryV1(
+    _Act0FirstValueReceiptCarryV1 carry,
+  ) {
+    if (_firstValueTodayShownTelemetryKey == carry.skillReceiptId) {
+      return;
+    }
+    _firstValueTodayShownTelemetryKey = carry.skillReceiptId;
+    _recordTelemetryEventV1('first_value_today_shown', <String, Object?>{
+      'schemaVersion': 1,
+      'skillReceiptId': carry.skillReceiptId,
+      'skillAtomId': carry.skillAtomId,
+      'nextRepId': carry.nextRepId,
+      'receiptOutcome': carry.outcomeId,
+    });
+  }
+
+  void _emitFirstValueTodayConsumedTelemetryV1(
+    _Act0FirstValueReceiptCarryV1 carry,
+  ) {
+    _recordTelemetryEventV1('first_value_today_consumed', <String, Object?>{
+      'schemaVersion': 1,
+      'skillReceiptId': carry.skillReceiptId,
+      'skillAtomId': carry.skillAtomId,
+      'nextRepId': carry.nextRepId,
+      'receiptOutcome': carry.outcomeId,
+    });
+  }
+
+  void _emitFirstValueDailyRepLaunchedTelemetryV1({
+    required _Act0FirstValueReceiptCarryV1 carry,
+    required _Act0FirstValueDailyRepTargetV1 target,
+  }) {
+    _recordTelemetryEventV1('first_value_daily_rep_launched', <String, Object?>{
+      'schemaVersion': 1,
+      'skillReceiptId': carry.skillReceiptId,
+      'skillAtomId': carry.skillAtomId,
+      'nextRepId': carry.nextRepId,
+      'receiptOutcome': carry.outcomeId,
+      'feedbackSignal': carry.sourceSignalId,
+      'tableSignal': carry.sourceSignalLabel,
+      'mappedTargetTaskId': target.taskId,
+      'mappingType': target.mappingType,
     });
   }
 
@@ -582,11 +1326,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       },
       routeTrustLine: switch (result.level) {
         Act0PlacementResultLevelV1.readyForBasics =>
-          'Шарки всё равно держит маршрут рядом со стартом, чтобы ни одно важное звено не потерялось.',
+          'Следующий шаг останется безопасным для новичка.',
         Act0PlacementResultLevelV1.rustyBeginner =>
-          'Ты пропускаешь полный ресет, но маршрут всё равно остаётся рядом с фундаментом.',
+          'Сначала удержим движение раздачи видимым, а скорость добавим позже.',
         Act0PlacementResultLevelV1.newPlayer =>
-          'Маршрут специально стартует со стола, чтобы ничего важного не пряталось под скоростью.',
+          'Начнем со стола, чтобы первая раздача оставалась понятной.',
       },
       premiumPitch:
           'Премиум добавит персональный разбор ошибок, больше практики и более умный недельный ритм после того, как ценность уже показана.',
@@ -967,6 +1711,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugProfileSurface();
       case Act0ControlledDemoCaptureSurfaceV1.worldCompletion:
         _applyDebugWorldCompletionSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback:
+        _applyDebugFirstCorrectFeedbackSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.firstWeekHome:
+        _applyDebugFirstWeekHomeSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.firstWeekReview:
+        _applyDebugReviewSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn:
+        _applyDebugLearnSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile:
+        _applyDebugProfileSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback:
+        _applyDebugFirstWrongFeedbackSurface(state);
     }
   }
 
@@ -988,6 +1744,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _practiceCompletionTitle = null;
     _practiceCompletionBody = null;
     _mistakeRecords.clear();
+    _openRepairIntentBySourceTaskId.clear();
     _resolvedMistakeTaskIds.clear();
     _cleanTaskIds.clear();
     _retentionMemoryByTaskId.clear();
@@ -1021,6 +1778,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _applyDebugHomeSurface() {
     _resetDebugSurfaceChrome();
     _tab = Act0ShellTabV1.home;
+  }
+
+  void _applyDebugFirstWeekHomeSurface() {
+    _applyDebugHomeSurface();
+    _completedTaskIds.add('actions_terms_intro');
   }
 
   void _applyDebugLearnSurface() {
@@ -1093,6 +1855,59 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           );
       _selectedOptionId = selectedOption?.id;
     }
+  }
+
+  void _applyDebugFirstCorrectFeedbackSurface(Act0ShellStateV1 state) {
+    _resetDebugSurfaceChrome();
+    final world = state.worldById('world_1');
+    final lesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final task = _taskById(lesson, 'actions_check_drill');
+    _startTaskByIds(
+      world,
+      lesson.lessonId,
+      task.taskId,
+      allowDrillBypass: true,
+    );
+    _returnToPlayHubOnBack = false;
+    _placementHandoffActive = true;
+    _placementDiagnosticActive = false;
+    _phase = Act0LessonPhaseV1.review;
+    _teachingStepIndex = task.runner.teachingSteps.length;
+    final correctOption = task.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => option != null && option.isCorrect,
+          orElse: () =>
+              task.runner.options.isEmpty ? null : task.runner.options.first,
+        );
+    _selectedOptionId = correctOption?.id;
+  }
+
+  void _applyDebugFirstWrongFeedbackSurface(Act0ShellStateV1 state) {
+    _resetDebugSurfaceChrome();
+    final world = state.worldById('world_1');
+    final lesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final task = _taskById(lesson, 'actions_check_drill');
+    _startTaskByIds(
+      world,
+      lesson.lessonId,
+      task.taskId,
+      allowDrillBypass: true,
+    );
+    _returnToPlayHubOnBack = false;
+    _placementHandoffActive = true;
+    _placementDiagnosticActive = false;
+    _phase = Act0LessonPhaseV1.review;
+    _teachingStepIndex = task.runner.teachingSteps.length;
+    final wrongOption = task.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) =>
+              option != null && option.quality == Act0FeedbackQualityV1.wrong,
+          orElse: () =>
+              task.runner.options.isEmpty ? null : task.runner.options.first,
+        );
+    _selectedOptionId = wrongOption?.id;
   }
 
   void _applyDebugReviewSurface(Act0ShellStateV1 state) {
@@ -1316,6 +2131,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final restoredSkillValues = parsed.profileSkillValues.isEmpty
         ? _deriveSkillValuesFromCompletedTasks(completedTaskIds)
         : parsed.profileSkillValues;
+    final restoredFirstValueCarry = _restorableFirstValueCarryV1(
+      parsed.firstValueReturnCarry,
+      state: state,
+    );
     setState(() {
       _completedTaskIds = completedTaskIds;
       _completedLessonIds = completedLessonIds;
@@ -1372,6 +2191,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               ),
         );
       _refreshRetentionMemoryStatusesV1();
+      _firstValueReceiptCarry = restoredFirstValueCarry;
+      _firstValueTodayShownTelemetryKey = '';
       _dismissedHomeHandoffKey = parsed.dismissedHomeHandoffKey;
       _dismissedHomeHandoffDay = parsed.dismissedHomeHandoffDay;
       // Daily deck resets on new day
@@ -1381,6 +2202,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _rapidPracticeLoop = false;
       }
     });
+  }
+
+  _Act0FirstValueReceiptCarryV1? _restorableFirstValueCarryV1(
+    _Act0FirstValueReceiptCarryV1? carry, {
+    required Act0ShellStateV1 state,
+  }) {
+    if (carry == null) {
+      return null;
+    }
+    if (carry.skillReceiptId.trim().isEmpty ||
+        carry.skillAtomId.trim().isEmpty ||
+        carry.sourceSignalId.trim().isEmpty ||
+        carry.sourceSignalLabel.trim().isEmpty ||
+        carry.nextRepId.trim().isEmpty ||
+        carry.sourceWorldId.trim().isEmpty ||
+        carry.sourceLessonId.trim().isEmpty ||
+        carry.sourceTaskId.trim().isEmpty) {
+      return null;
+    }
+    return _firstValueDailyRepTargetV1(carry, state: state) == null
+        ? null
+        : carry;
   }
 
   static String _todayDateString() {
@@ -1440,6 +2283,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       resumeSelectedOptionId: _selectedOptionId,
       dismissedHomeHandoffKey: _dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
+      firstValueReturnCarry: _firstValueReceiptCarry,
     );
     final generation = ++_progressPersistGeneration;
     unawaited(_writePersistedProgress(snapshot, generation));
@@ -1500,6 +2344,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlayHub = tab != Act0ShellTabV1.play;
       _returnToPlayHubOnBack = false;
       _mistakeRecords.clear();
+      _openRepairIntentBySourceTaskId.clear();
       _resolvedMistakeTaskIds.clear();
       _cleanTaskIds.clear();
       _lessonRunMistakeTaskIds.clear();
@@ -1879,21 +2724,42 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final worldTitle = act0LocalizedWorldTitleV1(context, world);
     final worldSubtitle = act0LocalizedWorldSubtitleV1(context, world);
     final valuePoints = <String>[
-      'Extra drills tied to the exact spots that broke before this world.',
-      'A calmer seven-day rhythm once $worldTitle opens.',
-      'Progress signals that show what this world is really adding to your game.',
+      'More table-clue reps after the free route proves useful.',
+      'Extra practice around $worldTitle when you are ready.',
+      'Deeper review of the same kinds of table reads.',
     ];
     unawaited(
       _openPremiumPreviewSheet(
         eyebrow: 'Premium preview',
         title: '$worldTitle gets deeper, not louder.',
         summary:
-            '$worldSubtitle Premium adds extra reps and follow-up around this world once the free route unlocks it naturally.',
+            '$worldSubtitle Premium stays optional and adds extra practice after this world opens naturally.',
         valuePoints: valuePoints,
         trustLine:
-            '${world.unlockLabel} The route still opens in order, so nothing important gets skipped.',
+            '${world.unlockLabel} The first useful hand stays free, and the route still opens in order.',
         footerLine:
-            'This is a preview, not a gate. Free progression still owns the main path.',
+            'This is a preview, not a gate. Stay on the free route until you want more practice.',
+      ),
+    );
+  }
+
+  void _openCompletedDailyPremiumPreviewSheet() {
+    unawaited(
+      _openPremiumPreviewSheet(
+        eyebrow: 'Premium preview',
+        title: 'Want more reps like this?',
+        summary:
+            'Premium adds more practice after the free foundation, without changing today\'s free route.',
+        valuePoints: const <String>[
+          'more table-clue practice after the free foundation.',
+          'Extra reps when one useful read feels worth sharpening.',
+          'deeper review of missed reads after you have proof it helps.',
+          'Longer route depth when you are ready.',
+        ],
+        trustLine:
+            'The free route stays open. Premium is optional extra practice for later.',
+        footerLine:
+            'No pressure. Keep using Sharky free until you want more depth.',
       ),
     );
   }
@@ -1905,6 +2771,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
     final profileState = _profileState(state.profile, progress);
+    if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
+        reviewState.mistakes.isNotEmpty &&
+        !_showPlacement &&
+        !_showWelcome) {
+      _emitRepairItemShownTelemetryV1(reviewState.mistakes.first);
+    }
     final reviewNavHasDot = reviewState.mistakes.isNotEmpty;
     final worlds = _progressWorlds(baseState);
     _normalizeSelection(worlds);
@@ -1961,6 +2833,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ),
           )
         : null;
+    final placementDiagnosticSignalId = _placementDiagnosticActive
+        ? _placementDiagnosticSpotsV1[_placementDiagnosticIndex].signalId
+        : null;
+    final activePlayRunner = playRunner != null && _placementDiagnosticActive
+        ? placementQuickCheckRunnerV1(
+            playRunner,
+            signalId: placementDiagnosticSignalId!,
+            checkIndex: _placementDiagnosticIndex + 1,
+            checkCount: _placementDiagnosticSpotsV1.length,
+            isRu: _isRuLocaleV1,
+          )
+        : playRunner;
+    final runnerFramingProfile = _runnerFramingProfileForTaskV1(
+      task: playSelectedTask,
+      runner: activePlayRunner,
+      placementDiagnosticActive: _placementDiagnosticActive,
+      placementSignalId: placementDiagnosticSignalId,
+    );
     final suppressTaskCompletionToast =
         isPlayRunner &&
         playSelectedTask != null &&
@@ -2006,7 +2896,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? playRunner.teachingSteps.last
         : null;
     final showTopBar =
-        _bootSurfaceReady && !_showPlacement && !_showWelcome && !isPlayRunner;
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null;
+    final firstValueTodayCarry =
+        _tab == Act0ShellTabV1.home &&
+            !_showPlacement &&
+            !_showWelcome &&
+            _bootSurfaceReady
+        ? _firstValueReceiptCarry
+        : null;
+    if (firstValueTodayCarry != null) {
+      _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
+    }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
     return Scaffold(
       key: const Key('act0_shell_preview_screen'),
@@ -2059,6 +2963,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _startPlacementRecommendation(
                               _progressWorlds(baseState),
                               fromZero: false,
+                              directRunner: true,
                             ),
                           );
                         });
@@ -2135,6 +3040,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                         dailyGoalValue: _dailyGoalValueLabel(),
                         dailyGoalCtaLabel: _homeDailyGoalCtaLabel(
+                          selectedWorld,
+                          _firstPlayableLesson(selectedWorld),
+                        ),
+                        dailyPlanTitle: _homeDailyPlanTitle(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
@@ -2401,6 +3310,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     .screenSubtitle,
                                 completionTitle: _practiceCompletionTitle,
                                 completionBody: _practiceCompletionBody,
+                                onOpenPremiumPreview:
+                                    _practiceCompletionTitle ==
+                                        _copyV1(
+                                          en: 'Session complete',
+                                          ru: 'Дневная серия закрыта',
+                                        )
+                                    ? _openCompletedDailyPremiumPreviewSheet
+                                    : null,
                                 onStartGroup: (group) => setState(() {
                                   _startPracticeGroup(group, selectedWorld);
                                 }),
@@ -2517,7 +3434,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                               )
                             : Act0LessonRunnerShellV1(
-                                runner: playRunner!,
+                                runner: activePlayRunner!,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,
                                 selectedTaskId: playSelectedTask?.taskId,
@@ -2525,8 +3442,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     playSelectedTask?.resolvedTaskFamily,
                                 telemetrySink: widget.telemetrySink,
                                 theoryRecallStep: theoryRecallStep,
+                                framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
+                                firstValueReceiptLine:
+                                    _placementHandoffActive &&
+                                        !_placementDiagnosticActive
+                                    ? _firstValueReceiptLineV1(playSelectedTask)
+                                    : null,
                                 relaxTheoryAdvanceLock: _completedTaskIds
                                     .contains(playSelectedTask!.taskId),
                                 showLearningRailFocusLabels:
@@ -2574,18 +3497,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.drill;
                                     _teachingStepIndex =
-                                        playRunner.teachingSteps.length;
+                                        activePlayRunner.teachingSteps.length;
                                     return;
                                   }
                                   if (_phase == Act0LessonPhaseV1.drill &&
-                                      playRunner.teachingSteps.isNotEmpty) {
+                                      activePlayRunner
+                                          .teachingSteps
+                                          .isNotEmpty) {
                                     _selectedOptionId = null;
                                     _teachingStepIndex =
-                                        playRunner.teachingSteps.length - 1;
+                                        activePlayRunner.teachingSteps.length -
+                                        1;
                                   }
                                 }),
                                 onContinueTheory: () => setState(() {
-                                  if (_advanceTeachingStep(playRunner)) {
+                                  if (_advanceTeachingStep(playRunner!)) {
                                     return;
                                   }
                                   _completeCurrentTask(playSelectedTask);
@@ -2608,6 +3534,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                                 onChooseOption: (option) => setState(() {
                                   _fireAnswerEffects(option);
+                                  _captureFirstValueReceiptCarryV1(
+                                    runner: activePlayRunner,
+                                    sourceWorldId: selectedWorld.worldId,
+                                    sourceLessonId: selectedLesson.lessonId,
+                                    task: playSelectedTask,
+                                    option: option,
+                                  );
                                   if (!_placementDiagnosticActive) {
                                     _recordAnswer(
                                       selectedLesson,
@@ -2633,9 +3566,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   );
                                 }),
                                 onChooseSeat: (seatId) => setState(() {
-                                  for (final option in playRunner.options) {
+                                  for (final option
+                                      in activePlayRunner.options) {
                                     if (option.seatId == seatId) {
                                       _fireAnswerEffects(option);
+                                      _captureFirstValueReceiptCarryV1(
+                                        runner: activePlayRunner,
+                                        sourceWorldId: selectedWorld.worldId,
+                                        sourceLessonId: selectedLesson.lessonId,
+                                        task: playSelectedTask,
+                                        option: option,
+                                      );
                                       if (!_placementDiagnosticActive) {
                                         _recordAnswer(
                                           selectedLesson,
@@ -2657,7 +3598,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_placementDiagnosticActive) {
                                     final spot = _placementDiagnosticSpotsV1
                                         .elementAt(_placementDiagnosticIndex);
-                                    if (playRunner.selectedOption?.isCorrect ??
+                                    if (activePlayRunner
+                                            .selectedOption
+                                            ?.isCorrect ??
                                         false) {
                                       _placementDiagnosticCorrect += 1;
                                       _placementDiagnosticScore += 1;
@@ -2689,14 +3632,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_activeRepairTaskId ==
                                       playSelectedTask.taskId) {
                                     final repaired =
-                                        playRunner.selectedOption?.isCorrect ??
+                                        playRunner!.selectedOption?.isCorrect ??
                                         false;
+                                    final repairSourceTaskId =
+                                        _activeRepairSourceTaskId ??
+                                        playSelectedTask.taskId;
+                                    final repairSourceRecord =
+                                        _mistakeRecords[repairSourceTaskId];
                                     _emitRepairCompletedTelemetryV1(
-                                      sourceTaskId:
-                                          _activeRepairSourceTaskId ??
-                                          playSelectedTask.taskId,
+                                      sourceTaskId: repairSourceTaskId,
                                       repairTaskId: playSelectedTask.taskId,
                                       repaired: repaired,
+                                    );
+                                    _emitRepairItemCompletedTelemetryV1(
+                                      sourceTaskId: repairSourceTaskId,
+                                      targetTaskId: playSelectedTask.taskId,
+                                      repaired: repaired,
+                                      record: repairSourceRecord,
                                     );
                                     if (repaired) {
                                       _completeCurrentTask(playSelectedTask);
@@ -2768,22 +3720,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
+                                    final singleCleanRep =
+                                        playRunner!.selectedOption?.isCorrect ??
+                                        false;
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
                                       completedRepCount: 1,
-                                      cleanRepCount:
-                                          playRunner
-                                                  .selectedOption
-                                                  ?.isCorrect ??
-                                              false
-                                          ? 1
-                                          : 0,
-                                      resultSummary:
-                                          playRunner
-                                                  .selectedOption
-                                                  ?.isCorrect ??
-                                              false
+                                      cleanRepCount: singleCleanRep ? 1 : 0,
+                                      resultSummary: singleCleanRep
                                           ? 'single_clean_rep_complete'
                                           : 'single_rep_complete',
                                     );
@@ -2792,7 +3737,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_activeLessonWrapUpTaskId ==
                                       playSelectedTask.taskId) {
                                     final wrappedCorrect =
-                                        playRunner.selectedOption?.isCorrect ??
+                                        playRunner!.selectedOption?.isCorrect ??
                                         false;
                                     if (wrappedCorrect) {
                                       _completeCurrentTask(playSelectedTask);
@@ -2825,14 +3770,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                   if (_shouldRetryInsideLesson(
                                     playSelectedTask,
-                                    playRunner,
+                                    playRunner!,
                                   )) {
+                                    _placementHandoffActive = false;
                                     _startInsideLessonRetry(
                                       playSelectedTask,
                                       playRunner,
                                     );
                                     return;
                                   }
+                                  _placementHandoffActive = false;
                                   _completeCurrentTask(playSelectedTask);
                                   if (_maybeStartLessonWrapUpRetry(
                                     selectedLesson,
@@ -2973,9 +3920,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonCardV1 selectedLesson,
   }) {
     final currentTask = _firstIncompleteTask(selectedLesson);
+    final openMistake = _topOpenMistake();
     final quickFix = _quickFixMistakes().isEmpty
         ? null
         : _quickFixMistakes().first;
+    final repairCandidate = openMistake ?? quickFix;
+    final hasOpenRepair = openMistake != null;
     final recommendation = _learningRecommendation(
       selectedWorld: world,
       selectedLesson: selectedLesson,
@@ -3015,30 +3965,36 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       Act0PracticeGroupV1(
         groupId: 'weak_spots',
         title:
-            quickFix?.title ??
+            repairCandidate?.title ??
             _copyV1(
               en: 'Review one quick fix',
               ru: 'Сделай один лёгкий повтор',
             ),
-        subtitle: quickFix == null
+        subtitle: repairCandidate == null
             ? _copyV1(
                 en: 'Quick fixes unlock after you repair one spot in Review.',
                 ru: 'Лёгкие повторы откроются после одного разбора во вкладке Разбор.',
               )
+            : hasOpenRepair
+            ? recommendation.subtitle
             : 'One light review keeps this quick fix stable.',
-        ctaLabel: quickFix != null
-            ? _recommendationCtaLabel(
-                _Act0LearningNextActionKindV1.reviewQuickFix,
-              )
+        ctaLabel: repairCandidate != null
+            ? hasOpenRepair
+                  ? recommendation.ctaLabel
+                  : _recommendationCtaLabel(
+                      _Act0LearningNextActionKindV1.reviewQuickFix,
+                    )
             : 'Review',
         categoryLabel: 'Repair',
-        isEnabled: quickFix != null,
-        targetLessonId: quickFix?.lessonId,
-        targetTaskId: quickFix?.taskId,
-        countLabel: quickFix == null
+        isEnabled: repairCandidate != null,
+        targetLessonId: repairCandidate?.lessonId,
+        targetTaskId: repairCandidate?.taskId,
+        countLabel: repairCandidate == null
             ? ''
+            : hasOpenRepair
+            ? '${_openMistakes().length} open'
             : '${_quickFixMistakes().length} ready',
-        sessionLabel: 'Quick fix',
+        sessionLabel: hasOpenRepair ? 'Repair' : 'Quick fix',
         durationLabel: '~4 min',
         isRecommended: recommendation.practiceGroupId == 'weak_spots',
         skipTeaching: true,
@@ -3050,7 +4006,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         title: dailyDeckEntry == null
             ? _copyV1(en: 'Daily practice', ru: 'Дневная практика')
             : _dailyCompletedRepCount >= 3
-            ? _copyV1(en: 'Daily set complete', ru: 'Дневная серия закрыта')
+            ? _copyV1(
+                en: 'Daily table trainer complete',
+                ru: 'Дневная серия закрыта',
+              )
             : _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
         subtitle: dailyDeckEntry == null
             ? _copyV1(
@@ -3058,7 +4017,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
-            ? 'Nice. Keep going or repair weak spots next.'
+            ? 'Table read improved. Come back tomorrow for the next useful hand, or practice extra reps.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
             : 'Finish three short spots for today.',
@@ -3164,6 +4123,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final topMistake = _topOpenMistake();
     if (topMistake != null) {
       final isDeep = topMistake.severityLabel == 'Deep leak';
+      final repairIntentTarget = _openRepairIntentTargetForSourceTaskV1(
+        topMistake.taskId,
+      );
       return _Act0LearningRecommendationV1(
         kind: isDeep
             ? _Act0LearningNextActionKindV1.repairDeepLeak
@@ -3205,8 +4167,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'После разбора вернись к ${_playDrillTitleForLesson(topMistake.lessonId)}.',
               ),
         mistake: topMistake,
-        lessonId: topMistake.lessonId,
-        taskId: topMistake.taskId,
+        lessonId: repairIntentTarget?.target.lessonId ?? topMistake.lessonId,
+        taskId: repairIntentTarget?.target.taskId ?? topMistake.taskId,
         practiceGroupId: 'weak_spots',
       );
     }
@@ -3258,11 +4220,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : _copyV1(en: 'Tomorrow is set', ru: 'Завтрашний старт готов'),
         subtitle: streakSaved
             ? _copyV1(
-                en: 'You earned tomorrow by repairing first and then closing the daily set.',
+                en: 'You repaired the miss, then finished the short table-clue set.',
                 ru: 'Сегодня ты сначала разобрал ошибки, а потом закрыл дневной набор. Завтра будет проще продолжить.',
               )
             : _copyV1(
-                en: 'Today is banked. One short return tomorrow keeps the rhythm warm.',
+                en: 'Today\'s table clue is complete. Come back for the next useful hand.',
                 ru: 'Сегодняшний день закрыт. Короткий заход завтра поможет не выпадать из ритма.',
               ),
         ctaLabel: _recommendationCtaLabel(
@@ -3271,11 +4233,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         hint: '',
         outcome: streakSaved
             ? _copyV1(
-                en: 'Seat held. One clean daily tomorrow extends it.',
+                en: 'Repair banked. One useful hand tomorrow keeps the clue warm.',
                 ru: 'Завтра будет проще продолжить. Один чистый дневной набор продлит этот ритм.',
               )
             : _copyV1(
-                en: 'Tomorrow starts ready. One clean daily keeps the loop warm.',
+                en: 'Next time, Sharky will keep the next useful hand ready.',
                 ru: 'Завтра можно сразу продолжать. Один чистый дневной набор удержит ритм.',
               ),
         lessonId: selectedLesson.lessonId,
@@ -3351,15 +4313,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         label: streakSaved ? 'Streak saved' : 'Done for today',
         title: streakSaved ? 'Seat held for tomorrow' : 'Tomorrow is set',
         subtitle: streakSaved
-            ? 'You earned tomorrow by repairing first and then closing the daily set.'
-            : 'Today is banked. One short return tomorrow keeps the rhythm warm.',
+            ? 'You repaired the miss, then finished the short table-clue set.'
+            : 'Today\'s table clue is complete. Come back for the next useful hand.',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDone,
         ),
         hint: '',
         outcome: streakSaved
-            ? 'Seat held. One clean daily tomorrow extends it.'
-            : 'Tomorrow starts ready. One clean daily keeps the loop warm.',
+            ? 'Repair banked. One useful hand tomorrow keeps the clue warm.'
+            : 'Next time, Sharky will keep the next useful hand ready.',
         lessonId: selectedLesson.lessonId,
         taskId: null,
         practiceGroupId: 'daily',
@@ -3443,7 +4405,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Начать дневную серию',
       ),
       _Act0LearningNextActionKindV1.dailyDone => _copyV1(
-        en: 'View progress',
+        en: 'Practice extra reps',
         ru: 'Смотреть прогресс',
       ),
       _Act0LearningNextActionKindV1.categoryPractice => _copyV1(
@@ -3539,6 +4501,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0WorldCardV1 selectedWorld,
     required Act0LessonCardV1 selectedLesson,
   }) {
+    final firstValueCarry = _firstValueReceiptCarry;
+    if (firstValueCarry != null) {
+      return _Act0LearningRecommendationV1(
+        kind: _Act0LearningNextActionKindV1.continueLesson,
+        label: firstValueCarry.isRepair
+            ? _copyV1(en: 'Repair', ru: 'Разбор')
+            : _copyV1(en: 'Next', ru: 'Дальше'),
+        title: firstValueCarry.homeTitle,
+        subtitle: firstValueCarry.homeSubtitle,
+        ctaLabel: _copyV1(en: 'Continue', ru: 'Продолжить'),
+        hint: firstValueCarry.homeSubtitle,
+        outcome: firstValueCarry.homeSubtitle,
+        lessonId: selectedLesson.lessonId,
+        taskId: _firstIncompleteTask(selectedLesson).taskId,
+        practiceGroupId: 'continue',
+      );
+    }
     final currentTask = _firstIncompleteTask(selectedLesson);
     final nextLesson = _nextLesson(
       selectedWorld.lessons,
@@ -3627,10 +4606,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _showHomeChecklistV1() {
-    return _completedTaskIds.isNotEmpty ||
+    return _firstValueReceiptCarry != null ||
+        _completedTaskIds.isNotEmpty ||
         _dailyCompletedRepCount > 0 ||
         _openMistakes().isNotEmpty ||
         _retentionMemoryByTaskId.isNotEmpty;
+  }
+
+  String? _homeDailyPlanTitle(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 currentLesson,
+  ) {
+    final carry = _firstValueReceiptCarry;
+    if (carry != null) {
+      return carry.focusTitle;
+    }
+    return null;
   }
 
   String _homeDailyGoalCtaLabel(
@@ -3760,13 +4751,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         hasRepairJob || agedRecheck != null || ownedCandidate != null;
     if (hasPlanMix) {
       final continueLabel = _dailyCompletedRepCount >= 3
-          ? _copyV1(en: 'Continue if you want', ru: 'Продолжай, если хочешь')
+          ? _copyV1(en: 'Next useful hand ready', ru: 'Продолжай, если хочешь')
           : (_cleanTaskIds.isEmpty && _completedTaskIds.isEmpty
                 ? _copyV1(en: 'New hand', ru: 'Новая раздача')
                 : _copyV1(en: 'Continue route', ru: 'Продолжить маршрут'));
       final continueDetail = _dailyCompletedRepCount >= 3
           ? _copyV1(
-              en: 'Today is already banked. One fresh route spot is still open if you want it.',
+              en: 'Session complete. Come back tomorrow or take one fresh route spot.',
               ru: 'Сегодняшний ритм уже засчитан. Но один новый спот всё ещё открыт, если хочешь.',
             )
           : _copyV1(
@@ -4028,12 +5019,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily done after successful repair — celebrate saved streak effort
     if (_streakSaveEarned()) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Seat held. You earned tomorrow by fixing leaks today.',
+        preSessionLine:
+            'Repair banked. This table clue is warmer for tomorrow.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
         summaryLine:
-            'Seat held by effort today. Repeat one clean set tomorrow.',
+            'Repair banked today. One useful hand tomorrow keeps the clue warm.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
       );
     }
@@ -4041,12 +5033,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily goal complete — highest priority
     if (_dailyCompletedRepCount >= 3) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Good work. This seat stays warm for tomorrow.',
+        preSessionLine: 'Good work. This table clue is warmer now.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
-        summaryLine:
-            'Tomorrow is ready. One more clean day strengthens the habit.',
+        summaryLine: 'Next time, Sharky will keep the next useful hand ready.',
         preSessionMood: Act0SharkyMoodV1.celebrate,
       );
     }
@@ -4117,6 +5108,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _startHomeNextAction(Act0WorldCardV1 selectedWorld) {
+    final firstValueCarry = _firstValueReceiptCarry;
+    if (firstValueCarry != null &&
+        _startFirstValueDailyRepLaunchV1(firstValueCarry)) {
+      return;
+    }
     _placementHandoffActive = false;
     final lesson = _lessonById(selectedWorld.lessons, _selectedLessonId);
     _startRecommendation(
@@ -4126,6 +5122,255 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ),
       selectedWorld,
       returnToPlayHub: false,
+    );
+  }
+
+  bool _startFirstValueDailyRepLaunchV1(_Act0FirstValueReceiptCarryV1 carry) {
+    final target = _firstValueDailyRepTargetV1(carry);
+    if (target == null) {
+      return false;
+    }
+    final launchWorld = _worldById(
+      _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+      target.worldId,
+    );
+    final launchLesson = _lessonById(launchWorld.lessons, target.lessonId);
+    final launchTask = _taskById(launchLesson, target.taskId);
+    if (launchTask.phase != Act0LessonPhaseV1.drill) {
+      return false;
+    }
+    _emitFirstValueTodayConsumedTelemetryV1(carry);
+    _emitFirstValueDailyRepLaunchedTelemetryV1(carry: carry, target: target);
+    _firstValueReceiptCarry = null;
+    _firstValueTodayShownTelemetryKey = '';
+    _placementHandoffActive = false;
+    _startTaskByIds(
+      launchWorld,
+      launchLesson.lessonId,
+      launchTask.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      rapidPracticeLoop: false,
+    );
+    _returnToPlayHubOnBack = false;
+    _activePracticeGroupId = carry.isRepair ? 'weak_spots' : 'daily';
+    if (carry.isRepair) {
+      _activeRepairTaskId = launchTask.taskId;
+      _activeRepairSourceTaskId = carry.sourceTaskId;
+    }
+    _persistProgress();
+    return true;
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _firstValueDailyRepTargetV1(
+    _Act0FirstValueReceiptCarryV1 carry, {
+    Act0ShellStateV1? state,
+  }) {
+    if (!carry.nextRepId.startsWith('repeat_')) {
+      return null;
+    }
+    final worlds = _progressedWorlds(
+      state ?? widget.state ?? Act0ShellStateV1.sample,
+    );
+    final mappedTarget = _firstValueMappedDailyRepTargetV1(carry, worlds);
+    if (mappedTarget != null) {
+      return mappedTarget;
+    }
+    return _firstValueReplayDailyRepTargetV1(carry, worlds);
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _firstValueMappedDailyRepTargetV1(
+    _Act0FirstValueReceiptCarryV1 carry,
+    List<Act0WorldCardV1> worlds,
+  ) {
+    final mapping = act0FirstValueSameSignalRepMappingV1(
+      nextRepId: carry.nextRepId,
+      skillAtomId: carry.skillAtomId,
+      sourceSignalId: carry.sourceSignalId,
+      sourceTaskId: carry.sourceTaskId,
+      receiptOutcome: carry.outcomeId,
+    );
+    if (mapping == null) {
+      return null;
+    }
+    return _sameSignalRepTargetIfLaunchableV1(
+      worlds,
+      worldId: mapping.worldId,
+      lessonId: mapping.lessonId,
+      taskId: mapping.taskId,
+      sourceTaskId: carry.sourceTaskId,
+      mappingType: mapping.mappingType,
+    );
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _firstValueReplayDailyRepTargetV1(
+    _Act0FirstValueReceiptCarryV1 carry,
+    List<Act0WorldCardV1> worlds,
+  ) {
+    final worldId = carry.sourceWorldId.trim();
+    final lessonId = carry.sourceLessonId.trim();
+    final taskId = carry.sourceTaskId.trim();
+    if (worldId.isEmpty || lessonId.isEmpty || taskId.isEmpty) {
+      return null;
+    }
+    return _sameSignalRepTargetIfLaunchableV1(
+      worlds,
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+      sourceTaskId: '',
+      mappingType: 'replay',
+    );
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _sameSignalRepTargetIfLaunchableV1(
+    List<Act0WorldCardV1> worlds, {
+    required String worldId,
+    required String lessonId,
+    required String taskId,
+    required String sourceTaskId,
+    required String mappingType,
+  }) {
+    final targetWorldId = worldId.trim();
+    final targetLessonId = lessonId.trim();
+    final targetTaskId = taskId.trim();
+    if (targetWorldId.isEmpty ||
+        targetLessonId.isEmpty ||
+        targetTaskId.isEmpty ||
+        targetTaskId == sourceTaskId.trim()) {
+      return null;
+    }
+    final world = worlds.cast<Act0WorldCardV1?>().firstWhere(
+      (candidate) => candidate?.worldId == targetWorldId,
+      orElse: () => null,
+    );
+    if (world == null) {
+      return null;
+    }
+    final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
+      (candidate) => candidate?.lessonId == targetLessonId,
+      orElse: () => null,
+    );
+    if (lesson == null) {
+      return null;
+    }
+    final task = lesson.taskList.cast<Act0LessonTaskV1?>().firstWhere(
+      (candidate) => candidate?.taskId == targetTaskId,
+      orElse: () => null,
+    );
+    if (task == null || task.phase != Act0LessonPhaseV1.drill) {
+      return null;
+    }
+    return _Act0FirstValueDailyRepTargetV1(
+      worldId: world.worldId,
+      lessonId: lesson.lessonId,
+      taskId: task.taskId,
+      mappingType: mappingType,
+    );
+  }
+
+  _Act0OpenRepairIntentTargetV1? _topOpenRepairIntentTargetV1({
+    Act0ShellStateV1? state,
+  }) {
+    for (final mistake in _openMistakes()) {
+      final target = _openRepairIntentTargetForSourceTaskV1(
+        mistake.taskId,
+        state: state,
+      );
+      if (target != null) {
+        return target;
+      }
+    }
+    return null;
+  }
+
+  _Act0OpenRepairIntentTargetV1? _openRepairIntentTargetForSourceTaskV1(
+    String sourceTaskId, {
+    Act0ShellStateV1? state,
+  }) {
+    final normalizedSourceTaskId = sourceTaskId.trim();
+    if (normalizedSourceTaskId.isEmpty ||
+        _resolvedMistakeTaskIds.contains(normalizedSourceTaskId) ||
+        !_mistakeRecords.containsKey(normalizedSourceTaskId)) {
+      return null;
+    }
+    final intent = _openRepairIntentBySourceTaskId[normalizedSourceTaskId];
+    if (intent == null) {
+      return null;
+    }
+    final worlds = _progressedWorlds(
+      state ?? widget.state ?? Act0ShellStateV1.sample,
+    );
+    final mappedTarget = _repairIntentTargetByIdsIfLaunchableV1(
+      worlds,
+      worldId: intent.targetWorldId,
+      lessonId: intent.targetLessonId,
+      taskId: intent.targetTaskId,
+      mappingType: intent.mappingType,
+      allowSourceTask: false,
+      sourceTaskId: normalizedSourceTaskId,
+    );
+    final target =
+        mappedTarget ??
+        _repairIntentTargetByIdsIfLaunchableV1(
+          worlds,
+          worldId: intent.sourceWorldId,
+          lessonId: intent.sourceLessonId,
+          taskId: intent.sourceTaskId,
+          mappingType: 'exact',
+          allowSourceTask: true,
+          sourceTaskId: normalizedSourceTaskId,
+        );
+    if (target == null) {
+      return null;
+    }
+    return _Act0OpenRepairIntentTargetV1(intent: intent, target: target);
+  }
+
+  _Act0FirstValueDailyRepTargetV1? _repairIntentTargetByIdsIfLaunchableV1(
+    List<Act0WorldCardV1> worlds, {
+    required String worldId,
+    required String lessonId,
+    required String taskId,
+    required String mappingType,
+    required bool allowSourceTask,
+    required String sourceTaskId,
+  }) {
+    final targetWorldId = worldId.trim();
+    final targetLessonId = lessonId.trim();
+    final targetTaskId = taskId.trim();
+    if (targetWorldId.isEmpty ||
+        targetLessonId.isEmpty ||
+        targetTaskId.isEmpty ||
+        (!allowSourceTask && targetTaskId == sourceTaskId.trim())) {
+      return null;
+    }
+    final world = worlds.cast<Act0WorldCardV1?>().firstWhere(
+      (candidate) => candidate?.worldId == targetWorldId,
+      orElse: () => null,
+    );
+    if (world == null) {
+      return null;
+    }
+    final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
+      (candidate) => candidate?.lessonId == targetLessonId,
+      orElse: () => null,
+    );
+    if (lesson == null) {
+      return null;
+    }
+    final task = lesson.taskList.cast<Act0LessonTaskV1?>().firstWhere(
+      (candidate) => candidate?.taskId == targetTaskId,
+      orElse: () => null,
+    );
+    if (task == null || task.phase != Act0LessonPhaseV1.drill) {
+      return null;
+    }
+    return _Act0FirstValueDailyRepTargetV1(
+      worldId: world.worldId,
+      lessonId: lesson.lessonId,
+      taskId: task.taskId,
+      mappingType: mappingType,
     );
   }
 
@@ -4506,16 +5751,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final isRetentionReplay =
         retentionStatus == _Act0RetentionMemoryStatusV1.agedRecheck ||
         retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
-    final repairTaskId = isRetentionReplay
-        ? sourceTaskId
-        : (_repairVariantTaskIdForSourceV1(sourceTaskId) ?? sourceTaskId);
+    final repairIntentTarget = isRetentionReplay
+        ? null
+        : _repairIntentTargetForSourceV1(
+            selectedWorld: selectedWorld,
+            sourceTaskId: sourceTaskId,
+          );
+    final repairTarget = isRetentionReplay
+        ? _Act0RepairTargetV1(lessonId: mistake.lessonId, taskId: sourceTaskId)
+        : (repairIntentTarget ??
+              _repairVariantTargetForSourceV1(
+                sourceTaskId,
+                sourceLessonId: mistake.lessonId,
+              ) ??
+              _Act0RepairTargetV1(
+                lessonId: mistake.lessonId,
+                taskId: sourceTaskId,
+              ));
+    final repairTaskId = repairTarget.taskId;
+    final mappingType = isRetentionReplay
+        ? 'replay'
+        : (repairTaskId == sourceTaskId &&
+              repairTarget.lessonId == mistake.lessonId)
+        ? 'exact'
+        : 'mapped';
     final launchWorld = mistake.worldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
             _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
             mistake.worldId,
           );
-    final launchLesson = _lessonById(launchWorld.lessons, mistake.lessonId);
+    final launchLesson = _lessonById(
+      launchWorld.lessons,
+      repairTarget.lessonId,
+    );
     final launchTask = _taskById(launchLesson, repairTaskId);
     if (!isRetentionReplay) {
       _mistakeRecords.putIfAbsent(
@@ -4538,16 +5807,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _startTaskByIds(
       launchWorld,
-      mistake.lessonId,
+      repairTarget.lessonId,
       repairTaskId,
       skipTeaching: skipTeaching,
       allowDrillBypass:
-          allowDrillBypass || launchTask.phase == Act0LessonPhaseV1.drill,
+          allowDrillBypass ||
+          mappingType == 'mapped' ||
+          launchTask.phase == Act0LessonPhaseV1.drill,
       rapidPracticeLoop: rapidPracticeLoop,
     );
     _emitRepairStartedTelemetryV1(
       sourceTaskId: sourceTaskId,
       repairTaskId: repairTaskId,
+    );
+    _emitRepairItemStartedTelemetryV1(
+      mistake: mistake,
+      targetTaskId: repairTaskId,
+      mappingType: mappingType,
     );
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
@@ -4556,6 +5832,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _rapidPracticeLoop = rapidPracticeLoop;
     _practiceCompletionTitle = null;
     _practiceCompletionBody = null;
+  }
+
+  _Act0RepairTargetV1? _repairIntentTargetForSourceV1({
+    required Act0WorldCardV1 selectedWorld,
+    required String sourceTaskId,
+  }) {
+    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    if (target == null || target.target.worldId != selectedWorld.worldId) {
+      return null;
+    }
+    return _Act0RepairTargetV1(
+      lessonId: target.target.lessonId,
+      taskId: target.target.taskId,
+    );
   }
 
   void _startRecommendation(
@@ -4641,7 +5931,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedOptionId = null;
     // Placement diagnostic is assessment-only. Skip lesson teaching copy here;
     // the same task still teaches normally when launched from the learning path.
-    _teachingStepIndex = task.runner.teachingSteps.length;
+    _teachingStepIndex = 0;
     _resetLessonRunMetrics();
   }
 
@@ -4661,9 +5951,49 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     await ProgressService.setPlacementScoreV1(_placementDiagnosticScore);
   }
 
+  String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
+    return 'First read logged. Next: use it once more.';
+  }
+
+  void _captureFirstValueReceiptCarryV1({
+    required Act0RunnerStateV1 runner,
+    required String sourceWorldId,
+    required String sourceLessonId,
+    required Act0LessonTaskV1 task,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (!_placementHandoffActive || _placementDiagnosticActive) {
+      return;
+    }
+    final receipt = act0FirstValueSkillReceiptForRunnerV1(
+      runner: runner,
+      option: option,
+      taskFamily: task.resolvedTaskFamily,
+    );
+    if (receipt == null) {
+      return;
+    }
+    _firstValueReceiptCarry = _Act0FirstValueReceiptCarryV1(
+      skillReceiptId: receipt.receiptId,
+      skillAtomId: receipt.skillAtomId,
+      skillLabel: receipt.skillLabel,
+      sourceSignalId: receipt.sourceSignalId,
+      sourceSignalLabel: receipt.sourceSignalLabel,
+      outcomeId: receipt.outcomeId,
+      nextRepId: receipt.nextRepId,
+      nextRepLabel: receipt.nextRepLabel,
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
+      sourceTaskId: task.taskId,
+    );
+    _firstValueTodayShownTelemetryKey = '';
+    _persistProgress();
+  }
+
   Future<void> _startPlacementRecommendation(
     List<Act0WorldCardV1> worlds, {
     required bool fromZero,
+    bool directRunner = false,
   }) async {
     final world = _worldById(worlds, 'world_1');
     final result = _placementResult;
@@ -4694,27 +6024,38 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTaskId: recommendedTask.taskId,
       );
       _skippedTaskIds.addAll(skipPlan.taskIds);
-      _visibleSkippedTaskIds.removeAll(skipPlan.taskIds);
-      unawaited(_animatePlacementSkipReveal(skipPlan.orderedTaskIds));
+      if (directRunner) {
+        _visibleSkippedTaskIds.addAll(skipPlan.taskIds);
+      } else {
+        _visibleSkippedTaskIds.removeAll(skipPlan.taskIds);
+        unawaited(_animatePlacementSkipReveal(skipPlan.orderedTaskIds));
+      }
     }
     _selectedWorldId = world.worldId;
-    _selectedLessonId = guideLesson.lessonId;
-    _selectedTaskId = guideTask.taskId;
+    _selectedLessonId = directRunner
+        ? recommendedLesson.lessonId
+        : guideLesson.lessonId;
+    _selectedTaskId = directRunner ? recommendedTask.taskId : guideTask.taskId;
     _showPlacement = false;
-    _showWelcome = !_welcomeCompletedV1;
+    _showWelcome = directRunner ? false : !_welcomeCompletedV1;
     _placementDiagnosticActive = false;
     _placementIntroVisible = false;
     _placementHandoffActive = true;
-    _tab = Act0ShellTabV1.home;
-    _showPlayHub = true;
+    _tab = directRunner ? Act0ShellTabV1.play : Act0ShellTabV1.home;
+    _showPlayHub = !directRunner;
     _returnToPlayHubOnBack = false;
     _showWorldMenu = false;
     _learnDetailWorldId = null;
     _learnDetailLessonId = null;
     _learnPopupTaskId = null;
-    _phase = guideTask.phase;
+    _firstValueReceiptCarry = null;
+    _firstValueTodayShownTelemetryKey = '';
+    _phase = directRunner ? recommendedTask.phase : guideTask.phase;
     _selectedOptionId = null;
-    _teachingStepIndex = 0;
+    _teachingStepIndex =
+        directRunner && recommendedTask.phase == Act0LessonPhaseV1.drill
+        ? recommendedTask.runner.teachingSteps.length
+        : 0;
     _resetLessonRunMetrics();
     _persistProgress();
     await _persistPlacementCompletionV1(result ?? _buildPlacementResult());
@@ -4882,11 +6223,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         .length;
     final foundationPerfect = foundationCorrect == foundationTotal;
     final diagnosticMostlyClean =
-        foundationMisses <= 1 && _placementDiagnosticCorrect >= 3;
+        foundationMisses <= 1 && _placementDiagnosticCorrect >= 2;
 
     if (foundationPerfect &&
         advancedCorrect >= 1 &&
-        _placementDiagnosticCorrect >= 4) {
+        _placementDiagnosticCorrect >= diagnosticTotal) {
       return Act0PlacementResultV1(
         level: Act0PlacementResultLevelV1.readyForBasics,
         levelLabel: 'Ready for action basics',
@@ -4932,14 +6273,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTitle: 'Fold, check, call, raise',
         recommendedReason:
             'The live check stayed clean, so we can begin with action words instead of resetting the table.',
-        routeTrustLine:
-            'Sharky still keeps the start close to the basics, so no core link goes missing.',
+        routeTrustLine: "We'll keep the next step beginner-safe.",
         premiumPitch:
-            'Premium can turn your diagnostic into daily weak-spot drills, review queues, and progress insights.',
+            'Premium is optional later: more table-clue practice after the free foundation.',
         trialValuePoints: <String>[
-          'Daily action reps from your misses',
-          'Personal review queue after every block',
-          'Progress insights by category',
+          'Extra action reps after the first hand',
+          'More table-clue practice when you are ready',
+          'Deeper review of the same reads',
         ],
       );
     }
@@ -4989,14 +6329,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTitle: 'Your first hand, dealt',
         recommendedReason:
             'The live check says we should steady the hand before we speed you up.',
-        routeTrustLine:
-            'You skip the full reset, but Sharky still keeps the start close to the foundations.',
+        routeTrustLine: "We'll keep the hand flow visible before adding speed.",
         premiumPitch:
-            'Premium can keep your review focused on the spots you miss instead of repeating everything.',
+            'Premium is optional later: more practice with the table clues you have already seen.',
         trialValuePoints: <String>[
-          'Guided street-order practice',
-          'Repair drills for missed table cues',
-          'A seven-day plan after placement',
+          'Extra street-order practice after the free route',
+          'More table-clue reps when you are ready',
+          'Deeper review of the same missed reads',
         ],
       );
     }
@@ -5034,13 +6373,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recommendedReason:
           'The live check says the route should teach the Sharky loop first, then move into the poker foundations.',
       routeTrustLine:
-          'Every fresh start still opens with the same short guide, so no core route truth goes missing.',
+          "We'll start with the table first, so the first hand stays clear.",
       premiumPitch:
-          'Premium can add personal repair drills and a seven-day guided plan after this foundation.',
+          'Premium is optional later: more table-clue practice after this foundation.',
       trialValuePoints: <String>[
-        'Step-by-step beginner path',
-        'Extra repairs when a concept misses',
-        'Simple progress insights',
+        'Step-by-step practice after the first hand',
+        'Extra table-clue reps when you are ready',
+        'Deeper review of the same foundation reads',
       ],
     );
   }
@@ -5559,6 +6898,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           _lessonRunDeepLeakTaskIds.remove(repairSourceTaskId);
         }
       }
+      _clearMatchedOpenRepairIntentV1(
+        sourceTaskId: repairSourceTaskId,
+        completedTaskId: selectedTask.taskId,
+      );
       _refreshRetentionMemoryStatusesV1();
       return;
     }
@@ -5596,6 +6939,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _repairActionLabel(selectedTask),
       attempts: (previous?.attempts ?? 0) + 1,
     );
+    _storeOpenRepairIntentForMissV1(
+      sourceWorldId: repairSourceWorldId,
+      sourceLessonId: repairSourceLessonId,
+      sourceTaskId: repairSourceTaskId,
+      runner: selectedTask.runner,
+      option: option,
+    );
+    if (_activeRepairTaskId == selectedTask.taskId &&
+        _activeRepairSourceTaskId != null) {
+      final retainedTarget = _openRepairIntentTargetForSourceTaskV1(
+        repairSourceTaskId,
+      );
+      if (retainedTarget != null) {
+        final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+          sourceTaskId: repairSourceTaskId,
+          target: retainedTarget,
+          practiceGroupId: _activePracticeGroupId,
+        );
+        _recordRepairIntentAuditTransitionV1(
+          'failed_repair_retained',
+          receipt: receipt,
+        );
+      }
+    }
     _retentionMemoryByTaskId[repairSourceTaskId] = _updatedRetentionEntryV1(
       taskId: repairSourceTaskId,
       lessonId: repairSourceLessonId,
@@ -5603,6 +6970,63 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       status: _Act0RetentionMemoryStatusV1.openRepair,
     );
     _refreshRetentionMemoryStatusesV1();
+  }
+
+  void _storeOpenRepairIntentForMissV1({
+    required String sourceWorldId,
+    required String sourceLessonId,
+    required String sourceTaskId,
+    required Act0RunnerStateV1 runner,
+    required Act0RunnerOptionV1 option,
+  }) {
+    final intent = buildAct0RepairIntentV1(
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
+      sourceTaskId: sourceTaskId,
+      runner: runner,
+      selectedOption: option,
+      mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+    );
+    if (intent == null) {
+      return;
+    }
+    _openRepairIntentBySourceTaskId[sourceTaskId] = intent;
+    _appendRepairIntentAuditEntryV1(
+      _Act0RepairIntentAuditEntryV1(
+        transition: 'intent_created',
+        sourceTaskId: intent.sourceTaskId,
+        targetTaskId: intent.targetTaskId,
+        selectionSource: '',
+        reasonCode: intent.reasonCode,
+        mappingType: intent.mappingType,
+      ),
+    );
+  }
+
+  void _clearMatchedOpenRepairIntentV1({
+    required String sourceTaskId,
+    required String completedTaskId,
+  }) {
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    if (intent == null) {
+      return;
+    }
+    final completedExactReplay =
+        intent.mappingType == 'exact' && completedTaskId == intent.sourceTaskId;
+    final completedMappedTarget = completedTaskId == intent.targetTaskId;
+    if (completedExactReplay || completedMappedTarget) {
+      _openRepairIntentBySourceTaskId.remove(sourceTaskId);
+      _appendRepairIntentAuditEntryV1(
+        _Act0RepairIntentAuditEntryV1(
+          transition: 'intent_cleared',
+          sourceTaskId: intent.sourceTaskId,
+          targetTaskId: completedTaskId,
+          selectionSource: '',
+          reasonCode: intent.reasonCode,
+          mappingType: completedExactReplay ? 'exact' : intent.mappingType,
+        ),
+      );
+    }
   }
 
   _Act0RetentionMemoryEntryV1 _updatedRetentionEntryV1({
@@ -5630,7 +7054,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  String? _repairVariantTaskIdForSourceV1(String taskId) {
+  _Act0RepairTargetV1? _repairVariantTargetForSourceV1(
+    String taskId, {
+    required String sourceLessonId,
+  }) {
     const repairVariantTaskIds = <String, String>{
       'flush_draws_w5_flush_draw_find':
           'flush_draws_w5_flush_draw_recheck_transfer',
@@ -5646,7 +7073,108 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'w6_bluff_candidate': 'w6_turn_pressure_shift_transfer',
       'w6_wet_board_repair': 'w6_turn_pressure_shift_transfer',
     };
-    return repairVariantTaskIds[taskId];
+    final sameLessonTaskId = repairVariantTaskIds[taskId];
+    if (sameLessonTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: sourceLessonId,
+        taskId: sameLessonTaskId,
+      );
+    }
+    const seatIdRepairTaskIds = <String, String>{
+      'position_six_seats_positions_button':
+          'position_six_seats_position_repair_seat_id_btn',
+      'button_advantage_find_button':
+          'position_six_seats_position_repair_seat_id_btn',
+      'position_six_seats_positions_utg':
+          'position_six_seats_position_repair_seat_id_utg',
+    };
+    final seatIdRepairTaskId = seatIdRepairTaskIds[taskId];
+    if (seatIdRepairTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: 'position_six_seats',
+        taskId: seatIdRepairTaskId,
+      );
+    }
+    const btnLastPostflopRepairTaskIds = <String, String>{
+      'button_advantage_button_last':
+          'button_advantage_position_repair_btn_last_postflop',
+    };
+    final btnLastPostflopRepairTaskId = btnLastPostflopRepairTaskIds[taskId];
+    if (btnLastPostflopRepairTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: 'button_advantage',
+        taskId: btnLastPostflopRepairTaskId,
+      );
+    }
+    const utgPlayersBehindRepairTaskIds = <String, String>{
+      'early_vs_late_early_pressure_choice':
+          'early_vs_late_position_repair_utg_players_behind',
+      'position_checkpoint_position_checkpoint_early_fold':
+          'early_vs_late_position_repair_utg_players_behind',
+      'position_checkpoint_early_fold':
+          'early_vs_late_position_repair_utg_players_behind',
+      'position_apply_early_fold':
+          'early_vs_late_position_repair_utg_players_behind',
+    };
+    final utgPlayersBehindRepairTaskId = utgPlayersBehindRepairTaskIds[taskId];
+    if (utgPlayersBehindRepairTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: 'early_vs_late',
+        taskId: utgPlayersBehindRepairTaskId,
+      );
+    }
+    const earlyLateOrderRepairTaskIds = <String, String>{
+      'position_six_seats_positions_late_seat':
+          'position_six_seats_position_repair_early_late_order',
+      'position_six_seats_positions_early_late':
+          'position_six_seats_position_repair_early_late_order',
+      'position_six_seats_seat_order_decision':
+          'position_six_seats_position_repair_early_late_order',
+    };
+    final earlyLateOrderRepairTaskId = earlyLateOrderRepairTaskIds[taskId];
+    if (earlyLateOrderRepairTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: 'position_six_seats',
+        taskId: earlyLateOrderRepairTaskId,
+      );
+    }
+    const sameHandDifferentSeatRepairTaskIds = <String, String>{
+      'same_hand_different_seat_same_hand_early_fold':
+          'same_hand_different_seat_position_repair_same_hand_different_seat',
+      'same_hand_different_seat_same_hand_late_open':
+          'same_hand_different_seat_position_repair_same_hand_different_seat',
+    };
+    final sameHandDifferentSeatRepairTaskId =
+        sameHandDifferentSeatRepairTaskIds[taskId];
+    if (sameHandDifferentSeatRepairTaskId != null) {
+      return _Act0RepairTargetV1(
+        lessonId: 'same_hand_different_seat',
+        taskId: sameHandDifferentSeatRepairTaskId,
+      );
+    }
+    const tablePositionSourceTaskIds = <String>{
+      'button_advantage_button_open',
+      'button_advantage_button_last',
+      'button_advantage_button_vs_cutoff',
+      'early_vs_late_early_pressure_choice',
+      'early_vs_late_late_info_choice',
+      'same_hand_different_seat_same_hand_early_fold',
+      'same_hand_different_seat_same_hand_late_open',
+      'position_apply_btn_open',
+      'position_apply_late_open',
+      'position_apply_early_fold',
+      'position_apply_hj_fold',
+      'position_checkpoint_late_open',
+      'position_checkpoint_early_fold',
+      'position_checkpoint_btn_call',
+    };
+    if (tablePositionSourceTaskIds.contains(taskId)) {
+      return const _Act0RepairTargetV1(
+        lessonId: 'position_checkpoint',
+        taskId: 'position_checkpoint_position_checkpoint_table_notice',
+      );
+    }
+    return null;
   }
 
   void _refreshRetentionMemoryStatusesV1() {
@@ -5868,11 +7396,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     if (groupId == 'daily') {
       _practiceCompletionTitle = _copyV1(
-        en: 'Daily set complete',
+        en: 'Session complete',
         ru: 'Дневная серия закрыта',
       );
       _practiceCompletionBody = _copyV1(
-        en: 'Three short reps landed. Today\'s reads stay sharp. Pick one more lane or head back Home.',
+        en: 'Nice work — one table clue is warmer. Sharky has tomorrow\'s useful hand ready.',
         ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
     } else if (completedLessonId != null) {
@@ -6138,7 +7666,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Act0ReviewStateV1 _reviewState(Act0ReviewStateV1 base) {
     final open = _openMistakes().isEmpty
-        ? base.mistakes.where((mistake) => !mistake.resolved).toList()
+        ? base.mistakes
+              .where(
+                (mistake) =>
+                    !mistake.resolved &&
+                    !_resolvedMistakeTaskIds.contains(mistake.taskId),
+              )
+              .toList()
         : _openMistakes();
     final fixed = _fixedMistakes().isEmpty
         ? base.fixedMistakes
@@ -6346,13 +7880,26 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
+    final intentTarget = _topOpenRepairIntentTargetV1();
+    if (intentTarget != null) {
+      for (final mistake in open) {
+        if (mistake.taskId == intentTarget.intent.sourceTaskId) {
+          return mistake;
+        }
+      }
+    }
     return open.isEmpty ? null : open.first;
   }
 
   List<Act0MistakeCardV1> _openMistakes() {
     final open = <Act0MistakeCardV1>[
       for (final record in _mistakeRecords.values)
-        if (!_resolvedMistakeTaskIds.contains(record.taskId)) record.toCard(),
+        if (!_resolvedMistakeTaskIds.contains(record.taskId))
+          record.toCard(
+            repairActionLabelOverride: _repairIntentSurfaceCopyLineV1(
+              record.taskId,
+            ),
+          ),
     ];
     open.sort((a, b) {
       final priority = _mistakePriority(b).compareTo(_mistakePriority(a));
@@ -6362,6 +7909,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return a.taskId.compareTo(b.taskId);
     });
     return open;
+  }
+
+  String? _repairIntentSurfaceCopyLineV1(String sourceTaskId) {
+    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    if (target == null) {
+      return null;
+    }
+    final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+      sourceTaskId: sourceTaskId,
+      target: target,
+    );
+    final copyLine = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(
+      receipt,
+    ).renderedCopyLine.trim();
+    return copyLine.isEmpty ? null : copyLine;
   }
 
   int _mistakePriority(Act0MistakeCardV1 mistake) {
@@ -6537,8 +8099,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       completionState: completionState,
       qualityLine: switch (replayStatus) {
         _Act0RetentionMemoryStatusV1.agedRecheck => _copyV1(
-          en: 'Still yours? Run this spot once more.',
-          ru: 'Ещё твоё? Пройди этот спот ещё раз.',
+          en: 'Still yours? One calm replay keeps it honest.',
+          ru: 'Ещё твоё? Один спокойный повтор это подтвердит.',
         ),
         _Act0RetentionMemoryStatusV1.ownedCandidate => _copyV1(
           en: stableOwned
@@ -7535,6 +9097,367 @@ class _Act0ProgressSnapshotV1 {
   final int xp;
 }
 
+class _Act0FirstValueReceiptCarryV1 {
+  const _Act0FirstValueReceiptCarryV1({
+    required this.skillReceiptId,
+    required this.skillAtomId,
+    required this.skillLabel,
+    required this.sourceSignalId,
+    required this.sourceSignalLabel,
+    required this.outcomeId,
+    required this.nextRepId,
+    required this.nextRepLabel,
+    required this.sourceWorldId,
+    required this.sourceLessonId,
+    required this.sourceTaskId,
+  });
+
+  final String skillReceiptId;
+  final String skillAtomId;
+  final String skillLabel;
+  final String sourceSignalId;
+  final String sourceSignalLabel;
+  final String outcomeId;
+  final String nextRepId;
+  final String nextRepLabel;
+  final String sourceWorldId;
+  final String sourceLessonId;
+  final String sourceTaskId;
+
+  bool get isRepair =>
+      outcomeId == 'repair_started' || outcomeId == 'needs_rep';
+
+  String get focusTitle => 'Focus: $skillLabel';
+
+  String get homeTitle =>
+      isRepair ? 'Repair: $skillLabel' : 'Next: one more $_repSkillLabel rep';
+
+  String get homeSubtitle => isRepair
+      ? 'The $sourceSignalLabel clue is waiting. One repair rep makes it easier next time.'
+      : 'You started with $sourceSignalLabel. One more rep makes it stick.';
+
+  String get _repSkillLabel =>
+      skillLabel.trim().toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+
+  Map<String, Object> toJson() {
+    return <String, Object>{
+      'skillReceiptId': skillReceiptId,
+      'skillAtomId': skillAtomId,
+      'skillLabel': skillLabel,
+      'sourceSignalId': sourceSignalId,
+      'sourceSignalLabel': sourceSignalLabel,
+      'outcomeId': outcomeId,
+      'nextRepId': nextRepId,
+      'nextRepLabel': nextRepLabel,
+      'sourceWorldId': sourceWorldId,
+      'sourceLessonId': sourceLessonId,
+      'sourceTaskId': sourceTaskId,
+    };
+  }
+
+  static _Act0FirstValueReceiptCarryV1? tryParse(Object? raw) {
+    if (raw is! Map) {
+      return null;
+    }
+    final map = raw.cast<String, Object?>();
+    final skillReceiptId = (map['skillReceiptId'] ?? '').toString();
+    final skillAtomId = (map['skillAtomId'] ?? '').toString();
+    final skillLabel = (map['skillLabel'] ?? '').toString();
+    final sourceSignalId = (map['sourceSignalId'] ?? '').toString();
+    final sourceSignalLabel = (map['sourceSignalLabel'] ?? '').toString();
+    final outcomeId = (map['outcomeId'] ?? '').toString();
+    final nextRepId = (map['nextRepId'] ?? '').toString();
+    final nextRepLabel = (map['nextRepLabel'] ?? '').toString();
+    final sourceWorldId = (map['sourceWorldId'] ?? '').toString();
+    final sourceLessonId = (map['sourceLessonId'] ?? '').toString();
+    final sourceTaskId = (map['sourceTaskId'] ?? '').toString();
+    if (skillReceiptId.isEmpty ||
+        skillAtomId.isEmpty ||
+        skillLabel.isEmpty ||
+        sourceSignalId.isEmpty ||
+        sourceSignalLabel.isEmpty ||
+        outcomeId.isEmpty ||
+        nextRepId.isEmpty ||
+        sourceWorldId.isEmpty ||
+        sourceLessonId.isEmpty ||
+        sourceTaskId.isEmpty) {
+      return null;
+    }
+    return _Act0FirstValueReceiptCarryV1(
+      skillReceiptId: skillReceiptId,
+      skillAtomId: skillAtomId,
+      skillLabel: skillLabel,
+      sourceSignalId: sourceSignalId,
+      sourceSignalLabel: sourceSignalLabel,
+      outcomeId: outcomeId,
+      nextRepId: nextRepId,
+      nextRepLabel: nextRepLabel,
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
+      sourceTaskId: sourceTaskId,
+    );
+  }
+}
+
+class _Act0FirstValueDailyRepTargetV1 {
+  const _Act0FirstValueDailyRepTargetV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.mappingType,
+  });
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String mappingType;
+}
+
+class _Act0OpenRepairIntentTargetV1 {
+  const _Act0OpenRepairIntentTargetV1({
+    required this.intent,
+    required this.target,
+  });
+
+  final Act0RepairIntentV1 intent;
+  final _Act0FirstValueDailyRepTargetV1 target;
+}
+
+class _Act0NextUsefulHandReasonReceiptV1 {
+  const _Act0NextUsefulHandReasonReceiptV1({
+    required this.source,
+    required this.selectionSource,
+    required this.sourceTaskId,
+    required this.targetWorldId,
+    required this.targetLessonId,
+    required this.targetTaskId,
+    required this.missedSignalId,
+    required this.missedSignalLabel,
+    required this.skillAtomId,
+    required this.skillLabel,
+    required this.mappingType,
+    required this.reasonCode,
+    required this.practiceGroupId,
+  });
+
+  factory _Act0NextUsefulHandReasonReceiptV1.forRepairIntent({
+    required String sourceTaskId,
+    required _Act0OpenRepairIntentTargetV1 target,
+    String? practiceGroupId,
+  }) {
+    final isExactReplay = target.target.mappingType == 'exact';
+    return _Act0NextUsefulHandReasonReceiptV1(
+      source: 'repair_intent',
+      selectionSource: isExactReplay
+          ? 'repair_intent_exact_replay'
+          : 'repair_intent_mapped',
+      sourceTaskId: sourceTaskId,
+      targetWorldId: target.target.worldId,
+      targetLessonId: target.target.lessonId,
+      targetTaskId: target.target.taskId,
+      missedSignalId: target.intent.missedSignalId,
+      missedSignalLabel: target.intent.missedSignalLabel,
+      skillAtomId: target.intent.skillAtomId,
+      skillLabel: target.intent.skillLabel,
+      mappingType: target.target.mappingType,
+      reasonCode: isExactReplay
+          ? 'exact_replay_${target.intent.skillAtomId}_${target.intent.missedSignalId}'
+          : target.intent.reasonCode,
+      practiceGroupId: practiceGroupId,
+    );
+  }
+
+  factory _Act0NextUsefulHandReasonReceiptV1.existingFallback({
+    required String sourceTaskId,
+    required String targetWorldId,
+    required String targetLessonId,
+    required String targetTaskId,
+    String? practiceGroupId,
+  }) {
+    return _Act0NextUsefulHandReasonReceiptV1(
+      source: 'recommendation',
+      selectionSource: 'existing_fallback',
+      sourceTaskId: sourceTaskId,
+      targetWorldId: targetWorldId,
+      targetLessonId: targetLessonId,
+      targetTaskId: targetTaskId,
+      missedSignalId: '',
+      missedSignalLabel: '',
+      skillAtomId: '',
+      skillLabel: '',
+      mappingType: '',
+      reasonCode: '',
+      practiceGroupId: practiceGroupId,
+    );
+  }
+
+  static const int schemaVersion = 1;
+  final String source;
+  final String selectionSource;
+  final String sourceTaskId;
+  final String targetWorldId;
+  final String targetLessonId;
+  final String targetTaskId;
+  final String missedSignalId;
+  final String missedSignalLabel;
+  final String skillAtomId;
+  final String skillLabel;
+  final String mappingType;
+  final String reasonCode;
+  final String? practiceGroupId;
+
+  Map<String, Object?> toPayload() {
+    return <String, Object?>{
+      'schemaVersion': schemaVersion,
+      'source': source,
+      'selectionSource': selectionSource,
+      'sourceTaskId': sourceTaskId,
+      'targetWorldId': targetWorldId,
+      'targetLessonId': targetLessonId,
+      'targetTaskId': targetTaskId,
+      'missedSignalId': missedSignalId,
+      'missedSignalLabel': missedSignalLabel,
+      'skillAtomId': skillAtomId,
+      'skillLabel': skillLabel,
+      'mappingType': mappingType,
+      'reasonCode': reasonCode,
+      'practiceGroupId': practiceGroupId,
+    };
+  }
+}
+
+class _Act0RepairIntentAuditEntryV1 {
+  const _Act0RepairIntentAuditEntryV1({
+    required this.transition,
+    required this.sourceTaskId,
+    required this.targetTaskId,
+    required this.selectionSource,
+    required this.reasonCode,
+    required this.mappingType,
+  });
+
+  final String transition;
+  final String sourceTaskId;
+  final String targetTaskId;
+  final String selectionSource;
+  final String reasonCode;
+  final String mappingType;
+
+  bool hasSamePayload(_Act0RepairIntentAuditEntryV1 other) {
+    return transition == other.transition &&
+        sourceTaskId == other.sourceTaskId &&
+        targetTaskId == other.targetTaskId &&
+        selectionSource == other.selectionSource &&
+        reasonCode == other.reasonCode &&
+        mappingType == other.mappingType;
+  }
+
+  Map<String, Object?> toPayload() {
+    return <String, Object?>{
+      'transition': transition,
+      'sourceTaskId': sourceTaskId,
+      'targetTaskId': targetTaskId,
+      'selectionSource': selectionSource,
+      'reasonCode': reasonCode,
+      'mappingType': mappingType,
+    };
+  }
+}
+
+class _Act0NextUsefulHandCopyBridgeV1 {
+  const _Act0NextUsefulHandCopyBridgeV1({
+    required this.lineKind,
+    required this.safeTemplateId,
+    required this.clueKey,
+    required this.clueLabel,
+    required this.skillKey,
+    required this.skillLabel,
+    required this.sourceTaskId,
+    required this.targetTaskId,
+    required this.selectionSource,
+    required this.reasonCode,
+  });
+
+  factory _Act0NextUsefulHandCopyBridgeV1.fromReceipt(
+    _Act0NextUsefulHandReasonReceiptV1 receipt,
+  ) {
+    final lineKind = switch (receipt.selectionSource) {
+      'repair_intent_mapped' => 'missed_clue_repair_same_signal',
+      'repair_intent_exact_replay' => 'exact_replay_repair',
+      _ => 'existing_fallback',
+    };
+    final safeTemplateId = switch (lineKind) {
+      'missed_clue_repair_same_signal' => 'repair_same_clue_v1',
+      'exact_replay_repair' => 'repair_exact_replay_v1',
+      _ => 'fallback_next_hand_v1',
+    };
+    return _Act0NextUsefulHandCopyBridgeV1(
+      lineKind: lineKind,
+      safeTemplateId: safeTemplateId,
+      clueKey: receipt.missedSignalId,
+      clueLabel: receipt.missedSignalLabel,
+      skillKey: receipt.skillAtomId,
+      skillLabel: receipt.skillLabel,
+      sourceTaskId: receipt.sourceTaskId,
+      targetTaskId: receipt.targetTaskId,
+      selectionSource: receipt.selectionSource,
+      reasonCode: receipt.reasonCode,
+    );
+  }
+
+  static const int schemaVersion = 1;
+  final String lineKind;
+  final String safeTemplateId;
+  final String clueKey;
+  final String clueLabel;
+  final String skillKey;
+  final String skillLabel;
+  final String sourceTaskId;
+  final String targetTaskId;
+  final String selectionSource;
+  final String reasonCode;
+
+  String get renderedCopyLine {
+    return act0RepairIntentCopyGuardLineV1(
+          safeTemplateId: safeTemplateId,
+          clueLabel: clueLabel,
+          skillLabel: skillLabel,
+        ) ??
+        '';
+  }
+
+  Map<String, Object?> toPayload() {
+    return <String, Object?>{
+      'schemaVersion': schemaVersion,
+      'lineKind': lineKind,
+      'safeTemplateId': safeTemplateId,
+      'clueKey': clueKey,
+      'clueLabel': clueLabel,
+      'skillKey': skillKey,
+      'skillLabel': skillLabel,
+      'sourceTaskId': sourceTaskId,
+      'targetTaskId': targetTaskId,
+      'selectionSource': selectionSource,
+      'reasonCode': reasonCode,
+    };
+  }
+
+  Map<String, Object?> toReviewSupportCopySnapshotPayload({
+    required String renderedLine,
+  }) {
+    return <String, Object?>{
+      'schemaVersion': schemaVersion,
+      'safeTemplateId': safeTemplateId,
+      'renderedLine': renderedLine,
+      'lineKind': lineKind,
+      'selectionSource': selectionSource,
+      'sourceTaskId': sourceTaskId,
+      'targetTaskId': targetTaskId,
+      'reasonCode': reasonCode,
+    };
+  }
+}
+
 class _Act0WorldRetentionSeedResultV1 {
   const _Act0WorldRetentionSeedResultV1({
     this.recheckCount = 0,
@@ -7720,6 +9643,7 @@ class _Act0PersistedProgressV1 {
     this.resumeSelectedOptionId,
     this.dismissedHomeHandoffKey = '',
     this.dismissedHomeHandoffDay = '',
+    this.firstValueReturnCarry,
   });
 
   final Set<String> completedTaskIds;
@@ -7742,6 +9666,7 @@ class _Act0PersistedProgressV1 {
   final String? resumeSelectedOptionId;
   final String dismissedHomeHandoffKey;
   final String dismissedHomeHandoffDay;
+  final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
 
   String toStorageString() {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
@@ -7752,7 +9677,7 @@ class _Act0PersistedProgressV1 {
     final sortedRetentionMemory = retentionMemory.toList(growable: false)
       ..sort((a, b) => a.taskId.compareTo(b.taskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 8,
+      'schemaVersion': 9,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -7783,6 +9708,8 @@ class _Act0PersistedProgressV1 {
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
+      if (firstValueReturnCarry != null)
+        'firstValueReturnCarry': firstValueReturnCarry!.toJson(),
       if (resumeSelectedOptionId != null)
         'resumeSelectedOptionId': resumeSelectedOptionId!,
     });
@@ -7800,7 +9727,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v8 as the shell snapshot evolves.
+    // Accept v1-v9 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -7808,7 +9735,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 5 &&
         schemaVersion != 6 &&
         schemaVersion != 7 &&
-        schemaVersion != 8) {
+        schemaVersion != 8 &&
+        schemaVersion != 9) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -7854,6 +9782,9 @@ class _Act0PersistedProgressV1 {
         .toString();
     final dismissedHomeHandoffDay = (map['dismissedHomeHandoffDay'] ?? '')
         .toString();
+    final firstValueReturnCarry = _Act0FirstValueReceiptCarryV1.tryParse(
+      map['firstValueReturnCarry'],
+    );
     if (selectedWorldId.isEmpty ||
         selectedLessonId.isEmpty ||
         selectedTaskId.isEmpty) {
@@ -7882,6 +9813,7 @@ class _Act0PersistedProgressV1 {
       resumeSelectedOptionId: resumeSelectedOptionId,
       dismissedHomeHandoffKey: dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
+      firstValueReturnCarry: firstValueReturnCarry,
     );
   }
 
@@ -8064,6 +9996,13 @@ class _Act0RetentionMemoryEntryV1 {
   }
 }
 
+class _Act0RepairTargetV1 {
+  const _Act0RepairTargetV1({required this.lessonId, required this.taskId});
+
+  final String lessonId;
+  final String taskId;
+}
+
 class _Act0MistakeRecordV1 {
   const _Act0MistakeRecordV1({
     required this.taskId,
@@ -8097,6 +10036,7 @@ class _Act0MistakeRecordV1 {
     bool resolved = false,
     Act0CompletionDisplayStateV1? completionState,
     String qualityLine = '',
+    String? repairActionLabelOverride,
   }) {
     return Act0MistakeCardV1(
       taskId: taskId,
@@ -8117,7 +10057,7 @@ class _Act0MistakeRecordV1 {
           ? 'Deep leak'
           : 'Needs repair',
       contextLabels: contextLabels,
-      repairActionLabel: repairActionLabel,
+      repairActionLabel: repairActionLabelOverride ?? repairActionLabel,
       resolved: resolved,
       completionState: completionState,
       qualityLine: qualityLine,
@@ -8617,29 +10557,16 @@ const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'cards_ranks_suits',
-    taskId: 'cards_ranks_suits_private_board',
-    signalId: 'board_read',
+    lessonId: 'what_poker_is',
+    taskId: 'what_poker_is_table_read_transfer',
+    signalId: 'board_private_cards',
     isFoundation: true,
   ),
   _Act0PlacementDiagnosticSpotV1(
     worldId: 'world_1',
-    lessonId: 'blinds_action_order',
-    taskId: 'blinds_first_actor',
-    signalId: 'action_order',
-    isFoundation: true,
-  ),
-  _Act0PlacementDiagnosticSpotV1(
-    worldId: 'world_1',
-    lessonId: 'fold_check_call_raise',
-    taskId: 'actions_legal_context',
-    signalId: 'action_menu',
-  ),
-  _Act0PlacementDiagnosticSpotV1(
-    worldId: 'world_1',
-    lessonId: 'positions',
-    taskId: 'positions_early_late',
-    signalId: 'position_pressure',
+    lessonId: 'what_poker_is',
+    taskId: 'what_poker_is_table_read_transfer',
+    signalId: 'action_basics',
   ),
 ];
 

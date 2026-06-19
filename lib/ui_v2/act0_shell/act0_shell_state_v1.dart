@@ -1467,6 +1467,17 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
             'Read one real table spot: your cards, the board, and the pot.',
       ),
       Act0LessonTaskV1(
+        taskId: 'what_poker_is_table_read_recheck',
+        title: 'Table read recheck',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _firstTableGuideReadTableRecheckRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+        taskFamily: Act0TaskFamilyV1.transfer,
+        summary:
+            'Repeat the same table scan on a second spot: Hero cards, board, and pot.',
+      ),
+      Act0LessonTaskV1(
         taskId: 'first_table_guide_one_clear_choice',
         title: 'Read the preflop setup',
         phase: Act0LessonPhaseV1.drill,
@@ -1666,6 +1677,16 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _firstHandRunner,
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'your_first_hand_private_cards_recheck',
+        title: 'Private cards recheck',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _privateCardsRecheckRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.practice,
+        summary:
+            'Recheck the two private cards that belong to Hero before the board appears.',
       ),
       Act0LessonTaskV1(
         taskId: 'your_first_hand_flop',
@@ -3209,6 +3230,30 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
+      Act0LessonTaskV1(
+        taskId: 'position_repair_early_late_order',
+        title: 'Repair early vs late',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3EarlyLateOrderRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_repair_seat_id_btn',
+        title: 'Repair BTN seat',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdBtnRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_repair_seat_id_utg',
+        title: 'Repair UTG seat',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdUtgRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
+      ),
     ],
   ),
   _lessonFromTasksV1(
@@ -3267,6 +3312,16 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         stepKind: Act0LessonStepKindV1.review,
       ),
     ],
+    extraDrills: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: 'position_repair_btn_last_postflop',
+        title: 'Repair BTN last postflop',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3BtnLastPostflopRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
+      ),
+    ],
   ),
   _lessonFromTasksV1(
     lessonId: 'early_vs_late',
@@ -3283,6 +3338,14 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         runner: _w3EarlySeatPressureRunner,
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_repair_utg_players_behind',
+        title: 'Repair UTG pressure',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3UtgPlayersBehindRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
       Act0LessonTaskV1(
         taskId: 'late_info_choice',
@@ -3317,6 +3380,14 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         runner: _world3LateOpenRunner,
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_repair_same_hand_different_seat',
+        title: 'Repair same hand, different seat',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SameHandDifferentSeatRepairRunner,
+        rewardXp: 6,
+        stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
     ],
   ),
@@ -6664,6 +6735,8 @@ const _firstHandRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Getting warmer.',
       feedbackReason: 'You start with two private cards.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
     ),
     Act0RunnerOptionV1(
       id: 'two',
@@ -6673,6 +6746,8 @@ const _firstHandRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Two cards: correct.',
       feedbackReason: 'You start with two private cards.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
     ),
     Act0RunnerOptionV1(
       id: 'five',
@@ -6682,6 +6757,8 @@ const _firstHandRunner = Act0RunnerStateV1(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'On the right track.',
       feedbackReason: 'Five cards can make a hand, but you start with two.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
     ),
   ],
   feedbackTitle: 'Two private cards: correct.',
@@ -6763,6 +6840,76 @@ const _firstHandRunner = Act0RunnerStateV1(
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['Private cards'],
+    ),
+  ],
+);
+
+final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
+  phase: Act0LessonPhaseV1.drill,
+  lessonId: 'your_first_hand_private_cards_recheck',
+  lessonTitle: 'Your first hand',
+  lessonSubtitle: 'See your private cards before the board appears.',
+  caption: 'Hero has two private cards before any board cards appear.',
+  hint: 'Your private cards sit by the Hero seat.',
+  question: 'Which two private cards are yours?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'ace_king',
+      label: 'A and K',
+      isCorrect: true,
+      preferredLabel: 'A and K',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean private-card read.',
+      feedbackReason:
+          'Hero\'s two private cards are A and K. They belong to Hero before any board cards appear.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'queen_queen',
+      label: 'Q and Q',
+      isCorrect: false,
+      preferredLabel: 'A and K',
+      betterAnswerLabel: 'A and K',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Good spot to recheck.',
+      feedbackReason:
+          'Those are not Hero\'s cards in this spot. Read the two cards beside Hero.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'board_cards',
+      label: 'The board cards',
+      isCorrect: false,
+      preferredLabel: 'A and K',
+      betterAnswerLabel: 'A and K',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Not this street.',
+      feedbackReason:
+          'Board cards are shared later. This recheck asks for Hero\'s two private cards.',
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Hero cards'],
+    ),
+  ],
+  feedbackTitle: 'Private cards locked in.',
+  feedbackReason:
+      'You found Hero\'s two private cards before looking for any board cards.',
+  table: _firstHandRunner.table.copyWith(
+    boardCards: const <Act0CardStateV1>[],
+    centerLabel: 'Hero private cards',
+    potLabel: 'Pot 1.5 BB',
+    highlightedCardIds: const <String>['hero_0', 'hero_1'],
+    emptyBoardLabel: 'No community cards yet',
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Start with Hero\'s cards.',
+      body:
+          'Before the board appears, Hero has exactly two private cards. Read those two cards first.',
+      focusSeatIds: <String>['btn'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['Hero cards'],
     ),
   ],
 );
@@ -6933,7 +7080,7 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Ranks have an order.',
       body:
-          'The beginner order is 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A. Ace is highest for now, so ace beats king in this drill.',
+          'The beginner order is 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A.\n\nAce is highest for now, so ace beats king in this drill.',
       focusLabels: <String>['2 ... 10', 'J Q K A', 'A beats K'],
     ),
   ],
@@ -8005,6 +8152,24 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
   ],
 );
 
+final _w3BtnLastPostflopRepairRunner = _postflopButtonActorRunner.copyWith(
+  lessonId: 'w3_repair_btn_last_postflop',
+  lessonTitle: 'Button advantage',
+  caption: 'Repair: BTN acts last after the flop.',
+  hint: 'Find the Button on the table.',
+  question: 'Who acts last after the flop?',
+  feedbackTitle: 'BTN-last repaired.',
+  feedbackReason: 'Button acts after the blinds postflop in this hand.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repair the postflop order.',
+      body: 'After the flop, Button is the late seat and acts last here.',
+      focusSeatIds: <String>['btn'],
+      focusLabels: <String>['BTN acts last postflop'],
+    ),
+  ],
+);
+
 final _positionsRunner = _meetTableRunner.copyWith(
   lessonId: 'positions',
   lessonTitle: 'The 6 positions',
@@ -8111,6 +8276,41 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       body: 'UTG acts first preflop and has the least information.',
       focusSeatIds: <String>['utg'],
       focusLabels: <String>['Early seat'],
+    ),
+  ],
+);
+
+final _w3SeatIdBtnRepairRunner = _buttonSeatRunner.copyWith(
+  lessonId: 'w3_repair_seat_id_btn',
+  caption: 'Repair: BTN is the Button seat.',
+  hint: 'Find the dealer button, then tap BTN.',
+  question: 'Tap BTN again.',
+  feedbackTitle: 'BTN repaired.',
+  feedbackReason: 'BTN is the Button seat and the late-position anchor.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repair the Button seat.',
+      body: 'BTN is the seat marked by the dealer button.',
+      focusSeatIds: <String>['btn'],
+      focusLabels: <String>['Button seat'],
+    ),
+  ],
+);
+
+final _w3SeatIdUtgRepairRunner = _utgSeatRunner.copyWith(
+  lessonId: 'w3_repair_seat_id_utg',
+  caption: 'Repair: UTG is the first preflop seat.',
+  hint: 'Find the earliest preflop seat, then tap UTG.',
+  question: 'Tap UTG again.',
+  feedbackTitle: 'UTG repaired.',
+  feedbackReason:
+      'UTG is the early seat that acts first before the rest of the table.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repair the UTG seat.',
+      body: 'UTG is the first preflop seat after the blinds are posted.',
+      focusSeatIds: <String>['utg'],
+      focusLabels: <String>['UTG seat'],
     ),
   ],
 );
@@ -9125,6 +9325,105 @@ final _w1TableReadTransferRunner = _tableRecapRunner.copyWith(
   ],
 );
 
+final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWith(
+  lessonId: 'what_poker_is_table_read_recheck',
+  lessonTitle: 'What poker is',
+  lessonSubtitle: 'Poker from Zero',
+  caption:
+      'New spot. Hero has two cards, the flop has three, and the pot is 4 BB.',
+  hint: 'Read Hero cards, shared board, and pot before any action.',
+  question: 'What is the clean table read here?',
+  feedbackTitle: 'Same scan, new spot.',
+  feedbackReason:
+      'You repeated the table scan: Hero cards, shared board, then pot.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'two_three_four',
+      label: '2 private cards, 3 board cards, 4 BB in the pot',
+      isCorrect: true,
+      preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean table read.',
+      feedbackReason:
+          'Same scan, new numbers: Hero has two private cards, the board has three shared cards, and the pot is 4 BB.',
+      repairFocusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'five_board_cards',
+      label: '5 board cards are out',
+      isCorrect: false,
+      preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
+      betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Good spot to recheck.',
+      feedbackReason:
+          'Only the flop is out, so the board has three shared cards here.',
+      repairFocusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'hero_cards_only',
+      label: 'Only Hero cards matter',
+      isCorrect: false,
+      preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
+      betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Part of the read.',
+      feedbackReason:
+          'Hero cards matter, but the clean table read also includes the shared board and the pot.',
+      repairFocusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+    ),
+  ],
+  table: _readBoardRunner.table.copyWith(
+    heroCards: _heroQqCards,
+    boardCards: _flopA72Cards,
+    centerLabel: 'Read hand, board, pot',
+    potLabel: 'Pot 4 BB',
+    highlightedCardIds: const <String>[
+      'hero_0',
+      'hero_1',
+      'board_0',
+      'board_1',
+      'board_2',
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repeat the same scan.',
+      body:
+          'Read your two cards, then the shared board, then the pot. Same scan, different spot.',
+      focusCardIds: <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+      focusLabels: <String>['2 private', '3 board', 'Pot 4 BB'],
+    ),
+  ],
+);
+
 final _w1LiveWinTransferRunner = _winWaysRunner.copyWith(
   lessonId: 'w1_live_win_transfer',
   lessonTitle: 'What poker is',
@@ -9244,6 +9543,13 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       feedbackTitle: 'That is the setup.',
       feedbackReason:
           'That is the clean first read. Hero is on the Button, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
+      repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>[
+        'Hero on the Button',
+        'Blinds posted',
+        'No board yet',
+      ],
     ),
     Act0RunnerOptionV1(
       id: 'co_still_acting',
@@ -9256,6 +9562,13 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       feedbackTitle: 'Read one seat earlier.',
       feedbackReason:
           'CO already folded in this setup, so action is on Hero now. The next safe job is to name who acts, not to solve the whole hand.',
+      repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>[
+        'Hero on the Button',
+        'Blinds posted',
+        'No board yet',
+      ],
     ),
     Act0RunnerOptionV1(
       id: 'flop_already_out',
@@ -9268,11 +9581,18 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       feedbackTitle: 'Not yet.',
       feedbackReason:
           'No board cards are out yet, so this is still preflop. The clean setup read comes before any later action choice.',
+      repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>[
+        'Hero on the Button',
+        'Blinds posted',
+        'No board yet',
+      ],
     ),
   ],
   feedbackTitle: 'Setup locked in.',
   feedbackReason:
-      'You read one spot, named the setup, and got one clear why back. That is the foundation later lessons keep reusing before action choices start.',
+      'You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.',
   table: _whatYouCanDoRunner.table.copyWith(
     toCallLabel: '',
     centerLabel: 'Hero acts next',
@@ -9296,8 +9616,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   beatCount: 5,
   phase: Act0LessonPhaseV1.review,
   caption: 'After the first loop, each tab has one clear job.',
-  hint:
-      'Use Review to fix misses. The other tabs help you know what to do next.',
+  hint: 'Home shows what to do now. Learn shows what to study next.',
   question: 'Where do you go to fix mistakes after a miss?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -9308,7 +9627,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Exactly.',
       feedbackReason:
-          'Review fixes mistakes. Home shows the next step, Learn shows what to study next, Practice gives extra reps, and You shows progress and settings.',
+          'Review fixes mistakes. Home shows what to do now, Learn shows what to study next, Practice gives extra reps, and You shows progress.',
     ),
     Act0RunnerOptionV1(
       id: 'practice',
@@ -9319,7 +9638,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close, but one tab is sharper.',
       feedbackReason:
-          'Practice is for extra reps after Learn teaches the concept. Review is where a miss gets fixed first.',
+          'Practice gives extra reps after Learn teaches the concept. Review is where a miss gets fixed first.',
     ),
     Act0RunnerOptionV1(
       id: 'learn',
@@ -9335,7 +9654,7 @@ final _firstTableGuideRouteRunner = _whatYouCanDoRunner.copyWith(
   ],
   feedbackTitle: 'Tab jobs locked in.',
   feedbackReason:
-      'Home shows the next step, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress and settings.',
+      'Home shows what to do now, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Know the five jobs.',
@@ -11720,6 +12039,50 @@ final _w3SeatOrderDecisionRunner = _earlyLatePositionRunner.copyWith(
   ],
 );
 
+final _w3EarlyLateOrderRepairRunner = _earlyLatePositionRunner.copyWith(
+  lessonId: 'w3_repair_early_late_order',
+  caption: 'Repair: compare early and late seats on this six-seat table.',
+  hint: 'UTG acts sooner. BTN sees more first.',
+  question: 'Which seat acts earlier on this six-seat table?',
+  feedbackTitle: 'Early-late order repaired.',
+  feedbackReason:
+      'On this six-seat table, UTG acts sooner and BTN gets more information first.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'utg',
+      label: 'UTG',
+      seatId: 'utg',
+      isCorrect: true,
+      preferredLabel: 'UTG',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Early-late order repaired.',
+      feedbackReason:
+          'UTG acts earlier on this six-seat table, before BTN gets to use late information.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'btn',
+      label: 'BTN',
+      seatId: 'btn',
+      isCorrect: false,
+      preferredLabel: 'UTG',
+      betterAnswerLabel: 'UTG',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Good spot to repair.',
+      feedbackReason:
+          'BTN is later on this table. The missed signal is that UTG acts sooner.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repair the order read.',
+      body:
+          'On this six-seat table, UTG is early and acts sooner; BTN is late and sees more first.',
+      focusSeatIds: <String>['utg', 'btn'],
+      focusLabels: <String>['UTG early', 'BTN late'],
+    ),
+  ],
+);
+
 final _w3EarlySeatPressureRunner = _earlyLatePositionRunner.copyWith(
   lessonId: 'w3_early_pressure',
   caption: 'UTG must act before HJ, CO, BTN, SB, and BB.',
@@ -11755,6 +12118,47 @@ final _w3EarlySeatPressureRunner = _earlyLatePositionRunner.copyWith(
           'UTG faces the most unseen decisions behind, so discipline starts there.',
       focusSeatIds: <String>['utg'],
       focusLabels: <String>['UTG', 'Five behind'],
+    ),
+  ],
+);
+
+final _w3UtgPlayersBehindRepairRunner = _w3EarlySeatPressureRunner.copyWith(
+  lessonId: 'w3_repair_utg_players_behind',
+  caption: 'Repair: UTG has five players behind.',
+  hint: 'Count who still acts after UTG.',
+  question: 'Why is UTG under pressure here?',
+  feedbackTitle: 'UTG pressure repaired.',
+  feedbackReason:
+      'Five players still act after UTG, so early seats need extra discipline.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'five_players_behind',
+      label: 'Five players still act after UTG',
+      isCorrect: true,
+      preferredLabel: 'Five players still act after UTG',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'UTG pressure repaired.',
+      feedbackReason:
+          'Five players still act after UTG, so the seat has less information.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'utg_has_late_info',
+      label: 'UTG already has late-position information',
+      isCorrect: false,
+      preferredLabel: 'Five players still act after UTG',
+      betterAnswerLabel: 'Five players still act after UTG',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Good spot to repair.',
+      feedbackReason:
+          'UTG acts before the rest of the table, so the missed signal is players behind.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Repair the early-seat read.',
+      body: 'UTG acts first, with HJ, CO, BTN, SB, and BB still behind it.',
+      focusSeatIds: <String>['utg', 'hj', 'co', 'btn', 'sb', 'bb'],
+      focusLabels: <String>['UTG', 'Five players behind'],
     ),
   ],
 );
@@ -11876,6 +12280,95 @@ final _world3SameHandRecapRunner = _world3SameHandIntroRunner.copyWith(
       title: 'Frame checklist.',
       body: 'Ask if the pot is unopened or if a raise already happened.',
       focusLabels: <String>['Unopened', 'Facing open'],
+    ),
+  ],
+);
+
+final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.copyWith(
+  lessonId: 'w3_repair_same_hand_different_seat',
+  lessonTitle: 'Same hand, different seat',
+  caption: 'Repair: same ATo, different seats on this six-seat table.',
+  hint: 'Look at who still acts after Hero before judging comfort.',
+  question: 'What changed most between the two frames?',
+  feedbackTitle: 'Same-hand seat shift repaired.',
+  feedbackReason:
+      'The cards stayed ATo. The seat changed who still acts after Hero, so the hand feels different.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'seat_context',
+      label: 'Seat context changed the hand comfort',
+      isCorrect: true,
+      preferredLabel: 'Seat context changed the hand comfort',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Seat context repaired.',
+      feedbackReason:
+          'Same hand, different seat: early has more players behind; later has fewer players behind.',
+      repairFocusSeatIds: <String>['utg', 'co', 'btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Same hand', 'Players behind'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'cards_changed',
+      label: 'The cards changed strength by themselves',
+      isCorrect: false,
+      preferredLabel: 'Seat context changed the hand comfort',
+      betterAnswerLabel: 'Seat context changed the hand comfort',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Good spot to repair.',
+      feedbackReason:
+          'The hand is still ATo. The missed signal is the seat and who still acts after Hero.',
+      repairFocusSeatIds: <String>['utg', 'co', 'btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Same hand', 'Players behind'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'position_unimportant',
+      label: 'Seat does not matter for this hand',
+      isCorrect: false,
+      preferredLabel: 'Seat context changed the hand comfort',
+      betterAnswerLabel: 'Seat context changed the hand comfort',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Repair the table read.',
+      feedbackReason:
+          'Position matters because it changes how many players still act after Hero.',
+      repairFocusSeatIds: <String>['utg', 'co', 'btn', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Same hand', 'Players behind'],
+    ),
+  ],
+  table: _act0ReassignHeroSeatV1(
+    _world3PositionDisciplineRunner.table.copyWith(
+      centerLabel: 'Same hand, seat changes',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'A', suit: 'd'),
+        Act0CardStateV1(rank: 'T', suit: 'c'),
+      ],
+      highlightedSeatIds: const <String>['utg', 'co', 'btn', 'sb', 'bb'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'Frame 1: UTG has more behind'),
+        Act0ActionTrailItemV1(label: 'Frame 2: CO has fewer behind'),
+        Act0ActionTrailItemV1(label: 'Hero compares seats'),
+      ],
+    ),
+    heroSeatId: 'co',
+    activeSeatId: 'co',
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Frame one: early seat.',
+      body:
+          'ATo from UTG faces more players behind and less information on this six-seat table.',
+      focusSeatIds: <String>['utg', 'hj', 'co', 'btn', 'sb', 'bb'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['ATo', 'More behind'],
+    ),
+    Act0TeachingStepV1(
+      title: 'Frame two: later seat.',
+      body:
+          'The same ATo later in the order has fewer players behind and more information first.',
+      focusSeatIds: <String>['co', 'btn', 'sb', 'bb'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['Same hand', 'Fewer behind'],
     ),
   ],
 );
