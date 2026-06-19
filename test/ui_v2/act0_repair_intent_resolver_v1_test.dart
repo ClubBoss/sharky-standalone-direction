@@ -226,6 +226,16 @@ void main() {
     await _launchReviewRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
+    expect(
+      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'Still missed: nobody had bet yet. One more repair hand will help.',
+      ),
+      findsNothing,
+    );
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
 
@@ -290,6 +300,16 @@ void main() {
     await _launchReviewRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
+    expect(
+      find.text(
+        'Still missed: nobody had bet yet. One more repair hand will help.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      findsNothing,
+    );
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
 
@@ -384,6 +404,53 @@ void main() {
     expect(bridge['reasonCode'], 'exact_replay_action_read_no_bet_yet');
   });
 
+  testWidgets('exact replay fixed receipt avoids same-signal claims', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _launchReviewRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+    expect(
+      find.text('Replay fixed: you handled this spot correctly.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('exact replay repeated receipt avoids same-signal claims', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+    await _launchReviewRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerWrongly(tester);
+    expect(
+      find.text('Replay missed again: try the same spot once more.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'Still missed: nobody had bet yet. One more repair hand will help.',
+      ),
+      findsNothing,
+    );
+  });
+
   testWidgets('correct answer does not override existing recommendation', (
     tester,
   ) async {
@@ -393,6 +460,10 @@ void main() {
       taskId: 'actions_legal_context',
     );
     await _answerOption(tester, 'check');
+    expect(find.textContaining('Repair fixed:'), findsNothing);
+    expect(find.textContaining('Still missed:'), findsNothing);
+    expect(find.textContaining('Replay fixed:'), findsNothing);
+    expect(find.textContaining('Replay missed again:'), findsNothing);
 
     final target = _nextUsefulHandTargetPayload(tester);
     final bridge = _copyBridgePayload(tester);
@@ -480,6 +551,41 @@ void main() {
       }),
       findsNothing,
     );
+  });
+
+  testWidgets('repair result receipt copy excludes forbidden terms', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    await _launchReviewRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+
+    const receipt = 'Repair fixed: you caught the no-bet-yet clue.';
+    expect(find.text(receipt), findsOneWidget);
+    const forbidden = <String>{
+      'ai',
+      'adaptive',
+      'gto',
+      'solver',
+      'optimal',
+      'win-rate',
+      'guarantee',
+      'premium',
+      'paywall',
+      'trial',
+      'unlock',
+      'leak detected',
+    };
+    for (final token in forbidden) {
+      expect(_containsForbiddenTokenInText(receipt, token), isFalse);
+    }
   });
 
   testWidgets('resolver snapshot excludes forbidden AI and commerce fields', (

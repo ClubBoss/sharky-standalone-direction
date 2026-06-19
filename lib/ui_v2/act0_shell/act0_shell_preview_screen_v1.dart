@@ -727,6 +727,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeRepairSourceTaskId;
+  String? _activeRepairResultReceiptLine;
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
   String _firstValueTodayShownTelemetryKey = '';
   final Set<String> _repairItemShownTelemetryKeys = <String>{};
@@ -3471,6 +3472,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         !_placementDiagnosticActive
                                     ? _firstValueReceiptLineV1(playSelectedTask)
                                     : null,
+                                repairResultReceiptLine:
+                                    _activeRepairTaskId ==
+                                        playSelectedTask?.taskId
+                                    ? _activeRepairResultReceiptLine
+                                    : null,
                                 relaxTheoryAdvanceLock: _completedTaskIds
                                     .contains(playSelectedTask!.taskId),
                                 showLearningRailFocusLabels:
@@ -3497,6 +3503,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _returnToPlayHubOnBack = false;
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
+                                    _activeRepairResultReceiptLine = null;
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -3555,6 +3562,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                                 onChooseOption: (option) => setState(() {
                                   _fireAnswerEffects(option);
+                                  _activeRepairResultReceiptLine =
+                                      _repairResultReceiptLineForOptionV1(
+                                        selectedTask: playSelectedTask,
+                                        option: option,
+                                      );
                                   _captureFirstValueReceiptCarryV1(
                                     runner: activePlayRunner,
                                     sourceWorldId: selectedWorld.worldId,
@@ -3591,6 +3603,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       in activePlayRunner.options) {
                                     if (option.seatId == seatId) {
                                       _fireAnswerEffects(option);
+                                      _activeRepairResultReceiptLine =
+                                          _repairResultReceiptLineForOptionV1(
+                                            selectedTask: playSelectedTask,
+                                            option: option,
+                                          );
                                       _captureFirstValueReceiptCarryV1(
                                         runner: activePlayRunner,
                                         sourceWorldId: selectedWorld.worldId,
@@ -3686,6 +3703,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _returnToPlayHubOnBack = false;
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
+                                    _activeRepairResultReceiptLine = null;
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -5200,6 +5218,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (carry.isRepair) {
       _activeRepairTaskId = launchTask.taskId;
       _activeRepairSourceTaskId = carry.sourceTaskId;
+      _activeRepairResultReceiptLine = null;
     }
     _persistProgress();
     return true;
@@ -5870,6 +5889,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
+    _activeRepairResultReceiptLine = null;
     _returnToPlayHubOnBack = returnToPlayHub;
     _activePracticeGroupId = practiceGroupId;
     _rapidPracticeLoop = rapidPracticeLoop;
@@ -5996,6 +6016,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
     return 'First read logged. Next: use it once more.';
+  }
+
+  String? _repairResultReceiptLineForOptionV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (_activeRepairTaskId != selectedTask.taskId) {
+      return null;
+    }
+    final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    final exactReplay =
+        sourceTaskId == selectedTask.taskId || intent?.mappingType == 'exact';
+    final clueLabel = intent?.missedSignalLabel ?? '';
+    return act0RepairResultReceiptCopyGuardLineV1(
+      repaired: option.isCorrect,
+      exactReplay: exactReplay,
+      clueLabel: clueLabel,
+    );
   }
 
   void _captureFirstValueReceiptCarryV1({
