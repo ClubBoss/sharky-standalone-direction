@@ -17,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -829,6 +830,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
       sourceTaskId: mistake.taskId,
       target: target,
+      repeatedMissCount: mistake.attempts,
     );
     final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
     final renderedLine = bridge.renderedCopyLine.trim();
@@ -854,6 +856,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         sourceTaskId: sourceTaskId!,
         target: repairIntentTarget,
         practiceGroupId: recommendation.practiceGroupId,
+        repeatedMissCount: recommendation.mistake?.attempts ?? 1,
       );
     }
     return _Act0NextUsefulHandReasonReceiptV1.existingFallback(
@@ -9238,14 +9241,29 @@ class _Act0NextUsefulHandReasonReceiptV1 {
     required this.mappingType,
     required this.reasonCode,
     required this.practiceGroupId,
+    required this.repairDecision,
   });
 
   factory _Act0NextUsefulHandReasonReceiptV1.forRepairIntent({
     required String sourceTaskId,
     required _Act0OpenRepairIntentTargetV1 target,
     String? practiceGroupId,
+    int repeatedMissCount = 1,
   }) {
     final isExactReplay = target.target.mappingType == 'exact';
+    final reasonCode = isExactReplay
+        ? 'exact_replay_${target.intent.skillAtomId}_${target.intent.missedSignalId}'
+        : target.intent.reasonCode;
+    final repairDecision = buildAct0RuleBasedRepairDecisionV1(
+      openRepairIntent: target.intent,
+      isOpen: true,
+      repeatedMissCount: repeatedMissCount,
+      resolvedTargetWorldId: target.target.worldId,
+      resolvedTargetLessonId: target.target.lessonId,
+      resolvedTargetTaskId: target.target.taskId,
+      resolvedMappingType: target.target.mappingType,
+      resolvedReasonCode: reasonCode,
+    );
     return _Act0NextUsefulHandReasonReceiptV1(
       source: 'repair_intent',
       selectionSource: isExactReplay
@@ -9260,10 +9278,9 @@ class _Act0NextUsefulHandReasonReceiptV1 {
       skillAtomId: target.intent.skillAtomId,
       skillLabel: target.intent.skillLabel,
       mappingType: target.target.mappingType,
-      reasonCode: isExactReplay
-          ? 'exact_replay_${target.intent.skillAtomId}_${target.intent.missedSignalId}'
-          : target.intent.reasonCode,
+      reasonCode: reasonCode,
       practiceGroupId: practiceGroupId,
+      repairDecision: repairDecision,
     );
   }
 
@@ -9288,6 +9305,7 @@ class _Act0NextUsefulHandReasonReceiptV1 {
       mappingType: '',
       reasonCode: '',
       practiceGroupId: practiceGroupId,
+      repairDecision: null,
     );
   }
 
@@ -9305,6 +9323,7 @@ class _Act0NextUsefulHandReasonReceiptV1 {
   final String mappingType;
   final String reasonCode;
   final String? practiceGroupId;
+  final Act0RuleBasedRepairDecisionV1? repairDecision;
 
   Map<String, Object?> toPayload() {
     return <String, Object?>{
@@ -9322,6 +9341,7 @@ class _Act0NextUsefulHandReasonReceiptV1 {
       'mappingType': mappingType,
       'reasonCode': reasonCode,
       'practiceGroupId': practiceGroupId,
+      if (repairDecision != null) 'repairDecision': repairDecision!.toPayload(),
     };
   }
 }

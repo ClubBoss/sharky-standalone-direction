@@ -24,6 +24,7 @@ void main() {
     final target = _nextUsefulHandTargetPayload(tester);
     final audit = _repairIntentAuditTrailPayload(tester);
     final bridge = _copyBridgePayload(tester);
+    final decision = _repairDecisionPayload(target);
 
     expect(target?['source'], 'repair_intent');
     expect(target?['selectionSource'], 'repair_intent_mapped');
@@ -33,6 +34,18 @@ void main() {
     expect(target?['skillAtomId'], 'action_read');
     expect(target?['mappingType'], 'repair');
     expect(target?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(decision?['recommendationSource'], 'repair_intent');
+    expect(decision?['actionType'], 'same_signal_repair');
+    expect(decision?['selectionSource'], 'repair_intent_mapped');
+    expect(decision?['decisionRule'], 'same_signal_repair_v1');
+    expect(decision?['priorityBand'], 'repair_next');
+    expect(decision?['priorityScore'], 80);
+    expect(decision?['choiceId'], 'fold');
+    expect(decision?['result'], 'incorrect');
+    expect(decision?['errorType'], 'missed_action_read');
+    expect(decision?['sourceTaskId'], 'actions_legal_context');
+    expect(decision?['targetTaskId'], 'actions_check_drill');
+    expect(decision?['reasonCode'], 'same_signal_action_read_no_bet_yet');
     expect(audit.length, 2);
     expect(audit.first['transition'], 'intent_created');
     expect(audit.first['sourceTaskId'], 'actions_legal_context');
@@ -202,12 +215,18 @@ void main() {
     final target = _nextUsefulHandTargetPayload(tester);
     final bridge = _copyBridgePayload(tester);
     final audit = _repairIntentAuditTrailPayload(tester);
+    final decision = _repairDecisionPayload(target);
     expect(target?['source'], 'repair_intent');
     expect(target?['selectionSource'], 'repair_intent_mapped');
     expect(target?['targetTaskId'], 'actions_check_drill');
     expect(target?['missedSignalId'], 'no_bet_yet');
     expect(target?['skillAtomId'], 'action_read');
     expect(target?['reasonCode'], 'same_signal_action_read_no_bet_yet');
+    expect(decision?['actionType'], 'same_signal_repair');
+    expect(decision?['priorityBand'], 'repair_first');
+    expect(decision?['priorityScore'], 85);
+    expect(decision?['decisionRule'], 'same_signal_repair_v1');
+    expect(decision?['reasonCode'], 'same_signal_action_read_no_bet_yet');
     expect(bridge['lineKind'], 'missed_clue_repair_same_signal');
     expect(bridge['safeTemplateId'], 'repair_same_clue_v1');
     expect(bridge['selectionSource'], 'repair_intent_mapped');
@@ -250,6 +269,7 @@ void main() {
     final target = _nextUsefulHandTargetPayload(tester);
     final audit = _repairIntentAuditTrailPayload(tester);
     final bridge = _copyBridgePayload(tester);
+    final decision = _repairDecisionPayload(target);
 
     expect(target?['source'], 'repair_intent');
     expect(target?['selectionSource'], 'repair_intent_exact_replay');
@@ -259,6 +279,15 @@ void main() {
     expect(target?['skillAtomId'], 'action_read');
     expect(target?['mappingType'], 'exact');
     expect(target?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
+    expect(decision?['recommendationSource'], 'repair_intent');
+    expect(decision?['actionType'], 'exact_replay');
+    expect(decision?['selectionSource'], 'repair_intent_exact_replay');
+    expect(decision?['decisionRule'], 'exact_replay_fallback_v1');
+    expect(decision?['priorityBand'], 'repair_next');
+    expect(decision?['priorityScore'], 70);
+    expect(decision?['sourceTaskId'], 'actions_legal_context');
+    expect(decision?['targetTaskId'], 'actions_legal_context');
+    expect(decision?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
     expect(audit.length, 2);
     expect(audit.last['transition'], 'exact_replay_selection');
     expect(audit.last['selectionSource'], 'repair_intent_exact_replay');
@@ -288,6 +317,7 @@ void main() {
     expect(target?['source'], isNot('repair_intent'));
     expect(target?['selectionSource'], 'existing_fallback');
     expect(target?['sourceTaskId'], isNot('actions_legal_context'));
+    expect(_repairDecisionPayload(target), isNull);
     expect(bridge['lineKind'], 'existing_fallback');
     expect(bridge['safeTemplateId'], 'fallback_next_hand_v1');
     expect(bridge['selectionSource'], 'existing_fallback');
@@ -378,6 +408,7 @@ void main() {
     final payload = _nextUsefulHandTargetPayload(tester)!;
     final audit = _repairIntentAuditTrailPayload(tester);
     final bridge = _copyBridgePayload(tester);
+    final decision = _repairDecisionPayload(payload)!;
     const forbiddenKeys = <String>{
       'ai',
       'ml',
@@ -399,7 +430,9 @@ void main() {
     for (final key in forbiddenKeys) {
       expect(payload.containsKey(key), isFalse, reason: key);
       expect(bridge.containsKey(key), isFalse, reason: key);
+      expect(decision.containsKey(key), isFalse, reason: key);
       expect(_containsForbiddenToken(bridge, key), isFalse, reason: key);
+      expect(_containsForbiddenToken(decision, key), isFalse, reason: key);
       for (final entry in audit) {
         expect(entry.containsKey(key), isFalse, reason: key);
       }
@@ -620,6 +653,14 @@ Future<void> _openReview(WidgetTester tester) async {
 Map<String, Object?>? _nextUsefulHandTargetPayload(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>?;
+}
+
+Map<String, Object?>? _repairDecisionPayload(Map<String, Object?>? target) {
+  final raw = target?['repairDecision'];
+  if (raw is! Map) {
+    return null;
+  }
+  return raw.cast<String, Object?>();
 }
 
 Map<String, Object?> _copyBridgePayload(WidgetTester tester) {

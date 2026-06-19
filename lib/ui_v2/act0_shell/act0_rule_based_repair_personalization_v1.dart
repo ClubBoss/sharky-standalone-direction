@@ -75,13 +75,26 @@ Act0RuleBasedRepairDecisionV1? buildAct0RuleBasedRepairDecisionV1({
   required Act0RepairIntentV1? openRepairIntent,
   required bool isOpen,
   int repeatedMissCount = 1,
+  String? resolvedTargetWorldId,
+  String? resolvedTargetLessonId,
+  String? resolvedTargetTaskId,
+  String? resolvedMappingType,
+  String? resolvedReasonCode,
 }) {
   final intent = openRepairIntent;
   if (!isOpen || intent == null || intent.result == 'correct') {
     return null;
   }
 
-  final isExactReplay = intent.mappingType == 'exact';
+  final mappingType = _resolvedValueV1(
+    resolvedMappingType,
+    fallback: intent.mappingType,
+  );
+  final reasonCode = _resolvedValueV1(
+    resolvedReasonCode,
+    fallback: intent.reasonCode,
+  );
+  final isExactReplay = mappingType == 'exact';
   final actionType = isExactReplay ? 'exact_replay' : 'same_signal_repair';
   final selectionSource = isExactReplay
       ? 'repair_intent_exact_replay'
@@ -109,12 +122,26 @@ Act0RuleBasedRepairDecisionV1? buildAct0RuleBasedRepairDecisionV1({
     errorType: intent.errorType,
     missedSignalId: intent.missedSignalId,
     skillAtomId: intent.skillAtomId,
-    targetWorldId: intent.targetWorldId,
-    targetLessonId: intent.targetLessonId,
-    targetTaskId: intent.targetTaskId,
-    mappingType: intent.mappingType,
-    reasonCode: intent.reasonCode,
+    targetWorldId: _resolvedValueV1(
+      resolvedTargetWorldId,
+      fallback: intent.targetWorldId,
+    ),
+    targetLessonId: _resolvedValueV1(
+      resolvedTargetLessonId,
+      fallback: intent.targetLessonId,
+    ),
+    targetTaskId: _resolvedValueV1(
+      resolvedTargetTaskId,
+      fallback: intent.targetTaskId,
+    ),
+    mappingType: mappingType,
+    reasonCode: reasonCode,
   );
+}
+
+String _resolvedValueV1(String? value, {required String fallback}) {
+  final resolved = value?.trim() ?? '';
+  return resolved.isEmpty ? fallback : resolved;
 }
 
 int _priorityScoreV1({
