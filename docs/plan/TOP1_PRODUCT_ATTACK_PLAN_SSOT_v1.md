@@ -78,6 +78,88 @@ or proprietary structure.
 - Advanced/GTO-feeling packaging can be less beginner-safe than a table-first
   coach.
 
+## 2A. Runout XAPK Static Benchmark Addendum
+
+### Analysis boundary
+
+This addendum comes from a static XAPK benchmark pass, not a live UX run. It
+should inform product direction, but it does not override
+`docs/plan/MASTER_PLAN_v3.0.md`, `docs/plan/MONETIZATION_SSOT_v1.md`, active
+route truth, or the current next wave.
+
+No Runout XAPK/APK binary, extracted asset, layout, chart, icon, text, paywall
+structure, or proprietary structure belongs in this repo.
+
+### What Runout appears to be
+
+Static evidence from `Runout+Poker+Trainer+GTO+Coach_1.1.6_APKPure.xapk`
+indicates:
+
+- package identity appears to be `com.gramercy.runout`;
+- version appears to be `1.1.6`;
+- React Native / Hermes bundle evidence is present;
+- billing, subscription, and paywall infrastructure evidence is present;
+- notifications and retention infrastructure evidence is present;
+- analytics, reliability, and tracking stack evidence is present;
+- progress, report, chart, tracker, skills, reference, and glossary-like
+  assets/strings are present;
+- onboarding, calibration, and trainer-construction style evidence is present.
+
+Runout therefore appears to be a complete commercial poker improvement
+ecosystem, not only a quiz or trainer. It appears to combine
+onboarding/calibration, drills, skills/mastery, reports/charts/progress,
+tracker/history/reference surfaces, subscriptions/paywall,
+notifications/retention, and analytics/reliability infrastructure.
+
+This confirms Runout's strongest advantage is perceived completeness and
+commercial packaging.
+
+### What Sharky should learn
+
+- Do not copy Runout artifacts.
+- Do not chase breadth before first proof.
+- Sharky should beat Runout through auditable learning causality:
+  `choice -> table signal -> why -> repair -> proof`
+- The immediate attack remains one-session repair proof, not dashboard breadth.
+
+### Confirmed product implications
+
+- Visible personalization: the next wave must show missed signal, selected
+  repair hand, and repair reason.
+- Progress theatre: do not build a dashboard now; first create compact proof
+  through Repair Result Receipt and Session Repair Summary.
+- Onboarding/calibration: future Welcome/Placement work should connect directly
+  to first repair proof; do not add a long calibration loop now.
+- Content/reference/glossary: future content-depth or glossary work is high-EV
+  only after visible repair proof.
+- Monetization: Runout's paywall/subscription maturity is a later packaging
+  battle; Sharky must keep value before paywall.
+- Retention: future habit and return reasons should come from real
+  missed/repaired signals, not streak guilt or random notifications.
+- Visual/premium packaging: later visual uplift should support repair feedback
+  rhythm, result ceremony, or proof packet; do not reopen Modern Table
+  micro-polish now.
+
+### Route impact
+
+- No immediate route change.
+- No score inflation.
+- No content expansion.
+- No monetization acceleration.
+- No Modern Table reopening.
+- Exact next wave remains: `Act0 Rule-Based Repair Visible Reason Surface v1`.
+
+### When to revisit Runout deeply again
+
+Revisit Runout deeply only for:
+
+- App Store / Premium Packaging Arc;
+- Premium/paywall/trial design;
+- Analytics / Leak Profile Lite;
+- final commercial proof packet;
+- live UX benchmark if screenshots, video, or user walkthrough evidence is
+  available.
+
 ## 3. Sharky Win Condition
 
 Sharky wins by making learning causality visible:
@@ -425,6 +507,7 @@ These ideas remain parked until their prerequisites are true:
 - Contextual glossary / tappable definitions.
 - Concept depth audit / spaced examples.
 - World/lesson completion reward layer.
+- Runout live UX benchmark / competitive packaging review.
 - W4 gate.
 - Dynamic or high-intent gate.
 - D2 or high-intent trial.
@@ -462,6 +545,7 @@ Accepted proof and strategy reviews:
 - `docs/_reviews/act0_rule_based_repair_runtime_consumption_v1.md`
 - `docs/_reviews/act0_rule_based_repair_telemetry_truth_v1.md`
 - `docs/_reviews/ci_workflow_rationalization_v1.md`
+- `docs/_reviews/top1_runout_xapk_benchmark_addendum_v1.md`
 - `docs/_reviews/blind_monetization_strategy_challenge_v1.md`
 - `docs/_reviews/monetization_ev_scenario_analysis_v1.md`
 - `docs/_reviews/premium_monetization_existing_plan_reconciliation_v1.md`
