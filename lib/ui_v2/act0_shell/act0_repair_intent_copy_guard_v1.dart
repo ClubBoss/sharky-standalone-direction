@@ -22,6 +22,8 @@ const Set<String> _act0RepairIntentForbiddenCopyTokensV1 = <String>{
   'guarantee',
   'leak',
   'detected',
+  'mastered',
+  'forever',
 };
 
 String? act0RepairIntentCopyGuardLineV1({
@@ -72,6 +74,32 @@ String? act0RepairResultReceiptCopyGuardLineV1({
   return line;
 }
 
+List<String> act0RepairSessionSummaryCopyGuardLinesV1({
+  required bool repaired,
+  required bool exactReplay,
+  required String clueLabel,
+}) {
+  final lines = exactReplay
+      ? <String>[
+          repaired
+              ? 'Replay fixed: you handled that spot correctly.'
+              : 'Replay still missed: try the spot once more.',
+        ]
+      : _sameSignalRepairSessionSummaryLinesV1(
+          repaired: repaired,
+          clueLabel: clueLabel,
+        );
+  if (lines.isEmpty) {
+    return const <String>[];
+  }
+  for (final line in lines) {
+    if (_containsForbiddenCopyTokenV1(line)) {
+      return const <String>[];
+    }
+  }
+  return List<String>.unmodifiable(lines);
+}
+
 String? _sameSignalRepairResultReceiptLineV1({
   required bool repaired,
   required String clueLabel,
@@ -87,6 +115,24 @@ String? _sameSignalRepairResultReceiptLineV1({
   return null;
 }
 
+List<String> _sameSignalRepairSessionSummaryLinesV1({
+  required bool repaired,
+  required String clueLabel,
+}) {
+  final compactClue = _learnerFacingCompactClueV1(clueLabel);
+  if (compactClue.isEmpty) {
+    return const <String>[];
+  }
+  if (repaired) {
+    return <String>['Today you repaired $compactClue.'];
+  }
+  final focusClue = _learnerFacingNextFocusClueV1(clueLabel);
+  return <String>[
+    'Still fragile: $compactClue.',
+    if (focusClue.isNotEmpty) 'Next focus: one more $focusClue repair hand.',
+  ];
+}
+
 String _learnerFacingSameSignalClueV1(String clueLabel) {
   final normalized = _normalizedRepairClueLabelV1(clueLabel);
   return switch (normalized) {
@@ -100,6 +146,14 @@ String _learnerFacingRepeatedMissClueV1(String clueLabel) {
   return switch (normalized) {
     'no bet yet' => 'nobody had bet yet',
     _ => _learnerFacingCompactClueV1(clueLabel),
+  };
+}
+
+String _learnerFacingNextFocusClueV1(String clueLabel) {
+  final normalized = _normalizedRepairClueLabelV1(clueLabel);
+  return switch (normalized) {
+    'no bet yet' => 'no-bet-yet',
+    _ => normalized.replaceAll(' ', '-'),
   };
 }
 

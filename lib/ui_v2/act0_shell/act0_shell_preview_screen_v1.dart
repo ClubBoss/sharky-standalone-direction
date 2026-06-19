@@ -728,6 +728,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activeRepairTaskId;
   String? _activeRepairSourceTaskId;
   String? _activeRepairResultReceiptLine;
+  List<String> _activeRepairSessionSummaryLines = const <String>[];
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
   String _firstValueTodayShownTelemetryKey = '';
   final Set<String> _repairItemShownTelemetryKeys = <String>{};
@@ -1759,6 +1760,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeGroupId = null;
     _activeRepairTaskId = null;
     _activeRepairSourceTaskId = null;
+    _activeRepairResultReceiptLine = null;
+    _activeRepairSessionSummaryLines = const <String>[];
     _practiceCompletionTitle = null;
     _practiceCompletionBody = null;
     _mistakeRecords.clear();
@@ -2378,6 +2381,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
       _activeRepairSourceTaskId = null;
+      _activeRepairResultReceiptLine = null;
+      _activeRepairSessionSummaryLines = const <String>[];
       _blockCompletionSummary = null;
       _dismissedHomeHandoffKey = '';
       _dismissedHomeHandoffDay = '';
@@ -2451,6 +2456,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activePracticeGroupId = null;
       _activeRepairTaskId = null;
       _activeRepairSourceTaskId = null;
+      _activeRepairResultReceiptLine = null;
+      _activeRepairSessionSummaryLines = const <String>[];
       _blockCompletionSummary = null;
     });
   }
@@ -2476,6 +2483,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _blockCompletionSummary = null;
       _activeRepairTaskId = null;
       _activeRepairSourceTaskId = null;
+      _activeRepairResultReceiptLine = null;
+      _activeRepairSessionSummaryLines = const <String>[];
       _selectedOptionId = null;
       _phase = selectedTask.phase;
       _teachingStepIndex = 0;
@@ -3477,6 +3486,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         playSelectedTask?.taskId
                                     ? _activeRepairResultReceiptLine
                                     : null,
+                                repairSessionSummaryLines:
+                                    _activeRepairTaskId ==
+                                        playSelectedTask?.taskId
+                                    ? _activeRepairSessionSummaryLines
+                                    : const <String>[],
                                 relaxTheoryAdvanceLock: _completedTaskIds
                                     .contains(playSelectedTask!.taskId),
                                 showLearningRailFocusLabels:
@@ -3504,6 +3518,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
                                     _activeRepairResultReceiptLine = null;
+                                    _activeRepairSessionSummaryLines =
+                                        const <String>[];
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -3567,6 +3583,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         selectedTask: playSelectedTask,
                                         option: option,
                                       );
+                                  _activeRepairSessionSummaryLines =
+                                      _repairSessionSummaryLinesForOptionV1(
+                                        selectedTask: playSelectedTask,
+                                        option: option,
+                                      );
                                   _captureFirstValueReceiptCarryV1(
                                     runner: activePlayRunner,
                                     sourceWorldId: selectedWorld.worldId,
@@ -3605,6 +3626,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _fireAnswerEffects(option);
                                       _activeRepairResultReceiptLine =
                                           _repairResultReceiptLineForOptionV1(
+                                            selectedTask: playSelectedTask,
+                                            option: option,
+                                          );
+                                      _activeRepairSessionSummaryLines =
+                                          _repairSessionSummaryLinesForOptionV1(
                                             selectedTask: playSelectedTask,
                                             option: option,
                                           );
@@ -3704,6 +3730,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
                                     _activeRepairResultReceiptLine = null;
+                                    _activeRepairSessionSummaryLines =
+                                        const <String>[];
                                     _selectedOptionId = null;
                                     _phase = Act0LessonPhaseV1.theory;
                                     _teachingStepIndex = 0;
@@ -3902,6 +3930,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _showPlayHub = true;
                   _activeRepairTaskId = null;
                   _activeRepairSourceTaskId = null;
+                  _activeRepairResultReceiptLine = null;
+                  _activeRepairSessionSummaryLines = const <String>[];
                 }
                 if (tab != Act0ShellTabV1.home) {
                   _placementHandoffActive = false;
@@ -5219,6 +5249,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activeRepairTaskId = launchTask.taskId;
       _activeRepairSourceTaskId = carry.sourceTaskId;
       _activeRepairResultReceiptLine = null;
+      _activeRepairSessionSummaryLines = const <String>[];
     }
     _persistProgress();
     return true;
@@ -5890,6 +5921,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
     _activeRepairResultReceiptLine = null;
+    _activeRepairSessionSummaryLines = const <String>[];
     _returnToPlayHubOnBack = returnToPlayHub;
     _activePracticeGroupId = practiceGroupId;
     _rapidPracticeLoop = rapidPracticeLoop;
@@ -6031,6 +6063,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         sourceTaskId == selectedTask.taskId || intent?.mappingType == 'exact';
     final clueLabel = intent?.missedSignalLabel ?? '';
     return act0RepairResultReceiptCopyGuardLineV1(
+      repaired: option.isCorrect,
+      exactReplay: exactReplay,
+      clueLabel: clueLabel,
+    );
+  }
+
+  List<String> _repairSessionSummaryLinesForOptionV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (_activeRepairTaskId != selectedTask.taskId) {
+      return const <String>[];
+    }
+    final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    final exactReplay =
+        sourceTaskId == selectedTask.taskId || intent?.mappingType == 'exact';
+    final clueLabel = intent?.missedSignalLabel ?? '';
+    return act0RepairSessionSummaryCopyGuardLinesV1(
       repaired: option.isCorrect,
       exactReplay: exactReplay,
       clueLabel: clueLabel,

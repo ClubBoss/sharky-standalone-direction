@@ -231,6 +231,11 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.text('Today you repaired the no-bet-yet clue.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('mastered forever'), findsNothing);
+    expect(
       find.text(
         'Still missed: nobody had bet yet. One more repair hand will help.',
       ),
@@ -304,6 +309,11 @@ void main() {
       find.text(
         'Still missed: nobody had bet yet. One more repair hand will help.',
       ),
+      findsOneWidget,
+    );
+    expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
+    expect(
+      find.text('Next focus: one more no-bet-yet repair hand.'),
       findsOneWidget,
     );
     expect(
@@ -422,6 +432,11 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.text('Replay fixed: you handled that spot correctly.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('same clue'), findsNothing);
+    expect(
       find.text('Repair fixed: you caught the no-bet-yet clue.'),
       findsNothing,
     );
@@ -444,6 +459,11 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.text('Replay still missed: try the spot once more.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('same clue'), findsNothing);
+    expect(
       find.text(
         'Still missed: nobody had bet yet. One more repair hand will help.',
       ),
@@ -460,6 +480,10 @@ void main() {
       taskId: 'actions_legal_context',
     );
     await _answerOption(tester, 'check');
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_summary')),
+      findsNothing,
+    );
     expect(find.textContaining('Repair fixed:'), findsNothing);
     expect(find.textContaining('Still missed:'), findsNothing);
     expect(find.textContaining('Replay fixed:'), findsNothing);
@@ -568,7 +592,9 @@ void main() {
     await _answerCorrectly(tester);
 
     const receipt = 'Repair fixed: you caught the no-bet-yet clue.';
+    const summary = 'Today you repaired the no-bet-yet clue.';
     expect(find.text(receipt), findsOneWidget);
+    expect(find.text(summary), findsOneWidget);
     const forbidden = <String>{
       'ai',
       'adaptive',
@@ -582,9 +608,11 @@ void main() {
       'trial',
       'unlock',
       'leak detected',
+      'mastered forever',
     };
     for (final token in forbidden) {
       expect(_containsForbiddenTokenInText(receipt, token), isFalse);
+      expect(_containsForbiddenTokenInText(summary, token), isFalse);
     }
   });
 
