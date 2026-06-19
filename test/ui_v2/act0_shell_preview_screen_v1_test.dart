@@ -2742,6 +2742,36 @@ void main() {
     expect(review!.mode, Act0ControlledDemoCaptureModeV1.directState);
     expect(review.surface, Act0ControlledDemoCaptureSurfaceV1.review);
 
+    final firstCorrectFeedback = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse(
+        'http://127.0.0.1:7357/?act0_capture=runner_first_correct_feedback',
+      ),
+    );
+    expect(firstCorrectFeedback, isNotNull);
+    expect(
+      firstCorrectFeedback!.mode,
+      Act0ControlledDemoCaptureModeV1.directState,
+    );
+    expect(
+      firstCorrectFeedback.surface,
+      Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
+    );
+
+    final firstWrongFeedback = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse(
+        'http://127.0.0.1:7357/?act0_capture=runner_first_wrong_feedback',
+      ),
+    );
+    expect(firstWrongFeedback, isNotNull);
+    expect(
+      firstWrongFeedback!.mode,
+      Act0ControlledDemoCaptureModeV1.directState,
+    );
+    expect(
+      firstWrongFeedback.surface,
+      Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+    );
+
     final legacyRunner = parseAct0ControlledDemoHarnessEntryV1(
       Uri.parse(
         'http://127.0.0.1:7357/?act0_capture=runner&world=world_1&lesson=what_poker_is&task=what_poker_is_theory',
@@ -2765,6 +2795,98 @@ void main() {
       ),
       isNull,
     );
+  });
+
+  test('First-week compact capture command stays targeted', () {
+    final source = File(
+      'tools/act0_first_week_compact_capture_v1.sh',
+    ).readAsStringSync();
+
+    expect(
+      source,
+      contains('"home_first_week:direct_state:?act0_capture=first_week_home"'),
+    );
+    expect(
+      source,
+      contains(
+        '"review_open_repair:direct_state:?act0_capture=first_week_review"',
+      ),
+    );
+    expect(
+      source,
+      contains(
+        '"learn_first_week_path:direct_state:?act0_capture=first_week_learn"',
+      ),
+    );
+    expect(
+      source,
+      contains(
+        '"profile_return_rhythm:direct_state:?act0_capture=first_week_profile"',
+      ),
+    );
+    expect(source, contains('VIEWPORT_NAME="compact_phone"'));
+    expect(source, contains('VIEWPORT_WIDTH=393'));
+    expect(source, contains('VIEWPORT_HEIGHT=852'));
+    expect(source, contains('pw open about:blank'));
+    expect(source, isNot(contains('large_phone')));
+    expect(source, isNot(contains('tablet')));
+    expect(source, isNot(contains('act0_controlled_demo_capture_v1.sh')));
+  });
+
+  test('Controlled demo capture query accepts first-week proof surfaces', () {
+    final home = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=first_week_home'),
+    );
+    expect(home, isNotNull);
+    expect(home!.mode, Act0ControlledDemoCaptureModeV1.directState);
+    expect(home.surface, Act0ControlledDemoCaptureSurfaceV1.firstWeekHome);
+
+    final review = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=first_week_review'),
+    );
+    expect(review, isNotNull);
+    expect(review!.surface, Act0ControlledDemoCaptureSurfaceV1.firstWeekReview);
+
+    final learn = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=first_week_learn'),
+    );
+    expect(learn, isNotNull);
+    expect(learn!.surface, Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn);
+
+    final profile = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=first_week_profile'),
+    );
+    expect(profile, isNotNull);
+    expect(
+      profile!.surface,
+      Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
+    );
+  });
+
+  test('Act0 proof capture locale override is explicit and English-only', () {
+    final reviewEnglish = act0CommercialProofLocaleOverrideV1(
+      Uri.parse(
+        'http://127.0.0.1:7357/?act0_capture=first_week_review&locale=en',
+      ),
+    );
+    expect(reviewEnglish, const Locale('en'));
+
+    final reviewDefault = act0CommercialProofLocaleOverrideV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=first_week_review'),
+    );
+    expect(reviewDefault, isNull);
+
+    final normalRoute = act0CommercialProofLocaleOverrideV1(
+      Uri.parse('http://127.0.0.1:7357/?locale=en'),
+    );
+    expect(normalRoute, isNull);
+
+    final unsupportedLocale = act0CommercialProofLocaleOverrideV1(
+      Uri.parse(
+        'http://127.0.0.1:7357/?act0_capture=first_week_review&locale=ru',
+      ),
+    );
+    expect(unsupportedLocale, isNull);
   });
 
   testWidgets(

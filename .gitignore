@@ -52,6 +52,12 @@ pa_audit_*/
 export/sessions/
 telemetry/*.log
 
+# Competitor binaries / local-only research artifacts
+external_competitors/
+*.apk
+*.xapk
+*.apks
+
 # --- macOS / Windows artifacts ---
 *.xcworkspace/
 *.xcodeproj/
