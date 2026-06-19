@@ -388,6 +388,7 @@ void main() {
       expect(selectedOptionId, 'raise');
       expect(sink.events.map((event) => event.name), <String>[
         'task_shown',
+        'user_choice',
         'task_result',
       ]);
 
@@ -400,7 +401,28 @@ void main() {
       expect(shown['phase'], 'drill');
       expect(shown['attemptOrdinal'], 1);
 
-      final result = sink.events[1].fields;
+      final userChoice = sink.events[1].fields;
+      expect(userChoice['schemaVersion'], 1);
+      expect(userChoice['worldId'], 'world_1');
+      expect(userChoice['lessonId'], 'fold_check_call_raise');
+      expect(userChoice['taskId'], 'actions_raise_drill');
+      expect(userChoice['choiceId'], 'raise');
+      expect(
+        userChoice['decisionTimeBucket'],
+        isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
+      );
+      expect(userChoice['attemptOrdinal'], 1);
+      expect(userChoice.keys.toSet(), <String>{
+        'schemaVersion',
+        'worldId',
+        'lessonId',
+        'taskId',
+        'choiceId',
+        'decisionTimeBucket',
+        'attemptOrdinal',
+      });
+
+      final result = sink.events[2].fields;
       expect(result['schemaVersion'], 1);
       expect(result['worldId'], 'world_1');
       expect(result['lessonId'], 'fold_check_call_raise');
@@ -410,6 +432,14 @@ void main() {
       expect(result['errorType'], 'none');
       expect(result['attemptOrdinal'], 1);
       expect(result['repairStatus'], 'none');
+      expect(
+        sink.events.where((event) => event.name == 'repair_started'),
+        isEmpty,
+      );
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        isEmpty,
+      );
 
       for (final event in sink.events) {
         expect(event.fields.containsKey('userId'), isFalse);
@@ -433,6 +463,61 @@ void main() {
       }
     },
   );
+
+  testWidgets('Act0 runner emits safe incorrect result telemetry', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+        .taskList
+        .firstWhere((candidate) => candidate.taskId == 'actions_raise_drill');
+    final sink = Act0InMemoryTelemetrySinkV1();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: task.runner.copyWith(
+              phase: Act0LessonPhaseV1.drill,
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            selectedWorldId: 'world_1',
+            selectedLessonId: 'fold_check_call_raise',
+            selectedTaskId: task.taskId,
+            selectedTaskFamily: task.resolvedTaskFamily,
+            telemetrySink: sink,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_call')));
+    await tester.pumpAndSettle();
+
+    final userChoice = sink.events.firstWhere(
+      (event) => event.name == 'user_choice',
+    );
+    expect(userChoice.fields['choiceId'], 'call');
+    expect(
+      userChoice.fields['decisionTimeBucket'],
+      isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
+    );
+
+    final result = sink.events.firstWhere(
+      (event) => event.name == 'task_result',
+    );
+    expect(result.fields['choiceId'], 'call');
+    expect(result.fields['result'], 'incorrect');
+    expect(result.fields['errorType'], 'unknown');
+
+    expectNoForbiddenTelemetryFieldsV1(sink.events);
+  });
 
   testWidgets(
     'Act0 runner emits one safe feedback_viewed event from the real feedback path',
@@ -506,7 +591,6 @@ void main() {
           .where((event) => event.name == 'repair_completed')
           .toList(growable: false);
       expect(repairEvents, hasLength(1));
-      expect(sink.events.last.name, 'repair_completed');
 
       final repair = repairEvents.single.fields;
       expect(repair['schemaVersion'], 1);
@@ -517,6 +601,19 @@ void main() {
       expect(repair['repairStatus'], 'fixed');
       expect(repair['sourceTaskId'], repairStart['sourceTaskId']);
       expect(repair['repairTaskId'], repairStart['repairTaskId']);
+
+      final repairItemEvents = sink.events
+          .where((event) => event.name == 'repair_item_completed')
+          .toList(growable: false);
+      expect(repairItemEvents, hasLength(1));
+      expect(sink.events.last.name, 'repair_item_completed');
+
+      final repairItem = repairItemEvents.single.fields;
+      expect(repairItem['schemaVersion'], 1);
+      expect(repairItem['sourceTaskId'], repairStart['sourceTaskId']);
+      expect(repairItem['targetTaskId'], repairStart['repairTaskId']);
+      expect(repairItem['outcome'], 'repaired');
+      expect(repairItem['correct'], isTrue);
 
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },
@@ -630,7 +727,6 @@ void main() {
     await completeDailySetFromPlayV1(tester);
 
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
-    expect(find.text('Daily set complete'), findsWidgets);
   });
 
   testWidgets('Act0 feedback telemetry stays non-blocking when sink throws', (

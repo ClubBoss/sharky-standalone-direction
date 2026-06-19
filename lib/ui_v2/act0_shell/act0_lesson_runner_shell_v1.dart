@@ -783,8 +783,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   String _advanceLockKey = '';
   String _rapidReviewKey = '';
   String _taskShownTelemetryKey = '';
+  String _userChoiceTelemetryKey = '';
   String _feedbackViewedTelemetryKey = '';
   String _showdownInteractionKey = '';
+  final Stopwatch _decisionTelemetryStopwatch = Stopwatch();
   List<String> _interactiveHighlightedCardIds = const <String>[];
   String _interactiveShowdownLine = '';
   int? _actionTrailFocusedIndex;
@@ -920,6 +922,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       return;
     }
     _taskShownTelemetryKey = key;
+    _userChoiceTelemetryKey = '';
+    _decisionTelemetryStopwatch
+      ..reset()
+      ..start();
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'task_shown',
@@ -936,6 +942,49 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         },
       ),
     );
+  }
+
+  void _maybeEmitUserChoiceTelemetry(Act0RunnerOptionV1 option) {
+    final key =
+        '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|$_stableTaskTelemetryId|${widget.runner.phase.name}|${option.id}';
+    if (_userChoiceTelemetryKey == key) {
+      return;
+    }
+    _userChoiceTelemetryKey = key;
+    final decisionTimeBucket = _decisionTimeBucketV1(
+      _decisionTelemetryStopwatch.isRunning
+          ? _decisionTelemetryStopwatch.elapsed
+          : Duration.zero,
+    );
+    _decisionTelemetryStopwatch.stop();
+    _recordTelemetry(
+      Act0TelemetryEventV1(
+        name: 'user_choice',
+        fields: <String, Object?>{
+          'schemaVersion': 1,
+          if ((widget.selectedWorldId ?? '').trim().isNotEmpty)
+            'worldId': widget.selectedWorldId!.trim(),
+          'lessonId': _stableLessonTelemetryId,
+          'taskId': _stableTaskTelemetryId,
+          'choiceId': option.id,
+          'decisionTimeBucket': decisionTimeBucket,
+          'attemptOrdinal': 1,
+        },
+      ),
+    );
+  }
+
+  String _decisionTimeBucketV1(Duration elapsed) {
+    if (elapsed <= Duration.zero) {
+      return 'unknown';
+    }
+    if (elapsed < const Duration(seconds: 3)) {
+      return 'under_3s';
+    }
+    if (elapsed < const Duration(seconds: 10)) {
+      return '3_to_10s';
+    }
+    return 'over_10s';
   }
 
   void _maybeEmitFeedbackViewedTelemetry() {
@@ -996,6 +1045,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    _maybeEmitUserChoiceTelemetry(option);
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
       option: option,
