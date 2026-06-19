@@ -9,7 +9,7 @@ void main() {
         clueLabel: 'No bet yet',
         skillLabel: 'Action read',
       ),
-      'You missed No bet yet. This hand repairs the same clue.',
+      'You missed that nobody has bet yet. This hand repeats that table clue.',
     );
   });
 
@@ -20,7 +20,7 @@ void main() {
         clueLabel: 'No bet yet',
         skillLabel: 'Action read',
       ),
-      'Replay this spot to fix No bet yet.',
+      'Replay this spot to fix the no-bet-yet clue.',
     );
   });
 
@@ -106,6 +106,8 @@ void main() {
     };
 
     for (final line in lines) {
+      expect(line.contains('You missed No bet yet'), isFalse);
+      expect(line.contains('fix No bet yet'), isFalse);
       for (final token in forbidden) {
         expect(_containsForbiddenToken(line, token), isFalse, reason: token);
       }

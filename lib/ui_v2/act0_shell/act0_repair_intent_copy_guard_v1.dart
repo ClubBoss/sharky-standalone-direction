@@ -31,11 +31,13 @@ String? act0RepairIntentCopyGuardLineV1({
 
   final clue = clueLabel.trim();
   final skill = skillLabel.trim();
+  final sameSignalClue = _learnerFacingSameSignalClueV1(clue);
+  final exactReplayClue = _learnerFacingExactReplayClueV1(clue);
   final line = switch (safeTemplateId) {
-    'repair_same_clue_v1' when clue.isNotEmpty =>
-      'You missed $clue. This hand repairs the same clue.',
-    'repair_exact_replay_v1' when clue.isNotEmpty =>
-      'Replay this spot to fix $clue.',
+    'repair_same_clue_v1' when sameSignalClue.isNotEmpty =>
+      'You missed $sameSignalClue. This hand repeats that table clue.',
+    'repair_exact_replay_v1' when exactReplayClue.isNotEmpty =>
+      'Replay this spot to fix $exactReplayClue.',
     'fallback_next_hand_v1' when skill.isNotEmpty =>
       'Next hand: keep building $skill.',
     _ => null,
@@ -45,6 +47,36 @@ String? act0RepairIntentCopyGuardLineV1({
     return null;
   }
   return line;
+}
+
+String _learnerFacingSameSignalClueV1(String clueLabel) {
+  final normalized = _normalizedRepairClueLabelV1(clueLabel);
+  return switch (normalized) {
+    'no bet yet' => 'that nobody has bet yet',
+    _ => _learnerFacingCompactClueV1(clueLabel),
+  };
+}
+
+String _learnerFacingExactReplayClueV1(String clueLabel) {
+  return _learnerFacingCompactClueV1(clueLabel);
+}
+
+String _learnerFacingCompactClueV1(String clueLabel) {
+  final normalized = _normalizedRepairClueLabelV1(clueLabel);
+  return switch (normalized) {
+    'no bet yet' => 'the no-bet-yet clue',
+    _ when normalized.isNotEmpty => 'the $normalized clue',
+    _ => '',
+  };
+}
+
+String _normalizedRepairClueLabelV1(String clueLabel) {
+  return clueLabel
+      .trim()
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
 }
 
 bool _containsForbiddenCopyTokenV1(String line) {
