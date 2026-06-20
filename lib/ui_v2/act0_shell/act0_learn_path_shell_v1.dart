@@ -3418,8 +3418,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                       Text(
                         _learnCopyV1(
                           context,
-                          en: 'Current Mission',
-                          ru: 'Текущая миссия',
+                          en: 'Learning path',
+                          ru: 'Путь обучения',
                         ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.textMuted,
@@ -3446,6 +3446,18 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           overflow: TextOverflow.fade,
                         ),
                         const SizedBox(height: 6),
+                        Text(
+                          _learnCopyV1(
+                            context,
+                            en: 'Why it matters',
+                            ru: 'Зачем это нужно',
+                          ),
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: _learnV6Cyan,
+                            fontSize: 9.2,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
                         Text(
                           support,
                           key: const Key('act0_shell_current_mission_support'),
