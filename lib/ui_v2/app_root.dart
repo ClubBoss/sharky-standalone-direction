@@ -18,6 +18,10 @@ const String _deepLinkTargetRaw = String.fromEnvironment(
   _deepLinkTargetEnvKey,
   defaultValue: '',
 );
+const String _act0NativeCaptureSurfaceRaw = String.fromEnvironment(
+  'SHARKY_CAPTURE_SURFACE',
+  defaultValue: '',
+);
 final DeepLinkTargetV1? _deepLinkTarget = parseDeepLinkTargetV1(
   _deepLinkTargetRaw,
 );
@@ -137,6 +141,24 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         worldId: worldId,
         lessonId: lessonId,
         taskId: taskId,
+      );
+    default:
+      return null;
+  }
+}
+
+@visibleForTesting
+Act0ShellDebugHarnessEntryV1? parseAct0NativeCaptureHarnessEntryV1(
+  String rawSurface,
+) {
+  switch (rawSurface.trim().toLowerCase()) {
+    case 'home':
+    case 'learn':
+    case 'practice':
+    case 'review':
+    case 'profile':
+      return parseAct0ControlledDemoHarnessEntryV1(
+        Uri(queryParameters: <String, String>{'act0_capture': rawSurface}),
       );
     default:
       return null;
@@ -541,7 +563,10 @@ class _EntryGateState extends State<_EntryGate> {
     final showPlacementOnStart = !onboardingCompleted;
     final debugHarnessEntry = kReleaseMode
         ? null
-        : parseAct0ControlledDemoHarnessEntryV1(Uri.base);
+        : parseAct0ControlledDemoHarnessEntryV1(Uri.base) ??
+              parseAct0NativeCaptureHarnessEntryV1(
+                _act0NativeCaptureSurfaceRaw,
+              );
     if (!mounted) return;
     setState(() {
       _debugHarnessEntry = debugHarnessEntry;
