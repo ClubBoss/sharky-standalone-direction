@@ -193,12 +193,40 @@ void main() {
     throw StateError('No local real-text font found for screen capture.');
   }
 
+  Future<void> loadIconFonts() async {
+    const iconFonts = <(String, String)>[
+      ('MaterialIcons', 'build/unit_test_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('MaterialIcons', 'build/flutter_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+    ];
+    final loaded = <String>{};
+    for (final (family, path) in iconFonts) {
+      if (loaded.contains(family)) {
+        continue;
+      }
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
+      }
+      final bytes = await file.readAsBytes();
+      await loadFontFamily(family, bytes);
+      loaded.add(family);
+    }
+    if (!loaded.contains('MaterialIcons')) {
+      throw StateError('No local MaterialIcons font found for screen capture.');
+    }
+  }
+
   setUp(() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
   setUpAll(() async {
     await loadRealTextFont();
+    await loadIconFonts();
   });
 
   Future<void> pumpCompact(

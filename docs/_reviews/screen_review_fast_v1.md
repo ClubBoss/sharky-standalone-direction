@@ -14,6 +14,7 @@
 
 - `tools/screen_review_fast_v1.sh` is the public command.
 - `tools/act0_real_text_surface_capture_v1.dart` generates a temporary Flutter widget test, pumps the existing deterministic Act0 debug surfaces, captures the root `RepaintBoundary`, and writes real-text PNGs.
+- The generated widget test loads local text fonts plus bundled `MaterialIcons` and `CupertinoIcons` fonts before rendering.
 - `tools/screen_review_fast_text_repair_v1.py` repairs Flutter-test-only Ahem button labels using temporary widget-tree overlay metadata, then removes the temporary overlay JSON before packaging.
 - `tools/package_screen_review_v1.py` packages the `core_fast` group into a contact sheet and zip with the existing packet helper.
 - Output is staged first and promoted only after every required PNG and manifest exists, preserving the previous good output on capture failure.
@@ -23,6 +24,12 @@
 - Root cause: `flutter test` uses the Ahem test font by default. Most Act0 text inherits the harness `Roboto` font, but locally styled `FilledButton.styleFrom(textStyle: ...)` CTA labels create a `DefaultTextStyle` with no font family, so those labels still rasterized as Ahem blocks.
 - Fix: the generated widget test records only text widgets whose effective test style lacks a font family. The repair helper redraws those exact labels into the PNGs with a local system font and deletes the temporary overlay metadata before the packet is created.
 - Product impact: none. This is capture-tooling-only and does not change Act0 UX, copy, layout, routes, telemetry, or Product-100.
+
+## Icon-font root cause and fix
+
+- Root cause: the Flutter-test renderer did not automatically load the app icon fonts used by `Icons.*` and `CupertinoIcons`, so icon glyphs appeared as square placeholders in the `core_fast` PNGs.
+- Fix: the generated widget test now loads the existing bundled `MaterialIcons-Regular.otf` and `CupertinoIcons.ttf` from local Flutter test/build assets before rendering.
+- Product impact: none. This only affects the capture harness; no product icon, layout, route, or theme behavior changed.
 
 ## Command
 
@@ -63,14 +70,15 @@
 - It supports only the compact core packet in v1.
 - It uses existing deterministic debug surfaces; it does not add navigation, app behavior, or product UI changes.
 - The lane includes a capture-only repair pass for Flutter-test button labels because `flutter test` forces Ahem for text styles without a font family.
+- The lane loads local bundled icon fonts for capture because Flutter-test `RepaintBoundary` output does not automatically include app icon fonts.
 - Generated screenshots, contact sheets, and zips are local-only and must not be committed.
 
 ## Acceptance verdict
 
 - Final command: `./tools/screen_review_fast_v1.sh core compact`
-- Runtime observed: about 16 seconds locally.
+- Runtime observed: about 13 seconds locally.
 - Output: all five compact core PNGs, `manifest.json`, `contact_sheet.png`, `screen_review_core_fast.zip`, `README.txt`, and `screen_review_index.json`.
-- Visual acceptance: Home, Learn, Practice, Review, and Profile text is readable; CTA/button labels are readable; no obvious Ahem/nonliteral blocks remain in the contact sheet.
+- Visual acceptance: Home, Learn, Practice, Review, and Profile text is readable; CTA/button labels are readable; bottom navigation and card icons render as icons rather than placeholder boxes.
 
 ## Checks
 
