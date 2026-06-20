@@ -44,8 +44,8 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
             ),
     'weak_spots' => _playCopyV1(
       context,
-      'play_action_fix_next_leak',
-      fallback: 'Fix next leak',
+      'play_action_practice_repair',
+      fallback: 'Practice repair',
     ),
     'continue' => _playCopyV1(
       context,
@@ -236,11 +236,21 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   Widget build(BuildContext context) {
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
+    final recommendedGroup = _groupById(
+      widget.groups,
+      widget.recommendedGroupId,
+    );
+    final recommendedRepairGroup =
+        recommendedGroup != null &&
+        recommendedGroup.isEnabled &&
+        _kRepairGroupIds.contains(recommendedGroup.groupId);
     final fallbackFeaturedGroup =
-        _groupById(widget.groups, widget.recommendedGroupId) ??
+        recommendedGroup ??
         fixLeakGroup ??
         (widget.groups.isEmpty ? null : widget.groups.first);
-    final featuredGroup = quickDrillGroup ?? fallbackFeaturedGroup;
+    final featuredGroup = recommendedRepairGroup
+        ? recommendedGroup
+        : quickDrillGroup ?? fallbackFeaturedGroup;
     final excludedGroupIds = <String>{
       if (featuredGroup != null) featuredGroup.groupId,
       if (quickDrillGroup != null) quickDrillGroup.groupId,
@@ -302,6 +312,9 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             group: featuredGroup,
             title: widget.recommendedTitle,
             subtitle: widget.recommendedSubtitle,
+            reasonLabel: recommendedRepairGroup
+                ? widget.recommendedReasonLabel
+                : null,
             onStartGroup: widget.onStartGroup,
           ),
           const SizedBox(height: Act0VisualMetricsV1.sectionGap),
@@ -533,12 +546,14 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
     required this.group,
     required this.title,
     required this.subtitle,
+    required this.reasonLabel,
     required this.onStartGroup,
   });
 
   final Act0PracticeGroupV1 group;
   final String title;
   final String subtitle;
+  final String? reasonLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
 
   @override
@@ -604,13 +619,20 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _playCopyV1(
-                              context,
-                              'play_daily_hero_eyebrow',
-                              fallback: 'Today\'s training',
-                            ),
+                            reasonLabel?.trim().isNotEmpty ?? false
+                                ? reasonLabel!.trim()
+                                : _playCopyV1(
+                                    context,
+                                    'play_daily_hero_eyebrow',
+                                    fallback: 'Today\'s training',
+                                  ),
+                            key: reasonLabel?.trim().isNotEmpty ?? false
+                                ? const Key('act0_shell_play_featured_reason')
+                                : null,
                             style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.actionBlue,
+                              color: isRepairGroup
+                                  ? Act0ShellTokensV1.gold
+                                  : Act0ShellTokensV1.actionBlue,
                               fontSize: 12,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.25,

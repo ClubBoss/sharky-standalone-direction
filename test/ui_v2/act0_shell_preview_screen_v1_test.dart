@@ -16286,12 +16286,12 @@ void main() {
     await openBottomTabV1(tester, 'Practice');
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
     expect(
-      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
+      find.byKey(const Key('act0_shell_play_featured_card')),
       findsOneWidget,
     );
-    await tester.tap(
-      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
-    );
+    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(find.text('Practice repair'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
     expect(
