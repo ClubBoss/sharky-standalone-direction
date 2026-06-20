@@ -71,9 +71,16 @@ The existing weak-spot CTA fallback was changed from `Fix next leak` to `Practic
 
 No telemetry event names, sinks, payload fields, or ownership changed. Existing telemetry tests remain the guard.
 
-## Screenshot Note
+## Screenshot Review
 
-No screenshot was captured in this local wave. The visible Practice featured block behavior changed, so screenshots should be captured before PR approval if this branch is pushed.
+Verdict: approved before PR.
+
+- Mapped repair: `/Users/elmarsalimzade/Sharky_1.0/output/playwright/practice_repair_reinforcement_entry_v1/browser_practice_widget_dark_20260620_022109/compact_phone.practice_mapped_repair.png`
+- Exact replay: `/Users/elmarsalimzade/Sharky_1.0/output/playwright/practice_repair_reinforcement_entry_v1/browser_practice_widget_dark_20260620_022109/compact_phone.practice_exact_replay.png`
+- No-repair fallback: `/Users/elmarsalimzade/Sharky_1.0/output/playwright/practice_repair_reinforcement_entry_v1/browser_practice_widget_dark_20260620_022109/compact_phone.practice_no_repair.png`
+- Supplemental full-app fallback: `/Users/elmarsalimzade/Sharky_1.0/output/playwright/practice_repair_reinforcement_entry_v1/browser_full_app_fallback_en2_20260620_022344/compact_phone.practice_no_repair_full_app.png`
+
+Screenshots are local-only artifacts and are not committed. The primary Practice entry is block/card based, not a primary pill/chip. No Session proof, session ceremony, Home card, or Review dashboard leaked into Practice.
 
 ## Checks
 
