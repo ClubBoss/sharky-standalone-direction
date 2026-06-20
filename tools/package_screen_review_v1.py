@@ -21,6 +21,13 @@ SURFACE_GROUPS = {
         ("review", "Review"),
         ("profile", "Profile"),
     ),
+    "core_fast": (
+        ("home", "Home"),
+        ("learn", "Learn"),
+        ("practice", "Practice"),
+        ("review", "Review"),
+        ("profile", "Profile"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEVICE = "compact"
@@ -37,7 +44,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -153,7 +160,7 @@ def _metadata(
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "git_commit": _git(root, "rev-parse", "HEAD"),
         "git_status": "clean" if _git(root, "status", "--short") == "" else "dirty",
-        "source_command": f"./tools/screen_review_v1.sh {group} compact",
+        "source_command": _source_command(group),
         "package_command": f"./tools/package_screen_review_v1.sh current {group}",
         "surfaces": [surface for surface, _, _ in entries],
         "files": [str(path.relative_to(root)) for _, _, path in entries],
@@ -161,6 +168,12 @@ def _metadata(
         "zip": str(zip_path.relative_to(root)),
         "note": "Generated packet artifacts are local-only and uncommitted.",
     }
+
+
+def _source_command(group: str) -> str:
+    if group == "core_fast":
+        return "./tools/screen_review_fast_v1.sh core compact"
+    return f"./tools/screen_review_v1.sh {group} compact"
 
 
 def _git(root: Path, *args: str) -> str:
