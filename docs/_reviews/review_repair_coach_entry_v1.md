@@ -29,3 +29,12 @@
 ## Checks
 
 - Focused Review, repair-copy, telemetry, static analysis, diff, and fast-loop results are recorded from the final local verification run.
+
+## Screenshot Capture Attempt / Waiver
+
+- Screenshots were requested because Review visible structure changed materially.
+- The existing controlled demo capture could not capture deterministic Review states.
+- A targeted harness was attempted locally; it produced `review_active_repair.png` but the command did not terminate.
+- The four required clean Review states were not captured, so this PR makes no visual screenshot approval claim.
+- Raw screenshot artifacts remain local-only and uncommitted. The targeted surface screenshot harness is deferred as a separate tooling wave.
+- This PR proceeds on focused tests, static analysis, diff validation, and the fast loop.
