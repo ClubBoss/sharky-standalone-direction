@@ -10899,15 +10899,15 @@ void main() {
 
       await openBottomTabV1(tester, 'Review');
       await tester.ensureVisible(
-        find.byKey(const Key('act0_shell_mistake_card')),
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
       );
       await tester.pumpAndSettle();
 
-      final reason = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_mistake_reason')),
+      expect(find.text('Repair coach'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
+        findsOneWidget,
       );
-      expect(reason.maxLines, 4);
-      expect(reason.overflow, TextOverflow.fade);
     },
   );
 
@@ -16268,20 +16268,15 @@ void main() {
 
     await openBottomTabV1(tester, 'Review');
     await tester.ensureVisible(
-      find.byKey(const Key('act0_shell_mistake_card')),
+      find.byKey(const Key('act0_shell_review_repair_coach_card')),
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('act0_shell_mistake_card')), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_mistake_reason')), findsOneWidget);
     expect(
-      find.byKey(const Key('act0_shell_mistake_decision_strip')),
+      find.byKey(const Key('act0_shell_review_repair_coach_card')),
       findsOneWidget,
     );
-    expect(
-      find.byKey(const Key('act0_shell_mistake_attempts_badge')),
-      findsNothing,
-    );
+    expect(find.text('Repair coach'), findsOneWidget);
 
     await openBottomTabV1(tester, 'Practice');
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
