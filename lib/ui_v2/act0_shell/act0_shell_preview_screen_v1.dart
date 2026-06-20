@@ -3479,6 +3479,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         !_placementDiagnosticActive
                                     ? _firstValueReceiptLineV1(playSelectedTask)
                                     : null,
+                                repairReasonLine:
+                                    _repairReasonLineForFeedbackV1(
+                                      playSelectedTask,
+                                    ),
                                 repairResultReceiptLine:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId
@@ -6131,6 +6135,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
     return 'First read logged. Next: use it once more.';
+  }
+
+  String? _repairReasonLineForFeedbackV1(Act0LessonTaskV1? selectedTask) {
+    if (selectedTask == null) {
+      return null;
+    }
+    final sourceTaskId = _activeRepairTaskId == selectedTask.taskId
+        ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
+        : selectedTask.taskId;
+    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    if (target == null) {
+      return null;
+    }
+    final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+      sourceTaskId: sourceTaskId,
+      target: target,
+      practiceGroupId: _activePracticeGroupId,
+      repeatedMissCount: _mistakeRecords[sourceTaskId]?.attempts ?? 1,
+    );
+    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
+    final line = bridge.renderedCopyLine.trim();
+    return line.isEmpty ? null : line;
   }
 
   String? _repairResultReceiptLineForOptionV1({

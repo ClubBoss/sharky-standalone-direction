@@ -116,6 +116,59 @@ void main() {
     );
   });
 
+  testWidgets('wrong repair feedback shows visible repair reason', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Good spot to fix.',
+            reason: 'No bet faces Hero yet. Check is the clean action.',
+            quality: Act0FeedbackQualityV1.wrong,
+            sharkyLine: 'Good spot to fix.',
+            sharkyMood: Act0SharkyMoodV1.repair,
+            selectedLabel: 'Bet',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            signalProof: const Act0FeedbackSignalProofV1(
+              signalId: 'no_bet_yet',
+              label: 'No bet yet',
+              proofLine: 'Signal: No bet yet',
+            ),
+            contextLabels: const <String>['No bet yet'],
+            repairReasonLine:
+                'You missed that nobody has bet yet. This hand repeats that table clue.',
+            repairResultReceiptLine:
+                'Repair started: the missed table clue was no bet yet.',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_visible_repair_reason')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair focus'), findsOneWidget);
+    expect(find.text('You missed the no-bet-yet clue.'), findsOneWidget);
+    expect(
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Before choosing, ask whether a bet faces you.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('AI'), findsNothing);
+    expect(find.textContaining('solver'), findsNothing);
+    expect(find.textContaining('GTO'), findsNothing);
+    expect(find.textContaining('optimal'), findsNothing);
+  });
+
   testWidgets('repeated repair feedback labels still fragile calmly', (
     tester,
   ) async {

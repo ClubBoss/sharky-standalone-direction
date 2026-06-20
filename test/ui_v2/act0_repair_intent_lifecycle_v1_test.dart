@@ -37,6 +37,22 @@ void main() {
     expect(intent?['mappingType'], 'repair');
     expect(intent?['reasonCode'], 'same_signal_action_read_no_bet_yet');
     expect(_openRepairIntentCount(tester), 1);
+    expect(
+      find.byKey(const Key('act0_shell_visible_repair_reason')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair focus'), findsOneWidget);
+    expect(find.text('You missed the no-bet-yet clue.'), findsOneWidget);
+    expect(
+      find.text(
+        'You missed that nobody has bet yet. This hand repeats that table clue.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Before choosing, ask whether a bet faces you.'),
+      findsOneWidget,
+    );
 
     final repeat = _openRepairIntentPayload(tester, 'actions_legal_context');
     expect(repeat, intent);
