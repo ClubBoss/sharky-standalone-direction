@@ -66,11 +66,9 @@ class Act0LanguageCopyBundleV1 {
   final Map<String, String> lessonTitlesByEnglish;
 }
 
-bool act0IsRuLocaleV1(BuildContext context) =>
-    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+bool act0IsRuLocaleV1(BuildContext context) => false;
 
-String act0LanguageCodeV1(BuildContext context) =>
-    _act0NormalizedLanguageCodeV1(Localizations.localeOf(context).languageCode);
+String act0LanguageCodeV1(BuildContext context) => '';
 
 String act0LocalizedSurfaceAtomV1(
   BuildContext context,

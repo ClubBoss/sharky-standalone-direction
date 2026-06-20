@@ -1168,9 +1168,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
   int _placementDiagnosticScore = 0;
-  bool get _isRuLocaleV1 => Localizations.localeOf(
-    context,
-  ).languageCode.toLowerCase().startsWith('ru');
+  bool get _isRuLocaleV1 => false;
 
   String _copyV1({required String en, required String ru}) =>
       _isRuLocaleV1 ? ru : en;
@@ -10394,9 +10392,6 @@ class _BottomNavV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRu = Localizations.localeOf(
-      context,
-    ).languageCode.toLowerCase().startsWith('ru');
     return SizedBox(
       key: const Key('act0_shell_bottom_nav'),
       height: Act0ShellTokensV1.bottomNavHeight,
@@ -10408,28 +10403,28 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.home,
               current: current,
               icon: Icons.home_rounded,
-              label: isRu ? 'Главная' : 'Home',
+              label: 'Home',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.learn,
               current: current,
               icon: Icons.menu_book_rounded,
-              label: isRu ? 'Обучение' : 'Learn',
+              label: 'Learn',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.play,
               current: current,
               icon: Icons.spa_rounded,
-              label: isRu ? 'Практика' : 'Practice',
+              label: 'Practice',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.review,
               current: current,
               icon: Icons.refresh_rounded,
-              label: isRu ? 'Разбор' : 'Review',
+              label: 'Review',
               showDot: reviewHasDot,
               onSelected: onSelected,
             ),
@@ -10437,7 +10432,7 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.profile,
               current: current,
               icon: Icons.person_rounded,
-              label: isRu ? 'Ты' : 'You',
+              label: 'You',
               onSelected: onSelected,
             ),
           ],

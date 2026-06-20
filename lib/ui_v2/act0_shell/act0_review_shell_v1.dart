@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 bool _isRuLocaleV1(BuildContext context) =>
-    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+    false;
 
 String _reviewCopyV1(
   BuildContext context, {

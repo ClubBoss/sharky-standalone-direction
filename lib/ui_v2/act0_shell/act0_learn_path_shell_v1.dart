@@ -11,7 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 bool _isRuLocaleV1(BuildContext context) =>
-    Localizations.localeOf(context).languageCode.toLowerCase().startsWith('ru');
+    false;
 
 String _learnCopyV1(
   BuildContext context, {
