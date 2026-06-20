@@ -4,138 +4,170 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  testWidgets('Review empty state stacks icon and copy on compact portrait', (
+  Widget reviewHost(Act0ReviewStateV1 review) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Act0ReviewShellV1(
+          review: review,
+          selected: null,
+          onSelected: (_) {},
+          onFixMistake: (_) {},
+          onReplayFixedMistake: (_) {},
+        ),
+      ),
+    );
+  }
+
+  const activeMistake = Act0MistakeCardV1(
+    taskId: 'actions_check_drill',
+    lessonId: 'fold_check_call_raise',
+    title: 'No bet yet',
+    weaknessLabel: 'Action read',
+    selectedOptionId: 'bet',
+    selectedLabel: 'Bet',
+    betterLabel: 'Check',
+    reason: 'Nobody had bet, so checking kept the action honest.',
+    attempts: 2,
+    repairActionLabel: 'Review why the table was telling you to check.',
+  );
+
+  const recoveredMistake = Act0MistakeCardV1(
+    taskId: 'actions_check_replay',
+    lessonId: 'fold_check_call_raise',
+    title: 'No bet yet',
+    weaknessLabel: 'Action read',
+    selectedOptionId: 'check',
+    selectedLabel: 'Check',
+    betterLabel: 'Check',
+    reason: 'You caught the missing bet before acting.',
+    attempts: 1,
+  );
+
+  testWidgets('Review gives an active clue a card-based repair coach entry', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(393, 852);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0ReviewShellV1(
-            review: const Act0ReviewStateV1(
-              title: 'Repair board',
-              subtitle: 'Fix the biggest leak first.',
-              weaknessLabel: 'Action order',
-              reason: 'Late action keeps getting rushed.',
-              stats: <Act0ReviewStatV1>[
-                Act0ReviewStatV1(label: 'Open', value: '0'),
-              ],
-              chosenLabel: 'Call',
-              betterLabel: 'Fold',
-            ),
-            selected: null,
-            onSelected: (_) {},
-          ),
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+          mistakes: <Act0MistakeCardV1>[activeMistake],
         ),
       ),
     );
     await tester.pumpAndSettle();
 
-    final layout = find.byKey(
-      const Key('act0_shell_review_empty_state_layout'),
-    );
-    expect(layout, findsOneWidget);
-    expect(tester.widget<Flex>(layout).direction, Axis.vertical);
-    expect(find.text('No weak spots yet.'), findsOneWidget);
     expect(
-      find.text('Finish a drill to build your review list.'),
+      find.byKey(const Key('act0_shell_review_repair_coach_card')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair coach'), findsOneWidget);
+    expect(find.text('No-bet-yet is still the clue to fix.'), findsOneWidget);
+    expect(
+      find.text('Review why the table was telling you to check.'),
+      findsOneWidget,
+    );
+    expect(find.text('Next repair: one no-bet-yet hand'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_review_fix_next_cta')),
       findsOneWidget,
     );
   });
 
-  testWidgets('Review active repair state reads like a recovery plan', (
+  testWidgets(
+    'Review makes a repeated pending pattern actionable without an error log',
+    (tester) async {
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Bet',
+            betterLabel: 'Check',
+            mistakes: <Act0MistakeCardV1>[
+              activeMistake,
+              Act0MistakeCardV1(
+                taskId: 'actions_check_drill_2',
+                lessonId: 'fold_check_call_raise',
+                title: 'No bet yet',
+                weaknessLabel: 'Action read',
+                selectedOptionId: 'bet',
+                selectedLabel: 'Bet',
+                betterLabel: 'Check',
+                reason: 'Check when nobody has bet yet.',
+                attempts: 2,
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Pattern to repair'), findsOneWidget);
+      expect(
+        find.text('Action read is showing up 2 times. Fix this pattern first.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('leak'), findsNothing);
+    },
+  );
+
+  testWidgets('Review keeps recovered mistakes as secondary proof', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(393, 852);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0ReviewShellV1(
-            review: const Act0ReviewStateV1(
-              title: 'Repair board',
-              subtitle: 'Fix the biggest leak first.',
-              weaknessLabel: 'Board texture',
-              reason: 'Wet boards keep getting misread under pressure.',
-              stats: <Act0ReviewStatV1>[
-                Act0ReviewStatV1(label: 'Open', value: '3'),
-              ],
-              chosenLabel: 'Call',
-              betterLabel: 'Fold',
-              mistakes: <Act0MistakeCardV1>[
-                Act0MistakeCardV1(
-                  taskId: 'w6_wet_board_repair',
-                  lessonId: 'w6_board_texture',
-                  title: 'Wet board pressure',
-                  weaknessLabel: 'Board texture',
-                  selectedOptionId: 'call',
-                  selectedLabel: 'Call',
-                  betterLabel: 'Fold',
-                  reason: 'Wet boards keep getting misread under pressure.',
-                  attempts: 2,
-                  contextLabels: <String>['Turn', 'Pressure spot'],
-                  repairActionLabel: 'Name the draw pressure, then re-run it.',
-                ),
-                Act0MistakeCardV1(
-                  taskId: 'w6_repair_2',
-                  lessonId: 'w6_board_texture',
-                  title: 'Second spot',
-                  weaknessLabel: 'Board texture',
-                  selectedOptionId: 'raise',
-                  selectedLabel: 'Raise',
-                  betterLabel: 'Check',
-                  reason: 'Second leak.',
-                  attempts: 1,
-                ),
-                Act0MistakeCardV1(
-                  taskId: 'w6_repair_3',
-                  lessonId: 'w6_board_texture',
-                  title: 'Third spot',
-                  weaknessLabel: 'Board texture',
-                  selectedOptionId: 'bet',
-                  selectedLabel: 'Bet',
-                  betterLabel: 'Check',
-                  reason: 'Third leak.',
-                  attempts: 1,
-                ),
-              ],
-            ),
-            selected: null,
-            onSelected: (_) {},
-            onFixMistake: (_) {},
-          ),
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+          mistakes: <Act0MistakeCardV1>[activeMistake],
+          fixedMistakes: <Act0MistakeCardV1>[recoveredMistake],
         ),
       ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Recovery plan'), findsOneWidget);
-    expect(find.text('Start here'), findsOneWidget);
-    expect(find.text('Start repair rep'), findsOneWidget);
-    expect(find.text('Review repair cue'), findsOneWidget);
-    expect(
-      find.text('After this, 2 more spots can settle one by one.'),
-      findsOneWidget,
-    );
-    expect(
-      find.text('2 more repairs are waiting after this one.'),
-      findsNothing,
-    );
-    expect(find.text('Repair next'), findsNothing);
+    expect(find.text('Repair coach'), findsOneWidget);
+    expect(find.text('Recovered lately'), findsOneWidget);
+    expect(find.textContaining('mastered forever'), findsNothing);
+  });
 
-    final repairTop = tester.getTopLeft(
-      find.byKey(const Key('act0_shell_mistake_card')),
+  testWidgets('Review has a calm no-repair fallback without session ceremony', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+          fixedMistakes: <Act0MistakeCardV1>[recoveredMistake],
+        ),
+      ),
     );
-    final reviewBoardTop = tester.getTopLeft(
-      find.byKey(const Key('act0_shell_review_board')),
-    );
-    expect(repairTop.dy, lessThan(reviewBoardTop.dy));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Clean board'), findsOneWidget);
+    expect(find.text('Recovered lately'), findsOneWidget);
+    expect(find.text('Repair coach'), findsNothing);
+    expect(find.textContaining('Session proof'), findsNothing);
+    expect(find.textContaining('Today you repaired'), findsNothing);
   });
 }

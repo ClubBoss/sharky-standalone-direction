@@ -2,6 +2,7 @@ const Set<String> act0RepairIntentCopyTemplateAllowlistV1 = <String>{
   'repair_same_clue_v1',
   'repair_exact_replay_v1',
   'fallback_next_hand_v1',
+  'review_repair_coach_v1',
 };
 
 const Set<String> _act0RepairIntentForbiddenCopyTokensV1 = <String>{
@@ -53,6 +54,31 @@ String? act0RepairIntentCopyGuardLineV1({
     return null;
   }
   return line;
+}
+
+List<String> act0ReviewRepairCoachCopyGuardLinesV1({
+  required String clueLabel,
+}) {
+  final normalized = _normalizedRepairClueLabelV1(clueLabel);
+  if (normalized.isEmpty) {
+    return const <String>[];
+  }
+  final learnerFacingClue = switch (normalized) {
+    'no bet yet' => 'No-bet-yet',
+    _ => '${normalized[0].toUpperCase()}${normalized.substring(1)}',
+  };
+  final nextRepair = switch (normalized) {
+    'no bet yet' => 'Next repair: one no-bet-yet hand',
+    _ => 'Next repair: one focused hand',
+  };
+  final lines = <String>[
+    '$learnerFacingClue is still the clue to fix.',
+    nextRepair,
+  ];
+  if (lines.any(_containsForbiddenCopyTokenV1)) {
+    return const <String>[];
+  }
+  return List<String>.unmodifiable(lines);
 }
 
 String? act0RepairResultReceiptCopyGuardLineV1({

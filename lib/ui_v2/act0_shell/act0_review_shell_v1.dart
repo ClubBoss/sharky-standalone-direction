@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -57,49 +58,25 @@ class Act0ReviewShellV1 extends StatelessWidget {
       ),
     ];
     final leftColumn = <Widget>[
-      if (dominantPattern != null) ...[
-        _ReviewPatternCardV1(pattern: dominantPattern, localeIsRu: localeIsRu),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-      ],
       _ReviewBoardV1(
         review: review,
-        nextMistake: nextMistake,
+        nextMistake: null,
         onFixMistake: onFixMistake,
       ),
     ];
     final activeRepairColumn = <Widget>[
       if (!isClean) ...[
-        Text(
-          _reviewCopyV1(context, en: 'Sharky repair', ru: 'Ремонт с Sharky'),
-          style: Act0ShellTokensV1.label.copyWith(
-            color: Act0ShellTokensV1.primary,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(
-          _reviewCopyV1(
-            context,
-            atomId: 'review_start_here_title',
-            fallback: 'Repair one clue before it sticks',
-          ),
-          style: Act0ShellTokensV1.sectionTitle,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapXs),
-        Text(
-          _reviewCopyV1(
-            context,
-            atomId: 'review_start_here_detail',
-            fallback: 'One calm reread makes this clue easier tomorrow.',
-          ),
-          style: Act0ShellTokensV1.muted,
-        ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _MistakeCardV1(
+        _ReviewRepairCoachCardV1(
           mistake: review.mistakes.first,
-          prominent: true,
           onFixMistake: onFixMistake,
         ),
+        if (dominantPattern != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ReviewPatternCardV1(
+            pattern: dominantPattern,
+            localeIsRu: localeIsRu,
+          ),
+        ],
         if (review.mistakes.length > 1) ...[
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Container(
@@ -143,7 +120,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     ? 'Один спот уже снова под контролем. Так ошибки перестают казаться вечными.'
                     : '${recovered.length} ${act0RussianPluralV1(recovered.length, 'спот', 'спота', 'спотов')} уже снова под контролем. Так игра начинает ощущаться легче.')
               : (recovered.length == 1
-                    ? 'One spot is already back under control. That is how leaks stop feeling permanent.'
+                    ? 'One spot is already back under control. That is how mistakes stop feeling permanent.'
                     : '${recovered.length} spots are already back under control. That is how the board starts feeling lighter.'),
           style: Act0ShellTokensV1.muted,
         ),
@@ -226,7 +203,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
         Act0ShellTokensV1.centeredContent(
           context,
           tabletMaxWidth: 1080,
-          child: isTablet
+          child: isTablet && isClean
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -340,9 +317,7 @@ class _ReviewPatternCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            localeIsRu
-                ? 'Паттерн начинает проступать'
-                : 'Pattern starting to form',
+            localeIsRu ? 'Паттерн начинает проступать' : 'Pattern to repair',
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.info,
             ),
@@ -351,7 +326,7 @@ class _ReviewPatternCardV1 extends StatelessWidget {
           Text(
             localeIsRu
                 ? '${pattern.label} всплывает ${pattern.count} раза. Сначала почини эту группу.'
-                : '${pattern.label} is showing up ${pattern.count} times. Fix this family first.',
+                : '${pattern.label} is showing up ${pattern.count} times. Fix this pattern first.',
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontWeight: FontWeight.w800,
@@ -364,6 +339,72 @@ class _ReviewPatternCardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textMuted,
               ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewRepairCoachCardV1 extends StatelessWidget {
+  const _ReviewRepairCoachCardV1({required this.mistake, this.onFixMistake});
+
+  final Act0MistakeCardV1 mistake;
+  final ValueChanged<Act0MistakeCardV1>? onFixMistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final guardedLines = act0ReviewRepairCoachCopyGuardLinesV1(
+      clueLabel: mistake.title,
+    );
+    final clueLine = guardedLines.isEmpty
+        ? 'This clue is still worth a closer look.'
+        : guardedLines.first;
+    final nextLine = guardedLines.length < 2
+        ? 'Next repair: one focused hand'
+        : guardedLines.last;
+    final actionLine = mistake.repairActionLabel.trim().isEmpty
+        ? mistake.reason
+        : mistake.repairActionLabel;
+    return Container(
+      key: const Key('act0_shell_review_repair_coach_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.primary.withOpacity(0.10),
+        borderColor: Act0ShellTokensV1.primary.withOpacity(0.32),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Repair coach',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.primary,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(clueLine, style: Act0ShellTokensV1.sectionTitle),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(actionLine, style: Act0ShellTokensV1.muted),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Text(
+            nextLine,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          if (onFixMistake != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            FilledButton(
+              key: const Key('act0_shell_review_fix_next_cta'),
+              onPressed: () => onFixMistake!(mistake),
+              style: Act0ShellTokensV1.primaryButtonStyle(
+                height: Act0ShellTokensV1.compactCtaHeight,
+              ),
+              child: const Text('Repair this clue'),
             ),
           ],
         ],
@@ -591,7 +632,7 @@ class _MistakeCardV1 extends StatelessWidget {
   const _MistakeCardV1({
     required this.mistake,
     required this.onFixMistake,
-    this.prominent = false,
+    required this.prominent,
   });
 
   final Act0MistakeCardV1 mistake;
