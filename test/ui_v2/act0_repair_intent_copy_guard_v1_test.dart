@@ -128,6 +128,17 @@ void main() {
     );
   });
 
+  test('review repair coach renders learner-facing, safe clue copy', () {
+    expect(
+      act0ReviewRepairCoachCopyGuardLinesV1(clueLabel: 'No bet yet'),
+      <String>[
+        'No-bet-yet is still the clue to fix.',
+        'Next repair: one no-bet-yet hand',
+      ],
+    );
+    expect(act0ReviewRepairCoachCopyGuardLinesV1(clueLabel: ''), isEmpty);
+  });
+
   test('missing labels degrade safely without forbidden terms', () {
     final lines = <String?>[
       act0RepairIntentCopyGuardLineV1(
