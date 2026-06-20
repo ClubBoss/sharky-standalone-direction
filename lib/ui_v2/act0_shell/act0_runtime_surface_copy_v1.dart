@@ -150,7 +150,7 @@ String act0RuntimeTrailTaskLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Проверь историю раздачи' : 'Read what happened';
+  return isRu ? 'Read what happened' : 'Read what happened';
 }
 
 String act0RuntimeSeatTapStatusLabelV1(BuildContext context) =>
@@ -171,7 +171,7 @@ String act0RuntimeTheoryRecallLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Повторить идею' : 'Review idea';
+  return isRu ? 'Review idea' : 'Review idea';
 }
 
 String act0RuntimeTheoryCoachLineV1(
@@ -271,7 +271,7 @@ String act0RuntimeQuestionBadgeLabelV1(
     final isRu = Localizations.localeOf(
       context,
     ).languageCode.toLowerCase().startsWith('ru');
-    return isRu ? 'История раздачи' : 'Hand history';
+    return isRu ? 'Hand history' : 'Hand history';
   }
   return act0RuntimeLocalizedGeneralLabelV1(context, 'Spot check');
 }
@@ -294,66 +294,66 @@ String act0RuntimeTrailPromptSupportLineV1(
       trailStreet.isNotEmpty &&
       currentStreet.toLowerCase() != trailStreet.toLowerCase()) {
     return isRu
-        ? 'Сейчас на столе: $currentStreet · В истории: $trailStreet'
-        : 'Current street: $currentStreet · Previous action: $trailStreet';
+        ? 'Current street: $currentStreet - Previous action: $trailStreet'
+        : 'Current street: $currentStreet - Previous action: $trailStreet';
   }
-  return isRu ? 'Смотри историю раздачи.' : 'Read the hand history.';
+  return isRu ? 'Read the hand history.' : 'Read the hand history.';
 }
 
 String act0RuntimeTrailFeedbackContextLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'История раздачи' : 'Hand history';
+  return isRu ? 'Hand history' : 'Hand history';
 }
 
 String act0RuntimeNeutralBucketCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Проверка группы' : 'Bucket check';
+  return isRu ? 'Bucket check' : 'Bucket check';
 }
 
 String act0RuntimeNeutralHandReadCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Чтение руки' : 'Hand read';
+  return isRu ? 'Hand read' : 'Hand read';
 }
 
 String act0RuntimeNeutralTableReadCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Чтение стола' : 'Table read';
+  return isRu ? 'Table read' : 'Table read';
 }
 
 String act0RuntimeNeutralDecisionCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Решение' : 'Decision spot';
+  return isRu ? 'Decision spot' : 'Decision spot';
 }
 
 String act0RuntimeNeutralFacingPriceCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Цена колла' : 'Facing price';
+  return isRu ? 'Facing price' : 'Facing price';
 }
 
 String act0RuntimeNeutralPotAndPriceCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Банк и цена' : 'Pot and price';
+  return isRu ? 'Pot and price' : 'Pot and price';
 }
 
 String act0RuntimeNeutralSizingCueLabelV1(BuildContext context) {
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Размер ставки' : 'Sizing spot';
+  return isRu ? 'Sizing spot' : 'Sizing spot';
 }
 
 String act0RuntimeNeutralFacingActorCueLabelV1(
@@ -364,7 +364,7 @@ String act0RuntimeNeutralFacingActorCueLabelV1(
   final isRu = Localizations.localeOf(
     context,
   ).languageCode.toLowerCase().startsWith('ru');
-  return isRu ? 'Против $actor $amount' : 'Facing $actor $amount';
+  return isRu ? 'Facing $actor $amount' : 'Facing $actor $amount';
 }
 
 String act0RuntimeLocalizedOptionLabelV1(BuildContext context, String label) =>
@@ -463,17 +463,17 @@ List<String> _theoryCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Start with what is visible.',
-        ru: 'Сначала смотри на то, что видно.',
+        ru: 'Start with what is visible.',
       ),
       _coachLineV1(
         context,
         en: 'Board, price, then action.',
-        ru: 'Сначала борд, цена, потом действие.',
+        ru: 'Board, price, then action.',
       ),
       _coachLineV1(
         context,
         en: 'One clean read, then decide.',
-        ru: 'Одно чистое чтение, потом решение.',
+        ru: 'One clean read, then decide.',
       ),
     ];
   }
@@ -484,17 +484,17 @@ List<String> _theoryCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Count what the table shows.',
-        ru: 'Считай то, что показывает стол.',
+        ru: 'Count what the table shows.',
       ),
       _coachLineV1(
         context,
         en: 'Start with what is visible.',
-        ru: 'Сначала смотри на то, что видно.',
+        ru: 'Start with what is visible.',
       ),
       _coachLineV1(
         context,
         en: 'Read once, then name it.',
-        ru: 'Сначала прочитай, потом назови.',
+        ru: 'Read once, then name it.',
       ),
     ];
   }
@@ -502,17 +502,17 @@ List<String> _theoryCoachCandidatesV1(
     _coachLineV1(
       context,
       en: 'Read the table first.',
-      ru: 'Сначала прочитай стол.',
+      ru: 'Read the table first.',
     ),
     _coachLineV1(
       context,
       en: 'Start with what is visible.',
-      ru: 'Сначала смотри на то, что видно.',
+      ru: 'Start with what is visible.',
     ),
     _coachLineV1(
       context,
       en: 'One clean read, then decide.',
-      ru: 'Одно чистое чтение, потом решение.',
+      ru: 'One clean read, then decide.',
     ),
   ];
 }
@@ -529,17 +529,17 @@ List<String> _promptCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Read the table, then tap one seat.',
-        ru: 'Сначала прочитай стол, потом нажми на одно место.',
+        ru: 'Read the table, then tap one seat.',
       ),
       _coachLineV1(
         context,
         en: 'Find the seat, then choose.',
-        ru: 'Сначала найди место, потом выбери.',
+        ru: 'Find the seat, then choose.',
       ),
       _coachLineV1(
         context,
         en: 'One clean read, then tap.',
-        ru: 'Одно чистое чтение, потом нажми.',
+        ru: 'One clean read, then tap.',
       ),
     ];
   }
@@ -552,17 +552,17 @@ List<String> _promptCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Check the price before acting.',
-        ru: 'Сначала проверь цену решения.',
+        ru: 'Check the price before acting.',
       ),
       _coachLineV1(
         context,
         en: 'One clean read, then choose.',
-        ru: 'Одно чистое чтение, потом выбор.',
+        ru: 'One clean read, then choose.',
       ),
       _coachLineV1(
         context,
         en: 'Start with the table, not memory.',
-        ru: 'Сначала стол, а не память.',
+        ru: 'Start with the table, not memory.',
       ),
     ];
   }
@@ -573,17 +573,17 @@ List<String> _promptCoachCandidatesV1(
       _coachLineV1(
         context,
         en: 'Use the board, not memory.',
-        ru: 'Смотри на борд, а не на память.',
+        ru: 'Use the board, not memory.',
       ),
       _coachLineV1(
         context,
         en: 'Read the table first.',
-        ru: 'Сначала прочитай стол.',
+        ru: 'Read the table first.',
       ),
       _coachLineV1(
         context,
         en: 'Start with what is visible.',
-        ru: 'Сначала смотри на то, что видно.',
+        ru: 'Start with what is visible.',
       ),
     ];
   }
@@ -591,17 +591,17 @@ List<String> _promptCoachCandidatesV1(
     _coachLineV1(
       context,
       en: 'Read the table first.',
-      ru: 'Сначала прочитай стол.',
+      ru: 'Read the table first.',
     ),
     _coachLineV1(
       context,
       en: 'One clean read, then choose.',
-      ru: 'Одно чистое чтение, потом выбор.',
+      ru: 'One clean read, then choose.',
     ),
     _coachLineV1(
       context,
       en: 'Start with what is visible.',
-      ru: 'Сначала смотри на то, что видно.',
+      ru: 'Start with what is visible.',
     ),
   ];
 }
@@ -614,53 +614,37 @@ List<String> _feedbackCoachCandidatesV1(
   switch (quality) {
     case Act0FeedbackQualityV1.correct:
       return <String>[
-        _coachLineV1(context, en: 'Sharp read.', ru: 'Хорошее чтение.'),
-        _coachLineV1(context, en: 'Clean read.', ru: 'Чистое чтение.'),
-        _coachLineV1(
-          context,
-          en: 'Good table check.',
-          ru: 'Хорошая проверка стола.',
-        ),
+        _coachLineV1(context, en: 'Sharp read.', ru: 'Sharp read.'),
+        _coachLineV1(context, en: 'Clean read.', ru: 'Clean read.'),
+        _coachLineV1(context, en: 'Good table check.', ru: 'Good table check.'),
         if (taskFamily == Act0TaskFamilyV1.review ||
             taskFamily == Act0TaskFamilyV1.transfer)
-          _coachLineV1(
-            context,
-            en: 'Keep that cue.',
-            ru: 'Сохрани эту подсказку.',
-          ),
+          _coachLineV1(context, en: 'Keep that cue.', ru: 'Keep that cue.'),
       ];
     case Act0FeedbackQualityV1.suboptimal:
       return <String>[
-        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
+        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Good spot to fix.'),
         _coachLineV1(
           context,
           en: 'Slow down the cue.',
-          ru: 'Замедлись и проверь подсказку.',
+          ru: 'Slow down the cue.',
         ),
-        _coachLineV1(
-          context,
-          en: 'One clean reread.',
-          ru: 'Ещё одно чистое перечитывание.',
-        ),
+        _coachLineV1(context, en: 'One clean reread.', ru: 'One clean reread.'),
       ];
     case Act0FeedbackQualityV1.wrong:
       return <String>[
-        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Полезный разбор.'),
+        _coachLineV1(context, en: 'Good spot to fix.', ru: 'Good spot to fix.'),
         _coachLineV1(
           context,
           en: 'This is repairable.',
-          ru: 'Это легко починить.',
+          ru: 'This is repairable.',
         ),
         _coachLineV1(
           context,
           en: 'Use the table, then retry.',
-          ru: 'Вернись к столу и попробуй снова.',
+          ru: 'Use the table, then retry.',
         ),
-        _coachLineV1(
-          context,
-          en: 'One calm retry.',
-          ru: 'Одна спокойная попытка ещё раз.',
-        ),
+        _coachLineV1(context, en: 'One calm retry.', ru: 'One calm retry.'),
       ];
   }
 }
@@ -891,7 +875,7 @@ String act0RuntimeLocalizedGeneralLabelV1(BuildContext context, String label) {
 
   final maxPlayersMatch = RegExp(r'^(\d+)-max$').firstMatch(trimmed);
   if (maxPlayersMatch != null && localeIsRu) {
-    return '${maxPlayersMatch.group(1)!}-макс';
+    return '${maxPlayersMatch.group(1)!}-max';
   }
 
   final effectiveStackMatch = RegExp(
@@ -916,7 +900,7 @@ String act0RuntimeLocalizedGeneralLabelV1(BuildContext context, String label) {
     if (!localeIsRu) {
       return '$privateCards private cards, $boardCards board cards, $potAmount in the pot';
     }
-    return '$privateCards закрытые карты, $boardCards общие карты, в банке $potAmount';
+    return '$privateCards private cards, $boardCards board cards, $potAmount in the pot';
   }
 
   final handsMatch = RegExp(r'^([A-Z0-9+]+|Hero) acts$').firstMatch(trimmed);
@@ -1008,13 +992,13 @@ String _act0RuCombosWordV1(int count) {
   final mod100 = count % 100;
   final mod10 = count % 10;
   if (mod100 >= 11 && mod100 <= 14) {
-    return 'комбинаций';
+    return 'combos';
   }
   if (mod10 == 1) {
-    return 'комбинация';
+    return 'combo';
   }
   if (mod10 >= 2 && mod10 <= 4) {
-    return 'комбинации';
+    return 'combos';
   }
-  return 'комбинаций';
+  return 'combos';
 }

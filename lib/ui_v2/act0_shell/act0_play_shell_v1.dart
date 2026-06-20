@@ -977,7 +977,7 @@ class _PlayIntroCardV1 extends StatelessWidget {
                     key: const Key('act0_shell_play_premium_preview_entry'),
                     onPressed: onOpenPremiumPreview,
                     style: Act0ShellTokensV1.quietButtonStyle(height: 38),
-                    child: const Text('See what premium adds'),
+                    child: const Text('See extra practice options'),
                   ),
                 ],
               ],
@@ -1259,10 +1259,10 @@ class _PlayLaneIntroV1 extends StatelessWidget {
     );
     final subtitle = selectedTopic == allTopicsLabel
         ? (localeIsRu
-              ? '$visibleLaneCount ${_playCopyV1(context, act0RussianPluralV1(visibleLaneCount, 'play_lanes_ready_plural_1', 'play_lanes_ready_plural_2', 'play_lanes_ready_plural_5'), fallback: 'линий готовы')}. Выбери одну и сделай несколько повторов.'
+              ? '$visibleLaneCount ${visibleLaneCount == 1 ? 'lane' : 'lanes'} ready. Pick one and run a few reps.'
               : '$visibleLaneCount lanes ready. Pick one and run a few reps.')
         : (localeIsRu
-              ? '$visibleLaneCount ${_playCopyV1(context, act0RussianPluralV1(visibleLaneCount, 'play_lanes_noun_plural_1', 'play_lanes_noun_plural_2', 'play_lanes_noun_plural_5'), fallback: 'линий')} по теме $selectedTopic.'
+              ? '$visibleLaneCount ${visibleLaneCount == 1 ? 'lane' : 'lanes'} inside $selectedTopic.'
               : '$visibleLaneCount ${visibleLaneCount == 1 ? 'lane' : 'lanes'} inside $selectedTopic.');
     return Container(
       padding: const EdgeInsets.symmetric(
