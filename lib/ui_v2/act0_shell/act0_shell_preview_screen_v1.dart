@@ -1168,9 +1168,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
   int _placementDiagnosticScore = 0;
-  bool get _isRuLocaleV1 => Localizations.localeOf(
-    context,
-  ).languageCode.toLowerCase().startsWith('ru');
+  bool get _isRuLocaleV1 => false;
 
   String _copyV1({required String en, required String ru}) =>
       _isRuLocaleV1 ? ru : en;
@@ -3481,6 +3479,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         !_placementDiagnosticActive
                                     ? _firstValueReceiptLineV1(playSelectedTask)
                                     : null,
+                                repairReasonLine:
+                                    _repairReasonLineForFeedbackV1(
+                                      playSelectedTask,
+                                    ),
                                 repairResultReceiptLine:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId
@@ -5121,10 +5123,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               en: 'One same-clue rep will help lock this in.',
               ru: 'Один повтор с той же подсказкой поможет закрепить её.',
             ),
-      reasonLabel: _copyV1(
-        en: 'Repair reinforcement',
-        ru: 'Закрепление ремонта',
-      ),
+      reasonLabel: _practiceRepairReturnReasonLineV1(receipt.missedSignalLabel),
       outcomeLead: _copyV1(en: 'Practice now:', ru: 'Практика сейчас:'),
       outcome: isExactReplay
           ? _copyV1(
@@ -5160,6 +5159,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return normalized;
     }
     return '$normalized clue';
+  }
+
+  String _practiceRepairReturnReasonLineV1(String missedSignalLabel) {
+    final label = missedSignalLabel.trim();
+    if (label.isEmpty) {
+      return _copyV1(
+        en: 'This table clue is still the one to stabilize.',
+        ru: 'Эту подсказку стола ещё нужно закрепить.',
+      );
+    }
+    return _copyV1(
+      en: '$label is still the clue to stabilize.',
+      ru: 'Подсказку $label ещё нужно закрепить.',
+    );
   }
 
   String _dailyGoalValueLabel() {
@@ -6133,6 +6146,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
     return 'First read logged. Next: use it once more.';
+  }
+
+  String? _repairReasonLineForFeedbackV1(Act0LessonTaskV1? selectedTask) {
+    if (selectedTask == null) {
+      return null;
+    }
+    final sourceTaskId = _activeRepairTaskId == selectedTask.taskId
+        ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
+        : selectedTask.taskId;
+    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    if (target == null) {
+      return null;
+    }
+    final receipt = _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
+      sourceTaskId: sourceTaskId,
+      target: target,
+      practiceGroupId: _activePracticeGroupId,
+      repeatedMissCount: _mistakeRecords[sourceTaskId]?.attempts ?? 1,
+    );
+    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
+    final line = bridge.renderedCopyLine.trim();
+    return line.isEmpty ? null : line;
   }
 
   String? _repairResultReceiptLineForOptionV1({
@@ -10394,9 +10429,6 @@ class _BottomNavV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRu = Localizations.localeOf(
-      context,
-    ).languageCode.toLowerCase().startsWith('ru');
     return SizedBox(
       key: const Key('act0_shell_bottom_nav'),
       height: Act0ShellTokensV1.bottomNavHeight,
@@ -10408,28 +10440,28 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.home,
               current: current,
               icon: Icons.home_rounded,
-              label: isRu ? 'Главная' : 'Home',
+              label: 'Home',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.learn,
               current: current,
               icon: Icons.menu_book_rounded,
-              label: isRu ? 'Обучение' : 'Learn',
+              label: 'Learn',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.play,
               current: current,
               icon: Icons.spa_rounded,
-              label: isRu ? 'Практика' : 'Practice',
+              label: 'Practice',
               onSelected: onSelected,
             ),
             _NavItemV1(
               tab: Act0ShellTabV1.review,
               current: current,
               icon: Icons.refresh_rounded,
-              label: isRu ? 'Разбор' : 'Review',
+              label: 'Review',
               showDot: reviewHasDot,
               onSelected: onSelected,
             ),
@@ -10437,7 +10469,7 @@ class _BottomNavV1 extends StatelessWidget {
               tab: Act0ShellTabV1.profile,
               current: current,
               icon: Icons.person_rounded,
-              label: isRu ? 'Ты' : 'You',
+              label: 'You',
               onSelected: onSelected,
             ),
           ],

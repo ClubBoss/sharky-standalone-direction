@@ -2797,6 +2797,21 @@ void main() {
     );
   });
 
+  test('Native capture define accepts only supported Act0 surfaces', () {
+    final learn = parseAct0NativeCaptureHarnessEntryV1('learn');
+    expect(learn, isNotNull);
+    expect(learn!.mode, Act0ControlledDemoCaptureModeV1.walkthrough);
+    expect(learn.surface, Act0ControlledDemoCaptureSurfaceV1.learn);
+
+    final practice = parseAct0NativeCaptureHarnessEntryV1('practice');
+    expect(practice, isNotNull);
+    expect(practice!.mode, Act0ControlledDemoCaptureModeV1.directState);
+    expect(practice.surface, Act0ControlledDemoCaptureSurfaceV1.practice);
+
+    expect(parseAct0NativeCaptureHarnessEntryV1(''), isNull);
+    expect(parseAct0NativeCaptureHarnessEntryV1('unknown'), isNull);
+  });
+
   test('First-week compact capture command stays targeted', () {
     final source = File(
       'tools/act0_first_week_compact_capture_v1.sh',
@@ -30001,9 +30016,9 @@ void main() {
         find.byKey(const Key('act0_shell_review_pattern_card')),
         findsOneWidget,
       );
-      expect(find.text('Pattern starting to form'), findsOneWidget);
+      expect(find.text('Pattern to repair'), findsOneWidget);
       expect(
-        find.text('Action order is showing up 2 times. Fix this family first.'),
+        find.text('Action order is showing up 2 times. Fix this pattern first.'),
         findsOneWidget,
       );
       expect(

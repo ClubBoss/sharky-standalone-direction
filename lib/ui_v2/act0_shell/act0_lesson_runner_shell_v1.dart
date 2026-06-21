@@ -732,6 +732,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     required this.onContinueReview,
     this.completionSummary,
     this.firstValueReceiptLine,
+    this.repairReasonLine,
     this.repairResultReceiptLine,
     this.repairSessionSummaryLines = const <String>[],
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
@@ -759,6 +760,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
+  final String? repairReasonLine;
   final String? repairResultReceiptLine;
   final List<String> repairSessionSummaryLines;
   final Act0RunnerFramingProfileV1 framingProfile;
@@ -1965,6 +1967,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     refined: isRefinedDev2,
                     completionSummary: null,
                     firstValueReceiptLine: widget.firstValueReceiptLine,
+                    repairReasonLine: widget.repairReasonLine,
                     repairResultReceiptLine: widget.repairResultReceiptLine,
                     repairSessionSummaryLines: widget.repairSessionSummaryLines,
                     onBack: null,
@@ -4303,6 +4306,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.refined = false,
     this.completionSummary,
     this.firstValueReceiptLine,
+    this.repairReasonLine,
     this.repairResultReceiptLine,
     this.repairSessionSummaryLines = const <String>[],
     this.onBack,
@@ -4328,6 +4332,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
+  final String? repairReasonLine;
   final String? repairResultReceiptLine;
   final List<String> repairSessionSummaryLines;
   final VoidCallback? onBack;
@@ -4435,6 +4440,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
+    final repairReason = repairReasonLine?.trim() ?? '';
+    final visibleRepairReasonLines = _visibleRepairReasonLinesV1(
+      quality: quality,
+      signalProof: signalProof,
+      repairReasonLine: repairReason,
+      repairReceiptLine: repairReceiptLine,
+    );
     final visibleRepairSessionSummaryLines = [
       for (final line in repairSessionSummaryLines)
         if (line.trim().isNotEmpty) line.trim(),
@@ -4443,20 +4455,24 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle =
-        skillReceipt?.title ??
-        (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
-            ? ''
-            : receiptSplitIndex < 0
-            ? fallbackReceiptLine
-            : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
-    final receiptDetail =
-        skillReceipt?.detail ??
-        (fallbackReceiptLine == null ||
-                fallbackReceiptLine.isEmpty ||
-                receiptSplitIndex < 0
-            ? ''
-            : fallbackReceiptLine.substring(receiptSplitIndex + 2).trim());
+    final receiptTitle = repairReceiptLine.isNotEmpty
+        ? 'Repair result'
+        : skillReceipt?.title ??
+              (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
+                  ? ''
+                  : receiptSplitIndex < 0
+                  ? fallbackReceiptLine
+                  : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
+    final receiptDetail = repairReceiptLine.isNotEmpty
+        ? repairReceiptLine
+        : skillReceipt?.detail ??
+              (fallbackReceiptLine == null ||
+                      fallbackReceiptLine.isEmpty ||
+                      receiptSplitIndex < 0
+                  ? ''
+                  : fallbackReceiptLine
+                        .substring(receiptSplitIndex + 2)
+                        .trim());
     final receiptNextLine = skillReceipt == null
         ? ''
         : switch (skillReceipt.outcome) {
@@ -4625,6 +4641,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 height: isCompactRefinedFeedback ? 1.08 : 1.16,
               ),
             ),
+          if (!rapidMode && visibleRepairReasonLines.isNotEmpty) ...[
+            SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
+            _FeedbackVisibleRepairReasonBlockV1(
+              lines: visibleRepairReasonLines,
+              compact: isCompactRefinedFeedback,
+            ),
+          ],
           if (!rapidMode && showVerdictTitle && !isCompactRefinedFeedback) ...[
             const SizedBox(height: 7),
             Row(
@@ -4701,6 +4724,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   children: [
                     Text(
                       receiptTitle,
+                      key: repairReceiptLine.isNotEmpty
+                          ? const Key('act0_shell_repair_result_receipt_title')
+                          : null,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.primary,
                         fontWeight: FontWeight.w800,
@@ -4781,6 +4807,63 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   }
 }
 
+class _FeedbackVisibleRepairReasonBlockV1 extends StatelessWidget {
+  const _FeedbackVisibleRepairReasonBlockV1({
+    required this.lines,
+    required this.compact,
+  });
+
+  final List<String> lines;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    if (lines.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Container(
+      key: const Key('act0_shell_visible_repair_reason'),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 8 : 10,
+        vertical: compact ? 6 : 8,
+      ),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+        border: Border.all(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Repair focus',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontSize: compact ? 10.5 : 11.0,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: compact ? 3 : 5),
+          for (var index = 0; index < lines.length; index++) ...[
+            if (index > 0) SizedBox(height: compact ? 2 : 3),
+            Text(
+              lines[index],
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontSize: compact ? 10.2 : 11.0,
+                fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
+                height: 1.12,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 bool _shouldPreserveFullCompactFeedbackReasonV1(String reason) {
   final normalized = reason.trim();
   if (normalized.length < 96 || normalized.length > 180) {
@@ -4788,6 +4871,74 @@ bool _shouldPreserveFullCompactFeedbackReasonV1(String reason) {
   }
   final sentenceCount = RegExp(r'[.!?](?:\s|$)').allMatches(normalized).length;
   return sentenceCount >= 2;
+}
+
+List<String> _visibleRepairReasonLinesV1({
+  required Act0FeedbackQualityV1 quality,
+  required Act0FeedbackSignalProofV1? signalProof,
+  required String repairReasonLine,
+  required String repairReceiptLine,
+}) {
+  final reasonLine = repairReasonLine.trim();
+  final receiptLine = repairReceiptLine.trim();
+  if ((reasonLine.isEmpty && receiptLine.isEmpty) ||
+      signalProof == null ||
+      quality == Act0FeedbackQualityV1.correct) {
+    return const <String>[];
+  }
+  final clue = _visibleRepairCluePhraseV1(signalProof.label);
+  if (clue.isEmpty) {
+    return const <String>[];
+  }
+  final focusLine = _visibleRepairFocusLineV1(signalProof.signalId);
+  final lines = <String>[
+    'You missed the $clue clue.',
+    reasonLine.isEmpty
+        ? 'This next hand starts with the same table signal.'
+        : reasonLine,
+    focusLine,
+  ];
+  if (lines.any(_containsForbiddenVisibleRepairCopyTokenV1)) {
+    return const <String>[];
+  }
+  return List<String>.unmodifiable(lines);
+}
+
+String _visibleRepairCluePhraseV1(String label) {
+  final normalized = label.trim().toLowerCase();
+  return switch (normalized) {
+    'no bet yet' => 'no-bet-yet',
+    _ => normalized,
+  };
+}
+
+String _visibleRepairFocusLineV1(String signalId) {
+  final normalized = signalId.trim().toLowerCase();
+  return switch (normalized) {
+    'no_bet_yet' => 'Before choosing, ask whether a bet faces you.',
+    _ => 'Before choosing, name the table clue first.',
+  };
+}
+
+bool _containsForbiddenVisibleRepairCopyTokenV1(String line) {
+  final tokens = line
+      .toLowerCase()
+      .split(RegExp(r'[^a-z0-9-]+'))
+      .where((part) => part.isNotEmpty)
+      .toSet();
+  const forbidden = <String>[
+    'ai',
+    'adaptive',
+    'gto',
+    'solver',
+    'optimal',
+    'guarantee',
+    'win-rate',
+    'premium',
+    'paywall',
+    'trial',
+  ];
+  return forbidden.any(tokens.contains);
 }
 
 class _FeedbackProofKeyWrapperV1 extends StatelessWidget {
@@ -4832,7 +4983,7 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Session proof',
+              'Session repair',
               key: const Key('act0_shell_session_summary_ceremony_label'),
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.gold,

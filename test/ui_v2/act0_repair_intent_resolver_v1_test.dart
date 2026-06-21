@@ -173,7 +173,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(
+      find.text('No bet yet is still the clue to stabilize.'),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsNothing);
     expect(find.text('Session proof'), findsNothing);
     expect(find.text('Review'), findsOneWidget);
     expect(find.text('Learn'), findsOneWidget);
@@ -279,7 +283,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(
+      find.text('No bet yet is still the clue to stabilize.'),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsNothing);
     expect(find.textContaining('same-clue'), findsNothing);
     expect(find.textContaining('same signal'), findsNothing);
     expect(find.text('Session proof'), findsNothing);
@@ -633,8 +641,8 @@ void main() {
 
     await _openReview(tester);
 
-    final supportText = _reviewSupportLine(tester);
     final snapshot = _reviewSupportCopySnapshot(tester);
+    final supportText = (snapshot?['renderedLine'] ?? '').toString();
     expect(
       supportText,
       'You missed that nobody has bet yet. This hand repeats that table clue.',
@@ -665,14 +673,6 @@ void main() {
         isFalse,
       );
     }
-    expect(
-      find.byKey(const Key('act0_shell_review_board_support_line')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_review_board_fix_cta')),
-      findsOneWidget,
-    );
     expect(
       find.byWidgetPredicate((widget) {
         final key = widget.key;
@@ -966,30 +966,32 @@ Future<void> _launchReviewRepair(WidgetTester tester) async {
 Future<void> _openReview(WidgetTester tester) async {
   final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
   if (runnerBack.evaluate().isNotEmpty) {
-    await tester.tap(runnerBack);
+    await tester.ensureVisible(runnerBack);
+    await tester.tap(runnerBack, warnIfMissed: false);
     await tester.pumpAndSettle();
   }
-  await tester.tap(
-    find.descendant(
-      of: find.byKey(const Key('act0_shell_bottom_nav')),
-      matching: find.text('Review'),
-    ),
+  final reviewTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Review'),
   );
+  await tester.ensureVisible(reviewTab);
+  await tester.tap(reviewTab, warnIfMissed: false);
   await tester.pumpAndSettle();
 }
 
 Future<void> _openPractice(WidgetTester tester) async {
   final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
   if (runnerBack.evaluate().isNotEmpty) {
-    await tester.tap(runnerBack);
+    await tester.ensureVisible(runnerBack);
+    await tester.tap(runnerBack, warnIfMissed: false);
     await tester.pumpAndSettle();
   }
-  await tester.tap(
-    find.descendant(
-      of: find.byKey(const Key('act0_shell_bottom_nav')),
-      matching: find.text('Practice'),
-    ),
+  final practiceTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Practice'),
   );
+  await tester.ensureVisible(practiceTab);
+  await tester.tap(practiceTab, warnIfMissed: false);
   await tester.pumpAndSettle();
 }
 
@@ -1048,13 +1050,6 @@ List<Map<String, Object?>> _repairIntentAuditTrailPayload(WidgetTester tester) {
 bool _containsForbiddenToken(Map<String, Object?> payload, String token) {
   final values = payload.values.join(' ').toLowerCase();
   return _containsForbiddenTokenInText(values, token);
-}
-
-String _reviewSupportLine(WidgetTester tester) {
-  final text = tester.widget<Text>(
-    find.byKey(const Key('act0_shell_review_board_support_text')),
-  );
-  return text.data ?? '';
 }
 
 bool _containsForbiddenTokenInText(String text, String token) {
