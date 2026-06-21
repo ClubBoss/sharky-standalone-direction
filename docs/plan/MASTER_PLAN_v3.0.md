@@ -113,6 +113,15 @@ If a task asks "are we truly release-ready for launch/store prep?", use the read
 
 Do not use the readiness reference as the default bottleneck selector for day-to-day product work.
 
+## Current post-merge status
+
+- The repair/retention learning wave landed on `main` at
+  `c5e2accf224d23a09a51b07ba4c8f6c02712f3b6`.
+- The deterministic loop is now landed:
+  `mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`.
+- The next candidate is Sharky Character & Coaching Presence v1: audit-first
+  and learning-EV only.
+
 ## Product 100
 
 For this plan, 100% means:

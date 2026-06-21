@@ -2,10 +2,10 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-19 after PR #6-#8 repair personalization
-foundation.
-Current active route: AI Personalization / Rule-Based Repair Layer v1 -
-visible learning value path.
+Last refreshed: 2026-06-21 after the repair/retention learning wave landed on
+`main` at `c5e2accf224d23a09a51b07ba4c8f6c02712f3b6`.
+Current active candidate: Sharky Character & Coaching Presence v1, audit-first
+and learning-EV only.
 
 Authority note:
 
@@ -16,6 +16,38 @@ Authority note:
   `docs/plan/MONETIZATION_SSOT_v1.md`, and active route truth win.
 - This document constrains product attack direction; it does not replace the
   Master Plan.
+
+## Post-merge repair/retention status (2026-06-21)
+
+The deterministic learning-causality loop is landed on `main`:
+
+`mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`
+
+Landed or confirmed:
+
+- Active English copy cleanup / audit work.
+- Visible Repair Reason Surface.
+- Repair Result Receipt.
+- Session Repair Summary.
+- Repair-based return reason.
+- Review pattern contract sync.
+- Existing Profile progress mirror confirmed.
+
+Already present / no-op confirmed:
+
+- Review Pattern Coaching Lite.
+- You / Profile Progress Mirror.
+
+Next candidate: `Sharky Character & Coaching Presence v1`. It is not
+automatically implementation-ready: begin with PIEC / audit first. Any admitted
+work must be learning-EV driven only: coaching presence, repair encouragement,
+session transitions, and emotional clarity. Do not turn it into noisy chat,
+broad visual redesign, or mascot decoration for its own sake.
+
+If PIEC shows Sharky Character scope is broad or low-EV, fall back to
+`Welcome / Placement Micro-Aha Alignment`. Modern Table remains maintenance-only
+unless there is a real regression or direct product-EV blocker. Generated
+screenshot and audit outputs remain local-only and must not be committed.
 
 ## 1. Mission
 
@@ -381,50 +413,24 @@ Operating constraints:
    - runtime consumption in Act0 next-useful-hand / reason receipt seam;
    - Act0 telemetry truth alignment for local learning-loop fields.
 
-### Immediate
+### Landed on main
 
-1. Act0 Rule-Based Repair Visible Reason Surface v1.
+1. Visible Repair Reason Surface.
+2. Repair Result Receipt.
+3. Session Repair Summary.
+4. Repair-based return reason.
+5. Review pattern contract sync, with Review Pattern Coaching Lite already
+   present.
+6. Existing Profile progress mirror confirmed.
 
-Definition:
+### Next candidate
 
-Make the existing deterministic repair decision visible to the learner in the
-smallest safe surface. The learner should understand:
-
-- what table signal they missed;
-- why this next hand was selected;
-- what exact skill/signal this rep repairs.
-
-Constraints:
-
-- no fake AI/adaptive claims;
-- no broad coach/chat system;
-- no new route;
-- no premium/paywall;
-- no Modern Table visual work;
-- no broad dashboard;
-- no new telemetry owner;
-- no generic encouragement replacing table-signal causality.
-
-Next Wave Contract:
-
-- consume the existing private repair decision / reason receipt only where a
-  current surface already has a safe reason slot;
-- show missed signal, selected repair hand, and repair reason;
-- no new telemetry owner;
-- no session summary yet;
-- no AI/ML claims;
-- no commerce;
-- no broad UI expansion;
-- no Modern Table visual work.
-
-### Then
-
-1. Repair Result Receipt v1
-   - shows fixed / repeated / needs another rep.
-2. Session Repair Summary v1
-   - shows mistakes found, repairs completed, skill improved, next skill.
-3. Compact First-Week Proof Packet v1
-   - first decision -> mistake -> repair -> success -> summary.
+1. Sharky Character & Coaching Presence v1.
+   - PIEC / audit first; it is not automatically implementation-ready.
+   - Admit only learning-EV coaching presence, repair encouragement, session
+     transitions, and emotional clarity.
+   - If that scope is broad or low-EV, use Welcome / Placement Micro-Aha
+     Alignment instead.
 
 ### Later
 
