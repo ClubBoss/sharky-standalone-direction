@@ -5123,10 +5123,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               en: 'One same-clue rep will help lock this in.',
               ru: 'Один повтор с той же подсказкой поможет закрепить её.',
             ),
-      reasonLabel: _copyV1(
-        en: 'Repair reinforcement',
-        ru: 'Закрепление ремонта',
-      ),
+      reasonLabel: _practiceRepairReturnReasonLineV1(receipt.missedSignalLabel),
       outcomeLead: _copyV1(en: 'Practice now:', ru: 'Практика сейчас:'),
       outcome: isExactReplay
           ? _copyV1(
@@ -5162,6 +5159,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return normalized;
     }
     return '$normalized clue';
+  }
+
+  String _practiceRepairReturnReasonLineV1(String missedSignalLabel) {
+    final label = missedSignalLabel.trim();
+    if (label.isEmpty) {
+      return _copyV1(
+        en: 'This table clue is still the one to stabilize.',
+        ru: 'Эту подсказку стола ещё нужно закрепить.',
+      );
+    }
+    return _copyV1(
+      en: '$label is still the clue to stabilize.',
+      ru: 'Подсказку $label ещё нужно закрепить.',
+    );
   }
 
   String _dailyGoalValueLabel() {

@@ -173,7 +173,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(
+      find.text('No bet yet is still the clue to stabilize.'),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsNothing);
     expect(find.text('Session proof'), findsNothing);
     expect(find.text('Review'), findsOneWidget);
     expect(find.text('Learn'), findsOneWidget);
@@ -279,7 +283,11 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Repair reinforcement'), findsOneWidget);
+    expect(
+      find.text('No bet yet is still the clue to stabilize.'),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reinforcement'), findsNothing);
     expect(find.textContaining('same-clue'), findsNothing);
     expect(find.textContaining('same signal'), findsNothing);
     expect(find.text('Session proof'), findsNothing);
