@@ -114,7 +114,8 @@ void main() {
       find.byKey(const Key('act0_shell_session_summary_ceremony_label')),
       findsOneWidget,
     );
-    expect(find.text('Session proof'), findsOneWidget);
+    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session proof'), findsNothing);
     expect(
       find.text('Today you repaired the no-bet-yet clue.'),
       findsOneWidget,
@@ -226,7 +227,8 @@ void main() {
       find.byKey(const Key('act0_shell_session_summary_proof_block')),
       findsOneWidget,
     );
-    expect(find.text('Session proof'), findsOneWidget);
+    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session proof'), findsNothing);
     expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
     expect(
       find.text('Next focus: one more no-bet-yet repair hand.'),
@@ -262,7 +264,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Session proof'), findsOneWidget);
+    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session proof'), findsNothing);
     expect(
       find.text('Replay fixed: you handled that spot correctly.'),
       findsOneWidget,

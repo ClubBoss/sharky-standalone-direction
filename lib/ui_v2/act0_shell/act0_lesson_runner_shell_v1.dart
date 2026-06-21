@@ -4983,7 +4983,7 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Session proof',
+              'Session repair',
               key: const Key('act0_shell_session_summary_ceremony_label'),
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.gold,
