@@ -96,6 +96,7 @@ void main(List<String> args) async {
   );
 
   final previousDir = Directory('${outputDir.path}.previous');
+  outputDir.parent.createSync(recursive: true);
   if (previousDir.existsSync()) {
     previousDir.deleteSync(recursive: true);
   }
