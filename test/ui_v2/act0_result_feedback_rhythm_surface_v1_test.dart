@@ -94,6 +94,15 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_repair_result_receipt_title')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair result'), findsOneWidget);
+    expect(
+      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_session_summary_proof_block')),
       findsOneWidget,
     );
@@ -204,6 +213,13 @@ void main() {
     expect(find.text('Still fragile'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_repair_receipt_proof_block')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair result'), findsOneWidget);
+    expect(
+      find.text(
+        'Still missed: nobody had bet yet. One more repair hand will help.',
+      ),
       findsOneWidget,
     );
     expect(

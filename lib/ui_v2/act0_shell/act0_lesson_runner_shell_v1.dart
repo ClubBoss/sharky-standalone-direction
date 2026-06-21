@@ -4455,20 +4455,24 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle =
-        skillReceipt?.title ??
-        (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
-            ? ''
-            : receiptSplitIndex < 0
-            ? fallbackReceiptLine
-            : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
-    final receiptDetail =
-        skillReceipt?.detail ??
-        (fallbackReceiptLine == null ||
-                fallbackReceiptLine.isEmpty ||
-                receiptSplitIndex < 0
-            ? ''
-            : fallbackReceiptLine.substring(receiptSplitIndex + 2).trim());
+    final receiptTitle = repairReceiptLine.isNotEmpty
+        ? 'Repair result'
+        : skillReceipt?.title ??
+              (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
+                  ? ''
+                  : receiptSplitIndex < 0
+                  ? fallbackReceiptLine
+                  : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
+    final receiptDetail = repairReceiptLine.isNotEmpty
+        ? repairReceiptLine
+        : skillReceipt?.detail ??
+              (fallbackReceiptLine == null ||
+                      fallbackReceiptLine.isEmpty ||
+                      receiptSplitIndex < 0
+                  ? ''
+                  : fallbackReceiptLine
+                        .substring(receiptSplitIndex + 2)
+                        .trim());
     final receiptNextLine = skillReceipt == null
         ? ''
         : switch (skillReceipt.outcome) {
@@ -4720,6 +4724,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   children: [
                     Text(
                       receiptTitle,
+                      key: repairReceiptLine.isNotEmpty
+                          ? const Key('act0_shell_repair_result_receipt_title')
+                          : null,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.primary,
                         fontWeight: FontWeight.w800,
