@@ -30016,9 +30016,9 @@ void main() {
         find.byKey(const Key('act0_shell_review_pattern_card')),
         findsOneWidget,
       );
-      expect(find.text('Pattern starting to form'), findsOneWidget);
+      expect(find.text('Pattern to repair'), findsOneWidget);
       expect(
-        find.text('Action order is showing up 2 times. Fix this family first.'),
+        find.text('Action order is showing up 2 times. Fix this pattern first.'),
         findsOneWidget,
       );
       expect(
