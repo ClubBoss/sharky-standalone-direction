@@ -4507,10 +4507,28 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       padding: EdgeInsets.all(
         rapidMode ? 8 : (isCompactRefinedFeedback ? 5 : (refined ? 8 : 10)),
       ),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        borderColor: tone.withValues(
-          alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.46),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
+            Act0ShellTokensV1.surface3.withValues(alpha: 0.94),
+          ],
         ),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(
+          color: tone.withValues(
+            alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.40),
+          ),
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -4530,22 +4548,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
-                      Container(
+                      KeyedSubtree(
                         key: const Key(
                           'act0_shell_feedback_primary_result_block',
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isCompactRefinedFeedback ? 8 : 9,
-                          vertical: isCompactRefinedFeedback ? 5 : 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: tone.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusBase,
-                          ),
-                          border: Border.all(
-                            color: tone.withValues(alpha: 0.24),
-                          ),
                         ),
                         child: KeyedSubtree(
                           key: const Key(
@@ -4656,6 +4661,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 if (showRepairFocus) ...[
                   SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
+                  const _FeedbackVerdictDividerV1(),
+                  SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
                   _FeedbackVisibleRepairReasonBlockV1(
                     lines: visibleRepairReasonLines,
                     compact: isCompactRefinedFeedback,
@@ -4714,27 +4721,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           ],
           if (!rapidMode && receiptTitle.isNotEmpty) ...[
             const SizedBox(height: 8),
+            const _FeedbackVerdictDividerV1(),
+            const SizedBox(height: 8),
             _FeedbackProofKeyWrapperV1(
               proofKey: repairReceiptLine.isNotEmpty
                   ? const Key('act0_shell_repair_receipt_proof_block')
                   : null,
-              child: Container(
+              child: KeyedSubtree(
                 key: repairReceiptLine.isNotEmpty
                     ? const Key('act0_shell_repair_result_receipt')
                     : const Key('act0_shell_first_value_receipt'),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusBase,
-                  ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
-                  ),
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -4775,6 +4771,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             ),
           ],
           if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            const _FeedbackVerdictDividerV1(),
             const SizedBox(height: 8),
             _FeedbackProofKeyWrapperV1(
               proofKey: const Key('act0_shell_session_summary_proof_block'),
@@ -4826,6 +4824,18 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   }
 }
 
+class _FeedbackVerdictDividerV1 extends StatelessWidget {
+  const _FeedbackVerdictDividerV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 1,
+      color: Act0ShellTokensV1.border.withValues(alpha: 0.72),
+    );
+  }
+}
+
 class _FeedbackActionContrastBlockV1 extends StatelessWidget {
   const _FeedbackActionContrastBlockV1({
     required this.actionLine,
@@ -4843,17 +4853,8 @@ class _FeedbackActionContrastBlockV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return KeyedSubtree(
       key: const Key('act0_shell_feedback_action_contrast_block'),
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8 : 9,
-        vertical: compact ? 6 : 7,
-      ),
-      decoration: BoxDecoration(
-        color: tone.withValues(alpha: compact ? 0.055 : 0.07),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-        border: Border.all(color: tone.withValues(alpha: 0.16)),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -4903,19 +4904,8 @@ class _FeedbackVisibleRepairReasonBlockV1 extends StatelessWidget {
     if (lines.isEmpty) {
       return const SizedBox.shrink();
     }
-    return Container(
+    return KeyedSubtree(
       key: const Key('act0_shell_visible_repair_reason'),
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8 : 10,
-        vertical: compact ? 6 : 8,
-      ),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-        border: Border.all(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -5053,16 +5043,8 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
       key: const Key('act0_shell_session_summary_ceremony_block'),
       child: KeyedSubtree(
         key: const Key('act0_shell_session_repair_summary'),
-        child: Container(
+        child: KeyedSubtree(
           key: const Key('act0_shell_session_repair_closure_strip'),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-            border: Border.all(
-              color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-            ),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
