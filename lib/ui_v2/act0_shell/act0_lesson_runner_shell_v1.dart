@@ -4485,6 +4485,23 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           };
     final showCompactInlineSignalProof =
         !rapidMode && isCompactRefinedFeedback && signalProof != null;
+    final selectedContrastLine =
+        !isCompactRefinedFeedback &&
+            (isWrong || isSuboptimal) &&
+            selectedLabel.isNotEmpty
+        ? _feedbackSelectedLineV1(context, selectedLabel)
+        : '';
+    final showSignalProofInProofStack =
+        !rapidMode && signalProof != null && !showCompactInlineSignalProof;
+    final showActionContrast = actionLabel.isNotEmpty;
+    final showReason = !rapidMode;
+    final showRepairFocus = !rapidMode && visibleRepairReasonLines.isNotEmpty;
+    final showProofStack =
+        !rapidMode &&
+        (showSignalProofInProofStack ||
+            showActionContrast ||
+            showReason ||
+            showRepairFocus);
     return Container(
       key: const Key('act0_shell_feedback_card'),
       padding: EdgeInsets.all(
@@ -4578,74 +4595,73 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ],
           ),
-          if (!rapidMode) SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
-          if (actionLabel.isNotEmpty) ...[
+          if (rapidMode && actionLabel.isNotEmpty) ...[
             Text(
               '$actionPrefix: $actionLabel',
               key: const Key('act0_shell_feedback_preferred_label'),
-              maxLines: rapidMode ? 2 : 2,
+              maxLines: 2,
               overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
                 color: Act0ShellTokensV1.text,
-                fontSize: rapidMode ? 15 : (refined ? 15.5 : 16.5),
+                fontSize: 15,
                 height: 1.06,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            SizedBox(
-              height: rapidMode ? 0 : (isCompactRefinedFeedback ? 2 : 6),
-            ),
+            const SizedBox(height: 0),
           ],
-          if (!rapidMode &&
-              !isCompactRefinedFeedback &&
-              (isWrong || isSuboptimal) &&
-              selectedLabel.isNotEmpty) ...[
-            Text(
-              _feedbackSelectedLineV1(context, selectedLabel),
-              key: const Key('act0_shell_feedback_selected_label'),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontSize: refined ? 11.5 : 12.0,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 5),
-          ],
-          if (!rapidMode &&
-              signalProof != null &&
-              !showCompactInlineSignalProof) ...[
-            _FeedbackSignalProofRowV1(
-              proofLine: signalProof!.proofLine,
-              tone: tone,
-              compact: isCompactRefinedFeedback,
-            ),
-            SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
-          ],
-          if (!rapidMode)
-            Text(
-              resolvedReason,
-              key: const Key('act0_shell_feedback_reason'),
-              maxLines: isCompactRefinedFeedback && !preserveFullCompactReason
-                  ? 2
-                  : null,
-              overflow: isCompactRefinedFeedback && !preserveFullCompactReason
-                  ? TextOverflow.fade
-                  : null,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontSize: isCompactRefinedFeedback
-                    ? 11.4
-                    : (refined ? 12.0 : 12.5),
-                height: isCompactRefinedFeedback ? 1.08 : 1.16,
-              ),
-            ),
-          if (!rapidMode && visibleRepairReasonLines.isNotEmpty) ...[
-            SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
-            _FeedbackVisibleRepairReasonBlockV1(
-              lines: visibleRepairReasonLines,
-              compact: isCompactRefinedFeedback,
+          if (showProofStack) ...[
+            SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
+            Column(
+              key: const Key('act0_shell_feedback_proof_stack'),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (showSignalProofInProofStack) ...[
+                  _FeedbackSignalProofRowV1(
+                    proofLine: signalProof!.proofLine,
+                    tone: tone,
+                    compact: isCompactRefinedFeedback,
+                  ),
+                  SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+                ],
+                if (showActionContrast) ...[
+                  _FeedbackActionContrastBlockV1(
+                    actionLine: '$actionPrefix: $actionLabel',
+                    selectedLine: selectedContrastLine,
+                    tone: tone,
+                    compact: isCompactRefinedFeedback,
+                    refined: refined,
+                  ),
+                  SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+                ],
+                if (showReason)
+                  Text(
+                    resolvedReason,
+                    key: const Key('act0_shell_feedback_reason'),
+                    maxLines:
+                        isCompactRefinedFeedback && !preserveFullCompactReason
+                        ? 2
+                        : null,
+                    overflow:
+                        isCompactRefinedFeedback && !preserveFullCompactReason
+                        ? TextOverflow.fade
+                        : null,
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontSize: isCompactRefinedFeedback
+                          ? 11.4
+                          : (refined ? 12.0 : 12.5),
+                      height: isCompactRefinedFeedback ? 1.08 : 1.16,
+                    ),
+                  ),
+                if (showRepairFocus) ...[
+                  SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
+                  _FeedbackVisibleRepairReasonBlockV1(
+                    lines: visibleRepairReasonLines,
+                    compact: isCompactRefinedFeedback,
+                  ),
+                ],
+              ],
             ),
           ],
           if (!rapidMode && showVerdictTitle && !isCompactRefinedFeedback) ...[
@@ -4736,6 +4752,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       const SizedBox(height: 3),
                       Text(
                         receiptDetail,
+                        key: repairReceiptLine.isNotEmpty
+                            ? const Key('act0_shell_repair_result_outcome_line')
+                            : null,
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.textMuted,
                         ),
@@ -4799,6 +4818,69 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _FeedbackActionContrastBlockV1 extends StatelessWidget {
+  const _FeedbackActionContrastBlockV1({
+    required this.actionLine,
+    required this.selectedLine,
+    required this.tone,
+    required this.compact,
+    required this.refined,
+  });
+
+  final String actionLine;
+  final String selectedLine;
+  final Color tone;
+  final bool compact;
+  final bool refined;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_feedback_action_contrast_block'),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 8 : 9,
+        vertical: compact ? 6 : 7,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: compact ? 0.055 : 0.07),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+        border: Border.all(color: tone.withValues(alpha: 0.16)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            actionLine,
+            key: const Key('act0_shell_feedback_preferred_label'),
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontSize: compact ? 14.0 : (refined ? 15.0 : 15.5),
+              height: 1.06,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          if (selectedLine.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              selectedLine,
+              key: const Key('act0_shell_feedback_selected_label'),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontSize: refined ? 11.5 : 12.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ],
@@ -4969,41 +5051,44 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: const Key('act0_shell_session_summary_ceremony_block'),
-      child: Container(
+      child: KeyedSubtree(
         key: const Key('act0_shell_session_repair_summary'),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-          border: Border.all(
-            color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Session repair',
-              key: const Key('act0_shell_session_summary_ceremony_label'),
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.gold,
-                fontWeight: FontWeight.w900,
-              ),
+        child: Container(
+          key: const Key('act0_shell_session_repair_closure_strip'),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+            border: Border.all(
+              color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
             ),
-            const SizedBox(height: 5),
-            for (var index = 0; index < lines.length; index++) ...[
-              if (index > 0) const SizedBox(height: 3),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                lines[index],
+                'Session repair',
+                key: const Key('act0_shell_session_summary_ceremony_label'),
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: index == 0
-                      ? Act0ShellTokensV1.gold
-                      : Act0ShellTokensV1.textMuted,
-                  fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
+                  color: Act0ShellTokensV1.gold,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
+              const SizedBox(height: 5),
+              for (var index = 0; index < lines.length; index++) ...[
+                if (index > 0) const SizedBox(height: 3),
+                Text(
+                  lines[index],
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: index == 0
+                        ? Act0ShellTokensV1.gold
+                        : Act0ShellTokensV1.textMuted,
+                    fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

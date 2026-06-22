@@ -53,6 +53,72 @@ void main() {
     },
   );
 
+  testWidgets('wrong feedback orders clue before action and repair focus', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Good spot to fix.',
+            reason: 'Checking keeps the free option when nobody has bet.',
+            quality: Act0FeedbackQualityV1.wrong,
+            sharkyLine: 'Good spot to fix.',
+            sharkyMood: Act0SharkyMoodV1.repair,
+            selectedLabel: 'Fold',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            signalProof: const Act0FeedbackSignalProofV1(
+              signalId: 'no_bet_yet',
+              label: 'No bet yet',
+              proofLine: 'Signal: No bet yet',
+            ),
+            repairReasonLine: 'This next hand starts with no bet facing Hero.',
+            repairResultReceiptLine:
+                'Repair started: the missed table clue was no bet yet.',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_feedback_proof_stack')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_signal_proof')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_visible_repair_reason')),
+      findsOneWidget,
+    );
+
+    final signalTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_feedback_signal_proof')))
+        .dy;
+    final actionTop = tester
+        .getTopLeft(
+          find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
+        )
+        .dy;
+    final reasonTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_feedback_reason')))
+        .dy;
+    final repairTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_visible_repair_reason')))
+        .dy;
+
+    expect(signalTop, lessThan(actionTop));
+    expect(actionTop, lessThan(reasonTop));
+    expect(reasonTop, lessThan(repairTop));
+  });
+
   testWidgets('repair feedback promotes receipt and summary proof blocks', (
     tester,
   ) async {
@@ -103,6 +169,10 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_repair_result_outcome_line')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_session_summary_proof_block')),
       findsOneWidget,
     );
@@ -112,6 +182,10 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_shell_session_summary_ceremony_label')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_closure_strip')),
       findsOneWidget,
     );
     expect(find.text('Session repair'), findsOneWidget);
@@ -124,6 +198,15 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_verdict_pill')),
       findsNothing,
     );
+    final resultTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_repair_result_receipt')))
+        .dy;
+    final sessionTop = tester
+        .getTopLeft(
+          find.byKey(const Key('act0_shell_session_repair_closure_strip')),
+        )
+        .dy;
+    expect(resultTop, lessThan(sessionTop));
   });
 
   testWidgets('wrong repair feedback shows visible repair reason', (
