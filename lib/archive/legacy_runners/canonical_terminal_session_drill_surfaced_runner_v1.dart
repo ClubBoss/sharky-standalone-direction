@@ -10,6 +10,7 @@ import 'package:poker_analyzer/personalization/learner_journey_cta_v1.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/session_drill_projection_truth_invariant_spine_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/services/session_drill_repair_receipt_persistence_v1.dart';
 import 'package:poker_analyzer/services/session_drill_projection_truth_reconciliation_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/infra/telemetry.dart';
@@ -545,6 +546,7 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
       }
       return;
     }
+    _persistRepairReceiptCandidateV1(current, result, event);
     setState(() {
       _lastPass = false;
       _lastErrorClass = result.errorClass;
@@ -554,6 +556,25 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
       _lastSoftPassInfo = null;
       _lastSoftPassDetailV1 = null;
     });
+  }
+
+  void _persistRepairReceiptCandidateV1(
+    SessionDrillItemV1 current,
+    DrillEvalResultV1 result,
+    DrillUserEventV1 event,
+  ) {
+    final chosenActionId = event.actionId?.trim();
+    if (chosenActionId == null || chosenActionId.isEmpty) {
+      return;
+    }
+    unawaited(
+      persistSessionDrillRepairReceiptCandidateIfEligibleV1(
+        sourceSessionId: widget.sessionId,
+        sourceDrill: current,
+        evaluation: result,
+        chosenActionId: chosenActionId,
+      ),
+    );
   }
 
   void _resetCurrentResult() {
