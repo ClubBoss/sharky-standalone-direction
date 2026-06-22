@@ -8,4 +8,8 @@
 - choose_raise_range: TODO
 - classify_strong_raise: TODO
 - classify_missed_fold: TODO
+- classify_medium_call_control: medium range bucket, fair-price control.
+- classify_weak_fold_pressure: weak range bucket under pressure.
+- classify_strong_call_control: strong range bucket with an already large action.
+- classify_missed_fold_recheck: missed range bucket with no clean draw.
 - choose_fold_trap: TODO

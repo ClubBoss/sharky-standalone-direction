@@ -1784,8 +1784,24 @@
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold.json"
             },
             {
+              "id": "classify_missed_fold_recheck",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold_recheck.json"
+            },
+            {
+              "id": "classify_medium_call_control",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_medium_call_control.json"
+            },
+            {
               "id": "classify_strong_raise",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_strong_raise.json"
+            },
+            {
+              "id": "classify_strong_call_control",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_strong_call_control.json"
+            },
+            {
+              "id": "classify_weak_fold_pressure",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_weak_fold_pressure.json"
             },
             {
               "id": "find_btn",

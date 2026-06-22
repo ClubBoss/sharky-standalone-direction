@@ -1,0 +1,15 @@
+{
+  "id": "classify_weak_fold_pressure",
+  "kind": "range_bucket_classifier_v1",
+  "prompt": "Range bucket is weak and pressure is growing. Choose action.",
+  "intent_v1": "range_vs_hand",
+  "range_bucket_v1": "weak",
+  "expected_action": "fold",
+  "acceptable_actions": [
+    "call"
+  ],
+  "why_v1": "Fold keeps a weak bucket from paying into pressure without a clear reason to continue.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Fold fits this weak bucket because pressure is rising while the likely hand group has little reason to continue.",
+  "feedback_incorrect_v1": "Incorrect. Fold fits this weak bucket because calling pressure without a stronger reason turns a thin hope into a bigger problem."
+}

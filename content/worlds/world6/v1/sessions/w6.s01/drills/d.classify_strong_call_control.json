@@ -1,0 +1,15 @@
+{
+  "id": "classify_strong_call_control",
+  "kind": "range_bucket_classifier_v1",
+  "prompt": "Range bucket is strong but the action is already large. Choose action.",
+  "intent_v1": "think_in_ranges",
+  "range_bucket_v1": "strong",
+  "expected_action": "call",
+  "acceptable_actions": [
+    "raise"
+  ],
+  "why_v1": "Call keeps a strong bucket in the pot when the action is already large and another raise would add pressure too quickly.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Call fits this strong bucket because the existing pressure already lets the hand continue without forcing more into the pot.",
+  "feedback_incorrect_v1": "Incorrect. Call fits this strong bucket because control can be stronger than adding another raise when the pot is already growing."
+}
