@@ -4,6 +4,15 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  Future<void> pumpCompactRunner(WidgetTester tester, Widget widget) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(widget);
+    await tester.pumpAndSettle();
+  }
+
   testWidgets(
     'wrong feedback uses primary result block and missed clue proof',
     (tester) async {
@@ -390,4 +399,69 @@ void main() {
     );
     expect(find.text('Session proof'), findsNothing);
   });
+
+  testWidgets(
+    'runner decision keeps table evidence above an anchored prompt action surface',
+    (tester) async {
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere(
+            (candidate) => candidate.lessonId == 'fold_check_call_raise',
+          );
+      final task = lesson.taskList.firstWhere(
+        (candidate) => candidate.taskId == 'actions_check_drill',
+      );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingStepIndex: task.runner.teachingSteps.length,
+      );
+
+      await pumpCompactRunner(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_runner_decision_rhythm_surface')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_action_prompt_panel')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+
+      final tableBottom = tester
+          .getBottomLeft(find.byKey(const Key('act0_shell_table')))
+          .dy;
+      final rhythmTop = tester
+          .getTopLeft(
+            find.byKey(const Key('act0_shell_runner_decision_rhythm_surface')),
+          )
+          .dy;
+      final promptTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_action_question')))
+          .dy;
+      final actionTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_action_panel')))
+          .dy;
+
+      expect(tableBottom, lessThan(rhythmTop));
+      expect(promptTop, lessThan(actionTop));
+    },
+  );
 }

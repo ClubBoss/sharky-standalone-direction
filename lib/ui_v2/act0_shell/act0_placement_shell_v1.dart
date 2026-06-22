@@ -287,24 +287,44 @@ class Act0PlacementShellV1 extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _PlacementHeroV1(
-                        title: _placementCopyV1(
-                          context,
-                          en: 'Find your start',
-                          ru: 'Найди свой старт',
+                      Container(
+                        key: const Key(
+                          'act0_shell_placement_route_check_frame',
                         ),
-                        subtitle: _placementCopyV1(
-                          context,
-                          en: 'Answer two quick questions. Then Sharky opens the first useful hand.',
-                          ru: 'Ответь на два коротких вопроса. Затем Шарки откроет первую полезную раздачу.',
+                        padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+                        decoration: Act0ShellTokensV1.surfaceDecoration(
+                          color: Act0ShellTokensV1.surface2.withValues(
+                            alpha: 0.52,
+                          ),
+                          borderColor: Act0ShellTokensV1.primary.withValues(
+                            alpha: 0.12,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      _PlacementLaunchPathV1(
-                        currentStep:
-                            showIntro || currentQuestionIndex < questions.length
-                            ? _PlacementLaunchStepV1.answer
-                            : _PlacementLaunchStepV1.quickCheck,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _PlacementHeroV1(
+                              title: _placementCopyV1(
+                                context,
+                                en: 'Find your start',
+                                ru: 'Найди свой старт',
+                              ),
+                              subtitle: _placementCopyV1(
+                                context,
+                                en: 'Answer two quick questions. Then Sharky opens the first useful hand.',
+                                ru: 'Ответь на два коротких вопроса. Затем Шарки откроет первую полезную раздачу.',
+                              ),
+                            ),
+                            const SizedBox(height: Act0ShellTokensV1.gapSm),
+                            _PlacementLaunchPathV1(
+                              currentStep:
+                                  showIntro ||
+                                      currentQuestionIndex < questions.length
+                                  ? _PlacementLaunchStepV1.answer
+                                  : _PlacementLaunchStepV1.quickCheck,
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapMd),
                       AnimatedSwitcher(

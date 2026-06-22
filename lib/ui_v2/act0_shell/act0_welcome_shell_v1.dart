@@ -141,7 +141,10 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           accent: Act0ShellTokensV1.gold,
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
-          child: _WelcomeLoopStripV1(copy: _copyV1),
+          child: KeyedSubtree(
+            key: const Key('act0_shell_welcome_handoff_proof_block'),
+            child: _WelcomeLoopStripV1(copy: _copyV1),
+          ),
         ),
         ctaLabel: _copyV1(
           en: widget.replayMode ? 'Back to profile' : 'Open your start',
@@ -206,18 +209,33 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  Text(title, style: Act0ShellTokensV1.sectionTitle),
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
-                  if (visual != null) ...[
-                    visual!,
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
-                  ],
-                  Act0SharkyGuideCardV1(
-                    eyebrow: eyebrow,
-                    line: line,
-                    detail: blocks.join(' '),
-                    mood: mood,
-                    compact: true,
+                  Container(
+                    key: const Key('act0_shell_welcome_beat_frame'),
+                    padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                    decoration: Act0ShellTokensV1.surfaceDecoration(
+                      color: Act0ShellTokensV1.surface2.withValues(alpha: 0.58),
+                      borderColor: Act0ShellTokensV1.primary.withValues(
+                        alpha: 0.14,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: Act0ShellTokensV1.sectionTitle),
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        if (visual != null) ...[
+                          visual!,
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        ],
+                        Act0SharkyGuideCardV1(
+                          eyebrow: eyebrow,
+                          line: line,
+                          detail: blocks.join(' '),
+                          mood: mood,
+                          compact: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

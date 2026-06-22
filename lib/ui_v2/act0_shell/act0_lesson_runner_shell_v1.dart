@@ -10950,23 +10950,30 @@ class _ActionPromptPanelV1 extends StatelessWidget {
             ),
           ),
         ] else if (question.isNotEmpty && effectiveCompactDecision) ...[
-          Container(
-            key: const Key('act0_shell_compact_decision_surface'),
-            padding: const EdgeInsets.fromLTRB(9, 3, 9, 4),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.78),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Act0ShellTokensV1.info.withValues(alpha: 0.18),
+          KeyedSubtree(
+            key: const Key('act0_shell_runner_decision_rhythm_surface'),
+            child: Container(
+              key: const Key('act0_shell_compact_decision_surface'),
+              padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: Act0ShellTokensV1.info.withValues(alpha: 0.20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 14,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
               ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                buildPromptHeader(),
-                Transform.translate(offset: const Offset(0, -2), child: child),
-              ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [buildPromptHeader(), child],
+              ),
             ),
           ),
         ] else if (question.isNotEmpty) ...[

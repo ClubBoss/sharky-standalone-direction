@@ -3221,6 +3221,10 @@ void main() {
       find.byKey(const Key('act0_shell_placement_launch_path')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_placement_route_check_frame')),
+      findsOneWidget,
+    );
     expect(find.text('Answer'), findsWidgets);
     expect(find.text('Quick check'), findsWidgets);
     expect(find.text('First hand'), findsWidgets);
@@ -11058,6 +11062,10 @@ void main() {
       findsOneWidget,
     );
     expect(
+      find.byKey(const Key('act0_shell_welcome_beat_frame')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_welcome_launch_path')),
       findsOneWidget,
     );
@@ -11091,6 +11099,10 @@ void main() {
     expect(find.text('Your path is ready.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_welcome_handoff_preview')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_welcome_handoff_proof_block')),
       findsOneWidget,
     );
     expect(
