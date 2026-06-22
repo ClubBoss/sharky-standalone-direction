@@ -4,8 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) =>
-    false;
+bool _isRuLocaleV1(BuildContext context) => false;
 
 String _profileCopyV1(
   BuildContext context, {
@@ -40,6 +39,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showRecentProof =
+        profile.recentSkillGains.isNotEmpty ||
+        profile.mistakesFixedLine.trim().isNotEmpty ||
+        profile.strongCategories.isNotEmpty;
     return ListView(
       key: const Key('act0_shell_profile_screen'),
       cacheExtent: 1200,
@@ -52,13 +55,17 @@ class Act0ProfileShellV1 extends StatelessWidget {
       children: [
         _ProfileHeaderBandV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
+        _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
+        if (showRecentProof) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ProfileRecentGainsCardV1(profile: profile),
+        ],
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileHeroCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
+        _ProfileProgressProofCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileConsistencyCardV1(profile: profile),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileProgressProofCardV1(profile: profile),
         if (profile.skillStats.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileSkillStatsStripV1(profile: profile),
@@ -781,9 +788,11 @@ class _ProfileNextMilestoneCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasFocus = profile.recommendedFocusTitle.trim().isNotEmpty;
-    final title = hasFocus
-        ? _profileCopyV1(context, en: 'Next milestone', ru: 'Следующий рубеж')
-        : _profileCopyV1(context, en: 'Next milestone', ru: 'Следующий рубеж');
+    final title = _profileCopyV1(
+      context,
+      en: 'Current focus',
+      ru: 'Текущий фокус',
+    );
     final body = hasFocus
         ? _profileCopyV1(
             context,

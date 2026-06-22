@@ -116,6 +116,18 @@ void main() {
         find.text('Action read is showing up 2 times. Fix this pattern first.'),
         findsOneWidget,
       );
+      expect(
+        tester
+            .getTopLeft(find.byKey(const Key('act0_shell_review_pattern_card')))
+            .dy,
+        lessThan(
+          tester
+              .getTopLeft(
+                find.byKey(const Key('act0_shell_review_repair_coach_card')),
+              )
+              .dy,
+        ),
+      );
       expect(find.textContaining('leak'), findsNothing);
     },
   );

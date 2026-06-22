@@ -27149,7 +27149,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('Recent progress'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsOneWidget);
+      expect(find.textContaining('Table sense +6'), findsWidgets);
       expect(
         find.text(
           'See what improved, what is getting stronger, and why the next session starts warmer.',
@@ -27242,7 +27242,7 @@ void main() {
       );
       expect(find.text('Progress proof'), findsOneWidget);
       expect(find.textContaining('Recent progress'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsOneWidget);
+      expect(find.textContaining('Table sense +6'), findsWidgets);
       expect(find.text('82% practice accuracy'), findsNothing);
       expect(find.textContaining('Base: '), findsNothing);
       expect(find.textContaining('Recent gain: '), findsNothing);
@@ -27252,6 +27252,11 @@ void main() {
   testWidgets('Profile keeps next milestone above rhythm support', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(1024, 1366);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -27315,6 +27320,77 @@ void main() {
       ),
     );
   });
+
+  testWidgets(
+    'Profile elevates current focus and recent proof above generic metrics',
+    (tester) async {
+      tester.view.physicalSize = const Size(1024, 1366);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ProfileShellV1(
+              profile: const Act0ProfileStateV1(
+                playerName: 'New player',
+                level: 'Level 1',
+                xpLine: '120 / 200 XP',
+                lessonsLine: '8 of 24 tasks complete',
+                accuracyLine: '82% practice accuracy',
+                qualityLine: '1 perfect clear',
+                consistencyActiveDays: 3,
+                achievements: <Act0AchievementV1>[],
+                streakLine: '3 day streak',
+                streakDays: 3,
+                recentSkillGains: <Act0SkillGainV1>[
+                  Act0SkillGainV1(
+                    label: 'Table sense',
+                    gain: 6,
+                    source: 'Action words',
+                  ),
+                ],
+                mistakesFixedLine: '1 spot stabilized',
+                recommendedFocusTitle: 'Fold, check, call, raise',
+                recommendedFocusBody:
+                    'Name each action before the table asks you.',
+                recommendedFocusCtaLabel: 'Continue',
+              ),
+              onRetakePlacement: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final focusCard = find.byKey(
+        const Key('act0_shell_profile_next_milestone'),
+      );
+      final recentProof = find.byKey(
+        const Key('act0_shell_profile_recent_skill_gains'),
+      );
+      final heroCard = find.byKey(const Key('act0_shell_profile_hero_card'));
+      final progressProof = find.byKey(
+        const Key('act0_shell_profile_progress_proof'),
+      );
+
+      expect(focusCard, findsOneWidget);
+      expect(recentProof, findsOneWidget);
+      expect(heroCard, findsOneWidget);
+      expect(progressProof, findsOneWidget);
+      expect(find.text('Current focus'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(
+        tester.getTopLeft(focusCard).dy,
+        lessThan(tester.getTopLeft(heroCard).dy),
+      );
+      expect(
+        tester.getTopLeft(recentProof).dy,
+        lessThan(tester.getTopLeft(progressProof).dy),
+      );
+    },
+  );
 
   testWidgets(
     'Profile groups next milestone and progress proof in the mounted story stack',
@@ -27390,7 +27466,7 @@ void main() {
       final milestoneTopLeft = tester.getTopLeft(milestoneCard);
       final proofTopLeft = tester.getTopLeft(proofCard);
       expect(milestoneTopLeft.dy, lessThan(proofTopLeft.dy));
-      expect(find.textContaining('Table sense +6'), findsOneWidget);
+      expect(find.textContaining('Table sense +6'), findsWidgets);
     },
   );
 

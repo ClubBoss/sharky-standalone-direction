@@ -5,8 +5,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) =>
-    false;
+bool _isRuLocaleV1(BuildContext context) => false;
 
 String _reviewCopyV1(
   BuildContext context, {
@@ -66,17 +65,17 @@ class Act0ReviewShellV1 extends StatelessWidget {
     ];
     final activeRepairColumn = <Widget>[
       if (!isClean) ...[
-        _ReviewRepairCoachCardV1(
-          mistake: review.mistakes.first,
-          onFixMistake: onFixMistake,
-        ),
         if (dominantPattern != null) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ReviewPatternCardV1(
             pattern: dominantPattern,
             localeIsRu: localeIsRu,
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
         ],
+        _ReviewRepairCoachCardV1(
+          mistake: review.mistakes.first,
+          onFixMistake: onFixMistake,
+        ),
         if (review.mistakes.length > 1) ...[
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Container(
