@@ -629,6 +629,10 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   repairFocus,
   repairResult,
   sessionRepair,
+  day2ReturnHome,
+  day2PracticeRepairTarget,
+  day2ReviewContinuation,
+  day2ProfileActiveRepair,
 }
 
 class Act0ShellDebugHarnessEntryV1 {
@@ -1762,6 +1766,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           state,
           outcome: _Act0DebugRepairProofOutcomeV1.wrong,
         );
+      case Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome:
+        _applyDebugDay2ReturnHomeSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget:
+        _applyDebugDay2PracticeRepairTargetSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.day2ReviewContinuation:
+        _applyDebugDay2ReviewContinuationSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.day2ProfileActiveRepair:
+        _applyDebugDay2ProfileActiveRepairSurface(state);
     }
   }
 
@@ -2035,6 +2047,113 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       option: selectedOption,
     );
     _selectedOptionId = selectedOption.id;
+  }
+
+  Act0MistakeCardV1? _seedDebugDay2OpenRepairStateV1(Act0ShellStateV1 state) {
+    _resetDebugSurfaceChrome();
+    final world = state.worldById('world_1');
+    final sourceLesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final sourceTask = _taskById(sourceLesson, 'actions_legal_context');
+    final missedOption = sourceTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) =>
+              option != null && option.quality == Act0FeedbackQualityV1.wrong,
+          orElse: () => sourceTask.runner.options.isEmpty
+              ? null
+              : sourceTask.runner.options.first,
+        );
+    final betterOption = sourceTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => option != null && option.isCorrect,
+          orElse: () => missedOption,
+        );
+    if (missedOption == null || betterOption == null) {
+      return null;
+    }
+    _selectedWorldId = world.worldId;
+    _selectedLessonId = sourceLesson.lessonId;
+    _selectedTaskId = sourceTask.taskId;
+    _completedTaskIds.add('actions_terms_intro');
+    _storeOpenRepairIntentForMissV1(
+      sourceWorldId: world.worldId,
+      sourceLessonId: sourceLesson.lessonId,
+      sourceTaskId: sourceTask.taskId,
+      runner: sourceTask.runner,
+      option: missedOption,
+    );
+    final record = _Act0MistakeRecordV1(
+      taskId: sourceTask.taskId,
+      lessonId: sourceLesson.lessonId,
+      worldId: world.worldId,
+      title: _localizedTaskTitleV1(sourceTask),
+      weaknessLabel: _categoryForLesson(sourceLesson.lessonId),
+      selectedOptionId: missedOption.id,
+      selectedLabel: missedOption.label,
+      betterLabel: betterOption.betterAnswerLabel,
+      reason: missedOption.feedbackReason,
+      contextLabels: _repairContextLabels(sourceTask.runner, missedOption),
+      repairActionLabel: _repairActionLabel(sourceTask),
+      attempts: 1,
+    );
+    _mistakeRecords[sourceTask.taskId] = record;
+    _retentionMemoryByTaskId[sourceTask.taskId] = _Act0RetentionMemoryEntryV1(
+      taskId: sourceTask.taskId,
+      lessonId: sourceLesson.lessonId,
+      worldId: world.worldId,
+      status: _Act0RetentionMemoryStatusV1.openRepair,
+      attempts: 1,
+      fixedAtSequence: 0,
+      lastRecheckSequence: 0,
+      successfulRecheckCount: 0,
+    );
+    return record.toCard(
+      repairActionLabelOverride: _repairIntentSurfaceCopyLineV1(
+        sourceTask.taskId,
+      ),
+    );
+  }
+
+  void _applyDebugDay2ReturnHomeSurface(Act0ShellStateV1 state) {
+    if (_seedDebugDay2OpenRepairStateV1(state) == null) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    _tab = Act0ShellTabV1.home;
+  }
+
+  void _applyDebugDay2PracticeRepairTargetSurface(Act0ShellStateV1 state) {
+    final mistake = _seedDebugDay2OpenRepairStateV1(state);
+    if (mistake == null) {
+      _applyDebugPracticeSurface();
+      return;
+    }
+    final world = state.worldById('world_1');
+    _startMistakeRepair(
+      world,
+      mistake,
+      returnToPlayHub: false,
+      practiceGroupId: 'weak_spots',
+      skipTeaching: true,
+      allowDrillBypass: true,
+    );
+  }
+
+  void _applyDebugDay2ReviewContinuationSurface(Act0ShellStateV1 state) {
+    if (_seedDebugDay2OpenRepairStateV1(state) == null) {
+      _applyDebugReviewSurface(state);
+      return;
+    }
+    _tab = Act0ShellTabV1.review;
+  }
+
+  void _applyDebugDay2ProfileActiveRepairSurface(Act0ShellStateV1 state) {
+    if (_seedDebugDay2OpenRepairStateV1(state) == null) {
+      _applyDebugProfileSurface();
+      return;
+    }
+    _tab = Act0ShellTabV1.profile;
   }
 
   void _applyDebugReviewSurface(Act0ShellStateV1 state) {

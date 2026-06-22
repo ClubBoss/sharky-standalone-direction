@@ -38,6 +38,13 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('review_handoff', 'firstWeekReview'),
     _CaptureSurfaceV1('profile_return', 'firstWeekProfile'),
   ],
+  'day2_return': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('open_repair_source', 'repairFocus'),
+    _CaptureSurfaceV1('return_home', 'day2ReturnHome'),
+    _CaptureSurfaceV1('practice_repair_target', 'day2PracticeRepairTarget'),
+    _CaptureSurfaceV1('review_continuation', 'day2ReviewContinuation'),
+    _CaptureSurfaceV1('profile_not_clear', 'day2ProfileActiveRepair'),
+  ],
 };
 
 void main(List<String> args) async {
@@ -417,6 +424,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return> compact',
   );
 }

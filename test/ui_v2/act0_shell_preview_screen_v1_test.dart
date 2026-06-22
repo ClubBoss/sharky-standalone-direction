@@ -2971,6 +2971,55 @@ void main() {
     );
   });
 
+  test('Fast screen review command exposes Day 2 return proof packet group', () {
+    final shellSource = File(
+      'tools/screen_review_fast_v1.sh',
+    ).readAsStringSync();
+    final captureSource = File(
+      'tools/act0_real_text_surface_capture_v1.dart',
+    ).readAsStringSync();
+    final packageSource = File(
+      'tools/package_screen_review_v1.py',
+    ).readAsStringSync();
+
+    expect(
+      shellSource,
+      contains('<core|runner|first_week|day2_return> compact'),
+    );
+    expect(captureSource, contains("'day2_return': <_CaptureSurfaceV1>"));
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('open_repair_source', 'repairFocus')"),
+    );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('return_home', 'day2ReturnHome')"),
+    );
+    expect(
+      captureSource,
+      contains(
+        "_CaptureSurfaceV1('practice_repair_target', 'day2PracticeRepairTarget')",
+      ),
+    );
+    expect(
+      captureSource,
+      contains(
+        "_CaptureSurfaceV1('review_continuation', 'day2ReviewContinuation')",
+      ),
+    );
+    expect(
+      captureSource,
+      contains(
+        "_CaptureSurfaceV1('profile_not_clear', 'day2ProfileActiveRepair')",
+      ),
+    );
+    expect(packageSource, contains('"day2_return_fast"'));
+    expect(
+      packageSource,
+      contains('return "./tools/screen_review_fast_v1.sh day2_return compact"'),
+    );
+  });
+
   test('Act0 proof capture locale override is explicit and English-only', () {
     final reviewEnglish = act0CommercialProofLocaleOverrideV1(
       Uri.parse(
@@ -3063,6 +3112,76 @@ void main() {
       );
     },
   );
+
+  testWidgets('Debug Day 2 proof surfaces expose open repair return story', (
+    tester,
+  ) async {
+    await pumpTall(
+      tester,
+      host(
+        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
+        ),
+      ),
+    );
+    expect(
+      find.byKey(const Key('act0_shell_home_primary_route_title')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<Text>(
+            find.byKey(const Key('act0_shell_home_primary_route_title')),
+          )
+          .data,
+      'Repair one weak spot',
+    );
+    expect(find.text('Fix this now'), findsOneWidget);
+
+    await pumpTall(
+      tester,
+      host(
+        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget,
+        ),
+      ),
+    );
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+    expect(
+      tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      'actions_check_drill',
+    );
+
+    await pumpTall(
+      tester,
+      host(
+        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.day2ReviewContinuation,
+        ),
+      ),
+    );
+    expect(
+      find.byKey(const Key('act0_shell_review_repair_coach_card')),
+      findsOneWidget,
+    );
+
+    await pumpTall(
+      tester,
+      host(
+        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.day2ProfileActiveRepair,
+        ),
+      ),
+    );
+    expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
+    expect(find.text('All sharp.'), findsNothing);
+  });
 
   testWidgets(
     'Debug capture first-wrong feedback opens exact No-bet repair state',

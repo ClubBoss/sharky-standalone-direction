@@ -47,6 +47,13 @@ SURFACE_GROUPS = {
         ("review_handoff", "Review handoff"),
         ("profile_return", "Profile return"),
     ),
+    "day2_return_fast": (
+        ("open_repair_source", "First-session open repair"),
+        ("return_home", "Day 2 Home repair priority"),
+        ("practice_repair_target", "Practice same repair target"),
+        ("review_continuation", "Review repair continuation"),
+        ("profile_not_clear", "Profile active repair proof"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEVICE = "compact"
@@ -63,7 +70,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -196,6 +203,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh runner compact"
     if group == "first_week_fast":
         return "./tools/screen_review_fast_v1.sh first_week compact"
+    if group == "day2_return_fast":
+        return "./tools/screen_review_fast_v1.sh day2_return compact"
     return f"./tools/screen_review_v1.sh {group} compact"
 
 
