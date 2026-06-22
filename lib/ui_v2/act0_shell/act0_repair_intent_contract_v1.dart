@@ -68,6 +68,77 @@ class Act0RepairIntentV1 {
       'reasonCode': reasonCode,
     };
   }
+
+  static Act0RepairIntentV1? tryParse(Object? raw) {
+    if (raw is! Map) {
+      return null;
+    }
+    final map = raw.cast<String, Object?>();
+    final schemaVersion = _nonNegativeInt(map['schemaVersion']) ?? 1;
+    if (schemaVersion != 1) {
+      return null;
+    }
+    final sourceWorldId = _requiredString(map, 'sourceWorldId');
+    final sourceLessonId = _requiredString(map, 'sourceLessonId');
+    final sourceTaskId = _requiredString(map, 'sourceTaskId');
+    final choiceId = _requiredString(map, 'choiceId');
+    final result = _requiredString(map, 'result');
+    final errorType = _requiredString(map, 'errorType');
+    final missedSignalId = _requiredString(map, 'missedSignalId');
+    final missedSignalLabel = _requiredString(map, 'missedSignalLabel');
+    final skillAtomId = _requiredString(map, 'skillAtomId');
+    final skillLabel = _requiredString(map, 'skillLabel');
+    final targetWorldId = _requiredString(map, 'targetWorldId');
+    final targetLessonId = _requiredString(map, 'targetLessonId');
+    final targetTaskId = _requiredString(map, 'targetTaskId');
+    final mappingType = _requiredString(map, 'mappingType');
+    final reasonCode = _requiredString(map, 'reasonCode');
+    if (sourceWorldId == null ||
+        sourceLessonId == null ||
+        sourceTaskId == null ||
+        choiceId == null ||
+        result == null ||
+        errorType == null ||
+        missedSignalId == null ||
+        missedSignalLabel == null ||
+        skillAtomId == null ||
+        skillLabel == null ||
+        targetWorldId == null ||
+        targetLessonId == null ||
+        targetTaskId == null ||
+        mappingType == null ||
+        reasonCode == null) {
+      return null;
+    }
+    return Act0RepairIntentV1(
+      schemaVersion: schemaVersion,
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
+      sourceTaskId: sourceTaskId,
+      choiceId: choiceId,
+      result: result,
+      errorType: errorType,
+      missedSignalId: missedSignalId,
+      missedSignalLabel: missedSignalLabel,
+      skillAtomId: skillAtomId,
+      skillLabel: skillLabel,
+      targetWorldId: targetWorldId,
+      targetLessonId: targetLessonId,
+      targetTaskId: targetTaskId,
+      mappingType: mappingType,
+      reasonCode: reasonCode,
+    );
+  }
+}
+
+String? _requiredString(Map<String, Object?> map, String key) {
+  final value = map[key]?.toString().trim() ?? '';
+  return value.isEmpty ? null : value;
+}
+
+int? _nonNegativeInt(Object? raw) {
+  final value = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
+  return value == null || value < 0 ? null : value;
 }
 
 Act0RepairIntentV1? buildAct0RepairIntentV1({

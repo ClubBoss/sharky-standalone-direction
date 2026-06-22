@@ -3922,6 +3922,89 @@ void main() {
     },
   );
 
+  testWidgets(
+    'Open repair remains actionable after carry is consumed and a later relaunch',
+    (tester) async {
+      final telemetrySink = Act0InMemoryTelemetrySinkV1();
+      await pumpTall(
+        tester,
+        host(showPlacementOnStart: true, telemetrySink: telemetrySink),
+      );
+
+      await runPlacementToResult(tester);
+      await startRecommendedThroughWelcome(tester);
+      await advanceTeachingToDrill(tester);
+      await answerVisiblePromptWrongly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      await openBottomTabV1(tester, 'Home');
+
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        'actions_check_drill',
+      );
+      final persistedAfterCarryConsumption =
+          await persistedProgressMapFromPrefsV1();
+      expect(
+        (persistedAfterCarryConsumption['openRepairIntents'] as List<dynamic>)
+            .any(
+              (intent) =>
+                  intent is Map &&
+                  intent['sourceTaskId'] == 'actions_legal_context',
+            ),
+        isTrue,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await pumpTall(tester, host(telemetrySink: telemetrySink));
+
+      final missionTitle = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_primary_route_title')),
+      );
+      expect(missionTitle.data, 'Repair one weak spot');
+      expect(find.text('Fix this now'), findsOneWidget);
+
+      await openBottomTabV1(tester, 'Practice');
+      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        'actions_check_drill',
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await pumpTall(tester, host(telemetrySink: telemetrySink));
+      await openBottomTabV1(tester, 'Review');
+      expect(
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
+        findsOneWidget,
+      );
+
+      await openBottomTabV1(tester, 'You');
+      expect(
+        find.byKey(const Key('act0_shell_profile_screen')),
+        findsOneWidget,
+      );
+      expect(find.text('All sharp.'), findsNothing);
+    },
+  );
+
   test('Same-signal rep mapping only returns safe existing Act0 targets', () {
     final learnedActionRead = act0FirstValueSameSignalRepMappingV1(
       nextRepId: 'repeat_action_read',

@@ -2317,6 +2317,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ),
               ),
         );
+      _openRepairIntentBySourceTaskId
+        ..clear()
+        ..addEntries(
+          parsed.openRepairIntents
+              .where((intent) {
+                final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
+                return retention != null &&
+                    retention.status ==
+                        _Act0RetentionMemoryStatusV1.openRepair &&
+                    retention.lessonId == intent.sourceLessonId &&
+                    retention.worldId == intent.sourceWorldId;
+              })
+              .map((intent) => MapEntry(intent.sourceTaskId, intent)),
+        );
+      _restorePersistedOpenRepairRecordsV1(state);
       _refreshRetentionMemoryStatusesV1();
       _firstValueReceiptCarry = restoredFirstValueCarry;
       _firstValueTodayShownTelemetryKey = '';
@@ -2351,6 +2366,77 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return _firstValueDailyRepTargetV1(carry, state: state) == null
         ? null
         : carry;
+  }
+
+  void _restorePersistedOpenRepairRecordsV1(Act0ShellStateV1 state) {
+    _mistakeRecords.clear();
+    _resolvedMistakeTaskIds.clear();
+    for (final intent in _openRepairIntentBySourceTaskId.values) {
+      final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
+      if (retention == null ||
+          retention.status != _Act0RetentionMemoryStatusV1.openRepair) {
+        continue;
+      }
+      final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
+        (candidate) => candidate?.worldId == intent.sourceWorldId,
+        orElse: () => null,
+      );
+      if (world == null) {
+        continue;
+      }
+      final lesson = world.lessons.cast<Act0LessonCardV1?>().firstWhere(
+        (candidate) => candidate?.lessonId == intent.sourceLessonId,
+        orElse: () => null,
+      );
+      if (lesson == null) {
+        continue;
+      }
+      final task = lesson.taskList.cast<Act0LessonTaskV1?>().firstWhere(
+        (candidate) => candidate?.taskId == intent.sourceTaskId,
+        orElse: () => null,
+      );
+      if (task == null) {
+        continue;
+      }
+      final selectedOption = task.runner.options
+          .cast<Act0RunnerOptionV1?>()
+          .firstWhere(
+            (candidate) => candidate?.id == intent.choiceId,
+            orElse: () => null,
+          );
+      final correctOption = task.runner.options
+          .cast<Act0RunnerOptionV1?>()
+          .firstWhere(
+            (candidate) => candidate?.isCorrect == true,
+            orElse: () => null,
+          );
+      if (selectedOption == null || correctOption == null) {
+        continue;
+      }
+      final contextLabels = _repairContextLabels(task.runner, selectedOption);
+      _mistakeRecords[intent.sourceTaskId] = _Act0MistakeRecordV1(
+        taskId: intent.sourceTaskId,
+        lessonId: lesson.lessonId,
+        worldId: world.worldId,
+        title: _localizedTaskTitleV1(task),
+        weaknessLabel: _categoryForLesson(lesson.lessonId),
+        selectedOptionId: selectedOption.id,
+        selectedLabel: selectedOption.label,
+        betterLabel: selectedOption.betterAnswerLabel.isEmpty
+            ? correctOption.betterAnswerLabel
+            : selectedOption.betterAnswerLabel,
+        reason: _hardenMistakeReason(
+          rawReason: selectedOption.feedbackReason,
+          betterLabel: selectedOption.betterAnswerLabel.isEmpty
+              ? correctOption.betterAnswerLabel
+              : selectedOption.betterAnswerLabel,
+          contextLabels: contextLabels,
+        ),
+        contextLabels: contextLabels,
+        repairActionLabel: _repairActionLabel(task),
+        attempts: retention.attempts.clamp(1, 99),
+      );
+    }
   }
 
   static String _todayDateString() {
@@ -2400,6 +2486,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       persistedStreakDays: currentStreak,
       retentionSequence: _retentionSequence,
       retentionMemory: _retentionMemoryByTaskId.values.toList(growable: false),
+      openRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
+        growable: false,
+      ),
       resumeInRunner:
           _tab == Act0ShellTabV1.play &&
           !_showPlayHub &&
@@ -4698,6 +4787,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         taskId: _firstIncompleteTask(selectedLesson).taskId,
         practiceGroupId: 'continue',
       );
+    }
+    final repairRecommendation = _learningRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+    );
+    if (repairRecommendation.mistake != null) {
+      return repairRecommendation;
     }
     final currentTask = _firstIncompleteTask(selectedLesson);
     final nextLesson = _nextLesson(
@@ -10024,6 +10120,7 @@ class _Act0PersistedProgressV1 {
     this.persistedStreakDays = 0,
     this.retentionSequence = 0,
     this.retentionMemory = const <_Act0RetentionMemoryEntryV1>[],
+    this.openRepairIntents = const <Act0RepairIntentV1>[],
     this.resumeInRunner = false,
     this.resumePhase = '',
     this.resumeTeachingStepIndex = 0,
@@ -10047,6 +10144,7 @@ class _Act0PersistedProgressV1 {
   final int persistedStreakDays;
   final int retentionSequence;
   final List<_Act0RetentionMemoryEntryV1> retentionMemory;
+  final List<Act0RepairIntentV1> openRepairIntents;
   final bool resumeInRunner;
   final String resumePhase;
   final int resumeTeachingStepIndex;
@@ -10063,8 +10161,10 @@ class _Act0PersistedProgressV1 {
       ..sort();
     final sortedRetentionMemory = retentionMemory.toList(growable: false)
       ..sort((a, b) => a.taskId.compareTo(b.taskId));
+    final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
+      ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 9,
+      'schemaVersion': 10,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -10090,6 +10190,9 @@ class _Act0PersistedProgressV1 {
       'retentionMemory': <Map<String, Object>>[
         for (final entry in sortedRetentionMemory) entry.toJson(),
       ],
+      'openRepairIntents': <Map<String, Object>>[
+        for (final intent in sortedOpenRepairIntents) intent.toPayload(),
+      ],
       'resumeInRunner': resumeInRunner,
       'resumePhase': resumePhase,
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
@@ -10114,7 +10217,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v9 as the shell snapshot evolves.
+    // Accept v1-v10 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -10123,7 +10226,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 6 &&
         schemaVersion != 7 &&
         schemaVersion != 8 &&
-        schemaVersion != 9) {
+        schemaVersion != 9 &&
+        schemaVersion != 10) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -10155,6 +10259,7 @@ class _Act0PersistedProgressV1 {
         : int.tryParse(retentionSequenceRaw?.toString() ?? '') ??
               completedTaskIds.length;
     final retentionMemory = _retentionMemoryList(map['retentionMemory']);
+    final openRepairIntents = _openRepairIntentList(map['openRepairIntents']);
     final resumeInRunner = map['resumeInRunner'] == true;
     final resumePhase = (map['resumePhase'] ?? '').toString();
     final resumeTeachingStepRaw = map['resumeTeachingStepIndex'];
@@ -10192,6 +10297,7 @@ class _Act0PersistedProgressV1 {
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
       retentionMemory: retentionMemory,
+      openRepairIntents: openRepairIntents,
       resumeInRunner: resumeInRunner,
       resumePhase: resumePhase,
       resumeTeachingStepIndex: resumeTeachingStepIndex < 0
@@ -10267,6 +10373,22 @@ class _Act0PersistedProgressV1 {
     }
     entries.sort((a, b) => a.taskId.compareTo(b.taskId));
     return entries;
+  }
+
+  static List<Act0RepairIntentV1> _openRepairIntentList(Object? raw) {
+    if (raw is! List) {
+      return const <Act0RepairIntentV1>[];
+    }
+    final intentsBySourceTaskId = <String, Act0RepairIntentV1>{};
+    for (final item in raw) {
+      final parsed = Act0RepairIntentV1.tryParse(item);
+      if (parsed != null) {
+        intentsBySourceTaskId[parsed.sourceTaskId] = parsed;
+      }
+    }
+    final intents = intentsBySourceTaskId.values.toList(growable: false)
+      ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
+    return intents;
   }
 }
 
