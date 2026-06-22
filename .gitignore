@@ -52,6 +52,9 @@ pa_audit_*/
 export/sessions/
 telemetry/*.log
 
+# Local generated code graph; instructions reference it when present.
+/graphify-out/
+
 # Competitor binaries / local-only research artifacts
 external_competitors/
 *.apk
