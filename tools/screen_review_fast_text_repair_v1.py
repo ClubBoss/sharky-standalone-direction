@@ -11,7 +11,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-SURFACES = ("home", "learn", "practice", "review", "profile")
 PIXEL_RATIO = 2
 
 
@@ -32,10 +31,9 @@ def main(argv: list[str]) -> int:
         return 1
 
     repaired = 0
-    for surface in SURFACES:
-        png = output_dir / f"{device}.{surface}.png"
-        overlay = output_dir / f"{device}.{surface}.png.text_overlays.json"
-        if not png.exists() or not overlay.exists():
+    for overlay in sorted(output_dir.glob(f"{device}.*.png.text_overlays.json")):
+        png = output_dir / overlay.name.removesuffix(".text_overlays.json")
+        if not png.exists():
             continue
         repaired += _repair_png(png, overlay)
         overlay.unlink(missing_ok=True)

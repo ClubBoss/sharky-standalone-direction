@@ -3020,6 +3020,25 @@ void main() {
     );
   });
 
+  test('Fast screen review text repair covers packet-specific surfaces', () {
+    final repairSource = File(
+      'tools/screen_review_fast_text_repair_v1.py',
+    ).readAsStringSync();
+
+    expect(
+      repairSource,
+      contains('glob(f"{device}.*.png.text_overlays.json")'),
+    );
+    expect(
+      repairSource,
+      isNot(
+        contains(
+          'SURFACES = ("home", "learn", "practice", "review", "profile")',
+        ),
+      ),
+    );
+  });
+
   test('Act0 proof capture locale override is explicit and English-only', () {
     final reviewEnglish = act0CommercialProofLocaleOverrideV1(
       Uri.parse(
