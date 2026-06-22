@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 
-enum Act0WelcomeBeatV1 { intro, whyEasier, appShape, demoSpot, handoff }
+enum Act0WelcomeBeatV1 { intro, demoSpot, handoff }
 
 class Act0WelcomeShellV1 extends StatefulWidget {
   const Act0WelcomeShellV1({
@@ -28,6 +28,7 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 
 class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
+  String? _selectedMicroWinOptionId;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
     context,
@@ -39,12 +40,30 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   String _atomV1(String atomId, {required String fallback}) =>
       act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
+  Act0RunnerStateV1 get _microWinRunnerV1 {
+    final lesson = Act0ShellStateV1.sample.lessonById('fold_check_call_raise');
+    final task = lesson.taskList.firstWhere(
+      (candidate) => candidate.taskId == 'actions_check_drill',
+    );
+    final selectedOptionId = _selectedMicroWinOptionId;
+    return task.runner.copyWith(
+      beatIndex: 2,
+      beatCount: 3,
+      phase: selectedOptionId == null
+          ? Act0LessonPhaseV1.drill
+          : Act0LessonPhaseV1.review,
+      selectedOptionId: selectedOptionId,
+      teachingStepIndex: task.runner.teachingSteps.length,
+      returnTarget: 'Welcome',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return switch (_beat) {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
-        beatCount: 2,
+        beatCount: 3,
         title: _atomV1('welcome_intro_title', fallback: 'Find your start'),
         eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
         line: _atomV1(
@@ -65,15 +84,30 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           child: _WelcomeLoopStripV1(copy: _copyV1),
         ),
-        ctaLabel: _copyV1(en: 'Find my start', ru: 'Найти мой старт'),
-        onNext: () => setState(() => _beat = Act0WelcomeBeatV1.handoff),
+        ctaLabel: 'Try one table read',
+        onNext: () => setState(() => _beat = Act0WelcomeBeatV1.demoSpot),
       ),
-      Act0WelcomeBeatV1.whyEasier ||
-      Act0WelcomeBeatV1.appShape ||
-      Act0WelcomeBeatV1.demoSpot ||
+      Act0WelcomeBeatV1.demoSpot => Act0LessonRunnerShellV1(
+        key: const Key('act0_shell_welcome_demo_spot'),
+        runner: _microWinRunnerV1,
+        onBack: widget.replayMode && widget.onClose != null
+            ? widget.onClose!
+            : () => setState(() => _beat = Act0WelcomeBeatV1.intro),
+        onContinueTheory: () {},
+        onChooseOption: (option) {
+          setState(() => _selectedMicroWinOptionId = option.id);
+        },
+        onContinueReview: () {
+          setState(() {
+            _selectedMicroWinOptionId = null;
+            _beat = Act0WelcomeBeatV1.handoff;
+          });
+        },
+        tableVisualVariant: widget.tableVisualVariant,
+      ),
       Act0WelcomeBeatV1.handoff => _WelcomeTextBeatV1(
-        beatIndex: 2,
-        beatCount: 2,
+        beatIndex: 3,
+        beatCount: 3,
         title: _copyV1(
           en: widget.replayMode
               ? 'You can reopen this anytime.'

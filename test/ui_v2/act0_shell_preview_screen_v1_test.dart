@@ -2257,13 +2257,39 @@ void main() {
 
   Future<void> completeWelcomeLayer(WidgetTester tester) async {
     final cta = find.byKey(const Key('act0_shell_welcome_primary_cta'));
-    for (var i = 0; i < 2; i++) {
-      if (cta.evaluate().isEmpty) {
-        return;
+    for (var i = 0; i < 4; i++) {
+      if (find
+          .byKey(const Key('act0_shell_welcome_demo_spot'))
+          .evaluate()
+          .isNotEmpty) {
+        await answerVisiblePromptCorrectly(tester);
+        await tester.tap(
+          find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        );
+        await tester.pumpAndSettle();
+        continue;
       }
-      await tester.tap(cta);
-      await tester.pumpAndSettle();
+      if (cta.evaluate().isNotEmpty) {
+        await tester.tap(cta);
+        await tester.pumpAndSettle();
+        continue;
+      }
+      return;
     }
+    fail('Welcome did not complete within its bounded first-start flow.');
+  }
+
+  Future<void> startRecommendedThroughWelcome(WidgetTester tester) async {
+    await tester.tap(
+      find.byKey(const Key('act0_shell_placement_start_recommended')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_welcome_primary_cta')),
+      findsOneWidget,
+    );
+    await completeWelcomeLayer(tester);
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
   }
 
   Future<void> createActionsMistakeFromPlayHub(WidgetTester tester) async {
@@ -3406,7 +3432,7 @@ void main() {
   );
 
   testWidgets(
-    'Placement diagnostic shows route proof and starts first hand directly',
+    'Placement diagnostic sends the recommended start through Welcome',
     (tester) async {
       await pumpTall(tester, host(showPlacementOnStart: true));
 
@@ -3488,36 +3514,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_welcome_primary_cta')),
-        findsNothing,
-      );
-
-      await advanceTeachingToDrill(tester);
-      await answerVisiblePromptCorrectly(tester);
-      expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_first_value_receipt')),
         findsOneWidget,
       );
-      expect(
-        find.byKey(const Key('act0_shell_feedback_signal_proof')),
-        findsOneWidget,
-      );
-      expect(find.text('Table read improved'), findsOneWidget);
-      expect(
-        find.text('You noticed No bet yet before choosing an action.'),
-        findsOneWidget,
-      );
-      expect(
-        find.text('Next: practice the same table clue once more.'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('Skill:'), findsNothing);
-      expect(find.textContaining('Signal:'), findsNothing);
-      expect(find.text('First table read started.'), findsNothing);
+      await completeWelcomeLayer(tester);
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
     },
   );
 
@@ -3531,10 +3533,7 @@ void main() {
       );
 
       await runPlacementToResult(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_placement_start_recommended')),
-      );
-      await tester.pumpAndSettle();
+      await startRecommendedThroughWelcome(tester);
 
       await advanceTeachingToDrill(tester);
       final firstTaskId = tester
@@ -3632,10 +3631,7 @@ void main() {
       );
 
       await runPlacementToResult(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_placement_start_recommended')),
-      );
-      await tester.pumpAndSettle();
+      await startRecommendedThroughWelcome(tester);
 
       await advanceTeachingToDrill(tester);
       final firstTaskId = tester
@@ -3711,10 +3707,7 @@ void main() {
       );
 
       await runPlacementToResult(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_placement_start_recommended')),
-      );
-      await tester.pumpAndSettle();
+      await startRecommendedThroughWelcome(tester);
 
       await advanceTeachingToDrill(tester);
       final firstTaskId = tester
@@ -3792,10 +3785,7 @@ void main() {
       );
 
       await runPlacementToResult(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_placement_start_recommended')),
-      );
-      await tester.pumpAndSettle();
+      await startRecommendedThroughWelcome(tester);
 
       await advanceTeachingToDrill(tester);
       await answerVisiblePromptWrongly(tester);
@@ -10967,12 +10957,25 @@ void main() {
     },
   );
 
-  testWidgets('Welcome compresses to two beats before first lesson handoff', (
+  testWidgets('Welcome completes one local micro win before Home handoff', (
     tester,
   ) async {
+    final sample = Act0ShellStateV1.sample;
+    final currentLesson = sample.currentLesson;
+    final storedProgress = jsonEncode(<String, Object>{
+      'schemaVersion': 5,
+      'completedTaskIds': <String>[],
+      'skippedTaskIds': <String>[],
+      'completedLessonIds': <String>[],
+      'selectedWorldId': sample.selectedWorldId,
+      'selectedLessonId': currentLesson.lessonId,
+      'selectedTaskId': currentLesson.taskList.first.taskId,
+      'earnedXp': 0,
+    });
     SharedPreferences.setMockInitialValues(<String, Object>{
       'intake_completed_v1': true,
       'act0_welcome_completed_v1': false,
+      'act0_shell_progress_v1': storedProgress,
     });
 
     await pumpTall(tester, host(showPlacementOnStart: true));
@@ -10981,7 +10984,7 @@ void main() {
       find.byKey(const Key('act0_shell_welcome_progress_label')),
       findsOneWidget,
     );
-    expect(find.text('1/2'), findsOneWidget);
+    expect(find.text('1/3'), findsOneWidget);
     expect(find.text('Find your start'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_welcome_visual_preview')),
@@ -10998,12 +11001,26 @@ void main() {
     );
     expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsNothing);
     expect(find.text('Each tab has one clear job.'), findsNothing);
-    expect(find.text('Find my start'), findsOneWidget);
+    expect(find.text('Try one table read'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();
 
-    expect(find.text('2/2'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_welcome_demo_spot')),
+      findsOneWidget,
+    );
+    expect(find.text('What action keeps playing for free?'), findsOneWidget);
+    await answerVisiblePromptCorrectly(tester);
+    expect(find.text('Correct'), findsOneWidget);
+    expect(
+      find.text('Checking keeps the hand going when no bet faces you.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('3/3'), findsOneWidget);
     expect(find.text('Your path is ready.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_welcome_handoff_preview')),
@@ -11021,8 +11038,14 @@ void main() {
       ),
       findsNothing,
     );
-    expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsNothing);
     expect(find.text('Open your start'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('act0_welcome_completed_v1'), isTrue);
+    expect(prefs.getString('act0_shell_progress_v1'), storedProgress);
   });
 
   test(
@@ -30018,7 +30041,9 @@ void main() {
       );
       expect(find.text('Pattern to repair'), findsOneWidget);
       expect(
-        find.text('Action order is showing up 2 times. Fix this pattern first.'),
+        find.text(
+          'Action order is showing up 2 times. Fix this pattern first.',
+        ),
         findsOneWidget,
       );
       expect(

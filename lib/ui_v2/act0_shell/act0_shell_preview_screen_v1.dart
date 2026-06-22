@@ -1617,6 +1617,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _showWelcome = false;
   bool _bootSurfaceReady = true;
   bool _welcomeCompletedV1 = false;
+  bool _welcomeHandoffStartsRecommendedTaskV1 = false;
   Act0ShellTabV1? _welcomeReturnTabV1;
 
   Set<String> get _pathClosedTaskIds => <String>{
@@ -1634,6 +1635,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _phase = widget.initialPhase;
     _showPlacement = widget.showPlacementOnStart;
     _showWelcome = false;
+    _welcomeHandoffStartsRecommendedTaskV1 = false;
     _bootSurfaceReady = !widget.showPlacementOnStart;
     _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
     final state = widget.state ?? Act0ShellStateV1.sample;
@@ -1746,6 +1748,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _resetDebugSurfaceChrome() {
     _showPlacement = false;
     _showWelcome = false;
+    _welcomeHandoffStartsRecommendedTaskV1 = false;
     _showPlayHub = true;
     _returnToPlayHubOnBack = false;
     _showWorldMenu = false;
@@ -2389,6 +2392,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;
+      _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
@@ -2432,6 +2436,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     setState(() {
       _showPlacement = true;
       _showWelcome = false;
+      _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
@@ -6289,13 +6294,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? recommendedLesson.lessonId
         : guideLesson.lessonId;
     _selectedTaskId = directRunner ? recommendedTask.taskId : guideTask.taskId;
+    final showWelcome = !_welcomeCompletedV1;
     _showPlacement = false;
-    _showWelcome = directRunner ? false : !_welcomeCompletedV1;
+    _showWelcome = showWelcome;
+    _welcomeHandoffStartsRecommendedTaskV1 = directRunner;
     _placementDiagnosticActive = false;
     _placementIntroVisible = false;
     _placementHandoffActive = true;
-    _tab = directRunner ? Act0ShellTabV1.play : Act0ShellTabV1.home;
-    _showPlayHub = !directRunner;
+    _tab = directRunner && !showWelcome
+        ? Act0ShellTabV1.play
+        : Act0ShellTabV1.home;
+    _showPlayHub = !(directRunner && !showWelcome);
     _returnToPlayHubOnBack = false;
     _showWorldMenu = false;
     _learnDetailWorldId = null;
@@ -6350,6 +6359,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showWelcome = false;
       if (replayMode) {
         _tab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
+      } else if (_welcomeHandoffStartsRecommendedTaskV1) {
+        _tab = Act0ShellTabV1.play;
+        _showPlayHub = false;
       } else {
         _tab = Act0ShellTabV1.home;
         final baseState = widget.state ?? Act0ShellStateV1.sample;
