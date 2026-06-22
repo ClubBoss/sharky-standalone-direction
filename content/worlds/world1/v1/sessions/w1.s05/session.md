@@ -6,6 +6,7 @@ Reinforce start-quality discipline as the second learner-facing World 1 repetiti
 ## Scenario
 Each rep shows a beginner preflop start and asks whether the hand is still clean enough to continue or should be released before trouble starts.
 The goal is to stop tempting but weak-looking hands from slipping past early discipline.
+Equity is your chance to win the pot if all cards fall.
 
 ## Decision
 Choose the action that best reflects clean preflop start-quality discipline in the spot.

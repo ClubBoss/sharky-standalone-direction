@@ -9,6 +9,7 @@ price-keeping,
 bluff pressure,
 and controlled reopen spots.
 The learner compares practical price tradeoffs instead of treating every preset as interchangeable.
+Blockers are cards in your hand that remove some opponent combinations.
 
 ## Decision
 Choose the size that best matches the clearest purpose-and-price tradeoff in the spot.

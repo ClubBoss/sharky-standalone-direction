@@ -8,6 +8,7 @@ Each rep shows a shallow-stack spot and asks whether the situation calls for a t
 a clear commitment,
 or a simple release.
 The goal is to feel how reduced depth removes comfortable maneuvering room.
+SPR, or stack-to-pot ratio, compares the stack left with the pot.
 
 ## Decision
 Choose the option that best reflects shallow-stack discipline in the spot.

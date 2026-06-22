@@ -1,5 +1,7 @@
 # Session w9.s01
 
+An exploit is an adjustment that uses a clear opponent tendency.
+
 ## Objective
 Build the first World 9 bridge by separating a balanced default from an exploit opportunity.
 

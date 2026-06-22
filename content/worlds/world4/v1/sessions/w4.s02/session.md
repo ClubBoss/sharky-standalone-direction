@@ -2,6 +2,7 @@
 
 ## Objective
 Teach bluff and denial as pressure-based sizing purposes in plain learner-facing terms.
+A probe is a smaller turn bet after the other player checks back the flop.
 
 ## Scenario
 Each rep presents one clear pressure job:

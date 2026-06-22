@@ -6,6 +6,7 @@ Practice risk premium in plain language before any deeper tournament math appear
 ## Scenario
 Each rep compares a cash-style continue with a tournament-style continue.
 The learner decides when busting carries enough extra cost that a stronger reason is needed to continue.
+EV, or expected value, is the average result of making the same decision many times.
 
 ## Decision
 Choose whether the tournament spot needs extra caution because the risk premium is higher.

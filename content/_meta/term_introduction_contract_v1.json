@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "active_learner_content_root": "content/worlds",
+  "reference_only_tokens": [
+    {
+      "term": "PFA",
+      "reason": "Only found in content/_reference; no active learner-facing owner is proven."
+    },
+    {
+      "term": "DB",
+      "reason": "Only found in content/_reference; no active learner-facing owner is proven."
+    }
+  ],
+  "priority_terms": [
+    {
+      "term": "EQUITY",
+      "introduction_path": "content/worlds/world1/v1/sessions/w1.s05/session.md",
+      "definition": "Equity is your chance to win the pot if all cards fall."
+    },
+    {
+      "term": "PROBE",
+      "introduction_path": "content/worlds/world4/v1/sessions/w4.s02/session.md",
+      "definition": "A probe is a smaller turn bet after the other player checks back the flop."
+    },
+    {
+      "term": "BLOCKERS",
+      "introduction_path": "content/worlds/world4/v1/sessions/w4.s03/session.md",
+      "definition": "Blockers are cards in your hand that remove some opponent combinations."
+    },
+    {
+      "term": "SPR",
+      "introduction_path": "content/worlds/world7/v1/sessions/w7.s02/session.md",
+      "definition": "SPR, or stack-to-pot ratio, compares the stack left with the pot."
+    },
+    {
+      "term": "EV",
+      "introduction_path": "content/worlds/world8/v1/sessions/w8.s02/session.md",
+      "definition": "EV, or expected value, is the average result of making the same decision many times."
+    },
+    {
+      "term": "EXPLOIT",
+      "introduction_path": "content/worlds/world9/v1/sessions/w9.s01/session.md",
+      "definition": "An exploit is an adjustment that uses a clear opponent tendency."
+    }
+  ]
+}
