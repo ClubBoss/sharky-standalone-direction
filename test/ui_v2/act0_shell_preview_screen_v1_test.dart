@@ -31100,13 +31100,24 @@ void main() {
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Review');
 
-    expect(find.byKey(const Key('act0_shell_mistake_card')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_review_repair_coach_card')),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_fixed_mistake_what_poker_is_find_hero')),
       findsOneWidget,
     );
     expect(
-      tester.getTopLeft(find.byKey(const Key('act0_shell_mistake_card'))).dy,
+      find.byKey(const Key('act0_shell_fixed_mistake_actions_raise_drill')),
+      findsNothing,
+    );
+    expect(
+      tester
+          .getTopLeft(
+            find.byKey(const Key('act0_shell_review_repair_coach_card')),
+          )
+          .dy,
       lessThan(
         tester
             .getTopLeft(
