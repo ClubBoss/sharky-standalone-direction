@@ -2798,6 +2798,33 @@ void main() {
       Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
     );
 
+    final repairFocus = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=repair_focus'),
+    );
+    expect(repairFocus, isNotNull);
+    expect(repairFocus!.mode, Act0ControlledDemoCaptureModeV1.directState);
+    expect(repairFocus.surface, Act0ControlledDemoCaptureSurfaceV1.repairFocus);
+
+    final repairResult = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=repair_result'),
+    );
+    expect(repairResult, isNotNull);
+    expect(repairResult!.mode, Act0ControlledDemoCaptureModeV1.directState);
+    expect(
+      repairResult.surface,
+      Act0ControlledDemoCaptureSurfaceV1.repairResult,
+    );
+
+    final sessionRepair = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=session_repair'),
+    );
+    expect(sessionRepair, isNotNull);
+    expect(sessionRepair!.mode, Act0ControlledDemoCaptureModeV1.directState);
+    expect(
+      sessionRepair.surface,
+      Act0ControlledDemoCaptureSurfaceV1.sessionRepair,
+    );
+
     final legacyRunner = parseAct0ControlledDemoHarnessEntryV1(
       Uri.parse(
         'http://127.0.0.1:7357/?act0_capture=runner&world=world_1&lesson=what_poker_is&task=what_poker_is_theory',
@@ -2901,6 +2928,46 @@ void main() {
     expect(
       profile!.surface,
       Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
+    );
+  });
+
+  test('Fast screen review command exposes first-week proof packet group', () {
+    final shellSource = File(
+      'tools/screen_review_fast_v1.sh',
+    ).readAsStringSync();
+    final captureSource = File(
+      'tools/act0_real_text_surface_capture_v1.dart',
+    ).readAsStringSync();
+    final packageSource = File(
+      'tools/package_screen_review_v1.py',
+    ).readAsStringSync();
+
+    expect(shellSource, contains('<core|runner|first_week> compact'));
+    expect(captureSource, contains("'first_week': <_CaptureSurfaceV1>"));
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('placement', 'placement')"),
+    );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('welcome_decision', 'welcome')"),
+    );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('repair_focus', 'repairFocus')"),
+    );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('repair_result', 'repairResult')"),
+    );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('session_repair', 'sessionRepair')"),
+    );
+    expect(packageSource, contains('"first_week_fast"'));
+    expect(
+      packageSource,
+      contains('return "./tools/screen_review_fast_v1.sh first_week compact"'),
     );
   });
 

@@ -5,10 +5,10 @@ group="${1:-}"
 device="${2:-}"
 
 usage() {
-  echo 'Usage: ./tools/screen_review_fast_v1.sh <core|runner> compact' >&2
+  echo 'Usage: ./tools/screen_review_fast_v1.sh <core|runner|first_week> compact' >&2
 }
 
-if [[ ( "$group" != "core" && "$group" != "runner" ) || "$device" != "compact" ]]; then
+if [[ ( "$group" != "core" && "$group" != "runner" && "$group" != "first_week" ) || "$device" != "compact" ]]; then
   usage
   exit 64
 fi

@@ -606,6 +606,8 @@ class _Act0PracticeSurfaceRecommendationV1 {
 
 enum Act0ControlledDemoCaptureModeV1 { walkthrough, directState }
 
+enum _Act0DebugRepairProofOutcomeV1 { correct, wrong }
+
 enum Act0ControlledDemoCaptureSurfaceV1 {
   placement,
   welcome,
@@ -624,6 +626,9 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   firstWeekLearn,
   firstWeekProfile,
   runnerFirstWrongFeedback,
+  repairFocus,
+  repairResult,
+  sessionRepair,
 }
 
 class Act0ShellDebugHarnessEntryV1 {
@@ -1742,6 +1747,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugProfileSurface();
       case Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback:
         _applyDebugFirstWrongFeedbackSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.repairFocus:
+        _applyDebugRepairProofSurface(
+          state,
+          outcome: _Act0DebugRepairProofOutcomeV1.wrong,
+        );
+      case Act0ControlledDemoCaptureSurfaceV1.repairResult:
+        _applyDebugRepairProofSurface(
+          state,
+          outcome: _Act0DebugRepairProofOutcomeV1.correct,
+        );
+      case Act0ControlledDemoCaptureSurfaceV1.sessionRepair:
+        _applyDebugRepairProofSurface(
+          state,
+          outcome: _Act0DebugRepairProofOutcomeV1.wrong,
+        );
     }
   }
 
@@ -1930,6 +1950,91 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               task.runner.options.isEmpty ? null : task.runner.options.first,
         );
     _selectedOptionId = wrongOption?.id;
+  }
+
+  void _applyDebugRepairProofSurface(
+    Act0ShellStateV1 state, {
+    required _Act0DebugRepairProofOutcomeV1 outcome,
+  }) {
+    _resetDebugSurfaceChrome();
+    final world = state.worldById('world_1');
+    final sourceLesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final sourceTask = _taskById(sourceLesson, 'actions_legal_context');
+    final missedOption = sourceTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) =>
+              option != null && option.quality == Act0FeedbackQualityV1.wrong,
+          orElse: () => sourceTask.runner.options.isEmpty
+              ? null
+              : sourceTask.runner.options.first,
+        );
+    final betterOption = sourceTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => option != null && option.isCorrect,
+          orElse: () => missedOption,
+        );
+    if (missedOption == null || betterOption == null) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    _storeOpenRepairIntentForMissV1(
+      sourceWorldId: world.worldId,
+      sourceLessonId: sourceLesson.lessonId,
+      sourceTaskId: sourceTask.taskId,
+      runner: sourceTask.runner,
+      option: missedOption,
+    );
+    final mistake = Act0MistakeCardV1(
+      taskId: sourceTask.taskId,
+      lessonId: sourceLesson.lessonId,
+      worldId: world.worldId,
+      title: _localizedTaskTitleV1(sourceTask),
+      weaknessLabel: _categoryForLesson(sourceLesson.lessonId),
+      selectedOptionId: missedOption.id,
+      selectedLabel: missedOption.label,
+      betterLabel: betterOption.betterAnswerLabel,
+      reason: missedOption.feedbackReason,
+      attempts: 1,
+      contextLabels: _repairContextLabels(sourceTask.runner, missedOption),
+      repairActionLabel: _repairActionLabel(sourceTask),
+    );
+    _startMistakeRepair(
+      world,
+      mistake,
+      returnToPlayHub: false,
+      practiceGroupId: 'weak_spots',
+      skipTeaching: true,
+      allowDrillBypass: true,
+    );
+    final repairLesson = _lessonById(world.lessons, _selectedLessonId);
+    final repairTask = _taskById(repairLesson, _selectedTaskId);
+    _phase = Act0LessonPhaseV1.review;
+    _teachingStepIndex = repairTask.runner.teachingSteps.length;
+    final selectedOption = repairTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (option) => outcome == _Act0DebugRepairProofOutcomeV1.correct
+              ? option != null && option.isCorrect
+              : option != null && option.quality == Act0FeedbackQualityV1.wrong,
+          orElse: () => repairTask.runner.options.isEmpty
+              ? null
+              : repairTask.runner.options.first,
+        );
+    if (selectedOption == null) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    _activeRepairResultReceiptLine = _repairResultReceiptLineForOptionV1(
+      selectedTask: repairTask,
+      option: selectedOption,
+    );
+    _activeRepairSessionSummaryLines = _repairSessionSummaryLinesForOptionV1(
+      selectedTask: repairTask,
+      option: selectedOption,
+    );
+    _selectedOptionId = selectedOption.id;
   }
 
   void _applyDebugReviewSurface(Act0ShellStateV1 state) {

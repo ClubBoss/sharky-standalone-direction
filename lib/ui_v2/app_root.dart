@@ -88,6 +88,21 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
       );
+    case 'repair_focus':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.repairFocus,
+      );
+    case 'repair_result':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.repairResult,
+      );
+    case 'session_repair':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.sessionRepair,
+      );
     case 'first_week_home':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,

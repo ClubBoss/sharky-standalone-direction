@@ -24,6 +24,20 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('correct_feedback', 'runnerFirstCorrectFeedback'),
     _CaptureSurfaceV1('wrong_feedback', 'runnerFirstWrongFeedback'),
   ],
+  'first_week': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('placement', 'placement'),
+    _CaptureSurfaceV1('welcome_decision', 'welcome'),
+    _CaptureSurfaceV1('welcome_feedback', 'welcome'),
+    _CaptureSurfaceV1('welcome_handoff', 'welcome'),
+    _CaptureSurfaceV1('decision', 'runnerDrill'),
+    _CaptureSurfaceV1('correct_feedback', 'runnerFirstCorrectFeedback'),
+    _CaptureSurfaceV1('wrong_feedback', 'runnerFirstWrongFeedback'),
+    _CaptureSurfaceV1('repair_focus', 'repairFocus'),
+    _CaptureSurfaceV1('repair_result', 'repairResult'),
+    _CaptureSurfaceV1('session_repair', 'sessionRepair'),
+    _CaptureSurfaceV1('review_handoff', 'firstWeekReview'),
+    _CaptureSurfaceV1('profile_return', 'firstWeekProfile'),
+  ],
 };
 
 void main(List<String> args) async {
@@ -287,6 +301,30 @@ void main() {
     await tester.pump();
   }
 
+  Future<void> advanceWelcomeCaptureState(
+    WidgetTester tester,
+    String fileName,
+  ) async {
+    if (!fileName.contains('welcome_')) {
+      return;
+    }
+    await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    if (fileName.contains('welcome_decision')) {
+      return;
+    }
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    if (fileName.contains('welcome_feedback')) {
+      return;
+    }
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+  }
+
   String colorToHex(Color color) {
     final alpha = (color.a * 255).round().clamp(0, 255);
     final red = (color.r * 255).round().clamp(0, 255);
@@ -347,6 +385,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     await pumpCompact(tester, surface);
+    await advanceWelcomeCaptureState(tester, fileName);
     writeTextRepairOverlays(tester, fileName);
     final boundary = tester.renderObject<RenderRepaintBoundary>(
       find.byKey(const Key('act0_real_text_capture_boundary')),
@@ -378,6 +417,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week> compact',
   );
 }
