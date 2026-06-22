@@ -22,9 +22,23 @@ result, and session repair.
 
 ## Hierarchy result
 
-The order is now status and verdict, table signal, better play, explanation,
-then repair or proof. The existing Continue action remains the only filled CTA.
-Repair and session language remains calm proof rather than a reward ceremony.
+The order is now status and coach line, role eyebrow, hero action, table
+signal and why, then a hairline before repair or proof. The existing Continue
+action remains the only filled CTA. Repair and session language remains calm
+proof rather than a reward ceremony.
+
+## Refinement pass
+
+The shared feedback shell now renders the action as a separate hero line, with
+the action role reduced to an eyebrow. The table signal is inline rather than
+a bordered subcard. Repair focus removes the duplicate missed-signal sentence
+and keeps its deterministic next-hand reason plus next-decision focus as one
+secondary line. Repair-result and session-proof outcomes use stronger proof
+typography without adding a second CTA.
+
+The Day 2 `open_repair_source` capture uses this same shared feedback shell,
+so it receives the lifted verdict treatment. It is not a separate legacy
+surface.
 
 ## Review and Profile
 
@@ -38,6 +52,7 @@ no Profile state or structure was changed.
 
 - one tonal outer container;
 - internal typography and hairlines rather than nested bordered boxes;
+- hero action before the inline clue and why;
 - blue remains reserved for the existing filled Continue CTA;
 - calm muted explanation copy and sparing status accents;
 - no saturated error fills, new CTA, route, logic, or telemetry behavior.

@@ -4483,16 +4483,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             Act0SkillReceiptOutcomeV1.needsRep =>
               'Next: practice the same table clue once more.',
           };
-    final showCompactInlineSignalProof =
-        !rapidMode && isCompactRefinedFeedback && signalProof != null;
     final selectedContrastLine =
         !isCompactRefinedFeedback &&
             (isWrong || isSuboptimal) &&
             selectedLabel.isNotEmpty
         ? _feedbackSelectedLineV1(context, selectedLabel)
         : '';
-    final showSignalProofInProofStack =
-        !rapidMode && signalProof != null && !showCompactInlineSignalProof;
+    final showSignalProofInProofStack = !rapidMode && signalProof != null;
     final showActionContrast = actionLabel.isNotEmpty;
     final showReason = !rapidMode;
     final showRepairFocus = !rapidMode && visibleRepairReasonLines.isNotEmpty;
@@ -4575,8 +4572,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       ),
                       const SizedBox(height: 1),
                     ],
-                    if (reactionLine.isNotEmpty &&
-                        !showCompactInlineSignalProof)
+                    if (reactionLine.isNotEmpty)
                       Text(
                         reactionLine,
                         key: const Key('act0_shell_sharky_outcome_reaction'),
@@ -4589,12 +4585,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                    if (showCompactInlineSignalProof)
-                      _FeedbackSignalProofRowV1(
-                        proofLine: signalProof!.proofLine,
-                        tone: tone,
-                        compact: true,
-                      ),
                   ],
                 ),
               ),
@@ -4603,7 +4593,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           if (rapidMode && actionLabel.isNotEmpty) ...[
             Text(
               '$actionPrefix: $actionLabel',
-              key: const Key('act0_shell_feedback_preferred_label'),
+              key: const Key('act0_shell_feedback_hero_action'),
               maxLines: 2,
               overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.body.copyWith(
@@ -4621,14 +4611,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               key: const Key('act0_shell_feedback_proof_stack'),
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (showSignalProofInProofStack) ...[
-                  _FeedbackSignalProofRowV1(
-                    proofLine: signalProof!.proofLine,
-                    tone: tone,
-                    compact: isCompactRefinedFeedback,
-                  ),
-                  SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
-                ],
                 if (showActionContrast) ...[
                   _FeedbackActionContrastBlockV1(
                     actionLine: '$actionPrefix: $actionLabel',
@@ -4637,7 +4619,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     compact: isCompactRefinedFeedback,
                     refined: refined,
                   ),
-                  SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+                  SizedBox(height: isCompactRefinedFeedback ? 7 : 10),
+                ],
+                if (showSignalProofInProofStack) ...[
+                  _FeedbackSignalProofRowV1(
+                    proofLine: signalProof!.proofLine,
+                    tone: tone,
+                    compact: isCompactRefinedFeedback,
+                  ),
+                  SizedBox(height: isCompactRefinedFeedback ? 2 : 3),
                 ],
                 if (showReason)
                   Text(
@@ -4660,9 +4650,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     ),
                   ),
                 if (showRepairFocus) ...[
-                  SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
+                  SizedBox(height: isCompactRefinedFeedback ? 6 : 10),
                   const _FeedbackVerdictDividerV1(),
-                  SizedBox(height: isCompactRefinedFeedback ? 5 : 8),
+                  SizedBox(height: isCompactRefinedFeedback ? 6 : 8),
                   _FeedbackVisibleRepairReasonBlockV1(
                     lines: visibleRepairReasonLines,
                     compact: isCompactRefinedFeedback,
@@ -4741,27 +4731,32 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           : null,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.primary,
+                        fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     if (receiptDetail.isNotEmpty) ...[
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 4),
                       Text(
                         receiptDetail,
                         key: repairReceiptLine.isNotEmpty
                             ? const Key('act0_shell_repair_result_outcome_line')
                             : null,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
+                          height: 1.12,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
                     ],
                     if (receiptNextLine.isNotEmpty) ...[
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 4),
                       Text(
                         receiptNextLine,
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.textMuted,
+                          fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
                         ),
                       ),
                     ],
@@ -4853,20 +4848,39 @@ class _FeedbackActionContrastBlockV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final separator = actionLine.indexOf(':');
+    final eyebrow = separator < 0
+        ? ''
+        : actionLine.substring(0, separator).trim();
+    final heroAction = separator < 0
+        ? actionLine
+        : actionLine.substring(separator + 1).trim();
     return KeyedSubtree(
       key: const Key('act0_shell_feedback_action_contrast_block'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (eyebrow.isNotEmpty) ...[
+            Text(
+              eyebrow,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: tone,
+                fontSize: compact ? 10.0 : 10.5,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 2),
+          ],
           Text(
-            actionLine,
-            key: const Key('act0_shell_feedback_preferred_label'),
+            heroAction,
+            key: const Key('act0_shell_feedback_hero_action'),
             maxLines: 2,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
-              fontSize: compact ? 14.0 : (refined ? 15.0 : 15.5),
-              height: 1.06,
+              fontSize: compact ? 20.0 : (refined ? 22.0 : 23.0),
+              height: 1.0,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -4918,22 +4932,32 @@ class _FeedbackVisibleRepairReasonBlockV1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: compact ? 3 : 5),
-          for (var index = 0; index < lines.length; index++) ...[
-            if (index > 0) SizedBox(height: compact ? 2 : 3),
-            Text(
-              lines[index],
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontSize: compact ? 10.2 : 11.0,
-                fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
-                height: 1.12,
-              ),
+          Text(
+            _compactRepairFocusCopyV1(lines),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontSize: compact ? 10.2 : 11.0,
+              fontWeight: FontWeight.w700,
+              height: 1.12,
             ),
-          ],
+          ),
         ],
       ),
     );
   }
+}
+
+String _compactRepairFocusCopyV1(List<String> lines) {
+  final explanation = lines.length > 1
+      ? lines[1].replaceFirst(
+          RegExp(r'^You missed [^.]+\.\s*', caseSensitive: false),
+          '',
+        )
+      : '';
+  return <String>[
+    explanation.trim(),
+    if (lines.length > 2) lines[2].trim(),
+  ].where((line) => line.isNotEmpty).join(' ');
 }
 
 bool _shouldPreserveFullCompactFeedbackReasonV1(String reason) {
@@ -5053,20 +5077,29 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
                 key: const Key('act0_shell_session_summary_ceremony_label'),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.gold,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               for (var index = 0; index < lines.length; index++) ...[
                 if (index > 0) const SizedBox(height: 3),
                 Text(
                   lines[index],
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: index == 0
-                        ? Act0ShellTokensV1.gold
-                        : Act0ShellTokensV1.textMuted,
-                    fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
-                  ),
+                  style:
+                      (index == 0
+                              ? Act0ShellTokensV1.body
+                              : Act0ShellTokensV1.label)
+                          .copyWith(
+                            color: index == 0
+                                ? Act0ShellTokensV1.gold
+                                : Act0ShellTokensV1.textMuted,
+                            fontSize: index == 0 ? 15.0 : 10.5,
+                            height: index == 0 ? 1.1 : null,
+                            fontWeight: index == 0
+                                ? FontWeight.w900
+                                : FontWeight.w700,
+                          ),
                 ),
               ],
             ],
@@ -5094,17 +5127,8 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
     if (line.isEmpty) {
       return const SizedBox.shrink();
     }
-    return Container(
+    return KeyedSubtree(
       key: const Key('act0_shell_feedback_signal_proof'),
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8 : 9,
-        vertical: compact ? 5 : 6,
-      ),
-      decoration: BoxDecoration(
-        color: tone.withValues(alpha: compact ? 0.09 : 0.11),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-        border: Border.all(color: tone.withValues(alpha: 0.22)),
-      ),
       child: Row(
         children: [
           Icon(Icons.visibility_rounded, color: tone, size: compact ? 12 : 13),
@@ -5117,7 +5141,7 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
               overflow: TextOverflow.fade,
               softWrap: false,
               style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.text,
+                color: Act0ShellTokensV1.textMuted,
                 fontSize: compact ? 10.5 : 11.0,
                 fontWeight: FontWeight.w800,
                 height: 1.05,

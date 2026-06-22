@@ -62,71 +62,77 @@ void main() {
     },
   );
 
-  testWidgets('wrong feedback orders clue before action and repair focus', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0FeedbackShellV1(
-            title: 'Good spot to fix.',
-            reason: 'Checking keeps the free option when nobody has bet.',
-            quality: Act0FeedbackQualityV1.wrong,
-            sharkyLine: 'Good spot to fix.',
-            sharkyMood: Act0SharkyMoodV1.repair,
-            selectedLabel: 'Fold',
-            preferredLabel: 'Check',
-            betterLabel: 'Check',
-            signalProof: const Act0FeedbackSignalProofV1(
-              signalId: 'no_bet_yet',
-              label: 'No bet yet',
-              proofLine: 'Signal: No bet yet',
+  testWidgets(
+    'wrong feedback leads with the hero action before clue and repair focus',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Good spot to fix.',
+              reason: 'Checking keeps the free option when nobody has bet.',
+              quality: Act0FeedbackQualityV1.wrong,
+              sharkyLine: 'Good spot to fix.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'Fold',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'no_bet_yet',
+                label: 'No bet yet',
+                proofLine: 'Signal: No bet yet',
+              ),
+              repairReasonLine:
+                  'This next hand starts with no bet facing Hero.',
+              repairResultReceiptLine:
+                  'Repair started: the missed table clue was no bet yet.',
+              onContinue: () {},
             ),
-            repairReasonLine: 'This next hand starts with no bet facing Hero.',
-            repairResultReceiptLine:
-                'Repair started: the missed table clue was no bet yet.',
-            onContinue: () {},
           ),
         ),
-      ),
-    );
+      );
 
-    expect(
-      find.byKey(const Key('act0_shell_feedback_proof_stack')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_feedback_signal_proof')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_visible_repair_reason')),
-      findsOneWidget,
-    );
+      expect(
+        find.byKey(const Key('act0_shell_feedback_proof_stack')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_feedback_signal_proof')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_feedback_hero_action')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_visible_repair_reason')),
+        findsOneWidget,
+      );
 
-    final signalTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_feedback_signal_proof')))
-        .dy;
-    final actionTop = tester
-        .getTopLeft(
-          find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
-        )
-        .dy;
-    final reasonTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_feedback_reason')))
-        .dy;
-    final repairTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_visible_repair_reason')))
-        .dy;
+      final signalTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_feedback_signal_proof')))
+          .dy;
+      final actionTop = tester
+          .getTopLeft(
+            find.byKey(const Key('act0_shell_feedback_action_contrast_block')),
+          )
+          .dy;
+      final reasonTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_feedback_reason')))
+          .dy;
+      final repairTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_visible_repair_reason')))
+          .dy;
 
-    expect(signalTop, lessThan(actionTop));
-    expect(actionTop, lessThan(reasonTop));
-    expect(reasonTop, lessThan(repairTop));
-  });
+      expect(actionTop, lessThan(signalTop));
+      expect(signalTop, lessThan(reasonTop));
+      expect(reasonTop, lessThan(repairTop));
+    },
+  );
 
   testWidgets('repair feedback promotes receipt and summary proof blocks', (
     tester,
@@ -254,16 +260,15 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Repair focus'), findsOneWidget);
-    expect(find.text('You missed the no-bet-yet clue.'), findsOneWidget);
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'This hand repeats that table clue. Before choosing, ask whether a bet faces you.',
       ),
       findsOneWidget,
     );
     expect(
-      find.text('Before choosing, ask whether a bet faces you.'),
-      findsOneWidget,
+      find.textContaining('You missed that nobody has bet yet.'),
+      findsNothing,
     );
     expect(find.textContaining('AI'), findsNothing);
     expect(find.textContaining('solver'), findsNothing);

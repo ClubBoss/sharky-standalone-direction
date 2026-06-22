@@ -643,7 +643,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Best play: Hero on the Button preflop'), findsOneWidget);
+    expect(find.text('Best play'), findsOneWidget);
+    expect(find.text('Hero on the Button preflop'), findsOneWidget);
     expect(
       find.textContaining(
         'Hero is BTN, blinds are posted, and no board is out yet',
@@ -683,7 +684,7 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_selected_label')),
     );
     final preferred = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_feedback_preferred_label')),
+      find.byKey(const Key('act0_shell_feedback_hero_action')),
     );
     final reason = tester.widget<Text>(
       find.byKey(const Key('act0_shell_feedback_reason')),
@@ -726,15 +727,14 @@ void main() {
     );
 
     final betterTop = tester
-        .getTopLeft(
-          find.byKey(const Key('act0_shell_feedback_preferred_label')),
-        )
+        .getTopLeft(find.byKey(const Key('act0_shell_feedback_hero_action')))
         .dy;
     final pickedTop = tester
         .getTopLeft(find.byKey(const Key('act0_shell_feedback_selected_label')))
         .dy;
 
-    expect(find.text('Better option: Three'), findsOneWidget);
+    expect(find.text('Better option'), findsOneWidget);
+    expect(find.text('Three'), findsOneWidget);
     expect(find.text('You picked Five'), findsOneWidget);
     expect(betterTop, lessThan(pickedTop));
     expect(find.textContaining('failed'), findsNothing);
@@ -765,7 +765,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Correct answer: CO'), findsOneWidget);
+    expect(find.text('Correct answer'), findsOneWidget);
+    expect(find.text('CO'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_feedback_reason')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_status_label')),
@@ -797,10 +798,9 @@ void main() {
         ),
       );
 
+      expect(find.text('Clean read'), findsOneWidget);
       expect(
-        find.text(
-          'Clean read: 2 private cards, 3 board cards, 6 BB in the pot',
-        ),
+        find.text('2 private cards, 3 board cards, 6 BB in the pot'),
         findsOneWidget,
       );
       expect(find.textContaining('закрытые карты'), findsNothing);
