@@ -2,10 +2,12 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-21 after the repair/retention learning wave landed on
-`main` at `c5e2accf224d23a09a51b07ba4c8f6c02712f3b6`.
-Current active candidate: Sharky Character & Coaching Presence v1, audit-first
-and learning-EV only.
+Last refreshed: 2026-06-22 after Day 2 return proof was accepted and the
+deterministic `day2_return` proof packet lane landed on `main` at
+`35e0362b95a64a56e16b9300bf828067b4818073`.
+Current active candidates: Commercial Screenshot / Renderer Acceptance, with
+Content Depth / Term Introduction / Drill Coverage Audit parallel-safe if
+capacity permits.
 
 Authority note:
 
@@ -17,11 +19,24 @@ Authority note:
 - This document constrains product attack direction; it does not replace the
   Master Plan.
 
-## Post-merge repair/retention status (2026-06-21)
+## Post-Day 2 proof status (2026-06-22)
 
 The deterministic learning-causality loop is landed on `main`:
 
 `mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`
+
+Day 2 return proof is also contract-proven and packet-capturable:
+
+`first-session miss -> persisted open repair -> relaunch -> Home repair priority -> Practice same repair target -> Review active continuation -> Profile not falsely clear`
+
+Current proof lane:
+
+```bash
+./tools/screen_review_fast_v1.sh day2_return compact
+```
+
+Route recalibration after this proof is recorded in
+`docs/_reviews/top1_route_recalibration_after_day2_v1.md`.
 
 Landed or confirmed:
 
@@ -32,22 +47,26 @@ Landed or confirmed:
 - Repair-based return reason.
 - Review pattern contract sync.
 - Existing Profile progress mirror confirmed.
+- Day 2 open-repair persistence.
+- Review queue contract fixture repair.
+- First Return / Day 2 proof acceptance.
+- Day 2 return proof packet lane.
 
 Already present / no-op confirmed:
 
 - Review Pattern Coaching Lite.
 - You / Profile Progress Mirror.
 
-Next candidate: `Sharky Character & Coaching Presence v1`. It is not
-automatically implementation-ready: begin with PIEC / audit first. Any admitted
-work must be learning-EV driven only: coaching presence, repair encouragement,
-session transitions, and emotional clarity. Do not turn it into noisy chat,
-broad visual redesign, or mascot decoration for its own sake.
+Next candidate: `Commercial Screenshot / Renderer Acceptance v1`. The goal is
+to judge actual packet quality before claiming external product/design/commercial
+readiness. In parallel, if resources allow, run `Content Depth / Term
+Introduction / Drill Coverage Audit v1` because content depth is now P0 after
+Day 2 evidence and uses a separate workstream.
 
-If PIEC shows Sharky Character scope is broad or low-EV, fall back to
-`Welcome / Placement Micro-Aha Alignment`. Modern Table remains maintenance-only
-unless there is a real regression or direct product-EV blocker. Generated
-screenshot and audit outputs remain local-only and must not be committed.
+Sharky Character, Welcome/Placement expansion, commerce, stamina/energy,
+Modern Table polish, and monetization remain deferred unless concrete evidence
+reopens them as the active bottleneck. Generated screenshot and audit outputs
+remain local-only and must not be committed.
 
 ## 1. Mission
 
@@ -176,10 +195,13 @@ commercial packaging.
 
 - No immediate route change.
 - No score inflation.
-- No content expansion.
+- Content depth is now P0 after Day 2 evidence, but it should begin as an
+  audit rather than broad expansion.
 - No monetization acceleration.
 - No Modern Table reopening.
-- Exact next wave remains: `Act0 Rule-Based Repair Visible Reason Surface v1`.
+- Current next wave: `Commercial Screenshot / Renderer Acceptance v1`, with
+  `Content Depth / Term Introduction / Drill Coverage Audit v1` parallel-safe
+  if capacity permits.
 
 ### When to revisit Runout deeply again
 
@@ -293,17 +315,17 @@ monetization work until a dedicated route-normalization wave.
 
 ### 4.4 Current strategic score
 
-- Foundation readiness: `9.1 / 10`
-- Visible user value: `8.8-9.0 / 10`
-- Runout-style personalization competitiveness: `8.8-9.0 / 10` after
-  runtime/telemetry foundation, not yet `9.5` because the repair reason is not
-  fully learner-visible.
-- Regression / deterministic delivery: `9.2+ / 10`
+- Architecture / Product Logic: high. The deterministic repair and Day 2 return
+  chain is contract-proven and packet-capturable.
+- Commercial Proof / External Readiness: still separate. Actual packet quality,
+  renderer fidelity, content depth, and commercial packaging must be judged
+  before external readiness is raised.
+- Content depth honest estimate after Day 2 evidence: around `6.8-7.4 / 10`.
 
-The remaining gap is not foundation or visual polish. The remaining gap is the
-visible learning loop:
+The remaining gap is not the internal repair/return foundation. The remaining
+gap is proving the route externally:
 
-`mistake -> repair reason -> successful repair -> session proof`
+`packet quality -> content depth -> personalization proof -> monetization proof`
 
 ## 5. Target Scorecard
 
@@ -329,8 +351,9 @@ competitive reference evidence. They are not measured cohort data.
 | Feature breadth | 7.8 | 9.1 | 9.3 | Add breadth only after first-value and habit loops remain clear. |
 | Product coherence | 8.9 | 8.8 | 9.7 | Align table feedback, repair reason, Review, and later summary around one causal rhythm. |
 
-Do not raise Personalization or First-week readiness to `9.5+` until the
-learner can actually see repair reason and repair outcome in product flow.
+Do not raise commercial proof or external readiness from internal contract
+success alone. Keep dual scoring: Architecture / Product Logic versus
+Commercial Proof / External Readiness.
 
 Expected next jump:
 
@@ -344,14 +367,14 @@ Expected next jump:
 | Product block | Where Sharky is now | What 10/10/top-1 looks like | Remaining gap | Next action | Acceptance signal | Not-now guardrail |
 | --- | --- | --- | --- | --- | --- | --- |
 | A. Foundation / deterministic app | Act0 route, repair foundation, monetization docs, capture tooling, and CI are stable enough for product work. | The app reliably turns one learner action into a clear table lesson without route or infra noise. | Foundation is not the bottleneck; visible EV is. | Stop foundation cleanup unless a real blocker appears. | Product waves can start from green `main` and pass R5 without scope repair. | No more backup mining or workflow cleanup as product work. |
-| B. AI personalization / repair | Decision contract, runtime reason receipt, and local `user_choice` telemetry are done. | The learner sees the missed signal, why the next hand was chosen, and whether the repair worked. | Repair reason and outcome are not learner-visible yet. | Build Visible Repair Reason Surface v1. | Existing surface shows missed signal -> selected repair hand -> reason. | No AI/adaptive claims, no coach/chat, no new route. |
-| C. Learning effect | Feedback is strong, but the complete mistake -> repair -> success loop is not yet explicit in one session. | In one session the learner can say: I missed this clue, fixed it, and can do it better now. | The outcome of repair is not packaged as proof. | Add Repair Result Receipt after visible reason. | A completed repair shows fixed / repeated / needs one more rep. | No fake mastery or guaranteed improvement claims. |
-| D. First-week commercial readiness | First-week proof is around `8.9-9.0`; premium preview is safe and post-value. | First week contains a compact proof arc strong enough to support later premium packaging. | The repair proof packet is not yet assembled. | Build Session Repair Summary, then proof packet. | First decision -> mistake -> repair -> success -> summary is explainable. | No paywall-first story or trial before repair proof. |
+| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, and Day 2 return proof are done. | The learner sees the missed signal, why the next hand was chosen, whether the repair worked, and why return starts there. | External proof quality still needs review from actual packets. | Run Commercial Screenshot / Renderer Acceptance. | `first_week` and `day2_return` packets are reviewable without explaining internals. | No AI/adaptive claims, no coach/chat, no new route. |
+| C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop. | In one session and on return the learner can say: I missed this clue, fixed or repeated it, and know what to do next. | Content depth may still be too thin beyond the early proof spine. | Run Content Depth / Term Introduction / Drill Coverage Audit. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No fake mastery or guaranteed improvement claims. |
+| D. First-week commercial readiness | First-week and Day 2 packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Packet quality and renderer fidelity must be judged before external claims. | Run Commercial Screenshot / Renderer Acceptance. | Screenshots/contact sheets are usable for product/design/commercial review. | No paywall-first story or trial before repair proof. |
 | E. UX/UI sequencing | Home, table, Review, and Play are coherent, but repair causality is still partly internal. | The user always knows what to do, why it matters, and what improved. | Next useful hand needs visible causal context. | Use existing reason slots before adding surfaces. | No added route; current flow explains next useful hand. | No broad UI expansion or dashboard. |
 | F. Activation / Welcome / Placement | Placement works and remains value-first; density risk exists but is not the active blocker. | Activation feels short, personal, and immediately connected to first repair value. | Welcome/placement simplification may help, but not before visible repair loop. | Defer until repair proof exists. | Later audit can show onboarding is blocking visible value. | Do not reopen placement before repair surface. |
 | G. Review / Home / re-entry | Review and Home can route repairs and return reasons from real state. | Re-entry starts from the learner's real missed/repaired signal, not generic practice. | Return reason needs repair-outcome evidence. | Feed repaired/missed outcomes into summary and return copy later. | Home/Review can say why this rep matters without generic encouragement. | No streak pressure or random daily churn. |
 | H. Visual / Modern Table / feedback rhythm | Modern Table quality is good enough; visual work is maintenance-only. | Visuals serve repair causality, result ceremony, and first-week proof. | Feedback rhythm may need visual support after reason/outcome exists. | Leave table visuals untouched unless feedback proof needs it. | Any visual change directly improves repair understanding or proof. | No table micro-polish, screenshot-driven design loops, or motion for its own sake. |
-| I. Content density / curriculum depth | Current route has enough spine for first value; deeper examples and spaced reps are future leverage. | Each key concept has enough examples, spaced repair, and no unexplained jargon. | Broad content depth is not the current bottleneck. | Defer concept-depth audit until visible repair loop proves learning value. | A later audit identifies exact concepts needing spaced examples. | No broad content expansion now. |
+| I. Content density / curriculum depth | Current route has enough spine for first value, but Day 2 proof now exposes premium-depth risk. | Each key concept has enough examples, spaced repair, and no unexplained jargon. | W5-W36 depth may be structurally weak for a W5+ premium boundary. | Run Content Depth / Term Introduction / Drill Coverage Audit. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No broad expansion before the audit names the gaps. |
 | J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Repair outcomes are not yet linked into session proof. | Add outcome receipts before new telemetry contracts. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
 | K. Monetization / premium value | Entitlement safety exists; public commerce remains blocked; premium preview is post-value. | Premium feels like deeper proven learning, not a hostage paywall. | Premium/value packaging needs visible learning proof first. | Keep premium/value packaging after proof packet. | Upgrade framing can point to real repair value already experienced. | No public price, purchase, trial, restore, Premium Hub, or route gate. |
 | L. Retention / habit loop | Daily/review loops exist and can use real repair signals. | Return reason comes from real missed/repaired signals, not streak pressure. | The repaired-signal history is not yet summarized into habit copy. | Build session summary before habit expansion. | D2/D7 return can reference a real skill or clue. | No guilt, fake scarcity, or random retention prompts. |
@@ -359,15 +382,14 @@ Expected next jump:
 | N. Product coherence / brand promise | Mission is clear: one real spot, one answer, one clear why. | Every major beat repeats the same causal rhythm: choice -> clue -> why -> repair -> proof. | Some state is auditable internally but not yet experienced as one story. | Align repair reason, Review, Home, and summary around the same language. | Learner-facing surfaces do not contradict or dilute the causal rhythm. | No new competing roadmap or broad brand rewrite. |
 | O. Technical delivery / CI | R5, health, and verify are green; TestSprite is external/non-blocking unless policy changes. | Delivery stays boring: one homogeneous branch, local checks, PR checks, merge. | None unless a real blocker appears. | Continue clean-scope PR cycle. | Docs/product branches merge with repo-owned checks green. | No infrastructure cleanup unless a real blocker appears. |
 
-The shortest path is not more design, not more CI, not more docs.
+The shortest path is not more foundation, not more CI, and not commerce-first.
 
 The shortest path is:
 
-1. Visible Repair Reason Surface
-2. Repair Result Receipt
-3. Session Repair Summary
-4. Compact First-Week Proof Packet
-5. Premium/value packaging later
+1. Commercial Screenshot / Renderer Acceptance
+2. Content Depth / Term Introduction / Drill Coverage Audit
+3. Personalization proof tightening only where evidence shows gaps
+4. Premium/value packaging later
 
 ## 5B. 10/10 Acceptance Gates
 
@@ -422,20 +444,24 @@ Operating constraints:
 5. Review pattern contract sync, with Review Pattern Coaching Lite already
    present.
 6. Existing Profile progress mirror confirmed.
+7. Day 2 open-repair persistence.
+8. Day 2 proof acceptance and deterministic `day2_return` packet lane.
 
 ### Next candidate
 
-1. Sharky Character & Coaching Presence v1.
-   - PIEC / audit first; it is not automatically implementation-ready.
-   - Admit only learning-EV coaching presence, repair encouragement, session
-     transitions, and emotional clarity.
-   - If that scope is broad or low-EV, use Welcome / Placement Micro-Aha
-     Alignment instead.
+1. Commercial Screenshot / Renderer Acceptance v1.
+   - Judge actual packet quality from `first_week` and `day2_return` evidence.
+   - Do not implement renderer fixes unless acceptance evidence proves a real
+     blocker.
+2. Content Depth / Term Introduction / Drill Coverage Audit v1.
+   - Parallel-safe if capacity permits.
+   - P0 after Day 2 evidence because weak W5-W36 content would make the W5+
+     premium boundary structurally empty.
 
 ### Later
 
 - Premium/value packaging after visible learning value.
-- Daily Trainer / Habit Loop Expansion and Learning Depth.
+- Daily Trainer / Habit Loop Expansion.
 - W4/W5 Product Truth Normalization.
 - Paywall / Trial Design.
 - App Store / Premium Packaging Arc.

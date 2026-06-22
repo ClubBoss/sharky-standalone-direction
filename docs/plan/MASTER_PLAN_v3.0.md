@@ -115,12 +115,15 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
-- The repair/retention learning wave landed on `main` at
-  `c5e2accf224d23a09a51b07ba4c8f6c02712f3b6`.
-- The deterministic loop is now landed:
+- The repair/retention learning loop is landed:
   `mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`.
-- The next candidate is Sharky Character & Coaching Presence v1: audit-first
-  and learning-EV only.
+- Day 2 return behavior is contract-proven and has a deterministic fast proof
+  packet lane via `./tools/screen_review_fast_v1.sh day2_return compact`.
+- Current route calibration is recorded in
+  `docs/_reviews/top1_route_recalibration_after_day2_v1.md`.
+- The next route is Commercial Screenshot / Renderer Acceptance, with Content
+  Depth / Term Introduction / Drill Coverage Audit allowed in parallel if
+  capacity permits.
 
 ## Product 100
 
@@ -451,12 +454,13 @@ full-app maturity, not only route coherence.
 
 Current next-wave order:
 
-1. `Proof closure`
-2. `Launch-surface premium consistency`
-3. `Commerce / value packaging truth`
-4. `Shell-runtime coherence audit`
-5. `Telemetry / observability truth`
-6. `Localization expansion after product-shape hold`
+1. `Commercial Screenshot / Renderer Acceptance`
+2. `Content Depth / Term Introduction / Drill Coverage Audit`
+3. `Proof-informed launch-surface premium consistency`
+4. `Commerce / value packaging truth`
+5. `Shell-runtime coherence audit`
+6. `Telemetry / observability truth`
+7. `Localization expansion after product-shape hold`
 
 Why this order:
 
@@ -468,8 +472,9 @@ Why this order:
 - current live evidence reopens one exact owner family inside the previously
   landed Play lane: the surface is route-correct, but the full reinforcement
   contract is still incomplete
-- the strongest open risks are now external-facing: real novice proof,
-  device-level polish, premium conversion truth, and whole-product coherence
+- the strongest open risks are now external-facing: packet/screenshot quality,
+  content depth, device-level polish, premium conversion truth, and
+  whole-product coherence
 - app-wide premium feel and shell/runtime consistency now outrank another local
   chrome wave inside already-closed Act0 families
 - localization still matters, but it should follow stable product shape rather
@@ -481,7 +486,8 @@ Immediate execution rule:
    owner family
 2. do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, or
    skill-taxonomy seams for cosmetic drift
-3. the next admitted family is `Proof closure`
+3. the next admitted family is commercial screenshot / renderer acceptance,
+   with content-depth audit parallel-safe because it uses a different workstream
 4. do not reopen `Practice` without concrete new evidence from real usage
 5. if manual proof is still unavailable, prefer a calibration or premium
    consistency family over reopening landed copy cleanup
