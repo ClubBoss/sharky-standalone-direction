@@ -28,6 +28,11 @@ SURFACE_GROUPS = {
         ("review", "Review"),
         ("profile", "Profile"),
     ),
+    "runner_fast": (
+        ("decision", "Decision choice"),
+        ("correct_feedback", "Correct feedback"),
+        ("wrong_feedback", "Wrong feedback"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEVICE = "compact"
@@ -173,6 +178,8 @@ def _metadata(
 def _source_command(group: str) -> str:
     if group == "core_fast":
         return "./tools/screen_review_fast_v1.sh core compact"
+    if group == "runner_fast":
+        return "./tools/screen_review_fast_v1.sh runner compact"
     return f"./tools/screen_review_v1.sh {group} compact"
 
 

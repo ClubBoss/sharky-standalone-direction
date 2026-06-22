@@ -4,19 +4,46 @@ import 'dart:io';
 const _outputRootPathV1 = 'output/screen_review/current';
 const _schemaV1 = 'screen_review_fast_v1';
 
+class _CaptureSurfaceV1 {
+  const _CaptureSurfaceV1(this.name, this.debugSurface);
+
+  final String name;
+  final String debugSurface;
+}
+
+const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
+  'core': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('home', 'firstWeekHome'),
+    _CaptureSurfaceV1('learn', 'firstWeekLearn'),
+    _CaptureSurfaceV1('practice', 'practice'),
+    _CaptureSurfaceV1('review', 'firstWeekReview'),
+    _CaptureSurfaceV1('profile', 'firstWeekProfile'),
+  ],
+  'runner': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('decision', 'runnerDrill'),
+    _CaptureSurfaceV1('correct_feedback', 'runnerFirstCorrectFeedback'),
+    _CaptureSurfaceV1('wrong_feedback', 'runnerFirstWrongFeedback'),
+  ],
+};
+
 void main(List<String> args) async {
   if (args.contains('--help') || args.contains('-h')) {
     _printUsageV1();
     exit(0);
   }
 
-  if (args.length != 2 || args[0] != 'core' || args[1] != 'compact') {
+  if (args.length != 2 || args[1] != 'compact') {
     _printUsageV1();
     exit(64);
   }
 
   final group = args[0];
   final device = args[1];
+  final captureSurfaces = _captureGroupsV1[group];
+  if (captureSurfaces == null) {
+    _printUsageV1();
+    exit(64);
+  }
   final outputDir = Directory('$_outputRootPathV1/${group}_fast');
   final stagingRoot = Directory('output/screen_review/.staging')
     ..createSync(recursive: true);
@@ -30,7 +57,9 @@ void main(List<String> args) async {
   final testFile = File(
     '${tempDir.path}${Platform.pathSeparator}act0_real_text_surface_capture_test.dart',
   );
-  testFile.writeAsStringSync(_flutterTestSource(stagingDir.path));
+  testFile.writeAsStringSync(
+    _flutterTestSource(stagingDir.path, group, device, captureSurfaces),
+  );
 
   final stopwatch = Stopwatch()..start();
   final result = await Process.start(
@@ -67,7 +96,7 @@ void main(List<String> args) async {
     exit(exitCode);
   }
 
-  const surfaces = <String>['home', 'learn', 'practice', 'review', 'profile'];
+  final surfaces = captureSurfaces.map((capture) => capture.name).toList();
   final entries = <Map<String, Object?>>[];
   for (final surface in surfaces) {
     final file = File(
@@ -111,8 +140,24 @@ void main(List<String> args) async {
   stdout.writeln(outputDir.path);
 }
 
-String _flutterTestSource(String outputDirPath) {
+String _flutterTestSource(
+  String outputDirPath,
+  String group,
+  String device,
+  List<_CaptureSurfaceV1> captures,
+) {
   final escapedOutputDir = jsonEncode(outputDirPath);
+  final captureStatements = captures
+      .map(
+        (capture) =>
+            '''
+    await captureSurface(
+      tester,
+      '$device.${capture.name}.png',
+      Act0ControlledDemoCaptureSurfaceV1.${capture.debugSurface},
+    );''',
+      )
+      .join();
   return '''
 import 'dart:io';
 import 'dart:convert';
@@ -317,7 +362,7 @@ void main() {
     file.writeAsBytesSync(Uint8List.view(byteData.buffer));
   }
 
-  testWidgets('capture real-text Act0 core review surfaces', (tester) async {
+  testWidgets('capture real-text Act0 $group review surfaces', (tester) async {
     tester.platformDispatcher.systemFontFamily = 'Roboto';
     addTearDown(() {
       tester.view.resetPhysicalSize();
@@ -325,31 +370,7 @@ void main() {
       tester.platformDispatcher.resetSystemFontFamily();
     });
 
-    await captureSurface(
-      tester,
-      'compact.home.png',
-      Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
-    );
-    await captureSurface(
-      tester,
-      'compact.learn.png',
-      Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn,
-    );
-    await captureSurface(
-      tester,
-      'compact.practice.png',
-      Act0ControlledDemoCaptureSurfaceV1.practice,
-    );
-    await captureSurface(
-      tester,
-      'compact.review.png',
-      Act0ControlledDemoCaptureSurfaceV1.firstWeekReview,
-    );
-    await captureSurface(
-      tester,
-      'compact.profile.png',
-      Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
-    );
+$captureStatements
   });
 }
 ''';
@@ -357,6 +378,6 @@ void main() {
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart core compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner> compact',
   );
 }
