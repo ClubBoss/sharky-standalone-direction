@@ -64,6 +64,24 @@ void main() {
     errorClass: 'expected_action_mismatch',
   );
 
+  const boardTextureRecheckItem = SessionDrillRecheckLaunchQueueItemV1(
+    queueKind: 'session_drill_recheck',
+    jobId: 'session_drill_recheck:w5.s01:classify_texture_intro_dry_raise_v1',
+    launchSessionId: 'w5.s01',
+    sourceWorldId: 'world_5',
+    sourceSessionId: 'w5.s01',
+    sourceDrillId: 'classify_texture_intro_dry_raise_v1',
+    drillFamilyId: 'board_texture_classifier_v1',
+    missedSignalId: 'board_texture_dry',
+    missedSignalLabel: 'Dry board texture',
+    chosenActionId: 'fold',
+    expectedActionId: 'raise',
+    targetSessionId: 'w5.s01',
+    targetDrillId: 'classify_texture_intro_dry_raise_v1',
+    targetKind: 'exact_replay',
+    errorClass: 'expected_action_mismatch',
+  );
+
   testWidgets('Review gives an active clue a card-based repair coach entry', (
     tester,
   ) async {
@@ -146,24 +164,94 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(const Key('act0_shell_review_w6_recheck_queue_card')),
+        find.byKey(const Key('act0_shell_review_recheck_queue_card')),
         findsOneWidget,
       );
-      expect(find.text('Review the range-bucket mistake'), findsOneWidget);
+      expect(find.text('Review this practice mistake'), findsOneWidget);
       expect(
-        find.byKey(const Key('act0_shell_review_w6_recheck_cta')),
+        find.byKey(const Key('act0_shell_review_recheck_cta')),
         findsOneWidget,
       );
       expect(find.text('Repair this clue'), findsNothing);
 
-      await tester.tap(
-        find.byKey(const Key('act0_shell_review_w6_recheck_cta')),
-      );
+      await tester.tap(find.byKey(const Key('act0_shell_review_recheck_cta')));
       await tester.pumpAndSettle();
 
       expect(tappedItem, same(w6RecheckItem));
       expect(launched?.sessionId, w6RecheckItem.launchSessionId);
       expect(launched?.initialDrillId, w6RecheckItem.targetDrillId);
+      expect(launched?.isRecheckLaunchV1, isTrue);
+    },
+  );
+
+  testWidgets(
+    'Review shows board texture recheck queue item through the same card',
+    (tester) async {
+      BuildContext? hostContext;
+      SessionDrillRecheckLaunchQueueItemV1? tappedItem;
+      CanonicalLauncherV1? launched;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              hostContext = context;
+              return Scaffold(
+                body: Act0ReviewShellV1(
+                  review: const Act0ReviewStateV1(
+                    title: 'Review',
+                    subtitle: 'Confidence repair board',
+                    weaknessLabel: 'Board texture',
+                    reason: '',
+                    stats: <Act0ReviewStatV1>[],
+                    chosenLabel: 'Fold',
+                    betterLabel: 'Raise',
+                  ),
+                  selected: null,
+                  onSelected: (_) {},
+                  sessionDrillRecheckQueueItems:
+                      const <SessionDrillRecheckLaunchQueueItemV1>[
+                        boardTextureRecheckItem,
+                      ],
+                  onStartSessionDrillRecheck: (item) {
+                    tappedItem = item;
+                    final route =
+                        sessionDrillRecheckLaunchRouteV1(item)
+                            as MaterialPageRoute<void>;
+                    launched =
+                        route.builder(hostContext!) as CanonicalLauncherV1;
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_recheck_queue_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Review this practice mistake'), findsOneWidget);
+      expect(
+        find.text(
+          'Dry board texture: you chose fold; try the raise line again.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_recheck_cta')),
+        findsOneWidget,
+      );
+      expect(find.text('Repair this clue'), findsNothing);
+
+      await tester.tap(find.byKey(const Key('act0_shell_review_recheck_cta')));
+      await tester.pumpAndSettle();
+
+      expect(tappedItem, same(boardTextureRecheckItem));
+      expect(launched?.sessionId, boardTextureRecheckItem.launchSessionId);
+      expect(launched?.initialDrillId, boardTextureRecheckItem.targetDrillId);
       expect(launched?.isRecheckLaunchV1, isTrue);
     },
   );
@@ -187,7 +275,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const Key('act0_shell_review_w6_recheck_queue_card')),
+      find.byKey(const Key('act0_shell_review_recheck_queue_card')),
       findsNothing,
     );
   });

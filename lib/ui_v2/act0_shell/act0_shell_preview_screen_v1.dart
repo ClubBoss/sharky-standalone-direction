@@ -1689,7 +1689,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final List<SessionDrillRecheckLaunchQueueItemV1> items;
     try {
       items = await const SessionDrillRecheckLaunchQueueV1()
-          .loadRangeBucketLaunchQueueItems();
+          .loadSupportedLaunchQueueItems();
     } catch (_) {
       return;
     }

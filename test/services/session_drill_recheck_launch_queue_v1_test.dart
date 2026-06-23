@@ -13,13 +13,13 @@ void main() {
   const store = SessionDrillRepairReceiptPersistenceV1();
   const launchQueue = SessionDrillRecheckLaunchQueueV1();
 
-  Future<SessionDrillItemV1> drill(String id) async {
-    final drills = await runtime.loadSessionDrills('w6.s01');
+  Future<SessionDrillItemV1> drill(String sessionId, String id) async {
+    final drills = await runtime.loadSessionDrills(sessionId);
     return drills.firstWhere((item) => item.drillId == id);
   }
 
   Future<void> persistMissedFoldReceipt() async {
-    final source = await drill('classify_missed_fold');
+    final source = await drill('w6.s01', 'classify_missed_fold');
     final evaluation = evaluator.evaluate(
       source.spec,
       DrillUserEventV1.actionChoice('raise'),
@@ -31,6 +31,21 @@ void main() {
       chosenActionId: 'raise',
     );
     await store.saveCandidate(receipt!);
+  }
+
+  Future<void> persistDryBoardTextureReceipt() async {
+    final source = await drill('w5.s01', 'classify_texture_intro_dry_raise_v1');
+    final evaluation = evaluator.evaluate(
+      source.spec,
+      DrillUserEventV1.actionChoice('fold'),
+    );
+    final receipt = await persistSessionDrillRepairReceiptCandidateIfEligibleV1(
+      sourceSessionId: 'w5.s01',
+      sourceDrill: source,
+      evaluation: evaluation,
+      chosenActionId: 'fold',
+    );
+    expect(receipt, isNotNull);
   }
 
   setUp(() {
@@ -64,6 +79,32 @@ void main() {
   );
 
   test(
+    'supported launch queue includes range-bucket and board-texture families',
+    () async {
+      await persistMissedFoldReceipt();
+      await persistDryBoardTextureReceipt();
+
+      final items = await launchQueue.loadSupportedLaunchQueueItems();
+
+      expect(items, hasLength(2));
+      expect(
+        items.map((item) => item.drillFamilyId),
+        containsAll(<String>[
+          'range_bucket_classifier_v1',
+          'board_texture_classifier_v1',
+        ]),
+      );
+      final boardItem = items.singleWhere(
+        (item) => item.drillFamilyId == 'board_texture_classifier_v1',
+      );
+      expect(boardItem.launchSessionId, 'w5.s01');
+      expect(boardItem.targetSessionId, 'w5.s01');
+      expect(boardItem.targetDrillId, 'classify_texture_intro_dry_raise_v1');
+      expect(boardItem.missedSignalLabel, 'Dry board texture');
+    },
+  );
+
+  test(
     'unsupported internal candidates are ignored by the launch queue seam',
     () {
       final item = buildSessionDrillRecheckLaunchQueueItemV1(
@@ -90,7 +131,7 @@ void main() {
   );
 
   test('correct answers do not create launch queue items', () async {
-    final source = await drill('classify_missed_fold');
+    final source = await drill('w6.s01', 'classify_missed_fold');
     final evaluation = evaluator.evaluate(
       source.spec,
       DrillUserEventV1.actionChoice('fold'),

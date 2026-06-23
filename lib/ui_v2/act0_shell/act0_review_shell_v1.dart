@@ -383,7 +383,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
         ? 'the better action'
         : item.expectedActionId;
     return Container(
-      key: const Key('act0_shell_review_w6_recheck_queue_card'),
+      key: const Key('act0_shell_review_recheck_queue_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.info.withOpacity(0.10),
@@ -402,7 +402,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
-            'Review the range-bucket mistake',
+            'Review this practice mistake',
             style: Act0ShellTokensV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -412,7 +412,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            'This opens the exact W6 drill again, not an Act0 task repair.',
+            'This opens the exact practice drill again, not an Act0 task repair.',
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontWeight: FontWeight.w800,
@@ -420,7 +420,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           FilledButton(
-            key: const Key('act0_shell_review_w6_recheck_cta'),
+            key: const Key('act0_shell_review_recheck_cta'),
             onPressed: () => onStart(item),
             style: Act0ShellTokensV1.primaryButtonStyle(
               height: Act0ShellTokensV1.compactCtaHeight,

@@ -78,6 +78,19 @@ class SessionDrillRecheckLaunchQueueV1 {
         .whereType<SessionDrillRecheckLaunchQueueItemV1>()
         .toList(growable: false);
   }
+
+  Future<List<SessionDrillRecheckLaunchQueueItemV1>>
+  loadSupportedLaunchQueueItems() async {
+    final items = <SessionDrillRecheckLaunchQueueItemV1>[
+      ...await loadRangeBucketLaunchQueueItems(),
+      ...await loadBoardTextureLaunchQueueItems(),
+    ];
+    final seenJobIds = <String>{};
+    return <SessionDrillRecheckLaunchQueueItemV1>[
+      for (final item in items)
+        if (seenJobIds.add(item.jobId)) item,
+    ];
+  }
 }
 
 SessionDrillRecheckLaunchQueueItemV1? buildSessionDrillRecheckLaunchQueueItemV1(
