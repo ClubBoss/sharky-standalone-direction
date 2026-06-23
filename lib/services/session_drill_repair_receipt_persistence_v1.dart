@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:poker_analyzer/services/board_texture_repair_receipt_mapping_v1.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/services/session_drill_repair_receipt_adapter_v1.dart';
@@ -58,12 +59,19 @@ persistSessionDrillRepairReceiptCandidateIfEligibleV1({
   SessionDrillRepairReceiptPersistenceV1 store =
       const SessionDrillRepairReceiptPersistenceV1(),
 }) async {
-  final candidate = buildSessionDrillRepairReceiptCandidateV1(
-    sourceSessionId: sourceSessionId,
-    sourceDrill: sourceDrill,
-    evaluation: evaluation,
-    chosenActionId: chosenActionId,
-  );
+  final candidate =
+      buildSessionDrillRepairReceiptCandidateV1(
+        sourceSessionId: sourceSessionId,
+        sourceDrill: sourceDrill,
+        evaluation: evaluation,
+        chosenActionId: chosenActionId,
+      ) ??
+      buildBoardTextureRepairReceiptCandidateV1(
+        sourceSessionId: sourceSessionId,
+        sourceDrill: sourceDrill,
+        evaluation: evaluation,
+        chosenActionId: chosenActionId,
+      );
   if (candidate == null) {
     return null;
   }

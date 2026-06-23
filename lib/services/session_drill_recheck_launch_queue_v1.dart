@@ -69,6 +69,15 @@ class SessionDrillRecheckLaunchQueueV1 {
         .whereType<SessionDrillRecheckLaunchQueueItemV1>()
         .toList(growable: false);
   }
+
+  Future<List<SessionDrillRecheckLaunchQueueItemV1>>
+  loadBoardTextureLaunchQueueItems() async {
+    final candidates = await consumer.loadBoardTextureRecheckCandidates();
+    return candidates
+        .map(buildSessionDrillRecheckLaunchQueueItemV1)
+        .whereType<SessionDrillRecheckLaunchQueueItemV1>()
+        .toList(growable: false);
+  }
 }
 
 SessionDrillRecheckLaunchQueueItemV1? buildSessionDrillRecheckLaunchQueueItemV1(
@@ -76,11 +85,7 @@ SessionDrillRecheckLaunchQueueItemV1? buildSessionDrillRecheckLaunchQueueItemV1(
 ) {
   if (candidate.schemaVersion != 1 ||
       candidate.consumerKind.trim() != 'session_drill_recheck' ||
-      candidate.sourceWorldId.trim() != 'world_6' ||
-      candidate.sourceSessionId.trim() != 'w6.s01' ||
-      candidate.targetSessionId.trim() != 'w6.s01' ||
-      candidate.drillFamilyId.trim() != 'range_bucket_classifier_v1' ||
-      !candidate.missedSignalId.trim().startsWith('range_bucket_') ||
+      !_isSupportedRepairFamilyCandidateV1(candidate) ||
       !_supportedTargetKindsV1.contains(candidate.targetKind.trim())) {
     return null;
   }
@@ -116,6 +121,29 @@ SessionDrillRecheckLaunchQueueItemV1? buildSessionDrillRecheckLaunchQueueItemV1(
     targetKind: candidate.targetKind.trim(),
     errorClass: candidate.errorClass.trim(),
   );
+}
+
+bool _isSupportedRepairFamilyCandidateV1(
+  SessionDrillRepairRecheckCandidateV1 candidate,
+) {
+  final sourceWorldId = candidate.sourceWorldId.trim();
+  final sourceSessionId = candidate.sourceSessionId.trim();
+  final targetSessionId = candidate.targetSessionId.trim();
+  final drillFamilyId = candidate.drillFamilyId.trim();
+  final missedSignalId = candidate.missedSignalId.trim();
+  final isRangeBucket =
+      sourceWorldId == 'world_6' &&
+      sourceSessionId == 'w6.s01' &&
+      targetSessionId == 'w6.s01' &&
+      drillFamilyId == 'range_bucket_classifier_v1' &&
+      missedSignalId.startsWith('range_bucket_');
+  final isBoardTexture =
+      sourceWorldId == 'world_5' &&
+      sourceSessionId == 'w5.s01' &&
+      targetSessionId == 'w5.s01' &&
+      drillFamilyId == 'board_texture_classifier_v1' &&
+      missedSignalId.startsWith('board_texture_');
+  return isRangeBucket || isBoardTexture;
 }
 
 const Set<String> _supportedTargetKindsV1 = <String>{

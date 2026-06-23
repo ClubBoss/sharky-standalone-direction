@@ -61,11 +61,25 @@ class SessionDrillRepairReceiptConsumerV1 {
 
   Future<List<SessionDrillRepairRecheckCandidateV1>>
   loadRangeBucketRecheckCandidates() async {
+    return _loadCandidatesWhere(buildSessionDrillRepairRecheckCandidateV1);
+  }
+
+  Future<List<SessionDrillRepairRecheckCandidateV1>>
+  loadBoardTextureRecheckCandidates() async {
+    return _loadCandidatesWhere(buildBoardTextureRepairRecheckCandidateV1);
+  }
+
+  Future<List<SessionDrillRepairRecheckCandidateV1>> _loadCandidatesWhere(
+    SessionDrillRepairRecheckCandidateV1? Function(
+      SessionDrillRepairReceiptCandidateV1 receipt,
+    )
+    buildCandidate,
+  ) async {
     final receipts = await persistence.loadCandidates();
     final seenSourceDrills = <String>{};
     final candidates = <SessionDrillRepairRecheckCandidateV1>[];
     for (final receipt in receipts) {
-      final candidate = buildSessionDrillRepairRecheckCandidateV1(receipt);
+      final candidate = buildCandidate(receipt);
       if (candidate == null) {
         continue;
       }
@@ -90,17 +104,28 @@ class SessionDrillRepairReceiptConsumerV1 {
 SessionDrillRepairRecheckCandidateV1? buildSessionDrillRepairRecheckCandidateV1(
   SessionDrillRepairReceiptCandidateV1 receipt,
 ) {
-  final targetKind = receipt.targetKind.trim();
-  if (receipt.schemaVersion != 1 ||
-      receipt.sourceWorldId.trim() != 'world_6' ||
-      receipt.sourceSessionId.trim() != 'w6.s01' ||
-      receipt.targetSessionId.trim() != 'w6.s01' ||
-      receipt.drillFamilyId.trim() != 'range_bucket_classifier_v1' ||
-      !receipt.missedSignalId.trim().startsWith('range_bucket_') ||
-      !_supportedTargetKindsV1.contains(targetKind)) {
+  if (!_isSupportedRangeBucketReceiptV1(receipt)) {
     return null;
   }
+  return _buildRecheckCandidateV1(receipt);
+}
 
+SessionDrillRepairRecheckCandidateV1? buildBoardTextureRepairRecheckCandidateV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  if (!_isSupportedBoardTextureReceiptV1(receipt)) {
+    return null;
+  }
+  return _buildRecheckCandidateV1(receipt);
+}
+
+SessionDrillRepairRecheckCandidateV1? _buildRecheckCandidateV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  final targetKind = receipt.targetKind.trim();
+  if (!_supportedTargetKindsV1.contains(targetKind)) {
+    return null;
+  }
   final requiredValues = <String>[
     receipt.sourceDrillId,
     receipt.missedSignalLabel,
@@ -112,7 +137,6 @@ SessionDrillRepairRecheckCandidateV1? buildSessionDrillRepairRecheckCandidateV1(
   if (requiredValues.any((value) => value.trim().isEmpty)) {
     return null;
   }
-
   return SessionDrillRepairRecheckCandidateV1(
     schemaVersion: 1,
     consumerKind: 'session_drill_recheck',
@@ -129,6 +153,30 @@ SessionDrillRepairRecheckCandidateV1? buildSessionDrillRepairRecheckCandidateV1(
     targetKind: targetKind,
     errorClass: receipt.errorClass.trim(),
   );
+}
+
+bool _isSupportedRangeBucketReceiptV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  return receipt.schemaVersion == 1 &&
+      receipt.sourceWorldId.trim() == 'world_6' &&
+      receipt.sourceSessionId.trim() == 'w6.s01' &&
+      receipt.targetSessionId.trim() == 'w6.s01' &&
+      receipt.drillFamilyId.trim() == 'range_bucket_classifier_v1' &&
+      receipt.missedSignalId.trim().startsWith('range_bucket_') &&
+      _supportedTargetKindsV1.contains(receipt.targetKind.trim());
+}
+
+bool _isSupportedBoardTextureReceiptV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  return receipt.schemaVersion == 1 &&
+      receipt.sourceWorldId.trim() == 'world_5' &&
+      receipt.sourceSessionId.trim() == 'w5.s01' &&
+      receipt.targetSessionId.trim() == 'w5.s01' &&
+      receipt.drillFamilyId.trim() == 'board_texture_classifier_v1' &&
+      receipt.missedSignalId.trim().startsWith('board_texture_') &&
+      _supportedTargetKindsV1.contains(receipt.targetKind.trim());
 }
 
 const Set<String> _supportedTargetKindsV1 = <String>{
