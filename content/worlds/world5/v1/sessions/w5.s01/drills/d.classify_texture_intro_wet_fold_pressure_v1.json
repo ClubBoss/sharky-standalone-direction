@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_intro_wet_fold_pressure_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Read the board first: this texture is wet and the pressure is high. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "wet",
+  "expected_action": "fold",
+  "acceptable_actions": ["call"],
+  "why_v1": "Wet boards create more changing turn cards, so high pressure can make a weak continue too costly.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Wet texture plus high pressure can make fold the disciplined action.",
+  "feedback_incorrect_v1": "Incorrect. Start from the wet texture and notice how much pressure you face."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "classify_texture_intro_paired_call_control_v1",
+  "kind": "board_texture_classifier_v1",
+  "prompt": "Read the board first: the texture is paired, and your hand can continue carefully. Choose the best action.",
+  "intent_v1": "texture_wet_vs_dry",
+  "board_texture_v1": "paired",
+  "expected_action": "call",
+  "acceptable_actions": ["fold"],
+  "why_v1": "Paired boards can reduce clean improvement paths, so calling keeps the pot controlled when you can still continue.",
+  "error_class": "expected_action_mismatch",
+  "feedback_correct_v1": "Correct. Paired texture with a careful continue points to call.",
+  "feedback_incorrect_v1": "Incorrect. Start from the paired texture and keep the action controlled."
+}

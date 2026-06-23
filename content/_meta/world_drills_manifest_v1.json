@@ -1555,12 +1555,24 @@
               "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_dry_raise_v1.json"
             },
             {
+              "id": "classify_texture_intro_dry_call_control_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_dry_call_control_v1.json"
+            },
+            {
               "id": "classify_texture_intro_paired_fold_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_paired_fold_v1.json"
             },
             {
+              "id": "classify_texture_intro_paired_call_control_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_paired_call_control_v1.json"
+            },
+            {
               "id": "classify_texture_intro_wet_call_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_wet_call_v1.json"
+            },
+            {
+              "id": "classify_texture_intro_wet_fold_pressure_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_wet_fold_pressure_v1.json"
             }
           ]
         },
