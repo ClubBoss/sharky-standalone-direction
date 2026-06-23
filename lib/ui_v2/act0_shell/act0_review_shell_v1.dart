@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
@@ -32,6 +33,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
     required this.onSelected,
     this.onFixMistake,
     this.onReplayFixedMistake,
+    this.sessionDrillRecheckQueueItems =
+        const <SessionDrillRecheckLaunchQueueItemV1>[],
+    this.onStartSessionDrillRecheck,
   });
 
   final Act0ReviewStateV1 review;
@@ -39,6 +43,10 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final ValueChanged<String> onSelected;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
   final ValueChanged<Act0MistakeCardV1>? onReplayFixedMistake;
+  final List<SessionDrillRecheckLaunchQueueItemV1>
+  sessionDrillRecheckQueueItems;
+  final ValueChanged<SessionDrillRecheckLaunchQueueItemV1>?
+  onStartSessionDrillRecheck;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +72,14 @@ class Act0ReviewShellV1 extends StatelessWidget {
       ),
     ];
     final activeRepairColumn = <Widget>[
+      if (sessionDrillRecheckQueueItems.isNotEmpty &&
+          onStartSessionDrillRecheck != null) ...[
+        _SessionDrillRecheckQueueCardV1(
+          item: sessionDrillRecheckQueueItems.first,
+          onStart: onStartSessionDrillRecheck!,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+      ],
       if (!isClean) ...[
         if (dominantPattern != null) ...[
           _ReviewPatternCardV1(
@@ -340,6 +356,77 @@ class _ReviewPatternCardV1 extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
+  const _SessionDrillRecheckQueueCardV1({
+    required this.item,
+    required this.onStart,
+  });
+
+  final SessionDrillRecheckLaunchQueueItemV1 item;
+  final ValueChanged<SessionDrillRecheckLaunchQueueItemV1> onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final signalLabel = item.missedSignalLabel.trim().isEmpty
+        ? 'Range bucket'
+        : item.missedSignalLabel;
+    final chosen = item.chosenActionId.trim().isEmpty
+        ? 'your last choice'
+        : item.chosenActionId;
+    final expected = item.expectedActionId.trim().isEmpty
+        ? 'the better action'
+        : item.expectedActionId;
+    return Container(
+      key: const Key('act0_shell_review_w6_recheck_queue_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.info.withOpacity(0.10),
+        borderColor: Act0ShellTokensV1.info.withOpacity(0.28),
+        glow: false,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Practice this spot again',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(
+            'Review the range-bucket mistake',
+            style: Act0ShellTokensV1.sectionTitle,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            '$signalLabel: you chose $chosen; try the $expected line again.',
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Text(
+            'This opens the exact W6 drill again, not an Act0 task repair.',
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          FilledButton(
+            key: const Key('act0_shell_review_w6_recheck_cta'),
+            onPressed: () => onStart(item),
+            style: Act0ShellTokensV1.primaryButtonStyle(
+              height: Act0ShellTokensV1.compactCtaHeight,
+            ),
+            child: const Text('Practice this spot again'),
+          ),
         ],
       ),
     );

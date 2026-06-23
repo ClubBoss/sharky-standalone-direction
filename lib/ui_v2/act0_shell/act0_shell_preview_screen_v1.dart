@@ -26,6 +26,8 @@ import 'package:poker_analyzer/ui_v2/audio/ui_sound_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
 import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
+import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
+import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
 
 ({String worldId, String lessonId, String taskId, String mappingType})?
 act0FirstValueSameSignalRepMappingV1({
@@ -660,6 +662,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.showPlacementOnStart = true,
     this.debugHarnessEntry,
     this.telemetrySink,
+    this.debugSessionDrillRecheckQueueItemsV1,
     // Dev2 is now the canonical detached Act0 shell. The classic variant stays
     // available for explicit fallback comparisons.
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
@@ -671,6 +674,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool showPlacementOnStart;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
+  final List<SessionDrillRecheckLaunchQueueItemV1>?
+  debugSessionDrillRecheckQueueItemsV1;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
 
   @override
@@ -741,6 +746,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
   String _firstValueTodayShownTelemetryKey = '';
   final Set<String> _repairItemShownTelemetryKeys = <String>{};
+  List<SessionDrillRecheckLaunchQueueItemV1> _sessionDrillRecheckQueueItemsV1 =
+      const <SessionDrillRecheckLaunchQueueItemV1>[];
 
   void _recordTelemetryEventV1(String name, Map<String, Object?> fields) {
     final sink = widget.telemetrySink;
@@ -1665,11 +1672,33 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedTaskId = _firstIncompleteTask(state.currentLesson).taskId;
     _learnPopupTaskId = null;
     _resetLessonRunMetrics();
+    final debugRecheckItems = widget.debugSessionDrillRecheckQueueItemsV1;
+    if (debugRecheckItems != null) {
+      _sessionDrillRecheckQueueItemsV1 = List.unmodifiable(debugRecheckItems);
+    } else {
+      unawaited(_loadSessionDrillRecheckQueueItemsV1());
+    }
     if (widget.debugHarnessEntry case final entry?) {
       _applyDebugHarnessEntry(entry, state);
       return;
     }
     unawaited(_bootstrapFirstStartRouteV1());
+  }
+
+  Future<void> _loadSessionDrillRecheckQueueItemsV1() async {
+    final List<SessionDrillRecheckLaunchQueueItemV1> items;
+    try {
+      items = await const SessionDrillRecheckLaunchQueueV1()
+          .loadRangeBucketLaunchQueueItems();
+    } catch (_) {
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _sessionDrillRecheckQueueItemsV1 = items;
+    });
   }
 
   @override
@@ -4211,6 +4240,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             practiceGroupId: 'weak_spots',
                           );
                         }),
+                        sessionDrillRecheckQueueItems:
+                            _sessionDrillRecheckQueueItemsV1,
+                        onStartSessionDrillRecheck: (item) {
+                          unawaited(
+                            pushSessionDrillRecheckLaunchV1(context, item),
+                          );
+                        },
                       ),
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
                         profile: profileState,
