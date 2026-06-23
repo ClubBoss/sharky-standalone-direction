@@ -71,10 +71,31 @@ import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microta
 import 'package:poker_analyzer/ui_v2/visual/campaign_ui_kit_v1.dart';
 import 'package:poker_analyzer/theme/app_colors.dart';
 
+int resolveInitialSessionDrillIndexV1({
+  required List<SessionDrillItemV1> drills,
+  required String? initialDrillId,
+}) {
+  final normalizedTargetId = initialDrillId?.trim() ?? '';
+  if (normalizedTargetId.isEmpty) return 0;
+  final index = drills.indexWhere(
+    (drill) => drill.drillId.trim() == normalizedTargetId,
+  );
+  return index < 0 ? 0 : index;
+}
+
+bool shouldSignalNormalSessionDrillCompletionV1({
+  required bool completionAlreadySignaled,
+  required bool isRecheckLaunchV1,
+}) {
+  return !completionAlreadySignaled && !isRecheckLaunchV1;
+}
+
 class CanonicalTerminalSessionDrillSurfacedRunnerV1 extends StatefulWidget {
   const CanonicalTerminalSessionDrillSurfacedRunnerV1({
     super.key,
     required this.sessionId,
+    this.initialDrillId,
+    this.isRecheckLaunchV1 = false,
     this.debugDrillsOverrideV1,
     this.handoffContextV1,
     this.world1ModuleTitleV1,
@@ -86,6 +107,8 @@ class CanonicalTerminalSessionDrillSurfacedRunnerV1 extends StatefulWidget {
   });
 
   final String sessionId;
+  final String? initialDrillId;
+  final bool isRecheckLaunchV1;
   final List<SessionDrillItemV1>? debugDrillsOverrideV1;
   final ProgressionHandoffContextV1? handoffContextV1;
   final String? world1ModuleTitleV1;
@@ -97,6 +120,8 @@ class CanonicalTerminalSessionDrillSurfacedRunnerV1 extends StatefulWidget {
 
   static Route<void> route({
     required String sessionId,
+    String? initialDrillId,
+    bool isRecheckLaunchV1 = false,
     ProgressionHandoffContextV1? handoffContextV1,
     String? world1ModuleTitleV1,
     String? world1ModeV1,
@@ -108,6 +133,8 @@ class CanonicalTerminalSessionDrillSurfacedRunnerV1 extends StatefulWidget {
     return MaterialPageRoute<void>(
       builder: (_) => CanonicalLauncherV1.sessionDrill(
         sessionId: sessionId,
+        initialDrillId: initialDrillId,
+        isRecheckLaunchV1: isRecheckLaunchV1,
         handoffContextV1: handoffContextV1,
         world1ModuleTitleV1: world1ModuleTitleV1,
         world1ModeV1: world1ModeV1,
@@ -276,6 +303,13 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
   SessionDrillItemV1? get _currentDrill =>
       _drills.isEmpty ? null : _drills[_currentIndex];
 
+  void _resolveInitialDrillSelectionV1() {
+    _currentIndex = resolveInitialSessionDrillIndexV1(
+      drills: _drills,
+      initialDrillId: widget.initialDrillId,
+    );
+  }
+
   bool get _usesWorld1AdapterLaunchV1 =>
       hasWorld1MicroTaskPack(widget.sessionId);
 
@@ -390,6 +424,7 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
     final override = widget.debugDrillsOverrideV1;
     if (override != null) {
       _drills = override;
+      _resolveInitialDrillSelectionV1();
       _loading = false;
       _loadError = null;
       return;
@@ -466,6 +501,7 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
       if (!mounted) return;
       setState(() {
         _drills = drills;
+        _resolveInitialDrillSelectionV1();
         _loading = false;
         _loadError = null;
       });
@@ -533,7 +569,10 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
           _lastSoftPassInfo = softPassInfo;
           _lastSoftPassDetailV1 = softPassDetailV1;
         });
-        if (!_completionSignaled) {
+        if (shouldSignalNormalSessionDrillCompletionV1(
+          completionAlreadySignaled: _completionSignaled,
+          isRecheckLaunchV1: widget.isRecheckLaunchV1,
+        )) {
           _completionSignaled = true;
           unawaited(ProgressService.markModuleCompleted(widget.sessionId));
           unawaited(

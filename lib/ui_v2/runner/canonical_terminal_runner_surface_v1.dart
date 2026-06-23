@@ -47,6 +47,8 @@ class CanonicalTerminalRunnerSurfaceV1 extends StatelessWidget {
           children: <Widget>[
             CanonicalTerminalSessionDrillSurfacedRunnerV1(
               sessionId: payload.sessionId,
+              initialDrillId: payload.initialDrillId,
+              isRecheckLaunchV1: payload.isRecheckLaunchV1,
               debugDrillsOverrideV1: payload.debugDrillsOverrideV1,
               handoffContextV1: payload.handoffContextV1,
               world1ModuleTitleV1: payload.world1ModuleTitleV1,

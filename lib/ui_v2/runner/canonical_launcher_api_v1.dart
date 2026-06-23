@@ -25,6 +25,8 @@ enum CanonicalPracticeLaunchKindV1 {
 
 Route<void> canonicalSessionDrillRouteV1({
   required String sessionId,
+  String? initialDrillId,
+  bool isRecheckLaunchV1 = false,
   ProgressionHandoffContextV1? handoffContextV1,
   String? world1ModuleTitleV1,
   String? world1ModeV1,
@@ -36,6 +38,8 @@ Route<void> canonicalSessionDrillRouteV1({
   return MaterialPageRoute<void>(
     builder: (_) => CanonicalLauncherV1.sessionDrill(
       sessionId: sessionId,
+      initialDrillId: initialDrillId,
+      isRecheckLaunchV1: isRecheckLaunchV1,
       handoffContextV1: handoffContextV1,
       world1ModuleTitleV1: world1ModuleTitleV1,
       world1ModeV1: world1ModeV1,
@@ -207,7 +211,9 @@ class CanonicalLauncherV1 extends StatefulWidget {
       world1StartHandIndexV1 = 0,
       world1CheckpointIdV1 = null,
       world1HintsEnabledV1 = true,
-      world1InstructionSourceV1 = null;
+      world1InstructionSourceV1 = null,
+      initialDrillId = null,
+      isRecheckLaunchV1 = false;
 
   const CanonicalLauncherV1.phase2({super.key})
     : family = CanonicalLauncherFamilyV1.phase2,
@@ -219,7 +225,9 @@ class CanonicalLauncherV1 extends StatefulWidget {
       world1StartHandIndexV1 = 0,
       world1CheckpointIdV1 = null,
       world1HintsEnabledV1 = true,
-      world1InstructionSourceV1 = null;
+      world1InstructionSourceV1 = null,
+      initialDrillId = null,
+      isRecheckLaunchV1 = false;
 
   const CanonicalLauncherV1.phase3({super.key})
     : family = CanonicalLauncherFamilyV1.phase3,
@@ -231,11 +239,15 @@ class CanonicalLauncherV1 extends StatefulWidget {
       world1StartHandIndexV1 = 0,
       world1CheckpointIdV1 = null,
       world1HintsEnabledV1 = true,
-      world1InstructionSourceV1 = null;
+      world1InstructionSourceV1 = null,
+      initialDrillId = null,
+      isRecheckLaunchV1 = false;
 
   const CanonicalLauncherV1.sessionDrill({
     super.key,
     required this.sessionId,
+    this.initialDrillId,
+    this.isRecheckLaunchV1 = false,
     this.debugDrillsOverrideV1,
     this.handoffContextV1,
     this.world1ModuleTitleV1,
@@ -248,6 +260,8 @@ class CanonicalLauncherV1 extends StatefulWidget {
 
   final CanonicalLauncherFamilyV1 family;
   final String? sessionId;
+  final String? initialDrillId;
+  final bool isRecheckLaunchV1;
   final List<SessionDrillItemV1>? debugDrillsOverrideV1;
   final ProgressionHandoffContextV1? handoffContextV1;
   final String? world1ModuleTitleV1;
@@ -348,6 +362,8 @@ class _CanonicalLauncherV1State extends State<CanonicalLauncherV1> {
           terminalResolvedHostLaunchV1:
               CanonicalTerminalResolvedHostLaunchV1.sessionDrillSurfaced(
                 sessionId: sessionId,
+                initialDrillId: widget.initialDrillId,
+                isRecheckLaunchV1: widget.isRecheckLaunchV1,
                 debugDrillsOverrideV1: widget.debugDrillsOverrideV1,
                 handoffContextV1: widget.handoffContextV1,
                 runtimeConfigV1: CanonicalTerminalWorld1RuntimeConfigV1(

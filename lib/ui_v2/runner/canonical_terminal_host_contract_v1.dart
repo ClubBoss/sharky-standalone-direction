@@ -146,6 +146,8 @@ class CanonicalTerminalResolvedHostLaunchV1 {
 
   factory CanonicalTerminalResolvedHostLaunchV1.sessionDrillSurfaced({
     required String sessionId,
+    String? initialDrillId,
+    bool isRecheckLaunchV1 = false,
     required List<SessionDrillItemV1>? debugDrillsOverrideV1,
     required ProgressionHandoffContextV1? handoffContextV1,
     required CanonicalTerminalWorld1RuntimeConfigV1 runtimeConfigV1,
@@ -154,6 +156,8 @@ class CanonicalTerminalResolvedHostLaunchV1 {
       family: CanonicalTerminalFamilyV1.sessionDrillSurfaced,
       payload: CanonicalTerminalSessionDrillSurfacedPayloadV1(
         sessionId: sessionId,
+        initialDrillId: initialDrillId,
+        isRecheckLaunchV1: isRecheckLaunchV1,
         debugDrillsOverrideV1: debugDrillsOverrideV1,
         handoffContextV1: handoffContextV1,
         runtimeConfigV1: runtimeConfigV1,
@@ -257,12 +261,16 @@ class CanonicalTerminalSessionDrillSurfacedPayloadV1
     extends CanonicalTerminalFamilyPayloadV1 {
   const CanonicalTerminalSessionDrillSurfacedPayloadV1({
     required this.sessionId,
+    required this.initialDrillId,
+    required this.isRecheckLaunchV1,
     required this.debugDrillsOverrideV1,
     required this.handoffContextV1,
     required this.runtimeConfigV1,
   });
 
   final String sessionId;
+  final String? initialDrillId;
+  final bool isRecheckLaunchV1;
   final List<SessionDrillItemV1>? debugDrillsOverrideV1;
   final ProgressionHandoffContextV1? handoffContextV1;
   final CanonicalTerminalWorld1RuntimeConfigV1 runtimeConfigV1;
