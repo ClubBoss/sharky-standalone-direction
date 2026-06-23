@@ -15,7 +15,7 @@ These instructions apply to the entire repository.
 
 ## Canonical Root
 - This repository is the standalone active product root.
-- Canonical local root: `/Users/elmarsalimzade/Sharky_1.0`
+- Canonical local root: this repository checkout.
 - Canonical GitHub remote for active product work: `https://github.com/ClubBoss/sharky-standalone-direction.git`.
 - Future pushes must target `origin/main` in this standalone repository.
 - Older neighboring roots such as `Poker_Analyzer`, `Sharky`, and `Sharky_main` are legacy/donor/archive workspaces, not the default place for new product edits.
@@ -134,8 +134,10 @@ This project has a knowledge graph at graphify-out/ with god nodes, community st
 When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
 
 Rules:
+- Graphify is navigation and dependency-safety tooling only. It is advisory and never overrides the active SSOT docs, roadmap, product scope, or user instructions.
 - For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Never commit generated graph output.
+- Use `graphify hook-check` as the lightweight validation check. Run a full `graphify update .` only when explicitly needed for graph freshness or when a task requires it; do not run expensive graph generation every turn.
+- Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

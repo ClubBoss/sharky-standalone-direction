@@ -1,5 +1,8 @@
 ## graphify
 
+Graphify is navigation and dependency-safety tooling only. It is advisory and must not override
+current SSOT docs, roadmap decisions, product scope, or user instructions.
+
 For any question about this repo's architecture, structure, components, or how to add/modify/find
 code, your first action should be `graphify query "<question>"` when `graphify-out/graph.json`
 exists. Use `graphify path "<A>" "<B>"` for relationship questions and `graphify explain "<concept>"`
@@ -14,4 +17,7 @@ only for broad architecture review or when query/path/explain do not surface eno
 source files when (a) modifying/debugging specific code, (b) the graph lacks the needed detail, or
 (c) the graph is missing or stale.
 
-Type `/graphify` in Copilot Chat to build or update the graph.
+Use `graphify hook-check` as lightweight validation. Run a full graph refresh only when explicitly
+needed for graph freshness or when a task requires it. Never commit generated graph output.
+
+Type `/graphify` in Copilot Chat to build or update the graph intentionally.

@@ -54,6 +54,7 @@ telemetry/*.log
 
 # Local generated code graph; instructions reference it when present.
 /graphify-out/
+/output/graphify-out/
 
 # Competitor binaries / local-only research artifacts
 external_competitors/
