@@ -107,7 +107,7 @@ void main() {
     );
   });
 
-  testWidgets('mapped repair reason is visible on Home next useful hand', (
+  testWidgets('mapped repair reason does not duplicate the Home hero action', (
     tester,
   ) async {
     await _pumpResolverHost(
@@ -121,19 +121,19 @@ void main() {
         'You missed that nobody has bet yet. This hand repeats that table clue.';
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
-    expect(find.text(visibleReason), findsOneWidget);
+    expect(find.text(visibleReason), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_home_next_best_action_block')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_home_next_best_action_title')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Repair the no-bet-yet clue'), findsOneWidget);
+    expect(find.text('Repair the no-bet-yet clue'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_home_next_best_action_reason')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
@@ -164,13 +164,17 @@ void main() {
         of: hero,
         matching: find.text('Practice the no-bet-yet clue'),
       ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.descendant(
         of: hero,
         matching: find.text('One same-clue rep will help lock this in.'),
       ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsOneWidget,
     );
     expect(
@@ -236,12 +240,12 @@ void main() {
     const visibleReason = 'Replay this spot to fix the no-bet-yet clue.';
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
-    expect(find.text(visibleReason), findsOneWidget);
+    expect(find.text(visibleReason), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_home_next_best_action_block')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Replay this spot'), findsOneWidget);
+    expect(find.text('Replay this spot'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
       findsNothing,
@@ -274,13 +278,17 @@ void main() {
     expect(hero, findsOneWidget);
     expect(
       find.descendant(of: hero, matching: find.text('Replay this spot')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.descendant(
         of: hero,
         matching: find.text('Train the exact spot again.'),
       ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsOneWidget,
     );
     expect(
@@ -328,7 +336,7 @@ void main() {
       'actions_check_drill',
     );
 
-    await _launchReviewRepair(tester);
+    await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
     expect(
@@ -385,13 +393,10 @@ void main() {
     await _pumpHomeWithReason(tester, null);
     expect(
       find.byKey(const Key('act0_shell_home_next_best_action_block')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Continue your first lesson'), findsOneWidget);
-    expect(
-      find.text('Sharky has your next useful hand ready.'),
-      findsOneWidget,
-    );
+    expect(find.text('Continue your first lesson'), findsNothing);
+    expect(find.text('Sharky has your next useful hand ready.'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
       findsNothing,
@@ -417,14 +422,14 @@ void main() {
     );
     await _answerOption(tester, 'fold');
 
-    await _launchReviewRepair(tester);
+    await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
     expect(
       find.text(
         'Still missed: nobody had bet yet. One more repair hand will help.',
       ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
     expect(
@@ -539,7 +544,7 @@ void main() {
     );
     await _answerOption(tester, 'fold');
 
-    await _launchReviewRepair(tester);
+    await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
     expect(
@@ -569,7 +574,7 @@ void main() {
       taskId: 'actions_legal_context',
     );
     await _answerOption(tester, 'fold');
-    await _launchReviewRepair(tester);
+    await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
     expect(
@@ -577,7 +582,7 @@ void main() {
         'Replay missed again: try the same spot once more.',
         skipOffstage: false,
       ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.text('Replay still missed: try the spot once more.'),
@@ -700,7 +705,7 @@ void main() {
     );
     await _answerOption(tester, 'fold');
 
-    await _launchReviewRepair(tester);
+    await _launchHomeRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
 
@@ -963,9 +968,21 @@ Future<void> _answerWrongly(WidgetTester tester) async {
   await _answerOption(tester, option.id);
 }
 
-Future<void> _launchReviewRepair(WidgetTester tester) async {
-  await _openReview(tester);
-  await tester.tap(find.byKey(const Key('act0_shell_review_fix_next_cta')));
+Future<void> _launchHomeRepair(WidgetTester tester) async {
+  final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
+  if (runnerBack.evaluate().isNotEmpty) {
+    await tester.ensureVisible(runnerBack);
+    await tester.tap(runnerBack, warnIfMissed: false);
+    await tester.pumpAndSettle();
+  }
+  final homeTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Home'),
+  );
+  await tester.ensureVisible(homeTab);
+  await tester.tap(homeTab, warnIfMissed: false);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
   await tester.pumpAndSettle();
 }
 

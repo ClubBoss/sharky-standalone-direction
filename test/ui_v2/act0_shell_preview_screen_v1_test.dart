@@ -3239,26 +3239,31 @@ void main() {
     },
   );
 
-  testWidgets('Debug capture review entry opens active repair board state', (
-    tester,
-  ) async {
-    await pumpTall(
-      tester,
-      host(
-        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
-          mode: Act0ControlledDemoCaptureModeV1.directState,
-          surface: Act0ControlledDemoCaptureSurfaceV1.review,
+  testWidgets(
+    'Debug capture review entry redirects active repair context to Home',
+    (tester) async {
+      await pumpTall(
+        tester,
+        host(
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.review,
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
-    expect(find.text('What to fix next'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_review_fix_next_cta')),
-      findsOneWidget,
-    );
-  });
+      expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
+      expect(find.text('Review'), findsWidgets);
+      expect(
+        find.text('Your active repair is waiting on Home.'),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_fix_next_cta')),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets('Dev menu can open placement manually from Today', (
     tester,
@@ -12327,7 +12332,9 @@ void main() {
     expect(
       find.descendant(
         of: header,
-        matching: find.text('W11-W12 planned foundation chapters, coming later.'),
+        matching: find.text(
+          'W11-W12 planned foundation chapters, coming later.',
+        ),
       ),
       findsOneWidget,
     );
@@ -30511,7 +30518,9 @@ void main() {
     },
   );
 
-  testWidgets('Review frames an open repair as part of Week 1', (tester) async {
+  testWidgets('Review keeps an open repair as Home-owned context', (
+    tester,
+  ) async {
     await pumpCompact(
       tester,
       MaterialApp(
@@ -30548,13 +30557,14 @@ void main() {
       ),
     );
 
-    expect(find.text('Sharky repair'), findsOneWidget);
-    expect(find.text('Repair one clue before it sticks'), findsOneWidget);
+    expect(find.text('Active repair'), findsOneWidget);
+    expect(find.text('Repair context'), findsOneWidget);
+    expect(find.text('Your active repair is waiting on Home.'), findsOneWidget);
     expect(
-      find.text('One calm reread makes this clue easier tomorrow.'),
+      find.text('Home has the next focused hand for this clue.'),
       findsOneWidget,
     );
-    expect(find.text('Repair this clue'), findsOneWidget);
+    expect(find.text('Repair this clue'), findsNothing);
     expect(find.text('Start repair rep'), findsNothing);
     expect(find.byKey(const Key('act0_shell_review_board')), findsNothing);
     expect(

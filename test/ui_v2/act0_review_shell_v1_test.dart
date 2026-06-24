@@ -82,44 +82,54 @@ void main() {
     errorClass: 'expected_action_mismatch',
   );
 
-  testWidgets('Review gives an active clue a card-based repair coach entry', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      reviewHost(
-        const Act0ReviewStateV1(
-          title: 'Review',
-          subtitle: 'Repair the clue that slipped.',
-          weaknessLabel: 'Action read',
-          reason: '',
-          stats: <Act0ReviewStatV1>[],
-          chosenLabel: 'Bet',
-          betterLabel: 'Check',
-          mistakes: <Act0MistakeCardV1>[activeMistake],
+  testWidgets(
+    'Review keeps active repair context on Home without a queue CTA',
+    (tester) async {
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Bet',
+            betterLabel: 'Check',
+            mistakes: <Act0MistakeCardV1>[activeMistake],
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const Key('act0_shell_review_repair_coach_card')),
-      findsOneWidget,
-    );
-    expect(find.text('Repair coach'), findsOneWidget);
-    expect(
-      find.text('The no-bet-yet clue is still the one to fix.'),
-      findsOneWidget,
-    );
-    expect(
-      find.text('Review why the table was telling you to check.'),
-      findsOneWidget,
-    );
-    expect(find.text('Next repair: one no-bet-yet hand'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_review_fix_next_cta')),
-      findsOneWidget,
-    );
-  });
+      expect(
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Active repair'), findsOneWidget);
+      expect(find.text('Repair context'), findsOneWidget);
+      expect(
+        find.text('Your active repair is waiting on Home.'),
+        findsOneWidget,
+      );
+      expect(find.text('1 fix waiting'), findsNothing);
+      expect(
+        find.text('The no-bet-yet clue is still the one to fix.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Review why the table was telling you to check.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Home has the next focused hand for this clue.'),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_fix_next_cta')),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets(
     'Review shows W6 recheck queue card only for real session-drill queue item',
@@ -356,7 +366,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Repair coach'), findsOneWidget);
+    expect(find.text('Active repair'), findsOneWidget);
+    expect(find.text('Repair context'), findsOneWidget);
     expect(find.text('Recovered lately'), findsOneWidget);
     expect(find.textContaining('mastered forever'), findsNothing);
   });

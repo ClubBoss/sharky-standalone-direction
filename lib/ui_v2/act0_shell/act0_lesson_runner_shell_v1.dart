@@ -5186,7 +5186,7 @@ String _feedbackPrimaryResultLabelV1({
   return switch (quality) {
     Act0FeedbackQualityV1.correct => 'Correct',
     Act0FeedbackQualityV1.suboptimal => 'Better clue',
-    Act0FeedbackQualityV1.wrong => 'Missed clue',
+    Act0FeedbackQualityV1.wrong => 'Table clue',
   };
 }
 

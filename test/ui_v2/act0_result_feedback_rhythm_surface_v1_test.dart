@@ -13,54 +13,53 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets(
-    'wrong feedback uses primary result block and missed clue proof',
-    (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Act0FeedbackShellV1(
-              title: 'Good spot to fix.',
-              reason: 'Checking is better because nobody has bet yet.',
-              quality: Act0FeedbackQualityV1.wrong,
-              sharkyLine: 'Good spot to fix.',
-              sharkyMood: Act0SharkyMoodV1.repair,
-              selectedLabel: 'Fold',
-              preferredLabel: 'Check',
-              betterLabel: 'Check',
-              signalProof: const Act0FeedbackSignalProofV1(
-                signalId: 'no_bet_yet',
-                label: 'No bet yet',
-                proofLine: 'Signal: No bet yet',
-              ),
-              contextLabels: const <String>['No bet yet'],
-              onContinue: () {},
+  testWidgets('wrong feedback uses primary result block and table clue proof', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Good spot to fix.',
+            reason: 'Checking is better because nobody has bet yet.',
+            quality: Act0FeedbackQualityV1.wrong,
+            sharkyLine: 'Good spot to fix.',
+            sharkyMood: Act0SharkyMoodV1.repair,
+            selectedLabel: 'Fold',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            signalProof: const Act0FeedbackSignalProofV1(
+              signalId: 'no_bet_yet',
+              label: 'No bet yet',
+              proofLine: 'Signal: No bet yet',
             ),
+            contextLabels: const <String>['No bet yet'],
+            onContinue: () {},
           ),
         ),
-      );
+      ),
+    );
 
-      expect(
-        find.byKey(const Key('act0_shell_feedback_primary_result_block')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_feedback_primary_result_label')),
-        findsOneWidget,
-      );
-      expect(find.text('Missed clue'), findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_feedback_verdict_pill')),
-        findsNothing,
-      );
-      expect(
-        find.text('Nobody had bet yet - that was the clue.'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('No bet yet'), findsNothing);
-      expect(find.textContaining('Signal:'), findsNothing);
-    },
-  );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_primary_result_label')),
+      findsOneWidget,
+    );
+    expect(find.text('Table clue'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_verdict_pill')),
+      findsNothing,
+    );
+    expect(
+      find.text('Nobody had bet yet - that was the clue.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('No bet yet'), findsNothing);
+    expect(find.textContaining('Signal:'), findsNothing);
+  });
 
   testWidgets(
     'wrong feedback leads with the hero action before clue and repair focus',
@@ -311,14 +310,14 @@ void main() {
     expect(find.text('Still fragile'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_repair_receipt_proof_block')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Repair result'), findsOneWidget);
+    expect(find.text('Repair result'), findsNothing);
     expect(
       find.text(
         'Still missed: nobody had bet yet. One more repair hand will help.',
       ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_session_summary_proof_block')),

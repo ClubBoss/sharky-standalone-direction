@@ -192,23 +192,17 @@ class Act0ReviewShellV1 extends StatelessWidget {
       ),
       children: [
         Act0ShellScreenHeaderV1(
-          title: isClean
-              ? _reviewCopyV1(context, fallback: 'Review')
-              : _reviewCopyV1(
-                  context,
-                  atomId: 'review_title',
-                  fallback: review.title,
-                ),
+          title: _reviewCopyV1(context, fallback: 'Review'),
           subtitle: isClean
               ? _reviewCopyV1(context, fallback: 'Confidence repair board')
               : _reviewCopyV1(
                   context,
-                  atomId: 'review_subtitle',
-                  fallback: review.subtitle,
+                  en: 'Your active repair is waiting on Home.',
+                  ru: 'Твой активный разбор ждёт на Главной.',
                 ),
           eyebrow: _reviewHeaderEyebrowV1(
             localeIsRu: localeIsRu,
-            pendingCount: review.mistakes.length,
+            hasActiveRepair: !isClean,
           ),
           eyebrowTone: review.mistakes.isEmpty
               ? Act0ShellTokensV1.primary
@@ -447,9 +441,6 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
     final clueLine = guardedLines.isEmpty
         ? 'This clue is still worth a closer look.'
         : guardedLines.first;
-    final nextLine = guardedLines.length < 2
-        ? 'Next repair: one focused hand'
-        : guardedLines.last;
     final actionLine = mistake.repairActionLabel.trim().isEmpty
         ? mistake.reason
         : mistake.repairActionLabel;
@@ -464,7 +455,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Repair coach',
+            'Repair context',
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
               fontWeight: FontWeight.w900,
@@ -476,7 +467,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
           Text(actionLine, style: Act0ShellTokensV1.muted),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            nextLine,
+            'Home has the next focused hand for this clue.',
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontWeight: FontWeight.w800,
@@ -490,17 +481,11 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
 
 String _reviewHeaderEyebrowV1({
   required bool localeIsRu,
-  required int pendingCount,
+  required bool hasActiveRepair,
 }) {
-  if (pendingCount <= 0) {
-    return localeIsRu ? 'Обзор' : 'Review';
-  }
-  if (pendingCount == 1) {
-    return localeIsRu ? '1 разбор ждёт' : '1 fix waiting';
-  }
-  return localeIsRu
-      ? '$pendingCount ${act0RussianPluralV1(pendingCount, 'разбор', 'разбора', 'разборов')} ждут'
-      : '$pendingCount fixes waiting';
+  return hasActiveRepair
+      ? (localeIsRu ? 'Активный разбор' : 'Active repair')
+      : (localeIsRu ? 'Обзор' : 'Review');
 }
 
 class _ReviewBoardV1 extends StatelessWidget {
