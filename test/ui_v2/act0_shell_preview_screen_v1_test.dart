@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
@@ -29762,6 +29763,155 @@ void main() {
     );
   });
 
+  testWidgets('Block summary renders current-run evidence summary lines', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0BlockCompletionShellV1(
+            summary: const Act0BlockCompletionSummaryV1(
+              lessonTitle: 'Action words',
+              xpEarned: 20,
+              errorCount: 1,
+              taskCount: 2,
+              correctCount: 1,
+              startLevel: 1,
+              endLevel: 1,
+              startXp: 80,
+              endXp: 100,
+              xpTarget: 200,
+              nextLessonTitle: 'Blinds and action order',
+            ),
+            evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+              hasEvidence: true,
+              title: 'This run',
+              runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+              runKind: 'lesson',
+              spotsLine: 'You played 2 spots.',
+              resultLine: '1 correct / 1 to review.',
+              repairFocusLine: 'Main repair focus: position clue.',
+              currentSessionOnly: true,
+            ),
+            onReplay: () {},
+            onContinue: () {},
+            onBackToMap: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_evidence_card')),
+      findsOneWidget,
+    );
+    expect(find.text('This run'), findsOneWidget);
+    expect(find.text('You played 2 spots.'), findsOneWidget);
+    expect(find.text('1 correct / 1 to review.'), findsOneWidget);
+    expect(find.text('Main repair focus: position clue.'), findsOneWidget);
+    expect(find.textContaining('biggest leak'), findsNothing);
+    expect(find.textContaining('weakest area'), findsNothing);
+    expect(find.textContaining('Mastered'), findsNothing);
+    expect(find.textContaining('AI'), findsNothing);
+    expect(find.textContaining('GTO'), findsNothing);
+    expect(find.textContaining('solver'), findsNothing);
+  });
+
+  testWidgets('Block summary hides evidence summary when evidence is empty', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0BlockCompletionShellV1(
+            summary: const Act0BlockCompletionSummaryV1(
+              lessonTitle: 'Action words',
+              xpEarned: 20,
+              errorCount: 0,
+              taskCount: 2,
+              correctCount: 2,
+              startLevel: 1,
+              endLevel: 1,
+              startXp: 80,
+              endXp: 100,
+              xpTarget: 200,
+              nextLessonTitle: 'Blinds and action order',
+            ),
+            evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+              hasEvidence: false,
+              title: 'This run',
+              runId: '',
+              runKind: '',
+              spotsLine: '',
+              resultLine: '',
+              repairFocusLine: null,
+              currentSessionOnly: false,
+            ),
+            onReplay: () {},
+            onContinue: () {},
+            onBackToMap: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_evidence_card')),
+      findsNothing,
+    );
+    expect(find.text('You played 0 spots.'), findsNothing);
+  });
+
+  testWidgets(
+    'Block summary evidence omits repair focus when no safe label exists',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0BlockCompletionShellV1(
+              summary: const Act0BlockCompletionSummaryV1(
+                lessonTitle: 'Action words',
+                xpEarned: 20,
+                errorCount: 1,
+                taskCount: 2,
+                correctCount: 1,
+                startLevel: 1,
+                endLevel: 1,
+                startXp: 80,
+                endXp: 100,
+                xpTarget: 200,
+                nextLessonTitle: 'Blinds and action order',
+              ),
+              evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+                hasEvidence: true,
+                title: 'This run',
+                runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+                runKind: 'lesson',
+                spotsLine: 'You played 2 spots.',
+                resultLine: '1 correct / 1 to review.',
+                repairFocusLine: null,
+                currentSessionOnly: true,
+              ),
+              onReplay: () {},
+              onContinue: () {},
+              onBackToMap: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_evidence_card')),
+        findsOneWidget,
+      );
+      expect(find.text('This run'), findsOneWidget);
+      expect(find.text('Main repair focus:'), findsNothing);
+    },
+  );
+
   testWidgets('Block summary naturalizes first lesson unlock copy', (
     tester,
   ) async {
@@ -31218,6 +31368,34 @@ void main() {
     expect(history.map((record) => record['runId']).toSet(), <Object?>{
       firstRunId,
     });
+  });
+
+  testWidgets('Block completion consumes grouped latest-run evidence', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+
+    await pumpCompact(tester, host());
+    await startCurrentRouteFromHomeV1(tester);
+    await completeCurrentLessonBlock(tester);
+
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_card')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_evidence_card')),
+      findsOneWidget,
+    );
+    expect(find.text('This run'), findsOneWidget);
+    expect(find.text('You played 5 spots.'), findsOneWidget);
+    expect(find.text('5 correct / 0 to review.'), findsOneWidget);
+    expect(find.textContaining('biggest leak'), findsNothing);
+    expect(find.textContaining('weakest area'), findsNothing);
+    expect(find.textContaining('Mastered'), findsNothing);
+    expect(find.textContaining('AI'), findsNothing);
+    expect(find.textContaining('GTO'), findsNothing);
+    expect(find.textContaining('solver'), findsNothing);
   });
 
   testWidgets('New practice/repair launch starts a distinct evidence run key', (

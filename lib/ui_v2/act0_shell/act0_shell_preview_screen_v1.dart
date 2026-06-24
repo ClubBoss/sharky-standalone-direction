@@ -3720,6 +3720,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                evidenceSummary:
+                                    Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+                                      _learningEvidenceHistoryV1,
+                                      repairFocusLabelsById:
+                                          _sessionSummaryRepairFocusLabelsByIdV1(),
+                                    ),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
                                   _selectedTaskId =
@@ -7536,6 +7542,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
     return latest;
+  }
+
+  Map<String, String> _sessionSummaryRepairFocusLabelsByIdV1() {
+    return const <String, String>{
+      'board_cards': 'board cards',
+      'hero_cards': 'hero cards',
+      'hero_cards_board_pot': 'cards and pot',
+      'no_bet_yet': 'no-bet-yet clue',
+      'pot_to_call': 'price clue',
+    };
   }
 
   void _recordAnswer(

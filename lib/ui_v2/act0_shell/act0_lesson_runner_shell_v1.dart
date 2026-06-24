@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -5486,6 +5487,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   const Act0BlockCompletionShellV1({
     super.key,
     required this.summary,
+    this.evidenceSummary,
     required this.onContinue,
     this.onReplay,
     this.onOpenReview,
@@ -5493,6 +5495,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   });
 
   final Act0BlockCompletionSummaryV1 summary;
+  final Act0SessionSummaryEvidenceViewModelV1? evidenceSummary;
   final VoidCallback onContinue;
   final VoidCallback? onReplay;
   final VoidCallback? onOpenReview;
@@ -5515,6 +5518,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ? Act0ShellTokensV1.gold
               : Act0ShellTokensV1.primary)
         : Act0ShellTokensV1.gold;
+    final visibleEvidenceSummary =
+        evidenceSummary != null && evidenceSummary!.hasEvidence
+        ? evidenceSummary
+        : null;
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5829,6 +5836,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
+              if (visibleEvidenceSummary != null) ...[
+                _SessionSummaryEvidenceCardV1(
+                  summary: visibleEvidenceSummary,
+                  tone: celebrateTone,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
               Container(
                 key: const Key('act0_shell_block_summary_next_label'),
                 padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -6118,6 +6132,78 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
+  const _SessionSummaryEvidenceCardV1({
+    required this.summary,
+    required this.tone,
+  });
+
+  final Act0SessionSummaryEvidenceViewModelV1 summary;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    final repairFocusLine = summary.repairFocusLine;
+    return Container(
+      key: const Key('act0_shell_block_summary_evidence_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.86),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.22)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            summary.title,
+            key: const Key('act0_shell_block_summary_evidence_title'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: tone,
+              letterSpacing: 0.35,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            summary.spotsLine,
+            key: const Key('act0_shell_block_summary_evidence_spots'),
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            summary.resultLine,
+            key: const Key('act0_shell_block_summary_evidence_result'),
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (repairFocusLine != null && repairFocusLine.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              repairFocusLine,
+              key: const Key('act0_shell_block_summary_evidence_repair_focus'),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
