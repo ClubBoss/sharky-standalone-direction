@@ -1,0 +1,33 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
+
+void main() {
+  test('W11 source draft has one structured non-routed transfer session', () {
+    const root = 'content/worlds/world11/v1';
+    const sessionPath = '$root/sessions/w11.s01/session.md';
+
+    expect(File('$root/world.md').existsSync(), isTrue);
+    expect(File('$root/index.md').existsSync(), isTrue);
+    expect(File('$root/sessions/index.md').existsSync(), isTrue);
+    expect(File('$root/sessions/w11.s01/notes.md').existsSync(), isTrue);
+
+    final session = File(sessionPath).readAsStringSync();
+    for (final heading in const <String>[
+      '# Session w11.s01',
+      '## Objective',
+      '## Scenario',
+      '## Decision',
+      '## Explanation',
+    ]) {
+      expect(session, contains(heading));
+    }
+
+    expect(
+      kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
+      isEmpty,
+      reason: 'The active source draft must not register W11 as a campaign.',
+    );
+  });
+}
