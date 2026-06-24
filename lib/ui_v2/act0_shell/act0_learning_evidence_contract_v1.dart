@@ -362,6 +362,83 @@ class Act0LearningEvidenceRunSummaryV1 {
   final bool currentSessionOnly;
 }
 
+/// Learner-safe, current-run-only view model for future summary consumers.
+///
+/// This adapter deliberately consumes only [latestRunSummary]. It does not
+/// inspect old ungrouped records, infer trends, or create Profile/Review claims.
+class Act0SessionSummaryEvidenceViewModelV1 {
+  const Act0SessionSummaryEvidenceViewModelV1({
+    required this.hasEvidence,
+    required this.title,
+    required this.runId,
+    required this.runKind,
+    required this.spotsLine,
+    required this.resultLine,
+    required this.repairFocusLine,
+    required this.currentSessionOnly,
+  });
+
+  final bool hasEvidence;
+  final String title;
+  final String runId;
+  final String runKind;
+  final String spotsLine;
+  final String resultLine;
+  final String? repairFocusLine;
+  final bool currentSessionOnly;
+
+  List<String> get claimLines {
+    if (!hasEvidence) {
+      return const <String>[];
+    }
+    return List<String>.unmodifiable(<String>[
+      title,
+      if (spotsLine.isNotEmpty) spotsLine,
+      if (resultLine.isNotEmpty) resultLine,
+      if (repairFocusLine != null && repairFocusLine!.isNotEmpty)
+        repairFocusLine!,
+    ]);
+  }
+
+  static Act0SessionSummaryEvidenceViewModelV1 fromHistory(
+    Act0LearningEvidenceHistoryV1 history, {
+    Map<String, String> repairFocusLabelsById = const <String, String>{},
+  }) {
+    final summary = history.latestRunSummary();
+    if (summary == null || !summary.currentSessionOnly) {
+      return const Act0SessionSummaryEvidenceViewModelV1(
+        hasEvidence: false,
+        title: 'This run',
+        runId: '',
+        runKind: '',
+        spotsLine: '',
+        resultLine: '',
+        repairFocusLine: null,
+        currentSessionOnly: false,
+      );
+    }
+    final repairFocusLabel =
+        repairFocusLabelsById[summary.topRepairFocusId]?.trim() ?? '';
+    final safeRepairFocusLine =
+        repairFocusLabel.isEmpty ||
+            _containsForbiddenSummaryClaim(repairFocusLabel)
+        ? null
+        : 'Main repair focus: $repairFocusLabel.';
+    return Act0SessionSummaryEvidenceViewModelV1(
+      hasEvidence: true,
+      title: 'This run',
+      runId: summary.runId,
+      runKind: summary.runKind,
+      spotsLine:
+          'You played ${summary.spotsPlayed} ${summary.spotsPlayed == 1 ? 'spot' : 'spots'}.',
+      resultLine:
+          '${summary.correctCount} correct / ${summary.incorrectCount} to review.',
+      repairFocusLine: safeRepairFocusLine,
+      currentSessionOnly: true,
+    );
+  }
+}
+
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({
     this.records = const <Act0LearningEvidenceRecordV1>[],
@@ -555,4 +632,28 @@ String _optionalString(Object? raw) => raw?.toString().trim() ?? '';
 int? _nonNegativeInt(Object? raw) {
   final value = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
   return value == null || value < 0 ? null : value;
+}
+
+bool _containsForbiddenSummaryClaim(String raw) {
+  final lower = raw.toLowerCase();
+  const forbiddenPhrases = <String>[
+    'based on your last',
+    'biggest leak',
+    'weakest area',
+  ];
+  if (forbiddenPhrases.any(lower.contains)) {
+    return true;
+  }
+  const forbiddenTokens = <String>{
+    'ai',
+    'gto',
+    'leak',
+    'mastered',
+    'solver',
+    'trend',
+  };
+  final tokens = RegExp(
+    r'[a-z0-9]+',
+  ).allMatches(lower).map((match) => match.group(0) ?? '').toSet();
+  return forbiddenTokens.any(tokens.contains);
 }

@@ -301,6 +301,129 @@ void main() {
     });
     expect(history.latestRunSummary()?.spotsPlayed, 2);
   });
+
+  test(
+    'session summary evidence adapter reads only grouped latest-run records',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(
+            order: 1,
+            runId: 'old-run',
+            runKind: 'lesson',
+            runOrdinal: 1,
+            isCorrect: true,
+            errorType: 'none',
+            repairFocusId: '',
+            resultKind: 'correct',
+          ),
+          _record(
+            order: 2,
+            runId: '',
+            runKind: '',
+            runOrdinal: null,
+            errorType: 'missed_action_read',
+            repairFocusId: 'no_bet_yet',
+          ),
+          _record(
+            order: 3,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 2,
+            isCorrect: true,
+            errorType: 'none',
+            repairFocusId: '',
+            resultKind: 'correct',
+          ),
+          _record(
+            order: 4,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 2,
+            errorType: 'missed_position_read',
+            repairFocusId: 'position_clue',
+            skillAtomId: 'position_read',
+          ),
+        ],
+      );
+
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        history,
+        repairFocusLabelsById: const <String, String>{
+          'position_clue': 'position clue',
+        },
+      );
+
+      expect(viewModel.hasEvidence, isTrue);
+      expect(viewModel.title, 'This run');
+      expect(viewModel.spotsLine, 'You played 2 spots.');
+      expect(viewModel.resultLine, '1 correct / 1 to review.');
+      expect(viewModel.repairFocusLine, 'Main repair focus: position clue.');
+      expect(viewModel.currentSessionOnly, isTrue);
+      expect(viewModel.claimLines.join(' '), isNot(contains('leak')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('Mastered')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('AI')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('GTO')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('solver')));
+    },
+  );
+
+  test(
+    'session summary evidence adapter keeps practice and repair runs separate',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(
+            order: 1,
+            runId: 'practice-run',
+            runKind: 'practice',
+            runOrdinal: 1,
+            isCorrect: true,
+            errorType: 'none',
+            repairFocusId: '',
+            resultKind: 'correct',
+          ),
+          _record(
+            order: 2,
+            runId: 'repair-run',
+            runKind: 'repair',
+            runOrdinal: 2,
+            errorType: 'missed_action_read',
+            repairFocusId: 'no_bet_yet',
+          ),
+        ],
+      );
+
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        history,
+        repairFocusLabelsById: const <String, String>{
+          'no_bet_yet': 'no-bet-yet clue',
+        },
+      );
+
+      expect(viewModel.runId, 'repair-run');
+      expect(viewModel.runKind, 'repair');
+      expect(viewModel.spotsLine, 'You played 1 spot.');
+      expect(viewModel.resultLine, '0 correct / 1 to review.');
+      expect(viewModel.repairFocusLine, 'Main repair focus: no-bet-yet clue.');
+    },
+  );
+
+  test(
+    'session summary evidence adapter falls back safely without evidence',
+    () {
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        const Act0LearningEvidenceHistoryV1(),
+      );
+
+      expect(viewModel.hasEvidence, isFalse);
+      expect(viewModel.claimLines, isEmpty);
+      expect(viewModel.title, 'This run');
+      expect(viewModel.spotsLine, isEmpty);
+      expect(viewModel.resultLine, isEmpty);
+      expect(viewModel.repairFocusLine, isNull);
+    },
+  );
 }
 
 Act0CompletedDecisionV1 _completedDecision({
