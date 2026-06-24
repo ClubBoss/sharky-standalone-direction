@@ -514,11 +514,12 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
     }
   }
 
-  void _handleEvent(DrillUserEventV1 event) {
+  Future<void> _handleEvent(DrillUserEventV1 event) async {
     if (_completed) return;
     final current = _currentDrill;
     if (current == null) return;
     final result = _evaluator.evaluate(current.spec, event);
+    await _persistRetainedRecheckResultEventV1(current, result, event);
     final softPassInfo = result.isSoftPass
         ? _buildSoftPassInfo(current.spec)
         : null;
@@ -613,6 +614,23 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
         evaluation: result,
         chosenActionId: chosenActionId,
       ),
+    );
+  }
+
+  Future<void> _persistRetainedRecheckResultEventV1(
+    SessionDrillItemV1 current,
+    DrillEvalResultV1 result,
+    DrillUserEventV1 event,
+  ) async {
+    final chosenActionId = event.actionId?.trim();
+    if (chosenActionId == null || chosenActionId.isEmpty) return;
+    await persistSessionDrillRetainedResultIfEligibleV1(
+      isRecheckLaunchV1: widget.isRecheckLaunchV1,
+      initialDrillId: widget.initialDrillId,
+      sourceSessionId: widget.sessionId,
+      currentDrill: current,
+      evaluation: result,
+      chosenActionId: chosenActionId,
     );
   }
 
