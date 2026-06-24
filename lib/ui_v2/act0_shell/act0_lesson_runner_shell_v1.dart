@@ -7561,6 +7561,9 @@ class _SeatNodeV1 extends StatelessWidget {
       refined: refined,
       decisionPriceOwnedByTable: decisionPriceOwnedByTable,
     );
+    final stackLabel = (seat.stackLabel ?? '').trim();
+    final showsOpponentStack =
+        !hero && stackLabel.isNotEmpty && markerDisplay.subLabel == stackLabel;
     final highlighted = switch (seatVisualState) {
       _SeatVisualStateV1.passive || _SeatVisualStateV1.selectable => false,
       _ => true,
@@ -7820,16 +7823,23 @@ class _SeatNodeV1 extends StatelessWidget {
                             ),
                           ),
                           if (markerDisplay.subLabel != null)
-                            Text(
-                              markerDisplay.subLabel!,
-                              key: Key(
-                                'act0_shell_seat_sublabel_${seat.seatId}',
-                              ),
-                              style: Act0ShellTokensV1.muted.copyWith(
-                                fontSize: useSlimRefinedSeat
-                                    ? 8.0
-                                    : (refined ? 8.5 : 9),
-                                color: subLabelColor,
+                            KeyedSubtree(
+                              key: showsOpponentStack
+                                  ? Key(
+                                      'act0_shell_opponent_stack_${seat.seatId}',
+                                    )
+                                  : null,
+                              child: Text(
+                                markerDisplay.subLabel!,
+                                key: Key(
+                                  'act0_shell_seat_sublabel_${seat.seatId}',
+                                ),
+                                style: Act0ShellTokensV1.muted.copyWith(
+                                  fontSize: useSlimRefinedSeat
+                                      ? 8.0
+                                      : (refined ? 8.5 : 9),
+                                  color: subLabelColor,
+                                ),
                               ),
                             ),
                         ],
@@ -8064,10 +8074,14 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
     if (seat.isLastAggressor && !active) _SeatMarkerKindV1.aggressor,
     if (active && !hero) _SeatMarkerKindV1.act,
   ];
+  final stackLabel = (seat.stackLabel ?? '').trim();
 
   if (!hero && active) {
     if (decisionPriceOwnedByTable) {
-      return _SeatMarkerDisplayV1(markers: markers);
+      return _SeatMarkerDisplayV1(
+        markers: markers,
+        subLabel: stackLabel.isEmpty ? null : stackLabel,
+      );
     }
     final toActAmountLabel =
         (seat.currentBetLabel ?? seat.blindAmountLabel ?? '').trim();
@@ -8082,7 +8096,6 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
     );
   }
 
-  final stackLabel = (seat.stackLabel ?? '').trim();
   if (stackLabel.isNotEmpty) {
     return _SeatMarkerDisplayV1(markers: markers, subLabel: stackLabel);
   }
@@ -9507,25 +9520,18 @@ class _MiniCardBackV1 extends StatelessWidget {
         padding: const EdgeInsets.all(1.5),
         child: DecoratedBox(
           decoration: BoxDecoration(
+            color: const Color(0xFF101D30),
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: <Color>[
-                Act0ShellTokensV1.runnerSharkBlueDark,
-                Act0ShellTokensV1.runnerTagBlue,
-              ],
+              colors: <Color>[Color(0xFF172B45), Color(0xFF233B59)],
             ),
             borderRadius: BorderRadius.circular(
               Act0ShellTokensV1.radius3xs - 1.5,
             ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
           ),
-          child: Center(
-            child: Icon(
-              Icons.diamond_outlined,
-              size: 12,
-              color: Colors.white.withValues(alpha: 0.3),
-            ),
-          ),
+          child: const SizedBox(key: Key('act0_shell_quiet_card_back')),
         ),
       ),
     );

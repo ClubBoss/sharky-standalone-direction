@@ -16274,6 +16274,7 @@ void main() {
       );
 
       expect(find.byKey(const Key('act0_shell_face_down_card')), findsWidgets);
+      expect(find.byKey(const Key('act0_shell_quiet_card_back')), findsWidgets);
       expect(
         tester
             .widgetList(find.byKey(const Key('act0_shell_face_down_card')))
@@ -18047,6 +18048,7 @@ void main() {
                       displayName: 'Small blind',
                       isSmallBlind: true,
                       isActive: true,
+                      stackLabel: '80 BB',
                       blindAmountLabel: '0.5 BB',
                       currentBetLabel: '0.5 BB',
                       bet: Act0SeatBetStateV1(
@@ -18090,9 +18092,10 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('act0_shell_seat_sublabel_sb_active')),
-        findsNothing,
+        find.byKey(const Key('act0_shell_opponent_stack_sb_active')),
+        findsOneWidget,
       );
+      expect(find.text('80 BB'), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_bet_chip_POST')), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_center_to_call_stat')),
