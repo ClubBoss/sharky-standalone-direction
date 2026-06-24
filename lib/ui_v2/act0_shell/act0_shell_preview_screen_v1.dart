@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
@@ -686,6 +687,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
 
 class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
+  Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
+      const Act0LearningEvidenceHistoryV1();
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -2428,6 +2431,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recentSkillGains
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
+      _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -2650,6 +2654,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffKey: _dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
+      learningEvidenceHistory: _learningEvidenceHistoryV1,
     );
     final generation = ++_progressPersistGeneration;
     unawaited(_writePersistedProgress(snapshot, generation));
@@ -2664,6 +2669,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     await prefs.setString(_progressPrefsKey, snapshot.toStorageString());
+  }
+
+  void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
+    _learningEvidenceHistoryV1 = _learningEvidenceHistoryV1
+        .appendCompletedDecision(decision);
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {
@@ -3971,7 +3981,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   );
                                 }),
                                 onCompletedDecision: (decision) {
-                                  _latestCompletedDecisionV1 = decision;
+                                  setState(() {
+                                    _latestCompletedDecisionV1 = decision;
+                                    _appendLearningEvidenceV1(decision);
+                                  });
+                                  _persistProgress();
                                 },
                                 onChooseSeat: (seatId) => setState(() {
                                   for (final option
@@ -10288,6 +10302,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffKey = '',
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
+    this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
   });
 
   final Set<String> completedTaskIds;
@@ -10312,6 +10327,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffKey;
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
+  final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
 
   String toStorageString() {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
@@ -10324,7 +10340,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 10,
+      'schemaVersion': 11,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -10358,6 +10374,7 @@ class _Act0PersistedProgressV1 {
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
+      'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       if (firstValueReturnCarry != null)
         'firstValueReturnCarry': firstValueReturnCarry!.toJson(),
       if (resumeSelectedOptionId != null)
@@ -10377,7 +10394,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v10 as the shell snapshot evolves.
+    // Accept v1-v11 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -10387,7 +10404,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 7 &&
         schemaVersion != 8 &&
         schemaVersion != 9 &&
-        schemaVersion != 10) {
+        schemaVersion != 10 &&
+        schemaVersion != 11) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -10437,6 +10455,11 @@ class _Act0PersistedProgressV1 {
     final firstValueReturnCarry = _Act0FirstValueReceiptCarryV1.tryParse(
       map['firstValueReturnCarry'],
     );
+    final learningEvidenceHistory =
+        Act0LearningEvidenceHistoryV1.tryParse(
+          map['learningEvidenceHistory'],
+        ) ??
+        const Act0LearningEvidenceHistoryV1();
     if (selectedWorldId.isEmpty ||
         selectedLessonId.isEmpty ||
         selectedTaskId.isEmpty) {
@@ -10467,6 +10490,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffKey: dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
+      learningEvidenceHistory: learningEvidenceHistory,
     );
   }
 

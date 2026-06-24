@@ -31133,15 +31133,54 @@ void main() {
       await tester.pumpAndSettle();
 
       final decoded = await persistedProgressMapFromPrefsV1();
-      expect(decoded['schemaVersion'], 9);
+      expect(decoded['schemaVersion'], 11);
       expect(decoded['retentionSequence'], 0);
       expect(decoded['retentionMemory'], isEmpty);
+      expect(decoded['learningEvidenceHistory'], isEmpty);
       expect(
         decoded['selectedWorldId'],
         Act0ShellStateV1.sample.selectedWorldId,
       );
     },
   );
+
+  testWidgets('Persisted learning evidence history round-trips', (
+    tester,
+  ) async {
+    final snapshot = minimalPersistedProgressMapV1(schemaVersion: 11)
+      ..['learningEvidenceHistory'] = <Map<String, Object?>>[
+        <String, Object?>{
+          'schemaVersion': 1,
+          'recordId':
+              'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+          'createdOrder': 1,
+          'worldId': 'world_1',
+          'lessonId': 'fold_check_call_raise',
+          'taskId': 'actions_raise_drill',
+          'choiceId': 'fold',
+          'expectedChoiceId': 'check',
+          'isCorrect': false,
+          'errorType': 'missed_action_read',
+          'repairFocusId': 'no_bet_yet',
+          'skillAtomId': 'action_read',
+          'decisionTimeBucket': 'under_3s',
+          'resultKind': 'incorrect',
+        },
+      ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    final history = decoded['learningEvidenceHistory'] as List<dynamic>;
+    expect(history, hasLength(1));
+    expect(history.single['recordId'], contains('|fold|1'));
+    expect(history.single['skillAtomId'], 'action_read');
+  });
 
   testWidgets('Persisted retentionSequence round-trips', (tester) async {
     SharedPreferences.setMockInitialValues(<String, Object>{

@@ -1056,7 +1056,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
-    _emitCompletedDecision(option, Act0CompletedDecisionKindV1.actionList);
+    final decisionTimeBucket = _completedDecisionTimeBucket();
     _maybeEmitUserChoiceTelemetry(option);
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
@@ -1099,6 +1099,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       ),
     );
     widget.onChooseOption(option);
+    _emitCompletedDecision(
+      option,
+      Act0CompletedDecisionKindV1.actionList,
+      decisionTimeBucket: decisionTimeBucket,
+    );
   }
 
   void _handleChooseSeat(String seatId) {
@@ -1106,10 +1111,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       (candidate) => candidate?.seatId == seatId,
       orElse: () => null,
     );
+    widget.onChooseSeat?.call(seatId);
     if (option != null) {
       _emitCompletedDecision(option, Act0CompletedDecisionKindV1.seat);
     }
-    widget.onChooseSeat?.call(seatId);
   }
 
   void _handleConfirmSizingPreset() {
@@ -1120,16 +1125,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
+    widget.onConfirmSizingPreset?.call();
     if (option != null) {
       _emitCompletedDecision(option, Act0CompletedDecisionKindV1.sizing);
     }
-    widget.onConfirmSizingPreset?.call();
   }
 
   void _emitCompletedDecision(
     Act0RunnerOptionV1 option,
-    Act0CompletedDecisionKindV1 kind,
-  ) {
+    Act0CompletedDecisionKindV1 kind, {
+    String? decisionTimeBucket,
+  }) {
     final taskKey =
         '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|'
         '$_stableTaskTelemetryId|${kind.name}';
@@ -1177,7 +1183,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         selectedId: option.id,
         expectedId: expectedOption?.id,
         isCorrect: option.isCorrect,
-        decisionTimeBucket: _completedDecisionTimeBucket(),
+        decisionTimeBucket:
+            decisionTimeBucket ?? _completedDecisionTimeBucket(),
         taskFamily: widget.selectedTaskFamily,
         resultKind: resultKind,
         errorType: errorType,

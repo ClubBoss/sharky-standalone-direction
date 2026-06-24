@@ -1,5 +1,57 @@
 import 'dart:convert';
 
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+
+/// Converts the normalized internal completion payload into a durable record.
+///
+/// Incomplete payloads are deliberately skipped rather than populated from UI
+/// state or guessed fallbacks.
+Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
+  Act0CompletedDecisionV1 decision, {
+  required int createdOrder,
+}) {
+  final worldId = decision.worldId?.trim();
+  final lessonId = decision.lessonId.trim();
+  final taskId = decision.taskId.trim();
+  final choiceId = decision.selectedId.trim();
+  final expectedChoiceId = decision.expectedId?.trim();
+  final errorType = decision.errorType?.trim();
+  final skillAtomId = decision.skillAtomId?.trim();
+  final decisionTimeBucket = decision.decisionTimeBucket.trim();
+  final resultKind = decision.resultKind.trim();
+  if (createdOrder < 0 ||
+      worldId == null ||
+      worldId.isEmpty ||
+      lessonId.isEmpty ||
+      taskId.isEmpty ||
+      choiceId.isEmpty ||
+      expectedChoiceId == null ||
+      expectedChoiceId.isEmpty ||
+      errorType == null ||
+      errorType.isEmpty ||
+      skillAtomId == null ||
+      skillAtomId.isEmpty ||
+      decisionTimeBucket.isEmpty ||
+      resultKind.isEmpty) {
+    return null;
+  }
+  return Act0LearningEvidenceRecordV1(
+    recordId: decision.attemptKey,
+    createdOrder: createdOrder,
+    worldId: worldId,
+    lessonId: lessonId,
+    taskId: taskId,
+    choiceId: choiceId,
+    expectedChoiceId: expectedChoiceId,
+    isCorrect: decision.isCorrect,
+    errorType: errorType,
+    repairFocusId: decision.repairFocusId?.trim() ?? '',
+    skillAtomId: skillAtomId,
+    decisionTimeBucket: decisionTimeBucket,
+    resultKind: resultKind,
+  );
+}
+
 /// Evidence-only record for a completed Act0 decision.
 ///
 /// This contract deliberately has no learner-facing interpretation fields.
@@ -166,6 +218,30 @@ class Act0LearningEvidenceHistoryV1 {
               next.sublist(next.length - maxRecords),
             ),
     );
+  }
+
+  /// Appends a normalized completion exactly once by its stable attempt key.
+  ///
+  /// Incomplete completions remain skipped; callers must not supplement them
+  /// from presentation state.
+  Act0LearningEvidenceHistoryV1 appendCompletedDecision(
+    Act0CompletedDecisionV1 decision,
+  ) {
+    if (records.any((record) => record.recordId == decision.attemptKey)) {
+      return this;
+    }
+    final createdOrder =
+        records.fold<int>(
+          0,
+          (maxOrder, record) =>
+              record.createdOrder > maxOrder ? record.createdOrder : maxOrder,
+        ) +
+        1;
+    final record = act0LearningEvidenceRecordFromCompletedDecisionV1(
+      decision,
+      createdOrder: createdOrder,
+    );
+    return record == null ? this : append(record);
   }
 
   List<Act0LearningEvidenceRecordV1> lastN(int count) {
