@@ -7,6 +7,7 @@ import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -729,6 +730,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onSelectSizingPreset,
     this.onConfirmSizingPreset,
     this.onChooseSeat,
+    this.onCompletedDecision,
     required this.onContinueReview,
     this.completionSummary,
     this.firstValueReceiptLine,
@@ -757,6 +759,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final ValueChanged<Act0SizingPresetV1>? onSelectSizingPreset;
   final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
+  final ValueChanged<Act0CompletedDecisionV1>? onCompletedDecision;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
@@ -791,6 +794,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   String _taskShownTelemetryKey = '';
   String _userChoiceTelemetryKey = '';
   String _feedbackViewedTelemetryKey = '';
+  String _completedDecisionTaskKey = '';
+  int _completedDecisionOrdinal = 0;
   String _showdownInteractionKey = '';
   final Stopwatch _decisionTelemetryStopwatch = Stopwatch();
   List<String> _interactiveHighlightedCardIds = const <String>[];
@@ -1051,6 +1056,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    _emitCompletedDecision(option, Act0CompletedDecisionKindV1.actionList);
     _maybeEmitUserChoiceTelemetry(option);
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
@@ -1093,6 +1099,87 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       ),
     );
     widget.onChooseOption(option);
+  }
+
+  void _handleChooseSeat(String seatId) {
+    final option = widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
+      (candidate) => candidate?.seatId == seatId,
+      orElse: () => null,
+    );
+    if (option != null) {
+      _emitCompletedDecision(option, Act0CompletedDecisionKindV1.seat);
+    }
+    widget.onChooseSeat?.call(seatId);
+  }
+
+  void _handleConfirmSizingPreset() {
+    final presetId = widget.runner.selectedPresetId;
+    final option = presetId == null
+        ? null
+        : widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
+            (candidate) => candidate?.id == presetId,
+            orElse: () => null,
+          );
+    if (option != null) {
+      _emitCompletedDecision(option, Act0CompletedDecisionKindV1.sizing);
+    }
+    widget.onConfirmSizingPreset?.call();
+  }
+
+  void _emitCompletedDecision(
+    Act0RunnerOptionV1 option,
+    Act0CompletedDecisionKindV1 kind,
+  ) {
+    final taskKey =
+        '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|'
+        '$_stableTaskTelemetryId|${kind.name}';
+    if (_completedDecisionTaskKey != taskKey) {
+      _completedDecisionTaskKey = taskKey;
+      _completedDecisionOrdinal = 0;
+    }
+    _completedDecisionOrdinal += 1;
+    final expectedOption = widget.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (candidate) => candidate?.isCorrect ?? false,
+          orElse: () => null,
+        );
+    final worldId = widget.selectedWorldId?.trim();
+    final normalizedWorldId = worldId == null || worldId.isEmpty
+        ? null
+        : worldId;
+    widget.onCompletedDecision?.call(
+      Act0CompletedDecisionV1(
+        attemptKey:
+            'v1|${normalizedWorldId ?? ''}|$_stableLessonTelemetryId|'
+            '$_stableTaskTelemetryId|${kind.name}|${option.id}|'
+            '$_completedDecisionOrdinal',
+        worldId: normalizedWorldId,
+        lessonId: _stableLessonTelemetryId,
+        taskId: _stableTaskTelemetryId,
+        sourceTaskId: _stableTaskTelemetryId,
+        decisionKind: kind,
+        selectedId: option.id,
+        expectedId: expectedOption?.id,
+        isCorrect: option.isCorrect,
+        decisionTimeBucket: _completedDecisionTimeBucket(),
+        taskFamily: widget.selectedTaskFamily,
+      ),
+    );
+  }
+
+  String _completedDecisionTimeBucket() {
+    if (!_decisionTelemetryStopwatch.isRunning) {
+      return 'unknown';
+    }
+    final elapsed = _decisionTelemetryStopwatch.elapsed;
+    if (elapsed < const Duration(seconds: 3)) {
+      return 'under_3s';
+    }
+    if (elapsed < const Duration(seconds: 10)) {
+      return '3_to_10s';
+    }
+    return 'over_10s';
   }
 
   bool _allowsInteractiveShowdown(Act0RunnerStateV1 runner) {
@@ -1909,7 +1996,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           ? theoryRecallPeek
                           : _SizingConfirmPanelV1(
                               selectedPreset: runner.selectedPreset,
-                              onConfirm: widget.onConfirmSizingPreset,
+                              onConfirm: _handleConfirmSizingPreset,
                             ),
                     )
                   : _ActionPromptPanelV1(
@@ -2043,7 +2130,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   highlightedCardIds: mergedHighlightIds,
                   interactiveCalloutLabel: interactiveCallout,
                   onBoardCardTap: _onBoardTappedForShowdown,
-                  onChooseSeat: widget.onChooseSeat,
+                  onChooseSeat: _handleChooseSeat,
                   visualVariant: widget.tableVisualVariant,
                   showFocusBadge: !_showBottomLearningRail,
                   showRepairCallout: !_isReview,

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -684,6 +685,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
 }
 
 class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
+  Act0CompletedDecisionV1? _latestCompletedDecisionV1;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -3968,6 +3970,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     selectedTask: playSelectedTask,
                                   );
                                 }),
+                                onCompletedDecision: (decision) {
+                                  _latestCompletedDecisionV1 = decision;
+                                },
                                 onChooseSeat: (seatId) => setState(() {
                                   for (final option
                                       in activePlayRunner.options) {
