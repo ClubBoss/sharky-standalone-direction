@@ -39,10 +39,6 @@ class Act0ProfileShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showRecentProof =
-        profile.recentSkillGains.isNotEmpty ||
-        profile.mistakesFixedLine.trim().isNotEmpty ||
-        profile.strongCategories.isNotEmpty;
     return ListView(
       key: const Key('act0_shell_profile_screen'),
       cacheExtent: 1200,
@@ -55,17 +51,11 @@ class Act0ProfileShellV1 extends StatelessWidget {
       children: [
         _ProfileHeaderBandV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
-        if (showRecentProof) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ProfileRecentGainsCardV1(profile: profile),
-        ],
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileHeroCardV1(profile: profile),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileProgressProofCardV1(profile: profile),
+        _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileConsistencyCardV1(profile: profile),
+        _ProfileProgressProofCardV1(profile: profile),
         if (profile.skillStats.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileSkillStatsStripV1(profile: profile),
@@ -167,7 +157,7 @@ String _profileHeaderSublineV1(
 ) {
   return _profileCopyV1(
     context,
-    en: 'Your progress rhythm',
+    en: 'Learning profile',
     ru: 'Твой покерный рост',
   );
 }
@@ -961,6 +951,32 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
               for (final tile in tiles.take(4)) _ProfileProofTileV1(tile: tile),
             ],
           ),
+          if (profile.streakLast7.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Row(
+              children: [
+                Expanded(
+                  child: _CompactStreakStripV1(days: profile.streakLast7),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                OutlinedButton(
+                  key: const Key('act0_shell_profile_rhythm_week_button'),
+                  onPressed: () => _showRhythmWeekSheet(context, profile),
+                  style: Act0ShellTokensV1.quietButtonStyle().copyWith(
+                    minimumSize: const WidgetStatePropertyAll(
+                      Size(0, Act0ShellTokensV1.compactCtaHeight),
+                    ),
+                    padding: const WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    ),
+                  ),
+                  child: Text(
+                    _profileCopyV1(context, en: 'View week', ru: 'Неделя'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -1023,7 +1039,7 @@ class _ProfileProofTileV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 84),
+      constraints: const BoxConstraints(minHeight: 72),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Act0VisualCanonV1.navySurface.withOpacity(0.58),
@@ -1050,7 +1066,7 @@ class _ProfileProofTileV1 extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
           Text(
             tile.value,
             maxLines: 2,
@@ -1191,12 +1207,8 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: profile.recentSkillGains.isEmpty
-                  ? 'Your strongest signals right now.'
-                  : 'Your strongest signals right now.',
-              ru: profile.recentSkillGains.isEmpty
-                  ? 'Твои главные сигналы сейчас.'
-                  : 'Твои главные сигналы сейчас.',
+              en: 'Current skill signals from this route.',
+              ru: 'Текущие сигналы навыков из этого маршрута.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
@@ -1214,7 +1226,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '${_profileCopyV1(context, en: 'Recent progress', ru: 'Последние приросты')} · ${recentGains.take(2).map((gain) => '${gain.label} +${gain.gain}').join('  ·  ')}',
+                '${_profileCopyV1(context, en: 'Recent gain', ru: 'Последний прирост')} · ${recentGains.take(2).map((gain) => '${gain.label} +${gain.gain}').join('  ·  ')}',
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.gold,
                   letterSpacing: 0,

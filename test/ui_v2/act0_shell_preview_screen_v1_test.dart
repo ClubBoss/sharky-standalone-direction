@@ -7886,12 +7886,14 @@ void main() {
     },
   );
 
-  testWidgets('Profile habit section shows streak nudge', (tester) async {
+  testWidgets('Profile progress proof shows compact rhythm affordance', (
+    tester,
+  ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
 
     expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.byKey(const Key('act0_shell_profile_streak_nudge')),
+      find.byKey(const Key('act0_shell_profile_progress_proof')),
       180,
       scrollable: find.descendant(
         of: find.byKey(const Key('act0_shell_profile_screen')),
@@ -7900,24 +7902,17 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(
+      find.byKey(const Key('act0_shell_profile_progress_proof')),
+      findsOneWidget,
+    );
+    expect(find.text('Rhythm'), findsWidgets);
+    expect(
+      find.byKey(const Key('act0_shell_profile_rhythm_week_button')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_profile_streak_nudge')),
-      findsOneWidget,
-    );
-    expect(
-      find.text('Week 1: short returns keep one table clue warm.'),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_consistency_active_days')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_streak_icon')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_momentum_line')),
-      findsOneWidget,
+      findsNothing,
     );
   });
 
@@ -11263,7 +11258,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile consistency card localizes momentum copy and keeps headroom in Russian',
+    'Profile compact progress proof keeps rhythm copy short in Russian host',
     (tester) async {
       await pumpTall(
         tester,
@@ -11271,7 +11266,7 @@ void main() {
       );
 
       await tester.scrollUntilVisible(
-        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        find.byKey(const Key('act0_shell_profile_progress_proof')),
         180,
         scrollable: find.descendant(
           of: find.byKey(const Key('act0_shell_profile_screen')),
@@ -11280,26 +11275,16 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Ритм'), findsWidgets);
-      expect(find.textContaining('дня'), findsOneWidget);
-
-      final support = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_profile_consistency_support_text')),
-      );
-
-      expect(support.maxLines, 2);
-      expect(support.overflow, TextOverflow.fade);
       expect(
-        find.byKey(const Key('act0_shell_profile_momentum_text')),
+        find.byKey(const Key('act0_shell_profile_progress_proof')),
         findsOneWidget,
       );
+      expect(find.text('Progress proof'), findsOneWidget);
+      expect(find.text('Rhythm'), findsWidgets);
       expect(
-        find.text(
-          'Серия уже держится. Ещё несколько спокойных заходов — и этот ритм закрепится.',
-        ),
+        find.byKey(const Key('act0_shell_profile_streak_nudge')),
         findsNothing,
       );
-      expect(support.data, 'Постоянство уже начинает превращаться в ощущение.');
     },
   );
 
@@ -11590,7 +11575,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('You'), findsWidgets);
-      expect(find.text('Your progress rhythm'), findsOneWidget);
+      expect(find.text('Learning profile'), findsOneWidget);
       expect(find.text('Progress proof'), findsOneWidget);
       expect(find.textContaining('becoming'), findsOneWidget);
       expect(
@@ -11665,58 +11650,54 @@ void main() {
     expect(find.text('Table sense +5  ·  Table sense +5'), findsNothing);
   });
 
-  testWidgets(
-    'Profile first-start tools move behind a compact utility entry and localize cleanly in Russian',
-    (tester) async {
-      final sample = Act0ShellStateV1.sample;
+  testWidgets('Profile first-start tools move behind a compact utility entry', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          locale: const Locale('ru'),
-          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          home: Scaffold(
-            body: Act0ProfileShellV1(
-              profile: sample.profile,
-              onRetakePlacement: () {},
-              onReplayWelcome: () {},
-            ),
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('ru'),
+        supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        home: Scaffold(
+          body: Act0ProfileShellV1(
+            profile: sample.profile,
+            onRetakePlacement: () {},
+            onReplayWelcome: () {},
           ),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('act0_shell_profile_first_start_tools_button')),
-        240,
-        scrollable: find.descendant(
-          of: find.byKey(const Key('act0_shell_profile_screen')),
-          matching: find.byType(Scrollable),
-        ),
-      );
-      await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('act0_shell_profile_first_start_tools_button')),
+      240,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_screen')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('act0_shell_profile_first_start_tools')),
-        findsNothing,
-      );
-      await tester.tap(
-        find.byKey(const Key('act0_shell_profile_first_start_tools_button')),
-      );
-      await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_profile_first_start_tools')),
+      findsNothing,
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_profile_first_start_tools_button')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('act0_shell_profile_first_start_tools')),
-        findsOneWidget,
-      );
-      expect(find.text('Инструменты старта'), findsOneWidget);
-      expect(find.text('Повторить знакомство'), findsOneWidget);
-      expect(find.text('Пройти плейсмент снова'), findsOneWidget);
-      expect(find.text('First start tools'), findsNothing);
-      expect(find.text('Replay welcome'), findsNothing);
-      expect(find.text('Retake placement'), findsNothing);
-    },
-  );
+    expect(
+      find.byKey(const Key('act0_shell_profile_first_start_tools')),
+      findsOneWidget,
+    );
+    expect(find.text('First start tools'), findsOneWidget);
+    expect(find.text('Replay welcome'), findsOneWidget);
+    expect(find.text('Retake placement'), findsOneWidget);
+  });
 
   testWidgets('Learn Path shows lesson cards and safe bottom padding', (
     tester,
@@ -27231,7 +27212,7 @@ void main() {
       );
 
       await tester.scrollUntilVisible(
-        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        find.byKey(const Key('act0_shell_profile_progress_proof')),
         200,
         scrollable: find.descendant(
           of: find.byKey(const Key('act0_shell_profile_screen')),
@@ -27449,7 +27430,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile compact recent-progress stack keeps one light summary above payoff rows',
+    'Profile compact progress stack avoids repeated mood-copy sections',
     (tester) async {
       await pumpCompact(
         tester,
@@ -27508,7 +27489,8 @@ void main() {
         find.byKey(const Key('act0_shell_profile_skill_stats')),
         findsOneWidget,
       );
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
+      expect(find.textContaining('Recent gain'), findsOneWidget);
       expect(find.textContaining('Table sense +6'), findsWidgets);
       expect(
         find.text(
@@ -27522,7 +27504,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile ties progress, identity, focus, and strengths into one story',
+    'Profile ties identity, current focus, and progress into one compressed story',
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -27601,7 +27583,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Progress proof'), findsOneWidget);
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
+      expect(find.textContaining('Recent gain'), findsOneWidget);
       expect(find.textContaining('Table sense +6'), findsWidgets);
       expect(find.text('82% practice accuracy'), findsNothing);
       expect(find.textContaining('Base: '), findsNothing);
@@ -27609,80 +27592,93 @@ void main() {
     },
   );
 
-  testWidgets('Profile keeps next milestone above rhythm support', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(1024, 1366);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'Profile keeps identity above current focus and compact progress',
+    (tester) async {
+      tester.view.physicalSize = const Size(1024, 1366);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Act0ProfileShellV1(
-            profile: const Act0ProfileStateV1(
-              playerName: 'New player',
-              level: 'Level 1',
-              xpLine: '120 / 200 XP',
-              lessonsLine: '8 of 24 tasks complete',
-              accuracyLine: '82% practice accuracy',
-              qualityLine: '1 perfect clear',
-              consistencyActiveDays: 3,
-              achievements: <Act0AchievementV1>[],
-              streakLine: '3 day streak',
-              streakDays: 3,
-              strongCategories: <String>['Table sense'],
-              weakCategories: <String>['Action order'],
-              recentSkillGains: <Act0SkillGainV1>[
-                Act0SkillGainV1(
-                  label: 'Table sense',
-                  gain: 6,
-                  source: 'Action words',
-                ),
-              ],
-              recommendedFocusTitle: 'Fold, check, call, raise',
-              recommendedFocusBody:
-                  'Name each action before the table asks you.',
-              recommendedFocusCtaLabel: 'Continue',
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ProfileShellV1(
+              profile: const Act0ProfileStateV1(
+                playerName: 'New player',
+                level: 'Level 1',
+                xpLine: '120 / 200 XP',
+                lessonsLine: '8 of 24 tasks complete',
+                accuracyLine: '82% practice accuracy',
+                qualityLine: '1 perfect clear',
+                consistencyActiveDays: 3,
+                achievements: <Act0AchievementV1>[],
+                streakLine: '3 day streak',
+                streakDays: 3,
+                strongCategories: <String>['Table sense'],
+                weakCategories: <String>['Action order'],
+                recentSkillGains: <Act0SkillGainV1>[
+                  Act0SkillGainV1(
+                    label: 'Table sense',
+                    gain: 6,
+                    source: 'Action words',
+                  ),
+                ],
+                recommendedFocusTitle: 'Fold, check, call, raise',
+                recommendedFocusBody:
+                    'Name each action before the table asks you.',
+                recommendedFocusCtaLabel: 'Continue',
+              ),
+              onRetakePlacement: () {},
             ),
-            onRetakePlacement: () {},
           ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const Key('act0_shell_profile_next_milestone')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_identity_summary')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_streak_nudge')),
-      findsOneWidget,
-    );
-    expect(
-      tester
-          .getTopLeft(
-            find.byKey(const Key('act0_shell_profile_next_milestone')),
-          )
-          .dy,
-      lessThan(
+      expect(
+        find.byKey(const Key('act0_shell_profile_next_milestone')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_identity_summary')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        findsNothing,
+      );
+      expect(
+        tester
+            .getTopLeft(find.byKey(const Key('act0_shell_profile_hero_card')))
+            .dy,
+        lessThan(
+          tester
+              .getTopLeft(
+                find.byKey(const Key('act0_shell_profile_next_milestone')),
+              )
+              .dy,
+        ),
+      );
+      expect(
         tester
             .getTopLeft(
-              find.byKey(const Key('act0_shell_profile_streak_nudge')),
+              find.byKey(const Key('act0_shell_profile_next_milestone')),
             )
             .dy,
-      ),
-    );
-  });
+        lessThan(
+          tester
+              .getTopLeft(
+                find.byKey(const Key('act0_shell_profile_progress_proof')),
+              )
+              .dy,
+        ),
+      );
+    },
+  );
 
   testWidgets(
-    'Profile elevates current focus and recent proof above generic metrics',
+    'Profile keeps identity first, then current focus and compact progress proof',
     (tester) async {
       tester.view.physicalSize = const Size(1024, 1366);
       tester.view.devicePixelRatio = 1.0;
@@ -27727,26 +27723,26 @@ void main() {
       final focusCard = find.byKey(
         const Key('act0_shell_profile_next_milestone'),
       );
-      final recentProof = find.byKey(
-        const Key('act0_shell_profile_recent_skill_gains'),
-      );
       final heroCard = find.byKey(const Key('act0_shell_profile_hero_card'));
       final progressProof = find.byKey(
         const Key('act0_shell_profile_progress_proof'),
       );
 
       expect(focusCard, findsOneWidget);
-      expect(recentProof, findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_profile_recent_skill_gains')),
+        findsNothing,
+      );
       expect(heroCard, findsOneWidget);
       expect(progressProof, findsOneWidget);
       expect(find.text('Current focus'), findsOneWidget);
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
       expect(
-        tester.getTopLeft(focusCard).dy,
-        lessThan(tester.getTopLeft(heroCard).dy),
+        tester.getTopLeft(heroCard).dy,
+        lessThan(tester.getTopLeft(focusCard).dy),
       );
       expect(
-        tester.getTopLeft(recentProof).dy,
+        tester.getTopLeft(focusCard).dy,
         lessThan(tester.getTopLeft(progressProof).dy),
       );
     },
@@ -27831,7 +27827,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile keeps identity summary above rhythm so the first story stays focused',
+    'Profile keeps identity summary above compact progress so the first story stays focused',
     (tester) async {
       await pumpCompact(
         tester,
@@ -27878,8 +27874,8 @@ void main() {
       final identitySummary = find.byKey(
         const Key('act0_shell_profile_identity_summary'),
       );
-      final rhythmCard = find.byKey(
-        const Key('act0_shell_profile_streak_nudge'),
+      final progressCard = find.byKey(
+        const Key('act0_shell_profile_progress_proof'),
       );
 
       expect(identitySummary, findsOneWidget);
@@ -27887,10 +27883,14 @@ void main() {
         find.byKey(const Key('act0_shell_profile_next_milestone')),
         findsOneWidget,
       );
-      expect(rhythmCard, findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_profile_streak_nudge')),
+        findsNothing,
+      );
+      expect(progressCard, findsOneWidget);
       expect(
         tester.getTopLeft(identitySummary).dy,
-        lessThan(tester.getTopLeft(rhythmCard).dy),
+        lessThan(tester.getTopLeft(progressCard).dy),
       );
       expect(
         find.byKey(const Key('act0_shell_profile_story_support_band')),
@@ -27956,7 +27956,8 @@ void main() {
         find.byKey(const Key('act0_shell_profile_skill_stats')),
         findsOneWidget,
       );
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
+      expect(find.textContaining('Recent gain'), findsOneWidget);
       expect(find.textContaining('Betting decisions +4'), findsOneWidget);
       expect(find.text('Betting decisions'), findsWidgets);
       expect(find.text('Rhythm'), findsWidgets);
@@ -28108,7 +28109,8 @@ void main() {
         find.byKey(const Key('act0_shell_profile_progress_proof')),
         findsOneWidget,
       );
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
+      expect(find.textContaining('Recent gain'), findsOneWidget);
       expect(find.textContaining('Table sense +6'), findsOneWidget);
       expect(find.textContaining('82% practice accuracy'), findsNothing);
       expect(find.textContaining('retentionSequence'), findsNothing);
@@ -28118,7 +28120,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile recent progress keeps one dominant proof before support detail',
+    'Profile skill snapshot keeps recent gains compact without extra progress sections',
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -28185,7 +28187,8 @@ void main() {
       );
 
       expect(recentProgress, findsOneWidget);
-      expect(find.textContaining('Recent progress'), findsOneWidget);
+      expect(find.textContaining('Recent progress'), findsNothing);
+      expect(find.textContaining('Recent gain'), findsOneWidget);
       expect(find.textContaining('Table sense +6'), findsOneWidget);
       expect(find.textContaining('Board reading +3'), findsOneWidget);
       expect(
@@ -31059,28 +31062,28 @@ void main() {
     expect(find.text('Sun'), findsOneWidget);
   });
 
-  testWidgets('Profile streak calendar localizes day labels in Russian', (
-    tester,
-  ) async {
-    await pumpTall(
-      tester,
-      host(tab: Act0ShellTabV1.profile, locale: const Locale('ru')),
-    );
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Profile streak calendar keeps day labels readable in Russian host',
+    (tester) async {
+      await pumpTall(
+        tester,
+        host(tab: Act0ShellTabV1.profile, locale: const Locale('ru')),
+      );
+      await tester.pumpAndSettle();
 
-    final listKey = find.byKey(const Key('act0_shell_profile_screen'));
-    await tester.drag(listKey, const Offset(0, -400));
-    await tester.pumpAndSettle();
+      final listKey = find.byKey(const Key('act0_shell_profile_screen'));
+      await tester.drag(listKey, const Offset(0, -400));
+      await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_profile_rhythm_week_button')),
-    );
-    await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_profile_rhythm_week_button')),
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.text('Пн'), findsOneWidget);
-    expect(find.text('Вс'), findsOneWidget);
-    expect(find.text('Mon'), findsNothing);
-  });
+      expect(find.text('Mon'), findsOneWidget);
+      expect(find.text('Sun'), findsOneWidget);
+    },
+  );
   // ── R2: Daily Goal Card CTA ────────────────────────────────────────────────
 
   testWidgets('Home focus row shows Practice now when goal not done', (
