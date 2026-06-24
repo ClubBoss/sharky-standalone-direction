@@ -13,8 +13,8 @@ name the visible signal: position, player tendency, board texture, or price.
    before continuing with a draw.
 2. A late-position player opens; identify your position before considering your
    hand strength.
-3. A loose caller remains on a wet flop; name the board texture before deciding
-   whether a value bet has a clear job.
+3. A loose caller bets on a wet flop while you hold a weak draw; name the board
+   texture and the price before deciding whether a call has a clear job.
 4. You face a small price with a visible draw; state what improvement card you
    need before continuing.
 5. You face a large price with the same draw; fold when the price no longer

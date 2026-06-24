@@ -30,4 +30,16 @@ void main() {
       reason: 'The active source draft must not register W11 as a campaign.',
     );
   });
+
+  test('W11 transfer source keeps one price-first decision focus', () {
+    const sessionPath =
+        'content/worlds/world11/v1/sessions/w11.s01/session.md';
+    final session = File(sessionPath).readAsStringSync();
+
+    expect(
+      session,
+      contains(RegExp(r'price\s+before continuing with a draw')),
+    );
+    expect(session, isNot(contains('whether a value bet has a clear job')));
+  });
 }
