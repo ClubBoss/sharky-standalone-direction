@@ -64,7 +64,7 @@ List<String> act0ReviewRepairCoachCopyGuardLinesV1({
     return const <String>[];
   }
   final learnerFacingClue = switch (normalized) {
-    'no bet yet' => 'No-bet-yet',
+    'no bet yet' => 'The no-bet-yet clue',
     _ => '${normalized[0].toUpperCase()}${normalized.substring(1)}',
   };
   final nextRepair = switch (normalized) {
@@ -72,7 +72,7 @@ List<String> act0ReviewRepairCoachCopyGuardLinesV1({
     _ => 'Next repair: one focused hand',
   };
   final lines = <String>[
-    '$learnerFacingClue is still the clue to fix.',
+    '$learnerFacingClue is still the one to fix.',
     nextRepair,
   ];
   if (lines.any(_containsForbiddenCopyTokenV1)) {
@@ -106,11 +106,7 @@ List<String> act0RepairSessionSummaryCopyGuardLinesV1({
   required String clueLabel,
 }) {
   final lines = exactReplay
-      ? <String>[
-          repaired
-              ? 'Replay fixed: you handled that spot correctly.'
-              : 'Replay still missed: try the spot once more.',
-        ]
+      ? const <String>[]
       : _sameSignalRepairSessionSummaryLinesV1(
           repaired: repaired,
           clueLabel: clueLabel,
@@ -197,12 +193,17 @@ String _learnerFacingCompactClueV1(String clueLabel) {
 }
 
 String _normalizedRepairClueLabelV1(String clueLabel) {
-  return clueLabel
+  final normalized = clueLabel
       .trim()
       .toLowerCase()
       .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
       .replaceAll(RegExp(r'\s+'), ' ')
       .trim();
+  return switch (normalized) {
+    'legal actions' => 'no bet yet',
+    'meet the table' => 'no bet yet',
+    _ => normalized,
+  };
 }
 
 bool _containsForbiddenCopyTokenV1(String line) {

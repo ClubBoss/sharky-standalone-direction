@@ -105,7 +105,7 @@ void main() {
         exactReplay: true,
         clueLabel: 'No bet yet',
       ),
-      <String>['Replay fixed: you handled that spot correctly.'],
+      isEmpty,
     );
     expect(
       act0RepairSessionSummaryCopyGuardLinesV1(
@@ -113,7 +113,7 @@ void main() {
         exactReplay: true,
         clueLabel: 'No bet yet',
       ),
-      <String>['Replay still missed: try the spot once more.'],
+      isEmpty,
     );
   });
 
@@ -132,11 +132,24 @@ void main() {
     expect(
       act0ReviewRepairCoachCopyGuardLinesV1(clueLabel: 'No bet yet'),
       <String>[
-        'No-bet-yet is still the clue to fix.',
+        'The no-bet-yet clue is still the one to fix.',
         'Next repair: one no-bet-yet hand',
       ],
     );
     expect(act0ReviewRepairCoachCopyGuardLinesV1(clueLabel: ''), isEmpty);
+  });
+
+  test('review repair coach normalizes first-week abstract labels', () {
+    for (final abstractLabel in <String>['Legal actions', 'Meet the table']) {
+      final lines = act0ReviewRepairCoachCopyGuardLinesV1(
+        clueLabel: abstractLabel,
+      );
+      expect(lines, <String>[
+        'The no-bet-yet clue is still the one to fix.',
+        'Next repair: one no-bet-yet hand',
+      ]);
+      expect(lines.join(' '), isNot(contains(abstractLabel)));
+    }
   });
 
   test('missing labels degrade safely without forbidden terms', () {

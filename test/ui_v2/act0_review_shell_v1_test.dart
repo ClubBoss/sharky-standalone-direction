@@ -106,7 +106,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Repair coach'), findsOneWidget);
-    expect(find.text('No-bet-yet is still the clue to fix.'), findsOneWidget);
+    expect(
+      find.text('The no-bet-yet clue is still the one to fix.'),
+      findsOneWidget,
+    );
     expect(
       find.text('Review why the table was telling you to check.'),
       findsOneWidget,

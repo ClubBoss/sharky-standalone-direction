@@ -64,6 +64,7 @@ void main() {
 
     await tester.pumpWidget(const AppRoot());
     await _pumpBounded(tester);
+    expect(tester.takeException(), isNull);
     final mapFallback = find.byKey(const Key('map_render_fallback_v1'));
     final world7Entry = find.byKey(const Key('world_campaign_open_7'));
     final nextPackCta = find.byKey(const Key('world_campaign_next_pack_cta'));

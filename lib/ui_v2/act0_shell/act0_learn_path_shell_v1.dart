@@ -2098,35 +2098,51 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       _VolumePillModelV1(
         id: 'volume_ii',
         label: _learnCopyV1(context, en: 'Volume II', ru: 'Том 2'),
-        subtitle: _learnCopyV1(context, en: 'Strategy', ru: 'Стратегия'),
-        stateLabel: _learnCopyV1(context, en: 'Locked', ru: 'Закрыт'),
+        subtitle: _learnCopyV1(
+          context,
+          en: 'Later strategic depth',
+          ru: 'Поздняя стратегическая глубина',
+        ),
+        stateLabel: _learnCopyV1(
+          context,
+          en: 'Later frontier',
+          ru: 'Поздний рубеж',
+        ),
         color: Act0ShellTokensV1.textDim,
         unlockAfterLabel: _learnCopyV1(
           context,
-          en: 'Unlocks after Volume I.',
-          ru: 'Откроется после Тома I.',
+          en: 'This is a future landmark, not a lesson you can open today.',
+          ru: 'Это будущий ориентир, а не урок, который можно открыть сегодня.',
         ),
         previewLine: _learnCopyV1(
           context,
-          en: 'Preview: position, preflop structure, bet purpose, and board reading.',
-          ru: 'Внутри: позиция, префлоп-структура, цель ставки и чтение борда.',
+          en: 'More strategic study follows the shared foundation.',
+          ru: 'Дальше — более глубокое стратегическое изучение.',
         ),
       ),
       _VolumePillModelV1(
         id: 'volume_iii',
         label: _learnCopyV1(context, en: 'Volume III', ru: 'Том 3'),
-        subtitle: _learnCopyV1(context, en: 'Mastery', ru: 'Мастерство'),
-        stateLabel: _learnCopyV1(context, en: 'Locked', ru: 'Закрыт'),
+        subtitle: _learnCopyV1(
+          context,
+          en: 'Advanced frontier',
+          ru: 'Продвинутый рубеж',
+        ),
+        stateLabel: _learnCopyV1(
+          context,
+          en: 'Advanced frontier',
+          ru: 'Продвинутый рубеж',
+        ),
         color: Act0ShellTokensV1.textDim,
         unlockAfterLabel: _learnCopyV1(
           context,
-          en: 'Unlocks after Volume II.',
-          ru: 'Откроется после Тома 2.',
+          en: 'This is a future landmark, not a lesson you can open today.',
+          ru: 'Это будущий ориентир, а не урок, который можно открыть сегодня.',
         ),
         previewLine: _learnCopyV1(
           context,
-          en: 'Preview: pressure spots, adjustments, and review loops.',
-          ru: 'Внутри: споты давления, подстройки и циклы разбора.',
+          en: 'Later advanced specialist study.',
+          ru: 'Позднее продвинутое специализированное обучение.',
         ),
       ),
     ];

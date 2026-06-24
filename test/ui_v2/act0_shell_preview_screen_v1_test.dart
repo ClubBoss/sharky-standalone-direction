@@ -12266,7 +12266,7 @@ void main() {
     },
   );
 
-  testWidgets('Volume strip shows active and locked journey states', (
+  testWidgets('Volume strip shows active and future frontier states', (
     tester,
   ) async {
     await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
@@ -12285,21 +12285,21 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_volume_ii')),
-        matching: find.text('Locked'),
+        matching: find.text('Later frontier'),
       ),
       findsOneWidget,
     );
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_volume_iii')),
-        matching: find.text('Locked'),
+        matching: find.text('Advanced frontier'),
       ),
-      findsOneWidget,
+      findsNWidgets(2),
     );
   });
 
   testWidgets(
-    'Locked Volume II opens compact route preview without premium copy',
+    'Future volumes open compact frontier previews without commercial copy',
     (tester) async {
       await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
 
@@ -12313,14 +12313,26 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Volume II'), findsWidgets);
-      expect(find.text('Strategy'), findsWidgets);
-      expect(find.text('Unlocks after Volume I.'), findsOneWidget);
+      expect(find.text('Later strategic depth'), findsWidgets);
+      expect(find.text('Later frontier'), findsWidgets);
       expect(
         find.text(
-          'Preview: position, preflop structure, bet purpose, and board reading.',
+          'This is a future landmark, not a lesson you can open today.',
         ),
         findsOneWidget,
       );
+      expect(
+        find.text('More strategic study follows the shared foundation.'),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_volume_ii_preview_panel')),
+          matching: find.text('Locked'),
+        ),
+        findsNothing,
+      );
+      expect(find.text('Unlocks after Volume I.'), findsNothing);
       expect(find.text('Premium preview'), findsNothing);
       expect(find.text('See what premium adds'), findsNothing);
       expect(
@@ -12334,6 +12346,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_shell_volume_ii_preview_panel')),
+        findsNothing,
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_volume_iii')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_volume_iii_preview_panel')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_volume_iii_preview_panel')),
+          matching: find.text('Advanced frontier'),
+        ),
+        findsWidgets,
+      );
+      expect(find.text('Later advanced specialist study.'), findsOneWidget);
+      expect(find.text('Unlocks after Volume II.'), findsNothing);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_volume_iii_preview_panel')),
+          matching: find.text('Mastery'),
+        ),
         findsNothing,
       );
     },

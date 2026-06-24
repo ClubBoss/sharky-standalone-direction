@@ -543,12 +543,15 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
     expect(
-      find.text('Replay fixed: you handled this spot correctly.'),
+      find.text(
+        'Replay fixed: you handled this spot correctly.',
+        skipOffstage: false,
+      ),
       findsOneWidget,
     );
     expect(
       find.text('Replay fixed: you handled that spot correctly.'),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.textContaining('same clue'), findsNothing);
     expect(
@@ -570,12 +573,15 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
     expect(
-      find.text('Replay missed again: try the same spot once more.'),
+      find.text(
+        'Replay missed again: try the same spot once more.',
+        skipOffstage: false,
+      ),
       findsOneWidget,
     );
     expect(
       find.text('Replay still missed: try the spot once more.'),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.textContaining('same clue'), findsNothing);
     expect(

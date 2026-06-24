@@ -705,11 +705,15 @@ class _HomeMetaPillV1 extends StatelessWidget {
         children: [
           Icon(icon, size: 13, color: color),
           const SizedBox(width: 5),
-          Text(
-            label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: color,
-              fontWeight: FontWeight.w800,
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: color,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ],

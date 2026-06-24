@@ -1,209 +1,180 @@
 # Commercial Screenshot / Renderer Acceptance v1
 
-## Scope
+## Verdict
 
-Audit / evidence acceptance plus one narrow renderer-tooling fix. No product
-UI, copy, routes, telemetry, Modern Table visuals, content, monetization,
-Sharky/persona, AI, dashboard, XP, or economy behavior changed.
+`accepted_with_minor_residue`
 
-Generated screenshot, manifest, contact-sheet, and zip artifacts remain
-local-only and must not be committed.
+The current `first_week compact` and `day2_return compact` packets are
+understandable as deterministic proof packets. A reviewer can follow the core
+learning-causality chain:
 
-## Evidence used
+`choice -> visible table signal -> why -> repair/recheck -> proof`
+
+Do not claim store-grade screenshot readiness from this pass. Compact portrait
+captures still show minor residue: long contact-sheet headers crowd filenames,
+missed-repair receipt content can run below the captured lower edge, and a few
+repair-continuation strings read awkwardly enough to justify a content-trust
+pass before external packaging.
+
+## Evidence inspected
 
 Commands run:
 
 ```bash
+git status --short
+git log --oneline -5
+git show --stat --oneline be4d94694bc1e5bdfd364d09ac91b31a05ef6d7e
+graphify hook-check
+flutter analyze
+git diff --check
+git push origin main
+graphify query "commercial screenshot renderer acceptance first_week day2_return proof packet screen_review_fast"
 ./tools/screen_review_fast_v1.sh first_week compact
 ./tools/screen_review_fast_v1.sh day2_return compact
 ```
 
-Artifacts inspected:
+Files, screens, and packets inspected:
 
+- `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md`
+- `docs/plan/MASTER_PLAN_v3.0.md`
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
+- `docs/_reviews/first_week_proof_packet_capture_lane_v1.md`
+- `docs/_reviews/first_return_day2_proof_packet_capture_lane_v1.md`
+- `tools/screen_review_fast_v1.sh`
 - `output/screen_review/current/first_week_fast/contact_sheet.png`
 - `output/screen_review/current/first_week_fast/manifest.json`
-- `output/screen_review/current/first_week_fast/screen_review_first_week_fast.zip`
+- `output/screen_review/current/first_week_fast/screen_review_index.json`
+- `output/screen_review/current/first_week_fast/compact.repair_focus.png`
+- `output/screen_review/current/first_week_fast/compact.repair_result.png`
+- `output/screen_review/current/first_week_fast/compact.session_repair.png`
+- `output/screen_review/current/first_week_fast/compact.review_handoff.png`
 - `output/screen_review/current/day2_return_fast/contact_sheet.png`
 - `output/screen_review/current/day2_return_fast/manifest.json`
-- `output/screen_review/current/day2_return_fast/screen_review_day2_return_fast.zip`
+- `output/screen_review/current/day2_return_fast/screen_review_index.json`
+- `output/screen_review/current/day2_return_fast/compact.open_repair_source.png`
+- `output/screen_review/current/day2_return_fast/compact.return_home.png`
+- `output/screen_review/current/day2_return_fast/compact.practice_repair_target.png`
+- `output/screen_review/current/day2_return_fast/compact.review_continuation.png`
 
-Supporting docs:
+Commit and branch state:
 
-- `docs/_reviews/screenshot_tooling_inventory_v1.md`
-- `docs/_reviews/first_return_day2_proof_packet_capture_lane_v1.md`
-- `docs/_reviews/top1_route_recalibration_after_day2_v1.md`
+- Branch: `main`
+- Audit commit: `be4d94694bc1e5bdfd364d09ac91b31a05ef6d7e`
+- Remote: `origin https://github.com/ClubBoss/sharky-standalone-direction.git`
+- Part A push: `be4d9469` pushed to `origin/main`
+- Existing local generated outputs remained untracked under `output/`
 
-## first_week packet verdict
+## First-week proof clarity
 
-Accepted for internal product/design/AI review and near-term commercial proof
-discussion.
+Decision made:
 
-The packet shows the intended chain:
+- Clear enough. The packet shows a W1 table decision with `A K` on an
+  `A 7 2` flop, a selected action, and later feedback that the better play is
+  `Check`.
 
-- placement;
-- Welcome micro-win decision;
-- Welcome feedback;
-- Welcome handoff;
-- W1 decision;
-- correct feedback;
-- wrong feedback;
-- Repair focus;
-- Repair result;
-- Session repair;
-- Review handoff;
-- Profile return proof.
+Missed table signal:
 
-After the text-repair fix, primary CTA/button labels are readable. The proof
-beats are understandable without internal explanation.
+- Clear. The missed signal is repeatedly expressed as no bet facing the hero:
+  nobody has bet yet, checking is free, and folding gives up the hand.
 
-Not store-grade yet: the contact sheet is dense and long tile labels can crowd
-filenames.
+Why repair/recheck is offered:
 
-## day2_return packet verdict
+- Clear. The repair focus says the hand repeats the same table clue before the
+  learner chooses again. The Review handoff also points the learner to fix the
+  same spot before it becomes a habit.
 
-Accepted for internal product/design/AI review and Day 2 commercial proof
-discussion.
+What improved:
 
-The packet shows the intended return chain:
+- Clear in the successful repair result: `+5 XP`, `Clean rep`, `Replay fixed`,
+  and the receipt confirm that the same spot was handled correctly.
 
-- first-session open repair source;
-- Day 2 Home repair priority;
-- Practice same repair target;
-- Review active repair continuation;
-- Profile active repair proof / not falsely clear.
+What to do next:
 
-After the text-repair fix, the key CTA labels are readable:
+- Clear enough. The packet has visible next-step CTAs including `Continue` and
+  `Repair this clue`. Minor residue: the missed-repair receipt can run below
+  the compact viewport, so the lowest continuation area is not always visible
+  on the missed state.
 
-- `Fix this now`
-- `Repair this clue`
+## Day 2 return proof clarity
 
-The packet clearly proves return value: the missed signal persists into the
-next useful action instead of disappearing into generic practice.
+Persisted open repair:
 
-Not store-grade yet: the contact sheet still has cramped long labels.
+- Clear. `compact.open_repair_source.png` preserves the original missed clue,
+  better option, repair focus, and replay result. Minor residue: the lower
+  receipt content is clipped in compact portrait, so the source screen is
+  understandable but not clean enough for polished external use.
 
-## Artifact / readability issues
+Home repair priority:
 
-### Fixed in this pass
+- Clear. `compact.return_home.png` prioritizes `Repair one weak spot`, includes
+  `Fix this now`, and names the repair target as the no-bet-yet clue.
 
-The fast-renderer text repair helper was scoped only to core surfaces:
+Practice same repair target:
 
-```text
-home, learn, practice, review, profile
-```
+- Clear. `compact.practice_repair_target.png` shows the same table state and
+  repair language: fold misses this, better check, no bet is facing you, and
+  check keeps playing for free.
 
-That meant first-week and Day 2 packet-specific overlay metadata was generated
-but never applied, leaving several primary button labels as white bars.
+Review active continuation:
 
-The helper now processes every `compact.*.png.text_overlays.json` file in the
-packet directory. This keeps the fix local to screenshot evidence tooling and
-does not alter product rendering.
+- Clear enough. `compact.review_continuation.png` shows `1 fix waiting`, a
+  repair coach card, the missed clue, and `Repair this clue`. Minor residue:
+  the abstract `Legal actions` repair-coach wording is understandable but
+  grammatically rough and should be handled as content-trust residue, not a
+  renderer blocker.
 
-### Remaining accepted limitation
+Profile not falsely clear:
 
-Contact-sheet labels can crowd with filenames on long state names, especially:
+- Clear. The packet shows Profile with a current focus and route-forward state,
+  not a falsely clean or completed state.
 
-- `First-session open repair`
-- `Practice same repair target`
-- `Profile active repair proof`
+## Renderer / screenshot acceptance
 
-This does not block current packet use because the underlying screen content is
-readable and the original per-screen PNGs remain available.
+Critical text visibility:
 
-## CTA / button renderer verdict
+- Accepted with minor residue. Core learner-critical copy is readable in the
+  per-screen PNGs and contact sheets. The compact missed-repair receipt can
+  clip lower content, but the decision, missed table signal, repair reason, and
+  next repair path remain visible across the packet.
 
-Accepted after narrow tooling fix.
+Prompt safe zone:
 
-Before the fix, white bars materially lowered commercial readiness because
-primary actions looked broken. After the fix, first_week and day2_return CTAs
-are readable enough for internal and near-term external review.
+- Accepted. The table prompt and feedback cards stay inside the visible compact
+  viewport in the inspected decision, feedback, repair, and return screens.
 
-This was a tooling/renderer post-processing issue, not a product UI issue.
+Result readable zone:
 
-## Contact-sheet label / layout verdict
+- Accepted with minor residue. The successful repair result is fully readable.
+  The missed-repair result is readable through the result line, but the lower
+  session-repair area can extend beyond the captured edge.
 
-Accepted with limitation.
+CTA safe-area zone:
 
-The current contact-sheet composition is usable for fast review, but not ideal
-as a polished sales/store asset. It is acceptable for product/design/commercial
-evidence review because:
+- Accepted. Primary CTAs such as `Continue`, `Fix this now`, and `Repair this
+  clue` are visible on the decisive next-step screens. The missed-repair source
+  shot is not the cleanest CTA evidence surface.
 
-- screen content is readable;
-- original PNGs are included;
-- manifest and zip preserve per-screen inspection;
-- label crowding does not obscure the actual app state.
+Compact/narrow portrait risk if observable:
 
-If a future packet is meant for external decks or store-style presentation,
-make a separate contact-sheet layout pass with shorter labels or larger header
-space.
-
-## Architecture score vs commercial proof score
-
-- Architecture / Product Logic: high. The first-week and Day 2 repair/return
-  chains are deterministic, packet-capturable, and reviewable.
-- Commercial Proof / External Readiness: improved after the CTA text repair,
-  but still below store-grade. Current packets are good enough for internal
-  product/design/AI review and near-term commercial proof discussion, not final
-  App Store / paid acquisition screenshots.
-
-Do not collapse these into one blended score.
-
-## Accepted limitations
-
-- Fast Flutter-rendered packets are proof packets, not native device marketing
-  screenshots.
-- Contact-sheet labels are functional, not polished.
-- First_week and Day 2 packets prove the proof chain; they do not prove full
-  content depth.
-- Store-grade screenshot composition remains a later packaging task.
+- Observable and accepted as minor residue. Compact portrait is the highest-risk
+  capture because long receipt cards and contact-sheet labels are tight.
+  This is not a P0/P1 blocker for current proof review, but it is not
+  store-grade.
 
 ## Blockers
 
-No blocker remains for using the current packets in product/design/AI review.
+No P0/P1 blocker found.
 
-Commercial/store-grade screenshot proof is still pending and should not be
-claimed from these packets alone.
+Do not promote the packets as App Store or paid-acquisition screenshot assets.
+That is a packaging claim, not a proof-packet claim.
 
-## Implementation candidates ranked
+## Next recommended wave
 
-1. **Content Depth / Term Introduction / Drill Coverage Audit** - highest next
-   EV because packets now prove the route, while W5-W36 depth still determines
-   whether premium is structurally credible.
-2. **Contact-sheet label/layout polish** - useful if evidence packets need to
-   be shared externally in decks; not required for current review.
-3. **Native/slow screenshot lane for final marketing proof** - defer until
-   store-grade screenshot needs are explicit.
-4. **Product UI / CTA refinement** - not indicated by this pass; the issue was
-   renderer/tooling, not unclear product action.
-5. **No immediate renderer work** - current white-bar blocker is fixed.
+`W1-W6 First-Week Content Trust Pass v1`
 
-## Final recommendation
+Reason: the screenshots are readable enough, but the audit exposed
+term/order/content-trust residue in the proof explanations and repair
+continuation strings. This is higher EV than external packaging while there is
+no real external recipient.
 
-Use the current `first_week compact` and `day2_return compact` packets for
-internal product/design/AI review and near-term commercial proof discussion.
-
-Do not start monetization, store screenshot packaging, or broad UI redesign
-from this pass.
-
-## Exact recommended next prompt title
-
-`Content Depth / Term Introduction / Drill Coverage Audit v1 — Local Only`
-
-Optional later prompt if deck/store proof becomes urgent:
-
-`Screen Review Contact Sheet Label Polish v1 — Local Only`
-
-## Validation
-
-- `flutter test test/ui_v2/act0_shell_preview_screen_v1_test.dart --name 'Fast screen review text repair covers packet-specific surfaces'`
-- `./tools/screen_review_fast_v1.sh first_week compact`
-- `./tools/screen_review_fast_v1.sh day2_return compact`
-- `python3 -m py_compile tools/screen_review_fast_text_repair_v1.py`
-
-Pending for commit packaging:
-
-- `bash -n` on touched shell scripts if any.
-- `flutter analyze` if Dart touched.
-- `dart format --set-exit-if-changed` on touched Dart/test files.
-- `git diff --check`.
-- `git status --short`.
+External Review Packaging v1 remains deferred.
