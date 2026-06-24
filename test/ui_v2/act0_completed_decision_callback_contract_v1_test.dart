@@ -42,6 +42,10 @@ void main() {
       task.runner.options.firstWhere((option) => option.isCorrect).id,
     );
     expect(completed!.isCorrect, isFalse);
+    expect(completed!.resultKind, 'incorrect');
+    expect(completed!.errorType, startsWith('missed_'));
+    expect(completed!.skillAtomId, isNotEmpty);
+    expect(completed!.repairFocusId, isNotEmpty);
     expect(completed!.decisionTimeBucket, isNot('unknown'));
     expect(completed!.attemptKey, contains('|actionList|${selected.id}|1'));
   });
@@ -83,6 +87,9 @@ void main() {
       expect(completed!.decisionKind, Act0CompletedDecisionKindV1.seat);
       expect(completed!.selectedId, selected.id);
       expect(completed!.decisionTimeBucket, isNot('unknown'));
+      expect(completed!.resultKind, isNotEmpty);
+      expect(completed!.skillAtomId, isNotEmpty);
+      expect(completed!.missedSignalId, isNotEmpty);
     },
   );
 
@@ -138,6 +145,8 @@ void main() {
       expect(completed!.decisionKind, Act0CompletedDecisionKindV1.sizing);
       expect(completed!.selectedId, selectedPresetId);
       expect(completed!.decisionTimeBucket, isNot('unknown'));
+      expect(completed!.resultKind, isNotEmpty);
+      expect(completed!.skillAtomId, isNotEmpty);
     },
   );
 }

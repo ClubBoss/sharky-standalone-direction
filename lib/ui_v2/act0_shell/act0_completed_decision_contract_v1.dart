@@ -21,6 +21,11 @@ class Act0CompletedDecisionV1 {
     required this.isCorrect,
     required this.decisionTimeBucket,
     required this.taskFamily,
+    required this.resultKind,
+    this.errorType,
+    this.skillAtomId,
+    this.repairFocusId,
+    this.missedSignalId,
   });
 
   final int schemaVersion;
@@ -35,4 +40,9 @@ class Act0CompletedDecisionV1 {
   final bool isCorrect;
   final String decisionTimeBucket;
   final Act0TaskFamilyV1? taskFamily;
+  final String resultKind;
+  final String? errorType;
+  final String? skillAtomId;
+  final String? repairFocusId;
+  final String? missedSignalId;
 }

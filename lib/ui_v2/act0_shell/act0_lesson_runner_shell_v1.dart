@@ -1148,6 +1148,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final normalizedWorldId = worldId == null || worldId.isEmpty
         ? null
         : worldId;
+    final receipt = act0FirstValueSkillReceiptForRunnerV1(
+      runner: widget.runner,
+      option: option,
+      taskFamily: widget.selectedTaskFamily,
+    );
+    final resultKind = switch (option.quality) {
+      Act0FeedbackQualityV1.correct => 'correct',
+      Act0FeedbackQualityV1.wrong => 'incorrect',
+      Act0FeedbackQualityV1.suboptimal => 'suboptimal',
+    };
+    final errorType = receipt == null || option.isCorrect
+        ? (option.isCorrect ? 'none' : null)
+        : option.quality == Act0FeedbackQualityV1.suboptimal
+        ? 'thin_${receipt.skillAtomId}'
+        : 'missed_${receipt.skillAtomId}';
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
         attemptKey:
@@ -1164,6 +1179,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         isCorrect: option.isCorrect,
         decisionTimeBucket: _completedDecisionTimeBucket(),
         taskFamily: widget.selectedTaskFamily,
+        resultKind: resultKind,
+        errorType: errorType,
+        skillAtomId: receipt?.skillAtomId,
+        repairFocusId: receipt?.sourceSignalId,
+        missedSignalId: receipt?.sourceSignalId,
       ),
     );
   }
