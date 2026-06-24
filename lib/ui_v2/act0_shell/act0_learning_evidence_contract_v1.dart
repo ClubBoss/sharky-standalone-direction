@@ -56,6 +56,89 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
 ///
 /// This contract deliberately has no learner-facing interpretation fields.
 /// Persistence and UI consumption are separate, future decisions.
+class Act0EvidenceRunKeyV1 {
+  const Act0EvidenceRunKeyV1({
+    this.schemaVersion = 1,
+    required this.runId,
+    required this.worldId,
+    required this.lessonId,
+    required this.runOrdinal,
+    required this.runKind,
+    required this.startedBy,
+  });
+
+  final int schemaVersion;
+  final String runId;
+  final String worldId;
+  final String lessonId;
+  final int runOrdinal;
+  final String runKind;
+  final String startedBy;
+
+  Map<String, Object?> toPayload() => <String, Object?>{
+    'schemaVersion': schemaVersion,
+    'runId': runId,
+    'worldId': worldId,
+    'lessonId': lessonId,
+    'runOrdinal': runOrdinal,
+    'runKind': runKind,
+    'startedBy': startedBy,
+  };
+
+  static Act0EvidenceRunKeyV1? tryParse(Object? raw) {
+    if (raw is! Map) {
+      return null;
+    }
+    final map = raw.cast<Object?, Object?>();
+    final schemaVersion = _nonNegativeInt(map['schemaVersion']);
+    final runId = _requiredString(map['runId']);
+    final worldId = _requiredString(map['worldId']);
+    final lessonId = _requiredString(map['lessonId']);
+    final runOrdinal = _nonNegativeInt(map['runOrdinal']);
+    final runKind = _requiredString(map['runKind']);
+    final startedBy = _requiredString(map['startedBy']);
+    if (schemaVersion != 1 ||
+        runId == null ||
+        worldId == null ||
+        lessonId == null ||
+        runOrdinal == null ||
+        runKind == null ||
+        startedBy == null) {
+      return null;
+    }
+    return Act0EvidenceRunKeyV1(
+      runId: runId,
+      worldId: worldId,
+      lessonId: lessonId,
+      runOrdinal: runOrdinal,
+      runKind: runKind,
+      startedBy: startedBy,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Act0EvidenceRunKeyV1 &&
+      other.schemaVersion == schemaVersion &&
+      other.runId == runId &&
+      other.worldId == worldId &&
+      other.lessonId == lessonId &&
+      other.runOrdinal == runOrdinal &&
+      other.runKind == runKind &&
+      other.startedBy == startedBy;
+
+  @override
+  int get hashCode => Object.hash(
+    schemaVersion,
+    runId,
+    worldId,
+    lessonId,
+    runOrdinal,
+    runKind,
+    startedBy,
+  );
+}
+
 class Act0LearningEvidenceRecordV1 {
   const Act0LearningEvidenceRecordV1({
     this.schemaVersion = 1,
@@ -72,6 +155,11 @@ class Act0LearningEvidenceRecordV1 {
     required this.skillAtomId,
     required this.decisionTimeBucket,
     required this.resultKind,
+    this.runId = '',
+    this.runKind = '',
+    this.runOrdinal,
+    this.sourceWorldId = '',
+    this.sourceLessonId = '',
   });
 
   final int schemaVersion;
@@ -88,23 +176,46 @@ class Act0LearningEvidenceRecordV1 {
   final String skillAtomId;
   final String decisionTimeBucket;
   final String resultKind;
+  final String runId;
+  final String runKind;
+  final int? runOrdinal;
+  final String sourceWorldId;
+  final String sourceLessonId;
 
-  Map<String, Object?> toPayload() => <String, Object?>{
-    'schemaVersion': schemaVersion,
-    'recordId': recordId,
-    'createdOrder': createdOrder,
-    'worldId': worldId,
-    'lessonId': lessonId,
-    'taskId': taskId,
-    'choiceId': choiceId,
-    'expectedChoiceId': expectedChoiceId,
-    'isCorrect': isCorrect,
-    'errorType': errorType,
-    'repairFocusId': repairFocusId,
-    'skillAtomId': skillAtomId,
-    'decisionTimeBucket': decisionTimeBucket,
-    'resultKind': resultKind,
-  };
+  Map<String, Object?> toPayload() {
+    final payload = <String, Object?>{
+      'schemaVersion': schemaVersion,
+      'recordId': recordId,
+      'createdOrder': createdOrder,
+      'worldId': worldId,
+      'lessonId': lessonId,
+      'taskId': taskId,
+      'choiceId': choiceId,
+      'expectedChoiceId': expectedChoiceId,
+      'isCorrect': isCorrect,
+      'errorType': errorType,
+      'repairFocusId': repairFocusId,
+      'skillAtomId': skillAtomId,
+      'decisionTimeBucket': decisionTimeBucket,
+      'resultKind': resultKind,
+    };
+    if (runId.isNotEmpty) {
+      payload['runId'] = runId;
+    }
+    if (runKind.isNotEmpty) {
+      payload['runKind'] = runKind;
+    }
+    if (runOrdinal != null) {
+      payload['runOrdinal'] = runOrdinal;
+    }
+    if (sourceWorldId.isNotEmpty) {
+      payload['sourceWorldId'] = sourceWorldId;
+    }
+    if (sourceLessonId.isNotEmpty) {
+      payload['sourceLessonId'] = sourceLessonId;
+    }
+    return payload;
+  }
 
   static Act0LearningEvidenceRecordV1? tryParse(Object? raw) {
     if (raw is! Map) {
@@ -125,6 +236,13 @@ class Act0LearningEvidenceRecordV1 {
     final resultKind = _requiredString(map['resultKind']);
     final isCorrect = map['isCorrect'];
     final repairFocusId = _optionalString(map['repairFocusId']);
+    final runOrdinal = map.containsKey('runOrdinal')
+        ? _nonNegativeInt(map['runOrdinal'])
+        : null;
+    final runId = _optionalString(map['runId']);
+    final runKind = _optionalString(map['runKind']);
+    final sourceWorldId = _optionalString(map['sourceWorldId']);
+    final sourceLessonId = _optionalString(map['sourceLessonId']);
     if (schemaVersion != 1 ||
         createdOrder == null ||
         recordId == null ||
@@ -159,6 +277,11 @@ class Act0LearningEvidenceRecordV1 {
       skillAtomId: skillAtomId,
       decisionTimeBucket: decisionTimeBucket,
       resultKind: resultKind,
+      runId: runId,
+      runKind: runKind,
+      runOrdinal: runOrdinal,
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
     );
   }
 
@@ -178,10 +301,15 @@ class Act0LearningEvidenceRecordV1 {
       other.repairFocusId == repairFocusId &&
       other.skillAtomId == skillAtomId &&
       other.decisionTimeBucket == decisionTimeBucket &&
-      other.resultKind == resultKind;
+      other.resultKind == resultKind &&
+      other.runId == runId &&
+      other.runKind == runKind &&
+      other.runOrdinal == runOrdinal &&
+      other.sourceWorldId == sourceWorldId &&
+      other.sourceLessonId == sourceLessonId;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll(<Object?>[
     schemaVersion,
     recordId,
     createdOrder,
@@ -196,7 +324,36 @@ class Act0LearningEvidenceRecordV1 {
     skillAtomId,
     decisionTimeBucket,
     resultKind,
-  );
+    runId,
+    runKind,
+    runOrdinal,
+    sourceWorldId,
+    sourceLessonId,
+  ]);
+}
+
+class Act0LearningEvidenceRunSummaryV1 {
+  const Act0LearningEvidenceRunSummaryV1({
+    required this.runId,
+    required this.runKind,
+    required this.runOrdinal,
+    required this.spotsPlayed,
+    required this.correctCount,
+    required this.incorrectCount,
+    required this.distinctErrorTypes,
+    required this.topRepairFocusId,
+    required this.currentSessionOnly,
+  });
+
+  final String runId;
+  final String runKind;
+  final int? runOrdinal;
+  final int spotsPlayed;
+  final int correctCount;
+  final int incorrectCount;
+  final List<String> distinctErrorTypes;
+  final String topRepairFocusId;
+  final bool currentSessionOnly;
 }
 
 class Act0LearningEvidenceHistoryV1 {
@@ -260,6 +417,30 @@ class Act0LearningEvidenceHistoryV1 {
   List<Act0LearningEvidenceRecordV1> byRepairFocus(String repairFocusId) =>
       _whereField((record) => record.repairFocusId, repairFocusId);
 
+  List<Act0LearningEvidenceRecordV1> byRunId(String runId) =>
+      _whereField((record) => record.runId, runId);
+
+  List<Act0LearningEvidenceRecordV1> latestRunRecords() {
+    final latestGrouped = records
+        .cast<Act0LearningEvidenceRecordV1?>()
+        .lastWhere(
+          (record) => record?.runId.trim().isNotEmpty == true,
+          orElse: () => null,
+        );
+    if (latestGrouped == null) {
+      return const <Act0LearningEvidenceRecordV1>[];
+    }
+    return byRunId(latestGrouped.runId);
+  }
+
+  Act0LearningEvidenceRunSummaryV1? latestRunSummary() {
+    final latest = latestRunRecords();
+    if (latest.isEmpty) {
+      return null;
+    }
+    return _runSummary(latest);
+  }
+
   List<Act0LearningEvidenceRecordV1> mistakes() =>
       List<Act0LearningEvidenceRecordV1>.unmodifiable(
         records.where((record) => !record.isCorrect),
@@ -307,6 +488,42 @@ class Act0LearningEvidenceHistoryV1 {
     }
     return List<Act0LearningEvidenceRecordV1>.unmodifiable(
       records.where((record) => value(record) == normalized),
+    );
+  }
+
+  Act0LearningEvidenceRunSummaryV1 _runSummary(
+    List<Act0LearningEvidenceRecordV1> runRecords,
+  ) {
+    final correctCount = runRecords.where((record) => record.isCorrect).length;
+    final errorTypes = <String>{};
+    final repairFocusCounts = <String, int>{};
+    for (final record in runRecords) {
+      if (!record.isCorrect && record.errorType.trim().isNotEmpty) {
+        errorTypes.add(record.errorType);
+      }
+      if (!record.isCorrect && record.repairFocusId.trim().isNotEmpty) {
+        repairFocusCounts[record.repairFocusId] =
+            (repairFocusCounts[record.repairFocusId] ?? 0) + 1;
+      }
+    }
+    final rankedRepairFocus = repairFocusCounts.entries.toList()
+      ..sort((a, b) {
+        final countCompare = b.value.compareTo(a.value);
+        return countCompare != 0 ? countCompare : a.key.compareTo(b.key);
+      });
+    final latest = runRecords.last;
+    return Act0LearningEvidenceRunSummaryV1(
+      runId: latest.runId,
+      runKind: latest.runKind,
+      runOrdinal: latest.runOrdinal,
+      spotsPlayed: runRecords.length,
+      correctCount: correctCount,
+      incorrectCount: runRecords.length - correctCount,
+      distinctErrorTypes: List<String>.unmodifiable(errorTypes),
+      topRepairFocusId: rankedRepairFocus.isEmpty
+          ? ''
+          : rankedRepairFocus.first.key,
+      currentSessionOnly: latest.runId.trim().isNotEmpty,
     );
   }
 }

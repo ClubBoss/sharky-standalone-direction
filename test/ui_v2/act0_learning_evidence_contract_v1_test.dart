@@ -188,6 +188,95 @@ void main() {
       );
     },
   );
+
+  test('run key serializes as stable non-telemetry identity', () {
+    const key = Act0EvidenceRunKeyV1(
+      runId: 'run_v1|world_1|fold_check_call_raise|3',
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      runOrdinal: 3,
+      runKind: 'lesson',
+      startedBy: 'learn_route',
+    );
+
+    expect(Act0EvidenceRunKeyV1.tryParse(key.toPayload()), key);
+    expect(key.toPayload(), isNot(containsPair('eventId', anything)));
+    expect(key.toPayload(), isNot(containsPair('telemetryKey', anything)));
+  });
+
+  test(
+    'old ungrouped records remain parse-safe and excluded from run queries',
+    () {
+      final oldPayload = _record(order: 1).toPayload();
+      final parsed = Act0LearningEvidenceRecordV1.tryParse(oldPayload);
+
+      expect(parsed, isNotNull);
+      expect(parsed!.runId, isEmpty);
+
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          parsed,
+          _record(
+            order: 2,
+            runId: 'run_v1|world_1|fold_check_call_raise|1',
+            runKind: 'lesson',
+            runOrdinal: 1,
+          ),
+        ],
+      );
+
+      expect(
+        history.byRunId('run_v1|world_1|fold_check_call_raise|1'),
+        hasLength(1),
+      );
+      expect(history.byRunId(''), isEmpty);
+    },
+  );
+
+  test('latest run summary uses only grouped current-run records', () {
+    final history = Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        _record(order: 1, runId: 'old-run', runKind: 'lesson', runOrdinal: 1),
+        _record(
+          order: 2,
+          runId: 'current-run',
+          runKind: 'lesson',
+          runOrdinal: 2,
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: '',
+          resultKind: 'correct',
+        ),
+        _record(
+          order: 3,
+          runId: 'current-run',
+          runKind: 'lesson',
+          runOrdinal: 2,
+          errorType: 'missed_position_read',
+          repairFocusId: 'position_clue',
+          skillAtomId: 'position_read',
+        ),
+        _record(
+          order: 4,
+          runId: '',
+          runKind: '',
+          runOrdinal: null,
+          errorType: 'missed_action_read',
+        ),
+      ],
+    );
+
+    final summary = history.latestRunSummary();
+
+    expect(summary, isNotNull);
+    expect(summary!.runId, 'current-run');
+    expect(summary.currentSessionOnly, isTrue);
+    expect(summary.spotsPlayed, 2);
+    expect(summary.correctCount, 1);
+    expect(summary.incorrectCount, 1);
+    expect(summary.distinctErrorTypes, <String>['missed_position_read']);
+    expect(summary.topRepairFocusId, 'position_clue');
+  });
 }
 
 Act0CompletedDecisionV1 _completedDecision({
@@ -220,6 +309,9 @@ Act0LearningEvidenceRecordV1 _record({
   String resultKind = 'incorrect',
   bool isCorrect = false,
   String errorType = 'missed_action_read',
+  String runId = '',
+  String runKind = '',
+  int? runOrdinal,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: '$order:world_1:actions_legal_context:fold',
@@ -235,5 +327,8 @@ Act0LearningEvidenceRecordV1 _record({
     skillAtomId: skillAtomId,
     decisionTimeBucket: 'under_3s',
     resultKind: resultKind,
+    runId: runId,
+    runKind: runKind,
+    runOrdinal: runOrdinal,
   );
 }
