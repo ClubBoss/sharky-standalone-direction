@@ -482,17 +482,6 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          if (onFixMistake != null) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            FilledButton(
-              key: const Key('act0_shell_review_fix_next_cta'),
-              onPressed: () => onFixMistake!(mistake),
-              style: Act0ShellTokensV1.primaryButtonStyle(
-                height: Act0ShellTokensV1.compactCtaHeight,
-              ),
-              child: const Text('Repair this clue'),
-            ),
-          ],
         ],
       ),
     );

@@ -248,9 +248,8 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
         recommendedGroup ??
         fixLeakGroup ??
         (widget.groups.isEmpty ? null : widget.groups.first);
-    final featuredGroup = recommendedRepairGroup
-        ? recommendedGroup
-        : quickDrillGroup ?? fallbackFeaturedGroup;
+    final featuredGroup =
+        quickDrillGroup ?? (recommendedRepairGroup ? null : fallbackFeaturedGroup);
     final excludedGroupIds = <String>{
       if (featuredGroup != null) featuredGroup.groupId,
       if (quickDrillGroup != null) quickDrillGroup.groupId,

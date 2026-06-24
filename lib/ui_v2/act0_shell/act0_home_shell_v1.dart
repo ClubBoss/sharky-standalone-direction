@@ -410,7 +410,6 @@ class Act0HomeShellV1 extends StatelessWidget {
         onTap: onOpenPracticeContext ?? onStartDailyDrill,
       ),
       reviewRow,
-      fixRow,
     ];
     return rows;
   }

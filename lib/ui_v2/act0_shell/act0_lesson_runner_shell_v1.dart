@@ -4359,20 +4359,20 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             (!refined &&
                 fullViewportHeight > 900 &&
                 fullViewportHeight <= 980));
-    final tone = isWrong
-        ? Act0ShellTokensV1.danger
-        : (isSuboptimal ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary);
-    final icon = isWrong
-        ? Icons.close_rounded
-        : (isSuboptimal ? Icons.trending_up_rounded : Icons.check_rounded);
+    final tone = isWrong || isSuboptimal
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.primary;
+    final icon = isWrong || isSuboptimal
+        ? Icons.trending_up_rounded
+        : Icons.check_rounded;
     final iconKey = isWrong
         ? const Key('act0_shell_feedback_icon_wrong')
         : (isSuboptimal
               ? const Key('act0_shell_feedback_icon_suboptimal')
               : const Key('act0_shell_feedback_icon_correct'));
-    final sharkyTone = isWrong
-        ? Act0ShellTokensV1.danger
-        : (isSuboptimal ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary);
+    final sharkyTone = isWrong || isSuboptimal
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.primary;
     final resolvedTitle = _feedbackTitleFloorV1(
       context,
       title: title,
@@ -4709,7 +4709,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             const SizedBox(height: 8),
             _CompletionToastV1(summary: completionSummary!),
           ],
-          if (!rapidMode && receiptTitle.isNotEmpty) ...[
+          if (!rapidMode && !isWrong && receiptTitle.isNotEmpty) ...[
             const SizedBox(height: 8),
             const _FeedbackVerdictDividerV1(),
             const SizedBox(height: 8),
@@ -4807,7 +4807,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           ? 34
                           : Act0ShellTokensV1.compactCtaHeight,
                     ),
-                    child: const Text('Continue'),
+                    child: Text(isWrong ? 'Try one like this' : 'Continue'),
                   ),
                 ),
               ],
