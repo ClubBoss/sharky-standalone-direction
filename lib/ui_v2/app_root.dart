@@ -143,6 +143,11 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.worldCompletion,
       );
+    case 'session_summary':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.sessionSummary,
+      );
     case 'runner':
       final worldId = (uri.queryParameters['world'] ?? '').trim();
       final lessonId = (uri.queryParameters['lesson'] ?? '').trim();

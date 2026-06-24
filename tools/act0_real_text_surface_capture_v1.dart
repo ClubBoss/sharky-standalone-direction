@@ -35,6 +35,7 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('repair_focus', 'repairFocus'),
     _CaptureSurfaceV1('repair_result', 'repairResult'),
     _CaptureSurfaceV1('session_repair', 'sessionRepair'),
+    _CaptureSurfaceV1('session_summary', 'sessionSummary'),
     _CaptureSurfaceV1('review_handoff', 'firstWeekReview'),
     _CaptureSurfaceV1('profile_return', 'firstWeekProfile'),
   ],

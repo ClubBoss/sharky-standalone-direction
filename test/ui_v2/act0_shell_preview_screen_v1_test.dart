@@ -2930,6 +2930,15 @@ void main() {
       profile!.surface,
       Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
     );
+
+    final sessionSummary = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=session_summary'),
+    );
+    expect(sessionSummary, isNotNull);
+    expect(
+      sessionSummary!.surface,
+      Act0ControlledDemoCaptureSurfaceV1.sessionSummary,
+    );
   });
 
   test('Fast screen review command exposes first-week proof packet group', () {
@@ -2943,7 +2952,10 @@ void main() {
       'tools/package_screen_review_v1.py',
     ).readAsStringSync();
 
-    expect(shellSource, contains('<core|runner|first_week> compact'));
+    expect(
+      shellSource,
+      contains('<core|runner|first_week|day2_return> compact'),
+    );
     expect(captureSource, contains("'first_week': <_CaptureSurfaceV1>"));
     expect(
       captureSource,
@@ -2965,7 +2977,12 @@ void main() {
       captureSource,
       contains("_CaptureSurfaceV1('session_repair', 'sessionRepair')"),
     );
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('session_summary', 'sessionSummary')"),
+    );
     expect(packageSource, contains('"first_week_fast"'));
+    expect(packageSource, contains('("session_summary", "Session summary")'));
     expect(
       packageSource,
       contains('return "./tools/screen_review_fast_v1.sh first_week compact"'),

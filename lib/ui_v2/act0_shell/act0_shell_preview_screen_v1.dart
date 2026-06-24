@@ -624,6 +624,7 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   practice,
   profile,
   worldCompletion,
+  sessionSummary,
   runnerFirstCorrectFeedback,
   firstWeekHome,
   firstWeekReview,
@@ -1775,6 +1776,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugProfileSurface();
       case Act0ControlledDemoCaptureSurfaceV1.worldCompletion:
         _applyDebugWorldCompletionSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.sessionSummary:
+        _applyDebugSessionSummarySurface();
       case Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback:
         _applyDebugFirstCorrectFeedbackSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.firstWeekHome:
@@ -2269,6 +2272,75 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       perfectClearCount: 12,
       completedClearCount: 12,
       futureRecheckCount: 2,
+    );
+  }
+
+  void _applyDebugSessionSummarySurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+    const runId = 'run_v1|world_1|fold_check_call_raise|lesson|1';
+    _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        Act0LearningEvidenceRecordV1(
+          recordId:
+              'v1|world_1|fold_check_call_raise|actions_check_drill|actionList|check|1',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: '',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+          runId: runId,
+          runKind: 'lesson',
+          runOrdinal: 1,
+          sourceWorldId: 'world_1',
+          sourceLessonId: 'fold_check_call_raise',
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId:
+              'v1|world_1|fold_check_call_raise|actions_check_drill|actionList|fold|2',
+          createdOrder: 2,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'fold',
+          expectedChoiceId: 'check',
+          isCorrect: false,
+          errorType: 'missed_action_read',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'incorrect',
+          runId: runId,
+          runKind: 'lesson',
+          runOrdinal: 1,
+          sourceWorldId: 'world_1',
+          sourceLessonId: 'fold_check_call_raise',
+        ),
+      ],
+    );
+    _blockCompletionSummary = const Act0BlockCompletionSummaryV1(
+      lessonTitle: 'Fold, check, call, raise',
+      xpEarned: 20,
+      errorCount: 1,
+      taskCount: 2,
+      correctCount: 1,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 80,
+      endXp: 100,
+      xpTarget: 200,
+      nextLessonTitle: 'Blinds and action order',
+      sharkyLine: 'Good proof. Keep the table clue in view.',
+      perfectClearCount: 1,
+      completedClearCount: 2,
     );
   }
 

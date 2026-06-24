@@ -44,6 +44,7 @@ SURFACE_GROUPS = {
         ("repair_focus", "Repair focus"),
         ("repair_result", "Repair result"),
         ("session_repair", "Session repair"),
+        ("session_summary", "Session summary"),
         ("review_handoff", "Review handoff"),
         ("profile_return", "Profile return"),
     ),
