@@ -2267,8 +2267,8 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         volumeNumber: 1,
                         subtitle: _learnCopyV1(
                           context,
-                          en: 'Foundations',
-                          ru: 'Основы',
+                          en: 'Current foundation',
+                          ru: 'Текущая основа',
                         ),
                       ),
                       style: Act0ShellTokensV1.label.copyWith(
@@ -2278,7 +2278,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'World ${currentWorld.worldNumber} of ${worlds.length} active',
+                      _learnCopyV1(
+                        context,
+                        en: 'W1-W6 available · W7-W10 current campaign',
+                        ru: 'W1-W6 доступны · W7-W10 — текущая кампания',
+                      ),
                       key: const Key(
                         'act0_shell_levels_selected_world_status_line',
                       ),
@@ -2324,6 +2328,40 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         ),
                       ),
                     ],
+                    const SizedBox(height: 4),
+                    Text(
+                      _learnCopyV1(
+                        context,
+                        en: 'W11-W12 planned foundation chapters, coming later.',
+                        ru: 'W11-W12 — главы запланированной основы, позже.',
+                      ),
+                      key: const Key(
+                        'act0_shell_levels_planned_foundation_line',
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textDim,
+                        fontSize: 10.4,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _learnCopyV1(
+                        context,
+                        en: 'W13+ is later strategic depth.',
+                        ru: 'W13+ — более поздняя стратегическая глубина.',
+                      ),
+                      key: const Key(
+                        'act0_shell_levels_later_frontier_line',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textDim,
+                        fontSize: 10.2,
+                      ),
+                    ),
                   ],
                 ),
               ),

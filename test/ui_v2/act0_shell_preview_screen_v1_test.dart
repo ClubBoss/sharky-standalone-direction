@@ -12298,6 +12298,50 @@ void main() {
     );
   });
 
+  testWidgets('Learn status header states the truthful Volume I horizon', (
+    tester,
+  ) async {
+    await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
+
+    await tester.tap(find.byKey(const Key('act0_shell_levels_menu_button')));
+    await tester.pumpAndSettle();
+
+    final header = find.byKey(
+      const Key('act0_shell_levels_sticky_node_header'),
+    );
+    expect(header, findsOneWidget);
+    expect(
+      find.descendant(
+        of: header,
+        matching: find.text('Volume 1 · Current foundation'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: header,
+        matching: find.text('W1-W6 available · W7-W10 current campaign'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: header,
+        matching: find.text('W11-W12 planned foundation chapters, coming later.'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: header,
+        matching: find.text('W13+ is later strategic depth.'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Unlock W13'), findsNothing);
+    expect(find.text('Finish Volume I now'), findsNothing);
+  });
+
   testWidgets(
     'Future volumes open compact frontier previews without commercial copy',
     (tester) async {

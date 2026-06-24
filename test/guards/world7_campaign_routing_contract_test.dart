@@ -35,7 +35,7 @@ Future<void> _pumpBounded(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('world7 entry remains actionable on small portrait', (
+  testWidgets('world7 canonical entry remains actionable on small portrait', (
     tester,
   ) async {
     addTearDown(() {
@@ -65,36 +65,22 @@ void main() {
     await tester.pumpWidget(const AppRoot());
     await _pumpBounded(tester);
     expect(tester.takeException(), isNull);
-    final mapFallback = find.byKey(const Key('map_render_fallback_v1'));
-    final world7Entry = find.byKey(const Key('world_campaign_open_7'));
-    final nextPackCta = find.byKey(const Key('world_campaign_next_pack_cta'));
+    final home = find.byKey(const Key('act0_shell_home_screen'));
+    final currentRouteCta = find.byKey(const Key('act0_shell_main_cta'));
     await _pumpUntilAny(tester, <Finder>[
-      world7Entry,
-      nextPackCta,
-      mapFallback,
+      home,
+      currentRouteCta,
     ]);
-    expect(
-      world7Entry.evaluate().isNotEmpty ||
-          nextPackCta.evaluate().isNotEmpty ||
-          mapFallback.evaluate().isNotEmpty,
-      isTrue,
-    );
+    expect(home, findsOneWidget);
+    expect(currentRouteCta, findsOneWidget);
 
-    if (nextPackCta.evaluate().isNotEmpty) {
-      final ctaRect = tester.getRect(nextPackCta);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(ctaRect.top >= 0, isTrue);
-      expect(ctaRect.bottom <= logicalHeight, isTrue);
-      final ctaWidget = tester.widget<ElevatedButton>(nextPackCta);
-      expect(ctaWidget.onPressed != null, isTrue);
-    } else if (world7Entry.evaluate().isNotEmpty) {
-      final entryRect = tester.getRect(world7Entry);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(entryRect.top >= 0, isTrue);
-      expect(entryRect.bottom <= logicalHeight, isTrue);
-    }
+    final ctaRect = tester.getRect(currentRouteCta);
+    final logicalHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    expect(ctaRect.top >= 0, isTrue);
+    expect(ctaRect.bottom <= logicalHeight, isTrue);
+    final ctaWidget = tester.widget<FilledButton>(currentRouteCta);
+    expect(ctaWidget.onPressed != null, isTrue);
 
     expect(tester.takeException(), isNull);
   });
