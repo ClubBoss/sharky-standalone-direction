@@ -277,6 +277,30 @@ void main() {
     expect(summary.distinctErrorTypes, <String>['missed_position_read']);
     expect(summary.topRepairFocusId, 'position_clue');
   });
+
+  test('completed decisions append with shell-owned run key', () {
+    const runKey = Act0EvidenceRunKeyV1(
+      runId: 'run_v1|world_1|fold_check_call_raise|1',
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      runOrdinal: 1,
+      runKind: 'lesson',
+      startedBy: 'learn_route',
+    );
+
+    final history = const Act0LearningEvidenceHistoryV1()
+        .appendCompletedDecision(_completedDecision(attempt: 1), runKey: runKey)
+        .appendCompletedDecision(
+          _completedDecision(attempt: 2),
+          runKey: runKey,
+        );
+
+    expect(history.records, hasLength(2));
+    expect(history.records.map((record) => record.runId).toSet(), <String>{
+      runKey.runId,
+    });
+    expect(history.latestRunSummary()?.spotsPlayed, 2);
+  });
 }
 
 Act0CompletedDecisionV1 _completedDecision({

@@ -31147,26 +31147,31 @@ void main() {
   testWidgets('Persisted learning evidence history round-trips', (
     tester,
   ) async {
-    final snapshot = minimalPersistedProgressMapV1(schemaVersion: 11)
-      ..['learningEvidenceHistory'] = <Map<String, Object?>>[
-        <String, Object?>{
-          'schemaVersion': 1,
-          'recordId':
-              'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
-          'createdOrder': 1,
-          'worldId': 'world_1',
-          'lessonId': 'fold_check_call_raise',
-          'taskId': 'actions_raise_drill',
-          'choiceId': 'fold',
-          'expectedChoiceId': 'check',
-          'isCorrect': false,
-          'errorType': 'missed_action_read',
-          'repairFocusId': 'no_bet_yet',
-          'skillAtomId': 'action_read',
-          'decisionTimeBucket': 'under_3s',
-          'resultKind': 'incorrect',
-        },
-      ];
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 11,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['learningEvidenceHistory'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'recordId':
+                  'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              'createdOrder': 1,
+              'worldId': 'world_1',
+              'lessonId': 'fold_check_call_raise',
+              'taskId': 'actions_raise_drill',
+              'choiceId': 'fold',
+              'expectedChoiceId': 'check',
+              'isCorrect': false,
+              'errorType': 'missed_action_read',
+              'repairFocusId': 'no_bet_yet',
+              'skillAtomId': 'action_read',
+              'decisionTimeBucket': 'under_3s',
+              'resultKind': 'incorrect',
+            },
+          ];
     SharedPreferences.setMockInitialValues(<String, Object>{
       'act0_shell_progress_v1': jsonEncode(snapshot),
     });
@@ -31180,6 +31185,70 @@ void main() {
     expect(history, hasLength(1));
     expect(history.single['recordId'], contains('|fold|1'));
     expect(history.single['skillAtomId'], 'action_read');
+  });
+
+  testWidgets('New lesson-run evidence records carry one shared run key', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+
+    await pumpTall(tester, host());
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await answerVisiblePromptCorrectly(tester);
+
+    var decoded = await persistedProgressMapFromPrefsV1();
+    var history = decoded['learningEvidenceHistory'] as List<dynamic>;
+    expect(history, hasLength(1));
+    final firstRunId = history.single['runId'] as String?;
+    expect(firstRunId, isNotNull);
+    expect(firstRunId, isNotEmpty);
+    expect(history.single['runKind'], 'lesson');
+    expect(history.single['runOrdinal'], 1);
+
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await answerVisiblePromptCorrectly(tester);
+
+    decoded = await persistedProgressMapFromPrefsV1();
+    history = decoded['learningEvidenceHistory'] as List<dynamic>;
+    expect(history, hasLength(2));
+    expect(history.map((record) => record['runId']).toSet(), <Object?>{
+      firstRunId,
+    });
+  });
+
+  testWidgets('New practice/repair launch starts a distinct evidence run key', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+
+    await pumpTall(tester, host());
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await answerVisiblePromptCorrectly(tester);
+
+    var decoded = await persistedProgressMapFromPrefsV1();
+    var history = decoded['learningEvidenceHistory'] as List<dynamic>;
+    final lessonRunId = history.single['runId'];
+
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    await tester.pumpAndSettle();
+    await openBottomTabAndDrainV1(tester, 'Practice');
+    await tester.tap(find.text('Start daily set'));
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await answerVisiblePromptCorrectly(tester);
+
+    decoded = await persistedProgressMapFromPrefsV1();
+    history = decoded['learningEvidenceHistory'] as List<dynamic>;
+    expect(history, hasLength(2));
+    expect(history.last['runKind'], 'practice');
+    expect(history.last['runId'], isNot(lessonRunId));
+    expect(history.last['runOrdinal'], 2);
   });
 
   testWidgets('Persisted retentionSequence round-trips', (tester) async {

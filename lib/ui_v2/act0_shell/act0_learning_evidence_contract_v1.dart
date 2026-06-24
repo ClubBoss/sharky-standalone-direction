@@ -9,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   Act0CompletedDecisionV1 decision, {
   required int createdOrder,
+  Act0EvidenceRunKeyV1? runKey,
 }) {
   final worldId = decision.worldId?.trim();
   final lessonId = decision.lessonId.trim();
@@ -49,6 +50,11 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     skillAtomId: skillAtomId,
     decisionTimeBucket: decisionTimeBucket,
     resultKind: resultKind,
+    runId: runKey?.runId ?? '',
+    runKind: runKey?.runKind ?? '',
+    runOrdinal: runKey?.runOrdinal,
+    sourceWorldId: runKey?.worldId ?? '',
+    sourceLessonId: runKey?.lessonId ?? '',
   );
 }
 
@@ -382,8 +388,9 @@ class Act0LearningEvidenceHistoryV1 {
   /// Incomplete completions remain skipped; callers must not supplement them
   /// from presentation state.
   Act0LearningEvidenceHistoryV1 appendCompletedDecision(
-    Act0CompletedDecisionV1 decision,
-  ) {
+    Act0CompletedDecisionV1 decision, {
+    Act0EvidenceRunKeyV1? runKey,
+  }) {
     if (records.any((record) => record.recordId == decision.attemptKey)) {
       return this;
     }
@@ -397,6 +404,7 @@ class Act0LearningEvidenceHistoryV1 {
     final record = act0LearningEvidenceRecordFromCompletedDecisionV1(
       decision,
       createdOrder: createdOrder,
+      runKey: runKey,
     );
     return record == null ? this : append(record);
   }

@@ -689,6 +689,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
+  Act0EvidenceRunKeyV1? _activeLearningEvidenceRunKeyV1;
+  int _learningEvidenceRunOrdinalV1 = 0;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -2673,7 +2675,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
     _learningEvidenceHistoryV1 = _learningEvidenceHistoryV1
-        .appendCompletedDecision(decision);
+        .appendCompletedDecision(
+          decision,
+          runKey: _activeLearningEvidenceRunKeyV1,
+        );
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {
@@ -2731,6 +2736,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _dailyCompletedTaskIds.clear();
       _dailyCompletedRepCount = 0;
       _rapidPracticeLoop = false;
+      _activeLearningEvidenceRunKeyV1 = null;
+      _learningEvidenceRunOrdinalV1 = 0;
       _retentionSequence = 0;
       _retentionMemoryByTaskId.clear();
       _activePracticeGroupId = null;
@@ -6302,6 +6309,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       skipTeaching: group.skipTeaching,
       allowDrillBypass: group.allowDrillBypass,
       rapidPracticeLoop: group.useRapidPracticeLoop,
+      evidenceRunKind: 'practice',
+      evidenceStartedBy: 'practice_${group.groupId}',
     );
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = group.groupId;
@@ -6386,6 +6395,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           mappingType == 'mapped' ||
           launchTask.phase == Act0LessonPhaseV1.drill,
       rapidPracticeLoop: rapidPracticeLoop,
+      evidenceRunKind: 'repair',
+      evidenceStartedBy: practiceGroupId == null
+          ? 'repair'
+          : 'practice_$practiceGroupId',
     );
     _emitRepairStartedTelemetryV1(
       sourceTaskId: sourceTaskId,
@@ -7440,6 +7453,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     bool skipTeaching = false,
     bool allowDrillBypass = false,
     bool rapidPracticeLoop = false,
+    String evidenceRunKind = 'lesson',
+    String evidenceStartedBy = 'learn_route',
   }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
     final task = _taskById(lesson, taskId);
@@ -7453,6 +7468,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _emitLessonStartedTelemetryV1(
       lessonId: lesson.lessonId,
       taskId: task.taskId,
+    );
+    _startLearningEvidenceRunV1(
+      worldId: selectedWorld.worldId,
+      lessonId: lesson.lessonId,
+      runKind: evidenceRunKind,
+      startedBy: evidenceStartedBy,
     );
     _selectedWorldId = selectedWorld.worldId;
     _selectedLessonId = lesson.lessonId;
@@ -7469,6 +7490,52 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? task.runner.teachingSteps.length
         : 0;
     _blockCompletionSummary = null;
+  }
+
+  void _startLearningEvidenceRunV1({
+    required String worldId,
+    required String lessonId,
+    required String runKind,
+    required String startedBy,
+  }) {
+    final normalizedWorldId = worldId.trim();
+    final normalizedLessonId = lessonId.trim();
+    final normalizedRunKind = runKind.trim().isEmpty
+        ? 'lesson'
+        : runKind.trim();
+    final normalizedStartedBy = startedBy.trim().isEmpty
+        ? 'learn_route'
+        : startedBy.trim();
+    if (normalizedWorldId.isEmpty || normalizedLessonId.isEmpty) {
+      _activeLearningEvidenceRunKeyV1 = null;
+      return;
+    }
+    final latestPersistedOrdinal = _latestLearningEvidenceRunOrdinalV1();
+    if (latestPersistedOrdinal > _learningEvidenceRunOrdinalV1) {
+      _learningEvidenceRunOrdinalV1 = latestPersistedOrdinal;
+    }
+    _learningEvidenceRunOrdinalV1 += 1;
+    _activeLearningEvidenceRunKeyV1 = Act0EvidenceRunKeyV1(
+      runId:
+          'run_v1|$normalizedWorldId|$normalizedLessonId|'
+          '$normalizedRunKind|$_learningEvidenceRunOrdinalV1',
+      worldId: normalizedWorldId,
+      lessonId: normalizedLessonId,
+      runOrdinal: _learningEvidenceRunOrdinalV1,
+      runKind: normalizedRunKind,
+      startedBy: normalizedStartedBy,
+    );
+  }
+
+  int _latestLearningEvidenceRunOrdinalV1() {
+    var latest = 0;
+    for (final record in _learningEvidenceHistoryV1.records) {
+      final ordinal = record.runOrdinal;
+      if (ordinal != null && ordinal > latest) {
+        latest = ordinal;
+      }
+    }
+    return latest;
   }
 
   void _recordAnswer(
