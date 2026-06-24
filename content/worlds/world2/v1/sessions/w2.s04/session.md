@@ -7,6 +7,8 @@ Build the next World 2 bridge by classifying simple board texture: calmer boards
 Each rep shows one flop texture and asks whether it stays calmer or builds more pressure.
 You are training board recognition first, not full betting logic.
 
+A paired board has two cards of the same rank.
+
 ## Decision
 Use CALL for the calmer board and RAISE for the more pressure-building board.
 Dry and paired boards usually stay calmer. Connected or draw-heavy boards build pressure faster.

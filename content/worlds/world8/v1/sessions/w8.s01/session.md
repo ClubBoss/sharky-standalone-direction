@@ -1,13 +1,15 @@
 # Session w8.s01
 
 ## Objective
-Build the first World 8 bridge by sorting tournament spots into simple ICM pressure buckets.
+Build the first World 8 bridge by sorting tournament spots into simple payout-pressure buckets.
 
 ## Scenario
 Each rep shows a basic tournament situation and asks whether the pressure is low,
 medium,
 or high.
 The goal is to notice that chip decisions change once survival and payout pressure enter the picture.
+
+ICM, or Independent Chip Model, is a tournament pressure idea: near prizes, losing chips can hurt more than winning the same chips helps.
 
 ## Decision
 Choose the simple ICM pressure bucket that best fits the tournament spot.

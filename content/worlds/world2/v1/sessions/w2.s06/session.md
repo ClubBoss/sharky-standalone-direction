@@ -1,11 +1,13 @@
 # Session w2.s06
 
 ## Objective
-Build the next World 2 bridge by counting simple outs and recognizing clear improvement paths.
+Build the next World 2 bridge by counting simple improvement cards and recognizing clear improvement paths.
 
 ## Scenario
 Each rep names a simple draw and asks how many cards improve the hand.
 You are counting clean improvement paths, not doing equity math yet.
+
+Outs are cards that can improve your hand.
 
 ## Decision
 Count the improving unseen cards first.

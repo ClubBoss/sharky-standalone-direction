@@ -4,6 +4,77 @@ import 'dart:io';
 import 'package:test/test.dart';
 
 void main() {
+  test('production contract owns first-use learner terms', () {
+    final contract = jsonDecode(
+      File('content/_meta/term_introduction_contract_v1.json')
+          .readAsStringSync(),
+    ) as Map<String, dynamic>;
+    final terms = (contract['priority_terms'] as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+    final byTerm = <String, Map<String, dynamic>>{
+      for (final term in terms) term['term'] as String: term,
+    };
+
+    expect(byTerm['ICM'], <String, dynamic>{
+      'term': 'ICM',
+      'introduction_path':
+          'content/worlds/world8/v1/sessions/w8.s01/session.md',
+      'definition':
+          'ICM, or Independent Chip Model, is a tournament pressure idea: near prizes, losing chips can hurt more than winning the same chips helps.',
+    });
+    expect(byTerm['OUTS'], <String, dynamic>{
+      'term': 'OUTS',
+      'introduction_path':
+          'content/worlds/world2/v1/sessions/w2.s06/session.md',
+      'definition': 'Outs are cards that can improve your hand.',
+    });
+    expect(byTerm['OOP'], <String, dynamic>{
+      'term': 'OOP',
+      'introduction_path':
+          'content/worlds/world2/v1/sessions/w2.s03/session.md',
+      'definition':
+          'OOP, or out of position, means acting before your opponent on later streets.',
+    });
+    expect(byTerm['PAIRED'], <String, dynamic>{
+      'term': 'PAIRED',
+      'introduction_path':
+          'content/worlds/world2/v1/sessions/w2.s04/session.md',
+      'definition': 'A paired board has two cards of the same rank.',
+    });
+    expect(byTerm['COMBO'], <String, dynamic>{
+      'term': 'COMBO',
+      'introduction_path':
+          'content/worlds/world6/v1/sessions/w6.s01/session.md',
+      'definition':
+          'A combo is one specific set of hole cards a player can hold.',
+    });
+    expect(
+      File('content/worlds/world8/v1/sessions/w8.s01/session.md')
+          .readAsStringSync(),
+      contains(byTerm['ICM']!['definition']),
+    );
+    expect(
+      File('content/worlds/world2/v1/sessions/w2.s06/session.md')
+          .readAsStringSync(),
+      contains(byTerm['OUTS']!['definition']),
+    );
+    expect(
+      File('content/worlds/world2/v1/sessions/w2.s03/session.md')
+          .readAsStringSync(),
+      contains(byTerm['OOP']!['definition']),
+    );
+    expect(
+      File('content/worlds/world2/v1/sessions/w2.s04/session.md')
+          .readAsStringSync(),
+      contains(byTerm['PAIRED']!['definition']),
+    );
+    expect(
+      File('content/worlds/world6/v1/sessions/w6.s01/session.md')
+          .readAsStringSync(),
+      contains(byTerm['COMBO']!['definition']),
+    );
+  });
+
   test(
     'term scanner rejects learner content that uses a term before its introduction',
     () async {

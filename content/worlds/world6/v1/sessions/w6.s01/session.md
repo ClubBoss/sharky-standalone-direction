@@ -3,6 +3,8 @@
 ## Objective
 Build the first World 6 bridge by sorting likely hands into broad range buckets instead of staring at one hand in isolation.
 
+A combo is one specific set of hole cards a player can hold.
+
 ## Scenario
 Each rep shows a simple action frame and asks which broad hand bucket best fits the likely range:
 strong,
