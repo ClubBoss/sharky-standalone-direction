@@ -3038,6 +3038,37 @@ void main() {
     );
   });
 
+  test('Fast screen review command exposes full-scroll evidence group', () {
+    final shellSource = File(
+      'tools/screen_review_fast_v1.sh',
+    ).readAsStringSync();
+    final captureSource = File(
+      'tools/act0_real_text_surface_capture_v1.dart',
+    ).readAsStringSync();
+    final packageSource = File(
+      'tools/package_screen_review_v1.py',
+    ).readAsStringSync();
+
+    expect(
+      shellSource,
+      contains('<core|runner|first_week|day2_return|full_scroll> compact'),
+    );
+    expect(captureSource, contains("'full_scroll': <_CaptureSurfaceV1>"));
+    expect(
+      captureSource,
+      contains("_CaptureSurfaceV1('profile.scroll_01_top', 'firstWeekProfile'"),
+    );
+    expect(captureSource, contains("'session_summary.scroll_03_bottom'"));
+    expect(captureSource, contains("'sessionSummary'"));
+    expect(captureSource, contains('full_scroll_meta.json'));
+    expect(packageSource, contains('"full_scroll_fast"'));
+    expect(packageSource, contains('full_scroll_meta.json'));
+    expect(
+      packageSource,
+      contains('return "./tools/screen_review_fast_v1.sh full_scroll compact"'),
+    );
+  });
+
   test('Fast screen review text repair covers packet-specific surfaces', () {
     final repairSource = File(
       'tools/screen_review_fast_text_repair_v1.py',

@@ -5,10 +5,15 @@ const _outputRootPathV1 = 'output/screen_review/current';
 const _schemaV1 = 'screen_review_fast_v1';
 
 class _CaptureSurfaceV1 {
-  const _CaptureSurfaceV1(this.name, this.debugSurface);
+  const _CaptureSurfaceV1(
+    this.name,
+    this.debugSurface, {
+    this.scrollViewport = 'top',
+  });
 
   final String name;
   final String debugSurface;
+  final String scrollViewport;
 }
 
 const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
@@ -45,6 +50,74 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('practice_repair_target', 'day2PracticeRepairTarget'),
     _CaptureSurfaceV1('review_continuation', 'day2ReviewContinuation'),
     _CaptureSurfaceV1('profile_not_clear', 'day2ProfileActiveRepair'),
+  ],
+  'full_scroll': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('home.scroll_01_top', 'firstWeekHome'),
+    _CaptureSurfaceV1(
+      'home.scroll_02_mid',
+      'firstWeekHome',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'home.scroll_03_bottom',
+      'firstWeekHome',
+      scrollViewport: 'bottom',
+    ),
+    _CaptureSurfaceV1('learn.scroll_01_top', 'firstWeekLearn'),
+    _CaptureSurfaceV1(
+      'learn.scroll_02_mid',
+      'firstWeekLearn',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'learn.scroll_03_bottom',
+      'firstWeekLearn',
+      scrollViewport: 'bottom',
+    ),
+    _CaptureSurfaceV1('practice.scroll_01_top', 'practice'),
+    _CaptureSurfaceV1(
+      'practice.scroll_02_mid',
+      'practice',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'practice.scroll_03_bottom',
+      'practice',
+      scrollViewport: 'bottom',
+    ),
+    _CaptureSurfaceV1('review.scroll_01_top', 'firstWeekReview'),
+    _CaptureSurfaceV1(
+      'review.scroll_02_mid',
+      'firstWeekReview',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'review.scroll_03_bottom',
+      'firstWeekReview',
+      scrollViewport: 'bottom',
+    ),
+    _CaptureSurfaceV1('profile.scroll_01_top', 'firstWeekProfile'),
+    _CaptureSurfaceV1(
+      'profile.scroll_02_mid',
+      'firstWeekProfile',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'profile.scroll_03_bottom',
+      'firstWeekProfile',
+      scrollViewport: 'bottom',
+    ),
+    _CaptureSurfaceV1('session_summary.scroll_01_top', 'sessionSummary'),
+    _CaptureSurfaceV1(
+      'session_summary.scroll_02_mid',
+      'sessionSummary',
+      scrollViewport: 'mid',
+    ),
+    _CaptureSurfaceV1(
+      'session_summary.scroll_03_bottom',
+      'sessionSummary',
+      scrollViewport: 'bottom',
+    ),
   ],
 };
 
@@ -146,6 +219,19 @@ void main(List<String> args) async {
     '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': '${group}_fast', 'device': device, 'render_kind': 'flutter_widget_test_real_text', 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted.'})}\n',
   );
 
+  if (group == 'full_scroll') {
+    final metadataFile = File(
+      '${stagingDir.path}${Platform.pathSeparator}full_scroll_meta.json',
+    );
+    if (!metadataFile.existsSync() || metadataFile.lengthSync() == 0) {
+      stderr.writeln('Missing full-scroll metadata `${metadataFile.path}`.');
+      stderr.writeln(
+        'screen_review_fast_v1: previous output preserved at ${outputDir.path}',
+      );
+      exit(1);
+    }
+  }
+
   final previousDir = Directory('${outputDir.path}.previous');
   outputDir.parent.createSync(recursive: true);
   if (previousDir.existsSync()) {
@@ -169,17 +255,20 @@ String _flutterTestSource(
   List<_CaptureSurfaceV1> captures,
 ) {
   final escapedOutputDir = jsonEncode(outputDirPath);
-  final captureStatements = captures
-      .map(
-        (capture) =>
-            '''
+  final captureStatements = captures.indexed.map((entry) {
+    final index = entry.$1;
+    final capture = entry.$2;
+    final screen = capture.name.split('.').first;
+    return '''
     await captureSurface(
       tester,
       '$device.${capture.name}.png',
       Act0ControlledDemoCaptureSurfaceV1.${capture.debugSurface},
-    );''',
-      )
-      .join();
+      screenName: '$screen',
+      scrollViewport: '${capture.scrollViewport}',
+      captureOrder: ${index + 1},
+    );''';
+  }).join();
   return '''
 import 'dart:io';
 import 'dart:convert';
@@ -198,7 +287,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const outputDirPath = $escapedOutputDir;
+  const captureGroup = '$group';
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
+  final fullScrollEntries = <Map<String, Object?>>[];
   const compactSize = Size(375, 812);
 
   Widget host(Act0ControlledDemoCaptureSurfaceV1 surface) {
@@ -333,6 +424,52 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
   }
 
+  Future<Map<String, Object?>> movePrimaryScrollableToViewport(
+    WidgetTester tester,
+    String scrollViewport,
+  ) async {
+    final candidates = find
+        .byType(Scrollable)
+        .evaluate()
+        .map(
+          (element) => element is StatefulElement ? element.state : null,
+        )
+        .whereType<ScrollableState>()
+        .where((state) => state.position.hasPixels)
+        .toList()
+      ..sort(
+        (a, b) => b.position.maxScrollExtent.compareTo(
+          a.position.maxScrollExtent,
+        ),
+      );
+    if (candidates.isEmpty) {
+      return <String, Object?>{
+        'requested_viewport': scrollViewport,
+        'scroll_offset': 0.0,
+        'max_scroll_extent': 0.0,
+        'bottom_reached': true,
+        'scrollable_found': false,
+      };
+    }
+    final position = candidates.first.position;
+    final maxExtent = position.maxScrollExtent;
+    final fraction = switch (scrollViewport) {
+      'mid' => 0.5,
+      'bottom' => 1.0,
+      _ => 0.0,
+    };
+    final targetOffset = maxExtent * fraction;
+    position.jumpTo(targetOffset);
+    await tester.pump();
+    return <String, Object?>{
+      'requested_viewport': scrollViewport,
+      'scroll_offset': position.pixels,
+      'max_scroll_extent': maxExtent,
+      'bottom_reached': position.pixels >= maxExtent,
+      'scrollable_found': true,
+    };
+  }
+
   String colorToHex(Color color) {
     final alpha = (color.a * 255).round().clamp(0, 255);
     final red = (color.r * 255).round().clamp(0, 255);
@@ -389,11 +526,20 @@ void main() {
     WidgetTester tester,
     String fileName,
     Act0ControlledDemoCaptureSurfaceV1 surface,
+    {
+    required String screenName,
+    required String scrollViewport,
+    required int captureOrder,
+  }
   ) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     await pumpCompact(tester, surface);
     await advanceWelcomeCaptureState(tester, fileName);
+    final scrollMetadata = await movePrimaryScrollableToViewport(
+      tester,
+      scrollViewport,
+    );
     writeTextRepairOverlays(tester, fileName);
     final boundary = tester.renderObject<RenderRepaintBoundary>(
       find.byKey(const Key('act0_real_text_capture_boundary')),
@@ -407,6 +553,16 @@ void main() {
     }
     final file = File('\${outputDir.path}/' + fileName);
     file.writeAsBytesSync(Uint8List.view(byteData.buffer));
+    if (captureGroup == 'full_scroll') {
+      fullScrollEntries.add(<String, Object?>{
+        'screen': screenName,
+        'file': fileName,
+        'capture_order': captureOrder,
+        'source_capture_state': surface.name,
+        'capture_mode': 'viewport_sequence',
+        ...scrollMetadata,
+      });
+    }
   }
 
   testWidgets('capture real-text Act0 $group review surfaces', (tester) async {
@@ -418,6 +574,17 @@ void main() {
     });
 
 $captureStatements
+    if (captureGroup == 'full_scroll') {
+      File('\${outputDir.path}/full_scroll_meta.json').writeAsStringSync(
+        const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+          'schema': 'full_scroll_screen_evidence_v1',
+          'device': '$device',
+          'capture_mode': 'viewport_sequence',
+          'entries': fullScrollEntries,
+          'note': 'Generated metadata is local-only and uncommitted.',
+        }) + '\\n',
+      );
+    }
   });
 }
 ''';
@@ -425,6 +592,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|full_scroll> compact',
   );
 }

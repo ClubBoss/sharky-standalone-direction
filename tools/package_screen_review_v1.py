@@ -55,6 +55,26 @@ SURFACE_GROUPS = {
         ("review_continuation", "Review repair continuation"),
         ("profile_not_clear", "Profile active repair proof"),
     ),
+    "full_scroll_fast": (
+        ("home.scroll_01_top", "Home - top"),
+        ("home.scroll_02_mid", "Home - middle"),
+        ("home.scroll_03_bottom", "Home - bottom"),
+        ("learn.scroll_01_top", "Learn - top"),
+        ("learn.scroll_02_mid", "Learn - middle"),
+        ("learn.scroll_03_bottom", "Learn - bottom"),
+        ("practice.scroll_01_top", "Practice - top"),
+        ("practice.scroll_02_mid", "Practice - middle"),
+        ("practice.scroll_03_bottom", "Practice - bottom"),
+        ("review.scroll_01_top", "Review - top"),
+        ("review.scroll_02_mid", "Review - middle"),
+        ("review.scroll_03_bottom", "Review - bottom"),
+        ("profile.scroll_01_top", "Profile - top"),
+        ("profile.scroll_02_mid", "Profile - middle"),
+        ("profile.scroll_03_bottom", "Profile - bottom"),
+        ("session_summary.scroll_01_top", "Session summary - top"),
+        ("session_summary.scroll_02_mid", "Session summary - middle"),
+        ("session_summary.scroll_03_bottom", "Session summary - bottom"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEVICE = "compact"
@@ -71,7 +91,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|full_scroll_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -106,7 +126,16 @@ def main(argv: list[str]) -> int:
     metadata = _metadata(root, entries, contact_sheet, zip_path, group)
     readme.write_text(_readme_text(metadata), encoding="utf-8")
     index.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-    _write_zip(entries, contact_sheet, readme, index, output_dir / "manifest.json", zip_path)
+    full_scroll_metadata = output_dir / "full_scroll_meta.json"
+    _write_zip(
+        entries,
+        contact_sheet,
+        readme,
+        index,
+        output_dir / "manifest.json",
+        full_scroll_metadata if full_scroll_metadata.exists() else None,
+        zip_path,
+    )
 
     print(contact_sheet)
     print(zip_path)
@@ -206,6 +235,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh first_week compact"
     if group == "day2_return_fast":
         return "./tools/screen_review_fast_v1.sh day2_return compact"
+    if group == "full_scroll_fast":
+        return "./tools/screen_review_fast_v1.sh full_scroll compact"
     return f"./tools/screen_review_v1.sh {group} compact"
 
 
@@ -244,6 +275,7 @@ def _write_zip(
     readme: Path,
     index: Path,
     manifest: Path,
+    full_scroll_metadata: Path | None,
     zip_path: Path,
 ) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -251,6 +283,8 @@ def _write_zip(
             archive.write(path, path.name)
         if manifest.exists():
             archive.write(manifest, manifest.name)
+        if full_scroll_metadata is not None:
+            archive.write(full_scroll_metadata, full_scroll_metadata.name)
         archive.write(contact_sheet, contact_sheet.name)
         archive.write(readme, readme.name)
         archive.write(index, index.name)
