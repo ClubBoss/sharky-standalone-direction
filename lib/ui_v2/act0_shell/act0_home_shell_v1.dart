@@ -212,7 +212,7 @@ class Act0HomeShellV1 extends StatelessWidget {
                             act0LocalizedSurfaceAtomV1(
                               context,
                               'home_checklist_title',
-                              fallback: 'Short table practice',
+                              fallback: 'Today\'s sequence',
                             ),
                       ))
               else
@@ -248,16 +248,15 @@ class Act0HomeShellV1 extends StatelessWidget {
       return null;
     }
 
-    final continueJob = findExactJob('continue');
     final repairJob = findJob('repair:');
     final recheckJob = findJob('recheck:');
     final proveJob = findJob('prove:');
     final localeIsRu = _isRuLocaleV1(context);
-    final learnDetail = checklistActive
-        ? ''
-        : (continueJob?.detail.trim().isNotEmpty ?? false)
-        ? continueJob!.detail.trim()
-        : nextActionSubtitle?.trim() ?? '';
+    final learnDetail = act0LocalizedSurfaceAtomV1(
+      context,
+      'home_checklist_learn_status_detail',
+      fallback: 'Current lesson is above.',
+    );
 
     final fixRow = repairJob != null
         ? Act0HomeChecklistRowV1(
@@ -378,15 +377,14 @@ class Act0HomeShellV1 extends StatelessWidget {
           'home_checklist_learn_label',
           fallback: 'Learn',
         ),
-        title:
-            nextActionTitle ??
-            currentLesson?.title ??
-            state.currentLesson.title,
+        title: act0LocalizedSurfaceAtomV1(
+          context,
+          'home_checklist_learn_status_title',
+          fallback: 'Learning path',
+        ),
         detail: learnDetail,
         icon: Icons.menu_book_rounded,
         accentColor: Act0ShellTokensV1.primary,
-        tapKey: 'act0_shell_home_plan_job_continue',
-        onTap: continueJob == null ? null : (onOpenLearnContext ?? onContinue),
       ),
       Act0HomeChecklistRowV1(
         rowKey: 'drill',

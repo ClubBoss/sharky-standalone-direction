@@ -6774,48 +6774,64 @@ void main() {
   testWidgets(
     'Activated Home does not duplicate the current lesson across hero focus and Learn row',
     (tester) async {
-      SharedPreferences.setMockInitialValues(<String, Object>{
-        'act0_shell_progress_v1': jsonEncode(
-          minimalPersistedProgressMapV1(
-            schemaVersion: 8,
-            completedTaskIds: const <String>['actions_terms_intro'],
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0HomeShellV1(
+              state: Act0ShellStateV1.sample,
+              showChecklist: true,
+              nextActionTitle: 'Fold, check, call, raise',
+              nextActionSubtitle: 'Learn the four table actions.',
+              dailyPlanTitle: 'Today\'s sequence',
+              dailyPlanJobs: const <Act0HomePlanJobV1>[
+                Act0HomePlanJobV1(
+                  jobId: 'continue',
+                  label: 'Learn',
+                  title: 'Fold, check, call, raise',
+                  detail: 'Learn the four table actions.',
+                ),
+              ],
+              onContinue: () {},
+            ),
           ),
         ),
-      });
+      );
 
-      await pumpTall(tester, host());
-
+      final heroTitle = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_primary_route_title')),
+      );
       final learnTitle = tester.widget<Text>(
         find.byKey(const Key('act0_shell_home_checklist_title_learn')),
       );
-      expect((learnTitle.data ?? '').trim(), isNotEmpty);
       expect(
-        find.byKey(const Key('act0_shell_home_primary_route_title')),
+        find.byKey(const Key('act0_shell_home_checklist_detail_learn')),
         findsOneWidget,
       );
-      expect(find.text(learnTitle.data!), findsWidgets);
+      final learnDetail = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_checklist_detail_learn')),
+      );
+      expect(heroTitle.data, 'Fold, check, call, raise');
+      expect(find.text('Fold, check, call, raise'), findsOneWidget);
+      expect((learnTitle.data ?? '').trim(), isNot('Fold, check, call, raise'));
+      expect(learnTitle.data, 'Learning path');
+      expect(learnDetail.data, 'Current lesson is above.');
+      expect(find.text('Continue'), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
       expect(
-        find.byKey(const Key('act0_shell_home_weekly_focus_title')),
+        find.byKey(const Key('act0_shell_home_plan_job_continue')),
         findsNothing,
       );
       expect(
-        find.byKey(const Key('act0_shell_home_next_action_subtitle')),
+        find.byKey(const Key('act0_shell_home_daily_plan_title')),
         findsOneWidget,
       );
-      expect(
-        find.byKey(const Key('act0_shell_home_checklist_title_learn')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_home_mission_command_card')),
-        findsOneWidget,
-      );
-      expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
+      expect(find.text('Today\'s sequence'), findsOneWidget);
     },
   );
 
   testWidgets(
-    'Activated Home row order is Learn Practice Review Fix and rows use owning tabs where safe',
+    'Activated Home row order is Learn Practice Review and rows use owning tabs where safe',
     (tester) async {
       SharedPreferences.setMockInitialValues(<String, Object>{
         'act0_shell_progress_v1': jsonEncode(
@@ -6856,30 +6872,26 @@ void main() {
             find.byKey(const Key('act0_shell_home_checklist_row_review')),
           )
           .dy;
-      final fixTop = tester
-          .getTopLeft(
-            find.byKey(const Key('act0_shell_home_checklist_row_fix')),
-          )
-          .dy;
 
       expect(learnTop, lessThan(practiceTop));
       expect(practiceTop, lessThan(reviewTop));
-      expect(reviewTop, lessThan(fixTop));
-
-      await tester.tap(
-        find.byKey(const Key('act0_shell_home_plan_job_continue')),
+      expect(
+        find.byKey(const Key('act0_shell_home_checklist_row_fix')),
+        findsNothing,
       );
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_home_plan_job_continue')),
+        findsNothing,
+      );
 
       await openBottomTabV1(tester, 'Home');
       await tester.tap(
         find.byKey(const Key('act0_shell_home_daily_practice_now')),
       );
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-      expect(find.byKey(const Key('act0_shell_play_screen')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
 
+      await openBottomTabV1(tester, 'Home');
       await tester.tap(
         find.byKey(
           const Key(
