@@ -10,8 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) =>
-    false;
+bool _isRuLocaleV1(BuildContext context) => false;
 
 String _learnCopyV1(
   BuildContext context, {
@@ -1097,8 +1096,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                               child: Text(
                                 _learnCopyV1(
                                   context,
-                                  en: 'World ${world.worldNumber}',
-                                  ru: 'Мир ${world.worldNumber}',
+                                  en: 'Current world · W${world.worldNumber}',
+                                  ru: 'Текущий мир · W${world.worldNumber}',
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.fade,
@@ -1178,8 +1177,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                         Text(
                           _learnCopyV1(
                             context,
-                            en: '$lessonCount lessons · $moduleProgressLabel',
-                            ru: '$lessonCount уроков · $moduleProgressLabel',
+                            en: 'World progress · $lessonCount lessons · $moduleProgressLabel',
+                            ru: 'Прогресс мира · $lessonCount уроков · $moduleProgressLabel',
                           ),
                           key: const Key('act0_shell_learn_route_board'),
                           maxLines: 1,
@@ -2352,9 +2351,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         en: 'W13+ is later strategic depth.',
                         ru: 'W13+ — более поздняя стратегическая глубина.',
                       ),
-                      key: const Key(
-                        'act0_shell_levels_later_frontier_line',
-                      ),
+                      key: const Key('act0_shell_levels_later_frontier_line'),
                       maxLines: 1,
                       overflow: TextOverflow.fade,
                       style: Act0ShellTokensV1.muted.copyWith(
@@ -3472,8 +3469,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                       Text(
                         _learnCopyV1(
                           context,
-                          en: 'Learning path',
-                          ru: 'Путь обучения',
+                          en: 'Current lesson',
+                          ru: 'Текущий урок',
                         ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.textMuted,
@@ -3557,8 +3554,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         Text(
                           _learnCopyV1(
                             context,
-                            en: 'Step $stepIndex of $totalSteps',
-                            ru: 'Шаг $stepIndex из $totalSteps',
+                            en: 'Current step · $stepIndex of $totalSteps',
+                            ru: 'Текущий шаг · $stepIndex из $totalSteps',
                           ),
                           style: Act0ShellTokensV1.label.copyWith(
                             color: _learnV6Cyan,

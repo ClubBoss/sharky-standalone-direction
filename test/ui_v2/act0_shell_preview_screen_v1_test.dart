@@ -12012,6 +12012,45 @@ void main() {
   );
 
   testWidgets(
+    'Learn route labels current world lesson and progress without false future activation',
+    (tester) async {
+      await pumpTall(tester, host(tab: Act0ShellTabV1.learn));
+
+      final world = find.byKey(const Key('act0_shell_learn_v5_world_context'));
+      final mission = find.byKey(const Key('act0_shell_current_mission_card'));
+
+      expect(world, findsOneWidget);
+      expect(mission, findsOneWidget);
+      expect(
+        find.descendant(of: world, matching: find.text('Current world · W1')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: world,
+          matching: find.textContaining('World progress ·'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: mission, matching: find.text('Current lesson')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: mission,
+          matching: find.text('Current step · 1 of 7'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('W11-W12 active'), findsNothing);
+      expect(find.text('W13+ active'), findsNothing);
+      expect(find.textContaining('36 worlds live'), findsNothing);
+      expect(find.textContaining('Volume I complete'), findsNothing);
+    },
+  );
+
+  testWidgets(
     'Learn compact header avoids duplicate world prefix and compresses utility chrome',
     (tester) async {
       await pumpCompact(tester, host(tab: Act0ShellTabV1.learn));
@@ -12778,7 +12817,10 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: mission, matching: find.text('Step 1 of 7')),
+        find.descendant(
+          of: mission,
+          matching: find.text('Current step · 1 of 7'),
+        ),
         findsOneWidget,
       );
       expect(
@@ -12981,7 +13023,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: hero, matching: find.text('Step 1 of 7')),
+      find.descendant(of: hero, matching: find.text('Current step · 1 of 7')),
       findsOneWidget,
     );
   });
@@ -13634,7 +13676,10 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: mission, matching: find.text('Step 1 of 7')),
+        find.descendant(
+          of: mission,
+          matching: find.text('Current step · 1 of 7'),
+        ),
         findsOneWidget,
       );
       expect(
