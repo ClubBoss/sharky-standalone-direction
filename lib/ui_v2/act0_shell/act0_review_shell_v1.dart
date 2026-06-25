@@ -55,7 +55,6 @@ class Act0ReviewShellV1 extends StatelessWidget {
     final localeIsRu = _isRuLocaleV1(context);
     final nextMistake = review.mistakes.isEmpty ? null : review.mistakes.first;
     final isClean = nextMistake == null;
-    final dominantPattern = _dominantReviewPatternV1(review.mistakes);
     final recovered = <Act0MistakeCardV1>[
       ...review.fixedMistakes.where(
         (mistake) => mistake.severityLabel != 'Quick fix',
@@ -81,40 +80,10 @@ class Act0ReviewShellV1 extends StatelessWidget {
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
       if (!isClean) ...[
-        if (dominantPattern != null) ...[
-          _ReviewPatternCardV1(
-            pattern: dominantPattern,
-            localeIsRu: localeIsRu,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
         _ReviewRepairCoachCardV1(
           mistake: review.mistakes.first,
           onFixMistake: onFixMistake,
         ),
-        if (review.mistakes.length > 1) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Container(
-            key: const Key('act0_shell_review_more_repairs_line'),
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-            decoration: Act0ShellTokensV1.surfaceDecoration(
-              color: Act0ShellTokensV1.surface2.withOpacity(0.56),
-              glow: false,
-            ),
-            child: Text(
-              localeIsRu
-                  ? (review.mistakes.length == 2
-                        ? 'Начни с этого. Когда он стабилизируется, следующий спот тоже станет легче.'
-                        : 'Начни с этого. Когда он стабилизируется, остальные ${review.mistakes.length - 1} ${act0RussianPluralV1(review.mistakes.length - 1, 'спот', 'спота', 'спотов')} тоже станут легче по одному.')
-                  : (review.mistakes.length == 2
-                        ? 'Start here. Once this settles, the next spot gets easier too.'
-                        : 'Start here. Once this settles, the next ${review.mistakes.length - 1} spots get easier one by one.'),
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textDim,
-              ),
-            ),
-          ),
-        ],
       ],
     ];
     final recoveredColumn = <Widget>[
@@ -194,11 +163,14 @@ class Act0ReviewShellV1 extends StatelessWidget {
         Act0ShellScreenHeaderV1(
           title: _reviewCopyV1(context, fallback: 'Review'),
           subtitle: isClean
-              ? _reviewCopyV1(context, fallback: 'Confidence repair board')
+              ? _reviewCopyV1(
+                  context,
+                  fallback: 'Review notes and what to revisit.',
+                )
               : _reviewCopyV1(
                   context,
-                  en: 'Your active repair is waiting on Home.',
-                  ru: 'Твой активный разбор ждёт на Главной.',
+                  en: 'One clue to keep in view.',
+                  ru: 'Одна подсказка, которую стоит держать в фокусе.',
                 ),
           eyebrow: _reviewHeaderEyebrowV1(
             localeIsRu: localeIsRu,
@@ -254,108 +226,6 @@ class Act0ReviewShellV1 extends StatelessWidget {
   }
 }
 
-class _ReviewPatternSignalV1 {
-  const _ReviewPatternSignalV1({
-    required this.label,
-    required this.count,
-    required this.totalAttempts,
-    required this.titles,
-  });
-
-  final String label;
-  final int count;
-  final int totalAttempts;
-  final List<String> titles;
-}
-
-_ReviewPatternSignalV1? _dominantReviewPatternV1(
-  List<Act0MistakeCardV1> mistakes,
-) {
-  if (mistakes.length < 2) {
-    return null;
-  }
-  final grouped = <String, List<Act0MistakeCardV1>>{};
-  for (final mistake in mistakes) {
-    grouped
-        .putIfAbsent(mistake.weaknessLabel, () => <Act0MistakeCardV1>[])
-        .add(mistake);
-  }
-  _ReviewPatternSignalV1? best;
-  for (final entry in grouped.entries) {
-    final bucket = entry.value;
-    final totalAttempts = bucket.fold<int>(
-      0,
-      (sum, mistake) => sum + mistake.attempts,
-    );
-    if (bucket.length < 2 && totalAttempts < 3) {
-      continue;
-    }
-    final candidate = _ReviewPatternSignalV1(
-      label: entry.key,
-      count: bucket.length,
-      totalAttempts: totalAttempts,
-      titles: bucket.map((mistake) => mistake.title).take(2).toList(),
-    );
-    if (best == null ||
-        candidate.count > best.count ||
-        (candidate.count == best.count &&
-            candidate.totalAttempts > best.totalAttempts)) {
-      best = candidate;
-    }
-  }
-  return best;
-}
-
-class _ReviewPatternCardV1 extends StatelessWidget {
-  const _ReviewPatternCardV1({required this.pattern, required this.localeIsRu});
-
-  final _ReviewPatternSignalV1 pattern;
-  final bool localeIsRu;
-
-  @override
-  Widget build(BuildContext context) {
-    final examples = pattern.titles.join(' · ');
-    return Container(
-      key: const Key('act0_shell_review_pattern_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.info.withOpacity(0.24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            localeIsRu ? 'Паттерн начинает проступать' : 'Pattern to repair',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.info,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            localeIsRu
-                ? '${pattern.label} всплывает ${pattern.count} раза. Сначала почини эту группу.'
-                : '${pattern.label} is showing up ${pattern.count} times. Fix this pattern first.',
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          if (examples.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              examples,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
   const _SessionDrillRecheckQueueCardV1({
     required this.item,
@@ -394,7 +264,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
           Text(
             'Review this practice mistake',
             style: Act0ShellTokensV1.sectionTitle,
@@ -446,31 +316,58 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
         : mistake.repairActionLabel;
     return Container(
       key: const Key('act0_shell_review_repair_coach_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.primary.withOpacity(0.10),
-        borderColor: Act0ShellTokensV1.primary.withOpacity(0.32),
+        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
+        borderColor: Act0ShellTokensV1.primary.withOpacity(0.22),
+        glow: false,
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Repair context',
-            style: Act0ShellTokensV1.label.copyWith(
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.primary.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            ),
+            child: const Icon(
+              Icons.bookmark_outline_rounded,
               color: Act0ShellTokensV1.primary,
-              fontWeight: FontWeight.w900,
+              size: 20,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(clueLine, style: Act0ShellTokensV1.sectionTitle),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(actionLine, style: Act0ShellTokensV1.muted),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Text(
-            'Home has the next focused hand for this clue.',
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
-              fontWeight: FontWeight.w800,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Active repair note',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.primary,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(
+                  clueLine,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(actionLine, style: Act0ShellTokensV1.muted),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(
+                  'Keep this clue in view before your next hand.',
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textDim,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -502,8 +399,12 @@ class _ReviewBoardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasRepair = nextMistake != null;
+    final hasRecovered = review.fixedMistakes.isNotEmpty;
+    final isEmpty = !hasRepair && !hasRecovered;
     final tone = hasRepair ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary;
-    final title = hasRepair
+    final title = isEmpty
+        ? _reviewCopyV1(context, fallback: 'Review notes')
+        : hasRepair
         ? _reviewCopyV1(
             context,
             atomId: 'review_board_title_fix',
@@ -514,20 +415,28 @@ class _ReviewBoardV1 extends StatelessWidget {
             atomId: 'review_board_title_clean',
             fallback: 'Clean board',
           );
-    final headline = hasRepair
+    final headline = isEmpty
+        ? _reviewCopyV1(context, fallback: 'No past spots to review yet')
+        : hasRepair
         ? nextMistake!.title
         : _reviewCopyV1(
             context,
             atomId: 'review_board_headline_clean',
             fallback: 'Board is clean',
           );
-    final body = hasRepair
+    final body = isEmpty
+        ? _reviewCopyV1(
+            context,
+            fallback:
+                'Finish more hands and Sharky will keep useful review notes here.',
+          )
+        : hasRepair
         ? nextMistake!.reason
         : _reviewCopyV1(
             context,
             atomId: 'review_board_body_clean',
             fallback:
-                'No urgent fixes right now. Keep the board clean with one crisp run.',
+                'No active repair right now. Recovered spots stay available below.',
           );
     final support = hasRepair
         ? (nextMistake!.repairActionLabel.trim().isNotEmpty
@@ -539,7 +448,9 @@ class _ReviewBoardV1 extends StatelessWidget {
                 ))
         : _reviewCopyV1(
             context,
-            en: 'That repair work stuck. Keep the next read light.',
+            en: isEmpty
+                ? 'Review stays quiet until completed hands create something useful to revisit.'
+                : 'That repair work stuck. Keep the next read light.',
             ru: 'Этот ремонт закрепился. Держи следующее чтение лёгким.',
           );
 

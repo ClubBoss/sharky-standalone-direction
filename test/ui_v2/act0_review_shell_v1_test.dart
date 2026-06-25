@@ -83,7 +83,7 @@ void main() {
   );
 
   testWidgets(
-    'Review keeps active repair context on Home without a queue CTA',
+    'Review keeps one compact active repair note without a Home redirect',
     (tester) async {
       await tester.pumpWidget(
         reviewHost(
@@ -106,11 +106,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Active repair'), findsOneWidget);
-      expect(find.text('Repair context'), findsOneWidget);
-      expect(
-        find.text('Your active repair is waiting on Home.'),
-        findsOneWidget,
-      );
+      expect(find.text('Active repair note'), findsOneWidget);
+      expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(find.text('1 fix waiting'), findsNothing);
       expect(
         find.text('The no-bet-yet clue is still the one to fix.'),
@@ -121,9 +118,10 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text('Home has the next focused hand for this clue.'),
+        find.text('Keep this clue in view before your next hand.'),
         findsOneWidget,
       );
+      expect(find.textContaining('Home'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_review_fix_next_cta')),
         findsNothing,
@@ -294,7 +292,7 @@ void main() {
   });
 
   testWidgets(
-    'Review makes a repeated pending pattern actionable without an error log',
+    'Review does not turn pending repairs into grouped history or counts',
     (tester) async {
       await tester.pumpWidget(
         reviewHost(
@@ -325,23 +323,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Pattern to repair'), findsOneWidget);
       expect(
-        find.text('Action read is showing up 2 times. Fix this pattern first.'),
-        findsOneWidget,
+        find.byKey(const Key('act0_shell_review_pattern_card')),
+        findsNothing,
       );
-      expect(
-        tester
-            .getTopLeft(find.byKey(const Key('act0_shell_review_pattern_card')))
-            .dy,
-        lessThan(
-          tester
-              .getTopLeft(
-                find.byKey(const Key('act0_shell_review_repair_coach_card')),
-              )
-              .dy,
-        ),
-      );
+      expect(find.textContaining('showing up 2 times'), findsNothing);
+      expect(find.textContaining('next spot gets easier'), findsNothing);
       expect(find.textContaining('leak'), findsNothing);
     },
   );
@@ -367,7 +354,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('Repair context'), findsOneWidget);
+    expect(find.text('Active repair note'), findsOneWidget);
     expect(find.text('Recovered lately'), findsOneWidget);
     expect(find.textContaining('mastered forever'), findsNothing);
   });
@@ -396,5 +383,39 @@ void main() {
     expect(find.text('Repair coach'), findsNothing);
     expect(find.textContaining('Session proof'), findsNothing);
     expect(find.textContaining('Today you repaired'), findsNothing);
+  });
+
+  testWidgets('Review shows an honest empty state without fake past spots', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Confidence repair board',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('No past spots to review yet'), findsOneWidget);
+    expect(
+      find.text(
+        'Finish more hands and Sharky will keep useful review notes here.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('mistake history'), findsNothing);
+    expect(find.textContaining('personalized'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_review_fix_next_cta')),
+      findsNothing,
+    );
+    expect(find.byType(FilledButton), findsNothing);
   });
 }

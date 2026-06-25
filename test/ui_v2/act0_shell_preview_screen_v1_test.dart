@@ -3297,7 +3297,7 @@ void main() {
   );
 
   testWidgets(
-    'Debug capture review entry redirects active repair context to Home',
+    'Debug capture review entry keeps active repair as compact context',
     (tester) async {
       await pumpTall(
         tester,
@@ -3311,9 +3311,11 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
       expect(find.text('Review'), findsWidgets);
+      expect(find.text('Active repair note'), findsOneWidget);
+      expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(
-        find.text('Your active repair is waiting on Home.'),
-        findsOneWidget,
+        find.text('Home has the next focused hand for this clue.'),
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_review_fix_next_cta')),
@@ -30721,82 +30723,71 @@ void main() {
     _expectNoForbiddenLabels();
   });
 
-  testWidgets(
-    'Review surfaces a dominant repair pattern when evidence repeats',
-    (tester) async {
-      tester.view.physicalSize = const Size(1024, 1366);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets('Review keeps repeated pending evidence as one active note', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1024, 1366);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Act0ReviewShellV1(
-              review: const Act0ReviewStateV1(
-                title: 'What to fix next',
-                subtitle: 'Fix the biggest leak first.',
-                weaknessLabel: 'Action order',
-                reason: 'Late action keeps getting rushed.',
-                stats: <Act0ReviewStatV1>[
-                  Act0ReviewStatV1(label: 'Open', value: '2'),
-                ],
-                chosenLabel: 'Call',
-                betterLabel: 'Fold',
-                mistakes: <Act0MistakeCardV1>[
-                  Act0MistakeCardV1(
-                    taskId: 'a1',
-                    lessonId: 'actions',
-                    title: 'BTN opens action',
-                    weaknessLabel: 'Action order',
-                    selectedOptionId: 'call',
-                    selectedLabel: 'Call',
-                    betterLabel: 'Fold',
-                    reason: 'Action order slipped under pressure.',
-                    attempts: 2,
-                  ),
-                  Act0MistakeCardV1(
-                    taskId: 'a2',
-                    lessonId: 'actions',
-                    title: 'BB closes action',
-                    weaknessLabel: 'Action order',
-                    selectedOptionId: 'raise',
-                    selectedLabel: 'Raise',
-                    betterLabel: 'Check',
-                    reason: 'Action order blurred again.',
-                    attempts: 1,
-                  ),
-                ],
-              ),
-              selected: null,
-              onSelected: (_) {},
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0ReviewShellV1(
+            review: const Act0ReviewStateV1(
+              title: 'What to fix next',
+              subtitle: 'Fix the biggest leak first.',
+              weaknessLabel: 'Action order',
+              reason: 'Late action keeps getting rushed.',
+              stats: <Act0ReviewStatV1>[
+                Act0ReviewStatV1(label: 'Open', value: '2'),
+              ],
+              chosenLabel: 'Call',
+              betterLabel: 'Fold',
+              mistakes: <Act0MistakeCardV1>[
+                Act0MistakeCardV1(
+                  taskId: 'a1',
+                  lessonId: 'actions',
+                  title: 'BTN opens action',
+                  weaknessLabel: 'Action order',
+                  selectedOptionId: 'call',
+                  selectedLabel: 'Call',
+                  betterLabel: 'Fold',
+                  reason: 'Action order slipped under pressure.',
+                  attempts: 2,
+                ),
+                Act0MistakeCardV1(
+                  taskId: 'a2',
+                  lessonId: 'actions',
+                  title: 'BB closes action',
+                  weaknessLabel: 'Action order',
+                  selectedOptionId: 'raise',
+                  selectedLabel: 'Raise',
+                  betterLabel: 'Check',
+                  reason: 'Action order blurred again.',
+                  attempts: 1,
+                ),
+              ],
             ),
+            selected: null,
+            onSelected: (_) {},
           ),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('act0_shell_review_pattern_card')),
-        findsOneWidget,
-      );
-      expect(find.text('Pattern to repair'), findsOneWidget);
-      expect(
-        find.text(
-          'Action order is showing up 2 times. Fix this pattern first.',
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.text(
-          'Start here. Once this settles, the next spot gets easier too.',
-        ),
-        findsOneWidget,
-      );
-    },
-  );
+    expect(
+      find.byKey(const Key('act0_shell_review_pattern_card')),
+      findsNothing,
+    );
+    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.textContaining('showing up 2 times'), findsNothing);
+    expect(find.textContaining('next spot gets easier'), findsNothing);
+  });
 
-  testWidgets('Review keeps an open repair as Home-owned context', (
+  testWidgets('Review keeps an open repair as compact truthful context', (
     tester,
   ) async {
     await pumpCompact(
@@ -30836,10 +30827,10 @@ void main() {
     );
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('Repair context'), findsOneWidget);
-    expect(find.text('Your active repair is waiting on Home.'), findsOneWidget);
+    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.text('Your active repair is waiting on Home.'), findsNothing);
     expect(
-      find.text('Home has the next focused hand for this clue.'),
+      find.text('Keep this clue in view before your next hand.'),
       findsOneWidget,
     );
     expect(find.text('Repair this clue'), findsNothing);
