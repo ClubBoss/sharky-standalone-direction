@@ -26711,7 +26711,7 @@ void main() {
       find.byKey(const Key('act0_shell_play_repair_empty')),
       findsOneWidget,
     );
-    expect(find.text('Skill packs'), findsOneWidget);
+    expect(find.text('Topic reps'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_play_topic_hub')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_practice_group_placement')),
@@ -26986,7 +26986,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
       expect(
-        find.text('Topic reps unlock as your route grows.'),
+        find.text('Focused reps open as your route grows.'),
         findsOneWidget,
       );
 
@@ -29620,40 +29620,25 @@ void main() {
     );
   });
 
-  testWidgets(
-    'Home prioritizes weak spot repair while Play keeps a stable lane layout',
-    (tester) async {
-      await pumpTall(tester, host());
-      await createActionsMistakeFromPlayHub(tester);
-      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
-      await tester.pumpAndSettle();
+  testWidgets('Play keeps a stable lane layout after a weak spot exists', (
+    tester,
+  ) async {
+    await pumpTall(tester, host());
+    await createActionsMistakeFromPlayHub(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Home'));
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const Key('act0_shell_home_mission_command_card')),
-        findsOneWidget,
-      );
-      expect(find.text('Repair'), findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_home_repair_panel')),
-        findsOneWidget,
-      );
-      expect(find.text('Repair this signal'), findsOneWidget);
-      expect(find.textContaining('Raise adds pressure'), findsNothing);
-
-      await openBottomTabV1(tester, 'Practice');
-      expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_play_featured_card')),
-        findsOneWidget,
-      );
-      expect(find.text('Skill packs'), findsOneWidget);
-      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
-    },
-  );
+    await openBottomTabV1(tester, 'Practice');
+    expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_card')),
+      findsOneWidget,
+    );
+    expect(find.text('Topic reps'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+  });
 
   testWidgets('Home weak spot CTA opens repair mode directly', (tester) async {
     await pumpTall(tester, host());

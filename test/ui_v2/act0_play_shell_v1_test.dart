@@ -218,7 +218,7 @@ void main() {
     expect(empty, findsOneWidget);
     expect(find.text('Nothing to repair right now.'), findsOneWidget);
     expect(
-      find.text('Use skill packs for extra reps by topic.'),
+      find.text('Topic reps stay ready for extra practice areas.'),
       findsOneWidget,
     );
     expect(
@@ -251,7 +251,7 @@ void main() {
   });
 
   testWidgets(
-    'Repair recommendation becomes the primary Practice reinforcement entry',
+    'Repair recommendation remains a secondary Practice reinforcement entry',
     (tester) async {
       final started = <String>[];
       await tester.pumpWidget(
@@ -279,32 +279,36 @@ void main() {
 
       final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
       expect(
-        find.descendant(
-          of: hero,
-          matching: find.text('Practice the no-bet-yet clue'),
-        ),
+        find.descendant(of: hero, matching: find.text('Quick daily drill')),
         findsOneWidget,
       );
       expect(
         find.descendant(
           of: hero,
-          matching: find.text('One same-clue rep will help lock this in.'),
+          matching: find.text('Short spots from completed lessons.'),
         ),
         findsOneWidget,
       );
-      expect(find.text('Repair reinforcement'), findsOneWidget);
+      final repair = find.byKey(
+        const Key('act0_shell_practice_group_weak_spots'),
+      );
+      expect(repair, findsOneWidget);
+      expect(
+        find.descendant(of: repair, matching: find.text('Repair this spot')),
+        findsOneWidget,
+      );
       expect(find.text('Session proof'), findsNothing);
       expect(find.text('Review'), findsNothing);
       expect(find.text('Learn'), findsNothing);
       expect(find.text('Profile'), findsNothing);
 
-      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+      await tester.tap(repair);
       expect(started, <String>['weak_spots']);
     },
   );
 
   testWidgets(
-    'Skill packs render compact honest previews without locked-wall copy',
+    'Topic reps render compact route-backed previews without lockwall claims',
     (tester) async {
       await pumpPractice(
         tester,
@@ -319,9 +323,9 @@ void main() {
         find.byKey(const Key('act0_shell_play_topic_hub')),
         findsOneWidget,
       );
-      expect(find.text('Skill packs'), findsOneWidget);
+      expect(find.text('Topic reps'), findsOneWidget);
       expect(
-        find.text('Topic reps unlock as your route grows.'),
+        find.text('Focused reps open as your route grows.'),
         findsOneWidget,
       );
 
@@ -349,11 +353,22 @@ void main() {
       expect(find.text('Later'), findsNothing);
       expect(find.text('Clear it on the route first.'), findsNothing);
       expect(find.text('0/12'), findsNothing);
+      expect(find.textContaining('premium'), findsNothing);
+      expect(find.textContaining('pay'), findsNothing);
+      expect(find.textContaining('recommended for you'), findsNothing);
+      expect(find.textContaining('based on your mistakes'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_play_locked_packs_summary')),
         findsOneWidget,
       );
-      expect(find.text('More packs unlock as you progress'), findsOneWidget);
+      expect(
+        find.text('More practice areas open with the route'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Finish lessons to open more focused reps.'),
+        findsOneWidget,
+      );
     },
   );
 

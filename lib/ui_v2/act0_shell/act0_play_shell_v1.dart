@@ -249,7 +249,8 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
         fixLeakGroup ??
         (widget.groups.isEmpty ? null : widget.groups.first);
     final featuredGroup =
-        quickDrillGroup ?? (recommendedRepairGroup ? null : fallbackFeaturedGroup);
+        quickDrillGroup ??
+        (recommendedRepairGroup ? null : fallbackFeaturedGroup);
     final excludedGroupIds = <String>{
       if (featuredGroup != null) featuredGroup.groupId,
       if (quickDrillGroup != null) quickDrillGroup.groupId,
@@ -820,7 +821,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_body',
-                    fallback: 'Use skill packs for extra reps by topic.',
+                    fallback: 'Topic reps stay ready for extra practice areas.',
                   ),
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
@@ -1321,7 +1322,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
                 _playCopyV1(
                   context,
                   'play_topic_packs_label',
-                  fallback: 'Skill packs',
+                  fallback: 'Topic reps',
                 ),
                 style: Act0ShellTokensV1.sectionTitle.copyWith(fontSize: 20),
               ),
@@ -1333,7 +1334,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_skill_pack_unlocks_hint',
-            fallback: 'Topic reps unlock as your route grows.',
+            fallback: 'Focused reps open as your route grows.',
           ),
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.textMuted,
@@ -1418,8 +1419,8 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
                   top: 0,
                   right: 0,
                   child: Icon(
-                    Icons.lock_rounded,
-                    color: Act0ShellTokensV1.textDim,
+                    Icons.route_rounded,
+                    color: Act0ShellTokensV1.textMuted.withOpacity(0.78),
                     size: 15,
                   ),
                 ),
@@ -1489,8 +1490,8 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
               border: Border.all(color: Act0ShellTokensV1.border),
             ),
             child: const Icon(
-              Icons.lock_rounded,
-              color: Act0ShellTokensV1.textMuted,
+              Icons.route_rounded,
+              color: Act0ShellTokensV1.actionBlue,
               size: 18,
             ),
           ),
@@ -1504,7 +1505,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_title',
-                    fallback: 'More packs unlock as you progress',
+                    fallback: 'More practice areas open with the route',
                   ),
                   style: Act0ShellTokensV1.body.copyWith(
                     fontWeight: FontWeight.w800,
@@ -1515,8 +1516,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_body',
-                    fallback:
-                        'Keep learning and playing to unlock more topics.',
+                    fallback: 'Finish lessons to open more focused reps.',
                   ),
                   style: Act0ShellTokensV1.muted,
                 ),
