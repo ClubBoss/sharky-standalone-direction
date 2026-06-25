@@ -16,6 +16,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
@@ -3878,6 +3880,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     practiceSurfaceRecommendation.masteryLabel,
                                 screenSubtitle: practiceSurfaceRecommendation
                                     .screenSubtitle,
+                                repairQueueConsumer:
+                                    Act0PracticeRepairQueueConsumerV1.fromProjection(
+                                      Act0PracticeRepairQueueProjectionV1.fromSources(
+                                        activeRepairIntents:
+                                            _openRepairIntentBySourceTaskId
+                                                .values
+                                                .toList(growable: false),
+                                        reviewMistakeHistory:
+                                            _reviewMistakeHistoryV1,
+                                      ),
+                                    ),
                                 completionTitle: _practiceCompletionTitle,
                                 completionBody: _practiceCompletionBody,
                                 onOpenPremiumPreview:

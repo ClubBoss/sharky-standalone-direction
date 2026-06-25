@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -9,6 +11,8 @@ void main() {
     WidgetTester tester, {
     required List<Act0PracticeGroupV1> groups,
     String recommendedGroupId = 'daily',
+    Act0PracticeRepairQueueConsumerV1 repairQueueConsumer =
+        const Act0PracticeRepairQueueConsumerV1(),
     ValueChanged<Act0PracticeGroupV1>? onStartGroup,
   }) async {
     await tester.pumpWidget(
@@ -24,6 +28,7 @@ void main() {
                 'three short spots keep the current route sharp without opening a full lesson.',
             recommendedOutcomeLead: 'Sharpens today:',
             masteryLabel: 'Today\'s reps',
+            repairQueueConsumer: repairQueueConsumer,
             onStartGroup: onStartGroup ?? (_) {},
           ),
         ),
@@ -180,6 +185,204 @@ void main() {
 
     await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
     expect(started, <String>['daily']);
+  });
+
+  testWidgets('Practice omits repair queue when projection has no rows', (
+    tester,
+  ) async {
+    await pumpPractice(
+      tester,
+      groups: const <Act0PracticeGroupV1>[
+        dailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+        const Act0PracticeRepairQueueProjectionV1(),
+      ),
+    );
+
+    expect(find.byKey(const Key('act0_shell_play_repair_queue')), findsNothing);
+    expect(find.byKey(const Key('act0_shell_play_daily_hero')), findsOneWidget);
+  });
+
+  testWidgets(
+    'Practice renders a passive repair queue without replacing hero',
+    (tester) async {
+      final started = <String>[];
+      await pumpPractice(
+        tester,
+        groups: const <Act0PracticeGroupV1>[
+          dailyGroup,
+          disabledRepairGroup,
+          ...topicGroups,
+        ],
+        repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+          Act0PracticeRepairQueueProjectionV1(
+            items: <Act0PracticeRepairQueueItemV1>[
+              _queueItem(safeLabel: 'Action read', context: 'No bet yet'),
+            ],
+          ),
+        ),
+        onStartGroup: (group) => started.add(group.groupId),
+      );
+
+      final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+      expect(queue, findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_play_daily_hero')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: queue, matching: find.text('Repair queue')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: queue,
+          matching: find.text('Spots Sharky can prove are worth repeating.'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: queue, matching: find.text('Action read')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: queue, matching: find.text('No bet yet')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: queue, matching: find.byType(FilledButton)),
+        findsNothing,
+      );
+      expect(started, isEmpty);
+    },
+  );
+
+  testWidgets('Practice repair queue renders at most three compact rows', (
+    tester,
+  ) async {
+    await pumpPractice(
+      tester,
+      groups: const <Act0PracticeGroupV1>[
+        dailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+        Act0PracticeRepairQueueProjectionV1(
+          items: <Act0PracticeRepairQueueItemV1>[
+            for (var index = 0; index < 5; index++)
+              _queueItem(
+                itemId: 'queue_$index',
+                sourceTaskId: 'task_$index',
+                safeLabel: 'Queue row $index',
+              ),
+          ],
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_0')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_2')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_3')),
+      findsNothing,
+    );
+    expect(find.text('Queue row 4'), findsNothing);
+  });
+
+  testWidgets('Practice repair queue pins the active item first', (
+    tester,
+  ) async {
+    await pumpPractice(
+      tester,
+      groups: const <Act0PracticeGroupV1>[
+        dailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+        Act0PracticeRepairQueueProjectionV1(
+          items: <Act0PracticeRepairQueueItemV1>[
+            _queueItem(itemId: 'history', safeLabel: 'History row'),
+            _queueItem(
+              itemId: 'active',
+              sourceTaskId: 'active_task',
+              safeLabel: 'Active row',
+              sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final first = find.byKey(const Key('act0_shell_play_repair_queue_item_0'));
+    expect(
+      find.descendant(of: first, matching: find.text('Active row')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: first, matching: find.text('Pinned')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Practice repair queue does not render forbidden claims', (
+    tester,
+  ) async {
+    await pumpPractice(
+      tester,
+      groups: const <Act0PracticeGroupV1>[
+        dailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+        Act0PracticeRepairQueueProjectionV1(
+          items: <Act0PracticeRepairQueueItemV1>[
+            _queueItem(
+              safeLabel: '',
+              errorDetail: 'gto solver leak fixed',
+              context: 'premium mastery',
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+    expect(
+      find.descendant(of: queue, matching: find.text('Practice repair')),
+      findsOneWidget,
+    );
+    for (final forbidden in <String>[
+      'fixed',
+      'cleared',
+      'resolved',
+      'completed',
+      'leak',
+      'mastery',
+      'GTO',
+      'solver',
+      'premium',
+    ]) {
+      expect(
+        find.descendant(of: queue, matching: find.textContaining(forbidden)),
+        findsNothing,
+      );
+    }
   });
 
   testWidgets(
@@ -436,4 +639,29 @@ void main() {
       isNot(const Color(0xFF087B91)),
     );
   });
+}
+
+Act0PracticeRepairQueueItemV1 _queueItem({
+  String itemId = 'queue_item',
+  String sourceTaskId = 'actions_legal_context',
+  String safeLabel = 'Action read',
+  String errorDetail = 'missed_action_read',
+  String context = 'No bet yet',
+  String sourceType = act0PracticeRepairQueueSourceReviewHistoryV1,
+}) {
+  return Act0PracticeRepairQueueItemV1(
+    itemId: itemId,
+    sourceRecordId: 'record_$itemId',
+    sourceKey: 'key_$itemId',
+    sourceTaskId: sourceTaskId,
+    skillTag: 'action_read',
+    safeLabel: safeLabel,
+    errorDetail: errorDetail,
+    selectedId: 'fold',
+    betterId: 'check',
+    context: context,
+    priority: 0,
+    sourceType: sourceType,
+    state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
+  );
 }

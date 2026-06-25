@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -207,6 +208,7 @@ class Act0PlayShellV1 extends StatefulWidget {
     required this.recommendedOutcomeLead,
     required this.masteryLabel,
     required this.onStartGroup,
+    this.repairQueueConsumer = const Act0PracticeRepairQueueConsumerV1(),
     this.onOpenPremiumPreview,
     this.screenSubtitle = 'Short reps keep today\'s skill sharp.',
     this.completionTitle,
@@ -222,6 +224,7 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String recommendedOutcomeLead;
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
+  final Act0PracticeRepairQueueConsumerV1 repairQueueConsumer;
   final VoidCallback? onOpenPremiumPreview;
   final String screenSubtitle;
   final String? completionTitle;
@@ -327,6 +330,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             onOpenPremiumPreview: widget.onOpenPremiumPreview,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapLg),
+        ],
+        if (widget.repairQueueConsumer.hasItems) ...[
+          _PracticeRepairQueueSectionV1(consumer: widget.repairQueueConsumer),
+          const SizedBox(height: Act0VisualMetricsV1.sectionGap),
         ],
         if (primaryGroups.isNotEmpty ||
             hasRepairEmptyState ||
@@ -494,6 +501,168 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PracticeRepairQueueSectionV1 extends StatelessWidget {
+  const _PracticeRepairQueueSectionV1({required this.consumer});
+
+  final Act0PracticeRepairQueueConsumerV1 consumer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_play_repair_queue'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.78),
+        borderColor: Act0ShellTokensV1.actionCyan.withOpacity(0.20),
+        glow: false,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.actionCyan.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusLg,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.repeat_rounded,
+                  color: Act0ShellTokensV1.actionCyan,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Repair queue',
+                      style: Act0ShellTokensV1.body.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Spots Sharky can prove are worth repeating.',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Act0ShellTokensV1.muted,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          for (var index = 0; index < consumer.items.length; index++) ...[
+            _PracticeRepairQueueRowV1(
+              key: Key('act0_shell_play_repair_queue_item_$index'),
+              item: consumer.items[index],
+            ),
+            if (index != consumer.items.length - 1)
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _PracticeRepairQueueRowV1 extends StatelessWidget {
+  const _PracticeRepairQueueRowV1({super.key, required this.item});
+
+  final Act0PracticeRepairQueueItemViewModelV1 item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 54),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface3.withOpacity(0.72),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        border: Border.all(color: Act0ShellTokensV1.border.withOpacity(0.78)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 7,
+            height: 32,
+            decoration: BoxDecoration(
+              color: item.isPinned
+                  ? Act0ShellTokensV1.gold
+                  : Act0ShellTokensV1.actionBlue,
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    if (item.isPinned) ...[
+                      const SizedBox(width: 8),
+                      Text(
+                        'Pinned',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.gold,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                if (item.detail != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    item.detail!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Act0ShellTokensV1.muted,
+                  ),
+                ],
+                if (item.actionLine != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    item.actionLine!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
