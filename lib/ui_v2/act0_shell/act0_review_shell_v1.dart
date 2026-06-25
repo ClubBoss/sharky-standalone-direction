@@ -3,6 +3,7 @@ import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -36,6 +37,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     this.sessionDrillRecheckQueueItems =
         const <SessionDrillRecheckLaunchQueueItemV1>[],
     this.onStartSessionDrillRecheck,
+    this.mistakeHistoryItems = const <Act0ReviewMistakeHistoryItemV1>[],
   });
 
   final Act0ReviewStateV1 review;
@@ -47,6 +49,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   sessionDrillRecheckQueueItems;
   final ValueChanged<SessionDrillRecheckLaunchQueueItemV1>?
   onStartSessionDrillRecheck;
+  final List<Act0ReviewMistakeHistoryItemV1> mistakeHistoryItems;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +70,13 @@ class Act0ReviewShellV1 extends StatelessWidget {
       _ReviewBoardV1(
         review: review,
         nextMistake: null,
+        hasMistakeHistory: mistakeHistoryItems.isNotEmpty,
         onFixMistake: onFixMistake,
       ),
+      if (mistakeHistoryItems.isNotEmpty) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        _MistakeHistoryListV1(items: mistakeHistoryItems.take(3).toList()),
+      ],
     ];
     final activeRepairColumn = <Widget>[
       if (sessionDrillRecheckQueueItems.isNotEmpty &&
@@ -84,6 +92,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
           mistake: review.mistakes.first,
           onFixMistake: onFixMistake,
         ),
+      ],
+    ];
+    final historyColumn = <Widget>[
+      if (mistakeHistoryItems.isNotEmpty) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapLg),
+        _MistakeHistoryListV1(items: mistakeHistoryItems.take(3).toList()),
       ],
     ];
     final recoveredColumn = <Widget>[
@@ -216,6 +230,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
                       ],
                     ] else ...[
                       ...activeRepairColumn,
+                      ...historyColumn,
                       ...recoveredColumn,
                     ],
                   ],
@@ -389,18 +404,20 @@ class _ReviewBoardV1 extends StatelessWidget {
   const _ReviewBoardV1({
     required this.review,
     required this.nextMistake,
+    required this.hasMistakeHistory,
     this.onFixMistake,
   });
 
   final Act0ReviewStateV1 review;
   final Act0MistakeCardV1? nextMistake;
+  final bool hasMistakeHistory;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
 
   @override
   Widget build(BuildContext context) {
     final hasRepair = nextMistake != null;
     final hasRecovered = review.fixedMistakes.isNotEmpty;
-    final isEmpty = !hasRepair && !hasRecovered;
+    final isEmpty = !hasRepair && !hasRecovered && !hasMistakeHistory;
     final tone = hasRepair ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary;
     final title = isEmpty
         ? _reviewCopyV1(context, fallback: 'Review notes')
@@ -419,6 +436,8 @@ class _ReviewBoardV1 extends StatelessWidget {
         ? _reviewCopyV1(context, fallback: 'No past spots to review yet')
         : hasRepair
         ? nextMistake!.title
+        : hasMistakeHistory
+        ? _reviewCopyV1(context, fallback: 'Past spots to review')
         : _reviewCopyV1(
             context,
             atomId: 'review_board_headline_clean',
@@ -432,6 +451,11 @@ class _ReviewBoardV1 extends StatelessWidget {
           )
         : hasRepair
         ? nextMistake!.reason
+        : hasMistakeHistory
+        ? _reviewCopyV1(
+            context,
+            fallback: 'Read-only notes from completed hands.',
+          )
         : _reviewCopyV1(
             context,
             atomId: 'review_board_body_clean',
@@ -446,6 +470,12 @@ class _ReviewBoardV1 extends StatelessWidget {
                   fallback:
                       'Stabilize this spot first. Then come back for the next check.',
                 ))
+        : hasMistakeHistory
+        ? _reviewCopyV1(
+            context,
+            fallback:
+                'Active repairs stay separate. These notes do not change progress.',
+          )
         : _reviewCopyV1(
             context,
             en: isEmpty
@@ -593,6 +623,118 @@ class _ReviewBoardV1 extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _MistakeHistoryListV1 extends StatelessWidget {
+  const _MistakeHistoryListV1({required this.items});
+
+  final List<Act0ReviewMistakeHistoryItemV1> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_review_mistake_history_list'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
+        borderColor: Act0ShellTokensV1.border,
+        glow: false,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Past spots to review', style: Act0ShellTokensV1.sectionTitle),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            'Read-only notes from completed hands.',
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          for (final item in items) ...[
+            _MistakeHistoryRowV1(item: item),
+            if (item != items.last)
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _MistakeHistoryRowV1 extends StatelessWidget {
+  const _MistakeHistoryRowV1({required this.item});
+
+  final Act0ReviewMistakeHistoryItemV1 item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: Key('act0_shell_review_mistake_history_row_${item.stableKey}'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface.withOpacity(0.78),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(color: Act0ShellTokensV1.border.withOpacity(0.86)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.gold,
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusPill,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Text(
+                  item.primaryLabel,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Text(
+                item.orderLabel,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  letterSpacing: 0,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(item.detailLine, style: Act0ShellTokensV1.muted),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            item.decisionLine,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            item.contextLine,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              letterSpacing: 0,
+            ),
+          ),
         ],
       ),
     );

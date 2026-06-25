@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
-  Widget reviewHost(Act0ReviewStateV1 review) {
+  Widget reviewHost(
+    Act0ReviewStateV1 review, {
+    List<Act0ReviewMistakeHistoryItemV1> historyItems =
+        const <Act0ReviewMistakeHistoryItemV1>[],
+  }) {
     return MaterialApp(
       home: Scaffold(
         body: Act0ReviewShellV1(
@@ -16,6 +21,7 @@ void main() {
           onSelected: (_) {},
           onFixMistake: (_) {},
           onReplayFixedMistake: (_) {},
+          mistakeHistoryItems: historyItems,
         ),
       ),
     );
@@ -80,6 +86,16 @@ void main() {
     targetDrillId: 'classify_texture_intro_dry_raise_v1',
     targetKind: 'exact_replay',
     errorClass: 'expected_action_mismatch',
+  );
+
+  const readOnlyHistoryItem = Act0ReviewMistakeHistoryItemV1(
+    stableKey: 'history-1',
+    sourceTaskId: 'actions_legal_context',
+    primaryLabel: 'Action read',
+    detailLine: 'Missed action read',
+    decisionLine: 'You chose fold; better was check.',
+    contextLine: 'fold check call raise',
+    orderLabel: 'Most recent',
   );
 
   testWidgets(
@@ -417,5 +433,117 @@ void main() {
       findsNothing,
     );
     expect(find.byType(FilledButton), findsNothing);
+  });
+
+  testWidgets('Review renders persisted mistake history as read-only notes', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Confidence repair board',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Fold',
+          betterLabel: 'Check',
+        ),
+        historyItems: const <Act0ReviewMistakeHistoryItemV1>[
+          readOnlyHistoryItem,
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_review_mistake_history_list')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_review_mistake_history_row_history-1')),
+      findsOneWidget,
+    );
+    expect(find.text('Past spots to review'), findsWidgets);
+    expect(find.text('Action read'), findsOneWidget);
+    expect(find.text('Missed action read'), findsOneWidget);
+    expect(find.text('You chose fold; better was check.'), findsOneWidget);
+    expect(find.text('fold check call raise'), findsOneWidget);
+    expect(find.text('Most recent'), findsOneWidget);
+    expect(find.text('No past spots to review yet'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_review_fix_next_cta')),
+      findsNothing,
+    );
+    expect(find.byType(FilledButton), findsNothing);
+  });
+
+  testWidgets(
+    'Read-only history rows contain no forbidden controls or claims',
+    (tester) async {
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Confidence repair board',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Fold',
+            betterLabel: 'Check',
+          ),
+          historyItems: const <Act0ReviewMistakeHistoryItemV1>[
+            readOnlyHistoryItem,
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Clear'), findsNothing);
+      expect(find.textContaining('clear'), findsNothing);
+      expect(find.textContaining('Fix'), findsNothing);
+      expect(find.textContaining('fix'), findsNothing);
+      expect(find.textContaining('Resolved'), findsNothing);
+      expect(find.textContaining('resolved'), findsNothing);
+      expect(find.textContaining('mastery'), findsNothing);
+      expect(find.textContaining('leak'), findsNothing);
+      expect(find.textContaining('AI'), findsNothing);
+      expect(find.textContaining('GTO'), findsNothing);
+      expect(find.textContaining('solver'), findsNothing);
+      expect(find.byType(FilledButton), findsNothing);
+      expect(find.byType(OutlinedButton), findsNothing);
+    },
+  );
+
+  testWidgets('Active repair note stays separate from read-only history', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+          mistakes: <Act0MistakeCardV1>[activeMistake],
+        ),
+        historyItems: const <Act0ReviewMistakeHistoryItemV1>[
+          readOnlyHistoryItem,
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Active repair note'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_review_mistake_history_list')),
+      findsOneWidget,
+    );
+    expect(find.text('Action read'), findsOneWidget);
+    expect(find.text('Repair this clue'), findsNothing);
+    expect(find.text('Your active repair is waiting on Home.'), findsNothing);
   });
 }

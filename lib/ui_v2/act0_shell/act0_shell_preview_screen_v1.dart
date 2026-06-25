@@ -18,6 +18,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
@@ -4357,6 +4358,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                         sessionDrillRecheckQueueItems:
                             _sessionDrillRecheckQueueItemsV1,
+                        mistakeHistoryItems:
+                            Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+                              _reviewMistakeHistoryV1,
+                              activeRepairSourceTaskIds: <String>{
+                                for (final mistake in reviewState.mistakes)
+                                  mistake.taskId,
+                              },
+                            ).items,
                         onStartSessionDrillRecheck: (item) {
                           unawaited(
                             pushSessionDrillRecheckLaunchV1(context, item),

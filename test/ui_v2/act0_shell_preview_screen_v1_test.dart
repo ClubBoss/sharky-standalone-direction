@@ -31546,6 +31546,68 @@ void main() {
     expect(history.single['runOrdinal'], 1);
   });
 
+  testWidgets('Review consumes persisted mistake history as read-only notes', (
+    tester,
+  ) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 11,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['reviewMistakeHistory'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'recordId':
+                  'review_mistake_v1|21:actions_raise_drill|10:no_bet_yet|11:action_read|18:missed_action_read',
+              'sourceDecisionId':
+                  'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              'createdOrder': 1,
+              'updatedOrder': 1,
+              'worldId': 'world_1',
+              'lessonId': 'fold_check_call_raise',
+              'decisionTaskId': 'actions_raise_drill',
+              'sourceTaskId': 'actions_raise_drill',
+              'decisionKind': 'actionList',
+              'selectedId': 'fold',
+              'expectedId': 'check',
+              'resultKind': 'incorrect',
+              'errorType': 'missed_action_read',
+              'skillAtomId': 'action_read',
+              'repairFocusId': 'no_bet_yet',
+              'runId': 'run_v1|world_1|fold_check_call_raise|lesson|1',
+              'runKind': 'lesson',
+              'runOrdinal': 1,
+              'attemptRecordIds': <String>[
+                'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              ],
+              'dedupUsesFallback': false,
+              'state': 'unresolved_only_v1',
+            },
+          ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host(tab: Act0ShellTabV1.review));
+
+    expect(
+      find.byKey(const Key('act0_shell_review_mistake_history_list')),
+      findsOneWidget,
+    );
+    expect(find.text('Past spots to review'), findsWidgets);
+    expect(find.text('Action read'), findsOneWidget);
+    expect(find.text('Missed action read'), findsOneWidget);
+    expect(find.text('You chose fold; better was check.'), findsOneWidget);
+    expect(find.text('fold check call raise'), findsOneWidget);
+    expect(find.text('No past spots to review yet'), findsNothing);
+    expect(find.text('Repair this clue'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_review_fix_next_cta')),
+      findsNothing,
+    );
+  });
+
   testWidgets('New lesson-run evidence records carry one shared run key', (
     tester,
   ) async {
