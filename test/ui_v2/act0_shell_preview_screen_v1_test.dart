@@ -3725,11 +3725,11 @@ void main() {
       );
       expect(
         find.byKey(const Key('act0_shell_placement_launch_path')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_placement_result_preview')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(find.text('Sharky found your start'), findsWidgets);
       expect(
@@ -3756,8 +3756,19 @@ void main() {
         find.byKey(const Key('act0_shell_placement_focus_chips')),
         findsOneWidget,
       );
-      expect(find.text('Table read'), findsOneWidget);
-      expect(find.text('Action basics'), findsOneWidget);
+      expect(find.text('Fast start'), findsOneWidget);
+      expect(find.text('First hand ready'), findsOneWidget);
+      expect(find.text('Action basics'), findsNothing);
+      final resultChipTexts = tester.widgetList<Text>(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_placement_focus_chips')),
+          matching: find.byType(Text),
+        ),
+      );
+      for (final chipText in resultChipTexts) {
+        expect(chipText.maxLines, isNull);
+        expect(chipText.overflow, isNull);
+      }
       expect(
         find.byKey(const Key('act0_shell_placement_start_recommended')),
         findsOneWidget,
@@ -3777,6 +3788,8 @@ void main() {
       expect(find.text('Premium trial'), findsNothing);
       expect(find.text('Preview 7-day trial'), findsNothing);
       expect(find.textContaining('Premium can'), findsNothing);
+      expect(find.text('Fold, check, call, raise'), findsNothing);
+      expect(find.text('Beginner-safe'), findsNothing);
       expect(find.text('Start with the useful hand'), findsOneWidget);
       expect(find.text('Start from the beginning'), findsOneWidget);
 
@@ -11383,11 +11396,15 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_shell_welcome_handoff_proof_block')),
-      findsOneWidget,
+      findsNothing,
     );
+    expect(find.text('Read'), findsNothing);
+    expect(find.text('Reason'), findsNothing);
+    expect(find.text('Move on'), findsNothing);
+    expect(find.text('Your first useful hand is ready.'), findsOneWidget);
     expect(
       find.text(
-        'Home opens with one clear poker spot, and Learn keeps the next lessons visible.',
+        'Open the start. Learn will keep the next lesson visible after that.',
       ),
       findsOneWidget,
     );
@@ -11429,12 +11446,7 @@ void main() {
         'lib/ui_v2/act0_shell/l10n/act0_copy_ru_v1.dart',
       ).readAsStringSync();
 
-      expect(
-        welcomeSource,
-        contains(
-          'Home opens with one clear poker spot, and Learn keeps the next lessons visible.',
-        ),
-      );
+      expect(welcomeSource, contains('Your first useful hand is ready.'));
       expect(
         welcomeSource,
         isNot(

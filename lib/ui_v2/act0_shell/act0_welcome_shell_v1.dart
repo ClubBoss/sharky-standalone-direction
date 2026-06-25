@@ -120,18 +120,18 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         line: _copyV1(
           en: widget.replayMode
               ? 'Home still shows what to do now, and Learn keeps the next lessons visible.'
-              : 'Home opens with one clear poker spot, and Learn keeps the next lessons visible.',
+              : 'Your first useful hand is ready.',
           ru: widget.replayMode
               ? 'Home по-прежнему показывает, что делать сейчас, а Learn держит следующие уроки на виду.'
-              : 'Home открывает один ясный покерный спот, а Learn держит следующие уроки на виду.',
+              : 'Твоя первая полезная раздача готова.',
         ),
         detail: _copyV1(
           en: widget.replayMode
               ? 'Go back when you are ready. Your progress stays exactly where it was.'
-              : 'You already know the loop. Open the start and take the first real lesson.',
+              : 'Open the start. Learn will keep the next lesson visible after that.',
           ru: widget.replayMode
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
-              : 'Цикл уже понятен. Открой старт и перейди к первому настоящему уроку.',
+              : 'Открой старт. Затем Learn покажет следующий урок.',
         ),
         mood: Act0SharkyMoodV1.celebrate,
         replayMode: widget.replayMode,
@@ -139,12 +139,8 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         visual: _WelcomeVisualPreviewCardV1(
           title: _copyV1(en: 'First hand ready', ru: 'Первая раздача готова'),
           accent: Act0ShellTokensV1.gold,
-          bridge: _WelcomeLaunchPathV1(copy: _copyV1),
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
-          child: KeyedSubtree(
-            key: const Key('act0_shell_welcome_handoff_proof_block'),
-            child: _WelcomeLoopStripV1(copy: _copyV1),
-          ),
+          child: const SizedBox.shrink(),
         ),
         ctaLabel: _copyV1(
           en: widget.replayMode ? 'Back to profile' : 'Open your start',

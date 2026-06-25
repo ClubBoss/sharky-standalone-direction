@@ -453,10 +453,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         ru: 'Первая раздача готова.',
                       ),
                     ),
-                    const SizedBox(height: Act0ShellTokensV1.gapSm),
-                    const _PlacementLaunchPathV1(
-                      currentStep: _PlacementLaunchStepV1.firstHand,
-                    ),
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 420),
@@ -1195,33 +1191,6 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              _PlacementLaunchSupportCardV1(
-                key: const Key('act0_shell_placement_result_preview'),
-                tone: _placementToneForResult(result),
-                title: _placementCopyV1(
-                  context,
-                  en: 'Useful first hand ready',
-                  ru: 'Полезная первая раздача готова',
-                ),
-                body: _placementCopyV1(
-                  context,
-                  en: 'It opens one table clue before the first lesson starts.',
-                  ru: 'Она покажет одну подсказку стола перед первым уроком.',
-                ),
-                chips: <String>[
-                  _placementCopyV1(
-                    context,
-                    en: 'Beginner-safe',
-                    ru: 'Безопасно для новичка',
-                  ),
-                  _placementCopyV1(
-                    context,
-                    en: 'Fold, check, call, raise',
-                    ru: 'Фолд, чек, колл, рейз',
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -1231,27 +1200,15 @@ class _PlacementResultViewV1 extends StatelessWidget {
 }
 
 List<String> _placementFocusChipsV1(Act0PlacementResultV1 result) {
-  final chips = <String>[];
-  void addChip(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty || chips.contains(trimmed)) {
-      return;
-    }
-    chips.add(trimmed);
-  }
-
-  for (final strength in result.strengths.take(2)) {
-    addChip(strength);
-  }
-  for (final weakSpot in result.weakSpots.take(1)) {
-    addChip(weakSpot);
-  }
-  addChip(switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer => 'Table basics',
-    Act0PlacementResultLevelV1.rustyBeginner => 'Hand flow',
-    Act0PlacementResultLevelV1.readyForBasics => 'Action basics',
-  });
-  return chips.take(4).toList(growable: false);
+  return <String>[
+    'Fast start',
+    'First hand ready',
+    switch (result.level) {
+      Act0PlacementResultLevelV1.newPlayer => 'Table basics',
+      Act0PlacementResultLevelV1.rustyBeginner => 'Hand flow',
+      Act0PlacementResultLevelV1.readyForBasics => 'Table clue',
+    },
+  ];
 }
 
 Color _placementToneForResult(Act0PlacementResultV1 result) {
