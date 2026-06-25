@@ -15911,6 +15911,14 @@ void main() {
     );
 
     expect(find.textContaining('Need 80% accuracy'), findsOneWidget);
+    expect(find.text('Almost there - replay to unlock'), findsOneWidget);
+    expect(find.text('Lesson complete'), findsNothing);
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
+          .data,
+      'Almost there - replay to unlock',
+    );
     expect(
       find.byKey(const Key('act0_shell_block_summary_map_cta')),
       findsOneWidget,

@@ -276,8 +276,12 @@ class Act0BlockCompletionSummaryV1 {
     Act0MasteryStatusV1.learning => 'Learning',
   };
 
-  String get milestoneTitle =>
-      isWorldComplete ? 'World $worldNumber complete' : 'Lesson complete';
+  String get milestoneTitle {
+    if (!qualifiesForNextLesson) {
+      return 'Almost there - replay to unlock';
+    }
+    return isWorldComplete ? 'World $worldNumber complete' : 'Lesson complete';
+  }
 
   String get milestoneDetailTitle => isWorldComplete ? worldTitle : lessonTitle;
 
@@ -4541,9 +4545,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             selectedLabel.isNotEmpty
         ? _feedbackSelectedLineV1(context, selectedLabel)
         : '';
-    final showSignalProofInProofStack = !rapidMode && signalProof != null;
+    final hasRepairTeachingBlock =
+        isWrong && visibleRepairReasonLines.isNotEmpty;
+    final showSignalProofInProofStack =
+        !rapidMode && !hasRepairTeachingBlock && signalProof != null;
     final showActionContrast = actionLabel.isNotEmpty;
-    final showReason = !rapidMode;
+    final showReason = !rapidMode && !hasRepairTeachingBlock;
     final showRepairFocus = !rapidMode && visibleRepairReasonLines.isNotEmpty;
     final showProofStack =
         !rapidMode &&
@@ -4757,10 +4764,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ],
             ),
           ],
-          if (!rapidMode && completionSummary != null) ...[
-            const SizedBox(height: 8),
-            _CompletionToastV1(summary: completionSummary!),
-          ],
           if (!rapidMode && !isWrong && receiptTitle.isNotEmpty) ...[
             const SizedBox(height: 8),
             const _FeedbackVerdictDividerV1(),
@@ -4827,6 +4830,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 lines: visibleRepairSessionSummaryLines,
               ),
             ),
+          ],
+          if (!rapidMode && completionSummary != null) ...[
+            const SizedBox(height: 8),
+            _CompletionToastV1(summary: completionSummary!),
           ],
           if (rapidMode) ...[
             const SizedBox(height: 8),
