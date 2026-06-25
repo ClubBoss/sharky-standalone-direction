@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -209,6 +210,7 @@ class Act0PlayShellV1 extends StatefulWidget {
     required this.masteryLabel,
     required this.onStartGroup,
     this.repairQueueConsumer = const Act0PracticeRepairQueueConsumerV1(),
+    this.onLaunchRepairQueueTarget,
     this.onOpenPremiumPreview,
     this.screenSubtitle = 'Short reps keep today\'s skill sharp.',
     this.completionTitle,
@@ -225,6 +227,8 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
   final Act0PracticeRepairQueueConsumerV1 repairQueueConsumer;
+  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>?
+  onLaunchRepairQueueTarget;
   final VoidCallback? onOpenPremiumPreview;
   final String screenSubtitle;
   final String? completionTitle;
@@ -332,7 +336,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
         if (widget.repairQueueConsumer.hasItems) ...[
-          _PracticeRepairQueueSectionV1(consumer: widget.repairQueueConsumer),
+          _PracticeRepairQueueSectionV1(
+            consumer: widget.repairQueueConsumer,
+            onLaunchTarget: widget.onLaunchRepairQueueTarget,
+          ),
           const SizedBox(height: Act0VisualMetricsV1.sectionGap),
         ],
         if (primaryGroups.isNotEmpty ||
@@ -506,9 +513,13 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
 }
 
 class _PracticeRepairQueueSectionV1 extends StatelessWidget {
-  const _PracticeRepairQueueSectionV1({required this.consumer});
+  const _PracticeRepairQueueSectionV1({
+    required this.consumer,
+    required this.onLaunchTarget,
+  });
 
   final Act0PracticeRepairQueueConsumerV1 consumer;
+  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>? onLaunchTarget;
 
   @override
   Widget build(BuildContext context) {
@@ -569,6 +580,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
             _PracticeRepairQueueRowV1(
               key: Key('act0_shell_play_repair_queue_item_$index'),
               item: consumer.items[index],
+              onLaunchTarget: onLaunchTarget,
             ),
             if (index != consumer.items.length - 1)
               const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -580,9 +592,14 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
 }
 
 class _PracticeRepairQueueRowV1 extends StatelessWidget {
-  const _PracticeRepairQueueRowV1({super.key, required this.item});
+  const _PracticeRepairQueueRowV1({
+    super.key,
+    required this.item,
+    required this.onLaunchTarget,
+  });
 
   final Act0PracticeRepairQueueItemViewModelV1 item;
+  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>? onLaunchTarget;
 
   @override
   Widget build(BuildContext context) {
@@ -658,6 +675,33 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     ),
                   ),
                 ],
+                if (_canLaunchPracticeQueueTargetV1(item) &&
+                    onLaunchTarget != null) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const Key('act0_shell_play_repair_queue_item_cta'),
+                      onPressed: () => onLaunchTarget!(item.launchTarget!),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Act0ShellTokensV1.actionBlue,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        minimumSize: const Size(0, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        'Practice this',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.actionBlue,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -665,6 +709,15 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _canLaunchPracticeQueueTargetV1(
+  Act0PracticeRepairQueueItemViewModelV1 item,
+) {
+  final target = item.launchTarget;
+  return item.isLaunchable &&
+      target != null &&
+      target.targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1;
 }
 
 class _TopicFilterChipV1 extends StatelessWidget {

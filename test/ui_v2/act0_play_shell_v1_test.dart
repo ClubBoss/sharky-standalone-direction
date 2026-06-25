@@ -14,6 +14,8 @@ void main() {
     Act0PracticeRepairQueueConsumerV1 repairQueueConsumer =
         const Act0PracticeRepairQueueConsumerV1(),
     ValueChanged<Act0PracticeGroupV1>? onStartGroup,
+    ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>?
+    onLaunchRepairQueueTarget,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -29,6 +31,7 @@ void main() {
             recommendedOutcomeLead: 'Sharpens today:',
             masteryLabel: 'Today\'s reps',
             repairQueueConsumer: repairQueueConsumer,
+            onLaunchRepairQueueTarget: onLaunchRepairQueueTarget,
             onStartGroup: onStartGroup ?? (_) {},
           ),
         ),
@@ -339,6 +342,117 @@ void main() {
     );
   });
 
+  testWidgets(
+    'Practice repair queue shows CTA only for launchable active row',
+    (tester) async {
+      await pumpPractice(
+        tester,
+        groups: const <Act0PracticeGroupV1>[
+          dailyGroup,
+          disabledRepairGroup,
+          ...topicGroups,
+        ],
+        repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+          Act0PracticeRepairQueueProjectionV1(
+            items: <Act0PracticeRepairQueueItemV1>[
+              _queueItem(
+                itemId: 'active',
+                safeLabel: 'Active row',
+                sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+                launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
+                  worldId: 'world_1',
+                  lessonId: 'fold_check_call_raise',
+                  taskId: 'actions_check_drill',
+                  source: act0PracticeRepairQueueSourceActiveRepairV1,
+                  targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+                ),
+              ),
+              _queueItem(itemId: 'history', safeLabel: 'History row'),
+            ],
+          ),
+        ),
+        onLaunchRepairQueueTarget: (_) {},
+      );
+
+      final active = find.byKey(
+        const Key('act0_shell_play_repair_queue_item_0'),
+      );
+      final history = find.byKey(
+        const Key('act0_shell_play_repair_queue_item_1'),
+      );
+      expect(
+        find.descendant(of: active, matching: find.text('Practice this')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: history, matching: find.text('Practice this')),
+        findsNothing,
+      );
+      for (final forbidden in <String>[
+        'Fix',
+        'Clear',
+        'Resolve',
+        'Complete',
+        'Master',
+        'Leak',
+        'AI',
+        'GTO',
+        'Solver',
+        'Premium',
+      ]) {
+        expect(find.textContaining(forbidden), findsNothing);
+      }
+    },
+  );
+
+  testWidgets(
+    'Practice repair queue CTA launches target and keeps row visible',
+    (tester) async {
+      final launched = <Act0PracticeRepairQueueLaunchTargetV1>[];
+      await pumpPractice(
+        tester,
+        groups: const <Act0PracticeGroupV1>[
+          dailyGroup,
+          disabledRepairGroup,
+          ...topicGroups,
+        ],
+        repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+          Act0PracticeRepairQueueProjectionV1(
+            items: <Act0PracticeRepairQueueItemV1>[
+              _queueItem(
+                itemId: 'active',
+                sourceTaskId: 'actions_legal_context',
+                safeLabel: 'Action read',
+                sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+                launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
+                  worldId: 'world_1',
+                  lessonId: 'fold_check_call_raise',
+                  taskId: 'actions_check_drill',
+                  source: act0PracticeRepairQueueSourceActiveRepairV1,
+                  targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        onLaunchRepairQueueTarget: launched.add,
+      );
+
+      await tester.tap(find.text('Practice this'));
+      await tester.pump();
+
+      expect(launched, hasLength(1));
+      expect(launched.single.worldId, 'world_1');
+      expect(launched.single.lessonId, 'fold_check_call_raise');
+      expect(launched.single.taskId, 'actions_check_drill');
+      expect(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_0')),
+        findsOneWidget,
+      );
+      expect(find.text('Action read'), findsOneWidget);
+    },
+  );
+
   testWidgets('Practice repair queue does not render forbidden claims', (
     tester,
   ) async {
@@ -648,6 +762,10 @@ Act0PracticeRepairQueueItemV1 _queueItem({
   String errorDetail = 'missed_action_read',
   String context = 'No bet yet',
   String sourceType = act0PracticeRepairQueueSourceReviewHistoryV1,
+  Act0PracticeRepairQueueLaunchTargetV1 launchTarget =
+      const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
+        source: act0PracticeRepairQueueSourceReviewHistoryV1,
+      ),
 }) {
   return Act0PracticeRepairQueueItemV1(
     itemId: itemId,
@@ -663,5 +781,6 @@ Act0PracticeRepairQueueItemV1 _queueItem({
     priority: 0,
     sourceType: sourceType,
     state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
+    launchTarget: launchTarget,
   );
 }

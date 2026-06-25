@@ -3904,6 +3904,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 onStartGroup: (group) => setState(() {
                                   _startPracticeGroup(group, selectedWorld);
                                 }),
+                                onLaunchRepairQueueTarget: (target) =>
+                                    setState(() {
+                                      _startPracticeRepairQueueTarget(target);
+                                    }),
                               )
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
@@ -6550,6 +6554,31 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = group.groupId;
     _rapidPracticeLoop = group.useRapidPracticeLoop;
+  }
+
+  void _startPracticeRepairQueueTarget(
+    Act0PracticeRepairQueueLaunchTargetV1 target,
+  ) {
+    if (!target.isLaunchable ||
+        target.targetType != act0PracticeRepairQueueTargetTypeActiveRepairV1) {
+      return;
+    }
+    final baseState = widget.state ?? Act0ShellStateV1.sample;
+    final launchWorld = _worldById(
+      _progressedWorlds(baseState),
+      target.worldId,
+    );
+    _startTaskByIds(
+      launchWorld,
+      target.lessonId,
+      target.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      evidenceRunKind: 'repair',
+      evidenceStartedBy: 'practice_repair_queue',
+    );
+    _returnToPlayHubOnBack = true;
+    _activePracticeGroupId = 'weak_spots';
   }
 
   void _startMistakeRepair(
