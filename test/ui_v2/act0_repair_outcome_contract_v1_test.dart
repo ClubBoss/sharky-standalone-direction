@@ -50,42 +50,59 @@ void main() {
       );
       expect(targetPayload, isNot(contains('sourceRecordId')));
       expect(targetPayload, isNot(contains('sourceKey')));
+
+      final requestPayload = projection.items.single.launchRequest?.toPayload();
+      expect(requestPayload?['targetWorldId'], intent.targetWorldId);
+      expect(requestPayload?['targetLessonId'], intent.targetLessonId);
+      expect(requestPayload?['targetTaskId'], intent.targetTaskId);
+      expect(requestPayload?['sourceTaskId'], intent.sourceTaskId);
+      expect(requestPayload?['repairTaskId'], intent.targetTaskId);
+      expect(requestPayload?['queueItemId'], itemPayload['itemId']);
     },
   );
 
-  test('practice queue shell launch has no repair source handoff yet', () {
-    final previewSource = File(
-      'lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart',
-    ).readAsStringSync();
-    final methodStart = previewSource.indexOf(
-      'void _startPracticeRepairQueueTarget(',
-    );
-    final methodEnd = previewSource.indexOf(
-      'void _startMistakeRepair(',
-      methodStart,
-    );
-    expect(methodStart, isNonNegative);
-    expect(methodEnd, greaterThan(methodStart));
+  test(
+    'practice queue shell launch restores source context without outcome',
+    () {
+      final previewSource = File(
+        'lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart',
+      ).readAsStringSync();
+      final methodStart = previewSource.indexOf(
+        'void _startPracticeRepairQueueTarget(',
+      );
+      final methodEnd = previewSource.indexOf(
+        'void _startMistakeRepair(',
+        methodStart,
+      );
+      expect(methodStart, isNonNegative);
+      expect(methodEnd, greaterThan(methodStart));
 
-    final methodSource = previewSource.substring(methodStart, methodEnd);
-    expect(
-      methodSource,
-      contains('Act0PracticeRepairQueueLaunchTargetV1 target'),
-    );
-    expect(methodSource, contains("evidenceRunKind: 'repair'"));
-    expect(
-      methodSource,
-      contains("evidenceStartedBy: 'practice_repair_queue'"),
-    );
-    expect(methodSource, contains("_activePracticeGroupId = 'weak_spots'"));
-    expect(methodSource, isNot(contains('_activeRepairTaskId =')));
-    expect(methodSource, isNot(contains('_activeRepairSourceTaskId =')));
-    expect(methodSource, isNot(contains('sourceTaskId')));
-    expect(methodSource, isNot(contains('sourceRecordId')));
-    expect(methodSource, isNot(contains('sourceKey')));
-  });
+      final methodSource = previewSource.substring(methodStart, methodEnd);
+      expect(
+        methodSource,
+        contains('Act0PracticeRepairQueueLaunchRequestV1 request'),
+      );
+      expect(methodSource, contains("evidenceRunKind: 'repair'"));
+      expect(
+        methodSource,
+        contains("evidenceStartedBy: 'practice_repair_queue'"),
+      );
+      expect(methodSource, contains("_activePracticeGroupId = 'weak_spots'"));
+      expect(
+        methodSource,
+        contains('_activeRepairTaskId = request.repairTaskId'),
+      );
+      expect(
+        methodSource,
+        contains('_activeRepairSourceTaskId = request.sourceTaskId'),
+      );
+      expect(methodSource, isNot(contains('sourceRecordId')));
+      expect(methodSource, isNot(contains('sourceKey')));
+      expect(methodSource, isNot(contains('Act0RepairOutcome')));
+    },
+  );
 
-  test('repair outcome projection is not admitted without source linkage', () {
+  test('repair outcome projection is not admitted by source handoff', () {
     final projectionSource = File(
       'lib/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart',
     ).readAsStringSync();

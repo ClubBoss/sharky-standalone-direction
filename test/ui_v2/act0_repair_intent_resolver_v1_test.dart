@@ -234,6 +234,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_activeTaskId(tester), 'actions_check_drill');
+    expect(_activeRepairContextPayload(tester), <String, Object?>{
+      'sourceTaskId': 'actions_legal_context',
+      'repairTaskId': 'actions_check_drill',
+      'practiceGroupId': 'weak_spots',
+    });
     final activeIntentAfter = _openRepairIntentPayload(
       tester,
       'actions_legal_context',
@@ -1107,6 +1112,11 @@ Map<String, Object?>? _openRepairIntentPayload(
 String _activeTaskId(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugSelectedTaskIdV1() as String;
+}
+
+Map<String, Object?> _activeRepairContextPayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugActiveRepairContextPayloadV1() as Map<String, Object?>;
 }
 
 String? _homeNextUsefulHandReasonLine(WidgetTester tester) {

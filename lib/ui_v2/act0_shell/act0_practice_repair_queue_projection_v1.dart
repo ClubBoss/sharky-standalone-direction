@@ -52,12 +52,14 @@ class Act0PracticeRepairQueueProjectionV1 {
         continue;
       }
       seenDedupKeys.add(key);
+      final itemId = 'practice_repair_queue_v1|active|${_keyPart(key)}';
+      final launchTarget = _activeRepairLaunchTarget(intent);
       candidates.add(
         _QueueCandidateV1(
           sortBucket: 0,
           sortOrder: 0,
           item: Act0PracticeRepairQueueItemV1(
-            itemId: 'practice_repair_queue_v1|active|${_keyPart(key)}',
+            itemId: itemId,
             sourceRecordId: intent.reasonCode,
             sourceKey: key,
             sourceTaskId: intent.sourceTaskId.trim(),
@@ -70,7 +72,13 @@ class Act0PracticeRepairQueueProjectionV1 {
             priority: 0,
             sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
             state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
-            launchTarget: _activeRepairLaunchTarget(intent),
+            launchTarget: launchTarget,
+            launchRequest: _activeRepairLaunchRequest(
+              intent: intent,
+              itemId: itemId,
+              sourceKey: key,
+              launchTarget: launchTarget,
+            ),
           ),
         ),
       );
@@ -161,6 +169,7 @@ class Act0PracticeRepairQueueItemV1 {
     required this.state,
     this.launchTarget =
         const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(),
+    this.launchRequest,
   });
 
   final int schemaVersion;
@@ -178,6 +187,7 @@ class Act0PracticeRepairQueueItemV1 {
   final String sourceType;
   final String state;
   final Act0PracticeRepairQueueLaunchTargetV1 launchTarget;
+  final Act0PracticeRepairQueueLaunchRequestV1? launchRequest;
 
   Act0PracticeRepairQueueItemV1 copyWith({int? priority}) {
     return Act0PracticeRepairQueueItemV1(
@@ -196,26 +206,34 @@ class Act0PracticeRepairQueueItemV1 {
       sourceType: sourceType,
       state: state,
       launchTarget: launchTarget,
+      launchRequest: launchRequest,
     );
   }
 
-  Map<String, Object?> toPayload() => <String, Object?>{
-    'schemaVersion': schemaVersion,
-    'itemId': itemId,
-    'sourceRecordId': sourceRecordId,
-    'sourceKey': sourceKey,
-    'sourceTaskId': sourceTaskId,
-    'skillTag': skillTag,
-    'safeLabel': safeLabel,
-    'errorDetail': errorDetail,
-    'selectedId': selectedId,
-    'betterId': betterId,
-    'context': context,
-    'priority': priority,
-    'sourceType': sourceType,
-    'state': state,
-    'launchTarget': launchTarget.toPayload(),
-  };
+  Map<String, Object?> toPayload() {
+    final payload = <String, Object?>{
+      'schemaVersion': schemaVersion,
+      'itemId': itemId,
+      'sourceRecordId': sourceRecordId,
+      'sourceKey': sourceKey,
+      'sourceTaskId': sourceTaskId,
+      'skillTag': skillTag,
+      'safeLabel': safeLabel,
+      'errorDetail': errorDetail,
+      'selectedId': selectedId,
+      'betterId': betterId,
+      'context': context,
+      'priority': priority,
+      'sourceType': sourceType,
+      'state': state,
+      'launchTarget': launchTarget.toPayload(),
+    };
+    final request = launchRequest;
+    if (request != null) {
+      payload['launchRequest'] = request.toPayload();
+    }
+    return payload;
+  }
 }
 
 class Act0PracticeRepairQueueLaunchTargetV1 {
@@ -260,6 +278,54 @@ class Act0PracticeRepairQueueLaunchTargetV1 {
   }
 }
 
+class Act0PracticeRepairQueueLaunchRequestV1 {
+  const Act0PracticeRepairQueueLaunchRequestV1({
+    required this.targetWorldId,
+    required this.targetLessonId,
+    required this.targetTaskId,
+    required this.targetType,
+    required this.sourceType,
+    required this.sourceTaskId,
+    required this.repairTaskId,
+    required this.repairFocusKey,
+    required this.queueItemId,
+  });
+
+  final String targetWorldId;
+  final String targetLessonId;
+  final String targetTaskId;
+  final String targetType;
+  final String sourceType;
+  final String sourceTaskId;
+  final String repairTaskId;
+  final String repairFocusKey;
+  final String queueItemId;
+
+  bool get isLaunchable =>
+      targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1 &&
+      targetWorldId.trim().isNotEmpty &&
+      targetLessonId.trim().isNotEmpty &&
+      targetTaskId.trim().isNotEmpty &&
+      sourceType == act0PracticeRepairQueueSourceActiveRepairV1 &&
+      sourceTaskId.trim().isNotEmpty &&
+      repairTaskId.trim().isNotEmpty &&
+      queueItemId.trim().isNotEmpty;
+
+  Map<String, Object> toPayload() {
+    return <String, Object>{
+      'targetWorldId': targetWorldId,
+      'targetLessonId': targetLessonId,
+      'targetTaskId': targetTaskId,
+      'targetType': targetType,
+      'sourceType': sourceType,
+      'sourceTaskId': sourceTaskId,
+      'repairTaskId': repairTaskId,
+      'repairFocusKey': repairFocusKey,
+      'queueItemId': queueItemId,
+    };
+  }
+}
+
 class _QueueCandidateV1 {
   const _QueueCandidateV1({
     required this.sortBucket,
@@ -298,6 +364,34 @@ Act0PracticeRepairQueueLaunchTargetV1 _activeRepairLaunchTarget(
     taskId: taskId,
     source: act0PracticeRepairQueueSourceActiveRepairV1,
     targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+  );
+}
+
+Act0PracticeRepairQueueLaunchRequestV1? _activeRepairLaunchRequest({
+  required Act0RepairIntentV1 intent,
+  required String itemId,
+  required String sourceKey,
+  required Act0PracticeRepairQueueLaunchTargetV1 launchTarget,
+}) {
+  if (!launchTarget.isLaunchable ||
+      launchTarget.targetType !=
+          act0PracticeRepairQueueTargetTypeActiveRepairV1) {
+    return null;
+  }
+  final sourceTaskId = intent.sourceTaskId.trim();
+  if (sourceTaskId.isEmpty) {
+    return null;
+  }
+  return Act0PracticeRepairQueueLaunchRequestV1(
+    targetWorldId: launchTarget.worldId,
+    targetLessonId: launchTarget.lessonId,
+    targetTaskId: launchTarget.taskId,
+    targetType: launchTarget.targetType,
+    sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+    sourceTaskId: sourceTaskId,
+    repairTaskId: launchTarget.taskId,
+    repairFocusKey: sourceKey,
+    queueItemId: itemId,
   );
 }
 

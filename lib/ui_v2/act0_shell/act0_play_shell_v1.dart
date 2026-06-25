@@ -227,7 +227,7 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String masteryLabel;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
   final Act0PracticeRepairQueueConsumerV1 repairQueueConsumer;
-  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>?
+  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
   onLaunchRepairQueueTarget;
   final VoidCallback? onOpenPremiumPreview;
   final String screenSubtitle;
@@ -519,7 +519,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
   });
 
   final Act0PracticeRepairQueueConsumerV1 consumer;
-  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>? onLaunchTarget;
+  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>? onLaunchTarget;
 
   @override
   Widget build(BuildContext context) {
@@ -599,7 +599,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
   });
 
   final Act0PracticeRepairQueueItemViewModelV1 item;
-  final ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>? onLaunchTarget;
+  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>? onLaunchTarget;
 
   @override
   Widget build(BuildContext context) {
@@ -682,7 +682,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       key: const Key('act0_shell_play_repair_queue_item_cta'),
-                      onPressed: () => onLaunchTarget!(item.launchTarget!),
+                      onPressed: () => onLaunchTarget!(item.launchRequest!),
                       style: TextButton.styleFrom(
                         foregroundColor: Act0ShellTokensV1.actionBlue,
                         padding: const EdgeInsets.symmetric(
@@ -715,9 +715,12 @@ bool _canLaunchPracticeQueueTargetV1(
   Act0PracticeRepairQueueItemViewModelV1 item,
 ) {
   final target = item.launchTarget;
+  final request = item.launchRequest;
   return item.isLaunchable &&
       target != null &&
-      target.targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1;
+      request != null &&
+      target.targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1 &&
+      request.targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1;
 }
 
 class _TopicFilterChipV1 extends StatelessWidget {

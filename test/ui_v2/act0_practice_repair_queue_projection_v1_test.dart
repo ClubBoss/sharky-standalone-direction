@@ -151,6 +151,18 @@ void main() {
       'source': act0PracticeRepairQueueSourceActiveRepairV1,
       'targetType': act0PracticeRepairQueueTargetTypeActiveRepairV1,
     });
+    expect(item.launchRequest?.toPayload(), <String, Object>{
+      'targetWorldId': 'world_1',
+      'targetLessonId': 'fold_check_call_raise',
+      'targetTaskId': 'actions_check_drill',
+      'targetType': act0PracticeRepairQueueTargetTypeActiveRepairV1,
+      'sourceType': act0PracticeRepairQueueSourceActiveRepairV1,
+      'sourceTaskId': 'actions_legal_context',
+      'repairTaskId': 'actions_check_drill',
+      'repairFocusKey':
+          '21:actions_legal_context|10:no_bet_yet|11:action_read|18:missed_action_read',
+      'queueItemId': item.itemId,
+    });
   });
 
   test('active repair row without target remains passive', () {
@@ -178,6 +190,7 @@ void main() {
 
     final item = projection.items.single;
     expect(item.launchTarget.isLaunchable, isFalse);
+    expect(item.launchRequest, isNull);
     expect(
       item.launchTarget.targetType,
       act0PracticeRepairQueueTargetTypeNotLaunchableV1,
@@ -200,6 +213,7 @@ void main() {
     final item = projection.items.single;
     expect(item.sourceType, act0PracticeRepairQueueSourceReviewHistoryV1);
     expect(item.launchTarget.isLaunchable, isFalse);
+    expect(item.launchRequest, isNull);
     final launchTarget =
         item.toPayload()['launchTarget'] as Map<String, Object?>;
     expect(
@@ -209,6 +223,7 @@ void main() {
     expect(launchTarget.keys, isNot(contains('worldId')));
     expect(launchTarget.keys, isNot(contains('lessonId')));
     expect(launchTarget.keys, isNot(contains('taskId')));
+    expect(item.toPayload().keys, isNot(contains('launchRequest')));
   });
 
   test('projection contains no fixed cleared or resolved states', () {

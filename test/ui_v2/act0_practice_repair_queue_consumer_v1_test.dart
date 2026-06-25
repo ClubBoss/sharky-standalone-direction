@@ -116,7 +116,7 @@ void main() {
     },
   );
 
-  test('consumer exposes launchability from projection target only', () {
+  test('consumer exposes launchability from projection launch request', () {
     final projection = Act0PracticeRepairQueueProjectionV1(
       items: <Act0PracticeRepairQueueItemV1>[
         _item(
@@ -145,6 +145,14 @@ void main() {
     expect(consumer.items.single.isPinned, isTrue);
     expect(consumer.items.single.isLaunchable, isTrue);
     expect(consumer.items.single.launchTarget?.taskId, 'actions_check_drill');
+    expect(
+      consumer.items.single.launchRequest?.sourceTaskId,
+      'actions_legal_context',
+    );
+    expect(
+      consumer.items.single.launchRequest?.repairTaskId,
+      'actions_check_drill',
+    );
     expect(payload.keys, isNot(contains('targetWorldId')));
     expect(payload.keys, isNot(contains('targetLessonId')));
     expect(payload.keys, isNot(contains('targetTaskId')));
@@ -165,7 +173,23 @@ Act0PracticeRepairQueueItemV1 _item({
       const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
         source: act0PracticeRepairQueueSourceReviewHistoryV1,
       ),
+  Act0PracticeRepairQueueLaunchRequestV1? launchRequest,
 }) {
+  final resolvedLaunchRequest =
+      launchRequest ??
+      (launchTarget.isLaunchable
+          ? Act0PracticeRepairQueueLaunchRequestV1(
+              targetWorldId: launchTarget.worldId,
+              targetLessonId: launchTarget.lessonId,
+              targetTaskId: launchTarget.taskId,
+              targetType: launchTarget.targetType,
+              sourceType: sourceType,
+              sourceTaskId: sourceTaskId,
+              repairTaskId: launchTarget.taskId,
+              repairFocusKey: 'key_$itemId',
+              queueItemId: itemId,
+            )
+          : null);
   return Act0PracticeRepairQueueItemV1(
     itemId: itemId,
     sourceRecordId: 'record_$itemId',
@@ -181,5 +205,6 @@ Act0PracticeRepairQueueItemV1 _item({
     sourceType: sourceType,
     state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
     launchTarget: launchTarget,
+    launchRequest: resolvedLaunchRequest,
   );
 }

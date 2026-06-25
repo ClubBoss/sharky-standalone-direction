@@ -14,7 +14,7 @@ void main() {
     Act0PracticeRepairQueueConsumerV1 repairQueueConsumer =
         const Act0PracticeRepairQueueConsumerV1(),
     ValueChanged<Act0PracticeGroupV1>? onStartGroup,
-    ValueChanged<Act0PracticeRepairQueueLaunchTargetV1>?
+    ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
     onLaunchRepairQueueTarget,
   }) async {
     await tester.pumpWidget(
@@ -408,7 +408,7 @@ void main() {
   testWidgets(
     'Practice repair queue CTA launches target and keeps row visible',
     (tester) async {
-      final launched = <Act0PracticeRepairQueueLaunchTargetV1>[];
+      final launched = <Act0PracticeRepairQueueLaunchRequestV1>[];
       await pumpPractice(
         tester,
         groups: const <Act0PracticeGroupV1>[
@@ -442,9 +442,12 @@ void main() {
       await tester.pump();
 
       expect(launched, hasLength(1));
-      expect(launched.single.worldId, 'world_1');
-      expect(launched.single.lessonId, 'fold_check_call_raise');
-      expect(launched.single.taskId, 'actions_check_drill');
+      expect(launched.single.targetWorldId, 'world_1');
+      expect(launched.single.targetLessonId, 'fold_check_call_raise');
+      expect(launched.single.targetTaskId, 'actions_check_drill');
+      expect(launched.single.sourceTaskId, 'actions_legal_context');
+      expect(launched.single.repairTaskId, 'actions_check_drill');
+      expect(launched.single.queueItemId, 'active');
       expect(
         find.byKey(const Key('act0_shell_play_repair_queue_item_0')),
         findsOneWidget,
@@ -766,7 +769,23 @@ Act0PracticeRepairQueueItemV1 _queueItem({
       const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
         source: act0PracticeRepairQueueSourceReviewHistoryV1,
       ),
+  Act0PracticeRepairQueueLaunchRequestV1? launchRequest,
 }) {
+  final resolvedLaunchRequest =
+      launchRequest ??
+      (launchTarget.isLaunchable
+          ? Act0PracticeRepairQueueLaunchRequestV1(
+              targetWorldId: launchTarget.worldId,
+              targetLessonId: launchTarget.lessonId,
+              targetTaskId: launchTarget.taskId,
+              targetType: launchTarget.targetType,
+              sourceType: sourceType,
+              sourceTaskId: sourceTaskId,
+              repairTaskId: launchTarget.taskId,
+              repairFocusKey: 'key_$itemId',
+              queueItemId: itemId,
+            )
+          : null);
   return Act0PracticeRepairQueueItemV1(
     itemId: itemId,
     sourceRecordId: 'record_$itemId',
@@ -782,5 +801,6 @@ Act0PracticeRepairQueueItemV1 _queueItem({
     sourceType: sourceType,
     state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
     launchTarget: launchTarget,
+    launchRequest: resolvedLaunchRequest,
   );
 }

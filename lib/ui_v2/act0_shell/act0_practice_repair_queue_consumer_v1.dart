@@ -52,6 +52,7 @@ class Act0PracticeRepairQueueItemViewModelV1 {
     required this.title,
     required this.isPinned,
     this.launchTarget,
+    this.launchRequest,
     this.detail,
     this.actionLine,
   });
@@ -60,10 +61,11 @@ class Act0PracticeRepairQueueItemViewModelV1 {
   final String title;
   final bool isPinned;
   final Act0PracticeRepairQueueLaunchTargetV1? launchTarget;
+  final Act0PracticeRepairQueueLaunchRequestV1? launchRequest;
   final String? detail;
   final String? actionLine;
 
-  bool get isLaunchable => launchTarget?.isLaunchable ?? false;
+  bool get isLaunchable => launchRequest?.isLaunchable ?? false;
 
   static Act0PracticeRepairQueueItemViewModelV1? fromItem(
     Act0PracticeRepairQueueItemV1 item, {
@@ -82,6 +84,9 @@ class Act0PracticeRepairQueueItemViewModelV1 {
       title: resolvedTitle ?? 'Practice repair',
       isPinned: isPinned,
       launchTarget: item.launchTarget.isLaunchable ? item.launchTarget : null,
+      launchRequest: item.launchRequest?.isLaunchable == true
+          ? item.launchRequest
+          : null,
       detail: detail,
       actionLine: actionLine,
     );

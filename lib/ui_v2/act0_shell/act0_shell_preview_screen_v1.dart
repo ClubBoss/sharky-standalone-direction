@@ -798,6 +798,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String debugSelectedTaskIdV1() => _selectedTaskId;
 
   @visibleForTesting
+  Map<String, Object?> debugActiveRepairContextPayloadV1() {
+    return <String, Object?>{
+      if (_activeRepairSourceTaskId != null)
+        'sourceTaskId': _activeRepairSourceTaskId,
+      if (_activeRepairTaskId != null) 'repairTaskId': _activeRepairTaskId,
+      if (_activePracticeGroupId != null)
+        'practiceGroupId': _activePracticeGroupId,
+    };
+  }
+
+  @visibleForTesting
   List<Map<String, Object?>> debugRepairIntentAuditTrailPayloadV1() {
     return List<Map<String, Object?>>.unmodifiable(
       _repairIntentAuditTrailV1.map((entry) => entry.toPayload()),
@@ -6557,28 +6568,35 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _startPracticeRepairQueueTarget(
-    Act0PracticeRepairQueueLaunchTargetV1 target,
+    Act0PracticeRepairQueueLaunchRequestV1 request,
   ) {
-    if (!target.isLaunchable ||
-        target.targetType != act0PracticeRepairQueueTargetTypeActiveRepairV1) {
+    if (!request.isLaunchable ||
+        request.targetType != act0PracticeRepairQueueTargetTypeActiveRepairV1) {
       return;
     }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final launchWorld = _worldById(
       _progressedWorlds(baseState),
-      target.worldId,
+      request.targetWorldId,
     );
+    final previousTaskId = _selectedTaskId;
     _startTaskByIds(
       launchWorld,
-      target.lessonId,
-      target.taskId,
+      request.targetLessonId,
+      request.targetTaskId,
       skipTeaching: true,
       allowDrillBypass: true,
       evidenceRunKind: 'repair',
       evidenceStartedBy: 'practice_repair_queue',
     );
+    if (_selectedTaskId == previousTaskId ||
+        _selectedTaskId != request.targetTaskId) {
+      return;
+    }
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = 'weak_spots';
+    _activeRepairTaskId = request.repairTaskId;
+    _activeRepairSourceTaskId = request.sourceTaskId;
   }
 
   void _startMistakeRepair(
