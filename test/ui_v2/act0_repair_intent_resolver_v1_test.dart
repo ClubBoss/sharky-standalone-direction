@@ -281,6 +281,11 @@ void main() {
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isTrue);
     expect(outcomes.single['outcomeState'], 'repair_correct_v1');
+    expect(find.text('Repair rep'), findsOneWidget);
+    expect(
+      find.text('Good rep - you chose the better action.'),
+      findsOneWidget,
+    );
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
@@ -319,6 +324,8 @@ void main() {
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isFalse);
     expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');
+    expect(find.text('Repair rep'), findsOneWidget);
+    expect(find.text('Still worth repeating.'), findsOneWidget);
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,

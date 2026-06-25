@@ -276,6 +276,72 @@ void main() {
     expect(resultTop, lessThan(sessionTop));
   });
 
+  testWidgets('repair outcome proof renders compact local proof only', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Nice choice.',
+            reason: 'Checking keeps the free option when nobody has bet.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Good rep.',
+            sharkyMood: Act0SharkyMoodV1.neutral,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            repairOutcomeProofLine: 'Good rep - you chose the better action.',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair rep'), findsOneWidget);
+    expect(
+      find.text('Good rep - you chose the better action.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('fixed'), findsNothing);
+    expect(find.textContaining('cleared'), findsNothing);
+    expect(find.textContaining('resolved'), findsNothing);
+    expect(find.textContaining('completed'), findsNothing);
+    expect(find.textContaining('mastered'), findsNothing);
+  });
+
+  testWidgets('repair outcome proof renders nothing when absent', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Nice choice.',
+            reason: 'Checking keeps the free option when nobody has bet.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Good rep.',
+            sharkyMood: Act0SharkyMoodV1.neutral,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof')),
+      findsNothing,
+    );
+    expect(find.text('Repair rep'), findsNothing);
+  });
+
   testWidgets('wrong repair feedback shows visible repair reason', (
     tester,
   ) async {

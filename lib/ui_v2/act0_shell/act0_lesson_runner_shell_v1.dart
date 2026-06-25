@@ -742,6 +742,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
+    this.repairOutcomeProofLine,
     this.repairSessionSummaryLines = const <String>[],
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
@@ -771,6 +772,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
+  final String? repairOutcomeProofLine;
   final List<String> repairSessionSummaryLines;
   final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
@@ -2089,6 +2091,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     firstValueReceiptLine: widget.firstValueReceiptLine,
                     repairReasonLine: widget.repairReasonLine,
                     repairResultReceiptLine: widget.repairResultReceiptLine,
+                    repairOutcomeProofLine: widget.repairOutcomeProofLine,
                     repairSessionSummaryLines: widget.repairSessionSummaryLines,
                     onBack: null,
                     rapidMode: widget.rapidReviewMode,
@@ -4365,6 +4368,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
+    this.repairOutcomeProofLine,
     this.repairSessionSummaryLines = const <String>[],
     this.onBack,
     this.rapidMode = false,
@@ -4391,6 +4395,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
+  final String? repairOutcomeProofLine;
   final List<String> repairSessionSummaryLines;
   final VoidCallback? onBack;
   final bool rapidMode;
@@ -4497,6 +4502,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
+    final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final repairReason = repairReasonLine?.trim() ?? '';
     final visibleRepairReasonLines = _visibleRepairReasonLinesV1(
       quality: quality,
@@ -4508,11 +4514,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       for (final line in repairSessionSummaryLines)
         if (line.trim().isNotEmpty) line.trim(),
     ];
+    final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
     final fallbackReceiptLine = repairReceiptLine.isNotEmpty
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle = repairReceiptLine.isNotEmpty
+    final receiptTitle = hasRepairOutcomeProof
+        ? 'Repair rep'
+        : repairReceiptLine.isNotEmpty
         ? 'Repair result'
         : skillReceipt?.title ??
               (fallbackReceiptLine == null || fallbackReceiptLine.isEmpty
@@ -4520,7 +4529,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   : receiptSplitIndex < 0
                   ? fallbackReceiptLine
                   : fallbackReceiptLine.substring(0, receiptSplitIndex + 1));
-    final receiptDetail = repairReceiptLine.isNotEmpty
+    final receiptDetail = hasRepairOutcomeProof
+        ? repairOutcomeProofLine
+        : repairReceiptLine.isNotEmpty
         ? repairReceiptLine
         : skillReceipt?.detail ??
               (fallbackReceiptLine == null ||
@@ -4530,6 +4541,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   : fallbackReceiptLine
                         .substring(receiptSplitIndex + 2)
                         .trim());
+    final shouldShowReceiptProof =
+        !rapidMode &&
+        receiptTitle.isNotEmpty &&
+        (!isWrong || hasRepairOutcomeProof);
     final receiptNextLine = skillReceipt == null
         ? ''
         : switch (skillReceipt.outcome) {
@@ -4765,17 +4780,21 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ],
             ),
           ],
-          if (!rapidMode && !isWrong && receiptTitle.isNotEmpty) ...[
+          if (shouldShowReceiptProof) ...[
             const SizedBox(height: 8),
             const _FeedbackVerdictDividerV1(),
             const SizedBox(height: 8),
             _FeedbackProofKeyWrapperV1(
               proofKey: repairReceiptLine.isNotEmpty
                   ? const Key('act0_shell_repair_receipt_proof_block')
+                  : hasRepairOutcomeProof
+                  ? const Key('act0_shell_repair_outcome_proof')
                   : null,
               child: KeyedSubtree(
                 key: repairReceiptLine.isNotEmpty
                     ? const Key('act0_shell_repair_result_receipt')
+                    : hasRepairOutcomeProof
+                    ? const Key('act0_shell_repair_outcome_proof_card')
                     : const Key('act0_shell_first_value_receipt'),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -4784,6 +4803,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       receiptTitle,
                       key: repairReceiptLine.isNotEmpty
                           ? const Key('act0_shell_repair_result_receipt_title')
+                          : hasRepairOutcomeProof
+                          ? const Key('act0_shell_repair_outcome_proof_title')
                           : null,
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.primary,
@@ -4797,6 +4818,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         receiptDetail,
                         key: repairReceiptLine.isNotEmpty
                             ? const Key('act0_shell_repair_result_outcome_line')
+                            : hasRepairOutcomeProof
+                            ? const Key('act0_shell_repair_outcome_proof_line')
                             : null,
                         style: Act0ShellTokensV1.body.copyWith(
                           color: Act0ShellTokensV1.text,

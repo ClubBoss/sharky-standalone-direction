@@ -24,6 +24,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
@@ -4091,6 +4092,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         playSelectedTask?.taskId
                                     ? _activeRepairResultReceiptLine
                                     : null,
+                                repairOutcomeProofLine:
+                                    _activeRepairTaskId ==
+                                        playSelectedTask?.taskId
+                                    ? _repairOutcomeProofLineV1()
+                                    : null,
                                 repairSessionSummaryLines:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId
@@ -8027,6 +8033,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       isCorrect: option.isCorrect,
       sequence: _repairOutcomeSequenceV1,
     );
+  }
+
+  String? _repairOutcomeProofLineV1() {
+    final proof = Act0RepairOutcomeConsumerV1.fromProjection(
+      _repairOutcomeProjectionV1,
+    ).proof;
+    return proof?.detail;
   }
 
   bool _isPracticeQueueRepairAnswerV1(Act0LessonTaskV1 selectedTask) {
