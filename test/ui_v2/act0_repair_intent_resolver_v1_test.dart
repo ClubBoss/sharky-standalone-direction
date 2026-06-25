@@ -191,6 +191,60 @@ void main() {
     expect(find.textContaining('leak'), findsNothing);
   });
 
+  testWidgets('Practice queue CTA launches mapped active repair target', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final activeIntentBefore = _openRepairIntentPayload(
+      tester,
+      'actions_legal_context',
+    );
+    expect(activeIntentBefore?['targetWorldId'], 'world_1');
+    expect(activeIntentBefore?['targetLessonId'], 'fold_check_call_raise');
+    expect(activeIntentBefore?['targetTaskId'], 'actions_check_drill');
+
+    await _openPractice(tester);
+
+    final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+    expect(queue, findsOneWidget);
+    expect(
+      find.descendant(of: queue, matching: find.text('Practice this')),
+      findsOneWidget,
+    );
+    for (final forbidden in <String>[
+      'Fix',
+      'Clear',
+      'Resolve',
+      'Complete',
+      'Leak',
+    ]) {
+      expect(
+        find.descendant(of: queue, matching: find.textContaining(forbidden)),
+        findsNothing,
+      );
+    }
+
+    await tester.tap(find.text('Practice this'));
+    await tester.pumpAndSettle();
+
+    expect(_activeTaskId(tester), 'actions_check_drill');
+    final activeIntentAfter = _openRepairIntentPayload(
+      tester,
+      'actions_legal_context',
+    );
+    expect(activeIntentAfter, activeIntentBefore);
+    expect(find.textContaining('fixed'), findsNothing);
+    expect(find.textContaining('cleared'), findsNothing);
+    expect(find.textContaining('resolved'), findsNothing);
+    expect(find.textContaining('completed'), findsNothing);
+  });
+
   testWidgets('exact replay bridge renders exact-replay review copy', (
     tester,
   ) async {
@@ -1039,6 +1093,20 @@ Future<void> _pumpHomeWithReason(
 Map<String, Object?>? _nextUsefulHandTargetPayload(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>?;
+}
+
+Map<String, Object?>? _openRepairIntentPayload(
+  WidgetTester tester,
+  String sourceTaskId,
+) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugOpenRepairIntentPayloadForSourceTaskV1(sourceTaskId)
+      as Map<String, Object?>?;
+}
+
+String _activeTaskId(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugSelectedTaskIdV1() as String;
 }
 
 String? _homeNextUsefulHandReasonLine(WidgetTester tester) {
