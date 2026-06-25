@@ -250,6 +250,85 @@ void main() {
     expect(find.textContaining('completed'), findsNothing);
   });
 
+  testWidgets('Practice queue repair answer records correct outcome only', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final activeIntentBefore = _openRepairIntentPayload(
+      tester,
+      'actions_legal_context',
+    );
+    await _openPractice(tester);
+    await tester.tap(find.text('Practice this'));
+    await tester.pumpAndSettle();
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+
+    final outcomes = _repairOutcomePayload(tester);
+    expect(outcomes, hasLength(1));
+    expect(outcomes.single['sourceTaskId'], 'actions_legal_context');
+    expect(outcomes.single['repairTaskId'], 'actions_check_drill');
+    expect(outcomes.single['targetWorldId'], 'world_1');
+    expect(outcomes.single['targetLessonId'], 'fold_check_call_raise');
+    expect(outcomes.single['targetTaskId'], 'actions_check_drill');
+    expect(outcomes.single['selectedChoiceId'], 'check');
+    expect(outcomes.single['correctChoiceId'], 'check');
+    expect(outcomes.single['isCorrect'], isTrue);
+    expect(outcomes.single['outcomeState'], 'repair_correct_v1');
+    expect(
+      _openRepairIntentPayload(tester, 'actions_legal_context'),
+      activeIntentBefore,
+    );
+    expect(find.textContaining('fixed'), findsNothing);
+    expect(find.textContaining('cleared'), findsNothing);
+    expect(find.textContaining('resolved'), findsNothing);
+    expect(find.textContaining('completed'), findsNothing);
+  });
+
+  testWidgets('Practice queue repair answer records needs rep outcome only', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+
+    final activeIntentBefore = _openRepairIntentPayload(
+      tester,
+      'actions_legal_context',
+    );
+    await _openPractice(tester);
+    await tester.tap(find.text('Practice this'));
+    await tester.pumpAndSettle();
+    await _advanceTeachingToDrill(tester);
+    await _answerOption(tester, 'fold');
+
+    final outcomes = _repairOutcomePayload(tester);
+    expect(outcomes, hasLength(1));
+    expect(outcomes.single['sourceTaskId'], 'actions_legal_context');
+    expect(outcomes.single['repairTaskId'], 'actions_check_drill');
+    expect(outcomes.single['selectedChoiceId'], 'fold');
+    expect(outcomes.single['correctChoiceId'], 'check');
+    expect(outcomes.single['isCorrect'], isFalse);
+    expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');
+    expect(
+      _openRepairIntentPayload(tester, 'actions_legal_context'),
+      activeIntentBefore,
+    );
+    expect(find.textContaining('fixed'), findsNothing);
+    expect(find.textContaining('cleared'), findsNothing);
+    expect(find.textContaining('resolved'), findsNothing);
+    expect(find.textContaining('completed'), findsNothing);
+  });
+
   testWidgets('exact replay bridge renders exact-replay review copy', (
     tester,
   ) async {
@@ -1117,6 +1196,12 @@ String _activeTaskId(WidgetTester tester) {
 Map<String, Object?> _activeRepairContextPayload(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugActiveRepairContextPayloadV1() as Map<String, Object?>;
+}
+
+List<Map<String, Object?>> _repairOutcomePayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  final raw = state.debugRepairOutcomeProjectionPayloadV1() as List<Object?>;
+  return raw.cast<Map<String, Object?>>();
 }
 
 String? _homeNextUsefulHandReasonLine(WidgetTester tester) {

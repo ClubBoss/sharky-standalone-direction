@@ -24,6 +24,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
@@ -760,6 +761,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   String? _activeRepairSourceTaskId;
+  Act0PracticeRepairQueueLaunchRequestV1? _activePracticeRepairQueueRequestV1;
+  Act0RepairOutcomeProjectionV1 _repairOutcomeProjectionV1 =
+      const Act0RepairOutcomeProjectionV1();
+  int _repairOutcomeSequenceV1 = 0;
   String? _activeRepairResultReceiptLine;
   List<String> _activeRepairSessionSummaryLines = const <String>[];
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
@@ -806,6 +811,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (_activePracticeGroupId != null)
         'practiceGroupId': _activePracticeGroupId,
     };
+  }
+
+  @visibleForTesting
+  List<Map<String, Object?>> debugRepairOutcomeProjectionPayloadV1() {
+    return List<Map<String, Object?>>.unmodifiable(
+      _repairOutcomeProjectionV1.toPayload(),
+    );
   }
 
   @visibleForTesting
@@ -1856,6 +1868,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeGroupId = null;
     _activeRepairTaskId = null;
     _activeRepairSourceTaskId = null;
+    _activePracticeRepairQueueRequestV1 = null;
     _activeRepairResultReceiptLine = null;
     _activeRepairSessionSummaryLines = const <String>[];
     _practiceCompletionTitle = null;
@@ -4170,16 +4183,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                                 onChooseOption: (option) => setState(() {
                                   _fireAnswerEffects(option);
-                                  _activeRepairResultReceiptLine =
-                                      _repairResultReceiptLineForOptionV1(
-                                        selectedTask: playSelectedTask,
-                                        option: option,
-                                      );
-                                  _activeRepairSessionSummaryLines =
-                                      _repairSessionSummaryLinesForOptionV1(
-                                        selectedTask: playSelectedTask,
-                                        option: option,
-                                      );
+                                  if (_isPracticeQueueRepairAnswerV1(
+                                    playSelectedTask,
+                                  )) {
+                                    _activeRepairResultReceiptLine = null;
+                                    _activeRepairSessionSummaryLines =
+                                        const <String>[];
+                                  } else {
+                                    _activeRepairResultReceiptLine =
+                                        _repairResultReceiptLineForOptionV1(
+                                          selectedTask: playSelectedTask,
+                                          option: option,
+                                        );
+                                    _activeRepairSessionSummaryLines =
+                                        _repairSessionSummaryLinesForOptionV1(
+                                          selectedTask: playSelectedTask,
+                                          option: option,
+                                        );
+                                  }
                                   _captureFirstValueReceiptCarryV1(
                                     runner: activePlayRunner,
                                     sourceWorldId: selectedWorld.worldId,
@@ -4223,16 +4244,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       in activePlayRunner.options) {
                                     if (option.seatId == seatId) {
                                       _fireAnswerEffects(option);
-                                      _activeRepairResultReceiptLine =
-                                          _repairResultReceiptLineForOptionV1(
-                                            selectedTask: playSelectedTask,
-                                            option: option,
-                                          );
-                                      _activeRepairSessionSummaryLines =
-                                          _repairSessionSummaryLinesForOptionV1(
-                                            selectedTask: playSelectedTask,
-                                            option: option,
-                                          );
+                                      if (_isPracticeQueueRepairAnswerV1(
+                                        playSelectedTask,
+                                      )) {
+                                        _activeRepairResultReceiptLine = null;
+                                        _activeRepairSessionSummaryLines =
+                                            const <String>[];
+                                      } else {
+                                        _activeRepairResultReceiptLine =
+                                            _repairResultReceiptLineForOptionV1(
+                                              selectedTask: playSelectedTask,
+                                              option: option,
+                                            );
+                                        _activeRepairSessionSummaryLines =
+                                            _repairSessionSummaryLinesForOptionV1(
+                                              selectedTask: playSelectedTask,
+                                              option: option,
+                                            );
+                                      }
                                       _captureFirstValueReceiptCarryV1(
                                         runner: activePlayRunner,
                                         sourceWorldId: selectedWorld.worldId,
@@ -6597,6 +6626,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeGroupId = 'weak_spots';
     _activeRepairTaskId = request.repairTaskId;
     _activeRepairSourceTaskId = request.sourceTaskId;
+    _activePracticeRepairQueueRequestV1 = request;
   }
 
   void _startMistakeRepair(
@@ -7765,6 +7795,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = null;
     _activeRepairSourceTaskId = null;
+    _activePracticeRepairQueueRequestV1 = null;
     _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.phase;
     _selectedOptionId = null;
@@ -7835,6 +7866,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
+    final practiceQueueRepairRequest = _activePracticeRepairQueueRequestV1;
+    final recordingPracticeQueueRepair =
+        practiceQueueRepairRequest != null &&
+        practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
+    if (recordingPracticeQueueRepair) {
+      _appendPracticeQueueRepairOutcomeV1(
+        request: practiceQueueRepairRequest,
+        selectedTask: selectedTask,
+        option: option,
+      );
+      return;
+    }
     final repairSourceTaskId = _activeRepairTaskId == selectedTask.taskId
         ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
         : selectedTask.taskId;
@@ -7969,6 +8012,35 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       status: _Act0RetentionMemoryStatusV1.openRepair,
     );
     _refreshRetentionMemoryStatusesV1();
+  }
+
+  void _appendPracticeQueueRepairOutcomeV1({
+    required Act0PracticeRepairQueueLaunchRequestV1 request,
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerOptionV1 option,
+  }) {
+    _repairOutcomeSequenceV1 += 1;
+    _repairOutcomeProjectionV1 = _repairOutcomeProjectionV1.appendAnsweredTask(
+      launchRequest: request,
+      selectedChoiceId: option.id,
+      correctChoiceId: _correctOptionIdV1(selectedTask.runner),
+      isCorrect: option.isCorrect,
+      sequence: _repairOutcomeSequenceV1,
+    );
+  }
+
+  bool _isPracticeQueueRepairAnswerV1(Act0LessonTaskV1 selectedTask) {
+    final request = _activePracticeRepairQueueRequestV1;
+    return request != null && request.repairTaskId == selectedTask.taskId;
+  }
+
+  String _correctOptionIdV1(Act0RunnerStateV1 runner) {
+    for (final option in runner.options) {
+      if (option.isCorrect) {
+        return option.id;
+      }
+    }
+    return '';
   }
 
   void _storeOpenRepairIntentForMissV1({

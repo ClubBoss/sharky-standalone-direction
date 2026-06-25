@@ -62,7 +62,7 @@ void main() {
   );
 
   test(
-    'practice queue shell launch restores source context without outcome',
+    'practice queue shell launch restores source context without resolution',
     () {
       final previewSource = File(
         'lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart',
@@ -98,23 +98,35 @@ void main() {
       );
       expect(methodSource, isNot(contains('sourceRecordId')));
       expect(methodSource, isNot(contains('sourceKey')));
-      expect(methodSource, isNot(contains('Act0RepairOutcome')));
+      expect(methodSource, isNot(contains('fixed_v1')));
+      expect(methodSource, isNot(contains('cleared_v1')));
+      expect(methodSource, isNot(contains('resolved_v1')));
+      expect(methodSource, isNot(contains('completed_v1')));
     },
   );
 
-  test('repair outcome projection is not admitted by source handoff', () {
-    final projectionSource = File(
-      'lib/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart',
+  test('repair outcome projection admits only safe outcome states', () {
+    final outcomeSource = File(
+      'lib/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart',
     ).readAsStringSync();
     final previewSource = File(
       'lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart',
     ).readAsStringSync();
-    final scannedSource = '$projectionSource\n$previewSource';
+    final scannedSource = '$outcomeSource\n$previewSource';
 
-    expect(scannedSource, isNot(contains('Act0RepairOutcomeProjectionV1')));
-    expect(scannedSource, isNot(contains('Act0RepairOutcomeV1')));
-    expect(scannedSource, isNot(contains('repair_attempted_v1')));
-    expect(scannedSource, isNot(contains('repair_correct_v1')));
-    expect(scannedSource, isNot(contains('repair_still_needs_rep_v1')));
+    expect(outcomeSource, contains('Act0RepairOutcomeProjectionV1'));
+    expect(outcomeSource, contains('Act0RepairOutcomeV1'));
+    expect(outcomeSource, contains('repair_attempted_v1'));
+    expect(outcomeSource, contains('repair_correct_v1'));
+    expect(outcomeSource, contains('repair_still_needs_rep_v1'));
+    for (final forbidden in <String>[
+      'fixed_v1',
+      'cleared_v1',
+      'resolved_v1',
+      'completed_v1',
+      'mastered_v1',
+    ]) {
+      expect(scannedSource, isNot(contains(forbidden)));
+    }
   });
 }
