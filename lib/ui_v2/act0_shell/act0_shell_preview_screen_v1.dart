@@ -18,6 +18,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -690,6 +691,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
+  Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
+      const Act0ReviewMistakeHistoryV1();
   Act0EvidenceRunKeyV1? _activeLearningEvidenceRunKeyV1;
   int _learningEvidenceRunOrdinalV1 = 0;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
@@ -2506,6 +2509,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
+      _reviewMistakeHistoryV1 = parsed.reviewMistakeHistory;
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -2729,6 +2733,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      reviewMistakeHistory: _reviewMistakeHistoryV1,
     );
     final generation = ++_progressPersistGeneration;
     unawaited(_writePersistedProgress(snapshot, generation));
@@ -2751,6 +2756,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           decision,
           runKey: _activeLearningEvidenceRunKeyV1,
         );
+    _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
+      decision,
+      runId: _activeLearningEvidenceRunKeyV1?.runId ?? '',
+      runKind: _activeLearningEvidenceRunKeyV1?.runKind ?? '',
+      runOrdinal: _activeLearningEvidenceRunKeyV1?.runOrdinal,
+    );
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {
@@ -10458,6 +10469,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
   });
 
   final Set<String> completedTaskIds;
@@ -10483,6 +10495,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
 
   String toStorageString() {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
@@ -10530,6 +10543,7 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
       if (firstValueReturnCarry != null)
         'firstValueReturnCarry': firstValueReturnCarry!.toJson(),
       if (resumeSelectedOptionId != null)
@@ -10615,6 +10629,9 @@ class _Act0PersistedProgressV1 {
           map['learningEvidenceHistory'],
         ) ??
         const Act0LearningEvidenceHistoryV1();
+    final reviewMistakeHistory =
+        Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
+        const Act0ReviewMistakeHistoryV1();
     if (selectedWorldId.isEmpty ||
         selectedLessonId.isEmpty ||
         selectedTaskId.isEmpty) {
@@ -10646,6 +10663,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      reviewMistakeHistory: reviewMistakeHistory,
     );
   }
 

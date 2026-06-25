@@ -31403,6 +31403,7 @@ void main() {
       expect(decoded['retentionSequence'], 0);
       expect(decoded['retentionMemory'], isEmpty);
       expect(decoded['learningEvidenceHistory'], isEmpty);
+      expect(decoded['reviewMistakeHistory'], isEmpty);
       expect(
         decoded['selectedWorldId'],
         Act0ShellStateV1.sample.selectedWorldId,
@@ -31451,6 +31452,98 @@ void main() {
     expect(history, hasLength(1));
     expect(history.single['recordId'], contains('|fold|1'));
     expect(history.single['skillAtomId'], 'action_read');
+  });
+
+  testWidgets(
+    'Incorrect completed decisions persist unresolved mistake history',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+
+      await pumpTall(tester, host());
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
+      await advanceTeachingToDrill(tester);
+      await answerVisiblePromptWrongly(tester);
+
+      final decoded = await persistedProgressMapFromPrefsV1();
+      final history = decoded['reviewMistakeHistory'] as List<dynamic>;
+      expect(history, hasLength(1));
+      expect(history.single['state'], 'unresolved_only_v1');
+      expect(history.single['sourceDecisionId'], contains('|fold|1'));
+      expect(history.single['sourceTaskId'], isNotEmpty);
+      expect(history.single['runKind'], 'lesson');
+      expect(decoded['openRepairIntents'], hasLength(1));
+    },
+  );
+
+  testWidgets('Correct completed decisions do not persist mistake history', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+
+    await pumpTall(tester, host());
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
+    await advanceTeachingToDrill(tester);
+    await answerVisiblePromptCorrectly(tester);
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    expect(decoded['reviewMistakeHistory'], isEmpty);
+    expect(decoded['learningEvidenceHistory'], hasLength(1));
+    expect(decoded['openRepairIntents'], isEmpty);
+  });
+
+  testWidgets('Persisted review mistake history round-trips', (tester) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 11,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['reviewMistakeHistory'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'recordId':
+                  'review_mistake_v1|21:actions_raise_drill|10:no_bet_yet|11:action_read|18:missed_action_read',
+              'sourceDecisionId':
+                  'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              'createdOrder': 1,
+              'updatedOrder': 1,
+              'worldId': 'world_1',
+              'lessonId': 'fold_check_call_raise',
+              'decisionTaskId': 'actions_raise_drill',
+              'sourceTaskId': 'actions_raise_drill',
+              'decisionKind': 'actionList',
+              'selectedId': 'fold',
+              'expectedId': 'check',
+              'resultKind': 'incorrect',
+              'errorType': 'missed_action_read',
+              'skillAtomId': 'action_read',
+              'repairFocusId': 'no_bet_yet',
+              'runId': 'run_v1|world_1|fold_check_call_raise|lesson|1',
+              'runKind': 'lesson',
+              'runOrdinal': 1,
+              'attemptRecordIds': <String>[
+                'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              ],
+              'dedupUsesFallback': false,
+              'state': 'unresolved_only_v1',
+            },
+          ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    final history = decoded['reviewMistakeHistory'] as List<dynamic>;
+    expect(history, hasLength(1));
+    expect(history.single['sourceTaskId'], 'actions_raise_drill');
+    expect(history.single['state'], 'unresolved_only_v1');
+    expect(history.single['runOrdinal'], 1);
   });
 
   testWidgets('New lesson-run evidence records carry one shared run key', (
