@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
@@ -4469,6 +4471,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 _learningEvidenceHistoryV1,
                               ),
                             ).signal,
+                        achievementSeedConsumer:
+                            Act0AchievementSeedConsumerV1.fromProjection(
+                              Act0AchievementSeedProjectionV1.fromSources(
+                                learningEvidenceHistory:
+                                    _learningEvidenceHistoryV1,
+                                repairIntents: _openRepairIntentBySourceTaskId
+                                    .values
+                                    .toList(growable: false),
+                                reviewMistakeHistory: _reviewMistakeHistoryV1,
+                                profileStreakDays: profileState.streakDays,
+                              ),
+                            ),
                         onRetakePlacement: _openPlacementFlow,
                         onReplayWelcome: _openWelcomeReplayV1,
                         onGoToHome: () =>

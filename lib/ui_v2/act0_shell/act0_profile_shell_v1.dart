@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
@@ -32,6 +33,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     this.onReplayWelcome,
     this.onGoToHome,
     this.evidenceSignal,
+    this.achievementSeedConsumer = const Act0AchievementSeedConsumerV1(),
   });
 
   final Act0ProfileStateV1 profile;
@@ -39,6 +41,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
+  final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),
         ],
+        if (achievementSeedConsumer.hasMoments) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ProfileEarnedMomentsCardV1(consumer: achievementSeedConsumer),
+        ],
         if (profile.skillStats.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileSkillStatsStripV1(profile: profile),
@@ -77,6 +84,92 @@ class Act0ProfileShellV1 extends StatelessWidget {
           onReplayWelcome: onReplayWelcome,
         ),
       ],
+    );
+  }
+}
+
+class _ProfileEarnedMomentsCardV1 extends StatelessWidget {
+  const _ProfileEarnedMomentsCardV1({required this.consumer});
+
+  final Act0AchievementSeedConsumerV1 consumer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_profile_earned_moments'),
+      padding: const EdgeInsets.all(12),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface3.withOpacity(0.78),
+        borderColor: Act0ShellTokensV1.border,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _profileCopyV1(context, en: 'Earned moments'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _profileCopyV1(context, en: 'Small wins Sharky can prove.'),
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              height: 1.25,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final moment in consumer.moments)
+                _ProfileEarnedMomentChipV1(moment: moment),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileEarnedMomentChipV1 extends StatelessWidget {
+  const _ProfileEarnedMomentChipV1({required this.moment});
+
+  final Act0AchievementMomentViewModelV1 moment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: Key('act0_shell_profile_earned_moment_${moment.seedId}'),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(color: Act0ShellTokensV1.gold.withOpacity(0.22)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.check_circle_rounded,
+            color: Act0ShellTokensV1.gold,
+            size: 16,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            moment.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
