@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
@@ -5432,6 +5433,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     super.key,
     required this.summary,
     this.evidenceSummary,
+    this.earnedMomentConsumer = const Act0AchievementSeedConsumerV1(),
     required this.onContinue,
     this.onReplay,
     this.onOpenReview,
@@ -5440,6 +5442,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
 
   final Act0BlockCompletionSummaryV1 summary;
   final Act0SessionSummaryEvidenceViewModelV1? evidenceSummary;
+  final Act0AchievementSeedConsumerV1 earnedMomentConsumer;
   final VoidCallback onContinue;
   final VoidCallback? onReplay;
   final VoidCallback? onOpenReview;
@@ -5465,6 +5468,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final visibleEvidenceSummary =
         evidenceSummary != null && evidenceSummary!.hasEvidence
         ? evidenceSummary
+        : null;
+    final visibleEarnedMoment = earnedMomentConsumer.moments.isNotEmpty
+        ? earnedMomentConsumer.moments.first
         : null;
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
@@ -5783,6 +5789,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               if (visibleEvidenceSummary != null) ...[
                 _SessionSummaryEvidenceCardV1(
                   summary: visibleEvidenceSummary,
+                  tone: celebrateTone,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
+              if (visibleEarnedMoment != null) ...[
+                _SessionSummaryEarnedMomentCardV1(
+                  moment: visibleEarnedMoment,
                   tone: celebrateTone,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -6207,6 +6220,82 @@ class _GrowthHighlightV1 extends StatelessWidget {
                   style: Act0ShellTokensV1.body.copyWith(
                     color: Act0ShellTokensV1.text,
                     fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
+  const _SessionSummaryEarnedMomentCardV1({
+    required this.moment,
+    required this.tone,
+  });
+
+  final Act0AchievementMomentViewModelV1 moment;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_block_summary_earned_moment'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.86),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.22)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: tone.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+            ),
+            child: Icon(Icons.check_circle_rounded, color: tone, size: 18),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Earned moment',
+                  key: const Key('act0_shell_block_summary_earned_label'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    letterSpacing: 0.35,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  moment.label,
+                  key: const Key('act0_shell_block_summary_earned_seed'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Small win Sharky can prove.',
+                  key: const Key('act0_shell_block_summary_earned_proof'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],

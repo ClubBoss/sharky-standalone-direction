@@ -3901,6 +3901,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       repairFocusLabelsById:
                                           _sessionSummaryRepairFocusLabelsByIdV1(),
                                     ),
+                                earnedMomentConsumer:
+                                    Act0AchievementSeedConsumerV1.fromProjection(
+                                      Act0AchievementSeedProjectionV1.fromSources(
+                                        learningEvidenceHistory:
+                                            _learningEvidenceHistoryV1,
+                                        repairIntents:
+                                            _openRepairIntentBySourceTaskId
+                                                .values
+                                                .toList(growable: false),
+                                        reviewMistakeHistory:
+                                            _reviewMistakeHistoryV1,
+                                        profileStreakDays:
+                                            profileState.streakDays,
+                                      ),
+                                    ),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
                                   _selectedTaskId =
