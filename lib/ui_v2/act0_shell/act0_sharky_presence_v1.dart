@@ -451,20 +451,32 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
       Act0SharkyMoodV1.thinking => (scale: 0.018, tilt: 0.025, lift: 1.5),
       Act0SharkyMoodV1.neutral => (scale: 0.014, tilt: 0.0, lift: 1.2),
     };
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final t = _act0SharkyPresencePhaseV1(_controller.value);
-        final centered = ((t - 0.5) * 2).clamp(-1.0, 1.0);
-        return Transform.translate(
-          offset: Offset(0, -motion.lift * t),
-          child: Transform.rotate(
-            angle: motion.tilt * centered,
-            child: Transform.scale(scale: 1 + (motion.scale * t), child: child),
-          ),
-        );
-      },
-      child: Image.asset(_mascotAssetForMood(widget.mood), fit: BoxFit.contain),
+    return SizedBox(
+      key: const Key('act0_shell_sharky_presence_mascot'),
+      width: widget.size,
+      height: widget.size,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final t = _act0SharkyPresencePhaseV1(_controller.value);
+          final centered = ((t - 0.5) * 2).clamp(-1.0, 1.0);
+          return Transform.translate(
+            offset: Offset(0, -motion.lift * t),
+            child: Transform.rotate(
+              angle: motion.tilt * centered,
+              child: Transform.scale(
+                scale: 1 + (motion.scale * t),
+                child: child,
+              ),
+            ),
+          );
+        },
+        child: Image.asset(
+          _mascotAssetForMood(widget.mood),
+          key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }

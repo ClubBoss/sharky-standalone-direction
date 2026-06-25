@@ -474,6 +474,10 @@ void main() {
     );
     expect(correctVerdict.style?.fontSize, greaterThanOrEqualTo(13));
     expect(find.text('Correct'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_sharky_presence_mascot_happy')),
+      findsOneWidget,
+    );
     expect(find.text('Table read improved'), findsOneWidget);
     expect(
       find.text(
@@ -532,7 +536,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Missed clue'), findsOneWidget);
+    expect(find.text('Table clue'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_rhythm_verdict')),
       findsOneWidget,
@@ -545,22 +549,26 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_rhythm_verdict')),
     );
     expect(wrongVerdict.style?.fontSize, greaterThanOrEqualTo(13));
-    expect(find.text('Missed clue'), findsOneWidget);
+    expect(find.text('Table clue'), findsOneWidget);
     expect(
-      find.text('The missed table clue was Hero on the Button.'),
+      find.byKey(const Key('act0_shell_sharky_presence_mascot_repair')),
       findsOneWidget,
     );
-    expect(find.text('Next: try this table clue once more.'), findsOneWidget);
+    expect(
+      find.text('The missed table clue was Hero on the Button.'),
+      findsNothing,
+    );
+    expect(find.text('Next: try this table clue once more.'), findsNothing);
     expect(find.text('First read logged.'), findsNothing);
     expect(find.text('Skill: Table position read'), findsNothing);
     expect(find.text('Repair: Table position read'), findsNothing);
     expect(find.text('Bottom seat'), findsNothing);
-    expect(find.text('Better option: Hero on the Button'), findsOneWidget);
+    expect(find.textContaining('Better option:'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_feedback_signal_proof')),
       findsOneWidget,
     );
-    expect(find.text('Hero on the Button'), findsOneWidget);
+    expect(find.text('Hero on the Button'), findsAtLeastNWidgets(1));
     expect(find.textContaining('Signal:'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -29766,6 +29774,10 @@ void main() {
     expect(find.text('What improved'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_sharky_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_sharky_presence_mascot_celebrate')),
       findsOneWidget,
     );
     expect(

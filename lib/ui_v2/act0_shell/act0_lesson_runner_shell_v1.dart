@@ -2984,94 +2984,31 @@ class Act0SharkyMascotV1 extends StatelessWidget {
             key: const Key('act0_shell_sharky_mascot'),
             width: size,
             height: size,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  left: size * 0.10,
-                  right: size * 0.10,
-                  top: size * 0.10,
-                  bottom: size * 0.06,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: tone.withValues(alpha: 0.28),
-                          blurRadius: size * 0.32,
-                          offset: Offset(0, size * 0.10),
-                        ),
-                      ],
-                    ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: tone.withValues(alpha: 0.20),
+                    blurRadius: size * 0.24,
+                    offset: Offset(0, size * 0.08),
                   ),
+                ],
+              ),
+              child: KeyedSubtree(
+                key: Key('act0_shell_sharky_mascot_${mood.name}'),
+                child: Act0SharkyPresenceMascotV1(
+                  mood: mood,
+                  tone: tone,
+                  size: size,
                 ),
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Act0ShellTokensV1.runnerSharkGradientStart,
-                          Act0ShellTokensV1.runnerSharkGradientEnd,
-                        ],
-                      ),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Act0ShellTokensV1.runnerSharkBlueDark,
-                        width: size * 0.05,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(size * 0.05),
-                      child: ClipOval(
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [Color(0x22FFFFFF), Color(0x00000000)],
-                            ),
-                          ),
-                          child: Image.asset(
-                            _act0MascotAssetForMoodV1(mood),
-                            key: Key('act0_shell_sharky_mascot_${mood.name}'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: size * 0.04,
-                  top: size * 0.02,
-                  child: Container(
-                    width: size * 0.16,
-                    height: size * 0.16,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.40),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-}
-
-String _act0MascotAssetForMoodV1(Act0SharkyMoodV1 mood) {
-  return switch (mood) {
-    Act0SharkyMoodV1.neutral => 'assets/images/mascot/sharky_neutral.png',
-    Act0SharkyMoodV1.happy => 'assets/images/mascot/sharky_happy.png',
-    Act0SharkyMoodV1.thinking => 'assets/images/mascot/sharky_thinking.png',
-    Act0SharkyMoodV1.repair => 'assets/images/mascot/sharky_repair.png',
-    Act0SharkyMoodV1.celebrate => 'assets/images/mascot/sharky_celebrate.png',
-  };
 }
 
 class _LearningRailV1 extends StatelessWidget {
