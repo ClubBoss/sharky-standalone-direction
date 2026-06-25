@@ -115,6 +115,34 @@ void main() {
       expect(source, isNot(contains('telemetry')));
     },
   );
+
+  test('consumer remains passive because projection has no launch target', () {
+    final projection = Act0PracticeRepairQueueProjectionV1(
+      items: <Act0PracticeRepairQueueItemV1>[
+        _item(
+          itemId: 'active',
+          sourceTaskId: 'actions_legal_context',
+          safeLabel: 'Action read',
+          sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        ),
+      ],
+    );
+    final consumer = Act0PracticeRepairQueueConsumerV1.fromProjection(
+      projection,
+    );
+    final payload = projection.toPayload().single;
+    final source = File(
+      'lib/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart',
+    ).readAsStringSync();
+
+    expect(consumer.items.single.isPinned, isTrue);
+    expect(payload.keys, isNot(contains('targetWorldId')));
+    expect(payload.keys, isNot(contains('targetLessonId')));
+    expect(payload.keys, isNot(contains('targetTaskId')));
+    expect(source, isNot(contains('VoidCallback')));
+    expect(source, isNot(contains('onLaunch')));
+    expect(source, isNot(contains('targetTaskId')));
+  });
 }
 
 Act0PracticeRepairQueueItemV1 _item({
