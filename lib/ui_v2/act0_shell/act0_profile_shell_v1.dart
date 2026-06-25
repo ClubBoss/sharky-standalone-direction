@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -30,12 +31,14 @@ class Act0ProfileShellV1 extends StatelessWidget {
     required this.onRetakePlacement,
     this.onReplayWelcome,
     this.onGoToHome,
+    this.evidenceSignal,
   });
 
   final Act0ProfileStateV1 profile;
   final VoidCallback onRetakePlacement;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
+  final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
         _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileProgressProofCardV1(profile: profile),
+        if (evidenceSignal != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),
+        ],
         if (profile.skillStats.isNotEmpty) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileSkillStatsStripV1(profile: profile),
@@ -70,6 +77,78 @@ class Act0ProfileShellV1 extends StatelessWidget {
           onReplayWelcome: onReplayWelcome,
         ),
       ],
+    );
+  }
+}
+
+class _ProfileEvidenceSignalCardV1 extends StatelessWidget {
+  const _ProfileEvidenceSignalCardV1({required this.signal});
+
+  final Act0ProfileEvidenceSignalViewModelV1 signal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_profile_evidence_signal'),
+      padding: const EdgeInsets.all(12),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0VisualCanonV1.greenTable.withOpacity(0.07),
+        borderColor: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+        glow: false,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Act0VisualCanonV1.greenTable.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+              border: Border.all(
+                color: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+              ),
+            ),
+            child: const Icon(
+              Icons.fact_check_rounded,
+              color: Act0VisualCanonV1.greenTable,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _profileCopyV1(context, en: 'Evidence signal'),
+                  key: const Key('act0_shell_profile_evidence_signal_title'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0VisualCanonV1.greenTable,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _profileCopyV1(context, en: 'You are building this skill.'),
+                  key: const Key('act0_shell_profile_evidence_signal_body'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  signal.proofLine,
+                  key: const Key('act0_shell_profile_evidence_signal_proof'),
+                  style: Act0ShellTokensV1.muted,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
