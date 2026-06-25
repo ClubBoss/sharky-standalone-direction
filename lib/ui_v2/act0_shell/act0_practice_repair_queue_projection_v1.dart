@@ -6,6 +6,10 @@ const String act0PracticeRepairQueueSourceReviewHistoryV1 =
 const String act0PracticeRepairQueueSourceActiveRepairV1 = 'active_repair_v1';
 const String act0PracticeRepairQueueStateQueuedUnresolvedV1 =
     'queued_unresolved_v1';
+const String act0PracticeRepairQueueTargetTypeActiveRepairV1 =
+    'active_repair_target_v1';
+const String act0PracticeRepairQueueTargetTypeNotLaunchableV1 =
+    'not_launchable_v1';
 
 class Act0PracticeRepairQueueProjectionV1 {
   const Act0PracticeRepairQueueProjectionV1({
@@ -66,6 +70,7 @@ class Act0PracticeRepairQueueProjectionV1 {
             priority: 0,
             sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
             state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
+            launchTarget: _activeRepairLaunchTarget(intent),
           ),
         ),
       );
@@ -107,6 +112,10 @@ class Act0PracticeRepairQueueProjectionV1 {
             priority: 0,
             sourceType: act0PracticeRepairQueueSourceReviewHistoryV1,
             state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
+            launchTarget:
+                const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
+                  source: act0PracticeRepairQueueSourceReviewHistoryV1,
+                ),
           ),
         ),
       );
@@ -150,6 +159,8 @@ class Act0PracticeRepairQueueItemV1 {
     required this.priority,
     required this.sourceType,
     required this.state,
+    this.launchTarget =
+        const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(),
   });
 
   final int schemaVersion;
@@ -166,6 +177,7 @@ class Act0PracticeRepairQueueItemV1 {
   final int priority;
   final String sourceType;
   final String state;
+  final Act0PracticeRepairQueueLaunchTargetV1 launchTarget;
 
   Act0PracticeRepairQueueItemV1 copyWith({int? priority}) {
     return Act0PracticeRepairQueueItemV1(
@@ -183,6 +195,7 @@ class Act0PracticeRepairQueueItemV1 {
       priority: priority ?? this.priority,
       sourceType: sourceType,
       state: state,
+      launchTarget: launchTarget,
     );
   }
 
@@ -201,7 +214,50 @@ class Act0PracticeRepairQueueItemV1 {
     'priority': priority,
     'sourceType': sourceType,
     'state': state,
+    'launchTarget': launchTarget.toPayload(),
   };
+}
+
+class Act0PracticeRepairQueueLaunchTargetV1 {
+  const Act0PracticeRepairQueueLaunchTargetV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.source,
+    required this.targetType,
+  });
+
+  const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable({
+    this.source = act0PracticeRepairQueueTargetTypeNotLaunchableV1,
+  }) : worldId = '',
+       lessonId = '',
+       taskId = '',
+       targetType = act0PracticeRepairQueueTargetTypeNotLaunchableV1;
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String source;
+  final String targetType;
+
+  bool get isLaunchable =>
+      targetType != act0PracticeRepairQueueTargetTypeNotLaunchableV1 &&
+      worldId.trim().isNotEmpty &&
+      lessonId.trim().isNotEmpty &&
+      taskId.trim().isNotEmpty;
+
+  Map<String, Object> toPayload() {
+    if (!isLaunchable) {
+      return <String, Object>{'source': source, 'targetType': targetType};
+    }
+    return <String, Object>{
+      'worldId': worldId,
+      'lessonId': lessonId,
+      'taskId': taskId,
+      'source': source,
+      'targetType': targetType,
+    };
+  }
 }
 
 class _QueueCandidateV1 {
@@ -223,6 +279,26 @@ String _activeRepairSortKey(Act0RepairIntentV1 intent) {
     intent.skillAtomId,
     intent.errorType,
   ].join('|');
+}
+
+Act0PracticeRepairQueueLaunchTargetV1 _activeRepairLaunchTarget(
+  Act0RepairIntentV1 intent,
+) {
+  final worldId = intent.targetWorldId.trim();
+  final lessonId = intent.targetLessonId.trim();
+  final taskId = intent.targetTaskId.trim();
+  if (worldId.isEmpty || lessonId.isEmpty || taskId.isEmpty) {
+    return const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
+      source: act0PracticeRepairQueueSourceActiveRepairV1,
+    );
+  }
+  return Act0PracticeRepairQueueLaunchTargetV1(
+    worldId: worldId,
+    lessonId: lessonId,
+    taskId: taskId,
+    source: act0PracticeRepairQueueSourceActiveRepairV1,
+    targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+  );
 }
 
 String _dedupKey({

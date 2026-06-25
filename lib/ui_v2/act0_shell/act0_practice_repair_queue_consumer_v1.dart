@@ -51,6 +51,7 @@ class Act0PracticeRepairQueueItemViewModelV1 {
     required this.itemId,
     required this.title,
     required this.isPinned,
+    this.launchTarget,
     this.detail,
     this.actionLine,
   });
@@ -58,8 +59,11 @@ class Act0PracticeRepairQueueItemViewModelV1 {
   final String itemId;
   final String title;
   final bool isPinned;
+  final Act0PracticeRepairQueueLaunchTargetV1? launchTarget;
   final String? detail;
   final String? actionLine;
+
+  bool get isLaunchable => launchTarget?.isLaunchable ?? false;
 
   static Act0PracticeRepairQueueItemViewModelV1? fromItem(
     Act0PracticeRepairQueueItemV1 item, {
@@ -77,6 +81,7 @@ class Act0PracticeRepairQueueItemViewModelV1 {
       itemId: item.itemId,
       title: resolvedTitle ?? 'Practice repair',
       isPinned: isPinned,
+      launchTarget: item.launchTarget.isLaunchable ? item.launchTarget : null,
       detail: detail,
       actionLine: actionLine,
     );
@@ -86,7 +91,8 @@ class Act0PracticeRepairQueueItemViewModelV1 {
   String toString() {
     return 'Act0PracticeRepairQueueItemViewModelV1('
         'itemId: $itemId, title: $title, isPinned: $isPinned, '
-        'detail: $detail, actionLine: $actionLine)';
+        'isLaunchable: $isLaunchable, detail: $detail, '
+        'actionLine: $actionLine)';
   }
 }
 

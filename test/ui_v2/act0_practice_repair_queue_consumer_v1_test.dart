@@ -116,7 +116,7 @@ void main() {
     },
   );
 
-  test('consumer remains passive because projection has no launch target', () {
+  test('consumer exposes launchability from projection target only', () {
     final projection = Act0PracticeRepairQueueProjectionV1(
       items: <Act0PracticeRepairQueueItemV1>[
         _item(
@@ -124,6 +124,13 @@ void main() {
           sourceTaskId: 'actions_legal_context',
           safeLabel: 'Action read',
           sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+          launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
+            worldId: 'world_1',
+            lessonId: 'fold_check_call_raise',
+            taskId: 'actions_check_drill',
+            source: act0PracticeRepairQueueSourceActiveRepairV1,
+            targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+          ),
         ),
       ],
     );
@@ -136,12 +143,14 @@ void main() {
     ).readAsStringSync();
 
     expect(consumer.items.single.isPinned, isTrue);
+    expect(consumer.items.single.isLaunchable, isTrue);
+    expect(consumer.items.single.launchTarget?.taskId, 'actions_check_drill');
     expect(payload.keys, isNot(contains('targetWorldId')));
     expect(payload.keys, isNot(contains('targetLessonId')));
     expect(payload.keys, isNot(contains('targetTaskId')));
+    expect(payload['launchTarget'], isA<Map<String, Object?>>());
     expect(source, isNot(contains('VoidCallback')));
     expect(source, isNot(contains('onLaunch')));
-    expect(source, isNot(contains('targetTaskId')));
   });
 }
 
@@ -152,6 +161,10 @@ Act0PracticeRepairQueueItemV1 _item({
   String sourceType = act0PracticeRepairQueueSourceReviewHistoryV1,
   String errorDetail = 'missed_action_read',
   String context = 'No bet yet',
+  Act0PracticeRepairQueueLaunchTargetV1 launchTarget =
+      const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
+        source: act0PracticeRepairQueueSourceReviewHistoryV1,
+      ),
 }) {
   return Act0PracticeRepairQueueItemV1(
     itemId: itemId,
@@ -167,5 +180,6 @@ Act0PracticeRepairQueueItemV1 _item({
     priority: 0,
     sourceType: sourceType,
     state: act0PracticeRepairQueueStateQueuedUnresolvedV1,
+    launchTarget: launchTarget,
   );
 }

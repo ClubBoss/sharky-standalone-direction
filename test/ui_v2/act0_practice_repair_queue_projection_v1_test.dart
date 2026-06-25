@@ -121,6 +121,96 @@ void main() {
     expect(intent.toPayload(), before);
   });
 
+  test('active repair row with target exposes launch target metadata', () {
+    final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
+    );
+
+    final item = projection.items.single;
+    expect(item.launchTarget.isLaunchable, isTrue);
+    expect(
+      item.launchTarget.targetType,
+      act0PracticeRepairQueueTargetTypeActiveRepairV1,
+    );
+    expect(item.launchTarget.worldId, 'world_1');
+    expect(item.launchTarget.lessonId, 'fold_check_call_raise');
+    expect(item.launchTarget.taskId, 'actions_check_drill');
+    expect(
+      item.launchTarget.source,
+      act0PracticeRepairQueueSourceActiveRepairV1,
+    );
+
+    final payload = item.toPayload();
+    expect(payload['targetWorldId'], isNull);
+    expect(payload['targetLessonId'], isNull);
+    expect(payload['targetTaskId'], isNull);
+    expect(payload['launchTarget'], <String, Object>{
+      'worldId': 'world_1',
+      'lessonId': 'fold_check_call_raise',
+      'taskId': 'actions_check_drill',
+      'source': act0PracticeRepairQueueSourceActiveRepairV1,
+      'targetType': act0PracticeRepairQueueTargetTypeActiveRepairV1,
+    });
+  });
+
+  test('active repair row without target remains passive', () {
+    final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[
+        Act0RepairIntentV1(
+          sourceWorldId: 'world_1',
+          sourceLessonId: 'fold_check_call_raise',
+          sourceTaskId: 'actions_legal_context',
+          choiceId: 'fold',
+          result: 'incorrect',
+          errorType: 'missed_action_read',
+          missedSignalId: 'no_bet_yet',
+          missedSignalLabel: 'No bet yet',
+          skillAtomId: 'action_read',
+          skillLabel: 'Action read',
+          targetWorldId: ' ',
+          targetLessonId: 'fold_check_call_raise',
+          targetTaskId: 'actions_check_drill',
+          mappingType: 'repair',
+          reasonCode: 'same_signal_action_read_no_bet_yet',
+        ),
+      ],
+    );
+
+    final item = projection.items.single;
+    expect(item.launchTarget.isLaunchable, isFalse);
+    expect(
+      item.launchTarget.targetType,
+      act0PracticeRepairQueueTargetTypeNotLaunchableV1,
+    );
+    expect(item.toPayload()['launchTarget'], <String, Object>{
+      'source': act0PracticeRepairQueueSourceActiveRepairV1,
+      'targetType': act0PracticeRepairQueueTargetTypeNotLaunchableV1,
+    });
+  });
+
+  test('history rows remain passive and expose no launch target ids', () {
+    final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
+      reviewMistakeHistory: Act0ReviewMistakeHistoryV1(
+        records: <Act0ReviewMistakeRecordV1>[
+          _mistakeRecord(order: 1, skillAtomId: 'target_like_label'),
+        ],
+      ),
+    );
+
+    final item = projection.items.single;
+    expect(item.sourceType, act0PracticeRepairQueueSourceReviewHistoryV1);
+    expect(item.launchTarget.isLaunchable, isFalse);
+    final launchTarget =
+        item.toPayload()['launchTarget'] as Map<String, Object?>;
+    expect(
+      launchTarget['targetType'],
+      act0PracticeRepairQueueTargetTypeNotLaunchableV1,
+    );
+    expect(launchTarget.keys, isNot(contains('worldId')));
+    expect(launchTarget.keys, isNot(contains('lessonId')));
+    expect(launchTarget.keys, isNot(contains('taskId')));
+  });
+
   test('projection contains no fixed cleared or resolved states', () {
     final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
       activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
