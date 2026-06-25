@@ -2939,6 +2939,15 @@ void main() {
       Act0ControlledDemoCaptureSurfaceV1.firstWeekProfile,
     );
 
+    final profileEvidence = parseAct0ControlledDemoHarnessEntryV1(
+      Uri.parse('http://127.0.0.1:7357/?act0_capture=profile_evidence'),
+    );
+    expect(profileEvidence, isNotNull);
+    expect(
+      profileEvidence!.surface,
+      Act0ControlledDemoCaptureSurfaceV1.profileEvidence,
+    );
+
     final sessionSummary = parseAct0ControlledDemoHarnessEntryV1(
       Uri.parse('http://127.0.0.1:7357/?act0_capture=session_summary'),
     );
@@ -2962,7 +2971,9 @@ void main() {
 
     expect(
       shellSource,
-      contains('<core|runner|first_week|day2_return> compact'),
+      contains(
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+      ),
     );
     expect(captureSource, contains("'first_week': <_CaptureSurfaceV1>"));
     expect(
@@ -3010,7 +3021,9 @@ void main() {
 
     expect(
       shellSource,
-      contains('<core|runner|first_week|day2_return> compact'),
+      contains(
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+      ),
     );
     expect(captureSource, contains("'day2_return': <_CaptureSurfaceV1>"));
     expect(
@@ -3059,7 +3072,24 @@ void main() {
 
     expect(
       shellSource,
-      contains('<core|runner|first_week|day2_return|full_scroll> compact'),
+      contains(
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+      ),
+    );
+    expect(captureSource, contains("'profile_evidence': <_CaptureSurfaceV1>"));
+    expect(captureSource, contains("'profile_evidence'"));
+    expect(captureSource, contains("'profileEvidence'"));
+    expect(captureSource, contains("scrollViewport: 'mid'"));
+    expect(
+      packageSource,
+      contains('("profile_evidence", "Profile evidence signal")'),
+    );
+    expect(packageSource, contains('"profile_evidence_fast"'));
+    expect(
+      packageSource,
+      contains(
+        'return "./tools/screen_review_fast_v1.sh profile_evidence compact"',
+      ),
     );
     expect(captureSource, contains("'full_scroll': <_CaptureSurfaceV1>"));
     expect(
@@ -3321,6 +3351,49 @@ void main() {
         find.byKey(const Key('act0_shell_review_fix_next_cta')),
         findsNothing,
       );
+    },
+  );
+
+  testWidgets(
+    'Debug capture profile evidence entry renders one safe evidence card',
+    (tester) async {
+      await pumpTall(
+        tester,
+        host(
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.profileEvidence,
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_profile_screen')),
+        findsOneWidget,
+      );
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_evidence_signal')),
+        220,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_profile_evidence_signal')),
+        findsOneWidget,
+      );
+      expect(find.text('Evidence signal'), findsOneWidget);
+      expect(find.text('You are building this skill.'), findsOneWidget);
+      expect(find.text('3/5 correct in Action reading'), findsOneWidget);
+      expect(find.textContaining('strongest'), findsNothing);
+      expect(find.textContaining('master'), findsNothing);
+      expect(find.textContaining('leak'), findsNothing);
+      expect(find.textContaining('AI'), findsNothing);
+      expect(find.textContaining('GTO'), findsNothing);
+      expect(find.textContaining('solver'), findsNothing);
     },
   );
 

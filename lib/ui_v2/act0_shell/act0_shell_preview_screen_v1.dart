@@ -642,6 +642,7 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   day2PracticeRepairTarget,
   day2ReviewContinuation,
   day2ProfileActiveRepair,
+  profileEvidence,
 }
 
 class Act0ShellDebugHarnessEntryV1 {
@@ -1819,6 +1820,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugDay2ReviewContinuationSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.day2ProfileActiveRepair:
         _applyDebugDay2ProfileActiveRepairSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.profileEvidence:
+        _applyDebugProfileEvidenceSurface();
     }
   }
 
@@ -2347,6 +2350,90 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sharkyLine: 'Good proof. Keep the table clue in view.',
       perfectClearCount: 1,
       completedClearCount: 2,
+    );
+  }
+
+  void _applyDebugProfileEvidenceSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.profile;
+    _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        Act0LearningEvidenceRecordV1(
+          recordId: 'profile_evidence_fixture|action_read|1',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: '',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId: 'profile_evidence_fixture|action_read|2',
+          createdOrder: 2,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: '',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId: 'profile_evidence_fixture|action_read|3',
+          createdOrder: 3,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: '',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'correct',
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId: 'profile_evidence_fixture|action_read|4',
+          createdOrder: 4,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'fold',
+          expectedChoiceId: 'check',
+          isCorrect: false,
+          errorType: 'missed_action_read',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'incorrect',
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId: 'profile_evidence_fixture|action_read|5',
+          createdOrder: 5,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'fold',
+          expectedChoiceId: 'check',
+          isCorrect: false,
+          errorType: 'missed_action_read',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: '3_to_10s',
+          resultKind: 'incorrect',
+        ),
+      ],
     );
   }
 

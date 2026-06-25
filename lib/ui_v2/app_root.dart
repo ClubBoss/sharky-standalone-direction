@@ -138,6 +138,11 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.profile,
       );
+    case 'profile_evidence':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.profileEvidence,
+      );
     case 'world_completion':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,

@@ -51,6 +51,13 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('review_continuation', 'day2ReviewContinuation'),
     _CaptureSurfaceV1('profile_not_clear', 'day2ProfileActiveRepair'),
   ],
+  'profile_evidence': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1(
+      'profile_evidence',
+      'profileEvidence',
+      scrollViewport: 'mid',
+    ),
+  ],
   'full_scroll': <_CaptureSurfaceV1>[
     _CaptureSurfaceV1('home.scroll_01_top', 'firstWeekHome'),
     _CaptureSurfaceV1(
@@ -592,6 +599,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|full_scroll> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
   );
 }

@@ -55,6 +55,9 @@ SURFACE_GROUPS = {
         ("review_continuation", "Review repair continuation"),
         ("profile_not_clear", "Profile active repair proof"),
     ),
+    "profile_evidence_fast": (
+        ("profile_evidence", "Profile evidence signal"),
+    ),
     "full_scroll_fast": (
         ("home.scroll_01_top", "Home - top"),
         ("home.scroll_02_mid", "Home - middle"),
@@ -91,7 +94,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|full_scroll_fast] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|full_scroll_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -235,6 +238,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh first_week compact"
     if group == "day2_return_fast":
         return "./tools/screen_review_fast_v1.sh day2_return compact"
+    if group == "profile_evidence_fast":
+        return "./tools/screen_review_fast_v1.sh profile_evidence compact"
     if group == "full_scroll_fast":
         return "./tools/screen_review_fast_v1.sh full_scroll compact"
     return f"./tools/screen_review_v1.sh {group} compact"
