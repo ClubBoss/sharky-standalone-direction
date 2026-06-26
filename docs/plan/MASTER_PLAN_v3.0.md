@@ -116,20 +116,26 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 ## Current post-merge status
 
 - The proof-loop, Premium Beta productization, premium feel, compact Sharky
-  soul, earned reward hook, and Review Pattern Coaching Lite waves through Wave
-  3.0 are closed.
-- Current state is stronger than narrow-beta packet-ready, but not yet Public
-  Premium TOP1 v1 Candidate.
-- Wave 3.0.1 locks the route from the current state to Public Premium TOP1 v1
-  Candidate in
-  `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`.
-- The next feature wave after the lock is Wave 3.1 - Street Replay / How We Got
-  Here v1.
-- Do not route next work into broad drill engines, W5-W36 breadth, AI/GTO/
-  solver claims, public paywall, Modern Table redesign, telemetry/model work,
-  full RU localization, hand-history databases, broad analytics, or old-main
-  feature restoration unless concrete P0/P1 evidence reopens that bottleneck
-  under the endgame lock's no-new-waves rule.
+  soul, earned reward hook, Review Pattern Coaching Lite, public-premium
+  endgame route, release-visible content gate, value packaging, and
+  English-first/RU boundary waves through Wave 3.9 are closed.
+- Wave 3.9.1 corrects the TOP1 product identity and route:
+  `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`.
+- Sharky is not a beginner-only app. The permanent product identity is:
+  `Zero to shark. Table-first poker training across 36 worlds.`
+- Public v1 is the W1-W4 Foundation beachhead, polished to 10/10 inside that
+  band. The full company/product ambition remains the 36-world Core Shark Path
+  from first poker decision to high-level/pro-style decision-making.
+- Store/Public Readiness is delayed until Waves 3.10-3.15 complete, fresh
+  day2_return / first_week / full_scroll packets exist, and a fresh TOP1
+  challenger pass confirms the quality bar.
+- The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
+- Do not route next work into broad drill engines, W5-W36 content authoring,
+  AI/chat, GTO/solver claims, public paywall, Modern Table redesign,
+  telemetry/model work, full RU localization, hand-history databases, broad
+  analytics, or old-main feature restoration unless a later excellence wave
+  admits a precise prerequisite or concrete P0/P1 evidence reopens that
+  bottleneck.
 
 ## Product 100
 
@@ -157,7 +163,9 @@ For this plan, 100% means:
 15. Progression slows through repair, mastery, and session rhythm, not timers,
     pain loops, or fake scarcity.
 
-This is a practical product 100, not a final company/release 100.
+This is a practical W1-W4 public-v1 product 100, not the final 36-world company
+100. The public beachhead must feel excellent without claiming W1-W36 are built
+or validated.
 
 App-wide monetization and retention north star:
 
@@ -453,10 +461,14 @@ truths above, it is not part of the route to 100.
 ## Current Route To 100
 
 After the landed proof-loop, Premium Beta productization, premium feel,
-Sharky Soul, earned reward hook, and Review Pattern Coaching Lite waves through
-Wave 3.0, the next route is no longer open-ended TOP1 polish. The remaining
-path to 100 must move toward Public Premium TOP1 v1 Candidate through the
-closed endgame lock while preserving deterministic local proof.
+Sharky Soul, earned reward hook, Review Pattern Coaching Lite, the public
+premium endgame route, value packaging, and English-first/RU boundary through
+Wave 3.9, the next route is no longer Store/Public Readiness. Wave 3.9.1 locks
+the corrected product identity: Sharky is a 36-world zero-to-shark table-first
+skill-building system, with W1-W4 as the public v1 Foundation beachhead.
+
+Store/Public Readiness is delayed until the excellence route below proves the
+current product quality is strong enough to present publicly.
 
 Current next-wave order:
 
@@ -470,36 +482,45 @@ Current next-wave order:
 8. `Wave 3.7 - Release-Visible Content Depth Gate v1`
 9. `Wave 3.8 - Value Packaging / Premium Timing v1`
 10. `Wave 3.9 - English-First / RU Localization Boundary v1`
-11. `Wave 4.0 - Store / Public Readiness Packet v1`
-12. `Wave 4.1 - TOP1 Release Candidate External Gate`
-13. `Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed`
+11. `Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1`
+12. `Wave 3.10 - Premium Motion Moments v1`
+13. `Wave 3.11 - Personalized Return Reason v1`
+14. `Wave 3.12 - World 1 Completion Payoff v1`
+15. `Wave 3.13 - Sharky Growth / Companion Tone v1`
+16. `Wave 3.14 - Competitive Wedge Pass v1`
+17. `Wave 3.15 - W2-W4 Launch Quality Packet v1`
+18. `Refresh day2_return, first_week, and full_scroll packets`
+19. `Fresh TOP1 challenger pass`
+20. `Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence score band is strong enough`
 
 Why this order:
 
-- Wave 3.0 made Review more coach-like without fake analytics, but the product
-  still needs a bounded route to public premium candidacy
-- the highest remaining EV is now street context, first-week proof, final text
-  clarity, proof-backed rewards visuals, Profile identity, value timing,
-  localization boundary, and public readiness
-- commercial screenshot, content-depth, telemetry, localization, and app-store
-  packaging work should follow the endgame lock rather than run as generic
-  surface cleanup
-- premium feel must support table-signal proof, repair payoff, and first-week
-  return value before public monetization
+- Wave 3.9 closed English-first release hygiene but did not prove public-store
+  excellence.
+- External TOP1 challenger input corrected the product identity from a
+  beginner-only trainer to a zero-to-shark 36-world system.
+- The safest next route is visible excellence inside the W1-W4 beachhead before
+  public packaging.
+- Premium motion, return reason, W1 payoff, Sharky tone growth, competitive
+  wedge clarity, and W2-W4 launch-quality proof must precede store claims.
+- Commercial screenshot, store, public readiness, and challenger gates should
+  follow the excellence packet, not substitute for it.
 
 Immediate execution rule:
 
 1. Treat Waves 1 and 2.1-2.4 as closed unless concrete evidence reopens one
    exact owner family.
-2. Use `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md` to select the
-   next wave and enforce no-new-waves discipline.
-3. The next implementation candidate is Wave 3.1 - Street Replay / How We Got
-   Here v1, unless concrete P0/P1 evidence changes the bottleneck under the
-   lock.
+2. Use
+   `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md` for
+   the current excellence route and product-identity lock.
+3. The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
 4. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
    Modern Table, telemetry/model work, or monetization for cosmetic drift.
 5. If validation does not move the selected TOP1 row, make the hypothesis
    dormant instead of expanding scope.
+6. Guard waves may pass by proving no P0/P1 blockers; excellence waves must
+   ship learner-visible value or return `blocked_missing_prerequisite` with the
+   exact prerequisite and next route.
 
 Sizing-control hold:
 

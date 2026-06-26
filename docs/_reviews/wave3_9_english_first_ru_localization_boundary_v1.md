@@ -216,4 +216,10 @@ Future localization work should be an explicit rollout with its own public selec
 
 ## 21. Next Recommendation
 
-Proceed to Wave 4.0 Store / Public Readiness Packet v1.
+Superseded by Wave 3.9.1 route lock on 2026-06-27.
+
+Proceed to Wave 3.10 - Premium Motion Moments v1 after
+`docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md` is
+accepted. Store/Public Readiness is delayed until Waves 3.10-3.15 complete,
+fresh packets are captured, and a fresh TOP1 challenger pass confirms the
+quality bar.

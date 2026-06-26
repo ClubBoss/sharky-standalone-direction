@@ -10,6 +10,12 @@ Sharky is making real product progress, but the path can still expand into endle
 
 This lock forces future work to run backward from a bounded final target: Public Premium TOP1 v1 Candidate. Future waves must be selected from the closed route below, must name final-product relevance, and must have measurable DoD. Nice-to-have polish is deferred unless concrete P0/P1 evidence proves it blocks the candidate.
 
+Supersession note, 2026-06-27: Wave 3.9.1 corrects the product identity and
+route after Wave 3.9. The current route authority is
+`docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`.
+This artifact remains accepted historical route-lock evidence, but Store/Public
+Readiness is no longer the immediate post-Wave-3.9 step.
+
 ## 3. Current state after Wave 3.0
 
 Closed state:
@@ -86,7 +92,7 @@ This must be Wave 3.1 unless concrete P0/P1 evidence changes the bottleneck.
 
 ## 7. Closed route to Public Premium TOP1 v1 Candidate
 
-The closed route is:
+The current route, superseded by Wave 3.9.1 after Wave 3.9, is:
 
 1. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock.
 2. Wave 3.1 - Street Replay / How We Got Here v1.
@@ -98,9 +104,17 @@ The closed route is:
 8. Wave 3.7 - Release-Visible Content Depth Gate v1.
 9. Wave 3.8 - Value Packaging / Premium Timing v1.
 10. Wave 3.9 - English-First / RU Localization Boundary v1.
-11. Wave 4.0 - Store / Public Readiness Packet v1.
-12. Wave 4.1 - TOP1 Release Candidate External Gate.
-13. Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed.
+11. Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1.
+12. Wave 3.10 - Premium Motion Moments v1.
+13. Wave 3.11 - Personalized Return Reason v1.
+14. Wave 3.12 - World 1 Completion Payoff v1.
+15. Wave 3.13 - Sharky Growth / Companion Tone v1.
+16. Wave 3.14 - Competitive Wedge Pass v1.
+17. Wave 3.15 - W2-W4 Launch Quality Packet v1.
+18. Refresh day2_return, first_week, and full_scroll packets.
+19. Fresh TOP1 challenger pass.
+20. Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence
+    score band is strong enough.
 
 ## 8. DoD for each future wave
 
@@ -193,6 +207,85 @@ The closed route is:
 - DoD: no mixed English/Russian copy appears in English release surfaces; RU is explicitly post-v1/deferred unless reopened.
 - Proof required: copy audit, focused l10n tests or scans if available, docs update.
 - Main drift risk: starting full localization instead of defining the release boundary.
+
+### Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1
+
+- Goal: correct the product identity and route before implementation resumes.
+- In-scope: docs-only SSOT lock, 36-world spine, excellence route insertion,
+  contract timing, Store/Public delay.
+- Out-of-scope: product code, motion, personalization, milestones,
+  localization, monetization, content, W5-W36 authoring.
+- DoD: Sharky is framed as zero-to-shark across 36 worlds; W1-W4 is the public
+  v1 beachhead; Waves 3.10-3.15 are inserted before Store/Public Readiness.
+- Proof required: docs diff, `git diff --check`, `git diff --cached --check`,
+  `graphify hook-check`, status.
+- Main drift risk: using vision lock as permission to start broad W5-W36
+  implementation.
+
+### Wave 3.10 - Premium Motion Moments v1
+
+- Goal: make key proof-loop moments feel premium and causal.
+- In-scope: decision -> feedback, fix landed, Session Summary hero, Street
+  Replay reveal if safe.
+- Out-of-scope: decorative animation, route changes, new state, broad motion
+  system.
+- DoD: motion ships learner-visible value and has before/after proof.
+- Proof required: screenshots plus device recording or frame sequence.
+- Main drift risk: motion theater without learning value.
+
+### Wave 3.11 - Personalized Return Reason v1
+
+- Goal: tie Day 2/Home return copy to last proof or current repair.
+- In-scope: Cross-Session Learner State Fields contract and bounded consumer
+  copy.
+- Out-of-scope: broad personalization, telemetry-owned state, AI/chat.
+- DoD: return reason is specific, source-owned, and honest.
+- Proof required: focused state/copy tests and screenshot proof if UI changes.
+- Main drift risk: generic habit copy pretending to be personalization.
+
+### Wave 3.12 - World 1 Completion Payoff v1
+
+- Goal: make W1 completion feel like an earned milestone with a W2 preview.
+- In-scope: milestone surface after W1 completion; unlocked/completed
+  separation proof.
+- Out-of-scope: broad progression redesign, fake mastery, W2-W36 completion
+  claims.
+- DoD: payoff gates on completed, not unlocked.
+- Proof required: focused progression/payoff tests and screenshot proof.
+- Main drift risk: treating unlock as completion.
+
+### Wave 3.13 - Sharky Growth / Companion Tone v1
+
+- Goal: define and apply curated Sharky phrase tiers for Foundation tone.
+- In-scope: Foundation tier phrase sets, proof-specific fix-landed variations,
+  within-session repair streak acknowledgement if safe.
+- Out-of-scope: AI, chat, dynamic generation, mascot bloat.
+- DoD: Sharky grows through deterministic curated phrases by band.
+- Proof required: phrase contract and focused copy tests.
+- Main drift risk: expanding persona instead of tightening coach register.
+
+### Wave 3.14 - Competitive Wedge Pass v1
+
+- Goal: make Sharky's table-first method felt in the first session.
+- In-scope: 2-3 small copy/framing improvements and premium entitlement source
+  confirmation before premium-adjacent copy changes.
+- Out-of-scope: competitor comparison, superiority claim, paywall activation.
+- DoD: the first session more clearly expresses `table clue -> decision ->
+  clear why -> targeted rep -> local proof`.
+- Proof required: focused copy proof and screenshot packet if UI changes.
+- Main drift risk: marketing claims instead of product clarity.
+
+### Wave 3.15 - W2-W4 Launch Quality Packet v1
+
+- Goal: validate W2-W4 first-session quality before public packaging.
+- In-scope: W2/W3/W4 screenshot/evidence packets, Mistake Family Taxonomy,
+  Canonical Telemetry Event Names, Practice Session Concept ID seam if
+  practical.
+- Out-of-scope: W5-W36 content expansion, generative rep engine, broad
+  telemetry sink.
+- DoD: W2-W4 launch quality is proven or blockers are classified.
+- Proof required: W2/W3/W4 packets and focused docs/contract validation.
+- Main drift risk: claiming public readiness before W2-W4 quality proof.
 
 ### Wave 4.0 - Store / Public Readiness Packet v1
 

@@ -2,11 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-26 after Wave 3.0.1 Public Premium TOP1 v1 Endgame
-Lock on `main`.
-Current phase: Public Premium TOP1 v1 Endgame Route - LOCKED.
-Current active control-plane wave: Wave 3.0.1 - Public Premium TOP1 v1
-Endgame Lock v1.
+Last refreshed: 2026-06-27 after Wave 3.9.1 36-World TOP1 Product Vision &
+Excellence Route Lock on `main`.
+Current phase: 36-World TOP1 Product Vision and Excellence Route - LOCKED.
+Current active control-plane wave: Wave 3.9.1 - 36-World TOP1 Product Vision &
+Excellence Route Lock v1.
 
 Authority note:
 
@@ -18,24 +18,62 @@ Authority note:
 - This document constrains product attack direction; it does not replace the
   Master Plan.
 
-## Public Premium TOP1 v1 Endgame Route (2026-06-26)
+## 36-World TOP1 Product Vision & Excellence Route (2026-06-27)
 
 Route-lock artifact:
 
-- `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
+- `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`
 
 Current accepted state:
 
-- Wave 3.0 - Review Pattern Coaching Lite v1 is closed with verdict
-  `wave3_0_review_pattern_coaching_lite_ready`.
-- Wave 3.0.1 locks the closed route from the current state to Public Premium
-  TOP1 v1 Candidate.
+- Waves through Wave 3.9 - English-First / RU Localization Boundary v1 are
+  closed.
+- Wave 3.9 accepted verdict:
+  `wave3_9_english_first_ru_localization_boundary_ready`.
+- External TOP1 challenger input supplied in conversation corrected the prior
+  product framing.
 
-Public Premium TOP1 v1 Candidate means an English-first premium poker learning
-app candidate where the active first-week product feels finished, premium,
-claim-safe, and competitively differentiated. It does not require all 36 worlds,
-full Russian localization, full AI coach/chat, a hand-history database, broad
-analytics, a full RPG economy, or solver/GTO trainer positioning.
+New external verdict:
+
+`current_format_can_anchor_a_36_world_zero_to_shark_journey_with_defined_architecture_contracts`
+
+Executive decision:
+
+- Sharky is not beginner-only.
+- Sharky is a 36-world table-first poker skill-building system.
+- Public v1 is W1-W4 Foundation, polished to 10/10 within that band.
+- The full ambition is zero-to-shark across 36 worlds.
+- Store/Public Readiness is delayed.
+- Excellence route E1-E6 is inserted before Store/Public.
+
+Public v1 positioning:
+
+`The table coach. Learn to read the table from your first hand.`
+
+Supporting v1 framing:
+
+`Sharky shows you what to look for at the table - one spot at a time, from your first decision.`
+
+Full product positioning:
+
+`Zero to shark. Table-first poker training across 36 worlds.`
+
+Supporting full-product framing:
+
+`Every world is a skill upgrade. Every rep is a better read.`
+
+Forbidden positioning:
+
+- beginner-only app;
+- GTO trainer;
+- AI poker coach;
+- complete poker curriculum before W1-W36 are built and validated;
+- Runout alternative;
+- Duolingo for poker;
+- best beginner X as permanent product identity.
+
+The earlier "best beginner table-clue poker decision trainer" framing is valid
+only as a public-v1 W1-W4 beachhead description, not as the product identity.
 
 Bounded route:
 
@@ -49,11 +87,19 @@ Bounded route:
 8. Wave 3.7 - Release-Visible Content Depth Gate v1.
 9. Wave 3.8 - Value Packaging / Premium Timing v1.
 10. Wave 3.9 - English-First / RU Localization Boundary v1.
-11. Wave 4.0 - Store / Public Readiness Packet v1.
-12. Wave 4.1 - TOP1 Release Candidate External Gate.
-13. Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed.
+11. Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1.
+12. Wave 3.10 - Premium Motion Moments v1.
+13. Wave 3.11 - Personalized Return Reason v1.
+14. Wave 3.12 - World 1 Completion Payoff v1.
+15. Wave 3.13 - Sharky Growth / Companion Tone v1.
+16. Wave 3.14 - Competitive Wedge Pass v1.
+17. Wave 3.15 - W2-W4 Launch Quality Packet v1.
+18. Refresh day2_return, first_week, and full_scroll packets.
+19. Run a fresh TOP1 challenger pass.
+20. Proceed to Wave 4.0 - Store / Public Readiness Packet v1 only if the
+    excellence score band is strong enough.
 
-Required differentiator:
+Required differentiator remains:
 
 - Street Replay / How We Got Here is required as Wave 3.1 unless concrete P0/P1
   evidence changes the bottleneck. It is a compact learning replay/context
@@ -74,6 +120,146 @@ Anti-theater rule:
 - Each future wave must state what user-visible thing changed, which final
   target requirement moved, what evidence proves it, what was explicitly not
   built, and why the wave is not fake progress.
+
+Guard vs Excellence protocol:
+
+- Guard waves may pass by proving no P0/P1 blockers.
+- Excellence waves may not pass by no P0/P1 alone.
+- An excellence wave must either ship learner-visible value or return
+  `blocked_missing_prerequisite` with the exact prerequisite and next route.
+- A docs-only wave can only be an excellence wave if its purpose is route/SSOT
+  lock, not product-score movement.
+
+## 36-World Progression Spine
+
+36 worlds are the canonical Core Shark Path. They are the product spine, not a
+loose content backlog. They are also not an artificial ceiling for the company
+or product.
+
+### W1-W4 - Foundation
+
+- learning promise: first reliable table signals and simple correct decisions;
+- user emotional state: cautious curiosity -> "I can actually see that";
+- Sharky tone: warm, direct, short;
+- current v1 beachhead;
+- proof: local, per-session, specific table clue.
+
+### W5-W12 - Developing Player
+
+- learning promise: more complex patterns, pot odds, position, bet-sizing
+  signals, multi-street basics;
+- Sharky tone: more precise, vocabulary-confident;
+- systems needed later: cross-session mistake tracking, simple concept
+  resurfacing, richer Review coaching.
+
+### W13-W24 - Intermediate Decision-Maker
+
+- learning promise: range-level thinking, multi-way dynamics, bluff-catch
+  frequencies, deeper structural reasoning;
+- Sharky tone: peer-level and proof-aware;
+- systems needed later: hand import, multi-street decision trees, persistent
+  leak profile, practice generator.
+
+### W25-W36 - High-Level / Pro-Style Thinking
+
+- learning promise: strong-reg style thinking, solver-consistent conceptual
+  validation, ICM/tournament pressure, advanced analytics;
+- Sharky tone: minimal, precise, respectful;
+- systems needed later: solver validation floor, advanced hand import, custom
+  drills, advanced analytics.
+
+Post-core growth may continue through mastery tracks, labs, specialized
+formats, imported-hand review, solver-backed validation, seasonal/mastery
+challenges, and advanced practice systems. Public v1 must not claim post-core
+features or full W1-W36 availability.
+
+## Sharky Grows With The Player
+
+Sharky's method stays constant:
+
+`table clue -> decision -> clear why -> targeted rep -> local proof`
+
+Sharky's register evolves by world band:
+
+- Foundation tier: W1-W4, warm/direct/simple.
+- Developing tier: W5-W12, precise/vocabulary-confident.
+- Sharp tier: W13-W36, minimal/peer-level/tactical.
+
+Mechanism:
+
+- curated phrase sets indexed by world band;
+- phrase sets per moment type;
+- deterministic selection by world band.
+
+This is not AI, not chat, not dynamic generation, and not mascot bloat.
+
+## Revised Excellence Route Contracts
+
+A. Replay Source Boundary:
+
+- timing: before Wave 3.10;
+- motion/presentation consumes `Act0StreetReplayStepV1` or equivalent
+  structured replay steps;
+- no authored-content assumption;
+- no hand-import parser implementation.
+
+B. Cross-Session Learner State Fields:
+
+- timing: during Wave 3.11;
+- fields: `last_session_repair_focus_id`, `last_session_proof_result`,
+  `last_session_date`, `last_session_world_id`;
+- owner: session close seam;
+- readers: Day 2 return, future resurfacing.
+
+C. World Progression Schema:
+
+- timing: during Wave 3.12;
+- `unlocked` and `completed` must be separate concepts;
+- payoff gates on `completed`, not `unlocked`.
+
+D. Sharky Phrase Tier Contract:
+
+- timing: during Wave 3.13;
+- Foundation / Developing / Sharp tiers;
+- phrase sets per moment type;
+- deterministic selection by world band.
+
+E. Premium Entitlement Source of Truth:
+
+- timing: before or during Wave 3.14;
+- W1-W4 free / W5-W36 premium boundary must be canonical;
+- no payment implementation.
+
+F. Mistake Family Taxonomy:
+
+- timing: during Wave 3.15;
+- W1-W4 family names and mapping mechanism;
+- no W5-W36 taxonomy overbuild before those worlds are authored.
+
+G. Canonical Telemetry Event Names:
+
+- timing: during Wave 3.15;
+- event names: `session_start`, `decision_made`, `repair_attempted`,
+  `fix_landed`, `session_complete`, `day2_return`, `world_complete`,
+  `upgrade_viewed`.
+
+H. Practice Session Concept ID Seam:
+
+- timing: confirm during Wave 3.11 or Wave 3.15 if practical;
+- no generative rep engine implementation.
+
+Post-v1 / later-band deferrals:
+
+- solver validation layer;
+- hand import implementation;
+- advanced analytics dashboard;
+- W13-W36 content authoring;
+- advanced practice generator;
+- full cross-session leak profile;
+- server-side analytics sink;
+- opponent tendency overlay;
+- full commerce implementation;
+- RU rollout beyond the English-first boundary.
 
 ## Alpha Closure / Premium Beta Transition (2026-06-26)
 
@@ -284,16 +470,29 @@ feature restoration.
 
 ## 1. Mission
 
-Sharky is the best first-value poker coach: one real spot, one answer, one
-clear why.
+Sharky is the table-first poker skill-building system for the full
+zero-to-shark journey.
+
+The product identity is:
+
+`Zero to shark. Table-first poker training across 36 worlds.`
+
+The public v1 beachhead is:
+
+`The table coach. Learn to read the table from your first hand.`
+
+The v1 support line is:
+
+`Sharky shows you what to look for at the table - one spot at a time, from your first decision.`
 
 The user should feel within 2-3 minutes:
 
 > I read the table better.
 
-Sharky is not trying to be only a trainer, only a course, only a GTO app, or a
-Runout clone. The top-1 path is to prove learning value on the table before
-asking for deeper trust.
+Sharky is not trying to be a beginner-only app, only a trainer, only a course,
+a GTO app, an AI poker coach, a Runout alternative, or Duolingo for poker. The
+top-1 path is to prove learning value on the table before asking for deeper
+trust, then grow the learner through the 36-world Core Shark Path.
 
 10/10 interpretation:
 
@@ -307,6 +506,7 @@ Core positioning:
 
 - Runout sells the idea of improvement.
 - Sharky proves improvement before asking for trust.
+- Every world is a skill upgrade. Every rep is a better read.
 
 ## 2. Enemy Benchmark
 
@@ -660,9 +860,8 @@ The post-Wave-2.4 shortest path through Wave 3.0 is closed:
 6. Wave 3.0 - Review Pattern Coaching v1.
 7. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock v1.
 
-Current active route after Wave 3.0.1 is the closed Public Premium TOP1 v1
-Endgame Route above, starting with Wave 3.1 - Street Replay / How We Got Here
-v1.
+Current active route after Wave 3.9.1 is the 36-World TOP1 Product Vision &
+Excellence Route above, starting with Wave 3.10 - Premium Motion Moments v1.
 
 Claude TOP1 Visual/UX Challenger is allowed after screenshot refresh if exact
 current visuals are needed, but the local active bottleneck is now TOP1
@@ -748,7 +947,7 @@ Operating constraints:
 ### Active TOP1 route sequence
 
 The active sequence is now locked by
-`docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`:
+`docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`:
 
 1. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock.
 2. Wave 3.1 - Street Replay / How We Got Here v1.
@@ -760,9 +959,17 @@ The active sequence is now locked by
 8. Wave 3.7 - Release-Visible Content Depth Gate v1.
 9. Wave 3.8 - Value Packaging / Premium Timing v1.
 10. Wave 3.9 - English-First / RU Localization Boundary v1.
-11. Wave 4.0 - Store / Public Readiness Packet v1.
-12. Wave 4.1 - TOP1 Release Candidate External Gate.
-13. Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed.
+11. Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1.
+12. Wave 3.10 - Premium Motion Moments v1.
+13. Wave 3.11 - Personalized Return Reason v1.
+14. Wave 3.12 - World 1 Completion Payoff v1.
+15. Wave 3.13 - Sharky Growth / Companion Tone v1.
+16. Wave 3.14 - Competitive Wedge Pass v1.
+17. Wave 3.15 - W2-W4 Launch Quality Packet v1.
+18. Refresh day2_return, first_week, and full_scroll packets.
+19. Fresh TOP1 challenger pass.
+20. Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence
+    score band is strong enough.
 
 Commercial Screenshot / Renderer Acceptance, Content Depth / Term Introduction
 / Drill Coverage Audit, Daily Trainer / Habit Loop Expansion, W4/W5 Product
