@@ -416,6 +416,24 @@ class Act0BlockCompletionSummaryV1 {
     return '$nextWorldTitle is next because $focus is already in motion.';
   }
 
+  bool get hasWorldOneCompletionPayoff =>
+      isWorldComplete &&
+      worldNumber == 1 &&
+      nextWorldNumber == 2 &&
+      nextWorldTitle != null &&
+      nextWorldTitle!.trim().isNotEmpty;
+
+  String get worldOneCompletionPayoffLabel => 'First table read banked.';
+
+  String get worldOneCompletionPathLabel =>
+      'First milestone in the 36-world Core Shark Path.';
+
+  String get worldOneCompletionNextLabel =>
+      'Next: ${nextWorldTitle?.trim() ?? 'Hand Discipline'}';
+
+  String get worldOneCompletionPreviewLine =>
+      'World 2 starts with a simple question: which hands deserve action?';
+
   bool get shouldReviewFirst =>
       deepLeakCount > 0 && qualifiesForNextLesson && hasSafeReviewTarget;
 
@@ -5852,6 +5870,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             color: Act0ShellTokensV1.textMuted,
                           ),
                         ),
+                        if (summary.hasWorldOneCompletionPayoff) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          _WorldOneCompletionPayoffV1(
+                            summary: summary,
+                            tone: celebrateTone,
+                          ),
+                        ],
                         if (foldUnlockIntoMilestonePanel) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           Text(
@@ -6167,6 +6192,73 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _WorldOneCompletionPayoffV1 extends StatelessWidget {
+  const _WorldOneCompletionPayoffV1({
+    required this.summary,
+    required this.tone,
+  });
+
+  final Act0BlockCompletionSummaryV1 summary;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_world1_completion_payoff'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.24)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            summary.worldOneCompletionPayoffLabel,
+            key: const Key('act0_shell_world1_completion_payoff_label'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            summary.worldOneCompletionPathLabel,
+            key: const Key('act0_shell_world1_completion_path_label'),
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            summary.worldOneCompletionNextLabel,
+            key: const Key('act0_shell_world1_completion_next_label'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: tone,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            summary.worldOneCompletionPreviewLine,
+            key: const Key('act0_shell_world1_completion_preview_line'),
+            maxLines: 3,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
