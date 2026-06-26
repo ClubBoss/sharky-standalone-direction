@@ -20661,6 +20661,133 @@ void main() {
     },
   );
 
+  testWidgets(
+    'Street replay opens structured how-we-got-here sheet without hiding decisions',
+    (tester) async {
+      final trailTask = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((l) => l.lessonId == 'your_first_hand')
+          .taskList
+          .firstWhere((t) => t.taskId == 'your_first_hand_action_trail');
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: trailTask.runner.copyWith(
+                phase: Act0LessonPhaseV1.drill,
+                teachingStepIndex: trailTask.runner.teachingSteps.length,
+              ),
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_entry')),
+        findsOneWidget,
+      );
+      expect(find.text('How we got here'), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('act0_shell_street_replay_entry')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_sheet')),
+        findsOneWidget,
+      );
+      final replaySheet = find.byKey(
+        const Key('act0_shell_street_replay_sheet'),
+      );
+      expect(
+        find.descendant(
+          of: replaySheet,
+          matching: find.text('Street by street'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: replaySheet, matching: find.text('You are here')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: replaySheet, matching: find.text('Hand history')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: replaySheet,
+          matching: find.textContaining('tracker'),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(of: replaySheet, matching: find.textContaining('GTO')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: replaySheet,
+          matching: find.textContaining('solver'),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_playback_toggle')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'Street replay entry stays hidden without street trail evidence',
+    (tester) async {
+      final trailTask = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((l) => l.lessonId == 'your_first_hand')
+          .taskList
+          .firstWhere((t) => t.taskId == 'your_first_hand_action_trail');
+      final runner = trailTask.runner;
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner.copyWith(
+                phase: Act0LessonPhaseV1.drill,
+                teachingStepIndex: runner.teachingSteps.length,
+                table: runner.table.copyWith(
+                  streetLabel: '',
+                  centerLabel: '',
+                  actionTrail: const <Act0ActionTrailItemV1>[],
+                ),
+              ),
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_entry')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
+    },
+  );
+
   test(
     'W1 beginner intro and positions path decodes seat abbreviations locally',
     () {

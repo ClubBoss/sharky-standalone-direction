@@ -15,6 +15,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contrac
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
@@ -1636,6 +1637,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     );
   }
 
+  Future<void> _openStreetReplaySheet(Act0StreetReplayV1 replay) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _StreetReplaySheetV1(replay: replay),
+    );
+  }
+
   void _openTheoryRecallPeek() {
     if (widget.theoryRecallStep == null || _showTheoryPeek) {
       return;
@@ -1768,6 +1778,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final streetReplay = act0StreetReplayFromTableV1(table);
     final interactionMode = _resolveRunnerInteractionModeV1(
       isDrill: isDrill,
       isReview: isReview,
@@ -1847,6 +1858,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         bottomContext.promptSupportLine?.trim().isNotEmpty == true
         ? bottomContext.promptSupportLine
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
+    final showStreetReplayEntry =
+        streetReplay != null && isDrill && !isTeaching;
     final decisionHint = _resolveDecisionHintV1(
       taskFamily: widget.selectedTaskFamily,
       runner: runner,
@@ -2022,10 +2035,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       compactDecision: compactAnswerListDecision,
                       question: question,
                       onBack: null,
-                      recallLabel: decisionHint == null ? null : 'Need a hint?',
-                      onRecall: decisionHint == null
+                      recallLabel: showStreetReplayEntry
+                          ? 'How we got here'
+                          : (decisionHint == null ? null : 'Need a hint?'),
+                      onRecall: showStreetReplayEntry
+                          ? () => _openStreetReplaySheet(streetReplay)
+                          : decisionHint == null
                           ? null
                           : _openTheoryRecallPeek,
+                      recallKey: showStreetReplayEntry
+                          ? const Key('act0_shell_street_replay_entry')
+                          : null,
+                      recallIcon: showStreetReplayEntry
+                          ? Icons.route_rounded
+                          : null,
+                      forceCompactRecallLabel: showStreetReplayEntry,
                       child: _showTheoryPeek && theoryRecallPeek != null
                           ? theoryRecallPeek
                           : _SizingConfirmPanelV1(
@@ -2041,10 +2065,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       compactDecision: compactAnswerListDecision,
                       question: question,
                       onBack: null,
-                      recallLabel: decisionHint == null ? null : 'Need a hint?',
-                      onRecall: decisionHint == null
+                      recallLabel: showStreetReplayEntry
+                          ? 'How we got here'
+                          : (decisionHint == null ? null : 'Need a hint?'),
+                      onRecall: showStreetReplayEntry
+                          ? () => _openStreetReplaySheet(streetReplay)
+                          : decisionHint == null
                           ? null
                           : _openTheoryRecallPeek,
+                      recallKey: showStreetReplayEntry
+                          ? const Key('act0_shell_street_replay_entry')
+                          : null,
+                      recallIcon: showStreetReplayEntry
+                          ? Icons.route_rounded
+                          : null,
+                      forceCompactRecallLabel: showStreetReplayEntry,
                       child: _showTheoryPeek && theoryRecallPeek != null
                           ? theoryRecallPeek
                           : _ActionPanelV1(
@@ -11179,6 +11214,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
     this.onBack,
     this.recallLabel,
     this.onRecall,
+    this.recallKey,
+    this.recallIcon,
+    this.forceCompactRecallLabel = false,
   });
 
   final String taskLabel;
@@ -11191,6 +11229,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
   final VoidCallback? onBack;
   final String? recallLabel;
   final VoidCallback? onRecall;
+  final Key? recallKey;
+  final IconData? recallIcon;
+  final bool forceCompactRecallLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -11272,6 +11313,37 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                 if (!effectiveCompactDecision) const SizedBox(height: 7),
                 if (effectiveCompactDecision &&
                     onRecall != null &&
+                    recallLabel != null &&
+                    forceCompactRecallLabel)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        formattedQuestion,
+                        key: const Key('act0_shell_action_question'),
+                        textAlign: TextAlign.left,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w900,
+                          height: 1.06,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      _TheoryRecallCtaV1(
+                        key: recallKey,
+                        label: recallLabel!,
+                        onPressed: onRecall!,
+                        centered: false,
+                        compact: true,
+                        icon: recallIcon,
+                        forceCompactLabel: true,
+                      ),
+                    ],
+                  )
+                else if (effectiveCompactDecision &&
+                    onRecall != null &&
                     recallLabel != null)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -11293,10 +11365,13 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                       KeyedSubtree(
                         key: const Key('act0_shell_compact_hint_inline'),
                         child: _TheoryRecallCtaV1(
+                          key: recallKey,
                           label: recallLabel!,
                           onPressed: onRecall!,
                           centered: false,
                           compact: true,
+                          icon: recallIcon,
+                          forceCompactLabel: forceCompactRecallLabel,
                         ),
                       ),
                     ],
@@ -11334,10 +11409,13 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                     recallLabel != null) ...[
                   SizedBox(height: effectiveCompactDecision ? 2 : 6),
                   _TheoryRecallCtaV1(
+                    key: recallKey,
                     label: recallLabel!,
                     onPressed: onRecall!,
                     centered: false,
                     compact: effectiveCompactDecision,
+                    icon: recallIcon,
+                    forceCompactLabel: forceCompactRecallLabel,
                   ),
                 ],
                 if (integrated) ...[
@@ -11449,24 +11527,33 @@ class _ActionPromptPanelV1 extends StatelessWidget {
 
 class _TheoryRecallCtaV1 extends StatelessWidget {
   const _TheoryRecallCtaV1({
+    super.key,
     required this.label,
     required this.onPressed,
     this.centered = false,
     this.compact = false,
+    this.icon,
+    this.forceCompactLabel = false,
   });
 
   final String label;
   final VoidCallback onPressed;
   final bool centered;
   final bool compact;
+  final IconData? icon;
+  final bool forceCompactLabel;
 
   @override
   Widget build(BuildContext context) {
     final effectiveCompact =
         compact || _CompactAnswerListDecisionScopeV1.isCompact(context);
-    if (effectiveCompact) {
+    final effectiveKey = key == null
+        ? const Key('act0_shell_theory_recall_cta')
+        : null;
+    final effectiveIcon = icon ?? Icons.auto_stories_rounded;
+    if (effectiveCompact && !forceCompactLabel) {
       final button = IconButton(
-        key: const Key('act0_shell_theory_recall_cta'),
+        key: effectiveKey,
         onPressed: onPressed,
         tooltip: label,
         constraints: const BoxConstraints(minWidth: 32, minHeight: 24),
@@ -11475,7 +11562,7 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           foregroundColor: Act0ShellTokensV1.info,
         ),
-        icon: const Icon(Icons.auto_stories_rounded, size: 15),
+        icon: Icon(effectiveIcon, size: 15),
       );
       if (centered) {
         return Align(alignment: Alignment.center, child: button);
@@ -11483,17 +11570,22 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
       return Align(alignment: Alignment.centerLeft, child: button);
     }
     final button = TextButton.icon(
-      key: const Key('act0_shell_theory_recall_cta'),
+      key: effectiveKey,
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+        padding: EdgeInsets.symmetric(
+          horizontal: effectiveCompact ? 6 : 0,
+          vertical: effectiveCompact ? 1 : 2,
+        ),
         minimumSize: Size(0, effectiveCompact ? 22 : 28),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         foregroundColor: Act0ShellTokensV1.info,
       ),
-      icon: Icon(Icons.auto_stories_rounded, size: effectiveCompact ? 14 : 16),
+      icon: Icon(effectiveIcon, size: effectiveCompact ? 14 : 16),
       label: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: Act0ShellTokensV1.label.copyWith(
           color: Act0ShellTokensV1.info,
           fontSize: effectiveCompact ? 10.6 : 11.6,
@@ -11743,6 +11835,278 @@ class _TheoryRecallSheetV1 extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _StreetReplaySheetV1 extends StatelessWidget {
+  const _StreetReplaySheetV1({required this.replay});
+
+  final Act0StreetReplayV1 replay;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+        child: Container(
+          key: const Key('act0_shell_street_replay_sheet'),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.surface,
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+            border: Border.all(
+              color: Act0ShellTokensV1.info.withValues(alpha: 0.26),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'How we got here',
+                            style: Act0ShellTokensV1.sectionTitle.copyWith(
+                              color: Act0ShellTokensV1.text,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            'Street by street',
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.info,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      key: const Key('act0_shell_street_replay_close_cta'),
+                      onPressed: () => Navigator.of(context).pop(),
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints.tightFor(
+                        width: 28,
+                        height: 28,
+                      ),
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      color: Act0ShellTokensV1.textMuted,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                for (var i = 0; i < replay.steps.length; i++) ...[
+                  _StreetReplayStepRowV1(step: replay.steps[i], index: i),
+                  if (i < replay.steps.length - 1)
+                    const SizedBox(height: Act0ShellTokensV1.gapSm),
+                ],
+                if (replay.decisionContext.trim().isNotEmpty) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+                  _StreetReplayInfoBlockV1(
+                    key: const Key('act0_shell_street_replay_decision_context'),
+                    label: 'Decision context',
+                    body: replay.decisionContext.trim(),
+                  ),
+                ],
+                if (replay.keyClue.trim().isNotEmpty) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapSm),
+                  _StreetReplayInfoBlockV1(
+                    key: const Key('act0_shell_street_replay_key_clue'),
+                    label: 'Key clue',
+                    body: replay.keyClue.trim(),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StreetReplayStepRowV1 extends StatelessWidget {
+  const _StreetReplayStepRowV1({required this.step, required this.index});
+
+  final Act0StreetReplayStepV1 step;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final board = step.boardCardsAtStreet.join(' ');
+    return Container(
+      key: Key('act0_shell_street_replay_step_$index'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+      decoration: BoxDecoration(
+        color: step.isCurrentStreet
+            ? Act0ShellTokensV1.info.withValues(alpha: 0.10)
+            : Act0ShellTokensV1.surface2.withValues(alpha: 0.54),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(
+          color: step.isCurrentStreet
+              ? Act0ShellTokensV1.info.withValues(alpha: 0.32)
+              : Act0ShellTokensV1.border.withValues(alpha: 0.32),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 25,
+            height: 25,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.surface3.withValues(alpha: 0.50),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            ),
+            child: Text(
+              '${index + 1}',
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.text,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        board.isEmpty
+                            ? step.streetLabel
+                            : '${step.streetLabel} - $board',
+                        key: step.isCurrentStreet
+                            ? const Key(
+                                'act0_shell_street_replay_current_street',
+                              )
+                            : null,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                    if (step.isCurrentStreet) ...[
+                      const SizedBox(width: 7),
+                      Container(
+                        key: const Key('act0_shell_street_replay_here_marker'),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Act0ShellTokensV1.info.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusPill,
+                          ),
+                        ),
+                        child: Text(
+                          step.youAreHereLabel,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.info,
+                            fontSize: 8.6,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  step.actionSummary,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontSize: 12,
+                    height: 1.12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (step.potAtStreet.trim().isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    step.potAtStreet.trim(),
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.textDim,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StreetReplayInfoBlockV1 extends StatelessWidget {
+  const _StreetReplayInfoBlockV1({
+    super.key,
+    required this.label,
+    required this.body,
+  });
+
+  final String label;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.48),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(
+          color: Act0ShellTokensV1.border.withValues(alpha: 0.26),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+              fontSize: 9.2,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            body,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontSize: 12,
+              height: 1.12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
       ),
     );
   }
