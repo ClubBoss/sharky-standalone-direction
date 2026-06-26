@@ -86,6 +86,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.dailyGoalCtaLabel = 'Start practice',
     this.dailyPlanTitle,
     this.nextUsefulHandReasonLine,
+    this.personalizedReturnReasonLine,
     this.weeklyFocus,
     this.dailyPlanJobs = const <Act0HomePlanJobV1>[],
     this.onOpenDailyPlanJob,
@@ -119,6 +120,7 @@ class Act0HomeShellV1 extends StatelessWidget {
   final String dailyGoalCtaLabel;
   final String? dailyPlanTitle;
   final String? nextUsefulHandReasonLine;
+  final String? personalizedReturnReasonLine;
   final Act0HomeWeeklyFocusV1? weeklyFocus;
   final List<Act0HomePlanJobV1> dailyPlanJobs;
   final ValueChanged<String>? onOpenDailyPlanJob;
@@ -214,6 +216,8 @@ class Act0HomeShellV1 extends StatelessWidget {
                               'home_checklist_title',
                               fallback: 'Today\'s sequence',
                             ),
+                        personalizedReturnReasonLine:
+                            personalizedReturnReasonLine,
                       ))
               else
                 const SizedBox.shrink(),
@@ -722,11 +726,13 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
     required this.rows,
     required this.localeIsRu,
     required this.title,
+    this.personalizedReturnReasonLine,
   });
 
   final List<Act0HomeChecklistRowV1> rows;
   final bool localeIsRu;
   final String title;
+  final String? personalizedReturnReasonLine;
 
   @override
   Widget build(BuildContext context) {
@@ -796,13 +802,20 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              localeIsRu
-                  ? 'Сегодня: держи одну подсказку стола в тонусе.'
-                  : 'Today: keep one table clue warm',
-              key: const Key('act0_shell_home_daily_plan_support'),
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
+            KeyedSubtree(
+              key: personalizedReturnReasonLine?.trim().isNotEmpty == true
+                  ? const Key('act0_shell_home_personalized_return_reason')
+                  : const Key('act0_shell_home_generic_return_reason'),
+              child: Text(
+                personalizedReturnReasonLine?.trim().isNotEmpty == true
+                    ? personalizedReturnReasonLine!.trim()
+                    : localeIsRu
+                    ? 'Сегодня: держи одну подсказку стола в тонусе.'
+                    : 'Today: keep one table clue warm',
+                key: const Key('act0_shell_home_daily_plan_support'),
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                ),
               ),
             ),
             const SizedBox(height: 12),

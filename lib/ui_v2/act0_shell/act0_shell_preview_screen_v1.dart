@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
@@ -766,6 +767,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0RepairOutcomeProjectionV1 _repairOutcomeProjectionV1 =
       const Act0RepairOutcomeProjectionV1();
   int _repairOutcomeSequenceV1 = 0;
+  Act0LastSessionLearnerStateV1? _lastSessionLearnerStateV1;
   String? _activeRepairResultReceiptLine;
   List<String> _activeRepairSessionSummaryLines = const <String>[];
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
@@ -819,6 +821,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return List<Map<String, Object?>>.unmodifiable(
       _repairOutcomeProjectionV1.toPayload(),
     );
+  }
+
+  @visibleForTesting
+  Map<String, Object?>? debugLastSessionReturnStatePayloadV1() {
+    return _lastSessionLearnerStateV1?.toJson();
   }
 
   @visibleForTesting
@@ -890,6 +897,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedLessonId,
     );
     return _homeNextUsefulHandReasonLine(selectedWorld, selectedLesson);
+  }
+
+  @visibleForTesting
+  String? debugHomePersonalizedReturnReasonLineV1() {
+    return _homePersonalizedReturnReasonLine();
   }
 
   @visibleForTesting
@@ -2688,6 +2700,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _firstValueTodayShownTelemetryKey = '';
       _dismissedHomeHandoffKey = parsed.dismissedHomeHandoffKey;
       _dismissedHomeHandoffDay = parsed.dismissedHomeHandoffDay;
+      _lastSessionLearnerStateV1 = parsed.lastSessionLearnerState;
       // Daily deck resets on new day
       if (isNewDay) {
         _dailyCompletedTaskIds.clear();
@@ -2853,6 +2866,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       reviewMistakeHistory: _reviewMistakeHistoryV1,
+      lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
     unawaited(_writePersistedProgress(snapshot, generation));
@@ -2950,6 +2964,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _blockCompletionSummary = null;
       _dismissedHomeHandoffKey = '';
       _dismissedHomeHandoffDay = '';
+      _lastSessionLearnerStateV1 = null;
       _persistedStreakDays = 0;
       _lastDailyDate = '';
       _showPlacement = showPlacement;
@@ -3644,6 +3659,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
                         ),
+                        personalizedReturnReasonLine:
+                            _homePersonalizedReturnReasonLine(),
                         weeklyFocus: _showHomeChecklistV1()
                             ? _homeWeeklyFocus(
                                 selectedWorld,
@@ -5323,6 +5340,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final renderedLine = bridge.renderedCopyLine.trim();
     return renderedLine.isEmpty ? null : renderedLine;
   }
+
+  String? _homePersonalizedReturnReasonLine() {
+    return act0PersonalizedReturnReasonLineV1(
+      _lastSessionLearnerStateV1,
+      repairFocusLabelsById: _lastSessionRepairFocusLabelsByIdV1,
+    );
+  }
+
+  static const Map<String, String> _lastSessionRepairFocusLabelsByIdV1 =
+      <String, String>{
+        'no_bet_yet': 'no-bet-yet clue',
+        'action_read': 'action-read clue',
+        'table_position_read': 'position clue',
+        'board_read': 'board clue',
+        'price_read': 'price clue',
+      };
 
   String _homeRepairLabel(
     Act0WorldCardV1 selectedWorld,
@@ -7955,11 +7988,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           _lessonRunDeepLeakTaskIds.remove(repairSourceTaskId);
         }
       }
+      final completedIntent =
+          _openRepairIntentBySourceTaskId[repairSourceTaskId];
+      if (completedIntent != null &&
+          (completedIntent.targetTaskId == selectedTask.taskId ||
+              completedIntent.sourceTaskId == selectedTask.taskId)) {
+        _recordLastSessionLearnerStateV1(
+          repairFocusId: completedIntent.missedSignalId,
+          proofResult: act0LastSessionProofFixLandedV1,
+          worldId: repairSourceWorldId,
+        );
+      }
       _clearMatchedOpenRepairIntentV1(
         sourceTaskId: repairSourceTaskId,
         completedTaskId: selectedTask.taskId,
       );
       _refreshRetentionMemoryStatusesV1();
+      _persistProgress();
       return;
     }
     _lessonRunMistakeTaskIds.add(repairSourceTaskId);
@@ -8003,6 +8048,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       runner: selectedTask.runner,
       option: option,
     );
+    final openIntent = _openRepairIntentBySourceTaskId[repairSourceTaskId];
+    _recordLastSessionLearnerStateV1(
+      repairFocusId: openIntent?.missedSignalId ?? '',
+      proofResult: act0LastSessionProofNotYetV1,
+      worldId: repairSourceWorldId,
+    );
     if (_activeRepairTaskId == selectedTask.taskId &&
         _activeRepairSourceTaskId != null) {
       final retainedTarget = _openRepairIntentTargetForSourceTaskV1(
@@ -8027,6 +8078,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       status: _Act0RetentionMemoryStatusV1.openRepair,
     );
     _refreshRetentionMemoryStatusesV1();
+    _persistProgress();
+  }
+
+  void _recordLastSessionLearnerStateV1({
+    required String repairFocusId,
+    required String proofResult,
+    required String worldId,
+  }) {
+    _lastSessionLearnerStateV1 = Act0LastSessionLearnerStateV1(
+      lastSessionRepairFocusId: repairFocusId.trim(),
+      lastSessionProofResult: proofResult.trim(),
+      lastSessionDate: _todayDateString(),
+      lastSessionWorldId: worldId.trim().isEmpty ? _selectedWorldId : worldId,
+    );
   }
 
   void _appendPracticeQueueRepairOutcomeV1({
@@ -8042,6 +8107,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       isCorrect: option.isCorrect,
       sequence: _repairOutcomeSequenceV1,
     );
+    _lastSessionLearnerStateV1 = Act0LastSessionLearnerStateV1(
+      lastSessionRepairFocusId: request.repairFocusKey.trim().isNotEmpty
+          ? request.repairFocusKey.trim()
+          : request.repairTaskId.trim(),
+      lastSessionProofResult: option.isCorrect
+          ? act0LastSessionProofFixLandedV1
+          : act0LastSessionProofNotYetV1,
+      lastSessionDate: _todayDateString(),
+      lastSessionWorldId: request.targetWorldId.trim(),
+    );
+    _persistProgress();
   }
 
   String? _repairOutcomeProofLineV1() {
@@ -10757,6 +10833,7 @@ class _Act0PersistedProgressV1 {
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
+    this.lastSessionLearnerState,
   });
 
   final Set<String> completedTaskIds;
@@ -10783,6 +10860,7 @@ class _Act0PersistedProgressV1 {
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
+  final Act0LastSessionLearnerStateV1? lastSessionLearnerState;
 
   String toStorageString() {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
@@ -10795,7 +10873,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 11,
+      'schemaVersion': 12,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -10831,6 +10909,8 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
+      if (lastSessionLearnerState != null)
+        'lastSessionLearnerState': lastSessionLearnerState!.toJson(),
       if (firstValueReturnCarry != null)
         'firstValueReturnCarry': firstValueReturnCarry!.toJson(),
       if (resumeSelectedOptionId != null)
@@ -10850,7 +10930,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v11 as the shell snapshot evolves.
+    // Accept v1-v12 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -10861,7 +10941,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 8 &&
         schemaVersion != 9 &&
         schemaVersion != 10 &&
-        schemaVersion != 11) {
+        schemaVersion != 11 &&
+        schemaVersion != 12) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -10919,6 +11000,9 @@ class _Act0PersistedProgressV1 {
     final reviewMistakeHistory =
         Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
         const Act0ReviewMistakeHistoryV1();
+    final lastSessionLearnerState = Act0LastSessionLearnerStateV1.tryParse(
+      map['lastSessionLearnerState'],
+    );
     if (selectedWorldId.isEmpty ||
         selectedLessonId.isEmpty ||
         selectedTaskId.isEmpty) {
@@ -10951,6 +11035,7 @@ class _Act0PersistedProgressV1 {
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
       reviewMistakeHistory: reviewMistakeHistory,
+      lastSessionLearnerState: lastSessionLearnerState,
     );
   }
 

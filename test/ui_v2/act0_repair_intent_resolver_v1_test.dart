@@ -556,6 +556,42 @@ void main() {
     );
   });
 
+  testWidgets('successful repair writes personalized return reason for Home', (
+    tester,
+  ) async {
+    await _pumpResolverHost(
+      tester,
+      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+      taskId: 'actions_legal_context',
+    );
+    await _answerOption(tester, 'fold');
+    await _launchHomeRepair(tester);
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+
+    final state = _lastSessionReturnStatePayload(tester);
+    expect(state?['last_session_repair_focus_id'], 'no_bet_yet');
+    expect(state?['last_session_proof_result'], 'fix_landed');
+    expect(state?['last_session_world_id'], 'world_1');
+    expect((state?['last_session_date'] as String?)?.isNotEmpty, isTrue);
+
+    final line = _homePersonalizedReturnReasonLine(tester);
+    expect(
+      line,
+      'Yesterday you landed the fix. Keep the no-bet-yet clue fresh.',
+    );
+
+    await _pumpHomeWithPersonalizedReason(tester, line);
+    expect(
+      find.byKey(const Key('act0_shell_home_personalized_return_reason')),
+      findsOneWidget,
+    );
+    expect(find.text(line!), findsOneWidget);
+    expect(find.textContaining('no_bet_yet'), findsNothing);
+    expect(find.textContaining('actions_check_drill'), findsNothing);
+    expect(find.textContaining('mastered'), findsNothing);
+  });
+
   testWidgets('failed repair keeps resolver priority', (tester) async {
     await _pumpResolverHost(
       tester,
@@ -1178,6 +1214,24 @@ Future<void> _pumpHomeWithReason(
   await tester.pumpAndSettle();
 }
 
+Future<void> _pumpHomeWithPersonalizedReason(
+  WidgetTester tester,
+  String? personalizedReturnReasonLine,
+) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      home: Act0HomeShellV1(
+        state: Act0ShellStateV1.sample,
+        showChecklist: true,
+        personalizedReturnReasonLine: personalizedReturnReasonLine,
+        onContinue: () {},
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
 Map<String, Object?>? _nextUsefulHandTargetPayload(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>?;
@@ -1211,6 +1265,16 @@ List<Map<String, Object?>> _repairOutcomePayload(WidgetTester tester) {
 String? _homeNextUsefulHandReasonLine(WidgetTester tester) {
   final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
   return state.debugHomeNextUsefulHandReasonLineV1() as String?;
+}
+
+Map<String, Object?>? _lastSessionReturnStatePayload(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugLastSessionReturnStatePayloadV1() as Map<String, Object?>?;
+}
+
+String? _homePersonalizedReturnReasonLine(WidgetTester tester) {
+  final state = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  return state.debugHomePersonalizedReturnReasonLineV1() as String?;
 }
 
 Map<String, Object?>? _repairDecisionPayload(Map<String, Object?>? target) {
