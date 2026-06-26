@@ -5504,6 +5504,72 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
         !summary.isWorldComplete || summary.growthLabel.isEmpty;
+    Widget nextActionCard() {
+      return Container(
+        key: const Key('act0_shell_block_summary_next_label'),
+        padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+        decoration: BoxDecoration(
+          color: celebrateTone.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+          border: Border.all(color: celebrateTone.withValues(alpha: 0.24)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'What next',
+              style: Act0ShellTokensV1.label.copyWith(
+                color: celebrateTone,
+                letterSpacing: 0.35,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              summary.suggestedNextAction,
+              key: const Key('act0_shell_block_summary_suggested_next'),
+              maxLines: 4,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.text,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            if (summary.nextUnlockReasonLabel != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                summary.nextUnlockReasonLabel!,
+                key: const Key('act0_shell_block_summary_next_reason'),
+                maxLines: 3,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+            if (summary.sharkyLine.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Act0SharkyPresenceBubbleV1(
+                line: summary.sharkyLine,
+                mood: summary.qualifiesForNextLesson
+                    ? Act0SharkyMoodV1.celebrate
+                    : Act0SharkyMoodV1.repair,
+                tone: summary.qualifiesForNextLesson
+                    ? Act0ShellTokensV1.primary
+                    : Act0ShellTokensV1.gold,
+                textKey: const Key('act0_shell_block_summary_sharky_line'),
+                mascotSize: 68,
+                bubblePadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    }
+
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
@@ -5741,6 +5807,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
+              nextActionCard(),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
               if (showHabitReward) ...[
                 Container(
                   key: const Key('act0_shell_block_summary_habit_reward'),
@@ -5835,75 +5903,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
-              Container(
-                key: const Key('act0_shell_block_summary_next_label'),
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                decoration: BoxDecoration(
-                  color: celebrateTone.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusCard,
-                  ),
-                  border: Border.all(
-                    color: celebrateTone.withValues(alpha: 0.24),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'What next',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: celebrateTone,
-                        letterSpacing: 0.35,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      summary.suggestedNextAction,
-                      key: const Key('act0_shell_block_summary_suggested_next'),
-                      maxLines: 4,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    if (summary.nextUnlockReasonLabel != null) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        summary.nextUnlockReasonLabel!,
-                        key: const Key('act0_shell_block_summary_next_reason'),
-                        maxLines: 3,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                    if (summary.sharkyLine.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Act0SharkyPresenceBubbleV1(
-                        line: summary.sharkyLine,
-                        mood: summary.qualifiesForNextLesson
-                            ? Act0SharkyMoodV1.celebrate
-                            : Act0SharkyMoodV1.repair,
-                        tone: summary.qualifiesForNextLesson
-                            ? Act0ShellTokensV1.primary
-                            : Act0ShellTokensV1.gold,
-                        textKey: const Key(
-                          'act0_shell_block_summary_sharky_line',
-                        ),
-                        mascotSize: 68,
-                        bubblePadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
               if (summary.isWorldComplete &&
                   summary.growthLabel.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapMd),

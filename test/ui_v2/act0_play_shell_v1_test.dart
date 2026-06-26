@@ -384,6 +384,22 @@ void main() {
       final history = find.byKey(
         const Key('act0_shell_play_repair_queue_item_1'),
       );
+      final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+      final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+      expect(queue, findsOneWidget);
+      expect(hero, findsOneWidget);
+      expect(tester.getTopLeft(queue).dy, lessThan(tester.getTopLeft(hero).dy));
+      expect(
+        find.descendant(of: queue, matching: find.text('Current fix first')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: queue,
+          matching: find.text('Run this repair before extra reps.'),
+        ),
+        findsOneWidget,
+      );
       expect(
         find.descendant(of: active, matching: find.text('Practice this')),
         findsOneWidget,

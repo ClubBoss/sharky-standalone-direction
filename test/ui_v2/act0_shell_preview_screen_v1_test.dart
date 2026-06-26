@@ -15930,7 +15930,10 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Open next lesson'), findsOneWidget);
-      expect(find.text('Lesson complete'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_title')),
+        findsOneWidget,
+      );
       expect(find.text('What improved'), findsOneWidget);
       expect(find.text('What next'), findsOneWidget);
       expect(find.text('What poker is is unlocked.'), findsNothing);

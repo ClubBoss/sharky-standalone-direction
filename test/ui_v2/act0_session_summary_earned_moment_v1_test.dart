@@ -189,6 +189,22 @@ void main() {
       expect(find.text('Replay before next lesson'), findsOneWidget);
       expect(find.text("Fixes you've banked"), findsOneWidget);
       expect(find.text('Good fixes: 1'), findsOneWidget);
+
+      final next = find.byKey(const Key('act0_shell_block_summary_next_label'));
+      final habit = find.byKey(
+        const Key('act0_shell_block_summary_habit_reward'),
+      );
+      final receipt = find.byKey(
+        const Key('act0_shell_session_repair_outcome_receipt'),
+      );
+      expect(next, findsOneWidget);
+      expect(habit, findsOneWidget);
+      expect(receipt, findsOneWidget);
+      expect(tester.getTopLeft(next).dy, lessThan(tester.getTopLeft(habit).dy));
+      expect(
+        tester.getTopLeft(next).dy,
+        lessThan(tester.getTopLeft(receipt).dy),
+      );
     },
   );
 

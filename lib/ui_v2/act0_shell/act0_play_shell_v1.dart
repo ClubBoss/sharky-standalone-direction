@@ -300,6 +300,9 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             _topicPreviewSortIndex(a).compareTo(_topicPreviewSortIndex(b)),
       );
     final hasLockedTopicGroups = topicGroups.any((group) => !group.isEnabled);
+    final hasPrimaryRepairQueue = widget.repairQueueConsumer.items.any(
+      _canLaunchPracticeQueueTargetV1,
+    );
 
     return ListView(
       key: const Key('act0_shell_play_screen'),
@@ -314,6 +317,14 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
         ),
         const SizedBox(height: 12),
+        if (hasPrimaryRepairQueue) ...[
+          _PracticeRepairQueueSectionV1(
+            consumer: widget.repairQueueConsumer,
+            onLaunchTarget: widget.onLaunchRepairQueueTarget,
+            primary: true,
+          ),
+          const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+        ],
         if (featuredGroup != null) ...[
           _DailyTrainingHeroV1(
             group: featuredGroup,
@@ -336,11 +347,13 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           const SizedBox(height: Act0ShellTokensV1.gapLg),
         ],
         if (widget.repairQueueConsumer.hasItems) ...[
-          _PracticeRepairQueueSectionV1(
-            consumer: widget.repairQueueConsumer,
-            onLaunchTarget: widget.onLaunchRepairQueueTarget,
-          ),
-          const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+          if (!hasPrimaryRepairQueue) ...[
+            _PracticeRepairQueueSectionV1(
+              consumer: widget.repairQueueConsumer,
+              onLaunchTarget: widget.onLaunchRepairQueueTarget,
+            ),
+            const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+          ],
         ],
         if (primaryGroups.isNotEmpty ||
             hasRepairEmptyState ||
@@ -516,10 +529,12 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
   const _PracticeRepairQueueSectionV1({
     required this.consumer,
     required this.onLaunchTarget,
+    this.primary = false,
   });
 
   final Act0PracticeRepairQueueConsumerV1 consumer;
   final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>? onLaunchTarget;
+  final bool primary;
 
   @override
   Widget build(BuildContext context) {
@@ -558,14 +573,16 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Practice repair',
+                      primary ? 'Current fix first' : 'Practice repair',
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Saved spots worth repeating.',
+                      primary
+                          ? 'Run this repair before extra reps.'
+                          : 'Saved spots worth repeating.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
