@@ -79,6 +79,13 @@ void main() {
     ]) {
       expect(visibleText, isNot(contains(unsafe)));
     }
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_profile_progress_proof')),
+        matching: find.byIcon(Icons.radar_rounded),
+      ),
+      findsNothing,
+    );
 
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_profile_skill_stats')),

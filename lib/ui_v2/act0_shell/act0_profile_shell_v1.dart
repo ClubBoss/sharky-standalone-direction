@@ -1096,7 +1096,7 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
                   en: '${profile.skillStats.length} tracked',
                   ru: '${profile.skillStats.length} отслеживаются',
                 ),
-          icon: Icons.radar_rounded,
+          icon: Icons.fact_check_rounded,
           tone: Act0VisualCanonV1.bluePrimary,
         ),
       if (profile.achievements.isNotEmpty)
