@@ -2,11 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-26 after Alpha Closure / Premium Beta Transition v1
-on `main` at `76e33fe8`.
-Current phase: Wave 2 - Premium Beta Productization - ACTIVE.
-Current active implementation wave: Wave 2.1 - Fix Landed + Session Close
-Payoff.
+Last refreshed: 2026-06-26 after Wave 2.4 Beta Handoff Packet and Wave 2.5
+TOP1 Recalibration on `main` base `6501e0ec`.
+Current phase: Post-Wave-2.4 TOP1 Recalibration Gate - ACTIVE.
+Current active control-plane wave: Wave 2.5 - TOP1 Recalibration & Final
+Product Route Reset v1.
 
 Authority note:
 
@@ -23,7 +23,8 @@ Authority note:
 Phase state:
 
 - Wave 1 - Alpha / Proof Spine Complete - CLOSED.
-- Wave 2 - Premium Beta Productization - ACTIVE.
+- Wave 2.1-2.4 - Premium Beta Productization handoff sequence - CLOSED.
+- Wave 2.5 - TOP1 Recalibration Gate - ACTIVE.
 
 Accepted Alpha state:
 
@@ -55,20 +56,22 @@ Beta means:
 - no shell feeling;
 - no unsupported RPG/progression claims.
 
-Active bottleneck:
+Historical beta bottleneck:
 
 `Premium productization: payoff, hierarchy, rhythm, first-week confidence`
 
-Wave 2 sequence:
+Closed Wave 2 sequence:
 
 1. Wave 2.1 - Hero Payoff & Session Close.
 2. Wave 2.2 - Premium Surface Hierarchy.
 3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
 4. Wave 2.4 - Beta Handoff Packet.
 
-Active next implementation:
+Closure state:
 
-Wave 2.1 - Fix Landed + Session Close Payoff.
+Waves 2.1-2.4 are closed. Wave 2.5 is the active control-plane route reset;
+the next implementation candidate is Wave 2.6 - Premium Motion & Interaction
+Feel v1, unless Claude TOP1 Visual/UX Challenger runs first.
 
 Admitted scope:
 
@@ -161,14 +164,63 @@ Showable Beta Readiness Audit v1, Beta Surface Cleanup Wave v1, Drill Readiness
 / Beta Proof Wave v1, Showable Beta Packet Review v1, and Beta Trust & Payoff
 Polish v1 are accepted Alpha-closure inputs.
 
-Optional next external review can happen after the transition artifact, but it
-is not required before the first local Premium Beta productization wave.
+Optional external review can happen as Claude TOP1 Visual/UX Challenger after
+fresh screenshots if exact current visuals are needed.
 
 Sharky Character expansion, Welcome/Placement expansion, commerce,
 stamina/energy, Modern Table polish, rating/radar/level systems, badge art, and
 monetization remain deferred unless concrete evidence reopens them as the
 active bottleneck. Generated screenshot and audit outputs remain local-only and
 must not be committed.
+
+## Post Wave 2.4 TOP1 Recalibration (2026-06-26)
+
+Wave 2.4 closed the controlled beta handoff packet with verdict
+`wave2_4_beta_handoff_packet_ready`. That state is narrow-beta packet-ready,
+not public TOP1 launch readiness.
+
+The active post-Wave-2.4 route reset is recorded in
+`docs/_reviews/top1_recalibration_after_wave2_4_v1.md` with verdict
+`top1_recalibration_after_wave2_4_ready`.
+
+Recalibrated target:
+
+Sharky should become a published premium table-first poker learning product
+that wins through first-loop clarity, beginner-safe table-signal feedback,
+deterministic repair, local proof, emotional payoff, premium mobile feel,
+compact Sharky coach/soul, earned rewards, habit rhythm, honest Review/Profile
+proof, value-after-proof monetization, and store-safe claims.
+
+Updated route sequence:
+
+1. Phase A - TOP1 Recalibration Gate:
+   - Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
+2. Phase B - Premium Product Feel:
+   - Wave 2.6 - Premium Motion & Interaction Feel v1.
+   - Wave 2.7 - Active Shell Visual Premium Proof v1.
+3. Phase C - Emotional Identity:
+   - Wave 2.8 - Sharky Soul / Compact Coach Layer v1.
+   - Wave 2.9 - Earned Rewards / Achievement Hooks v1.
+4. Phase D - Learning Depth / Retention:
+   - Wave 3.0 - Review Pattern Coaching v1.
+   - Wave 3.1 - First-Week Commercial Proof Packet v1.
+5. Phase E - Public Product / Monetization:
+   - Wave 3.2 - Value Packaging / Premium Timing v1.
+   - Wave 3.3 - Store / Public Readiness Packet v1.
+
+Operating rule:
+
+Every future TOP1 wave must name the target matrix row, 10/10 acceptance bar,
+anti-drift boundary, commercial proof signal, evidence type, expected score
+movement, and rollback / dormant-hypothesis rule if validation fails.
+
+Next recommendation:
+
+Run Claude as a TOP1 Visual/UX Challenger with refreshed screenshots if exact
+visual evidence is needed, or proceed to Wave 2.6 as a bounded premium motion
+and interaction-feel wave. Do not treat Wave 2.6 as a broad redesign, route
+rewrite, paywall wave, AI/GTO/solver wave, broad drill engine, or old-main
+feature restoration.
 
 ## 1. Mission
 
@@ -295,16 +347,16 @@ commercial packaging.
 
 ### Route impact
 
-- No immediate route change.
-- No score inflation.
-- Content depth remains important, but the current bottleneck is Premium Beta
-  productization before broad expansion.
-- No monetization acceleration.
-- No Modern Table reopening.
-- Current next wave: Wave 2.1 - Fix Landed + Session Close Payoff.
-- Commercial Screenshot / Renderer Acceptance and Content Depth / Term
-  Introduction / Drill Coverage Audit move to later/optional slots unless fresh
-  evidence makes them the active bottleneck.
+- No score inflation: Wave 2.4 means controlled beta packet-ready, not public
+  TOP1 launch-ready.
+- Content depth remains important, but only after the first-week TOP1 rows show
+  that content breadth is the active blocker.
+- No monetization acceleration before value proof.
+- No Modern Table reopening without concrete evidence.
+- Current route reset: Wave 2.5 - TOP1 Recalibration & Final Product Route
+  Reset v1.
+- Next candidate: Claude TOP1 Visual/UX Challenger with refreshed screenshots,
+  or Wave 2.6 - Premium Motion & Interaction Feel v1.
 
 ### When to revisit Runout deeply again
 
@@ -520,15 +572,15 @@ Commercial Proof / External Readiness.
 | Product block | Where Sharky is now | What 10/10/top-1 looks like | Remaining gap | Next action | Acceptance signal | Not-now guardrail |
 | --- | --- | --- | --- | --- | --- | --- |
 | A. Foundation / deterministic app | Act0 route, repair foundation, monetization docs, capture tooling, and CI are stable enough for product work. | The app reliably turns one learner action into a clear table lesson without route or infra noise. | Foundation is not the bottleneck; visible EV is. | Stop foundation cleanup unless a real blocker appears. | Product waves can start from green `main` and pass R5 without scope repair. | No more backup mining or workflow cleanup as product work. |
-| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, Day 2 return proof, Practice queue launch, source handoff, outcome proof, receipt, and copy safety are done. | The learner sees the missed signal, why the next hand was chosen, whether the fix attempt worked, and why return starts there. | The truth exists; Premium Beta must make the landed fix and session close feel earned. | Run Wave 2.1 - Fix Landed + Session Close Payoff. | Repair result, correct feedback, and Session Summary produce one dignified payoff without new state. | No AI/adaptive claims, no coach/chat, no new route. |
+| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, Day 2 return proof, Practice queue launch, source handoff, outcome proof, receipt, and copy safety are done. | The learner sees the missed signal, why the next hand was chosen, whether the fix attempt worked, and why return starts there. | The truth exists; Wave 2.1 closed the first payoff pass, and post-Wave-2.4 work must now move TOP1 rows. | Use the Wave 2.5 TOP1 matrix to select the next bounded row, usually Wave 2.6 premium motion / interaction feel. | Repair result, correct feedback, and Session Summary produce one dignified payoff without new state. | No AI/adaptive claims, no coach/chat, no new route. |
 | C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop in learner-safe copy. | In one session and on return the learner can say: I missed this clue, tried the fix, and know what to do next. | Emotional payoff and screen hierarchy are below the proof quality. | Strengthen payoff, hierarchy, and rhythm before broader RPG packaging. | Existing proof feels premium and memorable without fake mastery. | No fake mastery, unitless score, level, rating, or guaranteed improvement claims. |
-| D. First-week commercial readiness | First-week, Day 2, and full-scroll packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Narrow beta is about `8.0`; Premium Showable Beta needs about `9.0`. | Execute Wave 2 Premium Beta Productization sequence. | A reviewer can understand first-week value without explaining internals. | No paywall-first story, trial before repair proof, rating/radar, or badge art before evidence contracts. |
-| E. UX/UI sequencing | Home, table, Review, and Play are coherent enough for Alpha closure. | The user always knows what to do, why it matters, and what improved, with one hero per screen. | Screen-to-screen coherence and premium hierarchy need productization. | Run Premium Surface Hierarchy after Session Close Payoff. | No screen feels like a shell or internal debug surface. | No broad UI expansion, dashboard, or Runout/Duolingo copying. |
+| D. First-week commercial readiness | First-week, Day 2, and full-scroll packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Narrow beta is packet-ready, but public TOP1 readiness needs product feel, first-week depth, and value proof. | Use Wave 3.1 after premium feel and emotional identity rows move. | A reviewer can understand first-week value without explaining internals. | No paywall-first story, trial before repair proof, rating/radar, or badge art before evidence contracts. |
+| E. UX/UI sequencing | Home, table, Review, and Play are coherent enough for Alpha closure. | The user always knows what to do, why it matters, and what improved, with one hero per screen. | Screen-to-screen coherence and premium interaction feel need productization. | Run Wave 2.6 and Wave 2.7 through the TOP1 matrix. | No screen feels like a shell or internal debug surface. | No broad UI expansion, dashboard, or Runout/Duolingo copying. |
 | F. Activation / Welcome / Placement | Placement works and remains value-first; density risk exists but is not the active blocker. | Activation feels short, personal, and immediately connected to first repair value. | Welcome/placement simplification may help, but not before visible repair loop. | Defer until repair proof exists. | Later audit can show onboarding is blocking visible value. | Do not reopen placement before repair surface. |
 | G. Review / Home / re-entry | Review and Home can route repairs and return reasons from real state. | Re-entry starts from the learner's real missed/repaired signal, not generic practice. | Return reason needs repair-outcome evidence. | Feed repaired/missed outcomes into summary and return copy later. | Home/Review can say why this rep matters without generic encouragement. | No streak pressure or random daily churn. |
 | H. Visual / Modern Table / feedback rhythm | Modern Table quality is good enough; visual work is maintenance-only. | Visuals serve repair causality, result ceremony, and first-week proof. | Feedback rhythm may need visual support after reason/outcome exists. | Leave table visuals untouched unless feedback proof needs it. | Any visual change directly improves repair understanding or proof. | No table micro-polish, screenshot-driven design loops, or motion for its own sake. |
-| I. Content density / curriculum depth | Current route has enough spine for first value and narrow beta proof. | Each key concept has enough examples, spaced repair, no unexplained jargon, and evidence-backed progress naming. | First-week content confidence needs a bounded Premium Beta pass; W5-W36 breadth remains later. | Run Practice Confidence & First-Week Content Pass after surface hierarchy. | First-week route feels coherent without broad content expansion. | No broad expansion before beta or before an audit names exact gaps. |
-| J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Repair outcomes are not yet linked into session proof. | Add outcome receipts before new telemetry contracts. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
+| I. Content density / curriculum depth | Current route has enough spine for first value and narrow beta proof. | Each key concept has enough examples, spaced repair, no unexplained jargon, and evidence-backed progress naming. | First-week content confidence needs Wave 3.1; W5-W36 breadth remains later. | Use Wave 3.1 after TOP1 product-feel and identity passes. | First-week route feels coherent without broad content expansion. | No broad expansion before beta or before an audit names exact gaps. |
+| J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Commercial proof signals are not yet defined. | Defer until Wave 3.1 or later names the commercial proof signal. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
 | K. Monetization / premium value | Entitlement safety exists; public commerce remains blocked; premium preview is post-value. | Premium feels like deeper proven learning, not a hostage paywall. | Premium/value packaging needs visible learning proof first. | Keep premium/value packaging after proof packet. | Upgrade framing can point to real repair value already experienced. | No public price, purchase, trial, restore, Premium Hub, or route gate. |
 | L. Retention / habit loop | Daily/review loops exist and can use real repair signals. | Return reason comes from real missed/repaired signals, not streak pressure. | The repaired-signal history is not yet summarized into habit copy. | Build session summary before habit expansion. | D2/D7 return can reference a real skill or clue. | No guilt, fake scarcity, or random retention prompts. |
 | M. Proof packet / commercial evidence | Capture tooling source exists; generated outputs stay out by default. | Compact evidence shows first decision -> mistake -> repair -> success -> summary. | Proof packet awaits visible reason and result receipt. | Build proof packet after summary. | One compact flow can be captured without explaining internals. | No generated outputs committed by default; no copied Runout assets. |
@@ -537,16 +589,21 @@ Commercial Proof / External Readiness.
 
 The shortest path is not more foundation, not more CI, and not commerce-first.
 
-The shortest path is:
+The post-Wave-2.4 shortest path is:
 
-1. Wave 2.1 - Hero Payoff & Session Close.
-2. Wave 2.2 - Premium Surface Hierarchy.
-3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
-4. Wave 2.4 - Beta Handoff Packet.
+1. Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
+2. Wave 2.6 - Premium Motion & Interaction Feel v1.
+3. Wave 2.7 - Active Shell Visual Premium Proof v1.
+4. Wave 2.8 - Sharky Soul / Compact Coach Layer v1.
+5. Wave 2.9 - Earned Rewards / Achievement Hooks v1.
+6. Wave 3.0 - Review Pattern Coaching v1.
+7. Wave 3.1 - First-Week Commercial Proof Packet v1.
+8. Wave 3.2 - Value Packaging / Premium Timing v1.
+9. Wave 3.3 - Store / Public Readiness Packet v1.
 
-Optional Claude/Gemini recheck is allowed after the transition artifact and
-latest packets are ready, but the local active bottleneck is Premium Beta
-productization.
+Claude TOP1 Visual/UX Challenger is allowed after screenshot refresh if exact
+current visuals are needed, but the local active bottleneck is now TOP1
+recalibration and product-feel movement, not small-beta packet readiness.
 
 ## 5B. 10/10 Acceptance Gates
 
@@ -618,35 +675,30 @@ Operating constraints:
 20. Session Summary repair outcome receipt.
 21. Repair Loop Copy / Claim-Safety Pass v1.
 
-### Active Wave 2 sequence
+### Closed Wave 2.1-2.4 sequence
 
-1. Wave 2.1 - Hero Payoff & Session Close.
-   - Active implementation: Fix Landed + Session Close Payoff.
-   - Scope: repair result, Session Summary, light correct feedback, dignified
-     micro-payoff, and source-safe copy.
-   - No new model, route, progression, telemetry, queue resolution, or public
-     premium copy.
-2. Wave 2.2 - Premium Surface Hierarchy.
-   - Make the accepted truth spine feel coherent and premium screen to screen.
-   - Preserve one hero per screen and avoid shell/debug density.
-3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
-   - Keep Practice narrow but make short reps feel like a real beta training
-     surface.
-   - Tighten first-week confidence without broad W5-W36 expansion.
-4. Wave 2.4 - Beta Handoff Packet.
-   - Package the accepted Premium Beta proof, known limitations, and tester
-     instructions.
+1. Wave 2.1 - Hero Payoff & Session Close: CLOSED.
+2. Wave 2.2 - Premium Surface Hierarchy: CLOSED.
+3. Wave 2.3 - Practice Confidence & First-Week Content Pass: CLOSED.
+4. Wave 2.4 - Beta Handoff Packet: CLOSED.
 
-### Later
+### Active TOP1 route sequence
 
-- Optional post-copy Claude/Gemini visual or UX recheck.
-- Commercial Screenshot / Renderer Acceptance.
-- Content Depth / Term Introduction / Drill Coverage Audit.
-- Daily Trainer / Habit Loop Expansion.
-- W4/W5 Product Truth Normalization.
-- Paywall / Trial Design.
-- App Store / Premium Packaging Arc.
-- Analytics / Leak Profile Lite.
+1. Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
+2. Wave 2.6 - Premium Motion & Interaction Feel v1.
+3. Wave 2.7 - Active Shell Visual Premium Proof v1.
+4. Wave 2.8 - Sharky Soul / Compact Coach Layer v1.
+5. Wave 2.9 - Earned Rewards / Achievement Hooks v1.
+6. Wave 3.0 - Review Pattern Coaching v1.
+7. Wave 3.1 - First-Week Commercial Proof Packet v1.
+8. Wave 3.2 - Value Packaging / Premium Timing v1.
+9. Wave 3.3 - Store / Public Readiness Packet v1.
+
+Commercial Screenshot / Renderer Acceptance, Content Depth / Term Introduction
+/ Drill Coverage Audit, Daily Trainer / Habit Loop Expansion, W4/W5 Product
+Truth Normalization, Paywall / Trial Design, App Store / Premium Packaging Arc,
+and Analytics / Leak Profile Lite remain later or evidence-triggered families
+unless the TOP1 matrix makes one of them the active bottleneck.
 
 ## 7. Arc EV Table
 

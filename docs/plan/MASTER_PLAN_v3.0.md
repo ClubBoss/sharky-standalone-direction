@@ -115,15 +115,21 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
-- The repair/retention learning loop is landed:
-  `mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`.
-- Day 2 return behavior is contract-proven and has a deterministic fast proof
-  packet lane via `./tools/screen_review_fast_v1.sh day2_return compact`.
-- Current route calibration is recorded in
-  `docs/_reviews/top1_route_recalibration_after_day2_v1.md`.
-- The next route is Commercial Screenshot / Renderer Acceptance, with Content
-  Depth / Term Introduction / Drill Coverage Audit allowed in parallel if
-  capacity permits.
+- The proof-loop and Premium Beta productization waves through Wave 2.4 are
+  closed. Wave 2.4 verdict:
+  `wave2_4_beta_handoff_packet_ready`.
+- Current state is controlled narrow-beta packet-ready, not public TOP1 launch
+  readiness or premium monetization readiness.
+- The post-Wave-2.4 TOP1 route reset is recorded in
+  `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`.
+- The next active route should either run Claude as a TOP1 Visual/UX Challenger
+  with refreshed screenshots if exact visuals are needed, or proceed to Wave
+  2.6 - Premium Motion & Interaction Feel v1 as a bounded proof-loop polish
+  wave.
+- Do not route next work into broad drill engines, W5-W36 breadth, AI/GTO/
+  solver claims, public paywall, Modern Table redesign, telemetry/model work,
+  or old-main feature restoration unless concrete new evidence reopens that
+  bottleneck.
 
 ## Product 100
 
@@ -446,55 +452,47 @@ truths above, it is not part of the route to 100.
 
 ## Current Route To 100
 
-After the landed `Home`, `You`, `Review`, `Placement`, `Table / Result`,
-`Learn`, shell-consistency, habit-coherence, and integration-closure waves,
-the next route is no longer a broad product-surface route, but it is also not
-just proof plus commerce. The remaining path to 100 now has to account for
-full-app maturity, not only route coherence.
+After the landed proof-loop and Premium Beta productization waves through Wave
+2.4, the next route is no longer small-beta cleanup. The remaining path to 100
+must move from narrow-beta packet readiness toward a published premium TOP1
+product while preserving deterministic local proof.
 
 Current next-wave order:
 
-1. `Commercial Screenshot / Renderer Acceptance`
-2. `Content Depth / Term Introduction / Drill Coverage Audit`
-3. `Proof-informed launch-surface premium consistency`
-4. `Commerce / value packaging truth`
-5. `Shell-runtime coherence audit`
-6. `Telemetry / observability truth`
-7. `Localization expansion after product-shape hold`
+1. `Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1`
+2. `Wave 2.6 - Premium Motion & Interaction Feel v1`
+3. `Wave 2.7 - Active Shell Visual Premium Proof v1`
+4. `Wave 2.8 - Sharky Soul / Compact Coach Layer v1`
+5. `Wave 2.9 - Earned Rewards / Achievement Hooks v1`
+6. `Wave 3.0 - Review Pattern Coaching v1`
+7. `Wave 3.1 - First-Week Commercial Proof Packet v1`
+8. `Wave 3.2 - Value Packaging / Premium Timing v1`
+9. `Wave 3.3 - Store / Public Readiness Packet v1`
 
 Why this order:
 
-- the `Product-Truth And Surface-Role Closure` block is now materially landed,
-  so the highest remaining EV is no longer placeholder-truth cleanup
-- the English consumer-copy and alpha-residue closure is now landed, so the
-  highest remaining EV is back to proof, premium consistency, and full-product
-  coherence
-- current live evidence reopens one exact owner family inside the previously
-  landed Play lane: the surface is route-correct, but the full reinforcement
-  contract is still incomplete
-- the strongest open risks are now external-facing: packet/screenshot quality,
-  content depth, device-level polish, premium conversion truth, and
-  whole-product coherence
-- app-wide premium feel and shell/runtime consistency now outrank another local
-  chrome wave inside already-closed Act0 families
-- localization still matters, but it should follow stable product shape rather
-  than reopen active route decisions mid-flight
+- Wave 2.4 made the product controlled-beta packet-ready, not public launch
+  ready
+- the highest remaining EV is now TOP1 product feel, emotional identity,
+  first-week depth, honest proof, and value timing
+- commercial screenshot, content-depth, telemetry, localization, and app-store
+  packaging work should follow the TOP1 matrix rather than run as generic
+  surface cleanup
+- premium feel must support table-signal proof, repair payoff, and first-week
+  return value before public monetization
 
 Immediate execution rule:
 
-1. treat `Wave H` as closed unless concrete new evidence reopens one exact
-   owner family
-2. do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, or
-   skill-taxonomy seams for cosmetic drift
-3. the next admitted family is commercial screenshot / renderer acceptance,
-   with content-depth audit parallel-safe because it uses a different workstream
-4. do not reopen `Practice` without concrete new evidence from real usage
-5. if manual proof is still unavailable, prefer a calibration or premium
-   consistency family over reopening landed copy cleanup
-6. current status of `Proof closure`:
-   - automated Act0 proof floor is now recalibrated and green
-   - honest remaining residue is human/device proof, not stale fast-loop
-     automation drift
+1. Treat Waves 1 and 2.1-2.4 as closed unless concrete evidence reopens one
+   exact owner family.
+2. Use `docs/_reviews/top1_recalibration_after_wave2_4_v1.md` to select the
+   TOP1 matrix row for the next wave.
+3. The next implementation candidate is Wave 2.6, unless Claude TOP1
+   Visual/UX Challenger runs first with refreshed screenshots.
+4. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
+   Modern Table, telemetry/model work, or monetization for cosmetic drift.
+5. If validation does not move the selected TOP1 row, make the hypothesis
+   dormant instead of expanding scope.
 
 Sizing-control hold:
 

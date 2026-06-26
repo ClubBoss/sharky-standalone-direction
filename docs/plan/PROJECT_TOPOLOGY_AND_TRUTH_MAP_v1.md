@@ -12,6 +12,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
     top-1 ambition, 10/10 product/commercial standard, Runout/competitor
     positioning, first-week proof, visible repair proof, or best-in-class
     product attack sequencing
+    - post-Wave-2.4 route-reset evidence:
+      `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`
   - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
   - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` when the task risks drifting into legacy, persona, AI-coach, or non-Act0 families
   - latest Audit Hub surfaces if routing depends on fresh live truth:
@@ -48,6 +50,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
        - companion strategy SSOT for top-1 / 10/10 product attack planning
        - owns Runout benchmark interpretation, 10/10 operating map, acceptance
          gates, and current visible-repair attack sequence
+       - current post-Wave-2.4 recalibration evidence:
+         `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`
        - does not replace Master Plan, Monetization SSOT, readiness SSOT, or
          active route truth
   2. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
