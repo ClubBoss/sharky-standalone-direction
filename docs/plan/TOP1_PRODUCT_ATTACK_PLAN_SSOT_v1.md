@@ -2,11 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-27 after Wave 3.9.1 36-World TOP1 Product Vision &
-Excellence Route Lock on `main`.
+Last refreshed: 2026-06-27 after Wave 3.9.2 TOP1 10/10 Backcast Matrix
+Addendum on `main`.
 Current phase: 36-World TOP1 Product Vision and Excellence Route - LOCKED.
-Current active control-plane wave: Wave 3.9.1 - 36-World TOP1 Product Vision &
-Excellence Route Lock v1.
+Current active control-plane wave: Wave 3.9.2 - TOP1 10/10 Backcast Matrix
+Addendum v1.
 
 Authority note:
 
@@ -23,6 +23,8 @@ Authority note:
 Route-lock artifact:
 
 - `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`
+- implementation-control addendum:
+  `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md`
 
 Current accepted state:
 
@@ -88,15 +90,16 @@ Bounded route:
 9. Wave 3.8 - Value Packaging / Premium Timing v1.
 10. Wave 3.9 - English-First / RU Localization Boundary v1.
 11. Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1.
-12. Wave 3.10 - Premium Motion Moments v1.
-13. Wave 3.11 - Personalized Return Reason v1.
-14. Wave 3.12 - World 1 Completion Payoff v1.
-15. Wave 3.13 - Sharky Growth / Companion Tone v1.
-16. Wave 3.14 - Competitive Wedge Pass v1.
-17. Wave 3.15 - W2-W4 Launch Quality Packet v1.
-18. Refresh day2_return, first_week, and full_scroll packets.
-19. Run a fresh TOP1 challenger pass.
-20. Proceed to Wave 4.0 - Store / Public Readiness Packet v1 only if the
+12. Wave 3.9.2 - TOP1 10/10 Backcast Matrix Addendum v1.
+13. Wave 3.10 - Premium Motion Moments v1.
+14. Wave 3.11 - Personalized Return Reason v1.
+15. Wave 3.12 - World 1 Completion Payoff v1.
+16. Wave 3.13 - Sharky Growth / Companion Tone v1.
+17. Wave 3.14 - Competitive Wedge Pass v1.
+18. Wave 3.15 - W2-W4 Launch Quality Packet v1.
+19. Refresh day2_return, first_week, and full_scroll packets.
+20. Run a fresh TOP1 challenger pass.
+21. Proceed to Wave 4.0 - Store / Public Readiness Packet v1 only if the
     excellence score band is strong enough.
 
 Required differentiator remains:
@@ -129,6 +132,26 @@ Guard vs Excellence protocol:
   `blocked_missing_prerequisite` with the exact prerequisite and next route.
 - A docs-only wave can only be an excellence wave if its purpose is route/SSOT
   lock, not product-score movement.
+
+## 10/10 Backcast Matrix Control
+
+Implementation-control artifact:
+
+- `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md`
+
+Rules:
+
+- Every excellence wave must map to one or more matrix rows.
+- Each Wave 3.10-3.15 Retro Summary must include target 10/10 block,
+  user-visible effect, DoD, evidence, expected movement, actual movement, and
+  anti-theater proof.
+- Absence of a P0/P1 blocker is not success for an excellence wave.
+- Wave success is the named 10/10 block moving.
+- If the block does not move, the wave must return `blocked_missing_prerequisite`,
+  `implemented_but_no_visible_movement`, `dormant_hypothesis`, or
+  `needs_follow_up_p1`.
+- Only `blocked_missing_prerequisite` may insert a prerequisite wave, and only
+  when that prerequisite cannot fit inside the current wave.
 
 ## 36-World Progression Spine
 
@@ -947,7 +970,9 @@ Operating constraints:
 ### Active TOP1 route sequence
 
 The active sequence is now locked by
-`docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`:
+`docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`, with
+implementation control owned by
+`docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md`:
 
 1. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock.
 2. Wave 3.1 - Street Replay / How We Got Here v1.
@@ -960,15 +985,16 @@ The active sequence is now locked by
 9. Wave 3.8 - Value Packaging / Premium Timing v1.
 10. Wave 3.9 - English-First / RU Localization Boundary v1.
 11. Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1.
-12. Wave 3.10 - Premium Motion Moments v1.
-13. Wave 3.11 - Personalized Return Reason v1.
-14. Wave 3.12 - World 1 Completion Payoff v1.
-15. Wave 3.13 - Sharky Growth / Companion Tone v1.
-16. Wave 3.14 - Competitive Wedge Pass v1.
-17. Wave 3.15 - W2-W4 Launch Quality Packet v1.
-18. Refresh day2_return, first_week, and full_scroll packets.
-19. Fresh TOP1 challenger pass.
-20. Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence
+12. Wave 3.9.2 - TOP1 10/10 Backcast Matrix Addendum v1.
+13. Wave 3.10 - Premium Motion Moments v1.
+14. Wave 3.11 - Personalized Return Reason v1.
+15. Wave 3.12 - World 1 Completion Payoff v1.
+16. Wave 3.13 - Sharky Growth / Companion Tone v1.
+17. Wave 3.14 - Competitive Wedge Pass v1.
+18. Wave 3.15 - W2-W4 Launch Quality Packet v1.
+19. Refresh day2_return, first_week, and full_scroll packets.
+20. Fresh TOP1 challenger pass.
+21. Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence
     score band is strong enough.
 
 Commercial Screenshot / Renderer Acceptance, Content Depth / Term Introduction

@@ -20,6 +20,13 @@ External challenger finding supplied in conversation:
 The external challenger report was not present as a repo file during this wave.
 The findings above are preserved as supplied external review input.
 
+Wave 3.9.2 addendum:
+
+- `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md` adds
+  implementation backcast control for Waves 3.10-3.15.
+- This Wave 3.9.1 artifact remains the product-identity and excellence-route
+  lock.
+
 ## 3. Product Positioning
 
 Public v1 positioning:

@@ -121,6 +121,8 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   English-first/RU boundary waves through Wave 3.9 are closed.
 - Wave 3.9.1 corrects the TOP1 product identity and route:
   `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md`.
+- Wave 3.9.2 locks the 10/10 Backcast Matrix:
+  `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md`.
 - Sharky is not a beginner-only app. The permanent product identity is:
   `Zero to shark. Table-first poker training across 36 worlds.`
 - Public v1 is the W1-W4 Foundation beachhead, polished to 10/10 inside that
@@ -470,6 +472,13 @@ skill-building system, with W1-W4 as the public v1 Foundation beachhead.
 Store/Public Readiness is delayed until the excellence route below proves the
 current product quality is strong enough to present publicly.
 
+Wave 3.9.2 adds implementation control for this route:
+
+- each Wave 3.10-3.15 must cite the 10/10 Backcast Matrix row it moves;
+- "no blocker found" is not an excellence-wave success condition;
+- Store/Public Readiness remains delayed until the matrix rows for Waves
+  3.10-3.15 are closed or explicitly blocked.
+
 Current next-wave order:
 
 1. `Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock`
@@ -483,15 +492,16 @@ Current next-wave order:
 9. `Wave 3.8 - Value Packaging / Premium Timing v1`
 10. `Wave 3.9 - English-First / RU Localization Boundary v1`
 11. `Wave 3.9.1 - 36-World TOP1 Product Vision & Excellence Route Lock v1`
-12. `Wave 3.10 - Premium Motion Moments v1`
-13. `Wave 3.11 - Personalized Return Reason v1`
-14. `Wave 3.12 - World 1 Completion Payoff v1`
-15. `Wave 3.13 - Sharky Growth / Companion Tone v1`
-16. `Wave 3.14 - Competitive Wedge Pass v1`
-17. `Wave 3.15 - W2-W4 Launch Quality Packet v1`
-18. `Refresh day2_return, first_week, and full_scroll packets`
-19. `Fresh TOP1 challenger pass`
-20. `Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence score band is strong enough`
+12. `Wave 3.9.2 - TOP1 10/10 Backcast Matrix Addendum v1`
+13. `Wave 3.10 - Premium Motion Moments v1`
+14. `Wave 3.11 - Personalized Return Reason v1`
+15. `Wave 3.12 - World 1 Completion Payoff v1`
+16. `Wave 3.13 - Sharky Growth / Companion Tone v1`
+17. `Wave 3.14 - Competitive Wedge Pass v1`
+18. `Wave 3.15 - W2-W4 Launch Quality Packet v1`
+19. `Refresh day2_return, first_week, and full_scroll packets`
+20. `Fresh TOP1 challenger pass`
+21. `Wave 4.0 - Store / Public Readiness Packet v1, only if the excellence score band is strong enough`
 
 Why this order:
 
@@ -513,12 +523,16 @@ Immediate execution rule:
 2. Use
    `docs/_reviews/wave3_9_1_36_world_top1_product_vision_route_lock_v1.md` for
    the current excellence route and product-identity lock.
-3. The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
-4. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
+3. Use
+   `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md` for
+   implementation-control proof: target 10/10 block, gap, visible effect, DoD,
+   evidence, and anti-theater guard.
+4. The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
+5. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
    Modern Table, telemetry/model work, or monetization for cosmetic drift.
-5. If validation does not move the selected TOP1 row, make the hypothesis
+6. If validation does not move the selected TOP1 row, make the hypothesis
    dormant instead of expanding scope.
-6. Guard waves may pass by proving no P0/P1 blockers; excellence waves must
+7. Guard waves may pass by proving no P0/P1 blockers; excellence waves must
    ship learner-visible value or return `blocked_missing_prerequisite` with the
    exact prerequisite and next route.
 
