@@ -330,6 +330,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
     final actionLine = mistake.repairActionLabel.trim().isEmpty
         ? mistake.reason
         : mistake.repairActionLabel;
+    final patternFocus = _reviewPatternFocusLabelV1(mistake);
     return Container(
       key: const Key('act0_shell_review_repair_coach_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -374,6 +375,52 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+                if (patternFocus.isNotEmpty) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapSm),
+                  Container(
+                    key: const Key('act0_shell_review_pattern_coaching'),
+                    padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+                    decoration: BoxDecoration(
+                      color: Act0ShellTokensV1.primary.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusMd,
+                      ),
+                      border: Border.all(
+                        color: Act0ShellTokensV1.primary.withOpacity(0.18),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Pattern to practice',
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.primary,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: Act0ShellTokensV1.gapXs),
+                        Text(
+                          'You are working on $patternFocus.',
+                          key: const Key(
+                            'act0_shell_review_pattern_focus_line',
+                          ),
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: Act0ShellTokensV1.gapXs),
+                        Text(
+                          'Next rep: spot the clue before choosing.',
+                          style: Act0ShellTokensV1.muted.copyWith(
+                            color: Act0ShellTokensV1.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
                 Text(actionLine, style: Act0ShellTokensV1.muted),
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -413,6 +460,38 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {
+  final title = mistake.title.trim();
+  if (title.isEmpty) {
+    return '';
+  }
+  const forbiddenTerms = <String>{
+    'ai',
+    'all-time',
+    'cleared',
+    'complete',
+    'completed',
+    'fixed',
+    'gto',
+    'leak',
+    'level',
+    'master',
+    'mastery',
+    'premium',
+    'radar',
+    'rating',
+    'resolved',
+    'solver',
+  };
+  final normalized = title.toLowerCase();
+  for (final term in forbiddenTerms) {
+    if (normalized.contains(term)) {
+      return 'this table clue';
+    }
+  }
+  return title;
 }
 
 String _reviewHeaderEyebrowV1({

@@ -131,6 +131,12 @@ void main() {
         find.text('The no-bet-yet clue is still the one to fix.'),
         findsOneWidget,
       );
+      expect(find.text('Pattern to practice'), findsOneWidget);
+      expect(find.text('You are working on No bet yet.'), findsOneWidget);
+      expect(
+        find.text('Next rep: spot the clue before choosing.'),
+        findsOneWidget,
+      );
       expect(
         find.text('Review why the table was telling you to check.'),
         findsOneWidget,
@@ -178,6 +184,7 @@ void main() {
 
     expect(tappedMistake, activeMistake);
     expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Pattern to practice'), findsOneWidget);
     expect(find.text('This is the spot to clean up.'), findsOneWidget);
     expect(find.text('Practice this spot'), findsOneWidget);
     expect(find.textContaining('Fixed'), findsNothing);
@@ -228,6 +235,7 @@ void main() {
         find.byKey(const Key('act0_shell_review_practice_cta')),
         findsNothing,
       );
+      expect(find.text('Pattern to practice'), findsOneWidget);
     },
   );
 
@@ -434,6 +442,32 @@ void main() {
       expect(find.textContaining('leak'), findsNothing);
     },
   );
+
+  testWidgets('Review hides pattern coaching without active repair evidence', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('No misses saved yet'), findsOneWidget);
+    expect(find.text('Pattern to practice'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_review_pattern_focus_line')),
+      findsNothing,
+    );
+  });
 
   testWidgets('Review keeps past repair notes as secondary proof', (
     tester,
