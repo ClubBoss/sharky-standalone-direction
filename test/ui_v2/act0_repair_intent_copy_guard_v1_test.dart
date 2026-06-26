@@ -9,7 +9,7 @@ void main() {
         clueLabel: 'No bet yet',
         skillLabel: 'Action read',
       ),
-      'You missed that nobody has bet yet. This hand repeats that table clue.',
+      'You missed that nobody has bet yet. This rep repeats the same clue.',
     );
   });
 
@@ -42,7 +42,7 @@ void main() {
         exactReplay: false,
         clueLabel: 'No bet yet',
       ),
-      'Fix landed: you caught the no-bet-yet clue.',
+      'Fix landed: you saw the no-bet-yet clue before choosing.',
     );
     expect(
       act0RepairResultReceiptCopyGuardLineV1(
@@ -82,7 +82,9 @@ void main() {
           exactReplay: false,
           clueLabel: 'No bet yet',
         ),
-        <String>['Fix landed: the no-bet-yet clue is back in focus.'],
+        <String>[
+          'Local proof: you repeated the no-bet-yet clue and chose cleanly.',
+        ],
       );
       expect(
         act0RepairSessionSummaryCopyGuardLinesV1(
@@ -239,6 +241,8 @@ void main() {
       'ai',
       'ml',
       'adaptive',
+      'best',
+      'better',
       'solver',
       'gto',
       'optimal',
@@ -254,6 +258,8 @@ void main() {
       'leak',
       'detected',
       'mastered',
+      'pro-level',
+      'runout',
       'forever',
     };
 

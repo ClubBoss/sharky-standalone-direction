@@ -42,7 +42,7 @@ String? act0RepairIntentCopyGuardLineV1({
   final exactReplayClue = _learnerFacingExactReplayClueV1(clue);
   final line = switch (safeTemplateId) {
     'repair_same_clue_v1' when sameSignalClue.isNotEmpty =>
-      'You missed $sameSignalClue. This hand repeats that table clue.',
+      'You missed $sameSignalClue. This rep repeats the same clue.',
     'repair_exact_replay_v1' when exactReplayClue.isNotEmpty =>
       'Replay this spot to fix $exactReplayClue.',
     'fallback_next_hand_v1' when skill.isNotEmpty =>
@@ -129,7 +129,7 @@ String? _sameSignalRepairResultReceiptLineV1({
   final compactClue = _learnerFacingCompactClueV1(clueLabel);
   final repeatedClue = _learnerFacingRepeatedMissClueV1(clueLabel);
   if (repaired && compactClue.isNotEmpty) {
-    return 'Fix landed: you caught $compactClue.';
+    return 'Fix landed: you saw $compactClue before choosing.';
   }
   if (!repaired && repeatedClue.isNotEmpty) {
     return 'Still missed: $repeatedClue. One more repair hand will help.';
@@ -146,7 +146,9 @@ List<String> _sameSignalRepairSessionSummaryLinesV1({
     return const <String>[];
   }
   if (repaired) {
-    return <String>['Fix landed: $compactClue is back in focus.'];
+    return <String>[
+      'Local proof: you repeated $compactClue and chose cleanly.',
+    ];
   }
   final focusClue = _learnerFacingNextFocusClueV1(clueLabel);
   return <String>[

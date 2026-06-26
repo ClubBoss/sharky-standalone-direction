@@ -372,7 +372,7 @@ void main() {
             ),
             contextLabels: const <String>['No bet yet'],
             repairReasonLine:
-                'You missed that nobody has bet yet. This hand repeats that table clue.',
+                'You missed that nobody has bet yet. This rep repeats the same clue.',
             repairResultReceiptLine:
                 'Repair started: the missed table clue was no bet yet.',
             onContinue: () {},
@@ -388,7 +388,7 @@ void main() {
     expect(find.text('Repair focus'), findsOneWidget);
     expect(
       find.text(
-        'This hand repeats that table clue. Before choosing, ask whether a bet faces you.',
+        'This rep repeats the same clue. Before choosing, ask whether a bet faces you.',
       ),
       findsOneWidget,
     );

@@ -85,7 +85,7 @@ void main() {
 
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsOneWidget,
     );
@@ -96,7 +96,7 @@ void main() {
     expect(snapshot?['selectionSource'], 'repair_intent_mapped');
     expect(
       snapshot?['renderedLine'],
-      'You missed that nobody has bet yet. This hand repeats that table clue.',
+      'You missed that nobody has bet yet. This rep repeats the same clue.',
     );
     expect(snapshot?['sourceTaskId'], 'actions_legal_context');
     expect(snapshot?['targetTaskId'], 'actions_check_drill');
@@ -118,7 +118,7 @@ void main() {
     await _answerOption(tester, 'fold');
 
     const visibleReason =
-        'You missed that nobody has bet yet. This hand repeats that table clue.';
+        'You missed that nobody has bet yet. This rep repeats the same clue.';
     expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
     await _pumpHomeWithReason(tester, visibleReason);
     expect(find.text(visibleReason), findsNothing);
@@ -363,46 +363,47 @@ void main() {
     expect(snapshot?['reasonCode'], 'exact_replay_action_read_no_bet_yet');
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsNothing,
     );
   });
 
-  testWidgets('exact replay reason is visible on Home without same-signal copy', (
-    tester,
-  ) async {
-    await _pumpResolverHost(
-      tester,
-      taskIds: const <String>['actions_legal_context'],
-      taskId: 'actions_legal_context',
-    );
-    await _answerOption(tester, 'fold');
+  testWidgets(
+    'exact replay reason is visible on Home without same-signal copy',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
 
-    const visibleReason = 'Replay this spot to fix the no-bet-yet clue.';
-    expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
-    await _pumpHomeWithReason(tester, visibleReason);
-    expect(find.text(visibleReason), findsNothing);
-    expect(
-      find.byKey(const Key('act0_shell_home_next_best_action_block')),
-      findsNothing,
-    );
-    expect(find.text('Replay this spot'), findsNothing);
-    expect(
-      find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
-      findsNothing,
-    );
-    expect(find.text('Session proof'), findsNothing);
-    expect(
-      find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
-      ),
-      findsNothing,
-    );
-    for (final token in _forbiddenVisibleReasonTokens) {
-      expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
-    }
-  });
+      const visibleReason = 'Replay this spot to fix the no-bet-yet clue.';
+      expect(_homeNextUsefulHandReasonLine(tester), visibleReason);
+      await _pumpHomeWithReason(tester, visibleReason);
+      expect(find.text(visibleReason), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_home_next_best_action_block')),
+        findsNothing,
+      );
+      expect(find.text('Replay this spot'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_session_summary_ceremony_block')),
+        findsNothing,
+      );
+      expect(find.text('Session proof'), findsNothing);
+      expect(
+        find.text(
+          'You missed that nobody has bet yet. This rep repeats the same clue.',
+        ),
+        findsNothing,
+      );
+      for (final token in _forbiddenVisibleReasonTokens) {
+        expect(_containsForbiddenTokenInText(visibleReason, token), isFalse);
+      }
+    },
+  );
 
   testWidgets('exact replay reason becomes replay Practice entry', (
     tester,
@@ -482,11 +483,13 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
     expect(
-      find.text('Fix landed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you saw the no-bet-yet clue before choosing.'),
       findsOneWidget,
     );
     expect(
-      find.text('Fix landed: the no-bet-yet clue is back in focus.'),
+      find.text(
+        'Local proof: you repeated the no-bet-yet clue and chose cleanly.',
+      ),
       findsOneWidget,
     );
     expect(find.textContaining('mastered forever'), findsNothing);
@@ -522,7 +525,7 @@ void main() {
     expect(_reviewSupportCopySnapshot(tester), isNull);
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsNothing,
     );
@@ -546,7 +549,7 @@ void main() {
     expect(find.text('Session proof'), findsNothing);
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsNothing,
     );
@@ -615,7 +618,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('Fix landed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you saw the no-bet-yet clue before choosing.'),
       findsNothing,
     );
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
@@ -654,14 +657,14 @@ void main() {
     expect(snapshot?['selectionSource'], 'repair_intent_mapped');
     expect(
       snapshot?['renderedLine'],
-      'You missed that nobody has bet yet. This hand repeats that table clue.',
+      'You missed that nobody has bet yet. This rep repeats the same clue.',
     );
     expect(snapshot?['sourceTaskId'], 'actions_legal_context');
     expect(snapshot?['targetTaskId'], 'actions_check_drill');
     expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsOneWidget,
     );
@@ -738,7 +741,7 @@ void main() {
     );
     expect(find.textContaining('same clue'), findsNothing);
     expect(
-      find.text('Fix landed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you saw the no-bet-yet clue before choosing.'),
       findsNothing,
     );
   });
@@ -808,7 +811,7 @@ void main() {
     expect(_reviewSupportCopySnapshot(tester), isNull);
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
       ),
       findsNothing,
     );
@@ -818,60 +821,61 @@ void main() {
     );
   });
 
-  testWidgets('rendered repair copy excludes forbidden terms and new surfaces', (
-    tester,
-  ) async {
-    await _pumpResolverHost(
-      tester,
-      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
-      taskId: 'actions_legal_context',
-    );
-    await _answerOption(tester, 'fold');
-
-    await _openReview(tester);
-
-    final snapshot = _reviewSupportCopySnapshot(tester);
-    final supportText = (snapshot?['renderedLine'] ?? '').toString();
-    expect(
-      supportText,
-      'You missed that nobody has bet yet. This hand repeats that table clue.',
-    );
-    expect(snapshot?['renderedLine'], supportText);
-    const forbidden = <String>{
-      'ai',
-      'ml',
-      'adaptive',
-      'solver',
-      'gto',
-      'optimal',
-      'win-rate',
-      'guaranteed',
-      'premium',
-      'paywall',
-      'trial',
-      'purchase',
-      'restore',
-    };
-    for (final token in forbidden) {
-      expect(_containsForbiddenTokenInText(supportText, token), isFalse);
-      expect(
-        _containsForbiddenTokenInText(
-          (snapshot?['renderedLine'] ?? '').toString(),
-          token,
-        ),
-        isFalse,
+  testWidgets(
+    'rendered repair copy excludes forbidden terms and new surfaces',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+        taskId: 'actions_legal_context',
       );
-    }
-    expect(
-      find.byWidgetPredicate((widget) {
-        final key = widget.key;
-        return key is ValueKey<String> &&
-            (key.value.contains('repair_intent_copy') ||
-                key.value.contains('copy_bridge'));
-      }),
-      findsNothing,
-    );
-  });
+      await _answerOption(tester, 'fold');
+
+      await _openReview(tester);
+
+      final snapshot = _reviewSupportCopySnapshot(tester);
+      final supportText = (snapshot?['renderedLine'] ?? '').toString();
+      expect(
+        supportText,
+        'You missed that nobody has bet yet. This rep repeats the same clue.',
+      );
+      expect(snapshot?['renderedLine'], supportText);
+      const forbidden = <String>{
+        'ai',
+        'ml',
+        'adaptive',
+        'solver',
+        'gto',
+        'optimal',
+        'win-rate',
+        'guaranteed',
+        'premium',
+        'paywall',
+        'trial',
+        'purchase',
+        'restore',
+      };
+      for (final token in forbidden) {
+        expect(_containsForbiddenTokenInText(supportText, token), isFalse);
+        expect(
+          _containsForbiddenTokenInText(
+            (snapshot?['renderedLine'] ?? '').toString(),
+            token,
+          ),
+          isFalse,
+        );
+      }
+      expect(
+        find.byWidgetPredicate((widget) {
+          final key = widget.key;
+          return key is ValueKey<String> &&
+              (key.value.contains('repair_intent_copy') ||
+                  key.value.contains('copy_bridge'));
+        }),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets('repair result receipt copy excludes forbidden terms', (
     tester,
@@ -887,8 +891,9 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
 
-    const receipt = 'Fix landed: you caught the no-bet-yet clue.';
-    const summary = 'Fix landed: the no-bet-yet clue is back in focus.';
+    const receipt = 'Fix landed: you saw the no-bet-yet clue before choosing.';
+    const summary =
+        'Local proof: you repeated the no-bet-yet clue and chose cleanly.';
     expect(find.text(receipt), findsOneWidget);
     expect(find.text(summary), findsOneWidget);
     const forbidden = <String>{
