@@ -153,6 +153,120 @@ void main() {
     expect(goodTop, lessThan(repeatTop));
   });
 
+  testWidgets(
+    'Session Summary hero leads with correct read and good fix proof',
+    (tester) async {
+      await _pumpSummary(
+        tester,
+        consumer: Act0AchievementSeedConsumerV1.fromProjection(
+          Act0AchievementSeedProjectionV1(
+            seeds: <Act0AchievementSeedV1>[
+              _seed(act0AchievementSeedFirstCorrectReadV1, sequence: 1),
+            ],
+          ),
+        ),
+        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+          _repairOutcomeProjection(
+            outcomeState: act0RepairOutcomeStateCorrectV1,
+          ),
+        ),
+      );
+
+      expect(find.text('You banked a fix'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const Key('act0_shell_block_summary_title')),
+            )
+            .data,
+        'First correct read — and one useful fix banked.',
+      );
+      expect(
+        find.text('Replay once to keep the table clue fresh.'),
+        findsOneWidget,
+      );
+      expect(find.text('Almost there - replay to unlock'), findsNothing);
+      expect(find.text('Replay before next lesson'), findsOneWidget);
+      expect(find.text("Fixes you've banked"), findsOneWidget);
+      expect(find.text('Good fixes: 1'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Session Summary hero can lead with correct read proof only', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: Act0AchievementSeedConsumerV1.fromProjection(
+        Act0AchievementSeedProjectionV1(
+          seeds: <Act0AchievementSeedV1>[
+            _seed(act0AchievementSeedFirstCorrectReadV1, sequence: 1),
+          ],
+        ),
+      ),
+    );
+
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
+          .data,
+      'First correct read banked.',
+    );
+    expect(
+      find.text('Replay once to keep the table clue fresh.'),
+      findsOneWidget,
+    );
+    expect(find.text('You banked a fix'), findsNothing);
+    expect(find.text('Good fix banked.'), findsNothing);
+  });
+
+  testWidgets('Session Summary hero can lead with good fix proof only', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        _repairOutcomeProjection(outcomeState: act0RepairOutcomeStateCorrectV1),
+      ),
+    );
+
+    expect(find.text('You banked a fix'), findsOneWidget);
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
+          .data,
+      'Good fix banked.',
+    );
+    expect(
+      find.text('Replay once to keep the table clue fresh.'),
+      findsOneWidget,
+    );
+    expect(find.text('Almost there - replay to unlock'), findsNothing);
+  });
+
+  testWidgets('Session Summary keeps gate-first hero without proof', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        const Act0RepairOutcomeProjectionV1(),
+      ),
+    );
+
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
+          .data,
+      'Almost there - replay to unlock',
+    );
+    expect(find.text('You banked a fix'), findsNothing);
+    expect(find.text('First correct read banked.'), findsNothing);
+    expect(find.text('Good fix banked.'), findsNothing);
+  });
+
   testWidgets('Session Summary repair receipt contains no forbidden copy', (
     tester,
   ) async {
@@ -306,6 +420,27 @@ void main() {
     }
   });
 
+  testWidgets('Session Summary level-up card avoids forbidden level copy', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      errorCount: 0,
+      correctCount: 2,
+      startXp: 195,
+      endXp: 215,
+      endLevel: 2,
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_xp_total')),
+      findsOneWidget,
+    );
+    expect(find.text('Next step 2'), findsOneWidget);
+    expect(find.text('Level 2'), findsNothing);
+  });
+
   testWidgets('Session Summary callbacks remain route-neutral', (tester) async {
     var continued = 0;
     await _pumpSummary(
@@ -343,6 +478,9 @@ Future<void> _pumpSummary(
   VoidCallback? onContinue,
   int errorCount = 1,
   int correctCount = 1,
+  int startXp = 80,
+  int endXp = 100,
+  int endLevel = 1,
   Act0RepairOutcomeConsumerV1 repairOutcomeConsumer =
       const Act0RepairOutcomeConsumerV1(),
 }) async {
@@ -357,9 +495,9 @@ Future<void> _pumpSummary(
             taskCount: 2,
             correctCount: correctCount,
             startLevel: 1,
-            endLevel: 1,
-            startXp: 80,
-            endXp: 100,
+            endLevel: endLevel,
+            startXp: startXp,
+            endXp: endXp,
             xpTarget: 200,
             nextLessonTitle: 'Blinds and action order',
           ),

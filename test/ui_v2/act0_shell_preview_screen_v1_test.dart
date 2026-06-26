@@ -15618,7 +15618,27 @@ void main() {
       host(tab: Act0ShellTabV1.home, phase: Act0LessonPhaseV1.theory),
     );
 
-    expect(find.byKey(const Key('act0_shell_top_bar')), findsOneWidget);
+    final topBar = find.byKey(const Key('act0_shell_top_bar'));
+
+    expect(topBar, findsOneWidget);
+    expect(
+      find.descendant(of: topBar, matching: find.text('Today 0/3')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: topBar, matching: find.text('120 XP')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: topBar, matching: find.textContaining('XP')),
+      findsNothing,
+    );
+    for (final unsupported in <String>['Level', 'Lv', 'Rating', 'Radar']) {
+      expect(
+        find.descendant(of: topBar, matching: find.textContaining(unsupported)),
+        findsNothing,
+      );
+    }
   });
 
   testWidgets(

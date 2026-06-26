@@ -11255,11 +11255,6 @@ class _TopBarV1 extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: Act0ShellTokensV1.gapSm),
-                    Text(
-                      '${state.xp} XP',
-                      style: Act0ShellTokensV1.muted.copyWith(fontSize: 11),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 6),

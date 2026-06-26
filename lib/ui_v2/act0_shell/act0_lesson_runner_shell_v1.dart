@@ -5496,6 +5496,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         ? earnedMomentConsumer.moments.first
         : null;
     final visibleRepairOutcomeReceipt = repairOutcomeConsumer.sessionReceipt;
+    final payoffHero = _SessionSummaryPayoffHeroV1.fromProof(
+      moments: earnedMomentConsumer.moments,
+      receipt: visibleRepairOutcomeReceipt,
+    );
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5621,7 +5625,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: Act0ShellTokensV1.gapSm),
                     Text(
-                      'What finished',
+                      payoffHero?.kicker ?? 'What finished',
                       style: Act0ShellTokensV1.label.copyWith(
                         color: celebrateTone,
                         letterSpacing: 0.35,
@@ -5629,7 +5633,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      summary.milestoneTitle,
+                      payoffHero?.headline ?? summary.milestoneTitle,
                       key: const Key('act0_shell_block_summary_title'),
                       style: Act0ShellTokensV1.screenTitle.copyWith(
                         fontSize: 28,
@@ -5637,7 +5641,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      summary.milestoneDetailTitle,
+                      payoffHero?.detail ?? summary.milestoneDetailTitle,
                       key: const Key('act0_shell_block_summary_detail_title'),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -6039,6 +6043,41 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   }
 }
 
+class _SessionSummaryPayoffHeroV1 {
+  const _SessionSummaryPayoffHeroV1({
+    required this.kicker,
+    required this.headline,
+    required this.detail,
+  });
+
+  final String kicker;
+  final String headline;
+  final String detail;
+
+  static _SessionSummaryPayoffHeroV1? fromProof({
+    required List<Act0AchievementMomentViewModelV1> moments,
+    required Act0RepairOutcomeSessionReceiptV1? receipt,
+  }) {
+    final hasCorrectRead = moments.any(
+      (moment) => moment.label == 'First correct read',
+    );
+    final hasGoodFix =
+        receipt?.lines.any((line) => line.startsWith('Good fixes:')) ?? false;
+    if (!hasCorrectRead && !hasGoodFix) {
+      return null;
+    }
+    return _SessionSummaryPayoffHeroV1(
+      kicker: hasGoodFix ? 'You banked a fix' : 'What finished',
+      headline: hasCorrectRead && hasGoodFix
+          ? 'First correct read — and one useful fix banked.'
+          : hasCorrectRead
+          ? 'First correct read banked.'
+          : 'Good fix banked.',
+      detail: 'Replay once to keep the table clue fresh.',
+    );
+  }
+}
+
 class _BlockXpProgressCardV1 extends StatelessWidget {
   const _BlockXpProgressCardV1({required this.summary});
 
@@ -6091,7 +6130,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                   const Spacer(),
                   Text(
                     progress.leveledUp
-                        ? 'Level ${progress.endLevel}'
+                        ? 'Next step ${progress.endLevel}'
                         : '${progress.endXp}/${summary.xpTarget} XP',
                     key: const Key('act0_shell_block_summary_xp_total'),
                     style: Act0ShellTokensV1.body.copyWith(
