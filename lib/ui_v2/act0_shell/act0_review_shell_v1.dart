@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -380,6 +381,18 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   'Keep this clue in view before your next hand.',
                   style: Act0ShellTokensV1.muted.copyWith(
                     color: Act0ShellTokensV1.textDim,
+                  ),
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(
+                  act0SharkyCoachLineForMomentV1(
+                    Act0SharkyCoachMomentV1.reviewActiveRepair,
+                  ),
+                  key: const Key('act0_shell_review_sharky_coach_line'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.gold,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 if (onFixMistake != null) ...[

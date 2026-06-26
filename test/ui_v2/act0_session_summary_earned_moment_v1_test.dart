@@ -189,6 +189,7 @@ void main() {
       expect(find.text('Replay before next lesson'), findsOneWidget);
       expect(find.text("Fixes you've banked"), findsOneWidget);
       expect(find.text('Good fixes: 1'), findsOneWidget);
+      expect(find.text('Small win, real proof.'), findsOneWidget);
 
       final next = find.byKey(const Key('act0_shell_block_summary_next_label'));
       final habit = find.byKey(
@@ -262,6 +263,7 @@ void main() {
       'You turned one miss into a cleaner next rep.',
     );
     expect(find.text('Next best step is ready.'), findsOneWidget);
+    expect(find.text('Small win, real proof.'), findsOneWidget);
     expect(find.text('Almost there - replay to unlock'), findsNothing);
   });
 
@@ -285,6 +287,7 @@ void main() {
     expect(find.text('Session closed with proof'), findsNothing);
     expect(find.text('First correct read banked.'), findsNothing);
     expect(find.text('Good fix banked.'), findsNothing);
+    expect(find.text('Small win, real proof.'), findsNothing);
   });
 
   testWidgets('Session Summary repair receipt contains no forbidden copy', (

@@ -407,6 +407,13 @@ void main() {
         findsOneWidget,
       );
       expect(
+        find.descendant(
+          of: queue,
+          matching: find.text('Run it once more while the clue is fresh.'),
+        ),
+        findsOneWidget,
+      );
+      expect(
         find.descendant(of: active, matching: find.text('Practice this')),
         findsOneWidget,
       );
@@ -429,6 +436,13 @@ void main() {
       );
       expect(
         find.descendant(of: history, matching: find.text('Practice this')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: history,
+          matching: find.text('Run it once more while the clue is fresh.'),
+        ),
         findsNothing,
       );
       for (final forbidden in <String>[

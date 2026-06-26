@@ -11,8 +11,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
@@ -5545,6 +5546,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
       moments: earnedMomentConsumer.moments,
       receipt: visibleRepairOutcomeReceipt,
     );
+    final summarySharkyLine = summary.sharkyLine.trim().isNotEmpty
+        ? summary.sharkyLine.trim()
+        : payoffHero != null
+        ? act0SharkyCoachLineForMomentV1(
+            Act0SharkyCoachMomentV1.sessionSummaryProof,
+          )
+        : '';
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5594,10 +5602,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              if (summary.sharkyLine.isNotEmpty) ...[
+              if (summarySharkyLine.isNotEmpty) ...[
                 const SizedBox(height: 6),
                 Act0SharkyPresenceBubbleV1(
-                  line: summary.sharkyLine,
+                  line: summarySharkyLine,
                   mood: summary.qualifiesForNextLesson
                       ? Act0SharkyMoodV1.celebrate
                       : Act0SharkyMoodV1.repair,

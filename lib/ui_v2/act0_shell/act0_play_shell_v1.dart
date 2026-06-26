@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -587,6 +588,26 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
                     ),
+                    if (primary &&
+                        consumer.items.any(
+                          _canLaunchPracticeQueueTargetV1,
+                        )) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        act0SharkyCoachLineForMomentV1(
+                          Act0SharkyCoachMomentV1.practiceCurrentFix,
+                        ),
+                        key: const Key('act0_shell_play_sharky_coach_line'),
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.gold,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
