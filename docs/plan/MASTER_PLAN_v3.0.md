@@ -115,21 +115,21 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
-- The proof-loop and Premium Beta productization waves through Wave 2.4 are
-  closed. Wave 2.4 verdict:
-  `wave2_4_beta_handoff_packet_ready`.
-- Current state is controlled narrow-beta packet-ready, not public TOP1 launch
-  readiness or premium monetization readiness.
-- The post-Wave-2.4 TOP1 route reset is recorded in
-  `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`.
-- The next active route should either run Claude as a TOP1 Visual/UX Challenger
-  with refreshed screenshots if exact visuals are needed, or proceed to Wave
-  2.6 - Premium Motion & Interaction Feel v1 as a bounded proof-loop polish
-  wave.
+- The proof-loop, Premium Beta productization, premium feel, compact Sharky
+  soul, earned reward hook, and Review Pattern Coaching Lite waves through Wave
+  3.0 are closed.
+- Current state is stronger than narrow-beta packet-ready, but not yet Public
+  Premium TOP1 v1 Candidate.
+- Wave 3.0.1 locks the route from the current state to Public Premium TOP1 v1
+  Candidate in
+  `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`.
+- The next feature wave after the lock is Wave 3.1 - Street Replay / How We Got
+  Here v1.
 - Do not route next work into broad drill engines, W5-W36 breadth, AI/GTO/
   solver claims, public paywall, Modern Table redesign, telemetry/model work,
-  or old-main feature restoration unless concrete new evidence reopens that
-  bottleneck.
+  full RU localization, hand-history databases, broad analytics, or old-main
+  feature restoration unless concrete P0/P1 evidence reopens that bottleneck
+  under the endgame lock's no-new-waves rule.
 
 ## Product 100
 
@@ -452,31 +452,37 @@ truths above, it is not part of the route to 100.
 
 ## Current Route To 100
 
-After the landed proof-loop and Premium Beta productization waves through Wave
-2.4, the next route is no longer small-beta cleanup. The remaining path to 100
-must move from narrow-beta packet readiness toward a published premium TOP1
-product while preserving deterministic local proof.
+After the landed proof-loop, Premium Beta productization, premium feel,
+Sharky Soul, earned reward hook, and Review Pattern Coaching Lite waves through
+Wave 3.0, the next route is no longer open-ended TOP1 polish. The remaining
+path to 100 must move toward Public Premium TOP1 v1 Candidate through the
+closed endgame lock while preserving deterministic local proof.
 
 Current next-wave order:
 
-1. `Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1`
-2. `Wave 2.6 - Premium Motion & Interaction Feel v1`
-3. `Wave 2.7 - Active Shell Visual Premium Proof v1`
-4. `Wave 2.8 - Sharky Soul / Compact Coach Layer v1`
-5. `Wave 2.9 - Earned Rewards / Achievement Hooks v1`
-6. `Wave 3.0 - Review Pattern Coaching v1`
-7. `Wave 3.1 - First-Week Commercial Proof Packet v1`
-8. `Wave 3.2 - Value Packaging / Premium Timing v1`
-9. `Wave 3.3 - Store / Public Readiness Packet v1`
+1. `Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock`
+2. `Wave 3.1 - Street Replay / How We Got Here v1`
+3. `Wave 3.2 - First-Week Commercial Proof & Gap Lock`
+4. `Wave 3.3 - Runner Text Zone & Feedback Clarity Final Pass`
+5. `Wave 3.4 - Achievement Visual Language / Icons v1`
+6. `Wave 3.5 - Premium Transition & Replay Motion System v1`
+7. `Wave 3.6 - Profile Identity & Progress Proof v1`
+8. `Wave 3.7 - Release-Visible Content Depth Gate v1`
+9. `Wave 3.8 - Value Packaging / Premium Timing v1`
+10. `Wave 3.9 - English-First / RU Localization Boundary v1`
+11. `Wave 4.0 - Store / Public Readiness Packet v1`
+12. `Wave 4.1 - TOP1 Release Candidate External Gate`
+13. `Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed`
 
 Why this order:
 
-- Wave 2.4 made the product controlled-beta packet-ready, not public launch
-  ready
-- the highest remaining EV is now TOP1 product feel, emotional identity,
-  first-week depth, honest proof, and value timing
+- Wave 3.0 made Review more coach-like without fake analytics, but the product
+  still needs a bounded route to public premium candidacy
+- the highest remaining EV is now street context, first-week proof, final text
+  clarity, proof-backed rewards visuals, Profile identity, value timing,
+  localization boundary, and public readiness
 - commercial screenshot, content-depth, telemetry, localization, and app-store
-  packaging work should follow the TOP1 matrix rather than run as generic
+  packaging work should follow the endgame lock rather than run as generic
   surface cleanup
 - premium feel must support table-signal proof, repair payoff, and first-week
   return value before public monetization
@@ -485,10 +491,11 @@ Immediate execution rule:
 
 1. Treat Waves 1 and 2.1-2.4 as closed unless concrete evidence reopens one
    exact owner family.
-2. Use `docs/_reviews/top1_recalibration_after_wave2_4_v1.md` to select the
-   TOP1 matrix row for the next wave.
-3. The next implementation candidate is Wave 2.6, unless Claude TOP1
-   Visual/UX Challenger runs first with refreshed screenshots.
+2. Use `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md` to select the
+   next wave and enforce no-new-waves discipline.
+3. The next implementation candidate is Wave 3.1 - Street Replay / How We Got
+   Here v1, unless concrete P0/P1 evidence changes the bottleneck under the
+   lock.
 4. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
    Modern Table, telemetry/model work, or monetization for cosmetic drift.
 5. If validation does not move the selected TOP1 row, make the hypothesis

@@ -14,6 +14,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
     product attack sequencing
     - post-Wave-2.4 route-reset evidence:
       `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`
+    - Public Premium TOP1 v1 endgame route lock:
+      `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
   - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
   - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` when the task risks drifting into legacy, persona, AI-coach, or non-Act0 families
   - latest Audit Hub surfaces if routing depends on fresh live truth:
@@ -34,6 +36,8 @@ Purpose: primary orientation layer for future agents before repo investigation.
     commercial-product attack path, use `docs/plan/MASTER_PLAN_v3.0.md` for
     day-to-day priority and `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
     for the top-1 operating map
+    - for the closed route from Wave 3.0.1 to Public Premium TOP1 v1 Candidate,
+      use `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
   - if the task is post-route proof / "what still blocks product 100?", use
     `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
   - if the task is launch/readiness framing, use `docs/plan/MASTER_PLAN_v3.0.md` plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`

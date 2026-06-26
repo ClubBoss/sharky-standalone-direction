@@ -2,11 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-26 after Wave 2.4 Beta Handoff Packet and Wave 2.5
-TOP1 Recalibration on `main` base `6501e0ec`.
-Current phase: Post-Wave-2.4 TOP1 Recalibration Gate - ACTIVE.
-Current active control-plane wave: Wave 2.5 - TOP1 Recalibration & Final
-Product Route Reset v1.
+Last refreshed: 2026-06-26 after Wave 3.0.1 Public Premium TOP1 v1 Endgame
+Lock on `main`.
+Current phase: Public Premium TOP1 v1 Endgame Route - LOCKED.
+Current active control-plane wave: Wave 3.0.1 - Public Premium TOP1 v1
+Endgame Lock v1.
 
 Authority note:
 
@@ -17,6 +17,63 @@ Authority note:
   `docs/plan/MONETIZATION_SSOT_v1.md`, and active route truth win.
 - This document constrains product attack direction; it does not replace the
   Master Plan.
+
+## Public Premium TOP1 v1 Endgame Route (2026-06-26)
+
+Route-lock artifact:
+
+- `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
+
+Current accepted state:
+
+- Wave 3.0 - Review Pattern Coaching Lite v1 is closed with verdict
+  `wave3_0_review_pattern_coaching_lite_ready`.
+- Wave 3.0.1 locks the closed route from the current state to Public Premium
+  TOP1 v1 Candidate.
+
+Public Premium TOP1 v1 Candidate means an English-first premium poker learning
+app candidate where the active first-week product feels finished, premium,
+claim-safe, and competitively differentiated. It does not require all 36 worlds,
+full Russian localization, full AI coach/chat, a hand-history database, broad
+analytics, a full RPG economy, or solver/GTO trainer positioning.
+
+Bounded route:
+
+1. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock.
+2. Wave 3.1 - Street Replay / How We Got Here v1.
+3. Wave 3.2 - First-Week Commercial Proof & Gap Lock.
+4. Wave 3.3 - Runner Text Zone & Feedback Clarity Final Pass.
+5. Wave 3.4 - Achievement Visual Language / Icons v1.
+6. Wave 3.5 - Premium Transition & Replay Motion System v1.
+7. Wave 3.6 - Profile Identity & Progress Proof v1.
+8. Wave 3.7 - Release-Visible Content Depth Gate v1.
+9. Wave 3.8 - Value Packaging / Premium Timing v1.
+10. Wave 3.9 - English-First / RU Localization Boundary v1.
+11. Wave 4.0 - Store / Public Readiness Packet v1.
+12. Wave 4.1 - TOP1 Release Candidate External Gate.
+13. Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed.
+
+Required differentiator:
+
+- Street Replay / How We Got Here is required as Wave 3.1 unless concrete P0/P1
+  evidence changes the bottleneck. It is a compact learning replay/context
+  scaffold for turn/river or multi-street spots, not a hand-history archive,
+  PokerTracker, all-time hand log, or analytics dashboard.
+
+No-new-waves rule:
+
+- No new wave may be inserted into the endgame route unless a P0/P1 blocker is
+  found by tests, screenshots, Claude/Cowork, human tester, or source-truth
+  audit; the blocker cannot safely fit into an existing route wave; and the
+  inserted wave has bounded DoD without expanding final target scope.
+- P2 and nice-to-have polish must be deferred inside existing wave notes unless
+  evidence promotes it to P0/P1.
+
+Anti-theater rule:
+
+- Each future wave must state what user-visible thing changed, which final
+  target requirement moved, what evidence proves it, what was explicitly not
+  built, and why the wave is not fake progress.
 
 ## Alpha Closure / Premium Beta Transition (2026-06-26)
 
@@ -67,11 +124,11 @@ Closed Wave 2 sequence:
 3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
 4. Wave 2.4 - Beta Handoff Packet.
 
-Closure state:
+Historical closure state:
 
-Waves 2.1-2.4 are closed. Wave 2.5 is the active control-plane route reset;
-the next implementation candidate is Wave 2.6 - Premium Motion & Interaction
-Feel v1, unless Claude TOP1 Visual/UX Challenger runs first.
+Waves 2.1-2.4 are closed. Wave 2.5 was the control-plane route reset, and Wave
+2.6 was the next implementation candidate at that time. Current route authority
+now lives in the Public Premium TOP1 v1 Endgame Route above.
 
 Admitted scope:
 
@@ -191,7 +248,7 @@ deterministic repair, local proof, emotional payoff, premium mobile feel,
 compact Sharky coach/soul, earned rewards, habit rhythm, honest Review/Profile
 proof, value-after-proof monetization, and store-safe claims.
 
-Updated route sequence:
+Historical Wave 2.5 route sequence, now superseded by the endgame lock above:
 
 1. Phase A - TOP1 Recalibration Gate:
    - Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
@@ -203,10 +260,13 @@ Updated route sequence:
    - Wave 2.9 - Earned Rewards / Achievement Hooks v1.
 4. Phase D - Learning Depth / Retention:
    - Wave 3.0 - Review Pattern Coaching v1.
-   - Wave 3.1 - First-Week Commercial Proof Packet v1.
+   - Wave 3.1 - First-Week Commercial Proof Packet v1. (superseded by
+     Wave 3.1 - Street Replay / How We Got Here v1)
 5. Phase E - Public Product / Monetization:
-   - Wave 3.2 - Value Packaging / Premium Timing v1.
-   - Wave 3.3 - Store / Public Readiness Packet v1.
+   - Wave 3.2 - Value Packaging / Premium Timing v1. (superseded by the
+     Wave 3.2-Wave 4.2 closed endgame route)
+   - Wave 3.3 - Store / Public Readiness Packet v1. (superseded by the
+     Wave 3.2-Wave 4.2 closed endgame route)
 
 Operating rule:
 
@@ -537,7 +597,8 @@ theatre.
 
 Current active bottleneck:
 
-`Premium productization: payoff, hierarchy, rhythm, first-week confidence`
+`Public Premium TOP1 v1 endgame discipline: lock the route, then make street
+context understandable through Wave 3.1 - Street Replay / How We Got Here v1`
 
 ## 5. Target Scorecard
 
@@ -589,7 +650,7 @@ Commercial Proof / External Readiness.
 
 The shortest path is not more foundation, not more CI, and not commerce-first.
 
-The post-Wave-2.4 shortest path is:
+The post-Wave-2.4 shortest path through Wave 3.0 is closed:
 
 1. Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
 2. Wave 2.6 - Premium Motion & Interaction Feel v1.
@@ -597,9 +658,11 @@ The post-Wave-2.4 shortest path is:
 4. Wave 2.8 - Sharky Soul / Compact Coach Layer v1.
 5. Wave 2.9 - Earned Rewards / Achievement Hooks v1.
 6. Wave 3.0 - Review Pattern Coaching v1.
-7. Wave 3.1 - First-Week Commercial Proof Packet v1.
-8. Wave 3.2 - Value Packaging / Premium Timing v1.
-9. Wave 3.3 - Store / Public Readiness Packet v1.
+7. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock v1.
+
+Current active route after Wave 3.0.1 is the closed Public Premium TOP1 v1
+Endgame Route above, starting with Wave 3.1 - Street Replay / How We Got Here
+v1.
 
 Claude TOP1 Visual/UX Challenger is allowed after screenshot refresh if exact
 current visuals are needed, but the local active bottleneck is now TOP1
@@ -684,21 +747,29 @@ Operating constraints:
 
 ### Active TOP1 route sequence
 
-1. Wave 2.5 - TOP1 Recalibration & Final Product Route Reset v1.
-2. Wave 2.6 - Premium Motion & Interaction Feel v1.
-3. Wave 2.7 - Active Shell Visual Premium Proof v1.
-4. Wave 2.8 - Sharky Soul / Compact Coach Layer v1.
-5. Wave 2.9 - Earned Rewards / Achievement Hooks v1.
-6. Wave 3.0 - Review Pattern Coaching v1.
-7. Wave 3.1 - First-Week Commercial Proof Packet v1.
-8. Wave 3.2 - Value Packaging / Premium Timing v1.
-9. Wave 3.3 - Store / Public Readiness Packet v1.
+The active sequence is now locked by
+`docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`:
+
+1. Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock.
+2. Wave 3.1 - Street Replay / How We Got Here v1.
+3. Wave 3.2 - First-Week Commercial Proof & Gap Lock.
+4. Wave 3.3 - Runner Text Zone & Feedback Clarity Final Pass.
+5. Wave 3.4 - Achievement Visual Language / Icons v1.
+6. Wave 3.5 - Premium Transition & Replay Motion System v1.
+7. Wave 3.6 - Profile Identity & Progress Proof v1.
+8. Wave 3.7 - Release-Visible Content Depth Gate v1.
+9. Wave 3.8 - Value Packaging / Premium Timing v1.
+10. Wave 3.9 - English-First / RU Localization Boundary v1.
+11. Wave 4.0 - Store / Public Readiness Packet v1.
+12. Wave 4.1 - TOP1 Release Candidate External Gate.
+13. Wave 4.2 - Final P1 Closure / Public Premium TOP1 v1 Candidate, only if needed.
 
 Commercial Screenshot / Renderer Acceptance, Content Depth / Term Introduction
 / Drill Coverage Audit, Daily Trainer / Habit Loop Expansion, W4/W5 Product
 Truth Normalization, Paywall / Trial Design, App Store / Premium Packaging Arc,
 and Analytics / Leak Profile Lite remain later or evidence-triggered families
-unless the TOP1 matrix makes one of them the active bottleneck.
+unless the endgame lock's P0/P1 insertion rule makes one of them the active
+bottleneck.
 
 ## 7. Arc EV Table
 
