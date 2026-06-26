@@ -2,12 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-22 after Day 2 return proof was accepted and the
-deterministic `day2_return` proof packet lane landed on `main` at
-`35e0362b95a64a56e16b9300bf828067b4818073`.
-Current active candidates: Commercial Screenshot / Renderer Acceptance, with
-Content Depth / Term Introduction / Drill Coverage Audit parallel-safe if
-capacity permits.
+Last refreshed: 2026-06-26 after Repair Loop Copy / Claim-Safety Pass v1
+landed on `main` at `a92bbdd7`.
+Current active candidate: Achievement Taxonomy v1 - No Art.
+Next strategic contract after that: Evidence-Based Skill/RPG Taxonomy Contract
+v1.
 
 Authority note:
 
@@ -19,54 +18,83 @@ Authority note:
 - This document constrains product attack direction; it does not replace the
   Master Plan.
 
-## Post-Day 2 proof status (2026-06-22)
+## Post-Repair Loop Copy status (2026-06-26)
 
-The deterministic learning-causality loop is landed on `main`:
+The deterministic learning-causality loop is now visible across the core
+first-week repair path:
 
-`mistake -> repair focus -> repair result -> session repair -> return reason -> review pattern -> profile proof`
+`mistake -> repair intent -> Review history -> Practice repair queue -> Practice this -> repair target -> source handoff -> repair outcome -> local proof -> Session Summary repair receipt -> Profile evidence / earned moments`
 
-Day 2 return proof is also contract-proven and packet-capturable:
+Repair Loop Copy / Claim-Safety Pass v1 is closed by `a92bbdd7`. The loop now
+uses learner-safe fix language instead of implementation vocabulary:
 
-`first-session miss -> persisted open repair -> relaunch -> Home repair priority -> Practice same repair target -> Review active continuation -> Profile not falsely clear`
+- `Fix attempt`
+- `You gave the fix a try.`
+- `Nice - you chose the better action.`
+- `Not fixed yet - one more.`
+- `Fix attempts`
+- `Good fixes`
+- `Still to fix`
+- `Fixes tried`
+- `What to fix next`
+- `Cleared a fix`
+- `One miss to fix`
 
-Current proof lane:
+Profile skill claims are now evidence-safe:
+
+- `Skill snapshot`, `Lv N`, and unitless `+N` skill claims are gated away from
+  the learner-facing Profile copy.
+- Profile uses practiced/proof language such as `Skills practiced`,
+  `Recent proof from this route.`, and `Practiced: <skill>`.
+- Exact badge count copy was removed from Profile proof and replaced with
+  `Small wins Sharky can prove`.
+
+Current proof lanes:
 
 ```bash
+./tools/screen_review_fast_v1.sh first_week compact
 ./tools/screen_review_fast_v1.sh day2_return compact
+./tools/screen_review_fast_v1.sh full_scroll compact
 ```
 
-Route recalibration after this proof is recorded in
-`docs/_reviews/top1_route_recalibration_after_day2_v1.md`.
+Completed repair-loop stack now accepted on `main`:
 
-Landed or confirmed:
+- Review mistake history contract, projection, write integration, and
+  read-only consumer.
+- Profile evidence projection, consumer, and capture.
+- Achievement seed contract, projection, and consumer.
+- Profile earned moments.
+- Session Summary earned moment.
+- Practice repair queue projection and consumer.
+- Practice active-repair row CTA.
+- Practice queue target launch audit.
+- Practice queue repair source handoff.
+- Repair outcome projection.
+- Local repair proof.
+- Session Summary repair outcome receipt.
+- Repair Loop Copy / Claim-Safety Pass v1.
 
-- Active English copy cleanup / audit work.
-- Visible Repair Reason Surface.
-- Repair Result Receipt.
-- Session Repair Summary.
-- Repair-based return reason.
-- Review pattern contract sync.
-- Existing Profile progress mirror confirmed.
-- Day 2 open-repair persistence.
-- Review queue contract fixture repair.
-- First Return / Day 2 proof acceptance.
-- Day 2 return proof packet lane.
+Claude Repair Loop UX Audit v1 implication:
 
-Already present / no-op confirmed:
+- The loop was real and visible, but pre-copy language read too much like
+  plumbing.
+- Family A, repair-loop copy / clarity / claim-safety, was the highest-EV fix
+  and is now closed by `a92bbdd7`.
+- Remaining product implications are taxonomy and proof cohesion, not art or
+  abstract RPG surfaces.
 
-- Review Pattern Coaching Lite.
-- You / Profile Progress Mirror.
+Next candidate: `Achievement Taxonomy v1 - No Art`. The goal is to define what
+Sharky may truthfully award, group, and name before committing badge art,
+ratings, levels, radar charts, or premium packaging.
 
-Next candidate: `Commercial Screenshot / Renderer Acceptance v1`. The goal is
-to judge actual packet quality before claiming external product/design/commercial
-readiness. In parallel, if resources allow, run `Content Depth / Term
-Introduction / Drill Coverage Audit v1` because content depth is now P0 after
-Day 2 evidence and uses a separate workstream.
+Optional next external review: a Claude/Gemini post-copy visual or UX recheck
+may be useful after this refresh, but it is not the active bottleneck.
 
-Sharky Character, Welcome/Placement expansion, commerce, stamina/energy,
-Modern Table polish, and monetization remain deferred unless concrete evidence
-reopens them as the active bottleneck. Generated screenshot and audit outputs
-remain local-only and must not be committed.
+Sharky Character expansion, Welcome/Placement expansion, commerce,
+stamina/energy, Modern Table polish, rating/radar/level systems, badge art, and
+monetization remain deferred unless concrete evidence reopens them as the
+active bottleneck. Generated screenshot and audit outputs remain local-only and
+must not be committed.
 
 ## 1. Mission
 
@@ -195,13 +223,15 @@ commercial packaging.
 
 - No immediate route change.
 - No score inflation.
-- Content depth is now P0 after Day 2 evidence, but it should begin as an
-  audit rather than broad expansion.
+- Content depth remains important, but the post-copy bottleneck is taxonomy and
+  claim safety before broad expansion.
 - No monetization acceleration.
 - No Modern Table reopening.
-- Current next wave: `Commercial Screenshot / Renderer Acceptance v1`, with
-  `Content Depth / Term Introduction / Drill Coverage Audit v1` parallel-safe
-  if capacity permits.
+- Current next wave: `Achievement Taxonomy v1 - No Art`, followed by
+  `Evidence-Based Skill/RPG Taxonomy Contract v1`.
+- Commercial Screenshot / Renderer Acceptance and Content Depth / Term
+  Introduction / Drill Coverage Audit move to later/optional slots unless fresh
+  evidence makes them the active bottleneck.
 
 ### When to revisit Runout deeply again
 
@@ -213,6 +243,41 @@ Revisit Runout deeply only for:
 - final commercial proof packet;
 - live UX benchmark if screenshots, video, or user walkthrough evidence is
   available.
+
+## 2B. Runout RPG / Analytics Benchmark Implications
+
+Runout's visible advantage remains perceived completeness. The benchmark
+screens show a product that packages poker improvement through categories,
+rating, radar, session delta, difficulty, streak/flame, daily training, past
+sessions, and concept mastery.
+
+Observed benchmark structures include:
+
+- Total / Cash Game / Tournament tabs.
+- Type metrics: H-SCN, H-SEL, THEORY, PMATH.
+- Street performance: Preflop, Flop, Turn, River.
+- Format: Live, Online.
+- Position: In position, Out of position.
+- Preflop pot: SRP, 3-BET, 4-BET, LIMP.
+- Pot participant type: HU, MW.
+- Stack depth: Short, Standard, Deep.
+- Concept Mastery: Preflop, Betting, Defense, Math, Hand Read, Positional,
+  Tournament.
+- Poker rating, session delta, streak/flame, difficulty, Recalibrate Trainer,
+  skill radar, daily training, and past sessions.
+
+Strategic interpretation:
+
+- Sharky should use this as future taxonomy input only.
+- Do not copy Runout layout, assets, category names as a system, copy, radar
+  composition, or rating presentation.
+- No Sharky rating, radar, level system, or broad analytics theatre should ship
+  until an evidence-backed skill contract exists.
+- Achievement readiness is currently taxonomy-only. Badge/icon art is later.
+
+Future RPG path:
+
+`Evidence stats -> Skill taxonomy -> Achievement taxonomy -> Skill levels/rating contract -> RPG profile / badges / visual system -> premium/commercial packaging`
 
 ## 3. Sharky Win Condition
 
@@ -315,17 +380,30 @@ monetization work until a dedicated route-normalization wave.
 
 ### 4.4 Current strategic score
 
-- Architecture / Product Logic: high. The deterministic repair and Day 2 return
-  chain is contract-proven and packet-capturable.
-- Commercial Proof / External Readiness: still separate. Actual packet quality,
-  renderer fidelity, content depth, and commercial packaging must be judged
-  before external readiness is raised.
-- Content depth honest estimate after Day 2 evidence: around `6.8-7.4 / 10`.
+Scores are product-strategy estimates from current local proof, not measured
+cohort data.
 
-The remaining gap is not the internal repair/return foundation. The remaining
-gap is proving the route externally:
+Internal architecture / product logic:
 
-`packet quality -> content depth -> personalization proof -> monetization proof`
+- Architecture / Product Logic: `9.5-9.7`.
+- Learning Loop: `9.1-9.3`.
+- Trust: `9.6-9.8`.
+
+External commercial / product packaging:
+
+- First-week Product Feel: `8.8-9.1`.
+- Commercial / Runout-level Packaging: `8.1-8.4`.
+- Top-1 Readiness overall: `8.7-9.0`.
+
+The remaining gap is not whether the repair loop exists. It does.
+
+The remaining gap is whether Sharky can package that proof into truthful,
+commercially legible systems without jumping to fake ratings, fake levels, badge
+art, or broad analytics theatre before the evidence contracts are defined.
+
+Current active bottleneck:
+
+`evidence-safe repair proof -> achievement taxonomy -> skill/RPG taxonomy -> proof home -> explicit queue/review resolution contracts -> visual badge system -> commercial packaging`
 
 ## 5. Target Scorecard
 
@@ -334,47 +412,40 @@ competitive reference evidence. They are not measured cohort data.
 
 | Dimension | Sharky current | Runout benchmark | Sharky target | Delta needed |
 | --- | ---: | ---: | ---: | --- |
-| First promise | 8.9 | 9.2 | 9.7 | Make the first personal mistake/repair moment visible within the first session. |
+| First promise | 9.1 | 9.2 | 9.7 | Keep the first personal mistake/repair moment visible without slipping back into plumbing copy. |
 | First value before paywall | 9.3 | 7.4 | 9.8 | Preserve value-first route; do not introduce commerce before repair value is visible. |
 | Beginner safety | 9.1 | 7.2 | 9.7 | Keep poker-native without GTO/solver pressure. |
 | Visual premium feel | 8.5 | 9.3 | 9.5 | Maintain current table quality; future visual uplift must serve repair feedback rhythm, result ceremony, or first-week proof, not table micro-polish. |
-| Runner/table learning UX | 9.1 | 8.5 | 9.7 | Surface repair reason at the existing table/feedback seam without adding UI bloat. |
+| Runner/table learning UX | 9.2 | 8.5 | 9.7 | Keep repair reason and fix attempt proof visible at the existing table/feedback seam without adding UI bloat. |
 | Onboarding/induction | 8.7 | 9.2 | 9.5 | Keep short, authored, and causally personal. |
-| Personalization credibility | 8.9 | 7.8 | 9.6 | Make repair cause visible to the learner: missed signal -> selected repair hand -> reason. |
-| Feedback quality | 9.3 | 7.9 | 9.8 | Move from correct/wrong feedback to visible mistake -> repair -> transfer. |
-| Progress/skill map | 8.2 | 9.0 | 9.4 | Convert repair outcomes into lightweight session receipts before any dashboard. |
-| Retention loop | 8.6 | 8.8 | 9.5 | Use real repaired/missed signals for next useful rep and return reason. |
+| Personalization credibility | 9.2 | 7.8 | 9.6 | Preserve visible repair cause: missed signal -> selected repair hand -> reason -> outcome. |
+| Feedback quality | 9.4 | 7.9 | 9.8 | Keep mistake -> repair -> fix attempt -> receipt copy clear and emotionally light. |
+| Progress/skill map | 8.7 | 9.0 | 9.4 | Profile evidence is safer now; next gap is taxonomy before levels, ratings, or radar. |
+| Retention loop | 9.0 | 8.8 | 9.5 | Use real repaired/missed signals for next useful rep, return reason, and session proof. |
 | Monetization readiness | 8.7 | 9.2 | 9.4 | Keep premium/value packaging after visible learning proof; do not launch public commerce yet. |
-| Trust | 9.3 | 7.6 | 9.8 | Protect value-first, free foundation, and no fake claims. |
+| Trust | 9.7 | 7.6 | 9.8 | Protect value-first, free foundation, no fake claims, and evidence-safe Profile copy. |
 | Motion/animation | 7.2 | 9.0 | 9.2 | Animate table causality later; avoid generic celebration. |
 | Technical determinism | 9.6 | 7.0 | 9.8 | Keep every repair recommendation auditable through decision, receipt, and telemetry fields. |
 | Feature breadth | 7.8 | 9.1 | 9.3 | Add breadth only after first-value and habit loops remain clear. |
-| Product coherence | 8.9 | 8.8 | 9.7 | Align table feedback, repair reason, Review, and later summary around one causal rhythm. |
+| Product coherence | 9.1 | 8.8 | 9.7 | Align table feedback, repair reason, Review, Practice queue, Session Summary, and Profile around one causal rhythm. |
 
 Do not raise commercial proof or external readiness from internal contract
 success alone. Keep dual scoring: Architecture / Product Logic versus
 Commercial Proof / External Readiness.
-
-Expected next jump:
-
-- after Visible Repair Reason Surface, personalization credibility can approach
-  `9.2-9.3`;
-- after Repair Result Receipt + Session Summary, first-week readiness can
-  approach `9.4-9.6`.
 
 ## 5A. 10/10 Operating Map By Product Block
 
 | Product block | Where Sharky is now | What 10/10/top-1 looks like | Remaining gap | Next action | Acceptance signal | Not-now guardrail |
 | --- | --- | --- | --- | --- | --- | --- |
 | A. Foundation / deterministic app | Act0 route, repair foundation, monetization docs, capture tooling, and CI are stable enough for product work. | The app reliably turns one learner action into a clear table lesson without route or infra noise. | Foundation is not the bottleneck; visible EV is. | Stop foundation cleanup unless a real blocker appears. | Product waves can start from green `main` and pass R5 without scope repair. | No more backup mining or workflow cleanup as product work. |
-| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, and Day 2 return proof are done. | The learner sees the missed signal, why the next hand was chosen, whether the repair worked, and why return starts there. | External proof quality still needs review from actual packets. | Run Commercial Screenshot / Renderer Acceptance. | `first_week` and `day2_return` packets are reviewable without explaining internals. | No AI/adaptive claims, no coach/chat, no new route. |
-| C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop. | In one session and on return the learner can say: I missed this clue, fixed or repeated it, and know what to do next. | Content depth may still be too thin beyond the early proof spine. | Run Content Depth / Term Introduction / Drill Coverage Audit. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No fake mastery or guaranteed improvement claims. |
-| D. First-week commercial readiness | First-week and Day 2 packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Packet quality and renderer fidelity must be judged before external claims. | Run Commercial Screenshot / Renderer Acceptance. | Screenshots/contact sheets are usable for product/design/commercial review. | No paywall-first story or trial before repair proof. |
+| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, Day 2 return proof, Practice queue launch, source handoff, outcome proof, receipt, and copy safety are done. | The learner sees the missed signal, why the next hand was chosen, whether the fix attempt worked, and why return starts there. | The loop now needs taxonomy/proof cohesion before RPG packaging. | Run Achievement Taxonomy v1 - No Art. | Sharky can name earned moments without fake mastery, fake levels, or badge-art commitments. | No AI/adaptive claims, no coach/chat, no new route. |
+| C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop in learner-safe copy. | In one session and on return the learner can say: I missed this clue, tried the fix, and know what to do next. | Skill and achievement language needs source-backed taxonomy before it can become RPG/progress packaging. | Run Evidence-Based Skill/RPG Taxonomy Contract v1 after achievement taxonomy. | Skill labels, earned moments, and future levels are tied to explicit evidence sources. | No fake mastery, unitless score, level, rating, or guaranteed improvement claims. |
+| D. First-week commercial readiness | First-week, Day 2, and full-scroll packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Commercial packaging is still behind Runout until proof is organized into truthful taxonomy and visual systems. | Treat any post-copy visual/Claude recheck as optional; do taxonomy first. | Screenshots/contact sheets can be reviewed without explaining internals, but they do not yet justify ratings/radar/paywall. | No paywall-first story, trial before repair proof, rating/radar, or badge art before taxonomy. |
 | E. UX/UI sequencing | Home, table, Review, and Play are coherent, but repair causality is still partly internal. | The user always knows what to do, why it matters, and what improved. | Next useful hand needs visible causal context. | Use existing reason slots before adding surfaces. | No added route; current flow explains next useful hand. | No broad UI expansion or dashboard. |
 | F. Activation / Welcome / Placement | Placement works and remains value-first; density risk exists but is not the active blocker. | Activation feels short, personal, and immediately connected to first repair value. | Welcome/placement simplification may help, but not before visible repair loop. | Defer until repair proof exists. | Later audit can show onboarding is blocking visible value. | Do not reopen placement before repair surface. |
 | G. Review / Home / re-entry | Review and Home can route repairs and return reasons from real state. | Re-entry starts from the learner's real missed/repaired signal, not generic practice. | Return reason needs repair-outcome evidence. | Feed repaired/missed outcomes into summary and return copy later. | Home/Review can say why this rep matters without generic encouragement. | No streak pressure or random daily churn. |
 | H. Visual / Modern Table / feedback rhythm | Modern Table quality is good enough; visual work is maintenance-only. | Visuals serve repair causality, result ceremony, and first-week proof. | Feedback rhythm may need visual support after reason/outcome exists. | Leave table visuals untouched unless feedback proof needs it. | Any visual change directly improves repair understanding or proof. | No table micro-polish, screenshot-driven design loops, or motion for its own sake. |
-| I. Content density / curriculum depth | Current route has enough spine for first value, but Day 2 proof now exposes premium-depth risk. | Each key concept has enough examples, spaced repair, and no unexplained jargon. | W5-W36 depth may be structurally weak for a W5+ premium boundary. | Run Content Depth / Term Introduction / Drill Coverage Audit. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No broad expansion before the audit names the gaps. |
+| I. Content density / curriculum depth | Current route has enough spine for first value; taxonomy now matters before broad content or RPG packaging. | Each key concept has enough examples, spaced repair, no unexplained jargon, and evidence-backed progress naming. | W5-W36 depth may still be structurally weak for a W5+ premium boundary, but it is not the immediate post-copy bottleneck. | Defer content-depth audit behind achievement/skill taxonomy unless fresh evidence says content is blocking proof. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No broad expansion before the audit names the gaps. |
 | J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Repair outcomes are not yet linked into session proof. | Add outcome receipts before new telemetry contracts. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
 | K. Monetization / premium value | Entitlement safety exists; public commerce remains blocked; premium preview is post-value. | Premium feels like deeper proven learning, not a hostage paywall. | Premium/value packaging needs visible learning proof first. | Keep premium/value packaging after proof packet. | Upgrade framing can point to real repair value already experienced. | No public price, purchase, trial, restore, Premium Hub, or route gate. |
 | L. Retention / habit loop | Daily/review loops exist and can use real repair signals. | Return reason comes from real missed/repaired signals, not streak pressure. | The repaired-signal history is not yet summarized into habit copy. | Build session summary before habit expansion. | D2/D7 return can reference a real skill or clue. | No guilt, fake scarcity, or random retention prompts. |
@@ -386,22 +457,29 @@ The shortest path is not more foundation, not more CI, and not commerce-first.
 
 The shortest path is:
 
-1. Commercial Screenshot / Renderer Acceptance
-2. Content Depth / Term Introduction / Drill Coverage Audit
-3. Personalization proof tightening only where evidence shows gaps
-4. Premium/value packaging later
+1. Achievement Taxonomy v1 - No Art
+2. Evidence-Based Skill/RPG Taxonomy Contract v1
+3. Fixes You've Banked / Proof Home Contract v1
+4. Queue Resolution Contract v1
+5. Review Resolution Contract v1
+6. Badge/Icon Visual System
+7. Commercial Packaging / Premium Arc
+
+Optional post-copy visual/Claude recheck is allowed after the latest packets are
+ready, but it is not the active bottleneck.
 
 ## 5B. 10/10 Acceptance Gates
 
 | Gate | Accepted when | Must prove | Must not do |
 | --- | --- | --- | --- |
-| 1. Visible Repair Reason Surface gate | The existing Act0 flow shows the missed table signal, selected repair hand, and deterministic reason in a safe current surface. | The learner can understand why this next hand is useful without seeing internal payloads. | No new route, no broad UI expansion, no AI/adaptive claim, no new telemetry owner. |
-| 2. Repair Result Receipt gate | A repair completion produces a compact state: fixed, repeated, or needs one more rep. | The app can close or continue the loop based on the learner's actual repair result. | No fake mastery, no streak pressure, no dashboard. |
-| 3. Session Repair Summary gate | The session can summarize mistakes found, repairs completed, skill improved, and next skill. | One-session improvement proof is visible without analytics bloat. | No full leak profile, no public analytics dashboard, no premium upsell before value proof. |
-| 4. Compact First-Week Proof Packet gate | The first-week flow can show first decision -> mistake -> repair -> success -> summary. | Commercial proof exists before stronger premium/value packaging. | No generated proof outputs committed by default, no copied Runout assets, no paywall-first story. |
-| 5. Premium/value packaging gate | Premium copy can point to already experienced repair value and deeper learning. | Upgrade feels like more proven coaching, not basic usefulness being withheld. | No public price, purchase, trial, restore, Premium Hub, or hard gate until commerce safety and copy safety are admitted. |
-| 6. Content-depth follow-up gate | A focused audit shows which concepts lack examples, spaced reps, or beginner-safe terminology after the repair loop is visible. | Content expansion has direct learning EV. | No broad curriculum expansion, no W4/W5 route debate reopening. |
-| 7. Activation/Welcome/Placement follow-up gate | Evidence shows activation density blocks the first repair-proof moment. | Simplification improves time-to-first-useful-repair. | No placement rewrite before visible repair loop evidence exists. |
+| 1. Visible Repair Reason Surface gate | CLOSED. The existing Act0 flow shows the missed table signal, selected repair hand, and deterministic reason in a safe current surface. | The learner can understand why this next hand is useful without seeing internal payloads. | No new route, no broad UI expansion, no AI/adaptive claim, no new telemetry owner. |
+| 2. Repair Outcome / Receipt gate | CLOSED. A repair attempt produces compact local proof and Session Summary receipt copy. | The app can show whether the learner gave the fix a try, chose the better action, or still has one more attempt. | No fake mastery, no streak pressure, no dashboard, no unowned fixed/cleared/resolved semantics. |
+| 3. Practice Queue Launch gate | CLOSED. Active repair rows can expose `Practice this` and launch the expected target through the existing Act0 path. | Practice can start the currently active repair rep without inventing a new route family. | No history-row launch, no queue removal, no progression mutation, no telemetry change. |
+| 4. Profile Evidence / Earned Moment gate | CLOSED for projection/consumer/capture and copy safety. | Profile can show recent proof and earned moments without numeric skill or badge-count overclaim. | No fake skill levels, unitless +N skill scores, rating, radar, or badge art. |
+| 5. Achievement Taxonomy gate | Active next. Define what Sharky may truthfully award and group before art. | Earned moments have names, categories, and evidence requirements that do not imply fake mastery. | No badge/icon visual system before taxonomy; no commercial packaging based on undefined awards. |
+| 6. Evidence-Based Skill/RPG Taxonomy gate | Next contract. Define which evidence can support skill families, future levels, ratings, or RPG profile packaging. | Any future level/rating/progress copy has a cited source and threshold. | No abstract levels, radar, poker rating, or Runout-style analytics theatre before evidence contract. |
+| 7. Queue / Review Resolution gates | Future explicit contracts. Decide when a queue item or Review note may be removed, cleared, or resolved. | Resolution semantics are source-owned and auditable. | No queue/Review resolution before explicit resolution contract. |
+| 8. Premium/value packaging gate | Later. Premium copy can point to already experienced repair value and deeper learning. | Upgrade feels like more proven coaching, not basic usefulness being withheld. | No public price, purchase, trial, restore, Premium Hub, or hard gate until commerce safety and copy safety are admitted. |
 
 ### 5C. Full Surface 10/10 UX/UI Coherence Gate
 
@@ -446,21 +524,50 @@ Operating constraints:
 6. Existing Profile progress mirror confirmed.
 7. Day 2 open-repair persistence.
 8. Day 2 proof acceptance and deterministic `day2_return` packet lane.
+9. Review mistake history contract/projection/write/read-only consumer.
+10. Profile evidence projection/consumer/capture.
+11. Achievement seed contract/projection/consumer.
+12. Profile Earned moments.
+13. Session Summary Earned moment.
+14. Practice repair queue projection/consumer.
+15. Practice active-repair row CTA.
+16. Practice queue target launch audit.
+17. Practice queue repair source handoff.
+18. Repair outcome projection.
+19. Repair outcome local proof.
+20. Session Summary repair outcome receipt.
+21. Repair Loop Copy / Claim-Safety Pass v1.
 
 ### Next candidate
 
-1. Commercial Screenshot / Renderer Acceptance v1.
-   - Judge actual packet quality from `first_week` and `day2_return` evidence.
-   - Do not implement renderer fixes unless acceptance evidence proves a real
-     blocker.
-2. Content Depth / Term Introduction / Drill Coverage Audit v1.
-   - Parallel-safe if capacity permits.
-   - P0 after Day 2 evidence because weak W5-W36 content would make the W5+
-     premium boundary structurally empty.
+1. Achievement Taxonomy v1 - No Art.
+   - Define award families, proof requirements, and safe naming.
+   - Do not commit badge art, icon direction, ratings, levels, or commercial
+     packaging.
+2. Evidence-Based Skill/RPG Taxonomy Contract v1.
+   - Define the evidence stats and thresholds that could later support skill
+     families, levels, ratings, or RPG profile copy.
+   - Treat Runout analytics/RPG structure as taxonomy input only.
+3. Fixes You've Banked / Proof Home Contract v1.
+   - Decide whether a compact proof-home concept is valid after taxonomy.
+   - No new dashboard before the evidence and taxonomy contracts exist.
+4. Queue Resolution Contract v1.
+   - Define when a Practice queue item may be removed or marked done.
+   - No resolution semantics before this contract.
+5. Review Resolution Contract v1.
+   - Define when Review history may be cleared, recovered, or archived.
+   - No read/write behavior changes before this contract.
+6. Badge/Icon Visual System.
+   - Only after achievement taxonomy is accepted.
+7. Commercial Packaging / Premium Arc.
+   - Only after proof loop, taxonomy, visual system, and commerce safety are
+     ready.
 
 ### Later
 
-- Premium/value packaging after visible learning value.
+- Optional post-copy Claude/Gemini visual or UX recheck.
+- Commercial Screenshot / Renderer Acceptance.
+- Content Depth / Term Introduction / Drill Coverage Audit.
 - Daily Trainer / Habit Loop Expansion.
 - W4/W5 Product Truth Normalization.
 - Paywall / Trial Design.
@@ -471,11 +578,15 @@ Operating constraints:
 
 | Arc | EV | Why it matters | Runout impact | Dependencies | Not-now constraints |
 | --- | ---: | --- | --- | --- | --- |
-| AI Personalization / Rule-Based Repair Layer v1 | 9.5 | Converts Sharky's proof spine into a personal coach: mistake -> error type -> repair decision -> next useful hand -> repair result. | Beats black-box calibration with auditable table-signal personalization. | Repair decision contract, runtime reason receipt, telemetry truth, feedback surface. | No AI claims, no coach/chat, no broad analytics, no monetization gating, no visual polish. |
-| Visible Repair Reason Surface v1 | 9.6 | Turns internal deterministic personalization into user-visible learning value: missed signal -> why this rep -> what to repair. | Attacks Runout's "AI finds leaks" perception with auditable table-signal causality. | `Act0RuleBasedRepairDecisionV1`, next-useful-hand reason receipt, telemetry truth. | No new route, no chat coach, no premium gating, no generic dashboard, no Modern Table polish. |
-| Repair Result Receipt v1 | 9.4 | Closes the loop after a repair: fixed, repeated, or needs one more rep. | Turns leak-fixing promise into observable learning causality. | Visible Repair Reason Surface, repair decision, telemetry truth. | No broad progress dashboard, no streak pressure, no fake mastery claims. |
-| Session Repair Summary v1 | 9.5 | Gives one-session improvement proof: mistakes found, repairs completed, skill improved, next skill. | Competes with analytics/reporting through compact proof, not dashboard bloat. | Repair Result Receipt, local telemetry, skill atoms. | No full analytics dashboard, no public leak profile, no premium upsell before value proof. |
-| Compact First-Week Proof Packet v1 | 9.3 | Packages first decision -> mistake -> repair -> success -> summary as commercial proof. | Answers Runout packaging with proof-first Sharky flow. | Visible Repair Reason Surface, Repair Result Receipt, Session Repair Summary, capture tooling. | No generated output committed by default, no paywall-first story, no copied Runout assets. |
+| AI Personalization / Rule-Based Repair Layer v1 | CLOSED | Converts Sharky's proof spine into a personal coach: mistake -> error type -> repair decision -> next useful hand -> repair result. | Beats black-box calibration with auditable table-signal personalization. | Repair decision contract, runtime reason receipt, telemetry truth, feedback surface. | No AI claims, no coach/chat, no broad analytics, no monetization gating, no visual polish. |
+| Visible Repair Reason Surface v1 | CLOSED | Turns internal deterministic personalization into user-visible learning value: missed signal -> why this rep -> what to repair. | Attacks Runout's "AI finds leaks" perception with auditable table-signal causality. | `Act0RuleBasedRepairDecisionV1`, next-useful-hand reason receipt, telemetry truth. | No new route, no chat coach, no premium gating, no generic dashboard, no Modern Table polish. |
+| Repair Outcome / Local Proof / Session Receipt stack | CLOSED | Makes fix attempts visible in learner-safe copy and carries the outcome into Session Summary. | Turns leak-fixing promise into observable learning causality without fake mastery. | Visible repair reason, Practice queue launch, source handoff, repair outcome projection. | No queue removal, no fixed/cleared/resolved semantics, no broad progress dashboard. |
+| Profile Evidence / Earned Moment stack | CLOSED | Shows recent proof and earned moments while gating unsafe skill level and badge-count claims. | Gives Sharky a trust-safe alternative to Runout progress theatre. | Profile evidence projection/consumer/capture, achievement seeds, Session Summary earned moment. | No unitless +N skill scores, no `Lv N` capability claims, no rating/radar, no badge art. |
+| Achievement Taxonomy v1 - No Art | 9.4 | Defines what Sharky can truthfully award, group, and name before visual badges exist. | Starts closing Runout's RPG packaging advantage without copying or overclaiming. | Current earned-moment and repair-proof stack. | No badge/icon art, no fake mastery, no level/rating/radar commitment. |
+| Evidence-Based Skill/RPG Taxonomy Contract v1 | 9.3 | Defines which evidence can support future skill families, levels, ratings, and RPG profile language. | Lets Sharky learn from Runout's perceived completeness without adopting black-box analytics theatre. | Profile evidence, achievement taxonomy, repair outcomes, session proof. | No abstract levels/ratings, no radar, no AI/GTO/solver claims, no broad analytics dashboard. |
+| Fixes You've Banked / Proof Home Contract v1 | 9.1 | Gives the learner one compact place to understand what the repair loop proved. | Competes with analytics through cited proof, not dashboard breadth. | Achievement taxonomy, skill/RPG taxonomy, repair receipts, Profile evidence. | No fake backlog, no unowned resolution, no new route family. |
+| Queue Resolution Contract v1 | 8.8 | Defines when Practice queue rows can leave the queue or change state. | Prevents fake "fixed" theatre while enabling cleaner repair proof later. | Repair outcome source handoff and active queue contract. | No queue mutation before source-owned resolution semantics. |
+| Review Resolution Contract v1 | 8.7 | Defines when Review history can become recovered, archived, or cleared. | Makes long-term proof more credible without inventing history. | Review history write/read model, repair outcomes, queue resolution contract. | No Review clearing or recovered claims before contract. |
 | Commerce / Receipt / Entitlement Readiness | 8.8 | Enables safe future paywall/trial without mock purchase or restore risk. | Closes Runout's subscription-infrastructure advantage. | Entitlement ledger, receipt verification policy, restore truth, subscription copy. | No public paywall, pricing, trial start, Premium Hub exposure, or purchase UI until safety is proven. |
 | Daily Trainer / Habit Loop Expansion and Learning Depth | 9.0 | Turns first proof into D2/D7 return value with one useful table read or repair. | Answers Runout daily-session strength with deterministic table learning. | First-week loop, same-signal reps, repair queue, skill receipts. | No streak guilt, no broad dashboard, no random daily churn. |
 | W4/W5 Product Truth Normalization | 8.4 | Removes stale route-number ambiguity before paywall, trial, or store copy depends on W4/W5. | Prevents commercial confusion that Runout's packaging likely avoids. | Active route truth, authored content docs, monetization SSOT. | Do not combine with content expansion, paywall design, or route migration. |
@@ -524,6 +635,12 @@ One branch = one homogeneous scope.
 - No public commerce before receipt, restore, and entitlement safety.
 - No fake AI, adaptive, GTO, solver, optimal-frequency, guaranteed-result, or
   win-rate claims.
+- No fake mastery.
+- No abstract levels, ratings, radar, or skill scores without an evidence
+  source and threshold.
+- No badge art before achievement taxonomy.
+- No Sharky rating/radar/level system before the skill/RPG evidence contract.
+- No queue or Review resolution before explicit resolution contracts.
 - No visual-polish drift during Modern Table maintenance.
 - No content expansion without direct learning or commercial EV.
 - No copying Runout artifacts, text, layouts, assets, videos, charts, brand
@@ -543,6 +660,8 @@ One branch = one homogeneous scope.
 - Do not expand content breadth before the visible repair loop proves learning
   value.
 - Do not move premium/value packaging ahead of first-session repair proof.
+- Do not move premium/value packaging ahead of proof taxonomy, achievement
+  taxonomy, and commerce safety.
 
 ## 10. Deferred Ideas
 
@@ -602,6 +721,22 @@ Accepted proof and strategy reviews:
 - `docs/_reviews/blind_monetization_strategy_challenge_v1.md`
 - `docs/_reviews/monetization_ev_scenario_analysis_v1.md`
 - `docs/_reviews/premium_monetization_existing_plan_reconciliation_v1.md`
+- `docs/_reviews/review_mistake_history_data_contract_v1.md`
+- `docs/_reviews/review_mistake_history_unresolved_projection_v1.md`
+- `docs/_reviews/review_mistake_history_write_integration_v1.md`
+- `docs/_reviews/review_mistake_history_read_only_consumer_admission_v1.md`
+- `docs/_reviews/profile_evidence_projection_v1.md`
+- `docs/_reviews/profile_evidence_consumer_admission_v1.md`
+- `docs/_reviews/profile_evidence_capture_achievement_seed_contract_v1.md`
+- `docs/_reviews/achievement_seed_projection_v1.md`
+- `docs/_reviews/achievement_seed_consumer_admission_v1.md`
+- `docs/_reviews/session_summary_earned_moment_v1.md`
+- `docs/_reviews/practice_queue_target_launch_audit_v1.md`
+- `docs/_reviews/practice_queue_repair_source_handoff_contract_v1.md`
+- `docs/_reviews/repair_outcome_projection_v1.md`
+- `docs/_reviews/repair_outcome_consumer_local_proof_v1.md`
+- `docs/_reviews/session_summary_repair_outcome_receipt_v1.md`
+- `docs/_reviews/repair_loop_copy_claim_safety_pass_v1.md`
 
 Local competitive reference evidence, not active source links:
 
