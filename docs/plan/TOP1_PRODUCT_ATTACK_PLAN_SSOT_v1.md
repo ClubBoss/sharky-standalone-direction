@@ -2,11 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-26 after Repair Loop Copy / Claim-Safety Pass v1
-landed on `main` at `a92bbdd7`.
-Current active candidate: Achievement Taxonomy v1 - No Art.
-Next strategic contract after that: Evidence-Based Skill/RPG Taxonomy Contract
-v1.
+Last refreshed: 2026-06-26 after Alpha Closure / Premium Beta Transition v1
+on `main` at `76e33fe8`.
+Current phase: Wave 2 - Premium Beta Productization - ACTIVE.
+Current active implementation wave: Wave 2.1 - Fix Landed + Session Close
+Payoff.
 
 Authority note:
 
@@ -17,6 +17,78 @@ Authority note:
   `docs/plan/MONETIZATION_SSOT_v1.md`, and active route truth win.
 - This document constrains product attack direction; it does not replace the
   Master Plan.
+
+## Alpha Closure / Premium Beta Transition (2026-06-26)
+
+Phase state:
+
+- Wave 1 - Alpha / Proof Spine Complete - CLOSED.
+- Wave 2 - Premium Beta Productization - ACTIVE.
+
+Accepted Alpha state:
+
+- The deterministic proof loop is complete across placement / first route,
+  table decision, mistake or correct read, feedback, repair focus, `Practice
+  this spot`, repair outcome, Session Summary proof, and Review / Profile
+  proof.
+- Claim-safety is strong enough for narrow beta: no fake mastery, no AI/GTO/
+  solver overclaim, no public premium pressure, and no unsupported rating/radar/
+  level system.
+- No P0 showable-beta blockers remain after Beta Surface Cleanup, Drill
+  Readiness / Beta Proof, Showable Beta Packet Review, and Beta Trust & Payoff
+  Polish.
+- Current narrow beta readiness is approximately `8.0` after P1 fixes.
+- Alpha proves the truth spine, but Alpha is not the intended Premium Beta.
+
+Premium Beta target:
+
+`Premium Showable Beta ~9.0`
+
+Beta means:
+
+- premium feel;
+- emotionally rewarding loop;
+- one hero per screen;
+- Practice feels like a real beta training surface;
+- Session Summary closes with payoff;
+- first-week route is coherent;
+- no shell feeling;
+- no unsupported RPG/progression claims.
+
+Active bottleneck:
+
+`Premium productization: payoff, hierarchy, rhythm, first-week confidence`
+
+Wave 2 sequence:
+
+1. Wave 2.1 - Hero Payoff & Session Close.
+2. Wave 2.2 - Premium Surface Hierarchy.
+3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
+4. Wave 2.4 - Beta Handoff Packet.
+
+Active next implementation:
+
+Wave 2.1 - Fix Landed + Session Close Payoff.
+
+Admitted scope:
+
+- repair result;
+- Session Summary;
+- light correct feedback;
+- dignified micro-payoff;
+- source-safe copy;
+- no new model, route, progression, or telemetry.
+
+Deferred/post-Beta:
+
+- badge visual system;
+- rating/radar/levels;
+- durable all-time repair history;
+- queue/Review resolution;
+- public paywall/commercial packaging;
+- broad W5-W36 content expansion;
+- AI coach/chat/persona;
+- broad drill catalog.
 
 ## Post-Repair Loop Copy status (2026-06-26)
 
@@ -83,12 +155,14 @@ Claude Repair Loop UX Audit v1 implication:
 - Remaining product implications are taxonomy and proof cohesion, not art or
   abstract RPG surfaces.
 
-Next candidate: `Achievement Taxonomy v1 - No Art`. The goal is to define what
-Sharky may truthfully award, group, and name before committing badge art,
-ratings, levels, radar charts, or premium packaging.
+Achievement Taxonomy v1, Evidence-Based Skill/RPG Taxonomy Contract v1, Fixes
+You've Banked / Proof Home Contract v1, Session Summary Fixes Banked Label v1,
+Showable Beta Readiness Audit v1, Beta Surface Cleanup Wave v1, Drill Readiness
+/ Beta Proof Wave v1, Showable Beta Packet Review v1, and Beta Trust & Payoff
+Polish v1 are accepted Alpha-closure inputs.
 
-Optional next external review: a Claude/Gemini post-copy visual or UX recheck
-may be useful after this refresh, but it is not the active bottleneck.
+Optional next external review can happen after the transition artifact, but it
+is not required before the first local Premium Beta productization wave.
 
 Sharky Character expansion, Welcome/Placement expansion, commerce,
 stamina/energy, Modern Table polish, rating/radar/level systems, badge art, and
@@ -223,12 +297,11 @@ commercial packaging.
 
 - No immediate route change.
 - No score inflation.
-- Content depth remains important, but the post-copy bottleneck is taxonomy and
-  claim safety before broad expansion.
+- Content depth remains important, but the current bottleneck is Premium Beta
+  productization before broad expansion.
 - No monetization acceleration.
 - No Modern Table reopening.
-- Current next wave: `Achievement Taxonomy v1 - No Art`, followed by
-  `Evidence-Based Skill/RPG Taxonomy Contract v1`.
+- Current next wave: Wave 2.1 - Fix Landed + Session Close Payoff.
 - Commercial Screenshot / Renderer Acceptance and Content Depth / Term
   Introduction / Drill Coverage Audit move to later/optional slots unless fresh
   evidence makes them the active bottleneck.
@@ -383,27 +456,36 @@ monetization work until a dedicated route-normalization wave.
 Scores are product-strategy estimates from current local proof, not measured
 cohort data.
 
-Internal architecture / product logic:
+Alpha / proof-spine state:
 
-- Architecture / Product Logic: `9.5-9.7`.
-- Learning Loop: `9.1-9.3`.
-- Trust: `9.6-9.8`.
+- Alpha completeness: `9.0`.
+- Current narrow beta readiness: `8.0`.
+- Claim safety: `9.0`, target `9.5`.
 
-External commercial / product packaging:
+Premium Beta productization state:
 
-- First-week Product Feel: `8.8-9.1`.
-- Commercial / Runout-level Packaging: `8.1-8.4`.
-- Top-1 Readiness overall: `8.7-9.0`.
+- Premium Beta readiness: `6.5`, target `9.0`.
+- Visual/product feel: `7.5`, target `8.5`.
+- Screen-to-screen coherence: `7.5`, target `9.0`.
+- Practice/drill quality: `7.0`, target `8.5`.
+- Session Summary payoff: `7.5`, target `9.0`.
+- Review usefulness: `6.5`, target `8.0`.
+- Profile/progress trust: `8.0`, target `8.5`.
+- Dopamine/emotional payoff: `6.5`, target `8.5`.
+- Premium feel: `6.5`, target `8.5`.
+- First-week content confidence: `7.0`, target `8.0`.
+- Overall path to top-1: `7.5`, target `8.8`.
 
 The remaining gap is not whether the repair loop exists. It does.
 
-The remaining gap is whether Sharky can package that proof into truthful,
-commercially legible systems without jumping to fake ratings, fake levels, badge
-art, or broad analytics theatre before the evidence contracts are defined.
+The remaining gap is whether Sharky can make the proof feel premium,
+emotionally rewarding, coherent screen to screen, and beta-ready without jumping
+to fake ratings, fake levels, badge art, paywall pressure, or broad analytics
+theatre.
 
 Current active bottleneck:
 
-`evidence-safe repair proof -> achievement taxonomy -> skill/RPG taxonomy -> proof home -> explicit queue/review resolution contracts -> visual badge system -> commercial packaging`
+`Premium productization: payoff, hierarchy, rhythm, first-week confidence`
 
 ## 5. Target Scorecard
 
@@ -438,14 +520,14 @@ Commercial Proof / External Readiness.
 | Product block | Where Sharky is now | What 10/10/top-1 looks like | Remaining gap | Next action | Acceptance signal | Not-now guardrail |
 | --- | --- | --- | --- | --- | --- | --- |
 | A. Foundation / deterministic app | Act0 route, repair foundation, monetization docs, capture tooling, and CI are stable enough for product work. | The app reliably turns one learner action into a clear table lesson without route or infra noise. | Foundation is not the bottleneck; visible EV is. | Stop foundation cleanup unless a real blocker appears. | Product waves can start from green `main` and pass R5 without scope repair. | No more backup mining or workflow cleanup as product work. |
-| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, Day 2 return proof, Practice queue launch, source handoff, outcome proof, receipt, and copy safety are done. | The learner sees the missed signal, why the next hand was chosen, whether the fix attempt worked, and why return starts there. | The loop now needs taxonomy/proof cohesion before RPG packaging. | Run Achievement Taxonomy v1 - No Art. | Sharky can name earned moments without fake mastery, fake levels, or badge-art commitments. | No AI/adaptive claims, no coach/chat, no new route. |
-| C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop in learner-safe copy. | In one session and on return the learner can say: I missed this clue, tried the fix, and know what to do next. | Skill and achievement language needs source-backed taxonomy before it can become RPG/progress packaging. | Run Evidence-Based Skill/RPG Taxonomy Contract v1 after achievement taxonomy. | Skill labels, earned moments, and future levels are tied to explicit evidence sources. | No fake mastery, unitless score, level, rating, or guaranteed improvement claims. |
-| D. First-week commercial readiness | First-week, Day 2, and full-scroll packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Commercial packaging is still behind Runout until proof is organized into truthful taxonomy and visual systems. | Treat any post-copy visual/Claude recheck as optional; do taxonomy first. | Screenshots/contact sheets can be reviewed without explaining internals, but they do not yet justify ratings/radar/paywall. | No paywall-first story, trial before repair proof, rating/radar, or badge art before taxonomy. |
-| E. UX/UI sequencing | Home, table, Review, and Play are coherent, but repair causality is still partly internal. | The user always knows what to do, why it matters, and what improved. | Next useful hand needs visible causal context. | Use existing reason slots before adding surfaces. | No added route; current flow explains next useful hand. | No broad UI expansion or dashboard. |
+| B. AI personalization / repair | Decision contract, runtime reason receipt, visible repair reason, repair result, session repair, Day 2 return proof, Practice queue launch, source handoff, outcome proof, receipt, and copy safety are done. | The learner sees the missed signal, why the next hand was chosen, whether the fix attempt worked, and why return starts there. | The truth exists; Premium Beta must make the landed fix and session close feel earned. | Run Wave 2.1 - Fix Landed + Session Close Payoff. | Repair result, correct feedback, and Session Summary produce one dignified payoff without new state. | No AI/adaptive claims, no coach/chat, no new route. |
+| C. Learning effect | Feedback and repair proof now show the complete mistake -> repair -> return loop in learner-safe copy. | In one session and on return the learner can say: I missed this clue, tried the fix, and know what to do next. | Emotional payoff and screen hierarchy are below the proof quality. | Strengthen payoff, hierarchy, and rhythm before broader RPG packaging. | Existing proof feels premium and memorable without fake mastery. | No fake mastery, unitless score, level, rating, or guaranteed improvement claims. |
+| D. First-week commercial readiness | First-week, Day 2, and full-scroll packets exist; premium preview is safe and post-value. | First week plus first return contain a compact proof arc strong enough to support later premium packaging. | Narrow beta is about `8.0`; Premium Showable Beta needs about `9.0`. | Execute Wave 2 Premium Beta Productization sequence. | A reviewer can understand first-week value without explaining internals. | No paywall-first story, trial before repair proof, rating/radar, or badge art before evidence contracts. |
+| E. UX/UI sequencing | Home, table, Review, and Play are coherent enough for Alpha closure. | The user always knows what to do, why it matters, and what improved, with one hero per screen. | Screen-to-screen coherence and premium hierarchy need productization. | Run Premium Surface Hierarchy after Session Close Payoff. | No screen feels like a shell or internal debug surface. | No broad UI expansion, dashboard, or Runout/Duolingo copying. |
 | F. Activation / Welcome / Placement | Placement works and remains value-first; density risk exists but is not the active blocker. | Activation feels short, personal, and immediately connected to first repair value. | Welcome/placement simplification may help, but not before visible repair loop. | Defer until repair proof exists. | Later audit can show onboarding is blocking visible value. | Do not reopen placement before repair surface. |
 | G. Review / Home / re-entry | Review and Home can route repairs and return reasons from real state. | Re-entry starts from the learner's real missed/repaired signal, not generic practice. | Return reason needs repair-outcome evidence. | Feed repaired/missed outcomes into summary and return copy later. | Home/Review can say why this rep matters without generic encouragement. | No streak pressure or random daily churn. |
 | H. Visual / Modern Table / feedback rhythm | Modern Table quality is good enough; visual work is maintenance-only. | Visuals serve repair causality, result ceremony, and first-week proof. | Feedback rhythm may need visual support after reason/outcome exists. | Leave table visuals untouched unless feedback proof needs it. | Any visual change directly improves repair understanding or proof. | No table micro-polish, screenshot-driven design loops, or motion for its own sake. |
-| I. Content density / curriculum depth | Current route has enough spine for first value; taxonomy now matters before broad content or RPG packaging. | Each key concept has enough examples, spaced repair, no unexplained jargon, and evidence-backed progress naming. | W5-W36 depth may still be structurally weak for a W5+ premium boundary, but it is not the immediate post-copy bottleneck. | Defer content-depth audit behind achievement/skill taxonomy unless fresh evidence says content is blocking proof. | Audit identifies exact concepts needing examples, term sequencing, or spaced reps. | No broad expansion before the audit names the gaps. |
+| I. Content density / curriculum depth | Current route has enough spine for first value and narrow beta proof. | Each key concept has enough examples, spaced repair, no unexplained jargon, and evidence-backed progress naming. | First-week content confidence needs a bounded Premium Beta pass; W5-W36 breadth remains later. | Run Practice Confidence & First-Week Content Pass after surface hierarchy. | First-week route feels coherent without broad content expansion. | No broad expansion before beta or before an audit names exact gaps. |
 | J. Telemetry / learning loop | Local `user_choice` and decision-time bucket are aligned; `task_result` and repair events remain owned by existing seams. | Telemetry supports auditable learning-loop truth and session proof without owning product state. | Repair outcomes are not yet linked into session proof. | Add outcome receipts before new telemetry contracts. | Session proof can be derived from stable local fields. | No network telemetry, vendor SDK, or telemetry-owned personalization state. |
 | K. Monetization / premium value | Entitlement safety exists; public commerce remains blocked; premium preview is post-value. | Premium feels like deeper proven learning, not a hostage paywall. | Premium/value packaging needs visible learning proof first. | Keep premium/value packaging after proof packet. | Upgrade framing can point to real repair value already experienced. | No public price, purchase, trial, restore, Premium Hub, or route gate. |
 | L. Retention / habit loop | Daily/review loops exist and can use real repair signals. | Return reason comes from real missed/repaired signals, not streak pressure. | The repaired-signal history is not yet summarized into habit copy. | Build session summary before habit expansion. | D2/D7 return can reference a real skill or clue. | No guilt, fake scarcity, or random retention prompts. |
@@ -457,16 +539,14 @@ The shortest path is not more foundation, not more CI, and not commerce-first.
 
 The shortest path is:
 
-1. Achievement Taxonomy v1 - No Art
-2. Evidence-Based Skill/RPG Taxonomy Contract v1
-3. Fixes You've Banked / Proof Home Contract v1
-4. Queue Resolution Contract v1
-5. Review Resolution Contract v1
-6. Badge/Icon Visual System
-7. Commercial Packaging / Premium Arc
+1. Wave 2.1 - Hero Payoff & Session Close.
+2. Wave 2.2 - Premium Surface Hierarchy.
+3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
+4. Wave 2.4 - Beta Handoff Packet.
 
-Optional post-copy visual/Claude recheck is allowed after the latest packets are
-ready, but it is not the active bottleneck.
+Optional Claude/Gemini recheck is allowed after the transition artifact and
+latest packets are ready, but the local active bottleneck is Premium Beta
+productization.
 
 ## 5B. 10/10 Acceptance Gates
 
@@ -476,10 +556,10 @@ ready, but it is not the active bottleneck.
 | 2. Repair Outcome / Receipt gate | CLOSED. A repair attempt produces compact local proof and Session Summary receipt copy. | The app can show whether the learner gave the fix a try, chose the better action, or still has one more attempt. | No fake mastery, no streak pressure, no dashboard, no unowned fixed/cleared/resolved semantics. |
 | 3. Practice Queue Launch gate | CLOSED. Active repair rows can expose `Practice this` and launch the expected target through the existing Act0 path. | Practice can start the currently active repair rep without inventing a new route family. | No history-row launch, no queue removal, no progression mutation, no telemetry change. |
 | 4. Profile Evidence / Earned Moment gate | CLOSED for projection/consumer/capture and copy safety. | Profile can show recent proof and earned moments without numeric skill or badge-count overclaim. | No fake skill levels, unitless +N skill scores, rating, radar, or badge art. |
-| 5. Achievement Taxonomy gate | Active next. Define what Sharky may truthfully award and group before art. | Earned moments have names, categories, and evidence requirements that do not imply fake mastery. | No badge/icon visual system before taxonomy; no commercial packaging based on undefined awards. |
-| 6. Evidence-Based Skill/RPG Taxonomy gate | Next contract. Define which evidence can support skill families, future levels, ratings, or RPG profile packaging. | Any future level/rating/progress copy has a cited source and threshold. | No abstract levels, radar, poker rating, or Runout-style analytics theatre before evidence contract. |
+| 5. Achievement Taxonomy gate | CLOSED as Alpha input. Sharky can name safe earned moments without badge art. | Earned moments have names, categories, and evidence requirements that do not imply fake mastery. | No badge/icon visual system before validated beta moments. |
+| 6. Evidence-Based Skill/RPG Taxonomy gate | CLOSED as Alpha input. Future skill/RPG language remains evidence-gated. | Any future level/rating/progress copy needs a cited source and threshold. | No abstract levels, radar, poker rating, or Runout-style analytics theatre before explicit evidence contracts. |
 | 7. Queue / Review Resolution gates | Future explicit contracts. Decide when a queue item or Review note may be removed, cleared, or resolved. | Resolution semantics are source-owned and auditable. | No queue/Review resolution before explicit resolution contract. |
-| 8. Premium/value packaging gate | Later. Premium copy can point to already experienced repair value and deeper learning. | Upgrade feels like more proven coaching, not basic usefulness being withheld. | No public price, purchase, trial, restore, Premium Hub, or hard gate until commerce safety and copy safety are admitted. |
+| 8. Premium Beta Productization gate | ACTIVE. Make the accepted truth spine feel premium before public commerce. | Premium feel, payoff, hierarchy, rhythm, Practice confidence, and first-week coherence reach Premium Showable Beta quality. | No public price, purchase, trial, restore, Premium Hub, hard gate, or paywall-first story. |
 
 ### 5C. Full Surface 10/10 UX/UI Coherence Gate
 
@@ -538,30 +618,24 @@ Operating constraints:
 20. Session Summary repair outcome receipt.
 21. Repair Loop Copy / Claim-Safety Pass v1.
 
-### Next candidate
+### Active Wave 2 sequence
 
-1. Achievement Taxonomy v1 - No Art.
-   - Define award families, proof requirements, and safe naming.
-   - Do not commit badge art, icon direction, ratings, levels, or commercial
-     packaging.
-2. Evidence-Based Skill/RPG Taxonomy Contract v1.
-   - Define the evidence stats and thresholds that could later support skill
-     families, levels, ratings, or RPG profile copy.
-   - Treat Runout analytics/RPG structure as taxonomy input only.
-3. Fixes You've Banked / Proof Home Contract v1.
-   - Decide whether a compact proof-home concept is valid after taxonomy.
-   - No new dashboard before the evidence and taxonomy contracts exist.
-4. Queue Resolution Contract v1.
-   - Define when a Practice queue item may be removed or marked done.
-   - No resolution semantics before this contract.
-5. Review Resolution Contract v1.
-   - Define when Review history may be cleared, recovered, or archived.
-   - No read/write behavior changes before this contract.
-6. Badge/Icon Visual System.
-   - Only after achievement taxonomy is accepted.
-7. Commercial Packaging / Premium Arc.
-   - Only after proof loop, taxonomy, visual system, and commerce safety are
-     ready.
+1. Wave 2.1 - Hero Payoff & Session Close.
+   - Active implementation: Fix Landed + Session Close Payoff.
+   - Scope: repair result, Session Summary, light correct feedback, dignified
+     micro-payoff, and source-safe copy.
+   - No new model, route, progression, telemetry, queue resolution, or public
+     premium copy.
+2. Wave 2.2 - Premium Surface Hierarchy.
+   - Make the accepted truth spine feel coherent and premium screen to screen.
+   - Preserve one hero per screen and avoid shell/debug density.
+3. Wave 2.3 - Practice Confidence & First-Week Content Pass.
+   - Keep Practice narrow but make short reps feel like a real beta training
+     surface.
+   - Tighten first-week confidence without broad W5-W36 expansion.
+4. Wave 2.4 - Beta Handoff Packet.
+   - Package the accepted Premium Beta proof, known limitations, and tester
+     instructions.
 
 ### Later
 
@@ -638,11 +712,12 @@ One branch = one homogeneous scope.
 - No fake mastery.
 - No abstract levels, ratings, radar, or skill scores without an evidence
   source and threshold.
-- No badge art before achievement taxonomy.
+- No badge art before validated beta moments.
 - No Sharky rating/radar/level system before the skill/RPG evidence contract.
 - No queue or Review resolution before explicit resolution contracts.
 - No visual-polish drift during Modern Table maintenance.
 - No content expansion without direct learning or commercial EV.
+- No broad drill engine before Premium Beta proves the narrow Practice surface.
 - No copying Runout artifacts, text, layouts, assets, videos, charts, brand
   treatment, or proprietary structure.
 - Copy the job-to-be-done, not the artifact.
@@ -662,6 +737,8 @@ One branch = one homogeneous scope.
 - Do not move premium/value packaging ahead of first-session repair proof.
 - Do not move premium/value packaging ahead of proof taxonomy, achievement
   taxonomy, and commerce safety.
+- Do not move public paywall, pricing, trial, restore, Premium Hub, or purchase
+  UI ahead of Premium Beta value proof and commerce safety.
 
 ## 10. Deferred Ideas
 
@@ -672,12 +749,19 @@ These ideas remain parked until their prerequisites are true:
 - Public leak profile surface.
 - AI/adaptive marketing language.
 - Premium repair-depth upsell.
+- Public paywall/commercial packaging.
 - App Store packaging.
+- Badge visual system.
+- Rating/radar/levels.
+- Durable all-time repair history.
+- Queue/Review resolution.
 - Visual/motion layer.
 - Broad skill map.
+- Broad drill catalog.
 - Welcome/placement simplification.
 - Contextual glossary / tappable definitions.
 - Concept depth audit / spaced examples.
+- Broad W5-W36 content expansion.
 - World/lesson completion reward layer.
 - Runout live UX benchmark / competitive packaging review.
 - W4 gate.
