@@ -355,8 +355,9 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_earned_moment')),
       findsOneWidget,
     );
-    expect(find.text('Earned moment'), findsOneWidget);
-    expect(find.text('Small win Sharky can prove.'), findsOneWidget);
+    expect(find.text('Proof banked'), findsOneWidget);
+    expect(find.text('Small win earned from local proof.'), findsOneWidget);
+    expect(find.text('Earned moment'), findsNothing);
     expect(find.text('First correct read'), findsOneWidget);
     expect(find.text('First repair note'), findsNothing);
   });
@@ -396,6 +397,8 @@ void main() {
     expect(find.text('Lesson complete'), findsNothing);
     expect(find.text('Clean mini-drill'), findsNothing);
     expect(find.text('First evidence signal'), findsNothing);
+    expect(find.text('Proof banked'), findsNothing);
+    expect(find.text('Small win earned from local proof.'), findsNothing);
   });
 
   testWidgets('Session Summary earned moment contains no forbidden copy', (

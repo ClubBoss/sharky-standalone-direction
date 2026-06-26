@@ -6405,7 +6405,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Earned moment',
+                  'Proof banked',
                   key: const Key('act0_shell_block_summary_earned_label'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: tone,
@@ -6425,7 +6425,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Small win Sharky can prove.',
+                  'Small win earned from local proof.',
                   key: const Key('act0_shell_block_summary_earned_proof'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
