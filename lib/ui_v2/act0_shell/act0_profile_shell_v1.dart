@@ -2191,14 +2191,14 @@ class _ProfileIdentityCardV1 extends StatelessWidget {
         ? profile.strongCategories.first
         : _profileCopyV1(context, en: 'Table basics', ru: 'Основы стола');
     final gain = profile.recentSkillGains.isNotEmpty
-        ? '${profile.recentSkillGains.first.label} +${profile.recentSkillGains.first.gain}'
+        ? '${_profileCopyV1(context, en: 'Practiced', ru: 'Практика')}: ${profile.recentSkillGains.first.label}'
         : _profileCopyV1(context, en: 'Recent reps', ru: 'Недавние повторы');
     final weak = profile.weakCategories.isNotEmpty
         ? profile.weakCategories.first
         : _profileCopyV1(
             context,
-            en: 'No live leak',
-            ru: 'Явных слабых мест нет',
+            en: 'No current focus',
+            ru: 'Нет текущего фокуса',
           );
     final focus = profile.recommendedFocusTitle.isNotEmpty
         ? profile.recommendedFocusTitle
