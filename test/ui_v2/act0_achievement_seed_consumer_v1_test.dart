@@ -60,8 +60,8 @@ void main() {
     expect(consumer.hasMoments, isTrue);
     expect(consumer.moments.map((moment) => moment.label), <String>[
       'First correct read',
-      'First repair note',
-      'First review note',
+      'Back to the spot',
+      'One miss to fix',
     ]);
     expect(
       consumer.moments.map((moment) => moment.seedId),
@@ -99,7 +99,8 @@ void main() {
       Act0AchievementSeedProjectionV1(
         seeds: <Act0AchievementSeedV1>[
           _seed(act0AchievementSeedFirstCorrectReadV1, sequence: 1),
-          _seed(act0AchievementSeedThreeDayStreakV1, sequence: 3),
+          _seed(act0AchievementSeedFirstRepairNoteV1, sequence: 2),
+          _seed(act0AchievementSeedFirstReviewHistoryItemV1, sequence: 3),
         ],
       ),
     );
@@ -114,7 +115,10 @@ void main() {
     expect(find.text('Earned moments'), findsOneWidget);
     expect(find.text('Small wins Sharky can prove.'), findsOneWidget);
     expect(find.text('First correct read'), findsOneWidget);
-    expect(find.text('3-day streak'), findsOneWidget);
+    expect(find.text('Back to the spot'), findsOneWidget);
+    expect(find.text('One miss to fix'), findsOneWidget);
+    expect(find.text('First repair note'), findsNothing);
+    expect(find.text('First review note'), findsNothing);
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_profile_earned_moments')),

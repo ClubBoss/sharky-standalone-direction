@@ -63,15 +63,15 @@ String? _labelForSeedIdV1(String seedId) {
     case act0AchievementSeedFirstCorrectReadV1:
       return 'First correct read';
     case act0AchievementSeedFirstRepairNoteV1:
-      return 'First repair note';
+      return 'Back to the spot';
     case act0AchievementSeedFirstReviewHistoryItemV1:
-      return 'First review note';
+      return 'One miss to fix';
     case act0AchievementSeedFirstEvidenceSignalV1:
       return 'First evidence signal';
     case act0AchievementSeedFirstSessionCompleteV1:
       return 'First session complete';
     case act0AchievementSeedThreeDayStreakV1:
-      return '3-day streak';
+      return 'Three-day rhythm';
   }
   return null;
 }

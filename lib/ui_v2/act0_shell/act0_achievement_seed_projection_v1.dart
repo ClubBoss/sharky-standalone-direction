@@ -79,7 +79,7 @@ class Act0AchievementSeedProjectionV1 {
         _repairSeed(repairIntents: repairIntents, reviewRecords: reviewRecords),
         _earnedWhen(
           id: act0AchievementSeedFirstReviewHistoryItemV1,
-          internalTitle: 'First review history item',
+          internalTitle: 'One miss to fix',
           sourceOwner: 'Act0ReviewMistakeHistoryV1',
           earnedRecord: _oldestReviewRecord(reviewRecords),
           summaryBuilder: (record) => <String, Object?>{
@@ -121,7 +121,7 @@ class Act0AchievementSeedProjectionV1 {
         ),
         Act0AchievementSeedV1(
           id: act0AchievementSeedThreeDayStreakV1,
-          internalTitle: 'Three day streak',
+          internalTitle: 'Three-day rhythm',
           sourceOwner: 'Act0ProfileStateV1.streakDays',
           state: safeStreakDays >= 3
               ? act0AchievementSeedStateEarnedV1
@@ -259,7 +259,7 @@ Act0AchievementSeedV1 _repairSeed({
   final oldestReviewRecord = _oldestReviewRecord(reviewRecords);
   return Act0AchievementSeedV1(
     id: act0AchievementSeedFirstRepairNoteV1,
-    internalTitle: 'First repair note',
+    internalTitle: 'Back to the spot',
     sourceOwner: 'Act0RepairIntentV1|Act0ReviewMistakeHistoryV1',
     state: earned
         ? act0AchievementSeedStateEarnedV1
