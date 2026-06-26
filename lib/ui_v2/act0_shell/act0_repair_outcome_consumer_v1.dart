@@ -102,7 +102,7 @@ Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForOutcomesV1(
     return null;
   }
   return Act0RepairOutcomeSessionReceiptV1(
-    title: 'Fix attempts',
+    title: "Fixes you've banked",
     lines: List<String>.unmodifiable(lines),
   );
 }

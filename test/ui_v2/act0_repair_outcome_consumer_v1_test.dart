@@ -74,7 +74,7 @@ void main() {
     );
 
     expect(consumer.hasSessionReceipt, isTrue);
-    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.title, "Fixes you've banked");
     expect(consumer.sessionReceipt?.lines, <String>['Good fixes: 1']);
   });
 
@@ -83,7 +83,7 @@ void main() {
       _projection(isCorrect: false, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.title, "Fixes you've banked");
     expect(consumer.sessionReceipt?.lines, <String>['Still to fix: 1']);
   });
 
@@ -92,7 +92,7 @@ void main() {
       _projection(isCorrect: null, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.title, "Fixes you've banked");
     expect(consumer.sessionReceipt?.lines, <String>['Fixes tried: 1']);
   });
 
@@ -210,9 +210,14 @@ void main() {
       for (final forbidden in <String>[
         'cleared',
         'resolved',
+        'fixed forever',
         'completed',
         'mastered',
         'leak',
+        'all-time',
+        'rating',
+        'radar',
+        'level',
         'ai',
         'gto',
         'solver',

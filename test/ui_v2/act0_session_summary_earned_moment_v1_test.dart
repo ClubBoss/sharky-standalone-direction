@@ -44,7 +44,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsNothing,
     );
-    expect(find.text('Fix attempts'), findsNothing);
+    expect(find.text("Fixes you've banked"), findsNothing);
     expect(find.text('Good fixes: 1'), findsNothing);
     expect(find.text('Still to fix: 1'), findsNothing);
     expect(find.text('Fixes tried: 1'), findsNothing);
@@ -66,7 +66,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text("Fixes you've banked"), findsOneWidget);
     expect(find.text('Good fixes: 1'), findsOneWidget);
     expect(find.text('Still to fix: 1'), findsNothing);
     expect(find.text('Fixes tried: 1'), findsNothing);
@@ -89,7 +89,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text("Fixes you've banked"), findsOneWidget);
     expect(find.text('Still to fix: 1'), findsOneWidget);
     expect(find.text('Good fixes: 1'), findsNothing);
   });
@@ -111,7 +111,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text("Fixes you've banked"), findsOneWidget);
     expect(find.text('Fixes tried: 1'), findsOneWidget);
     expect(find.text('Good fixes: 1'), findsNothing);
     expect(find.text('Still to fix: 1'), findsNothing);
@@ -181,9 +181,14 @@ void main() {
       'fixed',
       'cleared',
       'resolved',
+      'fixed forever',
       'completed',
       'mastered',
       'leak',
+      'all-time',
+      'rating',
+      'radar',
+      'level',
       'ai',
       'gto',
       'solver',
