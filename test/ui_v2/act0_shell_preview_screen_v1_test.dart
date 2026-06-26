@@ -3355,6 +3355,33 @@ void main() {
         find.byKey(const Key('act0_shell_review_fix_next_cta')),
         findsNothing,
       );
+      expect(
+        find.byKey(const Key('act0_shell_review_practice_cta')),
+        findsOneWidget,
+      );
+      expect(find.text('Practice this spot'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Debug capture review Practice CTA launches existing repair task',
+    (tester) async {
+      await pumpTall(
+        tester,
+        host(
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.review,
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+      expect(find.text('Repair this spot'), findsOneWidget);
+      expect(find.textContaining('Better:'), findsWidgets);
     },
   );
 

@@ -382,6 +382,17 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                     color: Act0ShellTokensV1.textDim,
                   ),
                 ),
+                if (onFixMistake != null) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+                  FilledButton(
+                    key: const Key('act0_shell_review_practice_cta'),
+                    onPressed: () => onFixMistake!(mistake),
+                    style: Act0ShellTokensV1.primaryButtonStyle(
+                      height: Act0ShellTokensV1.compactCtaHeight,
+                    ),
+                    child: const Text('Practice this spot'),
+                  ),
+                ],
               ],
             ),
           ),

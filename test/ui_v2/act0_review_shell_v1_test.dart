@@ -12,6 +12,7 @@ void main() {
     Act0ReviewStateV1 review, {
     List<Act0ReviewMistakeHistoryItemV1> historyItems =
         const <Act0ReviewMistakeHistoryItemV1>[],
+    ValueChanged<Act0MistakeCardV1>? onFixMistake,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -19,7 +20,7 @@ void main() {
           review: review,
           selected: null,
           onSelected: (_) {},
-          onFixMistake: (_) {},
+          onFixMistake: onFixMistake ?? (_) {},
           onReplayFixedMistake: (_) {},
           mistakeHistoryItems: historyItems,
         ),
@@ -140,7 +141,89 @@ void main() {
       );
       expect(find.textContaining('Home'), findsNothing);
       expect(
-        find.byKey(const Key('act0_shell_review_fix_next_cta')),
+        find.byKey(const Key('act0_shell_review_practice_cta')),
+        findsOneWidget,
+      );
+      expect(find.text('Practice this spot'), findsOneWidget);
+      expect(find.text('Repair this clue'), findsNothing);
+    },
+  );
+
+  testWidgets('Review practice CTA uses existing active repair callback', (
+    tester,
+  ) async {
+    Act0MistakeCardV1? tappedMistake;
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+          mistakes: <Act0MistakeCardV1>[activeMistake],
+        ),
+        onFixMistake: (mistake) {
+          tappedMistake = mistake;
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+    await tester.pumpAndSettle();
+
+    expect(tappedMistake, activeMistake);
+    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this spot'), findsOneWidget);
+    expect(find.textContaining('Fixed'), findsNothing);
+    expect(find.textContaining('Cleared'), findsNothing);
+    expect(find.textContaining('Resolved'), findsNothing);
+    expect(find.textContaining('Recovered'), findsNothing);
+    expect(find.textContaining('AI'), findsNothing);
+    expect(find.textContaining('GTO'), findsNothing);
+    expect(find.textContaining('solver'), findsNothing);
+    expect(find.textContaining('premium'), findsNothing);
+    expect(find.textContaining('Level'), findsNothing);
+    expect(find.textContaining('Radar'), findsNothing);
+    expect(find.textContaining('rating'), findsNothing);
+    expect(find.textContaining('master'), findsNothing);
+    expect(find.textContaining('all-time'), findsNothing);
+  });
+
+  testWidgets(
+    'Review active repair remains passive when no launch callback exists',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0ReviewShellV1(
+              review: const Act0ReviewStateV1(
+                title: 'Review',
+                subtitle: 'Repair the clue that slipped.',
+                weaknessLabel: 'Action read',
+                reason: '',
+                stats: <Act0ReviewStatV1>[],
+                chosenLabel: 'Bet',
+                betterLabel: 'Check',
+                mistakes: <Act0MistakeCardV1>[activeMistake],
+              ),
+              selected: null,
+              onSelected: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_practice_cta')),
         findsNothing,
       );
     },
