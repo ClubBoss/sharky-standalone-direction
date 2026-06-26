@@ -512,7 +512,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_working_hub_support',
-            fallback: 'Practice one useful spot at a time.',
+            fallback: 'Build the read one spot at a time.',
           ),
           key: const Key('act0_shell_play_subtitle'),
           style: Act0ShellTokensV1.body.copyWith(
@@ -581,7 +581,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       primary
-                          ? 'Run this repair before extra reps.'
+                          ? 'Repeat the clue, not the whole lesson.'
                           : 'Saved spots worth repeating.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -683,7 +683,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     item.isPinned
-                        ? 'This repeats the clue you missed.'
+                        ? 'This rep uses the same table clue you missed.'
                         : item.actionLine!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -819,7 +819,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
         ? _playCopyV1(
             context,
             'play_daily_hero_support',
-            fallback: 'Short spots from completed lessons.',
+            fallback: 'One short rep keeps this table clue fresh.',
           )
         : subtitle;
     final metaItems = _dailyHeroMetaItemsV1(group);
@@ -1065,7 +1065,8 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_body',
-                    fallback: 'Keep building with short reps.',
+                    fallback:
+                        'First-week goal: understand the spot, not rush the map.',
                   ),
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
@@ -1578,7 +1579,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_skill_pack_unlocks_hint',
-            fallback: 'Short reps help Sharky prove what is improving.',
+            fallback: 'A good rep is one clearer table decision.',
           ),
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.textMuted,

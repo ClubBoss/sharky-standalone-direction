@@ -4890,7 +4890,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Этот спот уже дважды не дался. Разбери его, прежде чем идти дальше.',
               )
             : _copyV1(
-                en: 'Practice this spot before it becomes a habit.',
+                en: 'Repeat the table clue before it becomes a habit.',
                 ru: 'Разбери этот спот, пока он не закрепился.',
               ),
         ctaLabel: _recommendationCtaLabel(
@@ -4899,7 +4899,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               : _Act0LearningNextActionKindV1.repairWeakSpot,
         ),
         hint: _copyV1(
-          en: 'Repair this spot now.',
+          en: 'Repeat the table clue before it becomes a habit.',
           ru: 'Разбери этот спот сейчас.',
         ),
         outcome: isDeep

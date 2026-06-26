@@ -146,13 +146,19 @@ void main() {
     expect(find.byKey(const Key('act0_shell_play_header')), findsOneWidget);
     expect(find.text('Practice'), findsOneWidget);
     expect(find.text('Useful reps'), findsOneWidget);
-    expect(find.text('Practice one useful spot at a time.'), findsOneWidget);
-    expect(find.textContaining('Sharky'), findsOneWidget);
+    expect(find.text('Build the read one spot at a time.'), findsOneWidget);
 
     final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
     expect(hero, findsOneWidget);
     expect(
       find.descendant(of: hero, matching: find.text('Start a short rep')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('One short rep keeps this table clue fresh.'),
+      ),
       findsOneWidget,
     );
     expect(
@@ -340,7 +346,7 @@ void main() {
     expect(
       find.descendant(
         of: first,
-        matching: find.text('This repeats the clue you missed.'),
+        matching: find.text('This rep uses the same table clue you missed.'),
       ),
       findsOneWidget,
     );
@@ -396,7 +402,7 @@ void main() {
       expect(
         find.descendant(
           of: queue,
-          matching: find.text('Run this repair before extra reps.'),
+          matching: find.text('Repeat the clue, not the whole lesson.'),
         ),
         findsOneWidget,
       );
@@ -561,7 +567,10 @@ void main() {
     final empty = find.byKey(const Key('act0_shell_play_repair_empty'));
     expect(empty, findsOneWidget);
     expect(find.text('No saved miss yet'), findsOneWidget);
-    expect(find.text('Keep building with short reps.'), findsOneWidget);
+    expect(
+      find.text('First-week goal: understand the spot, not rush the map.'),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsNothing,
@@ -626,7 +635,7 @@ void main() {
       expect(
         find.descendant(
           of: hero,
-          matching: find.text('Short spots from completed lessons.'),
+          matching: find.text('One short rep keeps this table clue fresh.'),
         ),
         findsOneWidget,
       );
@@ -666,7 +675,7 @@ void main() {
       );
       expect(find.text('Short reps'), findsOneWidget);
       expect(
-        find.text('Short reps help Sharky prove what is improving.'),
+        find.text('A good rep is one clearer table decision.'),
         findsOneWidget,
       );
 

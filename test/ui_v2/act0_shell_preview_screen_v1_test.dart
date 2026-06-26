@@ -3244,6 +3244,10 @@ void main() {
       'Repair one weak spot',
     );
     expect(find.text('Practice this spot'), findsOneWidget);
+    expect(
+      find.text('Repeat the table clue before it becomes a habit.'),
+      findsOneWidget,
+    );
 
     await pumpTall(
       tester,
@@ -27141,7 +27145,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
       expect(
-        find.text('Short reps help Sharky prove what is improving.'),
+        find.text('A good rep is one clearer table decision.'),
         findsOneWidget,
       );
 
