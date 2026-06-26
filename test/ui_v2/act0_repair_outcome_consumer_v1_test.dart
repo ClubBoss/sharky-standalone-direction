@@ -13,6 +13,8 @@ void main() {
 
     expect(consumer.proof, isNull);
     expect(consumer.hasProof, isFalse);
+    expect(consumer.sessionReceipt, isNull);
+    expect(consumer.hasSessionReceipt, isFalse);
   });
 
   test('correct outcome maps to safe local proof', () {
@@ -66,6 +68,93 @@ void main() {
     expect(consumer.proof?.sequence, 2);
   });
 
+  test('correct outcomes summarize as good repair reps', () {
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: true, selectedChoiceId: 'check'),
+    );
+
+    expect(consumer.hasSessionReceipt, isTrue);
+    expect(consumer.sessionReceipt?.title, 'Repair reps');
+    expect(consumer.sessionReceipt?.lines, <String>['Good reps: 1']);
+  });
+
+  test('incorrect outcomes summarize as worth repeating', () {
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: false, selectedChoiceId: 'fold'),
+    );
+
+    expect(consumer.sessionReceipt?.title, 'Repair reps');
+    expect(consumer.sessionReceipt?.lines, <String>['Worth repeating: 1']);
+  });
+
+  test('attempted-only outcomes summarize as attempted reps', () {
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: null, selectedChoiceId: 'fold'),
+    );
+
+    expect(consumer.sessionReceipt?.title, 'Repair reps');
+    expect(consumer.sessionReceipt?.lines, <String>['Attempted reps: 1']);
+  });
+
+  test('multiple outcomes summarize deterministically', () {
+    final projection = const Act0RepairOutcomeProjectionV1(
+      outcomes: <Act0RepairOutcomeV1>[
+        Act0RepairOutcomeV1(
+          sourceTaskId: 'source_a',
+          repairTaskId: 'repair_a',
+          repairFocusKey: 'focus_a',
+          queueItemId: 'queue_a',
+          targetWorldId: 'world_1',
+          targetLessonId: 'fold_check_call_raise',
+          targetTaskId: 'repair_a',
+          selectedChoiceId: 'fold',
+          correctChoiceId: 'check',
+          isCorrect: false,
+          outcomeState: act0RepairOutcomeStateStillNeedsRepV1,
+          sequence: 3,
+          sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        ),
+        Act0RepairOutcomeV1(
+          sourceTaskId: 'source_b',
+          repairTaskId: 'repair_b',
+          repairFocusKey: 'focus_b',
+          queueItemId: 'queue_b',
+          targetWorldId: 'world_1',
+          targetLessonId: 'fold_check_call_raise',
+          targetTaskId: 'repair_b',
+          selectedChoiceId: 'check',
+          correctChoiceId: 'check',
+          isCorrect: true,
+          outcomeState: act0RepairOutcomeStateCorrectV1,
+          sequence: 1,
+          sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        ),
+        Act0RepairOutcomeV1(
+          sourceTaskId: 'source_c',
+          repairTaskId: 'repair_c',
+          repairFocusKey: 'focus_c',
+          queueItemId: 'queue_c',
+          targetWorldId: 'world_1',
+          targetLessonId: 'fold_check_call_raise',
+          targetTaskId: 'repair_c',
+          selectedChoiceId: 'check',
+          correctChoiceId: 'check',
+          isCorrect: true,
+          outcomeState: act0RepairOutcomeStateCorrectV1,
+          sequence: 2,
+          sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+        ),
+      ],
+    );
+
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(projection);
+
+    expect(consumer.sessionReceipt?.lines, <String>[
+      'Good reps: 2',
+      'Worth repeating: 1',
+    ]);
+  });
+
   test('proof copy avoids forbidden claim families', () {
     for (final state in <String>[
       act0RepairOutcomeStateCorrectV1,
@@ -78,6 +167,11 @@ void main() {
         ),
       ).proof!;
       final text = '${proof.title} ${proof.detail}'.toLowerCase();
+      final receiptText = Act0RepairOutcomeConsumerV1.fromProjection(
+        Act0RepairOutcomeProjectionV1(
+          outcomes: <Act0RepairOutcomeV1>[_outcome(outcomeState: state)],
+        ),
+      ).sessionReceipt!.lines.join(' ').toLowerCase();
       for (final forbidden in <String>[
         'fixed',
         'cleared',
@@ -90,8 +184,11 @@ void main() {
         'solver',
         'premium',
         'paywall',
+        'guaranteed',
+        'improvement',
       ]) {
         expect(_containsForbiddenTokenInText(text, forbidden), isFalse);
+        expect(_containsForbiddenTokenInText(receiptText, forbidden), isFalse);
       }
     }
   });

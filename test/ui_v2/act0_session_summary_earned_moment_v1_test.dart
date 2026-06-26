@@ -4,6 +4,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 
 void main() {
   testWidgets('Session Summary renders no earned moment with empty consumer', (
@@ -24,6 +27,171 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_continue_cta')),
       findsOneWidget,
     );
+  });
+
+  testWidgets('Session Summary renders no repair receipt without outcomes', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        const Act0RepairOutcomeProjectionV1(),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+      findsNothing,
+    );
+    expect(find.text('Repair reps'), findsNothing);
+    expect(find.text('Good reps: 1'), findsNothing);
+    expect(find.text('Worth repeating: 1'), findsNothing);
+    expect(find.text('Attempted reps: 1'), findsNothing);
+    expect(find.text('You played 2 spots.'), findsOneWidget);
+  });
+
+  testWidgets('Session Summary shows good repair receipt from projection', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        _repairOutcomeProjection(outcomeState: act0RepairOutcomeStateCorrectV1),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reps'), findsOneWidget);
+    expect(find.text('Good reps: 1'), findsOneWidget);
+    expect(find.text('Worth repeating: 1'), findsNothing);
+    expect(find.text('Attempted reps: 1'), findsNothing);
+  });
+
+  testWidgets('Session Summary shows worth repeating repair receipt', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        _repairOutcomeProjection(
+          outcomeState: act0RepairOutcomeStateStillNeedsRepV1,
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reps'), findsOneWidget);
+    expect(find.text('Worth repeating: 1'), findsOneWidget);
+    expect(find.text('Good reps: 1'), findsNothing);
+  });
+
+  testWidgets('Session Summary shows attempted-only repair receipt', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        _repairOutcomeProjection(
+          outcomeState: act0RepairOutcomeStateAttemptedV1,
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair reps'), findsOneWidget);
+    expect(find.text('Attempted reps: 1'), findsOneWidget);
+    expect(find.text('Good reps: 1'), findsNothing);
+    expect(find.text('Worth repeating: 1'), findsNothing);
+  });
+
+  testWidgets('Session Summary repair receipt summarizes deterministically', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        Act0RepairOutcomeProjectionV1(
+          outcomes: <Act0RepairOutcomeV1>[
+            _repairOutcome(
+              outcomeState: act0RepairOutcomeStateStillNeedsRepV1,
+              sequence: 3,
+              queueItemId: 'queue_3',
+            ),
+            _repairOutcome(
+              outcomeState: act0RepairOutcomeStateCorrectV1,
+              sequence: 1,
+              queueItemId: 'queue_1',
+            ),
+            _repairOutcome(
+              outcomeState: act0RepairOutcomeStateCorrectV1,
+              sequence: 2,
+              queueItemId: 'queue_2',
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text('Good reps: 2'), findsOneWidget);
+    expect(find.text('Worth repeating: 1'), findsOneWidget);
+    final goodTop = tester.getTopLeft(find.text('Good reps: 2')).dy;
+    final repeatTop = tester.getTopLeft(find.text('Worth repeating: 1')).dy;
+    expect(goodTop, lessThan(repeatTop));
+  });
+
+  testWidgets('Session Summary repair receipt contains no forbidden copy', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        _repairOutcomeProjection(outcomeState: act0RepairOutcomeStateCorrectV1),
+      ),
+    );
+
+    final receiptText = tester
+        .widgetList<Text>(
+          find.descendant(
+            of: find.byKey(
+              const Key('act0_shell_session_repair_outcome_receipt'),
+            ),
+            matching: find.byType(Text),
+          ),
+        )
+        .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
+        .join(' ')
+        .toLowerCase();
+
+    for (final forbidden in <String>[
+      'fixed',
+      'cleared',
+      'resolved',
+      'completed',
+      'mastered',
+      'leak',
+      'ai',
+      'gto',
+      'solver',
+      'premium',
+      'guaranteed improvement',
+    ]) {
+      expect(_containsForbiddenTokenInText(receiptText, forbidden), isFalse);
+    }
   });
 
   testWidgets('Session Summary renders exactly one earned moment', (
@@ -170,6 +338,8 @@ Future<void> _pumpSummary(
   VoidCallback? onContinue,
   int errorCount = 1,
   int correctCount = 1,
+  Act0RepairOutcomeConsumerV1 repairOutcomeConsumer =
+      const Act0RepairOutcomeConsumerV1(),
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -199,6 +369,7 @@ Future<void> _pumpSummary(
             currentSessionOnly: true,
           ),
           earnedMomentConsumer: consumer,
+          repairOutcomeConsumer: repairOutcomeConsumer,
           onReplay: () {},
           onContinue: onContinue ?? () {},
           onBackToMap: () {},
@@ -225,4 +396,49 @@ Act0AchievementSeedV1 _seed(
     sourceSummary: const <String, Object?>{},
     eligibilityState: state,
   );
+}
+
+Act0RepairOutcomeProjectionV1 _repairOutcomeProjection({
+  required String outcomeState,
+}) {
+  return Act0RepairOutcomeProjectionV1(
+    outcomes: <Act0RepairOutcomeV1>[
+      _repairOutcome(outcomeState: outcomeState, sequence: 1),
+    ],
+  );
+}
+
+Act0RepairOutcomeV1 _repairOutcome({
+  required String outcomeState,
+  required int sequence,
+  String queueItemId = 'queue_item',
+}) {
+  return Act0RepairOutcomeV1(
+    sourceTaskId: 'actions_legal_context',
+    repairTaskId: 'actions_check_drill',
+    repairFocusKey: 'focus_key',
+    queueItemId: queueItemId,
+    targetWorldId: 'world_1',
+    targetLessonId: 'fold_check_call_raise',
+    targetTaskId: 'actions_check_drill',
+    selectedChoiceId: outcomeState == act0RepairOutcomeStateCorrectV1
+        ? 'check'
+        : 'fold',
+    correctChoiceId: 'check',
+    isCorrect: outcomeState == act0RepairOutcomeStateCorrectV1
+        ? true
+        : outcomeState == act0RepairOutcomeStateStillNeedsRepV1
+        ? false
+        : null,
+    outcomeState: outcomeState,
+    sequence: sequence,
+    sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+  );
+}
+
+bool _containsForbiddenTokenInText(String text, String token) {
+  final pattern = RegExp(
+    r'(^|[^a-z0-9])' + RegExp.escape(token) + r'([^a-z0-9]|$)',
+  );
+  return pattern.hasMatch(text.toLowerCase());
 }

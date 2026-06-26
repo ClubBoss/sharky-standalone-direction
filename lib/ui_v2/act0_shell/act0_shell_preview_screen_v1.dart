@@ -3958,6 +3958,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             profileState.streakDays,
                                       ),
                                     ),
+                                repairOutcomeConsumer:
+                                    Act0RepairOutcomeConsumerV1.fromProjection(
+                                      _repairOutcomeProjectionV1,
+                                    ),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
                                   _selectedTaskId =

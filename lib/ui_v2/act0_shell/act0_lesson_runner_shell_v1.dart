@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -5457,6 +5458,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     required this.summary,
     this.evidenceSummary,
     this.earnedMomentConsumer = const Act0AchievementSeedConsumerV1(),
+    this.repairOutcomeConsumer = const Act0RepairOutcomeConsumerV1(),
     required this.onContinue,
     this.onReplay,
     this.onOpenReview,
@@ -5466,6 +5468,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   final Act0BlockCompletionSummaryV1 summary;
   final Act0SessionSummaryEvidenceViewModelV1? evidenceSummary;
   final Act0AchievementSeedConsumerV1 earnedMomentConsumer;
+  final Act0RepairOutcomeConsumerV1 repairOutcomeConsumer;
   final VoidCallback onContinue;
   final VoidCallback? onReplay;
   final VoidCallback? onOpenReview;
@@ -5495,6 +5498,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final visibleEarnedMoment = earnedMomentConsumer.moments.isNotEmpty
         ? earnedMomentConsumer.moments.first
         : null;
+    final visibleRepairOutcomeReceipt = repairOutcomeConsumer.sessionReceipt;
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5819,6 +5823,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               if (visibleEarnedMoment != null) ...[
                 _SessionSummaryEarnedMomentCardV1(
                   moment: visibleEarnedMoment,
+                  tone: celebrateTone,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
+              if (visibleRepairOutcomeReceipt != null) ...[
+                _SessionSummaryRepairOutcomeReceiptCardV1(
+                  receipt: visibleRepairOutcomeReceipt,
                   tone: celebrateTone,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -6324,6 +6335,58 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
+  const _SessionSummaryRepairOutcomeReceiptCardV1({
+    required this.receipt,
+    required this.tone,
+  });
+
+  final Act0RepairOutcomeSessionReceiptV1 receipt;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_session_repair_outcome_receipt'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.86),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(color: tone.withValues(alpha: 0.22)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            receipt.title,
+            key: const Key('act0_shell_session_repair_outcome_title'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: tone,
+              letterSpacing: 0.35,
+            ),
+          ),
+          const SizedBox(height: 6),
+          for (var index = 0; index < receipt.lines.length; index++) ...[
+            if (index > 0) const SizedBox(height: 4),
+            Text(
+              receipt.lines[index],
+              key: Key('act0_shell_session_repair_outcome_line_$index'),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.body.copyWith(
+                color: index == 0
+                    ? Act0ShellTokensV1.text
+                    : Act0ShellTokensV1.textMuted,
+                fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
+              ),
+            ),
+          ],
         ],
       ),
     );
