@@ -43,7 +43,7 @@ void main() {
       find.byKey(const Key('act0_shell_world1_completion_payoff')),
       findsOneWidget,
     );
-    expect(find.text('First table read banked.'), findsOneWidget);
+    expect(find.text('You banked the first table read.'), findsOneWidget);
     expect(
       find.text('First milestone in the 36-world Core Shark Path.'),
       findsOneWidget,

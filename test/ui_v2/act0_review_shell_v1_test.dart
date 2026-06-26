@@ -145,7 +145,10 @@ void main() {
         find.text('Keep this clue in view before your next hand.'),
         findsOneWidget,
       );
-      expect(find.text('This is the spot to clean up.'), findsOneWidget);
+      expect(
+        find.text('Keep this read warm with one quick rep.'),
+        findsOneWidget,
+      );
       expect(find.textContaining('Home'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_review_practice_cta')),
@@ -185,7 +188,10 @@ void main() {
     expect(tappedMistake, activeMistake);
     expect(find.text('What to fix next'), findsOneWidget);
     expect(find.text('Pattern to practice'), findsOneWidget);
-    expect(find.text('This is the spot to clean up.'), findsOneWidget);
+    expect(
+      find.text('Keep this read warm with one quick rep.'),
+      findsOneWidget,
+    );
     expect(find.text('Practice this spot'), findsOneWidget);
     expect(find.textContaining('Fixed'), findsNothing);
     expect(find.textContaining('Cleared'), findsNothing);

@@ -423,7 +423,9 @@ class Act0BlockCompletionSummaryV1 {
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
 
-  String get worldOneCompletionPayoffLabel => 'First table read banked.';
+  String get worldOneCompletionPayoffLabel => act0SharkyCoachLineForMomentV1(
+    Act0SharkyCoachMomentV1.worldOneCompletionPayoff,
+  );
 
   String get worldOneCompletionPathLabel =>
       'First milestone in the 36-world Core Shark Path.';
