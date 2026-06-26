@@ -6067,13 +6067,19 @@ class _SessionSummaryPayoffHeroV1 {
       return null;
     }
     return _SessionSummaryPayoffHeroV1(
-      kicker: hasGoodFix ? 'You banked a fix' : 'What finished',
+      kicker: hasCorrectRead && hasGoodFix
+          ? 'Session closed with proof'
+          : hasGoodFix
+          ? 'Fix landed'
+          : 'Good read',
       headline: hasCorrectRead && hasGoodFix
-          ? 'First correct read — and one useful fix banked.'
+          ? 'You turned one miss into a cleaner next rep.'
           : hasCorrectRead
           ? 'First correct read banked.'
-          : 'Good fix banked.',
-      detail: 'Replay once to keep the table clue fresh.',
+          : 'You turned one miss into a cleaner next rep.',
+      detail: hasCorrectRead && hasGoodFix
+          ? 'Correct read banked. Next best step is ready.'
+          : 'Next best step is ready.',
     );
   }
 }

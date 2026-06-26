@@ -23,8 +23,8 @@ void main() {
     );
 
     expect(consumer.hasProof, isTrue);
-    expect(consumer.proof?.title, 'Fix attempt');
-    expect(consumer.proof?.detail, 'Nice — you chose the better action.');
+    expect(consumer.proof?.title, 'Fix landed');
+    expect(consumer.proof?.detail, 'Nice repair. Same spot, cleaner decision.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateCorrectV1);
   });
 
@@ -34,7 +34,7 @@ void main() {
     );
 
     expect(consumer.proof?.title, 'Fix attempt');
-    expect(consumer.proof?.detail, 'Not fixed yet — one more.');
+    expect(consumer.proof?.detail, 'Not landed yet. One more rep.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateStillNeedsRepV1);
   });
 
@@ -44,7 +44,7 @@ void main() {
     );
 
     expect(consumer.proof?.title, 'Fix attempt');
-    expect(consumer.proof?.detail, 'You gave the fix a try.');
+    expect(consumer.proof?.detail, 'You gave the repair a try.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateAttemptedV1);
   });
 
@@ -64,7 +64,7 @@ void main() {
 
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(projection);
 
-    expect(consumer.proof?.detail, 'Nice — you chose the better action.');
+    expect(consumer.proof?.detail, 'Nice repair. Same spot, cleaner decision.');
     expect(consumer.proof?.sequence, 2);
   });
 

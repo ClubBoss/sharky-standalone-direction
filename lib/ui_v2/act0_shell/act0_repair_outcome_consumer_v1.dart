@@ -33,7 +33,9 @@ class Act0RepairOutcomeConsumerV1 {
       proof: detail.isEmpty
           ? null
           : Act0RepairOutcomeProofV1(
-              title: 'Fix attempt',
+              title: latest.outcomeState == act0RepairOutcomeStateCorrectV1
+                  ? 'Fix landed'
+                  : 'Fix attempt',
               detail: detail,
               outcomeState: latest.outcomeState,
               sequence: latest.sequence,
@@ -69,9 +71,10 @@ class Act0RepairOutcomeSessionReceiptV1 {
 
 String _detailForOutcomeStateV1(String outcomeState) {
   return switch (outcomeState) {
-    act0RepairOutcomeStateCorrectV1 => 'Nice — you chose the better action.',
-    act0RepairOutcomeStateStillNeedsRepV1 => 'Not fixed yet — one more.',
-    act0RepairOutcomeStateAttemptedV1 => 'You gave the fix a try.',
+    act0RepairOutcomeStateCorrectV1 =>
+      'Nice repair. Same spot, cleaner decision.',
+    act0RepairOutcomeStateStillNeedsRepV1 => 'Not landed yet. One more rep.',
+    act0RepairOutcomeStateAttemptedV1 => 'You gave the repair a try.',
     _ => '',
   };
 }

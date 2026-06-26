@@ -281,7 +281,10 @@ void main() {
     expect(outcomes.single['isCorrect'], isTrue);
     expect(outcomes.single['outcomeState'], 'repair_correct_v1');
     expect(find.text('Fix attempt'), findsOneWidget);
-    expect(find.text('Nice — you chose the better action.'), findsOneWidget);
+    expect(
+      find.text('Nice repair. Same spot, cleaner decision.'),
+      findsOneWidget,
+    );
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
@@ -320,7 +323,7 @@ void main() {
     expect(outcomes.single['isCorrect'], isFalse);
     expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');
     expect(find.text('Fix attempt'), findsOneWidget);
-    expect(find.text('Not fixed yet — one more.'), findsOneWidget);
+    expect(find.text('Not landed yet. One more rep.'), findsOneWidget);
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
@@ -479,11 +482,11 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
     expect(
-      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you caught the no-bet-yet clue.'),
       findsOneWidget,
     );
     expect(
-      find.text('Today you repaired the no-bet-yet clue.'),
+      find.text('Fix landed: the no-bet-yet clue is back in focus.'),
       findsOneWidget,
     );
     expect(find.textContaining('mastered forever'), findsNothing);
@@ -576,7 +579,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you caught the no-bet-yet clue.'),
       findsNothing,
     );
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
@@ -688,7 +691,7 @@ void main() {
     await _answerCorrectly(tester);
     expect(
       find.text(
-        'Replay fixed: you handled this spot correctly.',
+        'Fix landed: you handled this spot correctly.',
         skipOffstage: false,
       ),
       findsOneWidget,
@@ -699,7 +702,7 @@ void main() {
     );
     expect(find.textContaining('same clue'), findsNothing);
     expect(
-      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      find.text('Fix landed: you caught the no-bet-yet clue.'),
       findsNothing,
     );
   });
@@ -848,8 +851,8 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerCorrectly(tester);
 
-    const receipt = 'Repair fixed: you caught the no-bet-yet clue.';
-    const summary = 'Today you repaired the no-bet-yet clue.';
+    const receipt = 'Fix landed: you caught the no-bet-yet clue.';
+    const summary = 'Fix landed: the no-bet-yet clue is back in focus.';
     expect(find.text(receipt), findsOneWidget);
     expect(find.text(summary), findsOneWidget);
     const forbidden = <String>{

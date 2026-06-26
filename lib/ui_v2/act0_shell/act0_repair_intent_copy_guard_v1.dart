@@ -88,7 +88,7 @@ String? act0RepairResultReceiptCopyGuardLineV1({
 }) {
   final line = exactReplay
       ? (repaired
-            ? 'Replay fixed: you handled this spot correctly.'
+            ? 'Fix landed: you handled this spot correctly.'
             : 'Replay missed again: try the same spot once more.')
       : _sameSignalRepairResultReceiptLineV1(
           repaired: repaired,
@@ -129,7 +129,7 @@ String? _sameSignalRepairResultReceiptLineV1({
   final compactClue = _learnerFacingCompactClueV1(clueLabel);
   final repeatedClue = _learnerFacingRepeatedMissClueV1(clueLabel);
   if (repaired && compactClue.isNotEmpty) {
-    return 'Repair fixed: you caught $compactClue.';
+    return 'Fix landed: you caught $compactClue.';
   }
   if (!repaired && repeatedClue.isNotEmpty) {
     return 'Still missed: $repeatedClue. One more repair hand will help.';
@@ -146,7 +146,7 @@ List<String> _sameSignalRepairSessionSummaryLinesV1({
     return const <String>[];
   }
   if (repaired) {
-    return <String>['Today you repaired $compactClue.'];
+    return <String>['Fix landed: $compactClue is back in focus.'];
   }
   final focusClue = _learnerFacingNextFocusClueV1(clueLabel);
   return <String>[

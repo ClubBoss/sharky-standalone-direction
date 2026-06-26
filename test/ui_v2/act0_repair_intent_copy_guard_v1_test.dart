@@ -42,7 +42,7 @@ void main() {
         exactReplay: false,
         clueLabel: 'No bet yet',
       ),
-      'Repair fixed: you caught the no-bet-yet clue.',
+      'Fix landed: you caught the no-bet-yet clue.',
     );
     expect(
       act0RepairResultReceiptCopyGuardLineV1(
@@ -61,7 +61,7 @@ void main() {
         exactReplay: true,
         clueLabel: 'No bet yet',
       ),
-      'Replay fixed: you handled this spot correctly.',
+      'Fix landed: you handled this spot correctly.',
     );
     expect(
       act0RepairResultReceiptCopyGuardLineV1(
@@ -82,7 +82,7 @@ void main() {
           exactReplay: false,
           clueLabel: 'No bet yet',
         ),
-        <String>['Today you repaired the no-bet-yet clue.'],
+        <String>['Fix landed: the no-bet-yet clue is back in focus.'],
       );
       expect(
         act0RepairSessionSummaryCopyGuardLinesV1(

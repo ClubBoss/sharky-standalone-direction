@@ -172,17 +172,17 @@ void main() {
         ),
       );
 
-      expect(find.text('You banked a fix'), findsOneWidget);
+      expect(find.text('Session closed with proof'), findsOneWidget);
       expect(
         tester
             .widget<Text>(
               find.byKey(const Key('act0_shell_block_summary_title')),
             )
             .data,
-        'First correct read — and one useful fix banked.',
+        'You turned one miss into a cleaner next rep.',
       );
       expect(
-        find.text('Replay once to keep the table clue fresh.'),
+        find.text('Correct read banked. Next best step is ready.'),
         findsOneWidget,
       );
       expect(find.text('Almost there - replay to unlock'), findsNothing);
@@ -212,11 +212,8 @@ void main() {
           .data,
       'First correct read banked.',
     );
-    expect(
-      find.text('Replay once to keep the table clue fresh.'),
-      findsOneWidget,
-    );
-    expect(find.text('You banked a fix'), findsNothing);
+    expect(find.text('Next best step is ready.'), findsOneWidget);
+    expect(find.text('Session closed with proof'), findsNothing);
     expect(find.text('Good fix banked.'), findsNothing);
   });
 
@@ -231,17 +228,14 @@ void main() {
       ),
     );
 
-    expect(find.text('You banked a fix'), findsOneWidget);
+    expect(find.text('Fix landed'), findsOneWidget);
     expect(
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,
-      'Good fix banked.',
+      'You turned one miss into a cleaner next rep.',
     );
-    expect(
-      find.text('Replay once to keep the table clue fresh.'),
-      findsOneWidget,
-    );
+    expect(find.text('Next best step is ready.'), findsOneWidget);
     expect(find.text('Almost there - replay to unlock'), findsNothing);
   });
 
@@ -262,7 +256,7 @@ void main() {
           .data,
       'Almost there - replay to unlock',
     );
-    expect(find.text('You banked a fix'), findsNothing);
+    expect(find.text('Session closed with proof'), findsNothing);
     expect(find.text('First correct read banked.'), findsNothing);
     expect(find.text('Good fix banked.'), findsNothing);
   });
