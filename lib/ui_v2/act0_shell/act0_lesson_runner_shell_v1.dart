@@ -5133,7 +5133,52 @@ class _FeedbackProofKeyWrapperV1 extends StatelessWidget {
     if (key == null) {
       return child;
     }
-    return KeyedSubtree(key: key, child: child);
+    final motionKey = key == const Key('act0_shell_repair_outcome_proof')
+        ? const Key('act0_shell_repair_outcome_motion_reveal')
+        : const Key('act0_shell_feedback_proof_motion_reveal');
+    return KeyedSubtree(
+      key: key,
+      child: _ProofMotionRevealV1(key: motionKey, child: child),
+    );
+  }
+}
+
+class _ProofMotionRevealV1 extends StatefulWidget {
+  const _ProofMotionRevealV1({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<_ProofMotionRevealV1> createState() => _ProofMotionRevealV1State();
+}
+
+class _ProofMotionRevealV1State extends State<_ProofMotionRevealV1> {
+  var _settled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        _settled = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSlide(
+      offset: _settled ? Offset.zero : const Offset(0, 0.035),
+      duration: const Duration(milliseconds: 160),
+      curve: Curves.easeOutCubic,
+      child: AnimatedOpacity(
+        opacity: _settled ? 1 : 0.92,
+        duration: const Duration(milliseconds: 140),
+        curve: Curves.easeOutCubic,
+        child: widget.child,
+      ),
+    );
   }
 }
 
@@ -5505,67 +5550,70 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final showHabitReward =
         !summary.isWorldComplete || summary.growthLabel.isEmpty;
     Widget nextActionCard() {
-      return Container(
-        key: const Key('act0_shell_block_summary_next_label'),
-        padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-        decoration: BoxDecoration(
-          color: celebrateTone.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-          border: Border.all(color: celebrateTone.withValues(alpha: 0.24)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'What next',
-              style: Act0ShellTokensV1.label.copyWith(
-                color: celebrateTone,
-                letterSpacing: 0.35,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              summary.suggestedNextAction,
-              key: const Key('act0_shell_block_summary_suggested_next'),
-              maxLines: 4,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.text,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            if (summary.nextUnlockReasonLabel != null) ...[
-              const SizedBox(height: 6),
+      return _ProofMotionRevealV1(
+        key: const Key('act0_shell_block_summary_next_motion_reveal'),
+        child: Container(
+          key: const Key('act0_shell_block_summary_next_label'),
+          padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+          decoration: BoxDecoration(
+            color: celebrateTone.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+            border: Border.all(color: celebrateTone.withValues(alpha: 0.24)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                summary.nextUnlockReasonLabel!,
-                key: const Key('act0_shell_block_summary_next_reason'),
-                maxLines: 3,
+                'What next',
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: celebrateTone,
+                  letterSpacing: 0.35,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                summary.suggestedNextAction,
+                key: const Key('act0_shell_block_summary_suggested_next'),
+                maxLines: 4,
                 overflow: TextOverflow.fade,
                 style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                  fontWeight: FontWeight.w600,
+                  color: Act0ShellTokensV1.text,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-            ],
-            if (summary.sharkyLine.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Act0SharkyPresenceBubbleV1(
-                line: summary.sharkyLine,
-                mood: summary.qualifiesForNextLesson
-                    ? Act0SharkyMoodV1.celebrate
-                    : Act0SharkyMoodV1.repair,
-                tone: summary.qualifiesForNextLesson
-                    ? Act0ShellTokensV1.primary
-                    : Act0ShellTokensV1.gold,
-                textKey: const Key('act0_shell_block_summary_sharky_line'),
-                mascotSize: 68,
-                bubblePadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
+              if (summary.nextUnlockReasonLabel != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  summary.nextUnlockReasonLabel!,
+                  key: const Key('act0_shell_block_summary_next_reason'),
+                  maxLines: 3,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+              ],
+              if (summary.sharkyLine.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Act0SharkyPresenceBubbleV1(
+                  line: summary.sharkyLine,
+                  mood: summary.qualifiesForNextLesson
+                      ? Act0SharkyMoodV1.celebrate
+                      : Act0SharkyMoodV1.repair,
+                  tone: summary.qualifiesForNextLesson
+                      ? Act0ShellTokensV1.primary
+                      : Act0ShellTokensV1.gold,
+                  textKey: const Key('act0_shell_block_summary_sharky_line'),
+                  mascotSize: 68,
+                  bubblePadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       );
     }
@@ -5627,110 +5675,90 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Container(
-                key: const Key('act0_shell_block_summary_milestone_panel'),
-                padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                decoration: BoxDecoration(
-                  color: celebrateTone.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPanel,
+              _ProofMotionRevealV1(
+                key: const Key('act0_shell_block_summary_payoff_motion_reveal'),
+                child: Container(
+                  key: const Key('act0_shell_block_summary_milestone_panel'),
+                  padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                  decoration: BoxDecoration(
+                    color: celebrateTone.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPanel,
+                    ),
+                    border: Border.all(
+                      color: celebrateTone.withValues(alpha: 0.28),
+                    ),
                   ),
-                  border: Border.all(
-                    color: celebrateTone.withValues(alpha: 0.28),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: celebrateTone.withValues(alpha: 0.16),
-                            borderRadius: BorderRadius.circular(
-                              Act0ShellTokensV1.radiusPill,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
                             ),
-                            border: Border.all(
-                              color: celebrateTone.withValues(alpha: 0.34),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                summary.qualifiesForNextLesson
-                                    ? Icons.auto_awesome_rounded
-                                    : Icons.refresh_rounded,
-                                size: 14,
-                                color: celebrateTone,
+                            decoration: BoxDecoration(
+                              color: celebrateTone.withValues(alpha: 0.16),
+                              borderRadius: BorderRadius.circular(
+                                Act0ShellTokensV1.radiusPill,
                               ),
-                              const SizedBox(width: 6),
-                              Text(
-                                summary.masteryLabel,
-                                style: Act0ShellTokensV1.label.copyWith(
+                              border: Border.all(
+                                color: celebrateTone.withValues(alpha: 0.34),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  summary.qualifiesForNextLesson
+                                      ? Icons.auto_awesome_rounded
+                                      : Icons.refresh_rounded,
+                                  size: 14,
                                   color: celebrateTone,
-                                  letterSpacing: 0.5,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 6),
+                                Text(
+                                  summary.masteryLabel,
+                                  style: Act0ShellTokensV1.label.copyWith(
+                                    color: celebrateTone,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        if (summary.isWorldComplete) ...[
-                          const Spacer(),
-                          Icon(
-                            Icons.emoji_events_rounded,
-                            size: 20,
-                            color: celebrateTone,
-                          ),
+                          if (summary.isWorldComplete) ...[
+                            const Spacer(),
+                            Icon(
+                              Icons.emoji_events_rounded,
+                              size: 20,
+                              color: celebrateTone,
+                            ),
+                          ],
                         ],
-                      ],
-                    ),
-                    const SizedBox(height: Act0ShellTokensV1.gapSm),
-                    Text(
-                      payoffHero?.kicker ?? 'What finished',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: celebrateTone,
-                        letterSpacing: 0.35,
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      payoffHero?.headline ?? summary.milestoneTitle,
-                      key: const Key('act0_shell_block_summary_title'),
-                      style: Act0ShellTokensV1.screenTitle.copyWith(
-                        fontSize: 28,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      payoffHero?.detail ?? summary.milestoneDetailTitle,
-                      key: const Key('act0_shell_block_summary_detail_title'),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      summary.gateMessage,
-                      key: const Key('act0_shell_block_summary_gate_message'),
-                      maxLines: 4,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.textMuted,
-                      ),
-                    ),
-                    if (foldUnlockIntoMilestonePanel) ...[
-                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      const SizedBox(height: Act0ShellTokensV1.gapSm),
                       Text(
-                        summary.unlockedLabel!,
-                        key: const Key('act0_shell_block_summary_unlock_label'),
+                        payoffHero?.kicker ?? 'What finished',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: celebrateTone,
+                          letterSpacing: 0.35,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        payoffHero?.headline ?? summary.milestoneTitle,
+                        key: const Key('act0_shell_block_summary_title'),
+                        style: Act0ShellTokensV1.screenTitle.copyWith(
+                          fontSize: 28,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        payoffHero?.detail ?? summary.milestoneDetailTitle,
+                        key: const Key('act0_shell_block_summary_detail_title'),
                         maxLines: 2,
                         overflow: TextOverflow.fade,
                         style: Act0ShellTokensV1.body.copyWith(
@@ -5738,21 +5766,46 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Text(
-                        summary.progressStatusLabel,
-                        key: const Key(
-                          'act0_shell_block_summary_progress_status',
-                        ),
-                        maxLines: 2,
+                        summary.gateMessage,
+                        key: const Key('act0_shell_block_summary_gate_message'),
+                        maxLines: 4,
                         overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.muted.copyWith(
+                        style: Act0ShellTokensV1.body.copyWith(
                           color: Act0ShellTokensV1.textMuted,
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
+                      if (foldUnlockIntoMilestonePanel) ...[
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        Text(
+                          summary.unlockedLabel!,
+                          key: const Key(
+                            'act0_shell_block_summary_unlock_label',
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          summary.progressStatusLabel,
+                          key: const Key(
+                            'act0_shell_block_summary_progress_status',
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.muted.copyWith(
+                            color: Act0ShellTokensV1.textMuted,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),

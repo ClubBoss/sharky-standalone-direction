@@ -699,23 +699,25 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                   const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      key: const Key('act0_shell_play_repair_queue_item_cta'),
-                      onPressed: () => onLaunchTarget!(item.launchRequest!),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Act0ShellTokensV1.actionBlue,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                    child: _PracticeQueueCtaPressMotionV1(
+                      child: TextButton(
+                        key: const Key('act0_shell_play_repair_queue_item_cta'),
+                        onPressed: () => onLaunchTarget!(item.launchRequest!),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Act0ShellTokensV1.actionBlue,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          minimumSize: const Size(0, 32),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        minimumSize: const Size(0, 32),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Practice this',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.actionBlue,
-                          fontWeight: FontWeight.w900,
+                        child: Text(
+                          'Practice this',
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.actionBlue,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
@@ -725,6 +727,44 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PracticeQueueCtaPressMotionV1 extends StatefulWidget {
+  const _PracticeQueueCtaPressMotionV1({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_PracticeQueueCtaPressMotionV1> createState() =>
+      _PracticeQueueCtaPressMotionV1State();
+}
+
+class _PracticeQueueCtaPressMotionV1State
+    extends State<_PracticeQueueCtaPressMotionV1> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (_pressed == value) return;
+    setState(() {
+      _pressed = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      key: const Key('act0_shell_play_repair_queue_cta_press_motion'),
+      onPointerDown: (_) => _setPressed(true),
+      onPointerUp: (_) => _setPressed(false),
+      onPointerCancel: (_) => _setPressed(false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1,
+        duration: const Duration(milliseconds: 90),
+        curve: Curves.easeOutCubic,
+        child: widget.child,
       ),
     );
   }

@@ -246,6 +246,16 @@ void main() {
 
     expect(find.text('Fix landed'), findsOneWidget);
     expect(
+      find.byKey(const Key('act0_shell_block_summary_payoff_motion_reveal')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_next_motion_reveal')),
+      findsOneWidget,
+    );
+    expect(find.byType(AnimatedSlide), findsWidgets);
+    expect(find.byType(AnimatedOpacity), findsWidgets);
+    expect(
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,

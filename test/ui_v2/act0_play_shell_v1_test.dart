@@ -411,6 +411,19 @@ void main() {
         findsOneWidget,
       );
       expect(
+        find.descendant(
+          of: active,
+          matching: find.byKey(
+            const Key('act0_shell_play_repair_queue_cta_press_motion'),
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: active, matching: find.byType(AnimatedScale)),
+        findsOneWidget,
+      );
+      expect(
         find.descendant(of: active, matching: find.text('Your current fix')),
         findsOneWidget,
       );
@@ -472,6 +485,10 @@ void main() {
       await tester.pump();
 
       expect(launched, hasLength(1));
+      expect(
+        find.byKey(const Key('act0_shell_play_repair_queue_cta_press_motion')),
+        findsOneWidget,
+      );
       expect(launched.single.targetWorldId, 'world_1');
       expect(launched.single.targetLessonId, 'fold_check_call_raise');
       expect(launched.single.targetTaskId, 'actions_check_drill');
