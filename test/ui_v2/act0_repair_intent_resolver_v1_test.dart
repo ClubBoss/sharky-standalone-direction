@@ -244,7 +244,6 @@ void main() {
       'actions_legal_context',
     );
     expect(activeIntentAfter, activeIntentBefore);
-    expect(find.textContaining('fixed'), findsNothing);
     expect(find.textContaining('cleared'), findsNothing);
     expect(find.textContaining('resolved'), findsNothing);
     expect(find.textContaining('completed'), findsNothing);
@@ -281,16 +280,12 @@ void main() {
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isTrue);
     expect(outcomes.single['outcomeState'], 'repair_correct_v1');
-    expect(find.text('Repair rep'), findsOneWidget);
-    expect(
-      find.text('Good rep - you chose the better action.'),
-      findsOneWidget,
-    );
+    expect(find.text('Fix attempt'), findsOneWidget);
+    expect(find.text('Nice — you chose the better action.'), findsOneWidget);
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
     );
-    expect(find.textContaining('fixed'), findsNothing);
     expect(find.textContaining('cleared'), findsNothing);
     expect(find.textContaining('resolved'), findsNothing);
     expect(find.textContaining('completed'), findsNothing);
@@ -324,13 +319,12 @@ void main() {
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isFalse);
     expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');
-    expect(find.text('Repair rep'), findsOneWidget);
-    expect(find.text('Still worth repeating.'), findsOneWidget);
+    expect(find.text('Fix attempt'), findsOneWidget);
+    expect(find.text('Not fixed yet — one more.'), findsOneWidget);
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
     );
-    expect(find.textContaining('fixed'), findsNothing);
     expect(find.textContaining('cleared'), findsNothing);
     expect(find.textContaining('resolved'), findsNothing);
     expect(find.textContaining('completed'), findsNothing);

@@ -544,7 +544,7 @@ class Act0BlockCompletionSummaryV1 {
       return 'You fixed the miss inside the lesson.';
     }
     if (!isWorldComplete && growthLabel.isNotEmpty) {
-      return '$growthLabel moved in this lesson. This read will help in the next spot.';
+      return 'Practiced: $growthLabel. This read will help in the next spot.';
     }
     if (errorCount == 0 && taskCount > 0) {
       return 'Clean run. This read will help in the next spot.';
@@ -594,10 +594,7 @@ String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
       }
       return a.label.compareTo(b.label);
     });
-  return sorted
-      .take(2)
-      .map((gain) => '${gain.label} +${gain.gain}')
-      .join('  •  ');
+  return sorted.take(2).map((gain) => gain.label).join('  •  ');
 }
 
 String? _ownershipLineForSkillLabelV1(String label) {
@@ -4521,7 +4518,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle = hasRepairOutcomeProof
-        ? 'Repair rep'
+        ? 'Fix attempt'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
         : skillReceipt?.title ??

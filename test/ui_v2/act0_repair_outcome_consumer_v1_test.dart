@@ -23,8 +23,8 @@ void main() {
     );
 
     expect(consumer.hasProof, isTrue);
-    expect(consumer.proof?.title, 'Repair rep');
-    expect(consumer.proof?.detail, 'Good rep - you chose the better action.');
+    expect(consumer.proof?.title, 'Fix attempt');
+    expect(consumer.proof?.detail, 'Nice — you chose the better action.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateCorrectV1);
   });
 
@@ -33,8 +33,8 @@ void main() {
       _projection(isCorrect: false, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.proof?.title, 'Repair rep');
-    expect(consumer.proof?.detail, 'Still worth repeating.');
+    expect(consumer.proof?.title, 'Fix attempt');
+    expect(consumer.proof?.detail, 'Not fixed yet — one more.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateStillNeedsRepV1);
   });
 
@@ -43,8 +43,8 @@ void main() {
       _projection(isCorrect: null, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.proof?.title, 'Repair rep');
-    expect(consumer.proof?.detail, 'Repair rep attempted.');
+    expect(consumer.proof?.title, 'Fix attempt');
+    expect(consumer.proof?.detail, 'You gave the fix a try.');
     expect(consumer.proof?.outcomeState, act0RepairOutcomeStateAttemptedV1);
   });
 
@@ -64,7 +64,7 @@ void main() {
 
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(projection);
 
-    expect(consumer.proof?.detail, 'Good rep - you chose the better action.');
+    expect(consumer.proof?.detail, 'Nice — you chose the better action.');
     expect(consumer.proof?.sequence, 2);
   });
 
@@ -74,8 +74,8 @@ void main() {
     );
 
     expect(consumer.hasSessionReceipt, isTrue);
-    expect(consumer.sessionReceipt?.title, 'Repair reps');
-    expect(consumer.sessionReceipt?.lines, <String>['Good reps: 1']);
+    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.lines, <String>['Good fixes: 1']);
   });
 
   test('incorrect outcomes summarize as worth repeating', () {
@@ -83,8 +83,8 @@ void main() {
       _projection(isCorrect: false, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.sessionReceipt?.title, 'Repair reps');
-    expect(consumer.sessionReceipt?.lines, <String>['Worth repeating: 1']);
+    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.lines, <String>['Still to fix: 1']);
   });
 
   test('attempted-only outcomes summarize as attempted reps', () {
@@ -92,8 +92,8 @@ void main() {
       _projection(isCorrect: null, selectedChoiceId: 'fold'),
     );
 
-    expect(consumer.sessionReceipt?.title, 'Repair reps');
-    expect(consumer.sessionReceipt?.lines, <String>['Attempted reps: 1']);
+    expect(consumer.sessionReceipt?.title, 'Fix attempts');
+    expect(consumer.sessionReceipt?.lines, <String>['Fixes tried: 1']);
   });
 
   test('multiple outcomes summarize deterministically', () {
@@ -150,9 +150,44 @@ void main() {
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(projection);
 
     expect(consumer.sessionReceipt?.lines, <String>[
-      'Good reps: 2',
-      'Worth repeating: 1',
+      'Good fixes: 2',
+      'Still to fix: 1',
     ]);
+  });
+
+  test('consumer copy avoids old repair-loop plumbing labels', () {
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: true, selectedChoiceId: 'check'),
+    );
+    final attempted = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: null, selectedChoiceId: 'fold'),
+    );
+    final stillNeedsRep = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: false, selectedChoiceId: 'fold'),
+    );
+    final text = <String>[
+      consumer.proof?.title ?? '',
+      consumer.proof?.detail ?? '',
+      attempted.proof?.detail ?? '',
+      stillNeedsRep.proof?.detail ?? '',
+      consumer.sessionReceipt?.title ?? '',
+      ...?consumer.sessionReceipt?.lines,
+      ...?attempted.sessionReceipt?.lines,
+      ...?stillNeedsRep.sessionReceipt?.lines,
+    ].join(' ');
+
+    for (final oldCopy in <String>[
+      'Repair rep',
+      'rep attempted',
+      'Good rep',
+      'Still worth repeating',
+      'Repair reps',
+      'Good reps',
+      'Worth repeating',
+      'Attempted reps',
+    ]) {
+      expect(text, isNot(contains(oldCopy)));
+    }
   });
 
   test('proof copy avoids forbidden claim families', () {
@@ -173,7 +208,6 @@ void main() {
         ),
       ).sessionReceipt!.lines.join(' ').toLowerCase();
       for (final forbidden in <String>[
-        'fixed',
         'cleared',
         'resolved',
         'completed',

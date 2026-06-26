@@ -8891,7 +8891,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         Act0AchievementV1(
           id: 'repair_queue_clear',
-          label: 'Repair route clear',
+          label: 'Cleared a fix',
           locked: _openMistakes().isNotEmpty,
         ),
         Act0AchievementV1(

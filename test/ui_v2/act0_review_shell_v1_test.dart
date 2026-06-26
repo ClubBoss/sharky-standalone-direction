@@ -122,7 +122,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Active repair'), findsOneWidget);
-      expect(find.text('Active repair note'), findsOneWidget);
+      expect(find.text('What to fix next'), findsOneWidget);
+      expect(find.text('Active repair note'), findsNothing);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(find.text('1 fix waiting'), findsNothing);
       expect(
@@ -370,7 +371,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Active repair note'), findsNothing);
     expect(find.text('Recovered lately'), findsOneWidget);
     expect(find.textContaining('mastered forever'), findsNothing);
   });
@@ -515,7 +517,7 @@ void main() {
     },
   );
 
-  testWidgets('Active repair note stays separate from read-only history', (
+  testWidgets('What to fix next stays separate from read-only history', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -537,7 +539,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Active repair note'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_review_mistake_history_list')),
       findsOneWidget,

@@ -291,7 +291,7 @@ void main() {
             selectedLabel: 'Check',
             preferredLabel: 'Check',
             betterLabel: 'Check',
-            repairOutcomeProofLine: 'Good rep - you chose the better action.',
+            repairOutcomeProofLine: 'Nice — you chose the better action.',
             onContinue: () {},
           ),
         ),
@@ -302,11 +302,8 @@ void main() {
       find.byKey(const Key('act0_shell_repair_outcome_proof')),
       findsOneWidget,
     );
-    expect(find.text('Repair rep'), findsOneWidget);
-    expect(
-      find.text('Good rep - you chose the better action.'),
-      findsOneWidget,
-    );
+    expect(find.text('Fix attempt'), findsOneWidget);
+    expect(find.text('Nice — you chose the better action.'), findsOneWidget);
     expect(find.textContaining('fixed'), findsNothing);
     expect(find.textContaining('cleared'), findsNothing);
     expect(find.textContaining('resolved'), findsNothing);
@@ -339,7 +336,7 @@ void main() {
       find.byKey(const Key('act0_shell_repair_outcome_proof')),
       findsNothing,
     );
-    expect(find.text('Repair rep'), findsNothing);
+    expect(find.text('Fix attempt'), findsNothing);
   });
 
   testWidgets('wrong repair feedback shows visible repair reason', (

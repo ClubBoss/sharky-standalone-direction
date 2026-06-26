@@ -183,8 +183,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
                 )
               : _reviewCopyV1(
                   context,
-                  en: 'One clue to keep in view.',
-                  ru: 'Одна подсказка, которую стоит держать в фокусе.',
+                  en: 'One miss to fix.',
+                  ru: 'Один промах для исправления.',
                 ),
           eyebrow: _reviewHeaderEyebrowV1(
             localeIsRu: localeIsRu,
@@ -359,7 +359,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Active repair note',
+                  'What to fix next',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontWeight: FontWeight.w900,

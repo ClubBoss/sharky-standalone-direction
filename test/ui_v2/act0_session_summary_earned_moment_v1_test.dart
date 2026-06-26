@@ -44,10 +44,10 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsNothing,
     );
-    expect(find.text('Repair reps'), findsNothing);
-    expect(find.text('Good reps: 1'), findsNothing);
-    expect(find.text('Worth repeating: 1'), findsNothing);
-    expect(find.text('Attempted reps: 1'), findsNothing);
+    expect(find.text('Fix attempts'), findsNothing);
+    expect(find.text('Good fixes: 1'), findsNothing);
+    expect(find.text('Still to fix: 1'), findsNothing);
+    expect(find.text('Fixes tried: 1'), findsNothing);
     expect(find.text('You played 2 spots.'), findsOneWidget);
   });
 
@@ -66,10 +66,10 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Repair reps'), findsOneWidget);
-    expect(find.text('Good reps: 1'), findsOneWidget);
-    expect(find.text('Worth repeating: 1'), findsNothing);
-    expect(find.text('Attempted reps: 1'), findsNothing);
+    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text('Good fixes: 1'), findsOneWidget);
+    expect(find.text('Still to fix: 1'), findsNothing);
+    expect(find.text('Fixes tried: 1'), findsNothing);
   });
 
   testWidgets('Session Summary shows worth repeating repair receipt', (
@@ -89,9 +89,9 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Repair reps'), findsOneWidget);
-    expect(find.text('Worth repeating: 1'), findsOneWidget);
-    expect(find.text('Good reps: 1'), findsNothing);
+    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text('Still to fix: 1'), findsOneWidget);
+    expect(find.text('Good fixes: 1'), findsNothing);
   });
 
   testWidgets('Session Summary shows attempted-only repair receipt', (
@@ -111,10 +111,10 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
       findsOneWidget,
     );
-    expect(find.text('Repair reps'), findsOneWidget);
-    expect(find.text('Attempted reps: 1'), findsOneWidget);
-    expect(find.text('Good reps: 1'), findsNothing);
-    expect(find.text('Worth repeating: 1'), findsNothing);
+    expect(find.text('Fix attempts'), findsOneWidget);
+    expect(find.text('Fixes tried: 1'), findsOneWidget);
+    expect(find.text('Good fixes: 1'), findsNothing);
+    expect(find.text('Still to fix: 1'), findsNothing);
   });
 
   testWidgets('Session Summary repair receipt summarizes deterministically', (
@@ -146,10 +146,10 @@ void main() {
       ),
     );
 
-    expect(find.text('Good reps: 2'), findsOneWidget);
-    expect(find.text('Worth repeating: 1'), findsOneWidget);
-    final goodTop = tester.getTopLeft(find.text('Good reps: 2')).dy;
-    final repeatTop = tester.getTopLeft(find.text('Worth repeating: 1')).dy;
+    expect(find.text('Good fixes: 2'), findsOneWidget);
+    expect(find.text('Still to fix: 1'), findsOneWidget);
+    final goodTop = tester.getTopLeft(find.text('Good fixes: 2')).dy;
+    final repeatTop = tester.getTopLeft(find.text('Still to fix: 1')).dy;
     expect(goodTop, lessThan(repeatTop));
   });
 

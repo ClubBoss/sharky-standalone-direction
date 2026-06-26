@@ -3341,7 +3341,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
       expect(find.text('Review'), findsWidgets);
-      expect(find.text('Active repair note'), findsOneWidget);
+      expect(find.text('What to fix next'), findsOneWidget);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(
         find.text('Home has the next focused hand for this clue.'),
@@ -27579,7 +27579,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Betting decisions'), findsWidgets);
-      expect(find.text('+4'), findsOneWidget);
+      expect(find.text('Practiced'), findsWidgets);
       expect(
         find.byKey(
           const Key('act0_shell_profile_skill_stat_Betting decisions'),
@@ -27650,8 +27650,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('Recent progress'), findsNothing);
-      expect(find.textContaining('Recent gain'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsWidgets);
+      expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
+      expect(find.textContaining('Recent gain'), findsNothing);
       expect(
         find.text(
           'See what improved, what is getting stronger, and why the next session starts warmer.',
@@ -27744,8 +27744,7 @@ void main() {
       );
       expect(find.text('Progress proof'), findsOneWidget);
       expect(find.textContaining('Recent progress'), findsNothing);
-      expect(find.textContaining('Recent gain'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsWidgets);
+      expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
       expect(find.text('82% practice accuracy'), findsNothing);
       expect(find.textContaining('Base: '), findsNothing);
       expect(find.textContaining('Recent gain: '), findsNothing);
@@ -27982,7 +27981,7 @@ void main() {
       final milestoneTopLeft = tester.getTopLeft(milestoneCard);
       final proofTopLeft = tester.getTopLeft(proofCard);
       expect(milestoneTopLeft.dy, lessThan(proofTopLeft.dy));
-      expect(find.textContaining('Table sense +6'), findsWidgets);
+      expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
     },
   );
 
@@ -28117,8 +28116,11 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('Recent progress'), findsNothing);
-      expect(find.textContaining('Recent gain'), findsOneWidget);
-      expect(find.textContaining('Betting decisions +4'), findsOneWidget);
+      expect(find.textContaining('Practiced'), findsOneWidget);
+      expect(
+        find.textContaining('Practiced: Betting decisions'),
+        findsOneWidget,
+      );
       expect(find.text('Betting decisions'), findsWidgets);
       expect(find.text('Rhythm'), findsWidgets);
       expect(find.text('3 day streak'), findsWidgets);
@@ -28193,7 +28195,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Skill snapshot'), findsOneWidget);
+    expect(find.text('Skills practiced'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_profile_skill_stat_Table sense')),
       findsOneWidget,
@@ -28270,8 +28272,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('Recent progress'), findsNothing);
-      expect(find.textContaining('Recent gain'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsOneWidget);
+      expect(find.textContaining('Practiced'), findsOneWidget);
+      expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
       expect(find.textContaining('82% practice accuracy'), findsNothing);
       expect(find.textContaining('retentionSequence'), findsNothing);
       expect(find.textContaining('agedRecheck'), findsNothing);
@@ -28348,9 +28350,8 @@ void main() {
 
       expect(recentProgress, findsOneWidget);
       expect(find.textContaining('Recent progress'), findsNothing);
-      expect(find.textContaining('Recent gain'), findsOneWidget);
-      expect(find.textContaining('Table sense +6'), findsOneWidget);
-      expect(find.textContaining('Board reading +3'), findsOneWidget);
+      expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
+      expect(find.textContaining('Board reading'), findsWidgets);
       expect(
         find.byKey(const Key('act0_shell_profile_skill_stat_Hand reading')),
         findsNothing,
@@ -29919,7 +29920,7 @@ void main() {
     );
     expect(
       find.text(
-        'Betting decisions +6  •  Table sense +2 moved in this lesson. This read will help in the next spot.',
+        'Practiced: Betting decisions  •  Table sense. This read will help in the next spot.',
       ),
       findsOneWidget,
     );
@@ -30222,7 +30223,7 @@ void main() {
     expect(find.text('read the table and find your seat'), findsOneWidget);
     expect(find.text('compare the best hand at showdown'), findsOneWidget);
     expect(find.text('What improved'), findsOneWidget);
-    expect(find.text('Hand reading +8  •  Table sense +5'), findsOneWidget);
+    expect(find.text('Hand reading  •  Table sense'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_mastery_pack_card')),
       findsOneWidget,
@@ -30855,7 +30856,7 @@ void main() {
       find.byKey(const Key('act0_shell_review_pattern_card')),
       findsNothing,
     );
-    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.text('What to fix next'), findsOneWidget);
     expect(find.textContaining('showing up 2 times'), findsNothing);
     expect(find.textContaining('next spot gets easier'), findsNothing);
   });
@@ -30900,7 +30901,7 @@ void main() {
     );
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('Active repair note'), findsOneWidget);
+    expect(find.text('What to fix next'), findsOneWidget);
     expect(find.text('Your active repair is waiting on Home.'), findsNothing);
     expect(
       find.text('Keep this clue in view before your next hand.'),

@@ -1096,8 +1096,8 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
           title: _profileCopyV1(context, en: 'Earned', ru: 'Получено'),
           value: _profileCopyV1(
             context,
-            en: '${_profileUnlockedAchievementsCountV1(profile)} badges',
-            ru: '${_profileUnlockedAchievementsCountV1(profile)} бейджей',
+            en: 'Small wins Sharky can prove',
+            ru: 'Малые победы, которые Шарки может подтвердить',
           ),
           icon: Icons.emoji_events_rounded,
           tone: Act0VisualCanonV1.greenTable,
@@ -1370,7 +1370,11 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(context, en: 'Skill snapshot', ru: 'Срез навыков'),
+            _profileCopyV1(
+              context,
+              en: 'Skills practiced',
+              ru: 'Навыки в практике',
+            ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
             ),
@@ -1379,8 +1383,8 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Current skill signals from this route.',
-              ru: 'Текущие сигналы навыков из этого маршрута.',
+              en: 'Recent proof from this route.',
+              ru: 'Недавнее подтверждение из этого маршрута.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
@@ -1398,7 +1402,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '${_profileCopyV1(context, en: 'Recent gain', ru: 'Последний прирост')} · ${recentGains.take(2).map((gain) => '${gain.label} +${gain.gain}').join('  ·  ')}',
+                '${_profileCopyV1(context, en: 'Practiced', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.gold,
                   letterSpacing: 0,
@@ -1788,7 +1792,7 @@ class _ProfileRecentGainsCardV1 extends StatelessWidget {
           if (primaryGain != null) ...[
             _ProfilePayoffRowV1(
               label: _profileCopyV1(context, en: 'Improved', ru: 'Улучшилось'),
-              title: '${primaryGain.label} +${primaryGain.gain}',
+              title: '${primaryGain.label} — practiced',
               body: _profileGainPayoffBodyV1(context, primaryGain),
               tone: Act0ShellTokensV1.info,
               compact: compact,
@@ -2704,7 +2708,11 @@ class _ProfileSkillCardV1 extends StatelessWidget {
                       Text(
                         stat.locked
                             ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
-                            : stat.levelLabel,
+                            : _profileCopyV1(
+                                context,
+                                en: 'Practiced',
+                                ru: 'Практика',
+                              ),
                         style: Act0ShellTokensV1.label.copyWith(color: tone),
                       ),
                     ],
@@ -2727,7 +2735,7 @@ class _ProfileSkillCardV1 extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '+${gain!.gain}',
+                      _profileCopyV1(context, en: 'Practiced', ru: 'Практика'),
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.gold,
                       ),
@@ -2801,7 +2809,11 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   Text(
                     stat.locked
                         ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
-                        : stat.levelLabel,
+                        : _profileCopyV1(
+                            context,
+                            en: 'Practiced',
+                            ru: 'Практика',
+                          ),
                     style: Act0ShellTokensV1.label.copyWith(color: tone),
                   ),
                 ],
@@ -2821,7 +2833,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  '+${gain!.gain}',
+                  _profileCopyV1(context, en: 'Practiced', ru: 'Практика'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.gold,
                   ),
@@ -3033,7 +3045,11 @@ void _showSkillDetailsSheet(
                   Text(
                     stat.locked
                         ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
-                        : '${stat.levelLabel}  ${stat.nextLevelLabel}',
+                        : _profileCopyV1(
+                            context,
+                            en: 'Practiced',
+                            ru: 'Практика',
+                          ),
                     style: Act0ShellTokensV1.label.copyWith(
                       color: stat.locked
                           ? Act0ShellTokensV1.textMuted

@@ -33,7 +33,7 @@ class Act0RepairOutcomeConsumerV1 {
       proof: detail.isEmpty
           ? null
           : Act0RepairOutcomeProofV1(
-              title: 'Repair rep',
+              title: 'Fix attempt',
               detail: detail,
               outcomeState: latest.outcomeState,
               sequence: latest.sequence,
@@ -69,10 +69,9 @@ class Act0RepairOutcomeSessionReceiptV1 {
 
 String _detailForOutcomeStateV1(String outcomeState) {
   return switch (outcomeState) {
-    act0RepairOutcomeStateCorrectV1 =>
-      'Good rep - you chose the better action.',
-    act0RepairOutcomeStateStillNeedsRepV1 => 'Still worth repeating.',
-    act0RepairOutcomeStateAttemptedV1 => 'Repair rep attempted.',
+    act0RepairOutcomeStateCorrectV1 => 'Nice — you chose the better action.',
+    act0RepairOutcomeStateStillNeedsRepV1 => 'Not fixed yet — one more.',
+    act0RepairOutcomeStateAttemptedV1 => 'You gave the fix a try.',
     _ => '',
   };
 }
@@ -94,16 +93,16 @@ Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForOutcomesV1(
     }
   }
   final lines = <String>[
-    if (correctCount > 0) 'Good reps: $correctCount',
-    if (stillNeedsRepCount > 0) 'Worth repeating: $stillNeedsRepCount',
+    if (correctCount > 0) 'Good fixes: $correctCount',
+    if (stillNeedsRepCount > 0) 'Still to fix: $stillNeedsRepCount',
     if (correctCount == 0 && stillNeedsRepCount == 0 && attemptedCount > 0)
-      'Attempted reps: $attemptedCount',
+      'Fixes tried: $attemptedCount',
   ];
   if (lines.isEmpty) {
     return null;
   }
   return Act0RepairOutcomeSessionReceiptV1(
-    title: 'Repair reps',
+    title: 'Fix attempts',
     lines: List<String>.unmodifiable(lines),
   );
 }
