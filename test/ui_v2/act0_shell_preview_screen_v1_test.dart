@@ -20703,6 +20703,10 @@ void main() {
         find.byKey(const Key('act0_shell_street_replay_sheet')),
         findsOneWidget,
       );
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_step_motion_0')),
+        findsOneWidget,
+      );
       final replaySheet = find.byKey(
         const Key('act0_shell_street_replay_sheet'),
       );
@@ -30081,6 +30085,12 @@ void main() {
     expect(find.text('Clean pass'), findsOneWidget);
     expect(find.text('Lesson complete'), findsOneWidget);
     expect(find.text('What finished'), findsOneWidget);
+    expect(
+      find.byKey(
+        const Key('act0_shell_session_summary_proof_hero_motion_reveal'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Action words'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_suggested_next')),

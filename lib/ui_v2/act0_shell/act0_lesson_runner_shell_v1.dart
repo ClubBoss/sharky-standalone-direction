@@ -4608,329 +4608,343 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
-    return Container(
-      key: const Key('act0_shell_feedback_card'),
-      padding: EdgeInsets.all(
-        rapidMode ? 8 : (isCompactRefinedFeedback ? 5 : (refined ? 8 : 10)),
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
-            Act0ShellTokensV1.surface3.withValues(alpha: 0.94),
-          ],
+    return _ProofMotionRevealV1(
+      key: const Key('act0_shell_feedback_card_motion_reveal'),
+      child: Container(
+        key: const Key('act0_shell_feedback_card'),
+        padding: EdgeInsets.all(
+          rapidMode ? 8 : (isCompactRefinedFeedback ? 5 : (refined ? 8 : 10)),
         ),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(
-          color: tone.withValues(
-            alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.40),
-          ),
-        ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.18),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Act0SharkyMascotV1(
-                mood: sharkyMood,
-                tone: sharkyTone,
-                size: isCompactRefinedFeedback ? 30 : (refined ? 34 : 40),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
-                      KeyedSubtree(
-                        key: const Key(
-                          'act0_shell_feedback_primary_result_block',
-                        ),
-                        child: KeyedSubtree(
-                          key: const Key(
-                            'act0_shell_feedback_primary_result_label',
-                          ),
-                          child: Text(
-                            primaryResultLabel,
-                            key: const Key(
-                              'act0_shell_feedback_rhythm_verdict',
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: tone,
-                              fontSize: 13.5,
-                              height: 1.04,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 1),
-                    ],
-                    if (reactionLine.isNotEmpty)
-                      Text(
-                        reactionLine,
-                        key: const Key('act0_shell_sharky_outcome_reaction'),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.muted.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          fontSize: refined ? 10.0 : 10.5,
-                          height: 1.06,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: <Color>[
+              Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
+              Act0ShellTokensV1.surface3.withValues(alpha: 0.94),
             ],
           ),
-          if (rapidMode && actionLabel.isNotEmpty) ...[
-            Text(
-              '$actionPrefix: $actionLabel',
-              key: const Key('act0_shell_feedback_hero_action'),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.text,
-                fontSize: 15,
-                height: 1.06,
-                fontWeight: FontWeight.w900,
-              ),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+          border: Border.all(
+            color: tone.withValues(
+              alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.40),
             ),
-            const SizedBox(height: 0),
-          ],
-          if (showProofStack) ...[
-            SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
-            Column(
-              key: const Key('act0_shell_feedback_proof_stack'),
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (showActionContrast) ...[
-                  _FeedbackActionContrastBlockV1(
-                    actionLine: '$actionPrefix: $actionLabel',
-                    selectedLine: selectedContrastLine,
-                    tone: tone,
-                    compact: isCompactRefinedFeedback,
-                    refined: refined,
-                  ),
-                  SizedBox(height: isCompactRefinedFeedback ? 7 : 10),
-                ],
-                if (showSignalProofInProofStack) ...[
-                  _FeedbackSignalProofRowV1(
-                    proofLine: signalProof!.proofLine,
-                    tone: tone,
-                    compact: isCompactRefinedFeedback,
-                  ),
-                  SizedBox(height: isCompactRefinedFeedback ? 2 : 3),
-                ],
-                if (showReason)
-                  Text(
-                    resolvedReason,
-                    key: const Key('act0_shell_feedback_reason'),
-                    maxLines:
-                        isCompactRefinedFeedback && !preserveFullCompactReason
-                        ? 2
-                        : null,
-                    overflow:
-                        isCompactRefinedFeedback && !preserveFullCompactReason
-                        ? TextOverflow.fade
-                        : null,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      fontSize: isCompactRefinedFeedback
-                          ? 11.4
-                          : (refined ? 12.0 : 12.5),
-                      height: isCompactRefinedFeedback ? 1.08 : 1.16,
-                    ),
-                  ),
-                if (showRepairFocus) ...[
-                  SizedBox(height: isCompactRefinedFeedback ? 6 : 10),
-                  const _FeedbackVerdictDividerV1(),
-                  SizedBox(height: isCompactRefinedFeedback ? 6 : 8),
-                  _FeedbackVisibleRepairReasonBlockV1(
-                    lines: visibleRepairReasonLines,
-                    compact: isCompactRefinedFeedback,
-                  ),
-                ],
-              ],
+          ),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.18),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
             ),
           ],
-          if (!rapidMode && showVerdictTitle && !isCompactRefinedFeedback) ...[
-            const SizedBox(height: 7),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(icon, key: iconKey, color: tone, size: 15),
-                const SizedBox(width: 6),
+                Act0SharkyMascotV1(
+                  mood: sharkyMood,
+                  tone: sharkyTone,
+                  size: isCompactRefinedFeedback ? 30 : (refined ? 34 : 40),
+                ),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    act0RuntimeLocalizedGeneralLabelV1(context, resolvedTitle),
-                    key: const Key('act0_shell_feedback_status_label'),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: tone.withValues(alpha: 0.92),
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
+                        KeyedSubtree(
+                          key: const Key(
+                            'act0_shell_feedback_primary_result_block',
+                          ),
+                          child: KeyedSubtree(
+                            key: const Key(
+                              'act0_shell_feedback_primary_result_label',
+                            ),
+                            child: Text(
+                              primaryResultLabel,
+                              key: const Key(
+                                'act0_shell_feedback_rhythm_verdict',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: tone,
+                                fontSize: 13.5,
+                                height: 1.04,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 1),
+                      ],
+                      if (reactionLine.isNotEmpty)
+                        Text(
+                          reactionLine,
+                          key: const Key('act0_shell_sharky_outcome_reaction'),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.muted.copyWith(
+                            color: Act0ShellTokensV1.textMuted,
+                            fontSize: refined ? 10.0 : 10.5,
+                            height: 1.06,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ],
-          if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
-            const SizedBox(height: 9),
-            _PotSweepMomentV1(potLabel: potLabel),
-          ],
-          if (!rapidMode &&
-              !isCompactRefinedFeedback &&
-              visibleContextLabels.isNotEmpty) ...[
-            const SizedBox(height: 7),
-            Wrap(
-              key: const Key('act0_shell_feedback_context_labels'),
-              spacing: 6,
-              runSpacing: 5,
-              children: [
-                for (final label in visibleContextLabels)
-                  _DockStatusPillV1(
-                    label: label,
-                    icon: Icons.check_rounded,
-                    tone: tone,
-                  ),
-              ],
-            ),
-          ],
-          if (shouldShowReceiptProof) ...[
-            const SizedBox(height: 8),
-            const _FeedbackVerdictDividerV1(),
-            const SizedBox(height: 8),
-            _FeedbackProofKeyWrapperV1(
-              proofKey: repairReceiptLine.isNotEmpty
-                  ? const Key('act0_shell_repair_receipt_proof_block')
-                  : hasRepairOutcomeProof
-                  ? const Key('act0_shell_repair_outcome_proof')
-                  : null,
-              child: KeyedSubtree(
-                key: repairReceiptLine.isNotEmpty
-                    ? const Key('act0_shell_repair_result_receipt')
-                    : hasRepairOutcomeProof
-                    ? const Key('act0_shell_repair_outcome_proof_card')
-                    : const Key('act0_shell_first_value_receipt'),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            if (rapidMode && actionLabel.isNotEmpty) ...[
+              Text(
+                '$actionPrefix: $actionLabel',
+                key: const Key('act0_shell_feedback_hero_action'),
+                maxLines: 2,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.text,
+                  fontSize: 15,
+                  height: 1.06,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 0),
+            ],
+            if (showProofStack) ...[
+              SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
+              Column(
+                key: const Key('act0_shell_feedback_proof_stack'),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (showActionContrast) ...[
+                    _FeedbackActionContrastBlockV1(
+                      actionLine: '$actionPrefix: $actionLabel',
+                      selectedLine: selectedContrastLine,
+                      tone: tone,
+                      compact: isCompactRefinedFeedback,
+                      refined: refined,
+                    ),
+                    SizedBox(height: isCompactRefinedFeedback ? 7 : 10),
+                  ],
+                  if (showSignalProofInProofStack) ...[
+                    _FeedbackSignalProofRowV1(
+                      proofLine: signalProof!.proofLine,
+                      tone: tone,
+                      compact: isCompactRefinedFeedback,
+                    ),
+                    SizedBox(height: isCompactRefinedFeedback ? 2 : 3),
+                  ],
+                  if (showReason)
                     Text(
-                      receiptTitle,
-                      key: repairReceiptLine.isNotEmpty
-                          ? const Key('act0_shell_repair_result_receipt_title')
-                          : hasRepairOutcomeProof
-                          ? const Key('act0_shell_repair_outcome_proof_title')
+                      resolvedReason,
+                      key: const Key('act0_shell_feedback_reason'),
+                      maxLines:
+                          isCompactRefinedFeedback && !preserveFullCompactReason
+                          ? 2
                           : null,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.primary,
-                        fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                      overflow:
+                          isCompactRefinedFeedback && !preserveFullCompactReason
+                          ? TextOverflow.fade
+                          : null,
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                        fontSize: isCompactRefinedFeedback
+                            ? 11.4
+                            : (refined ? 12.0 : 12.5),
+                        height: isCompactRefinedFeedback ? 1.08 : 1.16,
+                      ),
+                    ),
+                  if (showRepairFocus) ...[
+                    SizedBox(height: isCompactRefinedFeedback ? 6 : 10),
+                    const _FeedbackVerdictDividerV1(),
+                    SizedBox(height: isCompactRefinedFeedback ? 6 : 8),
+                    _FeedbackVisibleRepairReasonBlockV1(
+                      lines: visibleRepairReasonLines,
+                      compact: isCompactRefinedFeedback,
+                    ),
+                  ],
+                ],
+              ),
+            ],
+            if (!rapidMode &&
+                showVerdictTitle &&
+                !isCompactRefinedFeedback) ...[
+              const SizedBox(height: 7),
+              Row(
+                children: [
+                  Icon(icon, key: iconKey, color: tone, size: 15),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      act0RuntimeLocalizedGeneralLabelV1(
+                        context,
+                        resolvedTitle,
+                      ),
+                      key: const Key('act0_shell_feedback_status_label'),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: tone.withValues(alpha: 0.92),
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    if (receiptDetail.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        receiptDetail,
-                        key: repairReceiptLine.isNotEmpty
-                            ? const Key('act0_shell_repair_result_outcome_line')
-                            : hasRepairOutcomeProof
-                            ? const Key('act0_shell_repair_outcome_proof_line')
-                            : null,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
-                          height: 1.12,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
-                    if (receiptNextLine.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        receiptNextLine,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-          if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            const _FeedbackVerdictDividerV1(),
-            const SizedBox(height: 8),
-            _FeedbackProofKeyWrapperV1(
-              proofKey: const Key('act0_shell_session_summary_proof_block'),
-              child: _FeedbackSessionSummaryCeremonyBlockV1(
-                lines: visibleRepairSessionSummaryLines,
-              ),
-            ),
-          ],
-          if (!rapidMode && completionSummary != null) ...[
-            const SizedBox(height: 8),
-            _CompletionToastV1(summary: completionSummary!),
-          ],
-          if (rapidMode) ...[
-            const SizedBox(height: 8),
-            Text(
-              'Next spot...',
-              key: const Key('act0_shell_feedback_auto_advance_label'),
-              textAlign: TextAlign.center,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: tone,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ] else ...[
-            SizedBox(height: isCompactRefinedFeedback ? 4 : 10),
-            Row(
-              children: [
-                if (onBack != null) ...[
-                  _DockBackButtonV1(
-                    key: const Key('act0_shell_interaction_back_cta'),
-                    onPressed: onBack!,
                   ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
                 ],
-                Expanded(
-                  child: FilledButton(
-                    key: const Key('act0_shell_feedback_continue_cta'),
-                    onPressed: onContinue,
-                    style: Act0ShellTokensV1.primaryButtonStyle(
-                      height: isCompactRefinedFeedback
-                          ? 34
-                          : Act0ShellTokensV1.compactCtaHeight,
+              ),
+            ],
+            if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
+              const SizedBox(height: 9),
+              _PotSweepMomentV1(potLabel: potLabel),
+            ],
+            if (!rapidMode &&
+                !isCompactRefinedFeedback &&
+                visibleContextLabels.isNotEmpty) ...[
+              const SizedBox(height: 7),
+              Wrap(
+                key: const Key('act0_shell_feedback_context_labels'),
+                spacing: 6,
+                runSpacing: 5,
+                children: [
+                  for (final label in visibleContextLabels)
+                    _DockStatusPillV1(
+                      label: label,
+                      icon: Icons.check_rounded,
+                      tone: tone,
                     ),
-                    child: Text(isWrong ? 'Try one like this' : 'Continue'),
+                ],
+              ),
+            ],
+            if (shouldShowReceiptProof) ...[
+              const SizedBox(height: 8),
+              const _FeedbackVerdictDividerV1(),
+              const SizedBox(height: 8),
+              _FeedbackProofKeyWrapperV1(
+                proofKey: repairReceiptLine.isNotEmpty
+                    ? const Key('act0_shell_repair_receipt_proof_block')
+                    : hasRepairOutcomeProof
+                    ? const Key('act0_shell_repair_outcome_proof')
+                    : null,
+                child: KeyedSubtree(
+                  key: repairReceiptLine.isNotEmpty
+                      ? const Key('act0_shell_repair_result_receipt')
+                      : hasRepairOutcomeProof
+                      ? const Key('act0_shell_repair_outcome_proof_card')
+                      : const Key('act0_shell_first_value_receipt'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        receiptTitle,
+                        key: repairReceiptLine.isNotEmpty
+                            ? const Key(
+                                'act0_shell_repair_result_receipt_title',
+                              )
+                            : hasRepairOutcomeProof
+                            ? const Key('act0_shell_repair_outcome_proof_title')
+                            : null,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.primary,
+                          fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      if (receiptDetail.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          receiptDetail,
+                          key: repairReceiptLine.isNotEmpty
+                              ? const Key(
+                                  'act0_shell_repair_result_outcome_line',
+                                )
+                              : hasRepairOutcomeProof
+                              ? const Key(
+                                  'act0_shell_repair_outcome_proof_line',
+                                )
+                              : null,
+                          style: Act0ShellTokensV1.body.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
+                            height: 1.12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                      if (receiptNextLine.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          receiptNextLine,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.textMuted,
+                            fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
+            if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              const _FeedbackVerdictDividerV1(),
+              const SizedBox(height: 8),
+              _FeedbackProofKeyWrapperV1(
+                proofKey: const Key('act0_shell_session_summary_proof_block'),
+                child: _FeedbackSessionSummaryCeremonyBlockV1(
+                  lines: visibleRepairSessionSummaryLines,
+                ),
+              ),
+            ],
+            if (!rapidMode && completionSummary != null) ...[
+              const SizedBox(height: 8),
+              _CompletionToastV1(summary: completionSummary!),
+            ],
+            if (rapidMode) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Next spot...',
+                key: const Key('act0_shell_feedback_auto_advance_label'),
+                textAlign: TextAlign.center,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: tone,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ] else ...[
+              SizedBox(height: isCompactRefinedFeedback ? 4 : 10),
+              Row(
+                children: [
+                  if (onBack != null) ...[
+                    _DockBackButtonV1(
+                      key: const Key('act0_shell_interaction_back_cta'),
+                      onPressed: onBack!,
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
+                  ],
+                  Expanded(
+                    child: FilledButton(
+                      key: const Key('act0_shell_feedback_continue_cta'),
+                      onPressed: onContinue,
+                      style: Act0ShellTokensV1.primaryButtonStyle(
+                        height: isCompactRefinedFeedback
+                            ? 34
+                            : Act0ShellTokensV1.compactCtaHeight,
+                      ),
+                      child: Text(isWrong ? 'Try one like this' : 'Continue'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -5204,15 +5218,24 @@ class _ProofMotionRevealV1State extends State<_ProofMotionRevealV1> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSlide(
-      offset: _settled ? Offset.zero : const Offset(0, 0.035),
+    final disableMotion = MediaQuery.of(context).disableAnimations;
+    if (disableMotion) {
+      return widget.child;
+    }
+    return AnimatedScale(
+      scale: _settled ? 1 : 0.992,
       duration: const Duration(milliseconds: 160),
       curve: Curves.easeOutCubic,
-      child: AnimatedOpacity(
-        opacity: _settled ? 1 : 0.92,
-        duration: const Duration(milliseconds: 140),
+      child: AnimatedSlide(
+        offset: _settled ? Offset.zero : const Offset(0, 0.035),
+        duration: const Duration(milliseconds: 160),
         curve: Curves.easeOutCubic,
-        child: widget.child,
+        child: AnimatedOpacity(
+          opacity: _settled ? 1 : 0.92,
+          duration: const Duration(milliseconds: 140),
+          curve: Curves.easeOutCubic,
+          child: widget.child,
+        ),
       ),
     );
   }
@@ -5719,112 +5742,96 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               _ProofMotionRevealV1(
-                key: const Key('act0_shell_block_summary_payoff_motion_reveal'),
-                child: Container(
-                  key: const Key('act0_shell_block_summary_milestone_panel'),
-                  padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                  decoration: BoxDecoration(
-                    color: celebrateTone.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPanel,
-                    ),
-                    border: Border.all(
-                      color: celebrateTone.withValues(alpha: 0.28),
-                    ),
+                key: const Key(
+                  'act0_shell_session_summary_proof_hero_motion_reveal',
+                ),
+                child: KeyedSubtree(
+                  key: const Key(
+                    'act0_shell_block_summary_payoff_motion_reveal',
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: celebrateTone.withValues(alpha: 0.16),
-                              borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusPill,
+                  child: Container(
+                    key: const Key('act0_shell_block_summary_milestone_panel'),
+                    padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+                    decoration: BoxDecoration(
+                      color: celebrateTone.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusPanel,
+                      ),
+                      border: Border.all(
+                        color: celebrateTone.withValues(alpha: 0.28),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
                               ),
-                              border: Border.all(
-                                color: celebrateTone.withValues(alpha: 0.34),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  summary.qualifiesForNextLesson
-                                      ? Icons.auto_awesome_rounded
-                                      : Icons.refresh_rounded,
-                                  size: 14,
-                                  color: celebrateTone,
+                              decoration: BoxDecoration(
+                                color: celebrateTone.withValues(alpha: 0.16),
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.radiusPill,
                                 ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  summary.masteryLabel,
-                                  style: Act0ShellTokensV1.label.copyWith(
+                                border: Border.all(
+                                  color: celebrateTone.withValues(alpha: 0.34),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    summary.qualifiesForNextLesson
+                                        ? Icons.auto_awesome_rounded
+                                        : Icons.refresh_rounded,
+                                    size: 14,
                                     color: celebrateTone,
-                                    letterSpacing: 0.5,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    summary.masteryLabel,
+                                    style: Act0ShellTokensV1.label.copyWith(
+                                      color: celebrateTone,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          if (summary.isWorldComplete) ...[
-                            const Spacer(),
-                            Icon(
-                              Icons.emoji_events_rounded,
-                              size: 20,
-                              color: celebrateTone,
-                            ),
+                            if (summary.isWorldComplete) ...[
+                              const Spacer(),
+                              Icon(
+                                Icons.emoji_events_rounded,
+                                size: 20,
+                                color: celebrateTone,
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapSm),
-                      Text(
-                        payoffHero?.kicker ?? 'What finished',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: celebrateTone,
-                          letterSpacing: 0.35,
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        payoffHero?.headline ?? summary.milestoneTitle,
-                        key: const Key('act0_shell_block_summary_title'),
-                        style: Act0ShellTokensV1.screenTitle.copyWith(
-                          fontSize: 28,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        payoffHero?.detail ?? summary.milestoneDetailTitle,
-                        key: const Key('act0_shell_block_summary_detail_title'),
-                        maxLines: 2,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        summary.gateMessage,
-                        key: const Key('act0_shell_block_summary_gate_message'),
-                        maxLines: 4,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                        ),
-                      ),
-                      if (foldUnlockIntoMilestonePanel) ...[
-                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        const SizedBox(height: Act0ShellTokensV1.gapSm),
                         Text(
-                          summary.unlockedLabel!,
+                          payoffHero?.kicker ?? 'What finished',
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: celebrateTone,
+                            letterSpacing: 0.35,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          payoffHero?.headline ?? summary.milestoneTitle,
+                          key: const Key('act0_shell_block_summary_title'),
+                          style: Act0ShellTokensV1.screenTitle.copyWith(
+                            fontSize: 28,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          payoffHero?.detail ?? summary.milestoneDetailTitle,
                           key: const Key(
-                            'act0_shell_block_summary_unlock_label',
+                            'act0_shell_block_summary_detail_title',
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
@@ -5833,21 +5840,48 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Text(
-                          summary.progressStatusLabel,
+                          summary.gateMessage,
                           key: const Key(
-                            'act0_shell_block_summary_progress_status',
+                            'act0_shell_block_summary_gate_message',
                           ),
-                          maxLines: 2,
+                          maxLines: 4,
                           overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.muted.copyWith(
+                          style: Act0ShellTokensV1.body.copyWith(
                             color: Act0ShellTokensV1.textMuted,
-                            fontWeight: FontWeight.w700,
                           ),
                         ),
+                        if (foldUnlockIntoMilestonePanel) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          Text(
+                            summary.unlockedLabel!,
+                            key: const Key(
+                              'act0_shell_block_summary_unlock_label',
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.fade,
+                            style: Act0ShellTokensV1.body.copyWith(
+                              color: Act0ShellTokensV1.text,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            summary.progressStatusLabel,
+                            key: const Key(
+                              'act0_shell_block_summary_progress_status',
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.fade,
+                            style: Act0ShellTokensV1.muted.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -11910,7 +11944,13 @@ class _StreetReplaySheetV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 for (var i = 0; i < replay.steps.length; i++) ...[
-                  _StreetReplayStepRowV1(step: replay.steps[i], index: i),
+                  _ProofMotionRevealV1(
+                    key: Key('act0_shell_street_replay_step_motion_$i'),
+                    child: _StreetReplayStepRowV1(
+                      step: replay.steps[i],
+                      index: i,
+                    ),
+                  ),
                   if (i < replay.steps.length - 1)
                     const SizedBox(height: Act0ShellTokensV1.gapSm),
                 ],

@@ -306,8 +306,13 @@ void main() {
       find.byKey(const Key('act0_shell_repair_outcome_motion_reveal')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_card_motion_reveal')),
+      findsOneWidget,
+    );
     expect(find.byType(AnimatedSlide), findsWidgets);
     expect(find.byType(AnimatedOpacity), findsWidgets);
+    expect(find.byType(AnimatedScale), findsWidgets);
     expect(find.text('Fix attempt'), findsOneWidget);
     expect(find.text('Nice — you chose the better action.'), findsOneWidget);
     expect(find.textContaining('fixed'), findsNothing);
