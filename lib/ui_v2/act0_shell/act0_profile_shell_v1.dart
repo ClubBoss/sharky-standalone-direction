@@ -496,7 +496,11 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      profile.level,
+                      _profileCopyV1(
+                        context,
+                        en: 'Learning profile',
+                        ru: 'Профиль обучения',
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
                       style: Act0ShellTokensV1.screenTitle.copyWith(
@@ -525,7 +529,11 @@ class _ProfileHeroCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            profile.xpLine,
+            _profileCopyV1(
+              context,
+              en: 'Recent route proof',
+              ru: 'Недавнее подтверждение маршрута',
+            ),
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0VisualCanonV1.textPrimary.withOpacity(0.92),
               fontWeight: FontWeight.w700,
@@ -1622,7 +1630,7 @@ String _profilePrimaryConsistencyLineV1(
         ? _profileSurfaceAtomByIdV1(
             context,
             'profile_support_no_streak_with_fix',
-            'You already fixed a live miss. One more clean rep starts the rhythm.',
+            'You already replayed a live miss. One more clean rep starts the rhythm.',
           )
         : _profileSurfaceAtomByIdV1(
             context,
@@ -1858,7 +1866,7 @@ class _ProfileSecondarySignalsWrapV1 extends StatelessWidget {
         ),
       if (profile.mistakesFixedLine.trim().isNotEmpty)
         _ProfileMiniSignalTileV1(
-          label: _profileCopyV1(context, en: 'Fixed', ru: 'Закрепилось'),
+          label: _profileCopyV1(context, en: 'Replay note', ru: 'Повтор'),
           title: profile.mistakesFixedLine,
           body: _profileFixedSupportBodyV1(context, profile.mistakesFixedLine),
           tone: Act0ShellTokensV1.info,
@@ -1914,8 +1922,8 @@ String _profileRecentProgressSummaryV1(
   if (profile.mistakesFixedLine.trim().isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: 'One repaired spot is back under control.',
-      ru: 'Один исправленный спот снова под контролем.',
+      en: 'One replayed spot is ready to keep practicing.',
+      ru: 'Один повторённый спот готов к дальнейшей практике.',
     );
   }
   return _profileCopyV1(
@@ -1941,14 +1949,14 @@ String _profileFixedSupportBodyV1(BuildContext context, String fixedLine) {
   if (fixedLine.startsWith('1 ') || fixedLine.startsWith('1\u00A0')) {
     return _profileCopyV1(
       context,
-      en: 'That repaired spot is back under control.',
-      ru: 'Этот спот снова под контролем.',
+      en: 'That replayed spot is ready to keep practicing.',
+      ru: 'Этот повторённый спот готов к дальнейшей практике.',
     );
   }
   return _profileCopyV1(
     context,
-    en: 'Those repaired spots are back under control.',
-    ru: 'Эти споты снова под контролем.',
+    en: 'Those replayed spots are ready to keep practicing.',
+    ru: 'Эти повторённые споты готовы к дальнейшей практике.',
   );
 }
 
@@ -1982,12 +1990,12 @@ String _profileReturnValueBodyV1(
       context,
       en: hasKeptSharpSignal
           ? hasFixedSignal
-                ? 'Tomorrow starts warmer because this skill stayed live, one repaired spot held, and the next close decision should feel clearer.'
+                ? 'Tomorrow starts warmer because this skill stayed live, one replay note held, and the next close decision should feel clearer.'
                 : 'Tomorrow starts warmer because this skill stayed live and the next close decision should feel clearer.'
           : 'Tomorrow starts warmer because your rhythm is already live.',
       ru: hasKeptSharpSignal
           ? hasFixedSignal
-                ? 'Вернуться завтра будет проще, потому что недавние чистые повторы удержали этот навык живым, исправленный спот остался под контролем, а следующее близкое решение должно читаться яснее.'
+                ? 'Вернуться завтра будет проще, потому что недавние чистые повторы удержали этот навык живым, одна заметка для повтора осталась доступной, а следующее близкое решение должно читаться яснее.'
                 : 'Вернуться завтра будет проще, потому что недавние чистые повторы уже удержали этот навык живым, а следующее близкое решение должно читаться яснее.'
           : 'Вернуться завтра будет проще, потому что ритм уже живой.',
     );
@@ -2356,7 +2364,7 @@ class _ProfileSnapshotStripV1 extends StatelessWidget {
             : _profileCopyV1(context, en: 'Activity', ru: 'Активность'),
         value: profile.streakLine.isNotEmpty
             ? profile.streakLine
-            : profile.level,
+            : _profileCopyV1(context, en: 'Route started', ru: 'Маршрут начат'),
         support: '',
       ),
       (
@@ -2364,7 +2372,11 @@ class _ProfileSnapshotStripV1 extends StatelessWidget {
         value: profile.lessonsLine,
         support: profile.mistakesFixedLine,
       ),
-      (label: 'XP', value: profile.xpLine, support: ''),
+      (
+        label: _profileCopyV1(context, en: 'Route', ru: 'Маршрут'),
+        value: profile.lessonsLine,
+        support: '',
+      ),
       (
         label: _profileCopyV1(context, en: 'Accuracy', ru: 'Точность'),
         value: profile.accuracyLine,

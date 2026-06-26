@@ -4862,7 +4862,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     final topMistake = _topOpenMistake();
     if (topMistake != null) {
-      final isDeep = topMistake.severityLabel == 'Deep leak';
+      final isDeep =
+          topMistake.severityLabel == 'Deep leak' ||
+          topMistake.severityLabel == 'Deep repair';
       final repairIntentTarget = _openRepairIntentTargetForSourceTaskV1(
         topMistake.taskId,
       );
@@ -4871,10 +4873,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? _Act0LearningNextActionKindV1.repairDeepLeak
             : _Act0LearningNextActionKindV1.repairWeakSpot,
         label: isDeep
-            ? _copyV1(en: 'Deep leak', ru: 'Серьёзная ошибка')
+            ? _copyV1(en: 'Deep repair', ru: 'Серьёзный разбор')
             : _copyV1(en: 'Needs work', ru: 'Нужно подтянуть'),
         title: isDeep
-            ? _copyV1(en: 'Fix a deep leak', ru: 'Разбери серьёзную ошибку')
+            ? _copyV1(
+                en: 'Practice one deep spot',
+                ru: 'Разбери один серьёзный спот',
+              )
             : _copyV1(
                 en: 'Repair one weak spot',
                 ru: 'Разбери одно слабое место',
@@ -4885,7 +4890,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Этот спот уже дважды не дался. Разбери его, прежде чем идти дальше.',
               )
             : _copyV1(
-                en: 'Fix this spot before it becomes a habit.',
+                en: 'Practice this spot before it becomes a habit.',
                 ru: 'Разбери этот спот, пока он не закрепился.',
               ),
         ctaLabel: _recommendationCtaLabel(
@@ -4899,7 +4904,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         outcome: isDeep
             ? _copyV1(
-                en: 'Deep leak first: repair ${_playDrillTitleForLesson(topMistake.lessonId)}.',
+                en: 'Deep repair first: practice ${_playDrillTitleForLesson(topMistake.lessonId)}.',
                 ru: 'Сначала разбери серьёзную ошибку: ${_playDrillTitleForLesson(topMistake.lessonId)}.',
               )
             : _copyV1(
@@ -5125,12 +5130,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _recommendationCtaLabel(_Act0LearningNextActionKindV1 kind) {
     return switch (kind) {
       _Act0LearningNextActionKindV1.repairDeepLeak => _copyV1(
-        en: 'Fix this now',
-        ru: 'Исправить сейчас',
+        en: 'Practice this spot',
+        ru: 'Разобрать этот спот',
       ),
       _Act0LearningNextActionKindV1.repairWeakSpot => _copyV1(
-        en: 'Fix this now',
-        ru: 'Исправить сейчас',
+        en: 'Practice this spot',
+        ru: 'Разобрать этот спот',
       ),
       _Act0LearningNextActionKindV1.reviewQuickFix => _copyV1(
         en: 'Review now',
@@ -5429,7 +5434,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) {
     if (_placementHandoffActive) {
       return _copyV1(
-        en: 'No leaks open. Keep going.',
+        en: 'No urgent repair open. Keep going.',
         ru: 'Сейчас явных ошибок нет. Просто продолжай.',
       );
     }
@@ -5450,7 +5455,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     return _copyV1(
-      en: 'No leaks open. Keep going.',
+      en: 'No urgent repair open. Keep going.',
       ru: 'Сейчас явных ошибок нет. Просто продолжай.',
     );
   }
@@ -5465,7 +5470,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     if (recommendation.mistake != null) {
       return _copyV1(
-        en: 'One fix now keeps the leak from following you forward.',
+        en: 'One practice pass keeps this spot from following you forward.',
         ru: 'Один разбор сейчас не даст этой ошибке закрепиться.',
       );
     }
@@ -5686,23 +5691,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0PracticeSurfaceRecommendationV1(
         groupId: quickFixGroup.groupId,
         title: _copyV1(
-          en: 'Sharpen one repaired spot',
-          ru: 'Закрепи уже исправленный спот',
+          en: 'Replay one useful spot',
+          ru: 'Повтори один полезный спот',
         ),
         subtitle: _copyV1(
-          en: 'Keep one fixed idea stable without dropping back into full Review.',
-          ru: 'Закрепи одну уже исправленную идею без возврата в полный режим Разбора.',
+          en: 'Keep one idea available without dropping back into full Review.',
+          ru: 'Удержи одну идею доступной без возврата в полный режим Разбора.',
         ),
         reasonLabel: _copyV1(en: 'Keep it sharp', ru: 'Удержи в тонусе'),
         outcomeLead: _copyV1(en: 'One calm rep:', ru: 'Один спокойный повтор:'),
         outcome: _copyV1(
-          en: 'stabilize the fix, then move back into today\'s reps or one skill pack.',
-          ru: 'закрепи исправление, а потом вернись к сегодняшним повторам или к одному паку.',
+          en: 'replay the spot, then move back into today\'s reps or one skill pack.',
+          ru: 'повтори спот, а потом вернись к сегодняшним повторам или к одному паку.',
         ),
         masteryLabel: _copyV1(en: 'Light repair rep', ru: 'Лёгкий повтор'),
         screenSubtitle: _copyV1(
-          en: 'Practice keeps repaired ideas sharp. Review still owns deeper fixes.',
-          ru: 'Практика удерживает исправленные идеи в тонусе. Более глубокий разбор всё ещё живёт во вкладке Разбор.',
+          en: 'Practice keeps replay notes sharp. Review still owns deeper repairs.',
+          ru: 'Практика удерживает заметки для повтора в тонусе. Более глубокий разбор всё ещё живёт во вкладке Разбор.',
         ),
       );
     }
@@ -5736,7 +5741,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : _copyV1(en: 'Today\'s reps', ru: 'Сегодняшние повторы'),
         screenSubtitle: repairStillOpen
             ? _copyV1(
-                en: 'Short reps stay light here. Review fixes the leak first.',
+                en: 'Short reps stay light here. Review owns the deeper repair first.',
                 ru: 'Здесь повторы остаются лёгкими. Ошибку сначала чинит Разбор.',
               )
             : _copyV1(
@@ -7464,7 +7469,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return 'a guided start before heavier drills';
     }
     if (_placementHasSelection('goal', 'diagnose')) {
-      return 'fast leak-finding with close repairs';
+      return 'fast weak-spot finding with close repairs';
     }
     if (_placementHasSelection('goal', 'practice')) {
       return 'tight repetitions once the concept is visible';
@@ -7559,7 +7564,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (_placementHasSelection('format', 'tournaments'))
         'Tournament examples',
       if (_placementHasSelection('goal', 'daily_plan')) 'Daily plan friendly',
-      if (_placementHasSelection('goal', 'diagnose')) 'Leak-finding bias',
+      if (_placementHasSelection('goal', 'diagnose')) 'Weak-spot bias',
       if (_placementHasSelection('goal', 'guided')) 'Guided coaching',
     ];
     return signals;
@@ -8795,7 +8800,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           label: 'Quick',
           value: '${_quickFixMistakes().length}',
         ),
-        Act0ReviewStatV1(label: 'Fixed', value: '${fixed.length}'),
+        Act0ReviewStatV1(label: 'Replay', value: '${fixed.length}'),
         Act0ReviewStatV1(label: 'Strong', value: '${strongSpots.length}'),
       ],
       chosenLabel: open.isEmpty ? base.chosenLabel : open.first.selectedLabel,
@@ -11202,7 +11207,7 @@ class _Act0MistakeRecordV1 {
                 ? 'Quick fix'
                 : 'Clear'
           : attempts >= 2
-          ? 'Deep leak'
+          ? 'Deep repair'
           : 'Needs repair',
       contextLabels: contextLabels,
       repairActionLabel: repairActionLabelOverride ?? repairActionLabel,
@@ -11639,7 +11644,7 @@ const _placementQuestionGoalV1 = Act0PlacementQuestionV1(
     ),
     Act0PlacementOptionV1(
       optionId: 'diagnose',
-      label: 'Show me quickly where I leak',
+      label: 'Show me my weak spots',
       score: 2,
       profileTag: 'Diagnostic',
       subtitle: 'Surface weak spots quickly and keep repair close by.',

@@ -317,7 +317,7 @@ class Act0HomeShellV1 extends StatelessWidget {
             detail: act0LocalizedSurfaceAtomV1(
               context,
               'home_checklist_clean_today_detail',
-              fallback: 'No leaks due. Keep the skill warm.',
+              fallback: 'No urgent repair due. Keep the skill warm.',
             ),
             icon: Icons.check_rounded,
             accentColor: Act0VisualCanonV1.greenTable,

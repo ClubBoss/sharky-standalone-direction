@@ -350,7 +350,7 @@ void main() {
     },
   );
 
-  testWidgets('Review keeps recovered mistakes as secondary proof', (
+  testWidgets('Review keeps past repair notes as secondary proof', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -373,7 +373,11 @@ void main() {
     expect(find.text('Active repair'), findsOneWidget);
     expect(find.text('What to fix next'), findsOneWidget);
     expect(find.text('Active repair note'), findsNothing);
-    expect(find.text('Recovered lately'), findsOneWidget);
+    expect(find.text('Worth replaying'), findsOneWidget);
+    expect(find.textContaining('Recovered'), findsNothing);
+    expect(find.textContaining('Fixed'), findsNothing);
+    expect(find.textContaining('Cleared'), findsNothing);
+    expect(find.textContaining('Resolved'), findsNothing);
     expect(find.textContaining('mastered forever'), findsNothing);
   });
 
@@ -397,7 +401,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Clean board'), findsOneWidget);
-    expect(find.text('Recovered lately'), findsOneWidget);
+    expect(find.text('Worth replaying'), findsOneWidget);
+    expect(find.textContaining('Recovered'), findsNothing);
+    expect(find.textContaining('Fixed'), findsNothing);
+    expect(find.textContaining('Cleared'), findsNothing);
+    expect(find.textContaining('Resolved'), findsNothing);
     expect(find.text('Repair coach'), findsNothing);
     expect(find.textContaining('Session proof'), findsNothing);
     expect(find.textContaining('Today you repaired'), findsNothing);
@@ -421,13 +429,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('No past spots to review yet'), findsOneWidget);
+    expect(find.text('No misses saved yet'), findsOneWidget);
     expect(
       find.text(
-        'Finish more hands and Sharky will keep useful review notes here.',
+        'Useful misses will appear here after a hand is worth repeating.',
       ),
       findsOneWidget,
     );
+    expect(find.textContaining('Fixed'), findsNothing);
+    expect(find.textContaining('Recovered'), findsNothing);
+    expect(find.textContaining('Cleared'), findsNothing);
+    expect(find.textContaining('Resolved'), findsNothing);
     expect(find.textContaining('mistake history'), findsNothing);
     expect(find.textContaining('personalized'), findsNothing);
     expect(
@@ -472,7 +484,7 @@ void main() {
     expect(find.text('You chose fold; better was check.'), findsOneWidget);
     expect(find.text('fold check call raise'), findsOneWidget);
     expect(find.text('Most recent'), findsOneWidget);
-    expect(find.text('No past spots to review yet'), findsNothing);
+    expect(find.text('No misses saved yet'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_review_fix_next_cta')),
       findsNothing,

@@ -30,7 +30,7 @@ String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
       return _playCopyV1(
         context,
         'play_action_no_active_fixes',
-        fallback: 'No active fixes',
+        fallback: 'Not ready yet',
       );
     }
     return _playCopyV1(context, 'play_later_cta', fallback: 'Later');
@@ -487,7 +487,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_working_hub_headline',
-            fallback: 'Sharpen your game',
+            fallback: 'Useful reps',
           ),
           style: Act0ShellTokensV1.sectionTitle.copyWith(
             fontSize: 26,
@@ -499,7 +499,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_working_hub_support',
-            fallback: 'Short reps. Real spots. Stronger decisions.',
+            fallback: 'Repair and short reps available now.',
           ),
           key: const Key('act0_shell_play_subtitle'),
           style: Act0ShellTokensV1.body.copyWith(
@@ -1046,7 +1046,8 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_body',
-                    fallback: 'Topic reps stay ready for extra practice areas.',
+                    fallback:
+                        'Useful reps are ready when you want a short set.',
                   ),
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
@@ -1362,7 +1363,7 @@ class _PracticeTileCardV1 extends StatelessWidget {
             ? 'play_tile_weak_spots_enabled_subtitle'
             : 'play_tile_weak_spots_disabled_subtitle',
         fallback: enabled
-            ? 'Fix the mistake that keeps repeating.'
+            ? 'Practice the spot that keeps repeating.'
             : 'New mistakes will show up here.',
       ),
       'continue' => _playCopyV1(
@@ -1547,7 +1548,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
                 _playCopyV1(
                   context,
                   'play_topic_packs_label',
-                  fallback: 'Topic reps',
+                  fallback: 'Short reps',
                 ),
                 style: Act0ShellTokensV1.sectionTitle.copyWith(fontSize: 20),
               ),
@@ -1559,7 +1560,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_skill_pack_unlocks_hint',
-            fallback: 'Focused reps open as your route grows.',
+            fallback: 'Small practice areas open as your route grows.',
           ),
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.textMuted,
@@ -1730,7 +1731,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_title',
-                    fallback: 'More practice areas open with the route',
+                    fallback: 'More drills coming later',
                   ),
                   style: Act0ShellTokensV1.body.copyWith(
                     fontWeight: FontWeight.w800,
@@ -1741,7 +1742,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_body',
-                    fallback: 'Finish lessons to open more focused reps.',
+                    fallback: 'Finish lessons to open useful reps.',
                   ),
                   style: Act0ShellTokensV1.muted,
                 ),

@@ -67,7 +67,7 @@ void main() {
     groupId: 'weak_spots',
     title: 'Review one quick fix',
     subtitle: 'Quick fixes unlock after you repair one spot in Review.',
-    ctaLabel: 'Fix',
+    ctaLabel: 'Practice',
     categoryLabel: 'Repair',
     sessionLabel: 'Quick fix',
     durationLabel: '~4 min',
@@ -77,10 +77,10 @@ void main() {
   const enabledRepairGroup = Act0PracticeGroupV1(
     groupId: 'weak_spots',
     title: 'Repair this spot',
-    subtitle: 'Fix the mistake that keeps repeating.',
-    ctaLabel: 'Fix',
+    subtitle: 'Practice the spot that keeps repeating.',
+    ctaLabel: 'Practice',
     categoryLabel: 'Repair',
-    countLabel: '1 leak',
+    countLabel: '1 spot',
     durationLabel: '~3 min',
     isEnabled: true,
   );
@@ -145,11 +145,8 @@ void main() {
     expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_play_header')), findsOneWidget);
     expect(find.text('Practice'), findsOneWidget);
-    expect(find.text('Sharpen your game'), findsOneWidget);
-    expect(
-      find.text('Short reps. Real spots. Stronger decisions.'),
-      findsOneWidget,
-    );
+    expect(find.text('Useful reps'), findsOneWidget);
+    expect(find.text('Repair and short reps available now.'), findsOneWidget);
     expect(find.textContaining('Sharky'), findsNothing);
 
     final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
@@ -538,7 +535,7 @@ void main() {
     expect(empty, findsOneWidget);
     expect(find.text('Nothing to repair right now.'), findsOneWidget);
     expect(
-      find.text('Topic reps stay ready for extra practice areas.'),
+      find.text('Useful reps are ready when you want a short set.'),
       findsOneWidget,
     );
     expect(
@@ -643,9 +640,9 @@ void main() {
         find.byKey(const Key('act0_shell_play_topic_hub')),
         findsOneWidget,
       );
-      expect(find.text('Topic reps'), findsOneWidget);
+      expect(find.text('Short reps'), findsOneWidget);
       expect(
-        find.text('Focused reps open as your route grows.'),
+        find.text('Small practice areas open as your route grows.'),
         findsOneWidget,
       );
 
@@ -683,12 +680,11 @@ void main() {
       );
       expect(
         find.text('More practice areas open with the route'),
-        findsOneWidget,
+        findsNothing,
       );
-      expect(
-        find.text('Finish lessons to open more focused reps.'),
-        findsOneWidget,
-      );
+      expect(find.text('More drills coming later'), findsOneWidget);
+      expect(find.textContaining('drill gym'), findsNothing);
+      expect(find.textContaining('many drill packs'), findsNothing);
     },
   );
 

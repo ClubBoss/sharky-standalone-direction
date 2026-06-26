@@ -3243,7 +3243,7 @@ void main() {
           .data,
       'Repair one weak spot',
     );
-    expect(find.text('Fix this now'), findsOneWidget);
+    expect(find.text('Practice this spot'), findsOneWidget);
 
     await pumpTall(
       tester,
@@ -4261,7 +4261,7 @@ void main() {
         find.byKey(const Key('act0_shell_home_primary_route_title')),
       );
       expect(missionTitle.data, 'Repair one weak spot');
-      expect(find.text('Fix this now'), findsOneWidget);
+      expect(find.text('Practice this spot'), findsOneWidget);
 
       await openBottomTabV1(tester, 'Practice');
       await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
@@ -7478,7 +7478,7 @@ void main() {
             repairHeadline: 'Fix Button open.',
             repairDetail: 'Last miss came from Actions.',
             repairOutcome:
-                'One fix now keeps the leak from following you forward.',
+                'One practice pass keeps this spot from following you forward.',
             repairCtaLabel: 'Fix now',
             showRepairPanel: true,
             onStartRepair: () {},
@@ -7487,7 +7487,7 @@ void main() {
                 jobId: 'repair:actions_raise_drill',
                 label: 'Repair one mistake',
                 title: 'Raise adds pressure',
-                detail: 'Fix this spot before it becomes a habit.',
+                detail: 'Practice this spot before it becomes a habit.',
               ),
               Act0HomePlanJobV1(
                 jobId: 'recheck:what_poker_is_table_read_transfer',
@@ -7541,7 +7541,7 @@ void main() {
               repairHeadline: 'Fix Raise adds pressure.',
               repairDetail: 'Last miss came from Actions.',
               repairOutcome:
-                  'One fix now keeps the leak from following you forward.',
+                  'One practice pass keeps this spot from following you forward.',
               repairCtaLabel: 'Fix now',
               onStartRepair: () {},
               weeklyFocus: const Act0HomeWeeklyFocusV1(
@@ -7559,7 +7559,7 @@ void main() {
                   jobId: 'repair:actions_raise_drill',
                   label: 'Repair one mistake',
                   title: 'Raise adds pressure',
-                  detail: 'Fix this spot before it becomes a habit.',
+                  detail: 'Practice this spot before it becomes a habit.',
                 ),
                 Act0HomePlanJobV1(
                   jobId: 'recheck:what_poker_is_table_read_transfer',
@@ -11653,8 +11653,8 @@ void main() {
                 recommendedFocusTitle:
                     'Repair one weak spot before the next session starts to drift into a repeated pattern',
                 recommendedFocusBody:
-                    'Fix this mistake before it becomes a habit and before the route starts teaching the wrong rhythm through repetition.',
-                recommendedFocusCtaLabel: 'Fix this now',
+                    'Practice this spot before it becomes a habit and before the route starts teaching the wrong rhythm through repetition.',
+                recommendedFocusCtaLabel: 'Practice this spot',
               ),
               onRetakePlacement: () {},
             ),
@@ -27700,8 +27700,8 @@ void main() {
                 ],
                 recommendedFocusTitle: 'Repair one weak spot',
                 recommendedFocusBody:
-                    'Fix this spot before it becomes a habit.',
-                recommendedFocusCtaLabel: 'Fix this now',
+                    'Practice this spot before it becomes a habit.',
+                recommendedFocusCtaLabel: 'Practice this spot',
               ),
               onRetakePlacement: () {},
             ),

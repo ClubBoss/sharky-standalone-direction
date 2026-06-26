@@ -107,7 +107,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
           _reviewCopyV1(
             context,
             atomId: 'review_recovered_lately_label',
-            fallback: 'Recovered lately',
+            fallback: 'Worth replaying',
           ),
           style: Act0ShellTokensV1.sectionTitle,
         ),
@@ -118,8 +118,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     ? 'Один спот уже снова под контролем. Так ошибки перестают казаться вечными.'
                     : '${recovered.length} ${act0RussianPluralV1(recovered.length, 'спот', 'спота', 'спотов')} уже снова под контролем. Так игра начинает ощущаться легче.')
               : (recovered.length == 1
-                    ? 'One spot is already back under control. That is how mistakes stop feeling permanent.'
-                    : '${recovered.length} spots are already back under control. That is how the board starts feeling lighter.'),
+                    ? 'One spot is saved as a light replay note. That keeps the board honest.'
+                    : '${recovered.length} spots are saved as light replay notes. That keeps the board honest.'),
           style: Act0ShellTokensV1.muted,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -142,8 +142,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
               Expanded(
                 child: Text(
                   localeIsRu
-                      ? 'Исправленные споты остаются лёгкими повторами, а не техническим отчётом.'
-                      : 'Fixed spots stay as light replays, not a debug log.',
+                      ? 'Заметки для повтора остаются лёгкими повторами, а не техническим отчётом.'
+                      : 'Past repair notes stay as light replays, not a debug log.',
                   style: Act0ShellTokensV1.body.copyWith(
                     color: Act0ShellTokensV1.text,
                     fontWeight: FontWeight.w800,
@@ -433,7 +433,7 @@ class _ReviewBoardV1 extends StatelessWidget {
             fallback: 'Clean board',
           );
     final headline = isEmpty
-        ? _reviewCopyV1(context, fallback: 'No past spots to review yet')
+        ? _reviewCopyV1(context, fallback: 'No misses saved yet')
         : hasRepair
         ? nextMistake!.title
         : hasMistakeHistory
@@ -447,7 +447,7 @@ class _ReviewBoardV1 extends StatelessWidget {
         ? _reviewCopyV1(
             context,
             fallback:
-                'Finish more hands and Sharky will keep useful review notes here.',
+                'Useful misses will appear here after a hand is worth repeating.',
           )
         : hasRepair
         ? nextMistake!.reason
@@ -460,7 +460,7 @@ class _ReviewBoardV1 extends StatelessWidget {
             context,
             atomId: 'review_board_body_clean',
             fallback:
-                'No active repair right now. Recovered spots stay available below.',
+                'No active repair right now. Useful replay notes stay below.',
           );
     final support = hasRepair
         ? (nextMistake!.repairActionLabel.trim().isNotEmpty
@@ -1055,11 +1055,7 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        _reviewCopyV1(
-                          context,
-                          en: 'Repaired',
-                          ru: 'Исправлено',
-                        ),
+                        _reviewCopyV1(context, en: 'Replay', ru: 'Повтор'),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0VisualCanonV1.greenTable,
                           fontSize: 10,
@@ -1182,16 +1178,16 @@ String _recoveredDetailLineV1(BuildContext context, Act0MistakeCardV1 mistake) {
       qualityLine == 'Идеально пройдено.') {
     return _reviewCopyV1(
       context,
-      en: 'This clue is clean now.',
-      ru: 'Эта подсказка теперь чистая.',
+      en: 'This clue is ready to replay.',
+      ru: 'Эта подсказка готова к повтору.',
     );
   }
   if (qualityLine == 'Clear path still open.' ||
       qualityLine == 'Путь к идеалу открыт.') {
     return _reviewCopyV1(
       context,
-      en: 'This clue is cleaner now.',
-      ru: 'Эта подсказка стала чище.',
+      en: 'This clue is worth one more replay.',
+      ru: 'Эта подсказка стоит ещё одного повтора.',
     );
   }
   final anxiousRecheckCopy = <String>{
@@ -1203,8 +1199,8 @@ String _recoveredDetailLineV1(BuildContext context, Act0MistakeCardV1 mistake) {
   }
   return _reviewCopyV1(
     context,
-    en: 'Recovered from recent review.',
-    ru: 'Закреплено после недавнего разбора.',
+    en: 'Saved from recent review.',
+    ru: 'Сохранено после недавнего разбора.',
   );
 }
 

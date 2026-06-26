@@ -60,6 +60,26 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+
+    final visibleText = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
+        .join(' ');
+
+    for (final unsafe in <String>[
+      'Level',
+      'Lv',
+      'XP',
+      'Rating',
+      'Radar',
+      'Skill score',
+      'Mastered',
+      'Strongest skill',
+      'Weakest skill',
+    ]) {
+      expect(visibleText, isNot(contains(unsafe)));
+    }
+
     await tester.scrollUntilVisible(
       find.byKey(const Key('act0_shell_profile_skill_stats')),
       180,
@@ -94,6 +114,13 @@ void main() {
       '+3',
       'Lv 1',
       'Lv 2',
+      'Level',
+      'XP',
+      'Rating',
+      'Radar',
+      'Skill score',
+      'Strongest skill',
+      'Weakest skill',
       'mastered',
       'leak',
       'AI',
