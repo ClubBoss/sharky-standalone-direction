@@ -23,7 +23,7 @@ void main() {
           body: Act0PlayShellV1(
             groups: groups,
             recommendedGroupId: recommendedGroupId,
-            recommendedTitle: 'Quick daily drill',
+            recommendedTitle: 'Start a short rep',
             recommendedSubtitle: 'Run short spots to keep today clean.',
             recommendedReasonLabel: 'Today\'s reps',
             recommendedOutcome:
@@ -146,13 +146,13 @@ void main() {
     expect(find.byKey(const Key('act0_shell_play_header')), findsOneWidget);
     expect(find.text('Practice'), findsOneWidget);
     expect(find.text('Useful reps'), findsOneWidget);
-    expect(find.text('Repair and short reps available now.'), findsOneWidget);
-    expect(find.textContaining('Sharky'), findsNothing);
+    expect(find.text('Practice one useful spot at a time.'), findsOneWidget);
+    expect(find.textContaining('Sharky'), findsOneWidget);
 
     final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
     expect(hero, findsOneWidget);
     expect(
-      find.descendant(of: hero, matching: find.text('Quick daily drill')),
+      find.descendant(of: hero, matching: find.text('Start a short rep')),
       findsOneWidget,
     );
     expect(
@@ -234,13 +234,13 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: queue, matching: find.text('Repair queue')),
+        find.descendant(of: queue, matching: find.text('Practice repair')),
         findsOneWidget,
       );
       expect(
         find.descendant(
           of: queue,
-          matching: find.text('Spots Sharky can prove are worth repeating.'),
+          matching: find.text('Saved spots worth repeating.'),
         ),
         findsOneWidget,
       );
@@ -334,7 +334,14 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: first, matching: find.text('Pinned')),
+      find.descendant(of: first, matching: find.text('Your current fix')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: first,
+        matching: find.text('This repeats the clue you missed.'),
+      ),
       findsOneWidget,
     );
   });
@@ -379,6 +386,10 @@ void main() {
       );
       expect(
         find.descendant(of: active, matching: find.text('Practice this')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: active, matching: find.text('Your current fix')),
         findsOneWidget,
       );
       expect(
@@ -479,7 +490,7 @@ void main() {
     final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
     expect(
       find.descendant(of: queue, matching: find.text('Practice repair')),
-      findsOneWidget,
+      findsWidgets,
     );
     for (final forbidden in <String>[
       'fixed',
@@ -533,11 +544,8 @@ void main() {
 
     final empty = find.byKey(const Key('act0_shell_play_repair_empty'));
     expect(empty, findsOneWidget);
-    expect(find.text('Nothing to repair right now.'), findsOneWidget);
-    expect(
-      find.text('Useful reps are ready when you want a short set.'),
-      findsOneWidget,
-    );
+    expect(find.text('No saved miss yet'), findsOneWidget);
+    expect(find.text('Keep building with short reps.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsNothing,
@@ -596,7 +604,7 @@ void main() {
 
       final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
       expect(
-        find.descendant(of: hero, matching: find.text('Quick daily drill')),
+        find.descendant(of: hero, matching: find.text('Start a short rep')),
         findsOneWidget,
       );
       expect(
@@ -642,7 +650,7 @@ void main() {
       );
       expect(find.text('Short reps'), findsOneWidget);
       expect(
-        find.text('Small practice areas open as your route grows.'),
+        find.text('Short reps help Sharky prove what is improving.'),
         findsOneWidget,
       );
 
@@ -683,6 +691,10 @@ void main() {
         findsNothing,
       );
       expect(find.text('More drills coming later'), findsOneWidget);
+      expect(
+        find.text('Future drill areas stay secondary for beta.'),
+        findsOneWidget,
+      );
       expect(find.textContaining('drill gym'), findsNothing);
       expect(find.textContaining('many drill packs'), findsNothing);
     },

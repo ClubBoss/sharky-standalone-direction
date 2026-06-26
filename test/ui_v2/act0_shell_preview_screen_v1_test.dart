@@ -27118,7 +27118,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
       expect(
-        find.text('Focused reps open as your route grows.'),
+        find.text('Short reps help Sharky prove what is improving.'),
         findsOneWidget,
       );
 
@@ -27256,9 +27256,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Done for today'), findsWidgets);
-    expect(find.text('Quick daily drill'), findsNothing);
+    expect(find.text('Start a short rep'), findsNothing);
     expect(find.text('Start daily set'), findsNothing);
-    expect(find.text('Daily table trainer complete'), findsOneWidget);
+    expect(find.text('Daily short reps complete'), findsOneWidget);
     expect(find.text('Practice extra reps'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_play_premium_preview_entry')),

@@ -499,7 +499,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_working_hub_support',
-            fallback: 'Repair and short reps available now.',
+            fallback: 'Practice one useful spot at a time.',
           ),
           key: const Key('act0_shell_play_subtitle'),
           style: Act0ShellTokensV1.body.copyWith(
@@ -558,14 +558,14 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Repair queue',
+                      'Practice repair',
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Spots Sharky can prove are worth repeating.',
+                      'Saved spots worth repeating.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
@@ -643,7 +643,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     if (item.isPinned) ...[
                       const SizedBox(width: 8),
                       Text(
-                        'Pinned',
+                        'Your current fix',
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.gold,
                           fontSize: 11,
@@ -665,7 +665,9 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                 if (item.actionLine != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    item.actionLine!,
+                    item.isPinned
+                        ? 'This repeats the clue you missed.'
+                        : item.actionLine!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.label.copyWith(
@@ -793,7 +795,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
         ? _playCopyV1(
             context,
             'play_daily_hero_title',
-            fallback: 'Quick daily drill',
+            fallback: 'Start a short rep',
           )
         : title;
     final heroSubtitle = group.groupId == 'daily' && !dailyComplete
@@ -1037,7 +1039,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_title',
-                    fallback: 'Nothing to repair right now.',
+                    fallback: 'No saved miss yet',
                   ),
                   style: Act0ShellTokensV1.body,
                 ),
@@ -1046,8 +1048,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_body',
-                    fallback:
-                        'Useful reps are ready when you want a short set.',
+                    fallback: 'Keep building with short reps.',
                   ),
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
@@ -1560,7 +1561,7 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
           _playCopyV1(
             context,
             'play_skill_pack_unlocks_hint',
-            fallback: 'Small practice areas open as your route grows.',
+            fallback: 'Short reps help Sharky prove what is improving.',
           ),
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.textMuted,
@@ -1742,7 +1743,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_body',
-                    fallback: 'Finish lessons to open useful reps.',
+                    fallback: 'Future drill areas stay secondary for beta.',
                   ),
                   style: Act0ShellTokensV1.muted,
                 ),

@@ -4747,13 +4747,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             ? _copyV1(en: 'Daily practice', ru: 'Дневная практика')
             : _dailyCompletedRepCount >= 3
             ? _copyV1(
-                en: 'Daily table trainer complete',
+                en: 'Daily short reps complete',
                 ru: 'Дневная серия закрыта',
               )
-            : _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
+            : _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
         subtitle: dailyDeckEntry == null
             ? _copyV1(
-                en: 'Unlock after one route drill.',
+                en: 'Unlock after one route rep.',
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
@@ -5029,7 +5029,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
-        title: _copyV1(en: 'Quick daily drill', ru: 'Быстрый дневной дрилл'),
+        title: _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
         subtitle: _copyV1(
           en: 'Run three short spots to keep today clean.',
           ru: 'Пройди три коротких спота, чтобы держать день в ритме.',
@@ -5038,7 +5038,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           _Act0LearningNextActionKindV1.dailyDrill,
         ),
         hint: _copyV1(
-          en: 'Quick daily drill in Play.',
+          en: 'Short rep in Practice.',
           ru: 'Быстрый дневной дрилл во вкладке Практика.',
         ),
         outcome: _copyV1(
@@ -6543,7 +6543,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'positions' => 'Positions',
       'hand_rankings_table' => 'Hand rankings',
       'showdown_winning' => 'Showdown',
-      _ => 'Quick daily drill',
+      _ => 'Start a short rep',
     };
   }
 
