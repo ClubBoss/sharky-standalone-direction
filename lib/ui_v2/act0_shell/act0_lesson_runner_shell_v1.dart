@@ -4845,68 +4845,74 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               const SizedBox(height: 8),
               const _FeedbackVerdictDividerV1(),
               const SizedBox(height: 8),
-              _FeedbackProofKeyWrapperV1(
-                proofKey: repairReceiptLine.isNotEmpty
-                    ? const Key('act0_shell_repair_receipt_proof_block')
-                    : hasRepairOutcomeProof
-                    ? const Key('act0_shell_repair_outcome_proof')
-                    : null,
-                child: KeyedSubtree(
-                  key: repairReceiptLine.isNotEmpty
-                      ? const Key('act0_shell_repair_result_receipt')
+              _RepairSystemProofBlockV1(
+                cardKey: const Key('act0_shell_repair_result_system_card'),
+                tone: Act0ShellTokensV1.primary,
+                child: _FeedbackProofKeyWrapperV1(
+                  proofKey: repairReceiptLine.isNotEmpty
+                      ? const Key('act0_shell_repair_receipt_proof_block')
                       : hasRepairOutcomeProof
-                      ? const Key('act0_shell_repair_outcome_proof_card')
-                      : const Key('act0_shell_first_value_receipt'),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        receiptTitle,
-                        key: repairReceiptLine.isNotEmpty
-                            ? const Key(
-                                'act0_shell_repair_result_receipt_title',
-                              )
-                            : hasRepairOutcomeProof
-                            ? const Key('act0_shell_repair_outcome_proof_title')
-                            : null,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.primary,
-                          fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      if (receiptDetail.isNotEmpty) ...[
-                        const SizedBox(height: 4),
+                      ? const Key('act0_shell_repair_outcome_proof')
+                      : null,
+                  child: KeyedSubtree(
+                    key: repairReceiptLine.isNotEmpty
+                        ? const Key('act0_shell_repair_result_receipt')
+                        : hasRepairOutcomeProof
+                        ? const Key('act0_shell_repair_outcome_proof_card')
+                        : const Key('act0_shell_first_value_receipt'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          receiptDetail,
+                          receiptTitle,
                           key: repairReceiptLine.isNotEmpty
                               ? const Key(
-                                  'act0_shell_repair_result_outcome_line',
+                                  'act0_shell_repair_result_receipt_title',
                                 )
                               : hasRepairOutcomeProof
                               ? const Key(
-                                  'act0_shell_repair_outcome_proof_line',
+                                  'act0_shell_repair_outcome_proof_title',
                                 )
                               : null,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
-                            height: 1.12,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                      if (receiptNextLine.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          receiptNextLine,
                           style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
+                            color: Act0ShellTokensV1.primary,
                             fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
+                        if (receiptDetail.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            receiptDetail,
+                            key: repairReceiptLine.isNotEmpty
+                                ? const Key(
+                                    'act0_shell_repair_result_outcome_line',
+                                  )
+                                : hasRepairOutcomeProof
+                                ? const Key(
+                                    'act0_shell_repair_outcome_proof_line',
+                                  )
+                                : null,
+                            style: Act0ShellTokensV1.body.copyWith(
+                              color: Act0ShellTokensV1.text,
+                              fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
+                              height: 1.12,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                        if (receiptNextLine.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            receiptNextLine,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                              fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -4915,10 +4921,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               const SizedBox(height: 8),
               const _FeedbackVerdictDividerV1(),
               const SizedBox(height: 8),
-              _FeedbackProofKeyWrapperV1(
-                proofKey: const Key('act0_shell_session_summary_proof_block'),
-                child: _FeedbackSessionSummaryCeremonyBlockV1(
-                  lines: visibleRepairSessionSummaryLines,
+              _RepairSystemProofBlockV1(
+                cardKey: const Key('act0_shell_repair_closure_system_card'),
+                tone: Act0ShellTokensV1.gold,
+                showLabel: false,
+                child: _FeedbackProofKeyWrapperV1(
+                  proofKey: const Key('act0_shell_session_summary_proof_block'),
+                  child: _FeedbackSessionSummaryCeremonyBlockV1(
+                    lines: visibleRepairSessionSummaryLines,
+                  ),
                 ),
               ),
             ],
@@ -5209,6 +5220,55 @@ class _FeedbackProofKeyWrapperV1 extends StatelessWidget {
     return KeyedSubtree(
       key: key,
       child: _ProofMotionRevealV1(key: motionKey, child: child),
+    );
+  }
+}
+
+class _RepairSystemProofBlockV1 extends StatelessWidget {
+  const _RepairSystemProofBlockV1({
+    required this.child,
+    required this.cardKey,
+    required this.tone,
+    this.showLabel = true,
+  });
+
+  final Widget child;
+  final Key cardKey;
+  final Color tone;
+  final bool showLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: const Key('act0_shell_repair_system_block'),
+      child: Container(
+        key: cardKey,
+        padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+        decoration: BoxDecoration(
+          color: tone.withValues(alpha: 0.075),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+          border: Border.all(color: tone.withValues(alpha: 0.18)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (showLabel) ...[
+              Text(
+                'Repair proof',
+                key: const Key('act0_shell_repair_system_label'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: tone,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.25,
+                ),
+              ),
+              const SizedBox(height: 5),
+            ],
+            child,
+          ],
+        ),
+      ),
     );
   }
 }
@@ -10887,71 +10947,79 @@ class _ActionPanelV1 extends StatelessWidget {
     final unselectedBorder = stackOptions
         ? Act0ShellTokensV1.info.withValues(alpha: 0.22)
         : Act0ShellTokensV1.border.withValues(alpha: 0.92);
+    Widget withCommitMotion(Widget child) {
+      return _DecisionCommitMotionV1(child: child);
+    }
+
     if (stackOptions) {
       if (effectiveCompactDecision) {
-        return Column(
-          key: const Key('act0_shell_action_panel'),
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              key: const Key('act0_shell_answer_sheet'),
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final entry in options.indexed) ...[
-                  _AnswerChoiceRowV1(
-                    option: entry.$2,
-                    optionIndex: entry.$1,
-                    selected: entry.$2.id == selectedOptionId,
-                    onChoose: onChoose,
-                    compact: true,
-                    readableCompactHeight:
-                        options.length <= 3 && hasLongStackedLabel,
-                  ),
-                  if (entry.$1 < options.length - 1)
-                    Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Act0ShellTokensV1.info.withValues(alpha: 0.08),
+        return withCommitMotion(
+          Column(
+            key: const Key('act0_shell_action_panel'),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                key: const Key('act0_shell_answer_sheet'),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final entry in options.indexed) ...[
+                    _AnswerChoiceRowV1(
+                      option: entry.$2,
+                      optionIndex: entry.$1,
+                      selected: entry.$2.id == selectedOptionId,
+                      onChoose: onChoose,
+                      compact: true,
+                      readableCompactHeight:
+                          options.length <= 3 && hasLongStackedLabel,
                     ),
+                    if (entry.$1 < options.length - 1)
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Act0ShellTokensV1.info.withValues(alpha: 0.08),
+                      ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         );
       }
-      return Container(
-        key: const Key('act0_shell_action_panel'),
-        decoration: BoxDecoration(
-          color: Act0ShellTokensV1.surface2.withValues(alpha: 0.88),
-          borderRadius: BorderRadius.circular(
-            effectiveCompactDecision ? 16 : 22,
+      return withCommitMotion(
+        Container(
+          key: const Key('act0_shell_action_panel'),
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.88),
+            borderRadius: BorderRadius.circular(
+              effectiveCompactDecision ? 16 : 22,
+            ),
+            border: Border.all(color: unselectedBorder),
           ),
-          border: Border.all(color: unselectedBorder),
-        ),
-        child: Column(
-          key: const Key('act0_shell_answer_sheet'),
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final entry in options.indexed) ...[
-              _AnswerChoiceRowV1(
-                option: entry.$2,
-                optionIndex: entry.$1,
-                selected: entry.$2.id == selectedOptionId,
-                onChoose: onChoose,
-                compact: effectiveCompactDecision,
-                readableCompactHeight:
-                    effectiveCompactDecision &&
-                    options.length <= 3 &&
-                    hasLongStackedLabel,
-              ),
-              if (entry.$1 < options.length - 1)
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Act0ShellTokensV1.info.withValues(alpha: 0.10),
+          child: Column(
+            key: const Key('act0_shell_answer_sheet'),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final entry in options.indexed) ...[
+                _AnswerChoiceRowV1(
+                  option: entry.$2,
+                  optionIndex: entry.$1,
+                  selected: entry.$2.id == selectedOptionId,
+                  onChoose: onChoose,
+                  compact: effectiveCompactDecision,
+                  readableCompactHeight:
+                      effectiveCompactDecision &&
+                      options.length <= 3 &&
+                      hasLongStackedLabel,
                 ),
+                if (entry.$1 < options.length - 1)
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Act0ShellTokensV1.info.withValues(alpha: 0.10),
+                  ),
+              ],
             ],
-          ],
+          ),
         ),
       );
     }
@@ -11120,27 +11188,73 @@ class _ActionPanelV1 extends StatelessWidget {
         })
         .toList(growable: false);
     if (buttons.length <= 3 && !stackOptions) {
-      return Row(
-        key: const Key('act0_shell_action_panel'),
-        children: [
-          for (var i = 0; i < buttons.length; i++) ...[
-            Expanded(child: buttons[i]),
-            if (i < buttons.length - 1)
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
+      return withCommitMotion(
+        Row(
+          key: const Key('act0_shell_action_panel'),
+          children: [
+            for (var i = 0; i < buttons.length; i++) ...[
+              Expanded(child: buttons[i]),
+              if (i < buttons.length - 1)
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+            ],
           ],
-        ],
+        ),
       );
     }
-    return Column(
-      key: const Key('act0_shell_action_panel'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var i = 0; i < buttons.length; i++) ...[
-          buttons[i],
-          if (i < buttons.length - 1)
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+    return withCommitMotion(
+      Column(
+        key: const Key('act0_shell_action_panel'),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < buttons.length; i++) ...[
+            buttons[i],
+            if (i < buttons.length - 1)
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
         ],
-      ],
+      ),
+    );
+  }
+}
+
+class _DecisionCommitMotionV1 extends StatefulWidget {
+  const _DecisionCommitMotionV1({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_DecisionCommitMotionV1> createState() =>
+      _DecisionCommitMotionV1State();
+}
+
+class _DecisionCommitMotionV1State extends State<_DecisionCommitMotionV1> {
+  var _settled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        _settled = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.of(context).disableAnimations) {
+      return KeyedSubtree(
+        key: const Key('act0_shell_decision_commit_motion'),
+        child: widget.child,
+      );
+    }
+    return AnimatedScale(
+      key: const Key('act0_shell_decision_commit_motion'),
+      scale: _settled ? 1 : 0.985,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOutCubic,
+      child: widget.child,
     );
   }
 }
