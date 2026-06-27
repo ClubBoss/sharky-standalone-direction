@@ -172,19 +172,16 @@ void main() {
         ),
       );
 
-      expect(find.text('Session closed with proof'), findsOneWidget);
+      expect(find.text('Proof banked'), findsWidgets);
       expect(
         tester
             .widget<Text>(
               find.byKey(const Key('act0_shell_block_summary_title')),
             )
             .data,
-        'You turned one miss into a cleaner next rep.',
+        'You turned one miss into a fix.',
       );
-      expect(
-        find.text('Correct read banked. Next best step is ready.'),
-        findsOneWidget,
-      );
+      expect(find.text('First read banked. Fix landed.'), findsOneWidget);
       expect(find.text('Almost there - replay to unlock'), findsNothing);
       expect(find.text('Replay before next lesson'), findsOneWidget);
       expect(find.text("Fixes you've banked"), findsOneWidget);
@@ -227,9 +224,12 @@ void main() {
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,
-      'First correct read banked.',
+      'First read banked.',
     );
-    expect(find.text('Next best step is ready.'), findsOneWidget);
+    expect(
+      find.text('One clean read is saved from this session.'),
+      findsOneWidget,
+    );
     expect(find.text('Session closed with proof'), findsNothing);
     expect(find.text('Good fix banked.'), findsNothing);
   });
@@ -245,7 +245,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Fix landed'), findsOneWidget);
+    expect(find.text('Fix landed.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_payoff_motion_reveal')),
       findsOneWidget,
@@ -260,9 +260,9 @@ void main() {
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,
-      'You turned one miss into a cleaner next rep.',
+      'Fix landed.',
     );
-    expect(find.text('Next best step is ready.'), findsOneWidget);
+    expect(find.text('You turned one miss into a fix.'), findsOneWidget);
     expect(find.text('Small win, real proof.'), findsOneWidget);
     expect(find.text('Almost there - replay to unlock'), findsNothing);
   });
@@ -355,8 +355,8 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_earned_moment')),
       findsOneWidget,
     );
-    expect(find.text('Proof banked'), findsOneWidget);
-    expect(find.text('Small win earned from local proof.'), findsOneWidget);
+    expect(find.text('Collected proof'), findsOneWidget);
+    expect(find.text('Small win earned. Sharky can prove it.'), findsOneWidget);
     expect(find.text('Earned moment'), findsNothing);
     expect(find.text('First correct read'), findsOneWidget);
     expect(find.text('First repair note'), findsNothing);
@@ -397,8 +397,8 @@ void main() {
     expect(find.text('Lesson complete'), findsNothing);
     expect(find.text('Clean mini-drill'), findsNothing);
     expect(find.text('First evidence signal'), findsNothing);
-    expect(find.text('Proof banked'), findsNothing);
-    expect(find.text('Small win earned from local proof.'), findsNothing);
+    expect(find.text('Collected proof'), findsNothing);
+    expect(find.text('Small win earned. Sharky can prove it.'), findsNothing);
   });
 
   testWidgets('Session Summary earned moment contains no forbidden copy', (

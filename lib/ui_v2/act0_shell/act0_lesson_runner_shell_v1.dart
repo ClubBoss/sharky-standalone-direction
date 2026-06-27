@@ -5680,7 +5680,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              if (summarySharkyLine.isNotEmpty) ...[
+              if (summarySharkyLine.isNotEmpty && payoffHero == null) ...[
                 const SizedBox(height: 6),
                 Act0SharkyPresenceBubbleV1(
                   line: summarySharkyLine,
@@ -5770,7 +5770,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     'act0_shell_block_summary_payoff_motion_reveal',
                   ),
                   child: Container(
-                    key: const Key('act0_shell_block_summary_milestone_panel'),
+                    key: payoffHero == null
+                        ? const Key('act0_shell_block_summary_milestone_panel')
+                        : const Key('act0_shell_session_summary_hero_payoff'),
                     padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                     decoration: BoxDecoration(
                       color: celebrateTone.withValues(alpha: 0.12),
@@ -5812,7 +5814,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    summary.masteryLabel,
+                                    payoffHero == null
+                                        ? summary.masteryLabel
+                                        : 'Proof banked',
                                     style: Act0ShellTokensV1.label.copyWith(
                                       color: celebrateTone,
                                       letterSpacing: 0.5,
@@ -5872,6 +5876,26 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             color: Act0ShellTokensV1.textMuted,
                           ),
                         ),
+                        if (summarySharkyLine.isNotEmpty &&
+                            payoffHero != null) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapSm),
+                          Act0SharkyPresenceBubbleV1(
+                            key: const Key(
+                              'act0_shell_session_summary_payoff_sharky',
+                            ),
+                            line: summarySharkyLine,
+                            mood: Act0SharkyMoodV1.celebrate,
+                            tone: Act0ShellTokensV1.primary,
+                            textKey: const Key(
+                              'act0_shell_block_summary_sharky_line',
+                            ),
+                            mascotSize: 64,
+                            bubblePadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                          ),
+                        ],
                         if (summary.hasWorldOneCompletionPayoff) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           _WorldOneCompletionPayoffV1(
@@ -6290,19 +6314,17 @@ class _SessionSummaryPayoffHeroV1 {
       return null;
     }
     return _SessionSummaryPayoffHeroV1(
-      kicker: hasCorrectRead && hasGoodFix
-          ? 'Session closed with proof'
-          : hasGoodFix
-          ? 'Fix landed'
-          : 'Good read',
+      kicker: 'Session proof',
       headline: hasCorrectRead && hasGoodFix
-          ? 'You turned one miss into a cleaner next rep.'
+          ? 'You turned one miss into a fix.'
           : hasCorrectRead
-          ? 'First correct read banked.'
-          : 'You turned one miss into a cleaner next rep.',
+          ? 'First read banked.'
+          : 'Fix landed.',
       detail: hasCorrectRead && hasGoodFix
-          ? 'Correct read banked. Next best step is ready.'
-          : 'Next best step is ready.',
+          ? 'First read banked. Fix landed.'
+          : hasCorrectRead
+          ? 'One clean read is saved from this session.'
+          : 'You turned one miss into a fix.',
     );
   }
 }
@@ -6552,6 +6574,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            key: const Key('act0_shell_block_summary_earned_moment_mark'),
             width: 34,
             height: 34,
             alignment: Alignment.center,
@@ -6567,7 +6590,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Proof banked',
+                  'Collected proof',
                   key: const Key('act0_shell_block_summary_earned_label'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: tone,
@@ -6587,7 +6610,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Small win earned from local proof.',
+                  'Small win earned. Sharky can prove it.',
                   key: const Key('act0_shell_block_summary_earned_proof'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
