@@ -788,6 +788,65 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  void _emitSessionStartTelemetryV1({
+    required String lessonId,
+    required String taskId,
+    required String sourceSurface,
+  }) {
+    _recordTelemetryEventV1('session_start', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': _selectedWorldId,
+      'world_id': _selectedWorldId,
+      'lessonId': lessonId,
+      'lesson_id': lessonId,
+      'taskId': taskId,
+      'task_id': taskId,
+      'source_surface': sourceSurface,
+    });
+  }
+
+  void _emitSessionCompleteTelemetryV1({
+    required String sourceSurface,
+    String? practiceGroupId,
+    int? completedRepCount,
+    int? cleanRepCount,
+    String? resultSummary,
+  }) {
+    _recordTelemetryEventV1('session_complete', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': _selectedWorldId,
+      'world_id': _selectedWorldId,
+      if (_selectedLessonId.trim().isNotEmpty) ...{
+        'lessonId': _selectedLessonId,
+        'lesson_id': _selectedLessonId,
+      },
+      if (_selectedTaskId.trim().isNotEmpty) ...{
+        'taskId': _selectedTaskId,
+        'task_id': _selectedTaskId,
+      },
+      if (practiceGroupId != null) ...{
+        'practiceGroupId': practiceGroupId,
+        'practice_group_id': practiceGroupId,
+      },
+      if (completedRepCount != null) 'completed_rep_count': completedRepCount,
+      if (cleanRepCount != null) 'clean_rep_count': cleanRepCount,
+      if (resultSummary != null) 'result_summary': resultSummary,
+      'source_surface': sourceSurface,
+    });
+  }
+
+  void _emitDay2ReturnTelemetryV1(Act0LastSessionLearnerStateV1 lastSession) {
+    _recordTelemetryEventV1('day2_return', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': lastSession.lastSessionWorldId,
+      'world_id': lastSession.lastSessionWorldId,
+      if (lastSession.lastSessionRepairFocusId.trim().isNotEmpty)
+        'repair_focus_id': lastSession.lastSessionRepairFocusId,
+      'proof_result': lastSession.lastSessionProofResult,
+      'source_surface': 'act0_home',
+    });
+  }
+
   @visibleForTesting
   Map<String, Object?>? debugOpenRepairIntentPayloadForSourceTaskV1(
     String sourceTaskId,
@@ -1009,6 +1068,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'attemptOrdinal': 1,
       'repairStatus': repaired ? 'fixed' : 'open',
     });
+    if (repaired) {
+      _recordTelemetryEventV1('fix_landed', <String, Object?>{
+        'schemaVersion': 1,
+        'worldId': _selectedWorldId,
+        'world_id': _selectedWorldId,
+        'repair_focus_id': sourceTaskId,
+        'sourceTaskId': sourceTaskId,
+        'source_task_id': sourceTaskId,
+        'taskId': repairTaskId,
+        'task_id': repairTaskId,
+        'is_correct': true,
+        'result': 'correct',
+        'source_surface': 'act0_review',
+      });
+    }
   }
 
   void _emitRepairItemShownTelemetryV1(Act0MistakeCardV1 mistake) {
@@ -1108,6 +1182,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'repairTaskId': repairTaskId,
       'attemptOrdinal': 1,
     });
+    _recordTelemetryEventV1('repair_attempted', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': _selectedWorldId,
+      'world_id': _selectedWorldId,
+      'repair_focus_id': sourceTaskId,
+      'sourceTaskId': sourceTaskId,
+      'source_task_id': sourceTaskId,
+      'taskId': repairTaskId,
+      'task_id': repairTaskId,
+      'attemptOrdinal': 1,
+      'attempt_ordinal': 1,
+      'source_surface': 'act0_review',
+    });
   }
 
   int _dailyCleanRepCountV1() {
@@ -1123,6 +1210,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required int cleanRepCount,
     required String resultSummary,
   }) {
+    _emitSessionCompleteTelemetryV1(
+      sourceSurface: 'act0_practice',
+      practiceGroupId: practiceGroupId,
+      completedRepCount: completedRepCount,
+      cleanRepCount: cleanRepCount,
+      resultSummary: resultSummary,
+    );
     _recordTelemetryEventV1('practice_completed', <String, Object?>{
       'schemaVersion': 1,
       'practiceGroupId': practiceGroupId,
@@ -1137,6 +1231,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'schemaVersion': 1,
       'practiceGroupId': practiceGroupId,
     });
+    _emitSessionStartTelemetryV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+      sourceSurface: 'act0_practice',
+    );
   }
 
   void _emitRecheckCompletedTelemetryV1({
@@ -1180,6 +1279,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'lessonId': lessonId,
       'taskId': taskId,
     });
+    _emitSessionStartTelemetryV1(
+      lessonId: lessonId,
+      taskId: taskId,
+      sourceSurface: 'act0_learn',
+    );
   }
 
   void _emitFirstValueTodayShownTelemetryV1(
@@ -2210,6 +2314,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _tab = Act0ShellTabV1.home;
+    if (_lastSessionLearnerStateV1 case final lastSession?) {
+      _emitDay2ReturnTelemetryV1(lastSession);
+    } else {
+      _recordTelemetryEventV1('day2_return', <String, Object?>{
+        'schemaVersion': 1,
+        'worldId': _selectedWorldId,
+        'world_id': _selectedWorldId,
+        'source_surface': 'act0_home',
+      });
+    }
   }
 
   void _applyDebugDay2PracticeRepairTargetSurface(Act0ShellStateV1 state) {
@@ -2323,6 +2437,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       completedClearCount: 12,
       futureRecheckCount: 2,
     );
+    _recordTelemetryEventV1('world_complete', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': 'world_1',
+      'world_id': 'world_1',
+      'completedClearCount': 12,
+      'completed_clear_count': 12,
+      'perfectClearCount': 12,
+      'perfect_clear_count': 12,
+      'source_surface': 'act0_completion',
+    });
   }
 
   void _applyDebugSessionSummarySurface() {
@@ -2708,6 +2832,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _rapidPracticeLoop = false;
       }
     });
+    final restoredLastSession = parsed.lastSessionLearnerState;
+    if (restoredLastSession != null &&
+        restoredLastSession.isUsable &&
+        _isConsecutiveDay(restoredLastSession.lastSessionDate, today)) {
+      _emitDay2ReturnTelemetryV1(restoredLastSession);
+    }
   }
 
   _Act0FirstValueReceiptCarryV1? _restorableFirstValueCarryV1(
@@ -9883,6 +10013,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _persistProgress();
     }
     _fireBlockCompletionEffects(_blockCompletionSummary!);
+    _emitSessionCompleteTelemetryV1(sourceSurface: 'act0_completion');
+    if (isWorldComplete) {
+      _recordTelemetryEventV1('world_complete', <String, Object?>{
+        'schemaVersion': 1,
+        'worldId': progressedWorld.worldId,
+        'world_id': progressedWorld.worldId,
+        'completedClearCount': _completedTaskCountForWorldV1(progressedWorld),
+        'completed_clear_count': _completedTaskCountForWorldV1(progressedWorld),
+        'perfectClearCount': _perfectTaskCountForWorldV1(progressedWorld),
+        'perfect_clear_count': _perfectTaskCountForWorldV1(progressedWorld),
+        'source_surface': 'act0_completion',
+      });
+    }
     return true;
   }
 

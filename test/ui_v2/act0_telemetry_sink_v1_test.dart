@@ -389,6 +389,7 @@ void main() {
       expect(sink.events.map((event) => event.name), <String>[
         'task_shown',
         'user_choice',
+        'decision_made',
         'task_result',
       ]);
 
@@ -422,7 +423,9 @@ void main() {
         'attemptOrdinal',
       });
 
-      final result = sink.events[2].fields;
+      final result = sink.events
+          .firstWhere((event) => event.name == 'task_result')
+          .fields;
       expect(result['schemaVersion'], 1);
       expect(result['worldId'], 'world_1');
       expect(result['lessonId'], 'fold_check_call_raise');
@@ -463,6 +466,62 @@ void main() {
       }
     },
   );
+
+  testWidgets('Act0 runner emits canonical decision_made payload aliases', (
+    tester,
+  ) async {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+        .taskList
+        .firstWhere((candidate) => candidate.taskId == 'actions_raise_drill');
+    final sink = Act0InMemoryTelemetrySinkV1();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: task.runner.copyWith(
+              phase: Act0LessonPhaseV1.drill,
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            selectedWorldId: 'world_1',
+            selectedLessonId: 'fold_check_call_raise',
+            selectedTaskId: task.taskId,
+            selectedTaskFamily: task.resolvedTaskFamily,
+            telemetrySink: sink,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_raise')));
+    await tester.pumpAndSettle();
+
+    final canonicalDecision = sink.events.firstWhere(
+      (event) => event.name == 'decision_made',
+    );
+    expect(canonicalDecision.fields['world_id'], 'world_1');
+    expect(canonicalDecision.fields['lesson_id'], 'fold_check_call_raise');
+    expect(canonicalDecision.fields['task_id'], 'actions_raise_drill');
+    expect(canonicalDecision.fields['concept_family_id'], 'decision');
+    expect(canonicalDecision.fields['selected_action'], 'raise');
+    expect(canonicalDecision.fields['correct_action'], 'raise');
+    expect(canonicalDecision.fields['is_correct'], isTrue);
+    expect(canonicalDecision.fields['error_type'], 'none');
+    expect(canonicalDecision.fields['source_surface'], 'act0_runner');
+    expect(
+      canonicalDecision.fields['time_to_decision_ms'],
+      anyOf(isA<int>(), isNull),
+    );
+
+    expectNoForbiddenTelemetryFieldsV1(sink.events);
+  });
 
   testWidgets('Act0 runner emits safe incorrect result telemetry', (
     tester,
@@ -555,13 +614,25 @@ void main() {
 
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
-      await tester.pumpWidget(previewHost(telemetrySink: sink));
-      await createActionsMistakeFromPlayHubV1(tester);
-      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            key: UniqueKey(),
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            telemetrySink: sink,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
+            ),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
 
       await openBottomTabV1(tester, 'Review');
-      final fixNext = find.byKey(const Key('act0_shell_review_fix_next_cta'));
+      final fixNext = find.byKey(const Key('act0_shell_review_practice_cta'));
+      expect(fixNext, findsOneWidget);
       await tester.ensureVisible(fixNext);
       await tester.pumpAndSettle();
       await tester.tap(fixNext);
@@ -587,6 +658,20 @@ void main() {
       expect(repairStart['repairTaskId'], allOf(isA<String>(), isNot(isEmpty)));
       expect(repairStart['attemptOrdinal'], 1);
 
+      final repairAttemptedEvents = sink.events
+          .where((event) => event.name == 'repair_attempted')
+          .toList(growable: false);
+      expect(repairAttemptedEvents, hasLength(1));
+      expect(
+        repairAttemptedEvents.single.fields['repair_focus_id'],
+        repairStart['sourceTaskId'],
+      );
+      expect(repairAttemptedEvents.single.fields['task_id'], isNot(isEmpty));
+      expect(
+        repairAttemptedEvents.single.fields['source_surface'],
+        'act0_review',
+      );
+
       final repairEvents = sink.events
           .where((event) => event.name == 'repair_completed')
           .toList(growable: false);
@@ -601,6 +686,17 @@ void main() {
       expect(repair['repairStatus'], 'fixed');
       expect(repair['sourceTaskId'], repairStart['sourceTaskId']);
       expect(repair['repairTaskId'], repairStart['repairTaskId']);
+
+      final fixLandedEvents = sink.events
+          .where((event) => event.name == 'fix_landed')
+          .toList(growable: false);
+      expect(fixLandedEvents, hasLength(1));
+      expect(fixLandedEvents.single.fields['is_correct'], isTrue);
+      expect(
+        fixLandedEvents.single.fields['repair_focus_id'],
+        repairStart['sourceTaskId'],
+      );
+      expect(fixLandedEvents.single.fields['source_surface'], 'act0_review');
 
       final repairItemEvents = sink.events
           .where((event) => event.name == 'repair_item_completed')
@@ -645,6 +741,13 @@ void main() {
       'taskId',
     });
 
+    final sessionStart = sink.events.firstWhere(
+      (event) => event.name == 'session_start',
+    );
+    expect(sessionStart.fields['lesson_id'], 'fold_check_call_raise');
+    expect(sessionStart.fields['task_id'], 'actions_theory');
+    expect(sessionStart.fields['source_surface'], 'act0_learn');
+
     expectNoForbiddenTelemetryFieldsV1(sink.events);
   });
 
@@ -686,9 +789,70 @@ void main() {
       );
       expect(practice['practiceGroupId'], practiceStart['practiceGroupId']);
 
+      final sessionComplete = sink.events.firstWhere(
+        (event) => event.name == 'session_complete',
+      );
+      expect(sessionComplete.fields['source_surface'], 'act0_practice');
+      expect(sessionComplete.fields['practice_group_id'], 'daily');
+      expect(sessionComplete.fields['completed_rep_count'], 3);
+
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },
   );
+
+  testWidgets('Act0 debug surfaces emit day2_return and world_complete', (
+    tester,
+  ) async {
+    final day2Sink = Act0InMemoryTelemetrySinkV1();
+    await tester.pumpWidget(
+      previewHost(telemetrySink: day2Sink, state: Act0ShellStateV1.sample),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          key: UniqueKey(),
+          showPlacementOnStart: false,
+          telemetrySink: day2Sink,
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final day2Return = day2Sink.events.firstWhere(
+      (event) => event.name == 'day2_return',
+    );
+    expect(day2Return.fields['world_id'], 'world_1');
+    expect(day2Return.fields['source_surface'], 'act0_home');
+
+    final worldSink = Act0InMemoryTelemetrySinkV1();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          key: UniqueKey(),
+          showPlacementOnStart: false,
+          telemetrySink: worldSink,
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.worldCompletion,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final worldComplete = worldSink.events.firstWhere(
+      (event) => event.name == 'world_complete',
+    );
+    expect(worldComplete.fields['world_id'], 'world_1');
+    expect(worldComplete.fields['source_surface'], 'act0_completion');
+
+    expectNoForbiddenTelemetryFieldsV1(day2Sink.events);
+    expectNoForbiddenTelemetryFieldsV1(worldSink.events);
+  });
 
   testWidgets('Act0 recheck flow emits safe recheck_completed telemetry', (
     tester,

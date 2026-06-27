@@ -12,6 +12,41 @@ class TelemetrySchema {
           criticality: TelemetryCriticality.monitor,
         ),
         TelemetryEventDefinition(
+          id: TelemetryEvents.decisionMade,
+          description: 'Act0 learner decision recorded locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.repairAttempted,
+          description: 'Act0 repair attempt launched locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.fixLanded,
+          description: 'Act0 repair completed correctly locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.sessionComplete,
+          description: 'Act0 learning or practice session completed locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.day2Return,
+          description: 'Act0 local return surface shown with prior state',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.worldComplete,
+          description: 'Act0 world completion reached locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
+          id: TelemetryEvents.practiceCompleted,
+          description: 'Act0 practice set completed locally',
+          criticality: TelemetryCriticality.monitor,
+        ),
+        TelemetryEventDefinition(
           id: TelemetryEvents.sessionEnd,
           description: 'Training session completed normally',
           criticality: TelemetryCriticality.monitor,

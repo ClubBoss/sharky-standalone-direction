@@ -1013,6 +1013,49 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     );
   }
 
+  void _emitCanonicalDecisionMadeTelemetryV1({
+    required Act0RunnerOptionV1 option,
+    required int? timeToDecisionMs,
+  }) {
+    final correctOption = widget.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (candidate) => candidate?.isCorrect == true,
+          orElse: () => null,
+        );
+    _recordTelemetry(
+      Act0TelemetryEventV1(
+        name: 'decision_made',
+        fields: <String, Object?>{
+          'schemaVersion': 1,
+          if ((widget.selectedWorldId ?? '').trim().isNotEmpty) ...{
+            'worldId': widget.selectedWorldId!.trim(),
+            'world_id': widget.selectedWorldId!.trim(),
+          },
+          'lessonId': _stableLessonTelemetryId,
+          'lesson_id': _stableLessonTelemetryId,
+          'taskId': _stableTaskTelemetryId,
+          'task_id': _stableTaskTelemetryId,
+          if (widget.selectedTaskFamily != null) ...{
+            'taskFamily': widget.selectedTaskFamily!.name,
+            'concept_family_id': widget.selectedTaskFamily!.name,
+          },
+          'choiceId': option.id,
+          'selected_action': option.id,
+          if (correctOption != null) 'correct_action': correctOption.id,
+          'is_correct': option.isCorrect,
+          'result': option.isCorrect ? 'correct' : 'incorrect',
+          'errorType': option.isCorrect ? 'none' : 'unknown',
+          'error_type': option.isCorrect ? 'none' : 'unknown',
+          'time_to_decision_ms': timeToDecisionMs,
+          'source_surface': 'act0_runner',
+          'attemptOrdinal': 1,
+          'attempt_ordinal': 1,
+        },
+      ),
+    );
+  }
+
   String _decisionTimeBucketV1(Duration elapsed) {
     if (elapsed <= Duration.zero) {
       return 'unknown';
@@ -1084,8 +1127,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    final timeToDecisionMs = _decisionTelemetryStopwatch.isRunning
+        ? _decisionTelemetryStopwatch.elapsedMilliseconds
+        : null;
     final decisionTimeBucket = _completedDecisionTimeBucket();
     _maybeEmitUserChoiceTelemetry(option);
+    _emitCanonicalDecisionMadeTelemetryV1(
+      option: option,
+      timeToDecisionMs: timeToDecisionMs,
+    );
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
       option: option,

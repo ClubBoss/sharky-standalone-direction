@@ -3,6 +3,13 @@ class TelemetryEvents {
   TelemetryEvents._();
 
   static const String sessionStart = 'session_start';
+  static const String decisionMade = 'decision_made';
+  static const String repairAttempted = 'repair_attempted';
+  static const String fixLanded = 'fix_landed';
+  static const String sessionComplete = 'session_complete';
+  static const String day2Return = 'day2_return';
+  static const String worldComplete = 'world_complete';
+  static const String practiceCompleted = 'practice_completed';
   static const String sessionStartTiming = 'session_start_timing';
   static const String sessionEnd = 'session_end';
   static const String sessionAbort = 'session_abort';
@@ -152,6 +159,13 @@ class TelemetryEvents {
 
   static const List<String> all = <String>[
     sessionStart,
+    decisionMade,
+    repairAttempted,
+    fixLanded,
+    sessionComplete,
+    day2Return,
+    worldComplete,
+    practiceCompleted,
     sessionStartTiming,
     sessionEnd,
     sessionAbort,
