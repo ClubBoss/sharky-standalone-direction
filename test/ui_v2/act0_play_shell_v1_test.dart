@@ -340,13 +340,13 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: first, matching: find.text('Your current fix')),
+      find.descendant(of: first, matching: find.text('Active repair')),
       findsOneWidget,
     );
     expect(
       find.descendant(
         of: first,
-        matching: find.text('This rep uses the same table clue you missed.'),
+        matching: find.text('Same table clue as the miss.'),
       ),
       findsOneWidget,
     );
@@ -396,13 +396,15 @@ void main() {
       expect(hero, findsOneWidget);
       expect(tester.getTopLeft(queue).dy, lessThan(tester.getTopLeft(hero).dy));
       expect(
-        find.descendant(of: queue, matching: find.text('Current fix first')),
+        find.descendant(of: queue, matching: find.text('Active repair first')),
         findsOneWidget,
       );
       expect(
         find.descendant(
           of: queue,
-          matching: find.text('Repeat the clue, not the whole lesson.'),
+          matching: find.text(
+            'Start the same table clue before browsing drills.',
+          ),
         ),
         findsOneWidget,
       );
@@ -431,7 +433,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: active, matching: find.text('Your current fix')),
+        find.descendant(of: active, matching: find.text('Active repair')),
         findsOneWidget,
       );
       expect(

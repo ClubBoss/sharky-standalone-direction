@@ -123,7 +123,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Active repair'), findsOneWidget);
-      expect(find.text('What to fix next'), findsOneWidget);
+      expect(find.text('Practice this clue next'), findsOneWidget);
       expect(find.text('Active repair note'), findsNothing);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(find.text('1 fix waiting'), findsNothing);
@@ -186,7 +186,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tappedMistake, activeMistake);
-    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this clue next'), findsOneWidget);
     expect(find.text('Pattern to practice'), findsOneWidget);
     expect(
       find.text('Keep this read warm with one quick rep.'),
@@ -496,7 +496,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this clue next'), findsOneWidget);
     expect(find.text('Active repair note'), findsNothing);
     expect(find.text('Worth replaying'), findsOneWidget);
     expect(find.textContaining('Recovered'), findsNothing);
@@ -654,7 +654,7 @@ void main() {
     },
   );
 
-  testWidgets('What to fix next stays separate from read-only history', (
+  testWidgets('Active repair next step stays separate from read-only history', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -676,7 +676,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this clue next'), findsOneWidget);
     expect(find.text('Active repair note'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_review_mistake_history_list')),

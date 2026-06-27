@@ -574,7 +574,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      primary ? 'Current fix first' : 'Practice repair',
+                      primary ? 'Active repair first' : 'Practice repair',
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -582,7 +582,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       primary
-                          ? 'Repeat the clue, not the whole lesson.'
+                          ? 'Start the same table clue before browsing drills.'
                           : 'Saved spots worth repeating.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -681,7 +681,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     if (item.isPinned) ...[
                       const SizedBox(width: 8),
                       Text(
-                        'Your current fix',
+                        'Active repair',
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.gold,
                           fontSize: 11,
@@ -704,7 +704,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     item.isPinned
-                        ? 'This rep uses the same table clue you missed.'
+                        ? 'Same table clue as the miss.'
                         : item.actionLine!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

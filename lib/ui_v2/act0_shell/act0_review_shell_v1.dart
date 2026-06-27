@@ -361,7 +361,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'What to fix next',
+                  'Practice this clue next',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontWeight: FontWeight.w900,

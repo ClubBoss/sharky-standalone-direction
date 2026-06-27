@@ -598,7 +598,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     _placementCopyV1(context, en: 'No score', ru: 'Без оценки'),
                     _placementCopyV1(
                       context,
-                      en: 'First hand after',
+                      en: 'Hand after',
                       ru: 'Дальше первая раздача',
                     ),
                   ],
@@ -1090,9 +1090,8 @@ class _PlacementLaunchStepChipV1 extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
+              maxLines: 2,
+              softWrap: true,
               style: Act0ShellTokensV1.label.copyWith(
                 color: tone,
                 letterSpacing: 0.12,

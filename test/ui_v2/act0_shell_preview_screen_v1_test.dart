@@ -3345,7 +3345,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
       expect(find.text('Review'), findsWidgets);
-      expect(find.text('What to fix next'), findsOneWidget);
+      expect(find.text('Practice this clue next'), findsOneWidget);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(
         find.text('Home has the next focused hand for this clue.'),
@@ -3534,6 +3534,17 @@ void main() {
     expect(find.text('Answer'), findsWidgets);
     expect(find.text('Quick check'), findsWidgets);
     expect(find.text('First hand'), findsWidgets);
+    final launchPathChipTexts = tester.widgetList<Text>(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_placement_launch_path')),
+        matching: find.byType(Text),
+      ),
+    );
+    for (final chipText in launchPathChipTexts) {
+      expect(chipText.maxLines, 2);
+      expect(chipText.overflow, isNull);
+      expect(chipText.softWrap, isTrue);
+    }
     expect(
       find.byKey(const Key('act0_shell_placement_intro_preview')),
       findsOneWidget,
@@ -3632,6 +3643,7 @@ void main() {
     expect(find.text('Short table read'), findsNothing);
     expect(find.text('Short checks'), findsOneWidget);
     expect(find.text('No score'), findsOneWidget);
+    expect(find.text('Hand after'), findsOneWidget);
     expect(find.textContaining('A few table reads now'), findsNothing);
     expect(find.text('Five quick reads'), findsNothing);
     expect(find.text('Start quick check'), findsOneWidget);
@@ -31034,7 +31046,7 @@ void main() {
       find.byKey(const Key('act0_shell_review_pattern_card')),
       findsNothing,
     );
-    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this clue next'), findsOneWidget);
     expect(find.textContaining('showing up 2 times'), findsNothing);
     expect(find.textContaining('next spot gets easier'), findsNothing);
   });
@@ -31079,7 +31091,7 @@ void main() {
     );
 
     expect(find.text('Active repair'), findsOneWidget);
-    expect(find.text('What to fix next'), findsOneWidget);
+    expect(find.text('Practice this clue next'), findsOneWidget);
     expect(find.text('Your active repair is waiting on Home.'), findsNothing);
     expect(
       find.text('Keep this clue in view before your next hand.'),
