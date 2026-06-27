@@ -303,6 +303,8 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const _PlacementBrandBeatV1(),
+                            const SizedBox(height: Act0ShellTokensV1.gapSm),
                             _PlacementHeroV1(
                               title: _placementCopyV1(
                                 context,
@@ -791,6 +793,111 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PlacementBrandBeatV1 extends StatelessWidget {
+  const _PlacementBrandBeatV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_placement_brand_beat'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
+        border: Border.all(
+          color: Act0ShellTokensV1.primary.withValues(alpha: 0.24),
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            Act0ShellTokensV1.primary.withValues(alpha: 0.16),
+            Act0ShellTokensV1.info.withValues(alpha: 0.08),
+            Act0ShellTokensV1.surface,
+          ],
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            key: const Key('act0_shell_placement_brand_sharky'),
+            width: 70,
+            height: 70,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
+              ),
+            ),
+            child: const Act0SharkyPresenceMascotV1(
+              mood: Act0SharkyMoodV1.happy,
+              tone: Act0ShellTokensV1.primary,
+              size: 58,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _placementCopyV1(
+                    context,
+                    en: 'Sharky Poker',
+                    ru: 'Sharky Poker',
+                  ),
+                  style: Act0ShellTokensV1.screenTitle.copyWith(
+                    fontSize: 28,
+                    height: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  _placementCopyV1(
+                    context,
+                    en: 'Read the table from your first hand.',
+                    ru: 'Читай стол с первой раздачи.',
+                  ),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _placementCopyV1(
+                    context,
+                    en: 'One clue. One decision. One proof.',
+                    ru: 'Одна подсказка. Одно решение. Одно доказательство.',
+                  ),
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _placementCopyV1(
+                    context,
+                    en: 'Your table coach is ready.',
+                    ru: 'Твой тренер за столом готов.',
+                  ),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.primary,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
