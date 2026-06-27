@@ -14,6 +14,18 @@ Color act0SharkyToneForMoodV1(Act0SharkyMoodV1 mood) {
   };
 }
 
+const String act0SharkyLogoMarkAssetV1 = 'assets/brand/logo.svg';
+
+String act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1 mood) {
+  return switch (mood) {
+    Act0SharkyMoodV1.neutral => 'assets/images/mascot/sharky_neutral.png',
+    Act0SharkyMoodV1.happy => 'assets/images/mascot/sharky_happy.png',
+    Act0SharkyMoodV1.thinking => 'assets/images/mascot/sharky_thinking.png',
+    Act0SharkyMoodV1.repair => 'assets/images/mascot/sharky_repair.png',
+    Act0SharkyMoodV1.celebrate => 'assets/images/mascot/sharky_celebrate.png',
+  };
+}
+
 class Act0SharkyGuideCardV1 extends StatelessWidget {
   const Act0SharkyGuideCardV1({
     super.key,
@@ -380,7 +392,10 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final mascot = animated
         ? Act0SharkyPresenceMascotV1(mood: mood, tone: tone, size: size * 0.84)
-        : Image.asset(_mascotAssetForMood(mood), fit: BoxFit.contain);
+        : Image.asset(
+            act0SharkyCompanionAssetForMoodV1(mood),
+            fit: BoxFit.contain,
+          );
     return Container(
       width: size,
       height: size,
@@ -473,7 +488,7 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
           );
         },
         child: Image.asset(
-          _mascotAssetForMood(widget.mood),
+          act0SharkyCompanionAssetForMoodV1(widget.mood),
           key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
           fit: BoxFit.contain,
           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
@@ -585,16 +600,6 @@ class _GuideBadgeV1 extends StatelessWidget {
       ),
     );
   }
-}
-
-String _mascotAssetForMood(Act0SharkyMoodV1 mood) {
-  return switch (mood) {
-    Act0SharkyMoodV1.neutral => 'assets/images/mascot/sharky_neutral.png',
-    Act0SharkyMoodV1.happy => 'assets/images/mascot/sharky_happy.png',
-    Act0SharkyMoodV1.thinking => 'assets/images/mascot/sharky_thinking.png',
-    Act0SharkyMoodV1.repair => 'assets/images/mascot/sharky_repair.png',
-    Act0SharkyMoodV1.celebrate => 'assets/images/mascot/sharky_celebrate.png',
-  };
 }
 
 String _mascotVectorFallbackForMood(Act0SharkyMoodV1 mood) {
