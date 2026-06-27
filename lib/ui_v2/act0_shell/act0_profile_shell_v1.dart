@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -329,8 +330,8 @@ String _profileHeaderSublineV1(
 ) {
   return _profileCopyV1(
     context,
-    en: 'Learning profile',
-    ru: 'Твой покерный рост',
+    en: 'Proof profile',
+    ru: 'Профиль доказательств',
   );
 }
 
@@ -431,7 +432,6 @@ class _ProfileHeroCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final confidenceLine = _profileIdentityConfidenceLineV1(context, profile);
     final completionLine = _profileCompactCompletionLineV1(context, profile);
-    final progressValue = _profileXpProgressValueV1(profile.xpLine);
     final streakLine = _profileStreakLineV1(context, profile);
     return Container(
       key: const Key('act0_shell_profile_hero_card'),
@@ -444,6 +444,7 @@ class _ProfileHeroCardV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                key: const Key('act0_shell_profile_sharky_identity'),
                 width: 64,
                 height: 64,
                 alignment: Alignment.center,
@@ -470,15 +471,10 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
-                  child: Image.asset(
-                    'assets/images/mascot/sharky_neutral.png',
-                    key: const Key('act0_shell_profile_sharky_asset'),
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.person_rounded,
-                      color: Act0ShellTokensV1.onPrimary,
-                      size: 28,
-                    ),
+                  child: const Act0SharkyPresenceMascotV1(
+                    mood: Act0SharkyMoodV1.neutral,
+                    tone: Act0VisualCanonV1.bluePrimary,
+                    size: 56,
                   ),
                 ),
               ),
@@ -498,8 +494,8 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Learning profile',
-                        ru: 'Профиль обучения',
+                        en: 'Proof profile',
+                        ru: 'Профиль доказательств',
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -509,7 +505,11 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      _profileHeroWorldLineV1(context, profile),
+                      _profileCopyV1(
+                        context,
+                        en: 'Sharky keeps proof, not points.',
+                        ru: 'Шарки хранит доказательства, а не очки.',
+                      ),
                       style: Act0ShellTokensV1.body.copyWith(
                         color: Act0VisualCanonV1.bluePrimary,
                         fontWeight: FontWeight.w700,
@@ -537,17 +537,6 @@ class _ProfileHeroCardV1 extends StatelessWidget {
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0VisualCanonV1.textPrimary.withOpacity(0.92),
               fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 7),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            child: LinearProgressIndicator(
-              key: const Key('act0_shell_profile_xp_progress_bar'),
-              minHeight: 8,
-              value: progressValue,
-              backgroundColor: Act0VisualCanonV1.navySurface.withOpacity(0.82),
-              color: Act0VisualCanonV1.bluePrimary,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -863,16 +852,6 @@ String _profileHeroQualityLineV1(
     en: 'Clean progress started',
     ru: 'Чистый прогресс начат',
   );
-}
-
-double _profileXpProgressValueV1(String xpLine) {
-  final match = RegExp(r'(\d+)\s*/\s*(\d+)').firstMatch(xpLine);
-  final current = double.tryParse(match?.group(1) ?? '');
-  final target = double.tryParse(match?.group(2) ?? '');
-  if (current == null || target == null || target <= 0) {
-    return 0;
-  }
-  return (current / target).clamp(0, 1).toDouble();
 }
 
 String _profileStreakLineV1(BuildContext context, Act0ProfileStateV1 profile) {

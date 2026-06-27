@@ -11704,7 +11704,7 @@ void main() {
   );
 
   testWidgets(
-    'Profile shows compact progress header and encouraging completion line',
+    'Profile shows Sharky proof identity and encouraging completion line',
     (tester) async {
       await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
 
@@ -11713,7 +11713,16 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('You'), findsWidgets);
-      expect(find.text('Learning profile'), findsOneWidget);
+      expect(find.text('Proof profile'), findsWidgets);
+      expect(find.text('Sharky keeps proof, not points.'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_profile_sharky_identity')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_xp_progress_bar')),
+        findsNothing,
+      );
       expect(find.text('Progress proof'), findsOneWidget);
       expect(find.textContaining('becoming'), findsOneWidget);
       expect(
@@ -12693,6 +12702,8 @@ void main() {
     expect(find.text('Locked'), findsWidgets);
     expect(find.text('Premium preview'), findsNothing);
     expect(find.text('See what premium adds'), findsNothing);
+    expect(find.textContaining('Reward +'), findsNothing);
+    expect(find.textContaining('XP'), findsNothing);
     expect(
       find.textContaining('This world opens later in the route'),
       findsOneWidget,
@@ -15754,7 +15765,7 @@ void main() {
   });
 
   testWidgets(
-    'Canonical detached shell review shows animated XP closing summary',
+    'Canonical detached shell review shows animated proof closing summary',
     (tester) async {
       await pumpCompact(tester, host());
       await startCurrentRouteFromHomeV1(tester);
@@ -15799,7 +15810,10 @@ void main() {
         find.byKey(const Key('act0_shell_pot_sweep_moment')),
         findsNothing,
       );
-      expect(find.textContaining('Clean rep'), findsOneWidget);
+      expect(find.text('Proof banked'), findsOneWidget);
+      expect(find.text('Table read improved'), findsOneWidget);
+      expect(find.textContaining('XP'), findsNothing);
+      expect(find.textContaining('Level'), findsNothing);
       expect(toast.top, greaterThan(table.top));
       expect(toast.top, greaterThan(utg.bottom));
       expect(toast.bottom, lessThan(center.top));
@@ -15825,76 +15839,49 @@ void main() {
   );
 
   testWidgets(
-    'Canonical detached shell review shows level up when XP crosses the target',
+    'Canonical detached shell keeps proof copy when internal XP crosses target',
     (tester) async {
-      final sample = Act0ShellStateV1.sample;
-      final baseLesson = sample.currentLesson;
-      final drillTask = baseLesson.taskList.firstWhere(
-        (task) => task.taskId == 'actions_legal_context',
-      );
-      final followUpTask = baseLesson.taskList.firstWhere(
-        (task) => task.taskId != 'actions_legal_context',
-      );
-      final lesson = baseLesson.copyWith(
-        state: Act0LessonStateV1.current,
-        isSelectable: true,
-        isLocked: false,
-        primaryCtaLabel: 'Open lesson',
-        tasks: <Act0LessonTaskV1>[drillTask, followUpTask],
-      );
-      final baseState = stateWithLessons(<Act0LessonCardV1>[lesson]);
-      final rewardState = Act0ShellStateV1(
-        courseTitle: baseState.courseTitle,
-        courseSubtitle: baseState.courseSubtitle,
-        levelLabel: 'Level 1',
-        xp: 195,
-        xpTarget: baseState.xpTarget,
-        streakDays: baseState.streakDays,
-        dailyGoalLabel: baseState.dailyGoalLabel,
-        dailyGoalValue: baseState.dailyGoalValue,
-        pathProgressLabel: baseState.pathProgressLabel,
-        selectedWorldId: baseState.selectedWorldId,
-        worlds: baseState.worlds,
-        lessons: baseState.lessons,
-        review: baseState.review,
-        profile: Act0ProfileStateV1(
-          playerName: baseState.profile.playerName,
-          level: 'Level 1',
-          xpLine: '195 / 200 XP',
-          lessonsLine: baseState.profile.lessonsLine,
-          accuracyLine: baseState.profile.accuracyLine,
-          qualityLine: baseState.profile.qualityLine,
-          consistencyActiveDays: baseState.profile.consistencyActiveDays,
-          achievements: baseState.profile.achievements,
-          strongCategories: baseState.profile.strongCategories,
-          weakCategories: baseState.profile.weakCategories,
-          recentProgress: baseState.profile.recentProgress,
-          recentSkillGains: baseState.profile.recentSkillGains,
-          skillStats: baseState.profile.skillStats,
-          recommendedFocusTitle: baseState.profile.recommendedFocusTitle,
-          recommendedFocusBody: baseState.profile.recommendedFocusBody,
-          recommendedFocusCtaLabel: baseState.profile.recommendedFocusCtaLabel,
-        ),
-      );
-
-      await pumpProMaxSimulatorSafeArea(
+      await pumpCompact(
         tester,
-        host(
-          tab: Act0ShellTabV1.play,
-          phase: Act0LessonPhaseV1.drill,
-          state: rewardState,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Correct.',
+              reason: 'Nobody had bet yet - that was the clue.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Good read.',
+              sharkyMood: Act0SharkyMoodV1.happy,
+              selectedLabel: 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'no_bet_yet',
+                label: 'No bet yet',
+                proofLine: 'Signal: No bet yet',
+              ),
+              completionSummary: const Act0RunnerCompletionSummaryV1(
+                xpGain: 12,
+                startLevel: 1,
+                endLevel: 2,
+                startXp: 195,
+                endXp: 7,
+                xpTarget: 200,
+              ),
+              onContinue: () {},
+            ),
+          ),
         ),
       );
-      await advanceTeachingToDrill(tester);
-      await tester.tap(find.byKey(const Key('act0_shell_option_check')));
-      await tester.pump(const Duration(milliseconds: 120));
+      await tester.pumpAndSettle();
 
       expect(
-        find.byKey(const Key('act0_shell_completion_toast_level_up')),
+        find.byKey(const Key('act0_shell_completion_toast')),
         findsOneWidget,
       );
-      expect(find.textContaining('Level up'), findsOneWidget);
-      expect(find.text('Level 2'), findsOneWidget);
+      expect(find.text('Proof banked'), findsOneWidget);
+      expect(find.text('Table read improved'), findsOneWidget);
+      expect(find.textContaining('Level up'), findsNothing);
+      expect(find.text('Level 2'), findsNothing);
     },
   );
 

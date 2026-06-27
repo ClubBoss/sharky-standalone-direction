@@ -2870,8 +2870,8 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                 Text(
                   _learnCopyV1(
                     context,
-                    en: 'Reward +${world.rewardXp} XP',
-                    ru: 'Награда +${world.rewardXp} XP',
+                    en: 'Proof path',
+                    ru: 'Маршрут доказательств',
                   ),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.gold,

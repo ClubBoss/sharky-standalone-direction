@@ -61,7 +61,7 @@ void main() {
     expect(find.textContaining('Signal:'), findsNothing);
   });
 
-  testWidgets('correct feedback shows skill proof before XP reward', (
+  testWidgets('correct feedback shows skill proof before proof reward', (
     tester,
   ) async {
     await tester.pumpWidget(

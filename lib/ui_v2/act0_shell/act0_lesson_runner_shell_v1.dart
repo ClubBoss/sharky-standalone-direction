@@ -101,7 +101,7 @@ class Act0RunnerCompletionSummaryV1 {
 
   bool get leveledUp => endLevel > startLevel;
 
-  String get toastRewardLabel => leveledUp ? 'Level up' : 'Clean rep';
+  String get toastRewardLabel => leveledUp ? 'Proof banked' : 'Clean rep';
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
 }
@@ -6322,8 +6322,6 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
       duration: const Duration(milliseconds: 1800),
       curve: Curves.easeOutCubic,
       builder: (context, value, child) {
-        final animatedGain = (summary.xpEarned * value).round();
-        final progress = _blockSummaryProgressAtGain(summary, animatedGain);
         return Container(
           decoration: BoxDecoration(
             color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
@@ -6348,7 +6346,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '+$animatedGain XP',
+                      'One clean read',
                       key: const Key('act0_shell_block_summary_xp_gain'),
                       style: Act0ShellTokensV1.label.copyWith(
                         color: tone,
@@ -6356,15 +6354,18 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  Text(
-                    progress.leveledUp
-                        ? 'Next step ${progress.endLevel}'
-                        : '${progress.endXp}/${summary.xpTarget} XP',
-                    key: const Key('act0_shell_block_summary_xp_total'),
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.text,
-                      fontWeight: FontWeight.w900,
+                  const SizedBox(width: Act0ShellTokensV1.gapSm),
+                  Expanded(
+                    child: Text(
+                      'Local proof saved',
+                      key: const Key('act0_shell_block_summary_xp_total'),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      textAlign: TextAlign.right,
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                 ],
@@ -6377,9 +6378,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                 child: LinearProgressIndicator(
                   key: const Key('act0_shell_block_summary_xp_progress'),
                   minHeight: 8,
-                  value: summary.xpTarget <= 0
-                      ? 0
-                      : (progress.endXp / summary.xpTarget).clamp(0, 1),
+                  value: summary.xpEarned <= 0 ? 0.0 : 1.0,
                   backgroundColor: Act0ShellTokensV1.surface3,
                   color: tone,
                 ),
@@ -6766,8 +6765,6 @@ class _CompletionToastV1 extends StatelessWidget {
           ((value - 0.72) / 0.28).clamp(0.0, 1.0),
         );
         final opacity = (appear * (1 - disappear)).clamp(0.0, 1.0);
-        final animatedGain = (summary.xpGain * appear).round();
-        final progress = _feedbackProgressAtGain(summary, animatedGain);
         final tone = summary.leveledUp
             ? Act0ShellTokensV1.gold
             : Act0ShellTokensV1.primary;
@@ -6813,7 +6810,7 @@ class _CompletionToastV1 extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          '+$animatedGain XP · ${summary.toastRewardLabel}',
+                          'Proof banked',
                           key: const Key(
                             'act0_shell_completion_toast_reward_label',
                           ),
@@ -6826,24 +6823,14 @@ class _CompletionToastV1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (summary.leveledUp)
-                        Text(
-                          'Level ${summary.endLevel}',
-                          key: const Key(
-                            'act0_shell_completion_toast_level_up',
-                          ),
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.gold,
-                            fontWeight: FontWeight.w900,
-                            fontSize: onTableOverlay ? 10.5 : 11.5,
-                          ),
-                        ),
                     ],
                   ),
                   SizedBox(height: onTableOverlay ? 2 : 3),
                   Text(
-                    '${progress.endXp}/${summary.xpTarget} XP',
+                    'Table read improved',
                     key: const Key('act0_shell_completion_toast_total'),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
                     style: Act0ShellTokensV1.body.copyWith(
                       fontWeight: FontWeight.w900,
                       fontSize: onTableOverlay ? 10.8 : 11.5,
@@ -6857,9 +6844,7 @@ class _CompletionToastV1 extends StatelessWidget {
                     child: LinearProgressIndicator(
                       key: const Key('act0_shell_completion_toast_progress'),
                       minHeight: onTableOverlay ? 5 : 6,
-                      value: summary.xpTarget <= 0
-                          ? 0
-                          : (progress.endXp / summary.xpTarget).clamp(0, 1),
+                      value: summary.xpGain <= 0 ? 0.0 : 1.0,
                       backgroundColor: Act0ShellTokensV1.surface3,
                       color: tone,
                     ),

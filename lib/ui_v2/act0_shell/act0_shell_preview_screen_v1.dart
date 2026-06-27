@@ -9734,7 +9734,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       primaryCtaLabel: completed
           ? 'Replay'
           : current
-          ? 'Start +${lesson.rewardXp} XP'
+          ? 'Start'
           : 'Locked',
       isSelectable: worldAvailable && (completed || current),
       isLocked: !worldAvailable || state == Act0LessonStateV1.locked,

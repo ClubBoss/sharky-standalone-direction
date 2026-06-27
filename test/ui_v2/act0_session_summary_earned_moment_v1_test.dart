@@ -463,7 +463,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_xp_total')),
       findsOneWidget,
     );
-    expect(find.text('Next step 2'), findsOneWidget);
+    expect(find.text('Local proof saved'), findsOneWidget);
     expect(find.text('Level 2'), findsNothing);
   });
 

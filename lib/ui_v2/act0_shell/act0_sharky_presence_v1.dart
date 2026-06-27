@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -475,6 +476,78 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
           _mascotAssetForMood(widget.mood),
           key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
           fit: BoxFit.contain,
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded || frame != null) {
+              return child;
+            }
+            return _SharkyMascotAssetFallbackV1(
+              mood: widget.mood,
+              tone: widget.tone,
+              size: widget.size,
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return _SharkyMascotAssetFallbackV1(
+              mood: widget.mood,
+              tone: widget.tone,
+              size: widget.size,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SharkyMascotAssetFallbackV1 extends StatelessWidget {
+  const _SharkyMascotAssetFallbackV1({
+    required this.mood,
+    required this.tone,
+    required this.size,
+  });
+
+  final Act0SharkyMoodV1 mood;
+  final Color tone;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_sharky_presence_asset_fallback'),
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: tone.withValues(alpha: 0.16),
+        border: Border.all(color: tone.withValues(alpha: 0.34)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: SvgPicture.asset(
+        _mascotVectorFallbackForMood(mood),
+        fit: BoxFit.cover,
+        placeholderBuilder: (context) =>
+            _SharkyMascotLetterFallbackV1(tone: tone, size: size),
+      ),
+    );
+  }
+}
+
+class _SharkyMascotLetterFallbackV1 extends StatelessWidget {
+  const _SharkyMascotLetterFallbackV1({required this.tone, required this.size});
+
+  final Color tone;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'S',
+        style: Act0ShellTokensV1.screenTitle.copyWith(
+          color: tone,
+          fontSize: size * 0.42,
+          fontWeight: FontWeight.w900,
         ),
       ),
     );
@@ -521,5 +594,15 @@ String _mascotAssetForMood(Act0SharkyMoodV1 mood) {
     Act0SharkyMoodV1.thinking => 'assets/images/mascot/sharky_thinking.png',
     Act0SharkyMoodV1.repair => 'assets/images/mascot/sharky_repair.png',
     Act0SharkyMoodV1.celebrate => 'assets/images/mascot/sharky_celebrate.png',
+  };
+}
+
+String _mascotVectorFallbackForMood(Act0SharkyMoodV1 mood) {
+  return switch (mood) {
+    Act0SharkyMoodV1.thinking => 'assets/mascot/poker_shark_thinking.svg',
+    Act0SharkyMoodV1.celebrate => 'assets/mascot/poker_shark_celebrate.svg',
+    Act0SharkyMoodV1.neutral ||
+    Act0SharkyMoodV1.happy ||
+    Act0SharkyMoodV1.repair => 'assets/mascot/poker_shark_idle.svg',
   };
 }
