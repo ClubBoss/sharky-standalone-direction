@@ -1,0 +1,561 @@
+# TOP1 Long-Horizon 100% Completion Route v1
+
+Status: ACTIVE long-horizon execution ledger after Wave 5.1.
+Created: 2026-06-28.
+
+Authority note:
+
+- `docs/plan/MASTER_PLAN_v3.0.md` remains the highest day-to-day product
+  authority.
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` remains the top-1 strategy
+  SSOT.
+- This ledger operationalizes the attached Full Top-1 Product Gap Audit /
+  100% Completion Map v1. It does not copy the audit verbatim.
+- If this ledger conflicts with the Master Plan, monetization SSOT, or active
+  route truth, the higher SSOT wins and this ledger must be updated.
+
+## 0. Source Conflict Notes
+
+- `docs/plan/MASTER_PLAN_v3.0.md` still contains older route language naming
+  Wave 3.10 - Premium Motion Moments v1 as the next implementation candidate
+  and warning against telemetry/model work unless a later excellence wave
+  admits it. The current user prompt, accepted Wave 5.1 commit, and updated
+  TOP1 SSOT supersede that operational next-wave pointer for this long-horizon
+  route. This docs-only wave does not edit the Master Plan because the prompt
+  requested a minimal TOP1 SSOT pointer and said not to rewrite Master Plan
+  unless clearly required.
+- The attached audit measured telemetry before Wave 5.1. This ledger keeps the
+  audit baseline score but uses the Wave 5.1 artifact for the current telemetry
+  score and remaining telemetry gaps.
+- Wave 5.1's review artifact recommends W1-W6 content depth next. The attached
+  long-horizon prompt and audit backlog rank W7-W12 route truth as the stronger
+  immediate control-plane blocker. This ledger sets Wave 5.2 as W7-W12 Route
+  Truth Reconciliation and keeps W1-W6 content depth as Wave 5.3.
+
+## 1. Strategic Verdict
+
+The W1-W4 beachhead is strong, premium, and much closer to a real product than
+earlier Sharky states. It is not full product completeness.
+
+The active route is now the Full Top-1 / 100% Completion Route. The quick
+store/public beta route is paused as the active priority unless the user
+explicitly reactivates it.
+
+Human novice QA is deferred only because participants are not currently
+available. It remains a hard future gate before external beta, public launch,
+monetization, or validated learning-effect claims.
+
+Wave 5.1 - Canonical Telemetry Instrumentation v1 is accepted. Local
+telemetry improved from a sparse pre-5.1 layer into a canonical local event
+foundation. Telemetry is still incomplete: there is no deterministic local
+`session_id`, no OP-19 transfer aggregation, no OP-05 server sink, no privacy
+posture decision, and no vendor analytics.
+
+This ledger is an execution control document. Its job is to order work by
+evidence value, blocking power, and rework avoidance.
+
+## 2. Current Score Ledger
+
+Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
+
+| Block | Audit baseline | Current after Wave 5.1 | Target | Delta remaining | Current status | Primary next wave | Evidence source |
+| --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
+| Full 36-world readiness | 2.5 | 2.5 | 9.0 | 6.5 | W1-W6 near-ready; W7-W12 conflicted; W13-W36 planned | Wave 5.2 | Gap audit OP-01, OP-13, OP-50, OP-54 |
+| Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
+| Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
+| Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
+| Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
+| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 depth unknown; W7-W12 unresolved; W13+ absent | Wave 5.3 | Gap audit OP-20, OP-65 |
+| Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
+| Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
+| Architecture scalability | 6.5 | 6.5 | 8.8 | 2.3 | Act0 seams good; content remains code-bound | Wave 6.1 | Gap audit OP-02, OP-10, OP-66 |
+| Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
+| Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
+| Overall top-1 readiness | 4.5 | 4.7 | 9.0 | 4.3 | Beachhead strong; full product still thin | Wave 5.2 | Gap audit plus Wave 5.1 delta |
+
+Score delta explanation:
+
+- Telemetry moves modestly from `3.0` to `4.3` because Wave 5.1 implements the
+  local canonical event foundation. It does not justify a large jump because
+  no server sink, privacy posture, transfer aggregation, or session join key
+  exists.
+- Overall top-1 readiness moves only from `4.5` to `4.7`; OP-04 improved, but
+  the larger content, learning-transfer, QA, monetization, and W13-W36 gaps
+  remain.
+
+## 3. Top-1 Gap Summary
+
+Major remaining gaps:
+
+- 36-world content depth: W7-W12 route truth is unresolved and W13-W36 are
+  not authored.
+- W7-W12 route truth: the Developing Player band cannot be opened until active
+  route status is reconciled.
+- Content schema/factory: authored content remains too code-bound for scalable
+  W7-W36 production.
+- Learning transfer measurement: the app cannot yet prove improvement across
+  sessions or concept families.
+- Telemetry aggregation/server sink: Wave 5.1 covers local instrumentation,
+  not OP-05 analytics.
+- Spaced repetition: resurfacing by concept family is not implemented.
+- Concept-family repair depth: no cross-session family miss accumulation or
+  multi-repair queue.
+- Proof/profile progression: Profile does not yet show durable concept-family
+  proof accumulation.
+- Poker correctness validation: W7+ advice needs expert/solver validation
+  before advanced claims.
+- Monetization: W5+ premium policy exists, but commerce does not.
+- Human novice QA: unavailable now, but still a hard future gate.
+- W13-W36 advanced content: planned in SSOT, not built.
+- Long-term moat: hand import, advanced analytics, solver framing, and coach
+  authority remain later-stage work.
+
+## 4. Stage Map
+
+### Stage A - Measurement & Truth Foundation
+
+- Goal: lock what is true before expansion.
+- Why here: route truth, measurement, and QA gates prevent high-cost rework.
+- Score areas affected: telemetry, content depth, learning effect, W1-W4
+  beachhead, full 36-world readiness.
+- Included waves: 5.1, 5.2, 5.3, 5.4.
+- Dependencies: Wave 5.1 accepted; current SSOT chain.
+- Do not touch: W5-W12 authoring, commerce, server analytics, broad UI polish,
+  App Store assets.
+- Expected movement: telemetry `3.0 -> 4.3`; route/content risk becomes
+  classified, not solved.
+- Exit criteria: local telemetry accepted, W7-W12 route status reconciled,
+  W1-W6 content-depth gaps known, human QA protocol locked even if execution
+  waits for participants.
+
+### Stage B - Content Factory & Architecture Foundation
+
+- Goal: make content production scalable before mass authoring.
+- Why here: schema before mass content prevents Dart-owner bloat and weak QA.
+- Score areas affected: architecture scalability, content depth, correctness.
+- Included waves: 6.1-6.4.
+- Dependencies: Stage A route/content audit outputs.
+- Do not touch: W7-W12 bulk authoring before schema; W13+ content; commerce.
+- Expected movement: architecture `6.5 -> 7.5`; content depth risk reduced.
+- Exit criteria: content schema, validation rules, factory MVP, and owner
+  refactor plan exist with pilot proof.
+
+### Stage C - Learning Effect & Repair Depth
+
+- Goal: prove and improve learning across sessions.
+- Why here: learning measurement must precede monetization and large claims.
+- Score areas affected: learning effect, personalization/repair, telemetry.
+- Included waves: 7.1-7.5.
+- Dependencies: canonical local telemetry; concept-family schema; content
+  identifiers stable enough to join.
+- Do not touch: payment, public claims, AI/chat, advanced analytics dashboard.
+- Expected movement: learning effect `6.0 -> 7.5+`; personalization
+  `5.0 -> 7.0+`.
+- Exit criteria: concept-family state, transfer measurement, spaced rep,
+  W5+ multi-repair design, and multi-session Review proof are implemented or
+  explicitly scoped.
+
+### Stage D - Progression / Dopamine / Proof Profile
+
+- Goal: make progress felt without fake gamification.
+- Why here: proof should become visible after measurement/state exists.
+- Score areas affected: progression/dopamine, Profile, retention, moat.
+- Included waves: 8.1-8.6.
+- Dependencies: concept-family state and learning evidence.
+- Do not touch: XP inflation, generic streaks, leaderboards, broad redesign.
+- Expected movement: progression `6.0 -> 7.8`; Profile proof becomes durable.
+- Exit criteria: repair streak, fixes banked, cross-session proof Profile,
+  W2-W6 payoffs, W4->W5 band milestone, and deterministic improvement moments
+  have evidence.
+
+### Stage E - Table & Poker Context Expansion
+
+- Goal: make the table support W5+ decision complexity.
+- Why here: advanced content needs visible poker context before authoring.
+- Score areas affected: table experience, correctness, content readiness.
+- Included waves: 9.1-9.4.
+- Dependencies: W7-W12 route truth and content schema.
+- Do not touch: solver product claims, hand import, W13+ analytics.
+- Expected movement: content readiness and competitive moat improve.
+- Exit criteria: position labels, stack/SPR context, multi-street decision
+  state, and tournament indicators are proven where needed.
+
+### Stage F - W5-W12 Developing Player Band
+
+- Goal: open the first real premium-depth band.
+- Why here: W5-W12 are the first proof that Sharky is not only a W1-W4
+  beachhead.
+- Score areas affected: full readiness, content depth, progression, moat.
+- Included waves: 10.1-10.6.
+- Dependencies: Stages A, B, and table context prerequisites.
+- Do not touch: public commerce until W5+ value is route-ready; W13+ content.
+- Expected movement: full 36-world readiness `2.5 -> 5.0+`; content depth
+  `4.5 -> 6.5`.
+- Exit criteria: W5-W6 verified/expanded, W7-W12 locked and authored in two
+  passes, Developing Sharky phrases ready.
+
+### Stage G - Correctness / Validation / External Trust
+
+- Goal: prevent wrong poker advice and establish validation credibility.
+- Why here: advanced advice without validation can destroy trust.
+- Score areas affected: correctness, moat, store/public trust.
+- Included waves: 11.1-11.3.
+- Dependencies: W5-W12 content route and schema.
+- Do not touch: public GTO/solver claims; black-box AI feedback.
+- Expected movement: competitive moat `5.5 -> 6.8+`.
+- Exit criteria: correctness protocol, light solver-validation posture, and
+  expert-review partnership plan are defined and used.
+
+### Stage H - Monetization / Premium Value
+
+- Goal: convert W5+ value into trusted revenue.
+- Why here: monetization must follow learning value, W5+ readiness, and
+  privacy/legal posture.
+- Score areas affected: monetization, store/brand, commercial readiness.
+- Included waves: 12.1-12.4.
+- Dependencies: W5+ value proof, privacy posture, legal/store prerequisites.
+- Do not touch: paywall pressure before value proof; unverified entitlement
+  paths.
+- Expected movement: monetization `2.0 -> 7.5+`.
+- Exit criteria: pricing decision, value page, W4->W5 trial flow, and IAP
+  implementation with restore/receipt edge cases.
+
+### Stage I - W13-W24 Intermediate / Advanced Band
+
+- Goal: design the intermediate product that gives Sharky long-term depth.
+- Why here: only after W5-W12 and monetization foundations are stable.
+- Score areas affected: full readiness, moat, learning effect, advanced trust.
+- Included waves: 13.1-13.6.
+- Dependencies: mature factory, validation, data model, and revenue path.
+- Do not touch: W25-W36 detail before W13-W24 design is coherent.
+- Expected movement: full readiness `5.0 -> 7.0+`.
+- Exit criteria: W13-W24 curriculum design, advanced table requirements,
+  generator research, hand import feasibility, tendency tracking, and advanced
+  leak-profile architecture are scoped.
+
+### Stage J - W25-W36 High-Level / Pro-Style Band
+
+- Goal: complete the Core Shark Path toward high-level/pro-style thinking.
+- Why here: this depends on every earlier content/validation system.
+- Score areas affected: full readiness, content depth, moat.
+- Included waves: 14.1-14.3.
+- Dependencies: Stages I and G; mature correctness validation.
+- Do not touch: unsupported pro claims or solver-depth promises.
+- Expected movement: full readiness approaches `8.0+`.
+- Exit criteria: W25-W36 curriculum design, factory-based authoring plan, and
+  Sharp-tier Sharky contract.
+
+### Stage K - Brand / Moat / Localization / Launch-Scale Product
+
+- Goal: defend top-1 position and launch/scale with authority.
+- Why here: launch-scale polish and localization should follow product proof.
+- Score areas affected: brand, store, moat, localization.
+- Included waves: 15.1-15.6.
+- Dependencies: broad product readiness, revenue path, data, QA.
+- Do not touch: broad localization or social mechanics before English product
+  proof is stable.
+- Expected movement: overall score toward `9.0-9.5`.
+- Exit criteria: Deep Ocean Gold system, 36-world arc visual, launch package,
+  RU rollout, shareable proof, and public authority partnership are ready.
+
+## 5. Wave Ledger
+
+| Wave | Purpose | Source IDs | Allowed scope | Forbidden scope | Wave DoD | Evidence DoD | Score areas | Expected delta | Dependencies | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 5.1 Canonical Telemetry Instrumentation | Emit local canonical learning events | OP-04 | Local Act0 telemetry only | Server sink, privacy, monetization | Accepted verdict exists | Wave 5.1 artifact/tests | Telemetry | +1.3 telemetry | None | done |
+| 5.2 W7-W12 Route Truth Reconciliation | Classify actual W7-W12 route truth | OP-01 | Audit/docs/route matrix | Content authoring, product code unless explicitly admitted | W7-W12 status matrix and blockers | Review artifact + graphify/diff checks | Full readiness, content | Risk classified | 5.1 | next |
+| 5.3 W1-W6 Content Depth / Same-Signal Coverage Audit | Check coverage illusion in W1-W6 | OP-20, OP-65 | Audit content coverage | New content writing | Family coverage matrix | Review artifact + validators if scoped | Content depth, learning | Risk classified | 5.2 or explicit retarget | planned |
+| 5.4 Human QA Protocol / Deferred Gate Lock | Lock novice QA protocol while participants unavailable | OP-03 | Protocol/docs | Running public beta, fake QA | Script, observation template, evidence path | Docs checks | W1-W4 confidence | 5.2/5.3 findings | planned |
+| 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.4 architecture | Stage A | planned |
+| 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 | 6.1 | planned |
+| 6.3 Content Factory MVP | Build minimal authoring pipeline | OP-10 | MVP factory and one pilot | W7-W12 mass generation | One valid generated/imported slice | Focused tests + docs | Architecture, content | +0.6 | 6.1-6.2 | planned |
+| 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
+| 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
+| 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
+| 7.3 Spaced Repetition Engine v1 | Resurface concepts over intervals | OP-12, OP-63 | Local scheduling | ML/AI, broad practice redesign | Interval policy implemented | Unit/route tests | Learning, retention | +0.7 | 7.1 | planned |
+| 7.4 Multi-Repair Queue for W5+ | Support multiple concept families | OP-18, OP-59 | W5+ queue contract | W1 beginner overload | Queue and priority rules | Focused tests | Repair depth | +0.6 | 7.1, W5 route | planned |
+| 7.5 Review Multi-Session Pattern Coaching | Show recurring families honestly | OP-30 | Review evidence surface | Dashboard theater | Multi-session pattern statement | UI/tests/evidence | Review, learning | +0.5 | 7.1 | planned |
+| 8.1 Repair Streak Display | Show proof-grounded streak | OP-25 | Earned repair streak | Attendance streak, XP | Streak copy/state safe | UI/test proof | Dopamine | +0.3 | 7.1 | planned |
+| 8.2 Fixes Banked / Weekly Proof Surface | Surface weekly proof | OP-40 | Local proof counts | Generic dashboard | Weekly proof summary | UI/test proof | Retention | +0.3 | 7.1 | planned |
+| 8.3 Cross-Session Proof Profile | Make Profile durable | OP-17, OP-41 | Concept proof Profile | Broad profile redesign | Proof accumulation visible | UI/test proof | Profile, learning | +0.6 | 7.1 | planned |
+| 8.4 W2-W6 Completion Payoff Screens | Add meso milestones | OP-15 | Completion payoff surfaces | W7+ authoring | W2-W6 payoff DoD | Screenshots/tests | Progression | +0.5 | route truth | planned |
+| 8.5 Band Transition Milestone W4->W5 | Make Foundation-to-Developing felt | OP-16, OP-55 | Band milestone | Commerce pressure | Transition payoff | Visual evidence | Progression, arc | +0.4 | W5 readiness | planned |
+| 8.6 Sharky Saw You Improve v1 | Deterministic improvement moment | OP-26 | Phrase trigger from proof | AI/chat/persona | Improvement condition/copy | State tests | Companion, moat | +0.4 | 7.2 | planned |
+| 9.1 Position Labels | Add consistent seat labels | OP-22 | Table context labels | Table redesign | Labels visible where needed | UI tests/screens | Table, content | +0.3 | route scope | planned |
+| 9.2 Stack Depth / SPR Context | Add W5+ depth context | OP-34 | SPR/stack display contract | Solver claims | Context shown safely | UI/tests | Table | +0.3 | 9.1 | planned |
+| 9.3 Multi-Street Decision State | Enable turn/river decisions | OP-23, OP-58 | State contract/pilot | Hand import | Multi-street decision pilot | Tests/screens | Content, moat | +0.6 | schema/table | planned |
+| 9.4 Tournament Context Indicators | Support W9+ context | OP-61 | Indicators only | ICM solver claims | Format indicator contract | Tests/screens | Table | +0.2 | W9 route | planned |
+| 10.1 W5-W6 Route Verification | Prove first premium-depth band | OP-74 | Route verification | Commerce | W5-W6 route matrix | Route tests/docs | Full readiness | +0.4 | 5.2 | planned |
+| 10.2 W5-W6 Content Expansion | Fill W5-W6 gaps | OP-20, OP-74 | Content using schema | Inline Dart sprawl | Coverage thresholds met | Content validators | Content depth | +0.5 | 6.x, 10.1 | planned |
+| 10.3 W7-W12 Curriculum Lock | Freeze Developing route | OP-01, OP-13 | Curriculum/route lock | Authoring before lock | W7-W12 plan approved | Review artifact | Full readiness | +0.4 | 5.2 | planned |
+| 10.4 W7-W12 Authoring Pass 1 | First Developing content pass | OP-13 | Factory-authored content | W13+ | Half-band coverage | Validators/review | Content | +0.8 | 10.3, 6.3 | planned |
+| 10.5 W7-W12 Authoring Pass 2 | Complete Developing content pass | OP-13 | Factory-authored content | Solver overclaim | Band coverage | Validators/review | Content | +0.8 | 10.4 | planned |
+| 10.6 Developing Tier Sharky Phrase Set | Activate W5-W12 tone | OP-27 | Curated phrases | Chat/AI | Phrase sets mapped | Copy guards | Companion | +0.2 | 10.3 | planned |
+| 11.1 Poker Correctness Review Protocol | Define correctness gates | OP-14 | Protocol/checklist | Solver product claims | Review protocol accepted | Docs checks | Trust | +0.4 | W5+ content | planned |
+| 11.2 Solver Validation Light Layer | Validate complex spots lightly | OP-49 | Research/pilot | Full solver trainer | Pilot validation path | Tests/artifact | Correctness | +0.4 | 11.1 | planned |
+| 11.3 Coach / Expert Review Partnership Plan | Add external trust path | OP-36, OP-70 | Partnership plan | Public endorsement before deal | Criteria/brief | Docs checks | Moat | +0.3 | 11.1 | planned |
+| 12.1 Pricing & Premium Boundary Decision | Decide value shape | OP-29, OP-75 | Business decision/docs | IAP code | Price/boundary lock | Review artifact | Monetization | +0.4 | W5 value proof | planned |
+| 12.2 Premium Value Page | Explain W5+ value | OP-28 | Value page/copy | Purchase flow | Claim-safe value page | UI/copy proof | Monetization | +0.4 | 12.1 | planned |
+| 12.3 Trial Flow After W4 | Value-first trial | OP-28 | Trial route contract | Payment edge cases skipped | Trial entry/exit tested | Tests | Monetization | +0.6 | 12.1-12.2 | planned |
+| 12.4 IAP / Commerce Implementation | Enable purchase/restore | OP-08, OP-09 | IAP/receipt/restore | Paywall pressure | Commerce edge cases pass | Entitlement tests | Monetization | +2.0 | legal/store | planned |
+| 13.1 W13-W24 Curriculum Design | Design intermediate band | OP-50 | Docs/curriculum | Authoring before design | W13-W24 map | Docs checks | Full readiness | +0.4 | Stage F/G | planned |
+| 13.2 Advanced Table State Requirements | Scope advanced table needs | OP-23 | Requirements/pilots | Full hand import | Requirements locked | Tests if pilot | Architecture | +0.3 | 13.1 | planned |
+| 13.3 Practice Generator Research | Determine generator path | OP-51 | Research/prototype plan | Production generator | Feasibility verdict | Artifact | Moat | +0.2 | content factory | planned |
+| 13.4 Hand Import Feasibility | Scope hand import | OP-48 | Feasibility only | Parser build | Build/no-build decision | Artifact | Moat | +0.2 | replay boundary | planned |
+| 13.5 Player Tendency Tracking | Scope tendency state | OP-53 | Local tracking design | Black-box AI | Tendency contract | Tests if code | Personalization | +0.4 | 7.x | planned |
+| 13.6 Advanced Analytics / Leak Profile | Design advanced proof | OP-52 | Design/pilot | Dashboard before data | Leak-profile contract | Artifact/tests | Moat | +0.4 | server data | planned |
+| 14.1 W25-W36 Curriculum Design | Design pro-style band | OP-54 | Curriculum design | Public pro claims | W25-W36 map | Docs checks | Full readiness | +0.4 | 13.x | planned |
+| 14.2 W25-W36 Content Factory Authoring | Author high-level content | OP-54 | Factory content | Unsupported solver advice | Coverage pass | Validators/review | Content | +1.0 | 14.1, 11.x | planned |
+| 14.3 Sharp Tier Sharky | Activate sharp tone | OP-27 | Curated phrases | AI/chat | Phrase sets mapped | Copy guards | Companion | +0.2 | 14.1 | planned |
+| 15.1 Deep Ocean Gold Brand System | Finish visual identity | OP-24 | Token/type/spacing system | Broad redesign | Brand system complete | Visual checks | Visual | +0.4 | product proof | planned |
+| 15.2 Learn World Map / 36-World Arc Visual | Make journey visible | OP-33, OP-56 | Compact arc visual | Full redesign | Arc visual tested | Screenshots | Brand/progression | +0.4 | route map | planned |
+| 15.3 Store/Public Launch Package | Prepare launch artifacts | OP-07, OP-42, OP-67 | Store package | Reactivating launch early | Metadata/assets ready | Store checks | Store | +0.8 | QA/legal | deferred |
+| 15.4 RU Localization | Localize after English proof | OP-45 | RU rollout | Early full localization | RU scope locked | L10n checks | Brand/market | +0.4 | English stable | deferred |
+| 15.5 Shareable Proof Moment | Add organic proof share | OP-60 | Shareable local proof | Social network | Share proof safe | UI/tests | Moat | +0.3 | proof state | deferred |
+| 15.6 Public Coach / Authority Partnership | Add public authority | OP-70 | Partnership/public plan | Unsupported endorsement | Partnership terms | Artifact | Moat | +0.4 | validation/revenue | deferred |
+
+## 6. Execution Granularity & Wave Closure Protocol
+
+A Stage is a large product layer. A Wave is a measurable outcome inside a
+Stage. A Prompt/PR is an atomic implementation, docs, audit, or tooling step
+inside a Wave.
+
+One Wave does not have to equal one Prompt/PR. Small docs/audit waves may
+close in one Prompt/PR. Larger implementation waves should be split into
+subwaves or prompt-sized PRs.
+
+### 6.1 Prompt/PR Size Rule
+
+Each Prompt/PR must be bounded, reviewable, evidence-producing, reversible or
+low-risk, tied to exactly one wave/subwave, free of opportunistic "while here"
+work, and optimized for max EV per token and max EV per PR.
+
+### 6.2 Wave Closure Rule
+
+A Wave is DONE only when its Wave DoD and Evidence DoD are satisfied. A merged
+PR, commit hash, or green diff is not proof by itself.
+
+### 6.3 Continue Same Wave Rule
+
+Continue the same Wave if the outcome is unchanged, the remaining work is part
+of the original Wave DoD, the next PR can be focused, and no new architecture
+or product direction is required.
+
+### 6.4 Split Wave Rule
+
+Split a Wave into subwaves if it needs more than three focused implementation
+PRs, touches more than two major surfaces, mixes audit/implementation/migration,
+requires separate evidence types, or reveals larger unknowns than expected.
+
+### 6.5 Stop-and-Audit Rule
+
+Stop implementation and run a bounded audit if route truth is unclear, SSOT
+docs conflict, tests imply one behavior while docs imply another, a change
+requires broad refactor, or the wave expands beyond its original DoD.
+
+### 6.6 Reject / Do-Not-Accept Rule
+
+Do not accept a Wave as complete if it has no evidence artifact, skipped checks
+without explanation, silent scope change, out-of-scope product changes, docs
+closure while runtime proof is required, or new unresolved P0/P1 issues.
+
+### 6.7 Evidence DoD Rule
+
+- Docs-only wave: review artifact plus `graphify hook-check`, diff checks, and
+  status review.
+- Product code wave: focused tests, analyze, diff checks, graphify.
+- UI wave: screenshot packet or targeted visual evidence.
+- Motion wave: motion frames/GIFs when motion is the claim.
+- Telemetry wave: event trace/payload tests.
+- Content wave: coverage matrix and validation tests.
+- Route wave: route proof and classification matrix.
+- Architecture wave: migration plan and pilot proof before mass migration.
+- Monetization wave: entitlement tests plus purchase/restore edge cases.
+- Learning wave: measurable concept-family or session proof.
+
+### 6.8 Retro Format Rule
+
+Every future Retro Summary must include wave verdict, whether the PR closes
+the wave or is part N of M, Wave DoD status, Evidence DoD status, remaining
+wave work, split recommendation, proposed score delta, and next PR/wave.
+
+### 6.9 Anti-Loop Rule
+
+If a wave reaches three PRs and is not close to Wave DoD, the next action must
+split it, reduce scope, or stop and re-audit. Do not continue indefinitely.
+
+### 6.10 Anti-Rush Rule
+
+Do not close a wave merely because a commit exists. Close only with the
+runtime, test, screenshot, telemetry, content, route, or review evidence
+appropriate to the claim.
+
+## 7. Token / Context Efficiency Protocol
+
+- Use search before reading.
+- Read the smallest source ranges needed.
+- Prefer active SSOT docs over rediscovering history.
+- Do not paste or summarize whole old docs into new docs.
+- Do not inspect generated screenshots unless the wave is visual/capture work.
+- Do not run broad tests unless the wave requires them.
+- Prefer focused tests plus mandatory checks.
+- Do not create meta-tests or tests-for-tests.
+- Prefer one clear artifact over redundant docs.
+- Avoid repeating closed history; reference it.
+- If a wave requires too much context, split it.
+
+Sweet spot rule: do not save tokens by skipping necessary evidence, and do not
+burn tokens proving already-closed facts. Spend tokens where they reduce risk,
+uncertainty, or future rework.
+
+## 8. Delta Update Protocol
+
+Every future wave/retro must update or explicitly leave unchanged:
+
+- wave verdict;
+- completed scope;
+- whether the wave closed or continues;
+- score delta proposed;
+- evidence for delta;
+- remaining gap;
+- next blocker;
+- whether next wave changes;
+- whether any deferred/hard gate changes;
+- whether human QA is still deferred;
+- whether any item moved from planned/deferred to active;
+- whether any score target changed and why.
+
+Score changes require evidence. Small infrastructure wins should move scores
+modestly unless they remove a blocker.
+
+## 9. Blocker Register
+
+| Blocker | Description | Affected scores | Severity | Required wave | Codex alone? | Human/business/expert input |
+| --- | --- | --- | --- | --- | --- | --- |
+| Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
+| W7-W12 route truth unresolved | Developing Player band status is conflicted | Full readiness, content | Critical | 5.2 | Mostly yes | Product decision if conflict remains |
+| W1-W6 content depth unknown | Same-signal coverage may be thin | Content, learning | High | 5.3 | Yes for audit | Poker review later |
+| Content factory absent | Content is too code-bound for scale | Architecture, content | Critical | 6.1-6.3 | Yes | Content author feedback useful |
+| Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
+| Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
+| Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
+| Privacy posture not decided | Blocks server analytics and public launch | Store, telemetry | Critical | privacy/legal wave | No | Business/legal |
+| Monetization absent | No payment path for W5+ | Monetization | Critical later | 12.1-12.4 | Partly | Business/store setup |
+| W13-W36 unbuilt | Advanced arc exists mostly in docs | Full readiness, moat | Strategic critical | 13.x-14.x | No | Content/expert review |
+| Poker correctness validation absent | W7+ advice needs validation | Trust, moat | Critical before advanced | 11.1-11.2 | Partly | Expert/solver input |
+| Content authoring too code-bound | Dart content does not scale | Architecture | High | 6.x | Yes | Content author input |
+| Advanced table states not ready | SPR/multi-street/tournament context absent | Content/table | High | 9.x | Yes | Poker validation |
+
+## 10. Deferred / Not Now Register
+
+| Item | Why not now | Eligible when | Must be true first |
+| --- | --- | --- | --- |
+| Public beta/store launch | Active route is full top-1, not quick release | User reactivates launch route or Stage K | Human QA, privacy/legal, launch package |
+| Monetization implementation | Learning value and W5+ readiness not proven | Stage H | W5+ route-ready, privacy/legal, pricing |
+| W13+ hand import | Parser complexity would distract from W5-W12 | Stage I | Replay boundary mature, W5-W12 stable |
+| Solver product positioning | Overclaim risk before validation | Stage I/J | Correctness protocol and solver posture |
+| AI/chat Sharky | Deterministic phrase tiers are safer | Never unless explicitly reopened | Claim-safety strategy changes |
+| Broad social layer | Moderation and bad-advice risk | Strategic later | Proof-sharing works and moderation scoped |
+| XP/levels/ranking/radar | Fake economy risk | Not recommended | Strong product reason beats proof model |
+| Full RU localization | English product not stable enough | Stage K | English route/content stable |
+| Broad visual redesign | Visual score already strong enough for now | Stage K or specific blocker | Evidence shows visual blocker |
+| Public coach endorsement | Needs real validation and relationship | Stage K | Correctness protocol and product proof |
+| Advanced analytics dashboard before data exists | Dashboard theater without D30 data | After server analytics/data | Privacy, sink, meaningful volume |
+
+## 11. Anti-Drift Rules
+
+- No random visual polish unless tied to a route wave.
+- No 36-world content authoring before schema/factory.
+- No monetization before learning value and W5+ readiness.
+- No server analytics before privacy posture.
+- No AI/chat/persona.
+- No GTO/solver public claim.
+- No fake progress economy.
+- No store/public launch as active goal unless explicitly reactivated.
+- No broad refactor without migration/pilot proof.
+- No "finish wave" pressure without evidence.
+
+## 12. Current Next Wave
+
+- Wave 5.1 Canonical Telemetry Instrumentation: DONE.
+- Wave 5.2 W7-W12 Route Truth Reconciliation: NEXT.
+
+Conflict note:
+
+- Wave 5.1's review artifact recommended `W1-W6 Content Depth /
+  Same-Signal Coverage Audit` next.
+- The attached long-horizon task and the audit backlog rank W7-W12 route truth
+  (`OP-01`) as the stronger immediate control-plane blocker, with W1-W6 content
+  depth (`OP-65`) following in Stage A.
+- Therefore this ledger sets Wave 5.2 as NEXT and Wave 5.3 as planned. If
+  W7-W12 route truth proves blocked by W1-W6 coverage facts, the next retro
+  should retarget explicitly.
+
+## 13. Handover Summary for New Chat
+
+Current strategic route:
+
+- Full Top-1 / 100% Completion Route is active.
+- Quick store/public beta route is paused unless explicitly reactivated.
+- W1-W4 beachhead is strong; full 36-world product completeness is not close.
+
+Latest accepted commit:
+
+- `066daddd4ddca952286bffe47eb09bf46cca2724`
+
+Active SSOT docs:
+
+- `docs/plan/MASTER_PLAN_v3.0.md`
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
+- `docs/plan/TOP1_LONG_HORIZON_100_PERCENT_ROUTE_v1.md`
+
+Current score summary:
+
+- W1-W4 beachhead: `8.3/10`
+- Telemetry after Wave 5.1: `4.3/10`
+- Overall top-1 readiness: `4.7/10`
+- Largest gaps: full 36-world readiness, content depth, learning transfer,
+  monetization, human QA, server analytics, correctness validation.
+
+Current next wave:
+
+- Wave 5.2 - W7-W12 Route Truth Reconciliation.
+
+Top blockers:
+
+- Human novice QA unavailable.
+- W7-W12 route truth unresolved.
+- W1-W6 content depth unknown.
+- Content factory absent.
+- Learning transfer not measured.
+- Deterministic session_id not owned.
+- Server analytics/privacy posture absent.
+- Monetization absent.
+- W13-W36 unbuilt.
+- Poker correctness validation absent.
+
+Execution protocol reminder:
+
+- A Prompt/PR is not a Wave.
+- A Wave closes only when Wave DoD and Evidence DoD are met.
+- Continue, split, or stop-and-audit based on evidence, not momentum.
+- Every retro must propose and justify score delta or explicitly leave scores
+  unchanged.
+
+Anti-drift reminder:
+
+- No W5-W12 authoring before route truth and schema/factory.
+- No monetization before learning value and W5+ readiness.
+- No server analytics before privacy posture.
+- No AI/chat/persona or GTO/solver claims.
+- No public beta/store launch unless the user reactivates that route.
+
+## 14. Final Recommendation
+
+Use this ledger as the active operating map after Wave 5.1. Future Codex
+prompts should reference it when choosing wave order, evidence budgets, score
+movement, and closure criteria.
+
+The goal is to move toward near-10/10 through large, accurate, evidence-backed
+steps. Avoid rushed wave closure and avoid endless micro-polish.

@@ -2,11 +2,18 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-27 after Wave 3.9.2 TOP1 10/10 Backcast Matrix
-Addendum on `main`.
-Current phase: 36-World TOP1 Product Vision and Excellence Route - LOCKED.
-Current active control-plane wave: Wave 3.9.2 - TOP1 10/10 Backcast Matrix
-Addendum v1.
+Last refreshed: 2026-06-28 after TOP1 Long-Horizon 100% Completion Route v1.
+Current phase: Full Top-1 / 100% Completion Route - ACTIVE.
+Current active control-plane wave: Wave 5.2 - W7-W12 Route Truth
+Reconciliation.
+
+Long-horizon execution ledger:
+
+- `docs/plan/TOP1_LONG_HORIZON_100_PERCENT_ROUTE_v1.md`
+- Future Codex work should reference this ledger for wave order, evidence
+  budgets, score deltas, closure criteria, and anti-drift rules.
+- Quick public/store route is paused as the active priority unless the user
+  explicitly reactivates it.
 
 Authority note:
 
