@@ -101,6 +101,69 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports real W1 seat role orientation PR2 as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_seat_role_orientation_migration_pr2_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['seat_role_orientation'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.seat_role_orientation.blind_button_seat_identity'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['button_role_find_v1'], 3);
+    expect(world.transferSurfaceCounts['blind_role_find_v1'], 3);
+    expect(world.repairFocusCounts['role_before_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('reports real W1 card board orientation PR2 as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_card_board_orientation_migration_pr2_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['card_board_orientation'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.card_board_orientation.board_slot_identity'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['flop_slot_find_v1'], 2);
+    expect(world.transferSurfaceCounts['turn_slot_find_v1'], 2);
+    expect(world.transferSurfaceCounts['river_slot_find_v1'], 2);
+    expect(world.repairFocusCounts['board_slot_before_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test('real W1 pilot fails L2 threshold when trimmed below five reps', () {
     final file = File(
       'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',

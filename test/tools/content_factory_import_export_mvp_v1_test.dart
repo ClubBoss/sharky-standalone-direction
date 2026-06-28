@@ -218,6 +218,130 @@ void main() {
     );
   });
 
+  test('exports W1 seat role orientation PR2 from real source tasks', () {
+    final first = exportW1SeatRoleOrientationPr2V1(writeFiles: false);
+    final second = exportW1SeatRoleOrientationPr2V1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w1_seat_role_orientation_migration_pr2_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_1'});
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'seat_role_orientation',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.seat_role_orientation.blind_button_seat_identity',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'role_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'button_role_find_v1',
+      'blind_role_find_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'btn',
+      'sb',
+      'bb',
+      'btn',
+      'sb',
+      'btn',
+    ]);
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world1/v1/sessions/w1.s01/drills/d.find_btn.json',
+        'content/worlds/world1/v1/sessions/w1.s02/drills/d.find_sb.json',
+        'content/worlds/world1/v1/sessions/w1.s03/drills/d.find_bb.json',
+        'content/worlds/world1/v1/sessions/w1.s07/drills/'
+            'd.find_btn_focus.json',
+        'content/worlds/world1/v1/sessions/w1.s08/drills/'
+            'd.find_sb_focus.json',
+        'content/worlds/world1/v1/sessions/w1.s10/drills/'
+            'd.find_btn_focus.json',
+      ]),
+    );
+  });
+
+  test('exports W1 card board orientation PR2 from real source tasks', () {
+    final first = exportW1CardBoardOrientationPr2V1(writeFiles: false);
+    final second = exportW1CardBoardOrientationPr2V1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w1_card_board_orientation_migration_pr2_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_1'});
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'card_board_orientation',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.card_board_orientation.board_slot_identity',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'board_slot_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'flop_slot_find_v1',
+      'turn_slot_find_v1',
+      'river_slot_find_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'flop_right',
+      'turn',
+      'river',
+      'flop_right',
+      'turn',
+      'river',
+    ]);
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.tap_flop_right.json',
+        'content/worlds/world1/v1/sessions/w1.s02/drills/d.tap_turn.json',
+        'content/worlds/world1/v1/sessions/w1.s03/drills/d.tap_river.json',
+        'content/worlds/world1/v1/sessions/w1.s04/drills/'
+            'd.tap_flop_right_repeat.json',
+        'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.tap_turn_repeat.json',
+        'content/worlds/world1/v1/sessions/w1.s06/drills/'
+            'd.tap_river_repeat.json',
+      ]),
+    );
+  });
+
   test('exports W2 bridge schema migration pilot from real source tasks', () {
     final first = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
     final second = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
@@ -516,7 +640,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(9));
+    expect(results, hasLength(11));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

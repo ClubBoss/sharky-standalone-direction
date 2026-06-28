@@ -98,6 +98,8 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     ...samples.map(_exportSample),
     exportW1WorldCoveragePilotV1(writeFiles: false),
     exportW1StartingHandDisciplineBatch1V1(writeFiles: false),
+    exportW1SeatRoleOrientationPr2V1(writeFiles: false),
+    exportW1CardBoardOrientationPr2V1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -482,6 +484,239 @@ ContentFactoryImportExportResultV1 exportW1StartingHandDisciplineBatch1V1({
         claimsTransfer: true,
       ),
     ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW1SeatRoleOrientationPr2V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w1_seat_role_orientation_migration_pr2_v1';
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/$fixtureId.json',
+    fixtureId: fixtureId,
+    fixtureLevel: 'w1_coverage_expansion_pr2',
+    writeFiles: writeFiles,
+    specs: [
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.find_btn.json',
+        lessonId: 'w1.l01',
+        sessionId: 'w1.s01',
+        taskId: 'w1.s01.find_btn.seat_role_pr2_v1',
+        transferSurfaceId: 'button_role_find_v1',
+        misconceptionId: 'cannot_identify_button_role',
+        correctActionOverride: 'btn',
+      ),
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s02/drills/'
+            'd.find_sb.json',
+        lessonId: 'w1.l02',
+        sessionId: 'w1.s02',
+        taskId: 'w1.s02.find_sb.seat_role_pr2_v1',
+        transferSurfaceId: 'blind_role_find_v1',
+        misconceptionId: 'cannot_identify_blind_role',
+        correctActionOverride: 'sb',
+      ),
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s03/drills/'
+            'd.find_bb.json',
+        lessonId: 'w1.l03',
+        sessionId: 'w1.s03',
+        taskId: 'w1.s03.find_bb.seat_role_pr2_v1',
+        transferSurfaceId: 'blind_role_find_v1',
+        misconceptionId: 'cannot_identify_blind_role',
+        correctActionOverride: 'bb',
+      ),
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s07/drills/'
+            'd.find_btn_focus.json',
+        lessonId: 'w1.l07',
+        sessionId: 'w1.s07',
+        taskId: 'w1.s07.find_btn_focus.seat_role_pr2_v1',
+        transferSurfaceId: 'button_role_find_v1',
+        misconceptionId: 'cannot_identify_button_role',
+        correctActionOverride: 'btn',
+      ),
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s08/drills/'
+            'd.find_sb_focus.json',
+        lessonId: 'w1.l08',
+        sessionId: 'w1.s08',
+        taskId: 'w1.s08.find_sb_focus.seat_role_pr2_v1',
+        transferSurfaceId: 'blind_role_find_v1',
+        misconceptionId: 'cannot_identify_blind_role',
+        correctActionOverride: 'sb',
+      ),
+      _w1SeatRolePr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s10/drills/'
+            'd.find_btn_focus.json',
+        lessonId: 'w1.l10',
+        sessionId: 'w1.s10',
+        taskId: 'w1.s10.find_btn_focus.seat_role_pr2_v1',
+        transferSurfaceId: 'button_role_find_v1',
+        misconceptionId: 'cannot_identify_button_role',
+        correctActionOverride: 'btn',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW1CardBoardOrientationPr2V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w1_card_board_orientation_migration_pr2_v1';
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/$fixtureId.json',
+    fixtureId: fixtureId,
+    fixtureLevel: 'w1_coverage_expansion_pr2',
+    writeFiles: writeFiles,
+    specs: [
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.tap_flop_right.json',
+        lessonId: 'w1.l01',
+        sessionId: 'w1.s01',
+        taskId: 'w1.s01.tap_flop_right.card_board_pr2_v1',
+        transferSurfaceId: 'flop_slot_find_v1',
+        misconceptionId: 'cannot_identify_flop_slot',
+        correctActionOverride: 'flop_right',
+      ),
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s02/drills/'
+            'd.tap_turn.json',
+        lessonId: 'w1.l02',
+        sessionId: 'w1.s02',
+        taskId: 'w1.s02.tap_turn.card_board_pr2_v1',
+        transferSurfaceId: 'turn_slot_find_v1',
+        misconceptionId: 'cannot_identify_turn_slot',
+        correctActionOverride: 'turn',
+      ),
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s03/drills/'
+            'd.tap_river.json',
+        lessonId: 'w1.l03',
+        sessionId: 'w1.s03',
+        taskId: 'w1.s03.tap_river.card_board_pr2_v1',
+        transferSurfaceId: 'river_slot_find_v1',
+        misconceptionId: 'cannot_identify_river_slot',
+        correctActionOverride: 'river',
+      ),
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s04/drills/'
+            'd.tap_flop_right_repeat.json',
+        lessonId: 'w1.l04',
+        sessionId: 'w1.s04',
+        taskId: 'w1.s04.tap_flop_right_repeat.card_board_pr2_v1',
+        transferSurfaceId: 'flop_slot_find_v1',
+        misconceptionId: 'cannot_identify_flop_slot',
+        correctActionOverride: 'flop_right',
+      ),
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.tap_turn_repeat.json',
+        lessonId: 'w1.l05',
+        sessionId: 'w1.s05',
+        taskId: 'w1.s05.tap_turn_repeat.card_board_pr2_v1',
+        transferSurfaceId: 'turn_slot_find_v1',
+        misconceptionId: 'cannot_identify_turn_slot',
+        correctActionOverride: 'turn',
+      ),
+      _w1CardBoardPr2Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s06/drills/'
+            'd.tap_river_repeat.json',
+        lessonId: 'w1.l06',
+        sessionId: 'w1.s06',
+        taskId: 'w1.s06.tap_river_repeat.card_board_pr2_v1',
+        transferSurfaceId: 'river_slot_find_v1',
+        misconceptionId: 'cannot_identify_river_slot',
+        correctActionOverride: 'river',
+      ),
+    ],
+  );
+}
+
+_FactorySampleSpecV1 _w1SeatRolePr2Spec({
+  required String sourcePath,
+  required String lessonId,
+  required String sessionId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String correctActionOverride,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w1_seat_role_orientation_migration_pr2_v1',
+    fixtureLevel: 'w1_coverage_expansion_pr2',
+    worldId: 'world_1',
+    routeWorldId: 'world_1',
+    displayWorldTitle: 'Poker from Zero',
+    contentOwnerWorldId: 'world_1',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sessionId,
+    packId: 'world1_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'seat_role_orientation',
+    repairFocusId: 'role_before_action',
+    sameSignalGroupId: 'w1.seat_role_orientation.blind_button_seat_identity',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: 'Find the blind or button role before action selection.',
+    sourceJob: 'w1_coverage_expansion_pr2_seat_role_orientation',
+    claimsTransfer: true,
+    correctActionOverride: correctActionOverride,
+  );
+}
+
+_FactorySampleSpecV1 _w1CardBoardPr2Spec({
+  required String sourcePath,
+  required String lessonId,
+  required String sessionId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String correctActionOverride,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w1_card_board_orientation_migration_pr2_v1',
+    fixtureLevel: 'w1_coverage_expansion_pr2',
+    worldId: 'world_1',
+    routeWorldId: 'world_1',
+    displayWorldTitle: 'Poker from Zero',
+    contentOwnerWorldId: 'world_1',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sessionId,
+    packId: 'world1_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'card_board_orientation',
+    repairFocusId: 'board_slot_before_action',
+    sameSignalGroupId: 'w1.card_board_orientation.board_slot_identity',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason:
+        'Find the board card slot before using the card in an action decision.',
+    sourceJob: 'w1_coverage_expansion_pr2_card_board_orientation',
+    claimsTransfer: true,
+    correctActionOverride: correctActionOverride,
   );
 }
 
@@ -1049,7 +1284,8 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
     'error_class',
     spec.sourcePath,
   );
-  final correctAction = _expectedAction(decoded, spec.sourcePath);
+  final correctAction =
+      spec.correctActionOverride ?? _expectedAction(decoded, spec.sourcePath);
   final feedbackReason =
       spec.feedbackReason ??
       _requiredString(decoded, 'why_v1', spec.sourcePath);
@@ -1166,6 +1402,7 @@ class _FactorySampleSpecV1 {
     required this.feedbackReason,
     required this.sourceJob,
     this.claimsTransfer = false,
+    this.correctActionOverride,
     this.safeClaimStatus,
     this.launchCoverageClaimed,
   });
@@ -1192,6 +1429,7 @@ class _FactorySampleSpecV1 {
   final String? feedbackReason;
   final String sourceJob;
   final bool claimsTransfer;
+  final String? correctActionOverride;
   final String? safeClaimStatus;
   final bool? launchCoverageClaimed;
 }
