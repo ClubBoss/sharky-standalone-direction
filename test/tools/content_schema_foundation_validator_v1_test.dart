@@ -19,6 +19,26 @@ void main() {
     expect(result.coverageCountableTasks, 1);
   });
 
+  test('L1 migrated sample passes and surfaces migration metadata', () {
+    final result = validateContentSchemaFoundationFixtureV1(
+      File(
+        'test/fixtures/content_schema_foundation/'
+        'w1_schema_l1_migrated_sample_v1.json',
+      ),
+    );
+
+    expect(result.errors, isEmpty);
+    expect(result.tasksChecked, 1);
+    expect(result.coverageCountableTasks, 1);
+    expect(result.migrationSourceCount, 1);
+    expect(
+      result.migrationSourcePaths,
+      contains(
+        'content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json',
+      ),
+    );
+  });
+
   test('missing required fields are reported with task path', () {
     final result = validateContentSchemaFoundationMapV1({
       'tasks': [
@@ -100,6 +120,43 @@ void main() {
     expect(
       result.errors,
       contains('tasks[0] missing correct_action or acceptable_actions'),
+    );
+  });
+
+  test('preview_only tasks are excluded from coverage_countable', () {
+    final result = validateContentSchemaFoundationMapV1({
+      'tasks': [
+        _validTask({'preview_only': true}),
+        _validTask({'task_id': 'w1.s01.position_action_order.r02'}),
+      ],
+    });
+
+    expect(result.errors, isEmpty);
+    expect(result.tasksChecked, 2);
+    expect(result.coverageCountableTasks, 1);
+  });
+
+  test('migration metadata does not create a runtime dependency', () {
+    final result = validateContentSchemaFoundationMapV1({
+      'fixture_level': 'l1_migrated_sample',
+      'tasks': [
+        _validTask({
+          'source_truth_status': 'migrated',
+          'migration_source': {
+            'source_path':
+                'content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json',
+            'source_id': 'choose_fold',
+            'source_kind': 'action_choice',
+          },
+        }),
+      ],
+    });
+
+    expect(result.errors, isEmpty);
+    expect(result.migrationSourceCount, 1);
+    expect(
+      result.migrationSourcePaths.single,
+      'content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json',
     );
   });
 

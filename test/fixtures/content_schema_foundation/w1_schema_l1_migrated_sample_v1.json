@@ -1,0 +1,56 @@
+{
+  "schema_version": "content_schema_foundation_v1",
+  "fixture_id": "w1_schema_l1_migrated_sample_v1",
+  "fixture_level": "l1_migrated_sample",
+  "migration_source": {
+    "source_path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json",
+    "source_id": "choose_fold",
+    "source_kind": "action_choice",
+    "source_intent_v1": "hand_discipline_fold",
+    "source_expected_action": "fold",
+    "source_error_class": "action_selection"
+  },
+  "tasks": [
+    {
+      "schema_version": "content_schema_foundation_v1",
+      "world_id": "world_1",
+      "route_world_id": "world_1",
+      "display_world_title": "Poker from Zero",
+      "content_owner_world_id": "world_1",
+      "route_gate_status": "learner_playable",
+      "lesson_id": "w1.l01",
+      "session_id": "w1.s01",
+      "pack_id": "world1_spine_campaign_v1",
+      "task_id": "w1.s01.choose_fold.migrated_sample_v1",
+      "concept_family_id": "starting_hand_discipline",
+      "repairable": true,
+      "repair_focus_id": "release_weak_continue",
+      "claims_same_signal": true,
+      "same_signal_group_id": "w1.starting_hand_discipline.release_under_pressure",
+      "claims_transfer": false,
+      "transfer_surface_id": null,
+      "misconception_id": "continues_after_pressure_without_strength",
+      "drill_kind": "action_choice",
+      "correct_action": "fold",
+      "acceptable_actions": [],
+      "feedback_reason": "Fold is the disciplined release after reading seat and action order.",
+      "table_state": null,
+      "scenario_state": {
+        "source_prompt": "Choose the best action.",
+        "source_intent_v1": "hand_discipline_fold",
+        "source_expected_action": "fold",
+        "source_error_class": "action_selection"
+      },
+      "validation_status": "source_validated",
+      "preview_only": false,
+      "source_truth_status": "migrated",
+      "locale_key": "w1_s01_choose_fold_migrated_sample_v1",
+      "copy_key": null,
+      "migration_source": {
+        "source_path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json",
+        "source_id": "choose_fold",
+        "source_kind": "action_choice"
+      }
+    }
+  ]
+}

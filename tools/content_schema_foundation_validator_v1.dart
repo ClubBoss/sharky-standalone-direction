@@ -80,7 +80,9 @@ Future<void> main(List<String> args) async {
     final result = validateContentSchemaFoundationFixtureV1(File(path));
     stdout.writeln(
       'content_schema_foundation_validator_v1: ${result.path} '
-      'tasks=${result.tasksChecked} coverage_countable=${result.coverageCountableTasks}',
+      'tasks=${result.tasksChecked} '
+      'coverage_countable=${result.coverageCountableTasks} '
+      'migration_sources=${result.migrationSourceCount}',
     );
     if (result.errors.isEmpty) {
       stdout.writeln('content_schema_foundation_validator_v1: OK');
@@ -153,6 +155,7 @@ ContentSchemaFoundationValidationResultV1 validateContentSchemaFoundationMapV1(
   }
 
   final seenTaskIds = <String>{};
+  final migrationSourcePaths = <String>{};
   var checked = 0;
   var coverageCountable = 0;
 
@@ -211,12 +214,18 @@ ContentSchemaFoundationValidationResultV1 validateContentSchemaFoundationMapV1(
     if (task['preview_only'] == false) {
       coverageCountable++;
     }
+
+    final migrationSourcePath = _migrationSourcePath(task['migration_source']);
+    if (migrationSourcePath != null) {
+      migrationSourcePaths.add(migrationSourcePath);
+    }
   }
 
   return ContentSchemaFoundationValidationResultV1(
     path: path,
     tasksChecked: checked,
     coverageCountableTasks: coverageCountable,
+    migrationSourcePaths: migrationSourcePaths.toList()..sort(),
     errors: errors,
   );
 }
@@ -323,6 +332,13 @@ int? _worldNumber(Object? value) {
   return int.tryParse(match.group(1)!);
 }
 
+String? _migrationSourcePath(Object? value) {
+  if (value is! Map) return null;
+  final sourcePath = value['source_path'];
+  if (sourcePath is! String || sourcePath.isEmpty) return null;
+  return sourcePath;
+}
+
 bool _hasPresentValue(Object? value) {
   if (value == null) return false;
   if (value is String) return value.isNotEmpty;
@@ -337,13 +353,17 @@ class ContentSchemaFoundationValidationResultV1 {
     required this.path,
     required this.tasksChecked,
     required this.coverageCountableTasks,
+    this.migrationSourcePaths = const <String>[],
     required this.errors,
   });
 
   final String path;
   final int tasksChecked;
   final int coverageCountableTasks;
+  final List<String> migrationSourcePaths;
   final List<String> errors;
+
+  int get migrationSourceCount => migrationSourcePaths.length;
 
   bool get isValid => errors.isEmpty;
 }
