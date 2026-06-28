@@ -68,11 +68,8 @@
       "street": "flop",
       "prompt": "Step 3: Flop size preview. Which size label still keeps the price easy for weaker hands?",
       "expected_preset_id": "one_third_pot",
-      "acceptable_preset_ids": [
-        "half_pot"
-      ],
       "feedback_correct_v1": "Correct. One third pot is the smaller size label from the World 1 preview.",
-      "feedback_incorrect_v1": "Incorrect. One-third pot is the smaller flop size, so it keeps the price cheap for weaker hands and draws that might otherwise fold.",
+      "feedback_incorrect_v1": "Incorrect. One third pot is the smaller flop size label in this World 1 preview.",
       "error_class": "expected_action_mismatch",
       "why_v1": "World 1 only previews sizing vocabulary here. One third pot is the compact keep-the-price-easy size."
     },
@@ -80,11 +77,8 @@
       "street": "flop",
       "prompt": "Step 4: Flop size preview. Which value size label still keeps worse hands in more often?",
       "expected_preset_id": "half_pot",
-      "acceptable_preset_ids": [
-        "one_third_pot"
-      ],
-      "feedback_correct_v1": "Correct. Half pot is the value size label that still keeps many worse hands in.",
-      "feedback_incorrect_v1": "Incorrect. Half pot is the clearer value size because it still gets called by worse hands without looking oversized.",
+      "feedback_correct_v1": "Correct. Half pot is the value-size label in this World 1 preview.",
+      "feedback_incorrect_v1": "Incorrect. Half pot is the value-size label here; this step is recognition, not deeper strategy.",
       "recap_v1": "The first World 1 bridge should now feel stable: position can make a continue cleaner, weak out-of-position starts should release, and the first size labels only need to be recognized as vocabulary.",
       "error_class": "expected_action_mismatch",
       "why_v1": "This closes the bridge by turning the sizing preview into simple recognition, not deeper strategy."

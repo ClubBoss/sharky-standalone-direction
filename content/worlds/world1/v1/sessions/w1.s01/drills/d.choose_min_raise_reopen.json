@@ -3,12 +3,9 @@
   "kind": "bet_sizing_choice_v1",
   "prompt": "Pick the smallest legal raise that reopens the action without bloating the pot.",
   "intent_v1": "hand_discipline_fold",
-  "why_v1": "Min raise reopens the action while risking less than a bigger raise.",
+  "why_v1": "Min raise is the smallest legal raise label in this World 1 preview.",
   "expected": {
     "presetId": "min_raise"
   },
-  "acceptable_preset_ids": [
-    "half_pot"
-  ],
   "error_class": "bet_sizing_selection"
 }

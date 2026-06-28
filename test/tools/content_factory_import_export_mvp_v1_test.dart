@@ -385,6 +385,66 @@ void main() {
       'one_third_pot',
       'half_pot',
     ]);
+    for (final task in tasks) {
+      expect(task['acceptable_actions'], isEmpty);
+    }
+
+    final minRaiseTask = tasks.singleWhere(
+      (task) => (task['task_id']! as String).contains('choose_min_raise'),
+    );
+    final potTask = tasks.singleWhere(
+      (task) => (task['task_id']! as String).contains('choose_pot_pressure'),
+    );
+    expect(
+      minRaiseTask['feedback_reason'],
+      contains('smallest legal raise label'),
+    );
+    expect(potTask['feedback_reason'], contains('largest pressure-size label'));
+    for (final task in tasks) {
+      final feedback = task['feedback_reason']! as String;
+      expect(feedback, isNot(contains('gets paid')));
+      expect(feedback, isNot(contains('marginal hands')));
+      expect(feedback, isNot(contains('worse hands')));
+    }
+
+    const strictSourcePaths = [
+      'content/worlds/world1/v1/sessions/w1.s01/drills/'
+          'd.choose_one_third_pot_keep_price.json',
+      'content/worlds/world1/v1/sessions/w1.s01/drills/'
+          'd.choose_half_pot_value.json',
+      'content/worlds/world1/v1/sessions/w1.s01/drills/'
+          'd.choose_min_raise_reopen.json',
+      'content/worlds/world1/v1/sessions/w1.s01/drills/'
+          'd.choose_pot_pressure.json',
+    ];
+    for (final sourcePath in strictSourcePaths) {
+      final source = jsonDecode(File(sourcePath).readAsStringSync())! as Map;
+      expect(
+        source['acceptable_preset_ids'],
+        anyOf(isNull, isEmpty),
+        reason: sourcePath,
+      );
+    }
+
+    final chainSource =
+        jsonDecode(
+              File(
+                'content/worlds/world1/v1/sessions/w1.s01/drills/'
+                'd.chain_world1_first_bridge_v1.json',
+              ).readAsStringSync(),
+            )!
+            as Map;
+    final chainSteps = (chainSource['steps']! as List).cast<Map>();
+    for (final step in chainSteps.where(
+      (step) =>
+          {'one_third_pot', 'half_pot'}.contains(step['expected_preset_id']),
+    )) {
+      expect(
+        step['acceptable_preset_ids'],
+        anyOf(isNull, isEmpty),
+        reason: '${chainSource['id']} step ${step['index']}',
+      );
+    }
     expect(
       tasks.map((task) => (task['migration_source']! as Map)['source_path']),
       containsAll([
