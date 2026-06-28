@@ -100,6 +100,8 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW1StartingHandDisciplineBatch1V1(writeFiles: false),
     exportW1SeatRoleOrientationPr2V1(writeFiles: false),
     exportW1CardBoardOrientationPr2V1(writeFiles: false),
+    exportW1BetSizeVocabularyPreviewPr3V1(writeFiles: false),
+    exportW1CheckpointSynthesisPr3V1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -720,6 +722,236 @@ _FactorySampleSpecV1 _w1CardBoardPr2Spec({
   );
 }
 
+ContentFactoryImportExportResultV1 exportW1BetSizeVocabularyPreviewPr3V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w1_bet_size_vocabulary_preview_migration_pr3_v1';
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/$fixtureId.json',
+    fixtureId: fixtureId,
+    fixtureLevel: 'w1_coverage_expansion_pr3',
+    writeFiles: writeFiles,
+    specs: [
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_one_third_pot_keep_price.json',
+        taskId: 'w1.s01.choose_one_third_pot_keep_price.bet_size_pr3_v1',
+        transferSurfaceId: 'cheap_price_label_v1',
+        misconceptionId: 'overstates_preview_size_strategy',
+      ),
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_half_pot_value.json',
+        taskId: 'w1.s01.choose_half_pot_value.bet_size_pr3_v1',
+        transferSurfaceId: 'value_size_label_v1',
+        misconceptionId: 'overstates_preview_size_strategy',
+      ),
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_min_raise_reopen.json',
+        taskId: 'w1.s01.choose_min_raise_reopen.bet_size_pr3_v1',
+        transferSurfaceId: 'reopen_label_v1',
+        misconceptionId: 'confuses_min_raise_with_value_size',
+      ),
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_pot_pressure.json',
+        taskId: 'w1.s01.choose_pot_pressure.bet_size_pr3_v1',
+        transferSurfaceId: 'pressure_size_label_v1',
+        misconceptionId: 'confuses_pressure_size_with_value_size',
+      ),
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.chain_world1_first_bridge_v1.json',
+        taskId: 'w1.s01.chain_first_bridge.step3.bet_size_pr3_v1',
+        transferSurfaceId: 'cheap_price_label_v1',
+        misconceptionId: 'overstates_preview_size_strategy',
+        sourceStepIndex: 2,
+      ),
+      _w1BetSizePr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.chain_world1_first_bridge_v1.json',
+        taskId: 'w1.s01.chain_first_bridge.step4.bet_size_pr3_v1',
+        transferSurfaceId: 'value_size_label_v1',
+        misconceptionId: 'overstates_preview_size_strategy',
+        sourceStepIndex: 3,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW1CheckpointSynthesisPr3V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w1_checkpoint_synthesis_migration_pr3_v1';
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/$fixtureId.json',
+    fixtureId: fixtureId,
+    fixtureLevel: 'w1_coverage_expansion_pr3',
+    writeFiles: writeFiles,
+    specs: [
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s02/drills/'
+            'd.chain_world1_blind_button_intro_v1.json',
+        lessonId: 'w1.l02',
+        sessionId: 'w1.s02',
+        taskId: 'w1.s02.chain_blind_button_intro.checkpoint_pr3_v1',
+        transferSurfaceId: 'blind_button_chain_v1',
+        misconceptionId: 'cannot_connect_blind_button_sequence',
+        feedbackReason:
+            'The blind-and-button chain connects opening, defending, and '
+            'releasing as one World 1 checkpoint.',
+      ),
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s03/drills/'
+            'd.chain_world1_action_order_checkpoint_v1.json',
+        lessonId: 'w1.l03',
+        sessionId: 'w1.s03',
+        taskId: 'w1.s03.chain_action_order.checkpoint_pr3_v1',
+        transferSurfaceId: 'action_order_chain_v1',
+        misconceptionId: 'cannot_connect_action_order_sequence',
+        feedbackReason:
+            'The action-order chain connects unopened action, prior pressure, '
+            'and stacked pressure into one checkpoint.',
+      ),
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s04/drills/'
+            'd.chain_world1_position_stability_v1.json',
+        lessonId: 'w1.l04',
+        sessionId: 'w1.s04',
+        taskId: 'w1.s04.chain_position_stability.checkpoint_pr3_v1',
+        transferSurfaceId: 'position_stability_chain_v1',
+        misconceptionId: 'cannot_keep_position_habit_stable',
+        feedbackReason:
+            'The position-stability chain checks whether the same World 1 '
+            'seat habits stay reliable across repeated surfaces.',
+      ),
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.chain_world1_start_quality_reinforcement_v1.json',
+        lessonId: 'w1.l05',
+        sessionId: 'w1.s05',
+        taskId: 'w1.s05.chain_start_quality.checkpoint_pr3_v1',
+        transferSurfaceId: 'start_quality_chain_v1',
+        misconceptionId: 'cannot_connect_start_quality_sequence',
+        feedbackReason:
+            'The start-quality chain reinforces clean starts, pressure '
+            'continues, and weak-hand releases as one review unit.',
+      ),
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s06/drills/'
+            'd.chain_world1_mixed_checkpoint_v1.json',
+        lessonId: 'w1.l06',
+        sessionId: 'w1.s06',
+        taskId: 'w1.s06.chain_mixed_checkpoint.checkpoint_pr3_v1',
+        transferSurfaceId: 'mixed_checkpoint_chain_v1',
+        misconceptionId: 'cannot_combine_seat_pressure_hand_quality',
+        feedbackReason:
+            'The mixed checkpoint chain combines seat, pressure, and hand '
+            'quality without adding new strategy.',
+      ),
+      _w1CheckpointPr3Spec(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s10/drills/'
+            'd.chain_world1_final_checkpoint_v1.json',
+        lessonId: 'w1.l10',
+        sessionId: 'w1.s10',
+        taskId: 'w1.s10.chain_final_checkpoint.checkpoint_pr3_v1',
+        transferSurfaceId: 'final_checkpoint_chain_v1',
+        misconceptionId: 'cannot_summarize_world1_decision_frame',
+        feedbackReason:
+            'The final checkpoint chain summarizes the World 1 frame: read '
+            'seat, notice pressure, and let hand quality shape the action.',
+      ),
+    ],
+  );
+}
+
+_FactorySampleSpecV1 _w1BetSizePr3Spec({
+  required String sourcePath,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  int? sourceStepIndex,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w1_bet_size_vocabulary_preview_migration_pr3_v1',
+    fixtureLevel: 'w1_coverage_expansion_pr3',
+    worldId: 'world_1',
+    routeWorldId: 'world_1',
+    displayWorldTitle: 'Poker from Zero',
+    contentOwnerWorldId: 'world_1',
+    routeGateStatus: 'learner_playable',
+    lessonId: 'w1.l01',
+    sessionId: 'w1.s01',
+    packId: 'world1_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'bet_size_vocabulary_preview',
+    repairFocusId: 'size_label_before_strategy',
+    sameSignalGroupId: 'w1.bet_size_vocabulary_preview.size_label_recognition',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: null,
+    sourceJob: 'w1_coverage_expansion_pr3_bet_size_vocabulary_preview',
+    claimsTransfer: true,
+    sourceStepIndex: sourceStepIndex,
+    sourceIntentOverride: 'bet_size_vocabulary_preview',
+  );
+}
+
+_FactorySampleSpecV1 _w1CheckpointPr3Spec({
+  required String sourcePath,
+  required String lessonId,
+  required String sessionId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String feedbackReason,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w1_checkpoint_synthesis_migration_pr3_v1',
+    fixtureLevel: 'w1_coverage_expansion_pr3',
+    worldId: 'world_1',
+    routeWorldId: 'world_1',
+    displayWorldTitle: 'Poker from Zero',
+    contentOwnerWorldId: 'world_1',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sessionId,
+    packId: 'world1_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'world1_checkpoint_synthesis',
+    repairFocusId: 'connect_seat_pressure_hand_quality',
+    sameSignalGroupId:
+        'w1.world1_checkpoint_synthesis.seat_pressure_hand_quality_chain',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: feedbackReason,
+    sourceJob: 'w1_coverage_expansion_pr3_checkpoint_synthesis',
+    claimsTransfer: true,
+    correctActionOverride: 'complete_chain',
+    sourceIntentOverride: 'world1_checkpoint_synthesis',
+    sourceErrorClassOverride: 'checkpoint_synthesis_review',
+  );
+}
+
 ContentFactoryImportExportResultV1 exportW2BridgeSchemaMigrationPilotV1({
   bool writeFiles = false,
 }) {
@@ -1276,19 +1508,32 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
     );
   }
 
+  final sourcePayload = _sourcePayload(decoded, spec);
   final sourceId = _requiredString(decoded, 'id', spec.sourcePath);
   final sourceKind = _requiredString(decoded, 'kind', spec.sourcePath);
-  final sourceIntent = _requiredString(decoded, 'intent_v1', spec.sourcePath);
-  final sourceErrorClass = _requiredString(
-    decoded,
-    'error_class',
-    spec.sourcePath,
-  );
+  final sourceIntent =
+      _optionalString(sourcePayload, 'intent_v1') ??
+      _optionalString(decoded, 'intent_v1') ??
+      spec.sourceIntentOverride ??
+      (throw FormatException(
+        'source task missing required string intent_v1',
+        spec.sourcePath,
+      ));
+  final sourceErrorClass =
+      spec.sourceErrorClassOverride ??
+      _optionalString(sourcePayload, 'error_class') ??
+      _optionalString(decoded, 'error_class') ??
+      (throw FormatException(
+        'source task missing required string error_class',
+        spec.sourcePath,
+      ));
   final correctAction =
-      spec.correctActionOverride ?? _expectedAction(decoded, spec.sourcePath);
+      spec.correctActionOverride ??
+      _expectedAction(sourcePayload, spec.sourcePath);
   final feedbackReason =
       spec.feedbackReason ??
-      _requiredString(decoded, 'why_v1', spec.sourcePath);
+      _requiredString(sourcePayload, 'why_v1', spec.sourcePath);
+  final sourceChainId = _optionalString(decoded, 'chain_id');
 
   final task = <String, Object?>{
     'schema_version': _schemaVersion,
@@ -1329,6 +1574,9 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
       'source_error_class': sourceErrorClass,
       'source_job': spec.sourceJob,
       'source_transform': 'tiny_content_factory_import_export_mvp_v1',
+      if (sourceChainId != null) 'source_chain_id': sourceChainId,
+      if (spec.sourceStepIndex != null)
+        'source_step_index': spec.sourceStepIndex,
     },
   };
 
@@ -1347,6 +1595,32 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
   );
 }
 
+Map<String, Object?> _sourcePayload(
+  Map<String, Object?> decoded,
+  _FactorySampleSpecV1 spec,
+) {
+  final sourceStepIndex = spec.sourceStepIndex;
+  if (sourceStepIndex == null) return decoded;
+
+  final steps = decoded['steps'];
+  if (steps is! List ||
+      sourceStepIndex < 0 ||
+      sourceStepIndex >= steps.length ||
+      steps[sourceStepIndex] is! Map) {
+    throw FormatException(
+      'source task missing usable steps[$sourceStepIndex]',
+      spec.sourcePath,
+    );
+  }
+  return (steps[sourceStepIndex]! as Map).cast<String, Object?>();
+}
+
+String? _optionalString(Map<String, Object?> source, String field) {
+  final value = source[field];
+  if (value is String && value.isNotEmpty) return value;
+  return null;
+}
+
 String _requiredString(Map<String, Object?> source, String field, String path) {
   final value = source[field];
   if (value is String && value.isNotEmpty) return value;
@@ -1358,12 +1632,18 @@ String _expectedAction(Map<String, Object?> source, String path) {
   if (expected is Map) {
     final actionId = expected['actionId'];
     if (actionId is String && actionId.isNotEmpty) return actionId;
+    final presetId = expected['presetId'];
+    if (presetId is String && presetId.isNotEmpty) return presetId;
   }
   final expectedAction = source['expected_action'];
   if (expectedAction is String && expectedAction.isNotEmpty) {
     return expectedAction;
   }
-  throw FormatException('source task missing expected.actionId', path);
+  final expectedPresetId = source['expected_preset_id'];
+  if (expectedPresetId is String && expectedPresetId.isNotEmpty) {
+    return expectedPresetId;
+  }
+  throw FormatException('source task missing expected action', path);
 }
 
 class ContentFactoryImportExportResultV1 {
@@ -1403,6 +1683,9 @@ class _FactorySampleSpecV1 {
     required this.sourceJob,
     this.claimsTransfer = false,
     this.correctActionOverride,
+    this.sourceStepIndex,
+    this.sourceIntentOverride,
+    this.sourceErrorClassOverride,
     this.safeClaimStatus,
     this.launchCoverageClaimed,
   });
@@ -1430,6 +1713,9 @@ class _FactorySampleSpecV1 {
   final String sourceJob;
   final bool claimsTransfer;
   final String? correctActionOverride;
+  final int? sourceStepIndex;
+  final String? sourceIntentOverride;
+  final String? sourceErrorClassOverride;
   final String? safeClaimStatus;
   final bool? launchCoverageClaimed;
 }

@@ -342,6 +342,131 @@ void main() {
     );
   });
 
+  test('exports W1 bet size vocabulary preview PR3 from real source tasks', () {
+    final first = exportW1BetSizeVocabularyPreviewPr3V1(writeFiles: false);
+    final second = exportW1BetSizeVocabularyPreviewPr3V1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w1_bet_size_vocabulary_preview_migration_pr3_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'bet_size_vocabulary_preview',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.bet_size_vocabulary_preview.size_label_recognition',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'size_label_before_strategy',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'cheap_price_label_v1',
+      'value_size_label_v1',
+      'reopen_label_v1',
+      'pressure_size_label_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'one_third_pot',
+      'half_pot',
+      'min_raise',
+      'pot',
+      'one_third_pot',
+      'half_pot',
+    ]);
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_one_third_pot_keep_price.json',
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_half_pot_value.json',
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_min_raise_reopen.json',
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.choose_pot_pressure.json',
+        'content/worlds/world1/v1/sessions/w1.s01/drills/'
+            'd.chain_world1_first_bridge_v1.json',
+      ]),
+    );
+    expect(
+      tasks
+          .map(
+            (task) => (task['migration_source']! as Map)['source_step_index'],
+          )
+          .whereType<int>()
+          .toList(),
+      [2, 3],
+    );
+  });
+
+  test('exports W1 checkpoint synthesis PR3 from real chain roots', () {
+    final first = exportW1CheckpointSynthesisPr3V1(writeFiles: false);
+    final second = exportW1CheckpointSynthesisPr3V1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w1_checkpoint_synthesis_migration_pr3_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'world1_checkpoint_synthesis',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.world1_checkpoint_synthesis.seat_pressure_hand_quality_chain',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'connect_seat_pressure_hand_quality',
+    });
+    expect(tasks.map((task) => task['drill_kind']).toSet(), {'hand_chain_v1'});
+    expect(tasks.map((task) => task['correct_action']).toSet(), {
+      'complete_chain',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'blind_button_chain_v1',
+      'action_order_chain_v1',
+      'position_stability_chain_v1',
+      'start_quality_chain_v1',
+      'mixed_checkpoint_chain_v1',
+      'final_checkpoint_chain_v1',
+    });
+    expect(
+      tasks.map(
+        (task) => (task['migration_source']! as Map)['source_chain_id'],
+      ),
+      containsAll([
+        'w1_s02_blind_button_intro_v1',
+        'w1_s03_action_order_checkpoint_v1',
+        'w1_s04_position_stability_v1',
+        'w1_s05_start_quality_reinforcement_v1',
+        'w1_s06_mixed_checkpoint_v1',
+        'w1_s10_final_checkpoint_v1',
+      ]),
+    );
+  });
+
   test('exports W2 bridge schema migration pilot from real source tasks', () {
     final first = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
     final second = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
@@ -640,7 +765,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(11));
+    expect(results, hasLength(13));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

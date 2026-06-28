@@ -11,6 +11,20 @@ const List<String> defaultContentSchemaL2L3FixturePathsV1 = [
       'w2_bridge_or_legacy_import_export_sample_v1.json',
 ];
 
+const List<String> w1ContentFactoryCoverageFixturePathsV1 = [
+  'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_starting_hand_discipline_migration_batch1_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_seat_role_orientation_migration_pr2_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_card_board_orientation_migration_pr2_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_bet_size_vocabulary_preview_migration_pr3_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_checkpoint_synthesis_migration_pr3_v1.json',
+];
+
 const List<String> _requiredFields = [
   'schema_version',
   'world_id',

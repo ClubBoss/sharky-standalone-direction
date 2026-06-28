@@ -164,6 +164,95 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports real W1 bet size vocabulary PR3 as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_bet_size_vocabulary_preview_migration_pr3_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['bet_size_vocabulary_preview'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.bet_size_vocabulary_preview.size_label_recognition'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['cheap_price_label_v1'], 2);
+    expect(world.transferSurfaceCounts['value_size_label_v1'], 2);
+    expect(world.transferSurfaceCounts['reopen_label_v1'], 1);
+    expect(world.transferSurfaceCounts['pressure_size_label_v1'], 1);
+    expect(world.repairFocusCounts['size_label_before_strategy'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('reports real W1 checkpoint synthesis PR3 as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_checkpoint_synthesis_migration_pr3_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['world1_checkpoint_synthesis'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.world1_checkpoint_synthesis.seat_pressure_hand_quality_chain'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['blind_button_chain_v1'], 1);
+    expect(world.transferSurfaceCounts['action_order_chain_v1'], 1);
+    expect(world.transferSurfaceCounts['position_stability_chain_v1'], 1);
+    expect(world.transferSurfaceCounts['start_quality_chain_v1'], 1);
+    expect(world.transferSurfaceCounts['mixed_checkpoint_chain_v1'], 1);
+    expect(world.transferSurfaceCounts['final_checkpoint_chain_v1'], 1);
+    expect(world.repairFocusCounts['connect_seat_pressure_hand_quality'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('explicit W1 coverage fixture list excludes the L1 tiny sample', () {
+    expect(
+      w1ContentFactoryCoverageFixturePathsV1,
+      isNot(
+        contains(
+          'test/fixtures/content_factory_mvp/w1_import_export_sample_v1.json',
+        ),
+      ),
+    );
+
+    final result = validateContentSchemaL2L3FixturePathsV1(
+      w1ContentFactoryCoverageFixturePathsV1,
+    );
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.fixtureCount, w1ContentFactoryCoverageFixturePathsV1.length);
+    expect(result.coverageCountableTasks, 36);
+    expect(result.worldReports['world_1']!.coverageReady, true);
+  });
+
   test('real W1 pilot fails L2 threshold when trimmed below five reps', () {
     final file = File(
       'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
