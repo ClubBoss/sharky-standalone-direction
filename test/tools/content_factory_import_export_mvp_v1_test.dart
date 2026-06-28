@@ -87,6 +87,59 @@ void main() {
     );
   });
 
+  test('exports W1 world coverage pilot from real source tasks', () {
+    final first = exportW1WorldCoveragePilotV1(writeFiles: false);
+    final second = exportW1WorldCoveragePilotV1(writeFiles: false);
+
+    expect(first.outputPath, endsWith('w1_world_coverage_pilot_v1.json'));
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'position_action_order',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.position_action_order.first_in_or_facing_pressure',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'position_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'first_in_action_order_v1',
+      'facing_open_pressure_v1',
+      'multiway_pressure_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'call',
+      'fold',
+      'raise',
+      'call',
+      'fold',
+    ]);
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world1/v1/sessions/w1.s02/drills/'
+            'd.choose_button_open_clean_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s03/drills/'
+            'd.choose_fold_when_multiway_pressure_stacks_v1.json',
+      ]),
+    );
+  });
+
   test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
@@ -151,13 +204,18 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(2));
+    expect(results, hasLength(3));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }
 
 Map<String, Object?> _singleTask(Map<String, Object?> fixture) {
-  final tasks = fixture['tasks']! as List<Object?>;
+  final tasks = _tasks(fixture);
   expect(tasks, hasLength(1));
-  return (tasks.single! as Map).cast<String, Object?>();
+  return tasks.single;
+}
+
+List<Map<String, Object?>> _tasks(Map<String, Object?> fixture) {
+  final tasks = fixture['tasks']! as List<Object?>;
+  return tasks.map((task) => (task! as Map).cast<String, Object?>()).toList();
 }

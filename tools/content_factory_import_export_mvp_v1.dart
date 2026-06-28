@@ -94,7 +94,10 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     ),
   ];
 
-  final results = samples.map(_exportSample).toList(growable: false);
+  final results = [
+    ...samples.map(_exportSample),
+    exportW1WorldCoveragePilotV1(writeFiles: false),
+  ];
   if (writeFiles) {
     Directory(_outputDir).createSync(recursive: true);
     for (final result in results) {
@@ -104,6 +107,194 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     }
   }
   return results;
+}
+
+ContentFactoryImportExportResultV1 exportW1WorldCoveragePilotV1({
+  bool writeFiles = false,
+}) {
+  final specs = [
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s02/drills/'
+          'd.choose_button_open_clean_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l02',
+      sessionId: 'w1.s02',
+      packId: 'world1_spine_campaign_v1',
+      taskId: 'w1.s02.choose_button_open_clean_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'first_in_action_order_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s02/drills/'
+          'd.choose_big_blind_continue_defend_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l02',
+      sessionId: 'w1.s02',
+      packId: 'world1_spine_campaign_v1',
+      taskId: 'w1.s02.choose_big_blind_continue_defend_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'facing_open_pressure_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s02/drills/'
+          'd.choose_small_blind_release_caution_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l02',
+      sessionId: 'w1.s02',
+      packId: 'world1_spine_campaign_v1',
+      taskId: 'w1.s02.choose_small_blind_release_caution_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'facing_open_pressure_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s03/drills/'
+          'd.choose_first_in_raise_after_folds_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l03',
+      sessionId: 'w1.s03',
+      packId: 'world1_spine_campaign_v1',
+      taskId: 'w1.s03.choose_first_in_raise_after_folds_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'first_in_action_order_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s03/drills/'
+          'd.choose_call_when_pressure_reaches_you_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l03',
+      sessionId: 'w1.s03',
+      packId: 'world1_spine_campaign_v1',
+      taskId:
+          'w1.s03.choose_call_when_pressure_reaches_you_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'facing_open_pressure_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world1/v1/sessions/w1.s03/drills/'
+          'd.choose_fold_when_multiway_pressure_stacks_v1.json',
+      outputPath: '',
+      fixtureId: 'w1_world_coverage_pilot_v1',
+      fixtureLevel: 'w1_world_coverage_expansion_pilot',
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l03',
+      sessionId: 'w1.s03',
+      packId: 'world1_spine_campaign_v1',
+      taskId:
+          'w1.s03.choose_fold_when_multiway_pressure_stacks_v1.coverage_pilot_v1',
+      conceptFamilyId: 'position_action_order',
+      repairFocusId: 'position_before_action',
+      sameSignalGroupId: 'w1.position_action_order.first_in_or_facing_pressure',
+      transferSurfaceId: 'multiway_pressure_v1',
+      misconceptionId: 'acts_without_reading_position',
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_action_order_pressure_pilot',
+      claimsTransfer: true,
+    ),
+  ];
+
+  final tasks = specs
+      .map((spec) => _exportSample(spec).task!)
+      .toList(growable: false);
+  final fixture = <String, Object?>{
+    'schema_version': _schemaVersion,
+    'fixture_id': 'w1_world_coverage_pilot_v1',
+    'fixture_level': 'w1_world_coverage_expansion_pilot',
+    'generated_by': 'content_factory_import_export_mvp_v1',
+    'tasks': tasks,
+  };
+  final result = ContentFactoryImportExportResultV1(
+    outputPath: '$_outputDir/w1_world_coverage_pilot_v1.json',
+    fixture: fixture,
+  );
+
+  if (writeFiles) {
+    Directory(_outputDir).createSync(recursive: true);
+    File(
+      result.outputPath,
+    ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
+  }
+  return result;
 }
 
 ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
@@ -149,8 +340,8 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
     'repair_focus_id': spec.repairFocusId,
     'claims_same_signal': true,
     'same_signal_group_id': spec.sameSignalGroupId,
-    'claims_transfer': false,
-    'transfer_surface_id': null,
+    'claims_transfer': spec.claimsTransfer,
+    'transfer_surface_id': spec.transferSurfaceId,
     'misconception_id': spec.misconceptionId,
     'drill_kind': sourceKind,
     'correct_action': correctAction,
@@ -183,6 +374,7 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
   return ContentFactoryImportExportResultV1(
     outputPath: spec.outputPath,
     fixture: fixture,
+    task: task,
   );
 }
 
@@ -205,10 +397,12 @@ class ContentFactoryImportExportResultV1 {
   const ContentFactoryImportExportResultV1({
     required this.outputPath,
     required this.fixture,
+    this.task,
   });
 
   final String outputPath;
   final Map<String, Object?> fixture;
+  final Map<String, Object?>? task;
 }
 
 class _FactorySampleSpecV1 {
@@ -229,10 +423,12 @@ class _FactorySampleSpecV1 {
     required this.conceptFamilyId,
     required this.repairFocusId,
     required this.sameSignalGroupId,
+    this.transferSurfaceId,
     required this.misconceptionId,
     required this.sourceTruthStatus,
     required this.feedbackReason,
     required this.sourceJob,
+    this.claimsTransfer = false,
   });
 
   final String sourcePath;
@@ -251,8 +447,10 @@ class _FactorySampleSpecV1 {
   final String conceptFamilyId;
   final String repairFocusId;
   final String sameSignalGroupId;
+  final String? transferSurfaceId;
   final String misconceptionId;
   final String sourceTruthStatus;
   final String? feedbackReason;
   final String sourceJob;
+  final bool claimsTransfer;
 }

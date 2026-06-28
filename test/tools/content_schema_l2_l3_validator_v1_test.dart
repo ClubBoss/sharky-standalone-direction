@@ -36,6 +36,56 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports real W1 factory coverage pilot as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.position_action_order.first_in_or_facing_pressure'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['first_in_action_order_v1'], 2);
+    expect(world.transferSurfaceCounts['facing_open_pressure_v1'], 3);
+    expect(world.transferSurfaceCounts['multiway_pressure_v1'], 1);
+    expect(world.repairFocusCounts['position_before_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('real W1 pilot fails L2 threshold when trimmed below five reps', () {
+    final file = File(
+      'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
+    );
+    final decoded = (jsonDecode(file.readAsStringSync()) as Map)
+        .cast<String, Object?>();
+    final tasks = (decoded['tasks']! as List<Object?>).take(4).toList();
+
+    final result = validateContentSchemaL2L3MapV1({'tasks': tasks});
+
+    expect(
+      result.errors,
+      contains(
+        'world_1 same_signal_group_id '
+        'w1.position_action_order.first_in_or_facing_pressure has 4 '
+        'coverage_countable tasks; minimum is 5',
+      ),
+    );
+  });
+
   test(
     'keeps factory bridge fixture reportable but not launch coverage-ready',
     () {
