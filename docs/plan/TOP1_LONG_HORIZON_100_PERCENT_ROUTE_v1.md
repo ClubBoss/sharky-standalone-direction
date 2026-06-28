@@ -2,7 +2,7 @@
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W1-W6 Migration Coverage Consolidation v1.
+Last refreshed: 2026-06-28 after W1 Full Coverage Certification Plan v1.
 
 Authority note:
 
@@ -65,6 +65,10 @@ Authority note:
   movement: W1 is the only canonical route-ready pilot, W2-W6 remain
   bridge-limited, and the next highest-EV step is W1 Full Coverage
   Certification Plan.
+- W1 Full Coverage Certification Plan v1 confirms no score movement and
+  selects W1 Concept Family Migration Batch 1 as the next implementation wave,
+  targeting a second schema-backed W1 concept family before broad migration or
+  content authoring.
 
 ## 1. Strategic Verdict
 
@@ -118,19 +122,19 @@ Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 | Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| W1-W12 Volume I Premium Product Readiness | 4.5 | 5.9 | 9.2 | 3.3 | Launch target rebaselined to W1-W12; W1 has one real validator-backed coverage group; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Full Coverage Certification Plan | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 5.9 | 9.2 | 3.3 | Launch target rebaselined to W1-W12; W1 has one real validator-backed coverage group; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Concept Family Migration Batch 1 | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan |
 | Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 4.8 | 9.0 | 4.2 | W1-W6 content-depth risk classified; W1 has one real validator-backed coverage group; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Full Coverage Certification Plan | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation |
+| Content depth | 4.5 | 4.8 | 9.0 | 4.2 | W1-W6 content-depth risk classified; W1 has one real validator-backed coverage group; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Concept Family Migration Batch 1 | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, one real W1 coverage pilot, and W2-W6 bridge migration pilots exist | W1 Full Coverage Certification Plan | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation |
+| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, one real W1 coverage pilot, and W2-W6 bridge migration pilots exist | W1 Concept Family Migration Batch 1 | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 5.7 | 9.0 | 3.3 | Launch scope is disciplined around Volume I; W1 coverage proof and W2-W6 bridge-limited migration proof exist, but product proof is still thin beyond W1-W4 | W1 Full Coverage Certification Plan | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation |
+| Overall top-1 readiness | 4.5 | 5.7 | 9.0 | 3.3 | Launch scope is disciplined around Volume I; W1 coverage proof and W2-W6 bridge-limited migration proof exist, but product proof is still thin beyond W1-W4 | W1 Concept Family Migration Batch 1 | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan |
 
 Score delta explanation:
 
@@ -349,6 +353,7 @@ Major remaining gaps:
 | 6.3V L2/L3 Content Validator Expansion | Report coverage metrics and block invalid route claims | OP-14, OP-39 | Companion validator, focused fixtures, tests | Content authoring, broad migration, route opening, W13 launch claims | L2 report and L3 gate executable on fixtures | Focused tests + CLI + validators | Architecture, readiness | +0.2 architecture | 6.3F | done |
 | 6.3B W2-W6 Bridge Coverage Expansion | Extend bridge_or_legacy migration proof across W3-W6 | OP-10, OP-14, OP-39 | Four bridge fixtures, factory exporters, validator tests, conservative ledger updates | Content authoring, route opening, canonical coverage claims, W7-W12 expansion | W3-W6 each have one validator-backed bridge fixture and launch-claim block | Focused tests + factory CLI + L2/L3/foundation validators | Architecture, content, readiness | +0.1 architecture, +0.1 content | 6.3V, W1-W6 schema pilot | done |
 | 6.3C W1-W6 Migration Coverage Consolidation | Consolidate W1-W6 fixture truth and select next step | OP-10, OP-14, OP-39 | Review artifact, existing validator evidence, conservative pointer updates | Tool churn, score inflation, content authoring, route opening | W1-W6 matrix and one selected next wave | Existing validators + graphify/diff checks | Readiness, content | +0.0 score, decision risk reduced | 6.3B | done |
+| 6.3D W1 Full Coverage Certification Plan | Define W1 concept-family certification gaps and next implementation slice | OP-10, OP-14, OP-39 | Review artifact and conservative pointer updates | Content authoring, broad migration, route opening, score inflation | W1 certification ladder and exact next wave selected | graphify/diff/checks | Readiness, content | +0.0 score, decision risk reduced | 6.3C | done |
 | 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
 | 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
 | 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
@@ -514,8 +519,8 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
 | W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
-| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, one W1 coverage pilot, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Full Coverage Certification Plan | Yes | Poker review later |
-| Content factory not ready for bulk production | Tiny import/export proof exists, plus W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Full Coverage Certification Plan | Yes | Content author feedback useful |
+| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, one W1 coverage pilot, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Concept Family Migration Batch 1 | Yes | Poker review later |
+| Content factory not ready for bulk production | Tiny import/export proof exists, plus W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Concept Family Migration Batch 1 | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -586,10 +591,11 @@ Closed:
 - W1-W6 Schema Migration Pilot.
 - W2-W6 Bridge Coverage Expansion.
 - W1-W6 Migration Coverage Consolidation.
+- W1 Full Coverage Certification Plan.
 
 Active next wave:
 
-- W1 Full Coverage Certification Plan.
+- W1 Concept Family Migration Batch 1.
 
 Must not skip:
 
@@ -622,7 +628,7 @@ Current strategic route:
 
 Latest accepted baseline before this wave:
 
-- `e7d88c7097fcdca38f48b60a007bc1f5ef8023bd`
+- W1 Full Coverage Certification Plan v1.
 
 Active SSOT docs:
 
@@ -634,17 +640,16 @@ Current score summary:
 
 - W1-W4 beachhead: `8.3/10`
 - Telemetry after Wave 5.1: `4.3/10`
-- Architecture scalability after L2/L3 validator: `7.8/10`
-- W1-W12 Volume I Premium Product Readiness: `5.6/10`
+- Architecture scalability after W2-W6 bridge migration pilots: `8.1/10`
+- W1-W12 Volume I Premium Product Readiness: `5.9/10`
 - Full W1-W36 Long-Horizon Readiness: `3.0/10`
-- Overall Top-1 Readiness: `5.4/10`
+- Overall Top-1 Readiness: `5.7/10`
 - Largest gaps: Volume I coverage/content truth, learning transfer,
   monetization, human QA, server analytics, correctness validation.
 
 Recommended next wave:
 
-- W1 World Coverage Expansion Pilot.
-- W1-W6 Schema Migration Pilot.
+- W1 Concept Family Migration Batch 1.
 
 Top blockers:
 
