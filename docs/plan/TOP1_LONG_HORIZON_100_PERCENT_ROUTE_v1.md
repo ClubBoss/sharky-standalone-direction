@@ -1,8 +1,8 @@
 # TOP1 Long-Horizon 100% Completion Route v1
 
-Status: ACTIVE long-horizon execution ledger after Wave 6.2.
+Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after Wave 6.2 Content Validation Rules v1.
+Last refreshed: 2026-06-28 after Volume I Launch Scope Rebaseline v1.
 
 Authority note:
 
@@ -14,6 +14,9 @@ Authority note:
   100% Completion Map v1. It does not copy the audit verbatim.
 - If this ledger conflicts with the Master Plan, monetization SSOT, or active
   route truth, the higher SSOT wins and this ledger must be updated.
+- Launch-scope correction: the active launch target is Perfect W1-W12 Volume I
+  Premium Product. W13-W36 remain the long-horizon top-1 expansion roadmap and
+  are not pre-launch blockers.
 
 ## 0. Source Conflict Notes
 
@@ -38,51 +41,76 @@ Authority note:
   schema-first, not authoring-first.
 - Wave 6.1 accepted `docs/plan/CONTENT_SCHEMA_FOUNDATION_v1.md`.
 - Wave 6.2 accepted the L0 content validation rules and fixture checker.
-- The active next wave is now Wave 6.3 - Content Factory MVP / L1 Migrated
-  Sample Pilot. It must not skip one validator-backed migrated sample and an
-  L1 migrated content check.
+- Wave 6.3 accepted one validator-backed L1 migrated W1 sample.
+- Volume I Launch Scope Rebaseline v1 changes the active launch target to
+  Perfect W1-W12 Volume I Premium Product and defers W13-W36 to post-launch /
+  live expansion. This does not cancel the W1-W36 top-1 ambition.
 
 ## 1. Strategic Verdict
 
 The W1-W4 beachhead is strong, premium, and much closer to a real product than
-earlier Sharky states. It is not full product completeness.
+earlier Sharky states. It is not Volume I launch completeness.
 
-The active route is now the Full Top-1 / 100% Completion Route. The quick
-store/public beta route is paused as the active priority unless the user
-explicitly reactivates it.
+The active launch target is now Perfect W1-W12 Volume I Premium Product. The
+full W1-W36 top-1 platform remains the long-horizon ambition, with W13-W36 as
+post-launch / live expansion / advanced curriculum roadmap.
+
+The quick store/public beta route is paused as the active priority unless the
+user explicitly reactivates it.
 
 Human novice QA is deferred only because participants are not currently
 available. It remains a hard future gate before external beta, public launch,
 monetization, or validated learning-effect claims.
 
-Waves 5.1 through 6.2 are accepted through local telemetry, W7-W12 route-truth
-closure, W1-W6 content-depth classification, Content Schema Foundation, and
-L0 Content Validation Rules. Telemetry is still incomplete: there is no
-deterministic local `session_id`, no OP-19 transfer aggregation, no OP-05
-server sink, no privacy posture decision, and no vendor analytics.
+Waves 5.1 through 6.3 are accepted through local telemetry, W7-W12 route-truth
+closure, W1-W6 content-depth classification, Content Schema Foundation, L0
+Content Validation Rules, and one validator-backed L1 migrated W1 sample.
+Telemetry is still incomplete: there is no deterministic local `session_id`,
+no OP-19 transfer aggregation, no OP-05 server sink, no privacy posture
+decision, and no vendor analytics.
 
 This ledger is an execution control document. Its job is to order work by
 evidence value, blocking power, and rework avoidance.
+
+### Volume I Launch-Grade Bar
+
+W1-W12 launch-grade means Volume I is strong enough to stand as a complete
+premium product. It requires:
+
+- schema-backed content;
+- validator-backed migration and factory path;
+- route/content truth alignment;
+- enough same-signal and transfer coverage;
+- repair paths for the concepts being claimed;
+- progression and payoff moments across the Volume I arc;
+- telemetry and measurement sufficient for local learning proof;
+- poker correctness review for W1-W12 claims;
+- human novice QA before external beta or public learning-effect claims;
+- privacy posture before server analytics or public launch;
+- monetization, IAP, restore, and entitlement proof before paid scale;
+- store, brand, onboarding, paywall, and copy readiness that frame W1-W12 as
+  complete Volume I and later volumes as future expansion.
 
 ## 2. Current Score Ledger
 
 Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 
-| Block | Audit baseline | Current after Wave 6.2 | Target | Delta remaining | Current status | Primary next wave | Evidence source |
+| Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| Full 36-world readiness | 2.5 | 2.6 | 9.0 | 6.4 | W1-W6 available but schema-normalization pending; W7-W10 locked; W11-W12 authored but not routed; W13-W36 planned | Wave 6.3 | Gap audit OP-01, OP-13, OP-50, OP-54; Waves 5.2-6.2 |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 5.3 | 9.2 | 3.9 | Launch target rebaselined to W1-W12; W1-W6 need normalization; W7-W10 locked; W11-W12 authored but not routed; schema/L1 pilot exists | L2 coverage report | Waves 5.2-6.3; Volume I rebaseline |
+| Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 content-depth risk classified; authoring paused until L1/factory proof; W5-W12 expansion deferred; W13+ absent | Wave 6.3 | Wave 5.3 audit; Waves 6.1-6.2 |
+| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 content-depth risk classified; L1 pilot exists; W1-W12 coverage report and normalization still pending | L2 coverage report | Wave 5.3 audit; Waves 6.1-6.3 |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 6.8 | 8.8 | 2.0 | Schema and L0 validation exist; content factory and L1 migrated sample still absent | Wave 6.3 | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.2 |
+| Architecture scalability | 6.5 | 7.3 | 8.8 | 1.5 | Schema, L0 validation, and L1 migrated sample exist; factory import/export still absent | Factory import/export MVP | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3 |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 4.8 | 9.0 | 4.2 | Beachhead strong; route/schema/control-plane stronger; full product still thin | Wave 6.3 | Gap audit plus Waves 5.1-6.2 |
+| Overall top-1 readiness | 4.5 | 5.1 | 9.0 | 3.9 | Launch scope is now disciplined around Volume I; product proof still thin beyond W1-W4 | L2 coverage report | Gap audit plus Waves 5.1-6.3; Volume I rebaseline |
 
 Score delta explanation:
 
@@ -90,20 +118,24 @@ Score delta explanation:
   local canonical event foundation. It does not justify a large jump because
   no server sink, privacy posture, transfer aggregation, or session join key
   exists.
-- Architecture scalability moves from `6.5` to `6.8` because Waves 6.1 and
-  6.2 added the schema foundation and executable L0 validation gate.
-- Full 36-world readiness moves only from `2.5` to `2.6`, and overall top-1
-  readiness only from `4.7` to `4.8`, because W5-W12 content expansion,
-  route admission, learning transfer, human QA, monetization, and W13-W36
-  remain unresolved.
+- Architecture scalability is now `7.3` after Waves 6.1-6.3 because schema,
+  L0 validation, and one validator-backed L1 migrated sample exist.
+- W1-W12 Volume I Premium Product Readiness is now tracked separately at
+  `5.3`. It is the active launch-readiness KPI.
+- Full W1-W36 Long-Horizon Readiness is now `3.0`; W13-W36 are no longer
+  pre-launch blockers, but they remain long-horizon top-1 expansion.
+- Overall top-1 readiness is now `5.1` because launch scope is clearer. This
+  is control-plane risk reduction, not product feature completion.
 
 ## 3. Top-1 Gap Summary
 
 Major remaining gaps:
 
-- 36-world content depth: W1-W6 content-depth risk is classified, W5-W12
-  expansion is deferred, W7-W10 are locked, W11-W12 are authored but not
-  routed, and W13-W36 are not authored.
+- Volume I launch readiness: W1-W12 must become a complete premium product,
+  not a partial demo. W1-W6 need route/content normalization and coverage
+  proof; W7-W10 remain locked; W11-W12 remain authored but not routed.
+- Long-horizon expansion: W13-W36 are post-launch/live expansion, not
+  pre-launch blockers and not launch-available.
 - W7-W12 route truth: the route leak is closed, but the Developing Player band
   cannot be opened until later route-admission evidence exists.
 - Content schema/factory: schema and L0 validation exist, but L1 migrated
@@ -196,19 +228,20 @@ Major remaining gaps:
 - Exit criteria: position labels, stack/SPR context, multi-street decision
   state, and tournament indicators are proven where needed.
 
-### Stage F - W5-W12 Developing Player Band
+### Stage F - W1-W12 Volume I Launch Product
 
-- Goal: open the first real premium-depth band.
-- Why here: W5-W12 are the first proof that Sharky is not only a W1-W4
-  beachhead.
+- Goal: make W1-W12 a complete launch-grade premium product.
+- Why here: W5-W12 are required for Volume I launch scope and must make
+  Sharky feel complete, not like a W1-W4 demo.
 - Score areas affected: full readiness, content depth, progression, moat.
 - Included waves: 10.1-10.6.
 - Dependencies: Stages A, B, and table context prerequisites.
-- Do not touch: public commerce until W5+ value is route-ready; W13+ content.
-- Expected movement: full 36-world readiness `2.5 -> 5.0+`; content depth
+- Do not touch: public commerce until W1-W12 value is route-ready; W13+
+  content.
+- Expected movement: W1-W12 Volume I readiness `5.3 -> 8.0+`; content depth
   `4.5 -> 6.5`.
 - Exit criteria: W5-W6 verified/expanded, W7-W12 locked and authored in two
-  passes, Developing Sharky phrases ready.
+  passes, Developing Sharky phrases ready, and Volume I claim safety intact.
 
 ### Stage G - Correctness / Validation / External Trust
 
@@ -236,20 +269,20 @@ Major remaining gaps:
 - Exit criteria: pricing decision, value page, W4->W5 trial flow, and IAP
   implementation with restore/receipt edge cases.
 
-### Stage I - W13-W24 Intermediate / Advanced Band
+### Stage I - W13-W24 Post-Launch Intermediate Expansion
 
 - Goal: design the intermediate product that gives Sharky long-term depth.
-- Why here: only after W5-W12 and monetization foundations are stable.
+- Why here: only after Volume I launch foundations and monetization are stable.
 - Score areas affected: full readiness, moat, learning effect, advanced trust.
 - Included waves: 13.1-13.6.
 - Dependencies: mature factory, validation, data model, and revenue path.
 - Do not touch: W25-W36 detail before W13-W24 design is coherent.
-- Expected movement: full readiness `5.0 -> 7.0+`.
+- Expected movement: full W1-W36 long-horizon readiness `3.0 -> 7.0+`.
 - Exit criteria: W13-W24 curriculum design, advanced table requirements,
   generator research, hand import feasibility, tendency tracking, and advanced
   leak-profile architecture are scoped.
 
-### Stage J - W25-W36 High-Level / Pro-Style Band
+### Stage J - W25-W36 Post-Launch High-Level / Pro-Style Expansion
 
 - Goal: complete the Core Shark Path toward high-level/pro-style thinking.
 - Why here: this depends on every earlier content/validation system.
@@ -257,7 +290,7 @@ Major remaining gaps:
 - Included waves: 14.1-14.3.
 - Dependencies: Stages I and G; mature correctness validation.
 - Do not touch: unsupported pro claims or solver-depth promises.
-- Expected movement: full readiness approaches `8.0+`.
+- Expected movement: full W1-W36 long-horizon readiness approaches `8.0+`.
 - Exit criteria: W25-W36 curriculum design, factory-based authoring plan, and
   Sharp-tier Sharky contract.
 
@@ -284,7 +317,8 @@ Major remaining gaps:
 | 5.4 Human QA Protocol / Deferred Gate Lock | Lock novice QA protocol while participants unavailable | OP-03 | Protocol/docs | Running public beta, fake QA | Script, observation template, evidence path | Docs checks | W1-W4 confidence | 5.2/5.3 findings | planned |
 | 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.3 architecture | Stage A | done |
 | 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 architecture | 6.1 | done |
-| 6.3 Content Factory MVP / L1 Migrated Sample Pilot | Build minimal authoring pipeline and prove one migrated sample | OP-10 | MVP factory, one validator-backed migrated sample, L1 migrated content check | W7-W12 mass generation, W1-W6 authoring, route opening | One valid generated/imported slice and L1 check | Focused tests + docs | Architecture, content | +0.6 if code-backed | 6.1-6.2 | active |
+| 6.3 Content Factory MVP / L1 Migrated Sample Pilot | Build minimal authoring pipeline and prove one migrated sample | OP-10 | MVP factory, one validator-backed migrated sample, L1 migrated content check | W7-W12 mass generation, W1-W6 authoring, route opening | One valid generated/imported slice and L1 check | Focused tests + docs | Architecture, content | +0.2 architecture | 6.1-6.2 | done |
+| 6.3R Volume I Launch Scope Rebaseline | Rebaseline launch target to W1-W12 Volume I | OP-01, OP-10, OP-13, OP-65 | Control-plane docs only | Code, content, routes, monetization, telemetry | W1-W12 launch target and W13-W36 deferred expansion locked | Docs checks + stale wording scan | Readiness, scope | Control-plane clarity | 6.3 | active |
 | 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
 | 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
 | 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
@@ -449,15 +483,15 @@ modestly unless they remove a blocker.
 | Blocker | Description | Affected scores | Severity | Required wave | Codex alone? | Human/business/expert input |
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
-| W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission proof | Full readiness, content | Critical future gate | Later route-admission wave | Mostly yes | Product decision if reopened |
-| W1-W6 route/content normalization pending | W1-W6 depth risk is classified, but route/content normalization must wait until after the L1 pilot | Content, learning | High | 6.3 then normalization wave | Yes | Poker review later |
-| Content factory absent | Content is too code-bound for scale; schema and L0 validation exist but L1/factory proof is missing | Architecture, content | Critical | 6.3 | Yes | Content author feedback useful |
+| W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
+| W1-W6 route/content normalization pending | W1-W6 depth risk is classified, but route/content normalization must wait until after the L1 pilot | Volume I, content, learning | High | Normalization wave | Yes | Poker review later |
+| Content factory MVP incomplete | Schema, L0 validation, and L1 sample exist; import/export factory proof is still missing | Architecture, content | High | Tiny factory import/export MVP | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
 | Privacy posture not decided | Blocks server analytics and public launch | Store, telemetry | Critical | privacy/legal wave | No | Business/legal |
 | Monetization absent | No payment path for W5+ | Monetization | Critical later | 12.1-12.4 | Partly | Business/store setup |
-| W13-W36 unbuilt | Advanced arc exists mostly in docs | Full readiness, moat | Strategic critical | 13.x-14.x | No | Content/expert review |
+| W13-W36 post-launch expansion unbuilt | Advanced arc exists mostly in docs and is not a launch blocker | Long-horizon readiness, moat | Strategic later | 13.x-14.x after Volume I | No | Content/expert review |
 | Poker correctness validation absent | W7+ advice needs validation | Trust, moat | Critical before advanced | 11.1-11.2 | Partly | Expert/solver input |
 | Content authoring too code-bound | Dart content does not scale | Architecture | High | 6.x | Yes | Content author input |
 | Advanced table states not ready | SPR/multi-street/tournament context absent | Content/table | High | 9.x | Yes | Poker validation |
@@ -473,6 +507,7 @@ modestly unless they remove a blocker.
 | W5-W12 expansion | Developing band is locked and content factory proof is missing | Stage F | Schema, L1 check, factory proof, route-admission evidence |
 | W7-W12 opening | Route gate is locked/non-routed by current truth | Later route-admission wave | Route, seam, validation, and correctness proof |
 | W13+ hand import | Parser complexity would distract from W5-W12 | Stage I | Replay boundary mature, W5-W12 stable |
+| W13-W36 content production | Post-launch/live expansion, not Volume I launch scope | After Volume I launch readiness or first real users | Mature factory, correctness protocol, user data |
 | Solver product positioning | Overclaim risk before validation | Stage I/J | Correctness protocol and solver posture |
 | AI/chat Sharky | Deterministic phrase tiers are safer | Never unless explicitly reopened | Claim-safety strategy changes |
 | Broad social layer | Moderation and bad-advice risk | Strategic later | Proof-sharing works and moderation scoped |
@@ -490,6 +525,9 @@ modestly unless they remove a blocker.
   L1 migrated content check, and route/content normalization plan.
 - No W5-W12 expansion before Content Factory MVP proof.
 - No W7-W12 opening while current route truth is locked/non-routed.
+- No W13-W36 pre-launch dependency; treat it as post-launch/live expansion.
+- No store, onboarding, paywall, or marketing claim that implies W13-W36 are
+  available at launch.
 - No external beta or public learning claims before Human QA Protocol.
 - No monetization before learning value and W5+ readiness.
 - No server analytics before privacy posture.
@@ -508,24 +546,33 @@ Closed:
 - W1-W6 content-depth audit classification.
 - Content Schema Foundation.
 - L0 Content Validation Rules.
+- L1 Migrated Sample Pilot.
 
-Active:
+Active next candidates:
 
-- Wave 6.3 Content Factory MVP / L1 Migrated Sample Pilot.
+- L2 World Coverage Report for W1-W12.
+- L2 World Coverage Report for W1-W6 first, if W1-W12 is too broad.
+- Tiny Content Factory Import/Export MVP.
+- W2-W6 Route/Content Normalization.
+- W7-W12 Admission/Content Lock.
+- Human QA Protocol.
 
 Must not skip:
 
-- One validator-backed migrated sample.
-- L1 migrated content check.
+- Validator-backed migration proof before content production.
+- Route/content normalization before broad authoring.
+- W1-W12 correctness and human QA before premium claims.
 - Route/content normalization for W2-W6 after pilot.
 - Content Factory MVP proof before authoring.
 - Human QA Protocol before external beta or claims.
+- No W13-W36 pre-launch dependency.
 
 Deferred:
 
 - New W1-W6 content authoring.
 - W5-W12 expansion.
 - W7-W12 opening.
+- W13-W36 content production.
 - Monetization.
 - Store/public beta.
 
@@ -533,13 +580,15 @@ Deferred:
 
 Current strategic route:
 
-- Full Top-1 / 100% Completion Route is active.
+- Volume I Premium Launch Scope is active.
+- Perfect W1-W12 Volume I Premium Product is the launch target.
+- W13-W36 are post-launch / live expansion / advanced roadmap.
 - Quick store/public beta route is paused unless explicitly reactivated.
-- W1-W4 beachhead is strong; full 36-world product completeness is not close.
+- W1-W4 beachhead is strong; Volume I completeness is not yet launch-grade.
 
 Latest accepted commit:
 
-- `4f3cd4caa16b5b87f2268e2ae14f147f421a237c`
+- `95d93d963a6a60bc22d155d42655898bffcbfe7d`
 
 Active SSOT docs:
 
@@ -551,15 +600,17 @@ Current score summary:
 
 - W1-W4 beachhead: `8.3/10`
 - Telemetry after Wave 5.1: `4.3/10`
-- Architecture scalability after Wave 6.2: `6.8/10`
-- Full 36-world readiness after Wave 6.2: `2.6/10`
-- Overall top-1 readiness after Wave 6.2: `4.8/10`
-- Largest gaps: full 36-world readiness, content depth, learning transfer,
+- Architecture scalability after Wave 6.3: `7.3/10`
+- W1-W12 Volume I Premium Product Readiness: `5.3/10`
+- Full W1-W36 Long-Horizon Readiness: `3.0/10`
+- Overall Top-1 Readiness: `5.1/10`
+- Largest gaps: Volume I coverage/content truth, learning transfer,
   monetization, human QA, server analytics, correctness validation.
 
-Current next wave:
+Recommended next wave:
 
-- Wave 6.3 - Content Factory MVP / L1 Migrated Sample Pilot.
+- L2 World Coverage Report for W1-W12, report-only and non-blocking.
+- If W1-W12 is too broad for one safe wave, start with W1-W6 first.
 
 Top blockers:
 
@@ -571,7 +622,7 @@ Top blockers:
 - Deterministic session_id not owned.
 - Server analytics/privacy posture absent.
 - Monetization absent.
-- W13-W36 unbuilt.
+- W13-W36 post-launch expansion unbuilt.
 - Poker correctness validation absent.
 
 Execution protocol reminder:
@@ -589,6 +640,7 @@ Current handoff constraints:
 - Do not normalize W2-W6 route/content before the pilot proves the path.
 - Do not author new W1-W6 content before factory proof.
 - Do not expand W5-W12 or open W7-W12.
+- Do not treat W13-W36 as a pre-launch dependency.
 - Do not reactivate monetization or store/public beta.
 - Do not make external beta or learning-effect claims before Human QA Protocol.
 
@@ -599,6 +651,7 @@ Anti-drift reminder:
 - No server analytics before privacy posture.
 - No AI/chat/persona or GTO/solver claims.
 - No public beta/store launch unless the user reactivates that route.
+- No 36-world launch-availability claims.
 
 ## 14. Final Recommendation
 

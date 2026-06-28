@@ -2,10 +2,11 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-28 after Wave 6.2 Content Validation Rules v1.
-Current phase: Full Top-1 / 100% Completion Route - ACTIVE.
-Current active control-plane wave: Wave 6.3 - Content Factory MVP / L1
-Migrated Sample Pilot.
+Last refreshed: 2026-06-28 after Volume I Launch Scope Rebaseline v1.
+Current phase: Volume I Premium Launch Scope - ACTIVE.
+Current launch target: Perfect W1-W12 Volume I Premium Product.
+Current long-horizon target: W1-W36 top-1 platform after launch/live expansion.
+Current active control-plane wave: Volume I Launch Scope Rebaseline v1.
 
 Long-horizon execution ledger:
 
@@ -14,9 +15,12 @@ Long-horizon execution ledger:
   budgets, score deltas, closure criteria, and anti-drift rules.
 - Quick public/store route is paused as the active priority unless the user
   explicitly reactivates it.
-- Current Stage B handoff: Wave 6.3 must produce one validator-backed migrated
-  sample and L1 migrated content check before route/content normalization or
-  content authoring.
+- W1-W12 Volume I is the primary launch product. W13-W36 are post-launch /
+  live expansion / advanced roadmap and must not be claimed as launch-available.
+- Current post-Wave-6.3 handoff: one validator-backed L1 migrated W1 sample
+  exists. Future content production still must not skip route/content
+  normalization, coverage reporting, factory proof, correctness review, and
+  human QA.
 
 Authority note:
 
@@ -53,10 +57,23 @@ Executive decision:
 
 - Sharky is not beginner-only.
 - Sharky is a 36-world table-first poker skill-building system.
-- Public v1 is W1-W4 Foundation, polished to 10/10 within that band.
-- The full ambition is zero-to-shark across 36 worlds.
+- Launch target is now Perfect W1-W12 Volume I Premium Product.
+- W1-W12 must be treated as a complete premium product, not a partial demo.
+- W13-W36 remain the zero-to-shark expansion roadmap after Volume I is
+  launch-ready or after first real users.
 - Store/Public Readiness is delayed.
 - Excellence route E1-E6 is inserted before Store/Public.
+
+Volume I launch-scope correction, 2026-06-28:
+
+- This is not a reduction of ambition. It is launch-scope discipline.
+- W1-W12 must reach 10/10 across content, learning loop, repair, progression,
+  UX, telemetry, monetization, privacy, store, brand, correctness, and human
+  QA before public launch or monetization scale.
+- W13-W36 are not pre-launch blockers and must not be marketed, onboarded, or
+  paywalled as available until built and validated.
+- Store, onboarding, premium copy, and launch claims should frame W1-W12 as
+  complete Volume I and frame later volumes as future expansion only.
 
 Public v1 positioning:
 
@@ -80,6 +97,8 @@ Forbidden positioning:
 - GTO trainer;
 - AI poker coach;
 - complete poker curriculum before W1-W36 are built and validated;
+- 36 worlds available at launch;
+- W13-W36 included in launch product;
 - Runout alternative;
 - Duolingo for poker;
 - best beginner X as permanent product identity.
