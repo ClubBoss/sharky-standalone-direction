@@ -544,6 +544,56 @@ void main() {
     );
   });
 
+  test('reports W3 canonical certification pilot as route-ready coverage', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w3_canonical_certification_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_3']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.conceptFamilyCounts['position_sensitive_preflop_decision'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w3.position_thinking.position_before_preflop_action'],
+      6,
+    );
+    expect(world.repairFocusCounts['position_before_preflop_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('keeps W3 bridge plus canonical pilot bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w3_canonical_certification_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_3']!;
+    expect(world.totalTasks, 9);
+    expect(world.coverageCountableTasks, 9);
+    expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.coverageReady, false);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
+  });
+
   test('blocks bridge pilot launch coverage claims', () {
     final file = File(
       'test/fixtures/content_factory_mvp/'

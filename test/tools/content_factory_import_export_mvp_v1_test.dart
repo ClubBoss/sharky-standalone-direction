@@ -1007,6 +1007,98 @@ void main() {
   );
 
   test(
+    'exports W3 canonical certification pilot from position-thinking chains',
+    () {
+      final result = exportW3CanonicalCertificationPilotV1(writeFiles: false);
+      final secondResult = exportW3CanonicalCertificationPilotV1(
+        writeFiles: false,
+      );
+
+      expect(
+        result.outputPath,
+        endsWith('w3_canonical_certification_pilot_v1.json'),
+      );
+      expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+      final validation = validateContentSchemaFoundationMapV1(
+        result.fixture,
+        path: result.outputPath,
+      );
+      expect(validation.errors, isEmpty);
+      expect(validation.tasksChecked, 6);
+      expect(validation.coverageCountableTasks, 6);
+
+      final tasks = _tasks(result.fixture);
+      expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+      expect(tasks.map((task) => task['world_id']).toSet(), {'world_3'});
+      expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_3'});
+      expect(tasks.map((task) => task['display_world_title']).toSet(), {
+        'Position Thinking',
+      });
+      expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+        'world_3',
+      });
+      expect(tasks.map((task) => task['route_gate_status']).toSet(), {
+        'learner_playable',
+      });
+      expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+        'migrated',
+      });
+      expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+        'canonical_pilot',
+      });
+      expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+        false,
+      });
+      expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+        'position_sensitive_preflop_decision',
+      });
+      expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+        'w3.position_thinking.position_before_preflop_action',
+      });
+      expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+        'position_before_preflop_action',
+      });
+      expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+        'position_identity_v1',
+        'unopened_late_position_open_v1',
+        'facing_open_in_position_continue_v1',
+        'facing_open_in_position_release_v1',
+        'unopened_late_position_release_v1',
+        'same_hand_position_shift_release_v1',
+      });
+      expect(tasks.map((task) => task['correct_action']).toList(), [
+        'hero',
+        'raise',
+        'call',
+        'fold',
+        'fold',
+        'fold',
+      ]);
+
+      final migrationSources = tasks
+          .map((task) => (task['migration_source']! as Map))
+          .toList();
+      expect(
+        migrationSources.map((source) => source['source_chain_id']).toSet(),
+        {
+          'w3_s11_position_open_call_v1',
+          'w3_s12_position_continue_fold_v1',
+          'w3_s13_position_open_fold_v1',
+          'w3_s14_position_sensitive_open_fold_v1',
+        },
+      );
+      expect(
+        migrationSources.map((source) => source['source_step_index']).toSet(),
+        {0, 1, 2},
+      );
+      expect(migrationSources.map((source) => source['source_job']).toSet(), {
+        'position_thinking_canonical_pilot',
+      });
+    },
+  );
+
+  test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
       final fixture = exportTinyContentFactorySamplesV1(
@@ -1070,7 +1162,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(16));
+    expect(results, hasLength(17));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }
