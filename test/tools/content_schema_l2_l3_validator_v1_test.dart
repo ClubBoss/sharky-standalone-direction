@@ -370,6 +370,77 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports W2 canonical PR2 facing price discipline as route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w2_facing_price_discipline_canonical_pr2_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_2']!;
+    expect(world.totalTasks, 8);
+    expect(world.coverageCountableTasks, 8);
+    expect(
+      world.conceptFamilyCounts['facing_price_continue_release_discipline'],
+      8,
+    );
+    expect(
+      world
+          .sameSignalGroupCounts['w2.hand_discipline.facing_price_continue_release'],
+      8,
+    );
+    expect(world.transferSurfaceCounts['facing_bet_price_continue_v1'], 2);
+    expect(world.transferSurfaceCounts['facing_bet_price_release_v1'], 2);
+    expect(world.transferSurfaceCounts['bridge_price_continue_v1'], 2);
+    expect(world.transferSurfaceCounts['bridge_price_release_v1'], 2);
+    expect(
+      world.repairFocusCounts['facing_price_continue_release_discipline'],
+      8,
+    );
+    expect(world.sourceTruthStatusCounts['migrated'], 8);
+    expect(world.migrationSourceCount, 8);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test(
+    'reports W2 canonical pilot plus PR2 as multiple route-ready families',
+    () {
+      final result = validateContentSchemaL2L3FixturePathsV1([
+        'test/fixtures/content_factory_mvp/'
+            'w2_canonical_certification_pilot_v1.json',
+        'test/fixtures/content_factory_mvp/'
+            'w2_facing_price_discipline_canonical_pr2_v1.json',
+      ]);
+
+      expect(result.errors, isEmpty);
+      expect(result.routeAdmissionErrors, isEmpty);
+      expect(result.warnings, isEmpty);
+
+      final world = result.worldReports['world_2']!;
+      expect(world.totalTasks, 14);
+      expect(world.coverageCountableTasks, 14);
+      expect(
+        world.conceptFamilyCounts['hand_discipline_position_price_defaults'],
+        6,
+      );
+      expect(
+        world.conceptFamilyCounts['facing_price_continue_release_discipline'],
+        8,
+      );
+      expect(world.sourceTruthStatusCounts['migrated'], 14);
+      expect(world.coverageReady, true);
+      expect(world.transferReady, true);
+      expect(world.repairReady, true);
+      expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+    },
+  );
+
   test('reports W3-W6 bridge expansion fixtures as bridge-limited', () {
     final result = validateContentSchemaL2L3FixturePathsV1([
       'test/fixtures/content_factory_mvp/'

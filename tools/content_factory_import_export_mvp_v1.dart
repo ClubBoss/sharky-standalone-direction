@@ -104,6 +104,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW1CheckpointSynthesisPr3V1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW2CanonicalCertificationPilotV1(writeFiles: false),
+    exportW2FacingPriceDisciplineCanonicalPr2V1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -1200,6 +1201,155 @@ _FactorySampleSpecV1 _w2CanonicalHandDisciplineSpecV1({
     claimsTransfer: true,
     sourceIntentOverride: 'hand_discipline_position_price_defaults',
     sourceErrorClassOverride: 'hand_discipline_position_price_default',
+    safeClaimStatus: 'canonical_pilot',
+    launchCoverageClaimed: false,
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW2FacingPriceDisciplineCanonicalPr2V1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/w2_facing_price_discipline_canonical_pr2_v1.json',
+    fixtureId: 'w2_facing_price_discipline_canonical_pr2_v1',
+    fixtureLevel: 'w2_canonical_coverage_expansion_pr2',
+    writeFiles: writeFiles,
+    specs: [
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s03/drills/'
+            'd.choose_call_facing_bet.json',
+        lessonId: 'w2.l03',
+        sessionId: 'w2.s03',
+        taskId: 'w2.s03.choose_call_facing_bet.canonical_pr2_v1',
+        transferSurfaceId: 'facing_bet_price_continue_v1',
+        misconceptionId: 'folds_acceptable_facing_bet_price',
+        feedbackReason:
+            'Call keeps discipline when the facing-bet price is acceptable.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s03/drills/'
+            'd.choose_fold_facing_bet.json',
+        lessonId: 'w2.l03',
+        sessionId: 'w2.s03',
+        taskId: 'w2.s03.choose_fold_facing_bet.canonical_pr2_v1',
+        transferSurfaceId: 'facing_bet_price_release_v1',
+        misconceptionId: 'continues_poor_facing_bet_price',
+        feedbackReason:
+            'Fold keeps discipline when the facing-bet price is poor.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s07/drills/'
+            'd.choose_call_facing_open_price_ok.json',
+        lessonId: 'w2.l07',
+        sessionId: 'w2.s07',
+        taskId: 'w2.s07.choose_call_facing_open_price_ok.canonical_pr2_v1',
+        transferSurfaceId: 'facing_bet_price_continue_v1',
+        misconceptionId: 'overfolds_acceptable_facing_open_price',
+        feedbackReason:
+            'Call preserves the continue when the facing-open price is okay.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s07/drills/'
+            'd.choose_fold_facing_open_price_bad.json',
+        lessonId: 'w2.l07',
+        sessionId: 'w2.s07',
+        taskId: 'w2.s07.choose_fold_facing_open_price_bad.canonical_pr2_v1',
+        transferSurfaceId: 'facing_bet_price_release_v1',
+        misconceptionId: 'continues_bad_facing_open_price',
+        feedbackReason:
+            'Fold preserves discipline when the facing-open price is bad.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s09/drills/'
+            'd.choose_call_bridge_tocall_price_ok.json',
+        lessonId: 'w2.l09',
+        sessionId: 'w2.s09',
+        taskId: 'w2.s09.choose_call_bridge_tocall_price_ok.canonical_pr2_v1',
+        transferSurfaceId: 'bridge_price_continue_v1',
+        misconceptionId: 'overfolds_acceptable_tocall_price',
+        feedbackReason:
+            'Call keeps the price read steady when toCall is acceptable.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s09/drills/'
+            'd.choose_fold_bridge_tocall_price_bad.json',
+        lessonId: 'w2.l09',
+        sessionId: 'w2.s09',
+        taskId: 'w2.s09.choose_fold_bridge_tocall_price_bad.canonical_pr2_v1',
+        transferSurfaceId: 'bridge_price_release_v1',
+        misconceptionId: 'continues_bad_tocall_price',
+        feedbackReason:
+            'Fold keeps the price read steady when toCall is too expensive.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s10/drills/'
+            'd.choose_call_checkpoint_tocall_price_ok.json',
+        lessonId: 'w2.l10',
+        sessionId: 'w2.s10',
+        taskId:
+            'w2.s10.choose_call_checkpoint_tocall_price_ok.canonical_pr2_v1',
+        transferSurfaceId: 'bridge_price_continue_v1',
+        misconceptionId: 'drops_acceptable_checkpoint_price',
+        feedbackReason:
+            'Call carries the acceptable price read into the checkpoint.',
+      ),
+      _w2FacingPriceDisciplinePr2Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s10/drills/'
+            'd.choose_fold_checkpoint_tocall_price_bad.json',
+        lessonId: 'w2.l10',
+        sessionId: 'w2.s10',
+        taskId:
+            'w2.s10.choose_fold_checkpoint_tocall_price_bad.canonical_pr2_v1',
+        transferSurfaceId: 'bridge_price_release_v1',
+        misconceptionId: 'continues_bad_checkpoint_price',
+        feedbackReason: 'Fold carries the poor price read into the checkpoint.',
+      ),
+    ],
+  );
+}
+
+_FactorySampleSpecV1 _w2FacingPriceDisciplinePr2Spec({
+  required String sourcePath,
+  required String lessonId,
+  required String sessionId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String feedbackReason,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w2_facing_price_discipline_canonical_pr2_v1',
+    fixtureLevel: 'w2_canonical_coverage_expansion_pr2',
+    worldId: 'world_2',
+    routeWorldId: 'world_2',
+    displayWorldTitle: 'Hand Discipline',
+    contentOwnerWorldId: 'world_2',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sessionId,
+    packId: 'world2_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'facing_price_continue_release_discipline',
+    repairFocusId: 'facing_price_continue_release_discipline',
+    sameSignalGroupId: 'w2.hand_discipline.facing_price_continue_release',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: feedbackReason,
+    sourceJob: 'w2_canonical_coverage_expansion_pr2_facing_price',
+    claimsTransfer: true,
+    sourceIntentOverride: 'facing_price_continue_release_discipline',
+    sourceErrorClassOverride: 'facing_price_continue_release_error',
     safeClaimStatus: 'canonical_pilot',
     launchCoverageClaimed: false,
   );
