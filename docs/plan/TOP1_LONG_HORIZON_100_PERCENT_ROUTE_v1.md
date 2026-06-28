@@ -2,7 +2,7 @@
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W1 8.0 Certification Review v1.
+Last refreshed: 2026-06-28 after W1 Poker Correctness Review Protocol v1.
 
 Authority note:
 
@@ -84,6 +84,10 @@ Authority note:
   correctness review, human QA, full W1 migration, and payoff/progression proof
   remain incomplete. The next active W1 gate is W1 Poker Correctness Review
   Protocol.
+- W1 Poker Correctness Review Protocol v1 found no P0 correctness blocker, but
+  found one P1 source-linked bet-size vocabulary acceptable-preset boundary
+  issue. It does not move scores. The next active W1 gate is W1 Bet-Size
+  Vocabulary Correctness Repair.
 
 ## 1. Strategic Verdict
 
@@ -137,19 +141,19 @@ Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 | Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.2 | 9.2 | 3.0 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups and is an 8.0 certification-passed candidate; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Poker Correctness Review Protocol | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.2 | 9.2 | 3.0 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups and is an 8.0 certification-passed candidate with one P1 bet-size correctness boundary issue; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Bet-Size Vocabulary Correctness Repair | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol |
 | Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 5.1 | 9.0 | 3.9 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups and passed 8.0 certification review; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Poker Correctness Review Protocol | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review |
+| Content depth | 4.5 | 5.1 | 9.0 | 3.9 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups and passed 8.0 certification review, but bet-size vocabulary needs a narrow correctness repair; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Bet-Size Vocabulary Correctness Repair | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, and W2-W6 bridge migration pilots exist | W1 Poker Correctness Review Protocol | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review |
+| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, and W2-W6 bridge migration pilots exist | W1 Bet-Size Vocabulary Correctness Repair | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 6.0 | 9.0 | 3.0 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs and passed 8.0 certification review, and W2-W6 bridge-limited migration proof exists, but product proof is still thin beyond W1-W4 | W1 Poker Correctness Review Protocol | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review |
+| Overall top-1 readiness | 4.5 | 6.0 | 9.0 | 3.0 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs and passed 8.0 certification review, W1 correctness review found one P1 bet-size boundary issue, and W2-W6 bridge-limited migration proof exists, but product proof is still thin beyond W1-W4 | W1 Bet-Size Vocabulary Correctness Repair | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol |
 
 Score delta explanation:
 
@@ -166,6 +170,9 @@ Score delta explanation:
   holds `8.0` as a certification-passed candidate, but the next score-moving
   gates are poker correctness review, human QA, and certification-linked
   payoff/progression proof.
+- W1 Poker Correctness Review Protocol v1 proposes no score movement. It found
+  no P0 correctness blocker, but one P1 bet-size vocabulary source boundary
+  issue keeps W1 correctness from clearing for Human QA.
 - W1-W12 Volume I Premium Product Readiness is now tracked separately at
   `6.2`. It is the active launch-readiness KPI.
 - Full W1-W36 Long-Horizon Readiness is now `3.0`; W13-W36 are no longer
@@ -542,8 +549,8 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
 | W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
-| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Poker Correctness Review Protocol | Yes | Poker review later |
-| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, and W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Poker Correctness Review Protocol | Yes | Content author feedback useful |
+| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, W1 correctness protocol, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Bet-Size Vocabulary Correctness Repair | Yes | Poker review later |
+| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, W1 correctness protocol, and W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Bet-Size Vocabulary Correctness Repair | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -619,10 +626,11 @@ Closed:
 - W1 Coverage Expansion PR2.
 - W1 Coverage Expansion PR3.
 - W1 8.0 Certification Review.
+- W1 Poker Correctness Review Protocol.
 
 Active next wave:
 
-- W1 Poker Correctness Review Protocol.
+- W1 Bet-Size Vocabulary Correctness Repair.
 
 Must not skip:
 
@@ -655,7 +663,7 @@ Current strategic route:
 
 Latest accepted baseline after this wave:
 
-- W1 8.0 Certification Review v1.
+- W1 Poker Correctness Review Protocol v1.
 
 Active SSOT docs:
 
@@ -677,7 +685,7 @@ Current score summary:
 
 Recommended next wave:
 
-- W1 Poker Correctness Review Protocol.
+- W1 Bet-Size Vocabulary Correctness Repair.
 
 Top blockers:
 

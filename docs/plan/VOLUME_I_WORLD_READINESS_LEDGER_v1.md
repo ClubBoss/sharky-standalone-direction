@@ -2,7 +2,7 @@
 
 Status: ACTIVE control-plane ledger for W1-W12 launch readiness.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W1 8.0 Certification Review v1.
+Last refreshed: 2026-06-28 after W1 Poker Correctness Review Protocol v1.
 
 ## 1. Purpose
 
@@ -63,7 +63,7 @@ Delta rules:
 
 | World ID | Band | Launch-facing title | Current route status | Content/source status | Source truth status | Schema/validator status | Same-signal coverage | Transfer coverage | Repair path | Progression/payoff | Poker correctness | Human QA | Launch claim safety | Premium value contribution | Previous score | Current score | Delta | Primary blocker | Next required action | Evidence source |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical/migrated with schema-legacy active content | one L0 fixture, one L1 migrated sample, one factory-exported W1 sample, one synthetic L2/L3 coverage-ready fixture, and six real six-task W1 concept-family coverage fixtures; active content still not fully schema migrated | six real same-signal groups passed at 6 tasks each; broader W1 still not fully migrated | six W1 groups have at least 2 transfer surfaces each; broader W1 still not fully migrated | runtime/feedback plus L1/factory/L2 repair fields and six W1 migrated repair-focus groups | strong W1 payoff, not human-validated | review needed before premium/public claims | not done | safe as W1 8.0 certification-passed schema proof, not full W1/10-10 claim | high; first value proof | 7.6 | 8.0 | +0.4 | human QA, correctness review, full migration, and certification-linked payoff proof remain incomplete | W1 Poker Correctness Review Protocol | L2 report; Wave 6.3 L1 sample; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review |
+| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical/migrated with schema-legacy active content | one L0 fixture, one L1 migrated sample, one factory-exported W1 sample, one synthetic L2/L3 coverage-ready fixture, and six real six-task W1 concept-family coverage fixtures; active content still not fully schema migrated | six real same-signal groups passed at 6 tasks each; broader W1 still not fully migrated | six W1 groups have at least 2 transfer surfaces each; broader W1 still not fully migrated | runtime/feedback plus L1/factory/L2 repair fields and six W1 migrated repair-focus groups | strong W1 payoff, not human-validated | conditional: no P0 found, but one P1 bet-size vocabulary source boundary repair needed | not done | safe as W1 8.0 certification-passed schema proof, not full W1/10-10 claim | high; first value proof | 7.6 | 8.0 | +0.4 | human QA, bet-size correctness repair, full migration, and certification-linked payoff proof remain incomplete | W1 Bet-Size Vocabulary Correctness Repair | L2 report; Wave 6.3 L1 sample; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol |
 | W2 | Foundation bridge | Hand Discipline | learner_playable via campaign path; Act0 card locked | broad table-reading bridge source | bridge_or_legacy | one tiny factory bridge sample plus one three-task W2 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | feedback/review patterns plus factory repair fields | campaign progression exists | review needed | not done | safe only as bridge/foundation support, not hand-discipline mastery | medium; teaches prerequisite reads | 4.5 | 4.7 | +0.2 | source job is broader than route title and W2 remains bridge-limited | W2-W6 Canonical Realignment Plan after W1 certification planning | L2 report; Wave 5.3; W2-W6 normalization; Tiny factory MVP; L2/L3 validator; W1-W6 schema migration pilot; W1-W6 consolidation |
 | W3 | Foundation bridge | Position Thinking | learner_playable via campaign path; Act0 card locked | Preflop Framework source | bridge_or_legacy | one three-task W3 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | review needed | not done | safe only as routed bridge, not position mastery | medium-high; useful preflop bridge | 4.9 | 5.1 | +0.2 | source job differs from route title and remains bridge-limited | W2-W6 Canonical Realignment Plan after W1 certification planning | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation |
 | W4 | Foundation bridge | Preflop Framework | learner_playable via campaign path; Act0 card locked | Bet Purpose and Price source | bridge_or_legacy | one three-task W4 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | sizing/purpose review needed | not done | safe only as routed bridge, not preflop-framework mastery | medium-high; strong paid-depth value once normalized | 5.1 | 5.3 | +0.2 | route title and content job are offset and remain bridge-limited | W2-W6 Canonical Realignment Plan after W1 certification planning | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation |
@@ -122,6 +122,10 @@ World scores reflected in the current ledger:
   as a certification-passed candidate. It proposes no score movement because
   poker correctness review, human QA, full W1 migration, and
   certification-linked payoff proof remain incomplete.
+- W1 Poker Correctness Review Protocol v1 found no P0 correctness blocker, but
+  found one P1 source-linked bet-size vocabulary acceptable-preset boundary
+  issue. It proposes no score movement and routes the next action to a narrow
+  bet-size correctness repair before Human QA Protocol.
 - W2 moved `4.5 -> 4.7` because a real three-task W2 bridge_or_legacy schema
   migration pilot now passes foundation validation and L2/L3 reporting while
   remaining blocked from canonical launch coverage.
@@ -176,21 +180,21 @@ author content, monetize, or launch-claim content.
 
 Recommended next step:
 
-`W1 Poker Correctness Review Protocol`
+`W1 Bet-Size Vocabulary Correctness Repair`
 
 Why:
 
-- W1 8.0 Certification Review v1 passed and did not find a coverage,
-  validator, fixture-scope, route, or claim-safety blocker to the `8.0`
-  candidate state.
+- W1 Poker Correctness Review Protocol v1 found no P0 issue, but did find one
+  P1 bet-size vocabulary source boundary issue.
 - W1 is the only W1-W6 world with canonical route-ready coverage evidence.
 - W1 has six real schema-backed concept families:
   `position_action_order`, `starting_hand_discipline`,
   `seat_role_orientation`, `card_board_orientation`,
   `bet_size_vocabulary_preview`, and `world1_checkpoint_synthesis`.
-- The next bottleneck is poker correctness and copy-boundary review for the
-  certified family set before human novice QA, payoff/progression
-  certification, broad migration, W2-W6 realignment, or W7-W12 admission.
+- The next bottleneck is repairing or explicitly narrowing the bet-size
+  vocabulary acceptable-preset boundary before Human QA Protocol,
+  payoff/progression certification, broad migration, W2-W6 realignment, or
+  W7-W12 admission.
 
 Must not skip:
 
@@ -199,6 +203,7 @@ Must not skip:
   `position_action_order`, `starting_hand_discipline`,
   `seat_role_orientation`, `card_board_orientation`,
   `bet_size_vocabulary_preview`, and `world1_checkpoint_synthesis`.
+- Do not declare W1 correctness cleared while the bet-size P1 remains open.
 - Do not advance W1 to 9.0 without poker correctness review and human QA.
 - Do not author new content unless a future prompt explicitly admits a tiny
   source-normalization correction.
