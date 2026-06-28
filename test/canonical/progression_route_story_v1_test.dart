@@ -60,22 +60,44 @@ void main() {
     },
   );
 
-  test('early-arc world3 route story carries continuity language', () {
-    final story = resolveProgressionRouteStoryForPackV1(
-      nextPackId: 'world3_spine_campaign_v1',
-      reviewRequired: false,
-      activePackId: '',
-      nextHandIndex: 0,
-      rhythmReason: '',
-    );
+  test(
+    'early-arc world3 route story carries Position Thinking payoff language',
+    () {
+      final target = resolveProgressionRouteTargetForPackIdV1(
+        'world3_spine_campaign_v1',
+      );
+      final story = resolveProgressionRouteStoryForPackV1(
+        nextPackId: 'world3_spine_campaign_v1',
+        reviewRequired: false,
+        activePackId: '',
+        nextHandIndex: 0,
+        rhythmReason: '',
+      );
 
-    expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
-    expect(story.target.world, 3);
-    expect(
-      story.reasonLine,
-      'Why: World 2 grounded visible table truth and pressure reads. World 3 now turns that clarity into the first simple open / call / fold framework.',
-    );
-  });
+      expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
+      expect(story.target.world, 3);
+      expect(
+        progressionRouteStatusLineForTargetV1(target),
+        'Stage shift - World 2 table reads -> World 3 Position Thinking',
+      );
+      expect(
+        progressionRouteStageShiftHeadlineForTargetV1(target),
+        'What changes now: Build Position Thinking from seat, hand bucket, and action-frame cues',
+      );
+      expect(
+        story.reasonLine,
+        'Why: World 2 grounded visible table truth and pressure reads. World 3 now trains Position Thinking through position-first choices plus hand-bucket action frames before open, call, or fold.',
+      );
+      expect(story.reasonLine, contains('Position'));
+      expect(story.reasonLine.toLowerCase(), contains('hand-bucket'));
+      expect(story.reasonLine, isNot(contains('8.0')));
+      expect(story.reasonLine, isNot(contains('9.0')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('launch')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('gto')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('solver')));
+      expect(story.reasonLine, isNot(contains('Human QA')));
+    },
+  );
 
   test('world10 followups resolve to track route story', () {
     final story = resolveProgressionRouteStoryForPackV1(

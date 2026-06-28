@@ -74,7 +74,8 @@ String? progressionRouteStageShiftValueForTargetV1(
   return switch (target.world) {
     2 =>
       'Build Hand Discipline from position, price, and approved pressure cues',
-    3 => 'Build the first preflop framework',
+    3 =>
+      'Build Position Thinking from seat, hand bucket, and action-frame cues',
     _ => null,
   };
 }
@@ -92,7 +93,7 @@ String progressionRouteStatusLineForTargetV1(ProgressionRouteTargetV1 target) {
       isEarlyArcSessionWorldV1(target.world)) {
     return switch (target.world) {
       2 => 'Stage shift - World 1 foundations -> World 2 Hand Discipline',
-      3 => 'Stage shift · World 2 table reads -> World 3 preflop framework',
+      3 => 'Stage shift - World 2 table reads -> World 3 Position Thinking',
       _ => 'Campaign route -> ${target.routeLabel}',
     };
   }
@@ -113,7 +114,7 @@ String progressionRouteReasonLineForTargetV1(ProgressionRouteTargetV1 target) {
           2 =>
             'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now trains when to fold, call, or raise from position, price, and approved pressure cues.',
           3 =>
-            'Why: World 2 grounded visible table truth and pressure reads. World 3 now turns that clarity into the first simple open / call / fold framework.',
+            'Why: World 2 grounded visible table truth and pressure reads. World 3 now trains Position Thinking through position-first choices plus hand-bucket action frames before open, call, or fold.',
           _ => 'Why: Your next learning route is ${target.routeLabel}.',
         };
       }
@@ -132,7 +133,8 @@ String progressionRouteCompletionBodyTextForSessionWorldV1({
     final lead = switch (world) {
       2 =>
         'World 2 trained fold, call, and raise discipline from position, price, and approved pressure cues.',
-      3 => 'World 3 keeps the same first-action framework in view.',
+      3 =>
+        'World 3 trained Position Thinking through position-first choices and hand-bucket action frames.',
       _ => 'Next lesson ready:',
     };
     return '$lead ${learnerJourneyNextLessonReadyTextV1(nextSessionProgressLabel)}';
@@ -159,8 +161,8 @@ String? progressionReviewCadenceValueForTargetV1({
           : 'Quick review: refresh the World 1 foundations before the next World 2 session.',
     3 =>
       isCheckpointBeat
-          ? 'Checkpoint review: lock the World 2 table-reading bridge before the next World 3 session.'
-          : 'Quick review: refresh the World 2 table-reading bridge before the next World 3 session.',
+          ? 'Checkpoint review: lock the World 2 table-reading bridge before the next World 3 Position Thinking session.'
+          : 'Quick review: refresh the World 2 table-reading bridge before the next World 3 Position Thinking session.',
     _ => null,
   };
 }

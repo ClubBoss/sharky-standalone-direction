@@ -36,6 +36,41 @@ void main() {
     );
   });
 
+  test('world3 chrome carries Position Thinking payoff and safe progression', () {
+    final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
+      const SessionDrillRunnerProgressionChromeInputV1(
+        sessionId: 'w3.s01',
+        stepLabel: 'Position Thinking',
+        currentDrillIndex: 0,
+        totalDrills: 1,
+        drillId: 'position_thinking_intro',
+      ),
+    );
+
+    expect(contract.titleText, 'World 3');
+    expect(contract.nextSessionId, 'w3.s02');
+    expect(
+      contract.completionBodyText,
+      startsWith(
+        'World 3 trained Position Thinking through position-first choices and hand-bucket action frames.',
+      ),
+    );
+    expect(contract.completionBodyText, contains('Next lesson ready: World 3'));
+    expect(contract.completionBodyText, contains('Session 2 of '));
+    expect(contract.completionBodyText, isNot(contains('8.0')));
+    expect(contract.completionBodyText, isNot(contains('9.0')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(contract.completionBodyText.toLowerCase(), isNot(contains('gto')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('solver')),
+    );
+    expect(contract.completionBodyText, isNot(contains('Human QA')));
+  });
+
   test('canonical world-session chrome resolves from session truth', () {
     final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
       const SessionDrillRunnerProgressionChromeInputV1(

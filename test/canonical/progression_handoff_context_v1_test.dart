@@ -42,6 +42,40 @@ void main() {
     );
   });
 
+  test(
+    'early-arc world3 handoff carries Position Thinking headline and reason',
+    () {
+      final context = buildProgressionHandoffContextForPackV1(
+        'world3_spine_campaign_v1',
+      );
+
+      expect(context, isNotNull);
+      expect(
+        context!.statusLine,
+        'Stage shift - World 2 table reads -> World 3 Position Thinking',
+      );
+      expect(
+        context.continuationHeadline,
+        'What changes now: Build Position Thinking from seat, hand bucket, and action-frame cues',
+      );
+      expect(
+        context.continuationReasonLine,
+        'Why: World 2 grounded visible table truth and pressure reads. World 3 now trains Position Thinking through position-first choices plus hand-bucket action frames before open, call, or fold.',
+      );
+      expect(context.continuationReasonLine, isNot(contains('8.0')));
+      expect(context.continuationReasonLine, isNot(contains('9.0')));
+      expect(
+        context.continuationReasonLine!.toLowerCase(),
+        isNot(contains('launch')),
+      );
+      expect(
+        context.continuationReasonLine!.toLowerCase(),
+        isNot(contains('solver')),
+      );
+      expect(context.continuationReasonLine, isNot(contains('Human QA')));
+    },
+  );
+
   test('world10 followup emits track handoff context', () {
     final context = buildProgressionHandoffContextForPackV1(
       'world10_spine_followup_v1_b0',
