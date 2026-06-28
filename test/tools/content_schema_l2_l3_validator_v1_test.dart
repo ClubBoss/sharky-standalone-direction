@@ -114,6 +114,64 @@ void main() {
     },
   );
 
+  test('reports W2 schema migration pilot as bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w2_bridge_or_legacy_schema_migration_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_2']!;
+    expect(world.totalTasks, 3);
+    expect(world.coverageCountableTasks, 3);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['position_btn_vs_early'], 3);
+    expect(
+      world
+          .sameSignalGroupCounts['w2.position_btn_vs_early.bridge_action_default'],
+      3,
+    );
+    expect(world.transferSurfaceCounts['early_position_release_v1'], 1);
+    expect(world.transferSurfaceCounts['facing_open_price_v1'], 1);
+    expect(world.transferSurfaceCounts['late_position_open_v1'], 1);
+    expect(world.repairFocusCounts['position_price_action_default'], 3);
+    expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
+    expect(world.validationStatusCounts['source_validated'], 3);
+    expect(world.migrationSourceCount, 3);
+    expect(world.coverageReady, false);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
+  });
+
+  test('blocks bridge pilot launch coverage claims', () {
+    final file = File(
+      'test/fixtures/content_factory_mvp/'
+      'w2_bridge_or_legacy_schema_migration_pilot_v1.json',
+    );
+    final decoded = (jsonDecode(file.readAsStringSync()) as Map)
+        .cast<String, Object?>();
+    final tasks = (decoded['tasks']! as List<Object?>)
+        .map(
+          (task) =>
+              Map<String, Object?>.from((task! as Map).cast<String, Object?>())
+                ..['launch_coverage_claimed'] = true,
+        )
+        .toList();
+
+    final result = validateContentSchemaL2L3MapV1({'tasks': tasks});
+
+    expect(
+      result.routeAdmissionErrors,
+      contains(
+        'world_2 bridge_or_legacy content must not claim launch coverage',
+      ),
+    );
+  });
+
   test('reports route admission errors for locked and deferred worlds', () {
     final result = validateContentSchemaL2L3MapV1({
       'tasks': [

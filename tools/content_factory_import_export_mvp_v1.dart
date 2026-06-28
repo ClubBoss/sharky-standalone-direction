@@ -97,6 +97,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
   final results = [
     ...samples.map(_exportSample),
     exportW1WorldCoveragePilotV1(writeFiles: false),
+    exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
   ];
   if (writeFiles) {
     Directory(_outputDir).createSync(recursive: true);
@@ -297,6 +298,121 @@ ContentFactoryImportExportResultV1 exportW1WorldCoveragePilotV1({
   return result;
 }
 
+ContentFactoryImportExportResultV1 exportW2BridgeSchemaMigrationPilotV1({
+  bool writeFiles = false,
+}) {
+  final specs = [
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world2/v1/sessions/w2.s01/drills/'
+          'd.choose_fold_early.json',
+      outputPath: '',
+      fixtureId: 'w2_bridge_or_legacy_schema_migration_pilot_v1',
+      fixtureLevel: 'w1_w6_schema_migration_bridge_pilot',
+      worldId: 'world_2',
+      routeWorldId: 'world_2',
+      displayWorldTitle: 'Hand Discipline',
+      contentOwnerWorldId: 'world_2',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w2.l01',
+      sessionId: 'w2.s01',
+      packId: 'world2_spine_campaign_v1',
+      taskId: 'w2.s01.choose_fold_early.schema_migration_pilot_v1',
+      conceptFamilyId: 'position_btn_vs_early',
+      repairFocusId: 'position_price_action_default',
+      sameSignalGroupId: 'w2.position_btn_vs_early.bridge_action_default',
+      transferSurfaceId: 'early_position_release_v1',
+      misconceptionId: 'acts_before_reading_position_or_price',
+      sourceTruthStatus: 'bridge_or_legacy',
+      feedbackReason: null,
+      sourceJob: 'table_reading_bridge',
+      claimsTransfer: true,
+      safeClaimStatus: 'limited_bridge',
+      launchCoverageClaimed: false,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world2/v1/sessions/w2.s01/drills/'
+          'd.choose_call_vs_open.json',
+      outputPath: '',
+      fixtureId: 'w2_bridge_or_legacy_schema_migration_pilot_v1',
+      fixtureLevel: 'w1_w6_schema_migration_bridge_pilot',
+      worldId: 'world_2',
+      routeWorldId: 'world_2',
+      displayWorldTitle: 'Hand Discipline',
+      contentOwnerWorldId: 'world_2',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w2.l01',
+      sessionId: 'w2.s01',
+      packId: 'world2_spine_campaign_v1',
+      taskId: 'w2.s01.choose_call_vs_open.schema_migration_pilot_v1',
+      conceptFamilyId: 'position_btn_vs_early',
+      repairFocusId: 'position_price_action_default',
+      sameSignalGroupId: 'w2.position_btn_vs_early.bridge_action_default',
+      transferSurfaceId: 'facing_open_price_v1',
+      misconceptionId: 'acts_before_reading_position_or_price',
+      sourceTruthStatus: 'bridge_or_legacy',
+      feedbackReason: null,
+      sourceJob: 'table_reading_bridge',
+      claimsTransfer: true,
+      safeClaimStatus: 'limited_bridge',
+      launchCoverageClaimed: false,
+    ),
+    _FactorySampleSpecV1(
+      sourcePath:
+          'content/worlds/world2/v1/sessions/w2.s01/drills/'
+          'd.choose_raise_btn.json',
+      outputPath: '',
+      fixtureId: 'w2_bridge_or_legacy_schema_migration_pilot_v1',
+      fixtureLevel: 'w1_w6_schema_migration_bridge_pilot',
+      worldId: 'world_2',
+      routeWorldId: 'world_2',
+      displayWorldTitle: 'Hand Discipline',
+      contentOwnerWorldId: 'world_2',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w2.l01',
+      sessionId: 'w2.s01',
+      packId: 'world2_spine_campaign_v1',
+      taskId: 'w2.s01.choose_raise_btn.schema_migration_pilot_v1',
+      conceptFamilyId: 'position_btn_vs_early',
+      repairFocusId: 'position_price_action_default',
+      sameSignalGroupId: 'w2.position_btn_vs_early.bridge_action_default',
+      transferSurfaceId: 'late_position_open_v1',
+      misconceptionId: 'acts_before_reading_position_or_price',
+      sourceTruthStatus: 'bridge_or_legacy',
+      feedbackReason: null,
+      sourceJob: 'table_reading_bridge',
+      claimsTransfer: true,
+      safeClaimStatus: 'limited_bridge',
+      launchCoverageClaimed: false,
+    ),
+  ];
+
+  final tasks = specs
+      .map((spec) => _exportSample(spec).task!)
+      .toList(growable: false);
+  final fixture = <String, Object?>{
+    'schema_version': _schemaVersion,
+    'fixture_id': 'w2_bridge_or_legacy_schema_migration_pilot_v1',
+    'fixture_level': 'w1_w6_schema_migration_bridge_pilot',
+    'generated_by': 'content_factory_import_export_mvp_v1',
+    'tasks': tasks,
+  };
+  final result = ContentFactoryImportExportResultV1(
+    outputPath:
+        '$_outputDir/w2_bridge_or_legacy_schema_migration_pilot_v1.json',
+    fixture: fixture,
+  );
+
+  if (writeFiles) {
+    Directory(_outputDir).createSync(recursive: true);
+    File(
+      result.outputPath,
+    ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
+  }
+  return result;
+}
+
 ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
   final sourceFile = File(spec.sourcePath);
   if (!sourceFile.existsSync()) {
@@ -351,6 +467,9 @@ ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
     'preview_only': false,
     'source_truth_status': spec.sourceTruthStatus,
     'locale_key': spec.taskId.replaceAll('.', '_'),
+    if (spec.safeClaimStatus != null) 'safe_claim_status': spec.safeClaimStatus,
+    if (spec.launchCoverageClaimed != null)
+      'launch_coverage_claimed': spec.launchCoverageClaimed,
     'migration_source': <String, Object?>{
       'source_path': spec.sourcePath,
       'source_id': sourceId,
@@ -429,6 +548,8 @@ class _FactorySampleSpecV1 {
     required this.feedbackReason,
     required this.sourceJob,
     this.claimsTransfer = false,
+    this.safeClaimStatus,
+    this.launchCoverageClaimed,
   });
 
   final String sourcePath;
@@ -453,4 +574,6 @@ class _FactorySampleSpecV1 {
   final String? feedbackReason;
   final String sourceJob;
   final bool claimsTransfer;
+  final String? safeClaimStatus;
+  final bool? launchCoverageClaimed;
 }
