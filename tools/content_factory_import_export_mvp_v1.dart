@@ -105,6 +105,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW2CanonicalCertificationPilotV1(writeFiles: false),
     exportW2FacingPriceDisciplineCanonicalPr2V1(writeFiles: false),
+    exportW2ApprovedRaiseDisciplineCanonicalPr3V1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -1350,6 +1351,130 @@ _FactorySampleSpecV1 _w2FacingPriceDisciplinePr2Spec({
     claimsTransfer: true,
     sourceIntentOverride: 'facing_price_continue_release_discipline',
     sourceErrorClassOverride: 'facing_price_continue_release_error',
+    safeClaimStatus: 'canonical_pilot',
+    launchCoverageClaimed: false,
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW2ApprovedRaiseDisciplineCanonicalPr3V1({bool writeFiles = false}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w2_approved_raise_discipline_canonical_pr3_v1.json',
+    fixtureId: 'w2_approved_raise_discipline_canonical_pr3_v1',
+    fixtureLevel: 'w2_canonical_coverage_expansion_pr3',
+    writeFiles: writeFiles,
+    specs: [
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s03/drills/'
+            'd.choose_raise_to_facing_bet.json',
+        lessonId: 'w2.l03',
+        sessionId: 'w2.s03',
+        taskId: 'w2.s03.choose_raise_to_facing_bet.canonical_pr3_v1',
+        transferSurfaceId: 'clear_aggression_trigger_raise_v1',
+        misconceptionId: 'misses_clear_aggression_trigger',
+        feedbackReason:
+            'Raise is disciplined only because the source grants a clear aggression trigger.',
+      ),
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s07/drills/'
+            'd.choose_raise_facing_open_isolation.json',
+        lessonId: 'w2.l07',
+        sessionId: 'w2.s07',
+        taskId: 'w2.s07.choose_raise_facing_open_isolation.canonical_pr3_v1',
+        transferSurfaceId: 'approved_isolation_raise_v1',
+        misconceptionId: 'flats_approved_isolation_spot',
+        feedbackReason:
+            'Raise is disciplined when the source marks the isolation node as approved.',
+      ),
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s04/drills/'
+            'd.choose_raise_flop_value.json',
+        lessonId: 'w2.l04',
+        sessionId: 'w2.s04',
+        taskId: 'w2.s04.choose_raise_flop_value.canonical_pr3_v1',
+        transferSurfaceId: 'value_intent_raise_v1',
+        misconceptionId: 'checks_clear_value_spot',
+        feedbackReason:
+            'Raise is disciplined when the source identifies a clear value spot.',
+      ),
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s04/drills/'
+            'd.choose_raise_flop_denial.json',
+        lessonId: 'w2.l04',
+        sessionId: 'w2.s04',
+        taskId: 'w2.s04.choose_raise_flop_denial.canonical_pr3_v1',
+        transferSurfaceId: 'denial_raise_v1',
+        misconceptionId: 'gives_free_equity_in_denial_spot',
+        feedbackReason:
+            'Raise is disciplined when the source frames the node as denial.',
+      ),
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s09/drills/'
+            'd.choose_raise_bridge_pressure_counter.json',
+        lessonId: 'w2.l09',
+        sessionId: 'w2.s09',
+        taskId: 'w2.s09.choose_raise_bridge_pressure_counter.canonical_pr3_v1',
+        transferSurfaceId: 'approved_pressure_counter_raise_v1',
+        misconceptionId: 'drifts_passive_when_pressure_counter_is_approved',
+        feedbackReason:
+            'Raise is disciplined when the source approves the pressure counter.',
+      ),
+      _w2ApprovedRaiseDisciplinePr3Spec(
+        sourcePath:
+            'content/worlds/world2/v1/sessions/w2.s10/drills/'
+            'd.choose_raise_checkpoint_value_branch.json',
+        lessonId: 'w2.l10',
+        sessionId: 'w2.s10',
+        taskId: 'w2.s10.choose_raise_checkpoint_value_branch.canonical_pr3_v1',
+        transferSurfaceId: 'value_intent_raise_v1',
+        misconceptionId: 'passes_value_checkpoint_branch',
+        feedbackReason:
+            'Raise is disciplined when the checkpoint source names the branch as value-intent.',
+      ),
+    ],
+  );
+}
+
+_FactorySampleSpecV1 _w2ApprovedRaiseDisciplinePr3Spec({
+  required String sourcePath,
+  required String lessonId,
+  required String sessionId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String feedbackReason,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath: sourcePath,
+    outputPath: '',
+    fixtureId: 'w2_approved_raise_discipline_canonical_pr3_v1',
+    fixtureLevel: 'w2_canonical_coverage_expansion_pr3',
+    worldId: 'world_2',
+    routeWorldId: 'world_2',
+    displayWorldTitle: 'Hand Discipline',
+    contentOwnerWorldId: 'world_2',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sessionId,
+    packId: 'world2_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'approved_raise_discipline',
+    repairFocusId: 'approved_raise_only_when_source_grants_trigger',
+    sameSignalGroupId: 'w2.hand_discipline.approved_raise_only',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: feedbackReason,
+    sourceJob: 'w2_canonical_coverage_expansion_pr3_approved_raise',
+    claimsTransfer: true,
+    sourceIntentOverride: 'approved_raise_discipline',
+    sourceErrorClassOverride: 'approved_raise_without_source_trigger_error',
     safeClaimStatus: 'canonical_pilot',
     launchCoverageClaimed: false,
   );

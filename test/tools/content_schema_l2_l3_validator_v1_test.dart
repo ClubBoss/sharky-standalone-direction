@@ -408,14 +408,54 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports W2 canonical PR3 approved raise discipline as route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w2_approved_raise_discipline_canonical_pr3_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_2']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.conceptFamilyCounts['approved_raise_discipline'], 6);
+    expect(
+      world.sameSignalGroupCounts['w2.hand_discipline.approved_raise_only'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['clear_aggression_trigger_raise_v1'], 1);
+    expect(world.transferSurfaceCounts['approved_isolation_raise_v1'], 1);
+    expect(world.transferSurfaceCounts['value_intent_raise_v1'], 2);
+    expect(world.transferSurfaceCounts['denial_raise_v1'], 1);
+    expect(
+      world.transferSurfaceCounts['approved_pressure_counter_raise_v1'],
+      1,
+    );
+    expect(
+      world.repairFocusCounts['approved_raise_only_when_source_grants_trigger'],
+      6,
+    );
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test(
-    'reports W2 canonical pilot plus PR2 as multiple route-ready families',
+    'reports W2 canonical pilot through PR3 as multiple route-ready families',
     () {
       final result = validateContentSchemaL2L3FixturePathsV1([
         'test/fixtures/content_factory_mvp/'
             'w2_canonical_certification_pilot_v1.json',
         'test/fixtures/content_factory_mvp/'
             'w2_facing_price_discipline_canonical_pr2_v1.json',
+        'test/fixtures/content_factory_mvp/'
+            'w2_approved_raise_discipline_canonical_pr3_v1.json',
       ]);
 
       expect(result.errors, isEmpty);
@@ -423,8 +463,8 @@ void main() {
       expect(result.warnings, isEmpty);
 
       final world = result.worldReports['world_2']!;
-      expect(world.totalTasks, 14);
-      expect(world.coverageCountableTasks, 14);
+      expect(world.totalTasks, 20);
+      expect(world.coverageCountableTasks, 20);
       expect(
         world.conceptFamilyCounts['hand_discipline_position_price_defaults'],
         6,
@@ -433,7 +473,8 @@ void main() {
         world.conceptFamilyCounts['facing_price_continue_release_discipline'],
         8,
       );
-      expect(world.sourceTruthStatusCounts['migrated'], 14);
+      expect(world.conceptFamilyCounts['approved_raise_discipline'], 6);
+      expect(world.sourceTruthStatusCounts['migrated'], 20);
       expect(world.coverageReady, true);
       expect(world.transferReady, true);
       expect(world.repairReady, true);
