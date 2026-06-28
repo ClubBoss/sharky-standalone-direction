@@ -2,7 +2,7 @@
 
 Status: ACTIVE control-plane ledger for W1-W12 launch readiness.
 Created: 2026-06-28.
-Last refreshed: 2026-06-29 after W2 Payoff/Progression Repair v1.
+Last refreshed: 2026-06-29 after W2 8.0 Certification Closure v1.
 
 ## 1. Purpose
 
@@ -63,9 +63,9 @@ Delta rules:
 
 | World ID | Band | Launch-facing title | Current route status | Content/source status | Source truth status | Schema/validator status | Same-signal coverage | Transfer coverage | Repair path | Progression/payoff | Poker correctness | Human QA | Launch claim safety | Premium value contribution | Previous score | Current score | Delta | Primary blocker | Next required action | Evidence source |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical/migrated with schema-legacy active content | one L0 fixture, one L1 migrated sample, one factory-exported W1 sample, one synthetic L2/L3 coverage-ready fixture, and six real six-task W1 concept-family coverage fixtures; active content still not fully schema migrated | six real same-signal groups passed at 6 tasks each; broader W1 still not fully migrated | six W1 groups have at least 2 transfer surfaces each; broader W1 still not fully migrated | runtime/feedback plus L1/factory/L2 repair fields and six W1 migrated repair-focus groups | technical payoff/progression certified; not human-validated and not durable accumulation | conditional pass: no P0 found and P1 bet-size vocabulary source boundary repaired | protocol_ready / execution_deferred | safe as W1 8.5 technical candidate, not 9.0 or launch-ready | high; first value proof | 8.0 | 8.5 | +0.5 | human QA execution, full migration, and durable progression/profile proof remain incomplete | W2 8.0 Certification Closure | L2 report; Wave 6.3 L1 sample; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot; W2 Canonical Coverage Expansion PR2; W2 Canonical Coverage Expansion PR3; W2 8.0 Certification Review; W2 Payoff/Progression Repair |
-| W2 | Foundation bridge | Hand Discipline | learner_playable via campaign path; Act0 card locked | broad table-reading bridge source plus three canonical hand-discipline families | mixed: three canonical pilots plus bridge_or_legacy remainder | one tiny factory bridge sample, one three-task W2 bridge schema migration pilot, one six-task W2 canonical certification pilot, one eight-task W2 canonical PR2 fixture, and one six-task W2 canonical PR3 fixture; canonical fixtures are L2/L3 route-ready without bridge evidence while bridge evidence remains bridge-limited | three canonical same-signal groups passed at 6, 8, and 6 tasks; bridge pilot remains 3 claim-limited tasks | canonical fixtures have twelve transfer surfaces total; bridge transfer remains claim-limited | three canonical repair focuses plus bridge repair fields | W2-specific completion payoff and route handoff proof now wired through canonical progression story and runner chrome; not human-validated or durable | conditional pass: no P0/P1/P2 found in fixture-level review | not done | safe as three W2 canonical pilot slices plus technical payoff proof only, not W2 launch/9.0 coverage | medium; teaches prerequisite hand-discipline reads | 6.0 | 7.2 | +1.2 | needs W2 8.0 Certification Closure before clean 8.0; Human QA and broad migration remain incomplete | W2 8.0 Certification Closure | L2 report; Wave 5.3; W2-W6 normalization; Tiny factory MVP; L2/L3 validator; W1-W6 schema migration pilot; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot; W2 Canonical Coverage Expansion PR2; W2 Canonical Coverage Expansion PR3; W2 8.0 Certification Review; W2 Payoff/Progression Repair |
-| W3 | Foundation bridge | Position Thinking | learner_playable via campaign path; Act0 card locked | Preflop Framework source | bridge_or_legacy | one three-task W3 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | review needed | not done | safe only as routed bridge, not position mastery | medium-high; useful preflop bridge | 4.9 | 5.1 | +0.2 | source job differs from route title and remains bridge-limited | Defer until W2 certification review/correctness-payoff gate | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision |
+| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical/migrated with schema-legacy active content | one L0 fixture, one L1 migrated sample, one factory-exported W1 sample, one synthetic L2/L3 coverage-ready fixture, and six real six-task W1 concept-family coverage fixtures; active content still not fully schema migrated | six real same-signal groups passed at 6 tasks each; broader W1 still not fully migrated | six W1 groups have at least 2 transfer surfaces each; broader W1 still not fully migrated | runtime/feedback plus L1/factory/L2 repair fields and six W1 migrated repair-focus groups | technical payoff/progression certified; not human-validated and not durable accumulation | conditional pass: no P0 found and P1 bet-size vocabulary source boundary repaired | protocol_ready / execution_deferred | safe as W1 8.5 technical candidate, not 9.0 or launch-ready | high; first value proof | 8.0 | 8.5 | +0.5 | human QA execution, full migration, and durable progression/profile proof remain incomplete | W3 Canonical Certification Pilot | L2 report; Wave 6.3 L1 sample; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot; W2 Canonical Coverage Expansion PR2; W2 Canonical Coverage Expansion PR3; W2 8.0 Certification Review; W2 Payoff/Progression Repair; W2 8.0 Certification Closure |
+| W2 | Foundation bridge | Hand Discipline | learner_playable via campaign path; Act0 card locked | broad table-reading bridge source plus three canonical hand-discipline families | mixed: three canonical pilots plus bridge_or_legacy remainder | one tiny factory bridge sample, one three-task W2 bridge schema migration pilot, one six-task W2 canonical certification pilot, one eight-task W2 canonical PR2 fixture, and one six-task W2 canonical PR3 fixture; canonical fixtures are L2/L3 route-ready without bridge evidence while bridge evidence remains bridge-limited | three canonical same-signal groups passed at 6, 8, and 6 tasks; bridge pilot remains 3 claim-limited tasks | canonical fixtures have twelve transfer surfaces total; bridge transfer remains claim-limited | three canonical repair focuses plus bridge repair fields | W2-specific completion payoff and route handoff proof now wired through canonical progression story and runner chrome; not human-validated or durable | conditional pass: no P0/P1/P2 found in fixture-level review | not done | safe as bounded W2 8.0 technical candidate, not W2 launch/9.0 coverage | medium-high; first non-W1 Volume I canonical proof | 7.2 | 8.0 | +0.8 | Human QA, durable learning proof, and broad W2 migration remain incomplete | W3 Canonical Certification Pilot | L2 report; Wave 5.3; W2-W6 normalization; Tiny factory MVP; L2/L3 validator; W1-W6 schema migration pilot; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot; W2 Canonical Coverage Expansion PR2; W2 Canonical Coverage Expansion PR3; W2 8.0 Certification Review; W2 Payoff/Progression Repair; W2 8.0 Certification Closure |
+| W3 | Foundation bridge | Position Thinking | learner_playable via campaign path; Act0 card locked | Preflop Framework source | bridge_or_legacy | one three-task W3 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | review needed | not done | safe only as routed bridge, not position mastery | medium-high; useful preflop bridge | 4.9 | 5.1 | +0.2 | source job differs from route title and remains bridge-limited | W3 Canonical Certification Pilot | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision |
 | W4 | Foundation bridge | Preflop Framework | learner_playable via campaign path; Act0 card locked | Bet Purpose and Price source | bridge_or_legacy | one three-task W4 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | sizing/purpose review needed | not done | safe only as routed bridge, not preflop-framework mastery | medium-high; strong paid-depth value once normalized | 5.1 | 5.3 | +0.2 | route title and content job are offset and remain bridge-limited | Source ownership remap or route-title realignment after W2 certification review | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision |
 | W5 | Developing bridge | Bet Purpose And Price | learner_playable via campaign path; Act0 card locked | Board Awareness source | bridge_or_legacy | one three-task W5 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | campaign progression exists | board/draw review needed | not done | safe only as routed bridge, not bet-purpose mastery | high future premium value | 5.1 | 5.3 | +0.2 | route title and content job are offset and remain bridge-limited | Source ownership remap after W2 certification review | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision |
 | W6 | Developing bridge | Board And Draws | learner_playable via campaign path; terminal before W7 gate | Range Thinking source | bridge_or_legacy | one three-task W6 bridge schema migration pilot; L2/L3 reports it as bridge-limited, not canonical coverage | real bridge pilot at 3 same-signal tasks; not canonical threshold coverage | bridge pilot has 3 transfer surfaces; still claim-limited | factory repair focus present for pilot | W6 terminal gate exists | range advice review needed | not done | safe only as routed bridge, not board/draw mastery | high future premium value | 4.9 | 5.1 | +0.2 | route title and content job are offset and remain bridge-limited | Split content job after W2 certification review | L2 report; Wave 5.3; W2-W6 normalization; W2-W6 Bridge Coverage Expansion; W1-W6 consolidation; W2-W6 Canonical/Bridge Decision |
@@ -83,7 +83,7 @@ These are conservative evidence scores for decision-making, not public claims.
 | World | Route | Source truth | Schema | Same-signal | Transfer | Repair | Feedback | Payoff | Correctness | Human QA | Claim safety | Premium value |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | W1 | 7 | 7 | 8 | 8 | 8 | 8 | 8 | 8 | 6 | 0 | 8 | 7 |
-| W2 | 5 | 6 | 5 | 7 | 7 | 6 | 7 | 7 | 4 | 0 | 7 | 6 |
+| W2 | 6 | 6 | 7 | 8 | 8 | 7 | 7 | 8 | 6 | 0 | 8 | 7 |
 | W3 | 5 | 4 | 2 | 6 | 5 | 4 | 6 | 4 | 4 | 0 | 5 | 6 |
 | W4 | 5 | 4 | 2 | 6 | 5 | 4 | 6 | 4 | 4 | 0 | 5 | 7 |
 | W5 | 5 | 4 | 2 | 6 | 5 | 4 | 6 | 4 | 4 | 0 | 5 | 7 |
@@ -176,14 +176,18 @@ World scores reflected in the current ledger:
   Discipline completion payoff, stage-shift, and next-session proof with focused
   tests. It does not move W2 to 8.0 before certification closure, and it does
   not affect Human QA, launch readiness, monetization, or broad migration.
+- W2 8.0 Certification Closure v1 moves W2 `7.2 -> 8.0` because canonical-only
+  W2 validates as route-ready, bridge-plus-canonical remains a negative control,
+  no fixture-level P0/P1/P2 is open, and payoff/progression proof is now closed.
+  It does not move W2 to 9.0 or launch-ready because Human QA, durable learning
+  proof, and broad migration remain incomplete.
 
 Remaining constraints after the current movement:
 
 - W1 still lacks full schema-owned world migration, Human QA execution, and
   durable progression/profile proof, so it remains below launch-ready status.
-- W2 now has three canonical pilot slices, a conditional certification pass, and
-  W2-specific technical payoff/progression proof, but remains below W2 8.0
-  until certification closure; Human QA and broad migration remain incomplete.
+- W2 now has bounded 8.0 technical certification candidate status, but Human
+  QA, durable learning proof, and broad migration remain incomplete.
 - W3-W6 remain bridge-limited and cannot be counted as canonical launch
   coverage.
 - W7-W10 remain locked.
@@ -208,6 +212,8 @@ Aggregate score proposal:
   Expansion PR3: `6.5 -> 6.6`.
 - W1-W12 Volume I Premium Product Readiness after W2 Payoff/Progression Repair:
   `6.6 -> 6.7`.
+- W1-W12 Volume I Premium Product Readiness after W2 8.0 Certification Closure:
+  `6.7 -> 6.8`.
 - Full W1-W36 Long-Horizon Readiness: unchanged at `3.0`.
 - Overall Top-1 Readiness: `5.6 -> 5.7`.
 - Overall Top-1 Readiness after W1 Concept Family Migration Batch 1:
@@ -218,6 +224,7 @@ Aggregate score proposal:
   `6.0 -> 6.1`.
 - Overall Top-1 Readiness after W2 Canonical Certification Pilot:
   `6.1 -> 6.2`.
+- Overall Top-1 Readiness after W2 8.0 Certification Closure: `6.2 -> 6.3`.
 - Architecture scalability: `8.0 -> 8.1`.
 - Content depth: `4.7 -> 4.8`.
 - Content depth after W1 Concept Family Migration Batch 1: `4.8 -> 4.9`.
@@ -232,34 +239,30 @@ Aggregate score proposal:
 - Progression / dopamine after W2 Payoff/Progression Repair: `6.2 -> 6.3`.
 - Monetization readiness: unchanged at `2.0`.
 
-Reason: the accepted W2 Payoff/Progression Repair closes the named technical
-payoff/progression blocker through existing contracts and focused tests, but it
-does not itself certify W2 as 8.0. Overall top-1 readiness remains unchanged
-because W2 certification closure, Human QA, learning effect, launch safety, and
-broad W2 migration remain open.
+Reason: the accepted W2 8.0 Certification Closure removes the remaining W2
+technical blocker to bounded 8.0. It does not move learning effect,
+monetization, Human QA, launch safety, or broad W2 migration.
 
 ## 6. Active Next Action
 
 Recommended next step:
 
-`W2 8.0 Certification Closure`
+`W3 Canonical Certification Pilot`
 
 Why:
 
-- W2 Payoff/Progression Repair v1 closed the named technical
-  payoff/progression blocker and selected certification closure as the next
-  honest gate.
+- W2 8.0 Certification Closure v1 closed the bounded W2 8.0 gate.
 - W2-W6 Canonical/Bridge Decision v1 remains valid: W2-W6 cannot become
   launch-grade while remaining `bridge_or_legacy`.
 - W1 Human QA remains protocol-ready but execution-deferred because live
   testers are unavailable.
-- W1 remains the only W1-W6 world with canonical route-ready coverage evidence
-  and six real schema-backed concept families:
+- W1 remains the broadest W1-W6 canonical coverage proof with six real
+  schema-backed concept families:
   `position_action_order`, `starting_hand_discipline`,
   `seat_role_orientation`, `card_board_orientation`,
   `bet_size_vocabulary_preview`, and `world1_checkpoint_synthesis`.
-- W2 now needs payoff/progression proof before another coverage or scale-out
-  wave can honestly claim 8.0 movement.
+- W2 now has bounded 8.0 status; W3 is the next bridge-limited world needing a
+  canonical pilot before batch scale-out.
 
 Must not skip:
 
@@ -274,8 +277,8 @@ Must not skip:
   source-normalization correction.
 - Do not bulk-migrate W1-W6.
 - Do not count bridge_or_legacy content as canonical launch coverage.
-- Do not claim W2 8.0 from three canonical pilot families without W2-specific
-  payoff/progression proof.
+- Do not claim W2 9.0 or launch-ready without Human QA, durable proof, and
+  launch claim review.
 - Do not open W7-W12.
 - Do not claim coverage-ready from bridge/legacy content.
 - Do not make W13-W36 launch claims.
