@@ -596,6 +596,84 @@ void main() {
     );
   });
 
+  test('exports W2 canonical certification pilot from real source tasks', () {
+    final first = exportW2CanonicalCertificationPilotV1(writeFiles: false);
+    final second = exportW2CanonicalCertificationPilotV1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w2_canonical_certification_pilot_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_2'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_2'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Hand Discipline',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_2',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pilot',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'hand_discipline_position_price_defaults',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w2.hand_discipline.position_price_action_defaults',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'position_price_hand_discipline',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'early_position_release_v1',
+      'facing_open_price_v1',
+      'late_position_open_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'fold',
+      'call',
+      'raise',
+      'fold',
+      'call',
+      'raise',
+    ]);
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world2/v1/sessions/w2.s01/drills/'
+            'd.choose_fold_early.json',
+        'content/worlds/world2/v1/sessions/w2.s01/drills/'
+            'd.choose_call_vs_open.json',
+        'content/worlds/world2/v1/sessions/w2.s01/drills/'
+            'd.choose_raise_btn.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/'
+            'd.choose_fold_utg_open.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/'
+            'd.choose_call_btn_defend.json',
+        'content/worlds/world2/v1/sessions/w2.s02/drills/'
+            'd.choose_raise_btn_open.json',
+      ]),
+    );
+  });
+
   test(
     'exports W3-W6 bridge schema migration pilots from real source tasks',
     () {
@@ -825,7 +903,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(13));
+    expect(results, hasLength(14));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

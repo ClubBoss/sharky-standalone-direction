@@ -334,6 +334,42 @@ void main() {
     expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
   });
 
+  test('reports W2 canonical certification pilot as route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w2_canonical_certification_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_2']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(
+      world.conceptFamilyCounts['hand_discipline_position_price_defaults'],
+      6,
+    );
+    expect(
+      world
+          .sameSignalGroupCounts['w2.hand_discipline.position_price_action_defaults'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['early_position_release_v1'], 2);
+    expect(world.transferSurfaceCounts['facing_open_price_v1'], 2);
+    expect(world.transferSurfaceCounts['late_position_open_v1'], 2);
+    expect(world.repairFocusCounts['position_price_hand_discipline'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test('reports W3-W6 bridge expansion fixtures as bridge-limited', () {
     final result = validateContentSchemaL2L3FixturePathsV1([
       'test/fixtures/content_factory_mvp/'

@@ -2,7 +2,7 @@
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W2-W6 Canonical/Bridge Decision v1.
+Last refreshed: 2026-06-28 after W2 Canonical Certification Pilot v1.
 
 Authority note:
 
@@ -107,6 +107,11 @@ Authority note:
   launch-grade while remaining `bridge_or_legacy`. It keeps existing bridge
   fixtures claim-limited, proposes no score movement, and selects W2 Canonical
   Certification Pilot as the next active implementation wave.
+- W2 Canonical Certification Pilot v1 proves one six-task W2
+  hand-discipline concept-family slice as canonical and route-ready when
+  evaluated by itself. The existing W2 bridge fixture remains
+  `bridge_or_legacy_limited`, so bridge and canonical evidence must remain
+  separated.
 
 ## 1. Strategic Verdict
 
@@ -160,19 +165,19 @@ Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 | Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.4 | 9.2 | 0.8 | Strong W1 technical payoff/progression proof exists, but not externally human-validated; Human QA protocol-ready/execution-deferred | Human QA execution when testers are available | Gap audit; Master Plan; W4-W5 review trail; W1 Human QA Protocol; W1 Payoff/Progression Certification |
-| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.3 | 9.2 | 2.9 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups, is an 8.5 technical candidate, cleared the known P1 bet-size correctness boundary, and has payoff/progression technically certified plus Human QA protocol-ready/execution-deferred; W2-W6 each have bridge-limited migration pilots; W2-W6 decision confirms bridge fixtures cannot become launch-grade by themselves; W7-W10 locked; W11-W12 authored but not routed | W2 Canonical Certification Pilot | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.4 | 9.2 | 2.8 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups, is an 8.5 technical candidate, cleared the known P1 bet-size correctness boundary, and has payoff/progression technically certified plus Human QA protocol-ready/execution-deferred; W2 now has one route-ready canonical pilot slice while W2 bridge evidence remains claim-limited; W3-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W2 Canonical Coverage Expansion PR2 | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot |
 | Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.2 | 8.8 | 2.6 | W1 completion payoff and next-step proof are technically certified; meso/macro loops and durable accumulation remain thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25; W1 Payoff/Progression Certification |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 5.1 | 9.0 | 3.9 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups, passed 8.0 certification review, cleared the known P1 bet-size repair, and has Human QA protocol-ready/execution-deferred; W2-W6 have bridge-limited migration pilots; W2-W6 decision selected W2 as the next canonical certification pilot; broad canonical W1-W6 coverage still pending | W2 Canonical Certification Pilot | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision |
+| Content depth | 4.5 | 5.2 | 9.0 | 3.8 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups, passed 8.0 certification review, cleared the known P1 bet-size repair, and has Human QA protocol-ready/execution-deferred; W2 has one route-ready canonical pilot slice; W2 bridge evidence and W3-W6 remain bridge-limited; broad canonical W1-W6 coverage still pending | W2 Canonical Coverage Expansion PR2 | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge migration pilots, and W2-W6 canonical/bridge decision exist | W2 Canonical Certification Pilot | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision |
+| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge migration pilots, W2-W6 canonical/bridge decision, and one W2 canonical pilot exist | W2 Canonical Coverage Expansion PR2 | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 6.1 | 9.0 | 2.9 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs, passed 8.0 certification review, cleared the known P1 bet-size correctness repair, and has technical payoff/progression certification plus Human QA protocol-ready/execution-deferred; W2-W6 bridge-limited migration proof exists, and the next proof target is narrowed to W2 canonical certification; product proof is still thin beyond W1-W4 | W2 Canonical Certification Pilot | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision |
+| Overall top-1 readiness | 4.5 | 6.2 | 9.0 | 2.8 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs, passed 8.0 certification review, cleared the known P1 bet-size correctness repair, and has technical payoff/progression certification plus Human QA protocol-ready/execution-deferred; W2 now has one route-ready canonical pilot slice while W2-W6 bridge-limited proof remains claim-limited; product proof is still thin beyond W1-W4 | W2 Canonical Coverage Expansion PR2 | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol; W1 Payoff/Progression Certification; W2-W6 Canonical/Bridge Decision; W2 Canonical Certification Pilot |
 
 Score delta explanation:
 
@@ -207,15 +212,20 @@ Score delta explanation:
   route-selection ambiguity by confirming that bridge fixtures cannot become
   launch-grade by metadata-only canonicalization and by selecting W2 Canonical
   Certification Pilot as the next implementation wave.
+- W2 Canonical Certification Pilot v1 moves W1-W12 Volume I Premium Product
+  Readiness `6.3 -> 6.4`, Content depth `5.1 -> 5.2`, and Overall top-1
+  readiness `6.1 -> 6.2`. It proves one W2 canonical concept-family slice is
+  route-ready while keeping the existing bridge fixture claim-limited.
 - W1-W12 Volume I Premium Product Readiness is now tracked separately at
-  `6.3`. It is the active launch-readiness KPI.
+  `6.4`. It is the active launch-readiness KPI.
 - Full W1-W36 Long-Horizon Readiness is now `3.0`; W13-W36 are no longer
   pre-launch blockers, but they remain long-horizon top-1 expansion.
-- Overall top-1 readiness is now `6.1` because W1 has six real
+- Overall top-1 readiness is now `6.2` because W1 has six real
   validator-backed coverage groups, W2-W6 have bridge-limited migration pilots,
-  W1 payoff/progression is technically certified, and the launch scope remains
-  disciplined. This is migration/tooling, payoff/progression, and claim-safety
-  risk reduction, not full product completion.
+  W2 has one route-ready canonical pilot slice, W1 payoff/progression is
+  technically certified, and the launch scope remains disciplined. This is
+  migration/tooling, payoff/progression, and claim-safety risk reduction, not
+  full product completion.
 
 ## 3. Top-1 Gap Summary
 
@@ -230,8 +240,8 @@ Major remaining gaps:
   cannot be opened until later route-admission evidence exists.
 - Content schema/factory: schema, L0 validation, one L1 migrated sample, one
   tiny import/export proof, L2/L3 coverage/admission checks, one real W1
-  coverage pilot, and W2-W6 bridge migration pilots exist, but broad canonical
-  W1-W6 migration coverage is still missing.
+  coverage pilot, W2-W6 bridge migration pilots, and one W2 canonical pilot
+  exist, but broad canonical W1-W6 migration coverage is still missing.
 - Learning transfer measurement: the app cannot yet prove improvement across
   sessions or concept families.
 - Telemetry aggregation/server sink: Wave 5.1 covers local instrumentation,
@@ -419,6 +429,8 @@ Major remaining gaps:
 | 6.3E W1 Concept Family Migration Batch 1 | Add second schema-backed W1 concept family | OP-10, OP-14, OP-39 | One W1 starting-hand fixture, focused tests, conservative ledgers | Content authoring, broad migration, route opening, W2-W6 migration | W1 starting-hand fixture validates and L2/L3 reports route-ready | Focused tests + factory CLI + L2/L3/foundation validators | Readiness, content | +0.3 W1, +0.1 W1-W12, +0.1 content | 6.3D | done |
 | 6.3E2 W1 Coverage Expansion PR2 | Add two more schema-backed W1 concept families | OP-10, OP-14, OP-39 | W1 seat-role and card-board fixtures, focused tests, conservative ledgers | Content authoring, broad migration, route opening, W2-W6 migration | Both PR2 fixtures validate and L2/L3 reports route-ready | Focused tests + factory CLI + L2/L3/foundation validators | Readiness, content | +0.4 W1, +0.1 W1-W12, +0.1 content | 6.3E | done |
 | 6.3E3 W1 Coverage Expansion PR3 | Complete remaining W1 family-breadth migration slice | OP-10, OP-14, OP-39 | W1 bet-size and checkpoint fixtures, focused tests, explicit W1 coverage fixture list, conservative ledgers | Content authoring, broad migration, route opening, W2-W6 migration | Both PR3 fixtures validate, L2/L3 reports route-ready, and L1 sample is excluded from W1 L2 coverage list | Focused tests + factory CLI + L2/L3/foundation validators | Readiness, content | +0.4 W1, +0.1 W1-W12, +0.1 content | 6.3E2 | done |
+| 6.3F2 W2 Canonical Certification Pilot | Prove one W2 canonical certification slice | OP-10, OP-14, OP-39 | One W2 canonical fixture, focused tests, conservative ledgers | Broad W2 migration, W3-W6 migration, route/title change, authoring, W7-W12 opening, launch claims | W2 canonical pilot validates and L2/L3 reports route-ready by itself while bridge remains limited | Focused tests + factory CLI + L2/L3/foundation validators | Readiness, content | +0.4 W2, +0.1 W1-W12, +0.1 content, +0.1 overall | W2-W6 Canonical/Bridge Decision | done |
+| 6.3F3 W2 Canonical Coverage Expansion PR2 | Add more W2 canonical concept-family breadth | OP-10, OP-14, OP-39 | Additional W2 canonical fixture(s), focused tests, conservative ledgers | Broad W2 migration, W3-W6 migration, route/title change, authoring, W7-W12 opening, launch claims | More W2 canonical coverage validates without using bridge evidence for launch claims | Focused tests + factory CLI + L2/L3/foundation validators | Readiness, content | TBD by evidence | 6.3F2 | planned |
 | 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
 | 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
 | 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
@@ -584,8 +596,8 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA execution unavailable | Human QA protocol is ready, but participants are not currently available; gate execution is deferred, not removed | W1-W4, learning, store | Critical future gate | Human QA execution wave when testers are available | No | Human participants |
 | W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
-| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge pilots, and W2-W6 decision proof exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W2 Canonical Certification Pilot | Yes | Human participants later |
-| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge pilots, and W2-W6 decision proof, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W2 Canonical Certification Pilot | Yes | Content author feedback useful |
+| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge pilots, W2-W6 decision proof, and one W2 canonical pilot exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W2 Canonical Coverage Expansion PR2 | Yes | Human participants later |
+| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, W1 payoff/progression certification, W2-W6 bridge pilots, W2-W6 decision proof, and one W2 canonical pilot, but the factory is not yet ready for broad production or broad canonical coverage claims | Architecture, content | High | W2 Canonical Coverage Expansion PR2 | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -665,10 +677,11 @@ Closed:
 - W1 Human QA Protocol.
 - W1 Payoff/Progression Certification.
 - W2-W6 Canonical/Bridge Decision.
+- W2 Canonical Certification Pilot.
 
 Active next wave:
 
-- W2 Canonical Certification Pilot.
+- W2 Canonical Coverage Expansion PR2.
 
 Must not skip:
 
@@ -702,7 +715,7 @@ Current strategic route:
 
 Latest accepted baseline after this wave:
 
-- W2-W6 Canonical/Bridge Decision v1.
+- W2 Canonical Certification Pilot v1.
 
 Active SSOT docs:
 
@@ -714,17 +727,18 @@ Current score summary:
 
 - W1-W4 beachhead: `8.4/10`
 - Telemetry after Wave 5.1: `4.3/10`
-- Architecture scalability after W1 PR3 and W2-W6 bridge migration pilots:
+- Architecture scalability after W1 PR3, W2-W6 bridge migration pilots, and
+  the W2 canonical pilot:
   `8.1/10`
-- W1-W12 Volume I Premium Product Readiness: `6.3/10`
+- W1-W12 Volume I Premium Product Readiness: `6.4/10`
 - Full W1-W36 Long-Horizon Readiness: `3.0/10`
-- Overall Top-1 Readiness: `6.1/10`
+- Overall Top-1 Readiness: `6.2/10`
 - Largest gaps: Volume I coverage/content truth, learning transfer,
   monetization, human QA, server analytics, correctness validation.
 
 Recommended next wave:
 
-- W2 Canonical Certification Pilot.
+- W2 Canonical Coverage Expansion PR2.
 
 Top blockers:
 
@@ -752,8 +766,8 @@ Current handoff constraints:
 - Do not skip one validator-backed migrated sample.
 - Do not skip the L1 migrated content check.
 - Do not drop W2-W6 route/content normalization fields from bridge samples.
-- Do not author new W1-W6 content before W1 coverage expansion proves the
-  migration path.
+- Do not author new W1-W6 content before W2 canonical expansion proves the
+  migration path beyond one W2 pilot.
 - Do not expand W5-W12 or open W7-W12.
 - Do not treat W13-W36 as a pre-launch dependency.
 - Do not reactivate monetization or store/public beta.

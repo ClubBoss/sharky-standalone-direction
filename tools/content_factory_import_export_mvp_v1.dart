@@ -103,6 +103,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW1BetSizeVocabularyPreviewPr3V1(writeFiles: false),
     exportW1CheckpointSynthesisPr3V1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW2CanonicalCertificationPilotV1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -1065,6 +1066,143 @@ ContentFactoryImportExportResultV1 exportW2BridgeSchemaMigrationPilotV1({
     ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
   }
   return result;
+}
+
+ContentFactoryImportExportResultV1 exportW2CanonicalCertificationPilotV1({
+  bool writeFiles = false,
+}) {
+  final specs = [
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_fold_early.json',
+      sourceId: 'choose_fold_early',
+      sourceSessionId: 'w2.s01',
+      lessonId: 'w2.l01',
+      taskId: 'w2.s01.choose_fold_early.canonical_certification_pilot_v1',
+      transferSurfaceId: 'early_position_release_v1',
+      misconceptionId: 'enters_pot_from_early_weak_start',
+      feedbackReason:
+          'Fold keeps weak early-position hands out of pressure spots.',
+    ),
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_call_vs_open.json',
+      sourceId: 'choose_call_vs_open',
+      sourceSessionId: 'w2.s01',
+      lessonId: 'w2.l01',
+      taskId: 'w2.s01.choose_call_vs_open.canonical_certification_pilot_v1',
+      transferSurfaceId: 'facing_open_price_v1',
+      misconceptionId: 'folds_playable_price_or_forces_extra_aggression',
+      feedbackReason:
+          'Call is the disciplined continue when the price is playable.',
+    ),
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_raise_btn.json',
+      sourceId: 'choose_raise_btn',
+      sourceSessionId: 'w2.s01',
+      lessonId: 'w2.l01',
+      taskId: 'w2.s01.choose_raise_btn.canonical_certification_pilot_v1',
+      transferSurfaceId: 'late_position_open_v1',
+      misconceptionId: 'misses_late_position_open_default',
+      feedbackReason:
+          'Raise is the disciplined first-in default from Button position.',
+    ),
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_fold_utg_open.json',
+      sourceId: 'choose_fold_utg_open',
+      sourceSessionId: 'w2.s02',
+      lessonId: 'w2.l02',
+      taskId: 'w2.s02.choose_fold_utg_open.canonical_certification_pilot_v1',
+      transferSurfaceId: 'early_position_release_v1',
+      misconceptionId: 'opens_weak_early_position_hand',
+      feedbackReason:
+          'Fold discipline removes weak early-seat open candidates.',
+    ),
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_call_btn_defend.json',
+      sourceId: 'choose_call_btn_defend',
+      sourceSessionId: 'w2.s02',
+      lessonId: 'w2.l02',
+      taskId: 'w2.s02.choose_call_btn_defend.canonical_certification_pilot_v1',
+      transferSurfaceId: 'facing_open_price_v1',
+      misconceptionId: 'overfolds_playable_button_defend',
+      feedbackReason:
+          'Call keeps the Button defend disciplined when the price is defined.',
+    ),
+    _w2CanonicalHandDisciplineSpecV1(
+      sourceFileName: 'd.choose_raise_btn_open.json',
+      sourceId: 'choose_raise_btn_open',
+      sourceSessionId: 'w2.s02',
+      lessonId: 'w2.l02',
+      taskId: 'w2.s02.choose_raise_btn_open.canonical_certification_pilot_v1',
+      transferSurfaceId: 'late_position_open_v1',
+      misconceptionId: 'passes_on_clean_button_open',
+      feedbackReason: 'Raise preserves the clean Button first-in discipline.',
+    ),
+  ];
+
+  final tasks = specs
+      .map((spec) => _exportSample(spec).task!)
+      .toList(growable: false);
+  final fixture = <String, Object?>{
+    'schema_version': _schemaVersion,
+    'fixture_id': 'w2_canonical_certification_pilot_v1',
+    'fixture_level': 'w2_canonical_certification_pilot',
+    'generated_by': 'content_factory_import_export_mvp_v1',
+    'tasks': tasks,
+  };
+  final result = ContentFactoryImportExportResultV1(
+    outputPath: '$_outputDir/w2_canonical_certification_pilot_v1.json',
+    fixture: fixture,
+  );
+
+  if (writeFiles) {
+    Directory(_outputDir).createSync(recursive: true);
+    File(
+      result.outputPath,
+    ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
+  }
+  return result;
+}
+
+_FactorySampleSpecV1 _w2CanonicalHandDisciplineSpecV1({
+  required String sourceFileName,
+  required String sourceId,
+  required String sourceSessionId,
+  required String lessonId,
+  required String taskId,
+  required String transferSurfaceId,
+  required String misconceptionId,
+  required String feedbackReason,
+}) {
+  return _FactorySampleSpecV1(
+    sourcePath:
+        'content/worlds/world2/v1/sessions/$sourceSessionId/drills/'
+        '$sourceFileName',
+    outputPath: '',
+    fixtureId: 'w2_canonical_certification_pilot_v1',
+    fixtureLevel: 'w2_canonical_certification_pilot',
+    worldId: 'world_2',
+    routeWorldId: 'world_2',
+    displayWorldTitle: 'Hand Discipline',
+    contentOwnerWorldId: 'world_2',
+    routeGateStatus: 'learner_playable',
+    lessonId: lessonId,
+    sessionId: sourceSessionId,
+    packId: 'world2_spine_campaign_v1',
+    taskId: taskId,
+    conceptFamilyId: 'hand_discipline_position_price_defaults',
+    repairFocusId: 'position_price_hand_discipline',
+    sameSignalGroupId: 'w2.hand_discipline.position_price_action_defaults',
+    transferSurfaceId: transferSurfaceId,
+    misconceptionId: misconceptionId,
+    sourceTruthStatus: 'migrated',
+    feedbackReason: feedbackReason,
+    sourceJob: 'w2_hand_discipline_canonical_pilot',
+    claimsTransfer: true,
+    sourceIntentOverride: 'hand_discipline_position_price_defaults',
+    sourceErrorClassOverride: 'hand_discipline_position_price_default',
+    safeClaimStatus: 'canonical_pilot',
+    launchCoverageClaimed: false,
+  );
 }
 
 ContentFactoryImportExportResultV1 exportW3BridgeSchemaMigrationPilotV1({
