@@ -1098,6 +1098,94 @@ void main() {
     },
   );
 
+  test('exports W3 hand bucket action frame PR2 from existing chains', () {
+    final result = exportW3HandBucketActionFrameCanonicalPr2V1(
+      writeFiles: false,
+    );
+    final secondResult = exportW3HandBucketActionFrameCanonicalPr2V1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w3_hand_bucket_action_frame_canonical_pr2_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_3'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_3'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Position Thinking',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_3',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pilot',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'hand_bucket_action_frame_discipline',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w3.position_thinking.hand_bucket_action_frame',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'hand_bucket_before_preflop_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'unopened_premium_open_v1',
+      'facing_open_playable_call_v1',
+      'out_of_position_weak_release_v1',
+      'facing_open_weak_release_v1',
+      'facing_open_suited_continue_v1',
+      'earlier_position_weak_release_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'call',
+      'fold',
+      'fold',
+      'call',
+      'fold',
+    ]);
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(
+      migrationSources.map((source) => source['source_chain_id']).toSet(),
+      {
+        'w3_s01_preflop_framework_intro_v1',
+        'w3_s02_preflop_category_reuse_v1',
+        'w3_s08_preflop_continue_fold_discipline_v1',
+        'w3_s10_preflop_final_checkpoint_v1',
+      },
+    );
+    expect(
+      migrationSources.map((source) => source['source_step_index']).toSet(),
+      {0, 1, 2},
+    );
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w3_canonical_coverage_pr2_hand_bucket_action_frame',
+    });
+  });
+
   test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
@@ -1162,7 +1250,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(17));
+    expect(results, hasLength(18));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

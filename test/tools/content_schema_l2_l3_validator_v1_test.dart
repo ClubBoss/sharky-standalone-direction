@@ -594,6 +594,90 @@ void main() {
     expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
   });
 
+  test(
+    'reports W3 canonical PR2 and canonical aggregate as route-ready coverage',
+    () {
+      final pr2Result = validateContentSchemaL2L3FixturePathsV1([
+        'test/fixtures/content_factory_mvp/'
+            'w3_hand_bucket_action_frame_canonical_pr2_v1.json',
+      ]);
+
+      expect(pr2Result.errors, isEmpty);
+      expect(pr2Result.routeAdmissionErrors, isEmpty);
+      expect(pr2Result.warnings, isEmpty);
+
+      final pr2World = pr2Result.worldReports['world_3']!;
+      expect(pr2World.totalTasks, 6);
+      expect(pr2World.coverageCountableTasks, 6);
+      expect(
+        pr2World.conceptFamilyCounts['hand_bucket_action_frame_discipline'],
+        6,
+      );
+      expect(
+        pr2World
+            .sameSignalGroupCounts['w3.position_thinking.hand_bucket_action_frame'],
+        6,
+      );
+      expect(
+        pr2World.repairFocusCounts['hand_bucket_before_preflop_action'],
+        6,
+      );
+      expect(pr2World.sourceTruthStatusCounts['migrated'], 6);
+      expect(pr2World.coverageReady, true);
+      expect(pr2World.transferReady, true);
+      expect(pr2World.repairReady, true);
+      expect(pr2World.routeAdmissionStatus, 'learner_playable_route_ready');
+
+      final canonicalResult = validateContentSchemaL2L3FixturePathsV1([
+        'test/fixtures/content_factory_mvp/'
+            'w3_canonical_certification_pilot_v1.json',
+        'test/fixtures/content_factory_mvp/'
+            'w3_hand_bucket_action_frame_canonical_pr2_v1.json',
+      ]);
+
+      expect(canonicalResult.errors, isEmpty);
+      expect(canonicalResult.routeAdmissionErrors, isEmpty);
+      expect(canonicalResult.warnings, isEmpty);
+
+      final canonicalWorld = canonicalResult.worldReports['world_3']!;
+      expect(canonicalWorld.totalTasks, 12);
+      expect(canonicalWorld.coverageCountableTasks, 12);
+      expect(canonicalWorld.sourceTruthStatusCounts['migrated'], 12);
+      expect(canonicalWorld.coverageReady, true);
+      expect(canonicalWorld.transferReady, true);
+      expect(canonicalWorld.repairReady, true);
+      expect(
+        canonicalWorld.routeAdmissionStatus,
+        'learner_playable_route_ready',
+      );
+    },
+  );
+
+  test('keeps W3 bridge plus both canonical fixtures bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w3_canonical_certification_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w3_hand_bucket_action_frame_canonical_pr2_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_3']!;
+    expect(world.totalTasks, 15);
+    expect(world.coverageCountableTasks, 15);
+    expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
+    expect(world.sourceTruthStatusCounts['migrated'], 12);
+    expect(world.coverageReady, false);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
+  });
+
   test('blocks bridge pilot launch coverage claims', () {
     final file = File(
       'test/fixtures/content_factory_mvp/'
