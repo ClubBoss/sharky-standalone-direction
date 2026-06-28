@@ -1,0 +1,43 @@
+{
+  "schema_version": "content_schema_foundation_v1",
+  "fixture_id": "w1_schema_l0_valid_fixture_v1",
+  "tasks": [
+    {
+      "schema_version": "content_schema_foundation_v1",
+      "world_id": "world_1",
+      "route_world_id": "world_1",
+      "display_world_title": "Poker from Zero",
+      "content_owner_world_id": "world_1",
+      "route_gate_status": "learner_playable",
+      "lesson_id": "w1.l01",
+      "session_id": "w1.s01",
+      "pack_id": "world1_spine_campaign_v1",
+      "task_id": "w1.s01.position_action_order.r01",
+      "concept_family_id": "position_action_order",
+      "repairable": true,
+      "repair_focus_id": "position_before_action",
+      "claims_same_signal": true,
+      "same_signal_group_id": "w1.position_action_order.first_in_or_facing_pressure",
+      "claims_transfer": true,
+      "transfer_surface_id": "table_seat_action_order_v1",
+      "misconception_id": "acts_without_reading_position",
+      "drill_kind": "action_choice",
+      "correct_action": "raise",
+      "acceptable_actions": [],
+      "feedback_reason": "Hero is on the button after folds, so position and first-in action support a simple raise.",
+      "table_state": {
+        "street": "preflop",
+        "hero_position": "button",
+        "players_remaining": 6,
+        "action_before_hero": "folded_to_hero",
+        "stack_depth_bb": 100
+      },
+      "scenario_state": null,
+      "validation_status": "draft",
+      "preview_only": false,
+      "source_truth_status": "canonical",
+      "locale_key": "w1_s01_position_action_order_r01",
+      "copy_key": null
+    }
+  ]
+}
