@@ -72,7 +72,8 @@ String? progressionRouteStageShiftValueForTargetV1(
     return null;
   }
   return switch (target.world) {
-    2 => 'Read visible table truth',
+    2 =>
+      'Build Hand Discipline from position, price, and approved pressure cues',
     3 => 'Build the first preflop framework',
     _ => null,
   };
@@ -90,7 +91,7 @@ String progressionRouteStatusLineForTargetV1(ProgressionRouteTargetV1 target) {
   if (target.family == ProgressionRouteFamilyV1.sessionWorld &&
       isEarlyArcSessionWorldV1(target.world)) {
     return switch (target.world) {
-      2 => 'Stage shift · World 1 foundations -> World 2 table reads',
+      2 => 'Stage shift - World 1 foundations -> World 2 Hand Discipline',
       3 => 'Stage shift · World 2 table reads -> World 3 preflop framework',
       _ => 'Campaign route -> ${target.routeLabel}',
     };
@@ -110,7 +111,7 @@ String progressionRouteReasonLineForTargetV1(ProgressionRouteTargetV1 target) {
       if (isEarlyArcSessionWorldV1(target.world)) {
         return switch (target.world) {
           2 =>
-            'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now asks you to read visible table truth before you choose.',
+            'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now trains when to fold, call, or raise from position, price, and approved pressure cues.',
           3 =>
             'Why: World 2 grounded visible table truth and pressure reads. World 3 now turns that clarity into the first simple open / call / fold framework.',
           _ => 'Why: Your next learning route is ${target.routeLabel}.',
@@ -129,7 +130,8 @@ String progressionRouteCompletionBodyTextForSessionWorldV1({
 }) {
   if (isEarlyArcSessionWorldV1(world)) {
     final lead = switch (world) {
-      2 => 'World 2 keeps the same table-reading arc in view.',
+      2 =>
+        'World 2 trained fold, call, and raise discipline from position, price, and approved pressure cues.',
       3 => 'World 3 keeps the same first-action framework in view.',
       _ => 'Next lesson ready:',
     };

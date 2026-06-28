@@ -22,7 +22,7 @@ void main() {
     expect(context!.statusLine, 'Campaign route -> World 6 sessions');
   });
 
-  test('early-arc world2 handoff carries shared headline and reason', () {
+  test('early-arc world2 handoff carries Hand Discipline headline and reason', () {
     final context = buildProgressionHandoffContextForPackV1(
       'world2_spine_campaign_v1',
     );
@@ -30,15 +30,15 @@ void main() {
     expect(context, isNotNull);
     expect(
       context!.statusLine,
-      'Stage shift · World 1 foundations -> World 2 table reads',
+      'Stage shift - World 1 foundations -> World 2 Hand Discipline',
     );
     expect(
       context.continuationHeadline,
-      'What changes now: Read visible table truth',
+      'What changes now: Build Hand Discipline from position, price, and approved pressure cues',
     );
     expect(
       context.continuationReasonLine,
-      'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now asks you to read visible table truth before you choose.',
+      'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now trains when to fold, call, or raise from position, price, and approved pressure cues.',
     );
   });
 

@@ -38,22 +38,27 @@ void main() {
     );
   });
 
-  test('early-arc world2 route story carries continuity language', () {
-    final story = resolveProgressionRouteStoryForPackV1(
-      nextPackId: 'world2_spine_campaign_v1',
-      reviewRequired: false,
-      activePackId: '',
-      nextHandIndex: 0,
-      rhythmReason: '',
-    );
+  test(
+    'early-arc world2 route story carries Hand Discipline payoff language',
+    () {
+      final story = resolveProgressionRouteStoryForPackV1(
+        nextPackId: 'world2_spine_campaign_v1',
+        reviewRequired: false,
+        activePackId: '',
+        nextHandIndex: 0,
+        rhythmReason: '',
+      );
 
-    expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
-    expect(story.target.world, 2);
-    expect(
-      story.reasonLine,
-      'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now asks you to read visible table truth before you choose.',
-    );
-  });
+      expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
+      expect(story.target.world, 2);
+      expect(story.ctaLabel, 'OPEN WORLD 2');
+      expect(story.semanticsLabel, 'Open World 2 session route');
+      expect(
+        story.reasonLine,
+        'Why: World 1 gave you position, action order, and simple preflop discipline. World 2 now trains when to fold, call, or raise from position, price, and approved pressure cues.',
+      );
+    },
+  );
 
   test('early-arc world3 route story carries continuity language', () {
     final story = resolveProgressionRouteStoryForPackV1(

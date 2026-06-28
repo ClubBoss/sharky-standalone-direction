@@ -2,7 +2,7 @@ import 'package:poker_analyzer/ui_v2/runner/session_drill_runner_progression_chr
 import 'package:test/test.dart';
 
 void main() {
-  test('early-arc world-session chrome carries shared continuation rhythm', () {
+  test('world2 chrome carries Hand Discipline payoff and safe progression', () {
     final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
       const SessionDrillRunnerProgressionChromeInputV1(
         sessionId: 'w2.s01',
@@ -17,11 +17,22 @@ void main() {
     expect(contract.nextSessionId, 'w2.s02');
     expect(
       contract.completionBodyText,
-      startsWith('World 2 keeps the same table-reading arc in view.'),
+      startsWith(
+        'World 2 trained fold, call, and raise discipline from position, price, and approved pressure cues.',
+      ),
     );
+    expect(contract.completionBodyText, contains('Next lesson ready: World 2'));
+    expect(contract.completionBodyText, contains('Session 2 of '));
+    expect(contract.completionBodyText, isNot(contains('8.0')));
+    expect(contract.completionBodyText, isNot(contains('9.0')));
     expect(
-      contract.completionBodyText,
-      contains('Next lesson ready: World 2 · Session 2 of '),
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(contract.completionBodyText.toLowerCase(), isNot(contains('gto')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('solver')),
     );
   });
 
