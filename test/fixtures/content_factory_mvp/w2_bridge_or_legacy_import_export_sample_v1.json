@@ -1,0 +1,46 @@
+{
+  "schema_version": "content_schema_foundation_v1",
+  "fixture_id": "w2_bridge_or_legacy_import_export_sample_v1",
+  "fixture_level": "content_factory_import_export_mvp_bridge",
+  "generated_by": "content_factory_import_export_mvp_v1",
+  "tasks": [
+    {
+      "schema_version": "content_schema_foundation_v1",
+      "world_id": "world_2",
+      "route_world_id": "world_2",
+      "display_world_title": "Hand Discipline",
+      "content_owner_world_id": "world_2",
+      "route_gate_status": "learner_playable",
+      "lesson_id": "w2.l01",
+      "session_id": "w2.s01",
+      "pack_id": "world2_spine_campaign_v1",
+      "task_id": "w2.s01.choose_fold_early.import_export_sample_v1",
+      "concept_family_id": "position_btn_vs_early",
+      "repairable": true,
+      "repair_focus_id": "early_position_weak_hand_release",
+      "claims_same_signal": true,
+      "same_signal_group_id": "w2.position_btn_vs_early.weak_start_release",
+      "claims_transfer": false,
+      "transfer_surface_id": null,
+      "misconception_id": "enters_pot_from_early_weak_start",
+      "drill_kind": "action_choice",
+      "correct_action": "fold",
+      "acceptable_actions": [],
+      "feedback_reason": "Early-position weakness is resolved by a fold default.",
+      "validation_status": "source_validated",
+      "preview_only": false,
+      "source_truth_status": "bridge_or_legacy",
+      "locale_key": "w2_s01_choose_fold_early_import_export_sample_v1",
+      "migration_source": {
+        "source_path": "content/worlds/world2/v1/sessions/w2.s01/drills/d.choose_fold_early.json",
+        "source_id": "choose_fold_early",
+        "source_kind": "action_choice",
+        "source_intent_v1": "position_btn_vs_early",
+        "source_expected_action": "fold",
+        "source_error_class": "expected_action_mismatch",
+        "source_job": "table_reading_bridge",
+        "source_transform": "tiny_content_factory_import_export_mvp_v1"
+      }
+    }
+  ]
+}

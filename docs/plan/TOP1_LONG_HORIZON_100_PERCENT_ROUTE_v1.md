@@ -2,7 +2,7 @@
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after Volume I Launch Scope Rebaseline v1.
+Last refreshed: 2026-06-28 after Tiny Content Factory Import/Export MVP v1.
 
 Authority note:
 
@@ -45,6 +45,9 @@ Authority note:
 - Volume I Launch Scope Rebaseline v1 changes the active launch target to
   Perfect W1-W12 Volume I Premium Product and defers W13-W36 to post-launch /
   live expansion. This does not cancel the W1-W36 top-1 ambition.
+- Tiny Content Factory Import/Export MVP v1 proves deterministic schema-shaped
+  export for one W1 migrated source task and one W2 bridge_or_legacy source
+  task without runtime migration.
 
 ## 1. Strategic Verdict
 
@@ -98,19 +101,19 @@ Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 | Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| W1-W12 Volume I Premium Product Readiness | 4.5 | 5.3 | 9.2 | 3.9 | Launch target rebaselined to W1-W12; W1-W6 need normalization; W7-W10 locked; W11-W12 authored but not routed; schema/L1 pilot exists | L2 coverage report | Waves 5.2-6.3; Volume I rebaseline |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 5.5 | 9.2 | 3.7 | Launch target rebaselined to W1-W12; W1-W6 need validator expansion; W7-W10 locked; W11-W12 authored but not routed; schema/L1/factory proof exists | L2/L3 validator expansion | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP |
 | Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 content-depth risk classified; L1 pilot exists; W1-W12 coverage report and normalization still pending | L2 coverage report | Wave 5.3 audit; Waves 6.1-6.3 |
+| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 content-depth risk classified; L1 pilot and tiny factory proof exist; broad coverage still pending | L2/L3 validator expansion | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 7.3 | 8.8 | 1.5 | Schema, L0 validation, and L1 migrated sample exist; factory import/export still absent | Factory import/export MVP | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3 |
+| Architecture scalability | 6.5 | 7.6 | 8.8 | 1.2 | Schema, L0 validation, L1 migrated sample, and tiny import/export proof exist | L2/L3 validator expansion | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 5.1 | 9.0 | 3.9 | Launch scope is now disciplined around Volume I; product proof still thin beyond W1-W4 | L2 coverage report | Gap audit plus Waves 5.1-6.3; Volume I rebaseline |
+| Overall top-1 readiness | 4.5 | 5.3 | 9.0 | 3.7 | Launch scope is disciplined around Volume I; schema/factory proof exists, but product proof is still thin beyond W1-W4 | L2/L3 validator expansion | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP |
 
 Score delta explanation:
 
@@ -118,14 +121,16 @@ Score delta explanation:
   local canonical event foundation. It does not justify a large jump because
   no server sink, privacy posture, transfer aggregation, or session join key
   exists.
-- Architecture scalability is now `7.3` after Waves 6.1-6.3 because schema,
-  L0 validation, and one validator-backed L1 migrated sample exist.
+- Architecture scalability is now `7.6` after Tiny Content Factory
+  Import/Export MVP v1 because schema, L0 validation, one validator-backed L1
+  migrated sample, and one tiny import/export proof exist.
 - W1-W12 Volume I Premium Product Readiness is now tracked separately at
-  `5.3`. It is the active launch-readiness KPI.
+  `5.5`. It is the active launch-readiness KPI.
 - Full W1-W36 Long-Horizon Readiness is now `3.0`; W13-W36 are no longer
   pre-launch blockers, but they remain long-horizon top-1 expansion.
-- Overall top-1 readiness is now `5.1` because launch scope is clearer. This
-  is control-plane risk reduction, not product feature completion.
+- Overall top-1 readiness is now `5.3` because launch scope is clearer and the
+  first import/export proof exists. This is control-plane and tooling risk
+  reduction, not product feature completion.
 
 ## 3. Top-1 Gap Summary
 
@@ -138,8 +143,9 @@ Major remaining gaps:
   pre-launch blockers and not launch-available.
 - W7-W12 route truth: the route leak is closed, but the Developing Player band
   cannot be opened until later route-admission evidence exists.
-- Content schema/factory: schema and L0 validation exist, but L1 migrated
-  content validation and Content Factory MVP proof are still missing.
+- Content schema/factory: schema, L0 validation, one L1 migrated sample, and
+  one tiny import/export proof exist, but broad L2/L3 validation and migration
+  coverage are still missing.
 - Learning transfer measurement: the app cannot yet prove improvement across
   sessions or concept families.
 - Telemetry aggregation/server sink: Wave 5.1 covers local instrumentation,
@@ -318,7 +324,8 @@ Major remaining gaps:
 | 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.3 architecture | Stage A | done |
 | 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 architecture | 6.1 | done |
 | 6.3 Content Factory MVP / L1 Migrated Sample Pilot | Build minimal authoring pipeline and prove one migrated sample | OP-10 | MVP factory, one validator-backed migrated sample, L1 migrated content check | W7-W12 mass generation, W1-W6 authoring, route opening | One valid generated/imported slice and L1 check | Focused tests + docs | Architecture, content | +0.2 architecture | 6.1-6.2 | done |
-| 6.3R Volume I Launch Scope Rebaseline | Rebaseline launch target to W1-W12 Volume I | OP-01, OP-10, OP-13, OP-65 | Control-plane docs only | Code, content, routes, monetization, telemetry | W1-W12 launch target and W13-W36 deferred expansion locked | Docs checks + stale wording scan | Readiness, scope | Control-plane clarity | 6.3 | active |
+| 6.3R Volume I Launch Scope Rebaseline | Rebaseline launch target to W1-W12 Volume I | OP-01, OP-10, OP-13, OP-65 | Control-plane docs only | Code, content, routes, monetization, telemetry | W1-W12 launch target and W13-W36 deferred expansion locked | Docs checks + stale wording scan | Readiness, scope | Control-plane clarity | 6.3 | done |
+| 6.3F Tiny Content Factory Import/Export MVP | Prove deterministic schema-shaped import/export for source tasks | OP-10 | One W1 migrated sample and one safe W2 bridge sample | Runtime migration, broad migration, authoring, routes, UI | Two generated fixtures validate and preserve source metadata | Focused tests + CLI + schema validator | Architecture, content | +0.2 architecture | 6.3, W2-W6 normalization | done |
 | 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
 | 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
 | 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
@@ -484,8 +491,8 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
 | W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
-| W1-W6 route/content normalization pending | W1-W6 depth risk is classified, but route/content normalization must wait until after the L1 pilot | Volume I, content, learning | High | Normalization wave | Yes | Poker review later |
-| Content factory MVP incomplete | Schema, L0 validation, and L1 sample exist; import/export factory proof is still missing | Architecture, content | High | Tiny factory import/export MVP | Yes | Content author feedback useful |
+| L2/L3 validator coverage incomplete | Schema, L0 validation, L1 sample, and tiny factory proof exist; broader migrated coverage and route/content validation are still missing | Volume I, content, learning | High | L2/L3 validator expansion | Yes | Poker review later |
+| Content factory not ready for bulk production | Tiny import/export proof exists, but it covers only one W1 sample and one W2 bridge sample | Architecture, content | High | Validator-led factory expansion | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -503,8 +510,8 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- |
 | Public beta/store launch | Active route is full top-1, not quick release | User reactivates launch route or Stage K | Human QA, privacy/legal, launch package |
 | Monetization implementation | Learning value and W5+ readiness not proven | Stage H | W5+ route-ready, privacy/legal, pricing |
-| New W1-W6 content authoring | Schema/factory pilot is not proven yet | After Wave 6.3 and route/content normalization | Validator-backed L1 sample and normalization plan |
-| W5-W12 expansion | Developing band is locked and content factory proof is missing | Stage F | Schema, L1 check, factory proof, route-admission evidence |
+| New W1-W6 content authoring | Validator/factory breadth is not proven yet | After L2/L3 validator expansion and route/content normalization | Validator-backed L1 sample, tiny factory proof, and normalization plan |
+| W5-W12 expansion | Developing band is locked and content factory proof is still tiny | Stage F | Schema, L1 check, factory proof, route-admission evidence |
 | W7-W12 opening | Route gate is locked/non-routed by current truth | Later route-admission wave | Route, seam, validation, and correctness proof |
 | W13+ hand import | Parser complexity would distract from W5-W12 | Stage I | Replay boundary mature, W5-W12 stable |
 | W13-W36 content production | Post-launch/live expansion, not Volume I launch scope | After Volume I launch readiness or first real users | Mature factory, correctness protocol, user data |
@@ -547,23 +554,25 @@ Closed:
 - Content Schema Foundation.
 - L0 Content Validation Rules.
 - L1 Migrated Sample Pilot.
+- Volume I Launch Scope Rebaseline.
+- L2 World Coverage Report for W1-W12.
+- W2-W6 Route/Content Normalization.
+- Tiny Content Factory Import/Export MVP.
 
 Active next candidates:
 
-- L2 World Coverage Report for W1-W12.
-- L2 World Coverage Report for W1-W6 first, if W1-W12 is too broad.
-- Tiny Content Factory Import/Export MVP.
-- W2-W6 Route/Content Normalization.
+- L2/L3 Content Validator Expansion.
+- Validator-led factory expansion across W2-W6.
 - W7-W12 Admission/Content Lock.
 - Human QA Protocol.
 
 Must not skip:
 
 - Validator-backed migration proof before content production.
-- Route/content normalization before broad authoring.
+- Validator-led route/content checks before broad authoring.
 - W1-W12 correctness and human QA before premium claims.
-- Route/content normalization for W2-W6 after pilot.
-- Content Factory MVP proof before authoring.
+- Keep W2-W6 route/content normalization fields in every migrated bridge sample.
+- Keep factory proof validator-backed before authoring.
 - Human QA Protocol before external beta or claims.
 - No W13-W36 pre-launch dependency.
 
@@ -586,9 +595,9 @@ Current strategic route:
 - Quick store/public beta route is paused unless explicitly reactivated.
 - W1-W4 beachhead is strong; Volume I completeness is not yet launch-grade.
 
-Latest accepted commit:
+Latest accepted baseline before this wave:
 
-- `95d93d963a6a60bc22d155d42655898bffcbfe7d`
+- `e7d88c7097fcdca38f48b60a007bc1f5ef8023bd`
 
 Active SSOT docs:
 
@@ -600,24 +609,24 @@ Current score summary:
 
 - W1-W4 beachhead: `8.3/10`
 - Telemetry after Wave 5.1: `4.3/10`
-- Architecture scalability after Wave 6.3: `7.3/10`
-- W1-W12 Volume I Premium Product Readiness: `5.3/10`
+- Architecture scalability after Tiny factory MVP: `7.6/10`
+- W1-W12 Volume I Premium Product Readiness: `5.5/10`
 - Full W1-W36 Long-Horizon Readiness: `3.0/10`
-- Overall Top-1 Readiness: `5.1/10`
+- Overall Top-1 Readiness: `5.3/10`
 - Largest gaps: Volume I coverage/content truth, learning transfer,
   monetization, human QA, server analytics, correctness validation.
 
 Recommended next wave:
 
-- L2 World Coverage Report for W1-W12, report-only and non-blocking.
-- If W1-W12 is too broad for one safe wave, start with W1-W6 first.
+- L2/L3 Content Validator Expansion.
+- Validator-led factory expansion across W2-W6.
 
 Top blockers:
 
 - Human novice QA unavailable.
 - W7-W12 route admission locked until later proof.
-- W1-W6 route/content normalization pending after the L1 pilot.
-- Content factory absent beyond schema and L0 validation.
+- L2/L3 validator coverage incomplete.
+- Content factory still tiny and not ready for bulk production.
 - Learning transfer not measured.
 - Deterministic session_id not owned.
 - Server analytics/privacy posture absent.
@@ -637,8 +646,8 @@ Current handoff constraints:
 
 - Do not skip one validator-backed migrated sample.
 - Do not skip the L1 migrated content check.
-- Do not normalize W2-W6 route/content before the pilot proves the path.
-- Do not author new W1-W6 content before factory proof.
+- Do not drop W2-W6 route/content normalization fields from bridge samples.
+- Do not author new W1-W6 content before validator-led factory expansion.
 - Do not expand W5-W12 or open W7-W12.
 - Do not treat W13-W36 as a pre-launch dependency.
 - Do not reactivate monetization or store/public beta.

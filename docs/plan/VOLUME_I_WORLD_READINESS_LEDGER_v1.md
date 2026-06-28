@@ -2,7 +2,7 @@
 
 Status: ACTIVE control-plane ledger for W1-W12 launch readiness.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W2-W6 Route/Content Normalization v1.
+Last refreshed: 2026-06-28 after Tiny Content Factory Import/Export MVP v1.
 
 ## 1. Purpose
 
@@ -63,8 +63,8 @@ Delta rules:
 
 | World ID | Band | Launch-facing title | Current route status | Content/source status | Source truth status | Schema/validator status | Same-signal coverage | Transfer coverage | Repair path | Progression/payoff | Poker correctness | Human QA | Launch claim safety | Premium value contribution | Previous score | Current score | Delta | Primary blocker | Next required action | Evidence source |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical with schema-legacy active content | one L0 fixture and one L1 migrated sample; active content still schema legacy | strong but mostly inferred | present but mostly inferred | runtime/feedback plus one L1 repair field | strong W1 payoff, not human-validated | review needed before premium/public claims | not done | safe as W1 foundation, not 10/10 claim | high; first value proof | 6.5 | 6.5 | +0.0 | active content lacks schema-owned coverage fields and human QA | W1 schema migration/coverage after W2-W6 normalization | L2 report; Wave 6.3 L1 sample |
-| W2 | Foundation bridge | Hand Discipline | learner_playable via campaign path; Act0 card locked | broad table-reading bridge source | bridge_or_legacy | no content-world schema fields; no L1 sample | partial/inferred | bridge transfer inferred | feedback/review patterns, no source-owned repair field | campaign progression exists | review needed | not done | safe only as bridge/foundation support, not hand-discipline mastery | medium; teaches prerequisite reads | 4.3 | 4.4 | +0.1 | source job is broader than route title | Schema-normalize W2 as bridge_or_legacy before authoring | L2 report; Wave 5.3; W2-W6 normalization |
+| W1 | Foundation | Poker from Zero | learner_playable | strong W1 source plus Act0/spine packs | canonical with schema-legacy active content | one L0 fixture, one L1 migrated sample, and one factory-exported W1 sample; active content still schema legacy | strong but mostly inferred | present but mostly inferred | runtime/feedback plus L1/factory repair fields | strong W1 payoff, not human-validated | review needed before premium/public claims | not done | safe as W1 foundation, not 10/10 claim | high; first value proof | 6.5 | 6.6 | +0.1 | active content lacks schema-owned coverage fields and human QA | W1 schema migration/coverage after factory/validator expansion | L2 report; Wave 6.3 L1 sample; Tiny factory MVP |
+| W2 | Foundation bridge | Hand Discipline | learner_playable via campaign path; Act0 card locked | broad table-reading bridge source | bridge_or_legacy | one factory-exported bridge sample; broader content still schema legacy | partial/inferred | bridge transfer inferred | feedback/review patterns plus one factory repair field | campaign progression exists | review needed | not done | safe only as bridge/foundation support, not hand-discipline mastery | medium; teaches prerequisite reads | 4.4 | 4.5 | +0.1 | source job is broader than route title | Extend bridge_or_legacy validation before authoring | L2 report; Wave 5.3; W2-W6 normalization; Tiny factory MVP |
 | W3 | Foundation bridge | Position Thinking | learner_playable via campaign path; Act0 card locked | Preflop Framework source | bridge_or_legacy | no content-world schema fields; no L1 sample | strong/inferred preflop chain arc | chain transfer inferred | feedback exists, no source-owned repair field | campaign progression exists | review needed | not done | safe only as routed bridge, not position mastery | medium-high; useful preflop bridge | 4.8 | 4.9 | +0.1 | source job differs from route title | Schema-normalize W3 as bridge_or_legacy before coverage claims | L2 report; Wave 5.3; W2-W6 normalization |
 | W4 | Foundation bridge | Preflop Framework | learner_playable via campaign path; Act0 card locked | Bet Purpose and Price source | bridge_or_legacy | no content-world schema fields; no L1 sample | strong/inferred purpose-price coverage | action/size transfer inferred | feedback exists, no source-owned repair field | campaign progression exists | sizing/purpose review needed | not done | safe only as routed bridge, not preflop-framework mastery | medium-high; strong paid-depth value once normalized | 5.0 | 5.1 | +0.1 | route title and content job are offset | Schema-normalize W4 as bridge_or_legacy before migration | L2 report; Wave 5.3; W2-W6 normalization |
 | W5 | Developing bridge | Bet Purpose And Price | learner_playable via campaign path; Act0 card locked | Board Awareness source | bridge_or_legacy | no content-world schema fields; no L1 sample | strong/inferred board texture coverage | texture-to-action transfer inferred | recap/feedback exists, no source-owned repair field | campaign progression exists | board/draw review needed | not done | safe only as routed bridge, not bet-purpose mastery | high future premium value | 5.0 | 5.1 | +0.1 | route title and content job are offset | Schema-normalize W5 as bridge_or_legacy before factory migration | L2 report; Wave 5.3; W2-W6 normalization |
@@ -99,50 +99,47 @@ These are conservative evidence scores for decision-making, not public claims.
 
 World scores moved this wave:
 
-- W2: `4.3 -> 4.4` because the bridge/legacy migration posture is now explicit.
-- W3: `4.8 -> 4.9` because the bridge/legacy migration posture is now explicit.
-- W4: `5.0 -> 5.1` because the bridge/legacy migration posture is now explicit.
-- W5: `5.0 -> 5.1` because the bridge/legacy migration posture is now explicit.
-- W6: `4.8 -> 4.9` because the bridge/legacy migration posture is now explicit.
+- W1: `6.5 -> 6.6` because an existing source task now has a
+  deterministic factory import/export proof in schema shape.
+- W2: `4.4 -> 4.5` because one bridge_or_legacy source task now exports with
+  normalized route/content fields and validator-backed schema shape.
 
 World scores did not move where no readiness risk moved:
 
-- W1 did not gain new schema coverage, QA, or correctness evidence.
+- W3-W6 did not receive factory-exported samples.
 - W7-W10 remain locked.
 - W11-W12 remain authored but not routed.
 
 Aggregate score proposal:
 
-- W1-W12 Volume I Premium Product Readiness: `5.3 -> 5.4`.
+- W1-W12 Volume I Premium Product Readiness: `5.4 -> 5.5`.
 - Full W1-W36 Long-Horizon Readiness: unchanged at `3.0`.
-- Overall Top-1 Readiness: `5.1 -> 5.2`.
-- Architecture scalability: `7.3 -> 7.4`.
+- Overall Top-1 Readiness: `5.2 -> 5.3`.
+- Architecture scalability: `7.4 -> 7.6`.
 - Content depth: unchanged at `4.5`.
 - Learning effect: unchanged at `6.0`.
 - Monetization readiness: unchanged at `2.0`.
 
-Reason: this wave removes migration-target ambiguity for W2-W6 but does not
-author, migrate, validate, route-admit, QA, or correctness-review content.
+Reason: this wave proves a tiny deterministic import/export path for one W1
+source task and one W2 bridge task. It does not author, bulk migrate,
+route-admit, QA, correctness-review, or launch-claim content.
 
 ## 6. Active Next Action
 
 Recommended next step:
 
-`Tiny Content Factory Import/Export MVP`
+`L2/L3 Content Validator Expansion`
 
 Why:
 
-- W2-W6 now have stable migration posture:
-  `route_world_id=<same world>`, active route title as `display_world_title`,
-  current source folder as `content_owner_world_id`, `source_truth_status` as
-  `bridge_or_legacy`, and `route_gate_status` as `learner_playable` only for
-  the campaign path.
-- A tiny factory/import-export proof can now preserve route title and source
-  job separately without pretending content is launch-coverage-ready.
+- The tiny factory/import-export proof now preserves route title, content
+  owner, source truth, and migration metadata for one W1 and one W2 sample.
+- The next risk is broader validator coverage before authoring or bulk
+  migration.
 
 Must not skip:
 
-- Keep factory proof tiny.
+- Keep factory expansion validator-led.
 - Do not author new content.
 - Do not bulk-migrate W1-W6.
 - Do not open W7-W12.
