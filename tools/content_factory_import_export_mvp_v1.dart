@@ -97,6 +97,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
   final results = [
     ...samples.map(_exportSample),
     exportW1WorldCoveragePilotV1(writeFiles: false),
+    exportW1StartingHandDisciplineBatch1V1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
@@ -300,6 +301,188 @@ ContentFactoryImportExportResultV1 exportW1WorldCoveragePilotV1({
     ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
   }
   return result;
+}
+
+ContentFactoryImportExportResultV1 exportW1StartingHandDisciplineBatch1V1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w1_starting_hand_discipline_migration_batch1_v1.json',
+    fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+    fixtureLevel: 'w1_concept_family_migration_batch1',
+    writeFiles: writeFiles,
+    specs: [
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.choose_cutoff_raise_clean_start_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l05',
+        sessionId: 'w1.s05',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s05.choose_cutoff_raise_clean_start_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'clean_first_in_start_v1',
+        misconceptionId: 'passes_clean_first_in_playable_start',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.choose_small_blind_fold_weak_start_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l05',
+        sessionId: 'w1.s05',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s05.choose_small_blind_fold_weak_start_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'oop_weak_start_release_v1',
+        misconceptionId: 'continues_weak_oop_start',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s06/drills/'
+            'd.choose_raise_clean_first_in_checkpoint_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l06',
+        sessionId: 'w1.s06',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s06.choose_raise_clean_first_in_checkpoint_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'clean_first_in_start_v1',
+        misconceptionId: 'underplays_clean_strong_start',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s08/drills/'
+            'd.choose_big_blind_call_oop_defend_focus_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l08',
+        sessionId: 'w1.s08',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s08.choose_big_blind_call_oop_defend_focus_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'facing_open_continue_or_release_v1',
+        misconceptionId: 'turns_playable_defend_into_loose_raise',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s09/drills/'
+            'd.choose_raise_when_action_folds_to_you_focus_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l09',
+        sessionId: 'w1.s09',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s09.choose_raise_when_action_folds_to_you_focus_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'clean_first_in_start_v1',
+        misconceptionId: 'passes_clean_first_in_playable_start',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world1/v1/sessions/w1.s09/drills/'
+            'd.choose_fold_when_pressure_and_position_fail_focus_v1.json',
+        outputPath: '',
+        fixtureId: 'w1_starting_hand_discipline_migration_batch1_v1',
+        fixtureLevel: 'w1_concept_family_migration_batch1',
+        worldId: 'world_1',
+        routeWorldId: 'world_1',
+        displayWorldTitle: 'Poker from Zero',
+        contentOwnerWorldId: 'world_1',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w1.l09',
+        sessionId: 'w1.s09',
+        packId: 'world1_spine_campaign_v1',
+        taskId:
+            'w1.s09.choose_fold_when_pressure_and_position_fail_focus_v1.'
+            'starting_hand_batch1_v1',
+        conceptFamilyId: 'starting_hand_discipline',
+        repairFocusId: 'release_weak_or_dominated_start',
+        sameSignalGroupId: 'w1.starting_hand_discipline.clean_start_or_release',
+        transferSurfaceId: 'oop_weak_start_release_v1',
+        misconceptionId: 'continues_weak_oop_start',
+        sourceTruthStatus: 'migrated',
+        feedbackReason: null,
+        sourceJob: 'w1_starting_hand_discipline_batch1',
+        claimsTransfer: true,
+      ),
+    ],
+  );
 }
 
 ContentFactoryImportExportResultV1 exportW2BridgeSchemaMigrationPilotV1({

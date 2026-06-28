@@ -140,6 +140,84 @@ void main() {
     );
   });
 
+  test('exports W1 starting hand discipline batch from real source tasks', () {
+    final first = exportW1StartingHandDisciplineBatch1V1(writeFiles: false);
+    final second = exportW1StartingHandDisciplineBatch1V1(writeFiles: false);
+
+    expect(
+      first.outputPath,
+      endsWith('w1_starting_hand_discipline_migration_batch1_v1.json'),
+    );
+    expect(jsonEncode(first.fixture), jsonEncode(second.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      first.fixture,
+      path: first.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(first.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_1'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_1'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Poker from Zero',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_1',
+    });
+    expect(tasks.map((task) => task['route_gate_status']).toSet(), {
+      'learner_playable',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'starting_hand_discipline',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w1.starting_hand_discipline.clean_start_or_release',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'release_weak_or_dominated_start',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'clean_first_in_start_v1',
+      'facing_open_continue_or_release_v1',
+      'oop_weak_start_release_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'fold',
+      'raise',
+      'call',
+      'raise',
+      'fold',
+    ]);
+    expect(tasks.map((task) => task['validation_status']).toSet(), {
+      'source_validated',
+    });
+    expect(
+      tasks.map((task) => (task['migration_source']! as Map)['source_path']),
+      containsAll([
+        'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.choose_cutoff_raise_clean_start_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s05/drills/'
+            'd.choose_small_blind_fold_weak_start_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s06/drills/'
+            'd.choose_raise_clean_first_in_checkpoint_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s08/drills/'
+            'd.choose_big_blind_call_oop_defend_focus_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s09/drills/'
+            'd.choose_raise_when_action_folds_to_you_focus_v1.json',
+        'content/worlds/world1/v1/sessions/w1.s09/drills/'
+            'd.choose_fold_when_pressure_and_position_fail_focus_v1.json',
+      ]),
+    );
+  });
+
   test('exports W2 bridge schema migration pilot from real source tasks', () {
     final first = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
     final second = exportW2BridgeSchemaMigrationPilotV1(writeFiles: false);
@@ -438,7 +516,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(8));
+    expect(results, hasLength(9));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

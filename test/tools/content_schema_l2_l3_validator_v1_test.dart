@@ -66,6 +66,41 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports real W1 starting hand discipline batch as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_starting_hand_discipline_migration_batch1_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['starting_hand_discipline'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w1.starting_hand_discipline.clean_start_or_release'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['clean_first_in_start_v1'], 3);
+    expect(
+      world.transferSurfaceCounts['facing_open_continue_or_release_v1'],
+      1,
+    );
+    expect(world.transferSurfaceCounts['oop_weak_start_release_v1'], 2);
+    expect(world.repairFocusCounts['release_weak_or_dominated_start'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test('real W1 pilot fails L2 threshold when trimmed below five reps', () {
     final file = File(
       'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
