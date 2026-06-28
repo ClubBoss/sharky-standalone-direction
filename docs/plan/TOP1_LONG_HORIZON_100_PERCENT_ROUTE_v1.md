@@ -2,7 +2,7 @@
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.
 Created: 2026-06-28.
-Last refreshed: 2026-06-28 after W1 Bet-Size Vocabulary Correctness Repair v1.
+Last refreshed: 2026-06-28 after W1 Human QA Protocol v1.
 
 Authority note:
 
@@ -93,6 +93,10 @@ Authority note:
   PR3 fixture with beginner-safe label wording, and cleared the P1 bet-size
   blocker. It does not move scores. The next active W1 gate is W1 Human QA
   Protocol.
+- W1 Human QA Protocol v1 defines the novice QA script, rubric, thresholds,
+  severity model, and deferred execution path. It does not execute Human QA or
+  move scores. The next active non-human-blocked W1 gate is W1
+  Payoff/Progression Certification.
 
 ## 1. Strategic Verdict
 
@@ -145,20 +149,20 @@ Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 
 | Block | Audit baseline | Current after rebaseline | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
-| W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.2 | 9.2 | 3.0 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups, is an 8.0 certification-passed candidate, and has cleared the known P1 bet-size correctness boundary; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Human QA Protocol | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair |
+| W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated; Human QA protocol-ready/execution-deferred | Human QA execution when testers are available | Gap audit; Master Plan; W4-W5 review trail; W1 Human QA Protocol |
+| W1-W12 Volume I Premium Product Readiness | 4.5 | 6.2 | 9.2 | 3.0 | Launch target rebaselined to W1-W12; W1 has six real validator-backed coverage groups, is an 8.0 certification-passed candidate, cleared the known P1 bet-size correctness boundary, and has Human QA protocol-ready/execution-deferred; W2-W6 each have bridge-limited migration pilots; W7-W10 locked; W11-W12 authored but not routed | W1 Payoff/Progression Certification | Waves 5.2-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol |
 | Full W1-W36 Long-Horizon Readiness | 2.5 | 3.0 | 9.0 | 6.0 | W1-W12 now launch scope; W13-W36 deferred to post-launch/live expansion | Post-Volume I roadmap | Gap audit OP-50, OP-54; Volume I rebaseline |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 5.1 | 9.0 | 3.9 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups, passed 8.0 certification review, and cleared the known P1 bet-size repair; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Human QA Protocol | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair |
+| Content depth | 4.5 | 5.1 | 9.0 | 3.9 | W1-W6 content-depth risk classified; W1 has six real validator-backed coverage groups, passed 8.0 certification review, cleared the known P1 bet-size repair, and has Human QA protocol-ready/execution-deferred; W2-W6 have bridge-limited migration pilots; broad canonical W1-W6 coverage still pending | W1 Payoff/Progression Certification | Wave 5.3 audit; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, W1 bet-size repair, and W2-W6 bridge migration pilots exist | W1 Human QA Protocol | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair |
+| Architecture scalability | 6.5 | 8.1 | 8.8 | 0.7 | Schema, L0 validation, L1 migrated sample, tiny import/export proof, L2/L3 checks, six real W1 coverage groups, W1 explicit coverage fixture list, W1 bet-size repair, W1 Human QA protocol, and W2-W6 bridge migration pilots exist | W1 Payoff/Progression Certification | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.3; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 6.0 | 9.0 | 3.0 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs, passed 8.0 certification review, and cleared the known P1 bet-size correctness repair; W2-W6 bridge-limited migration proof exists, but product proof is still thin beyond W1-W4 | W1 Human QA Protocol | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair |
+| Overall top-1 readiness | 4.5 | 6.0 | 9.0 | 3.0 | Launch scope is disciplined around Volume I; W1 now has six coverage proofs, passed 8.0 certification review, cleared the known P1 bet-size correctness repair, and has Human QA protocol-ready/execution-deferred; W2-W6 bridge-limited migration proof exists, but product proof is still thin beyond W1-W4 | W1 Payoff/Progression Certification | Gap audit plus Waves 5.1-6.3; Volume I rebaseline; Tiny factory MVP; L2/L3 validator; W1 coverage pilot; W1-W6 schema migration pilot; W2-W6 bridge expansion; W1-W6 consolidation; W1 certification plan; W1 starting-hand batch; W1 Coverage Expansion PR2; W1 Coverage Expansion PR3; W1 8.0 Certification Review; W1 Poker Correctness Review Protocol; W1 Bet-Size Vocabulary Correctness Repair; W1 Human QA Protocol |
 
 Score delta explanation:
 
@@ -181,6 +185,9 @@ Score delta explanation:
 - W1 Bet-Size Vocabulary Correctness Repair v1 proposes no score movement. It
   clears the known P1 bet-size source boundary but does not complete human QA,
   payoff/progression proof, or broad migration.
+- W1 Human QA Protocol v1 proposes no score movement. It makes the Human QA
+  gate protocol-ready but does not execute Human QA, produce live novice
+  evidence, or move W1 toward 9.0 by itself.
 - W1-W12 Volume I Premium Product Readiness is now tracked separately at
   `6.2`. It is the active launch-readiness KPI.
 - Full W1-W36 Long-Horizon Readiness is now `3.0`; W13-W36 are no longer
@@ -379,7 +386,7 @@ Major remaining gaps:
 | 5.1 Canonical Telemetry Instrumentation | Emit local canonical learning events | OP-04 | Local Act0 telemetry only | Server sink, privacy, monetization | Accepted verdict exists | Wave 5.1 artifact/tests | Telemetry | +1.3 telemetry | None | done |
 | 5.2 W7-W12 Route Truth Reconciliation | Classify actual W7-W12 route truth | OP-01 | Audit/docs/route matrix | Content authoring, product code unless explicitly admitted | W7-W12 status matrix and blockers | Review artifact + graphify/diff checks | Full readiness, content | Risk classified | 5.1 | done |
 | 5.3 W1-W6 Content Depth / Same-Signal Coverage Audit | Check coverage illusion in W1-W6 | OP-20, OP-65 | Audit content coverage | New content writing | Family coverage matrix | Review artifact + validators if scoped | Content depth, learning | Risk classified | 5.2 or explicit retarget | done |
-| 5.4 Human QA Protocol / Deferred Gate Lock | Lock novice QA protocol while participants unavailable | OP-03 | Protocol/docs | Running public beta, fake QA | Script, observation template, evidence path | Docs checks | W1-W4 confidence | 5.2/5.3 findings | planned |
+| 5.4 Human QA Protocol / Deferred Gate Lock | Lock novice QA protocol while participants unavailable | OP-03 | Protocol/docs | Running public beta, fake QA | Script, observation template, evidence path | Docs checks | W1-W4 confidence | 5.2/5.3 findings | done |
 | 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.3 architecture | Stage A | done |
 | 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 architecture | 6.1 | done |
 | 6.3 Content Factory MVP / L1 Migrated Sample Pilot | Build minimal authoring pipeline and prove one migrated sample | OP-10 | MVP factory, one validator-backed migrated sample, L1 migrated content check | W7-W12 mass generation, W1-W6 authoring, route opening | One valid generated/imported slice and L1 check | Focused tests + docs | Architecture, content | +0.2 architecture | 6.1-6.2 | done |
@@ -555,10 +562,10 @@ modestly unless they remove a blocker.
 
 | Blocker | Description | Affected scores | Severity | Required wave | Codex alone? | Human/business/expert input |
 | --- | --- | --- | --- | --- | --- | --- |
-| Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
+| Human novice QA execution unavailable | Human QA protocol is ready, but participants are not currently available; gate execution is deferred, not removed | W1-W4, learning, store | Critical future gate | Human QA execution wave when testers are available | No | Human participants |
 | W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission/content proof | Volume I, content | Critical future gate | W7-W12 admission/content lock | Mostly yes | Product decision if reopened |
-| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Human QA Protocol | Partly | Human participants |
-| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, and W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Human QA Protocol | Partly | Human participants and content author feedback useful |
+| Real migrated coverage incomplete | Schema, L0 validation, L1 sample, tiny factory proof, L2/L3 checks, six W1 coverage groups, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, and W2-W6 bridge pilots exist; broad canonical W1-W6 coverage is still missing | Volume I, content, learning | High | W1 Payoff/Progression Certification | Yes | Human participants later |
+| Content factory not ready for bulk production | Tiny import/export proof exists, plus six W1 coverage groups, explicit W1 coverage fixture selection, W1 8.0 certification review, W1 correctness protocol, W1 bet-size repair, W1 Human QA protocol, and W2-W6 bridge pilots, but the factory is not yet ready for broad production or canonical coverage claims | Architecture, content | High | W1 Payoff/Progression Certification | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -568,7 +575,6 @@ modestly unless they remove a blocker.
 | Poker correctness validation absent | W7+ advice needs validation | Trust, moat | Critical before advanced | 11.1-11.2 | Partly | Expert/solver input |
 | Content authoring too code-bound | Dart content does not scale | Architecture | High | 6.x | Yes | Content author input |
 | Advanced table states not ready | SPR/multi-street/tournament context absent | Content/table | High | 9.x | Yes | Poker validation |
-| Human QA Protocol not locked | Human QA remains a hard future gate before external beta or claims | W1-W4, learning, store | Critical future gate | 5.4 | Partly | Human participants |
 
 ## 10. Deferred / Not Now Register
 
@@ -636,10 +642,11 @@ Closed:
 - W1 8.0 Certification Review.
 - W1 Poker Correctness Review Protocol.
 - W1 Bet-Size Vocabulary Correctness Repair.
+- W1 Human QA Protocol.
 
 Active next wave:
 
-- W1 Human QA Protocol.
+- W1 Payoff/Progression Certification.
 
 Must not skip:
 
@@ -672,7 +679,7 @@ Current strategic route:
 
 Latest accepted baseline after this wave:
 
-- W1 Bet-Size Vocabulary Correctness Repair v1.
+- W1 Human QA Protocol v1.
 
 Active SSOT docs:
 
@@ -694,11 +701,11 @@ Current score summary:
 
 Recommended next wave:
 
-- W1 Human QA Protocol.
+- W1 Payoff/Progression Certification.
 
 Top blockers:
 
-- Human novice QA unavailable.
+- Human novice QA execution unavailable.
 - W7-W12 route admission locked until later proof.
 - Real migrated W1-W6 coverage incomplete.
 - Content factory still tiny and not ready for bulk production.
