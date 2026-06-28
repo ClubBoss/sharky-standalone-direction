@@ -388,6 +388,26 @@ class ProgressService {
   static final List<String> campaignPackIdsV1 = List<String>.unmodifiable(
     campaign_registry.kCampaignPackIdsV1,
   );
+  static const String w7W10LearnerRouteGateTerminalPackIdV1 =
+      'world6_spine_followup_v1_b2';
+  static const Set<String> _w7W10LearnerRouteLockedPackIdsV1 = <String>{
+    'world7_spine_campaign_v1',
+    'world7_spine_followup_v1_b0',
+    'world7_spine_followup_v1_b1',
+    'world7_spine_followup_v1_b2',
+    'world8_spine_campaign_v1',
+    'world8_spine_followup_v1_b0',
+    'world8_spine_followup_v1_b1',
+    'world8_spine_followup_v1_b2',
+    'world9_spine_campaign_v1',
+    'world9_spine_followup_v1_b0',
+    'world9_spine_followup_v1_b1',
+    'world9_spine_followup_v1_b2',
+    'world10_spine_campaign_v1',
+    'world10_spine_followup_v1_b0',
+    'world10_spine_followup_v1_b1',
+    'world10_spine_followup_v1_b2',
+  };
   static const int bankrollCap = 100;
   static const int bankrollRegenIntervalMinutes = 60;
   static const int bankrollRegenAmount = 10;
@@ -2994,6 +3014,11 @@ class ProgressService {
     return campaign_registry.isCampaignPackIdV1(packId);
   }
 
+  static bool _isW7W10LearnerRouteLockedPackIdV1(String packId) {
+    final normalized = packId.trim().toLowerCase();
+    return _w7W10LearnerRouteLockedPackIdsV1.contains(normalized);
+  }
+
   static Future<int> totalHandsInCampaignV1() async {
     final calibrationCompleted = await isSpineCalibrationCompletedV1();
     final band =
@@ -3168,6 +3193,9 @@ class ProgressService {
   static Future<String> getNextSpinePackToRunV1() async {
     final active = await getSpineActivePackIdV1();
     if (active != null) {
+      if (_isW7W10LearnerRouteLockedPackIdV1(active)) {
+        return w7W10LearnerRouteGateTerminalPackIdV1;
+      }
       return active;
     }
 
@@ -3248,57 +3276,7 @@ class ProgressService {
                 if (!await isSpinePackCompletedV1(world6Followup)) {
                   return world6Followup;
                 }
-                final world7CalibrationCompleted =
-                    await isWorld7CalibrationCompletedV1();
-                if (world7CalibrationCompleted) {
-                  final world7Followup = await _resolveAdaptiveFollowupPackV1(
-                    world: 7,
-                    fallbackPackId: world7FollowupPackIdForBandV1(band),
-                    focus: routingFocus,
-                  );
-                  if (!await isSpinePackCompletedV1(world7Followup)) {
-                    return world7Followup;
-                  }
-                  final world8CalibrationCompleted =
-                      await isWorld8CalibrationCompletedV1();
-                  if (world8CalibrationCompleted) {
-                    final world8Followup = await _resolveAdaptiveFollowupPackV1(
-                      world: 8,
-                      fallbackPackId: world8FollowupPackIdForBandV1(band),
-                      focus: routingFocus,
-                    );
-                    if (!await isSpinePackCompletedV1(world8Followup)) {
-                      return world8Followup;
-                    }
-                    final world9CalibrationCompleted =
-                        await isWorld9CalibrationCompletedV1();
-                    if (world9CalibrationCompleted) {
-                      final world9Followup =
-                          await _resolveAdaptiveFollowupPackV1(
-                            world: 9,
-                            fallbackPackId: world9FollowupPackIdForBandV1(band),
-                            focus: routingFocus,
-                          );
-                      if (!await isSpinePackCompletedV1(world9Followup)) {
-                        return world9Followup;
-                      }
-                      final world10CalibrationCompleted =
-                          await isWorld10CalibrationCompletedV1();
-                      if (world10CalibrationCompleted) {
-                        final selectedTrack =
-                            await getWorld10TrackChoiceV1() ??
-                            world10TrackChoiceMixedV1;
-                        return world10TrackEntryPackIdForChoiceV1(
-                          selectedTrack,
-                        );
-                      }
-                      return 'world10_spine_campaign_v1';
-                    }
-                    return 'world9_spine_campaign_v1';
-                  }
-                  return 'world8_spine_campaign_v1';
-                }
-                return 'world7_spine_campaign_v1';
+                return w7W10LearnerRouteGateTerminalPackIdV1;
               }
               return 'world6_spine_campaign_v1';
             }

@@ -12553,7 +12553,7 @@ void main() {
     expect(
       find.descendant(
         of: header,
-        matching: find.text('W1-W6 available · W7-W10 current campaign'),
+        matching: find.text('W1-W6 available - W7-W10 locked preview'),
       ),
       findsOneWidget,
     );

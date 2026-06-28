@@ -66,10 +66,7 @@ void main() {
     await tester.pumpWidget(const AppRoot());
     final home = find.byKey(const Key('act0_shell_home_screen'));
     final currentRouteCta = find.byKey(const Key('act0_shell_main_cta'));
-    await _pumpUntilAny(tester, <Finder>[
-      home,
-      currentRouteCta,
-    ]);
+    await _pumpUntilAny(tester, <Finder>[home, currentRouteCta]);
     expect(home, findsOneWidget);
     expect(currentRouteCta, findsOneWidget);
 
@@ -84,7 +81,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('world8 routing selects world8 as the next deterministic pack', (
+  testWidgets('world8 routing is blocked by active learner route gate', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(<String, Object>{
@@ -107,7 +104,7 @@ void main() {
       'world8_calibration_completed_v1': false,
     });
     final expectedPackId = await ProgressService.getNextSpinePackToRunV1();
-    expect(expectedPackId, 'world8_spine_campaign_v1');
+    expect(expectedPackId, 'world6_spine_followup_v1_b2');
 
     await tester.pumpWidget(
       const MaterialApp(home: UniversalIntakePlanScreen()),
@@ -116,6 +113,7 @@ void main() {
     expect(find.byKey(const Key('today_plan_screen')), findsOneWidget);
     expect(find.byKey(const Key('today_plan_start_cta')), findsOneWidget);
     expect(find.byKey(const Key('spine_campaign_pack_id_value')), findsNothing);
+    expect(find.textContaining('world6_spine_followup_v1_b2'), findsNothing);
     expect(find.textContaining('world8_spine_campaign_v1'), findsNothing);
     expect(tester.takeException(), isNull);
   });

@@ -2495,8 +2495,8 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     Text(
                       _learnCopyV1(
                         context,
-                        en: 'W1-W6 available · W7-W10 current campaign',
-                        ru: 'W1-W6 доступны · W7-W10 — текущая кампания',
+                        en: 'W1-W6 available - W7-W10 locked preview',
+                        ru: 'W1-W6 available - W7-W10 locked preview',
                       ),
                       key: const Key(
                         'act0_shell_levels_selected_world_status_line',
