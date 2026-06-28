@@ -98,6 +98,10 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     ...samples.map(_exportSample),
     exportW1WorldCoveragePilotV1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
   ];
   if (writeFiles) {
     Directory(_outputDir).createSync(recursive: true);
@@ -413,6 +417,433 @@ ContentFactoryImportExportResultV1 exportW2BridgeSchemaMigrationPilotV1({
   return result;
 }
 
+ContentFactoryImportExportResultV1 exportW3BridgeSchemaMigrationPilotV1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+    fixtureId: 'w3_bridge_or_legacy_schema_migration_pilot_v1',
+    fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+    writeFiles: writeFiles,
+    specs: [
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world3/v1/sessions/w3.s06/drills/'
+            'd.choose_raise_mixed_context_checkpoint_v1.json',
+        outputPath: '',
+        fixtureId: 'w3_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_3',
+        routeWorldId: 'world_3',
+        displayWorldTitle: 'Position Thinking',
+        contentOwnerWorldId: 'world_3',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w3.l06',
+        sessionId: 'w3.s06',
+        packId: 'world3_spine_campaign_v1',
+        taskId:
+            'w3.s06.choose_raise_mixed_context_checkpoint_v1.bridge_pilot_v1',
+        conceptFamilyId: 'preflop_framework_bridge',
+        repairFocusId: 'preflop_frame_action_default',
+        sameSignalGroupId: 'w3.preflop_framework.bridge_action_default',
+        transferSurfaceId: 'late_position_open_v1',
+        misconceptionId: 'acts_without_preflop_frame',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'preflop_framework_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world3/v1/sessions/w3.s03/drills/'
+            'd.choose_call_preflop_checkpoint_v1.json',
+        outputPath: '',
+        fixtureId: 'w3_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_3',
+        routeWorldId: 'world_3',
+        displayWorldTitle: 'Position Thinking',
+        contentOwnerWorldId: 'world_3',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w3.l03',
+        sessionId: 'w3.s03',
+        packId: 'world3_spine_campaign_v1',
+        taskId: 'w3.s03.choose_call_preflop_checkpoint_v1.bridge_pilot_v1',
+        conceptFamilyId: 'preflop_framework_bridge',
+        repairFocusId: 'preflop_frame_action_default',
+        sameSignalGroupId: 'w3.preflop_framework.bridge_action_default',
+        transferSurfaceId: 'facing_open_continue_v1',
+        misconceptionId: 'acts_without_preflop_frame',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'preflop_framework_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world3/v1/sessions/w3.s10/drills/'
+            'd.choose_fold_final_preflop_checkpoint_v1.json',
+        outputPath: '',
+        fixtureId: 'w3_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_3',
+        routeWorldId: 'world_3',
+        displayWorldTitle: 'Position Thinking',
+        contentOwnerWorldId: 'world_3',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w3.l10',
+        sessionId: 'w3.s10',
+        packId: 'world3_spine_campaign_v1',
+        taskId:
+            'w3.s10.choose_fold_final_preflop_checkpoint_v1.bridge_pilot_v1',
+        conceptFamilyId: 'preflop_framework_bridge',
+        repairFocusId: 'preflop_frame_action_default',
+        sameSignalGroupId: 'w3.preflop_framework.bridge_action_default',
+        transferSurfaceId: 'earlier_position_release_v1',
+        misconceptionId: 'acts_without_preflop_frame',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'preflop_framework_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW4BridgeSchemaMigrationPilotV1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w4_bridge_or_legacy_schema_migration_pilot_v1.json',
+    fixtureId: 'w4_bridge_or_legacy_schema_migration_pilot_v1',
+    fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+    writeFiles: writeFiles,
+    specs: [
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+            'd.choose_raise_focus.json',
+        outputPath: '',
+        fixtureId: 'w4_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_4',
+        routeWorldId: 'world_4',
+        displayWorldTitle: 'Preflop Framework',
+        contentOwnerWorldId: 'world_4',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w4.l10',
+        sessionId: 'w4.s10',
+        packId: 'world4_spine_campaign_v1',
+        taskId: 'w4.s10.choose_raise_focus.bridge_pilot_v1',
+        conceptFamilyId: 'bet_purpose_price_bridge',
+        repairFocusId: 'purpose_price_action_default',
+        sameSignalGroupId: 'w4.bet_purpose_price.bridge_action_default',
+        transferSurfaceId: 'denial_raise_v1',
+        misconceptionId: 'chooses_size_without_purpose_or_price',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'bet_purpose_price_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+            'd.choose_call_focus.json',
+        outputPath: '',
+        fixtureId: 'w4_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_4',
+        routeWorldId: 'world_4',
+        displayWorldTitle: 'Preflop Framework',
+        contentOwnerWorldId: 'world_4',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w4.l10',
+        sessionId: 'w4.s10',
+        packId: 'world4_spine_campaign_v1',
+        taskId: 'w4.s10.choose_call_focus.bridge_pilot_v1',
+        conceptFamilyId: 'bet_purpose_price_bridge',
+        repairFocusId: 'purpose_price_action_default',
+        sameSignalGroupId: 'w4.bet_purpose_price.bridge_action_default',
+        transferSurfaceId: 'control_call_v1',
+        misconceptionId: 'chooses_size_without_purpose_or_price',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'bet_purpose_price_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+            'd.choose_fold_focus.json',
+        outputPath: '',
+        fixtureId: 'w4_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_4',
+        routeWorldId: 'world_4',
+        displayWorldTitle: 'Preflop Framework',
+        contentOwnerWorldId: 'world_4',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w4.l10',
+        sessionId: 'w4.s10',
+        packId: 'world4_spine_campaign_v1',
+        taskId: 'w4.s10.choose_fold_focus.bridge_pilot_v1',
+        conceptFamilyId: 'bet_purpose_price_bridge',
+        repairFocusId: 'purpose_price_action_default',
+        sameSignalGroupId: 'w4.bet_purpose_price.bridge_action_default',
+        transferSurfaceId: 'release_when_denial_gone_v1',
+        misconceptionId: 'chooses_size_without_purpose_or_price',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'bet_purpose_price_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW5BridgeSchemaMigrationPilotV1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w5_bridge_or_legacy_schema_migration_pilot_v1.json',
+    fixtureId: 'w5_bridge_or_legacy_schema_migration_pilot_v1',
+    fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+    writeFiles: writeFiles,
+    specs: [
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+            'd.classify_texture_synthesis_dry_raise_v1.json',
+        outputPath: '',
+        fixtureId: 'w5_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_5',
+        routeWorldId: 'world_5',
+        displayWorldTitle: 'Bet Purpose And Price',
+        contentOwnerWorldId: 'world_5',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w5.l10',
+        sessionId: 'w5.s10',
+        packId: 'world5_spine_campaign_v1',
+        taskId:
+            'w5.s10.classify_texture_synthesis_dry_raise_v1.bridge_pilot_v1',
+        conceptFamilyId: 'board_awareness_bridge',
+        repairFocusId: 'texture_before_action',
+        sameSignalGroupId: 'w5.board_awareness.bridge_texture_action_default',
+        transferSurfaceId: 'dry_texture_pressure_v1',
+        misconceptionId: 'acts_without_texture_read',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'board_awareness_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+            'd.classify_texture_synthesis_connected_call_v1.json',
+        outputPath: '',
+        fixtureId: 'w5_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_5',
+        routeWorldId: 'world_5',
+        displayWorldTitle: 'Bet Purpose And Price',
+        contentOwnerWorldId: 'world_5',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w5.l10',
+        sessionId: 'w5.s10',
+        packId: 'world5_spine_campaign_v1',
+        taskId:
+            'w5.s10.classify_texture_synthesis_connected_call_v1.bridge_pilot_v1',
+        conceptFamilyId: 'board_awareness_bridge',
+        repairFocusId: 'texture_before_action',
+        sameSignalGroupId: 'w5.board_awareness.bridge_texture_action_default',
+        transferSurfaceId: 'connected_texture_control_v1',
+        misconceptionId: 'acts_without_texture_read',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'board_awareness_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+            'd.classify_texture_synthesis_wet_fold_v1.json',
+        outputPath: '',
+        fixtureId: 'w5_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_5',
+        routeWorldId: 'world_5',
+        displayWorldTitle: 'Bet Purpose And Price',
+        contentOwnerWorldId: 'world_5',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w5.l10',
+        sessionId: 'w5.s10',
+        packId: 'world5_spine_campaign_v1',
+        taskId: 'w5.s10.classify_texture_synthesis_wet_fold_v1.bridge_pilot_v1',
+        conceptFamilyId: 'board_awareness_bridge',
+        repairFocusId: 'texture_before_action',
+        sameSignalGroupId: 'w5.board_awareness.bridge_texture_action_default',
+        transferSurfaceId: 'wet_texture_release_v1',
+        misconceptionId: 'acts_without_texture_read',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'board_awareness_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW6BridgeSchemaMigrationPilotV1({
+  bool writeFiles = false,
+}) {
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w6_bridge_or_legacy_schema_migration_pilot_v1.json',
+    fixtureId: 'w6_bridge_or_legacy_schema_migration_pilot_v1',
+    fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+    writeFiles: writeFiles,
+    specs: [
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s10/drills/'
+            'd.choose_raise_synthesis.json',
+        outputPath: '',
+        fixtureId: 'w6_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_6',
+        routeWorldId: 'world_6',
+        displayWorldTitle: 'Board And Draws',
+        contentOwnerWorldId: 'world_6',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w6.l10',
+        sessionId: 'w6.s10',
+        packId: 'world6_spine_campaign_v1',
+        taskId: 'w6.s10.choose_raise_synthesis.bridge_pilot_v1',
+        conceptFamilyId: 'range_thinking_bridge',
+        repairFocusId: 'range_before_action',
+        sameSignalGroupId: 'w6.range_thinking.bridge_range_action_default',
+        transferSurfaceId: 'range_strength_raise_v1',
+        misconceptionId: 'acts_from_hand_only',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'range_thinking_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s10/drills/'
+            'd.choose_call_synthesis.json',
+        outputPath: '',
+        fixtureId: 'w6_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_6',
+        routeWorldId: 'world_6',
+        displayWorldTitle: 'Board And Draws',
+        contentOwnerWorldId: 'world_6',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w6.l10',
+        sessionId: 'w6.s10',
+        packId: 'world6_spine_campaign_v1',
+        taskId: 'w6.s10.choose_call_synthesis.bridge_pilot_v1',
+        conceptFamilyId: 'range_thinking_bridge',
+        repairFocusId: 'range_before_action',
+        sameSignalGroupId: 'w6.range_thinking.bridge_range_action_default',
+        transferSurfaceId: 'equity_realization_call_v1',
+        misconceptionId: 'acts_from_hand_only',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'range_thinking_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+      _FactorySampleSpecV1(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s03/drills/'
+            'd.choose_fold_trap.json',
+        outputPath: '',
+        fixtureId: 'w6_bridge_or_legacy_schema_migration_pilot_v1',
+        fixtureLevel: 'w2_w6_bridge_coverage_expansion_pilot',
+        worldId: 'world_6',
+        routeWorldId: 'world_6',
+        displayWorldTitle: 'Board And Draws',
+        contentOwnerWorldId: 'world_6',
+        routeGateStatus: 'learner_playable',
+        lessonId: 'w6.l03',
+        sessionId: 'w6.s03',
+        packId: 'world6_spine_campaign_v1',
+        taskId: 'w6.s03.choose_fold_trap.bridge_pilot_v1',
+        conceptFamilyId: 'range_thinking_bridge',
+        repairFocusId: 'range_before_action',
+        sameSignalGroupId: 'w6.range_thinking.bridge_range_action_default',
+        transferSurfaceId: 'range_weak_release_v1',
+        misconceptionId: 'acts_from_hand_only',
+        sourceTruthStatus: 'bridge_or_legacy',
+        feedbackReason: null,
+        sourceJob: 'range_thinking_bridge',
+        claimsTransfer: true,
+        safeClaimStatus: 'limited_bridge',
+        launchCoverageClaimed: false,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 _exportAggregateFixture({
+  required String outputPath,
+  required String fixtureId,
+  required String fixtureLevel,
+  required List<_FactorySampleSpecV1> specs,
+  required bool writeFiles,
+}) {
+  final tasks = specs
+      .map((spec) => _exportSample(spec).task!)
+      .toList(growable: false);
+  final fixture = <String, Object?>{
+    'schema_version': _schemaVersion,
+    'fixture_id': fixtureId,
+    'fixture_level': fixtureLevel,
+    'generated_by': 'content_factory_import_export_mvp_v1',
+    'tasks': tasks,
+  };
+  final result = ContentFactoryImportExportResultV1(
+    outputPath: outputPath,
+    fixture: fixture,
+  );
+
+  if (writeFiles) {
+    Directory(_outputDir).createSync(recursive: true);
+    File(
+      result.outputPath,
+    ).writeAsStringSync('${_prettyJson.convert(result.fixture)}\n');
+  }
+  return result;
+}
+
 ContentFactoryImportExportResultV1 _exportSample(_FactorySampleSpecV1 spec) {
   final sourceFile = File(spec.sourcePath);
   if (!sourceFile.existsSync()) {
@@ -508,6 +939,10 @@ String _expectedAction(Map<String, Object?> source, String path) {
   if (expected is Map) {
     final actionId = expected['actionId'];
     if (actionId is String && actionId.isNotEmpty) return actionId;
+  }
+  final expectedAction = source['expected_action'];
+  if (expectedAction is String && expectedAction.isNotEmpty) {
+    return expectedAction;
   }
   throw FormatException('source task missing expected.actionId', path);
 }

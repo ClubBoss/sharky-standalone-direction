@@ -210,6 +210,171 @@ void main() {
   });
 
   test(
+    'exports W3-W6 bridge schema migration pilots from real source tasks',
+    () {
+      final pilots = [
+        _BridgePilotExpectation(
+          result: exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
+          secondResult: exportW3BridgeSchemaMigrationPilotV1(writeFiles: false),
+          outputPath: 'w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+          worldId: 'world_3',
+          displayWorldTitle: 'Position Thinking',
+          conceptFamilyId: 'preflop_framework_bridge',
+          sameSignalGroupId: 'w3.preflop_framework.bridge_action_default',
+          repairFocusId: 'preflop_frame_action_default',
+          transferSurfaceIds: {
+            'late_position_open_v1',
+            'facing_open_continue_v1',
+            'earlier_position_release_v1',
+          },
+          correctActions: ['raise', 'call', 'fold'],
+          sourcePaths: {
+            'content/worlds/world3/v1/sessions/w3.s06/drills/'
+                'd.choose_raise_mixed_context_checkpoint_v1.json',
+            'content/worlds/world3/v1/sessions/w3.s03/drills/'
+                'd.choose_call_preflop_checkpoint_v1.json',
+            'content/worlds/world3/v1/sessions/w3.s10/drills/'
+                'd.choose_fold_final_preflop_checkpoint_v1.json',
+          },
+        ),
+        _BridgePilotExpectation(
+          result: exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
+          secondResult: exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
+          outputPath: 'w4_bridge_or_legacy_schema_migration_pilot_v1.json',
+          worldId: 'world_4',
+          displayWorldTitle: 'Preflop Framework',
+          conceptFamilyId: 'bet_purpose_price_bridge',
+          sameSignalGroupId: 'w4.bet_purpose_price.bridge_action_default',
+          repairFocusId: 'purpose_price_action_default',
+          transferSurfaceIds: {
+            'denial_raise_v1',
+            'control_call_v1',
+            'release_when_denial_gone_v1',
+          },
+          correctActions: ['raise', 'call', 'fold'],
+          sourcePaths: {
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+                'd.choose_raise_focus.json',
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+                'd.choose_call_focus.json',
+            'content/worlds/world4/v1/sessions/w4.s10/drills/'
+                'd.choose_fold_focus.json',
+          },
+        ),
+        _BridgePilotExpectation(
+          result: exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
+          secondResult: exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
+          outputPath: 'w5_bridge_or_legacy_schema_migration_pilot_v1.json',
+          worldId: 'world_5',
+          displayWorldTitle: 'Bet Purpose And Price',
+          conceptFamilyId: 'board_awareness_bridge',
+          sameSignalGroupId: 'w5.board_awareness.bridge_texture_action_default',
+          repairFocusId: 'texture_before_action',
+          transferSurfaceIds: {
+            'dry_texture_pressure_v1',
+            'connected_texture_control_v1',
+            'wet_texture_release_v1',
+          },
+          correctActions: ['raise', 'call', 'fold'],
+          sourcePaths: {
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+                'd.classify_texture_synthesis_dry_raise_v1.json',
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+                'd.classify_texture_synthesis_connected_call_v1.json',
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+                'd.classify_texture_synthesis_wet_fold_v1.json',
+          },
+        ),
+        _BridgePilotExpectation(
+          result: exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
+          secondResult: exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
+          outputPath: 'w6_bridge_or_legacy_schema_migration_pilot_v1.json',
+          worldId: 'world_6',
+          displayWorldTitle: 'Board And Draws',
+          conceptFamilyId: 'range_thinking_bridge',
+          sameSignalGroupId: 'w6.range_thinking.bridge_range_action_default',
+          repairFocusId: 'range_before_action',
+          transferSurfaceIds: {
+            'range_strength_raise_v1',
+            'equity_realization_call_v1',
+            'range_weak_release_v1',
+          },
+          correctActions: ['raise', 'call', 'fold'],
+          sourcePaths: {
+            'content/worlds/world6/v1/sessions/w6.s10/drills/'
+                'd.choose_raise_synthesis.json',
+            'content/worlds/world6/v1/sessions/w6.s10/drills/'
+                'd.choose_call_synthesis.json',
+            'content/worlds/world6/v1/sessions/w6.s03/drills/'
+                'd.choose_fold_trap.json',
+          },
+        ),
+      ];
+
+      for (final pilot in pilots) {
+        expect(pilot.result.outputPath, endsWith(pilot.outputPath));
+        expect(
+          jsonEncode(pilot.result.fixture),
+          jsonEncode(pilot.secondResult.fixture),
+        );
+
+        final validation = validateContentSchemaFoundationMapV1(
+          pilot.result.fixture,
+          path: pilot.result.outputPath,
+        );
+        expect(validation.errors, isEmpty);
+        expect(validation.tasksChecked, 3);
+        expect(validation.coverageCountableTasks, 3);
+
+        final tasks = _tasks(pilot.result.fixture);
+        expect(tasks.map((task) => task['task_id']).toSet(), hasLength(3));
+        expect(tasks.map((task) => task['world_id']).toSet(), {pilot.worldId});
+        expect(tasks.map((task) => task['route_world_id']).toSet(), {
+          pilot.worldId,
+        });
+        expect(tasks.map((task) => task['display_world_title']).toSet(), {
+          pilot.displayWorldTitle,
+        });
+        expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+          pilot.worldId,
+        });
+        expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+          'bridge_or_legacy',
+        });
+        expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+          'limited_bridge',
+        });
+        expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+          false,
+        });
+        expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+          pilot.conceptFamilyId,
+        });
+        expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+          pilot.sameSignalGroupId,
+        });
+        expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+          pilot.repairFocusId,
+        });
+        expect(
+          tasks.map((task) => task['transfer_surface_id']).toSet(),
+          pilot.transferSurfaceIds,
+        );
+        expect(
+          tasks.map((task) => task['correct_action']).toList(),
+          pilot.correctActions,
+        );
+        expect(
+          tasks.map(
+            (task) => (task['migration_source']! as Map)['source_path'],
+          ),
+          containsAll(pilot.sourcePaths),
+        );
+      }
+    },
+  );
+
+  test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
       final fixture = exportTinyContentFactorySamplesV1(
@@ -273,9 +438,37 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(4));
+    expect(results, hasLength(8));
     expect(File(sourcePath).readAsStringSync(), before);
   });
+}
+
+class _BridgePilotExpectation {
+  const _BridgePilotExpectation({
+    required this.result,
+    required this.secondResult,
+    required this.outputPath,
+    required this.worldId,
+    required this.displayWorldTitle,
+    required this.conceptFamilyId,
+    required this.sameSignalGroupId,
+    required this.repairFocusId,
+    required this.transferSurfaceIds,
+    required this.correctActions,
+    required this.sourcePaths,
+  });
+
+  final ContentFactoryImportExportResultV1 result;
+  final ContentFactoryImportExportResultV1 secondResult;
+  final String outputPath;
+  final String worldId;
+  final String displayWorldTitle;
+  final String conceptFamilyId;
+  final String sameSignalGroupId;
+  final String repairFocusId;
+  final Set<String> transferSurfaceIds;
+  final List<String> correctActions;
+  final Set<String> sourcePaths;
 }
 
 Map<String, Object?> _singleTask(Map<String, Object?> fixture) {

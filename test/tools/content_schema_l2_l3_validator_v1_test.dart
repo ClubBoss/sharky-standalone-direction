@@ -147,6 +147,68 @@ void main() {
     expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
   });
 
+  test('reports W3-W6 bridge expansion fixtures as bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w4_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w5_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w6_bridge_or_legacy_schema_migration_pilot_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    _expectBridgeWorldReport(
+      result.worldReports['world_3']!,
+      conceptFamilyId: 'preflop_framework_bridge',
+      sameSignalGroupId: 'w3.preflop_framework.bridge_action_default',
+      repairFocusId: 'preflop_frame_action_default',
+      transferSurfaceIds: {
+        'late_position_open_v1',
+        'facing_open_continue_v1',
+        'earlier_position_release_v1',
+      },
+    );
+    _expectBridgeWorldReport(
+      result.worldReports['world_4']!,
+      conceptFamilyId: 'bet_purpose_price_bridge',
+      sameSignalGroupId: 'w4.bet_purpose_price.bridge_action_default',
+      repairFocusId: 'purpose_price_action_default',
+      transferSurfaceIds: {
+        'denial_raise_v1',
+        'control_call_v1',
+        'release_when_denial_gone_v1',
+      },
+    );
+    _expectBridgeWorldReport(
+      result.worldReports['world_5']!,
+      conceptFamilyId: 'board_awareness_bridge',
+      sameSignalGroupId: 'w5.board_awareness.bridge_texture_action_default',
+      repairFocusId: 'texture_before_action',
+      transferSurfaceIds: {
+        'dry_texture_pressure_v1',
+        'connected_texture_control_v1',
+        'wet_texture_release_v1',
+      },
+    );
+    _expectBridgeWorldReport(
+      result.worldReports['world_6']!,
+      conceptFamilyId: 'range_thinking_bridge',
+      sameSignalGroupId: 'w6.range_thinking.bridge_range_action_default',
+      repairFocusId: 'range_before_action',
+      transferSurfaceIds: {
+        'range_strength_raise_v1',
+        'equity_realization_call_v1',
+        'range_weak_release_v1',
+      },
+    );
+  });
+
   test('blocks bridge pilot launch coverage claims', () {
     final file = File(
       'test/fixtures/content_factory_mvp/'
@@ -170,6 +232,41 @@ void main() {
         'world_2 bridge_or_legacy content must not claim launch coverage',
       ),
     );
+  });
+
+  test('blocks W3-W6 bridge expansion launch coverage claims', () {
+    final tasks = <Object?>[];
+    for (final path in [
+      'test/fixtures/content_factory_mvp/'
+          'w3_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w4_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w5_bridge_or_legacy_schema_migration_pilot_v1.json',
+      'test/fixtures/content_factory_mvp/'
+          'w6_bridge_or_legacy_schema_migration_pilot_v1.json',
+    ]) {
+      final decoded = (jsonDecode(File(path).readAsStringSync()) as Map)
+          .cast<String, Object?>();
+      tasks.addAll(
+        (decoded['tasks']! as List<Object?>).map(
+          (task) =>
+              Map<String, Object?>.from((task! as Map).cast<String, Object?>())
+                ..['launch_coverage_claimed'] = true,
+        ),
+      );
+    }
+
+    final result = validateContentSchemaL2L3MapV1({'tasks': tasks});
+
+    for (final worldId in ['world_3', 'world_4', 'world_5', 'world_6']) {
+      expect(
+        result.routeAdmissionErrors,
+        contains(
+          '$worldId bridge_or_legacy content must not claim launch coverage',
+        ),
+      );
+    }
   });
 
   test('reports route admission errors for locked and deferred worlds', () {
@@ -321,4 +418,27 @@ Map<String, Object?> _task([Map<String, Object?> overrides = const {}]) {
     'source_truth_status': 'canonical',
     ...overrides,
   };
+}
+
+void _expectBridgeWorldReport(
+  ContentSchemaWorldL2L3ReportV1 world, {
+  required String conceptFamilyId,
+  required String sameSignalGroupId,
+  required String repairFocusId,
+  required Set<String> transferSurfaceIds,
+}) {
+  expect(world.totalTasks, 3);
+  expect(world.coverageCountableTasks, 3);
+  expect(world.previewOnlyTasks, 0);
+  expect(world.conceptFamilyCounts[conceptFamilyId], 3);
+  expect(world.sameSignalGroupCounts[sameSignalGroupId], 3);
+  expect(world.transferSurfaceCounts.keys.toSet(), transferSurfaceIds);
+  expect(world.repairFocusCounts[repairFocusId], 3);
+  expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
+  expect(world.validationStatusCounts['source_validated'], 3);
+  expect(world.migrationSourceCount, 3);
+  expect(world.coverageReady, false);
+  expect(world.transferReady, true);
+  expect(world.repairReady, true);
+  expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
 }
