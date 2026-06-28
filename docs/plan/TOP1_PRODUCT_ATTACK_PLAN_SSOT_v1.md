@@ -2,10 +2,10 @@
 
 Status: ACTIVE strategy SSOT for top-1 product attack planning.
 Date: 2026-06-18
-Last refreshed: 2026-06-28 after TOP1 Long-Horizon 100% Completion Route v1.
+Last refreshed: 2026-06-28 after Wave 6.2 Content Validation Rules v1.
 Current phase: Full Top-1 / 100% Completion Route - ACTIVE.
-Current active control-plane wave: Wave 5.2 - W7-W12 Route Truth
-Reconciliation.
+Current active control-plane wave: Wave 6.3 - Content Factory MVP / L1
+Migrated Sample Pilot.
 
 Long-horizon execution ledger:
 
@@ -14,6 +14,9 @@ Long-horizon execution ledger:
   budgets, score deltas, closure criteria, and anti-drift rules.
 - Quick public/store route is paused as the active priority unless the user
   explicitly reactivates it.
+- Current Stage B handoff: Wave 6.3 must produce one validator-backed migrated
+  sample and L1 migrated content check before route/content normalization or
+  content authoring.
 
 Authority note:
 

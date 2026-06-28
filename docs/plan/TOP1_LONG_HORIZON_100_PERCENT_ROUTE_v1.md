@@ -1,7 +1,8 @@
 # TOP1 Long-Horizon 100% Completion Route v1
 
-Status: ACTIVE long-horizon execution ledger after Wave 5.1.
+Status: ACTIVE long-horizon execution ledger after Wave 6.2.
 Created: 2026-06-28.
+Last refreshed: 2026-06-28 after Wave 6.2 Content Validation Rules v1.
 
 Authority note:
 
@@ -31,6 +32,15 @@ Authority note:
   long-horizon prompt and audit backlog rank W7-W12 route truth as the stronger
   immediate control-plane blocker. This ledger sets Wave 5.2 as W7-W12 Route
   Truth Reconciliation and keeps W1-W6 content depth as Wave 5.3.
+- Wave 5.2 and its follow-up closed the W7-W10 route leak. W7-W10 are
+  `locked_not_learner_playable`; W11-W12 are `authored_but_not_routed`.
+- Wave 5.3 classified W1-W6 content-depth and same-signal coverage risk as
+  schema-first, not authoring-first.
+- Wave 6.1 accepted `docs/plan/CONTENT_SCHEMA_FOUNDATION_v1.md`.
+- Wave 6.2 accepted the L0 content validation rules and fixture checker.
+- The active next wave is now Wave 6.3 - Content Factory MVP / L1 Migrated
+  Sample Pilot. It must not skip one validator-backed migrated sample and an
+  L1 migrated content check.
 
 ## 1. Strategic Verdict
 
@@ -45,11 +55,11 @@ Human novice QA is deferred only because participants are not currently
 available. It remains a hard future gate before external beta, public launch,
 monetization, or validated learning-effect claims.
 
-Wave 5.1 - Canonical Telemetry Instrumentation v1 is accepted. Local
-telemetry improved from a sparse pre-5.1 layer into a canonical local event
-foundation. Telemetry is still incomplete: there is no deterministic local
-`session_id`, no OP-19 transfer aggregation, no OP-05 server sink, no privacy
-posture decision, and no vendor analytics.
+Waves 5.1 through 6.2 are accepted through local telemetry, W7-W12 route-truth
+closure, W1-W6 content-depth classification, Content Schema Foundation, and
+L0 Content Validation Rules. Telemetry is still incomplete: there is no
+deterministic local `session_id`, no OP-19 transfer aggregation, no OP-05
+server sink, no privacy posture decision, and no vendor analytics.
 
 This ledger is an execution control document. Its job is to order work by
 evidence value, blocking power, and rework avoidance.
@@ -58,21 +68,21 @@ evidence value, blocking power, and rework avoidance.
 
 Targets are realistic top-1 operating targets, not fake `10.0` endpoints.
 
-| Block | Audit baseline | Current after Wave 5.1 | Target | Delta remaining | Current status | Primary next wave | Evidence source |
+| Block | Audit baseline | Current after Wave 6.2 | Target | Delta remaining | Current status | Primary next wave | Evidence source |
 | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | W1-W4 beachhead | 8.3 | 8.3 | 9.2 | 0.9 | Strong but not externally human-validated | Wave 5.4 | Gap audit; Master Plan; W4-W5 review trail |
-| Full 36-world readiness | 2.5 | 2.5 | 9.0 | 6.5 | W1-W6 near-ready; W7-W12 conflicted; W13-W36 planned | Wave 5.2 | Gap audit OP-01, OP-13, OP-50, OP-54 |
+| Full 36-world readiness | 2.5 | 2.6 | 9.0 | 6.4 | W1-W6 available but schema-normalization pending; W7-W10 locked; W11-W12 authored but not routed; W13-W36 planned | Wave 6.3 | Gap audit OP-01, OP-13, OP-50, OP-54; Waves 5.2-6.2 |
 | Learning effect | 6.0 | 6.0 | 9.0 | 3.0 | Good in-session loop; no transfer proof | Wave 7.2 | Gap audit OP-19; Wave 5.1 |
 | Personalization / repair | 5.0 | 5.0 | 8.8 | 3.8 | Single active repair; no family accumulation | Wave 7.1 | Gap audit OP-11, OP-18 |
 | Progression / dopamine | 6.0 | 6.0 | 8.8 | 2.8 | Micro proof works; meso/macro loops thin | Wave 8.1 | Gap audit OP-15, OP-16, OP-25 |
 | Visual / premium feel | 8.3 | 8.3 | 9.2 | 0.9 | Strong W1-W4 beachhead; brand system incomplete | Wave 15.1 | Gap audit OP-24 |
-| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 depth unknown; W7-W12 unresolved; W13+ absent | Wave 5.3 | Gap audit OP-20, OP-65 |
+| Content depth | 4.5 | 4.5 | 9.0 | 4.5 | W1-W6 content-depth risk classified; authoring paused until L1/factory proof; W5-W12 expansion deferred; W13+ absent | Wave 6.3 | Wave 5.3 audit; Waves 6.1-6.2 |
 | Telemetry / measurement | 3.0 | 4.3 | 8.8 | 4.5 | Canonical local events added; aggregation and server sink absent | Wave 7.2 | Wave 5.1 artifact; gap audit OP-04, OP-05 |
 | Monetization readiness | 2.0 | 2.0 | 8.5 | 6.5 | Policy boundary only; no commerce | Wave 12.1 | Gap audit OP-08, OP-09, OP-28, OP-29 |
-| Architecture scalability | 6.5 | 6.5 | 8.8 | 2.3 | Act0 seams good; content remains code-bound | Wave 6.1 | Gap audit OP-02, OP-10, OP-66 |
+| Architecture scalability | 6.5 | 6.8 | 8.8 | 2.0 | Schema and L0 validation exist; content factory and L1 migrated sample still absent | Wave 6.3 | Gap audit OP-02, OP-10, OP-66; Waves 6.1-6.2 |
 | Competitive moat | 5.5 | 5.5 | 8.8 | 3.3 | Strong method; weak advanced breadth/data moat | Wave 11.1 | Gap audit dimensions 12-13 |
 | Store / brand readiness | 5.0 | 5.0 | 8.5 | 3.5 | Store/public route paused; legal/support absent | Wave 15.3 | Gap audit OP-06, OP-07, OP-42, OP-68 |
-| Overall top-1 readiness | 4.5 | 4.7 | 9.0 | 4.3 | Beachhead strong; full product still thin | Wave 5.2 | Gap audit plus Wave 5.1 delta |
+| Overall top-1 readiness | 4.5 | 4.8 | 9.0 | 4.2 | Beachhead strong; route/schema/control-plane stronger; full product still thin | Wave 6.3 | Gap audit plus Waves 5.1-6.2 |
 
 Score delta explanation:
 
@@ -80,20 +90,24 @@ Score delta explanation:
   local canonical event foundation. It does not justify a large jump because
   no server sink, privacy posture, transfer aggregation, or session join key
   exists.
-- Overall top-1 readiness moves only from `4.5` to `4.7`; OP-04 improved, but
-  the larger content, learning-transfer, QA, monetization, and W13-W36 gaps
-  remain.
+- Architecture scalability moves from `6.5` to `6.8` because Waves 6.1 and
+  6.2 added the schema foundation and executable L0 validation gate.
+- Full 36-world readiness moves only from `2.5` to `2.6`, and overall top-1
+  readiness only from `4.7` to `4.8`, because W5-W12 content expansion,
+  route admission, learning transfer, human QA, monetization, and W13-W36
+  remain unresolved.
 
 ## 3. Top-1 Gap Summary
 
 Major remaining gaps:
 
-- 36-world content depth: W7-W12 route truth is unresolved and W13-W36 are
-  not authored.
-- W7-W12 route truth: the Developing Player band cannot be opened until active
-  route status is reconciled.
-- Content schema/factory: authored content remains too code-bound for scalable
-  W7-W36 production.
+- 36-world content depth: W1-W6 content-depth risk is classified, W5-W12
+  expansion is deferred, W7-W10 are locked, W11-W12 are authored but not
+  routed, and W13-W36 are not authored.
+- W7-W12 route truth: the route leak is closed, but the Developing Player band
+  cannot be opened until later route-admission evidence exists.
+- Content schema/factory: schema and L0 validation exist, but L1 migrated
+  content validation and Content Factory MVP proof are still missing.
 - Learning transfer measurement: the app cannot yet prove improvement across
   sessions or concept families.
 - Telemetry aggregation/server sink: Wave 5.1 covers local instrumentation,
@@ -120,14 +134,14 @@ Major remaining gaps:
 - Score areas affected: telemetry, content depth, learning effect, W1-W4
   beachhead, full 36-world readiness.
 - Included waves: 5.1, 5.2, 5.3, 5.4.
-- Dependencies: Wave 5.1 accepted; current SSOT chain.
+- Dependencies: Waves 5.1-5.3 accepted; current SSOT chain.
 - Do not touch: W5-W12 authoring, commerce, server analytics, broad UI polish,
   App Store assets.
 - Expected movement: telemetry `3.0 -> 4.3`; route/content risk becomes
   classified, not solved.
-- Exit criteria: local telemetry accepted, W7-W12 route status reconciled,
-  W1-W6 content-depth gaps known, human QA protocol locked even if execution
-  waits for participants.
+- Exit criteria: local telemetry accepted, W7-W10 route leak closed,
+  W11-W12 non-routed state confirmed, W1-W6 content-depth gaps classified,
+  and human QA protocol locked even if execution waits for participants.
 
 ### Stage B - Content Factory & Architecture Foundation
 
@@ -135,10 +149,11 @@ Major remaining gaps:
 - Why here: schema before mass content prevents Dart-owner bloat and weak QA.
 - Score areas affected: architecture scalability, content depth, correctness.
 - Included waves: 6.1-6.4.
-- Dependencies: Stage A route/content audit outputs.
+- Dependencies: Stage A route/content audit outputs; Waves 6.1-6.2 accepted.
 - Do not touch: W7-W12 bulk authoring before schema; W13+ content; commerce.
 - Expected movement: architecture `6.5 -> 7.5`; content depth risk reduced.
-- Exit criteria: content schema, validation rules, factory MVP, and owner
+- Exit criteria: content schema, validation rules, factory MVP with one
+  validator-backed migrated sample, L1 migrated content check, and owner
   refactor plan exist with pilot proof.
 
 ### Stage C - Learning Effect & Repair Depth
@@ -264,12 +279,12 @@ Major remaining gaps:
 | Wave | Purpose | Source IDs | Allowed scope | Forbidden scope | Wave DoD | Evidence DoD | Score areas | Expected delta | Dependencies | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 5.1 Canonical Telemetry Instrumentation | Emit local canonical learning events | OP-04 | Local Act0 telemetry only | Server sink, privacy, monetization | Accepted verdict exists | Wave 5.1 artifact/tests | Telemetry | +1.3 telemetry | None | done |
-| 5.2 W7-W12 Route Truth Reconciliation | Classify actual W7-W12 route truth | OP-01 | Audit/docs/route matrix | Content authoring, product code unless explicitly admitted | W7-W12 status matrix and blockers | Review artifact + graphify/diff checks | Full readiness, content | Risk classified | 5.1 | next |
-| 5.3 W1-W6 Content Depth / Same-Signal Coverage Audit | Check coverage illusion in W1-W6 | OP-20, OP-65 | Audit content coverage | New content writing | Family coverage matrix | Review artifact + validators if scoped | Content depth, learning | Risk classified | 5.2 or explicit retarget | planned |
+| 5.2 W7-W12 Route Truth Reconciliation | Classify actual W7-W12 route truth | OP-01 | Audit/docs/route matrix | Content authoring, product code unless explicitly admitted | W7-W12 status matrix and blockers | Review artifact + graphify/diff checks | Full readiness, content | Risk classified | 5.1 | done |
+| 5.3 W1-W6 Content Depth / Same-Signal Coverage Audit | Check coverage illusion in W1-W6 | OP-20, OP-65 | Audit content coverage | New content writing | Family coverage matrix | Review artifact + validators if scoped | Content depth, learning | Risk classified | 5.2 or explicit retarget | done |
 | 5.4 Human QA Protocol / Deferred Gate Lock | Lock novice QA protocol while participants unavailable | OP-03 | Protocol/docs | Running public beta, fake QA | Script, observation template, evidence path | Docs checks | W1-W4 confidence | 5.2/5.3 findings | planned |
-| 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.4 architecture | Stage A | planned |
-| 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 | 6.1 | planned |
-| 6.3 Content Factory MVP | Build minimal authoring pipeline | OP-10 | MVP factory and one pilot | W7-W12 mass generation | One valid generated/imported slice | Focused tests + docs | Architecture, content | +0.6 | 6.1-6.2 | planned |
+| 6.1 Content Schema Foundation | Define authorable world/lesson/task schema | OP-02, OP-35 | Schema design + tiny pilot | Bulk migration | Canonical schema doc/pilot | Schema review + diff checks | Architecture | +0.3 architecture | Stage A | done |
+| 6.2 Content Validation Rules | Define validation constraints | OP-14, OP-39 | Validators/specs | Broad content rewrites | Required rules listed | Validation proof where code touched | Correctness, content | +0.3 architecture | 6.1 | done |
+| 6.3 Content Factory MVP / L1 Migrated Sample Pilot | Build minimal authoring pipeline and prove one migrated sample | OP-10 | MVP factory, one validator-backed migrated sample, L1 migrated content check | W7-W12 mass generation, W1-W6 authoring, route opening | One valid generated/imported slice and L1 check | Focused tests + docs | Architecture, content | +0.6 if code-backed | 6.1-6.2 | active |
 | 6.4 Large Content Owner Refactor Plan | Plan `act0_shell_state_v1.dart` relief | OP-66 | Audit/plan/pilot seam | Broad refactor | Migration plan with pilot | Plan + small proof if admitted | Architecture | +0.2 | 6.3 | planned |
 | 7.1 Concept Family State Foundation | Own cross-session family state | OP-11 | Local state contract | Analytics dashboard | Family miss/proof fields defined | State tests | Personalization | +0.7 | 6.x identifiers | planned |
 | 7.2 Learning Transfer Measurement v1 | Measure improvement over sessions | OP-19 | Local transfer metrics | Public claims, server dashboards | Correctness trend contract | Event/state tests | Learning effect | +0.8 | 7.1, 5.1 | planned |
@@ -434,9 +449,9 @@ modestly unless they remove a blocker.
 | Blocker | Description | Affected scores | Severity | Required wave | Codex alone? | Human/business/expert input |
 | --- | --- | --- | --- | --- | --- | --- |
 | Human novice QA unavailable | Participants are not currently available; gate is deferred, not removed | W1-W4, learning, store | Critical future gate | 5.4 then execution wave | No | Human participants |
-| W7-W12 route truth unresolved | Developing Player band status is conflicted | Full readiness, content | Critical | 5.2 | Mostly yes | Product decision if conflict remains |
-| W1-W6 content depth unknown | Same-signal coverage may be thin | Content, learning | High | 5.3 | Yes for audit | Poker review later |
-| Content factory absent | Content is too code-bound for scale | Architecture, content | Critical | 6.1-6.3 | Yes | Content author feedback useful |
+| W7-W12 route admission locked | W7-W10 route leak is closed; W7-W12 must remain locked/non-routed until later admission proof | Full readiness, content | Critical future gate | Later route-admission wave | Mostly yes | Product decision if reopened |
+| W1-W6 route/content normalization pending | W1-W6 depth risk is classified, but route/content normalization must wait until after the L1 pilot | Content, learning | High | 6.3 then normalization wave | Yes | Poker review later |
+| Content factory absent | Content is too code-bound for scale; schema and L0 validation exist but L1/factory proof is missing | Architecture, content | Critical | 6.3 | Yes | Content author feedback useful |
 | Learning transfer not measured | No cross-session improvement proof | Learning, moat | Critical | 7.2 | Yes locally | Later analytics/human validation |
 | Deterministic session_id not owned | Local events cannot be joined by session key | Telemetry | P1 local | 7.2 or telemetry follow-up | Yes | No |
 | Server analytics absent | No D1/D7/D30 data or funnel analytics | Telemetry, store, monetization | Critical later | OP-05 later wave | Partly | Privacy/business decision |
@@ -446,6 +461,7 @@ modestly unless they remove a blocker.
 | Poker correctness validation absent | W7+ advice needs validation | Trust, moat | Critical before advanced | 11.1-11.2 | Partly | Expert/solver input |
 | Content authoring too code-bound | Dart content does not scale | Architecture | High | 6.x | Yes | Content author input |
 | Advanced table states not ready | SPR/multi-street/tournament context absent | Content/table | High | 9.x | Yes | Poker validation |
+| Human QA Protocol not locked | Human QA remains a hard future gate before external beta or claims | W1-W4, learning, store | Critical future gate | 5.4 | Partly | Human participants |
 
 ## 10. Deferred / Not Now Register
 
@@ -453,6 +469,9 @@ modestly unless they remove a blocker.
 | --- | --- | --- | --- |
 | Public beta/store launch | Active route is full top-1, not quick release | User reactivates launch route or Stage K | Human QA, privacy/legal, launch package |
 | Monetization implementation | Learning value and W5+ readiness not proven | Stage H | W5+ route-ready, privacy/legal, pricing |
+| New W1-W6 content authoring | Schema/factory pilot is not proven yet | After Wave 6.3 and route/content normalization | Validator-backed L1 sample and normalization plan |
+| W5-W12 expansion | Developing band is locked and content factory proof is missing | Stage F | Schema, L1 check, factory proof, route-admission evidence |
+| W7-W12 opening | Route gate is locked/non-routed by current truth | Later route-admission wave | Route, seam, validation, and correctness proof |
 | W13+ hand import | Parser complexity would distract from W5-W12 | Stage I | Replay boundary mature, W5-W12 stable |
 | Solver product positioning | Overclaim risk before validation | Stage I/J | Correctness protocol and solver posture |
 | AI/chat Sharky | Deterministic phrase tiers are safer | Never unless explicitly reopened | Claim-safety strategy changes |
@@ -467,6 +486,11 @@ modestly unless they remove a blocker.
 
 - No random visual polish unless tied to a route wave.
 - No 36-world content authoring before schema/factory.
+- No W1-W6 content authoring before one validator-backed migrated sample,
+  L1 migrated content check, and route/content normalization plan.
+- No W5-W12 expansion before Content Factory MVP proof.
+- No W7-W12 opening while current route truth is locked/non-routed.
+- No external beta or public learning claims before Human QA Protocol.
 - No monetization before learning value and W5+ readiness.
 - No server analytics before privacy posture.
 - No AI/chat/persona.
@@ -478,19 +502,32 @@ modestly unless they remove a blocker.
 
 ## 12. Current Next Wave
 
-- Wave 5.1 Canonical Telemetry Instrumentation: DONE.
-- Wave 5.2 W7-W12 Route Truth Reconciliation: NEXT.
+Closed:
 
-Conflict note:
+- W7-W10 route leak.
+- W1-W6 content-depth audit classification.
+- Content Schema Foundation.
+- L0 Content Validation Rules.
 
-- Wave 5.1's review artifact recommended `W1-W6 Content Depth /
-  Same-Signal Coverage Audit` next.
-- The attached long-horizon task and the audit backlog rank W7-W12 route truth
-  (`OP-01`) as the stronger immediate control-plane blocker, with W1-W6 content
-  depth (`OP-65`) following in Stage A.
-- Therefore this ledger sets Wave 5.2 as NEXT and Wave 5.3 as planned. If
-  W7-W12 route truth proves blocked by W1-W6 coverage facts, the next retro
-  should retarget explicitly.
+Active:
+
+- Wave 6.3 Content Factory MVP / L1 Migrated Sample Pilot.
+
+Must not skip:
+
+- One validator-backed migrated sample.
+- L1 migrated content check.
+- Route/content normalization for W2-W6 after pilot.
+- Content Factory MVP proof before authoring.
+- Human QA Protocol before external beta or claims.
+
+Deferred:
+
+- New W1-W6 content authoring.
+- W5-W12 expansion.
+- W7-W12 opening.
+- Monetization.
+- Store/public beta.
 
 ## 13. Handover Summary for New Chat
 
@@ -502,7 +539,7 @@ Current strategic route:
 
 Latest accepted commit:
 
-- `066daddd4ddca952286bffe47eb09bf46cca2724`
+- `4f3cd4caa16b5b87f2268e2ae14f147f421a237c`
 
 Active SSOT docs:
 
@@ -514,20 +551,22 @@ Current score summary:
 
 - W1-W4 beachhead: `8.3/10`
 - Telemetry after Wave 5.1: `4.3/10`
-- Overall top-1 readiness: `4.7/10`
+- Architecture scalability after Wave 6.2: `6.8/10`
+- Full 36-world readiness after Wave 6.2: `2.6/10`
+- Overall top-1 readiness after Wave 6.2: `4.8/10`
 - Largest gaps: full 36-world readiness, content depth, learning transfer,
   monetization, human QA, server analytics, correctness validation.
 
 Current next wave:
 
-- Wave 5.2 - W7-W12 Route Truth Reconciliation.
+- Wave 6.3 - Content Factory MVP / L1 Migrated Sample Pilot.
 
 Top blockers:
 
 - Human novice QA unavailable.
-- W7-W12 route truth unresolved.
-- W1-W6 content depth unknown.
-- Content factory absent.
+- W7-W12 route admission locked until later proof.
+- W1-W6 route/content normalization pending after the L1 pilot.
+- Content factory absent beyond schema and L0 validation.
 - Learning transfer not measured.
 - Deterministic session_id not owned.
 - Server analytics/privacy posture absent.
@@ -542,6 +581,16 @@ Execution protocol reminder:
 - Continue, split, or stop-and-audit based on evidence, not momentum.
 - Every retro must propose and justify score delta or explicitly leave scores
   unchanged.
+
+Current handoff constraints:
+
+- Do not skip one validator-backed migrated sample.
+- Do not skip the L1 migrated content check.
+- Do not normalize W2-W6 route/content before the pilot proves the path.
+- Do not author new W1-W6 content before factory proof.
+- Do not expand W5-W12 or open W7-W12.
+- Do not reactivate monetization or store/public beta.
+- Do not make external beta or learning-effect claims before Human QA Protocol.
 
 Anti-drift reminder:
 
