@@ -1,17 +1,24 @@
 # Durable Repair Capsule v1
 
-Status: ACTIVE planning capsule. This does not implement durable repair.
+Status: ACTIVE durable repair capsule. The first engine-only concept-family
+repair memory slice exists; UI exposure and durable persistence expansion remain
+future bounded waves.
 
 ## Objective
 
-Prepare a deterministic rule-based repair memory / personalized repair queue that can remember concept-family errors over time and choose the next bounded repair candidate without ML, AI chat, or solver claims.
+Maintain deterministic rule-based repair memory that can aggregate
+concept-family errors over time and choose the next bounded repair candidate
+without ML, AI chat, or solver claims.
 
 ## Why This Is Next
 
 - W1-W6 are frozen as source/fixture/validator-backed technical candidates.
 - Human QA is the next evidence gate when participants exist.
 - If Human QA is unavailable, the next useful product layer is durable repair memory: preserve what the learner missed, why it mattered, and what repair candidate follows.
-- Existing first-session repair proof exists, but durable all-time repair history and long-lived concept-family memory are not implemented.
+- Existing first-session repair proof exists.
+- First-slice concept-family repair memory now derives engine-only summaries and
+  a deterministic next repair candidate from `Act0LearningEvidenceHistoryV1`.
+- Durable persistence expansion and learner-facing exposure remain future work.
 
 ## Required Signal Fields
 
@@ -53,26 +60,29 @@ Likely areas to inspect only after search:
 - Review / Profile proof surfaces.
 - Existing repair queue projection and source handoff tests.
 
-## Recommended First Slice
+## Implemented First Slice
 
 Concept Family Repair Memory v1.
 
 Purpose:
 
-- Store concept-family error signal deterministically.
-- Group repeated misses by `repair_focus_id` / concept family.
+- Aggregate concept-family error signal deterministically from existing learning
+  evidence.
+- Group repeated misses by `repair_focus_id` / concept family, with stable
+  fallbacks.
 - Select one bounded next repair candidate.
-- Expose proof through existing feedback/review surfaces if they already exist.
+- Keep UI exposure closed until a separate surface wave admits it.
 
 ## First Slice DoD
 
-- Stores concept-family error signal deterministically.
+- Stores or derives concept-family error signal deterministically.
 - Uses `user_choice`, `correct` / `error_type`, and `time_to_decision` where available.
 - Selects a bounded next repair candidate without AI/adaptive claims.
 - Keeps selection explainable from stored local fields.
 - Keeps queue state reversible and auditable.
 - Preserves W1-W6 freeze and does not author new content.
-- Exposes proof only through existing feedback/review/session surfaces if already available.
+- Exposes proof only through existing feedback/review/session surfaces if a
+  future wave admits a safe owner.
 - Includes focused validator/test coverage.
 - Does not claim launch readiness, Human QA, monetization, 9.0, or durable mastery.
 
