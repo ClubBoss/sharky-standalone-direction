@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 
 /// Converts the normalized internal completion payload into a durable record.
 ///
@@ -377,6 +379,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     required this.resultLine,
     required this.repairFocusLine,
     this.repairCandidateLine,
+    this.practiceLaunchRequest,
     required this.currentSessionOnly,
   });
 
@@ -388,6 +391,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
   final String resultLine;
   final String? repairFocusLine;
   final String? repairCandidateLine;
+  final Act0PracticeRepairQueueLaunchRequestV1? practiceLaunchRequest;
   final bool currentSessionOnly;
 
   List<String> get claimLines {
@@ -420,6 +424,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         resultLine: '',
         repairFocusLine: null,
         repairCandidateLine: null,
+        practiceLaunchRequest: null,
         currentSessionOnly: false,
       );
     }
@@ -440,6 +445,11 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     final safeRepairCandidateLine = repairCandidateLabel == null
         ? null
         : 'Suggested focus: $repairCandidateLabel. Worth practicing next.';
+    final practiceLaunchRequest = safeRepairCandidateLine == null
+        ? null
+        : mapAct0ConceptCandidateToPracticeLaunchRequestV1(
+            repairCandidate,
+          ).request;
     return Act0SessionSummaryEvidenceViewModelV1(
       hasEvidence: true,
       title: 'This run',
@@ -451,6 +461,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
           '${summary.correctCount} correct / ${summary.incorrectCount} to review.',
       repairFocusLine: safeRepairFocusLine,
       repairCandidateLine: safeRepairCandidateLine,
+      practiceLaunchRequest: practiceLaunchRequest,
       currentSessionOnly: true,
     );
   }

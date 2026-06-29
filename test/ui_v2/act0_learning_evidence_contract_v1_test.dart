@@ -411,6 +411,15 @@ void main() {
         viewModel.repairCandidateLine,
         'Suggested focus: Action reads. Worth practicing next.',
       );
+      expect(viewModel.practiceLaunchRequest?.targetWorldId, 'world_1');
+      expect(
+        viewModel.practiceLaunchRequest?.targetLessonId,
+        'fold_check_call_raise',
+      );
+      expect(
+        viewModel.practiceLaunchRequest?.targetTaskId,
+        'actions_check_drill',
+      );
       expect(viewModel.claimLines.join(' '), isNot(contains('no_bet_yet')));
       expect(viewModel.claimLines.join(' '), isNot(contains('action_read')));
       expect(
@@ -449,6 +458,10 @@ void main() {
       viewModel.repairCandidateLine,
       'Suggested focus: Action reads. Worth practicing next.',
     );
+    expect(
+      viewModel.practiceLaunchRequest?.targetTaskId,
+      'actions_check_drill',
+    );
     expect(viewModel.claimLines.join(' '), isNot(contains('no_bet_yet')));
     expect(viewModel.claimLines.join(' '), isNot(contains('action_read')));
     expect(
@@ -479,6 +492,7 @@ void main() {
 
     expect(viewModel.repairFocusLine, isNull);
     expect(viewModel.repairCandidateLine, isNull);
+    expect(viewModel.practiceLaunchRequest, isNull);
     expect(viewModel.claimLines.join(' '), isNot(contains('AI')));
     expect(viewModel.claimLines.join(' '), isNot(contains('leak')));
   });

@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -5693,6 +5694,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     required this.onContinue,
     this.onReplay,
     this.onOpenReview,
+    this.onLaunchPracticeRepairQueueTarget,
     required this.onBackToMap,
   });
 
@@ -5703,6 +5705,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   final VoidCallback onContinue;
   final VoidCallback? onReplay;
   final VoidCallback? onOpenReview;
+  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
+  onLaunchPracticeRepairQueueTarget;
   final VoidCallback onBackToMap;
 
   VoidCallback? _callbackForCta(Act0MilestoneCtaKindV1 kind) {
@@ -6177,6 +6181,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 _SessionSummaryEvidenceCardV1(
                   summary: visibleEvidenceSummary,
                   tone: celebrateTone,
+                  onLaunchPracticeRepairQueueTarget:
+                      onLaunchPracticeRepairQueueTarget,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
@@ -6527,15 +6533,22 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
   const _SessionSummaryEvidenceCardV1({
     required this.summary,
     required this.tone,
+    this.onLaunchPracticeRepairQueueTarget,
   });
 
   final Act0SessionSummaryEvidenceViewModelV1 summary;
   final Color tone;
+  final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
+  onLaunchPracticeRepairQueueTarget;
 
   @override
   Widget build(BuildContext context) {
     final repairFocusLine = summary.repairFocusLine;
     final repairCandidateLine = summary.repairCandidateLine;
+    final practiceLaunchRequest = summary.practiceLaunchRequest;
+    final showPracticeCta =
+        practiceLaunchRequest?.isLaunchable == true &&
+        onLaunchPracticeRepairQueueTarget != null;
     return Container(
       key: const Key('act0_shell_block_summary_evidence_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -6604,6 +6617,19 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 color: Act0ShellTokensV1.textMuted,
                 fontWeight: FontWeight.w700,
               ),
+            ),
+          ],
+          if (showPracticeCta) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            OutlinedButton(
+              key: const Key('act0_shell_session_summary_practice_cta'),
+              onPressed: () =>
+                  onLaunchPracticeRepairQueueTarget!(practiceLaunchRequest!),
+              style: Act0ShellTokensV1.tonalButtonStyle(
+                tone: tone,
+                fullWidth: true,
+              ),
+              child: const Text('Practice this next'),
             ),
           ],
         ],

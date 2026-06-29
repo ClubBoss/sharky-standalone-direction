@@ -4109,6 +4109,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     Act0RepairOutcomeConsumerV1.fromProjection(
                                       _repairOutcomeProjectionV1,
                                     ),
+                                onLaunchPracticeRepairQueueTarget: (target) =>
+                                    setState(() {
+                                      _startPracticeRepairQueueTarget(target);
+                                    }),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
                                   _selectedTaskId =

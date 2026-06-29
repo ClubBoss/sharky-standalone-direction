@@ -373,6 +373,91 @@ void main() {
     expect(body, isNot(contains('guaranteed')));
   });
 
+  testWidgets('Session Summary shows Practice CTA for safe mapper target', (
+    tester,
+  ) async {
+    Act0PracticeRepairQueueLaunchRequestV1? capturedRequest;
+    const request = Act0PracticeRepairQueueLaunchRequestV1(
+      targetWorldId: 'world_1',
+      targetLessonId: 'fold_check_call_raise',
+      targetTaskId: 'actions_check_drill',
+      targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+      sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+      sourceTaskId: 'actions_legal_context',
+      repairTaskId: 'actions_check_drill',
+      repairFocusKey: 'actions_legal_context|no_bet_yet',
+      queueItemId: 'practice_repair_queue_v1|concept_candidate|no_bet_yet',
+    );
+
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+        hasEvidence: true,
+        title: 'This run',
+        runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+        runKind: 'lesson',
+        spotsLine: 'You played 2 spots.',
+        resultLine: '1 correct / 1 to review.',
+        repairFocusLine: 'You missed Action reads recently.',
+        repairCandidateLine:
+            'Suggested focus: Action reads. Worth practicing next.',
+        practiceLaunchRequest: request,
+        currentSessionOnly: true,
+      ),
+      onLaunchPracticeRepairQueueTarget: (request) {
+        capturedRequest = request;
+      },
+    );
+
+    expect(find.text('Practice this next'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+      findsOneWidget,
+    );
+
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+    );
+
+    expect(capturedRequest?.targetWorldId, 'world_1');
+    expect(capturedRequest?.targetLessonId, 'fold_check_call_raise');
+    expect(capturedRequest?.targetTaskId, 'actions_check_drill');
+    expect(capturedRequest?.sourceTaskId, 'actions_legal_context');
+    expect(capturedRequest?.repairTaskId, 'actions_check_drill');
+  });
+
+  testWidgets('Session Summary hides Practice CTA without mapped target', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+        hasEvidence: true,
+        title: 'This run',
+        runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+        runKind: 'lesson',
+        spotsLine: 'You played 2 spots.',
+        resultLine: '1 correct / 1 to review.',
+        repairFocusLine: 'You missed Action reads recently.',
+        repairCandidateLine:
+            'Suggested focus: Action reads. Worth practicing next.',
+        currentSessionOnly: true,
+      ),
+      onLaunchPracticeRepairQueueTarget: (_) {},
+    );
+
+    expect(find.text('Practice this next'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+      findsNothing,
+    );
+  });
+
   testWidgets('Session Summary renders exactly one earned moment', (
     tester,
   ) async {
@@ -547,6 +632,8 @@ Future<void> _pumpSummary(
   Act0RepairOutcomeConsumerV1 repairOutcomeConsumer =
       const Act0RepairOutcomeConsumerV1(),
   Act0SessionSummaryEvidenceViewModelV1? evidenceSummary,
+  ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
+  onLaunchPracticeRepairQueueTarget,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -579,6 +666,7 @@ Future<void> _pumpSummary(
               ),
           earnedMomentConsumer: consumer,
           repairOutcomeConsumer: repairOutcomeConsumer,
+          onLaunchPracticeRepairQueueTarget: onLaunchPracticeRepairQueueTarget,
           onReplay: () {},
           onContinue: onContinue ?? () {},
           onBackToMap: () {},
