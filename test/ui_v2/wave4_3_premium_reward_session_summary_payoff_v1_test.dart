@@ -123,7 +123,7 @@ Future<void> _pumpPayoffSummary(
             runKind: 'lesson',
             spotsLine: 'You played 2 spots.',
             resultLine: '1 correct / 1 to review.',
-            repairFocusLine: 'Main repair focus: position clue.',
+            repairFocusLine: 'You missed Action reads recently.',
             currentSessionOnly: true,
           ),
           earnedMomentConsumer: Act0AchievementSeedConsumerV1.fromProjection(

@@ -349,18 +349,24 @@ void main() {
         runKind: 'lesson',
         spotsLine: 'You played 2 spots.',
         resultLine: '1 correct / 1 to review.',
-        repairFocusLine: 'Main repair focus: position clue.',
-        repairCandidateLine: 'Recommended repair: position clue.',
+        repairFocusLine: 'You missed Action reads recently.',
+        repairCandidateLine:
+            'Suggested focus: Action reads. Worth practicing next.',
         currentSessionOnly: true,
       ),
     );
 
-    expect(find.text('Recommended repair: position clue.'), findsOneWidget);
+    expect(
+      find.text('Suggested focus: Action reads. Worth practicing next.'),
+      findsOneWidget,
+    );
     final body = tester
         .widgetList<Text>(find.byType(Text))
         .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
         .join(' ')
         .toLowerCase();
+    expect(body, isNot(contains('recommended repair')));
+    expect(body, isNot(contains('no_bet_yet')));
     expect(body, isNot(contains('ai found')));
     expect(body, isNot(contains('gto')));
     expect(body, isNot(contains('solver')));
@@ -568,7 +574,7 @@ Future<void> _pumpSummary(
                 runKind: 'lesson',
                 spotsLine: 'You played 2 spots.',
                 resultLine: '1 correct / 1 to review.',
-                repairFocusLine: 'Main repair focus: position clue.',
+                repairFocusLine: 'You missed Action reads recently.',
                 currentSessionOnly: true,
               ),
           earnedMomentConsumer: consumer,

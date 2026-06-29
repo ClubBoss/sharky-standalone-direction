@@ -423,25 +423,23 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         currentSessionOnly: false,
       );
     }
-    final repairFocusLabel =
-        repairFocusLabelsById[summary.topRepairFocusId]?.trim() ?? '';
+    final repairFocusLabel = _sessionSummaryRepairFocusLabelV1(
+      summary.topRepairFocusId,
+    );
     final safeRepairFocusLine =
-        repairFocusLabel.isEmpty ||
-            _containsForbiddenSummaryClaim(repairFocusLabel)
+        repairFocusLabel == null || summary.incorrectCount < 1
         ? null
-        : 'Main repair focus: $repairFocusLabel.';
+        : 'You missed $repairFocusLabel recently.';
     final repairCandidate =
         Act0ConceptFamilyRepairMemoryV1.fromLearningEvidence(
           history,
         ).nextRepairCandidate;
-    final repairCandidateLabel = repairCandidate == null
-        ? ''
-        : repairFocusLabelsById[repairCandidate.conceptFamilyId]?.trim() ?? '';
-    final safeRepairCandidateLine =
-        repairCandidateLabel.isEmpty ||
-            _containsForbiddenSummaryClaim(repairCandidateLabel)
+    final repairCandidateLabel = _sessionSummaryRepairCandidateLabelV1(
+      repairCandidate,
+    );
+    final safeRepairCandidateLine = repairCandidateLabel == null
         ? null
-        : 'Recommended repair: $repairCandidateLabel.';
+        : 'Suggested focus: $repairCandidateLabel. Worth practicing next.';
     return Act0SessionSummaryEvidenceViewModelV1(
       hasEvidence: true,
       title: 'This run',
@@ -457,6 +455,41 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     );
   }
 }
+
+String? _sessionSummaryRepairCandidateLabelV1(
+  Act0ConceptFamilyRepairCandidateV1? candidate,
+) {
+  if (candidate == null) {
+    return null;
+  }
+  final conceptFamilyId = candidate.conceptFamilyId.trim();
+  final conceptLabel = _sessionSummaryRepairFocusLabelV1(conceptFamilyId);
+  if (conceptLabel != null) {
+    return conceptLabel;
+  }
+  if (candidate.repairFocusId.trim().isNotEmpty || conceptFamilyId.isNotEmpty) {
+    return null;
+  }
+  final skillLabel = _sessionSummaryRepairFocusLabelV1(candidate.skillAtomId);
+  if (skillLabel != null) {
+    return skillLabel;
+  }
+  return _sessionSummaryRepairFocusLabelV1(candidate.errorType);
+}
+
+String? _sessionSummaryRepairFocusLabelV1(String rawId) {
+  final id = rawId.trim();
+  if (id.isEmpty) {
+    return null;
+  }
+  return _sessionSummaryRepairFocusLabelsV1[id];
+}
+
+const Map<String, String> _sessionSummaryRepairFocusLabelsV1 = <String, String>{
+  'no_bet_yet': 'Action reads',
+  'action_read': 'Action reads',
+  'missed_action_read': 'Action reads',
+};
 
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({
@@ -651,28 +684,4 @@ String _optionalString(Object? raw) => raw?.toString().trim() ?? '';
 int? _nonNegativeInt(Object? raw) {
   final value = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
   return value == null || value < 0 ? null : value;
-}
-
-bool _containsForbiddenSummaryClaim(String raw) {
-  final lower = raw.toLowerCase();
-  const forbiddenPhrases = <String>[
-    'based on your last',
-    'biggest leak',
-    'weakest area',
-  ];
-  if (forbiddenPhrases.any(lower.contains)) {
-    return true;
-  }
-  const forbiddenTokens = <String>{
-    'ai',
-    'gto',
-    'leak',
-    'mastered',
-    'solver',
-    'trend',
-  };
-  final tokens = RegExp(
-    r'[a-z0-9]+',
-  ).allMatches(lower).map((match) => match.group(0) ?? '').toSet();
-  return forbiddenTokens.any(tokens.contains);
 }

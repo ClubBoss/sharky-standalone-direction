@@ -358,11 +358,8 @@ void main() {
       expect(viewModel.title, 'This run');
       expect(viewModel.spotsLine, 'You played 2 spots.');
       expect(viewModel.resultLine, '1 correct / 1 to review.');
-      expect(viewModel.repairFocusLine, 'Main repair focus: position clue.');
-      expect(
-        viewModel.repairCandidateLine,
-        'Recommended repair: position clue.',
-      );
+      expect(viewModel.repairFocusLine, isNull);
+      expect(viewModel.repairCandidateLine, isNull);
       expect(viewModel.currentSessionOnly, isTrue);
       expect(viewModel.claimLines.join(' '), isNot(contains('leak')));
       expect(viewModel.claimLines.join(' '), isNot(contains('Mastered')));
@@ -409,13 +406,56 @@ void main() {
       expect(viewModel.runKind, 'repair');
       expect(viewModel.spotsLine, 'You played 1 spot.');
       expect(viewModel.resultLine, '0 correct / 1 to review.');
-      expect(viewModel.repairFocusLine, 'Main repair focus: no-bet-yet clue.');
+      expect(viewModel.repairFocusLine, 'You missed Action reads recently.');
       expect(
         viewModel.repairCandidateLine,
-        'Recommended repair: no-bet-yet clue.',
+        'Suggested focus: Action reads. Worth practicing next.',
+      );
+      expect(viewModel.claimLines.join(' '), isNot(contains('no_bet_yet')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('action_read')));
+      expect(
+        viewModel.claimLines.join(' '),
+        isNot(contains('Recommended repair')),
       );
     },
   );
+
+  test('session summary repair focus copy uses explicit display allowlist', () {
+    final history = Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        _record(
+          order: 1,
+          runId: 'current-run',
+          runKind: 'lesson',
+          runOrdinal: 1,
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          errorType: 'missed_action_read',
+        ),
+      ],
+    );
+
+    final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+      history,
+      repairFocusLabelsById: const <String, String>{
+        'no_bet_yet': 'no_bet_yet',
+        'action_read': 'action_read',
+        'missed_action_read': 'missed_action_read',
+      },
+    );
+
+    expect(viewModel.repairFocusLine, 'You missed Action reads recently.');
+    expect(
+      viewModel.repairCandidateLine,
+      'Suggested focus: Action reads. Worth practicing next.',
+    );
+    expect(viewModel.claimLines.join(' '), isNot(contains('no_bet_yet')));
+    expect(viewModel.claimLines.join(' '), isNot(contains('action_read')));
+    expect(
+      viewModel.claimLines.join(' '),
+      isNot(contains('missed_action_read')),
+    );
+  });
 
   test('session summary repair candidate copy is claim-safe', () {
     final history = Act0LearningEvidenceHistoryV1(

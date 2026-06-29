@@ -2,8 +2,9 @@
 
 Status: ACTIVE durable repair capsule. The first concept-family repair memory
 slice exists with active/clear candidate resolution and bounded Session Summary
-exposure. A pure partial Practice-target mapper exists; durable persistence
-expansion and Practice UI admission remain future bounded waves.
+focus copy. A pure partial Practice-target mapper exists; Session Summary
+Practice CTA admission, durable persistence expansion, and broader Practice UI
+admission remain future bounded waves.
 
 ## Objective
 
@@ -20,10 +21,12 @@ without ML, AI chat, or solver claims.
 - First-slice concept-family repair memory now derives summaries, active/clear
   resolution state, and a deterministic next repair candidate from
   `Act0LearningEvidenceHistoryV1`.
-- Session Summary can expose a safe `Recommended repair` line from that
-  candidate.
+- Session Summary can expose safe `You missed...` and `Suggested focus...`
+  lines from allowlisted candidate labels.
 - A pure mapper can return an existing Practice launch request for allowlisted
   concept-family candidates or an explicit no-target reason.
+- Current Session Summary remains route-neutral and has no admitted Practice CTA
+  action seam.
 - Durable persistence expansion and broader learner-facing exposure remain
   future work.
 
@@ -80,7 +83,7 @@ Purpose:
 - Select one bounded next repair candidate.
 - Clear that candidate when the latest evidence for the same concept family is
   correct.
-- Expose only a bounded Session Summary `Recommended repair` line.
+- Expose only bounded Session Summary repair focus / suggested focus copy.
 - Map only explicitly allowlisted concept candidates to existing Practice launch
   requests; unknown, route-locked, bridge-limited, or unsafe targets return
   no-target reasons.
