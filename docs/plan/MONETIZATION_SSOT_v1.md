@@ -17,15 +17,16 @@ The active Act0 launch route is:
 | W1 | Poker from Zero |
 | W2 | Hand Discipline |
 | W3 | Position Thinking |
-| W4 | Preflop Framework |
-| W5 | Bet Purpose + Price |
-| W6 | Board and Draws |
+| W4 | Bet Purpose / Price |
+| W5 | Board Awareness |
+| W6 | Range Thinking |
 
-Older authored/content documents may still describe W4 as `Bet Purpose + Price`
-and W5 as `Board Awareness`. Those meanings are stale or secondary for
-monetization work until a dedicated route/content normalization wave changes the
-active route truth. Premium, paywall, trial, and preview copy must follow the
-active launch route above.
+Older authored/content documents may still describe W4 as `Preflop Framework`,
+W5 as `Bet Purpose + Price`, and W6 as `Board and Draws`. Those labels are
+deprecated for route/content ownership after the W1-W12 cascade map,
+W4-W6 normalization plan, and W4-W6 title/runtime normalization PR1. Premium,
+paywall, trial, and preview copy must follow the active launch route above
+while preserving the monetization boundary below.
 
 ### Accepted preview status
 

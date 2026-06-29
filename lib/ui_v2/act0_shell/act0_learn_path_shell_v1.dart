@@ -1197,7 +1197,7 @@ String _foundationWorldLabelV1(Act0WorldCardV1 world) {
     1 => 'Table Basics',
     2 => 'Hand Discipline',
     3 => 'Position Thinking',
-    4 => 'Preflop Framework',
+    4 => 'Bet Purpose / Price',
     _ => world.title,
   };
   return 'W${world.worldNumber} · $title';

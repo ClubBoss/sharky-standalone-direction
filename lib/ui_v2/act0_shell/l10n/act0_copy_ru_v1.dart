@@ -1,56 +1,57 @@
 part of '../act0_content_copy_v1.dart';
 
-const Map<String, Act0WorldDisplayCopyV1>
-_ruWorldCopyByIdV1 = <String, Act0WorldDisplayCopyV1>{
-  'world_1': Act0WorldDisplayCopyV1(
-    title: 'Покер с нуля',
-    subtitle: 'Грамотность за столом: карты, места, блайнды, стек и банк.',
-  ),
-  'world_2': Act0WorldDisplayCopyV1(
-    title: 'Дисциплина рук',
-    subtitle: 'Пойми, какие руки стоят фишек, а какие спокойно уходят в пас.',
-  ),
-  'world_3': Act0WorldDisplayCopyV1(
-    title: 'Мышление позицией',
-    subtitle: 'Почувствуй, почему порядок мест меняет силу руки и комфорт.',
-  ),
-  'world_4': Act0WorldDisplayCopyV1(
-    title: 'Префлоп-каркас',
-    subtitle: 'Смотри на руку, место и действие до того, как выбирать линию.',
-  ),
-  'world_5': Act0WorldDisplayCopyV1(
-    title: 'Смысл ставки и цена',
-    subtitle: 'Пойми вэлью, блеф, защиту и цену колла без перегруза.',
-  ),
-  'world_6': Act0WorldDisplayCopyV1(
-    title: 'Борд и дро',
-    subtitle: 'Читай текстуру борда, дро и то, как улицы меняют план.',
-  ),
-  'world_7': Act0WorldDisplayCopyV1(
-    title: 'Диапазоны без перегруза',
-    subtitle: 'Группируй руки просто, без лишней теории.',
-  ),
-  'world_8': Act0WorldDisplayCopyV1(
-    title: 'Глубина стека и риск',
-    subtitle: 'Пойми, почему 100 BB и 20 BB требуют разного мышления.',
-  ),
-  'world_9': Act0WorldDisplayCopyV1(
-    title: 'Турнирное давление',
-    subtitle: 'Почувствуй давление выживания и риска без формул.',
-  ),
-  'world_10': Act0WorldDisplayCopyV1(
-    title: 'Подстройка под игроков',
-    subtitle: 'Меняй один рычаг за раз против реальных типов игроков.',
-  ),
-  'world_11': Act0WorldDisplayCopyV1(
-    title: 'Перенос в реальную игру',
-    subtitle: 'Перенеси учебные решения в реальные игровые ритмы.',
-  ),
-  'world_12': Act0WorldDisplayCopyV1(
-    title: 'Мост к мышлению игрока',
-    subtitle: 'Собери дисциплину, ясность и устойчивый игровой тон.',
-  ),
-};
+const Map<String, Act0WorldDisplayCopyV1> _ruWorldCopyByIdV1 =
+    <String, Act0WorldDisplayCopyV1>{
+      'world_1': Act0WorldDisplayCopyV1(
+        title: 'Покер с нуля',
+        subtitle: 'Грамотность за столом: карты, места, блайнды, стек и банк.',
+      ),
+      'world_2': Act0WorldDisplayCopyV1(
+        title: 'Дисциплина рук',
+        subtitle:
+            'Пойми, какие руки стоят фишек, а какие спокойно уходят в пас.',
+      ),
+      'world_3': Act0WorldDisplayCopyV1(
+        title: 'Мышление позицией',
+        subtitle: 'Почувствуй, почему порядок мест меняет силу руки и комфорт.',
+      ),
+      'world_4': Act0WorldDisplayCopyV1(
+        title: 'Смысл ставки и цена',
+        subtitle: 'Пойми, зачем ставить и какую цену предлагает банк.',
+      ),
+      'world_5': Act0WorldDisplayCopyV1(
+        title: 'Чтение борда',
+        subtitle: 'Читай текстуру борда, дро и то, как улицы меняют план.',
+      ),
+      'world_6': Act0WorldDisplayCopyV1(
+        title: 'Мышление диапазонами',
+        subtitle: 'Группируй руки в диапазоны и понимай, у кого преимущество.',
+      ),
+      'world_7': Act0WorldDisplayCopyV1(
+        title: 'Диапазоны без перегруза',
+        subtitle: 'Группируй руки просто, без лишней теории.',
+      ),
+      'world_8': Act0WorldDisplayCopyV1(
+        title: 'Глубина стека и риск',
+        subtitle: 'Пойми, почему 100 BB и 20 BB требуют разного мышления.',
+      ),
+      'world_9': Act0WorldDisplayCopyV1(
+        title: 'Турнирное давление',
+        subtitle: 'Почувствуй давление выживания и риска без формул.',
+      ),
+      'world_10': Act0WorldDisplayCopyV1(
+        title: 'Подстройка под игроков',
+        subtitle: 'Меняй один рычаг за раз против реальных типов игроков.',
+      ),
+      'world_11': Act0WorldDisplayCopyV1(
+        title: 'Перенос в реальную игру',
+        subtitle: 'Перенеси учебные решения в реальные игровые ритмы.',
+      ),
+      'world_12': Act0WorldDisplayCopyV1(
+        title: 'Мост к мышлению игрока',
+        subtitle: 'Собери дисциплину, ясность и устойчивый игровой тон.',
+      ),
+    };
 
 const Map<String, Act0LessonDisplayCopyV1>
 _ruLessonCopyByIdV1 = <String, Act0LessonDisplayCopyV1>{

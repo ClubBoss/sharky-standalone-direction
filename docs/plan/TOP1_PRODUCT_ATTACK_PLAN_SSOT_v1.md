@@ -778,8 +778,10 @@ Deprecated launch route labels for monetization and commercial planning:
 
 These W4-W6 topic labels are stale after
 `docs/_reviews/w1_w12_route_content_cascade_map_v1.md` and
-`docs/_reviews/w4_w6_route_content_normalization_plan_v1.md`. Current
-normalized route/content ownership for future implementation is:
+`docs/_reviews/w4_w6_route_content_normalization_plan_v1.md`. Runtime/title
+normalization landed in
+`docs/_reviews/w4_w6_title_runtime_normalization_pr1_v1.md`. Current
+normalized route/content ownership is:
 
 | World | Normalized title/job |
 | --- | --- |

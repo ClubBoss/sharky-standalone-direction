@@ -12416,9 +12416,9 @@ void main() {
         'Poker from Zero',
         'Hand Discipline',
         'Position Thinking',
-        'Preflop Framework',
-        'Bet Purpose And Price',
-        'Board And Draws',
+        'Bet Purpose / Price',
+        'Board Awareness',
+        'Range Thinking',
         'Range Thinking Lite',
         'Stack Depth And Risk',
         'Tournament Pressure',
@@ -12728,9 +12728,9 @@ void main() {
       'Poker from Zero',
       'Hand Discipline',
       'Position Thinking',
-      'Preflop Framework',
-      'Bet Purpose And Price',
-      'Board And Draws',
+      'Bet Purpose / Price',
+      'Board Awareness',
+      'Range Thinking',
       'Range Thinking Lite',
       'Stack Depth And Risk',
       'Tournament Pressure',
@@ -22818,7 +22818,7 @@ void main() {
 
   test('World 4 has a real preflop framework spine', () {
     final world4 = Act0ShellStateV1.sample.worldById('world_4');
-    expect(world4.title, 'Preflop Framework');
+    expect(world4.title, 'Bet Purpose / Price');
     expect(world4.lessons.map((lesson) => lesson.title), <String>[
       'First-in open',
       'Facing an open',
@@ -23021,7 +23021,7 @@ void main() {
 
   test('World 5 has a real bet-purpose and price spine', () {
     final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    expect(world5.title, 'Bet Purpose And Price');
+    expect(world5.title, 'Board Awareness');
     expect(world5.lessons.map((lesson) => lesson.title), <String>[
       'Why bets happen',
       'Value bets',
@@ -23294,7 +23294,7 @@ void main() {
 
   test('World 6 has a real board-and-draws spine', () {
     final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    expect(world6.title, 'Board And Draws');
+    expect(world6.title, 'Range Thinking');
     expect(world6.lessons.map((lesson) => lesson.title), <String>[
       'Dry or wet board',
       'Connected boards',
