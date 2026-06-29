@@ -693,7 +693,19 @@ _FactorySampleSpecV1 _w1SeatRolePr2Spec({
     transferSurfaceId: transferSurfaceId,
     misconceptionId: misconceptionId,
     sourceTruthStatus: 'migrated',
-    feedbackReason: 'Find the blind or button role before action selection.',
+    feedbackReason: switch (correctActionOverride) {
+      'btn' =>
+        'The Button is the seat marked BTN. Identify it before choosing an action.',
+      'sb' =>
+        'The small blind is the seat marked SB. Identify it before choosing an action.',
+      'bb' =>
+        'The big blind is the seat marked BB. Identify it before choosing an action.',
+      _ => throw ArgumentError.value(
+        correctActionOverride,
+        'correctActionOverride',
+        'Expected btn, sb, or bb.',
+      ),
+    },
     sourceJob: 'w1_coverage_expansion_pr2_seat_role_orientation',
     claimsTransfer: true,
     correctActionOverride: correctActionOverride,
@@ -1487,7 +1499,7 @@ exportW2ApprovedRaiseDisciplineCanonicalPr3V1({bool writeFiles = false}) {
         transferSurfaceId: 'clear_aggression_trigger_raise_v1',
         misconceptionId: 'misses_clear_aggression_trigger',
         feedbackReason:
-            'Raise is disciplined only because the source grants a clear aggression trigger.',
+            'Raise is disciplined because this is a clear approved raise spot.',
       ),
       _w2ApprovedRaiseDisciplinePr3Spec(
         sourcePath:

@@ -31,14 +31,14 @@
         "raise"
       ],
       "expected_action": "fold",
-      "feedback_correct_v1": "Correct. A dry river closure with no improvement should still release.",
-      "feedback_incorrect_v1": "Incorrect. Let the dry closure and missed improvement drive the choice.",
+      "feedback_correct_v1": "Correct. A dry final river card with no improvement should still release.",
+      "feedback_incorrect_v1": "Incorrect. Let the final river card and missed improvement drive the choice.",
       "error_class": "expected_action_mismatch",
       "why_v1": "A dry river that never improves you often strips away the reason to keep pressuring."
     },
     {
       "street": "river",
-      "prompt": "Step 3: The river closure completes heavy wet-board pressure and the draw story is now clean. Which simple action fits best?",
+      "prompt": "Step 3: The final river card completes heavy wet-board pressure and the draw story is now clean. Which simple action fits best?",
       "intent_v1": "texture_wet_vs_dry",
       "available_actions_v1": [
         "fold",
@@ -47,7 +47,7 @@
       ],
       "expected_action": "raise",
       "feedback_correct_v1": "Correct. A completed wet-board pressure story supports the stronger value action.",
-      "feedback_incorrect_v1": "Incorrect. Start from the completed wet closure before acting.",
+      "feedback_incorrect_v1": "Incorrect. Start from the final river card before acting.",
       "recap_v1": "World 5 turn-and-river checkpoints should now feel simple: a turn can sharpen pressure, a dry missed river can release, and a fully completed wet story can press hard again.",
       "error_class": "expected_action_mismatch",
       "why_v1": "Street changes matter because they can either confirm the pressure story or collapse it."

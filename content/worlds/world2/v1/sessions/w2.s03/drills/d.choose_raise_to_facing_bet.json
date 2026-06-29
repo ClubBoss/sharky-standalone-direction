@@ -1,7 +1,7 @@
 {
   "id": "choose_raise_to_facing_bet",
   "kind": "action_choice",
-  "prompt": "Facing one open with clear aggression trigger, choose legal response.",
+  "prompt": "Facing one open in a clear approved raise spot, choose the legal response.",
   "intent_v1": "position_oop_pain",
   "why_v1": "Aggression branch is represented by raise_to in this spot.",
   "expected": {

@@ -26,7 +26,7 @@
       "drill_kind": "action_choice",
       "correct_action": "raise",
       "acceptable_actions": [],
-      "feedback_reason": "Raise is disciplined only because the source grants a clear aggression trigger.",
+      "feedback_reason": "Raise is disciplined because this is a clear approved raise spot.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

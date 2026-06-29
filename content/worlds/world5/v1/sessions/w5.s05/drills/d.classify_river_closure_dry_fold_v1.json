@@ -6,8 +6,8 @@
   "board_texture_v1": "dry",
   "expected_action": "fold",
   "acceptable_actions": ["call"],
-  "why_v1": "Dry river closures with missed improvement often leave too little pressure or value to continue profitably.",
+  "why_v1": "A dry final river card with missed improvement often leaves too little pressure or value to continue profitably.",
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. The dry missed closure points to a fold.",
-  "feedback_incorrect_v1": "Incorrect. Let the dry river closure and missed improvement drive the choice."
+  "feedback_correct_v1": "Correct. The dry final river card points to a fold.",
+  "feedback_incorrect_v1": "Incorrect. Let the final river card and missed improvement drive the choice."
 }

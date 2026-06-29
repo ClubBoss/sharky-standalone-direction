@@ -399,7 +399,7 @@ void main() {
       minRaiseTask['feedback_reason'],
       contains('smallest legal raise label'),
     );
-    expect(potTask['feedback_reason'], contains('largest pressure-size label'));
+    expect(potTask['feedback_reason'], contains('largest basic size label'));
     for (final task in tasks) {
       final feedback = task['feedback_reason']! as String;
       expect(feedback, isNot(contains('gets paid')));
@@ -1745,7 +1745,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(24));
+    expect(results, hasLength(25));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }
