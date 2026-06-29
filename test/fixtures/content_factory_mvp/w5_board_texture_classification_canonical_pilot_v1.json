@@ -66,7 +66,7 @@
       "drill_kind": "board_texture_classifier_v1",
       "correct_action": "call",
       "acceptable_actions": [],
-      "feedback_reason": "Wet boards carry more draw pressure, so calling controls risk while still continuing.",
+      "feedback_reason": "A draw is an incomplete hand that can become strong if the right card comes. Wet boards carry more draw pressure, so calling controls risk while still continuing.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

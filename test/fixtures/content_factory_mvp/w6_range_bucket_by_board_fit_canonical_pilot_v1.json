@@ -26,7 +26,7 @@
       "drill_kind": "range_bucket_board_fit_classifier_v1",
       "correct_action": "strong",
       "acceptable_actions": [],
-      "feedback_reason": "Strong means the made hand fits the board well and sits ahead of many weaker made hands.",
+      "feedback_reason": "A range is the set of hands an opponent could have here, not one exact hand. Strong means the made hand fits the board well and sits ahead of many weaker made hands.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

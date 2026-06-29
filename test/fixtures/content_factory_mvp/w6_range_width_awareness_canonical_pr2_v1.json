@@ -26,7 +26,7 @@
       "drill_kind": "range_width_classifier_v1",
       "correct_action": "wider",
       "acceptable_actions": [],
-      "feedback_reason": "Wider means the button can include more hands because fewer players remain behind.",
+      "feedback_reason": "A range is the set of hands an opponent could have here, not one exact hand. Wider means the button can include more hands because fewer players remain behind.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

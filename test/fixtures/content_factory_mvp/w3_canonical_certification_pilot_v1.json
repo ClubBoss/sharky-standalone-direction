@@ -26,7 +26,7 @@
       "drill_kind": "hand_chain_v1",
       "correct_action": "hero",
       "acceptable_actions": [],
-      "feedback_reason": "Position tells you who gets more information before making the next decision.",
+      "feedback_reason": "In position means acting after your opponent. Out of position means acting before your opponent. Acting later gives you more information before the next decision.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

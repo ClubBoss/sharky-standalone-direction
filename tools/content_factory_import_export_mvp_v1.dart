@@ -436,7 +436,10 @@ ContentFactoryImportExportResultV1 exportW1StartingHandDisciplineBatch1V1({
         transferSurfaceId: 'facing_open_continue_or_release_v1',
         misconceptionId: 'turns_playable_defend_into_loose_raise',
         sourceTruthStatus: 'migrated',
-        feedbackReason: null,
+        feedbackReason:
+            'Calling from the big blind with a playable broadway is a defend: '
+            'you already posted the big blind, but without position the clean '
+            'continue is call.',
         sourceJob: 'w1_starting_hand_discipline_batch1',
         claimsTransfer: true,
       ),
@@ -750,6 +753,9 @@ ContentFactoryImportExportResultV1 exportW1BetSizeVocabularyPreviewPr3V1({
         taskId: 'w1.s01.choose_one_third_pot_keep_price.bet_size_pr3_v1',
         transferSurfaceId: 'cheap_price_label_v1',
         misconceptionId: 'overstates_preview_size_strategy',
+        feedbackReason:
+            'One third pot is a smaller size label. The pot is the chips '
+            'already in the middle.',
       ),
       _w1BetSizePr3Spec(
         sourcePath:
@@ -758,6 +764,8 @@ ContentFactoryImportExportResultV1 exportW1BetSizeVocabularyPreviewPr3V1({
         taskId: 'w1.s01.choose_half_pot_value.bet_size_pr3_v1',
         transferSurfaceId: 'value_size_label_v1',
         misconceptionId: 'overstates_preview_size_strategy',
+        feedbackReason:
+            'Half pot means betting half the chips currently in the middle.',
       ),
       _w1BetSizePr3Spec(
         sourcePath:
@@ -774,6 +782,9 @@ ContentFactoryImportExportResultV1 exportW1BetSizeVocabularyPreviewPr3V1({
         taskId: 'w1.s01.choose_pot_pressure.bet_size_pr3_v1',
         transferSurfaceId: 'pressure_size_label_v1',
         misconceptionId: 'confuses_pressure_size_with_value_size',
+        feedbackReason:
+            'A pot-sized bet matches the chips already in the middle; it is '
+            'the largest basic size label in this preview.',
       ),
       _w1BetSizePr3Spec(
         sourcePath:
@@ -783,6 +794,9 @@ ContentFactoryImportExportResultV1 exportW1BetSizeVocabularyPreviewPr3V1({
         transferSurfaceId: 'cheap_price_label_v1',
         misconceptionId: 'overstates_preview_size_strategy',
         sourceStepIndex: 2,
+        feedbackReason:
+            'World 1 only previews sizing vocabulary here. One third pot is '
+            'the compact smaller-pot size label.',
       ),
       _w1BetSizePr3Spec(
         sourcePath:
@@ -895,6 +909,7 @@ _FactorySampleSpecV1 _w1BetSizePr3Spec({
   required String transferSurfaceId,
   required String misconceptionId,
   int? sourceStepIndex,
+  String? feedbackReason,
 }) {
   return _FactorySampleSpecV1(
     sourcePath: sourcePath,
@@ -916,7 +931,7 @@ _FactorySampleSpecV1 _w1BetSizePr3Spec({
     transferSurfaceId: transferSurfaceId,
     misconceptionId: misconceptionId,
     sourceTruthStatus: 'migrated',
-    feedbackReason: null,
+    feedbackReason: feedbackReason,
     sourceJob: 'w1_coverage_expansion_pr3_bet_size_vocabulary_preview',
     claimsTransfer: true,
     sourceStepIndex: sourceStepIndex,
@@ -1529,7 +1544,10 @@ ContentFactoryImportExportResultV1 exportW3CanonicalCertificationPilotV1({
         transferSurfaceId: 'position_identity_v1',
         misconceptionId: 'acts_without_reading_position',
         sourceTruthStatus: 'migrated',
-        feedbackReason: null,
+        feedbackReason:
+            'In position means acting after your opponent. Out of position '
+            'means acting before your opponent. Acting later gives you more '
+            'information before the next decision.',
         sourceJob: sourceJob,
         claimsTransfer: true,
         sourceStepIndex: 0,
@@ -2221,6 +2239,7 @@ exportW4PriceGivenBeforeActionCanonicalPilotV1({bool writeFiles = false}) {
     required String taskId,
     required String transferSurfaceId,
     required String misconceptionId,
+    String? feedbackReason,
   }) {
     return _FactorySampleSpecV1(
       sourcePath: sourcePath,
@@ -2242,7 +2261,7 @@ exportW4PriceGivenBeforeActionCanonicalPilotV1({bool writeFiles = false}) {
       transferSurfaceId: transferSurfaceId,
       misconceptionId: misconceptionId,
       sourceTruthStatus: 'migrated',
-      feedbackReason: null,
+      feedbackReason: feedbackReason,
       sourceJob: sourceJob,
       claimsTransfer: true,
       sourceIntentOverride: sourceIntentOverride,
@@ -2338,6 +2357,7 @@ exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
     required String taskId,
     required String transferSurfaceId,
     required String misconceptionId,
+    String? feedbackReason,
   }) {
     return _FactorySampleSpecV1(
       sourcePath: sourcePath,
@@ -2359,7 +2379,7 @@ exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
       transferSurfaceId: transferSurfaceId,
       misconceptionId: misconceptionId,
       sourceTruthStatus: 'migrated',
-      feedbackReason: null,
+      feedbackReason: feedbackReason,
       sourceJob: sourceJob,
       claimsTransfer: true,
       safeClaimStatus: 'canonical_pilot',
@@ -2393,6 +2413,10 @@ exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
         taskId: 'w5.s01.classify_texture_intro_wet_call.canonical_pilot_v1',
         transferSurfaceId: 'wet_texture_control_v1',
         misconceptionId: 'overplays_wet_texture',
+        feedbackReason:
+            'A draw is an incomplete hand that can become strong if the right '
+            'card comes. Wet boards carry more draw pressure, so calling '
+            'controls risk while still continuing.',
       ),
       spec(
         sourcePath:
@@ -2457,6 +2481,7 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
     required String taskId,
     required String transferSurfaceId,
     required String misconceptionId,
+    String? feedbackReason,
   }) {
     return _FactorySampleSpecV1(
       sourcePath: sourcePath,
@@ -2478,7 +2503,7 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
       transferSurfaceId: transferSurfaceId,
       misconceptionId: misconceptionId,
       sourceTruthStatus: 'migrated',
-      feedbackReason: null,
+      feedbackReason: feedbackReason,
       sourceJob: sourceJob,
       claimsTransfer: true,
       sourceIntentOverride: sourceIntentOverride,
@@ -2503,6 +2528,10 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         taskId: 'w4.s01.choose_raise_protection.canonical_pr2_v1',
         transferSurfaceId: 'protection_raise_action_v1',
         misconceptionId: 'chooses_price_before_protection_purpose',
+        feedbackReason:
+            'Protection means betting so drawing hands pay more to continue; '
+            'raising here charges overcards and draws instead of giving them '
+            'a free card.',
       ),
       spec(
         sourcePath:
@@ -2523,6 +2552,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         taskId: 'w4.s02.choose_raise_denial.canonical_pr2_v1',
         transferSurfaceId: 'denial_raise_action_v1',
         misconceptionId: 'undercharges_denial_spot',
+        feedbackReason:
+            'Equity means chance to win the hand. Raise here to make drawing '
+            'hands pay more instead of letting them use that chance cheaply.',
       ),
       spec(
         sourcePath:
@@ -2533,6 +2565,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         taskId: 'w4.s02.choose_call_control.canonical_pr2_v1',
         transferSurfaceId: 'denial_control_call_v1',
         misconceptionId: 'overraises_control_spot',
+        feedbackReason:
+            'Call controls risk when raising would build the pot without '
+            'enough clear pressure.',
       ),
       spec(
         sourcePath:
@@ -2543,6 +2578,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         taskId: 'w4.s03.choose_raise_bluff.canonical_pr2_v1',
         transferSurfaceId: 'bluff_raise_action_v1',
         misconceptionId: 'ignores_blocker_bluff_pressure',
+        feedbackReason:
+            'Raise as a bluff when the spot creates enough simple pressure '
+            'and opponents can still fold.',
       ),
       spec(
         sourcePath:
@@ -2553,6 +2591,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         taskId: 'w4.s05.choose_raise_repeat.canonical_pr2_v1',
         transferSurfaceId: 'protection_raise_action_v1',
         misconceptionId: 'misses_repeat_protection_raise',
+        feedbackReason:
+            'Protection means betting so drawing hands pay more to continue; '
+            'raise here to charge draws instead of giving a free card.',
       ),
     ],
   );
@@ -2690,6 +2731,7 @@ exportW6RangeBucketByBoardFitCanonicalPilotV1({bool writeFiles = false}) {
     required String taskId,
     required String transferSurfaceId,
     required String misconceptionId,
+    String? feedbackReason,
   }) {
     return _FactorySampleSpecV1(
       sourcePath: sourcePath,
@@ -2711,7 +2753,7 @@ exportW6RangeBucketByBoardFitCanonicalPilotV1({bool writeFiles = false}) {
       transferSurfaceId: transferSurfaceId,
       misconceptionId: misconceptionId,
       sourceTruthStatus: 'migrated',
-      feedbackReason: null,
+      feedbackReason: feedbackReason,
       sourceJob: sourceJob,
       claimsTransfer: true,
       safeClaimStatus: 'canonical_pilot',
@@ -2733,6 +2775,10 @@ exportW6RangeBucketByBoardFitCanonicalPilotV1({bool writeFiles = false}) {
         taskId: 'w6.s01.classify_strong_clean_fit.canonical_pilot_v1',
         transferSurfaceId: 'made_hand_clean_fit_v1',
         misconceptionId: 'misses_clean_made_hand_strength',
+        feedbackReason:
+            'A range is the set of hands an opponent could have here, not one '
+            'exact hand. Strong means the made hand fits the board well and '
+            'sits ahead of many weaker made hands.',
       ),
       spec(
         sourcePath:
@@ -2792,6 +2838,7 @@ ContentFactoryImportExportResultV1 exportW6RangeWidthAwarenessCanonicalPr2V1({
     required String taskId,
     required String transferSurfaceId,
     required String misconceptionId,
+    String? feedbackReason,
   }) {
     return _FactorySampleSpecV1(
       sourcePath: sourcePath,
@@ -2813,7 +2860,7 @@ ContentFactoryImportExportResultV1 exportW6RangeWidthAwarenessCanonicalPr2V1({
       transferSurfaceId: transferSurfaceId,
       misconceptionId: misconceptionId,
       sourceTruthStatus: 'migrated',
-      feedbackReason: null,
+      feedbackReason: feedbackReason,
       sourceJob: sourceJob,
       claimsTransfer: true,
       safeClaimStatus: 'canonical_pilot',
@@ -2834,6 +2881,10 @@ ContentFactoryImportExportResultV1 exportW6RangeWidthAwarenessCanonicalPr2V1({
         taskId: 'w6.s02.classify_button_range_wider.canonical_pr2_v1',
         transferSurfaceId: 'late_position_more_hands_v1',
         misconceptionId: 'treats_button_like_utg_width',
+        feedbackReason:
+            'A range is the set of hands an opponent could have here, not one '
+            'exact hand. Wider means the button can include more hands '
+            'because fewer players remain behind.',
       ),
       spec(
         sourcePath:

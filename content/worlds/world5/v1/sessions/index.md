@@ -12,5 +12,6 @@ World goal: board awareness, where board texture guides action more than hand la
 - w5.s08: Draw Completion Awareness
 - w5.s09: Texture and Blocker Context
 - w5.s10: Texture Synthesis Checkpoint
+- w5.s11: Basic Outs Awareness
 
 Each session id maps to its folder.

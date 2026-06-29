@@ -1,0 +1,3 @@
+- Target error class: basic_outs_awareness_gap.
+- Scope lock: count only flush draw 9, open-ended straight draw 8, and gutshot 4.
+- Keep this to beginner counting; do not add deeper action policy.

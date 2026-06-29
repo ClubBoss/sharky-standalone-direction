@@ -1,0 +1,11 @@
+{
+  "id": "count_open_ended_straight_draw_eight_outs_v1",
+  "kind": "outs_count_classifier_v1",
+  "prompt": "You have an open-ended straight draw. How many unseen cards complete the straight?",
+  "choices": ["9 outs", "8 outs", "4 outs"],
+  "correct_action": "eight_outs",
+  "why_v1": "An open-ended straight draw has 8 outs because four cards on each end can complete it.",
+  "feedback_correct_v1": "Correct. An open-ended straight draw has 8 outs.",
+  "feedback_incorrect_v1": "Incorrect. Count both ends of the straight: an open-ended straight draw has 8 outs.",
+  "tags": ["world5", "basic_outs_awareness", "open_ended_straight_draw"]
+}

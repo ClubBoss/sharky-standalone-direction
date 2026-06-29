@@ -1,0 +1,3 @@
+- count_flush_draw_nine_outs_v1: count 9 outs for a flush draw.
+- count_open_ended_straight_draw_eight_outs_v1: count 8 outs for an open-ended straight draw.
+- count_gutshot_four_outs_v1: count 4 outs for a gutshot straight draw.

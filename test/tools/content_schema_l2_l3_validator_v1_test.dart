@@ -1190,6 +1190,54 @@ void main() {
     },
   );
 
+  test('reports W5 basic outs prerequisite repair as route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1(
+      w5PrerequisiteChainRepairFixturePathsV1,
+    );
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_5']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['basic_outs_awareness'], 6);
+    expect(
+      world.sameSignalGroupCounts['w5.board_awareness.basic_outs_awareness'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['flush_draw_outs_v1'], 2);
+    expect(world.transferSurfaceCounts['open_ended_straight_draw_outs_v1'], 2);
+    expect(world.transferSurfaceCounts['gutshot_outs_v1'], 2);
+    expect(world.repairFocusCounts['draw_count_before_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
+  test('keeps W5 bridge plus outs repair as bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w5_bridge_or_legacy_schema_migration_pilot_v1.json',
+      ...w5PrerequisiteChainRepairFixturePathsV1,
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+
+    final world = result.worldReports['world_5']!;
+    expect(world.coverageReady, false);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
+  });
+
   test('CLI exits non-zero for invalid L3 route admission claims', () async {
     final tempDir = Directory.systemTemp.createTempSync(
       'content_schema_l2_l3_validator_',

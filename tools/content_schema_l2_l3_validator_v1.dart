@@ -46,6 +46,11 @@ const List<String> w6CanonicalCoveragePr2FixturePathsV1 = [
       'w6_range_width_awareness_canonical_pr2_v1.json',
 ];
 
+const List<String> w5PrerequisiteChainRepairFixturePathsV1 = [
+  'test/fixtures/content_factory_mvp/'
+      'w5_basic_outs_awareness_canonical_prerequisite_repair_v1.json',
+];
+
 const List<String> _requiredFields = [
   'schema_version',
   'world_id',

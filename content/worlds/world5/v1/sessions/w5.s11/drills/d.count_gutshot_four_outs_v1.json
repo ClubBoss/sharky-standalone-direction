@@ -1,0 +1,11 @@
+{
+  "id": "count_gutshot_four_outs_v1",
+  "kind": "outs_count_classifier_v1",
+  "prompt": "You have a gutshot straight draw. How many unseen cards complete the inside straight?",
+  "choices": ["9 outs", "8 outs", "4 outs"],
+  "correct_action": "four_outs",
+  "why_v1": "A gutshot has 4 outs because only one rank completes the inside straight.",
+  "feedback_correct_v1": "Correct. A gutshot has 4 outs.",
+  "feedback_incorrect_v1": "Incorrect. Count only the one rank that completes the inside straight: a gutshot has 4 outs.",
+  "tags": ["world5", "basic_outs_awareness", "gutshot"]
+}

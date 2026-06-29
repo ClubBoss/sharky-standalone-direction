@@ -140,7 +140,7 @@
       "drill_kind": "action_choice",
       "correct_action": "call",
       "acceptable_actions": [],
-      "feedback_reason": "From the big blind, a playable broadway hand can still continue by calling even without position.",
+      "feedback_reason": "Calling from the big blind with a playable broadway is a defend: you already posted the big blind, but without position the clean continue is call.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

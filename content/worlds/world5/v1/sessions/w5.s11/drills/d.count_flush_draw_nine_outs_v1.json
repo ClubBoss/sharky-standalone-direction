@@ -1,0 +1,11 @@
+{
+  "id": "count_flush_draw_nine_outs_v1",
+  "kind": "outs_count_classifier_v1",
+  "prompt": "You have four cards to a flush after the turn. How many unseen cards complete the flush draw?",
+  "choices": ["9 outs", "8 outs", "4 outs"],
+  "correct_action": "nine_outs",
+  "why_v1": "A flush draw has 9 outs because nine unseen cards of the suit can complete it.",
+  "feedback_correct_v1": "Correct. A flush draw has 9 outs.",
+  "feedback_incorrect_v1": "Incorrect. Count only the unseen cards of the suit: a flush draw has 9 outs.",
+  "tags": ["world5", "basic_outs_awareness", "flush_draw"]
+}
