@@ -6,10 +6,10 @@
 - tap_turn_range: TODO
 - choose_call_range: TODO
 - choose_raise_range: TODO
-- classify_strong_raise: TODO
-- classify_missed_fold: TODO
-- classify_medium_call_control: medium range bucket, fair-price control.
-- classify_weak_fold_pressure: weak range bucket under pressure.
-- classify_strong_call_control: strong range bucket with an already large action.
-- classify_missed_fold_recheck: missed range bucket with no clean draw.
+- classify_strong_raise: strong bucket from clean made-hand board fit.
+- classify_missed_fold: missed bucket from no pair and no clear draw.
+- classify_medium_call_control: medium bucket from made hand with stronger hands still available.
+- classify_weak_fold_pressure: weak bucket from light made-hand board fit.
+- classify_strong_call_control: strong bucket from overpair board fit.
+- classify_missed_fold_recheck: missed bucket from unpaired low cards with no clear draw.
 - choose_fold_trap: TODO

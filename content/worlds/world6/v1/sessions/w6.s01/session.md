@@ -9,11 +9,13 @@ A combo is one specific set of hole cards a player can hold.
 Each rep shows a simple action frame and asks which broad hand bucket best fits the likely range:
 strong,
 medium,
-or weak.
+weak,
+or missed.
 The goal is to notice that a decision starts from a set of likely hands, not from one exact combo.
 
 ## Decision
-Choose the broad range bucket that best matches the likely hand group in the spot.
+Given a hand category and board-fit cue, choose the broad range bucket that
+best matches the situation.
 
 ## Explanation
 World 6 starts when learners stop treating every spot like a single-hand puzzle.

@@ -1,15 +1,14 @@
 {
-  "id": "classify_strong_raise",
-  "kind": "range_bucket_classifier_v1",
-  "prompt": "Range bucket is strong in position. Choose action.",
+  "id": "classify_strong_clean_fit",
+  "kind": "range_bucket_board_fit_classifier_v1",
+  "prompt": "Hand category: top pair or better. Board fit: the hand connects cleanly with the board and is ahead of many weaker made hands. Classify the range bucket.",
   "intent_v1": "think_in_ranges",
+  "hand_category_v1": "top_pair_or_better",
+  "board_fit_v1": "clean_made_hand_fit",
+  "expected_action": "strong",
   "range_bucket_v1": "strong",
-  "expected_action": "raise",
-  "acceptable_actions": [
-    "call"
-  ],
-  "why_v1": "Raise now to build value while strong hands can still get called.",
-  "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Raise fits this strong bucket because in-position value wants to build the pot before weaker continues shut down.",
-  "feedback_incorrect_v1": "Incorrect. Raise fits this strong bucket because an in-position value range should build the pot before weaker continues shut down."
+  "why_v1": "Strong means the made hand fits the board well and sits ahead of many weaker made hands.",
+  "error_class": "range_bucket_mismatch",
+  "feedback_correct_v1": "Correct. This is strong because the hand is already made, connects cleanly with the board, and beats many weaker made hands.",
+  "feedback_incorrect_v1": "Incorrect. This is strong because the board fit supports a made hand that is ahead of many weaker made hands."
 }

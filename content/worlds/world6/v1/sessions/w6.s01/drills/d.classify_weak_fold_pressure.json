@@ -1,15 +1,14 @@
 {
-  "id": "classify_weak_fold_pressure",
-  "kind": "range_bucket_classifier_v1",
-  "prompt": "Range bucket is weak and pressure is growing. Choose action.",
+  "id": "classify_weak_bottom_pair_fit",
+  "kind": "range_bucket_board_fit_classifier_v1",
+  "prompt": "Hand category: bottom pair. Board fit: the hand caught the board lightly, but many higher pairs and stronger made hands are possible. Classify the range bucket.",
   "intent_v1": "range_vs_hand",
+  "hand_category_v1": "bottom_pair",
+  "board_fit_v1": "light_made_hand_fit",
+  "expected_action": "weak",
   "range_bucket_v1": "weak",
-  "expected_action": "fold",
-  "acceptable_actions": [
-    "call"
-  ],
-  "why_v1": "Fold keeps a weak bucket from paying into pressure without a clear reason to continue.",
-  "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Fold fits this weak bucket because pressure is rising while the likely hand group has little reason to continue.",
-  "feedback_incorrect_v1": "Incorrect. Fold fits this weak bucket because calling pressure without a stronger reason turns a thin hope into a bigger problem."
+  "why_v1": "Weak means the hand touched the board, but its fit is low and many stronger made hands can exist.",
+  "error_class": "range_bucket_mismatch",
+  "feedback_correct_v1": "Correct. This is weak because bottom pair has some board fit, but many higher pairs and stronger made hands can beat it.",
+  "feedback_incorrect_v1": "Incorrect. This is weak because the hand is not a full miss, yet its board fit is low and easily outclassed."
 }

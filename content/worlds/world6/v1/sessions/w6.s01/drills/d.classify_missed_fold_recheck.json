@@ -1,15 +1,14 @@
 {
-  "id": "classify_missed_fold_recheck",
-  "kind": "range_bucket_classifier_v1",
-  "prompt": "Range bucket is missed with no clean draw. Choose action.",
+  "id": "classify_missed_low_cards_no_draw",
+  "kind": "range_bucket_board_fit_classifier_v1",
+  "prompt": "Hand category: unpaired low cards. Board fit: the hand missed the board and does not form a clear straight or flush draw. Classify the range bucket.",
   "intent_v1": "range_vs_hand",
+  "hand_category_v1": "unpaired_low_cards",
+  "board_fit_v1": "missed_board_no_clear_draw",
+  "expected_action": "missed",
   "range_bucket_v1": "missed",
-  "expected_action": "fold",
-  "acceptable_actions": [
-    "call"
-  ],
-  "why_v1": "Fold repeats the same missed-bucket read when no pair or clean draw supports paying for another card.",
-  "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Fold fits this missed bucket because no pair or clean draw gives the range a stable reason to keep paying.",
-  "feedback_incorrect_v1": "Incorrect. Fold fits this missed bucket because a missed range without a clean draw should not pay for another card on hope alone."
+  "why_v1": "Missed means the board did not make a pair or a clear draw for this hand category.",
+  "error_class": "range_bucket_mismatch",
+  "feedback_correct_v1": "Correct. This is missed because the hand stayed unpaired and the board did not create a clear draw.",
+  "feedback_incorrect_v1": "Incorrect. This is missed because the hand has no made fit and no clear draw to move it into a stronger bucket."
 }

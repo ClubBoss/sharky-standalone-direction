@@ -1341,6 +1341,100 @@ void main() {
     });
   });
 
+  test('exports W6 range bucket board-fit canonical pilot', () {
+    final result = exportW6RangeBucketByBoardFitCanonicalPilotV1(
+      writeFiles: false,
+    );
+    final secondResult = exportW6RangeBucketByBoardFitCanonicalPilotV1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w6_range_bucket_by_board_fit_canonical_pilot_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_6'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_6'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Range Thinking',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_6',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pilot',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'range_bucket_by_board_fit',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w6.range_thinking.range_bucket_by_board_fit',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'bucket_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'made_hand_clean_fit_v1',
+      'made_hand_showdown_fit_v1',
+      'light_pair_fit_v1',
+      'missed_no_clear_draw_v1',
+    });
+    expect(tasks.map((task) => task['drill_kind']).toSet(), {
+      'range_bucket_board_fit_classifier_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'strong',
+      'strong',
+      'medium',
+      'weak',
+      'missed',
+      'missed',
+    ]);
+    expect(
+      tasks.map((task) => task['feedback_reason']).join('\n'),
+      isNot(
+        anyOf([
+          contains('bet'),
+          contains('call'),
+          contains('fold'),
+          contains('raise'),
+          contains('blocker'),
+          contains('polar'),
+          contains('solver'),
+          contains('GTO'),
+        ]),
+      ),
+    );
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w6_canonical_pilot_range_bucket_by_board_fit',
+    });
+    expect(migrationSources.map((source) => source['source_kind']).toSet(), {
+      'range_bucket_board_fit_classifier_v1',
+    });
+  });
+
   test('exports W4 intent action discipline canonical PR2', () {
     final result = exportW4IntentActionDisciplineCanonicalPr2V1(
       writeFiles: false,
@@ -1559,7 +1653,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(22));
+    expect(results, hasLength(23));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

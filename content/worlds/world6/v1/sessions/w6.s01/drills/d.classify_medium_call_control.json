@@ -1,15 +1,14 @@
 {
-  "id": "classify_medium_call_control",
-  "kind": "range_bucket_classifier_v1",
-  "prompt": "Range bucket is medium and the price is fair. Choose action.",
+  "id": "classify_medium_second_pair_fit",
+  "kind": "range_bucket_board_fit_classifier_v1",
+  "prompt": "Hand category: second pair. Board fit: the hand has showdown value, but top pair and stronger made hands are still available. Classify the range bucket.",
   "intent_v1": "think_in_ranges",
+  "hand_category_v1": "second_pair",
+  "board_fit_v1": "made_but_not_top_pair",
+  "expected_action": "medium",
   "range_bucket_v1": "medium",
-  "expected_action": "call",
-  "acceptable_actions": [
-    "fold"
-  ],
-  "why_v1": "Call keeps a medium bucket under control when the price is fair and stronger hands still exist.",
-  "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call fits this medium bucket because it keeps the pot controlled without turning a fair continue into forced pressure.",
-  "feedback_incorrect_v1": "Incorrect. Call fits this medium bucket because the fair price supports control, not a forced raise into stronger hands."
+  "why_v1": "Medium means the hand has real made-hand value, but stronger made hands are still common.",
+  "error_class": "range_bucket_mismatch",
+  "feedback_correct_v1": "Correct. This is medium because second pair fits the board, yet top pair and stronger hands can still be ahead.",
+  "feedback_incorrect_v1": "Incorrect. This is medium because the board fit gives made-hand value without making it one of the strongest buckets."
 }

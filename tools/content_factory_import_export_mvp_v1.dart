@@ -116,6 +116,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW5BoardTextureClassificationCanonicalPilotV1(writeFiles: false),
     exportW5BoardShiftAwarenessCanonicalPr2V1(writeFiles: false),
     exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW6RangeBucketByBoardFitCanonicalPilotV1(writeFiles: false),
   ];
   if (writeFiles) {
     Directory(_outputDir).createSync(recursive: true);
@@ -2670,6 +2671,107 @@ ContentFactoryImportExportResultV1 exportW5BoardShiftAwarenessCanonicalPr2V1({
         taskId: 'w5.s05.classify_river_closure_wet_raise.canonical_pr2_v1',
         transferSurfaceId: 'river_wet_pressure_v1',
         misconceptionId: 'misses_completed_wet_river_pressure',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW6RangeBucketByBoardFitCanonicalPilotV1({bool writeFiles = false}) {
+  const fixtureId = 'w6_range_bucket_by_board_fit_canonical_pilot_v1';
+  const fixtureLevel = 'w6_range_bucket_source_repair_plan_v1';
+  const conceptFamilyId = 'range_bucket_by_board_fit';
+  const repairFocusId = 'bucket_before_action';
+  const sameSignalGroupId = 'w6.range_thinking.range_bucket_by_board_fit';
+  const sourceJob = 'w6_canonical_pilot_range_bucket_by_board_fit';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_6',
+      routeWorldId: 'world_6',
+      displayWorldTitle: 'Range Thinking',
+      contentOwnerWorldId: 'world_6',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w6.l01',
+      sessionId: 'w6.s01',
+      packId: 'world6_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      safeClaimStatus: 'canonical_pilot',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w6_range_bucket_by_board_fit_canonical_pilot_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_strong_raise.json',
+        taskId: 'w6.s01.classify_strong_clean_fit.canonical_pilot_v1',
+        transferSurfaceId: 'made_hand_clean_fit_v1',
+        misconceptionId: 'misses_clean_made_hand_strength',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_strong_call_control.json',
+        taskId: 'w6.s01.classify_strong_overpair_fit.canonical_pilot_v1',
+        transferSurfaceId: 'made_hand_clean_fit_v1',
+        misconceptionId: 'undervalues_overpair_board_fit',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_medium_call_control.json',
+        taskId: 'w6.s01.classify_medium_second_pair_fit.canonical_pilot_v1',
+        transferSurfaceId: 'made_hand_showdown_fit_v1',
+        misconceptionId: 'overclasses_second_pair_as_strong',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_weak_fold_pressure.json',
+        taskId: 'w6.s01.classify_weak_bottom_pair_fit.canonical_pilot_v1',
+        transferSurfaceId: 'light_pair_fit_v1',
+        misconceptionId: 'overclasses_bottom_pair_as_medium',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_missed_fold.json',
+        taskId: 'w6.s01.classify_missed_overcards_no_draw.canonical_pilot_v1',
+        transferSurfaceId: 'missed_no_clear_draw_v1',
+        misconceptionId: 'treats_unpaired_overcards_as_made_fit',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s01/drills/'
+            'd.classify_missed_fold_recheck.json',
+        taskId: 'w6.s01.classify_missed_low_cards_no_draw.canonical_pilot_v1',
+        transferSurfaceId: 'missed_no_clear_draw_v1',
+        misconceptionId: 'treats_unpaired_low_cards_as_board_fit',
       ),
     ],
   );
