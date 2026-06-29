@@ -53,7 +53,11 @@ resolveSessionDrillRunnerProgressionChromeContractV1(
   if (progression != null) {
     final sessionWorld = resolveSessionWorldForSessionIdV1(input.sessionId);
     final nextBody = progression.nextSessionProgressLabel == null
-        ? learnerJourneyBackToMapForNextLessonTextV1()
+        ? sessionWorld != null
+              ? progressionRouteTerminalBodyTextForSessionWorldV1(
+                  world: sessionWorld,
+                )
+              : learnerJourneyBackToMapForNextLessonTextV1()
         : sessionWorld != null
         ? progressionRouteCompletionBodyTextForSessionWorldV1(
             world: sessionWorld,
@@ -65,7 +69,7 @@ resolveSessionDrillRunnerProgressionChromeContractV1(
     return SessionDrillRunnerProgressionChromeContractV1(
       titleText: progression.headerLabel,
       statusText:
-          '${progression.headerLabel} · ${progression.sessionProgressLabel} · ${input.stepLabel}',
+          '${progression.headerLabel} \u00B7 ${progression.sessionProgressLabel} \u00B7 ${input.stepLabel}',
       completionBodyText: nextBody,
       nextSessionId: progression.nextSessionId,
       nextSessionProgressLabel: progression.nextSessionProgressLabel,
@@ -95,7 +99,7 @@ resolveSessionDrillRunnerProgressionChromeContractV1(
   return SessionDrillRunnerProgressionChromeContractV1(
     titleText: 'World 2 Session',
     statusText:
-        'Session $upperSessionId · ${input.stepLabel} · Step $stepNumber of $totalSteps',
+        'Session $upperSessionId \u00B7 ${input.stepLabel} \u00B7 Step $stepNumber of $totalSteps',
     completionBodyText: learnerJourneyBackToMapForNextLessonTextV1(),
   );
 }
@@ -174,7 +178,7 @@ _CanonicalSessionProgressionFrameV1? _buildSequenceFrameV1({
         'Session ${currentIndex + 1} of ${normalizedSequence.length}',
     nextSessionId: hasNext ? normalizedSequence[nextIndex] : null,
     nextSessionProgressLabel: hasNext
-        ? '$headerLabel · Session ${nextIndex + 1} of ${normalizedSequence.length}'
+        ? '$headerLabel \u00B7 Session ${nextIndex + 1} of ${normalizedSequence.length}'
         : null,
   );
 }

@@ -172,6 +172,28 @@ void main() {
     },
   );
 
+  test(
+    'world6 completion payoff names buckets and width without strategy claim',
+    () {
+      final body = progressionRouteCompletionBodyTextForSessionWorldV1(
+        world: 6,
+        nextSessionProgressLabel: 'World 6 \u00B7 Session 2 of 10',
+      );
+
+      expect(
+        body,
+        startsWith(
+          'World 6 trained Range Thinking by reading broad range buckets and range width before action.',
+        ),
+      );
+      expect(body, contains('Next lesson ready: World 6'));
+      expect(body.toLowerCase(), contains('buckets'));
+      expect(body.toLowerCase(), contains('width'));
+      expect(body, isNot('Next lesson ready: World 6 \u00B7 Session 2 of 10.'));
+      _expectNoW6ForbiddenStrategyTerms(body);
+    },
+  );
+
   test('world10 followups resolve to track route story', () {
     final story = resolveProgressionRouteStoryForPackV1(
       nextPackId: 'world10_spine_followup_v1_b0',
@@ -223,4 +245,28 @@ void main() {
       'Why: Checkpoint review: lock the World 1 foundations before the next World 2 session.',
     );
   });
+}
+
+void _expectNoW6ForbiddenStrategyTerms(String value) {
+  final lower = value.toLowerCase();
+  for (final term in <String>[
+    '8.0',
+    '9.0',
+    'advanced strategy',
+    'blocker',
+    'combo',
+    'exploit',
+    'frequency',
+    'gto',
+    'human qa',
+    'launch',
+    'opponent',
+    'perfect counter',
+    'polar',
+    'solver',
+    'stack',
+    'tournament',
+  ]) {
+    expect(lower, isNot(contains(term)));
+  }
 }

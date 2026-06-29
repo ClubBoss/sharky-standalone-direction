@@ -145,7 +145,7 @@ void main() {
     expect(contract.completionBodyText, isNot(contains('Human QA')));
   });
 
-  test('canonical world-session chrome resolves from session truth', () {
+  test('world6 chrome carries Range Thinking payoff and safe progression', () {
     final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
       const SessionDrillRunnerProgressionChromeInputV1(
         sessionId: 'w6.s01',
@@ -157,14 +157,72 @@ void main() {
     );
 
     expect(contract.titleText, 'World 6');
+    expect(contract.nextSessionId, 'w6.s02');
     expect(
       contract.statusText,
       'World 6 \u00B7 Session 1 of 10 \u00B7 Range Thinking',
     );
-    expect(contract.nextSessionId, 'w6.s02');
     expect(
       contract.completionBodyText,
-      'Next lesson ready: World 6 \u00B7 Session 2 of 10.',
+      startsWith(
+        'World 6 trained Range Thinking by reading broad range buckets and range width before action.',
+      ),
+    );
+    expect(contract.completionBodyText, contains('Next lesson ready: World 6'));
+    expect(contract.completionBodyText.toLowerCase(), contains('buckets'));
+    expect(contract.completionBodyText.toLowerCase(), contains('width'));
+    expect(
+      contract.completionBodyText,
+      isNot('Next lesson ready: World 6 \u00B7 Session 2 of 10.'),
+    );
+    _expectNoW6ForbiddenStrategyTerms(contract.completionBodyText);
+  });
+
+  test('world6 final chrome keeps future route locked and claim safe', () {
+    final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
+      const SessionDrillRunnerProgressionChromeInputV1(
+        sessionId: 'w6.s10',
+        stepLabel: 'Range Thinking',
+        currentDrillIndex: 0,
+        totalDrills: 1,
+        drillId: 'range_thinking_final',
+      ),
+    );
+
+    expect(contract.titleText, 'World 6');
+    expect(contract.nextSessionId, isNull);
+    expect(contract.hasNextSession, isFalse);
+    expect(
+      contract.completionBodyText,
+      'World 6 completed Range Thinking: keep reading buckets and width before action. Future range topics stay locked for later.',
+    );
+    expect(contract.completionBodyText.toLowerCase(), contains('locked'));
+    expect(contract.completionBodyText.toLowerCase(), contains('buckets'));
+    expect(contract.completionBodyText.toLowerCase(), contains('width'));
+    expect(contract.completionBodyText.toLowerCase(), isNot(contains('w7')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('world 7')),
+    );
+    _expectNoW6ForbiddenStrategyTerms(contract.completionBodyText);
+  });
+
+  test('later world-session chrome still uses generic terminal copy', () {
+    final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
+      const SessionDrillRunnerProgressionChromeInputV1(
+        sessionId: 'w8.s10',
+        stepLabel: 'Future Route',
+        currentDrillIndex: 0,
+        totalDrills: 1,
+        drillId: 'future_route_final',
+      ),
+    );
+
+    expect(contract.titleText, 'World 8');
+    expect(contract.nextSessionId, isNull);
+    expect(
+      contract.completionBodyText,
+      'Back to the map when you are ready for the next lesson.',
     );
   });
 
@@ -212,4 +270,28 @@ void main() {
     );
     expect(contract.nextSessionId, isNull);
   });
+}
+
+void _expectNoW6ForbiddenStrategyTerms(String value) {
+  final lower = value.toLowerCase();
+  for (final term in <String>[
+    '8.0',
+    '9.0',
+    'advanced strategy',
+    'blocker',
+    'combo',
+    'exploit',
+    'frequency',
+    'gto',
+    'human qa',
+    'launch',
+    'opponent',
+    'perfect counter',
+    'polar',
+    'solver',
+    'stack',
+    'tournament',
+  ]) {
+    expect(lower, isNot(contains(term)));
+  }
 }

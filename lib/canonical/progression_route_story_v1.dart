@@ -68,7 +68,7 @@ bool _hasSpecificRouteHandoffCopyV1(int? world) =>
     world != null && world >= 2 && world <= 6;
 
 bool _hasSpecificCompletionPayoffCopyV1(int? world) =>
-    world != null && world >= 2 && world <= 5;
+    world != null && world >= 2 && world <= 6;
 
 String? progressionRouteStageShiftValueForTargetV1(
   ProgressionRouteTargetV1 target,
@@ -155,11 +155,21 @@ String progressionRouteCompletionBodyTextForSessionWorldV1({
         'World 4 trained Bet Purpose / Price by connecting why a bet is made, price, and action before the click.',
       5 =>
         'World 5 trained Board Awareness by reading dry, wet, paired, connected, and shifting boards before action.',
+      6 =>
+        'World 6 trained Range Thinking by reading broad range buckets and range width before action.',
       _ => 'Next lesson ready:',
     };
     return '$lead ${learnerJourneyNextLessonReadyTextV1(nextSessionProgressLabel)}';
   }
   return learnerJourneyNextLessonReadyTextV1(nextSessionProgressLabel);
+}
+
+String progressionRouteTerminalBodyTextForSessionWorldV1({required int world}) {
+  return switch (world) {
+    6 =>
+      'World 6 completed Range Thinking: keep reading buckets and width before action. Future range topics stay locked for later.',
+    _ => learnerJourneyBackToMapForNextLessonTextV1(),
+  };
 }
 
 String? progressionReviewCadenceValueForTargetV1({
