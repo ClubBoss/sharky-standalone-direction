@@ -111,8 +111,10 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW3HandBucketActionFrameCanonicalPr2V1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW4PriceGivenBeforeActionCanonicalPilotV1(writeFiles: false),
+    exportW4IntentActionDisciplineCanonicalPr2V1(writeFiles: false),
     exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW5BoardTextureClassificationCanonicalPilotV1(writeFiles: false),
+    exportW5BoardShiftAwarenessCanonicalPr2V1(writeFiles: false),
     exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
   ];
   if (writeFiles) {
@@ -2431,6 +2433,243 @@ exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
             'w5.s10.classify_texture_synthesis_dry_raise.canonical_pilot_v1',
         transferSurfaceId: 'dry_texture_pressure_v1',
         misconceptionId: 'fails_to_convert_clean_dry_synthesis',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
+  const fixtureId = 'w4_intent_action_discipline_canonical_pr2_v1';
+  const fixtureLevel = 'w4_w5_canonical_coverage_expansion_pr2_v1';
+  const conceptFamilyId = 'intent_action_discipline';
+  const repairFocusId = 'purpose_before_action';
+  const sameSignalGroupId = 'w4.bet_purpose_price.intent_action_discipline';
+  const sourceJob = 'w4_canonical_pr2_intent_action_discipline';
+  const sourceIntentOverride = 'intent_action_discipline';
+  const sourceErrorClassOverride = 'purpose_before_action_error';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String lessonId,
+    required String sessionId,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_4',
+      routeWorldId: 'world_4',
+      displayWorldTitle: 'Bet Purpose / Price',
+      contentOwnerWorldId: 'world_4',
+      routeGateStatus: 'learner_playable',
+      lessonId: lessonId,
+      sessionId: sessionId,
+      packId: 'world4_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      sourceIntentOverride: sourceIntentOverride,
+      sourceErrorClassOverride: sourceErrorClassOverride,
+      safeClaimStatus: 'canonical_pr2',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/w4_intent_action_discipline_canonical_pr2_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s01/drills/'
+            'd.choose_raise_protection.json',
+        lessonId: 'w4.l01',
+        sessionId: 'w4.s01',
+        taskId: 'w4.s01.choose_raise_protection.canonical_pr2_v1',
+        transferSurfaceId: 'protection_raise_action_v1',
+        misconceptionId: 'chooses_price_before_protection_purpose',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s02/drills/'
+            'd.choose_raise_bluff.json',
+        lessonId: 'w4.l02',
+        sessionId: 'w4.s02',
+        taskId: 'w4.s02.choose_raise_bluff.canonical_pr2_v1',
+        transferSurfaceId: 'bluff_raise_action_v1',
+        misconceptionId: 'misses_bluff_pressure_action',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s02/drills/'
+            'd.choose_raise_denial.json',
+        lessonId: 'w4.l02',
+        sessionId: 'w4.s02',
+        taskId: 'w4.s02.choose_raise_denial.canonical_pr2_v1',
+        transferSurfaceId: 'denial_raise_action_v1',
+        misconceptionId: 'undercharges_denial_spot',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s02/drills/'
+            'd.choose_call_control.json',
+        lessonId: 'w4.l02',
+        sessionId: 'w4.s02',
+        taskId: 'w4.s02.choose_call_control.canonical_pr2_v1',
+        transferSurfaceId: 'denial_control_call_v1',
+        misconceptionId: 'overraises_control_spot',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s03/drills/'
+            'd.choose_raise_bluff.json',
+        lessonId: 'w4.l03',
+        sessionId: 'w4.s03',
+        taskId: 'w4.s03.choose_raise_bluff.canonical_pr2_v1',
+        transferSurfaceId: 'bluff_raise_action_v1',
+        misconceptionId: 'ignores_blocker_bluff_pressure',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s05/drills/'
+            'd.choose_raise_repeat.json',
+        lessonId: 'w4.l05',
+        sessionId: 'w4.s05',
+        taskId: 'w4.s05.choose_raise_repeat.canonical_pr2_v1',
+        transferSurfaceId: 'protection_raise_action_v1',
+        misconceptionId: 'misses_repeat_protection_raise',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW5BoardShiftAwarenessCanonicalPr2V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w5_board_shift_awareness_canonical_pr2_v1';
+  const fixtureLevel = 'w4_w5_canonical_coverage_expansion_pr2_v1';
+  const conceptFamilyId = 'board_shift_awareness';
+  const repairFocusId = 'board_shift_before_action';
+  const sameSignalGroupId = 'w5.board_awareness.board_shift_awareness';
+  const sourceJob = 'w5_canonical_pr2_board_shift_awareness';
+  const sourceIntentOverride = 'board_shift_awareness';
+  const sourceErrorClassOverride = 'board_shift_action_error';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String lessonId,
+    required String sessionId,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_5',
+      routeWorldId: 'world_5',
+      displayWorldTitle: 'Board Awareness',
+      contentOwnerWorldId: 'world_5',
+      routeGateStatus: 'learner_playable',
+      lessonId: lessonId,
+      sessionId: sessionId,
+      packId: 'world5_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      sourceIntentOverride: sourceIntentOverride,
+      sourceErrorClassOverride: sourceErrorClassOverride,
+      safeClaimStatus: 'canonical_pr2',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/w5_board_shift_awareness_canonical_pr2_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s04/drills/'
+            'd.classify_turn_shift_connected_raise_v1.json',
+        lessonId: 'w5.l04',
+        sessionId: 'w5.s04',
+        taskId: 'w5.s04.classify_turn_shift_connected_raise.canonical_pr2_v1',
+        transferSurfaceId: 'turn_connected_pressure_v1',
+        misconceptionId: 'misses_connected_turn_pressure_shift',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s04/drills/'
+            'd.classify_turn_shift_wet_call_v1.json',
+        lessonId: 'w5.l04',
+        sessionId: 'w5.s04',
+        taskId: 'w5.s04.classify_turn_shift_wet_call.canonical_pr2_v1',
+        transferSurfaceId: 'turn_wet_control_v1',
+        misconceptionId: 'overplays_wet_turn_shift',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s04/drills/'
+            'd.classify_turn_shift_paired_fold_v1.json',
+        lessonId: 'w5.l04',
+        sessionId: 'w5.s04',
+        taskId: 'w5.s04.classify_turn_shift_paired_fold.canonical_pr2_v1',
+        transferSurfaceId: 'turn_paired_release_v1',
+        misconceptionId: 'forces_paired_turn_continue',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s05/drills/'
+            'd.classify_river_closure_connected_call_v1.json',
+        lessonId: 'w5.l05',
+        sessionId: 'w5.s05',
+        taskId: 'w5.s05.classify_river_closure_connected_call.canonical_pr2_v1',
+        transferSurfaceId: 'river_connected_control_v1',
+        misconceptionId: 'overpresses_connected_river_closure',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s05/drills/'
+            'd.classify_river_closure_dry_fold_v1.json',
+        lessonId: 'w5.l05',
+        sessionId: 'w5.s05',
+        taskId: 'w5.s05.classify_river_closure_dry_fold.canonical_pr2_v1',
+        transferSurfaceId: 'river_dry_missed_release_v1',
+        misconceptionId: 'continues_missed_dry_closure',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s05/drills/'
+            'd.classify_river_closure_wet_raise_v1.json',
+        lessonId: 'w5.l05',
+        sessionId: 'w5.s05',
+        taskId: 'w5.s05.classify_river_closure_wet_raise.canonical_pr2_v1',
+        transferSurfaceId: 'river_wet_pressure_v1',
+        misconceptionId: 'misses_completed_wet_river_pressure',
       ),
     ],
   );

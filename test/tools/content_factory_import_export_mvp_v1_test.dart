@@ -1341,6 +1341,160 @@ void main() {
     });
   });
 
+  test('exports W4 intent action discipline canonical PR2', () {
+    final result = exportW4IntentActionDisciplineCanonicalPr2V1(
+      writeFiles: false,
+    );
+    final secondResult = exportW4IntentActionDisciplineCanonicalPr2V1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w4_intent_action_discipline_canonical_pr2_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_4'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_4'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Bet Purpose / Price',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pr2',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'intent_action_discipline',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w4.bet_purpose_price.intent_action_discipline',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'purpose_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'protection_raise_action_v1',
+      'bluff_raise_action_v1',
+      'denial_raise_action_v1',
+      'denial_control_call_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'raise',
+      'raise',
+      'call',
+      'raise',
+      'raise',
+    ]);
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w4_canonical_pr2_intent_action_discipline',
+    });
+    expect(migrationSources.map((source) => source['source_path']).toSet(), {
+      'content/worlds/world4/v1/sessions/w4.s01/drills/'
+          'd.choose_raise_protection.json',
+      'content/worlds/world4/v1/sessions/w4.s02/drills/'
+          'd.choose_raise_bluff.json',
+      'content/worlds/world4/v1/sessions/w4.s02/drills/'
+          'd.choose_raise_denial.json',
+      'content/worlds/world4/v1/sessions/w4.s02/drills/'
+          'd.choose_call_control.json',
+      'content/worlds/world4/v1/sessions/w4.s03/drills/'
+          'd.choose_raise_bluff.json',
+      'content/worlds/world4/v1/sessions/w4.s05/drills/'
+          'd.choose_raise_repeat.json',
+    });
+  });
+
+  test('exports W5 board shift awareness canonical PR2', () {
+    final result = exportW5BoardShiftAwarenessCanonicalPr2V1(writeFiles: false);
+    final secondResult = exportW5BoardShiftAwarenessCanonicalPr2V1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w5_board_shift_awareness_canonical_pr2_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_5'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_5'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Board Awareness',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pr2',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'board_shift_awareness',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w5.board_awareness.board_shift_awareness',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'board_shift_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'turn_connected_pressure_v1',
+      'turn_wet_control_v1',
+      'turn_paired_release_v1',
+      'river_connected_control_v1',
+      'river_dry_missed_release_v1',
+      'river_wet_pressure_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'call',
+      'fold',
+      'call',
+      'fold',
+      'raise',
+    ]);
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w5_canonical_pr2_board_shift_awareness',
+    });
+  });
+
   test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
@@ -1405,7 +1559,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(20));
+    expect(results, hasLength(22));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

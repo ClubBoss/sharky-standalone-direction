@@ -32,6 +32,13 @@ const List<String> w4W5CanonicalPilotFixturePathsV1 = [
       'w5_board_texture_classification_canonical_pilot_v1.json',
 ];
 
+const List<String> w4W5CanonicalCoveragePr2FixturePathsV1 = [
+  'test/fixtures/content_factory_mvp/'
+      'w4_intent_action_discipline_canonical_pr2_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w5_board_shift_awareness_canonical_pr2_v1.json',
+];
+
 const List<String> _requiredFields = [
   'schema_version',
   'world_id',
