@@ -1186,6 +1186,161 @@ void main() {
     });
   });
 
+  test('exports W4 price given before action canonical pilot', () {
+    final result = exportW4PriceGivenBeforeActionCanonicalPilotV1(
+      writeFiles: false,
+    );
+    final secondResult = exportW4PriceGivenBeforeActionCanonicalPilotV1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w4_price_given_before_action_canonical_pilot_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_4'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_4'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Bet Purpose / Price',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_4',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pilot',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'price_given_before_action',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w4.bet_purpose_price.price_given_before_action',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'price_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'half_pot_value_price_v1',
+      'raise_value_action_v1',
+      'pot_value_pressure_price_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'half_pot',
+      'raise',
+      'half_pot',
+      'half_pot',
+      'half_pot',
+      'pot',
+    ]);
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w4_canonical_pilot_price_given_before_action',
+    });
+    expect(
+      migrationSources.map((source) => source['source_path']).toSet(),
+      containsAll({
+        'content/worlds/world4/v1/sessions/w4.s01/drills/'
+            'd.choose_half_pot_value.json',
+        'content/worlds/world4/v1/sessions/w4.s07/drills/'
+            'd.choose_pot_value_pressure_finish.json',
+      }),
+    );
+  });
+
+  test('exports W5 board texture classification canonical pilot', () {
+    final result = exportW5BoardTextureClassificationCanonicalPilotV1(
+      writeFiles: false,
+    );
+    final secondResult = exportW5BoardTextureClassificationCanonicalPilotV1(
+      writeFiles: false,
+    );
+
+    expect(
+      result.outputPath,
+      endsWith('w5_board_texture_classification_canonical_pilot_v1.json'),
+    );
+    expect(jsonEncode(result.fixture), jsonEncode(secondResult.fixture));
+
+    final validation = validateContentSchemaFoundationMapV1(
+      result.fixture,
+      path: result.outputPath,
+    );
+    expect(validation.errors, isEmpty);
+    expect(validation.tasksChecked, 6);
+    expect(validation.coverageCountableTasks, 6);
+
+    final tasks = _tasks(result.fixture);
+    expect(tasks.map((task) => task['task_id']).toSet(), hasLength(6));
+    expect(tasks.map((task) => task['world_id']).toSet(), {'world_5'});
+    expect(tasks.map((task) => task['route_world_id']).toSet(), {'world_5'});
+    expect(tasks.map((task) => task['display_world_title']).toSet(), {
+      'Board Awareness',
+    });
+    expect(tasks.map((task) => task['content_owner_world_id']).toSet(), {
+      'world_5',
+    });
+    expect(tasks.map((task) => task['source_truth_status']).toSet(), {
+      'migrated',
+    });
+    expect(tasks.map((task) => task['safe_claim_status']).toSet(), {
+      'canonical_pilot',
+    });
+    expect(tasks.map((task) => task['launch_coverage_claimed']).toSet(), {
+      false,
+    });
+    expect(tasks.map((task) => task['concept_family_id']).toSet(), {
+      'board_texture_classification',
+    });
+    expect(tasks.map((task) => task['same_signal_group_id']).toSet(), {
+      'w5.board_awareness.board_texture_classification',
+    });
+    expect(tasks.map((task) => task['repair_focus_id']).toSet(), {
+      'texture_before_action',
+    });
+    expect(tasks.map((task) => task['transfer_surface_id']).toSet(), {
+      'dry_texture_pressure_v1',
+      'wet_texture_control_v1',
+      'paired_texture_release_v1',
+      'connected_texture_control_v1',
+      'turn_shift_paired_release_v1',
+    });
+    expect(tasks.map((task) => task['correct_action']).toList(), [
+      'raise',
+      'call',
+      'fold',
+      'call',
+      'fold',
+      'raise',
+    ]);
+
+    final migrationSources = tasks
+        .map((task) => (task['migration_source']! as Map))
+        .toList();
+    expect(migrationSources.map((source) => source['source_job']).toSet(), {
+      'w5_canonical_pilot_board_texture_classification',
+    });
+  });
+
   test(
     'factory output rejects duplicate task IDs and missing required fields',
     () {
@@ -1250,7 +1405,7 @@ void main() {
 
     final results = exportTinyContentFactorySamplesV1(writeFiles: true);
 
-    expect(results, hasLength(18));
+    expect(results, hasLength(20));
     expect(File(sourcePath).readAsStringSync(), before);
   });
 }

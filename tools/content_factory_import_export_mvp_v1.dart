@@ -110,7 +110,9 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW3CanonicalCertificationPilotV1(writeFiles: false),
     exportW3HandBucketActionFrameCanonicalPr2V1(writeFiles: false),
     exportW4BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW4PriceGivenBeforeActionCanonicalPilotV1(writeFiles: false),
     exportW5BridgeSchemaMigrationPilotV1(writeFiles: false),
+    exportW5BoardTextureClassificationCanonicalPilotV1(writeFiles: false),
     exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
   ];
   if (writeFiles) {
@@ -2193,6 +2195,242 @@ ContentFactoryImportExportResultV1 exportW5BridgeSchemaMigrationPilotV1({
         claimsTransfer: true,
         safeClaimStatus: 'limited_bridge',
         launchCoverageClaimed: false,
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW4PriceGivenBeforeActionCanonicalPilotV1({bool writeFiles = false}) {
+  const fixtureId = 'w4_price_given_before_action_canonical_pilot_v1';
+  const fixtureLevel = 'w4_w5_canonical_pilot_batch_v1';
+  const conceptFamilyId = 'price_given_before_action';
+  const repairFocusId = 'price_before_action';
+  const sameSignalGroupId = 'w4.bet_purpose_price.price_given_before_action';
+  const sourceJob = 'w4_canonical_pilot_price_given_before_action';
+  const sourceIntentOverride = 'price_given_before_action';
+  const sourceErrorClassOverride = 'price_before_action_error';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String lessonId,
+    required String sessionId,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_4',
+      routeWorldId: 'world_4',
+      displayWorldTitle: 'Bet Purpose / Price',
+      contentOwnerWorldId: 'world_4',
+      routeGateStatus: 'learner_playable',
+      lessonId: lessonId,
+      sessionId: sessionId,
+      packId: 'world4_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      sourceIntentOverride: sourceIntentOverride,
+      sourceErrorClassOverride: sourceErrorClassOverride,
+      safeClaimStatus: 'canonical_pilot',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w4_price_given_before_action_canonical_pilot_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s01/drills/'
+            'd.choose_half_pot_value.json',
+        lessonId: 'w4.l01',
+        sessionId: 'w4.s01',
+        taskId: 'w4.s01.choose_half_pot_value.canonical_pilot_v1',
+        transferSurfaceId: 'half_pot_value_price_v1',
+        misconceptionId: 'sizes_before_naming_value_price',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s01/drills/'
+            'd.choose_raise_value.json',
+        lessonId: 'w4.l01',
+        sessionId: 'w4.s01',
+        taskId: 'w4.s01.choose_raise_value.canonical_pilot_v1',
+        transferSurfaceId: 'raise_value_action_v1',
+        misconceptionId: 'acts_before_naming_value_purpose',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s03/drills/'
+            'd.choose_half_pot_value_checkpoint.json',
+        lessonId: 'w4.l03',
+        sessionId: 'w4.s03',
+        taskId: 'w4.s03.choose_half_pot_value_checkpoint.canonical_pilot_v1',
+        transferSurfaceId: 'half_pot_value_price_v1',
+        misconceptionId: 'overprices_value_checkpoint',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s04/drills/'
+            'd.choose_half_pot_value_stability.json',
+        lessonId: 'w4.l04',
+        sessionId: 'w4.s04',
+        taskId: 'w4.s04.choose_half_pot_value_stability.canonical_pilot_v1',
+        transferSurfaceId: 'half_pot_value_price_v1',
+        misconceptionId: 'drops_stable_value_price',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s07/drills/'
+            'd.choose_half_pot_value_followthrough.json',
+        lessonId: 'w4.l07',
+        sessionId: 'w4.s07',
+        taskId: 'w4.s07.choose_half_pot_value_followthrough.canonical_pilot_v1',
+        transferSurfaceId: 'half_pot_value_price_v1',
+        misconceptionId: 'maxes_pressure_before_preserving_value',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world4/v1/sessions/w4.s07/drills/'
+            'd.choose_pot_value_pressure_finish.json',
+        lessonId: 'w4.l07',
+        sessionId: 'w4.s07',
+        taskId: 'w4.s07.choose_pot_value_pressure_finish.canonical_pilot_v1',
+        transferSurfaceId: 'pot_value_pressure_price_v1',
+        misconceptionId: 'misses_when_value_supports_max_price',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
+  const fixtureId = 'w5_board_texture_classification_canonical_pilot_v1';
+  const fixtureLevel = 'w4_w5_canonical_pilot_batch_v1';
+  const conceptFamilyId = 'board_texture_classification';
+  const repairFocusId = 'texture_before_action';
+  const sameSignalGroupId = 'w5.board_awareness.board_texture_classification';
+  const sourceJob = 'w5_canonical_pilot_board_texture_classification';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String lessonId,
+    required String sessionId,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_5',
+      routeWorldId: 'world_5',
+      displayWorldTitle: 'Board Awareness',
+      contentOwnerWorldId: 'world_5',
+      routeGateStatus: 'learner_playable',
+      lessonId: lessonId,
+      sessionId: sessionId,
+      packId: 'world5_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      safeClaimStatus: 'canonical_pilot',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath:
+        '$_outputDir/w5_board_texture_classification_canonical_pilot_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s01/drills/'
+            'd.classify_texture_intro_dry_raise_v1.json',
+        lessonId: 'w5.l01',
+        sessionId: 'w5.s01',
+        taskId: 'w5.s01.classify_texture_intro_dry_raise.canonical_pilot_v1',
+        transferSurfaceId: 'dry_texture_pressure_v1',
+        misconceptionId: 'misses_dry_texture_value_pressure',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s01/drills/'
+            'd.classify_texture_intro_wet_call_v1.json',
+        lessonId: 'w5.l01',
+        sessionId: 'w5.s01',
+        taskId: 'w5.s01.classify_texture_intro_wet_call.canonical_pilot_v1',
+        transferSurfaceId: 'wet_texture_control_v1',
+        misconceptionId: 'overplays_wet_texture',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s01/drills/'
+            'd.classify_texture_intro_paired_fold_v1.json',
+        lessonId: 'w5.l01',
+        sessionId: 'w5.s01',
+        taskId: 'w5.s01.classify_texture_intro_paired_fold.canonical_pilot_v1',
+        transferSurfaceId: 'paired_texture_release_v1',
+        misconceptionId: 'ignores_paired_texture_release',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s03/drills/'
+            'd.classify_wet_protection_connected_call_v1.json',
+        lessonId: 'w5.l03',
+        sessionId: 'w5.s03',
+        taskId:
+            'w5.s03.classify_wet_protection_connected_call.canonical_pilot_v1',
+        transferSurfaceId: 'connected_texture_control_v1',
+        misconceptionId: 'misses_connected_board_volatility',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s04/drills/'
+            'd.classify_turn_shift_paired_fold_v1.json',
+        lessonId: 'w5.l04',
+        sessionId: 'w5.s04',
+        taskId: 'w5.s04.classify_turn_shift_paired_fold.canonical_pilot_v1',
+        transferSurfaceId: 'turn_shift_paired_release_v1',
+        misconceptionId: 'continues_after_paired_turn_shift',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world5/v1/sessions/w5.s10/drills/'
+            'd.classify_texture_synthesis_dry_raise_v1.json',
+        lessonId: 'w5.l10',
+        sessionId: 'w5.s10',
+        taskId:
+            'w5.s10.classify_texture_synthesis_dry_raise.canonical_pilot_v1',
+        transferSurfaceId: 'dry_texture_pressure_v1',
+        misconceptionId: 'fails_to_convert_clean_dry_synthesis',
       ),
     ],
   );

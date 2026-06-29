@@ -25,6 +25,13 @@ const List<String> w1ContentFactoryCoverageFixturePathsV1 = [
       'w1_checkpoint_synthesis_migration_pr3_v1.json',
 ];
 
+const List<String> w4W5CanonicalPilotFixturePathsV1 = [
+  'test/fixtures/content_factory_mvp/'
+      'w4_price_given_before_action_canonical_pilot_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w5_board_texture_classification_canonical_pilot_v1.json',
+];
+
 const List<String> _requiredFields = [
   'schema_version',
   'world_id',
