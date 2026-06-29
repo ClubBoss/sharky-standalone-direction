@@ -765,7 +765,7 @@ Current launch monetization and route truth:
   subscription-copy safety are production-ready.
 - Route truth is locked by `docs/plan/MONETIZATION_SSOT_v1.md`.
 
-Active launch route labels for monetization and commercial planning:
+Deprecated launch route labels for monetization and commercial planning:
 
 | World | Launch-facing title |
 | --- | --- |
@@ -776,8 +776,23 @@ Active launch route labels for monetization and commercial planning:
 | W5 | Bet Purpose + Price |
 | W6 | Board and Draws |
 
-Older authored/content docs that describe W4/W5 differently are secondary for
-monetization work until a dedicated route-normalization wave.
+These W4-W6 topic labels are stale after
+`docs/_reviews/w1_w12_route_content_cascade_map_v1.md` and
+`docs/_reviews/w4_w6_route_content_normalization_plan_v1.md`. Current
+normalized route/content ownership for future implementation is:
+
+| World | Normalized title/job |
+| --- | --- |
+| W4 | Bet Purpose / Price |
+| W5 | Board Awareness |
+| W6 | Range Thinking |
+
+Do not restore the old W4-W6 route labels as active product direction without
+new source/route evidence and an explicit normalization wave.
+
+Monetization boundary remains unchanged: W1-W4 are the free public foundation,
+W5+ is future paid depth, W4 remains only a future challenger / A-B candidate,
+and public commerce remains blocked until commerce safety is production-ready.
 
 ### 4.2 Technical / infrastructure accepted state
 

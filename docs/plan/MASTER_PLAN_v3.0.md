@@ -926,9 +926,16 @@ Practical naming note:
 - The app shows `Poker from Zero` as the first visible world: this is W1 / world_1.
 - W-numbers in this plan match world_ IDs in code: W1 = world_1, W7 = world_7,
   and so on. No more off-by-one confusion.
-- The numbered learning ladder preserves the cognitive shifts:
-  Hand Discipline (W2), Position Thinking (W3), Preflop Framework (W4),
-  Bet Purpose + Price (W5), Board Awareness (W6), and then the later worlds.
+- W1-W3 remain accepted as Poker from Zero, Hand Discipline, and Position
+  Thinking.
+- W4-W6 practical labels that appear below as `Preflop Framework`,
+  `Bet Purpose + Price`, and `Board Awareness` are deprecated route wording
+  after `docs/_reviews/w1_w12_route_content_cascade_map_v1.md` and
+  `docs/_reviews/w4_w6_route_content_normalization_plan_v1.md`.
+- Current normalized W4-W6 ownership for future implementation is:
+  W4 = Bet Purpose / Price, W5 = Board Awareness, W6 = Range Thinking.
+- Do not restore the old W4-W6 route labels as active direction without new
+  source/route evidence and an explicit normalization wave.
 
 The goal is not perfect numbering purity. The goal is that the learner never
 gets several unrelated mental models mixed into one world.
@@ -980,7 +987,7 @@ after their first bad run.
 
 The mental foundation must be planted in the W1–W11 block at two touch points:
 
-**Touch 1 — W5 (Bet Purpose And Price):** When pot odds are introduced, the
+**Touch 1 - normalized W4 (Bet Purpose And Price):** When pot odds are introduced, the
 learner must immediately encounter the core variance insight: a call can be
 mathematically correct and still lose. This reframes losing not as failure but
 as expected noise. The drill must show this explicitly — correct decision,
@@ -995,7 +1002,7 @@ full mental primer must be delivered:
   Name the feeling, take a break, do not chase.
 - A session that loses is not a failed session if the decisions were correct.
 
-This seed planted in W5 and W11 prevents the most common beginner dropout
+This seed planted in normalized W4 and W11 prevents the most common beginner dropout
 loop: correct play → bad result → believe strategy is wrong → quit.
 The full mental game curriculum arrives in W20 and W31 — but the seed
 changes everything about how the learner survives to get there.
@@ -1005,9 +1012,9 @@ changes everything about how the learner survives to get there.
 | W1: Poker from Zero | Absolute table/rules onramp. | Playable and dense for v1. |
 | W2: Hand Discipline | Not every hand deserves play. | Playable enough for v1 bridge. |
 | W3: Position Thinking | Position changes hand value. | Playable enough for v1 bridge. |
-| W4: Preflop Framework | First structured open/call/fold framework. | Playable enough for v1 bridge. |
-| W5: Bet Purpose And Price | Why bets happen, price, and simple pot-odds intuition. First encounter with variance: a correct call can still lose. | Playable enough for v1 bridge. |
-| W6: Board And Draws | Board texture, draws, outs, and street changes. | Playable enough for v1 bridge. |
+| W4: Bet Purpose And Price | Why bets happen, price, and simple pot-odds intuition. First encounter with variance: a correct call can still lose. | Bridge-limited until W4-W6 title/runtime normalization and validator-backed canonical evidence. |
+| W5: Board Awareness | Board texture, draws, outs, and street changes. | Bridge-limited until W4-W6 title/runtime normalization and validator-backed canonical evidence. |
+| W6: Range Thinking | Strong/medium/weak/missed buckets, range width, advantage, compression, and bounded polarization. | Bridge-limited; must preserve the terminal gate before W7-W10 and pass range correctness review before certification. |
 | W7: Range Thinking Lite | Strong/medium/weak/missed buckets, board fit, and hand combination counting. AK = 16 combos, a pocket pair = 6 combos — combinations are how you measure range density, not just hand names. | Playable in the first independent wave once seam and regression gates are green. |
 | W8: Stack Depth And Risk | Stack sizes, commitment, risk control, and format differences: same hand plays wider at 6-max, tighter at full ring — first explicit format-awareness concept. | Playable in the first independent wave once seam and regression gates are green. |
 | W9: Tournament Pressure | Survival pressure, bubbles, and risk premium intuition. | Playable in the first independent wave once seam and regression gates are green. |
@@ -1024,9 +1031,9 @@ This is the practical launch-v1 content target.
 | W1 / World 1: Poker from Zero | Absolute beginner onramp. | Table, seats, opponents, pot, blinds, card ranks/suits, action order, streets, hand rankings, showdown basics, and first repair loop are all taught with intro/practice/apply/review rhythm. | A pretty map with one task per node, or questions before concepts are introduced. |
 | W2 / World 2: Hand Discipline | First real choice filter after rules literacy. | Hand buckets, weak ace awareness, dominated hands, and fold discipline teach that not every hand deserves play. | Pushing hand discipline into later worlds after the user has already learned loose action habits. |
 | W3 / World 3: Position Thinking | Position changes value and action comfort. | UTG/HJ/CO/BTN/SB/BB, IP/OOP, BTN advantage, and same-hand-different-seat examples are taught as one clean shift. | Mixing position with unrelated showdown, board, or initiative theory. |
-| W4 / World 4: Preflop Framework | First structured decision framework. | First-in open, facing open, open/call/fold logic, and simple rule-based preflop choices without charts. Playing vs limpers: raise to isolate, do not passively complete with strong hands. Blind vs blind basics: ranges widen dramatically when folds to SB, BB must defend wide. | Charts, solver language, dominated-hand theory as first-time material, or random action questions without a clear framework. |
-| W5 / World 5: Bet Purpose And Price | First bet-size and price intuition. | Why bets happen, what a size is trying to do, simple call price, basic pot-odds intuition, and implied odds — what you stand to win on future streets when you hit, not just the current pot. | Fine sizing comparisons before purpose is clear; implied odds without first establishing pot-odds. |
-| W6 / World 6: Board And Draws | First board-awareness world. | Dry/wet board basics, obvious draws, outs as improvement paths, reverse implied odds (when hitting a draw creates the second-best hand — e.g., flopping a smaller flush draw when Ace-high flush is possible — the implied odds become negative; the call can become a mistake even with correct outs count), street changes, and semi-bluff as the concept of betting with a draw — equity + fold equity combine to make it profitable even when called. | Texture labels without card-level understanding; introducing semi-bluff before outs are solid. |
+| W4 / World 4: Bet Purpose And Price | First bet-size and price intuition. | Why bets happen, what a size is trying to do, simple call price, basic pot-odds intuition, and implied odds - what you stand to win on future streets when you hit, not just the current pot. | Fine sizing comparisons before purpose is clear; implied odds without first establishing pot-odds. |
+| W5 / World 5: Board Awareness | First board-awareness world. | Dry/wet board basics, obvious draws, outs as improvement paths, reverse implied odds, street changes, and semi-bluff as the concept of betting with a draw. | Texture labels without card-level understanding; introducing semi-bluff before outs are solid. |
+| W6 / World 6: Range Thinking | First range-thinking world. | Strong/medium/weak/missed buckets, board fit, range width, advantage, compression, and bounded polarization without solver language. | Solver frequencies, dense combo math as first-time material, or opening W7-W10 before route admission. |
 | W7-W12 / Worlds 7-12 | First independent extension path after core foundation. | Playable when density, seam audit verdicts, and regression locks are green; otherwise remain locked preview. | Showing any world as playable before density and seam proof exists. |
 | Cross-world Review | Retention layer. | Mistakes and weak spots resurface simply across the path. | Review behaves like a static placeholder or punishment screen. |
 
@@ -1163,19 +1170,21 @@ in this order:
 
 1. Keep `Poker from Zero` as the release-grade W1 table-literacy world, not as
    the long-term W2+ strategy world.
-2. Keep the detached early path aligned to the canonical W2-W4 shifts:
-   Hand Discipline, Position Thinking, Preflop Framework.
+2. Keep the detached early path aligned to the accepted W1-W3 baseline and the
+   normalized W4-W6 contract:
+   Hand Discipline, Position Thinking, Bet Purpose / Price, Board Awareness,
+   Range Thinking.
 3. Make W2 Hand Discipline real enough for v1: buckets, weak aces, dominated
    hands, fold discipline, and simple continue/fold choices.
 4. Make W3 Position Thinking clean enough for v1: positions, IP/OOP, BTN
    advantage, and same-hand-different-seat drills without initiative overload.
-5. Make W4 Preflop Framework clean enough for v1: first-in, facing open,
-   open/call/fold, no charts.
-6. Make W5 a simple bet-purpose and price world. Current detached preview now
-   has the canonical purpose/price spine; next pass should human-review the
-   size examples before calling it release-grade.
-7. Keep W6 as a concrete board/draws world: dry/wet, connected boards,
-   flush/straight draws, outs, and street-change basics.
+5. Make normalized W4 a simple bet-purpose and price world. Current source
+   has the purpose/price spine; next runtime pass should normalize title/copy
+   before canonical certification.
+6. Make normalized W5 a concrete board-awareness world: dry/wet, connected
+   boards, flush/straight draws, outs, and street-change basics.
+7. Keep normalized W6 as a range-thinking world while preserving the terminal
+   gate before W7-W10.
 8. Treat W1-W12 as the first independent wave. Keep W13+ as honest locked
   previews until their density exists and seam promotion is completed.
 
@@ -1284,23 +1293,25 @@ been re-homed to the v4.4 cognitive-shift order:
 - Current `Poker from Zero` maps to W1 (world_1).
 - Hand discipline is its own next world.
 - Position thinking is its own next world.
-- Preflop framework is its own next world.
-- Bet purpose and price follows after preflop framework.
-- Board and draws follows after bet purpose and price.
+- After the accepted W1-W12 cascade map, the old W4-W6 order is deprecated:
+  Preflop Framework is displaced into W3 bridge-limited source, W4 becomes
+  Bet Purpose / Price, W5 becomes Board Awareness, and W6 becomes Range
+  Thinking.
 
-Keep this order unless a deliberate content-plan update changes the route:
+Keep this normalized order unless a deliberate content-plan update changes the route:
 
 - Current hand comparison and showdown basics stay in W1 unless they
   directly teach hand discipline.
 - Dominated-hand material belongs in W2 Hand Discipline.
 - Current pure position material belongs in W3 Position Thinking.
-- Current first-in/facing-open material belongs in W4 Preflop Framework.
-- Current initiative material should be softened to `last aggressor` only, or
-  deferred to W7 Range Thinking Lite.
-- Current W5 purpose/price material is structurally aligned and avoids relying
-  on `draw` as first-time knowledge before W6 Board And Draws.
-- Current W6 board/draw material is a real detached preview spine, but should
+- Current first-in/facing-open material is W3 bridge-limited source and should
+  not reopen W3 canonical certification.
+- Current W4 purpose/price material is structurally aligned after
+  normalization.
+- Current W5 board/draw material is a real board-awareness spine, but should
   still get human review for pacing and visuals before release-grade status.
+- Current W6 range-thinking material requires correctness review and terminal
+  gate safety before canonical certification.
 
 This migration should be done as bounded content/state waves, not a broad UI
 rewrite.
