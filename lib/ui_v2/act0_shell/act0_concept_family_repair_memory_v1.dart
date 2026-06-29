@@ -1,5 +1,11 @@
 import 'act0_learning_evidence_contract_v1.dart';
 
+const String act0RepairCandidateResolutionActiveV1 =
+    'active_latest_incorrect_v1';
+const String act0RepairCandidateResolutionClearedV1 =
+    'cleared_latest_correct_v1';
+const String act0RepairCandidateResolutionNoMissV1 = 'no_miss_v1';
+
 class Act0ConceptFamilyRepairMemoryV1 {
   const Act0ConceptFamilyRepairMemoryV1({required this.families});
 
@@ -33,7 +39,10 @@ class Act0ConceptFamilyRepairMemoryV1 {
 
   Act0ConceptFamilyRepairCandidateV1? get nextRepairCandidate {
     final eligible = families
-        .where((family) => family.incorrectCount > 0)
+        .where(
+          (family) =>
+              family.resolutionState == act0RepairCandidateResolutionActiveV1,
+        )
         .toList(growable: false);
     if (eligible.isEmpty) {
       return null;
@@ -50,9 +59,7 @@ class Act0ConceptFamilyRepairMemoryV1 {
       latestIncorrectOrder: family.latestIncorrectOrder,
       selectionReasonCode: family.incorrectCount > 1
           ? 'repeated_incorrect_family'
-          : family.latestWasIncorrect
-          ? 'latest_incorrect_family'
-          : 'historical_incorrect_family',
+          : 'latest_incorrect_family',
     );
   }
 }
@@ -70,6 +77,7 @@ class Act0ConceptFamilyRepairSummaryV1 {
     required this.latestErrorType,
     required this.latestDecisionTimeBucket,
     required this.slowDecisionCount,
+    required this.resolutionState,
   });
 
   final String conceptFamilyId;
@@ -83,6 +91,10 @@ class Act0ConceptFamilyRepairSummaryV1 {
   final String latestErrorType;
   final String latestDecisionTimeBucket;
   final int slowDecisionCount;
+  final String resolutionState;
+
+  bool get isActiveCandidate =>
+      resolutionState == act0RepairCandidateResolutionActiveV1;
 }
 
 class Act0ConceptFamilyRepairCandidateV1 {
@@ -147,6 +159,11 @@ class _ConceptFamilyAccumulatorV1 {
   }
 
   Act0ConceptFamilyRepairSummaryV1 toSummary() {
+    final resolutionState = incorrectCount == 0
+        ? act0RepairCandidateResolutionNoMissV1
+        : latestWasIncorrect
+        ? act0RepairCandidateResolutionActiveV1
+        : act0RepairCandidateResolutionClearedV1;
     return Act0ConceptFamilyRepairSummaryV1(
       conceptFamilyId: conceptFamilyId,
       repairFocusId: repairFocusId,
@@ -159,6 +176,7 @@ class _ConceptFamilyAccumulatorV1 {
       latestErrorType: latestErrorType,
       latestDecisionTimeBucket: latestDecisionTimeBucket,
       slowDecisionCount: slowDecisionCount,
+      resolutionState: resolutionState,
     );
   }
 }

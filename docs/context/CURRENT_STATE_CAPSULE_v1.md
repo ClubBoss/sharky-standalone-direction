@@ -16,9 +16,9 @@ Last verified from `main`: `a6cd8f003726cc30ee8a3fa99463cdb32d32b2e4`.
 - W1-W6 Tier A prerequisite chain is source/fixture/validator-backed.
 - W7-W12 remain closed / locked / non-routed.
 - Human QA has not been executed.
-- Durable repair memory has a first concept-family slice with bounded Session
-  Summary exposure; no route, ML, AI chat, or broad personalization owner is
-  active.
+- Durable repair memory has a first concept-family slice with active/clear
+  candidate resolution and bounded Session Summary exposure; no route, ML, AI
+  chat, or broad personalization owner is active.
 - Existing first-session repair-loop proof exists, but it is not Human QA or durable learner proof.
 - Modern Table remains maintenance mode.
 - Screenshot pipeline is for audit, regression, AI review, or visual evidence only; it is not a design-iteration excuse.

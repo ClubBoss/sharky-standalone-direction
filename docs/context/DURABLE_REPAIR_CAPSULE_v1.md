@@ -1,8 +1,8 @@
 # Durable Repair Capsule v1
 
 Status: ACTIVE durable repair capsule. The first concept-family repair memory
-slice exists with bounded Session Summary exposure; durable persistence
-expansion remains a future bounded wave.
+slice exists with active/clear candidate resolution and bounded Session Summary
+exposure; durable persistence expansion remains a future bounded wave.
 
 ## Objective
 
@@ -16,8 +16,9 @@ without ML, AI chat, or solver claims.
 - Human QA is the next evidence gate when participants exist.
 - If Human QA is unavailable, the next useful product layer is durable repair memory: preserve what the learner missed, why it mattered, and what repair candidate follows.
 - Existing first-session repair proof exists.
-- First-slice concept-family repair memory now derives summaries and a
-  deterministic next repair candidate from `Act0LearningEvidenceHistoryV1`.
+- First-slice concept-family repair memory now derives summaries, active/clear
+  resolution state, and a deterministic next repair candidate from
+  `Act0LearningEvidenceHistoryV1`.
 - Session Summary can expose a safe `Recommended repair` line from that
   candidate.
 - Durable persistence expansion and broader learner-facing exposure remain
@@ -74,6 +75,8 @@ Purpose:
 - Group repeated misses by `repair_focus_id` / concept family, with stable
   fallbacks.
 - Select one bounded next repair candidate.
+- Clear that candidate when the latest evidence for the same concept family is
+  correct.
 - Expose only a bounded Session Summary `Recommended repair` line.
 
 ## First Slice DoD
@@ -81,6 +84,8 @@ Purpose:
 - Stores or derives concept-family error signal deterministically.
 - Uses `user_choice`, `correct` / `error_type`, and `time_to_decision` where available.
 - Selects a bounded next repair candidate without AI/adaptive claims.
+- Keeps candidates active only while the latest same-family evidence is
+  incorrect.
 - Keeps selection explainable from stored local fields.
 - Keeps queue state reversible and auditable.
 - Preserves W1-W6 freeze and does not author new content.

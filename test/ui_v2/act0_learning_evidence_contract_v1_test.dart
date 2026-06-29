@@ -444,6 +444,42 @@ void main() {
   });
 
   test(
+    'session summary candidate clears after same-concept correct evidence',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(
+            order: 1,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 1,
+            repairFocusId: 'no_bet_yet',
+          ),
+          _record(
+            order: 2,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 1,
+            repairFocusId: 'no_bet_yet',
+            isCorrect: true,
+            errorType: 'none',
+            resultKind: 'correct',
+          ),
+        ],
+      );
+
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        history,
+        repairFocusLabelsById: const <String, String>{
+          'no_bet_yet': 'no-bet-yet clue',
+        },
+      );
+
+      expect(viewModel.repairCandidateLine, isNull);
+    },
+  );
+
+  test(
     'session summary evidence adapter falls back safely without evidence',
     () {
       final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
