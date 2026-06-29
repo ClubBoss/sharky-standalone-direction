@@ -23,6 +23,8 @@ const List<String> w1ContentFactoryCoverageFixturePathsV1 = [
       'w1_bet_size_vocabulary_preview_migration_pr3_v1.json',
   'test/fixtures/content_factory_mvp/'
       'w1_checkpoint_synthesis_migration_pr3_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w1_showdown_basics_source_authorship_repair_v1.json',
 ];
 
 const List<String> w4W5CanonicalPilotFixturePathsV1 = [

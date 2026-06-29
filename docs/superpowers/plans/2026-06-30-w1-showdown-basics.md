@@ -4,7 +4,7 @@
 
 **Goal:** Add a W1-owned, validator-backed beginner showdown-basics source slice and canonical fixture.
 
-**Architecture:** Add one isolated `w1.s11` source session with six source tasks, then generate the canonical fixture through the existing content-factory exporter. Extend the explicit W1 fixture list and focused tests without changing runtime routes or bridge ownership.
+**Architecture:** Add one isolated, non-routed W1 source-repair slice with six source tasks, then generate the canonical fixture through the existing content-factory exporter. Extend the explicit W1 fixture list and focused tests without changing runtime sessions, routes, or bridge ownership.
 
 **Tech Stack:** Markdown/JSON source content, Dart factory and validators, Flutter test.
 
@@ -42,16 +42,15 @@ Expected: failure because the fixture/source/export path does not exist.
 
 **Files:**
 - Modify: `content/worlds/world1/v1/world.md`
-- Modify: `content/worlds/world1/v1/sessions/index.md`
-- Create: `content/worlds/world1/v1/sessions/w1.s11/session.md`
-- Create: `content/worlds/world1/v1/sessions/w1.s11/notes.md`
-- Create: `content/worlds/world1/v1/sessions/w1.s11/drills/index.md`
-- Create: six JSON drill files under `content/worlds/world1/v1/sessions/w1.s11/drills/`
+- Create: `content/worlds/world1/v1/source_repairs/showdown_basics_v1/source.md`
+- Create: `content/worlds/world1/v1/source_repairs/showdown_basics_v1/notes.md`
+- Create: `content/worlds/world1/v1/source_repairs/showdown_basics_v1/drills/index.md`
+- Create: six JSON drill files under `content/worlds/world1/v1/source_repairs/showdown_basics_v1/drills/`
 
 - [ ] **Step 1: Add source ownership text**
 
-Extend W1 goals/completion criteria with bounded visible-card comparison and
-add `w1.s11` to the session index.
+Extend W1 goals/completion criteria with bounded visible-card comparison while
+leaving the active ten-session index unchanged.
 
 - [ ] **Step 2: Add six beginner source tasks**
 

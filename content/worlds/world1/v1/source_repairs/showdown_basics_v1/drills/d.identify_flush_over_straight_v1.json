@@ -1,0 +1,14 @@
+{
+  "id": "identify_flush_over_straight_v1",
+  "kind": "hand_rank_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Which made hand ranks higher: a flush or a straight?",
+  "available_actions_v1": ["flush", "straight"],
+  "expected": {
+    "actionId": "flush"
+  },
+  "error_class": "hand_rank_order_mismatch",
+  "why_v1": "A flush ranks above a straight in the basic hand-ranking order.",
+  "feedback_correct_v1": "Correct. A flush beats a straight.",
+  "feedback_incorrect_v1": "Incorrect. Compare the hand ranks first: a flush ranks above a straight."
+}

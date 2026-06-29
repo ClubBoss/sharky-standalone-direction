@@ -232,6 +232,40 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports W1 showdown basics source repair as L2 route-ready', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w1_showdown_basics_source_authorship_repair_v1.json',
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_1']!;
+    expect(world.totalTasks, 6);
+    expect(world.coverageCountableTasks, 6);
+    expect(world.previewOnlyTasks, 0);
+    expect(world.conceptFamilyCounts['showdown_basics'], 6);
+    expect(
+      world.sameSignalGroupCounts['w1.showdown_basics.best_five_comparison'],
+      6,
+    );
+    expect(world.transferSurfaceCounts['hand_rank_order_v1'], 2);
+    expect(world.transferSurfaceCounts['best_five_selection_v1'], 1);
+    expect(world.transferSurfaceCounts['showdown_winner_v1'], 1);
+    expect(world.transferSurfaceCounts['kicker_tiebreak_v1'], 1);
+    expect(world.transferSurfaceCounts['board_plays_tie_v1'], 1);
+    expect(world.repairFocusCounts['best_five_before_showdown_winner'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.validationStatusCounts['source_validated'], 6);
+    expect(world.migrationSourceCount, 6);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test('explicit W1 coverage fixture list excludes the L1 tiny sample', () {
     expect(
       w1ContentFactoryCoverageFixturePathsV1,
@@ -249,7 +283,7 @@ void main() {
     expect(result.errors, isEmpty);
     expect(result.routeAdmissionErrors, isEmpty);
     expect(result.fixtureCount, w1ContentFactoryCoverageFixturePathsV1.length);
-    expect(result.coverageCountableTasks, 36);
+    expect(result.coverageCountableTasks, 42);
     expect(result.worldReports['world_1']!.coverageReady, true);
   });
 

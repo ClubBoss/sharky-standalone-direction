@@ -1,0 +1,17 @@
+{
+  "id": "choose_board_plays_tie_v1",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Hero has Ac 2d, villain has Kh Qh, and the board is Ts 9d 8c 7h 6s. Who wins at showdown?",
+  "hero_hole_cards_v1": ["Ac", "2d"],
+  "villain_hole_cards_v1": ["Kh", "Qh"],
+  "board_cards_v1": ["Ts", "9d", "8c", "7h", "6s"],
+  "available_actions_v1": ["hero", "villain", "board_plays"],
+  "expected": {
+    "actionId": "board_plays"
+  },
+  "error_class": "board_plays_tie_mismatch",
+  "why_v1": "The board already makes the same ten-high straight for both players, so their best five cards tie.",
+  "feedback_correct_v1": "Correct. The board supplies the same best five-card straight to both players.",
+  "feedback_incorrect_v1": "Incorrect. Neither hole-card hand improves the board's ten-high straight, so the result is a tie."
+}

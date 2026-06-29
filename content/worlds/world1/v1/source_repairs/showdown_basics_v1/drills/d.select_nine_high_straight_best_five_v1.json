@@ -1,0 +1,16 @@
+{
+  "id": "select_nine_high_straight_best_five_v1",
+  "kind": "best_five_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Hero has 9h 8h on 7c 6d 5s Kd 2c. Which best five-card hand can Hero make?",
+  "hero_hole_cards_v1": ["9h", "8h"],
+  "board_cards_v1": ["7c", "6d", "5s", "Kd", "2c"],
+  "available_actions_v1": ["nine_high_straight", "pair_of_kings", "king_high"],
+  "expected": {
+    "actionId": "nine_high_straight"
+  },
+  "error_class": "best_five_selection_mismatch",
+  "why_v1": "The best five are 9-8-7-6-5, which make a nine-high straight.",
+  "feedback_correct_v1": "Correct. Use the strongest five cards: 9-8-7-6-5 is a straight.",
+  "feedback_incorrect_v1": "Incorrect. Check all seven available cards and select 9-8-7-6-5 as the best five."
+}

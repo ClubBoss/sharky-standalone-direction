@@ -11,13 +11,14 @@ beginner foundation can be added safely without broadening into strategy.
 
 ## Source Ownership
 
-Create `w1.s11` under `content/worlds/world1/v1/sessions/`. The source is new
-W1 authorship and must not copy W2 task IDs, source metadata, or bridge status.
-W2 showdown material remains reference-only evidence that the ownership gap is
-real.
+Create a non-routed source slice under
+`content/worlds/world1/v1/source_repairs/showdown_basics_v1/`. The source is
+new W1 authorship and must not copy W2 task IDs, source metadata, or bridge
+status. W2 showdown material remains reference-only evidence that the ownership
+gap is real.
 
-Update W1 world/session source descriptions so `Poker from Zero` honestly owns
-beginner showdown comparison in addition to its existing preflop foundations.
+Update W1 world source truth so `Poker from Zero` honestly owns beginner
+showdown comparison without adding an unsupported runtime session.
 
 ## Learning Slice
 

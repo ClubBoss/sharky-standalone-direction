@@ -1,0 +1,17 @@
+{
+  "id": "choose_hero_pair_over_pair_showdown_v1",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Hero has Ah Kd, villain has Qs Qd, and the board is Ac 7h 4s 2c 9d. Who wins at showdown?",
+  "hero_hole_cards_v1": ["Ah", "Kd"],
+  "villain_hole_cards_v1": ["Qs", "Qd"],
+  "board_cards_v1": ["Ac", "7h", "4s", "2c", "9d"],
+  "available_actions_v1": ["hero", "villain", "tie"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "showdown_winner_choice_mismatch",
+  "why_v1": "Hero's pair of aces outranks villain's pair of queens.",
+  "feedback_correct_v1": "Correct. Hero wins with the higher pair, aces over queens.",
+  "feedback_incorrect_v1": "Incorrect. Build each best five first: hero has a pair of aces and villain has a pair of queens."
+}

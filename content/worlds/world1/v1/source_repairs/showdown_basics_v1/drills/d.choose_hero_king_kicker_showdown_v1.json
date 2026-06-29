@@ -1,0 +1,17 @@
+{
+  "id": "choose_hero_king_kicker_showdown_v1",
+  "kind": "showdown_winner_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Hero has Ah Kd, villain has As Qd, and the board is Ac 7h 4s 2c 9d. Both players have a pair of aces. Who wins?",
+  "hero_hole_cards_v1": ["Ah", "Kd"],
+  "villain_hole_cards_v1": ["As", "Qd"],
+  "board_cards_v1": ["Ac", "7h", "4s", "2c", "9d"],
+  "available_actions_v1": ["hero", "villain", "tie"],
+  "expected": {
+    "actionId": "hero"
+  },
+  "error_class": "kicker_tiebreak_mismatch",
+  "why_v1": "The pair of aces ties, so hero's king kicker beats villain's queen kicker.",
+  "feedback_correct_v1": "Correct. With the pair tied, the king kicker makes hero's best five stronger.",
+  "feedback_incorrect_v1": "Incorrect. Compare the tied pair first, then the kicker: king beats queen."
+}

@@ -102,6 +102,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW1CardBoardOrientationPr2V1(writeFiles: false),
     exportW1BetSizeVocabularyPreviewPr3V1(writeFiles: false),
     exportW1CheckpointSynthesisPr3V1(writeFiles: false),
+    exportW1ShowdownBasicsSourceAuthorshipRepairV1(writeFiles: false),
     exportW2BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW2CanonicalCertificationPilotV1(writeFiles: false),
     exportW2FacingPriceDisciplineCanonicalPr2V1(writeFiles: false),
@@ -975,6 +976,94 @@ _FactorySampleSpecV1 _w1CheckpointPr3Spec({
     correctActionOverride: 'complete_chain',
     sourceIntentOverride: 'world1_checkpoint_synthesis',
     sourceErrorClassOverride: 'checkpoint_synthesis_review',
+  );
+}
+
+ContentFactoryImportExportResultV1
+exportW1ShowdownBasicsSourceAuthorshipRepairV1({bool writeFiles = false}) {
+  const fixtureId = 'w1_showdown_basics_source_authorship_repair_v1';
+  const fixtureLevel = 'w1_showdown_basics_source_authorship_repair_v1';
+  const sourceRoot =
+      'content/worlds/world1/v1/source_repairs/showdown_basics_v1/drills/';
+
+  _FactorySampleSpecV1 spec({
+    required String sourceFile,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: '$sourceRoot$sourceFile',
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_1',
+      routeWorldId: 'world_1',
+      displayWorldTitle: 'Poker from Zero',
+      contentOwnerWorldId: 'world_1',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w1.l11',
+      sessionId: 'w1.s11',
+      packId: 'world1_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: 'showdown_basics',
+      repairFocusId: 'best_five_before_showdown_winner',
+      sameSignalGroupId: 'w1.showdown_basics.best_five_comparison',
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: 'w1_showdown_basics_source_authorship_repair_v1',
+      claimsTransfer: true,
+      sourceIntentOverride: 'showdown_basics',
+      safeClaimStatus: 'canonical_pilot',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/$fixtureId.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourceFile: 'd.identify_straight_over_two_pair_v1.json',
+        taskId: 'w1.s11.identify_straight_over_two_pair.showdown_repair_v1',
+        transferSurfaceId: 'hand_rank_order_v1',
+        misconceptionId: 'ranks_two_pair_above_straight',
+      ),
+      spec(
+        sourceFile: 'd.identify_flush_over_straight_v1.json',
+        taskId: 'w1.s11.identify_flush_over_straight.showdown_repair_v1',
+        transferSurfaceId: 'hand_rank_order_v1',
+        misconceptionId: 'ranks_straight_above_flush',
+      ),
+      spec(
+        sourceFile: 'd.select_nine_high_straight_best_five_v1.json',
+        taskId: 'w1.s11.select_nine_high_straight_best_five.showdown_repair_v1',
+        transferSurfaceId: 'best_five_selection_v1',
+        misconceptionId: 'fails_to_select_best_five_from_seven',
+      ),
+      spec(
+        sourceFile: 'd.choose_hero_pair_over_pair_showdown_v1.json',
+        taskId: 'w1.s11.choose_hero_pair_over_pair_showdown.showdown_repair_v1',
+        transferSurfaceId: 'showdown_winner_v1',
+        misconceptionId: 'chooses_lower_pair_at_showdown',
+      ),
+      spec(
+        sourceFile: 'd.choose_hero_king_kicker_showdown_v1.json',
+        taskId: 'w1.s11.choose_hero_king_kicker_showdown.showdown_repair_v1',
+        transferSurfaceId: 'kicker_tiebreak_v1',
+        misconceptionId: 'ignores_kicker_after_pair_ties',
+      ),
+      spec(
+        sourceFile: 'd.choose_board_plays_tie_v1.json',
+        taskId: 'w1.s11.choose_board_plays_tie.showdown_repair_v1',
+        transferSurfaceId: 'board_plays_tie_v1',
+        misconceptionId: 'forces_winner_when_best_five_ties',
+      ),
+    ],
   );
 }
 

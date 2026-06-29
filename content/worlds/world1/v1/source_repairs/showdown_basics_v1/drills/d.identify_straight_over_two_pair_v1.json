@@ -1,0 +1,14 @@
+{
+  "id": "identify_straight_over_two_pair_v1",
+  "kind": "hand_rank_choice_v1",
+  "intent_v1": "showdown_basics",
+  "prompt": "Which made hand ranks higher: a straight or two pair?",
+  "available_actions_v1": ["straight", "two_pair"],
+  "expected": {
+    "actionId": "straight"
+  },
+  "error_class": "hand_rank_order_mismatch",
+  "why_v1": "A straight ranks above two pair in the basic hand-ranking order.",
+  "feedback_correct_v1": "Correct. A straight beats two pair.",
+  "feedback_incorrect_v1": "Incorrect. Compare the hand ranks first: a straight ranks above two pair."
+}
