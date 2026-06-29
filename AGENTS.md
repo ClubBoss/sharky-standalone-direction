@@ -3,6 +3,8 @@
 ## Quick Orientation
 
 For project navigation and SSOT authority:
+- Read `docs/context/CONTEXT_ROUTER_v1.md` before broad-reading docs; use it
+  to select the narrow lane capsule and token budget for the task.
 - Read `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` first (defines doc hierarchy)
 - Then `docs/plan/MASTER_PLAN_v3.0.md` (active product-working master plan)
 - For top-1 / 10/10 / Runout / competitive-product attack planning, also read
