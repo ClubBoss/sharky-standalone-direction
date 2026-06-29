@@ -15,11 +15,11 @@ void main() {
 
   test('campaign to session promotion emits world-session handoff context', () {
     final context = buildProgressionHandoffContextForPackV1(
-      'world6_spine_campaign_v1',
+      'world8_spine_campaign_v1',
     );
 
     expect(context, isNotNull);
-    expect(context!.statusLine, 'Campaign route -> World 6 sessions');
+    expect(context!.statusLine, 'Campaign route -> World 8 sessions');
   });
 
   test('early-arc world2 handoff carries Hand Discipline headline and reason', () {
@@ -75,6 +75,68 @@ void main() {
       expect(context.continuationReasonLine, isNot(contains('Human QA')));
     },
   );
+
+  test('world5 handoff carries Board Awareness headline and reason', () {
+    final context = buildProgressionHandoffContextForPackV1(
+      'world5_spine_campaign_v1',
+    );
+
+    expect(context, isNotNull);
+    expect(
+      context!.statusLine,
+      'Stage shift - World 4 Bet Purpose / Price -> World 5 Board Awareness',
+    );
+    expect(
+      context.continuationHeadline,
+      'What changes now: Build Board Awareness from texture, board shifts, and action context',
+    );
+    expect(
+      context.continuationReasonLine,
+      'Why: World 4 trained Bet Purpose / Price by connecting intent, price, and action before the click. World 5 now trains Board Awareness through dry, wet, paired, and connected board reads before action.',
+    );
+    expect(context.continuationReasonLine, isNot(contains('8.0')));
+    expect(context.continuationReasonLine, isNot(contains('9.0')));
+    expect(
+      context.continuationReasonLine!.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(
+      context.continuationReasonLine!.toLowerCase(),
+      isNot(contains('solver')),
+    );
+    expect(context.continuationReasonLine, isNot(contains('Human QA')));
+  });
+
+  test('world6 handoff points to Range Thinking without closure claim', () {
+    final context = buildProgressionHandoffContextForPackV1(
+      'world6_spine_campaign_v1',
+    );
+
+    expect(context, isNotNull);
+    expect(
+      context!.statusLine,
+      'Stage shift - World 5 Board Awareness -> World 6 Range Thinking',
+    );
+    expect(
+      context.continuationHeadline,
+      'What changes now: Build Range Thinking from board-aware pressure and likely hand groups',
+    );
+    expect(
+      context.continuationReasonLine,
+      'Why: World 5 trained Board Awareness before action. World 6 now introduces Range Thinking by connecting board-aware pressure to likely hand groups.',
+    );
+    expect(context.continuationReasonLine, isNot(contains('8.0')));
+    expect(context.continuationReasonLine, isNot(contains('9.0')));
+    expect(
+      context.continuationReasonLine!.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(
+      context.continuationReasonLine!.toLowerCase(),
+      isNot(contains('solver')),
+    );
+    expect(context.continuationReasonLine, isNot(contains('Human QA')));
+  });
 
   test('world10 followup emits track handoff context', () {
     final context = buildProgressionHandoffContextForPackV1(

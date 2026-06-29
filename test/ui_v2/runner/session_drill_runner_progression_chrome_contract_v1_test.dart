@@ -71,7 +71,42 @@ void main() {
     expect(contract.completionBodyText, isNot(contains('Human QA')));
   });
 
-  test('canonical world-session chrome resolves from session truth', () {
+  test('world4 chrome carries Bet Purpose Price payoff and safe progression', () {
+    final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
+      const SessionDrillRunnerProgressionChromeInputV1(
+        sessionId: 'w4.s01',
+        stepLabel: 'Bet Purpose / Price',
+        currentDrillIndex: 0,
+        totalDrills: 1,
+        drillId: 'price_given_before_action_intro',
+      ),
+    );
+
+    expect(contract.titleText, 'World 4');
+    expect(contract.nextSessionId, 'w4.s02');
+    expect(
+      contract.completionBodyText,
+      startsWith(
+        'World 4 trained Bet Purpose / Price by connecting why a bet is made, price, and action before the click.',
+      ),
+    );
+    expect(contract.completionBodyText, contains('Next lesson ready: World 4'));
+    expect(contract.completionBodyText, contains('Session 2 of '));
+    expect(contract.completionBodyText, isNot(contains('8.0')));
+    expect(contract.completionBodyText, isNot(contains('9.0')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(contract.completionBodyText.toLowerCase(), isNot(contains('gto')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('solver')),
+    );
+    expect(contract.completionBodyText, isNot(contains('Human QA')));
+  });
+
+  test('world5 chrome carries Board Awareness payoff and safe progression', () {
     final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
       const SessionDrillRunnerProgressionChromeInputV1(
         sessionId: 'w5.s01',
@@ -83,11 +118,53 @@ void main() {
     );
 
     expect(contract.titleText, 'World 5');
-    expect(contract.statusText, 'World 5 · Session 1 of 10 · Board Texture');
     expect(contract.nextSessionId, 'w5.s02');
     expect(
       contract.completionBodyText,
-      'Next lesson ready: World 5 · Session 2 of 10.',
+      startsWith(
+        'World 5 trained Board Awareness by reading dry, wet, paired, connected, and shifting boards before action.',
+      ),
+    );
+    expect(contract.completionBodyText, contains('Next lesson ready: World 5'));
+    expect(contract.completionBodyText, contains('Session 2 of '));
+    expect(
+      contract.completionBodyText,
+      isNot('Next lesson ready: World 5 \u00B7 Session 2 of 10.'),
+    );
+    expect(contract.completionBodyText, isNot(contains('8.0')));
+    expect(contract.completionBodyText, isNot(contains('9.0')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('launch')),
+    );
+    expect(contract.completionBodyText.toLowerCase(), isNot(contains('gto')));
+    expect(
+      contract.completionBodyText.toLowerCase(),
+      isNot(contains('solver')),
+    );
+    expect(contract.completionBodyText, isNot(contains('Human QA')));
+  });
+
+  test('canonical world-session chrome resolves from session truth', () {
+    final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
+      const SessionDrillRunnerProgressionChromeInputV1(
+        sessionId: 'w6.s01',
+        stepLabel: 'Range Thinking',
+        currentDrillIndex: 0,
+        totalDrills: 1,
+        drillId: 'range_thinking_done',
+      ),
+    );
+
+    expect(contract.titleText, 'World 6');
+    expect(
+      contract.statusText,
+      'World 6 \u00B7 Session 1 of 10 \u00B7 Range Thinking',
+    );
+    expect(contract.nextSessionId, 'w6.s02');
+    expect(
+      contract.completionBodyText,
+      'Next lesson ready: World 6 \u00B7 Session 2 of 10.',
     );
   });
 
@@ -105,12 +182,12 @@ void main() {
     expect(contract.titleText, 'World 10 Cash Track');
     expect(
       contract.statusText,
-      'World 10 Cash Track · Session 9 of 10 · Board Texture',
+      'World 10 Cash Track \u00B7 Session 9 of 10 \u00B7 Board Texture',
     );
     expect(contract.nextSessionId, 'cash.s10');
     expect(
       contract.completionBodyText,
-      'Next lesson ready: World 10 Cash Track · Session 10 of 10.',
+      'Next lesson ready: World 10 Cash Track \u00B7 Session 10 of 10.',
     );
   });
 

@@ -37,16 +37,13 @@ ProgressionHandoffContextV1? buildProgressionHandoffContextForPackV1(
     rhythmReason: '',
   );
   final statusLine = progressionRouteStatusLineForTargetV1(target);
-  final shouldCarryEarlyArcCue =
-      target.family == ProgressionRouteFamilyV1.sessionWorld &&
-      isEarlyArcSessionWorldV1(target.world);
+  final shouldCarryRouteCue =
+      progressionRouteStageShiftHeadlineForTargetV1(target) != null;
   return ProgressionHandoffContextV1(
     statusLine: statusLine,
-    continuationHeadline: shouldCarryEarlyArcCue
+    continuationHeadline: shouldCarryRouteCue
         ? progressionRouteStageShiftHeadlineForTargetV1(target)
         : null,
-    continuationReasonLine: shouldCarryEarlyArcCue
-        ? routeStory.reasonLine
-        : null,
+    continuationReasonLine: shouldCarryRouteCue ? routeStory.reasonLine : null,
   );
 }

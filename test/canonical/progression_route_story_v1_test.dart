@@ -18,9 +18,9 @@ void main() {
     expect(story.reasonLine, 'Why: Continue your next campaign route.');
   });
 
-  test('session worlds resolve to world-session route story', () {
+  test('later session worlds keep generic world-session route story', () {
     final story = resolveProgressionRouteStoryForPackV1(
-      nextPackId: 'world6_spine_campaign_v1',
+      nextPackId: 'world8_spine_campaign_v1',
       reviewRequired: false,
       activePackId: '',
       nextHandIndex: 0,
@@ -28,13 +28,13 @@ void main() {
     );
 
     expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
-    expect(story.target.world, 6);
-    expect(story.target.routeLabel, 'World 6 sessions');
-    expect(story.ctaLabel, 'OPEN WORLD 6');
-    expect(story.semanticsLabel, 'Open World 6 session route');
+    expect(story.target.world, 8);
+    expect(story.target.routeLabel, 'World 8 sessions');
+    expect(story.ctaLabel, 'OPEN WORLD 8');
+    expect(story.semanticsLabel, 'Open World 8 session route');
     expect(
       story.reasonLine,
-      'Why: Your next learning route is World 6 sessions.',
+      'Why: Your next learning route is World 8 sessions.',
     );
   });
 
@@ -90,6 +90,79 @@ void main() {
       );
       expect(story.reasonLine, contains('Position'));
       expect(story.reasonLine.toLowerCase(), contains('hand-bucket'));
+      expect(story.reasonLine, isNot(contains('8.0')));
+      expect(story.reasonLine, isNot(contains('9.0')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('launch')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('gto')));
+      expect(story.reasonLine.toLowerCase(), isNot(contains('solver')));
+      expect(story.reasonLine, isNot(contains('Human QA')));
+    },
+  );
+
+  test('world5 route story carries Board Awareness payoff handoff', () {
+    final target = resolveProgressionRouteTargetForPackIdV1(
+      'world5_spine_campaign_v1',
+    );
+    final story = resolveProgressionRouteStoryForPackV1(
+      nextPackId: 'world5_spine_campaign_v1',
+      reviewRequired: false,
+      activePackId: '',
+      nextHandIndex: 0,
+      rhythmReason: '',
+    );
+
+    expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
+    expect(story.target.world, 5);
+    expect(
+      progressionRouteStatusLineForTargetV1(target),
+      'Stage shift - World 4 Bet Purpose / Price -> World 5 Board Awareness',
+    );
+    expect(
+      progressionRouteStageShiftHeadlineForTargetV1(target),
+      'What changes now: Build Board Awareness from texture, board shifts, and action context',
+    );
+    expect(
+      story.reasonLine,
+      'Why: World 4 trained Bet Purpose / Price by connecting intent, price, and action before the click. World 5 now trains Board Awareness through dry, wet, paired, and connected board reads before action.',
+    );
+    expect(story.reasonLine, contains('Board Awareness'));
+    expect(story.reasonLine, isNot(contains('8.0')));
+    expect(story.reasonLine, isNot(contains('9.0')));
+    expect(story.reasonLine.toLowerCase(), isNot(contains('launch')));
+    expect(story.reasonLine.toLowerCase(), isNot(contains('gto')));
+    expect(story.reasonLine.toLowerCase(), isNot(contains('solver')));
+    expect(story.reasonLine, isNot(contains('Human QA')));
+  });
+
+  test(
+    'world6 route story carries Range Thinking handoff without closure claim',
+    () {
+      final target = resolveProgressionRouteTargetForPackIdV1(
+        'world6_spine_campaign_v1',
+      );
+      final story = resolveProgressionRouteStoryForPackV1(
+        nextPackId: 'world6_spine_campaign_v1',
+        reviewRequired: false,
+        activePackId: '',
+        nextHandIndex: 0,
+        rhythmReason: '',
+      );
+
+      expect(story.target.family, ProgressionRouteFamilyV1.sessionWorld);
+      expect(story.target.world, 6);
+      expect(
+        progressionRouteStatusLineForTargetV1(target),
+        'Stage shift - World 5 Board Awareness -> World 6 Range Thinking',
+      );
+      expect(
+        progressionRouteStageShiftHeadlineForTargetV1(target),
+        'What changes now: Build Range Thinking from board-aware pressure and likely hand groups',
+      );
+      expect(
+        story.reasonLine,
+        'Why: World 5 trained Board Awareness before action. World 6 now introduces Range Thinking by connecting board-aware pressure to likely hand groups.',
+      );
+      expect(story.reasonLine, contains('Range Thinking'));
       expect(story.reasonLine, isNot(contains('8.0')));
       expect(story.reasonLine, isNot(contains('9.0')));
       expect(story.reasonLine.toLowerCase(), isNot(contains('launch')));
