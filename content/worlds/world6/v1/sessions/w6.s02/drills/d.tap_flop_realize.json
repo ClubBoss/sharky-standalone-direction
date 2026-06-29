@@ -1,13 +1,13 @@
 {
-  "id": "tap_flop_realize",
-  "kind": "board_tap",
-  "prompt": "Tap flop middle slot to anchor realization context.",
-  "intent_v1": "equity_realization",
-  "expected": {
-    "boardSlot": "flop_mid"
-  },
-  "why_v1": "Board anchor keeps street context stable before range action.",
-  "error_class": "focus_anchor_mismatch",
-  "feedback_correct_v1": "Correct. flop_mid is the board anchor here because the middle flop card tells you whether the texture really supports clean realization.",
-  "feedback_incorrect_v1": "Incorrect. Anchor the flop first because it gives the first real read on texture, draw pressure, and who benefits from the board. Without that flop context, the realization decision is detached from what the board is actually doing."
+  "id": "classify_utg_range_stronger_average",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Position comparison: UTG opens before anyone else acts. Compared with the button first-in range, classify the UTG range quality.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "utg_first_in_vs_button_first_in",
+  "expected_action": "stronger_on_average",
+  "range_width_v1": "stronger_on_average",
+  "why_v1": "Stronger on average means the early-position range starts with fewer hands and keeps more strong hands.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. UTG is stronger on average because early position usually starts with fewer, stronger hands.",
+  "feedback_incorrect_v1": "Incorrect. UTG is stronger on average because acting early leaves more players behind, so the range starts tighter."
 }

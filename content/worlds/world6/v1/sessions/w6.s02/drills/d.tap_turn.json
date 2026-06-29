@@ -1,13 +1,13 @@
 {
-  "id": "tap_turn",
-  "kind": "board_tap",
-  "prompt": "Equity realization check: tap turn.",
-  "intent_v1": "equity_realization",
-  "expected": {
-    "boardSlot": "turn"
-  },
-  "error_class": "focus_anchor_mismatch",
-  "why_v1": "Board anchor keeps street context stable before range action.",
-  "feedback_correct_v1": "Correct. turn is the board anchor here because the second street decides whether the realization edge grows or gets squeezed.",
-  "feedback_incorrect_v1": "Incorrect. The turn matters because it changes pressure, adds or removes draws, and can shift who still wants to keep building the pot. You need that new card before judging how well the hand realizes its equity."
+  "id": "classify_late_position_more_hands",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Position comparison: cutoff or button can enter after early seats are out. Compared with early position, classify how many hands late position can include.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "late_position_vs_early_position",
+  "expected_action": "wider",
+  "range_width_v1": "wider",
+  "why_v1": "Wider means late position can include more hands than early position.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. Late position is wider because cutoff and button ranges can include more hands than early position.",
+  "feedback_incorrect_v1": "Incorrect. Late position is wider because fewer players remain behind, so more hands can stay in the range."
 }

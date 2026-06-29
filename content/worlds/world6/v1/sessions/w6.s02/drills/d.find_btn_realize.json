@@ -1,13 +1,13 @@
 {
-  "id": "find_btn_realize",
-  "kind": "seat_tap",
-  "prompt": "Tap button seat before realization decision.",
-  "intent_v1": "equity_realization",
-  "expected": {
-    "role": "btn"
-  },
-  "why_v1": "Seat anchor keeps action order stable before range decisions.",
-  "error_class": "anchor_order_mismatch",
-  "feedback_correct_v1": "Correct. Button is the seat anchor here because the last-acting range owns the cleanest realization edge.",
-  "feedback_incorrect_v1": "Incorrect. The button is the right seat anchor here because the last-acting range can see every earlier decision before committing more chips."
+  "id": "classify_button_range_wider",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Position comparison: the button can enter after earlier seats are out. Compared with UTG first-in, classify the button range width.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "button_vs_utg_first_in",
+  "expected_action": "wider",
+  "range_width_v1": "wider",
+  "why_v1": "Wider means the button can include more hands because fewer players remain behind.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. The button range is wider because late position can include more hands than UTG.",
+  "feedback_incorrect_v1": "Incorrect. The button range is wider because fewer players remain behind, so more hands can fit the range."
 }

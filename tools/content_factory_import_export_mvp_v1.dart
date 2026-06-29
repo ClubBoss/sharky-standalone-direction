@@ -117,6 +117,7 @@ List<ContentFactoryImportExportResultV1> exportTinyContentFactorySamplesV1({
     exportW5BoardShiftAwarenessCanonicalPr2V1(writeFiles: false),
     exportW6BridgeSchemaMigrationPilotV1(writeFiles: false),
     exportW6RangeBucketByBoardFitCanonicalPilotV1(writeFiles: false),
+    exportW6RangeWidthAwarenessCanonicalPr2V1(writeFiles: false),
   ];
   if (writeFiles) {
     Directory(_outputDir).createSync(recursive: true);
@@ -2772,6 +2773,105 @@ exportW6RangeBucketByBoardFitCanonicalPilotV1({bool writeFiles = false}) {
         taskId: 'w6.s01.classify_missed_low_cards_no_draw.canonical_pilot_v1',
         transferSurfaceId: 'missed_no_clear_draw_v1',
         misconceptionId: 'treats_unpaired_low_cards_as_board_fit',
+      ),
+    ],
+  );
+}
+
+ContentFactoryImportExportResultV1 exportW6RangeWidthAwarenessCanonicalPr2V1({
+  bool writeFiles = false,
+}) {
+  const fixtureId = 'w6_range_width_awareness_canonical_pr2_v1';
+  const fixtureLevel = 'w6_canonical_coverage_expansion_pr2_v1';
+  const conceptFamilyId = 'range_width_awareness';
+  const repairFocusId = 'width_before_action';
+  const sameSignalGroupId = 'w6.range_thinking.range_width_awareness';
+  const sourceJob = 'w6_canonical_pr2_range_width_awareness';
+  _FactorySampleSpecV1 spec({
+    required String sourcePath,
+    required String taskId,
+    required String transferSurfaceId,
+    required String misconceptionId,
+  }) {
+    return _FactorySampleSpecV1(
+      sourcePath: sourcePath,
+      outputPath: '',
+      fixtureId: fixtureId,
+      fixtureLevel: fixtureLevel,
+      worldId: 'world_6',
+      routeWorldId: 'world_6',
+      displayWorldTitle: 'Range Thinking',
+      contentOwnerWorldId: 'world_6',
+      routeGateStatus: 'learner_playable',
+      lessonId: 'w6.l02',
+      sessionId: 'w6.s02',
+      packId: 'world6_spine_campaign_v1',
+      taskId: taskId,
+      conceptFamilyId: conceptFamilyId,
+      repairFocusId: repairFocusId,
+      sameSignalGroupId: sameSignalGroupId,
+      transferSurfaceId: transferSurfaceId,
+      misconceptionId: misconceptionId,
+      sourceTruthStatus: 'migrated',
+      feedbackReason: null,
+      sourceJob: sourceJob,
+      claimsTransfer: true,
+      safeClaimStatus: 'canonical_pilot',
+      launchCoverageClaimed: false,
+    );
+  }
+
+  return _exportAggregateFixture(
+    outputPath: '$_outputDir/w6_range_width_awareness_canonical_pr2_v1.json',
+    fixtureId: fixtureId,
+    fixtureLevel: fixtureLevel,
+    writeFiles: writeFiles,
+    specs: [
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/'
+            'd.find_btn_realize.json',
+        taskId: 'w6.s02.classify_button_range_wider.canonical_pr2_v1',
+        transferSurfaceId: 'late_position_more_hands_v1',
+        misconceptionId: 'treats_button_like_utg_width',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/d.find_bb.json',
+        taskId: 'w6.s02.classify_big_blind_continue_narrower.canonical_pr2_v1',
+        transferSurfaceId: 'facing_open_filters_hands_v1',
+        misconceptionId: 'treats_continue_range_as_all_hands',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/'
+            'd.choose_call_realize.json',
+        taskId: 'w6.s02.classify_continue_range_narrower.canonical_pr2_v1',
+        transferSurfaceId: 'facing_open_filters_hands_v1',
+        misconceptionId: 'treats_continue_range_as_wide_as_opener',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/'
+            'd.choose_raise_blocker.json',
+        taskId: 'w6.s02.classify_button_open_less_constrained.canonical_pr2_v1',
+        transferSurfaceId: 'late_position_more_varied_v1',
+        misconceptionId: 'overconstrains_late_position_range',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/'
+            'd.tap_flop_realize.json',
+        taskId: 'w6.s02.classify_utg_range_stronger_average.canonical_pr2_v1',
+        transferSurfaceId: 'early_position_fewer_stronger_v1',
+        misconceptionId: 'misses_early_position_strength_filter',
+      ),
+      spec(
+        sourcePath:
+            'content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_turn.json',
+        taskId: 'w6.s02.classify_late_position_more_hands.canonical_pr2_v1',
+        transferSurfaceId: 'late_position_more_hands_v1',
+        misconceptionId: 'misses_late_position_width',
       ),
     ],
   );

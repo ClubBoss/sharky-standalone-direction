@@ -1,13 +1,13 @@
 {
-  "id": "find_bb",
-  "kind": "seat_tap",
-  "prompt": "Equity realization setup: tap BB.",
-  "intent_v1": "equity_realization",
-  "why_v1": "Seat anchor keeps action order stable before range decisions.",
-  "expected": {
-    "role": "bb"
-  },
-  "error_class": "anchor_order_mismatch",
-  "feedback_correct_v1": "Correct. Big blind is the seat anchor here because the forced defender closes the action and sets the realization pressure.",
-  "feedback_incorrect_v1": "Incorrect. Start with the big blind so you know who closes the action and how much positional pressure the hand faces. That seat anchor is what tells you how carefully this realization spot should be played."
+  "id": "classify_big_blind_continue_narrower",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Line comparison: the big blind continues after facing an early-position open. Compared with all hands before the open, classify the continuing range width.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "big_blind_continue_vs_all_hands",
+  "expected_action": "narrower",
+  "range_width_v1": "narrower",
+  "why_v1": "Narrower means the player has filtered out many hands before continuing.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. The continuing big blind range is narrower because facing an early open removes many weak hands.",
+  "feedback_incorrect_v1": "Incorrect. This continuing range is narrower because not every possible hand remains after an early open."
 }

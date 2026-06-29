@@ -1,13 +1,13 @@
 {
-  "id": "choose_raise_blocker",
-  "kind": "action_choice",
-  "prompt": "Blocker proxy spot: choose the best action.",
-  "intent_v1": "blockers_basics",
-  "expected": {
-    "actionId": "raise"
-  },
-  "error_class": "expected_action_mismatch",
-  "why_v1": "Raise applies pressure when range and price support aggression.",
-  "feedback_correct_v1": "Correct. Raising fits because the Ks blocker removes strong continues and gives this pressure line real fold equity.",
-  "feedback_incorrect_v1": "Incorrect. Raise is better here because the blocker removes some strong continues from villain's range and makes fold equity more believable. With pressure plus that card-removal edge, aggression earns more than a passive line."
+  "id": "classify_button_open_less_constrained",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Position comparison: the button is first to enter before the flop. Compared with UTG first-in, classify how constrained the button range is.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "button_first_in_vs_utg_first_in",
+  "expected_action": "less_constrained",
+  "range_width_v1": "less_constrained",
+  "why_v1": "Less constrained means late position can keep a more varied set of hands.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. The button range is less constrained because late position can include a more varied set of hands.",
+  "feedback_incorrect_v1": "Incorrect. The button range is less constrained than UTG because fewer players remain behind."
 }

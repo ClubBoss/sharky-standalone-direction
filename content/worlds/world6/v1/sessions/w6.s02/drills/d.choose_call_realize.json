@@ -1,13 +1,13 @@
 {
-  "id": "choose_call_realize",
-  "kind": "action_choice",
-  "prompt": "Realization proxy: choose the best action.",
-  "intent_v1": "equity_realization",
-  "expected": {
-    "actionId": "call"
-  },
-  "error_class": "expected_action_mismatch",
-  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
-  "feedback_correct_v1": "Correct. Calling fits because your edge still realizes equity cleanly without inflating the pot from a medium-strength continue.",
-  "feedback_incorrect_v1": "Incorrect. Call is better when your edge is real but not strong enough to build a bigger pot. You keep the hand playable, realize equity, and avoid turning a medium-strength continue into an unnecessary raise."
+  "id": "classify_continue_range_narrower",
+  "kind": "range_width_classifier_v1",
+  "prompt": "Line comparison: a player continues after another player opens. Compared with the opener's possible first-in hands, classify the continuing range width.",
+  "intent_v1": "position_and_range_width",
+  "position_context_v1": "continue_after_open_vs_opener",
+  "expected_action": "narrower",
+  "range_width_v1": "narrower",
+  "why_v1": "Narrower means continuing after an open usually keeps fewer hands than opening first.",
+  "error_class": "range_width_mismatch",
+  "feedback_correct_v1": "Correct. The continuing range is narrower because facing an open filters out many hands.",
+  "feedback_incorrect_v1": "Incorrect. The continuing range is narrower because the player has already faced an open and kept only a more selected set of hands."
 }

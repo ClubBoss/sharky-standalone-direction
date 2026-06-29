@@ -39,6 +39,13 @@ const List<String> w4W5CanonicalCoveragePr2FixturePathsV1 = [
       'w5_board_shift_awareness_canonical_pr2_v1.json',
 ];
 
+const List<String> w6CanonicalCoveragePr2FixturePathsV1 = [
+  'test/fixtures/content_factory_mvp/'
+      'w6_range_bucket_by_board_fit_canonical_pilot_v1.json',
+  'test/fixtures/content_factory_mvp/'
+      'w6_range_width_awareness_canonical_pr2_v1.json',
+];
+
 const List<String> _requiredFields = [
   'schema_version',
   'world_id',

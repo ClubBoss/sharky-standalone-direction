@@ -771,6 +771,39 @@ void main() {
     expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
   });
 
+  test('reports W6 canonical PR2 fixture list as route-ready coverage', () {
+    final result = validateContentSchemaL2L3FixturePathsV1(
+      w6CanonicalCoveragePr2FixturePathsV1,
+    );
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+    expect(result.fixtureCount, 2);
+
+    final world = result.worldReports['world_6']!;
+    expect(world.totalTasks, 12);
+    expect(world.coverageCountableTasks, 12);
+    expect(world.conceptFamilyCounts['range_bucket_by_board_fit'], 6);
+    expect(world.conceptFamilyCounts['range_width_awareness'], 6);
+    expect(
+      world
+          .sameSignalGroupCounts['w6.range_thinking.range_bucket_by_board_fit'],
+      6,
+    );
+    expect(
+      world.sameSignalGroupCounts['w6.range_thinking.range_width_awareness'],
+      6,
+    );
+    expect(world.repairFocusCounts['bucket_before_action'], 6);
+    expect(world.repairFocusCounts['width_before_action'], 6);
+    expect(world.sourceTruthStatusCounts['migrated'], 12);
+    expect(world.coverageReady, true);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'learner_playable_route_ready');
+  });
+
   test('keeps W4 bridge plus canonical pilot bridge-limited', () {
     final result = validateContentSchemaL2L3FixturePathsV1([
       'test/fixtures/content_factory_mvp/'
@@ -834,6 +867,28 @@ void main() {
     expect(world.coverageCountableTasks, 9);
     expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
     expect(world.sourceTruthStatusCounts['migrated'], 6);
+    expect(world.coverageReady, false);
+    expect(world.transferReady, true);
+    expect(world.repairReady, true);
+    expect(world.routeAdmissionStatus, 'bridge_or_legacy_limited');
+  });
+
+  test('keeps W6 bridge plus canonical PR2 fixtures bridge-limited', () {
+    final result = validateContentSchemaL2L3FixturePathsV1([
+      'test/fixtures/content_factory_mvp/'
+          'w6_bridge_or_legacy_schema_migration_pilot_v1.json',
+      ...w6CanonicalCoveragePr2FixturePathsV1,
+    ]);
+
+    expect(result.errors, isEmpty);
+    expect(result.routeAdmissionErrors, isEmpty);
+    expect(result.warnings, isEmpty);
+
+    final world = result.worldReports['world_6']!;
+    expect(world.totalTasks, 15);
+    expect(world.coverageCountableTasks, 15);
+    expect(world.sourceTruthStatusCounts['bridge_or_legacy'], 3);
+    expect(world.sourceTruthStatusCounts['migrated'], 12);
     expect(world.coverageReady, false);
     expect(world.transferReady, true);
     expect(world.repairReady, true);

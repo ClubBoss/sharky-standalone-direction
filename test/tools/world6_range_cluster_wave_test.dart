@@ -84,16 +84,16 @@ void main() {
 
       const correctSnippetsByFile = <String, List<String>>{
         'd.find_bb.json': <String>[
-          'Big blind is the seat anchor',
-          'forced defender',
+          'continuing big blind range is narrower',
+          'facing an early open',
         ],
         'd.find_btn_realize.json': <String>[
-          'Button is the seat anchor',
-          'last-acting range',
+          'button range is wider',
+          'late position',
         ],
         'd.tap_flop_realize.json': <String>[
-          'flop_mid is the board anchor',
-          'middle flop card',
+          'UTG is stronger on average',
+          'fewer, stronger hands',
         ],
         'd.tap_hole_right_ks.json': <String>[
           'Ks is the hole-card anchor',
@@ -104,8 +104,16 @@ void main() {
           'trap line ends',
         ],
         'd.tap_turn.json': <String>[
-          'turn is the board anchor',
-          'realization edge grows or gets squeezed',
+          'Late position is wider',
+          'cutoff and button ranges',
+        ],
+        'd.choose_call_realize.json': <String>[
+          'continuing range is narrower',
+          'facing an open',
+        ],
+        'd.choose_raise_blocker.json': <String>[
+          'button range is less constrained',
+          'more varied set of hands',
         ],
         'd.choose_fold_trap.json': <String>[
           'Folding fits',
@@ -200,8 +208,20 @@ void main() {
 
       const incorrectSnippetsByFile = <String, List<String>>{
         'd.find_btn_realize.json': <String>[
-          'button is the right seat anchor',
-          'last-acting range',
+          'button range is wider',
+          'more hands can fit',
+        ],
+        'd.find_bb.json': <String>[
+          'continuing range is narrower',
+          'not every possible hand remains',
+        ],
+        'd.choose_raise_blocker.json': <String>[
+          'button range is less constrained',
+          'fewer players remain behind',
+        ],
+        'd.tap_flop_realize.json': <String>[
+          'UTG is stronger on average',
+          'range starts tighter',
         ],
         'd.tap_hole_right_ks.json': <String>[
           'Ks is the correct hole-card cue',
@@ -262,7 +282,7 @@ void main() {
                 reason: '${file.path} should not regress to shallow feedback.',
               );
             }
-            if (fileName.startsWith('d.choose_')) {
+            if (json['kind'] == 'action_choice') {
               final actionId =
                   (json['expected'] as Map<String, dynamic>)['actionId']
                       as String;
