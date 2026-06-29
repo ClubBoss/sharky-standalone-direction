@@ -100,18 +100,18 @@ No `output/` artifact was staged or committed by this checkpoint.
 
 ## 7. Validation
 
-Required validation performed or planned in this checkpoint:
+Required validation performed in this checkpoint:
 
 - `git status --short --branch`: passed with only the four allowed untracked output folders before artifact authoring.
 - `git log --oneline --decorate -n 20`: confirmed the accepted sequence at the tip before artifact authoring.
 - `git branch --show-current`: confirmed checkpoint branch before artifact authoring.
 - `git branch --contains c8889037`: confirmed `main`, the accepted branch, and checkpoint branch contain `c8889037`.
-- `git diff --check`: to run after artifact authoring.
-- `git diff --cached --check`: to run after staging.
-- `graphify hook-check`: to run after artifact authoring.
-- Direct ASCII / diff-only ASCII check on this artifact: to run after artifact authoring.
-- Trailing whitespace / CRLF / final-newline checks: to run after artifact authoring.
-- `flutter analyze`: not planned because this checkpoint authored no product/source changes beyond the already accepted fast-forward.
+- `git diff --check`: passed.
+- `git diff --cached --check`: passed.
+- `graphify hook-check`: passed.
+- Direct ASCII / diff-only ASCII check on this artifact: passed.
+- Trailing whitespace / CRLF / final-newline checks: passed.
+- `flutter analyze`: not run because this checkpoint authored no product/source changes beyond the already accepted fast-forward.
 
 ## 8. Push result
 
@@ -121,7 +121,9 @@ Push target:
 
 Push status:
 
-- Pending at artifact authoring time; final command evidence is recorded in the final checkpoint summary.
+- Completed by normal non-force push.
+- Initial push advanced `origin/main` from `564300ad4d510ce7579d8d24e66c7cfe813da642` to `68216c17eaf78d5fdf7739770986292a810b225a`.
+- This artifact evidence finalization is docs-only; final local/remote hash parity is reported in the final checkpoint summary.
 
 No force push is allowed or planned.
 
