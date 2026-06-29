@@ -1,8 +1,8 @@
 # Durable Repair Capsule v1
 
-Status: ACTIVE durable repair capsule. The first engine-only concept-family
-repair memory slice exists; UI exposure and durable persistence expansion remain
-future bounded waves.
+Status: ACTIVE durable repair capsule. The first concept-family repair memory
+slice exists with bounded Session Summary exposure; durable persistence
+expansion remains a future bounded wave.
 
 ## Objective
 
@@ -16,9 +16,12 @@ without ML, AI chat, or solver claims.
 - Human QA is the next evidence gate when participants exist.
 - If Human QA is unavailable, the next useful product layer is durable repair memory: preserve what the learner missed, why it mattered, and what repair candidate follows.
 - Existing first-session repair proof exists.
-- First-slice concept-family repair memory now derives engine-only summaries and
-  a deterministic next repair candidate from `Act0LearningEvidenceHistoryV1`.
-- Durable persistence expansion and learner-facing exposure remain future work.
+- First-slice concept-family repair memory now derives summaries and a
+  deterministic next repair candidate from `Act0LearningEvidenceHistoryV1`.
+- Session Summary can expose a safe `Recommended repair` line from that
+  candidate.
+- Durable persistence expansion and broader learner-facing exposure remain
+  future work.
 
 ## Required Signal Fields
 
@@ -71,7 +74,7 @@ Purpose:
 - Group repeated misses by `repair_focus_id` / concept family, with stable
   fallbacks.
 - Select one bounded next repair candidate.
-- Keep UI exposure closed until a separate surface wave admits it.
+- Expose only a bounded Session Summary `Recommended repair` line.
 
 ## First Slice DoD
 
@@ -81,8 +84,8 @@ Purpose:
 - Keeps selection explainable from stored local fields.
 - Keeps queue state reversible and auditable.
 - Preserves W1-W6 freeze and does not author new content.
-- Exposes proof only through existing feedback/review/session surfaces if a
-  future wave admits a safe owner.
+- Exposes proof only through the admitted Session Summary evidence card unless
+  a future wave admits another safe owner.
 - Includes focused validator/test coverage.
 - Does not claim launch readiness, Human QA, monetization, 9.0, or durable mastery.
 

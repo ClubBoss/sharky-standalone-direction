@@ -6535,6 +6535,7 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repairFocusLine = summary.repairFocusLine;
+    final repairCandidateLine = summary.repairCandidateLine;
     return Container(
       key: const Key('act0_shell_block_summary_evidence_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -6581,6 +6582,22 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
             Text(
               repairFocusLine,
               key: const Key('act0_shell_block_summary_evidence_repair_focus'),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          if (repairCandidateLine != null &&
+              repairCandidateLine.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              repairCandidateLine,
+              key: const Key(
+                'act0_shell_block_summary_evidence_repair_candidate',
+              ),
               maxLines: 2,
               overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.muted.copyWith(

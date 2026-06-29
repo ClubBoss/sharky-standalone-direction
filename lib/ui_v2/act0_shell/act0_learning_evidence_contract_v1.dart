@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 
 /// Converts the normalized internal completion payload into a durable record.
 ///
@@ -375,6 +376,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     required this.spotsLine,
     required this.resultLine,
     required this.repairFocusLine,
+    this.repairCandidateLine,
     required this.currentSessionOnly,
   });
 
@@ -385,6 +387,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
   final String spotsLine;
   final String resultLine;
   final String? repairFocusLine;
+  final String? repairCandidateLine;
   final bool currentSessionOnly;
 
   List<String> get claimLines {
@@ -397,6 +400,8 @@ class Act0SessionSummaryEvidenceViewModelV1 {
       if (resultLine.isNotEmpty) resultLine,
       if (repairFocusLine != null && repairFocusLine!.isNotEmpty)
         repairFocusLine!,
+      if (repairCandidateLine != null && repairCandidateLine!.isNotEmpty)
+        repairCandidateLine!,
     ]);
   }
 
@@ -414,6 +419,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         spotsLine: '',
         resultLine: '',
         repairFocusLine: null,
+        repairCandidateLine: null,
         currentSessionOnly: false,
       );
     }
@@ -424,6 +430,18 @@ class Act0SessionSummaryEvidenceViewModelV1 {
             _containsForbiddenSummaryClaim(repairFocusLabel)
         ? null
         : 'Main repair focus: $repairFocusLabel.';
+    final repairCandidate =
+        Act0ConceptFamilyRepairMemoryV1.fromLearningEvidence(
+          history,
+        ).nextRepairCandidate;
+    final repairCandidateLabel = repairCandidate == null
+        ? ''
+        : repairFocusLabelsById[repairCandidate.conceptFamilyId]?.trim() ?? '';
+    final safeRepairCandidateLine =
+        repairCandidateLabel.isEmpty ||
+            _containsForbiddenSummaryClaim(repairCandidateLabel)
+        ? null
+        : 'Recommended repair: $repairCandidateLabel.';
     return Act0SessionSummaryEvidenceViewModelV1(
       hasEvidence: true,
       title: 'This run',
@@ -434,6 +452,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
       resultLine:
           '${summary.correctCount} correct / ${summary.incorrectCount} to review.',
       repairFocusLine: safeRepairFocusLine,
+      repairCandidateLine: safeRepairCandidateLine,
       currentSessionOnly: true,
     );
   }

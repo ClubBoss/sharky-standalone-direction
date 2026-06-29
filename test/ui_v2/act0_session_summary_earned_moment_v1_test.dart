@@ -336,6 +336,37 @@ void main() {
     }
   });
 
+  testWidgets('Session Summary renders repair candidate line safely', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+        hasEvidence: true,
+        title: 'This run',
+        runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+        runKind: 'lesson',
+        spotsLine: 'You played 2 spots.',
+        resultLine: '1 correct / 1 to review.',
+        repairFocusLine: 'Main repair focus: position clue.',
+        repairCandidateLine: 'Recommended repair: position clue.',
+        currentSessionOnly: true,
+      ),
+    );
+
+    expect(find.text('Recommended repair: position clue.'), findsOneWidget);
+    final body = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
+        .join(' ')
+        .toLowerCase();
+    expect(body, isNot(contains('ai found')));
+    expect(body, isNot(contains('gto')));
+    expect(body, isNot(contains('solver')));
+    expect(body, isNot(contains('guaranteed')));
+  });
+
   testWidgets('Session Summary renders exactly one earned moment', (
     tester,
   ) async {
@@ -509,6 +540,7 @@ Future<void> _pumpSummary(
   int endLevel = 1,
   Act0RepairOutcomeConsumerV1 repairOutcomeConsumer =
       const Act0RepairOutcomeConsumerV1(),
+  Act0SessionSummaryEvidenceViewModelV1? evidenceSummary,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -527,16 +559,18 @@ Future<void> _pumpSummary(
             xpTarget: 200,
             nextLessonTitle: 'Blinds and action order',
           ),
-          evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
-            hasEvidence: true,
-            title: 'This run',
-            runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
-            runKind: 'lesson',
-            spotsLine: 'You played 2 spots.',
-            resultLine: '1 correct / 1 to review.',
-            repairFocusLine: 'Main repair focus: position clue.',
-            currentSessionOnly: true,
-          ),
+          evidenceSummary:
+              evidenceSummary ??
+              const Act0SessionSummaryEvidenceViewModelV1(
+                hasEvidence: true,
+                title: 'This run',
+                runId: 'run_v1|world_1|fold_check_call_raise|lesson|1',
+                runKind: 'lesson',
+                spotsLine: 'You played 2 spots.',
+                resultLine: '1 correct / 1 to review.',
+                repairFocusLine: 'Main repair focus: position clue.',
+                currentSessionOnly: true,
+              ),
           earnedMomentConsumer: consumer,
           repairOutcomeConsumer: repairOutcomeConsumer,
           onReplay: () {},

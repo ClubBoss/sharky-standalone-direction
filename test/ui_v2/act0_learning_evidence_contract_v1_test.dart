@@ -359,6 +359,10 @@ void main() {
       expect(viewModel.spotsLine, 'You played 2 spots.');
       expect(viewModel.resultLine, '1 correct / 1 to review.');
       expect(viewModel.repairFocusLine, 'Main repair focus: position clue.');
+      expect(
+        viewModel.repairCandidateLine,
+        'Recommended repair: position clue.',
+      );
       expect(viewModel.currentSessionOnly, isTrue);
       expect(viewModel.claimLines.join(' '), isNot(contains('leak')));
       expect(viewModel.claimLines.join(' '), isNot(contains('Mastered')));
@@ -406,8 +410,38 @@ void main() {
       expect(viewModel.spotsLine, 'You played 1 spot.');
       expect(viewModel.resultLine, '0 correct / 1 to review.');
       expect(viewModel.repairFocusLine, 'Main repair focus: no-bet-yet clue.');
+      expect(
+        viewModel.repairCandidateLine,
+        'Recommended repair: no-bet-yet clue.',
+      );
     },
   );
+
+  test('session summary repair candidate copy is claim-safe', () {
+    final history = Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        _record(
+          order: 1,
+          runId: 'current-run',
+          runKind: 'lesson',
+          runOrdinal: 1,
+          repairFocusId: 'bad_claim',
+        ),
+      ],
+    );
+
+    final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+      history,
+      repairFocusLabelsById: const <String, String>{
+        'bad_claim': 'AI found your leak',
+      },
+    );
+
+    expect(viewModel.repairFocusLine, isNull);
+    expect(viewModel.repairCandidateLine, isNull);
+    expect(viewModel.claimLines.join(' '), isNot(contains('AI')));
+    expect(viewModel.claimLines.join(' '), isNot(contains('leak')));
+  });
 
   test(
     'session summary evidence adapter falls back safely without evidence',
@@ -422,6 +456,7 @@ void main() {
       expect(viewModel.spotsLine, isEmpty);
       expect(viewModel.resultLine, isEmpty);
       expect(viewModel.repairFocusLine, isNull);
+      expect(viewModel.repairCandidateLine, isNull);
     },
   );
 }
