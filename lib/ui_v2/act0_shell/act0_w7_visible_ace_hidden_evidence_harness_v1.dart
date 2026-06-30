@@ -28,6 +28,7 @@ class Act0W7VisibleAceHiddenEvidenceHarnessV1 {
     }
     return owner.appendChoiceEvidence(
       history: history,
+      taskId: taskId,
       selectedChoiceId: selectedChoiceId,
       attemptKey: attemptKey,
       decisionTimeBucket: decisionTimeBucket,
