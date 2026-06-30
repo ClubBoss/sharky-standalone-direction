@@ -10,6 +10,8 @@ derived from that evidence without adding storage architecture. Broader Practice
 UI admission remains a future bounded wave. A local engine-only transfer
 projection can mark same-concept miss-to-later-correct evidence from persisted
 learning records, without claiming practice causality or learner-facing mastery.
+A local engine-only practice-action join can connect ordered same-concept repair
+run evidence to later-correct signals without treating that as causal proof.
 
 ## Objective
 
@@ -37,6 +39,10 @@ without ML, AI chat, or solver claims.
 - A pure local transfer projection can classify no-prior-miss,
   miss-still-active, later-correct, insufficient-ordering, and unmapped-concept
   states from same-concept learning evidence.
+- A pure local practice-action join projection can distinguish later correct
+  without practice evidence, same-concept repair evidence before later correct,
+  repair evidence after later correct, unrelated repair targets, and
+  insufficient evidence.
 - Broader learner-facing exposure remains future work.
 
 ## Required Signal Fields
