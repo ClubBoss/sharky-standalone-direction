@@ -66,6 +66,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     runOrdinal: runKey?.runOrdinal,
     sourceWorldId: runKey?.worldId ?? '',
     sourceLessonId: runKey?.lessonId ?? '',
+    startedBy: runKey?.startedBy ?? '',
   );
 }
 
@@ -177,6 +178,7 @@ class Act0LearningEvidenceRecordV1 {
     this.runOrdinal,
     this.sourceWorldId = '',
     this.sourceLessonId = '',
+    this.startedBy = '',
   });
 
   final int schemaVersion;
@@ -198,6 +200,7 @@ class Act0LearningEvidenceRecordV1 {
   final int? runOrdinal;
   final String sourceWorldId;
   final String sourceLessonId;
+  final String startedBy;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -231,6 +234,9 @@ class Act0LearningEvidenceRecordV1 {
     if (sourceLessonId.isNotEmpty) {
       payload['sourceLessonId'] = sourceLessonId;
     }
+    if (startedBy.isNotEmpty) {
+      payload['startedBy'] = startedBy;
+    }
     return payload;
   }
 
@@ -260,6 +266,7 @@ class Act0LearningEvidenceRecordV1 {
     final runKind = _optionalString(map['runKind']);
     final sourceWorldId = _optionalString(map['sourceWorldId']);
     final sourceLessonId = _optionalString(map['sourceLessonId']);
+    final startedBy = _optionalString(map['startedBy']);
     if (schemaVersion != 1 ||
         createdOrder == null ||
         recordId == null ||
@@ -299,6 +306,7 @@ class Act0LearningEvidenceRecordV1 {
       runOrdinal: runOrdinal,
       sourceWorldId: sourceWorldId,
       sourceLessonId: sourceLessonId,
+      startedBy: startedBy,
     );
   }
 
@@ -323,7 +331,8 @@ class Act0LearningEvidenceRecordV1 {
       other.runKind == runKind &&
       other.runOrdinal == runOrdinal &&
       other.sourceWorldId == sourceWorldId &&
-      other.sourceLessonId == sourceLessonId;
+      other.sourceLessonId == sourceLessonId &&
+      other.startedBy == startedBy;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -346,6 +355,7 @@ class Act0LearningEvidenceRecordV1 {
     runOrdinal,
     sourceWorldId,
     sourceLessonId,
+    startedBy,
   ]);
 }
 

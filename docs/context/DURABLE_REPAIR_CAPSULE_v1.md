@@ -11,7 +11,8 @@ UI admission remains a future bounded wave. A local engine-only transfer
 projection can mark same-concept miss-to-later-correct evidence from persisted
 learning records, without claiming practice causality or learner-facing mastery.
 A local engine-only practice-action join can connect ordered same-concept repair
-run evidence to later-correct signals without treating that as causal proof.
+run evidence to later-correct signals, with Session Summary CTA source separated
+from other or unknown repair sources, without treating that as causal proof.
 
 ## Objective
 
@@ -42,7 +43,8 @@ without ML, AI chat, or solver claims.
 - A pure local practice-action join projection can distinguish later correct
   without practice evidence, same-concept repair evidence before later correct,
   repair evidence after later correct, unrelated repair targets, and
-  insufficient evidence.
+  insufficient evidence. It can also separate Session Summary CTA-launched
+  repair evidence from other or unknown repair sources.
 - Broader learner-facing exposure remains future work.
 
 ## Required Signal Fields
@@ -122,6 +124,9 @@ Purpose:
   a future wave admits another safe owner.
 - Keeps learning-transfer measurement engine-only until a future display owner
   can separate miss-to-later-correct evidence from practice-causal claims.
+- Persists existing run source on local evidence records so source-specific
+  joins can distinguish Session Summary CTA, other repair, and unavailable
+  source evidence without a new storage architecture.
 - Includes focused validator/test coverage.
 - Does not claim launch readiness, Human QA, monetization, 9.0, or durable mastery.
 

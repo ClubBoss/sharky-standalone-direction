@@ -82,11 +82,9 @@ void main() {
         methodSource,
         contains('Act0PracticeRepairQueueLaunchRequestV1 request'),
       );
+      expect(methodSource, contains("String evidenceStartedBy ="));
       expect(methodSource, contains("evidenceRunKind: 'repair'"));
-      expect(
-        methodSource,
-        contains("evidenceStartedBy: 'practice_repair_queue'"),
-      );
+      expect(methodSource, contains('evidenceStartedBy: evidenceStartedBy'));
       expect(methodSource, contains("_activePracticeGroupId = 'weak_spots'"));
       expect(
         methodSource,

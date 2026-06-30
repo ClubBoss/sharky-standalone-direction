@@ -31,12 +31,46 @@ void main() {
     expect(signal.practiceEvidenceOrder, isNull);
   });
 
-  test('repair run evidence before later correct joins same concept', () {
+  test(
+    'repair run evidence before later correct with unknown source joins safely',
+    () {
+      final projection =
+          Act0PracticeActionTransferJoinProjectionV1.fromEvidence(
+            Act0LearningEvidenceHistoryV1(
+              records: <Act0LearningEvidenceRecordV1>[
+                _record(order: 1),
+                _record(order: 2, runKind: 'repair'),
+                _record(
+                  order: 4,
+                  isCorrect: true,
+                  errorType: 'none',
+                  resultKind: 'correct',
+                ),
+              ],
+            ),
+          );
+
+      final signal = projection.signalForConcept('no_bet_yet');
+
+      expect(
+        signal.state,
+        act0PracticeActionTransferUnknownSourceBeforeCorrectV1,
+      );
+      expect(signal.practiceEvidenceOrder, 2);
+      expect(signal.laterCorrectOrder, 4);
+    },
+  );
+
+  test('session summary cta source before later correct is explicit', () {
     final projection = Act0PracticeActionTransferJoinProjectionV1.fromEvidence(
       Act0LearningEvidenceHistoryV1(
         records: <Act0LearningEvidenceRecordV1>[
           _record(order: 1),
-          _record(order: 2, runKind: 'repair'),
+          _record(
+            order: 2,
+            runKind: 'repair',
+            startedBy: 'session_summary_practice_cta',
+          ),
           _record(
             order: 4,
             isCorrect: true,
@@ -49,9 +83,39 @@ void main() {
 
     final signal = projection.signalForConcept('no_bet_yet');
 
-    expect(signal.state, act0PracticeActionTransferPracticeBeforeCorrectV1);
-    expect(signal.practiceEvidenceOrder, 2);
-    expect(signal.laterCorrectOrder, 4);
+    expect(
+      signal.state,
+      act0PracticeActionTransferSessionSummaryCtaBeforeCorrectV1,
+    );
+    expect(
+      signal.practiceSource,
+      act0PracticeActionTransferSourceSessionSummaryCtaV1,
+    );
+  });
+
+  test('other repair source is not labeled session summary cta', () {
+    final projection = Act0PracticeActionTransferJoinProjectionV1.fromEvidence(
+      Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(order: 1),
+          _record(order: 2, runKind: 'repair', startedBy: 'repair'),
+          _record(
+            order: 4,
+            isCorrect: true,
+            errorType: 'none',
+            resultKind: 'correct',
+          ),
+        ],
+      ),
+    );
+
+    final signal = projection.signalForConcept('no_bet_yet');
+
+    expect(signal.state, act0PracticeActionTransferOtherRepairBeforeCorrectV1);
+    expect(
+      signal.practiceSource,
+      act0PracticeActionTransferSourceOtherRepairV1,
+    );
   });
 
   test('repair run evidence after later correct does not count as prior', () {
@@ -186,6 +250,7 @@ Act0LearningEvidenceRecordV1 _record({
   String runKind = 'lesson',
   bool isCorrect = false,
   String resultKind = 'incorrect',
+  String startedBy = '',
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: 'record_$order',
@@ -206,5 +271,6 @@ Act0LearningEvidenceRecordV1 _record({
     runId: 'run_$order',
     runKind: runKind,
     runOrdinal: order < 0 ? null : order,
+    startedBy: startedBy,
   );
 }

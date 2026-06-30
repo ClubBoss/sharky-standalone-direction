@@ -5,6 +5,12 @@ const String act0PracticeActionTransferLaterCorrectWithoutPracticeEvidenceV1 =
     'later_correct_without_practice_evidence_v1';
 const String act0PracticeActionTransferPracticeBeforeCorrectV1 =
     'practice_attempt_before_later_correct_v1';
+const String act0PracticeActionTransferSessionSummaryCtaBeforeCorrectV1 =
+    'session_summary_cta_before_later_correct_v1';
+const String act0PracticeActionTransferUnknownSourceBeforeCorrectV1 =
+    'repair_attempt_before_later_correct_unknown_source_v1';
+const String act0PracticeActionTransferOtherRepairBeforeCorrectV1 =
+    'other_repair_before_later_correct_v1';
 const String act0PracticeActionTransferPracticeAfterCorrectV1 =
     'practice_attempt_after_later_correct_v1';
 const String act0PracticeActionTransferPracticeEvidenceUnorderedV1 =
@@ -14,6 +20,11 @@ const String act0PracticeActionTransferUnrelatedPracticeTargetV1 =
 const String act0PracticeActionTransferInsufficientEvidenceV1 =
     'insufficient_evidence_v1';
 const String act0PracticeActionTransferUnsafeEvidenceV1 = 'unsafe_evidence_v1';
+const String act0PracticeActionTransferSourceUnavailableV1 =
+    'source_unavailable_v1';
+const String act0PracticeActionTransferSourceSessionSummaryCtaV1 =
+    'session_summary_cta_v1';
+const String act0PracticeActionTransferSourceOtherRepairV1 = 'other_repair_v1';
 
 class Act0PracticeActionTransferJoinProjectionV1 {
   const Act0PracticeActionTransferJoinProjectionV1({required this.signals});
@@ -60,6 +71,7 @@ class Act0PracticeActionTransferJoinSignalV1 {
     required this.priorMissOrder,
     required this.practiceEvidenceOrder,
     required this.laterCorrectOrder,
+    this.practiceSource = act0PracticeActionTransferSourceUnavailableV1,
   });
 
   factory Act0PracticeActionTransferJoinSignalV1.insufficient(
@@ -79,6 +91,7 @@ class Act0PracticeActionTransferJoinSignalV1 {
   final int? priorMissOrder;
   final int? practiceEvidenceOrder;
   final int? laterCorrectOrder;
+  final String practiceSource;
 }
 
 Act0PracticeActionTransferJoinSignalV1 _joinSignal(
@@ -133,12 +146,14 @@ Act0PracticeActionTransferJoinSignalV1 _joinSignal(
         orElse: () => null,
       );
   if (priorPractice != null) {
+    final practiceSource = _practiceSource(priorPractice);
     return Act0PracticeActionTransferJoinSignalV1(
       conceptFamilyId: conceptFamilyId,
-      state: act0PracticeActionTransferPracticeBeforeCorrectV1,
+      state: _priorPracticeState(practiceSource),
       priorMissOrder: transferSignal.priorMissOrder,
       practiceEvidenceOrder: priorPractice.createdOrder,
       laterCorrectOrder: transferSignal.laterCorrectOrder,
+      practiceSource: practiceSource,
     );
   }
   final laterPractice = sameConceptRepairRecords
@@ -174,6 +189,25 @@ Act0PracticeActionTransferJoinSignalV1 _joinSignal(
 
 bool _isRepairPracticeEvidence(Act0LearningEvidenceRecordV1 record) {
   return record.runKind.trim() == 'repair';
+}
+
+String _practiceSource(Act0LearningEvidenceRecordV1 record) {
+  return switch (record.startedBy.trim()) {
+    'session_summary_practice_cta' =>
+      act0PracticeActionTransferSourceSessionSummaryCtaV1,
+    '' => act0PracticeActionTransferSourceUnavailableV1,
+    _ => act0PracticeActionTransferSourceOtherRepairV1,
+  };
+}
+
+String _priorPracticeState(String practiceSource) {
+  return switch (practiceSource) {
+    act0PracticeActionTransferSourceSessionSummaryCtaV1 =>
+      act0PracticeActionTransferSessionSummaryCtaBeforeCorrectV1,
+    act0PracticeActionTransferSourceOtherRepairV1 =>
+      act0PracticeActionTransferOtherRepairBeforeCorrectV1,
+    _ => act0PracticeActionTransferUnknownSourceBeforeCorrectV1,
+  };
 }
 
 String _conceptFamilyId(Act0LearningEvidenceRecordV1 record) {

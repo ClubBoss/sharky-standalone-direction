@@ -27,7 +27,8 @@ Last verified from `main`: `a6cd8f003726cc30ee8a3fa99463cdb32d32b2e4`.
   evidence, but it does not claim practice causality, mastery, or public
   learning-effect proof. A local engine-only practice-action join can further
   distinguish later-correct evidence with or without ordered same-concept
-  repair-run attempt evidence, without adding learner-facing claims.
+  repair-run attempt evidence, including explicit Session Summary CTA source
+  versus other/unknown repair source, without adding learner-facing claims.
 - Existing first-session repair-loop proof exists, but it is not Human QA or durable learner proof.
 - Modern Table remains maintenance mode.
 - Screenshot pipeline is for audit, regression, AI review, or visual evidence only; it is not a design-iteration excuse.

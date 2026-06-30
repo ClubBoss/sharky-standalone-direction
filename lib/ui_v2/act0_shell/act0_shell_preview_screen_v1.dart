@@ -4111,7 +4111,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     ),
                                 onLaunchPracticeRepairQueueTarget: (target) =>
                                     setState(() {
-                                      _startPracticeRepairQueueTarget(target);
+                                      _startPracticeRepairQueueTarget(
+                                        target,
+                                        evidenceStartedBy:
+                                            'session_summary_practice_cta',
+                                      );
                                     }),
                                 onReplay: () => setState(() {
                                   _showPlayHub = false;
@@ -6779,8 +6783,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _startPracticeRepairQueueTarget(
-    Act0PracticeRepairQueueLaunchRequestV1 request,
-  ) {
+    Act0PracticeRepairQueueLaunchRequestV1 request, {
+    String evidenceStartedBy = 'practice_repair_queue',
+  }) {
     if (!request.isLaunchable ||
         request.targetType != act0PracticeRepairQueueTargetTypeActiveRepairV1) {
       return;
@@ -6798,7 +6803,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       skipTeaching: true,
       allowDrillBypass: true,
       evidenceRunKind: 'repair',
-      evidenceStartedBy: 'practice_repair_queue',
+      evidenceStartedBy: evidenceStartedBy,
     );
     if (_selectedTaskId == previousTaskId ||
         _selectedTaskId != request.targetTaskId) {

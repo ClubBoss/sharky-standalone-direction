@@ -299,7 +299,26 @@ void main() {
     expect(history.records.map((record) => record.runId).toSet(), <String>{
       runKey.runId,
     });
+    expect(history.records.map((record) => record.startedBy).toSet(), <String>{
+      'learn_route',
+    });
+    expect(history.records.first.toPayload()['startedBy'], 'learn_route');
     expect(history.latestRunSummary()?.spotsPlayed, 2);
+  });
+
+  test('old records default missing startedBy to source unavailable', () {
+    final payload = _record(
+      order: 1,
+      runId: 'run_v1|world_1|fold_check_call_raise|1',
+      runKind: 'repair',
+      runOrdinal: 1,
+    ).toPayload()..remove('startedBy');
+
+    final parsed = Act0LearningEvidenceRecordV1.tryParse(payload);
+
+    expect(parsed, isNotNull);
+    expect(parsed!.startedBy, isEmpty);
+    expect(parsed.toPayload(), isNot(containsPair('startedBy', anything)));
   });
 
   test(
@@ -678,6 +697,7 @@ Act0LearningEvidenceRecordV1 _record({
   String runId = '',
   String runKind = '',
   int? runOrdinal,
+  String startedBy = '',
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: '$order:world_1:actions_legal_context:fold',
@@ -696,5 +716,6 @@ Act0LearningEvidenceRecordV1 _record({
     runId: runId,
     runKind: runKind,
     runOrdinal: runOrdinal,
+    startedBy: startedBy,
   );
 }
