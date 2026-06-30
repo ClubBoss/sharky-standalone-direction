@@ -5,7 +5,9 @@ slice exists with active/clear candidate resolution and bounded Session Summary
 focus copy. A pure partial Practice-target mapper exists; Session Summary can
 show a mapper-backed Practice CTA only when an allowlisted request maps to the
 existing Act0 preview-shell Practice repair launch owner. Durable persistence
-expansion and broader Practice UI admission remain future bounded waves.
+is owned by the existing persisted learning evidence history; lifecycle copy is
+derived from that evidence without adding storage architecture. Broader Practice
+UI admission remains a future bounded wave.
 
 ## Objective
 
@@ -28,8 +30,9 @@ without ML, AI chat, or solver claims.
   concept-family candidates or an explicit no-target reason.
 - Current Session Summary CTA wiring reuses the existing Act0 preview-shell
   Practice repair launch owner and does not create a new route or screen.
-- Durable persistence expansion and broader learner-facing exposure remain
-  future work.
+- Session Summary lifecycle copy can distinguish new focus, still-active focus,
+  repeated miss, and quiet-after-correct state without claiming mastery.
+- Broader learner-facing exposure remains future work.
 
 ## Required Signal Fields
 
@@ -87,6 +90,8 @@ Purpose:
 - Expose only bounded Session Summary repair focus / suggested focus copy.
 - Show Session Summary Practice CTA only when the mapper returns a launchable
   allowlisted request and an action owner callback is present.
+- Derive lifecycle wording from persisted learning evidence only; avoid
+  positive clearing copy that could imply fixed/mastered.
 - Map only explicitly allowlisted concept candidates to existing Practice launch
   requests; unknown, route-locked, bridge-limited, or unsafe targets return
   no-target reasons.

@@ -470,6 +470,92 @@ void main() {
     );
   });
 
+  test('session summary lifecycle copy distinguishes still-active focus', () {
+    final history = Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        _record(
+          order: 1,
+          runId: 'previous-run',
+          runKind: 'lesson',
+          runOrdinal: 1,
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+        ),
+        _record(
+          order: 2,
+          runId: 'current-run',
+          runKind: 'lesson',
+          runOrdinal: 2,
+          repairFocusId: 'position_clue',
+          skillAtomId: 'position_read',
+          isCorrect: true,
+          errorType: 'none',
+          resultKind: 'correct',
+        ),
+      ],
+    );
+
+    final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+      history,
+    );
+
+    expect(viewModel.repairFocusLine, isNull);
+    expect(
+      viewModel.repairCandidateLine,
+      'Still worth practicing: Action reads.',
+    );
+    expect(
+      viewModel.repairLifecycleState,
+      act0SessionSummaryRepairLifecycleStillActiveV1,
+    );
+    expect(
+      viewModel.practiceLaunchRequest?.targetTaskId,
+      'actions_check_drill',
+    );
+  });
+
+  test(
+    'session summary lifecycle copy marks repeated miss without overclaiming',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(
+            order: 1,
+            runId: 'previous-run',
+            runKind: 'lesson',
+            runOrdinal: 1,
+            repairFocusId: 'no_bet_yet',
+          ),
+          _record(
+            order: 2,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 2,
+            repairFocusId: 'no_bet_yet',
+          ),
+        ],
+      );
+
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        history,
+      );
+
+      expect(viewModel.repairFocusLine, 'You missed Action reads recently.');
+      expect(
+        viewModel.repairCandidateLine,
+        'You missed this again: Action reads.',
+      );
+      expect(
+        viewModel.repairLifecycleState,
+        act0SessionSummaryRepairLifecycleRepeatedMissV1,
+      );
+      final copy = viewModel.claimLines.join(' ').toLowerCase();
+      expect(copy, isNot(contains('fixed')));
+      expect(copy, isNot(contains('mastered')));
+      expect(copy, isNot(contains('leak')));
+    },
+  );
+
   test('session summary repair candidate copy is claim-safe', () {
     final history = Act0LearningEvidenceHistoryV1(
       records: <Act0LearningEvidenceRecordV1>[
@@ -530,6 +616,14 @@ void main() {
       );
 
       expect(viewModel.repairCandidateLine, isNull);
+      expect(
+        viewModel.repairLifecycleState,
+        act0SessionSummaryRepairLifecycleQuietAfterCorrectV1,
+      );
+      expect(viewModel.practiceLaunchRequest, isNull);
+      expect(viewModel.claimLines.join(' '), isNot(contains('quiet')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('fixed')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('mastered')));
     },
   );
 

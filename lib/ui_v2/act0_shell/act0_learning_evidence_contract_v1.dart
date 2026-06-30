@@ -5,6 +5,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memor
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 
+const String act0SessionSummaryRepairLifecycleNoSignalV1 = 'no_signal_v1';
+const String act0SessionSummaryRepairLifecycleNewFocusV1 = 'new_focus_v1';
+const String act0SessionSummaryRepairLifecycleStillActiveV1 = 'still_active_v1';
+const String act0SessionSummaryRepairLifecycleRepeatedMissV1 =
+    'repeated_miss_v1';
+const String act0SessionSummaryRepairLifecycleQuietAfterCorrectV1 =
+    'quiet_after_correct_v1';
+
 /// Converts the normalized internal completion payload into a durable record.
 ///
 /// Incomplete payloads are deliberately skipped rather than populated from UI
@@ -380,6 +388,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     required this.repairFocusLine,
     this.repairCandidateLine,
     this.practiceLaunchRequest,
+    this.repairLifecycleState = act0SessionSummaryRepairLifecycleNoSignalV1,
     required this.currentSessionOnly,
   });
 
@@ -392,6 +401,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
   final String? repairFocusLine;
   final String? repairCandidateLine;
   final Act0PracticeRepairQueueLaunchRequestV1? practiceLaunchRequest;
+  final String repairLifecycleState;
   final bool currentSessionOnly;
 
   List<String> get claimLines {
@@ -425,9 +435,11 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         repairFocusLine: null,
         repairCandidateLine: null,
         practiceLaunchRequest: null,
+        repairLifecycleState: act0SessionSummaryRepairLifecycleNoSignalV1,
         currentSessionOnly: false,
       );
     }
+    final latestRunRecords = history.latestRunRecords();
     final repairFocusLabel = _sessionSummaryRepairFocusLabelV1(
       summary.topRepairFocusId,
     );
@@ -435,16 +447,25 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         repairFocusLabel == null || summary.incorrectCount < 1
         ? null
         : 'You missed $repairFocusLabel recently.';
-    final repairCandidate =
-        Act0ConceptFamilyRepairMemoryV1.fromLearningEvidence(
-          history,
-        ).nextRepairCandidate;
+    final repairMemory = Act0ConceptFamilyRepairMemoryV1.fromLearningEvidence(
+      history,
+    );
+    final repairCandidate = repairMemory.nextRepairCandidate;
     final repairCandidateLabel = _sessionSummaryRepairCandidateLabelV1(
       repairCandidate,
     );
+    final repairLifecycleState = repairCandidateLabel == null
+        ? _sessionSummaryQuietLifecycleStateV1(repairMemory, latestRunRecords)
+        : _sessionSummaryRepairLifecycleStateV1(
+            repairCandidate!,
+            latestRunRecords,
+          );
     final safeRepairCandidateLine = repairCandidateLabel == null
         ? null
-        : 'Suggested focus: $repairCandidateLabel. Worth practicing next.';
+        : _sessionSummaryRepairLifecycleLineV1(
+            label: repairCandidateLabel,
+            lifecycleState: repairLifecycleState,
+          );
     final practiceLaunchRequest = safeRepairCandidateLine == null
         ? null
         : mapAct0ConceptCandidateToPracticeLaunchRequestV1(
@@ -462,9 +483,77 @@ class Act0SessionSummaryEvidenceViewModelV1 {
       repairFocusLine: safeRepairFocusLine,
       repairCandidateLine: safeRepairCandidateLine,
       practiceLaunchRequest: practiceLaunchRequest,
+      repairLifecycleState: repairLifecycleState,
       currentSessionOnly: true,
     );
   }
+}
+
+String _sessionSummaryQuietLifecycleStateV1(
+  Act0ConceptFamilyRepairMemoryV1 memory,
+  List<Act0LearningEvidenceRecordV1> latestRunRecords,
+) {
+  if (latestRunRecords.isEmpty) {
+    return act0SessionSummaryRepairLifecycleNoSignalV1;
+  }
+  final latestRunOrders = latestRunRecords
+      .map((record) => record.createdOrder)
+      .toSet();
+  final hasAllowlistedClearedFamily = memory.families.any(
+    (family) =>
+        family.resolutionState == act0RepairCandidateResolutionClearedV1 &&
+        latestRunOrders.contains(family.latestOrder) &&
+        _sessionSummaryRepairFocusLabelV1(family.conceptFamilyId) != null,
+  );
+  return hasAllowlistedClearedFamily
+      ? act0SessionSummaryRepairLifecycleQuietAfterCorrectV1
+      : act0SessionSummaryRepairLifecycleNoSignalV1;
+}
+
+String _sessionSummaryRepairLifecycleStateV1(
+  Act0ConceptFamilyRepairCandidateV1 candidate,
+  List<Act0LearningEvidenceRecordV1> latestRunRecords,
+) {
+  final latestRunHasCandidateMiss = latestRunRecords.any(
+    (record) =>
+        !record.isCorrect &&
+        _sessionSummaryRecordConceptFamilyIdV1(record) ==
+            candidate.conceptFamilyId,
+  );
+  if (!latestRunHasCandidateMiss) {
+    return act0SessionSummaryRepairLifecycleStillActiveV1;
+  }
+  if (candidate.incorrectCount > 1) {
+    return act0SessionSummaryRepairLifecycleRepeatedMissV1;
+  }
+  return act0SessionSummaryRepairLifecycleNewFocusV1;
+}
+
+String _sessionSummaryRepairLifecycleLineV1({
+  required String label,
+  required String lifecycleState,
+}) {
+  return switch (lifecycleState) {
+    act0SessionSummaryRepairLifecycleStillActiveV1 =>
+      'Still worth practicing: $label.',
+    act0SessionSummaryRepairLifecycleRepeatedMissV1 =>
+      'You missed this again: $label.',
+    _ => 'Suggested focus: $label. Worth practicing next.',
+  };
+}
+
+String _sessionSummaryRecordConceptFamilyIdV1(
+  Act0LearningEvidenceRecordV1 record,
+) {
+  final repairFocusId = record.repairFocusId.trim();
+  if (repairFocusId.isNotEmpty) {
+    return repairFocusId;
+  }
+  final skillAtomId = record.skillAtomId.trim();
+  if (skillAtomId.isNotEmpty) {
+    return skillAtomId;
+  }
+  return record.errorType.trim();
 }
 
 String? _sessionSummaryRepairCandidateLabelV1(
