@@ -527,6 +527,7 @@ void main() {
       viewModel.repairLifecycleState,
       act0SessionSummaryRepairLifecycleStillActiveV1,
     );
+    expect(viewModel.learningProofLine, isNull);
     expect(
       viewModel.practiceLaunchRequest?.targetTaskId,
       'actions_check_drill',
@@ -639,10 +640,57 @@ void main() {
         viewModel.repairLifecycleState,
         act0SessionSummaryRepairLifecycleQuietAfterCorrectV1,
       );
+      expect(
+        viewModel.learningProofLine,
+        'You later answered this focus correctly.',
+      );
       expect(viewModel.practiceLaunchRequest, isNull);
-      expect(viewModel.claimLines.join(' '), isNot(contains('quiet')));
+      expect(
+        viewModel.claimLines.join(' '),
+        contains('You later answered this focus correctly.'),
+      );
+      expect(viewModel.claimLines.join(' '), isNot(contains('practice fixed')));
       expect(viewModel.claimLines.join(' '), isNot(contains('fixed')));
       expect(viewModel.claimLines.join(' '), isNot(contains('mastered')));
+      expect(viewModel.claimLines.join(' '), isNot(contains('solved')));
+    },
+  );
+
+  test(
+    'session summary proof line ignores unrelated later correct evidence',
+    () {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(
+            order: 1,
+            runId: 'previous-run',
+            runKind: 'lesson',
+            runOrdinal: 1,
+            repairFocusId: 'no_bet_yet',
+          ),
+          _record(
+            order: 2,
+            runId: 'current-run',
+            runKind: 'lesson',
+            runOrdinal: 2,
+            repairFocusId: 'position_clue',
+            skillAtomId: 'position_read',
+            isCorrect: true,
+            errorType: 'none',
+            resultKind: 'correct',
+          ),
+        ],
+      );
+
+      final viewModel = Act0SessionSummaryEvidenceViewModelV1.fromHistory(
+        history,
+      );
+
+      expect(viewModel.learningProofLine, isNull);
+      expect(
+        viewModel.repairLifecycleState,
+        act0SessionSummaryRepairLifecycleStillActiveV1,
+      );
     },
   );
 
@@ -660,6 +708,7 @@ void main() {
       expect(viewModel.resultLine, isEmpty);
       expect(viewModel.repairFocusLine, isNull);
       expect(viewModel.repairCandidateLine, isNull);
+      expect(viewModel.learningProofLine, isNull);
     },
   );
 }

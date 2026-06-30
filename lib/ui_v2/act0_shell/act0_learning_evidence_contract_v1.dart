@@ -397,6 +397,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
     required this.resultLine,
     required this.repairFocusLine,
     this.repairCandidateLine,
+    this.learningProofLine,
     this.practiceLaunchRequest,
     this.repairLifecycleState = act0SessionSummaryRepairLifecycleNoSignalV1,
     required this.currentSessionOnly,
@@ -410,6 +411,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
   final String resultLine;
   final String? repairFocusLine;
   final String? repairCandidateLine;
+  final String? learningProofLine;
   final Act0PracticeRepairQueueLaunchRequestV1? practiceLaunchRequest;
   final String repairLifecycleState;
   final bool currentSessionOnly;
@@ -426,6 +428,8 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         repairFocusLine!,
       if (repairCandidateLine != null && repairCandidateLine!.isNotEmpty)
         repairCandidateLine!,
+      if (learningProofLine != null && learningProofLine!.isNotEmpty)
+        learningProofLine!,
     ]);
   }
 
@@ -444,6 +448,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
         resultLine: '',
         repairFocusLine: null,
         repairCandidateLine: null,
+        learningProofLine: null,
         practiceLaunchRequest: null,
         repairLifecycleState: act0SessionSummaryRepairLifecycleNoSignalV1,
         currentSessionOnly: false,
@@ -476,6 +481,11 @@ class Act0SessionSummaryEvidenceViewModelV1 {
             label: repairCandidateLabel,
             lifecycleState: repairLifecycleState,
           );
+    final learningProofLine =
+        repairLifecycleState ==
+            act0SessionSummaryRepairLifecycleQuietAfterCorrectV1
+        ? 'You later answered this focus correctly.'
+        : null;
     final practiceLaunchRequest = safeRepairCandidateLine == null
         ? null
         : mapAct0ConceptCandidateToPracticeLaunchRequestV1(
@@ -492,6 +502,7 @@ class Act0SessionSummaryEvidenceViewModelV1 {
           '${summary.correctCount} correct / ${summary.incorrectCount} to review.',
       repairFocusLine: safeRepairFocusLine,
       repairCandidateLine: safeRepairCandidateLine,
+      learningProofLine: learningProofLine,
       practiceLaunchRequest: practiceLaunchRequest,
       repairLifecycleState: repairLifecycleState,
       currentSessionOnly: true,

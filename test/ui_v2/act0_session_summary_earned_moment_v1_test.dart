@@ -373,6 +373,51 @@ void main() {
     expect(body, isNot(contains('guaranteed')));
   });
 
+  testWidgets('Session Summary renders later-correct proof line safely', (
+    tester,
+  ) async {
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+        hasEvidence: true,
+        title: 'This run',
+        runId: 'run_v1|world_1|fold_check_call_raise|lesson|2',
+        runKind: 'lesson',
+        spotsLine: 'You played 1 spot.',
+        resultLine: '1 correct / 0 to review.',
+        repairFocusLine: null,
+        repairCandidateLine: null,
+        learningProofLine: 'You later answered this focus correctly.',
+        currentSessionOnly: true,
+      ),
+    );
+
+    expect(
+      find.text('You later answered this focus correctly.'),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_block_summary_evidence_learning_proof')),
+      findsOneWidget,
+    );
+    final body = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
+        .join(' ')
+        .toLowerCase();
+    expect(body, isNot(contains('practice fixed')));
+    expect(body, isNot(contains('practice improved')));
+    expect(body, isNot(contains('mastered')));
+    expect(body, isNot(contains('fixed')));
+    expect(body, isNot(contains('solved')));
+    expect(body, isNot(contains('guaranteed improvement')));
+    expect(body, isNot(contains('proven improvement')));
+    expect(body, isNot(contains('ai saw')));
+    expect(body, isNot(contains('gto')));
+    expect(body, isNot(contains('solver')));
+  });
+
   testWidgets('Session Summary shows Practice CTA for safe mapper target', (
     tester,
   ) async {

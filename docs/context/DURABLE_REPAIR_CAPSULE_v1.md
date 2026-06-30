@@ -13,6 +13,8 @@ learning records, without claiming practice causality or learner-facing mastery.
 A local engine-only practice-action join can connect ordered same-concept repair
 run evidence to later-correct signals, with Session Summary CTA source separated
 from other or unknown repair sources, without treating that as causal proof.
+Session Summary can render one learner-safe same-focus later-correct proof line
+from existing local evidence, without claiming practice causality or mastery.
 
 ## Objective
 
@@ -45,6 +47,8 @@ without ML, AI chat, or solver claims.
   repair evidence after later correct, unrelated repair targets, and
   insufficient evidence. It can also separate Session Summary CTA-launched
   repair evidence from other or unknown repair sources.
+- Session Summary can show `You later answered this focus correctly.` only for
+  same-focus quiet-after-correct evidence.
 - Broader learner-facing exposure remains future work.
 
 ## Required Signal Fields
@@ -127,6 +131,9 @@ Purpose:
 - Persists existing run source on local evidence records so source-specific
   joins can distinguish Session Summary CTA, other repair, and unavailable
   source evidence without a new storage architecture.
+- Renders only a bounded later-correct proof line on the existing Session
+  Summary evidence card; it does not show practice-causal, mastery, fixed,
+  solved, Human QA, or public learning-effect copy.
 - Includes focused validator/test coverage.
 - Does not claim launch readiness, Human QA, monetization, 9.0, or durable mastery.
 

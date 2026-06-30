@@ -6545,6 +6545,7 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final repairFocusLine = summary.repairFocusLine;
     final repairCandidateLine = summary.repairCandidateLine;
+    final learningProofLine = summary.learningProofLine;
     final practiceLaunchRequest = summary.practiceLaunchRequest;
     final showPracticeCta =
         practiceLaunchRequest?.isLaunchable == true &&
@@ -6610,6 +6611,21 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               repairCandidateLine,
               key: const Key(
                 'act0_shell_block_summary_evidence_repair_candidate',
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          if (learningProofLine != null && learningProofLine.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              learningProofLine,
+              key: const Key(
+                'act0_shell_block_summary_evidence_learning_proof',
               ),
               maxLines: 2,
               overflow: TextOverflow.fade,
