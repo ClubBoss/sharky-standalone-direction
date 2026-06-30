@@ -6622,16 +6622,21 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
           ],
           if (learningProofLine != null && learningProofLine.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text(
-              learningProofLine,
+            _ProofMotionRevealV1(
               key: const Key(
-                'act0_shell_block_summary_evidence_learning_proof',
+                'act0_shell_block_summary_evidence_learning_proof_reveal',
               ),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontWeight: FontWeight.w700,
+              child: Text(
+                learningProofLine,
+                key: const Key(
+                  'act0_shell_block_summary_evidence_learning_proof',
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],

@@ -401,6 +401,21 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_evidence_learning_proof')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(
+        const Key('act0_shell_block_summary_evidence_learning_proof_reveal'),
+      ),
+      findsOneWidget,
+    );
+    final reveal = tester.widget<AnimatedScale>(
+      find.descendant(
+        of: find.byKey(
+          const Key('act0_shell_block_summary_evidence_learning_proof_reveal'),
+        ),
+        matching: find.byType(AnimatedScale),
+      ),
+    );
+    expect(reveal.duration, const Duration(milliseconds: 160));
     final body = tester
         .widgetList<Text>(find.byType(Text))
         .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
@@ -416,6 +431,70 @@ void main() {
     expect(body, isNot(contains('ai saw')));
     expect(body, isNot(contains('gto')));
     expect(body, isNot(contains('solver')));
+  });
+
+  testWidgets('Session Summary proof reveal respects disable animations', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: MaterialApp(
+          home: Scaffold(
+            body: Act0BlockCompletionShellV1(
+              summary: const Act0BlockCompletionSummaryV1(
+                lessonTitle: 'Action words',
+                xpEarned: 20,
+                errorCount: 1,
+                taskCount: 2,
+                correctCount: 1,
+                startLevel: 1,
+                endLevel: 1,
+                startXp: 80,
+                endXp: 100,
+                xpTarget: 200,
+                nextLessonTitle: 'Blinds and action order',
+              ),
+              evidenceSummary: const Act0SessionSummaryEvidenceViewModelV1(
+                hasEvidence: true,
+                title: 'This run',
+                runId: 'run_v1|world_1|fold_check_call_raise|lesson|2',
+                runKind: 'lesson',
+                spotsLine: 'You played 1 spot.',
+                resultLine: '1 correct / 0 to review.',
+                repairFocusLine: null,
+                learningProofLine: 'You later answered this focus correctly.',
+                currentSessionOnly: true,
+              ),
+              onReplay: () {},
+              onContinue: () {},
+              onBackToMap: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(
+        const Key('act0_shell_block_summary_evidence_learning_proof_reveal'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(
+          const Key('act0_shell_block_summary_evidence_learning_proof_reveal'),
+        ),
+        matching: find.byType(AnimatedScale),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.text('You later answered this focus correctly.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Session Summary shows Practice CTA for safe mapper target', (
@@ -456,6 +535,12 @@ void main() {
     );
 
     expect(find.text('Practice this next'), findsOneWidget);
+    expect(
+      find.byKey(
+        const Key('act0_shell_block_summary_evidence_learning_proof_reveal'),
+      ),
+      findsNothing,
+    );
     expect(
       find.byKey(const Key('act0_shell_session_summary_practice_cta')),
       findsOneWidget,
