@@ -309,7 +309,18 @@ void _expectConsumableEvidence({
 
 void _expectCopySafe(List<dynamic> taskSpecs) {
   final encoded = jsonEncode(
-    taskSpecs.map((dynamic task) => task.copySafetyPayload).toList(),
+    taskSpecs
+        .map(
+          (dynamic task) => <String>[
+            task.learnerPrompt as String,
+            ...(task.choiceLabels as Map<String, String>).values,
+            task.feedbackReason as String,
+            ...(task.incorrectFeedback as Map<String, String>).values,
+            task.boardContext as String,
+            task.learningPurpose as String,
+          ],
+        )
+        .toList(),
   ).toLowerCase();
   for (final forbidden in <String>[
     'gto',
@@ -319,10 +330,23 @@ void _expectCopySafe(List<dynamic> taskSpecs) {
     'mastered',
     'fixed',
     'guaranteed improvement',
+    'proven improvement',
     'ai leak',
     'win-rate',
     'public',
     'playable',
+    'lite',
+    'combo density',
+    'card removal',
+    'gutshot',
+    'thin value',
+    'fold pressure',
+    'suited texture pressure',
+    'put it all together',
+    'build winning habits',
+    'develop your reads',
+    'now you know',
+    'you mastered',
   ]) {
     expect(encoded, isNot(contains(forbidden)));
   }

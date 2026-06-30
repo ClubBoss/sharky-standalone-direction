@@ -227,10 +227,9 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
     skillAtomId: 'w10_bet_purpose_bluff_read',
     errorType: 'missed_clear_bluff_intention',
     drillKind: 'bet_purpose_choice_v1',
-    boardContext: 'Weak hand using fold pressure',
+    boardContext: 'Weak hand trying to make stronger hands fold',
     learningPurpose:
-        'Recognize a bet whose main purpose is fold pressure on stronger '
-        'hands.',
+        'Recognize a bet whose main purpose is making stronger hands fold.',
     expectedChoiceId: 'bet_to_make_stronger_hands_fold',
     choiceIds: <String>[
       'bet_to_make_stronger_hands_fold',
@@ -249,8 +248,8 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
       'bet_shows_exact_hand': 'The bet reveals the exact hand.',
     },
     feedbackReason:
-        'A bluff-purpose bet is mainly about fold pressure. It still does not '
-        'guarantee that stronger hands fold.',
+        'A bluff-purpose bet is mainly about pressuring stronger hands to '
+        'fold. It still does not guarantee that stronger hands fold.',
     incorrectFeedback: <String, String>{
       'bet_for_worse_to_call':
           'With little showdown strength, worse calls are not the main value '
@@ -274,7 +273,7 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
     drillKind: 'bet_purpose_caution_choice_v1',
     boardContext: 'Medium hand with unclear worse calls',
     learningPurpose:
-        'Recognize when value is thin because worse calls are unclear.',
+        'Recognize when a value bet is close because worse calls are unclear.',
     expectedChoiceId: 'worse_calls_are_unclear',
     choiceIds: <String>[
       'worse_calls_are_unclear',
@@ -287,17 +286,17 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
         'What is the safest purpose read?',
     choiceLabels: <String, String>{
       'worse_calls_are_unclear':
-          'The value case is thin because worse calls are unclear.',
+          'The value case is close because worse calls are unclear.',
       'many_worse_hands_clearly_call': 'Many worse hands clearly call.',
-      'bet_must_be_bluff': 'The bet must be only fold pressure.',
+      'bet_must_be_bluff': 'The bet must only try to make stronger hands fold.',
       'purpose_does_not_matter': 'The bet purpose does not matter.',
     },
     feedbackReason:
-        'Thin value means worse calls are not obvious. The safest read is '
-        'caution, not a forced value or pressure label.',
+        'A close value spot means worse calls are not obvious. The safest read '
+        'is caution, not a forced value or pressure label.',
     incorrectFeedback: <String, String>{
       'many_worse_hands_clearly_call':
-          'If worse calls are unclear, the value case is thin.',
+          'If worse calls are unclear, the value case is close.',
       'bet_must_be_bluff':
           'Unclear value does not automatically make the bet pure pressure.',
       'purpose_does_not_matter':
@@ -316,7 +315,8 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
     skillAtomId: 'w10_bet_purpose_transfer',
     errorType: 'missed_bet_purpose_transfer',
     drillKind: 'bet_purpose_transfer_choice_v1',
-    boardContext: 'Compare value purpose with fold-pressure purpose',
+    boardContext:
+        'Compare value purpose with pressure to make stronger hands fold',
     learningPurpose:
         'Transfer the value-versus-pressure purpose read across spots.',
     expectedChoiceId: 'main_purpose_value_or_fold_pressure',
@@ -331,7 +331,7 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
         'bet?',
     choiceLabels: <String, String>{
       'main_purpose_value_or_fold_pressure':
-          'Ask whether the main purpose is value or fold pressure.',
+          'Ask whether the main purpose is value or making stronger hands fold.',
       'bet_size_predicts_result': 'The bet size predicts the result.',
       'all_bets_have_same_purpose': 'All bets have the same purpose.',
       'answer_already_known': 'The answer is already known.',

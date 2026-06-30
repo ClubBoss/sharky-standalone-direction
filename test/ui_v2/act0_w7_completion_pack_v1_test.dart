@@ -167,7 +167,18 @@ void main() {
 
     test('learning arc copy is beginner readable and claim safe', () {
       final encoded = jsonEncode(
-        owner.taskSpecs.map((task) => task.copySafetyPayload).toList(),
+        owner.taskSpecs
+            .map(
+              (task) => <String>[
+                task.learnerPrompt,
+                ...task.choiceLabels.values,
+                task.feedbackReason,
+                ...task.incorrectFeedback.values,
+                task.boardContext,
+                task.learningPurpose,
+              ],
+            )
+            .toList(),
       ).toLowerCase();
       for (final forbidden in <String>[
         'gto',
@@ -177,10 +188,23 @@ void main() {
         'mastered',
         'fixed',
         'guaranteed improvement',
+        'proven improvement',
         'ai leak',
         'win-rate',
         'public',
         'playable',
+        'lite',
+        'combo density',
+        'card removal',
+        'gutshot',
+        'thin value',
+        'fold pressure',
+        'suited texture pressure',
+        'put it all together',
+        'build winning habits',
+        'develop your reads',
+        'now you know',
+        'you mastered',
       ]) {
         expect(encoded, isNot(contains(forbidden)));
       }
