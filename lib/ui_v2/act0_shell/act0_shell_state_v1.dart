@@ -5994,8 +5994,8 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
   Act0WorldCardV1(
     worldId: 'world_7',
     worldNumber: 7,
-    title: 'Range Thinking Lite',
-    subtitle: 'Group hands into simple buckets without solver talk.',
+    title: 'Visible Cards Change Ranges',
+    subtitle: 'Use visible cards to narrow what hands can still be there.',
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),
@@ -6013,7 +6013,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     status: Act0WorldStateV1.locked,
     progressLabel: act0LockedWorldProgressLabelV1(isImmediateNext: false),
     primaryCtaLabel: act0LockedWorldPrimaryCtaLabelV1(isImmediateNext: false),
-    unlockLabel: act0LockedWorldUnlockLabelV1('Range Thinking Lite'),
+    unlockLabel: act0LockedWorldUnlockLabelV1('Visible Cards Change Ranges'),
     isSelectable: false,
     isLocked: true,
     rewardXp: 280,
@@ -15640,7 +15640,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_wet_board_repair',
   lessonTitle: 'Range meets board',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption:
       'Turn card connected the board, but hero still treats one pair like the flop stayed dry.',
   hint: 'Repair the board read before forcing the same old action.',
@@ -15697,13 +15697,13 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
   ],
 );
 
-// ── W6: Range Thinking Lite — fresh runners ──────────────────────────────
+// ── W7: Visible Cards Change Ranges — fresh runners ──────────────────────────────
 
 final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w6_range_intro',
   lessonTitle: 'Range buckets',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption: 'A range is the group of hands that fit a situation.',
   hint: 'Value, bluff candidate, and missed are the three range buckets.',
   question: 'What are range buckets?',
@@ -16542,7 +16542,7 @@ final _w6SuitedOffsuitWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_suited_offsuit_weight_compare',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption: 'Compare A-K suited with A-K offsuit before blockers.',
   hint: 'Offsuit hands usually have more combinations than suited hands.',
   question: 'Which family appears more often in a range?',
@@ -16594,7 +16594,7 @@ final _w6PairVsSuitedWeightCompareRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_pair_vs_suited_weight_compare',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption: 'Compare pocket nines with K-Q suited before blockers.',
   hint: 'Not every unpaired hand is denser than a pocket pair.',
   question: 'Which family appears more often in a range?',
@@ -16650,7 +16650,7 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_checkpoint_table_combo_weight',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption:
       'Real table. CO opens preflop. Before guessing exact hands in a simple opening range, you want the heavier family first.',
   hint: 'Use combo counts as weight, not as a guess.',
@@ -16713,7 +16713,7 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_kicker_showdown_compare',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption: 'River board is K-7-2-9-4. Hero shows A-K. Villain shows K-Q.',
   hint: 'Name the made hand first. Both players have one pair.',
   question: 'Which hand is stronger at showdown?',
@@ -16831,7 +16831,7 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_board_pair_strength_compare',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption: 'River board is J-8-8-2-2. Hero shows A-J. Villain shows K-8.',
   hint: 'The board helped both players. Compare the full five-card hand.',
   question: 'Which hand is stronger at showdown?',
@@ -16949,7 +16949,7 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_checkpoint_table_best_five',
   lessonTitle: 'Range thinking checkpoint',
-  lessonSubtitle: 'Range Thinking Lite',
+  lessonSubtitle: 'Visible Cards Change Ranges',
   caption:
       'Real table showdown. River board is A-K-Q-J-T. Hero shows A-5. Villain shows K-4.',
   hint: 'Best five cards decide the hand, not the loudest private card.',

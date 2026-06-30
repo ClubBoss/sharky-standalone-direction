@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -37,6 +39,94 @@ void main() {
         reason: 'world_$worldNumber non-selectable',
       );
     }
+  });
+
+  test('W7 route-facing card copy uses approved title while locked', () {
+    final world7 = Act0ShellStateV1.sample.worldById('world_7');
+
+    expect(world7.title, 'Visible Cards Change Ranges');
+    expect(
+      world7.subtitle,
+      'Use visible cards to narrow what hands can still be there.',
+    );
+    expect(world7.status, Act0WorldStateV1.locked);
+    expect(world7.isLocked, isTrue);
+    expect(world7.isSelectable, isFalse);
+    expect(world7.progressLabel, 'Later in Volume I');
+    expect(world7.primaryCtaLabel, 'View route');
+    expect(world7.unlockLabel, 'Finish Range Thinking to open this world.');
+    expect(world7.title, isNot(contains('Lite')));
+    expect(world7.subtitle, isNot(contains('solver')));
+
+    final world8 = Act0ShellStateV1.sample.worldById('world_8');
+    expect(
+      world8.unlockLabel,
+      'Finish Visible Cards Change Ranges to open this world.',
+    );
+  });
+
+  test('W7 route-facing card copy avoids pre-route forbidden claims', () {
+    final world7 = Act0ShellStateV1.sample.worldById('world_7');
+    final routeCopy = <String>[
+      world7.title,
+      world7.subtitle,
+      world7.progressLabel,
+      world7.primaryCtaLabel,
+      world7.unlockLabel,
+    ].join(' ').toLowerCase();
+
+    for (final forbidden in const <String>[
+      'range thinking lite',
+      'combo density',
+      'card removal',
+      'world7_',
+      'w7_',
+      'solver',
+      'gto',
+      'mastered',
+      'fixed forever',
+      'human qa',
+      'launch-ready',
+      '9.0',
+      'learning effect',
+    ]) {
+      expect(routeCopy, isNot(contains(forbidden)));
+    }
+  });
+
+  test('mapper still returns no target for W7 route-locked target', () {
+    final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
+      const Act0ConceptFamilyRepairCandidateV1(
+        conceptFamilyId: 'no_bet_yet',
+        repairFocusId: 'no_bet_yet',
+        skillAtomId: 'action_read',
+        errorType: 'missed_action_read',
+        incorrectCount: 1,
+        correctCount: 0,
+        latestIncorrectOrder: 1,
+        selectionReasonCode: 'latest_incorrect_family',
+      ),
+      allowlist: const <Act0ConceptCandidatePracticeTargetSpecV1>[
+        Act0ConceptCandidatePracticeTargetSpecV1(
+          mappingId: 'locked_w7',
+          conceptFamilyId: 'no_bet_yet',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          errorType: 'missed_action_read',
+          sourceTaskId: 'actions_legal_context',
+          targetWorldId: 'world_7',
+          targetLessonId: 'w7_visible_cards_intro',
+          targetTaskId: 'w7_visible_cards_task',
+        ),
+      ],
+    );
+
+    expect(result.isMapped, isFalse);
+    expect(result.request, isNull);
+    expect(
+      result.reasonCode,
+      act0ConceptCandidatePracticeNoTargetRouteLockedV1,
+    );
   });
 
   test(

@@ -12419,7 +12419,7 @@ void main() {
         'Bet Purpose / Price',
         'Board Awareness',
         'Range Thinking',
-        'Range Thinking Lite',
+        'Visible Cards Change Ranges',
         'Stack Depth And Risk',
         'Tournament Pressure',
         'Player Adjustment',
@@ -12731,7 +12731,7 @@ void main() {
       'Bet Purpose / Price',
       'Board Awareness',
       'Range Thinking',
-      'Range Thinking Lite',
+      'Visible Cards Change Ranges',
       'Stack Depth And Risk',
       'Tournament Pressure',
       'Player Adjustment',
@@ -23970,7 +23970,11 @@ void main() {
 
   test('World 7 is locked but has a real range-thinking scaffold', () {
     final world7 = Act0ShellStateV1.sample.worldById('world_7');
-    expect(world7.title, 'Range Thinking Lite');
+    expect(world7.title, 'Visible Cards Change Ranges');
+    expect(
+      world7.subtitle,
+      'Use visible cards to narrow what hands can still be there.',
+    );
     expect(world7.status, Act0WorldStateV1.locked);
     expect(world7.isLocked, isTrue);
     expect(world7.isSelectable, isFalse);
