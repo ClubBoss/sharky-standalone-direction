@@ -213,6 +213,10 @@ int _compareBoolDesc(bool a, bool b) {
 }
 
 String _conceptFamilyId(Act0LearningEvidenceRecordV1 record) {
+  final conceptFamilyId = record.conceptFamilyId.trim();
+  if (conceptFamilyId.isNotEmpty) {
+    return conceptFamilyId;
+  }
   final repairFocusId = record.repairFocusId.trim();
   if (repairFocusId.isNotEmpty) {
     return repairFocusId;
