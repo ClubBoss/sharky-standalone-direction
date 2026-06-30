@@ -1,0 +1,90 @@
+{
+  "schema_version": "content_schema_foundation_v1",
+  "fixture_id": "w7_visible_ace_combo_reduction_intro_v1",
+  "fixture_level": "w7_single_task_runtime_slice_v1",
+  "generated_by": "manual_source_owned_task_slice_v1",
+  "tasks": [
+    {
+      "schema_version": "content_schema_foundation_v1",
+      "world_id": "world_7",
+      "route_world_id": "world_7",
+      "display_world_title": "Range Thinking Lite",
+      "content_owner_world_id": "world_7",
+      "route_gate_status": "authored_but_not_routed",
+      "lesson_id": "range_thinking_lite_combo_density",
+      "session_id": "w7.visible_ace.single_task_runtime_slice_v1",
+      "pack_id": "w7_visible_ace_source_owned_task_v1",
+      "task_id": "visible_ace_combo_reduction_intro",
+      "source_task_id": "visible_ace_combo_reduction_intro",
+      "concept_family_id": "w7_combo_density_visible_card_removal",
+      "repairable": true,
+      "repair_focus_id": "w7_visible_card_combo_reduction",
+      "skill_atom_id": "w7_combo_density_card_removal",
+      "error_type": "missed_visible_card_combo_reduction",
+      "drill_kind": "combo_density_visible_card_choice_v1",
+      "board_context": "A72 rainbow",
+      "learner_prompt": "An ace is already visible on A72 rainbow. What does that do to ace-containing hands in the opponent's possible range?",
+      "choices": [
+        {
+          "id": "ace_combos_reduced",
+          "label": "There are fewer ace-containing combinations left."
+        },
+        {
+          "id": "ace_combos_unchanged",
+          "label": "The visible ace does not change the number of ace combinations."
+        },
+        {
+          "id": "ace_combos_guaranteed",
+          "label": "The opponent must have an ace."
+        },
+        {
+          "id": "ace_combos_impossible",
+          "label": "The opponent can never have an ace."
+        }
+      ],
+      "correct_action": "ace_combos_reduced",
+      "expected_choice": "ace_combos_reduced",
+      "acceptable_actions": [],
+      "feedback_reason": "One ace is already visible, so fewer ace-containing combinations remain possible. This does not tell us the exact hand; it only changes how many hands are available.",
+      "incorrect_feedback": {
+        "ace_combos_unchanged": "Visible cards are unavailable to private hands, so the number of possible ace-containing hands changes.",
+        "ace_combos_guaranteed": "A visible ace reduces possible ace-containing hands; it does not prove the opponent has one.",
+        "ace_combos_impossible": "One visible ace reduces ace-containing hands, but some ace-containing hands can still exist."
+      },
+      "evidence_fields": [
+        "world_id",
+        "lesson_id",
+        "task_id",
+        "source_task_id",
+        "user_choice",
+        "expected_choice",
+        "correct",
+        "error_type",
+        "skill_atom_id",
+        "repair_focus_id",
+        "time_to_decision",
+        "ordered_local_evidence_record"
+      ],
+      "ordered_local_evidence_compatible": true,
+      "time_to_decision_compatible": true,
+      "practice_cta_allowed": false,
+      "mapper_no_target_reason": "w7_route_locked_no_safe_practice_target_v1",
+      "validation_status": "source_validated",
+      "preview_only": true,
+      "source_truth_status": "canonical",
+      "locale_key": "w7_visible_ace_combo_reduction_intro_v1",
+      "safe_claim_status": "single_task_source_owned_route_locked",
+      "launch_coverage_claimed": false,
+      "migration_source": {
+        "source_path": "docs/_reviews/w7_visible_ace_combo_reduction_task_owner_design_v1.md",
+        "source_id": "visible_ace_combo_reduction_intro",
+        "source_kind": "combo_density_visible_card_choice_v1",
+        "source_intent_v1": "visible_card_combo_reduction",
+        "source_expected_action": "ace_combos_reduced",
+        "source_error_class": "missed_visible_card_combo_reduction",
+        "source_job": "w7_visible_ace_single_task_runtime_slice_v1",
+        "source_transform": "manual_source_owned_task_slice_v1"
+      }
+    }
+  ]
+}
