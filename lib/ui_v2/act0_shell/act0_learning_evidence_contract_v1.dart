@@ -57,6 +57,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     expectedChoiceId: expectedChoiceId,
     isCorrect: decision.isCorrect,
     errorType: errorType,
+    conceptFamilyId: decision.conceptFamilyId?.trim() ?? '',
     repairFocusId: decision.repairFocusId?.trim() ?? '',
     skillAtomId: skillAtomId,
     decisionTimeBucket: decisionTimeBucket,
@@ -169,6 +170,7 @@ class Act0LearningEvidenceRecordV1 {
     required this.expectedChoiceId,
     required this.isCorrect,
     required this.errorType,
+    this.conceptFamilyId = '',
     required this.repairFocusId,
     required this.skillAtomId,
     required this.decisionTimeBucket,
@@ -191,6 +193,7 @@ class Act0LearningEvidenceRecordV1 {
   final String expectedChoiceId;
   final bool isCorrect;
   final String errorType;
+  final String conceptFamilyId;
   final String repairFocusId;
   final String skillAtomId;
   final String decisionTimeBucket;
@@ -214,6 +217,7 @@ class Act0LearningEvidenceRecordV1 {
       'expectedChoiceId': expectedChoiceId,
       'isCorrect': isCorrect,
       'errorType': errorType,
+      'conceptFamilyId': conceptFamilyId,
       'repairFocusId': repairFocusId,
       'skillAtomId': skillAtomId,
       'decisionTimeBucket': decisionTimeBucket,
@@ -258,6 +262,7 @@ class Act0LearningEvidenceRecordV1 {
     final decisionTimeBucket = _requiredString(map['decisionTimeBucket']);
     final resultKind = _requiredString(map['resultKind']);
     final isCorrect = map['isCorrect'];
+    final conceptFamilyId = _optionalString(map['conceptFamilyId']);
     final repairFocusId = _optionalString(map['repairFocusId']);
     final runOrdinal = map.containsKey('runOrdinal')
         ? _nonNegativeInt(map['runOrdinal'])
@@ -297,6 +302,7 @@ class Act0LearningEvidenceRecordV1 {
       expectedChoiceId: expectedChoiceId,
       isCorrect: isCorrect,
       errorType: errorType,
+      conceptFamilyId: conceptFamilyId,
       repairFocusId: repairFocusId,
       skillAtomId: skillAtomId,
       decisionTimeBucket: decisionTimeBucket,
@@ -323,6 +329,7 @@ class Act0LearningEvidenceRecordV1 {
       other.expectedChoiceId == expectedChoiceId &&
       other.isCorrect == isCorrect &&
       other.errorType == errorType &&
+      other.conceptFamilyId == conceptFamilyId &&
       other.repairFocusId == repairFocusId &&
       other.skillAtomId == skillAtomId &&
       other.decisionTimeBucket == decisionTimeBucket &&
@@ -346,6 +353,7 @@ class Act0LearningEvidenceRecordV1 {
     expectedChoiceId,
     isCorrect,
     errorType,
+    conceptFamilyId,
     repairFocusId,
     skillAtomId,
     decisionTimeBucket,
