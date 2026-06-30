@@ -53,12 +53,11 @@ Repo hygiene validation:
 
 ## Push result
 
-Pending at artifact creation; expected normal non-force push to `origin/main`
-after validation and commit.
+Pushed `main` normally to `origin/main` with no force push.
 
 ## Final main hash
 
-Pending until sync artifact commit and push.
+`0c126833c12b196d0589591ebcd144f45cd15500`
 
 ## Token budget result
 
