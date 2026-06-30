@@ -129,6 +129,50 @@ void main() {
     );
   });
 
+  test('mapper still returns no target for W8-W12 route-locked targets', () {
+    for (final worldId in const <String>[
+      'world_8',
+      'world_9',
+      'world_10',
+      'world_11',
+      'world_12',
+    ]) {
+      final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
+        const Act0ConceptFamilyRepairCandidateV1(
+          conceptFamilyId: 'no_bet_yet',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          errorType: 'missed_action_read',
+          incorrectCount: 1,
+          correctCount: 0,
+          latestIncorrectOrder: 1,
+          selectionReasonCode: 'latest_incorrect_family',
+        ),
+        allowlist: <Act0ConceptCandidatePracticeTargetSpecV1>[
+          Act0ConceptCandidatePracticeTargetSpecV1(
+            mappingId: 'locked_$worldId',
+            conceptFamilyId: 'no_bet_yet',
+            repairFocusId: 'no_bet_yet',
+            skillAtomId: 'action_read',
+            errorType: 'missed_action_read',
+            sourceTaskId: 'actions_legal_context',
+            targetWorldId: worldId,
+            targetLessonId: '${worldId}_visible_locked_preview',
+            targetTaskId: '${worldId}_task',
+          ),
+        ],
+      );
+
+      expect(result.isMapped, isFalse, reason: worldId);
+      expect(result.request, isNull, reason: worldId);
+      expect(
+        result.reasonCode,
+        act0ConceptCandidatePracticeNoTargetRouteLockedV1,
+        reason: worldId,
+      );
+    }
+  });
+
   test(
     'learner-facing progression does not promote W7-W10 after W6 completion',
     () async {

@@ -162,6 +162,7 @@ Do not run broad Flutter analyze/test by default unless source changes or policy
 
 - Checklist created.
 - Decision gate selected W7 state B: visible locked preview.
+- W7 visible locked preview implementation is active in the existing route-card owner.
 - W7 remains locked, non-selectable, and not route-admitted.
 - Selective W7 route admission remains blocked until route entry/exit, stale-resume, mapper, Practice CTA, and Human QA boundaries are separately admitted.
 - W8-W12 remain locked until their future staged admission.
