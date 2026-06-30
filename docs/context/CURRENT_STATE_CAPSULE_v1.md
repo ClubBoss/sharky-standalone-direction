@@ -22,7 +22,10 @@ Last verified from `main`: `a6cd8f003726cc30ee8a3fa99463cdb32d32b2e4`.
   Practice CTA only for safe mapped requests and launches through the existing
   Act0 preview-shell Practice repair owner. Candidate lifecycle copy is derived
   from the existing persisted learning evidence owner; no new route, storage
-  architecture, ML, AI chat, or broad personalization owner is active.
+  architecture, ML, AI chat, or broad personalization owner is active. A local
+  engine-only transfer projection can mark same-concept miss-to-later-correct
+  evidence, but it does not claim practice causality, mastery, or public
+  learning-effect proof.
 - Existing first-session repair-loop proof exists, but it is not Human QA or durable learner proof.
 - Modern Table remains maintenance mode.
 - Screenshot pipeline is for audit, regression, AI review, or visual evidence only; it is not a design-iteration excuse.

@@ -7,7 +7,9 @@ show a mapper-backed Practice CTA only when an allowlisted request maps to the
 existing Act0 preview-shell Practice repair launch owner. Durable persistence
 is owned by the existing persisted learning evidence history; lifecycle copy is
 derived from that evidence without adding storage architecture. Broader Practice
-UI admission remains a future bounded wave.
+UI admission remains a future bounded wave. A local engine-only transfer
+projection can mark same-concept miss-to-later-correct evidence from persisted
+learning records, without claiming practice causality or learner-facing mastery.
 
 ## Objective
 
@@ -32,6 +34,9 @@ without ML, AI chat, or solver claims.
   Practice repair launch owner and does not create a new route or screen.
 - Session Summary lifecycle copy can distinguish new focus, still-active focus,
   repeated miss, and quiet-after-correct state without claiming mastery.
+- A pure local transfer projection can classify no-prior-miss,
+  miss-still-active, later-correct, insufficient-ordering, and unmapped-concept
+  states from same-concept learning evidence.
 - Broader learner-facing exposure remains future work.
 
 ## Required Signal Fields
@@ -109,6 +114,8 @@ Purpose:
 - Preserves W1-W6 freeze and does not author new content.
 - Exposes proof only through the admitted Session Summary evidence card unless
   a future wave admits another safe owner.
+- Keeps learning-transfer measurement engine-only until a future display owner
+  can separate miss-to-later-correct evidence from practice-causal claims.
 - Includes focused validator/test coverage.
 - Does not claim launch readiness, Human QA, monetization, 9.0, or durable mastery.
 
