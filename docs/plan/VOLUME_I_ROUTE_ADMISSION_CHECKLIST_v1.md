@@ -161,7 +161,8 @@ Do not run broad Flutter analyze/test by default unless source changes or policy
 ## 16. Current Status
 
 - Checklist created.
-- Route admission remains blocked.
-- W7 remains locked until a future implementation wave.
+- Decision gate selected W7 state B: visible locked preview.
+- W7 remains locked, non-selectable, and not route-admitted.
+- Selective W7 route admission remains blocked until route entry/exit, stale-resume, mapper, Practice CTA, and Human QA boundaries are separately admitted.
 - W8-W12 remain locked until their future staged admission.
 - No score movement is authorized by this checklist.
