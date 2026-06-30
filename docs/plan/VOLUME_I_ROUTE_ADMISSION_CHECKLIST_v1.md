@@ -158,7 +158,35 @@ Minimum validation for a W7 route implementation wave:
 
 Do not run broad Flutter analyze/test by default unless source changes or policy require it.
 
-## 16. Current Status
+## 16. Final Quality Gate Contract
+
+Before any decision or claim that W1-W12 / Volume I is ideal, 10/10, top-1
+quality, premium-ready, public-ready, launch-ready, full Volume I
+Human-QA-ready, or safe for public learning-effect claims, run
+`W1-W12 End-to-End Curriculum & Product Quality Gate v1`.
+
+That future gate must verify:
+
+- W1-W12 sequence and progression.
+- No concept holes or unexplained jumps.
+- Sufficient examples and scenario richness per world.
+- Content depth per world, not a fixed task count.
+- Beginner comprehension and jargon safety.
+- Title, intro, prompt, choice, feedback, repair, and completion copy quality.
+- W7-W12 route continuity after W6.
+- Repair loop usefulness and learner-visible value.
+- W12 review and payoff quality.
+- Hard and soft claim safety.
+- No raw, internal, or debug copy leakage.
+- Human QA readiness.
+- Premium product feel.
+- Remaining P1/P2 EV backlog status.
+
+This gate is not required immediately. It is mandatory before final readiness,
+top-1, 10/10, premium-ready, public-ready, launch-ready, full Volume I
+Human-QA-ready, or public learning-effect claims.
+
+## 17. Current Status
 
 - Checklist created.
 - Decision gate selected W7 state B: visible locked preview.
