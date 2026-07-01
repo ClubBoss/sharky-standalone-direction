@@ -319,27 +319,22 @@ class _WelcomeLaunchPathV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
         border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.14)),
       ),
-      child: Row(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: Act0ShellTokensV1.gapXs,
+        runSpacing: Act0ShellTokensV1.gapXs,
         children: [
-          Expanded(
-            child: _WelcomeLaunchStepV1(
-              label: copy(en: 'Answer', ru: 'Ответы'),
-              state: _WelcomeLaunchVisualStateV1.complete,
-            ),
+          _WelcomeLaunchStepV1(
+            label: copy(en: 'Answer', ru: 'Ответы'),
+            state: _WelcomeLaunchVisualStateV1.complete,
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapXs),
-          Expanded(
-            child: _WelcomeLaunchStepV1(
-              label: copy(en: 'Quick check', ru: 'Быстрая проверка'),
-              state: _WelcomeLaunchVisualStateV1.complete,
-            ),
+          _WelcomeLaunchStepV1(
+            label: copy(en: 'Quick check', ru: 'Быстрая проверка'),
+            state: _WelcomeLaunchVisualStateV1.complete,
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapXs),
-          Expanded(
-            child: _WelcomeLaunchStepV1(
-              label: copy(en: 'First hand', ru: 'Первая раздача'),
-              state: _WelcomeLaunchVisualStateV1.active,
-            ),
+          _WelcomeLaunchStepV1(
+            label: copy(en: 'First hand', ru: 'Первая раздача'),
+            state: _WelcomeLaunchVisualStateV1.active,
           ),
         ],
       ),
@@ -371,20 +366,18 @@ class _WelcomeLaunchStepV1 extends StatelessWidget {
         border: Border.all(color: tone.withOpacity(0.22)),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 14, color: tone),
           const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: tone,
-                letterSpacing: 0.12,
-              ),
+          Text(
+            label,
+            maxLines: 1,
+            softWrap: false,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: tone,
+              letterSpacing: 0.12,
             ),
           ),
         ],

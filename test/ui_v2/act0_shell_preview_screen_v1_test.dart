@@ -11564,6 +11564,13 @@ void main() {
     expect(find.text('Reason'), findsNothing);
     expect(find.text('Move on'), findsNothing);
     expect(find.text('Quick check'), findsOneWidget);
+    final quickCheckText = tester.widget<Text>(find.text('Quick check'));
+    final quickCheckPainter = TextPainter(
+      text: TextSpan(text: 'Quick check', style: quickCheckText.style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final quickCheckRect = tester.getRect(find.text('Quick check'));
+    expect(quickCheckRect.width, greaterThanOrEqualTo(quickCheckPainter.width));
     expect(find.text('First hand'), findsOneWidget);
     expect(find.text('Your first useful hand is ready.'), findsOneWidget);
     expect(find.textContaining('Your first lesson is ready'), findsOneWidget);
