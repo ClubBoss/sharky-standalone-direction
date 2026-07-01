@@ -428,6 +428,247 @@ List<MicroTaskStep> _w7VisibleRangeFollowupB2V1() => <MicroTaskStep>[
   ),
 ];
 
+MicroTaskStep _w8DrawImprovementStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w8DrawImprovementCampaignPackV1() => <MicroTaskStep>[
+  _w8DrawImprovementStepV1(
+    prompt: 'Two hearts make a flush draw. Tap Button after reading the clue.',
+    hint: 'A future card of the suit can improve the hand.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['Ah', '7h', '2c'],
+    contextText:
+        'W8 follows W7: after visible cards narrow ranges, draws show how a future card can improve a hand.',
+    tradeoffText:
+        'Name the flush draw path, or treat the hand as already complete.',
+    consequenceText: 'Draw read: +8 chips. Made-hand mistake: -6 chips.',
+    insightText:
+        'A flush draw is not made yet; a future card of the suit can improve it.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: '5-6-7-8 is open-ended. Tap Cutoff after naming the draw.',
+    hint: 'Open-ended means either end can complete the straight.',
+    expectedSeatId: 'co',
+    boardCards: <String>['5s', '6d', '7c'],
+    contextText:
+        'An open-ended straight draw has clear improvement cards on both sides.',
+    tradeoffText:
+        'Use the open-ended clue, or look for only one exact future card.',
+    consequenceText: 'Two-side draw read: +8 chips. One-card tunnel: -6 chips.',
+    insightText:
+        'Open-ended straight draws can improve from either end of the sequence.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'One inside card completes the straight. Tap Big Blind.',
+    hint: 'A one-gap straight draw has a narrower improvement path.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['5s', '6d', '8c'],
+    contextText:
+        'This introduces the gutshot idea without making the route depend on jargon.',
+    tradeoffText: 'Compare the narrow draw, or call every draw equally strong.',
+    consequenceText: 'Narrow-path read: +8 chips. Equal-draw leak: -6 chips.',
+    insightText:
+        'A one-gap draw can still improve, but it has fewer clear future-card paths than an open-ended draw.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Flush draw vs no clear draw. Tap Hijack after choosing the path.',
+    hint: 'The flush draw has more visible improvement potential.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Kh', '9h', '3c'],
+    contextText:
+        'Transfer W8: compare a visible draw with a hand that has no clear draw.',
+    tradeoffText:
+        'Choose the hand with visible improvement, or guess from current strength only.',
+    consequenceText:
+        'Improvement path found: +8 chips. Static guess: -6 chips.',
+    insightText:
+        'Draws matter because future cards can improve them; they do not reveal the next card.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Final W8 check: draws can improve later. Tap Small Blind.',
+    hint: 'Read the draw first, then stay claim-safe.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Qh', 'Jh', '4s'],
+    contextText:
+        'W8 stays beginner-safe: draw means possible improvement, not certainty.',
+    tradeoffText:
+        'Explain the future-card path, or overclaim the hand is solved.',
+    consequenceText: 'Claim-safe close: +8 chips. Overclaim punish: -6 chips.',
+    insightText:
+        'Flush draw, open-ended draw, and one-gap draw are improvement clues, not final answers.',
+  ),
+];
+
+List<MicroTaskStep> _w8DrawImprovementFollowupB0V1() => <MicroTaskStep>[
+  _w8DrawImprovementStepV1(
+    prompt: 'Hearts on board create a flush draw. Tap Button.',
+    hint: 'A future card of that suit can improve the hand.',
+    boardCards: <String>['Jh', '8h', '2s'],
+    contextText: 'B0 repairs the first miss: draw is not the same as made.',
+    tradeoffText:
+        'Keep the flush draw as future-card potential, or mark it complete now.',
+    consequenceText: 'Repair held: +8 chips. Made-now leak: -6 chips.',
+    insightText:
+        'The flush draw can improve later; it is not complete on this street.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: '4-5-6-7 is open-ended. Tap Cutoff.',
+    hint: 'Cards on either end can complete the straight.',
+    expectedSeatId: 'co',
+    boardCards: <String>['4s', '5d', '6c'],
+    contextText: 'B0 repeats the open-ended straight draw in a new shape.',
+    tradeoffText:
+        'Use both ends of the sequence, or search for one exact card only.',
+    consequenceText: 'Open-ended repair: +8 chips. One-card tunnel: -6 chips.',
+    insightText:
+        'Open-ended draws have more clear improvement paths than one-gap draws.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Inside-card straight draw. Tap Big Blind after comparing it.',
+    hint: 'This draw can improve, but through a narrower path.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['6s', '7d', '9c'],
+    contextText: 'B0 compares narrow and open-ended draw shapes.',
+    tradeoffText:
+        'Notice the narrower future-card path, or treat all draws the same.',
+    consequenceText: 'Shape compared: +8 chips. Same-draw mistake: -6 chips.',
+    insightText:
+        'A one-gap draw still has improvement potential, just fewer clear paths.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Flush draw beats no clear draw for improvement. Tap Hijack.',
+    hint: 'A visible draw gives cleaner future-card paths.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Th', '6h', '2d'],
+    contextText: 'B0 closes with draw vs no-draw transfer.',
+    tradeoffText:
+        'Choose visible improvement potential, or ignore the draw clue.',
+    consequenceText: 'Transfer repair: +8 chips. Ignored clue: -6 chips.',
+    insightText:
+        'The draw gives visible ways to improve without promising the next card.',
+  ),
+];
+
+List<MicroTaskStep> _w8DrawImprovementFollowupB1V1() => <MicroTaskStep>[
+  _w8DrawImprovementStepV1(
+    prompt: 'Spades create a flush draw. Tap Button after the safe read.',
+    hint: 'A future card of the suit can help complete a flush.',
+    boardCards: <String>['As', '9s', '4d'],
+    contextText: 'B1 changes suit and board while keeping the same draw idea.',
+    tradeoffText:
+        'Read the flush draw, or call the current hand static forever.',
+    consequenceText: 'Suit-path read: +8 chips. Static-hand leak: -6 chips.',
+    insightText:
+        'A flush draw is an improvement path from future cards of the suit.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: '8-9-T-J is open-ended. Tap Small Blind.',
+    hint: 'Either side of the straight shape can matter.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['8c', '9d', 'Ts'],
+    contextText: 'B1 adds a higher open-ended straight draw example.',
+    tradeoffText: 'Use the two-sided path, or over-focus on one future card.',
+    consequenceText: 'Two-sided read: +8 chips. Tunnel miss: -6 chips.',
+    insightText:
+        'Open-ended draws can improve from either side; that is why the shape matters.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'One-gap draw compared with open-ended. Tap Cutoff.',
+    hint: 'The open-ended draw has more clear improvement cards.',
+    expectedSeatId: 'co',
+    boardCards: <String>['7s', '8d', 'Tc'],
+    contextText:
+        'B1 makes the comparison explicit without requiring equity math.',
+    tradeoffText: 'Compare improvement paths, or use raw hand strength only.',
+    consequenceText: 'Path comparison: +8 chips. Raw-strength drift: -6 chips.',
+    insightText:
+        'Draw quality starts with how many clear future-card paths can improve the hand.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Draw vs no clear draw transfer. Tap Big Blind.',
+    hint: 'Visible improvement paths make the draw easier to continue with.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qh', '8h', '3s'],
+    contextText: 'B1 closes with a transfer across board texture.',
+    tradeoffText: 'Carry the draw-improvement clue, or restart from guessing.',
+    consequenceText: 'Transfer read: +8 chips. Guess reset: -6 chips.',
+    insightText:
+        'Future cards can improve a visible draw; no clear draw has fewer visible paths.',
+  ),
+];
+
+List<MicroTaskStep> _w8DrawImprovementFollowupB2V1() => <MicroTaskStep>[
+  _w8DrawImprovementStepV1(
+    prompt:
+        'Two draws appear together. Tap Button after naming the safer idea.',
+    hint: 'Multiple draw paths can give more ways to improve.',
+    boardCards: <String>['Jh', 'Th', '9s'],
+    contextText:
+        'B2 adds scenario richness: a hand can have more than one improvement path.',
+    tradeoffText:
+        'Combine visible draw paths, or treat the spot as already complete.',
+    consequenceText: 'Combined draw read: +8 chips. Made-hand jump: -6 chips.',
+    insightText:
+        'Flush draw plus straight shape can add future-card improvement paths.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Open-ended draw with no flush draw. Tap Cutoff.',
+    hint: 'A straight draw can matter even without the suit draw.',
+    expectedSeatId: 'co',
+    boardCards: <String>['6c', '7d', '8s'],
+    contextText: 'B2 separates straight improvement from flush improvement.',
+    tradeoffText:
+        'Name the open-ended path, or require every draw to be a flush draw.',
+    consequenceText: 'Straight path read: +8 chips. Flush-only leak: -6 chips.',
+    insightText:
+        'Open-ended straight draws can improve through future cards at either end.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt: 'Flush draw with no straight draw. Tap Small Blind.',
+    hint: 'The suited future-card path is still enough to matter.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Ah', '6h', '2c'],
+    contextText: 'B2 separates flush improvement from straight improvement.',
+    tradeoffText:
+        'Use the suit path, or miss the draw because no straight is present.',
+    consequenceText: 'Flush path read: +8 chips. Missed-draw leak: -6 chips.',
+    insightText:
+        'A flush draw can improve from a future card of the suit even without a straight draw.',
+  ),
+  _w8DrawImprovementStepV1(
+    prompt:
+        'Final W8 transfer: draw means possible improvement. Tap Big Blind.',
+    hint: 'Possible improvement is useful, but it is not certainty.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Ks', 'Qs', '4d'],
+    contextText: 'B2 closes W8 as a route bridge after visible-card work.',
+    tradeoffText:
+        'Use draw improvement potential, or claim the future card is known.',
+    consequenceText: 'Safe close: +8 chips. Certainty claim: -6 chips.',
+    insightText:
+        'Flush draw and open-ended draw clues show possible improvement, not a final result.',
+  ),
+];
+
 String _stepNarrativeTextV1(MicroTaskStep step) {
   return [
     step.prompt,
@@ -3285,174 +3526,13 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
 
   'world7_spine_followup_v1_b2': _w7VisibleRangeFollowupB2V1(),
 
-  'world8_spine_campaign_v1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: anchor the seat map first.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Start each set by anchoring the seat map on Button.',
-      tradeoffText: 'Anchor the map first, or guess seat labels.',
-      consequenceText: 'Anchor set: +8 chips. Seat guess: -6 chips.',
-      insightText: 'Button is the anchor for seat-order drills.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: identify the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Blind seats are position labels in this set.',
-      tradeoffText: 'Name the blind seat now, or mix labels later.',
-      consequenceText: 'Blind seat read: +8 chips. Mixed labels: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Big Blind completes the two-seat blind pair.',
-      tradeoffText: 'Complete the pair, or leave the map incomplete.',
-      consequenceText:
-          'Blind pair complete: +8 chips. Incomplete map: -6 chips.',
-      insightText: 'BB is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: continue seat order away from blinds.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'This step checks seat labels beyond Button and blinds.',
-      tradeoffText: 'Use seat-order labels, or click by shape only.',
-      consequenceText: 'Seat order held: +8 chips. Label drift: -6 chips.',
-      insightText: 'Hijack is a seat-order label, not an action-order rule.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: confirm the late-position seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Cutoff is a seat label in the late-position group.',
-      tradeoffText: 'Confirm the label, or mix late seats.',
-      consequenceText:
-          'Late seat confirmed: +8 chips. Late-seat miss: -6 chips.',
-      insightText: 'Cutoff sits before Button in seat order.',
-    ),
-  ],
+  'world8_spine_campaign_v1': _w8DrawImprovementCampaignPackV1(),
 
-  'world8_spine_followup_v1_b0': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: restart from the seat-order anchor.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'B0 repeats core labels with short checks.',
-      tradeoffText: 'Start from the anchor, or guess the map.',
-      consequenceText: 'Anchor restart: +8 chips. Guess start: -6 chips.',
-      insightText: 'Restart from Button when the map feels noisy.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: verify blind label quickly.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Short followup keeps blind labels accurate.',
-      tradeoffText: 'Verify the seat label, or drift by memory.',
-      consequenceText: 'Blind verified: +8 chips. Label drift: -6 chips.',
-      insightText: 'Blind labels should stay automatic.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair again.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Pairing SB and BB prevents blind-label misses.',
-      tradeoffText: 'Complete the pair, or leave a gap.',
-      consequenceText: 'Pair complete: +8 chips. Gap left: -6 chips.',
-      insightText: 'SB and BB should be checked as a pair.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: finish on the late seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Final step checks a non-blind late seat label.',
-      tradeoffText: 'Finish with seat order, or revert to guessing.',
-      consequenceText: 'Late label finish: +8 chips. Guess finish: -6 chips.',
-      insightText: 'Cutoff and Button should stay distinct.',
-    ),
-  ],
+  'world8_spine_followup_v1_b0': _w8DrawImprovementFollowupB0V1(),
 
-  'world8_spine_followup_v1_b1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: seat order before Button.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'This followup reinforces late-seat order only.',
-      tradeoffText: 'Use seat-order wording, or imply action order.',
-      consequenceText: 'Seat order clear: +8 chips. Wording drift: -6 chips.',
-      insightText: 'Cutoff is before Button in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: keep the anchor label precise.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Anchor label checks support faster seat reads.',
-      tradeoffText: 'Confirm the anchor, or click by habit.',
-      consequenceText: 'Anchor confirmed: +8 chips. Habit miss: -6 chips.',
-      insightText: 'Button remains the anchor seat label.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: check the middle seat label.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'Middle-seat labels break anchor-only habits.',
-      tradeoffText: 'Read the label, or overuse anchor cues.',
-      consequenceText:
-          'Middle seat read: +8 chips. Anchor-only miss: -6 chips.',
-      insightText: 'Hijack is a position label in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: finish with the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Close by returning to a blind label check.',
-      tradeoffText: 'Finish on a clear blind label, or end on drift.',
-      consequenceText: 'Blind close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-  ],
+  'world8_spine_followup_v1_b1': _w8DrawImprovementFollowupB1V1(),
 
-  'world8_spine_followup_v1_b2': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: seat label first, then decision.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Separate seat recognition from later hand decisions.',
-      tradeoffText: 'Name the seat first, or mix tasks together.',
-      consequenceText: 'Tasks separated: +8 chips. Mixed tasks: -6 chips.',
-      insightText: 'Seat labels and action decisions are different checks.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: confirm the second blind seat.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Blind-seat order should remain stable under repetition.',
-      tradeoffText: 'Confirm the blind seat, or drift on labels.',
-      consequenceText: 'Blind confirmed: +8 chips. Label drift: -6 chips.',
-      insightText: 'Big Blind is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: keep late-seat labels distinct.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Late-seat labels should stay precise under repetition.',
-      tradeoffText: 'Keep labels distinct, or merge late seats.',
-      consequenceText:
-          'Late-seat precision: +8 chips. Merged labels: -6 chips.',
-      insightText: 'Cutoff and Button are different late seats.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: close on the anchor seat label.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Closing on the anchor confirms the full seat map.',
-      tradeoffText: 'Close on the anchor, or finish on drift.',
-      consequenceText: 'Anchor close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Close on Button to reset the seat map.',
-    ),
-  ],
+  'world8_spine_followup_v1_b2': _w8DrawImprovementFollowupB2V1(),
 
   'world9_spine_campaign_v1': <MicroTaskStep>[
     MicroTaskStep(

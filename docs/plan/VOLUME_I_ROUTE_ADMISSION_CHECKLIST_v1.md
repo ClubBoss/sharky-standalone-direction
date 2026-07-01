@@ -197,6 +197,11 @@ Human-QA-ready, or public learning-effect claims.
 - W7 completed route state falls back to the existing W6 terminal until a
   separate W7 follow-up or W8 admission wave.
 - W7 route-card preview metadata remains locked/non-selectable.
-- Mapper and Practice CTA remain blocked for W7.
-- W8-W12 remain locked until their future staged admission.
+- W8 route entry is admitted through the existing post-W7 learner progression
+  path after a W8 route-pack draw-improvement depth update.
+- W8 active pack continuation is admitted for W8 packs only.
+- W8 completed route state falls back to the existing W6 terminal until a
+  separate W9 admission wave.
+- Mapper and Practice CTA remain blocked for W7-W8.
+- W9-W12 remain locked until their future staged admission.
 - No score movement is authorized by this checklist.

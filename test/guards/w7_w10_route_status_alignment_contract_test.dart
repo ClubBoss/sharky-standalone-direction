@@ -16,11 +16,7 @@ void main() {
     'world7_spine_followup_v1_b2',
   };
 
-  const blockedW8W10Packs = <String>{
-    'world8_spine_campaign_v1',
-    'world8_spine_followup_v1_b0',
-    'world8_spine_followup_v1_b1',
-    'world8_spine_followup_v1_b2',
+  const blockedW9W10Packs = <String>{
     'world9_spine_campaign_v1',
     'world9_spine_followup_v1_b0',
     'world9_spine_followup_v1_b1',
@@ -219,7 +215,7 @@ void main() {
     }
   });
 
-  test('W7 completion does not open W8 without separate route admission', () async {
+  test('W7 completion opens W8 after separate route admission', () async {
     SharedPreferences.setMockInitialValues(<String, Object>{
       'onboardingCompleted': true,
       'intake_completed_v1': true,
@@ -242,13 +238,13 @@ void main() {
 
     final nextPack = await ProgressService.getNextSpinePackToRunV1();
 
-    expect(nextPack, 'world6_spine_followup_v1_b2');
+    expect(nextPack, 'world8_spine_campaign_v1');
   });
 
   test(
-    'stale active W8-W10 pack state is not returned to learner route',
+    'stale active W9-W10 pack state is not returned to learner route',
     () async {
-      for (final activePack in blockedW8W10Packs) {
+      for (final activePack in blockedW9W10Packs) {
         SharedPreferences.setMockInitialValues(<String, Object>{
           'onboardingCompleted': true,
           'intake_completed_v1': true,

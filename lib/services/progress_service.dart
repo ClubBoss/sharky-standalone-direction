@@ -391,10 +391,6 @@ class ProgressService {
   static const String w7W10LearnerRouteGateTerminalPackIdV1 =
       'world6_spine_followup_v1_b2';
   static const Set<String> _w8W10LearnerRouteLockedPackIdsV1 = <String>{
-    'world8_spine_campaign_v1',
-    'world8_spine_followup_v1_b0',
-    'world8_spine_followup_v1_b1',
-    'world8_spine_followup_v1_b2',
     'world9_spine_campaign_v1',
     'world9_spine_followup_v1_b0',
     'world9_spine_followup_v1_b1',
@@ -3277,6 +3273,12 @@ class ProgressService {
                 if (!world7CalibrationCompleted &&
                     !await isSpinePackCompletedV1('world7_spine_campaign_v1')) {
                   return 'world7_spine_campaign_v1';
+                }
+                final world8CalibrationCompleted =
+                    await isWorld8CalibrationCompletedV1();
+                if (!world8CalibrationCompleted &&
+                    !await isSpinePackCompletedV1('world8_spine_campaign_v1')) {
+                  return 'world8_spine_campaign_v1';
                 }
                 return w7W10LearnerRouteGateTerminalPackIdV1;
               }
