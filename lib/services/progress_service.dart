@@ -390,16 +390,7 @@ class ProgressService {
   );
   static const String w7W10LearnerRouteGateTerminalPackIdV1 =
       'world6_spine_followup_v1_b2';
-  static const Set<String> _w8W10LearnerRouteLockedPackIdsV1 = <String>{
-    'world9_spine_campaign_v1',
-    'world9_spine_followup_v1_b0',
-    'world9_spine_followup_v1_b1',
-    'world9_spine_followup_v1_b2',
-    'world10_spine_campaign_v1',
-    'world10_spine_followup_v1_b0',
-    'world10_spine_followup_v1_b1',
-    'world10_spine_followup_v1_b2',
-  };
+  static const Set<String> _w8W10LearnerRouteLockedPackIdsV1 = <String>{};
   static const int bankrollCap = 100;
   static const int bankrollRegenIntervalMinutes = 60;
   static const int bankrollRegenAmount = 10;
@@ -3279,6 +3270,20 @@ class ProgressService {
                 if (!world8CalibrationCompleted &&
                     !await isSpinePackCompletedV1('world8_spine_campaign_v1')) {
                   return 'world8_spine_campaign_v1';
+                }
+                final world9CalibrationCompleted =
+                    await isWorld9CalibrationCompletedV1();
+                if (!world9CalibrationCompleted &&
+                    !await isSpinePackCompletedV1('world9_spine_campaign_v1')) {
+                  return 'world9_spine_campaign_v1';
+                }
+                final world10CalibrationCompleted =
+                    await isWorld10CalibrationCompletedV1();
+                if (!world10CalibrationCompleted &&
+                    !await isSpinePackCompletedV1(
+                      'world10_spine_campaign_v1',
+                    )) {
+                  return 'world10_spine_campaign_v1';
                 }
                 return w7W10LearnerRouteGateTerminalPackIdV1;
               }

@@ -7,11 +7,11 @@ import 'package:poker_analyzer/services/progress_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const w8RouteEntryPacks = <String>{
-    'world8_spine_campaign_v1',
-    'world8_spine_followup_v1_b0',
-    'world8_spine_followup_v1_b1',
-    'world8_spine_followup_v1_b2',
+  const w9RouteEntryPacks = <String>{
+    'world9_spine_campaign_v1',
+    'world9_spine_followup_v1_b0',
+    'world9_spine_followup_v1_b1',
+    'world9_spine_followup_v1_b2',
   };
 
   const w10RouteEntryPacks = <String>{
@@ -21,48 +21,7 @@ void main() {
     'world10_spine_followup_v1_b2',
   };
 
-  test('W7 completion can route to W8 when W8 is incomplete', () async {
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      'onboardingCompleted': true,
-      'intake_completed_v1': true,
-      'intake_profile_v1':
-          '{"version":"v1","focusLabel":"baseline","skillBand":"advanced","placementScore":3}',
-      'spine_campaign_active_pack_id_v1': '',
-      'spine_campaign_next_hand_index_v1': 0,
-      'spine_campaign_completed_packs_v1':
-          'world1_act0_table_literacy,world1_act0_action_literacy,world1_act0_street_flow,world1_spine_campaign_v1,world1_spine_followup_v1_b2,world2_spine_followup_v1_b2,world3_spine_followup_v1_b2,world4_spine_followup_v1_b2,world5_spine_followup_v1_b2,world6_spine_campaign_v1,world6_spine_followup_v1_b2,world7_spine_campaign_v1,world7_spine_followup_v1_b2',
-      'spine_calibration_completed_v1': true,
-      'spine_calibration_band_v1': 2,
-      'world2_calibration_completed_v1': true,
-      'world3_calibration_completed_v1': true,
-      'world4_calibration_completed_v1': true,
-      'world5_calibration_completed_v1': true,
-      'world6_calibration_completed_v1': true,
-      'world7_calibration_completed_v1': true,
-      'world8_calibration_completed_v1': false,
-    });
-
-    final nextPack = await ProgressService.getNextSpinePackToRunV1();
-
-    expect(nextPack, 'world8_spine_campaign_v1');
-  });
-
-  test('active W8 pack state resumes W8 under admitted stale policy', () async {
-    for (final activePack in w8RouteEntryPacks) {
-      SharedPreferences.setMockInitialValues(<String, Object>{
-        'onboardingCompleted': true,
-        'intake_completed_v1': true,
-        'spine_campaign_active_pack_id_v1': activePack,
-        'spine_campaign_next_hand_index_v1': 1,
-      });
-
-      final nextPack = await ProgressService.getNextSpinePackToRunV1();
-
-      expect(nextPack, activePack, reason: activePack);
-    }
-  });
-
-  test('W8 completion opens W9 after separate route admission', () async {
+  test('W8 completion can route to W9 when W9 is incomplete', () async {
     SharedPreferences.setMockInitialValues(<String, Object>{
       'onboardingCompleted': true,
       'intake_completed_v1': true,
@@ -89,7 +48,50 @@ void main() {
     expect(nextPack, 'world9_spine_campaign_v1');
   });
 
-  test('active W10 pack state resumes after route admission', () async {
+  test('active W9 pack state resumes W9 under admitted stale policy', () async {
+    for (final activePack in w9RouteEntryPacks) {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'onboardingCompleted': true,
+        'intake_completed_v1': true,
+        'spine_campaign_active_pack_id_v1': activePack,
+        'spine_campaign_next_hand_index_v1': 1,
+      });
+
+      final nextPack = await ProgressService.getNextSpinePackToRunV1();
+
+      expect(nextPack, activePack, reason: activePack);
+    }
+  });
+
+  test('W9 completion opens W10 after separate route admission', () async {
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'onboardingCompleted': true,
+      'intake_completed_v1': true,
+      'intake_profile_v1':
+          '{"version":"v1","focusLabel":"baseline","skillBand":"advanced","placementScore":3}',
+      'spine_campaign_active_pack_id_v1': '',
+      'spine_campaign_next_hand_index_v1': 0,
+      'spine_campaign_completed_packs_v1':
+          'world1_act0_table_literacy,world1_act0_action_literacy,world1_act0_street_flow,world1_spine_campaign_v1,world1_spine_followup_v1_b2,world2_spine_followup_v1_b2,world3_spine_followup_v1_b2,world4_spine_followup_v1_b2,world5_spine_followup_v1_b2,world6_spine_campaign_v1,world6_spine_followup_v1_b2,world7_spine_campaign_v1,world7_spine_followup_v1_b2,world8_spine_campaign_v1,world8_spine_followup_v1_b2,world9_spine_campaign_v1,world9_spine_followup_v1_b2',
+      'spine_calibration_completed_v1': true,
+      'spine_calibration_band_v1': 2,
+      'world2_calibration_completed_v1': true,
+      'world3_calibration_completed_v1': true,
+      'world4_calibration_completed_v1': true,
+      'world5_calibration_completed_v1': true,
+      'world6_calibration_completed_v1': true,
+      'world7_calibration_completed_v1': true,
+      'world8_calibration_completed_v1': true,
+      'world9_calibration_completed_v1': true,
+      'world10_calibration_completed_v1': false,
+    });
+
+    final nextPack = await ProgressService.getNextSpinePackToRunV1();
+
+    expect(nextPack, 'world10_spine_campaign_v1');
+  });
+
+  test('active W10 pack state resumes W10 after route admission', () async {
     for (final activePack in w10RouteEntryPacks) {
       SharedPreferences.setMockInitialValues(<String, Object>{
         'onboardingCompleted': true,
@@ -104,8 +106,8 @@ void main() {
     }
   });
 
-  test('W8 route packs teach draw improvement with safe beginner copy', () {
-    for (final packId in w8RouteEntryPacks) {
+  test('W9 route packs teach pot price with safe beginner copy', () {
+    for (final packId in w9RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
       expect(pack, isNotNull, reason: packId);
       expect(pack, isNotEmpty, reason: packId);
@@ -124,13 +126,14 @@ void main() {
           .join(' ')
           .toLowerCase();
 
-      expect(copy, contains('draw'), reason: packId);
-      expect(copy, contains('improve'), reason: packId);
-      expect(copy, contains('future card'), reason: packId);
-      expect(copy, contains('flush draw'), reason: packId);
-      expect(copy, contains('open-ended'), reason: packId);
+      expect(copy, contains('pot'), reason: packId);
+      expect(copy, contains('call'), reason: packId);
+      expect(copy, contains('price'), reason: packId);
+      expect(copy, contains('fold'), reason: packId);
+      expect(copy, contains('risk'), reason: packId);
+      expect(copy, contains('reward'), reason: packId);
       expect(copy, isNot(contains('seat label')), reason: packId);
-      expect(copy, isNot(contains('range thinking lite')), reason: packId);
+      expect(copy, isNot(contains('bet purpose')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
       expect(copy, isNot(contains('gto')), reason: packId);
       expect(copy, isNot(contains('mastered')), reason: packId);

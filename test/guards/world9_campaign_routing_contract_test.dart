@@ -82,7 +82,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('world9 routing is blocked by active learner route gate', (
+  testWidgets('world9 routing is admitted by active learner route gate', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(<String, Object>{
@@ -106,7 +106,7 @@ void main() {
       'world9_calibration_completed_v1': false,
     });
     final expectedPackId = await ProgressService.getNextSpinePackToRunV1();
-    expect(expectedPackId, 'world6_spine_followup_v1_b2');
+    expect(expectedPackId, 'world9_spine_campaign_v1');
 
     await tester.pumpWidget(
       const MaterialApp(home: UniversalIntakePlanScreen()),

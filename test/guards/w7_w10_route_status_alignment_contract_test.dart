@@ -16,11 +16,7 @@ void main() {
     'world7_spine_followup_v1_b2',
   };
 
-  const blockedW9W10Packs = <String>{
-    'world9_spine_campaign_v1',
-    'world9_spine_followup_v1_b0',
-    'world9_spine_followup_v1_b1',
-    'world9_spine_followup_v1_b2',
+  const w10RouteEntryPacks = <String>{
     'world10_spine_campaign_v1',
     'world10_spine_followup_v1_b0',
     'world10_spine_followup_v1_b1',
@@ -241,26 +237,18 @@ void main() {
     expect(nextPack, 'world8_spine_campaign_v1');
   });
 
-  test(
-    'stale active W9-W10 pack state is not returned to learner route',
-    () async {
-      for (final activePack in blockedW9W10Packs) {
-        SharedPreferences.setMockInitialValues(<String, Object>{
-          'onboardingCompleted': true,
-          'intake_completed_v1': true,
-          'spine_campaign_active_pack_id_v1': activePack,
-          'spine_campaign_next_hand_index_v1': 0,
-        });
+  test('active W10 pack state resumes after route admission', () async {
+    for (final activePack in w10RouteEntryPacks) {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'onboardingCompleted': true,
+        'intake_completed_v1': true,
+        'spine_campaign_active_pack_id_v1': activePack,
+        'spine_campaign_next_hand_index_v1': 0,
+      });
 
-        final nextPack = await ProgressService.getNextSpinePackToRunV1();
+      final nextPack = await ProgressService.getNextSpinePackToRunV1();
 
-        expect(
-          nextPack,
-          isNot(activePack),
-          reason: '$activePack must not bypass the W8-W10 learner gate',
-        );
-        expect(nextPack, 'world6_spine_followup_v1_b2');
-      }
-    },
-  );
+      expect(nextPack, activePack, reason: activePack);
+    }
+  });
 }

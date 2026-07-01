@@ -200,8 +200,18 @@ Human-QA-ready, or public learning-effect claims.
 - W8 route entry is admitted through the existing post-W7 learner progression
   path after a W8 route-pack draw-improvement depth update.
 - W8 active pack continuation is admitted for W8 packs only.
-- W8 completed route state falls back to the existing W6 terminal until a
-  separate W9 admission wave.
-- Mapper and Practice CTA remain blocked for W7-W8.
-- W9-W12 remain locked until their future staged admission.
+- W8 completed route state can advance to W9 after the W9 route-admission
+  batch gate.
+- W9 route entry is admitted through the existing post-W8 learner progression
+  path after a W9 pot-price route-pack depth update.
+- W9 active pack continuation is admitted for W9 packs only.
+- W9 completed route state can advance to W10 after the W10 route-admission
+  batch gate.
+- W10 route entry is admitted through the existing post-W9 learner progression
+  path after a W10 bet-purpose route-pack depth update.
+- W10 active pack continuation is admitted for W10 packs only.
+- W10 completed route state falls back to the existing W6 terminal until a
+  separate W11 admission wave.
+- Mapper and Practice CTA remain blocked for W7-W10.
+- W11-W12 remain locked until their future staged admission.
 - No score movement is authorized by this checklist.

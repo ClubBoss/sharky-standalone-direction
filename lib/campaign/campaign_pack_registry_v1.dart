@@ -669,6 +669,472 @@ List<MicroTaskStep> _w8DrawImprovementFollowupB2V1() => <MicroTaskStep>[
   ),
 ];
 
+MicroTaskStep _w9CallPriceStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w9CallPriceCampaignPackV1() => <MicroTaskStep>[
+  _w9CallPriceStepV1(
+    prompt: 'Big pot, small call. Tap Button after reading the price.',
+    hint: 'A small call compared with the pot is a cheaper price.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['Ah', '9d', '4c'],
+    contextText:
+        'W9 follows W8: after draw improvement, compare the call cost to the pot reward.',
+    tradeoffText: 'Compare price to pot reward, or call without checking risk.',
+    consequenceText: 'Price read: +8 chips. Risk-blind call: -6 chips.',
+    insightText:
+        'Pot odds start simple: the price of a call is cheap or expensive compared with the pot.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Small pot, large call. Tap Cutoff after naming the risk.',
+    hint: 'A large call into a small pot is an expensive price.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', '8d', '3c'],
+    contextText:
+        'The same pot-price idea can warn you when the risk is too large.',
+    tradeoffText:
+        'Notice the expensive call, or chase reward without price discipline.',
+    consequenceText: 'Risk checked: +8 chips. Price leak: -6 chips.',
+    insightText:
+        'An expensive call asks for more reward because the risk is larger.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Same hand, different pot. Tap Big Blind after comparing prices.',
+    hint: 'The pot size changes whether a call price feels cheap or expensive.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qh', '7s', '2d'],
+    contextText:
+        'W9 is comparison practice: price only makes sense next to the pot.',
+    tradeoffText: 'Compare both spots, or judge the call amount alone.',
+    consequenceText:
+        'Comparison read: +8 chips. Isolated-price miss: -6 chips.',
+    insightText:
+        'A call can be better in a bigger pot because the reward is larger.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Cheap call or fold? Tap Hijack after weighing risk and reward.',
+    hint: 'Cheap price can support a call, but it does not promise a win.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Jh', 'Th', '5c'],
+    contextText:
+        'Keep W9 claim-safe: pot price informs call or fold, not the exact result.',
+    tradeoffText: 'Use risk and reward, or pretend odds guarantee the outcome.',
+    consequenceText: 'Claim-safe call read: +8 chips. Result claim: -6 chips.',
+    insightText:
+        'Odds guide the call/fold decision by comparing risk to pot reward.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Final W9 check: price before call. Tap Small Blind.',
+    hint: 'Compare pot, call price, risk, and reward before choosing.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['9s', '8d', '4h'],
+    contextText:
+        'W9 closes as a route bridge from draw potential to call-price discipline.',
+    tradeoffText: 'Check the price first, or click call/fold by habit.',
+    consequenceText: 'Discipline close: +8 chips. Habit click: -6 chips.',
+    insightText:
+        'The safer read is simple: pot reward and call price shape risk before action.',
+  ),
+];
+
+List<MicroTaskStep> _w9CallPriceFollowupB0V1() => <MicroTaskStep>[
+  _w9CallPriceStepV1(
+    prompt: 'Large pot, tiny call. Tap Button after the cheap-price read.',
+    hint: 'Cheap price means less risk for the pot reward.',
+    boardCards: <String>['Ad', 'Td', '3s'],
+    contextText:
+        'B0 repairs the easy miss: call price is relative to pot size.',
+    tradeoffText:
+        'Compare the price to the pot, or treat every call amount the same.',
+    consequenceText:
+        'Relative-price read: +8 chips. Same-price leak: -6 chips.',
+    insightText:
+        'A small call can be attractive when the pot reward is already large.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Small pot, big call. Tap Cutoff after the expensive-price read.',
+    hint: 'More risk needs more reward.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Kh', '6d', '2c'],
+    contextText: 'B0 repeats the expensive-call side of the comparison.',
+    tradeoffText:
+        'Respect the larger risk, or chase with weak price discipline.',
+    consequenceText: 'Risk respected: +8 chips. Chase leak: -6 chips.',
+    insightText:
+        'An expensive call is not forbidden, but it needs enough pot reward.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Call or fold after price check. Tap Big Blind.',
+    hint: 'Price helps decide whether the risk is worth continuing.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qs', 'Jd', '4c'],
+    contextText: 'B0 keeps the action tied to pot and price.',
+    tradeoffText:
+        'Use the price to choose call/fold, or decide from hand hope alone.',
+    consequenceText: 'Action priced: +8 chips. Hope call: -6 chips.',
+    insightText:
+        'Call/fold discipline starts by comparing the call price to the pot.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Transfer W9: bigger pot improves the same call price. Tap Hijack.',
+    hint: 'The same risk can look better with more reward.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['8h', '7h', '2s'],
+    contextText: 'B0 closes with direct risk/reward transfer.',
+    tradeoffText:
+        'Transfer the price idea, or restart from guessing each spot.',
+    consequenceText: 'Transfer held: +8 chips. Guess reset: -6 chips.',
+    insightText:
+        'The same call price can be more attractive when the pot reward is bigger.',
+  ),
+];
+
+List<MicroTaskStep> _w9CallPriceFollowupB1V1() => <MicroTaskStep>[
+  _w9CallPriceStepV1(
+    prompt: 'Medium pot, medium call. Tap Button after checking the price.',
+    hint: 'Not every spot is clearly cheap or clearly expensive.',
+    boardCards: <String>['Ac', '8s', '5d'],
+    contextText: 'B1 adds middle-price judgment without heavy math.',
+    tradeoffText:
+        'Keep comparing pot and call price, or force a simple label too fast.',
+    consequenceText: 'Balanced price read: +8 chips. Forced label: -6 chips.',
+    insightText:
+        'Pot odds can be a spectrum: price, risk, and reward still guide the decision.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Cheap call with weak reward. Tap Small Blind.',
+    hint: 'Cheap price helps, but reward still matters.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Kd', '9c', '2h'],
+    contextText: 'B1 prevents cheap-price autopilot.',
+    tradeoffText: 'Check reward too, or call only because the price is small.',
+    consequenceText: 'Reward checked: +8 chips. Cheap-only leak: -6 chips.',
+    insightText:
+        'A cheap call can still be wrong if the reward side is not good enough.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Expensive call with big reward. Tap Cutoff.',
+    hint: 'Big pot reward can make more risk worth considering.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Qd', 'Td', '6s'],
+    contextText: 'B1 keeps expensive calls from being auto-folds.',
+    tradeoffText:
+        'Compare risk to reward, or fold every larger price automatically.',
+    consequenceText: 'Risk/reward read: +8 chips. Auto-fold leak: -6 chips.',
+    insightText:
+        'An expensive call needs more reward, but price alone does not decide.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Final B1 transfer: pot and price together. Tap Big Blind.',
+    hint: 'The call price only makes sense next to the pot.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Jh', '8s', '3d'],
+    contextText: 'B1 closes with a beginner-safe pot odds summary.',
+    tradeoffText: 'Use pot plus price, or judge the call without context.',
+    consequenceText: 'Context read: +8 chips. Context-free call: -6 chips.',
+    insightText: 'Pot, call, price, risk, and reward are the core W9 words.',
+  ),
+];
+
+List<MicroTaskStep> _w9CallPriceFollowupB2V1() => <MicroTaskStep>[
+  _w9CallPriceStepV1(
+    prompt: 'Draw from W8, price from W9. Tap Button after combining them.',
+    hint: 'A draw can improve, but the call price still matters.',
+    boardCards: <String>['Jh', 'Th', '4c'],
+    contextText: 'B2 connects W8 draw potential to W9 pot-price discipline.',
+    tradeoffText: 'Use draw plus price, or call every draw regardless of risk.',
+    consequenceText: 'Combined read: +8 chips. Any-draw call: -6 chips.',
+    insightText:
+        'A draw gives possible reward, while the pot and call price define risk.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'No clear draw, expensive call. Tap Cutoff after the fold warning.',
+    hint: 'High risk and weak reward can point toward fold.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', '8d', '2c'],
+    contextText: 'B2 adds a fold-friendly price spot without overclaiming.',
+    tradeoffText: 'Let price warn you, or continue with no clear reward.',
+    consequenceText: 'Fold warning read: +8 chips. Price ignore: -6 chips.',
+    insightText:
+        'Fold can be disciplined when the call price is high and reward is thin.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Clear draw, cheap call. Tap Small Blind after the call support.',
+    hint: 'Cheap price plus possible reward can support continuing.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Ah', '9h', '3s'],
+    contextText: 'B2 contrasts a better call-price spot.',
+    tradeoffText: 'Use price plus reward, or ignore the cheap path.',
+    consequenceText: 'Call support read: +8 chips. Missed price: -6 chips.',
+    insightText:
+        'A cheap call with visible reward can be easier to justify than a costly call.',
+  ),
+  _w9CallPriceStepV1(
+    prompt: 'Final W9 transfer: price shapes call or fold. Tap Big Blind.',
+    hint: 'No exact math needed: compare risk and reward first.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qs', '7s', '5d'],
+    contextText: 'B2 closes W9 before bet-purpose work.',
+    tradeoffText:
+        'Use risk/reward discipline, or claim the result from price alone.',
+    consequenceText: 'Safe close: +8 chips. Result claim: -6 chips.',
+    insightText:
+        'Pot odds guide call/fold choices; they do not guarantee the outcome.',
+  ),
+];
+
+MicroTaskStep _w10BetPurposeStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w10BetPurposeCampaignPackV1() => <MicroTaskStep>[
+  _w10BetPurposeStepV1(
+    prompt: 'Strong hand, worse hands can call. Tap Button.',
+    hint: 'Value means the bet purpose is getting called by worse hands.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['Ah', 'Kd', '4c'],
+    contextText:
+        'W10 follows W9: after price discipline, ask why the bet is made.',
+    tradeoffText:
+        'Name the value purpose, or confuse it with making stronger hands fold.',
+    consequenceText: 'Value read: +8 chips. Purpose mix-up: -6 chips.',
+    insightText:
+        'A value bet is mainly for worse hands to call; it does not promise the result.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Weak hand, stronger hands might fold. Tap Cutoff.',
+    hint: 'This bet purpose is about making stronger hands fold.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Qs', '9d', '3c'],
+    contextText:
+        'The contrast is simple: value wants worse calls; this purpose wants stronger folds.',
+    tradeoffText:
+        'Read the stronger-hands-fold purpose, or call every bet value.',
+    consequenceText: 'Purpose contrast: +8 chips. Value-only leak: -6 chips.',
+    insightText:
+        'A pressure bet can target stronger hands folding, but it does not guarantee a fold.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Worse calls or stronger folds? Tap Big Blind after comparing.',
+    hint: 'Bet purpose starts with who you want to continue or fold.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Jh', '8h', '2s'],
+    contextText:
+        'W10 comparison practice keeps value separate from stronger-hands-fold purpose.',
+    tradeoffText: 'Compare both purposes, or label the bet from size alone.',
+    consequenceText: 'Comparison read: +8 chips. Size-only miss: -6 chips.',
+    insightText:
+        'The same bet size can have different purpose depending on worse hands and stronger hands.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Bet purpose before click. Tap Hijack.',
+    hint: 'Ask whether the bet wants worse calls or stronger folds.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Td', '7c', '2h'],
+    contextText:
+        'This is beginner-safe W10: purpose before action, no advanced labels needed.',
+    tradeoffText: 'Name the purpose, or bet without knowing the target.',
+    consequenceText: 'Target named: +8 chips. Blind bet: -6 chips.',
+    insightText:
+        'Bet purpose is a target: worse hands calling or stronger hands folding.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt:
+        'Final W10 check: value is not stronger-hands-fold. Tap Small Blind.',
+    hint: 'Keep the two purposes separate.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['As', 'Qc', '5d'],
+    contextText: 'W10 closes by separating value from pressure.',
+    tradeoffText:
+        'Keep purpose clear, or claim every bet does both jobs equally.',
+    consequenceText: 'Clear close: +8 chips. Blended-purpose leak: -6 chips.',
+    insightText:
+        'Value targets worse hands calling; pressure targets stronger hands folding.',
+  ),
+];
+
+List<MicroTaskStep> _w10BetPurposeFollowupB0V1() => <MicroTaskStep>[
+  _w10BetPurposeStepV1(
+    prompt: 'Top pair, worse hands can call. Tap Button.',
+    hint: 'Value purpose: worse hands continue.',
+    boardCards: <String>['Kh', '9s', '4d'],
+    contextText: 'B0 repairs the value side with a concrete made-hand spot.',
+    tradeoffText:
+        'Choose worse-hands-call value, or say the bet is only to make folds.',
+    consequenceText: 'Value repair: +8 chips. Fold-only leak: -6 chips.',
+    insightText: 'When worse hands can call, the bet purpose can be value.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Missed hand, stronger hands may fold. Tap Cutoff.',
+    hint: 'Pressure purpose: stronger hands folding.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Qd', '8c', '3s'],
+    contextText: 'B0 repairs the stronger-hands-fold side.',
+    tradeoffText:
+        'Name the pressure purpose, or call it value without worse calls.',
+    consequenceText: 'Pressure repair: +8 chips. Value label leak: -6 chips.',
+    insightText:
+        'A bet can target stronger hands folding when worse calls are not the story.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Strong hand but no worse calls. Tap Big Blind.',
+    hint: 'Value needs worse hands that can call.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Ah', 'As', '7c'],
+    contextText: 'B0 prevents automatic value labels.',
+    tradeoffText:
+        'Check whether worse hands call, or name value from strength alone.',
+    consequenceText: 'Target checked: +8 chips. Strength-only label: -6 chips.',
+    insightText:
+        'Hand strength helps, but value purpose needs worse hands to call.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Transfer W10: ask who continues. Tap Hijack.',
+    hint: 'Worse calls and stronger folds are different targets.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Jc', '9c', '2d'],
+    contextText: 'B0 closes with target-recognition transfer.',
+    tradeoffText: 'Transfer the target question, or restart from bet size.',
+    consequenceText: 'Transfer held: +8 chips. Size reset: -6 chips.',
+    insightText: 'Purpose starts with the target, not with a promised result.',
+  ),
+];
+
+List<MicroTaskStep> _w10BetPurposeFollowupB1V1() => <MicroTaskStep>[
+  _w10BetPurposeStepV1(
+    prompt: 'Medium hand, worse hands can still call. Tap Button.',
+    hint: 'Value can be simple: worse calls are available.',
+    boardCards: <String>['Qh', '7d', '3c'],
+    contextText:
+        'B1 adds a less obvious value example without thin-value jargon.',
+    tradeoffText:
+        'Look for worse calls, or assume only very strong hands can value bet.',
+    consequenceText: 'Worse-call read: +8 chips. Too-narrow value: -6 chips.',
+    insightText:
+        'Value purpose means worse hands can call, even when the hand is not the nuts.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Weak hand, fold target is stronger hands. Tap Small Blind.',
+    hint: 'The purpose is not value if worse calls are not the plan.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Ks', 'Ts', '4h'],
+    contextText: 'B1 repeats the stronger-hands-fold side in new wording.',
+    tradeoffText: 'Name the fold target, or mislabel pressure as value.',
+    consequenceText: 'Fold target read: +8 chips. Mislabel leak: -6 chips.',
+    insightText:
+        'Trying to make stronger hands fold is a different purpose from value.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Same bet size, different purpose. Tap Cutoff.',
+    hint: 'Size alone does not tell you value or stronger-hands-fold purpose.',
+    expectedSeatId: 'co',
+    boardCards: <String>['9h', '8d', '2c'],
+    contextText: 'B1 compares purpose without changing to advanced strategy.',
+    tradeoffText: 'Use target hands, or infer purpose from size only.',
+    consequenceText: 'Target comparison: +8 chips. Size-only trap: -6 chips.',
+    insightText:
+        'Bet purpose depends on worse hands calling or stronger hands folding.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Final B1 transfer: purpose before result. Tap Big Blind.',
+    hint: 'Purpose guides the bet; it does not lock what happens.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Ad', '6s', '2h'],
+    contextText: 'B1 keeps claim safety explicit.',
+    tradeoffText: 'Read the purpose, or claim the bet proves the result.',
+    consequenceText: 'Claim-safe read: +8 chips. Result claim: -6 chips.',
+    insightText:
+        'A value or stronger-hands-fold purpose is a plan, not a locked result.',
+  ),
+];
+
+List<MicroTaskStep> _w10BetPurposeFollowupB2V1() => <MicroTaskStep>[
+  _w10BetPurposeStepV1(
+    prompt: 'W9 price was good; W10 asks why bet. Tap Button.',
+    hint: 'Call price and bet purpose are different questions.',
+    boardCards: <String>['Ah', 'Jd', '5c'],
+    contextText: 'B2 connects W9 price discipline to W10 purpose discipline.',
+    tradeoffText:
+        'Ask the bet-purpose question, or reuse call-price logic only.',
+    consequenceText: 'Purpose bridge: +8 chips. Old-question leak: -6 chips.',
+    insightText:
+        'W9 asks about call price; W10 asks whether worse hands call or stronger hands fold.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Value spot: worse hands can call. Tap Cutoff.',
+    hint: 'Value is about worse hands continuing.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Kd', 'Qc', '6h'],
+    contextText: 'B2 repeats the value target in compact form.',
+    tradeoffText:
+        'Choose worse-hands-call purpose, or chase stronger folds by mistake.',
+    consequenceText: 'Value target: +8 chips. Wrong target: -6 chips.',
+    insightText:
+        'A value bet wants worse hands to call, not stronger hands to fold.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt: 'Pressure spot: stronger hands can fold. Tap Small Blind.',
+    hint: 'This purpose targets stronger hands folding.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Qh', '9s', '4d'],
+    contextText: 'B2 repeats the pressure target in compact form.',
+    tradeoffText:
+        'Choose stronger-hands-fold purpose, or call it value by habit.',
+    consequenceText: 'Pressure target: +8 chips. Habit label: -6 chips.',
+    insightText:
+        'A stronger-hands-fold purpose is different from worse hands calling.',
+  ),
+  _w10BetPurposeStepV1(
+    prompt:
+        'Final W10 transfer: name the target before betting. Tap Big Blind.',
+    hint: 'Worse calls or stronger folds: pick one safe purpose.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Ts', '7c', '3d'],
+    contextText: 'B2 closes W10 before W11 remains locked.',
+    tradeoffText: 'Name the target, or make an unfocused bet.',
+    consequenceText: 'Safe close: +8 chips. Unfocused bet: -6 chips.',
+    insightText:
+        'Bet purpose is beginner-safe when the target is clear and claims stay bounded.',
+  ),
+];
+
 String _stepNarrativeTextV1(MicroTaskStep step) {
   return [
     step.prompt,
@@ -3534,343 +4000,21 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
 
   'world8_spine_followup_v1_b2': _w8DrawImprovementFollowupB2V1(),
 
-  'world9_spine_campaign_v1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: anchor the seat map first.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Start each set by anchoring the seat map on Button.',
-      tradeoffText: 'Anchor the map first, or guess seat labels.',
-      consequenceText: 'Anchor set: +8 chips. Seat guess: -6 chips.',
-      insightText: 'Button is the anchor for seat-order drills.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: identify the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Blind seats are position labels in this set.',
-      tradeoffText: 'Name the blind seat now, or mix labels later.',
-      consequenceText: 'Blind seat read: +8 chips. Mixed labels: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Big Blind completes the two-seat blind pair.',
-      tradeoffText: 'Complete the pair, or leave the map incomplete.',
-      consequenceText:
-          'Blind pair complete: +8 chips. Incomplete map: -6 chips.',
-      insightText: 'BB is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: continue seat order away from blinds.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'This step checks seat labels beyond Button and blinds.',
-      tradeoffText: 'Use seat-order labels, or click by shape only.',
-      consequenceText: 'Seat order held: +8 chips. Label drift: -6 chips.',
-      insightText: 'Hijack is a seat-order label, not an action-order rule.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: confirm the late-position seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Cutoff is a seat label in the late-position group.',
-      tradeoffText: 'Confirm the label, or mix late seats.',
-      consequenceText:
-          'Late seat confirmed: +8 chips. Late-seat miss: -6 chips.',
-      insightText: 'Cutoff sits before Button in seat order.',
-    ),
-  ],
+  'world9_spine_campaign_v1': _w9CallPriceCampaignPackV1(),
 
-  'world9_spine_followup_v1_b0': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: restart from the seat-order anchor.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'B0 repeats core labels with short checks.',
-      tradeoffText: 'Start from the anchor, or guess the map.',
-      consequenceText: 'Anchor restart: +8 chips. Guess start: -6 chips.',
-      insightText: 'Restart from Button when the map feels noisy.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: verify blind label quickly.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Short followup keeps blind labels accurate.',
-      tradeoffText: 'Verify the seat label, or drift by memory.',
-      consequenceText: 'Blind verified: +8 chips. Label drift: -6 chips.',
-      insightText: 'Blind labels should stay automatic.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair again.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Pairing SB and BB prevents blind-label misses.',
-      tradeoffText: 'Complete the pair, or leave a gap.',
-      consequenceText: 'Pair complete: +8 chips. Gap left: -6 chips.',
-      insightText: 'SB and BB should be checked as a pair.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: finish on the late seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Final step checks a non-blind late seat label.',
-      tradeoffText: 'Finish with seat order, or revert to guessing.',
-      consequenceText: 'Late label finish: +8 chips. Guess finish: -6 chips.',
-      insightText: 'Cutoff and Button should stay distinct.',
-    ),
-  ],
+  'world9_spine_followup_v1_b0': _w9CallPriceFollowupB0V1(),
 
-  'world9_spine_followup_v1_b1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: seat order before Button.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'This followup reinforces late-seat order only.',
-      tradeoffText: 'Use seat-order wording, or imply action order.',
-      consequenceText: 'Seat order clear: +8 chips. Wording drift: -6 chips.',
-      insightText: 'Cutoff is before Button in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: keep the anchor label precise.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Anchor label checks support faster seat reads.',
-      tradeoffText: 'Confirm the anchor, or click by habit.',
-      consequenceText: 'Anchor confirmed: +8 chips. Habit miss: -6 chips.',
-      insightText: 'Button remains the anchor seat label.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: check the middle seat label.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'Middle-seat labels break anchor-only habits.',
-      tradeoffText: 'Read the label, or overuse anchor cues.',
-      consequenceText:
-          'Middle seat read: +8 chips. Anchor-only miss: -6 chips.',
-      insightText: 'Hijack is a position label in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: finish with the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Close by returning to a blind label check.',
-      tradeoffText: 'Finish on a clear blind label, or end on drift.',
-      consequenceText: 'Blind close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-  ],
+  'world9_spine_followup_v1_b1': _w9CallPriceFollowupB1V1(),
 
-  'world9_spine_followup_v1_b2': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: seat label first, then decision.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Separate seat recognition from later hand decisions.',
-      tradeoffText: 'Name the seat first, or mix tasks together.',
-      consequenceText: 'Tasks separated: +8 chips. Mixed tasks: -6 chips.',
-      insightText: 'Seat labels and action decisions are different checks.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: confirm the second blind seat.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Blind-seat order should remain stable under repetition.',
-      tradeoffText: 'Confirm the blind seat, or drift on labels.',
-      consequenceText: 'Blind confirmed: +8 chips. Label drift: -6 chips.',
-      insightText: 'Big Blind is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: keep late-seat labels distinct.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Late-seat labels should stay precise under repetition.',
-      tradeoffText: 'Keep labels distinct, or merge late seats.',
-      consequenceText:
-          'Late-seat precision: +8 chips. Merged labels: -6 chips.',
-      insightText: 'Cutoff and Button are different late seats.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: close on the anchor seat label.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Closing on the anchor confirms the full seat map.',
-      tradeoffText: 'Close on the anchor, or finish on drift.',
-      consequenceText: 'Anchor close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Close on Button to reset the seat map.',
-    ),
-  ],
+  'world9_spine_followup_v1_b2': _w9CallPriceFollowupB2V1(),
 
-  'world10_spine_campaign_v1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: anchor the seat map first.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Start each set by anchoring the seat map on Button.',
-      tradeoffText: 'Anchor the map first, or guess seat labels.',
-      consequenceText: 'Anchor set: +8 chips. Seat guess: -6 chips.',
-      insightText: 'Button is the anchor for seat-order drills.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: identify the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Blind seats are position labels in this set.',
-      tradeoffText: 'Name the blind seat now, or mix labels later.',
-      consequenceText: 'Blind seat read: +8 chips. Mixed labels: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Big Blind completes the two-seat blind pair.',
-      tradeoffText: 'Complete the pair, or leave the map incomplete.',
-      consequenceText:
-          'Blind pair complete: +8 chips. Incomplete map: -6 chips.',
-      insightText: 'BB is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: continue seat order away from blinds.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'This step checks seat labels beyond Button and blinds.',
-      tradeoffText: 'Use seat-order labels, or click by shape only.',
-      consequenceText: 'Seat order held: +8 chips. Label drift: -6 chips.',
-      insightText: 'Hijack is a seat-order label, not an action-order rule.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: confirm the late-position seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Cutoff is a seat label in the late-position group.',
-      tradeoffText: 'Confirm the label, or mix late seats.',
-      consequenceText:
-          'Late seat confirmed: +8 chips. Late-seat miss: -6 chips.',
-      insightText: 'Cutoff sits before Button in seat order.',
-    ),
-  ],
+  'world10_spine_campaign_v1': _w10BetPurposeCampaignPackV1(),
 
-  'world10_spine_followup_v1_b0': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: restart from the seat-order anchor.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'B0 repeats core labels with short checks.',
-      tradeoffText: 'Start from the anchor, or guess the map.',
-      consequenceText: 'Anchor restart: +8 chips. Guess start: -6 chips.',
-      insightText: 'Restart from Button when the map feels noisy.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: verify blind label quickly.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Short followup keeps blind labels accurate.',
-      tradeoffText: 'Verify the seat label, or drift by memory.',
-      consequenceText: 'Blind verified: +8 chips. Label drift: -6 chips.',
-      insightText: 'Blind labels should stay automatic.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair again.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Pairing SB and BB prevents blind-label misses.',
-      tradeoffText: 'Complete the pair, or leave a gap.',
-      consequenceText: 'Pair complete: +8 chips. Gap left: -6 chips.',
-      insightText: 'SB and BB should be checked as a pair.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: finish on the late seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Final step checks a non-blind late seat label.',
-      tradeoffText: 'Finish with seat order, or revert to guessing.',
-      consequenceText: 'Late label finish: +8 chips. Guess finish: -6 chips.',
-      insightText: 'Cutoff and Button should stay distinct.',
-    ),
-  ],
+  'world10_spine_followup_v1_b0': _w10BetPurposeFollowupB0V1(),
 
-  'world10_spine_followup_v1_b1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: seat order before Button.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'This followup reinforces late-seat order only.',
-      tradeoffText: 'Use seat-order wording, or imply action order.',
-      consequenceText: 'Seat order clear: +8 chips. Wording drift: -6 chips.',
-      insightText: 'Cutoff is before Button in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: keep the anchor label precise.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Anchor label checks support faster seat reads.',
-      tradeoffText: 'Confirm the anchor, or click by habit.',
-      consequenceText: 'Anchor confirmed: +8 chips. Habit miss: -6 chips.',
-      insightText: 'Button remains the anchor seat label.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: check the middle seat label.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'Middle-seat labels break anchor-only habits.',
-      tradeoffText: 'Read the label, or overuse anchor cues.',
-      consequenceText:
-          'Middle seat read: +8 chips. Anchor-only miss: -6 chips.',
-      insightText: 'Hijack is a position label in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: finish with the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Close by returning to a blind label check.',
-      tradeoffText: 'Finish on a clear blind label, or end on drift.',
-      consequenceText: 'Blind close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-  ],
+  'world10_spine_followup_v1_b1': _w10BetPurposeFollowupB1V1(),
 
-  'world10_spine_followup_v1_b2': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: seat label first, then decision.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Separate seat recognition from later hand decisions.',
-      tradeoffText: 'Name the seat first, or mix tasks together.',
-      consequenceText: 'Tasks separated: +8 chips. Mixed tasks: -6 chips.',
-      insightText: 'Seat labels and action decisions are different checks.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: confirm the second blind seat.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Blind-seat order should remain stable under repetition.',
-      tradeoffText: 'Confirm the blind seat, or drift on labels.',
-      consequenceText: 'Blind confirmed: +8 chips. Label drift: -6 chips.',
-      insightText: 'Big Blind is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: keep late-seat labels distinct.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Late-seat labels should stay precise under repetition.',
-      tradeoffText: 'Keep labels distinct, or merge late seats.',
-      consequenceText:
-          'Late-seat precision: +8 chips. Merged labels: -6 chips.',
-      insightText: 'Cutoff and Button are different late seats.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: close on the anchor seat label.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Closing on the anchor confirms the full seat map.',
-      tradeoffText: 'Close on the anchor, or finish on drift.',
-      consequenceText: 'Anchor close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Close on Button to reset the seat map.',
-    ),
-  ],
+  'world10_spine_followup_v1_b2': _w10BetPurposeFollowupB2V1(),
 });
 
 const Set<String> kCampaignPackIdsV1 = <String>{
