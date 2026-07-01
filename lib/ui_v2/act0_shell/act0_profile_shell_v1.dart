@@ -1048,6 +1048,19 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
+    Act0AchievementV1? firstAchievement;
+    Act0AchievementV1? firstUnlockedAchievement;
+    for (final achievement in profile.achievements) {
+      if (achievement.label.trim().isEmpty) {
+        continue;
+      }
+      firstAchievement ??= achievement;
+      if (!achievement.locked) {
+        firstUnlockedAchievement = achievement;
+        break;
+      }
+    }
+    final achievementProof = firstUnlockedAchievement ?? firstAchievement;
     final tiles = <_ProfileProofTileDataV1>[
       _ProfileProofTileDataV1(
         title: _profileCopyV1(context, en: 'Lessons', ru: 'Уроки'),
@@ -1078,14 +1091,13 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
           icon: Icons.fact_check_rounded,
           tone: Act0VisualCanonV1.bluePrimary,
         ),
-      if (profile.achievements.isNotEmpty)
+      if (achievementProof != null)
         _ProfileProofTileDataV1(
-          title: _profileCopyV1(context, en: 'Earned', ru: 'Получено'),
-          value: _profileCopyV1(
-            context,
-            en: 'Small wins Sharky can prove',
-            ru: 'Малые победы, которые Шарки может подтвердить',
-          ),
+          title: firstUnlockedAchievement != null
+              ? _profileCopyV1(context, en: 'Earned', ru: 'Получено')
+              : _profileCopyV1(context, en: 'Next proof', ru: 'Следующая цель'),
+          value: achievementProof.label,
+          valueKey: const Key('act0_shell_profile_earned_proof_value'),
           icon: Icons.emoji_events_rounded,
           tone: Act0VisualCanonV1.greenTable,
         ),
@@ -1182,12 +1194,14 @@ class _ProfileProofTileDataV1 {
     required this.value,
     required this.icon,
     required this.tone,
+    this.valueKey,
   });
 
   final String title;
   final String value;
   final IconData icon;
   final Color tone;
+  final Key? valueKey;
 }
 
 class _ProfileProofTileV1 extends StatelessWidget {
@@ -1228,6 +1242,7 @@ class _ProfileProofTileV1 extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             tile.value,
+            key: tile.valueKey,
             maxLines: 2,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),

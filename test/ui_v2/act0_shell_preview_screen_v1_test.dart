@@ -11558,11 +11558,13 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_shell_welcome_handoff_proof_block')),
-      findsNothing,
+      findsOneWidget,
     );
     expect(find.text('Read'), findsNothing);
     expect(find.text('Reason'), findsNothing);
     expect(find.text('Move on'), findsNothing);
+    expect(find.text('Quick check'), findsOneWidget);
+    expect(find.text('First hand'), findsOneWidget);
     expect(find.text('Your first useful hand is ready.'), findsOneWidget);
     expect(find.textContaining('Your first lesson is ready'), findsOneWidget);
     expect(
@@ -11576,13 +11578,16 @@ void main() {
       ),
       findsNothing,
     );
-    final frameBottom = tester
-        .getBottomLeft(find.byKey(const Key('act0_shell_welcome_beat_frame')))
+    final viewportHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    final progressTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_welcome_progress_label')))
         .dy;
-    final ctaTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_welcome_primary_cta')))
+    final ctaBottom = tester
+        .getBottomLeft(find.byKey(const Key('act0_shell_welcome_primary_cta')))
         .dy;
-    expect(ctaTop - frameBottom, lessThanOrEqualTo(180));
+    expect(progressTop, lessThan(viewportHeight * 0.20));
+    expect(ctaBottom, greaterThan(viewportHeight * 0.80));
 
     expect(find.text('Open first lesson'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
@@ -11800,6 +11805,24 @@ void main() {
       expect(find.textContaining('of 329 tasks complete'), findsNothing);
     },
   );
+
+  testWidgets('Profile Earned tile shows concrete unlocked proof above fold', (
+    tester,
+  ) async {
+    await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
+
+    final earnedProof = find.byKey(
+      const Key('act0_shell_profile_earned_proof_value'),
+    );
+    expect(earnedProof, findsOneWidget);
+    expect(tester.widget<Text>(earnedProof).data, equals('First clear read'));
+    expect(find.text('Small wins Sharky can prove'), findsNothing);
+
+    final profileBottom = tester
+        .getBottomLeft(find.byKey(const Key('act0_shell_profile_screen')))
+        .dy;
+    expect(tester.getTopLeft(earnedProof).dy, lessThan(profileBottom));
+  });
 
   testWidgets('Profile recent gains dedupe repeated labels in display', (
     tester,

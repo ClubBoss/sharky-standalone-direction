@@ -140,7 +140,13 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           title: _copyV1(en: 'First hand ready', ru: 'Первая раздача готова'),
           accent: Act0ShellTokensV1.gold,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
-          child: const SizedBox.shrink(),
+          child: Container(
+            key: const Key('act0_shell_welcome_handoff_proof_block'),
+            child: _WelcomeLaunchPathV1(
+              copy: ({required String en, required String ru}) =>
+                  _copyV1(en: en, ru: ru),
+            ),
+          ),
         ),
         ctaLabel: _copyV1(
           en: widget.replayMode ? 'Back to profile' : 'Open first lesson',
@@ -221,9 +227,6 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: centerContent
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
           children: [
             _WelcomeTopBarV1(
               beatIndex: beatIndex,
@@ -232,18 +235,14 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
               onClose: onClose,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapLg),
-            if (centerContent)
-              Flexible(
-                fit: FlexFit.loose,
+            Expanded(
+              child: Align(
+                alignment: centerContent
+                    ? Alignment.center
+                    : Alignment.topCenter,
                 child: SingleChildScrollView(child: beatFrame),
-              )
-            else
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: SingleChildScrollView(child: beatFrame),
-                ),
               ),
+            ),
             const SizedBox(height: Act0ShellTokensV1.gapLg),
             SizedBox(
               width: double.infinity,
