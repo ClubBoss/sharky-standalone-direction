@@ -3,6 +3,8 @@ import 'dart:io';
 
 const _outputRootPathV1 = 'output/screen_review/current';
 const _schemaV1 = 'screen_review_fast_v1';
+const _routeVisualAuditValidityV1 = 'legacy_reference_not_for_audit';
+const _routeAllowedUseV1 = 'route_state_smoke_evidence_only';
 
 class _CaptureSurfaceV1 {
   const _CaptureSurfaceV1(
@@ -14,6 +16,34 @@ class _CaptureSurfaceV1 {
   final String name;
   final String debugSurface;
   final String scrollViewport;
+}
+
+class _RouteCaptureSurfaceV1 {
+  const _RouteCaptureSurfaceV1(
+    this.name,
+    this.packId,
+    this.moduleTitle, {
+    this.startHandIndex = 0,
+  });
+
+  final String name;
+  final String packId;
+  final String moduleTitle;
+  final int startHandIndex;
+}
+
+class _ActiveRouteCaptureSurfaceV1 {
+  const _ActiveRouteCaptureSurfaceV1(
+    this.name,
+    this.world,
+    this.taskIndex,
+    this.captureKind,
+  );
+
+  final String name;
+  final int world;
+  final int taskIndex;
+  final String captureKind;
 }
 
 const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
@@ -128,6 +158,115 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
   ],
 };
 
+const _routeW7W12CaptureSurfacesV1 = <_RouteCaptureSurfaceV1>[
+  _RouteCaptureSurfaceV1(
+    'w7_first_route_task',
+    'world7_spine_campaign_v1',
+    'W7 Visible Cards Narrow Ranges',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w8_first_route_task',
+    'world8_spine_campaign_v1',
+    'W8 Draws Can Improve',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w9_first_route_task',
+    'world9_spine_campaign_v1',
+    'W9 Call Price',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w10_first_route_task',
+    'world10_spine_campaign_v1',
+    'W10 Bet Purpose',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w11_danger_texture_task',
+    'world11_spine_campaign_v1',
+    'W11 Texture Danger',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w12_first_review_task',
+    'world12_spine_campaign_v1',
+    'W12 Review Payoff',
+  ),
+  _RouteCaptureSurfaceV1(
+    'w12_payoff_completion',
+    'world12_spine_campaign_v1',
+    'W12 Review Payoff',
+    startHandIndex: 3,
+  ),
+  _RouteCaptureSurfaceV1(
+    'volume_i_terminal_review',
+    'volume_i_terminal_review_v1',
+    'Volume I Terminal Review',
+  ),
+  _RouteCaptureSurfaceV1(
+    'no_w13_terminal_state',
+    'volume_i_terminal_review_v1',
+    'Volume I Terminal Review',
+    startHandIndex: 3,
+  ),
+];
+
+const _activeRouteW7W12CaptureSurfacesV1 = <_ActiveRouteCaptureSurfaceV1>[
+  _ActiveRouteCaptureSurfaceV1('w7_first_route_task_table', 7, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w7_first_route_task_copy_detail',
+    7,
+    0,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w8_route_task_table', 8, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w8_route_task_copy_detail',
+    8,
+    0,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w9_first_route_task_table', 9, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w9_first_route_task_copy_detail',
+    9,
+    0,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w10_route_task_table', 10, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w10_route_task_copy_detail',
+    10,
+    0,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w11_danger_texture_task_table', 11, 1, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w11_danger_texture_task_copy_detail',
+    11,
+    1,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w12_first_review_task_table', 12, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w12_first_review_task_copy_detail',
+    12,
+    0,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('w12_payoff_completion_table', 12, 3, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'w12_payoff_completion_copy_detail',
+    12,
+    3,
+    'copy_detail',
+  ),
+  _ActiveRouteCaptureSurfaceV1('volume_i_terminal_review_table', 0, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1(
+    'terminal_no_w13_copy_detail',
+    0,
+    3,
+    'copy_detail',
+  ),
+];
+
 void main(List<String> args) async {
   if (args.contains('--help') || args.contains('-h')) {
     _printUsageV1();
@@ -142,7 +281,15 @@ void main(List<String> args) async {
   final group = args[0];
   final device = args[1];
   final captureSurfaces = _captureGroupsV1[group];
-  if (captureSurfaces == null) {
+  final routeCaptureSurfaces = group == 'route_w7_w12'
+      ? _routeW7W12CaptureSurfacesV1
+      : null;
+  final activeRouteCaptureSurfaces = group == 'active_route_w7_w12'
+      ? _activeRouteW7W12CaptureSurfacesV1
+      : null;
+  if (captureSurfaces == null &&
+      routeCaptureSurfaces == null &&
+      activeRouteCaptureSurfaces == null) {
     _printUsageV1();
     exit(64);
   }
@@ -160,7 +307,26 @@ void main(List<String> args) async {
     '${tempDir.path}${Platform.pathSeparator}act0_real_text_surface_capture_test.dart',
   );
   testFile.writeAsStringSync(
-    _flutterTestSource(stagingDir.path, group, device, captureSurfaces),
+    routeCaptureSurfaces == null
+        ? activeRouteCaptureSurfaces == null
+              ? _flutterTestSource(
+                  stagingDir.path,
+                  group,
+                  device,
+                  captureSurfaces!,
+                )
+              : _activeRouteFlutterTestSource(
+                  stagingDir.path,
+                  group,
+                  device,
+                  activeRouteCaptureSurfaces,
+                )
+        : _routeFlutterTestSource(
+            stagingDir.path,
+            group,
+            device,
+            routeCaptureSurfaces,
+          ),
   );
 
   final stopwatch = Stopwatch()..start();
@@ -198,7 +364,11 @@ void main(List<String> args) async {
     exit(exitCode);
   }
 
-  final surfaces = captureSurfaces.map((capture) => capture.name).toList();
+  final surfaces = captureSurfaces != null
+      ? captureSurfaces.map((capture) => capture.name).toList()
+      : routeCaptureSurfaces != null
+      ? routeCaptureSurfaces.map((capture) => capture.name).toList()
+      : activeRouteCaptureSurfaces!.map((capture) => capture.name).toList();
   final entries = <Map<String, Object?>>[];
   for (final surface in surfaces) {
     final file = File(
@@ -222,8 +392,26 @@ void main(List<String> args) async {
   final manifestFile = File(
     '${stagingDir.path}${Platform.pathSeparator}manifest.json',
   );
+  final routeVisualAuditValidity = group == 'route_w7_w12'
+      ? _routeVisualAuditValidityV1
+      : group == 'active_route_w7_w12'
+      ? 'active_runtime_visual_evidence'
+      : 'active_surface_fast_review';
+  final routeAllowedUse = group == 'route_w7_w12'
+      ? _routeAllowedUseV1
+      : group == 'active_route_w7_w12'
+      ? 'final_pre_human_visual_ux_audit'
+      : 'final_visual_audit_candidate';
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': '${group}_fast', 'device': device, 'render_kind': 'flutter_widget_test_real_text', 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted.'})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': '${group}_fast', 'device': device, 'render_kind': 'flutter_widget_test_real_text', 'scenario_family': group == 'route_w7_w12'
+        ? 'late_route_w7_w12_visual_coverage'
+        : group == 'active_route_w7_w12'
+        ? 'active_runtime_late_route_w7_w12_visual_coverage'
+        : 'act0_fast_screen_review', 'content_reflects_latest_post_idealization_copy': group == 'route_w7_w12' || group == 'active_route_w7_w12', 'visual_audit_validity': routeVisualAuditValidity, 'final_visual_audit_eligible': group != 'route_w7_w12', 'invalid_for_final_visual_ux_judgment': group == 'route_w7_w12' ? true : false, 'allowed_use': routeAllowedUse, 'capture_source_policy': group == 'route_w7_w12'
+        ? _routeVisualAuditValidityV1
+        : group == 'active_route_w7_w12'
+        ? 'active_act0_runtime_test_only_wrapper'
+        : 'active_surface_allowlisted', 'legacy_archive_runner_used': group == 'route_w7_w12', 'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null, 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted.'})}\n',
   );
 
   if (group == 'full_scroll') {
@@ -597,8 +785,814 @@ $captureStatements
 ''';
 }
 
+String _activeRouteFlutterTestSource(
+  String outputDirPath,
+  String group,
+  String device,
+  List<_ActiveRouteCaptureSurfaceV1> captures,
+) {
+  final escapedOutputDir = jsonEncode(outputDirPath);
+  final captureStatements = captures.indexed.map((entry) {
+    final index = entry.$1;
+    final capture = entry.$2;
+    final fileName = '$device.${capture.name}.png';
+    return '''
+    await captureActiveRouteSurface(
+      tester,
+      '$fileName',
+      world: ${capture.world},
+      taskIndex: ${capture.taskIndex},
+      captureKind: '${capture.captureKind}',
+      captureOrder: ${index + 1},
+    );''';
+  }).join();
+  return '''
+import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w11_board_texture_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w12_review_decision_hidden_runtime_session_owner_v1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const outputDirPath = $escapedOutputDir;
+  const captureGroup = '$group';
+  final outputDir = Directory(outputDirPath)..createSync(recursive: true);
+  final activeRouteEntries = <Map<String, Object?>>[];
+  const compactSize = Size(375, 812);
+  const copyDetailSize = Size(760, 1200);
+
+  _TerminalTaskSpecV1 _terminalTaskSpec(int taskIndex) {
+    final pack = kCampaignPacksV1['volume_i_terminal_review_v1']!;
+    final step = pack[taskIndex];
+    final expected = step.expectedSeatIds.isEmpty
+        ? 'terminal_review'
+        : step.expectedSeatIds.first;
+    return _TerminalTaskSpecV1(
+      worldId: 'world_12_terminal',
+      lessonId: 'volume_i_terminal_review_v1',
+      taskId: taskIndex == 0
+          ? 'volume_i_terminal_review'
+          : 'terminal_no_w13_state',
+      conceptFamilyId: 'volume_i_terminal_review',
+      boardContext: step.contextText ?? step.hint,
+      learningPurpose: step.insightText ?? step.hint,
+      expectedChoiceId: expected,
+      choiceIds: <String>[
+        expected,
+        'expect_w13',
+        'expect_new_world',
+        'skip_review',
+      ],
+      learnerPrompt: step.prompt,
+      choiceLabels: <String, String>{
+        expected: expected == 'btn'
+            ? 'Start the keep-sharp review.'
+            : 'Stay in terminal review.',
+        'expect_w13': 'Expect W13 to open now.',
+        'expect_new_world': 'Treat this as a new world.',
+        'skip_review': 'Skip the review state.',
+      },
+      feedbackReason:
+          '\${step.contextText ?? ''} \${step.tradeoffText ?? ''} \${step.insightText ?? ''}'.trim(),
+    );
+  }
+
+  dynamic activeTaskSpecFor({required int world, required int taskIndex}) {
+    final specs = switch (world) {
+      7 => const Act0W7VisibleAceHiddenRuntimeSessionOwnerV1().taskSpecs,
+      8 => const Act0W8DrawsHiddenRuntimeSessionOwnerV1().taskSpecs,
+      9 => const Act0W9PriceHiddenRuntimeSessionOwnerV1().taskSpecs,
+      10 => const Act0W10BetPurposeHiddenRuntimeSessionOwnerV1().taskSpecs,
+      11 => const Act0W11BoardTextureHiddenRuntimeSessionOwnerV1().taskSpecs,
+      12 => const Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1().taskSpecs,
+      _ => null,
+    };
+    if (specs == null) {
+      return _terminalTaskSpec(taskIndex);
+    }
+    return specs[taskIndex];
+  }
+
+  List<Act0RunnerOptionV1> optionsForTask(dynamic task) {
+    final ids = task.choiceIds as List<String>;
+    final labels = task.choiceLabels as Map<String, String>;
+    return ids.map((id) {
+      final correct = id == task.expectedChoiceId;
+      return Act0RunnerOptionV1(
+        id: id,
+        label: labels[id] ?? id,
+        isCorrect: correct,
+        preferredLabel: labels[task.expectedChoiceId] ?? task.expectedChoiceId,
+        quality: correct ? Act0FeedbackQualityV1.correct : Act0FeedbackQualityV1.wrong,
+        feedbackTitle: correct ? 'Good route read.' : 'Use the route clue.',
+        feedbackReason: correct
+            ? task.feedbackReason as String
+            : 'This choice misses the visible route clue: \${task.learningPurpose}.',
+        repairFocusLabels: <String>[
+          task.conceptFamilyId as String,
+          task.boardContext as String,
+        ],
+      );
+    }).toList(growable: false);
+  }
+
+  String worldTitleForTask(dynamic task) {
+    final worldId = task.worldId as String;
+    if (worldId.contains('terminal')) {
+      return 'Volume I Terminal Review';
+    }
+    final number = worldId.replaceAll('world_', '');
+    return 'W\$number Active Route';
+  }
+
+  List<Act0CardStateV1> boardCardsForWorld(String worldId, String taskId) {
+    if (worldId == 'world_7') {
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'A', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '2', suit: 'c'),
+      ];
+    }
+    if (worldId == 'world_8') {
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '3', suit: 'c'),
+      ];
+    }
+    if (worldId == 'world_9') {
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '9', suit: 'c'),
+        Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+      ];
+    }
+    if (worldId == 'world_10') {
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '2', suit: 'c'),
+      ];
+    }
+    if (worldId == 'world_11') {
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+      ];
+    }
+    return const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'K', suit: 's'),
+      Act0CardStateV1(rank: 'Q', suit: 's'),
+      Act0CardStateV1(rank: 'T', suit: 's'),
+    ];
+  }
+
+  Act0TableStateV1 tableForTask(dynamic task, {required String captureKind}) {
+    final worldId = task.worldId as String;
+    final cards = boardCardsForWorld(worldId, task.taskId as String);
+    return Act0TableStateV1(
+      tableFormat: Act0TableFormatV1.sixMax,
+      playerCount: 6,
+      seats: const <Act0SeatStateV1>[
+        Act0SeatStateV1(seatId: 'utg', seatLabel: 'UTG', displayName: 'UTG'),
+        Act0SeatStateV1(seatId: 'hj', seatLabel: 'HJ', displayName: 'Hijack'),
+        Act0SeatStateV1(seatId: 'co', seatLabel: 'CO', displayName: 'Cutoff'),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Button',
+          isHero: true,
+          isDealerButton: true,
+          isActive: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          holeCards: <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+          ],
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Small blind',
+          isSmallBlind: true,
+          blindAmountLabel: '0.5 BB',
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Big blind',
+          isBigBlind: true,
+          blindAmountLabel: '1 BB',
+        ),
+      ],
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+      ],
+      boardCards: cards,
+      streetLabel: worldId.contains('terminal') ? 'Review' : 'Flop',
+      potLabel: worldId == 'world_9' ? 'Pot 18 BB' : 'Pot 12 BB',
+      toCallLabel: worldId == 'world_9' ? 'Call 3 BB' : '',
+      centerLabel: task.boardContext as String,
+      focusCalloutLabel: task.learningPurpose as String,
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      highlightedSeatIds: const <String>['btn'],
+      highlightedCardIds: captureKind == 'copy_detail'
+          ? const <String>[]
+          : const <String>['board_0', 'board_1'],
+      actionTrail: <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: task.learningPurpose as String),
+      ],
+    );
+  }
+
+  Act0RunnerStateV1 runnerFromTaskSpec(
+    dynamic task, {
+    required String captureKind,
+  }) {
+    final selectedOptionId = captureKind == 'copy_detail'
+        ? task.expectedChoiceId as String
+        : null;
+    final copyDetailQuestion =
+        '\${task.learnerPrompt}\\n\\nWhy this route step matters: \${task.learningPurpose}\\n\\nContext: \${task.boardContext}';
+    return Act0RunnerStateV1(
+      lessonId: task.lessonId as String,
+      lessonTitle: worldTitleForTask(task),
+      lessonSubtitle: task.learningPurpose as String,
+      beatIndex: (task.taskId as String).contains('terminal_no_w13') ? 4 : 1,
+      beatCount: 4,
+      phase: captureKind == 'copy_detail'
+          ? Act0LessonPhaseV1.review
+          : Act0LessonPhaseV1.drill,
+      caption: task.boardContext as String,
+      hint: task.learningPurpose as String,
+      question: captureKind == 'copy_detail'
+          ? copyDetailQuestion
+          : task.learnerPrompt as String,
+      options: optionsForTask(task),
+      selectedOptionId: selectedOptionId,
+      feedbackTitle: captureKind == 'copy_detail'
+          ? 'Full route-copy detail'
+          : 'Active route task',
+      feedbackReason: task.feedbackReason as String,
+      primaryCtaLabel: captureKind == 'copy_detail' ? 'Continue review' : 'Choose',
+      nextLessonId: null,
+      returnTarget: 'learn',
+      table: tableForTask(task, captureKind: captureKind),
+      hintPolicy: Act0HintPolicyV1.always,
+      sharky: const Act0SharkyCueV1(
+        preSessionLine: 'Read the active route spot.',
+        correctReaction: 'Route clue connected.',
+        wrongReaction: 'Use the visible clue before choosing.',
+        repairLine: 'Slow down and name the clue.',
+        summaryLine: 'The route step stays visible.',
+      ),
+    );
+  }
+
+  Widget host({
+    required dynamic task,
+    required String captureKind,
+  }) {
+    final runner = runnerFromTaskSpec(task, captureKind: captureKind);
+    final realTextButtonStyle = ButtonStyle(
+      textStyle: WidgetStateProperty.all(
+        const TextStyle(fontFamily: 'Roboto'),
+      ),
+    );
+    return MaterialApp(
+      locale: const Locale('en'),
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+        filledButtonTheme: FilledButtonThemeData(style: realTextButtonStyle),
+        outlinedButtonTheme: OutlinedButtonThemeData(style: realTextButtonStyle),
+        textButtonTheme: TextButtonThemeData(style: realTextButtonStyle),
+      ),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: RepaintBoundary(
+        key: const Key('act0_real_text_capture_boundary'),
+        child: Scaffold(
+          backgroundColor: const Color(0xFF070B12),
+          body: SafeArea(
+            child: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedWorldId: task.worldId as String,
+              selectedLessonId: task.lessonId as String,
+              selectedTaskId: task.taskId as String,
+              selectedTaskFamily: captureKind == 'copy_detail'
+                  ? Act0TaskFamilyV1.review
+                  : Act0TaskFamilyV1.decision,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              relaxTheoryAdvanceLock: true,
+              showLearningRailFocusLabels: true,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadFontFamily(String family, Uint8List bytes) async {
+    final loader = FontLoader(family)
+      ..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+    await loader.load().timeout(const Duration(seconds: 10));
+  }
+
+  Future<void> loadRealTextFont() async {
+    const candidates = <String>[
+      '/System/Library/Fonts/Supplemental/Arial.ttf',
+      '/System/Library/Fonts/SFNS.ttf',
+    ];
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
+      }
+      final bytes = await file.readAsBytes();
+      await loadFontFamily('Roboto', bytes);
+      await loadFontFamily('Ahem', bytes);
+      return;
+    }
+    throw StateError('No local real-text font found for active route capture.');
+  }
+
+  Future<void> loadIconFonts() async {
+    const iconFonts = <(String, String)>[
+      ('MaterialIcons', 'build/unit_test_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('MaterialIcons', 'build/flutter_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/cupertino_icons.ttf'),
+      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+    ];
+    final loaded = <String>{};
+    for (final (family, path) in iconFonts) {
+      if (loaded.contains(family)) {
+        continue;
+      }
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
+      }
+      final bytes = await file.readAsBytes();
+      await loadFontFamily(family, bytes);
+      loaded.add(family);
+    }
+    if (!loaded.contains('MaterialIcons')) {
+      throw StateError('No local MaterialIcons font found for active route capture.');
+    }
+  }
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
+
+  setUpAll(() async {
+    await loadRealTextFont();
+    await loadIconFonts();
+  });
+
+  Future<void> captureActiveRouteSurface(
+    WidgetTester tester,
+    String fileName, {
+    required int world,
+    required int taskIndex,
+    required String captureKind,
+    required int captureOrder,
+  }) async {
+    final task = activeTaskSpecFor(world: world, taskIndex: taskIndex);
+    final size = captureKind == 'copy_detail' ? copyDetailSize : compactSize;
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+    await tester.pumpWidget(host(task: task, captureKind: captureKind));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 900));
+    final boundary = tester.renderObject<RenderRepaintBoundary>(
+      find.byKey(const Key('act0_real_text_capture_boundary')),
+    );
+    final byteData = await tester.runAsync(() async {
+      final image = await boundary.toImage(pixelRatio: 2.0);
+      return image.toByteData(format: ui.ImageByteFormat.png);
+    });
+    if (byteData == null) {
+      throw StateError('Failed to capture active route screenshot for ' + fileName);
+    }
+    final file = File('\${outputDir.path}/' + fileName);
+    file.writeAsBytesSync(Uint8List.view(byteData.buffer));
+    activeRouteEntries.add(<String, Object?>{
+      'file': fileName,
+      'capture_order': captureOrder,
+      'world': world,
+      'task_index': taskIndex,
+      'task_id': task.taskId as String,
+      'lesson_id': task.lessonId as String,
+      'capture_kind': captureKind,
+      'capture_mode': 'active_act0_runtime_test_only_wrapper',
+      'active_surface': 'Act0LessonRunnerShellV1',
+      'visual_audit_validity': 'active_runtime_visual_evidence',
+      'final_visual_audit_eligible': true,
+      'invalid_for_final_visual_ux_judgment': false,
+      'allowed_use': 'final_pre_human_visual_ux_audit',
+      'legacy_archive_runner_used': false,
+    });
+  }
+
+  testWidgets('capture active real-text W7-W12 route surfaces', (tester) async {
+    tester.platformDispatcher.systemFontFamily = 'Roboto';
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.resetSystemFontFamily();
+    });
+
+$captureStatements
+    File('\${outputDir.path}/active_route_w7_w12_meta.json').writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+        'schema': 'active_route_w7_w12_screen_evidence_v1',
+        'device': '$device',
+        'capture_group': captureGroup,
+        'scenario_family': 'active_runtime_late_route_w7_w12_visual_coverage',
+        'content_reflects_latest_post_idealization_copy': true,
+        'visual_audit_validity': 'active_runtime_visual_evidence',
+        'final_visual_audit_eligible': true,
+        'invalid_for_final_visual_ux_judgment': false,
+        'allowed_use': 'final_pre_human_visual_ux_audit',
+        'capture_source_policy': 'active_act0_runtime_test_only_wrapper',
+        'active_surface': 'Act0LessonRunnerShellV1',
+        'legacy_archive_runner_used': false,
+        'entries': activeRouteEntries,
+        'note': 'Generated metadata is local-only and uncommitted.',
+      }) + '\\n',
+    );
+  });
+}
+
+class _TerminalTaskSpecV1 {
+  const _TerminalTaskSpecV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.conceptFamilyId,
+    required this.boardContext,
+    required this.learningPurpose,
+    required this.expectedChoiceId,
+    required this.choiceIds,
+    required this.learnerPrompt,
+    required this.choiceLabels,
+    required this.feedbackReason,
+  });
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String conceptFamilyId;
+  final String boardContext;
+  final String learningPurpose;
+  final String expectedChoiceId;
+  final List<String> choiceIds;
+  final String learnerPrompt;
+  final Map<String, String> choiceLabels;
+  final String feedbackReason;
+}
+''';
+}
+
+String _routeFlutterTestSource(
+  String outputDirPath,
+  String group,
+  String device,
+  List<_RouteCaptureSurfaceV1> captures,
+) {
+  final escapedOutputDir = jsonEncode(outputDirPath);
+  final captureStatements = captures.indexed.map((entry) {
+    final index = entry.$1;
+    final capture = entry.$2;
+    final fileName = '$device.${capture.name}.png';
+    return '''
+    await captureRouteSurface(
+      tester,
+      '$fileName',
+      packId: '${capture.packId}',
+      moduleTitle: ${jsonEncode(capture.moduleTitle)},
+      startHandIndex: ${capture.startHandIndex},
+      captureOrder: ${index + 1},
+    );''';
+  }).join();
+  return '''
+import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const outputDirPath = $escapedOutputDir;
+  const captureGroup = '$group';
+  final outputDir = Directory(outputDirPath)..createSync(recursive: true);
+  final routeEntries = <Map<String, Object?>>[];
+  const compactSize = Size(375, 812);
+
+  Widget host({
+    required String packId,
+    required String moduleTitle,
+    required int startHandIndex,
+  }) {
+    final realTextButtonStyle = ButtonStyle(
+      textStyle: WidgetStateProperty.all(
+        const TextStyle(fontFamily: 'Roboto'),
+      ),
+    );
+    return MaterialApp(
+      locale: const Locale('en'),
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+        filledButtonTheme: FilledButtonThemeData(style: realTextButtonStyle),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: realTextButtonStyle,
+        ),
+        textButtonTheme: TextButtonThemeData(style: realTextButtonStyle),
+      ),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: RepaintBoundary(
+        key: const Key('act0_real_text_capture_boundary'),
+        child: World1FoundationsMicroTaskRunnerScreen(
+          key: UniqueKey(),
+          moduleId: packId,
+          moduleTitle: moduleTitle,
+          mode: kWorld1RunnerModeCampaignSpine,
+          startHandIndex: startHandIndex,
+          hintsEnabledV1: true,
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadFontFamily(String family, Uint8List bytes) async {
+    final loader = FontLoader(family)
+      ..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+    await loader.load().timeout(const Duration(seconds: 10));
+  }
+
+  Future<void> loadRealTextFont() async {
+    const candidates = <String>[
+      '/System/Library/Fonts/Supplemental/Arial.ttf',
+      '/System/Library/Fonts/SFNS.ttf',
+    ];
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
+      }
+      final bytes = await file.readAsBytes();
+      await loadFontFamily('Roboto', bytes);
+      await loadFontFamily('Ahem', bytes);
+      return;
+    }
+    throw StateError('No local real-text font found for route capture.');
+  }
+
+  Future<void> loadIconFonts() async {
+    const iconFonts = <(String, String)>[
+      ('MaterialIcons', 'build/unit_test_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('MaterialIcons', 'build/flutter_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('packages/cupertino_icons/CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+    ];
+    final loaded = <String>{};
+    for (final (family, path) in iconFonts) {
+      if (loaded.contains(family)) {
+        continue;
+      }
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
+      }
+      final bytes = await file.readAsBytes();
+      await loadFontFamily(family, bytes);
+      loaded.add(family);
+    }
+    if (!loaded.contains('MaterialIcons')) {
+      throw StateError('No local MaterialIcons font found for route capture.');
+    }
+  }
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
+
+  setUpAll(() async {
+    await loadRealTextFont();
+    await loadIconFonts();
+  });
+
+  Future<void> pumpCompact(
+    WidgetTester tester, {
+    required String packId,
+    required String moduleTitle,
+    required int startHandIndex,
+  }) async {
+    tester.view.physicalSize = compactSize;
+    tester.view.devicePixelRatio = 1.0;
+    await tester.pumpWidget(
+      host(
+        packId: packId,
+        moduleTitle: moduleTitle,
+        startHandIndex: startHandIndex,
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pump();
+  }
+
+  String colorToHex(Color color) {
+    final alpha = (color.a * 255).round().clamp(0, 255);
+    final red = (color.r * 255).round().clamp(0, 255);
+    final green = (color.g * 255).round().clamp(0, 255);
+    final blue = (color.b * 255).round().clamp(0, 255);
+    return '#'
+        '\${alpha.toRadixString(16).padLeft(2, '0')}'
+        '\${red.toRadixString(16).padLeft(2, '0')}'
+        '\${green.toRadixString(16).padLeft(2, '0')}'
+        '\${blue.toRadixString(16).padLeft(2, '0')}';
+  }
+
+  void writeTextRepairOverlays(WidgetTester tester, String fileName) {
+    final overlays = <Map<String, Object?>>[];
+    for (final element in find.byType(Text).evaluate()) {
+      final widget = element.widget;
+      if (widget is! Text) {
+        continue;
+      }
+      final text = widget.data ?? widget.textSpan?.toPlainText() ?? '';
+      if (text.trim().isEmpty) {
+        continue;
+      }
+      final defaultStyle = DefaultTextStyle.of(element).style;
+      final explicitStyle = widget.style;
+      if (defaultStyle.fontFamily != null || explicitStyle?.fontFamily != null) {
+        continue;
+      }
+      final renderObject = element.renderObject;
+      if (renderObject is! RenderBox || !renderObject.hasSize) {
+        continue;
+      }
+      final topLeft = renderObject.localToGlobal(Offset.zero);
+      final size = renderObject.size;
+      if (size.width <= 0 || size.height <= 0) {
+        continue;
+      }
+      overlays.add(<String, Object?>{
+        'text': text,
+        'left': topLeft.dx,
+        'top': topLeft.dy,
+        'width': size.width,
+        'height': size.height,
+        'fontSize': (explicitStyle?.fontSize ?? defaultStyle.fontSize ?? 14),
+        'fontWeight': (explicitStyle?.fontWeight ?? defaultStyle.fontWeight ?? FontWeight.w400).value,
+        'color': colorToHex(explicitStyle?.color ?? defaultStyle.color ?? Colors.white),
+      });
+    }
+    final overlayFile = File('\${outputDir.path}/' + fileName + '.text_overlays.json');
+    overlayFile.writeAsStringSync(jsonEncode(overlays));
+  }
+
+  Future<void> captureRouteSurface(
+    WidgetTester tester,
+    String fileName, {
+    required String packId,
+    required String moduleTitle,
+    required int startHandIndex,
+    required int captureOrder,
+  }) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await pumpCompact(
+      tester,
+      packId: packId,
+      moduleTitle: moduleTitle,
+      startHandIndex: startHandIndex,
+    );
+    final preludeContinue = find.byKey(
+      const Key('microtask_prelude_continue_cta_v1'),
+    );
+    if (preludeContinue.evaluate().isNotEmpty) {
+      await tester.tap(preludeContinue, warnIfMissed: false);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    final detailsIcon = find.byIcon(Icons.info_outline_rounded);
+    if (detailsIcon.evaluate().isNotEmpty) {
+      await tester.tap(detailsIcon.first, warnIfMissed: false);
+      await tester.pumpAndSettle();
+    } else {
+      final detailsButtons = find.text('Details');
+      if (detailsButtons.evaluate().isNotEmpty) {
+        await tester.tap(detailsButtons.first, warnIfMissed: false);
+        await tester.pumpAndSettle();
+      }
+    }
+    writeTextRepairOverlays(tester, fileName);
+    final boundary = tester.renderObject<RenderRepaintBoundary>(
+      find.byKey(const Key('act0_real_text_capture_boundary')),
+    );
+    final byteData = await tester.runAsync(() async {
+      final image = await boundary.toImage(pixelRatio: 2.0);
+      return image.toByteData(format: ui.ImageByteFormat.png);
+    });
+    if (byteData == null) {
+      throw StateError('Failed to capture route screenshot for ' + fileName);
+    }
+    final file = File('\${outputDir.path}/' + fileName);
+    file.writeAsBytesSync(Uint8List.view(byteData.buffer));
+    routeEntries.add(<String, Object?>{
+      'file': fileName,
+      'capture_order': captureOrder,
+      'pack_id': packId,
+      'module_title': moduleTitle,
+      'start_hand_index': startHandIndex,
+      'capture_mode': 'route_pack_direct_runner_fixture',
+    });
+  }
+
+  testWidgets('capture real-text route W7-W12 review surfaces', (tester) async {
+    tester.platformDispatcher.systemFontFamily = 'Roboto';
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.resetSystemFontFamily();
+    });
+
+$captureStatements
+    File('\${outputDir.path}/route_w7_w12_meta.json').writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+        'schema': 'route_w7_w12_screen_evidence_v1',
+        'device': '$device',
+        'capture_group': captureGroup,
+        'scenario_family': 'late_route_w7_w12_visual_coverage',
+        'content_reflects_latest_post_idealization_copy': true,
+        'visual_audit_validity': '$_routeVisualAuditValidityV1',
+        'final_visual_audit_eligible': false,
+        'invalid_for_final_visual_ux_judgment': true,
+        'allowed_use': '$_routeAllowedUseV1',
+        'capture_source_policy': 'legacy_reference_not_for_audit',
+        'capture_mode': 'route_pack_direct_runner_fixture',
+        'entries': routeEntries,
+        'note': 'Generated metadata is local-only and uncommitted.',
+      }) + '\\n',
+    );
+  });
+}
+''';
+}
+
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12> compact',
   );
 }

@@ -78,6 +78,44 @@ SURFACE_GROUPS = {
         ("session_summary.scroll_02_mid", "Session summary - middle"),
         ("session_summary.scroll_03_bottom", "Session summary - bottom"),
     ),
+    "route_w7_w12_fast": (
+        ("w7_first_route_task", "W7 - first route task"),
+        ("w8_first_route_task", "W8 - first route task"),
+        ("w9_first_route_task", "W9 - first route task"),
+        ("w10_first_route_task", "W10 - first route task"),
+        ("w11_danger_texture_task", "W11 - danger texture task"),
+        ("w12_first_review_task", "W12 - first review task"),
+        ("w12_payoff_completion", "W12 - payoff completion"),
+        ("volume_i_terminal_review", "Volume I terminal review"),
+        ("no_w13_terminal_state", "No W13 terminal state"),
+    ),
+    "active_route_w7_w12_fast": (
+        ("w7_first_route_task_table", "W7 - first route task table"),
+        ("w7_first_route_task_copy_detail", "W7 - first route task copy detail"),
+        ("w8_route_task_table", "W8 - route task table"),
+        ("w8_route_task_copy_detail", "W8 - route task copy detail"),
+        ("w9_first_route_task_table", "W9 - first route task table"),
+        ("w9_first_route_task_copy_detail", "W9 - first route task copy detail"),
+        ("w10_route_task_table", "W10 - route task table"),
+        ("w10_route_task_copy_detail", "W10 - route task copy detail"),
+        ("w11_danger_texture_task_table", "W11 - danger texture task table"),
+        (
+            "w11_danger_texture_task_copy_detail",
+            "W11 - danger texture task copy detail",
+        ),
+        ("w12_first_review_task_table", "W12 - first review task table"),
+        (
+            "w12_first_review_task_copy_detail",
+            "W12 - first review task copy detail",
+        ),
+        ("w12_payoff_completion_table", "W12 - payoff completion table"),
+        (
+            "w12_payoff_completion_copy_detail",
+            "W12 - payoff completion copy detail",
+        ),
+        ("volume_i_terminal_review_table", "Volume I terminal review table"),
+        ("terminal_no_w13_copy_detail", "Terminal no-W13 copy detail"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEVICE = "compact"
@@ -130,6 +168,8 @@ def main(argv: list[str]) -> int:
     readme.write_text(_readme_text(metadata), encoding="utf-8")
     index.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     full_scroll_metadata = output_dir / "full_scroll_meta.json"
+    route_metadata = output_dir / "route_w7_w12_meta.json"
+    active_route_metadata = output_dir / "active_route_w7_w12_meta.json"
     _write_zip(
         entries,
         contact_sheet,
@@ -137,6 +177,8 @@ def main(argv: list[str]) -> int:
         index,
         output_dir / "manifest.json",
         full_scroll_metadata if full_scroll_metadata.exists() else None,
+        route_metadata if route_metadata.exists() else None,
+        active_route_metadata if active_route_metadata.exists() else None,
         zip_path,
     )
 
@@ -213,7 +255,7 @@ def _metadata(
     zip_path: Path,
     group: str,
 ) -> dict[str, object]:
-    return {
+    metadata = {
         "packet": f"screen_review_{group}",
         "group": group,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -221,11 +263,45 @@ def _metadata(
         "git_status": "clean" if _git(root, "status", "--short") == "" else "dirty",
         "source_command": _source_command(group),
         "package_command": f"./tools/package_screen_review_v1.sh current {group}",
+        "scenario_family": _scenario_family(group),
+        "content_reflects_latest_post_idealization_copy": group
+        in ("route_w7_w12_fast", "active_route_w7_w12_fast"),
         "surfaces": [surface for surface, _, _ in entries],
         "files": [str(path.relative_to(root)) for _, _, path in entries],
         "contact_sheet": str(contact_sheet.relative_to(root)),
         "zip": str(zip_path.relative_to(root)),
         "note": "Generated packet artifacts are local-only and uncommitted.",
+    }
+    metadata.update(_audit_policy_metadata(group))
+    return metadata
+
+
+def _audit_policy_metadata(group: str) -> dict[str, object]:
+    if group == "route_w7_w12_fast":
+        return {
+            "visual_audit_validity": "legacy_reference_not_for_audit",
+            "final_visual_audit_eligible": False,
+            "invalid_for_final_visual_ux_judgment": True,
+            "allowed_use": "route_state_smoke_evidence_only",
+            "capture_source_policy": "legacy_reference_not_for_audit",
+            "required_replacement": "active_runtime_route_pack_capture_lane_v1",
+        }
+    if group == "active_route_w7_w12_fast":
+        return {
+            "visual_audit_validity": "active_runtime_visual_evidence",
+            "final_visual_audit_eligible": True,
+            "invalid_for_final_visual_ux_judgment": False,
+            "allowed_use": "final_pre_human_visual_ux_audit",
+            "capture_source_policy": "active_act0_runtime_test_only_wrapper",
+            "active_surface": "Act0LessonRunnerShellV1",
+            "legacy_archive_runner_used": False,
+        }
+    return {
+        "visual_audit_validity": "active_surface_fast_review",
+        "final_visual_audit_eligible": True,
+        "invalid_for_final_visual_ux_judgment": False,
+        "allowed_use": "final_visual_audit_candidate",
+        "capture_source_policy": "active_surface_allowlisted",
     }
 
 
@@ -242,7 +318,19 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh profile_evidence compact"
     if group == "full_scroll_fast":
         return "./tools/screen_review_fast_v1.sh full_scroll compact"
+    if group == "route_w7_w12_fast":
+        return "./tools/screen_review_fast_v1.sh route_w7_w12 compact"
+    if group == "active_route_w7_w12_fast":
+        return "./tools/screen_review_fast_v1.sh active_route_w7_w12 compact"
     return f"./tools/screen_review_v1.sh {group} compact"
+
+
+def _scenario_family(group: str) -> str:
+    if group == "route_w7_w12_fast":
+        return "late_route_w7_w12_visual_coverage"
+    if group == "active_route_w7_w12_fast":
+        return "active_runtime_late_route_w7_w12_visual_coverage"
+    return "act0_fast_screen_review"
 
 
 def _git(root: Path, *args: str) -> str:
@@ -281,6 +369,8 @@ def _write_zip(
     index: Path,
     manifest: Path,
     full_scroll_metadata: Path | None,
+    route_metadata: Path | None,
+    active_route_metadata: Path | None,
     zip_path: Path,
 ) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -290,6 +380,10 @@ def _write_zip(
             archive.write(manifest, manifest.name)
         if full_scroll_metadata is not None:
             archive.write(full_scroll_metadata, full_scroll_metadata.name)
+        if route_metadata is not None:
+            archive.write(route_metadata, route_metadata.name)
+        if active_route_metadata is not None:
+            archive.write(active_route_metadata, active_route_metadata.name)
         archive.write(contact_sheet, contact_sheet.name)
         archive.write(readme, readme.name)
         archive.write(index, index.name)

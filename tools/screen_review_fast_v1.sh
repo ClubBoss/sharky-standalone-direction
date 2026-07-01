@@ -5,10 +5,10 @@ group="${1:-}"
 device="${2:-}"
 
 usage() {
-  echo 'Usage: ./tools/screen_review_fast_v1.sh <core|runner|first_week|day2_return|profile_evidence|full_scroll> compact' >&2
+  echo 'Usage: ./tools/screen_review_fast_v1.sh <core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> compact' >&2
 }
 
-if [[ ( "$group" != "core" && "$group" != "runner" && "$group" != "first_week" && "$group" != "day2_return" && "$group" != "profile_evidence" && "$group" != "full_scroll" ) || "$device" != "compact" ]]; then
+if [[ ( "$group" != "core" && "$group" != "runner" && "$group" != "first_week" && "$group" != "day2_return" && "$group" != "profile_evidence" && "$group" != "full_scroll" && "$group" != "route_w7_w12" && "$group" != "active_route_w7_w12" ) || "$device" != "compact" ]]; then
   usage
   exit 64
 fi

@@ -2972,7 +2972,7 @@ void main() {
     expect(
       shellSource,
       contains(
-        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> compact',
       ),
     );
     expect(captureSource, contains("'first_week': <_CaptureSurfaceV1>"));
@@ -3022,7 +3022,7 @@ void main() {
     expect(
       shellSource,
       contains(
-        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> compact',
       ),
     );
     expect(captureSource, contains("'day2_return': <_CaptureSurfaceV1>"));
@@ -3073,7 +3073,7 @@ void main() {
     expect(
       shellSource,
       contains(
-        '<core|runner|first_week|day2_return|profile_evidence|full_scroll> compact',
+        '<core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> compact',
       ),
     );
     expect(captureSource, contains("'profile_evidence': <_CaptureSurfaceV1>"));
