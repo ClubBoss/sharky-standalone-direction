@@ -11,22 +11,22 @@ const _progressServicePath = 'lib/services/progress_service.dart';
 
 void main() {
   test(
-    'W11 Volume I admission stays planned-visible with entry and handoff disabled',
+    'W11 Volume I admission enables active entry while W12 remains planned',
     () {
       const proof = W11RouteBackedProofV1(
         routeId: kW11SourceRouteProofIdV1,
         worldId: 'world11',
         sessionId: 'w11.s01',
         beats: [],
-        learnerVisible: false,
-        w10HandoffEnabled: false,
+        learnerVisible: true,
+        w10HandoffEnabled: true,
       );
 
       final policy = buildW11VolumeIAdmissionPolicyV1(proof);
 
       expect(
         policy.state,
-        W11VolumeIAdmissionStateV1.plannedContinuationHandoffDisabled,
+        W11VolumeIAdmissionStateV1.activeRouteAdmittedW12Locked,
       );
       expect(policy.routeProofId, kW11SourceRouteProofIdV1);
       expect(policy.surfaceOwner, 'Act0LearnPathShellV1');
@@ -35,10 +35,10 @@ void main() {
         'act0_shell_levels_planned_foundation_line',
       );
       expect(policy.learnerVisibleAsPlannedContinuation, isTrue);
-      expect(policy.activeEntryEnabled, isFalse);
-      expect(policy.w10HandoffEnabled, isFalse);
-      expect(policy.runtimeConsumptionEnabled, isFalse);
-      expect(policy.requiresRuntimeConsumptionBeforeActiveEntry, isTrue);
+      expect(policy.activeEntryEnabled, isTrue);
+      expect(policy.w10HandoffEnabled, isTrue);
+      expect(policy.runtimeConsumptionEnabled, isTrue);
+      expect(policy.requiresRuntimeConsumptionBeforeActiveEntry, isFalse);
       expect(policy.w12PlannedOnly, isTrue);
       expect(policy.w13FrontierOnly, isTrue);
       expect(policy.impliesVolumeICompletion, isFalse);

@@ -13,7 +13,7 @@ const _contractPath = 'lib/campaign/w11_route_admission_contract_v1.dart';
 
 void main() {
   test(
-    'W11 source route contract preserves projection fields without registry admission',
+    'W11 source route contract preserves projection fields with registry admission',
     () {
       final decoded = jsonDecode(File(_fixturePath).readAsStringSync());
       expect(decoded, isA<Map<String, Object?>>());
@@ -53,9 +53,19 @@ void main() {
       }
 
       expect(
-        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
+        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')).toSet(),
+        const <String>{
+          'world11_spine_campaign_v1',
+          'world11_spine_followup_v1_b0',
+          'world11_spine_followup_v1_b1',
+          'world11_spine_followup_v1_b2',
+        },
+        reason: 'The W11 route contract now has admitted learner packs.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
         isEmpty,
-        reason: 'The W11 route contract must not register a learner route.',
+        reason: 'W11 admission must not register W12 packs.',
       );
 
       final contractSource = File(

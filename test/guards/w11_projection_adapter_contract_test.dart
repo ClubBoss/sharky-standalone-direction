@@ -11,70 +11,77 @@ const _fixturePath =
 const _adapterPath = 'lib/campaign/w11_campaign_fixture_projection_v1.dart';
 
 void main() {
-  test(
-    'W11 fixture projects six source-owned reps without route admission',
-    () {
-      final fixtureFile = File(_fixturePath);
-      expect(fixtureFile.existsSync(), isTrue);
-      if (!fixtureFile.existsSync()) return;
+  test('W11 fixture projects six source-owned reps with route admission', () {
+    final fixtureFile = File(_fixturePath);
+    expect(fixtureFile.existsSync(), isTrue);
+    if (!fixtureFile.existsSync()) return;
 
-      final decoded = jsonDecode(fixtureFile.readAsStringSync());
-      expect(decoded, isA<Map<String, Object?>>());
-      if (decoded is! Map<String, Object?>) return;
+    final decoded = jsonDecode(fixtureFile.readAsStringSync());
+    expect(decoded, isA<Map<String, Object?>>());
+    if (decoded is! Map<String, Object?>) return;
 
-      final projected = projectW11CampaignFixtureV1(decoded);
+    final projected = projectW11CampaignFixtureV1(decoded);
 
-      expect(projected, hasLength(6));
-      expect(projected.map((rep) => rep.repId), const <String>[
-        'w11.s01.r01',
-        'w11.s01.r02',
-        'w11.s01.r03',
-        'w11.s01.r04',
-        'w11.s01.r05',
-        'w11.s01.r06',
-      ]);
+    expect(projected, hasLength(6));
+    expect(projected.map((rep) => rep.repId), const <String>[
+      'w11.s01.r01',
+      'w11.s01.r02',
+      'w11.s01.r03',
+      'w11.s01.r04',
+      'w11.s01.r05',
+      'w11.s01.r06',
+    ]);
 
-      for (final rep in projected) {
-        expect(rep.worldId, 'world11');
-        expect(rep.sessionId, 'w11.s01');
-        expect(rep.sourceRef, startsWith('session.md#scenario-rep-'));
-        expect(rep.legalChoices, const <String>['continue', 'fold']);
-        expect(rep.legalChoices, contains(rep.expectedAnswer));
-        expect(rep.errorType, isNotEmpty);
-        expect(rep.repairCue, isNotEmpty);
-        expect(rep.correctFeedback, isNotEmpty);
-        expect(rep.incorrectFeedback, isNotEmpty);
-        expect(rep.telemetryInputs, contains('user_choice'));
-        expect(rep.telemetryInputs, contains('correct_or_incorrect'));
-        expect(rep.telemetryInputs, contains('error_type'));
-        expect(rep.telemetryInputs, contains('time_to_decision'));
-        expect(
-          rep.telemetryInputs.last,
-          '${rep.worldId}/${rep.sessionId}/${rep.repId}',
-        );
-      }
-
+    for (final rep in projected) {
+      expect(rep.worldId, 'world11');
+      expect(rep.sessionId, 'w11.s01');
+      expect(rep.sourceRef, startsWith('session.md#scenario-rep-'));
+      expect(rep.legalChoices, const <String>['continue', 'fold']);
+      expect(rep.legalChoices, contains(rep.expectedAnswer));
+      expect(rep.errorType, isNotEmpty);
+      expect(rep.repairCue, isNotEmpty);
+      expect(rep.correctFeedback, isNotEmpty);
+      expect(rep.incorrectFeedback, isNotEmpty);
+      expect(rep.telemetryInputs, contains('user_choice'));
+      expect(rep.telemetryInputs, contains('correct_or_incorrect'));
+      expect(rep.telemetryInputs, contains('error_type'));
+      expect(rep.telemetryInputs, contains('time_to_decision'));
       expect(
-        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
-        isEmpty,
-        reason: 'Projection must not add a W11 campaign registration.',
+        rep.telemetryInputs.last,
+        '${rep.worldId}/${rep.sessionId}/${rep.repId}',
       );
+    }
 
-      final adapter = File(_adapterPath).readAsStringSync().toLowerCase();
-      for (final forbiddenImport in const <String>[
-        'canonical/',
-        'progress_service.dart',
-        'ui_v2/',
-        'world10',
-        'world12',
-        'world13',
-      ]) {
-        expect(
-          adapter,
-          isNot(contains(forbiddenImport)),
-          reason: 'Projection must not depend on $forbiddenImport.',
-        );
-      }
-    },
-  );
+    expect(
+      kCampaignPackIdsV1.where((id) => id.startsWith('world11_')).toSet(),
+      const <String>{
+        'world11_spine_campaign_v1',
+        'world11_spine_followup_v1_b0',
+        'world11_spine_followup_v1_b1',
+        'world11_spine_followup_v1_b2',
+      },
+      reason: 'Projection must coexist with admitted W11 route packs.',
+    );
+    expect(
+      kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+      isEmpty,
+      reason: 'W11 projection must not add a W12 campaign registration.',
+    );
+
+    final adapter = File(_adapterPath).readAsStringSync().toLowerCase();
+    for (final forbiddenImport in const <String>[
+      'canonical/',
+      'progress_service.dart',
+      'ui_v2/',
+      'world10',
+      'world12',
+      'world13',
+    ]) {
+      expect(
+        adapter,
+        isNot(contains(forbiddenImport)),
+        reason: 'Projection must not depend on $forbiddenImport.',
+      );
+    }
+  });
 }

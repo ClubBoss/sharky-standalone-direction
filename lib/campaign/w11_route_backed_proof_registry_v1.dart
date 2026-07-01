@@ -2,11 +2,11 @@ import 'package:poker_analyzer/campaign/w11_route_admission_contract_v1.dart';
 
 const String kW11SourceRouteProofIdV1 = 'w11_source_route_proof_v1';
 
-/// Non-learner-visible W11 route-backed proof descriptor.
+/// W11 route-backed proof descriptor.
 ///
-/// This descriptor is intentionally source-owned and separate from the legacy
-/// campaign-pack registry. It gives W11 a stable route proof identity while
-/// preserving the lossless admission beats for a later launch/runtime decision.
+/// This descriptor remains source-owned and preserves the lossless admission
+/// beats used by the learner route. It does not imply W12, Volume I
+/// completion, commercial readiness, or public learning-effect readiness.
 class W11RouteBackedProofV1 {
   const W11RouteBackedProofV1({
     required this.routeId,
@@ -34,7 +34,7 @@ W11RouteBackedProofV1 buildW11RouteBackedProofV1(
     worldId: 'world11',
     sessionId: 'w11.s01',
     beats: materializedBeats,
-    learnerVisible: false,
-    w10HandoffEnabled: false,
+    learnerVisible: true,
+    w10HandoffEnabled: true,
   );
 }

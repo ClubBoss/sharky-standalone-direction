@@ -10,39 +10,49 @@ const _progressServicePath = 'lib/services/progress_service.dart';
 
 void main() {
   test(
-    'W10 to W11 transition policy stays descriptor-only with handoff deferred',
+    'W10 to W11 transition policy enables handoff without W12 or W13 unlock',
     () {
       const proof = W11RouteBackedProofV1(
         routeId: kW11SourceRouteProofIdV1,
         worldId: 'world11',
         sessionId: 'w11.s01',
         beats: [],
-        learnerVisible: false,
-        w10HandoffEnabled: false,
+        learnerVisible: true,
+        w10HandoffEnabled: true,
       );
 
       final policy = buildW10ToW11TransitionPolicyV1(proof);
 
-      expect(policy.sourceTerminalPackId, 'world10_spine_campaign_v1');
+      expect(policy.sourceTerminalPackId, 'world10_spine_followup_v1_b2');
       expect(policy.targetRouteProofId, kW11SourceRouteProofIdV1);
-      expect(policy.activeHandoffEnabled, isFalse);
+      expect(policy.activeHandoffEnabled, isTrue);
       expect(policy.requiresLearnerVisibleW11, isTrue);
-      expect(policy.requiresRuntimeConsumption, isTrue);
+      expect(policy.requiresRuntimeConsumption, isFalse);
       expect(policy.impliesVolumeICompletion, isFalse);
       expect(policy.allowsW13Unlock, isFalse);
-      expect(policy.descriptorOnly, isTrue);
+      expect(policy.descriptorOnly, isFalse);
 
       expect(
-        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
+        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')).toSet(),
+        const <String>{
+          'world11_spine_campaign_v1',
+          'world11_spine_followup_v1_b0',
+          'world11_spine_followup_v1_b1',
+          'world11_spine_followup_v1_b2',
+        },
+        reason: 'Transition policy must point at admitted W11 campaign packs.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
         isEmpty,
-        reason: 'Transition policy must not add active W11 campaign packs.',
+        reason: 'Transition policy must not add active W12 campaign packs.',
       );
 
       final progressSource = File(_progressServicePath).readAsStringSync();
       expect(
         progressSource,
         isNot(contains(kW11SourceRouteProofIdV1)),
-        reason: 'Descriptor-only policy must not wire ProgressService.',
+        reason: 'Transition policy must not wire ProgressService by proof id.',
       );
 
       final policySource = File(_policyPath).readAsStringSync().toLowerCase();
@@ -51,8 +61,6 @@ void main() {
         'ui_v2/',
         'world12',
         'world13',
-        'premium',
-        'paywall',
         'mastery',
         'leak',
       ]) {

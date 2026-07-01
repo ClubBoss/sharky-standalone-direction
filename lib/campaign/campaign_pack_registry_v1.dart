@@ -1135,6 +1135,224 @@ List<MicroTaskStep> _w10BetPurposeFollowupB2V1() => <MicroTaskStep>[
   ),
 ];
 
+MicroTaskStep _w11BoardTextureStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
+  _w11BoardTextureStepV1(
+    prompt: 'Dry board texture has fewer clear links. Tap Button.',
+    hint:
+        'A dry board is less connected and usually carries less immediate danger.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['Ah', '7d', '2c'],
+    contextText:
+        'W11 starts after bet purpose by reading board texture danger.',
+    tradeoffText:
+        'Name the dry board texture, or treat every flop as equally dangerous.',
+    consequenceText: 'Dry board read: +8 chips. Same-texture leak: -6 chips.',
+    insightText:
+        'A dry board has fewer obvious straight or flush paths; that lowers texture danger without deciding the hand.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Connected board texture creates more paths. Tap Cutoff.',
+    hint: 'Close ranks can create more straight paths.',
+    expectedSeatId: 'co',
+    boardCards: <String>['9h', '8d', '7c'],
+    contextText: 'W11 separates connected board danger from a calm dry board.',
+    tradeoffText:
+        'Use the connected ranks, or ignore how more hands can interact.',
+    consequenceText: 'Connected read: +8 chips. Missed danger: -6 chips.',
+    insightText:
+        'A connected board can be more dangerous because more hands can find draws or made-hand paths.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Suited board texture adds flush pressure. Tap Big Blind.',
+    hint: 'Shared suits can add danger without proving a flush.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Kh', 'Th', '4s'],
+    contextText: 'W11 adds suit texture as another beginner-safe clue.',
+    tradeoffText: 'Read the suited danger clue, or say suits never matter.',
+    consequenceText: 'Suit clue read: +8 chips. Suit miss: -6 chips.',
+    insightText:
+        'A suited board can add flush pressure; it is a danger signal, not a certain result.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt:
+        'One pair faces more danger on connected suited boards. Tap Hijack.',
+    hint: 'One pair is less comfortable when texture creates many paths.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Jc', 'Tc', '8d'],
+    contextText: 'W11 closes the first pack with one pair transfer.',
+    tradeoffText:
+        'Transfer texture danger to one pair, or call one pair always safe.',
+    consequenceText: 'Transfer read: +8 chips. Always-safe leak: -6 chips.',
+    insightText:
+        'One pair can still matter, but connected and suited texture asks for more caution.',
+  ),
+];
+
+List<MicroTaskStep> _w11BoardTextureFollowupB0V1() => <MicroTaskStep>[
+  _w11BoardTextureStepV1(
+    prompt: 'Dry board texture repeat: fewer connections. Tap Button.',
+    hint: 'Far-apart ranks make fewer straight paths.',
+    boardCards: <String>['Kc', '8d', '3s'],
+    contextText: 'B0 repairs the dry board idea in a new spot.',
+    tradeoffText:
+        'Keep the dry board read, or overstate danger on every board.',
+    consequenceText: 'Dry repair: +8 chips. Over-danger leak: -6 chips.',
+    insightText:
+        'Dry board texture means fewer immediate connection clues, not a known winner.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Connected ranks raise board texture danger. Tap Cutoff.',
+    hint: 'Ranks sitting near each other can create more paths.',
+    expectedSeatId: 'co',
+    boardCards: <String>['8s', '7h', '6d'],
+    contextText: 'B0 repairs connected board recognition.',
+    tradeoffText: 'Use rank connection, or read only card height.',
+    consequenceText: 'Connection repair: +8 chips. Height-only miss: -6 chips.',
+    insightText:
+        'Connected board texture can interact with more hands than a dry board.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Two clubs on board create suited danger. Tap Small Blind.',
+    hint: 'Shared suits can add flush-pressure danger.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Qc', '9c', '2h'],
+    contextText: 'B0 repairs suited board texture.',
+    tradeoffText: 'Read suited pressure, or ignore suits completely.',
+    consequenceText: 'Suit repair: +8 chips. Suit-blind leak: -6 chips.',
+    insightText:
+        'Suited texture adds danger because future cards can complete or pressure flush paths.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'One pair transfer: dry board is calmer. Tap Big Blind.',
+    hint: 'Compare dry board danger with connected suited danger.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['As', '7c', '2d'],
+    contextText: 'B0 closes by comparing one pair across texture.',
+    tradeoffText:
+        'Compare texture danger, or treat one pair the same everywhere.',
+    consequenceText: 'Transfer repair: +8 chips. Texture-blind leak: -6 chips.',
+    insightText:
+        'One pair on a dry board usually faces fewer immediate danger clues than on a connected suited board.',
+  ),
+];
+
+List<MicroTaskStep> _w11BoardTextureFollowupB1V1() => <MicroTaskStep>[
+  _w11BoardTextureStepV1(
+    prompt: 'Dry board, low texture danger. Tap Button.',
+    hint: 'Dry board texture has fewer obvious draw paths.',
+    boardCards: <String>['Qh', '6d', '2c'],
+    contextText: 'B1 repeats dry board recognition with different ranks.',
+    tradeoffText: 'Notice fewer paths, or invent danger from no clear clue.',
+    consequenceText: 'Fewer paths: +8 chips. Invented danger: -6 chips.',
+    insightText:
+        'Dry board texture is a calmer clue, but it still does not guarantee the result.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Connected board, higher texture danger. Tap Hijack.',
+    hint: 'Close ranks can create straight paths.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Ts', '9d', '8c'],
+    contextText: 'B1 repeats connected texture with a new board.',
+    tradeoffText: 'Read the connected danger, or treat the board as dry.',
+    consequenceText: 'Danger read: +8 chips. Dry-label leak: -6 chips.',
+    insightText:
+        'Connected texture can give more hands ways to continue or improve.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Suited connected board: stack the danger clues. Tap Cutoff.',
+    hint: 'Connection plus suits can both matter.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Jh', 'Th', '9s'],
+    contextText: 'B1 adds scenario richness without advanced labels.',
+    tradeoffText: 'Stack the texture clues, or read only one card at a time.',
+    consequenceText: 'Clues stacked: +8 chips. One-card miss: -6 chips.',
+    insightText:
+        'A board can be dangerous for more than one reason: connected ranks and suited pressure.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'One pair needs caution on dangerous texture. Tap Big Blind.',
+    hint: 'One pair is not always safe on connected suited boards.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qd', 'Jd', '9c'],
+    contextText: 'B1 closes with one pair caution transfer.',
+    tradeoffText:
+        'Carry caution forward, or ignore board texture after pairing.',
+    consequenceText: 'Caution transfer: +8 chips. Pair-only leak: -6 chips.',
+    insightText:
+        'One pair can be useful, but dangerous texture should slow automatic confidence.',
+  ),
+];
+
+List<MicroTaskStep> _w11BoardTextureFollowupB2V1() => <MicroTaskStep>[
+  _w11BoardTextureStepV1(
+    prompt: 'Final dry board transfer: calmer texture. Tap Button.',
+    hint: 'Dry board means fewer obvious danger paths.',
+    boardCards: <String>['Ad', '8c', '3h'],
+    contextText: 'B2 starts the final transfer loop with dry board texture.',
+    tradeoffText: 'Use the calmer clue, or mark all boards as dangerous.',
+    consequenceText: 'Calm read: +8 chips. All-danger leak: -6 chips.',
+    insightText:
+        'A dry board is calmer because fewer obvious straight or flush paths appear.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Final connected transfer: danger rises. Tap Small Blind.',
+    hint: 'Connected ranks create more ways for hands to interact.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['7s', '6c', '5d'],
+    contextText: 'B2 repeats connected texture before the close.',
+    tradeoffText: 'Read the connected danger, or miss the rank pattern.',
+    consequenceText: 'Pattern read: +8 chips. Pattern miss: -6 chips.',
+    insightText:
+        'Connected board texture can raise danger by opening more straight-path stories.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Final suited transfer: shared suits add danger. Tap Cutoff.',
+    hint: 'Suited board texture adds flush pressure.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', '9s', '4d'],
+    contextText: 'B2 repeats suited texture in claim-safe language.',
+    tradeoffText: 'Use suited danger, or claim the flush is already decided.',
+    consequenceText: 'Suit read: +8 chips. Result claim: -6 chips.',
+    insightText:
+        'Suited board texture adds danger; it does not prove a final hand.',
+  ),
+  _w11BoardTextureStepV1(
+    prompt: 'Final W11: one pair plus texture danger. Tap Big Blind.',
+    hint:
+        'Compare dry board with connected suited board before trusting one pair.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Jc', 'Tc', '8c'],
+    contextText: 'B2 closes W11 and keeps the next world locked.',
+    tradeoffText:
+        'Transfer texture danger to one pair, or claim one pair solves the spot.',
+    consequenceText: 'Safe close: +8 chips. Overclaim leak: -6 chips.',
+    insightText:
+        'One pair deserves more caution when board texture is connected and suited.',
+  ),
+];
+
 String _stepNarrativeTextV1(MicroTaskStep step) {
   return [
     step.prompt,
@@ -4015,6 +4233,14 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
   'world10_spine_followup_v1_b1': _w10BetPurposeFollowupB1V1(),
 
   'world10_spine_followup_v1_b2': _w10BetPurposeFollowupB2V1(),
+
+  'world11_spine_campaign_v1': _w11BoardTextureCampaignPackV1(),
+
+  'world11_spine_followup_v1_b0': _w11BoardTextureFollowupB0V1(),
+
+  'world11_spine_followup_v1_b1': _w11BoardTextureFollowupB1V1(),
+
+  'world11_spine_followup_v1_b2': _w11BoardTextureFollowupB2V1(),
 });
 
 const Set<String> kCampaignPackIdsV1 = <String>{
@@ -4061,6 +4287,10 @@ const Set<String> kCampaignPackIdsV1 = <String>{
   'world10_spine_followup_v1_b0',
   'world10_spine_followup_v1_b1',
   'world10_spine_followup_v1_b2',
+  'world11_spine_campaign_v1',
+  'world11_spine_followup_v1_b0',
+  'world11_spine_followup_v1_b1',
+  'world11_spine_followup_v1_b2',
 };
 
 int campaignHandCountForPackIdV1(String packId) {

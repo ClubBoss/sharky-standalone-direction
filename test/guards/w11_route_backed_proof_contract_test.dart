@@ -15,7 +15,7 @@ const _proofRegistryPath =
 
 void main() {
   test(
-    'W11 route-backed proof registers source-owned beats without learner visibility',
+    'W11 route-backed proof registers source-owned beats with learner visibility',
     () {
       final decoded = jsonDecode(File(_fixturePath).readAsStringSync());
       expect(decoded, isA<Map<String, Object?>>());
@@ -28,17 +28,27 @@ void main() {
       expect(proof.routeId, 'w11_source_route_proof_v1');
       expect(proof.worldId, 'world11');
       expect(proof.sessionId, 'w11.s01');
-      expect(proof.learnerVisible, isFalse);
-      expect(proof.w10HandoffEnabled, isFalse);
+      expect(proof.learnerVisible, isTrue);
+      expect(proof.w10HandoffEnabled, isTrue);
       expect(proof.beats, admissionBeats);
       expect(proof.beats, hasLength(6));
       expect(proof.beats.first.routeBeatId, 'world11.w11.s01.w11.s01.r01');
       expect(proof.beats.last.routeBeatId, 'world11.w11.s01.w11.s01.r06');
 
       expect(
-        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
+        kCampaignPackIdsV1.where((id) => id.startsWith('world11_')).toSet(),
+        const <String>{
+          'world11_spine_campaign_v1',
+          'world11_spine_followup_v1_b0',
+          'world11_spine_followup_v1_b1',
+          'world11_spine_followup_v1_b2',
+        },
+        reason: 'W11 proof must match the admitted active campaign packs.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
         isEmpty,
-        reason: 'W11 proof must not register an active campaign pack.',
+        reason: 'W11 proof must not register W12 packs.',
       );
 
       final registrySource = File(
