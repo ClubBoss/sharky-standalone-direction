@@ -77,6 +77,66 @@ void main() {
     },
   );
 
+  test(
+    'active W7-W12 copy-detail feedback never renders raw internal concept-family ids',
+    () {
+      final capture = File(
+        'tools/act0_real_text_surface_capture_v1.dart',
+      ).readAsStringSync();
+      final activeSection = _activeRouteSection(capture);
+
+      // The eye-icon/repair-focus label fed to the feedback panel must go
+      // through a human-readable mapping, never the raw snake_case
+      // conceptFamilyId used for internal content tracking.
+      expect(
+        activeSection,
+        contains(
+          'humanRepairFocusLabelForConceptFamily(task.conceptFamilyId as String)',
+        ),
+        reason:
+            'repairFocusLabels must not pass task.conceptFamilyId through unchanged.',
+      );
+      expect(
+        activeSection,
+        isNot(
+          contains(
+            'repairFocusLabels: <String>[\n          task.conceptFamilyId as String,',
+          ),
+        ),
+      );
+
+      // Every raw concept-family id observed leaking into evidence in the
+      // pre-human visual UX audit (docs/_reviews/
+      // full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1.md, GR-01/
+      // GR-02) must resolve to a curated human label, and W8's label must
+      // read as draw/improvement content, not price/pot content.
+      const knownConceptFamilyLabels = <String, String>{
+        'w7_combo_density_visible_card_removal': 'Visible cards',
+        'w8_draw_improvement_potential': 'Draws that improve',
+        'w9_price_intuition_call_price': 'Price to call',
+        'w10_bet_purpose_value_bluff': 'Bet purpose',
+        'w11_board_texture_danger_awareness': 'Board texture',
+        'w12_review_decision_intuition': 'Review clue',
+        'volume_i_terminal_review': 'Volume I review',
+      };
+      for (final entry in knownConceptFamilyLabels.entries) {
+        expect(
+          activeSection,
+          contains("'${entry.key}': '${entry.value}'"),
+          reason: entry.key,
+        );
+      }
+      expect(
+        knownConceptFamilyLabels['w8_draw_improvement_potential'],
+        isNot(contains('Pot')),
+      );
+      expect(
+        knownConceptFamilyLabels['w8_draw_improvement_potential'],
+        isNot(contains('to call')),
+      );
+    },
+  );
+
   test('active W7-W12 metadata is final-audit eligible', () {
     final capture = File(
       'tools/act0_real_text_surface_capture_v1.dart',

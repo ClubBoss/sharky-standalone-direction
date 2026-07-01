@@ -890,6 +890,34 @@ void main() {
     return specs[taskIndex];
   }
 
+  String humanRepairFocusLabelForConceptFamily(String conceptFamilyId) {
+    const knownLabels = <String, String>{
+      'w7_combo_density_visible_card_removal': 'Visible cards',
+      'w8_draw_improvement_potential': 'Draws that improve',
+      'w9_price_intuition_call_price': 'Price to call',
+      'w10_bet_purpose_value_bluff': 'Bet purpose',
+      'w11_board_texture_danger_awareness': 'Board texture',
+      'w12_review_decision_intuition': 'Review clue',
+      'volume_i_terminal_review': 'Volume I review',
+    };
+    final id = conceptFamilyId.trim();
+    final known = knownLabels[id];
+    if (known != null) {
+      return known;
+    }
+    final withoutWorldPrefix = id.replaceFirst(RegExp(r'^w\d+_'), '');
+    final words = withoutWorldPrefix
+        .split('_')
+        .where((word) => word.isNotEmpty)
+        .toList(growable: false);
+    if (words.isEmpty) {
+      return 'Route clue';
+    }
+    return words
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
+  }
+
   List<Act0RunnerOptionV1> optionsForTask(dynamic task) {
     final ids = task.choiceIds as List<String>;
     final labels = task.choiceLabels as Map<String, String>;
@@ -906,7 +934,7 @@ void main() {
             ? task.feedbackReason as String
             : 'This choice misses the visible route clue: \${task.learningPurpose}.',
         repairFocusLabels: <String>[
-          task.conceptFamilyId as String,
+          humanRepairFocusLabelForConceptFamily(task.conceptFamilyId as String),
           task.boardContext as String,
         ],
       );

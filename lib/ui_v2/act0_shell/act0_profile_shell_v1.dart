@@ -330,8 +330,8 @@ String _profileHeaderSublineV1(
 ) {
   return _profileCopyV1(
     context,
-    en: 'Proof profile',
-    ru: 'Профиль доказательств',
+    en: 'What Sharky can already prove',
+    ru: 'Что Шарки уже может подтвердить',
   );
 }
 

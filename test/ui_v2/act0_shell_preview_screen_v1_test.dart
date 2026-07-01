@@ -5620,6 +5620,50 @@ void main() {
     expect(find.text('Bottom seat'), findsNothing);
   });
 
+  testWidgets('Review-phase feedback panel renders a non-empty CTA label', (
+    tester,
+  ) async {
+    // Guards GR-03: the pre-human visual UX audit's active_route_w7_w12_fast
+    // screenshots showed a blank primary CTA on every copy-detail feedback
+    // screen. That screenshot capture tool uses a specialized headless font
+    // loading path; this test uses the standard runner harness (already
+    // known-good for text rendering across this whole file) to confirm the
+    // live app itself always renders a visible, non-empty CTA label for a
+    // correct-answer review-phase feedback state, which is the same runner
+    // state shape (phase: review, selectedOptionId: correct) that the
+    // active W7-W12 capture tool constructs.
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+        .taskList
+        .firstWhere((entry) => entry.taskId == 'what_poker_is_find_hero');
+    final runner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      selectedOptionId: 'top',
+      teachingSteps: const <Act0TeachingStepV1>[],
+    );
+
+    await pumpRunnerWithSimulatorSafeArea(
+      tester,
+      runner: runner,
+      taskFamily: task.resolvedTaskFamily,
+      framingProfile: Act0RunnerFramingProfileV1.neutral,
+    );
+
+    final ctaFinder = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(ctaFinder, findsOneWidget);
+    final ctaText = tester.widget<Text>(
+      find.descendant(of: ctaFinder, matching: find.byType(Text)).first,
+    );
+    expect(ctaText.data, isNotNull);
+    expect(ctaText.data!.trim(), isNotEmpty);
+    expect(
+      ctaText.data,
+      anyOf(equals('Continue'), equals('Try one like this')),
+    );
+  });
+
   testWidgets(
     'First-session setup feedback points to Hero on the Button signal',
     (tester) async {
@@ -11532,6 +11576,14 @@ void main() {
       ),
       findsNothing,
     );
+    final frameBottom = tester
+        .getBottomLeft(find.byKey(const Key('act0_shell_welcome_beat_frame')))
+        .dy;
+    final ctaTop = tester
+        .getTopLeft(find.byKey(const Key('act0_shell_welcome_primary_cta')))
+        .dy;
+    expect(ctaTop - frameBottom, lessThanOrEqualTo(180));
+
     expect(find.text('Open first lesson'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();

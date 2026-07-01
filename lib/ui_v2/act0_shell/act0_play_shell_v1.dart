@@ -1725,7 +1725,8 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
                   top: 0,
                   right: 0,
                   child: Icon(
-                    Icons.route_rounded,
+                    Icons.lock_rounded,
+                    key: const Key('act0_shell_practice_group_locked_icon'),
                     color: Act0ShellTokensV1.textMuted.withOpacity(0.78),
                     size: 15,
                   ),

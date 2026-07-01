@@ -221,6 +221,9 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: centerContent
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           children: [
             _WelcomeTopBarV1(
               beatIndex: beatIndex,

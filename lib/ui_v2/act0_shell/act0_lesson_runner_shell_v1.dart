@@ -5819,7 +5819,12 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+        padding: const EdgeInsets.fromLTRB(
+          Act0ShellTokensV1.gapLg,
+          Act0ShellTokensV1.gapLg,
+          Act0ShellTokensV1.gapLg,
+          Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
+        ),
         child: Container(
           key: const Key('act0_shell_block_summary_card'),
           constraints: const BoxConstraints(maxWidth: 388),

@@ -3658,7 +3658,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         child: Column(
           children: [
             if (showTopBar)
-              _TopBarV1(state: state, goalLabel: _compactDailyLabel()),
+              _TopBarV1(
+                state: state,
+                goalLabel: _compactDailyLabel(),
+                goalProgress: _dailyGoalProgressValueV1(),
+              ),
             Expanded(
               child: !_bootSurfaceReady
                   ? const Center(child: CircularProgressIndicator())
@@ -6048,6 +6052,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return _streakSaveEarned()
         ? _copyV1(en: 'Saved \u2713', ru: 'Сохранён \u2713')
         : _copyV1(en: 'Done \u2713', ru: 'Готово \u2713');
+  }
+
+  // The bar under `_compactDailyLabel()` must track the same today's-goal
+  // count it labels, not the unrelated overall curriculum/XP progress.
+  double _dailyGoalProgressValueV1() {
+    final count = _dailyCompletedRepCount.clamp(0, 3);
+    return count / 3;
   }
 
   bool _streakSaveEarned() {
@@ -11456,10 +11467,15 @@ class _Act0MistakeRecordV1 {
 }
 
 class _TopBarV1 extends StatelessWidget {
-  const _TopBarV1({required this.state, required this.goalLabel});
+  const _TopBarV1({
+    required this.state,
+    required this.goalLabel,
+    required this.goalProgress,
+  });
 
   final Act0ShellStateV1 state;
   final String goalLabel;
+  final double goalProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -11501,7 +11517,7 @@ class _TopBarV1 extends StatelessWidget {
                   ),
                   child: LinearProgressIndicator(
                     minHeight: Act0ShellTokensV1.progressHeight,
-                    value: state.xpProgress,
+                    value: goalProgress,
                     backgroundColor: Act0ShellTokensV1.surface3,
                     color: Act0ShellTokensV1.actionBlue,
                   ),

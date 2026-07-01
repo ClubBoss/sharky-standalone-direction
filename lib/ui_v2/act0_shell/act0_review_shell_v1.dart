@@ -491,6 +491,17 @@ String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {
       return 'this table clue';
     }
   }
+  // Some lesson-node titles read as internal category names ("Legal
+  // actions") rather than a natural continuation of "You are working on
+  // ...". Swap those specific titles for a phrase that reads naturally in
+  // that sentence without renaming the lesson node itself.
+  const naturalPhraseOverrides = <String, String>{
+    'legal actions': 'the actions you can choose',
+  };
+  final override = naturalPhraseOverrides[normalized];
+  if (override != null) {
+    return override;
+  }
   return title;
 }
 
