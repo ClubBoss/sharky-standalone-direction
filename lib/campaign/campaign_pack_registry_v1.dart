@@ -189,6 +189,245 @@ World1MicroTaskPack? _spinePackStepsForIdV1(String packId) {
   return pack;
 }
 
+MicroTaskStep _w7VisibleRangeStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w7VisibleRangeCampaignPackV1() => <MicroTaskStep>[
+  _w7VisibleRangeStepV1(
+    prompt: 'A72 has a visible ace. Tap Button after reading the range clue.',
+    hint: 'Visible ace means fewer ace hands remain possible.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['As', '7d', '2c'],
+    contextText:
+        'W7 continues W6: start with the visible board, then narrow the possible range.',
+    tradeoffText:
+        'Use the visible ace as a range clue, or guess one exact hand.',
+    consequenceText: 'Visible-card read: +8 chips. Exact-hand leak: -6 chips.',
+    insightText:
+        'A visible ace reduces some ace hands, but ace hands can still exist.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'K84 has a visible king. Tap Cutoff after reading the range clue.',
+    hint: 'Visible king means fewer king hands remain possible.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', '8d', '4c'],
+    contextText:
+        'The same W7 idea transfers: visible ranks change what remains possible.',
+    tradeoffText:
+        'Narrow the range by the visible king, or ignore the card and drift.',
+    consequenceText: 'King read: +8 chips. Range drift spew: -6 chips.',
+    insightText:
+        'The visible king is unavailable to private hands, not proof of one exact hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: '772 is paired. Tap Big Blind after checking what can still exist.',
+    hint: 'Two visible sevens reduce seven hands, but trips are not gone.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['7s', '7d', '2c'],
+    contextText:
+        'Paired visible cards create pressure because some strong hands remain possible.',
+    tradeoffText:
+        'Respect what still exists, or over-remove every strong hand.',
+    consequenceText:
+        'Paired-board caution: +8 chips. Over-remove mistake: -6 chips.',
+    insightText:
+        'Visible pairs reduce combinations, but they do not erase every strong hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'A72 and K84 share one rule. Tap Hijack after naming it.',
+    hint: 'Visible ranks reduce matching-rank hands across boards.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Ah', '7c', '2d'],
+    contextText:
+        'This is recognition practice: carry the W7 clue across different boards.',
+    tradeoffText:
+        'Transfer the visible-card rule, or treat every board as unrelated.',
+    consequenceText: 'Transfer read: +8 chips. Recount trap: -6 chips.',
+    insightText:
+        'Visible cards narrow the possible range; they do not show the exact hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'QJ4 has a visible queen. Tap Small Blind after reading the clue.',
+    hint: 'A visible queen reduces queen-heavy hands, but some can remain.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Qs', 'Jd', '4c'],
+    contextText:
+        'Use W6 range buckets, then let W7 visible cards narrow the possible hands.',
+    tradeoffText:
+        'Adjust the range carefully, or overclaim the opponent cannot have queens.',
+    consequenceText: 'Careful narrow: +8 chips. Overclaim punish: -6 chips.',
+    insightText:
+        'Visible cards are range clues, not certainty about one exact hand.',
+  ),
+];
+
+List<MicroTaskStep> _w7VisibleRangeFollowupB0V1() => <MicroTaskStep>[
+  _w7VisibleRangeStepV1(
+    prompt: 'A95 shows an ace. Tap Button after a quick visible-card check.',
+    hint: 'Fewer ace hands remain possible, not zero.',
+    boardCards: <String>['Ad', '9c', '5s'],
+    contextText:
+        'B0 repairs the common miss: visible does not mean impossible.',
+    tradeoffText: 'Keep some ace hands in range, or erase too much.',
+    consequenceText: 'Repair held: +8 chips. Range erase leak: -6 chips.',
+    insightText: 'The exact hand is unknown; some ace hands can still exist.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'K72 shows a king. Tap Cutoff after narrowing the range.',
+    hint: 'The visible king removes one rank card from private hands.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Kh', '7s', '2d'],
+    contextText: 'B0 repeats the visible-rank read on a clean board.',
+    tradeoffText: 'Use the visible king, or keep the old count unchanged.',
+    consequenceText:
+        'Count adjusted: +8 chips. Unchanged-count spew: -6 chips.',
+    insightText:
+        'Visible cards narrow possible hands without proving one exact hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: '884 is paired. Tap Big Blind after checking what still exists.',
+    hint: 'Paired visible cards reduce some hands; they do not remove all.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['8s', '8c', '4d'],
+    contextText:
+        'B0 keeps paired-board range repair concrete and beginner-readable.',
+    tradeoffText: 'Respect remaining strong hands, or over-remove them.',
+    consequenceText: 'Still-exists read: +8 chips. Over-remove trap: -6 chips.',
+    insightText:
+        'Some strong hands still exist after visible cards reduce the count.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'A72 to K84 transfer. Tap Hijack after using the shared rule.',
+    hint: 'Visible high cards reduce matching-rank hands on both boards.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Ks', '8d', '4c'],
+    contextText: 'B0 closes by transferring the visible-card range clue.',
+    tradeoffText: 'Use the shared range rule, or restart from guessing.',
+    consequenceText: 'Transfer close: +8 chips. Guess reset: -6 chips.',
+    insightText:
+        'The shared rule narrows the possible range, not the exact hand.',
+  ),
+];
+
+List<MicroTaskStep> _w7VisibleRangeFollowupB1V1() => <MicroTaskStep>[
+  _w7VisibleRangeStepV1(
+    prompt: 'Q93 shows a queen. Tap Button after reading the range clue.',
+    hint: 'Queen-containing hands become fewer, not impossible.',
+    boardCards: <String>['Qh', '9s', '3d'],
+    contextText:
+        'B1 adds a new rank so the visible-card idea does not stay ace-only.',
+    tradeoffText: 'Narrow queen hands, or leave the range too wide.',
+    consequenceText: 'Queen narrow: +8 chips. Too-wide range leak: -6 chips.',
+    insightText:
+        'Visible queens reduce possible queen hands, but some still exist.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'TT5 is paired. Tap Cutoff after naming the safe takeaway.',
+    hint: 'Visible tens reduce ten hands but do not prove or erase trips.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ts', 'Td', '5c'],
+    contextText:
+        'B1 repairs paired-board overclaims with a second pair example.',
+    tradeoffText: 'Keep the range balanced, or jump to one exact hand.',
+    consequenceText: 'Balanced read: +8 chips. Exact-hand trap: -6 chips.',
+    insightText:
+        'Paired visible cards change possible hands without proving the exact hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'KJ4 shows a king. Tap Small Blind after adjusting the range.',
+    hint: 'The visible king narrows matching-rank hands.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Kd', 'Jh', '4s'],
+    contextText:
+        'B1 keeps the clue tied to W6 range thinking rather than seat memory.',
+    tradeoffText: 'Adjust from the visible card, or ignore the board clue.',
+    consequenceText:
+        'Board clue used: +8 chips. Ignored clue punish: -6 chips.',
+    insightText:
+        'Visible cards narrow a possible range; they do not complete the read.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'A72, K84, and Q93. Tap Big Blind after choosing the shared idea.',
+    hint: 'Each visible rank reduces matching-rank hands.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qs', '9d', '3c'],
+    contextText: 'B1 closes with multi-board recognition, not mastery.',
+    tradeoffText: 'Transfer the clue, or treat each board as a new guess.',
+    consequenceText: 'Multi-board transfer: +8 chips. Recount spew: -6 chips.',
+    insightText:
+        'The exact hand stays unknown, but the possible range becomes narrower.',
+  ),
+];
+
+List<MicroTaskStep> _w7VisibleRangeFollowupB2V1() => <MicroTaskStep>[
+  _w7VisibleRangeStepV1(
+    prompt: 'A77 has an ace and a pair. Tap Button after checking both clues.',
+    hint: 'Visible cards can narrow more than one part of the range.',
+    boardCards: <String>['Ah', '7s', '7c'],
+    contextText:
+        'B2 combines rank and paired-board clues without claiming certainty.',
+    tradeoffText: 'Combine visible clues, or over-focus on one card.',
+    consequenceText: 'Combined read: +8 chips. One-card tunnel: -6 chips.',
+    insightText:
+        'Several visible cards narrow possible hands, but exact holdings remain unknown.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'KQ4 shows two high cards. Tap Cutoff after narrowing both ranks.',
+    hint: 'Visible high cards reduce matching high-card hands.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', 'Qd', '4h'],
+    contextText: 'B2 adds scenario richness with two visible ranks.',
+    tradeoffText: 'Narrow both ranks, or leave the possible range too loose.',
+    consequenceText: 'Two-rank narrow: +8 chips. Loose range leak: -6 chips.',
+    insightText:
+        'Visible cards reduce parts of the range; they do not reveal the exact hand.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: '995 is paired. Tap Small Blind after checking what still exists.',
+    hint: 'Some nine hands are reduced, while strong hands can still exist.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['9h', '9d', '5s'],
+    contextText:
+        'B2 repeats the most important repair: still possible does not mean certain.',
+    tradeoffText: 'Respect remaining hands, or make a certainty claim.',
+    consequenceText:
+        'Respect still-possible: +8 chips. Certainty tax: -6 chips.',
+    insightText:
+        'Visible cards narrow the range, but some strong hands still exist.',
+  ),
+  _w7VisibleRangeStepV1(
+    prompt: 'Final W7 check: visible cards narrow ranges. Tap Big Blind.',
+    hint:
+        'Recognition only: narrow what is possible without claiming certainty.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['As', 'Kd', '2c'],
+    contextText: 'B2 closes the route bridge after W6 range buckets.',
+    tradeoffText: 'Use visible-card recognition, or jump to one exact hand.',
+    consequenceText: 'Strong close: +8 chips. Exact-hand misfire: -6 chips.',
+    insightText:
+        'W7 is a bridge: visible cards narrow the possible range, not a final read.',
+  ),
+];
+
 String _stepNarrativeTextV1(MicroTaskStep step) {
   return [
     step.prompt,
@@ -3038,174 +3277,13 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
     ),
   ],
 
-  'world7_spine_campaign_v1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: anchor the seat map first.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Start each set by anchoring the seat map on Button.',
-      tradeoffText: 'Anchor the map first, or guess seat labels.',
-      consequenceText: 'Anchor set: +8 chips. Seat guess: -6 chips.',
-      insightText: 'Button is the anchor for seat-order drills.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: identify the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Blind seats are position labels in this set.',
-      tradeoffText: 'Name the blind seat now, or mix labels later.',
-      consequenceText: 'Blind seat read: +8 chips. Mixed labels: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Big Blind completes the two-seat blind pair.',
-      tradeoffText: 'Complete the pair, or leave the map incomplete.',
-      consequenceText:
-          'Blind pair complete: +8 chips. Incomplete map: -6 chips.',
-      insightText: 'BB is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: continue seat order away from blinds.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'This step checks seat labels beyond Button and blinds.',
-      tradeoffText: 'Use seat-order labels, or click by shape only.',
-      consequenceText: 'Seat order held: +8 chips. Label drift: -6 chips.',
-      insightText: 'Hijack is a seat-order label, not an action-order rule.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: confirm the late-position seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Cutoff is a seat label in the late-position group.',
-      tradeoffText: 'Confirm the label, or mix late seats.',
-      consequenceText:
-          'Late seat confirmed: +8 chips. Late-seat miss: -6 chips.',
-      insightText: 'Cutoff sits before Button in seat order.',
-    ),
-  ],
+  'world7_spine_campaign_v1': _w7VisibleRangeCampaignPackV1(),
 
-  'world7_spine_followup_v1_b0': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Button: restart from the seat-order anchor.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'B0 repeats core labels with short checks.',
-      tradeoffText: 'Start from the anchor, or guess the map.',
-      consequenceText: 'Anchor restart: +8 chips. Guess start: -6 chips.',
-      insightText: 'Restart from Button when the map feels noisy.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: verify blind label quickly.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Short followup keeps blind labels accurate.',
-      tradeoffText: 'Verify the seat label, or drift by memory.',
-      consequenceText: 'Blind verified: +8 chips. Label drift: -6 chips.',
-      insightText: 'Blind labels should stay automatic.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: complete the blind pair again.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Pairing SB and BB prevents blind-label misses.',
-      tradeoffText: 'Complete the pair, or leave a gap.',
-      consequenceText: 'Pair complete: +8 chips. Gap left: -6 chips.',
-      insightText: 'SB and BB should be checked as a pair.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: finish on the late seat label.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Final step checks a non-blind late seat label.',
-      tradeoffText: 'Finish with seat order, or revert to guessing.',
-      consequenceText: 'Late label finish: +8 chips. Guess finish: -6 chips.',
-      insightText: 'Cutoff and Button should stay distinct.',
-    ),
-  ],
+  'world7_spine_followup_v1_b0': _w7VisibleRangeFollowupB0V1(),
 
-  'world7_spine_followup_v1_b1': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: seat order before Button.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'This followup reinforces late-seat order only.',
-      tradeoffText: 'Use seat-order wording, or imply action order.',
-      consequenceText: 'Seat order clear: +8 chips. Wording drift: -6 chips.',
-      insightText: 'Cutoff is before Button in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: keep the anchor label precise.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Anchor label checks support faster seat reads.',
-      tradeoffText: 'Confirm the anchor, or click by habit.',
-      consequenceText: 'Anchor confirmed: +8 chips. Habit miss: -6 chips.',
-      insightText: 'Button remains the anchor seat label.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Hijack: check the middle seat label.',
-      hint: 'Tap Hijack.',
-      expectedSeatIds: <String>['hj'],
-      contextText: 'Middle-seat labels break anchor-only habits.',
-      tradeoffText: 'Read the label, or overuse anchor cues.',
-      consequenceText:
-          'Middle seat read: +8 chips. Anchor-only miss: -6 chips.',
-      insightText: 'Hijack is a position label in seat order.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: finish with the first blind seat.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Close by returning to a blind label check.',
-      tradeoffText: 'Finish on a clear blind label, or end on drift.',
-      consequenceText: 'Blind close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Small Blind sits immediately left of Button.',
-    ),
-  ],
+  'world7_spine_followup_v1_b1': _w7VisibleRangeFollowupB1V1(),
 
-  'world7_spine_followup_v1_b2': <MicroTaskStep>[
-    MicroTaskStep(
-      prompt: 'Tap Small Blind: seat label first, then decision.',
-      hint: 'Tap Small Blind.',
-      expectedSeatIds: <String>['sb'],
-      contextText: 'Separate seat recognition from later hand decisions.',
-      tradeoffText: 'Name the seat first, or mix tasks together.',
-      consequenceText: 'Tasks separated: +8 chips. Mixed tasks: -6 chips.',
-      insightText: 'Seat labels and action decisions are different checks.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Big Blind: confirm the second blind seat.',
-      hint: 'Tap Big Blind.',
-      expectedSeatIds: <String>['bb'],
-      contextText: 'Blind-seat order should remain stable under repetition.',
-      tradeoffText: 'Confirm the blind seat, or drift on labels.',
-      consequenceText: 'Blind confirmed: +8 chips. Label drift: -6 chips.',
-      insightText: 'Big Blind is the second blind seat.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Cutoff: keep late-seat labels distinct.',
-      hint: 'Tap Cutoff.',
-      expectedSeatIds: <String>['co'],
-      contextText: 'Late-seat labels should stay precise under repetition.',
-      tradeoffText: 'Keep labels distinct, or merge late seats.',
-      consequenceText:
-          'Late-seat precision: +8 chips. Merged labels: -6 chips.',
-      insightText: 'Cutoff and Button are different late seats.',
-    ),
-    MicroTaskStep(
-      prompt: 'Tap Button: close on the anchor seat label.',
-      hint: 'Tap Button.',
-      expectedSeatIds: <String>['btn'],
-      contextText: 'Closing on the anchor confirms the full seat map.',
-      tradeoffText: 'Close on the anchor, or finish on drift.',
-      consequenceText: 'Anchor close: +8 chips. Drift close: -6 chips.',
-      insightText: 'Close on Button to reset the seat map.',
-    ),
-  ],
+  'world7_spine_followup_v1_b2': _w7VisibleRangeFollowupB2V1(),
 
   'world8_spine_campaign_v1': <MicroTaskStep>[
     MicroTaskStep(
