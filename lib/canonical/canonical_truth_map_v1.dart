@@ -113,6 +113,7 @@ const Set<String> _kCanonicalSessionBackedCampaignPackIdsV1 = <String>{
   'world6_spine_followup_v1_b0',
   'world6_spine_followup_v1_b1',
   'world6_spine_followup_v1_b2',
+  'volume_i_terminal_review_v1',
   'world7_spine_campaign_v1',
   'world7_spine_followup_v1_b0',
   'world7_spine_followup_v1_b1',

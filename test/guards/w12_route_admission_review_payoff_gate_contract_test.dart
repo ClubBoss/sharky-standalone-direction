@@ -91,7 +91,50 @@ void main() {
     final nextPack = await ProgressService.getNextSpinePackToRunV1();
 
     expect(nextPack, ProgressService.w7W10LearnerRouteGateTerminalPackIdV1);
+    expect(nextPack, 'volume_i_terminal_review_v1');
     expect(nextPack, isNot(startsWith('world13_')));
+  });
+
+  test('W12 completion terminal pack explains Volume I terminal state', () {
+    final terminalPack =
+        kCampaignPacksV1[ProgressService.w7W10LearnerRouteGateTerminalPackIdV1];
+    expect(terminalPack, isNotNull);
+    expect(terminalPack, isNotEmpty);
+
+    final copy = terminalPack!
+        .map(
+          (step) => <String>[
+            step.prompt,
+            step.hint,
+            step.contextText ?? '',
+            step.tradeoffText ?? '',
+            step.consequenceText ?? '',
+            step.insightText ?? '',
+          ].join(' '),
+        )
+        .join(' ')
+        .toLowerCase();
+
+    expect(copy, contains('volume i'));
+    expect(copy, contains('review is complete'));
+    expect(copy, contains('w13 is not open'));
+    expect(copy, contains('keep-sharp'));
+    expect(copy, contains('review'));
+    expect(copy, contains('intentional'));
+    expect(copy, contains('later worlds'));
+    expect(copy, isNot(contains('seat label')));
+    expect(copy, isNot(contains('practice cta')));
+    expect(copy, isNot(contains('mapper')));
+    expect(copy, isNot(contains('world 6')));
+    expect(copy, isNot(contains('world6')));
+    expect(copy, isNot(contains('world13')));
+    expect(copy, isNot(contains('w13+')));
+    expect(copy, isNot(contains('mastered')));
+    expect(copy, isNot(contains('top-1')));
+    expect(copy, isNot(contains('10/10')));
+    expect(copy, isNot(contains('public')));
+    expect(copy, isNot(contains('launch')));
+    expect(copy, isNot(contains('learning effect')));
   });
 
   test('W12 route packs are review/payoff packs with concrete cue repair', () {
@@ -121,6 +164,14 @@ void main() {
           )
           .join(' ')
           .toLowerCase();
+      final firstStepCopy = <String>[
+        pack.first.prompt,
+        pack.first.hint,
+        pack.first.contextText ?? '',
+        pack.first.tradeoffText ?? '',
+        pack.first.consequenceText ?? '',
+        pack.first.insightText ?? '',
+      ].join(' ').toLowerCase();
 
       expect(copy, contains('review'), reason: packId);
       expect(copy, contains('checkpoint'), reason: packId);
@@ -132,12 +183,21 @@ void main() {
       expect(copy, contains('texture'), reason: packId);
       expect(copy, contains('explanation'), reason: packId);
       expect(copy, contains('missed cue'), reason: packId);
+      expect(copy, contains('volume i'), reason: packId);
+      if (packId == 'world12_spine_campaign_v1') {
+        expect(firstStepCopy, contains('earlier clues come together'));
+        expect(firstStepCopy, contains('explain the decision'));
+        expect(copy, contains('payoff is the process'), reason: packId);
+        expect(copy, contains('into an explanation'), reason: packId);
+      }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
       expect(copy, isNot(contains('gto')), reason: packId);
       expect(copy, isNot(contains('mastered')), reason: packId);
       expect(copy, isNot(contains('guaranteed')), reason: packId);
       expect(copy, isNot(contains('proven improvement')), reason: packId);
+      expect(copy, isNot(contains('every spot')), reason: packId);
+      expect(copy, isNot(contains('solved')), reason: packId);
       expect(copy, isNot(contains('public')), reason: packId);
       expect(copy, isNot(contains('launch')), reason: packId);
       expect(copy, isNot(contains('10/10')), reason: packId);

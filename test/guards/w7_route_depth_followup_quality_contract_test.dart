@@ -32,6 +32,23 @@ void main() {
       expect(copy, contains('visible'), reason: packId);
       expect(copy, contains('range'), reason: packId);
       expect(copy, contains('possible'), reason: packId);
+      if (packId == 'world7_spine_campaign_v1') {
+        final firstStepCopy = <String>[
+          pack.first.prompt,
+          pack.first.hint,
+          pack.first.contextText ?? '',
+          pack.first.tradeoffText ?? '',
+          pack.first.consequenceText ?? '',
+          pack.first.insightText ?? '',
+        ].join(' ').toLowerCase();
+
+        expect(firstStepCopy, contains('w6'), reason: packId);
+        expect(firstStepCopy, contains('range buckets'), reason: packId);
+        expect(firstStepCopy, contains('one exact hand'), reason: packId);
+        expect(firstStepCopy, contains('visible cards'), reason: packId);
+        expect(firstStepCopy, contains('narrow'), reason: packId);
+        expect(firstStepCopy, contains('possible'), reason: packId);
+      }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('range thinking lite')), reason: packId);
       expect(copy, isNot(contains('combo density')), reason: packId);

@@ -125,6 +125,14 @@ void main() {
           )
           .join(' ')
           .toLowerCase();
+      final firstStepCopy = <String>[
+        pack.first.prompt,
+        pack.first.hint,
+        pack.first.contextText ?? '',
+        pack.first.tradeoffText ?? '',
+        pack.first.consequenceText ?? '',
+        pack.first.insightText ?? '',
+      ].join(' ').toLowerCase();
 
       expect(copy, contains('pot'), reason: packId);
       expect(copy, contains('call'), reason: packId);
@@ -132,6 +140,17 @@ void main() {
       expect(copy, contains('fold'), reason: packId);
       expect(copy, contains('risk'), reason: packId);
       expect(copy, contains('reward'), reason: packId);
+      if (packId == 'world9_spine_campaign_v1') {
+        expect(
+          firstStepCopy,
+          contains('after spotting a draw'),
+          reason: packId,
+        );
+        expect(firstStepCopy, contains('call price'), reason: packId);
+        expect(firstStepCopy, contains('worth paying'), reason: packId);
+        expect(firstStepCopy, contains('same price check'), reason: packId);
+        expect(firstStepCopy, contains('no clear draw'), reason: packId);
+      }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('bet purpose')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
@@ -140,6 +159,8 @@ void main() {
       expect(copy, isNot(contains('guaranteed')), reason: packId);
       expect(copy, isNot(contains('public')), reason: packId);
       expect(copy, isNot(contains('playable')), reason: packId);
+      expect(copy, isNot(contains('every spot')), reason: packId);
+      expect(copy, isNot(contains('guarantee the outcome')), reason: packId);
     }
   });
 }

@@ -218,7 +218,7 @@ List<MicroTaskStep> _w7VisibleRangeCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'btn',
     boardCards: <String>['As', '7d', '2c'],
     contextText:
-        'W7 continues W6: start with the visible board, then narrow the possible range.',
+        'In W6, you started thinking in range buckets instead of one exact hand. Now W7 shows how visible cards narrow which hands are still possible.',
     tradeoffText:
         'Use the visible ace as a range clue, or guess one exact hand.',
     consequenceText: 'Visible-card read: +8 chips. Exact-hand leak: -6 chips.',
@@ -457,9 +457,8 @@ List<MicroTaskStep> _w8DrawImprovementCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', '7h', '2c'],
     contextText:
-        'W8 follows W7: after visible cards narrow ranges, draws show how a future card can improve a hand.',
-    tradeoffText:
-        'Name the flush draw path, or treat the hand as already complete.',
+        'W8 reconnects W5 outs and draws to W7: after visible cards narrow ranges, draws show how a future card can improve a hand.',
+    tradeoffText: 'Name the flush draw path, or treat the hand as made now.',
     consequenceText: 'Draw read: +8 chips. Made-hand mistake: -6 chips.',
     insightText:
         'A flush draw is not made yet; a future card of the suit can improve it.',
@@ -511,7 +510,7 @@ List<MicroTaskStep> _w8DrawImprovementCampaignPackV1() => <MicroTaskStep>[
     contextText:
         'W8 stays beginner-safe: draw means possible improvement, not certainty.',
     tradeoffText:
-        'Explain the future-card path, or overclaim the hand is solved.',
+        'Explain the future-card path, or overclaim the hand is decided.',
     consequenceText: 'Claim-safe close: +8 chips. Overclaim punish: -6 chips.',
     insightText:
         'Flush draw, open-ended draw, and one-gap draw are improvement clues, not final answers.',
@@ -624,8 +623,7 @@ List<MicroTaskStep> _w8DrawImprovementFollowupB2V1() => <MicroTaskStep>[
     boardCards: <String>['Jh', 'Th', '9s'],
     contextText:
         'B2 adds scenario richness: a hand can have more than one improvement path.',
-    tradeoffText:
-        'Combine visible draw paths, or treat the spot as already complete.',
+    tradeoffText: 'Combine visible draw paths, or treat the spot as made now.',
     consequenceText: 'Combined draw read: +8 chips. Made-hand jump: -6 chips.',
     insightText:
         'Flush draw plus straight shape can add future-card improvement paths.',
@@ -698,7 +696,7 @@ List<MicroTaskStep> _w9CallPriceCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', '9d', '4c'],
     contextText:
-        'W9 follows W8: after draw improvement, compare the call cost to the pot reward.',
+        'W9 follows W8: after spotting a draw, ask whether the call price is worth paying for the pot reward; the same price check matters when no clear draw is visible.',
     tradeoffText: 'Compare price to pot reward, or call without checking risk.',
     consequenceText: 'Price read: +8 chips. Risk-blind call: -6 chips.',
     insightText:
@@ -737,7 +735,7 @@ List<MicroTaskStep> _w9CallPriceCampaignPackV1() => <MicroTaskStep>[
     boardCards: <String>['Jh', 'Th', '5c'],
     contextText:
         'Keep W9 claim-safe: pot price informs call or fold, not the exact result.',
-    tradeoffText: 'Use risk and reward, or pretend odds guarantee the outcome.',
+    tradeoffText: 'Use risk and reward, or pretend odds predict the result.',
     consequenceText: 'Claim-safe call read: +8 chips. Result claim: -6 chips.',
     insightText:
         'Odds guide the call/fold decision by comparing risk to pot reward.',
@@ -767,8 +765,7 @@ List<MicroTaskStep> _w9CallPriceFollowupB0V1() => <MicroTaskStep>[
         'Compare the price to the pot, or treat every call amount the same.',
     consequenceText:
         'Relative-price read: +8 chips. Same-price leak: -6 chips.',
-    insightText:
-        'A small call can be attractive when the pot reward is already large.',
+    insightText: 'A small call can be attractive when the pot reward is large.',
   ),
   _w9CallPriceStepV1(
     prompt: 'Small pot, big call. Tap Cutoff after the expensive-price read.',
@@ -811,7 +808,7 @@ List<MicroTaskStep> _w9CallPriceFollowupB0V1() => <MicroTaskStep>[
 List<MicroTaskStep> _w9CallPriceFollowupB1V1() => <MicroTaskStep>[
   _w9CallPriceStepV1(
     prompt: 'Medium pot, medium call. Tap Button after checking the price.',
-    hint: 'Not every spot is clearly cheap or clearly expensive.',
+    hint: 'Some prices are not clearly cheap or clearly expensive.',
     boardCards: <String>['Ac', '8s', '5d'],
     contextText: 'B1 adds middle-price judgment without heavy math.',
     tradeoffText:
@@ -898,7 +895,7 @@ List<MicroTaskStep> _w9CallPriceFollowupB2V1() => <MicroTaskStep>[
         'Use risk/reward discipline, or claim the result from price alone.',
     consequenceText: 'Safe close: +8 chips. Result claim: -6 chips.',
     insightText:
-        'Pot odds guide call/fold choices; they do not guarantee the outcome.',
+        'Pot odds guide call/fold choices; they do not predict the outcome.',
   ),
 ];
 
@@ -931,7 +928,7 @@ List<MicroTaskStep> _w10BetPurposeCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', 'Kd', '4c'],
     contextText:
-        'W10 follows W9: after price discipline, ask why the bet is made.',
+        'W4 showed that bets and prices exist; W9 asked about call price; W10 asks what the bet is trying to accomplish now.',
     tradeoffText:
         'Name the value purpose, or confuse it with making stronger hands fold.',
     consequenceText: 'Value read: +8 chips. Purpose mix-up: -6 chips.',
@@ -949,7 +946,7 @@ List<MicroTaskStep> _w10BetPurposeCampaignPackV1() => <MicroTaskStep>[
         'Read the stronger-hands-fold purpose, or call every bet value.',
     consequenceText: 'Purpose contrast: +8 chips. Value-only leak: -6 chips.',
     insightText:
-        'A pressure bet can target stronger hands folding, but it does not guarantee a fold.',
+        'A pressure bet can target stronger hands folding, but it does not promise a fold.',
   ),
   _w10BetPurposeStepV1(
     prompt: 'Worse calls or stronger folds? Tap Big Blind after comparing.',
@@ -983,7 +980,7 @@ List<MicroTaskStep> _w10BetPurposeCampaignPackV1() => <MicroTaskStep>[
     boardCards: <String>['As', 'Qc', '5d'],
     contextText: 'W10 closes by separating value from pressure.',
     tradeoffText:
-        'Keep purpose clear, or claim every bet does both jobs equally.',
+        'Keep purpose clear, or blend the two jobs without checking targets.',
     consequenceText: 'Clear close: +8 chips. Blended-purpose leak: -6 chips.',
     insightText:
         'Value targets worse hands calling; pressure targets stronger hands folding.',
@@ -1161,11 +1158,11 @@ List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
   _w11BoardTextureStepV1(
     prompt: 'Dry board texture has fewer clear links. Tap Button.',
     hint:
-        'A dry board is less connected and usually carries less immediate danger.',
+        'A dry board has fewer specific straight or flush paths that can improve.',
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', '7d', '2c'],
     contextText:
-        'W11 starts after bet purpose by reading board texture danger.',
+        'W11 starts after bet purpose by reading board texture danger as specific paths, not fear of every board.',
     tradeoffText:
         'Name the dry board texture, or treat every flop as equally dangerous.',
     consequenceText: 'Dry board read: +8 chips. Same-texture leak: -6 chips.',
@@ -1182,7 +1179,7 @@ List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
         'Use the connected ranks, or ignore how more hands can interact.',
     consequenceText: 'Connected read: +8 chips. Missed danger: -6 chips.',
     insightText:
-        'A connected board can be more dangerous because more hands can find draws or made-hand paths.',
+        'A connected board can be more dangerous because more hands can find specific draw or made-hand paths.',
   ),
   _w11BoardTextureStepV1(
     prompt: 'Suited board texture adds flush pressure. Tap Big Blind.',
@@ -1190,10 +1187,10 @@ List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'bb',
     boardCards: <String>['Kh', 'Th', '4s'],
     contextText: 'W11 adds suit texture as another beginner-safe clue.',
-    tradeoffText: 'Read the suited danger clue, or say suits never matter.',
+    tradeoffText: 'Read the suited danger clue, or ignore suits completely.',
     consequenceText: 'Suit clue read: +8 chips. Suit miss: -6 chips.',
     insightText:
-        'A suited board can add flush pressure; it is a danger signal, not a certain result.',
+        'A suited board can add flush pressure because a future card can improve flush paths; it is a danger signal, not a certain result.',
   ),
   _w11BoardTextureStepV1(
     prompt:
@@ -1203,8 +1200,8 @@ List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
     boardCards: <String>['Jc', 'Tc', '8d'],
     contextText: 'W11 closes the first pack with one pair transfer.',
     tradeoffText:
-        'Transfer texture danger to one pair, or call one pair always safe.',
-    consequenceText: 'Transfer read: +8 chips. Always-safe leak: -6 chips.',
+        'Transfer texture danger to one pair, or trust one pair without checking texture.',
+    consequenceText: 'Transfer read: +8 chips. Texture-check leak: -6 chips.',
     insightText:
         'One pair can still matter, but connected and suited texture asks for more caution.',
   ),
@@ -1267,7 +1264,7 @@ List<MicroTaskStep> _w11BoardTextureFollowupB1V1() => <MicroTaskStep>[
     tradeoffText: 'Notice fewer paths, or invent danger from no clear clue.',
     consequenceText: 'Fewer paths: +8 chips. Invented danger: -6 chips.',
     insightText:
-        'Dry board texture is a calmer clue, but it still does not guarantee the result.',
+        'Dry board texture is a calmer clue, but it still does not predict the result.',
   ),
   _w11BoardTextureStepV1(
     prompt: 'Connected board, higher texture danger. Tap Hijack.',
@@ -1293,7 +1290,7 @@ List<MicroTaskStep> _w11BoardTextureFollowupB1V1() => <MicroTaskStep>[
   ),
   _w11BoardTextureStepV1(
     prompt: 'One pair needs caution on dangerous texture. Tap Big Blind.',
-    hint: 'One pair is not always safe on connected suited boards.',
+    hint: 'One pair needs a texture check on connected suited boards.',
     expectedSeatId: 'bb',
     boardCards: <String>['Qd', 'Jd', '9c'],
     contextText: 'B1 closes with one pair caution transfer.',
@@ -1333,7 +1330,7 @@ List<MicroTaskStep> _w11BoardTextureFollowupB2V1() => <MicroTaskStep>[
     expectedSeatId: 'co',
     boardCards: <String>['Ks', '9s', '4d'],
     contextText: 'B2 repeats suited texture in claim-safe language.',
-    tradeoffText: 'Use suited danger, or claim the flush is already decided.',
+    tradeoffText: 'Use suited danger, or claim the flush result is decided.',
     consequenceText: 'Suit read: +8 chips. Result claim: -6 chips.',
     insightText:
         'Suited board texture adds danger; it does not prove a final hand.',
@@ -1345,8 +1342,7 @@ List<MicroTaskStep> _w11BoardTextureFollowupB2V1() => <MicroTaskStep>[
     expectedSeatId: 'bb',
     boardCards: <String>['Jc', 'Tc', '8c'],
     contextText: 'B2 closes W11 and keeps the next world locked.',
-    tradeoffText:
-        'Transfer texture danger to one pair, or claim one pair solves the spot.',
+    tradeoffText: 'Transfer texture danger to one pair, or overtrust one pair.',
     consequenceText: 'Safe close: +8 chips. Overclaim leak: -6 chips.',
     insightText:
         'One pair deserves more caution when board texture is connected and suited.',
@@ -1382,7 +1378,7 @@ List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'btn',
     boardCards: <String>['Qh', 'Jh', '8c'],
     contextText:
-        'W12 reviews visible cards, range changes, draw pressure, call price, bet purpose, texture, and explanation.',
+        'W12 is where earlier clues come together: visible cards, ranges, draws, price, bet purpose, and texture all help explain the decision.',
     tradeoffText:
         'Name the missed cue, or jump to an answer without connecting the clues.',
     consequenceText: 'Review checkpoint: +8 chips. Missed cue: -6 chips.',
@@ -1408,7 +1404,7 @@ List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'bb',
     boardCards: <String>['Kd', '9c', '3s'],
     contextText:
-        'W12 uses bet purpose as a review clue beside visible cards, range, draw, call price, and texture.',
+        'W12 uses bet purpose as a Volume I review clue beside visible cards, range, draw, call price, and texture.',
     tradeoffText:
         'Explain the bet purpose, or let the result replace the decision reason.',
     consequenceText: 'Purpose review: +8 chips. Missed cue: -6 chips.',
@@ -1422,7 +1418,7 @@ List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
     expectedSeatId: 'hj',
     boardCards: <String>['Jc', 'Tc', '8d'],
     contextText:
-        'The payoff is a modest Volume I review checkpoint, not a readiness claim.',
+        'The Volume I payoff is the process: connect visible cards, ranges, draws, call price, bet purpose, board texture, and missed-cue patterns into an explanation without making a readiness claim.',
     tradeoffText:
         'Connect the missed cue types, or call one clue the whole explanation.',
     consequenceText: 'Review payoff: +8 chips. Missed cue: -6 chips.',
@@ -1437,7 +1433,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
     hint: 'Visible cards remove some hands and change the range story.',
     boardCards: <String>['As', 'Qs', '6d'],
     contextText:
-        'B0 repairs the missed cue by reviewing visible cards, range, texture, draw, call price, bet purpose, and explanation.',
+        'B0 repairs the Volume I missed cue by reviewing visible cards, range, texture, draw, call price, bet purpose, and explanation.',
     tradeoffText: 'Read the range shift, or review from hand strength only.',
     consequenceText: 'Range review: +8 chips. Missed cue: -6 chips.',
     insightText:
@@ -1449,7 +1445,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
     expectedSeatId: 'sb',
     boardCards: <String>['9h', '8h', '2c'],
     contextText:
-        'B0 keeps the review concrete: missed cue can be draw, call price, or texture.',
+        'B0 keeps the Volume I review concrete: missed cue can be draw, call price, or texture.',
     tradeoffText: 'Pair draw with call price, or review the draw without cost.',
     consequenceText: 'Price repair: +8 chips. Missed cue: -6 chips.',
     insightText:
@@ -1461,7 +1457,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
     expectedSeatId: 'co',
     boardCards: <String>['Qd', 'Jd', '9c'],
     contextText:
-        'B0 reviews texture danger beside visible cards, range, draw, call price, and bet purpose.',
+        'B0 reviews Volume I texture danger beside visible cards, range, draw, call price, and bet purpose.',
     tradeoffText:
         'Use texture in the explanation, or ignore a concrete missed cue.',
     consequenceText: 'Texture repair: +8 chips. Missed cue: -6 chips.',
@@ -1475,7 +1471,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
     expectedSeatId: 'bb',
     boardCards: <String>['Kh', '7s', '3c'],
     contextText:
-        'B0 payoff connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+        'B0 Volume I payoff connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
     tradeoffText:
         'Name the bet purpose, or leave the review explanation unfinished.',
     consequenceText: 'Purpose repair: +8 chips. Missed cue: -6 chips.',
@@ -1490,7 +1486,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB1V1() => <MicroTaskStep>[
     hint: 'Use several clues, not one result story.',
     boardCards: <String>['Ts', '9s', '6h'],
     contextText:
-        'B1 reviews visible cards, range, draw, call price, bet purpose, texture, and explanation in a new board.',
+        'B1 reviews Volume I visible cards, range, draw, call price, bet purpose, texture, and explanation in a new board.',
     tradeoffText:
         'Build the explanation from clues, or skip the missed cue review.',
     consequenceText: 'Explanation review: +8 chips. Missed cue: -6 chips.',
@@ -1528,7 +1524,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB1V1() => <MicroTaskStep>[
     expectedSeatId: 'bb',
     boardCards: <String>['Jd', 'Td', '8s'],
     contextText:
-        'B1 closes with a review checkpoint that connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+        'B1 closes with a Volume I review checkpoint that connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
     tradeoffText:
         'Name the missed cue clearly, or finish with a vague review line.',
     consequenceText: 'Concrete repair: +8 chips. Vague cue: -6 chips.',
@@ -1543,7 +1539,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
     hint: 'Start the review with what cards make possible.',
     boardCards: <String>['Ac', 'Kc', '7d'],
     contextText:
-        'B2 starts the final review checkpoint with visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+        'B2 starts the final Volume I review checkpoint with visible cards, range, draw, call price, bet purpose, texture, and explanation.',
     tradeoffText:
         'Anchor the range clue, or begin the explanation from the result.',
     consequenceText: 'Range anchor: +8 chips. Missed cue: -6 chips.',
@@ -1556,7 +1552,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
     expectedSeatId: 'sb',
     boardCards: <String>['Qh', 'Jh', '9s'],
     contextText:
-        'B2 reviews a missed cue stack: draw, texture, visible cards, range, call price, bet purpose, and explanation.',
+        'B2 reviews a Volume I missed cue stack: draw, texture, visible cards, range, call price, bet purpose, and explanation.',
     tradeoffText:
         'Connect draw with texture, or split the review into isolated guesses.',
     consequenceText: 'Stack review: +8 chips. Missed cue: -6 chips.',
@@ -1569,7 +1565,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
     expectedSeatId: 'co',
     boardCards: <String>['9c', '6s', '2d'],
     contextText:
-        'B2 separates call price from bet purpose while keeping visible cards, range, draw, texture, and explanation in view.',
+        'B2 separates call price from bet purpose while keeping Volume I visible cards, range, draw, texture, and explanation in view.',
     tradeoffText:
         'Use both decision clues, or let one missed cue erase the review.',
     consequenceText: 'Decision review: +8 chips. Missed cue: -6 chips.',
@@ -1585,10 +1581,61 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
     contextText:
         'The final checkpoint is a learner-safe Volume I review payoff, not an outcome claim.',
     tradeoffText:
-        'Name the missed cue and connect the clues, or claim the course proves every spot.',
+        'Name the missed cue and connect the clues, or overclaim the review answer.',
     consequenceText: 'Review payoff: +8 chips. Overclaim: -6 chips.',
     insightText:
-        'The checkpoint shows practice connecting clues; it does not claim every future spot is solved.',
+        'The checkpoint shows practice connecting clues; it does not promise later results.',
+  ),
+];
+
+List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
+  MicroTaskStep(
+    prompt: 'Volume I review is complete. Tap Button for a keep-sharp review.',
+    hint: 'The route is at a terminal review state.',
+    expectedSeatIds: <String>['btn'],
+    contextText:
+        'Volume I review is complete; this keep-sharp review is intentional, and W13 is not open in this route.',
+    tradeoffText:
+        'Use this as a keep-sharp review, or mistake it for a new world.',
+    consequenceText:
+        'Terminal review held: +8 chips. Route-confusion: -6 chips.',
+    insightText:
+        'The next visible activity is review and keep-sharp work, not a W6 regression.',
+  ),
+  MicroTaskStep(
+    prompt: 'Keep-sharp review: connect the clue stack. Tap Cutoff.',
+    hint: 'Review visible cards, range, draw, price, purpose, and texture.',
+    expectedSeatIds: <String>['co'],
+    contextText:
+        'This terminal pack keeps Volume I clues warm without opening W13.',
+    tradeoffText:
+        'Review the clue stack, or treat the terminal state as a proof claim.',
+    consequenceText: 'Review state clear: +8 chips. Proof overclaim: -6 chips.',
+    insightText:
+        'Terminal review repeats earlier clues without making a proof claim.',
+  ),
+  MicroTaskStep(
+    prompt: 'Keep-sharp review: name the missed cue. Tap Big Blind.',
+    hint: 'A missed cue can be range, draw, call price, purpose, or texture.',
+    expectedSeatIds: <String>['bb'],
+    contextText:
+        'The terminal state is for review, explanation, and modest repair language.',
+    tradeoffText: 'Name the missed cue, or overclaim future results.',
+    consequenceText: 'Cue named: +8 chips. Overclaim: -6 chips.',
+    insightText:
+        'Volume I can be reviewed here; no next-world promise is made.',
+  ),
+  MicroTaskStep(
+    prompt: 'Terminal check: Volume I stays in review. Tap Small Blind.',
+    hint: 'Stop at review; do not expect W13 in this route.',
+    expectedSeatIds: <String>['sb'],
+    contextText:
+        'Volume I review is complete, W13 is not open, and later worlds remain blocked in this route.',
+    tradeoffText:
+        'Stay in review mode, or expect an unavailable route to open.',
+    consequenceText: 'Terminal close: +8 chips. Route overreach: -6 chips.',
+    insightText:
+        'Use the review loop to keep clues sharp while later worlds stay blocked.',
   ),
 ];
 
@@ -4441,6 +4488,8 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
     ),
   ],
 
+  'volume_i_terminal_review_v1': _volumeITerminalReviewPackV1(),
+
   'world7_spine_campaign_v1': _w7VisibleRangeCampaignPackV1(),
 
   'world7_spine_followup_v1_b0': _w7VisibleRangeFollowupB0V1(),
@@ -4518,6 +4567,7 @@ const Set<String> kCampaignPackIdsV1 = <String>{
   'world6_spine_followup_v1_b0',
   'world6_spine_followup_v1_b1',
   'world6_spine_followup_v1_b2',
+  'volume_i_terminal_review_v1',
   'world7_spine_campaign_v1',
   'world7_spine_followup_v1_b0',
   'world7_spine_followup_v1_b1',

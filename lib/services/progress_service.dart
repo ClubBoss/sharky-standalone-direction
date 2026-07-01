@@ -393,7 +393,7 @@ class ProgressService {
     campaign_registry.kCampaignPackIdsV1,
   );
   static const String w7W10LearnerRouteGateTerminalPackIdV1 =
-      'world6_spine_followup_v1_b2';
+      'volume_i_terminal_review_v1';
   static const Set<String> _w8W10LearnerRouteLockedPackIdsV1 = <String>{};
   static const int bankrollCap = 100;
   static const int bankrollRegenIntervalMinutes = 60;
@@ -3184,6 +3184,9 @@ class ProgressService {
     }
     if (normalized == 'world10_spine_followup_v1_b2') {
       return 'World10 Followup B2';
+    }
+    if (normalized == 'volume_i_terminal_review_v1') {
+      return 'Volume I Review Terminal';
     }
     return 'Campaign';
   }

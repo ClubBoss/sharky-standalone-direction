@@ -123,12 +123,26 @@ void main() {
           )
           .join(' ')
           .toLowerCase();
+      final firstStepCopy = <String>[
+        pack.first.prompt,
+        pack.first.hint,
+        pack.first.contextText ?? '',
+        pack.first.tradeoffText ?? '',
+        pack.first.consequenceText ?? '',
+        pack.first.insightText ?? '',
+      ].join(' ').toLowerCase();
 
       expect(copy, contains('draw'), reason: packId);
       expect(copy, contains('improve'), reason: packId);
       expect(copy, contains('future card'), reason: packId);
       expect(copy, contains('flush draw'), reason: packId);
       expect(copy, contains('open-ended'), reason: packId);
+      if (packId == 'world8_spine_campaign_v1') {
+        expect(firstStepCopy, contains('w5'), reason: packId);
+        expect(firstStepCopy, contains('outs'), reason: packId);
+        expect(firstStepCopy, contains('draw'), reason: packId);
+        expect(firstStepCopy, contains('improve'), reason: packId);
+      }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('range thinking lite')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
@@ -137,6 +151,8 @@ void main() {
       expect(copy, isNot(contains('guaranteed')), reason: packId);
       expect(copy, isNot(contains('public')), reason: packId);
       expect(copy, isNot(contains('playable')), reason: packId);
+      expect(copy, isNot(contains('solved')), reason: packId);
+      expect(copy, isNot(contains('already complete')), reason: packId);
     }
   });
 }

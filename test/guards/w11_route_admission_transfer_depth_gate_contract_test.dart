@@ -129,11 +129,20 @@ void main() {
       expect(copy, contains('connected'), reason: packId);
       expect(copy, contains('suited'), reason: packId);
       expect(copy, contains('one pair'), reason: packId);
+      if (packId == 'world11_spine_campaign_v1') {
+        expect(copy, contains('specific'), reason: packId);
+        expect(copy, contains('path'), reason: packId);
+        expect(copy, contains('improve'), reason: packId);
+      }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
       expect(copy, isNot(contains('gto')), reason: packId);
       expect(copy, isNot(contains('mastered')), reason: packId);
       expect(copy, isNot(contains('guaranteed')), reason: packId);
+      expect(copy, isNot(contains('always-safe')), reason: packId);
+      expect(copy, isNot(contains('always safe')), reason: packId);
+      expect(copy, isNot(contains('never matters')), reason: packId);
+      expect(copy, isNot(contains('automatically bad')), reason: packId);
       expect(copy, isNot(contains('public')), reason: packId);
       expect(copy, isNot(contains('playable')), reason: packId);
       expect(copy, isNot(contains('world12')), reason: packId);
