@@ -2,10 +2,11 @@ import 'package:poker_analyzer/campaign/w12_route_admission_contract_v1.dart';
 
 const String kW12SourceRouteProofIdV1 = 'w12_source_route_proof_v1';
 
-/// Non-learner-visible W12 route-backed proof descriptor.
+/// W12 route-backed proof descriptor.
 ///
 /// The descriptor gives W12 a stable proof identity while preserving source
-/// admission beats for a later runtime decision.
+/// admission beats for the learner route. It does not imply W13, commercial
+/// readiness, or public learning-effect readiness.
 class W12RouteBackedProofV1 {
   const W12RouteBackedProofV1({
     required this.routeId,
@@ -33,7 +34,7 @@ W12RouteBackedProofV1 buildW12RouteBackedProofV1(
     worldId: 'world12',
     sessionId: 'w12.s01',
     beats: materializedBeats,
-    learnerVisible: false,
-    w11HandoffEnabled: false,
+    learnerVisible: true,
+    w11HandoffEnabled: true,
   );
 }

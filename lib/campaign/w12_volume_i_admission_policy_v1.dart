@@ -1,12 +1,12 @@
 import 'package:poker_analyzer/campaign/w12_route_backed_proof_registry_v1.dart';
 
-enum W12VolumeIAdmissionStateV1 { plannedContinuationHandoffDisabled }
+enum W12VolumeIAdmissionStateV1 { activeRouteAdmittedW13Locked }
 
 /// W12 Volume I admission descriptor.
 ///
-/// This records the safe state: W12 can be referenced by the existing Learn
-/// horizon as a planned continuation, while active entry, runtime consumption,
-/// and prior-world handoff remain disabled.
+/// This records the safe state: W12 has active route entry from W11 while W13,
+/// commercial readiness, public learning-effect claims, and final-quality
+/// claims remain blocked.
 class W12VolumeIAdmissionPolicyV1 {
   const W12VolumeIAdmissionPolicyV1({
     required this.state,
@@ -43,15 +43,15 @@ W12VolumeIAdmissionPolicyV1 buildW12VolumeIAdmissionPolicyV1(
   W12RouteBackedProofV1 proof,
 ) {
   return W12VolumeIAdmissionPolicyV1(
-    state: W12VolumeIAdmissionStateV1.plannedContinuationHandoffDisabled,
+    state: W12VolumeIAdmissionStateV1.activeRouteAdmittedW13Locked,
     routeProofId: proof.routeId,
     surfaceOwner: 'Act0LearnPathShellV1',
     surfaceCopyKey: 'act0_shell_levels_planned_foundation_line',
     learnerVisibleAsPlannedContinuation: true,
-    activeEntryEnabled: false,
-    w11HandoffEnabled: false,
-    runtimeConsumptionEnabled: false,
-    requiresRuntimeConsumptionBeforeActiveEntry: true,
+    activeEntryEnabled: true,
+    w11HandoffEnabled: true,
+    runtimeConsumptionEnabled: true,
+    requiresRuntimeConsumptionBeforeActiveEntry: false,
     w13FrontierOnly: true,
     impliesVolumeICompletion: false,
     allowsPremiumOrPaywallClaim: false,

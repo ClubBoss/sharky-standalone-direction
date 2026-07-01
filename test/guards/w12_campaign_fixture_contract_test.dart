@@ -13,7 +13,7 @@ const _fixturePath =
 
 void main() {
   test(
-    'W12 campaign fixture preserves the six non-routed source packet reps',
+    'W12 campaign fixture preserves the six source packet reps with route admission',
     () {
       final packetFile = File(_packetPath);
       final fixtureFile = File(_fixturePath);
@@ -131,9 +131,19 @@ void main() {
       }
 
       expect(
-        kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+        kCampaignPackIdsV1.where((id) => id.startsWith('world12_')).toSet(),
+        const <String>{
+          'world12_spine_campaign_v1',
+          'world12_spine_followup_v1_b0',
+          'world12_spine_followup_v1_b1',
+          'world12_spine_followup_v1_b2',
+        },
+        reason: 'The fixture must coexist with admitted W12 route packs.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
         isEmpty,
-        reason: 'The fixture must not create a W12 campaign registration.',
+        reason: 'The fixture must not create a W13 campaign registration.',
       );
     },
   );

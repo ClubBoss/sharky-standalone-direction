@@ -9,7 +9,7 @@ const _packetPath =
     '$_root/sessions/w12.s01/w12.s01_deterministic_source_packet_v1.md';
 
 void main() {
-  test('W12 source draft has one structured non-routed mindset session', () {
+  test('W12 source draft has one structured admitted review session', () {
     expect(File('$_root/world.md').existsSync(), isTrue);
     expect(File('$_root/index.md').existsSync(), isTrue);
     expect(File('$_root/sessions/index.md').existsSync(), isTrue);
@@ -27,9 +27,19 @@ void main() {
     }
 
     expect(
-      kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+      kCampaignPackIdsV1.where((id) => id.startsWith('world12_')).toSet(),
+      const <String>{
+        'world12_spine_campaign_v1',
+        'world12_spine_followup_v1_b0',
+        'world12_spine_followup_v1_b1',
+        'world12_spine_followup_v1_b2',
+      },
+      reason: 'The active source draft now coexists with admitted W12 packs.',
+    );
+    expect(
+      kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
       isEmpty,
-      reason: 'The active source draft must not register W12 as a campaign.',
+      reason: 'The active source draft must not register W13 as a campaign.',
     );
   });
 

@@ -346,6 +346,8 @@ class ProgressService {
       'world10_calibration_completed_v1';
   static const String _world11CalibrationCompletedV1Key =
       'world11_calibration_completed_v1';
+  static const String _world12CalibrationCompletedV1Key =
+      'world12_calibration_completed_v1';
   static const String _world10TrackChoiceSeenV1Key =
       'world10_track_choice_seen_v1';
   static const String _world10TrackChoiceV1Key = 'world10_track_choice_v1';
@@ -2600,6 +2602,16 @@ class ProgressService {
     return prefs.getBool(_world11CalibrationCompletedV1Key) ?? false;
   }
 
+  static Future<void> markWorld12CalibrationCompletedV1() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_world12CalibrationCompletedV1Key, true);
+  }
+
+  static Future<bool> isWorld12CalibrationCompletedV1() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_world12CalibrationCompletedV1Key) ?? false;
+  }
+
   static bool _isValidWorld10TrackChoiceV1(String value) {
     return value == world10TrackChoiceCashV1 ||
         value == world10TrackChoiceTournamentV1 ||
@@ -3304,6 +3316,14 @@ class ProgressService {
                       'world11_spine_campaign_v1',
                     )) {
                   return 'world11_spine_campaign_v1';
+                }
+                final world12CalibrationCompleted =
+                    await isWorld12CalibrationCompletedV1();
+                if (!world12CalibrationCompleted &&
+                    !await isSpinePackCompletedV1(
+                      'world12_spine_campaign_v1',
+                    )) {
+                  return 'world12_spine_campaign_v1';
                 }
                 return w7W10LearnerRouteGateTerminalPackIdV1;
               }

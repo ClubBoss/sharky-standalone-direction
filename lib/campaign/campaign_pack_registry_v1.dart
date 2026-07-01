@@ -1353,6 +1353,245 @@ List<MicroTaskStep> _w11BoardTextureFollowupB2V1() => <MicroTaskStep>[
   ),
 ];
 
+MicroTaskStep _w12ReviewPayoffStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
+  _w12ReviewPayoffStepV1(
+    prompt: 'Review checkpoint: pick the main clue. Tap Button.',
+    hint: 'Start with visible cards, range, and texture before the action.',
+    expectedSeatId: 'btn',
+    boardCards: <String>['Qh', 'Jh', '8c'],
+    contextText:
+        'W12 reviews visible cards, range changes, draw pressure, call price, bet purpose, texture, and explanation.',
+    tradeoffText:
+        'Name the missed cue, or jump to an answer without connecting the clues.',
+    consequenceText: 'Review checkpoint: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Visible cards can change range stories; texture and draw clues shape the explanation.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Review checkpoint: price and draw together. Tap Cutoff.',
+    hint: 'Call price matters more when a draw can improve later.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ah', 'Th', '4s'],
+    contextText:
+        'The checkpoint asks whether the missed cue was draw quality, call price, or texture danger.',
+    tradeoffText:
+        'Connect draw plus call price, or treat the review as one loose guess.',
+    consequenceText: 'Clues connected: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'A safe explanation can say the draw has paths and the call price controls the cost.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Review checkpoint: bet purpose before result. Tap Big Blind.',
+    hint: 'Ask whether worse hands call or stronger hands fold.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Kd', '9c', '3s'],
+    contextText:
+        'W12 uses bet purpose as a review clue beside visible cards, range, draw, call price, and texture.',
+    tradeoffText:
+        'Explain the bet purpose, or let the result replace the decision reason.',
+    consequenceText: 'Purpose review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Bet purpose helps explain the decision without claiming the result was known.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Review payoff: combine the clue stack. Tap Hijack.',
+    hint:
+        'Use visible cards, range, draw, call price, bet purpose, and texture.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Jc', 'Tc', '8d'],
+    contextText:
+        'The payoff is a modest Volume I review checkpoint, not a readiness claim.',
+    tradeoffText:
+        'Connect the missed cue types, or call one clue the whole explanation.',
+    consequenceText: 'Review payoff: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'A good explanation combines simple clues and stays modest about what they prove.',
+  ),
+];
+
+List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint repair: visible cards shift range. Tap Button.',
+    hint: 'Visible cards remove some hands and change the range story.',
+    boardCards: <String>['As', 'Qs', '6d'],
+    contextText:
+        'B0 repairs the missed cue by reviewing visible cards, range, texture, draw, call price, bet purpose, and explanation.',
+    tradeoffText: 'Read the range shift, or review from hand strength only.',
+    consequenceText: 'Range review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Visible cards can narrow range stories before price or bet purpose is judged.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint repair: draw plus call price. Tap Small Blind.',
+    hint: 'A draw clue is stronger when the call price is manageable.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['9h', '8h', '2c'],
+    contextText:
+        'B0 keeps the review concrete: missed cue can be draw, call price, or texture.',
+    tradeoffText: 'Pair draw with call price, or review the draw without cost.',
+    consequenceText: 'Price repair: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Draw improvement and call price explain why a continue-or-fold decision changes.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint repair: texture changes confidence. Tap Cutoff.',
+    hint: 'Connected suited texture can make one pair less comfortable.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Qd', 'Jd', '9c'],
+    contextText:
+        'B0 reviews texture danger beside visible cards, range, draw, call price, and bet purpose.',
+    tradeoffText:
+        'Use texture in the explanation, or ignore a concrete missed cue.',
+    consequenceText: 'Texture repair: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Texture can make an explanation more cautious without proving a final result.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt:
+        'Checkpoint repair: bet purpose completes the review. Tap Big Blind.',
+    hint: 'Add why the bet exists after reading the board clues.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Kh', '7s', '3c'],
+    contextText:
+        'B0 payoff connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+    tradeoffText:
+        'Name the bet purpose, or leave the review explanation unfinished.',
+    consequenceText: 'Purpose repair: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'The review checkpoint is useful when the reason names the concrete cue that was missed.',
+  ),
+];
+
+List<MicroTaskStep> _w12ReviewPayoffFollowupB1V1() => <MicroTaskStep>[
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint variation: choose the safest explanation. Tap Button.',
+    hint: 'Use several clues, not one result story.',
+    boardCards: <String>['Ts', '9s', '6h'],
+    contextText:
+        'B1 reviews visible cards, range, draw, call price, bet purpose, texture, and explanation in a new board.',
+    tradeoffText:
+        'Build the explanation from clues, or skip the missed cue review.',
+    consequenceText: 'Explanation review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'A safe explanation can combine texture danger with draw and price clues.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint variation: turn card changed the review. Tap Hijack.',
+    hint: 'A new card can change draw and texture pressure.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Ah', 'Jh', '4c', 'Th'],
+    contextText:
+        'B1 repairs the missed cue by naming the turn-card change before call price or bet purpose.',
+    tradeoffText:
+        'Update the review after the turn card, or reuse the old explanation.',
+    consequenceText: 'Turn review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'The same visible cards and range story can change when draw or texture pressure changes.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint variation: price controls the continue. Tap Cutoff.',
+    hint: 'Call price is a concrete clue, not a result prediction.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Kc', 'Qc', '5d'],
+    contextText:
+        'B1 reviews call price beside draw, texture, visible cards, range, bet purpose, and explanation.',
+    tradeoffText: 'Use the price clue, or review only the look of the hand.',
+    consequenceText: 'Price review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Call price helps explain risk and reward while staying modest about outcome.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Checkpoint payoff: name the missed cue. Tap Big Blind.',
+    hint: 'The missed cue can be range, draw, price, purpose, or texture.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Jd', 'Td', '8s'],
+    contextText:
+        'B1 closes with a review checkpoint that connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+    tradeoffText:
+        'Name the missed cue clearly, or finish with a vague review line.',
+    consequenceText: 'Concrete repair: +8 chips. Vague cue: -6 chips.',
+    insightText:
+        'The payoff is concrete when the explanation says which cue changed the decision.',
+  ),
+];
+
+List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
+  _w12ReviewPayoffStepV1(
+    prompt: 'Final checkpoint: visible cards and range first. Tap Button.',
+    hint: 'Start the review with what cards make possible.',
+    boardCards: <String>['Ac', 'Kc', '7d'],
+    contextText:
+        'B2 starts the final review checkpoint with visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+    tradeoffText:
+        'Anchor the range clue, or begin the explanation from the result.',
+    consequenceText: 'Range anchor: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Visible cards and range changes are the first checkpoint before later clues.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Final checkpoint: draw and texture together. Tap Small Blind.',
+    hint: 'Draw pressure and texture danger can point the same way.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Qh', 'Jh', '9s'],
+    contextText:
+        'B2 reviews a missed cue stack: draw, texture, visible cards, range, call price, bet purpose, and explanation.',
+    tradeoffText:
+        'Connect draw with texture, or split the review into isolated guesses.',
+    consequenceText: 'Stack review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Draw and texture clues can both ask for caution without making the result known.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Final checkpoint: call price and bet purpose. Tap Cutoff.',
+    hint: 'Price asks about cost; purpose asks why the bet exists.',
+    expectedSeatId: 'co',
+    boardCards: <String>['9c', '6s', '2d'],
+    contextText:
+        'B2 separates call price from bet purpose while keeping visible cards, range, draw, texture, and explanation in view.',
+    tradeoffText:
+        'Use both decision clues, or let one missed cue erase the review.',
+    consequenceText: 'Decision review: +8 chips. Missed cue: -6 chips.',
+    insightText:
+        'Call price and bet purpose answer different parts of the explanation.',
+  ),
+  _w12ReviewPayoffStepV1(
+    prompt: 'Final W12 payoff: connect the Volume I clues. Tap Big Blind.',
+    hint:
+        'Review visible cards, range, draw, call price, bet purpose, texture, and explanation.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Ks', 'Qs', 'Ts'],
+    contextText:
+        'The final checkpoint is a learner-safe Volume I review payoff, not an outcome claim.',
+    tradeoffText:
+        'Name the missed cue and connect the clues, or claim the course proves every spot.',
+    consequenceText: 'Review payoff: +8 chips. Overclaim: -6 chips.',
+    insightText:
+        'The checkpoint shows practice connecting clues; it does not claim every future spot is solved.',
+  ),
+];
+
 String _stepNarrativeTextV1(MicroTaskStep step) {
   return [
     step.prompt,
@@ -4241,6 +4480,14 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
   'world11_spine_followup_v1_b1': _w11BoardTextureFollowupB1V1(),
 
   'world11_spine_followup_v1_b2': _w11BoardTextureFollowupB2V1(),
+
+  'world12_spine_campaign_v1': _w12ReviewPayoffCampaignPackV1(),
+
+  'world12_spine_followup_v1_b0': _w12ReviewPayoffFollowupB0V1(),
+
+  'world12_spine_followup_v1_b1': _w12ReviewPayoffFollowupB1V1(),
+
+  'world12_spine_followup_v1_b2': _w12ReviewPayoffFollowupB2V1(),
 });
 
 const Set<String> kCampaignPackIdsV1 = <String>{
@@ -4291,6 +4538,10 @@ const Set<String> kCampaignPackIdsV1 = <String>{
   'world11_spine_followup_v1_b0',
   'world11_spine_followup_v1_b1',
   'world11_spine_followup_v1_b2',
+  'world12_spine_campaign_v1',
+  'world12_spine_followup_v1_b0',
+  'world12_spine_followup_v1_b1',
+  'world12_spine_followup_v1_b2',
 };
 
 int campaignHandCountForPackIdV1(String packId) {
