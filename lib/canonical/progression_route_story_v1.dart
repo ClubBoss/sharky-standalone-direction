@@ -167,7 +167,7 @@ String progressionRouteCompletionBodyTextForSessionWorldV1({
 String progressionRouteTerminalBodyTextForSessionWorldV1({required int world}) {
   return switch (world) {
     6 =>
-      'World 6 completed Range Thinking: keep reading buckets and width before action. Future range topics stay locked for later.',
+      'World 6 completed Range Thinking: keep reading buckets and width before action. Visible Cards Change Ranges is ready next.',
     _ => learnerJourneyBackToMapForNextLessonTextV1(),
   };
 }

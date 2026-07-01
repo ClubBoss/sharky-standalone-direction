@@ -390,11 +390,7 @@ class ProgressService {
   );
   static const String w7W10LearnerRouteGateTerminalPackIdV1 =
       'world6_spine_followup_v1_b2';
-  static const Set<String> _w7W10LearnerRouteLockedPackIdsV1 = <String>{
-    'world7_spine_campaign_v1',
-    'world7_spine_followup_v1_b0',
-    'world7_spine_followup_v1_b1',
-    'world7_spine_followup_v1_b2',
+  static const Set<String> _w8W10LearnerRouteLockedPackIdsV1 = <String>{
     'world8_spine_campaign_v1',
     'world8_spine_followup_v1_b0',
     'world8_spine_followup_v1_b1',
@@ -3014,9 +3010,9 @@ class ProgressService {
     return campaign_registry.isCampaignPackIdV1(packId);
   }
 
-  static bool _isW7W10LearnerRouteLockedPackIdV1(String packId) {
+  static bool _isW8W10LearnerRouteLockedPackIdV1(String packId) {
     final normalized = packId.trim().toLowerCase();
-    return _w7W10LearnerRouteLockedPackIdsV1.contains(normalized);
+    return _w8W10LearnerRouteLockedPackIdsV1.contains(normalized);
   }
 
   static Future<int> totalHandsInCampaignV1() async {
@@ -3193,7 +3189,7 @@ class ProgressService {
   static Future<String> getNextSpinePackToRunV1() async {
     final active = await getSpineActivePackIdV1();
     if (active != null) {
-      if (_isW7W10LearnerRouteLockedPackIdV1(active)) {
+      if (_isW8W10LearnerRouteLockedPackIdV1(active)) {
         return w7W10LearnerRouteGateTerminalPackIdV1;
       }
       return active;
@@ -3275,6 +3271,12 @@ class ProgressService {
                 );
                 if (!await isSpinePackCompletedV1(world6Followup)) {
                   return world6Followup;
+                }
+                final world7CalibrationCompleted =
+                    await isWorld7CalibrationCompletedV1();
+                if (!world7CalibrationCompleted &&
+                    !await isSpinePackCompletedV1('world7_spine_campaign_v1')) {
+                  return 'world7_spine_campaign_v1';
                 }
                 return w7W10LearnerRouteGateTerminalPackIdV1;
               }

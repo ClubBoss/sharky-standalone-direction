@@ -191,7 +191,12 @@ Human-QA-ready, or public learning-effect claims.
 - Checklist created.
 - Decision gate selected W7 state B: visible locked preview.
 - W7 visible locked preview implementation is active in the existing route-card owner.
-- W7 remains locked, non-selectable, and not route-admitted.
-- Selective W7 route admission remains blocked until route entry/exit, stale-resume, mapper, Practice CTA, and Human QA boundaries are separately admitted.
+- W7 selective route entry is admitted through the existing post-W6 learner
+  progression path.
+- W7 active pack continuation is admitted for W7 packs only.
+- W7 completed route state falls back to the existing W6 terminal until a
+  separate W7 follow-up or W8 admission wave.
+- W7 route-card preview metadata remains locked/non-selectable.
+- Mapper and Practice CTA remain blocked for W7.
 - W8-W12 remain locked until their future staged admission.
 - No score movement is authorized by this checklist.

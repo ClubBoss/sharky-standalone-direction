@@ -178,7 +178,7 @@ void main() {
     _expectNoW6ForbiddenStrategyTerms(contract.completionBodyText);
   });
 
-  test('world6 final chrome keeps future route locked and claim safe', () {
+  test('world6 final chrome points to W7 route entry and stays claim safe', () {
     final contract = resolveSessionDrillRunnerProgressionChromeContractV1(
       const SessionDrillRunnerProgressionChromeInputV1(
         sessionId: 'w6.s10',
@@ -194,15 +194,14 @@ void main() {
     expect(contract.hasNextSession, isFalse);
     expect(
       contract.completionBodyText,
-      'World 6 completed Range Thinking: keep reading buckets and width before action. Future range topics stay locked for later.',
+      'World 6 completed Range Thinking: keep reading buckets and width before action. Visible Cards Change Ranges is ready next.',
     );
-    expect(contract.completionBodyText.toLowerCase(), contains('locked'));
     expect(contract.completionBodyText.toLowerCase(), contains('buckets'));
     expect(contract.completionBodyText.toLowerCase(), contains('width'));
     expect(contract.completionBodyText.toLowerCase(), isNot(contains('w7')));
     expect(
-      contract.completionBodyText.toLowerCase(),
-      isNot(contains('world 7')),
+      contract.completionBodyText,
+      contains('Visible Cards Change Ranges'),
     );
     _expectNoW6ForbiddenStrategyTerms(contract.completionBodyText);
   });
