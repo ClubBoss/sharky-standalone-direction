@@ -1122,8 +1122,8 @@ class _FoundationProofCardV1 extends StatelessWidget {
                 child: Text(
                   _learnCopyV1(
                     context,
-                    en: 'The 36-world path starts here.',
-                    ru: 'Путь из 36 миров начинается здесь.',
+                    en: 'Start Volume I: one clear table read at a time.',
+                    ru: 'Начни Volume I: одно ясное чтение стола за раз.',
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.fade,

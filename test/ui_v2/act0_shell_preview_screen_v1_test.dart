@@ -11520,19 +11520,19 @@ void main() {
     expect(find.text('Reason'), findsNothing);
     expect(find.text('Move on'), findsNothing);
     expect(find.text('Your first useful hand is ready.'), findsOneWidget);
+    expect(find.textContaining('Your first lesson is ready'), findsOneWidget);
     expect(
-      find.text(
-        'Open the start. Learn will keep the next lesson visible after that.',
-      ),
+      find.textContaining('Learn will keep the next one visible'),
       findsOneWidget,
     );
+    expect(find.textContaining('Open the start'), findsNothing);
     expect(
       find.text(
         'The route is set. Home opens one clear spot, and Learn keeps the next path visible.',
       ),
       findsNothing,
     );
-    expect(find.text('Open your start'), findsOneWidget);
+    expect(find.text('Open first lesson'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();
 
@@ -16083,9 +16083,9 @@ void main() {
             summary: const Act0BlockCompletionSummaryV1(
               lessonTitle: 'Button open basics',
               xpEarned: 18,
-              errorCount: 3,
-              taskCount: 5,
-              correctCount: 2,
+              errorCount: 1,
+              taskCount: 2,
+              correctCount: 1,
               startLevel: 1,
               endLevel: 1,
               startXp: 42,
@@ -16107,7 +16107,14 @@ void main() {
       ),
     );
 
-    expect(find.textContaining('Need 80% accuracy'), findsOneWidget);
+    expect(find.textContaining('Need 80% accuracy'), findsNothing);
+    expect(find.textContaining('Blinds'), findsNothing);
+    expect(
+      find.text(
+        'Keep replaying this clue to deepen the read before moving on.',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Almost there - replay to unlock'), findsOneWidget);
     expect(find.text('Lesson complete'), findsNothing);
     expect(
@@ -30126,7 +30133,7 @@ void main() {
     expect(find.text('What moved'), findsNothing);
     expect(find.text('Unlocked now: Blinds and action order'), findsNothing);
     expect(find.text('Perfect path'), findsNothing);
-    expect(find.text('Continue to Blinds and action order.'), findsOneWidget);
+    expect(find.textContaining('unlock Blinds'), findsNothing);
     expect(find.textContaining('Premium'), findsNothing);
     expect(find.textContaining('Today 0/3'), findsNothing);
     expect(
@@ -30148,6 +30155,8 @@ void main() {
     expect(suggestedNext.overflow, TextOverflow.fade);
     expect(accuracy.maxLines, 2);
     expect(accuracy.overflow, TextOverflow.fade);
+    expect(accuracy.data, contains('1 error'));
+    expect(accuracy.data, isNot(contains('1 errors')));
     expect(
       find.byKey(const Key('act0_shell_block_summary_repair_mix')),
       findsNothing,

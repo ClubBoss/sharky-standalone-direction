@@ -104,7 +104,12 @@ void main() {
     expect(find.text('W2 · Hand Discipline'), findsOneWidget);
     expect(find.text('W3 · Position Thinking'), findsOneWidget);
     expect(find.text('W4 \u00B7 Bet Purpose / Price'), findsOneWidget);
-    expect(find.text('The 36-world path starts here.'), findsOneWidget);
+    expect(
+      find.text('Start Volume I: one clear table read at a time.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('36-world'), findsNothing);
+    expect(find.textContaining('36 worlds'), findsNothing);
     expect(find.textContaining('World 5'), findsNothing);
     expect(find.textContaining('W5'), findsNothing);
     expect(find.textContaining('built'), findsNothing);

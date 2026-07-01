@@ -128,10 +128,10 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         detail: _copyV1(
           en: widget.replayMode
               ? 'Go back when you are ready. Your progress stays exactly where it was.'
-              : 'Open the start. Learn will keep the next lesson visible after that.',
+              : 'Your first lesson is ready. Learn will keep the next one visible after that.',
           ru: widget.replayMode
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
-              : 'Открой старт. Затем Learn покажет следующий урок.',
+              : 'Первый урок готов. Затем Learn покажет следующий урок.',
         ),
         mood: Act0SharkyMoodV1.celebrate,
         replayMode: widget.replayMode,
@@ -143,7 +143,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           child: const SizedBox.shrink(),
         ),
         ctaLabel: _copyV1(
-          en: widget.replayMode ? 'Back to profile' : 'Open your start',
+          en: widget.replayMode ? 'Back to profile' : 'Open first lesson',
           ru: widget.replayMode ? 'Назад в профиль' : 'Открыть свой старт',
         ),
         onNext: widget.onCompleted,
@@ -184,6 +184,33 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final blocks = act0BuildInstructionBlocksV1(text: detail, compact: true);
+    final centerContent = beatIndex == beatCount;
+    final beatFrame = Container(
+      key: const Key('act0_shell_welcome_beat_frame'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.58),
+        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Act0ShellTokensV1.sectionTitle),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          if (visual != null) ...[
+            visual!,
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+          ],
+          Act0SharkyGuideCardV1(
+            eyebrow: eyebrow,
+            line: line,
+            detail: blocks.join(' '),
+            mood: mood,
+            compact: true,
+          ),
+        ],
+      ),
+    );
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -202,40 +229,18 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
               onClose: onClose,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Expanded(
-              child: ListView(
-                children: [
-                  Container(
-                    key: const Key('act0_shell_welcome_beat_frame'),
-                    padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-                    decoration: Act0ShellTokensV1.surfaceDecoration(
-                      color: Act0ShellTokensV1.surface2.withValues(alpha: 0.58),
-                      borderColor: Act0ShellTokensV1.primary.withValues(
-                        alpha: 0.14,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title, style: Act0ShellTokensV1.sectionTitle),
-                        const SizedBox(height: Act0ShellTokensV1.gapMd),
-                        if (visual != null) ...[
-                          visual!,
-                          const SizedBox(height: Act0ShellTokensV1.gapMd),
-                        ],
-                        Act0SharkyGuideCardV1(
-                          eyebrow: eyebrow,
-                          line: line,
-                          detail: blocks.join(' '),
-                          mood: mood,
-                          compact: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            if (centerContent)
+              Flexible(
+                fit: FlexFit.loose,
+                child: SingleChildScrollView(child: beatFrame),
+              )
+            else
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(child: beatFrame),
+                ),
               ),
-            ),
             const SizedBox(height: Act0ShellTokensV1.gapLg),
             SizedBox(
               width: double.infinity,

@@ -428,8 +428,7 @@ class Act0BlockCompletionSummaryV1 {
     Act0SharkyCoachMomentV1.worldOneCompletionPayoff,
   );
 
-  String get worldOneCompletionPathLabel =>
-      'First milestone in the 36-world Core Shark Path.';
+  String get worldOneCompletionPathLabel => 'First milestone in Volume I.';
 
   String get worldOneCompletionNextLabel =>
       'Next: ${nextWorldTitle?.trim() ?? 'Hand Discipline'}';
@@ -599,7 +598,7 @@ class Act0BlockCompletionSummaryV1 {
         ? hasNextLesson
               ? 'Next lesson unlocked: ${nextLessonTitle!}.'
               : 'Clean finish. You completed all lessons.'
-        : 'Need $unlockAccuracyPercent% accuracy to unlock ${nextLessonTitle!}. Replay this block and tighten up the mistakes.';
+        : 'Keep replaying this clue to deepen the read before moving on.';
   }
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
@@ -6248,7 +6247,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} errors',
+                '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,

@@ -44,10 +44,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('You banked the first table read.'), findsOneWidget);
-    expect(
-      find.text('First milestone in the 36-world Core Shark Path.'),
-      findsOneWidget,
-    );
+    expect(find.text('First milestone in Volume I.'), findsOneWidget);
     expect(find.text('Next: Hand Discipline'), findsOneWidget);
     expect(
       find.text(
@@ -57,6 +54,8 @@ void main() {
     );
     expect(find.text('Open next world'), findsOneWidget);
     expect(find.textContaining('mastered'), findsNothing);
+    expect(find.textContaining('36-world'), findsNothing);
+    expect(find.textContaining('36 worlds'), findsNothing);
     expect(find.textContaining('36 worlds unlocked'), findsNothing);
     expect(find.textContaining('pro-level'), findsNothing);
   });
