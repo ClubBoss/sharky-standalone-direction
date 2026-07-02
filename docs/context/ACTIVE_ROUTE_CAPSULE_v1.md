@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w4_w5_band_transition_milestone_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_phrase_tier_contract_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -14,7 +14,15 @@ CLOSED. Phase 5 - Sharky Companion is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Sharky Phrase Tier Contract v1`
+- `Foundation + Developing Phrase Sets v1`
+
+## Phase 5 Sequence
+
+1. Sharky Phrase Tier Contract - CLOSED
+2. Foundation + Developing Phrase Sets - ACTIVE
+3. Sharky Saw You Improve
+4. Sharky Companion States
+5. Sharky Visual Growth / Evolution
 
 ## Phase 4 Sequence (closed)
 

@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w4_w5_band_transition_milestone_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_phrase_tier_contract_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -67,7 +67,20 @@ milestone rim and an extra accent ring, used only by this one moment. World
 grid, motion, XP, level, mastery, or RPG badge economy was introduced, and no
 general multi-band framework exists — `hasBandTransitionPayoff` is
 intentionally `worldNumber == 4` only. Phase 4 - Proof Progression is now
-CLOSED. The active task is `Sharky Phrase Tier Contract v1` (Phase 5).
+CLOSED. Sharky Phrase Tier Contract v1 landed the first Phase 5 companion
+contract: `act0_sharky_coach_phrase_contract_v1.dart` now owns a deterministic
+phrase context/resolver with `surface`, `momentType`, `tier`, `evidenceKind`,
+optional repair/transfer/proof/completion state, claim boundary, and fallback
+key. Only `foundation` and `developing` phrase tiers are active; W13+ does not
+introduce a new phrase tier and falls back to the currently proven developing
+contract until a later explicit scope reopens it. Phrase families are bounded
+to `orient`, `explain`, `repair`, `confirm`, `reinforce`, `reflect`, and
+`transition`. Missing evidence returns the neutral fallback, not a specific
+claim. The only product migration was the existing W4->W5 `Foundation complete`
+identity label moving under the phrase contract while preserving rendered
+copy. No new visual state, pose, asset, motion, animation, chat, AI copy, or
+personality engine exists. The active task is `Foundation + Developing Phrase
+Sets v1` (Phase 5).
 
 ## Remaining Visual Route
 

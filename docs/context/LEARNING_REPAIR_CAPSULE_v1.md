@@ -2,8 +2,8 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
-Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
-Verified active route artifact: `docs/_reviews/cross_session_proof_profile_v1.md`.
+Verified product HEAD: pending commit (this task's own commit advances it).
+Verified active route artifact: `docs/_reviews/sharky_phrase_tier_contract_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -38,6 +38,10 @@ reason it is not an improvement claim.
   a recent-session window, not calendar-week reporting.
 - Profile's existing `Progress proof` card consumes source-backed lifetime and
   recent banked-fix proof without owning or mutating the proof projection.
+- Sharky Phrase Tier Contract v1 makes learner-facing Sharky phrases consume
+  structured evidence state instead of owning truth. Direct-observation,
+  repair, transfer, pattern, and completion claims require matching source
+  evidence; missing evidence resolves to a neutral fallback.
 
 ## Constraints
 
@@ -64,6 +68,8 @@ broad outcome history.
 - Local events support truth.
 - Telemetry does not own product state.
 - Product state must remain explainable from local source/runtime contracts.
+- Phrase selection belongs to the deterministic phrase resolver, not telemetry.
+- Full learner-facing phrase text is not logged by default.
 - Server analytics, privacy policy work, cohort analysis, and remote dashboards
   remain later scope.
 
@@ -75,6 +81,9 @@ broad outcome history.
 - Session Summary can report local proof, but cannot imply global learning
   effect or mastery.
 - Review and Profile can show evidence, not invented identity growth.
+- Sharky can say what the current evidence supports, but cannot infer mastery,
+  biggest leaks, AI discovery, always/never behavior, memory guarantees, or
+  unsupported personality/emotion state.
 
 ## Key Owner Seams
 

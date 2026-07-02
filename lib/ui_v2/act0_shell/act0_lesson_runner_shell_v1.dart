@@ -486,7 +486,9 @@ class Act0BlockCompletionSummaryV1 {
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
 
-  String get bandTransitionIdentityLabel => 'Foundation complete';
+  String get bandTransitionIdentityLabel => act0SharkyCoachLineForMomentV1(
+    Act0SharkyCoachMomentV1.bandTransitionPayoff,
+  ).replaceFirst(RegExp(r'\.$'), '');
 
   String get bandTransitionLearningLabel =>
       'You can now read the table, hand, action, and position before '
