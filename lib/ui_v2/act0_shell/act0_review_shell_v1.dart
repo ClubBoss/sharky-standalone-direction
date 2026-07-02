@@ -206,40 +206,58 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final fixedLayout = constraints.maxHeight >= 760;
+        final fixedLayout = constraints.maxHeight >= 620;
+        const topPadding = Act0ShellTokensV1.gapLg;
+        final bottomPadding = fixedLayout
+            ? Act0ShellTokensV1.gapLg
+            : Act0ShellTokensV1.gapXl;
+        final fixedBodyHeight =
+            constraints.maxHeight - topPadding - bottomPadding;
+        final centeredBench = Act0ShellTokensV1.centeredContent(
+          context,
+          tabletMaxWidth: 720,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [...header, ...benchBody],
+          ),
+        );
         final content = Padding(
           padding: EdgeInsets.fromLTRB(
             pagePadding,
-            Act0ShellTokensV1.gapLg,
+            topPadding,
             pagePadding,
-            fixedLayout ? Act0ShellTokensV1.gapLg : Act0ShellTokensV1.gapXl,
+            bottomPadding,
           ),
-          child: Act0ShellTokensV1.centeredContent(
-            context,
-            tabletMaxWidth: 720,
-            child: fixedLayout
-                ? Column(
+          child: fixedLayout
+              ? SizedBox(
+                  height: fixedBodyHeight < 0 ? 0 : fixedBodyHeight,
+                  child: Column(
                     key: const Key('act0_shell_review_screen'),
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ...header,
-                      ...benchBody,
+                      centeredBench,
                       const Spacer(),
-                      const SizedBox(height: Act0ShellTokensV1.gapMd),
-                      const _ReviewBenchFooterV1(),
-                    ],
-                  )
-                : Column(
-                    key: const Key('act0_shell_review_screen'),
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ...header,
-                      ...benchBody,
-                      const SizedBox(height: Act0ShellTokensV1.gapMd),
-                      const _ReviewBenchFooterV1(),
+                      Act0ShellTokensV1.centeredContent(
+                        context,
+                        tabletMaxWidth: 720,
+                        child: const _ReviewBenchFooterV1(),
+                      ),
                     ],
                   ),
-          ),
+                )
+              : Column(
+                  key: const Key('act0_shell_review_screen'),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    centeredBench,
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    Act0ShellTokensV1.centeredContent(
+                      context,
+                      tabletMaxWidth: 720,
+                      child: const _ReviewBenchFooterV1(),
+                    ),
+                  ],
+                ),
         );
         if (fixedLayout) {
           return content;
@@ -577,14 +595,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
           ],
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(actionLine, style: Act0ShellTokensV1.muted),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            'Keep this clue in view before your next hand.',
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.textDim,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          const SizedBox(height: 6),
           Text(
             act0SharkyCoachLineForMomentV1(
               Act0SharkyCoachMomentV1.reviewActiveRepair,
@@ -735,45 +746,67 @@ class _ReviewBenchFooterV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Center(
       key: const Key('act0_shell_review_bench_footer'),
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.check_circle_rounded,
-          color: Act0VisualCanonV1.greenTable,
-          size: 17,
-        ),
-        const SizedBox(width: Act0ShellTokensV1.gapXs),
-        Flexible(
-          child: Text(
-            'Nothing else is due. Misses land here the moment they happen.',
-            textAlign: TextAlign.center,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.text.withOpacity(0.55),
-              fontSize: 13,
-              height: 1.18,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 360),
+        child: Row(
+          key: const Key('act0_shell_review_bench_footer_content'),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Act0VisualCanonV1.greenTable,
+              size: 19,
             ),
-          ),
+            const SizedBox(width: 9),
+            Flexible(
+              child: Text(
+                'Nothing else is due. Misses land here the moment they happen.',
+                textAlign: TextAlign.left,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.text.withOpacity(0.55),
+                  fontSize: 13,
+                  height: 1.18,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
 
 String _reviewMissSlotLabelV1(Act0MistakeCardV1 mistake) {
   final title = mistake.title.trim();
+  final guardedLines = act0ReviewRepairCoachCopyGuardLinesV1(clueLabel: title);
+  for (final line in guardedLines) {
+    final match = RegExp(
+      r'\bthe\s+([a-z0-9][a-z0-9 -]*?)\s+clue\b',
+      caseSensitive: false,
+    ).firstMatch(line);
+    if (match != null) {
+      return _reviewHyphenatedClueLabelV1(match.group(1) ?? '');
+    }
+  }
   if (title.isEmpty) {
     return 'current clue';
   }
-  final normalized = title
+  return _reviewHyphenatedClueLabelV1(title);
+}
+
+String _reviewHyphenatedClueLabelV1(String rawLabel) {
+  final normalized = rawLabel
+      .trim()
       .toLowerCase()
       .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
       .replaceAll(RegExp(r'^-+|-+$'), '');
   if (normalized.isEmpty) {
-    return title;
+    return 'current clue';
   }
-  return '$normalized clue';
+  return '${normalized[0].toUpperCase()}${normalized.substring(1)} clue';
 }
 
 String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {

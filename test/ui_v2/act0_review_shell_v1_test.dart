@@ -126,10 +126,15 @@ void main() {
       expect(find.text('1 miss to fix'), findsOneWidget);
       expect(find.text('HOW REVIEW WORKS'), findsOneWidget);
       expect(find.text('MISS'), findsOneWidget);
+      expect(find.text('No-bet-yet clue'), findsOneWidget);
       expect(find.text('REPAIR'), findsOneWidget);
       expect(find.text('PROOF'), findsOneWidget);
       expect(find.text('one clean rep'), findsOneWidget);
       expect(find.text('banked read'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_review_bench_footer_content')),
+        findsOneWidget,
+      );
       expect(
         find.text(
           'Nothing else is due. Misses land here the moment they happen.',
@@ -158,7 +163,7 @@ void main() {
       );
       expect(
         find.text('Keep this clue in view before your next hand.'),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.text('Keep this read warm with one quick rep.'),
@@ -206,6 +211,10 @@ void main() {
     expect(
       find.text('Keep this read warm with one quick rep.'),
       findsOneWidget,
+    );
+    expect(
+      find.text('Keep this clue in view before your next hand.'),
+      findsNothing,
     );
     expect(find.text('Practice this spot'), findsOneWidget);
     expect(find.textContaining('Fixed'), findsNothing);
@@ -586,6 +595,10 @@ void main() {
     expect(find.text('Nothing to fix right now.'), findsOneWidget);
     expect(find.text('HOW REVIEW WORKS'), findsOneWidget);
     expect(find.text('MISS'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_review_bench_footer_content')),
+      findsOneWidget,
+    );
     expect(find.text('REPAIR'), findsOneWidget);
     expect(find.text('PROOF'), findsOneWidget);
     expect(find.text('one clean rep'), findsOneWidget);
