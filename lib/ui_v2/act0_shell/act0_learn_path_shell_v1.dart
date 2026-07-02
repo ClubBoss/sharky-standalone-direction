@@ -1227,6 +1227,9 @@ class _WorldContextStripV5 extends StatelessWidget {
     final compact = MediaQuery.sizeOf(context).width < 420;
     final normalizedProgress = progressFraction.clamp(0.0, 1.0);
     final progressPercent = (normalizedProgress * 100).round();
+    final conciseProgressLabel = moduleProgressLabel
+        .replaceFirst(RegExp(r'\s+complete$'), '')
+        .trim();
     const accent = _learnV6Cyan;
     return Material(
       key: const Key('act0_shell_module_header'),
@@ -1393,8 +1396,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                         Text(
                           _learnCopyV1(
                             context,
-                            en: 'World progress · $lessonCount lessons · $moduleProgressLabel',
-                            ru: 'Прогресс мира · $lessonCount уроков · $moduleProgressLabel',
+                            en: '$conciseProgressLabel · $progressPercent%',
+                            ru: '$conciseProgressLabel · $progressPercent%',
                           ),
                           key: const Key('act0_shell_learn_route_board'),
                           maxLines: 1,
@@ -3617,35 +3620,6 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                key: const Key('act0_shell_current_mission_ambient_visual'),
-                right: compact ? -58 : -46,
-                top: compact ? -2 : -8,
-                child: Transform.rotate(
-                  angle: -0.14,
-                  child: Container(
-                    width: compact ? 250 : 310,
-                    height: compact ? 132 : 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[
-                          _learnV6Cyan.withValues(alpha: compact ? 0.16 : 0.18),
-                          _learnV6Blue.withValues(alpha: 0.10),
-                          const Color(0xFF031018).withValues(alpha: 0.02),
-                        ],
-                      ),
-                      border: Border.all(
-                        color: _learnV6Cyan.withValues(
-                          alpha: compact ? 0.10 : 0.14,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -3796,51 +3770,17 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
-                    child: Semantics(
-                      button: true,
-                      enabled: onStart != null,
-                      child: Material(
-                        key: const Key('act0_shell_current_mission_cta'),
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusPill,
-                        ),
-                        child: InkWell(
-                          key: const Key('act0_shell_start_luminous_cta_v6'),
-                          onTap: onStart,
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                          child: Ink(
-                            height: Act0VisualMetricsV1.primaryCtaHeight,
-                            decoration:
-                                Act0VisualCanonV1.primaryCtaDecoration(),
-                            child: Center(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  _learnCopyV1(
-                                    context,
-                                    en: 'Start',
-                                    ru: 'Старт',
-                                  ),
-                                  maxLines: 1,
-                                  softWrap: false,
-                                  style: Act0ShellTokensV1.cta.copyWith(
-                                    color: Act0ShellTokensV1.onPrimary,
-                                    fontSize: 15.8,
-                                    shadows: const <Shadow>[
-                                      Shadow(
-                                        color: Color(0x66002244),
-                                        blurRadius: 6,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                    child: FilledButton(
+                      key: const Key('act0_shell_current_mission_cta'),
+                      onPressed: onStart,
+                      style: Act0ShellTokensV1.primaryButtonStyle(
+                        height: Act0VisualMetricsV1.primaryCtaHeight,
+                      ),
+                      child: Text(
+                        _learnCopyV1(context, en: 'Start', ru: 'Старт'),
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
                       ),
                     ),
                   ),

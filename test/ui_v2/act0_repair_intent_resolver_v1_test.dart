@@ -1062,15 +1062,6 @@ Future<void> _advanceTeachingToDrill(WidgetTester tester) async {
       await tester.pumpAndSettle();
       continue;
     }
-    final luminousStartCta = find.byKey(
-      const Key('act0_shell_start_luminous_cta_v6'),
-    );
-    if (luminousStartCta.evaluate().isNotEmpty) {
-      await tester.ensureVisible(luminousStartCta);
-      await tester.tap(luminousStartCta, warnIfMissed: false);
-      await tester.pumpAndSettle();
-      continue;
-    }
     final currentMissionCta = find.byKey(
       const Key('act0_shell_current_mission_cta'),
     );

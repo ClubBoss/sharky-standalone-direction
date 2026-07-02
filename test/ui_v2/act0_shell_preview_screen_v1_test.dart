@@ -7929,6 +7929,17 @@ void main() {
       find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
     );
+    final cta = tester.widget<FilledButton>(
+      find.byKey(const Key('act0_shell_current_mission_cta')),
+    );
+    expect(
+      cta.style?.backgroundColor?.resolve(<WidgetState>{}),
+      Act0ShellTokensV1.primary,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_start_luminous_cta_v6')),
+      findsNothing,
+    );
 
     await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
     await tester.pumpAndSettle();
@@ -8056,6 +8067,11 @@ void main() {
     expect(
       find.byKey(const Key('act0_shell_learn_progress_bar')),
       findsOneWidget,
+    );
+    expect(find.text('4 of 9 lessons · 44%'), findsOneWidget);
+    expect(
+      find.text('World progress · 9 lessons · 4 of 9 lessons'),
+      findsNothing,
     );
   });
 
@@ -12254,11 +12270,15 @@ void main() {
         findsOneWidget,
       );
       expect(
+        find.descendant(of: world, matching: find.text('4 of 9 lessons · 44%')),
+        findsOneWidget,
+      );
+      expect(
         find.descendant(
           of: world,
           matching: find.textContaining('World progress ·'),
         ),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.descendant(of: mission, matching: find.text('Current lesson')),
@@ -13036,7 +13056,7 @@ void main() {
             const Key('act0_shell_current_mission_ambient_visual'),
           ),
         ),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.descendant(of: mission, matching: find.text('The 6 positions')),
@@ -13107,7 +13127,7 @@ void main() {
             const Key('act0_shell_current_mission_ambient_visual'),
           ),
         ),
-        findsOneWidget,
+        findsNothing,
       );
     },
   );
@@ -13154,7 +13174,7 @@ void main() {
             const Key('act0_shell_current_mission_ambient_visual'),
           ),
         ),
-        findsOneWidget,
+        findsNothing,
       );
     },
   );
@@ -13378,9 +13398,16 @@ void main() {
     expect(
       find.descendant(
         of: mission,
-        matching: find.byKey(const Key('act0_shell_start_luminous_cta_v6')),
+        matching: find.byKey(const Key('act0_shell_current_mission_cta')),
       ),
       findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: mission,
+        matching: find.byKey(const Key('act0_shell_start_luminous_cta_v6')),
+      ),
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_learn_v6_world_luminous_context')),
@@ -13399,9 +13426,17 @@ void main() {
       findsNothing,
     );
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_learn_v5_view_full_path')),
+    final fullPathButton = find.byKey(
+      const Key('act0_shell_learn_v5_view_full_path'),
     );
+    await tester.ensureVisible(fullPathButton);
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.byKey(const Key('act0_shell_learn_screen')),
+      const Offset(0, -80),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(fullPathButton);
     await tester.pumpAndSettle();
 
     expect(

@@ -10,6 +10,8 @@ void main() {
       _contrastRatio(Act0ShellTokensV1.onPrimary, Act0ShellTokensV1.primary),
       greaterThanOrEqualTo(4.5),
     );
+    expect(Act0ShellTokensV1.primary, const Color(0xFF0A64D8));
+    expect(Act0ShellTokensV1.actionBlue, Act0ShellTokensV1.primary);
   });
 
   test('Deep Ocean Gold v1.1 keeps dark-surface text comfortably readable', () {

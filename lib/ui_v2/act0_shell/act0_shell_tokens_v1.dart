@@ -7,8 +7,8 @@ class Act0VisualCanonV1 {
   static const Color appBlack = Color(0xFF050B12);
   static const Color navySurface = Color(0xFF101A2B);
   static const Color navySurfaceSoft = Color(0xFF0D1726);
-  static const Color bluePrimary = Color(0xFF1598FF);
-  static const Color blueDeep = Color(0xFF0A64D8);
+  static const Color bluePrimary = Color(0xFF0A64D8);
+  static const Color blueDeep = Color(0xFF0858BE);
   static const Color cyanAccent = Color(0xFF25E6F2);
   static const Color goldAccent = Color(0xFFFFC84D);
   static const Color greenTable = Color(0xFF16C784);
@@ -20,24 +20,8 @@ class Act0VisualCanonV1 {
 
   static BoxDecoration primaryCtaDecoration() {
     return BoxDecoration(
-      borderRadius: BorderRadius.circular(18),
-      gradient: const LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: <Color>[cyanAccent, bluePrimary],
-      ),
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          color: bluePrimary.withOpacity(0.34),
-          blurRadius: 22,
-          offset: const Offset(0, 10),
-        ),
-        BoxShadow(
-          color: cyanAccent.withOpacity(0.18),
-          blurRadius: 30,
-          offset: Offset.zero,
-        ),
-      ],
+      color: bluePrimary,
+      borderRadius: BorderRadius.circular(16),
     );
   }
 }
@@ -151,6 +135,7 @@ class Act0ShellTokensV1 {
   static const double radius2xs = 4;
   static const double radiusXxl = 26;
   static const double radiusOverlay = 24;
+  static const double ctaRadius = 16;
   static const double radiusPill = radiusBase;
   static const double topBarHeight = 54;
   static const double bottomNavHeight = 66;
@@ -224,9 +209,9 @@ class Act0ShellTokensV1 {
 
   static const TextStyle cta = TextStyle(
     color: onPrimary,
-    fontSize: 14,
+    fontSize: 16,
     height: 1,
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w700,
   );
 
   static BoxDecoration surfaceDecoration({
@@ -373,15 +358,28 @@ class Act0ShellTokensV1 {
   }
 
   static ButtonStyle primaryButtonStyle({double height = primaryCtaHeight}) {
-    return FilledButton.styleFrom(
-      backgroundColor: primary,
-      foregroundColor: onPrimary,
-      minimumSize: Size(double.infinity, height),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusBase),
+    return ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return primary.withValues(alpha: 0.42);
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return Act0VisualCanonV1.blueDeep;
+        }
+        return primary;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return onPrimary.withValues(alpha: 0.58);
+        }
+        return onPrimary;
+      }),
+      minimumSize: WidgetStatePropertyAll<Size>(Size(double.infinity, height)),
+      shape: WidgetStatePropertyAll<OutlinedBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(ctaRadius)),
       ),
-      textStyle: cta,
-      elevation: 0,
+      textStyle: const WidgetStatePropertyAll<TextStyle>(cta),
+      elevation: const WidgetStatePropertyAll<double>(0),
     );
   }
 
@@ -422,29 +420,19 @@ class Act0ShellTokensV1 {
   static ButtonStyle premiumActionButtonStyle({
     double height = primaryCtaHeight,
   }) {
-    return FilledButton.styleFrom(
-      backgroundColor: actionBlue,
-      foregroundColor: onPrimary,
-      minimumSize: Size(double.infinity, height),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusBase),
-        side: BorderSide(color: actionCyan.withOpacity(0.42)),
-      ),
-      textStyle: cta,
-      elevation: 0,
-      shadowColor: actionBlue.withOpacity(0.26),
-    );
+    return primaryButtonStyle(height: height);
   }
 
   static ButtonStyle quietButtonStyle({double height = compactCtaHeight}) {
     return OutlinedButton.styleFrom(
       foregroundColor: text,
+      backgroundColor: Colors.transparent,
       minimumSize: Size(double.infinity, height),
-      side: BorderSide(color: border.withOpacity(0.9)),
+      side: const BorderSide(color: Color(0x47FFFFFF)),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusBase),
+        borderRadius: BorderRadius.circular(ctaRadius),
       ),
-      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+      textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
     );
   }
 
