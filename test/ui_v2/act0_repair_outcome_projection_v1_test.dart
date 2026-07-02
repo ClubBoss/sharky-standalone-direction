@@ -165,6 +165,30 @@ void main() {
       expect(_containsForbiddenTokenInText(text, forbidden), isFalse);
     }
   });
+
+  test('repair outcome projection round-trips for proof reconstruction', () {
+    final source = const Act0RepairOutcomeProjectionV1().appendAnsweredTask(
+      launchRequest: _launchRequest(),
+      selectedChoiceId: 'check',
+      correctChoiceId: 'check',
+      isCorrect: true,
+      sequence: 12,
+      sessionId: 'session_v1|2',
+    );
+
+    final restored = Act0RepairOutcomeProjectionV1.tryParse(source.toPayload());
+
+    expect(restored.toPayload(), source.toPayload());
+  });
+
+  test('malformed persisted repair outcomes fail closed', () {
+    final restored = Act0RepairOutcomeProjectionV1.tryParse(<Object?>[
+      <String, Object?>{'schemaVersion': 1, 'queueItemId': 'partial'},
+      'not-an-outcome',
+    ]);
+
+    expect(restored.outcomes, isEmpty);
+  });
 }
 
 Act0PracticeRepairQueueLaunchRequestV1 _launchRequest({

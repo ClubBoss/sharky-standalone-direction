@@ -101,8 +101,6 @@ void main() {
     expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
     expect(find.text('Table sense'), findsWidgets);
     expect(find.text('Practiced'), findsWidgets);
-    expect(find.text('Small wins Sharky can prove'), findsOneWidget);
-
     final skillText = tester
         .widgetList<Text>(
           find.descendant(

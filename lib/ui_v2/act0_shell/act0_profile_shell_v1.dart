@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
@@ -34,6 +35,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     this.onReplayWelcome,
     this.onGoToHome,
     this.evidenceSignal,
+    this.crossSessionProof,
     this.achievementSeedConsumer = const Act0AchievementSeedConsumerV1(),
   });
 
@@ -42,6 +44,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
+  final Act0CrossSessionProfileProofV1? crossSessionProof;
   final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
 
   @override
@@ -62,7 +65,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileProgressProofCardV1(profile: profile),
+        _ProfileProgressProofCardV1(
+          profile: profile,
+          crossSessionProof: crossSessionProof,
+        ),
         if (evidenceSignal != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),
@@ -1041,9 +1047,13 @@ class _ProfileNextMilestoneCardV1 extends StatelessWidget {
 }
 
 class _ProfileProgressProofCardV1 extends StatelessWidget {
-  const _ProfileProgressProofCardV1({required this.profile});
+  const _ProfileProgressProofCardV1({
+    required this.profile,
+    this.crossSessionProof,
+  });
 
   final Act0ProfileStateV1 profile;
+  final Act0CrossSessionProfileProofV1? crossSessionProof;
 
   @override
   Widget build(BuildContext context) {
@@ -1061,47 +1071,54 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
       }
     }
     final achievementProof = firstUnlockedAchievement ?? firstAchievement;
-    final tiles = <_ProfileProofTileDataV1>[
-      _ProfileProofTileDataV1(
-        title: _profileCopyV1(context, en: 'Lessons', ru: 'Уроки'),
-        value: _profileProofProgressLineV1(context, profile),
-        icon: Icons.menu_book_rounded,
-        tone: Act0VisualCanonV1.bluePrimary,
-      ),
-      _ProfileProofTileDataV1(
-        title: _profileCopyV1(context, en: 'Rhythm', ru: 'Ритм'),
-        value: _profileRhythmProofLineV1(context, profile),
-        icon: Icons.local_fire_department_rounded,
-        tone: Act0VisualCanonV1.cyanAccent,
-      ),
-      if (recentGains.isNotEmpty || profile.skillStats.isNotEmpty)
-        _ProfileProofTileDataV1(
-          title: _profileCopyV1(context, en: 'Skills', ru: 'Навыки'),
-          value: recentGains.isNotEmpty
-              ? _profileCopyV1(
-                  context,
-                  en: '${recentGains.length} growing',
-                  ru: '${recentGains.length} растут',
-                )
-              : _profileCopyV1(
-                  context,
-                  en: '${profile.skillStats.length} tracked',
-                  ru: '${profile.skillStats.length} отслеживаются',
-                ),
-          icon: Icons.fact_check_rounded,
-          tone: Act0VisualCanonV1.bluePrimary,
-        ),
-      if (achievementProof != null)
-        _ProfileProofTileDataV1(
-          title: firstUnlockedAchievement != null
-              ? _profileCopyV1(context, en: 'Earned', ru: 'Получено')
-              : _profileCopyV1(context, en: 'Next proof', ru: 'Следующая цель'),
-          value: achievementProof.label,
-          valueKey: const Key('act0_shell_profile_earned_proof_value'),
-          icon: Icons.emoji_events_rounded,
-          tone: Act0VisualCanonV1.greenTable,
-        ),
-    ];
+    final proof = crossSessionProof;
+    final tiles = proof?.hasProof == true
+        ? _crossSessionProofTilesV1(context, profile, proof!)
+        : <_ProfileProofTileDataV1>[
+            _ProfileProofTileDataV1(
+              title: _profileCopyV1(context, en: 'Lessons', ru: 'Уроки'),
+              value: _profileProofProgressLineV1(context, profile),
+              icon: Icons.menu_book_rounded,
+              tone: Act0VisualCanonV1.bluePrimary,
+            ),
+            _ProfileProofTileDataV1(
+              title: _profileCopyV1(context, en: 'Rhythm', ru: 'Ритм'),
+              value: _profileRhythmProofLineV1(context, profile),
+              icon: Icons.local_fire_department_rounded,
+              tone: Act0VisualCanonV1.cyanAccent,
+            ),
+            if (recentGains.isNotEmpty || profile.skillStats.isNotEmpty)
+              _ProfileProofTileDataV1(
+                title: _profileCopyV1(context, en: 'Skills', ru: 'Навыки'),
+                value: recentGains.isNotEmpty
+                    ? _profileCopyV1(
+                        context,
+                        en: '${recentGains.length} growing',
+                        ru: '${recentGains.length} растут',
+                      )
+                    : _profileCopyV1(
+                        context,
+                        en: '${profile.skillStats.length} tracked',
+                        ru: '${profile.skillStats.length} отслеживаются',
+                      ),
+                icon: Icons.fact_check_rounded,
+                tone: Act0VisualCanonV1.bluePrimary,
+              ),
+            if (achievementProof != null)
+              _ProfileProofTileDataV1(
+                title: firstUnlockedAchievement != null
+                    ? _profileCopyV1(context, en: 'Earned', ru: 'Получено')
+                    : _profileCopyV1(
+                        context,
+                        en: 'Next proof',
+                        ru: 'Следующая цель',
+                      ),
+                value: achievementProof.label,
+                valueKey: const Key('act0_shell_profile_earned_proof_value'),
+                icon: Icons.emoji_events_rounded,
+                tone: Act0VisualCanonV1.greenTable,
+              ),
+          ];
     return Container(
       key: const Key('act0_shell_profile_progress_proof'),
       padding: const EdgeInsets.all(12),
@@ -1122,6 +1139,11 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
               for (final tile in tiles.take(4)) _ProfileProofTileV1(tile: tile),
             ],
           ),
+          if (proof?.hasProof == true &&
+              proof!.recentProofItems.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            _ProfileRecentProofV1(proof: proof),
+          ],
           if (profile.streakLast7.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Row(
@@ -1150,6 +1172,83 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+List<_ProfileProofTileDataV1> _crossSessionProofTilesV1(
+  BuildContext context,
+  Act0ProfileStateV1 profile,
+  Act0CrossSessionProfileProofV1 proof,
+) {
+  final reinforced = proof.reinforcedFixCount;
+  final concepts = proof.distinctConceptFamilyCount;
+  return <_ProfileProofTileDataV1>[
+    _ProfileProofTileDataV1(
+      title: _profileCopyV1(context, en: 'Fixes'),
+      value: '${proof.totalBankedFixCount} banked',
+      icon: Icons.check_circle_outline_rounded,
+      tone: Act0ShellTokensV1.gold,
+    ),
+    _ProfileProofTileDataV1(
+      title: _profileCopyV1(context, en: 'Reinforced'),
+      value: reinforced == 1
+          ? '1 on a later hand'
+          : '$reinforced on later hands',
+      icon: Icons.replay_circle_filled_rounded,
+      tone: Act0VisualCanonV1.greenTable,
+    ),
+    _ProfileProofTileDataV1(
+      title: _profileCopyV1(context, en: 'Concepts'),
+      value: concepts == 1 ? '1 worked on' : '$concepts worked on',
+      icon: Icons.fact_check_outlined,
+      tone: Act0VisualCanonV1.bluePrimary,
+    ),
+    _ProfileProofTileDataV1(
+      title: _profileCopyV1(context, en: 'Lessons', ru: 'Уроки'),
+      value: _profileProofProgressLineV1(context, profile),
+      icon: Icons.menu_book_rounded,
+      tone: Act0VisualCanonV1.bluePrimary,
+    ),
+  ];
+}
+
+class _ProfileRecentProofV1 extends StatelessWidget {
+  const _ProfileRecentProofV1({required this.proof});
+
+  final Act0CrossSessionProfileProofV1 proof;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: const Key('act0_shell_profile_recent_proof'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _profileCopyV1(context, en: 'Across your recent sessions'),
+          style: Act0ShellTokensV1.label.copyWith(
+            color: Act0ShellTokensV1.gold,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 6),
+        for (final item in proof.recentProofItems.take(3))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: Text(
+              item.isReinforced
+                  ? 'Later evidence supported this repair'
+                  : 'You repaired this table-reading clue',
+              key: Key('act0_shell_profile_recent_proof_item_${item.proofId}'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                height: 1.25,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

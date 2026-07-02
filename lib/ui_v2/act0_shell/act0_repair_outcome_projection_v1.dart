@@ -75,6 +75,30 @@ class Act0RepairOutcomeProjectionV1 {
 
   List<Map<String, Object?>> toPayload() =>
       outcomes.map((outcome) => outcome.toPayload()).toList(growable: false);
+
+  static Act0RepairOutcomeProjectionV1 tryParse(Object? raw) {
+    if (raw is! List) {
+      return const Act0RepairOutcomeProjectionV1();
+    }
+    final byIdentity = <String, Act0RepairOutcomeV1>{};
+    for (final value in raw) {
+      final outcome = Act0RepairOutcomeV1.tryParse(value);
+      if (outcome == null) {
+        continue;
+      }
+      byIdentity['${outcome.sequence}|${outcome.queueItemId}'] = outcome;
+    }
+    final outcomes = byIdentity.values.toList(growable: false)
+      ..sort((a, b) {
+        final sequence = a.sequence.compareTo(b.sequence);
+        return sequence != 0
+            ? sequence
+            : a.queueItemId.compareTo(b.queueItemId);
+      });
+    return Act0RepairOutcomeProjectionV1(
+      outcomes: List<Act0RepairOutcomeV1>.unmodifiable(outcomes),
+    );
+  }
 }
 
 class Act0RepairOutcomeV1 {
@@ -129,6 +153,54 @@ class Act0RepairOutcomeV1 {
     'sourceType': sourceType,
     if (sessionId.isNotEmpty) 'sessionId': sessionId,
   };
+
+  static Act0RepairOutcomeV1? tryParse(Object? raw) {
+    if (raw is! Map) {
+      return null;
+    }
+    final map = raw.cast<String, Object?>();
+    final schemaVersion = _nonNegativeInt(map['schemaVersion']) ?? 1;
+    final sourceTaskId = _requiredString(map, 'sourceTaskId');
+    final repairTaskId = _requiredString(map, 'repairTaskId');
+    final queueItemId = _requiredString(map, 'queueItemId');
+    final targetWorldId = _requiredString(map, 'targetWorldId');
+    final targetLessonId = _requiredString(map, 'targetLessonId');
+    final targetTaskId = _requiredString(map, 'targetTaskId');
+    final outcomeState = _requiredString(map, 'outcomeState');
+    final sequence = _nonNegativeInt(map['sequence']);
+    final sourceType = _requiredString(map, 'sourceType');
+    final correctness = map['isCorrect'];
+    if (schemaVersion != 1 ||
+        sourceTaskId == null ||
+        repairTaskId == null ||
+        queueItemId == null ||
+        targetWorldId == null ||
+        targetLessonId == null ||
+        targetTaskId == null ||
+        outcomeState == null ||
+        sequence == null ||
+        sourceType != act0PracticeRepairQueueSourceActiveRepairV1 ||
+        (correctness != null && correctness is! bool) ||
+        outcomeState != _outcomeStateForCorrectnessV1(correctness as bool?)) {
+      return null;
+    }
+    return Act0RepairOutcomeV1(
+      sourceTaskId: sourceTaskId,
+      repairTaskId: repairTaskId,
+      repairFocusKey: map['repairFocusKey']?.toString().trim() ?? '',
+      queueItemId: queueItemId,
+      targetWorldId: targetWorldId,
+      targetLessonId: targetLessonId,
+      targetTaskId: targetTaskId,
+      selectedChoiceId: map['selectedChoiceId']?.toString().trim() ?? '',
+      correctChoiceId: map['correctChoiceId']?.toString().trim() ?? '',
+      isCorrect: correctness,
+      outcomeState: outcomeState,
+      sequence: sequence,
+      sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+      sessionId: map['sessionId']?.toString().trim() ?? '',
+    );
+  }
 }
 
 String _outcomeStateForCorrectnessV1(bool? isCorrect) {
@@ -139,4 +211,14 @@ String _outcomeStateForCorrectnessV1(bool? isCorrect) {
     return act0RepairOutcomeStateStillNeedsRepV1;
   }
   return act0RepairOutcomeStateAttemptedV1;
+}
+
+String? _requiredString(Map<String, Object?> map, String key) {
+  final value = map[key]?.toString().trim() ?? '';
+  return value.isEmpty ? null : value;
+}
+
+int? _nonNegativeInt(Object? raw) {
+  final value = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
+  return value == null || value < 0 ? null : value;
 }

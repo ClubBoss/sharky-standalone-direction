@@ -31830,13 +31830,14 @@ void main() {
       await tester.pumpAndSettle();
 
       final decoded = await persistedProgressMapFromPrefsV1();
-      expect(decoded['schemaVersion'], 14);
+      expect(decoded['schemaVersion'], 16);
       expect(decoded['retentionSequence'], 0);
       expect(decoded['retentionMemory'], isEmpty);
       expect(decoded['learningEvidenceHistory'], isEmpty);
       expect(decoded['reviewMistakeHistory'], isEmpty);
       expect(decoded['conceptFamilyStateHistory'], isEmpty);
       expect(decoded['sessionIdentityState'], isNotNull);
+      expect(decoded['repairOutcomeProjection'], isEmpty);
       expect(
         decoded['selectedWorldId'],
         Act0ShellStateV1.sample.selectedWorldId,
@@ -32230,6 +32231,52 @@ void main() {
     expect(find.text('Action read'), findsNothing);
     final decoded = await persistedProgressMapFromPrefsV1();
     expect(decoded['reviewResolutionReceipts'], hasLength(1));
+  });
+
+  testWidgets('Persisted exact repair proof reconstructs on Profile reload', (
+    tester,
+  ) async {
+    final snapshot = minimalPersistedProgressMapV1(schemaVersion: 16)
+      ..['repairOutcomeProjection'] = <Map<String, Object?>>[
+        <String, Object?>{
+          'schemaVersion': 1,
+          'sourceTaskId': 'actions_legal_context',
+          'repairTaskId': 'actions_check_drill',
+          'repairFocusKey': 'no_bet_yet',
+          'queueItemId': 'queue_a',
+          'targetWorldId': 'world_1',
+          'targetLessonId': 'fold_check_call_raise',
+          'targetTaskId': 'actions_check_drill',
+          'selectedChoiceId': 'check',
+          'correctChoiceId': 'check',
+          'isCorrect': true,
+          'outcomeState': 'repair_correct_v1',
+          'sequence': 3,
+          'sourceType': 'active_repair_v1',
+          'sessionId': 'session_v1|2',
+        },
+      ]
+      ..['reviewResolutionReceipts'] = <Map<String, Object?>>[
+        <String, Object?>{
+          'schemaVersion': 1,
+          'reviewItemId': 'review_queue_a',
+          'conceptFamilyId': 'no_bet_yet',
+          'sourceTaskId': 'actions_legal_context',
+          'sourceSessionId': 'session_v1|1',
+          'reviewState': 'resolved',
+          'resolutionReason': 'repair_succeeded',
+          'repairOutcomeId': 'repair_outcome_v1|3|queue_a',
+          'resolvedAtOrder': 3,
+        },
+      ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host(tab: Act0ShellTabV1.profile));
+
+    expect(find.text('1 banked'), findsOneWidget);
+    expect(find.text('1 worked on'), findsOneWidget);
   });
 
   testWidgets('New lesson-run evidence records carry one shared run key', (

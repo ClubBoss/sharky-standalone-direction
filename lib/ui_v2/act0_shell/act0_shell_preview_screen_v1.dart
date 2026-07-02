@@ -8,6 +8,7 @@ import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
@@ -2866,6 +2867,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _reviewResolutionReceiptHistoryV1 = parsed.reviewResolutionReceiptHistory;
       _conceptFamilyStateHistoryV1 = parsed.conceptFamilyStateHistory;
       _sessionIdentityStateV1 = parsed.sessionIdentityState;
+      _repairOutcomeProjectionV1 = parsed.repairOutcomeProjection;
+      _repairOutcomeSequenceV1 = parsed.repairOutcomeProjection.outcomes.fold(
+        0,
+        (latest, outcome) =>
+            outcome.sequence > latest ? outcome.sequence : latest,
+      );
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -3184,6 +3191,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       reviewResolutionReceiptHistory: _reviewResolutionReceiptHistoryV1,
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
       sessionIdentityState: _sessionIdentityStateV1,
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
       lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
@@ -4916,6 +4924,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
                         profile: profileState,
+                        crossSessionProof:
+                            Act0CrossSessionProfileProofV1.fromFixProof(
+                              _fixProofProjectionV1(),
+                            ),
                         evidenceSignal:
                             Act0ProfileEvidenceConsumerV1.fromProjection(
                               Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
@@ -11326,6 +11338,7 @@ class _Act0PersistedProgressV1 {
         const Act0ReviewResolutionReceiptHistoryV1(),
     this.conceptFamilyStateHistory = const Act0ConceptFamilyStateHistoryV1(),
     this.sessionIdentityState = const Act0SessionIdentityStateV1(),
+    this.repairOutcomeProjection = const Act0RepairOutcomeProjectionV1(),
     this.lastSessionLearnerState,
   });
 
@@ -11358,6 +11371,7 @@ class _Act0PersistedProgressV1 {
   final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
   final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
   final Act0SessionIdentityStateV1 sessionIdentityState;
+  final Act0RepairOutcomeProjectionV1 repairOutcomeProjection;
   final Act0LastSessionLearnerStateV1? lastSessionLearnerState;
 
   String toStorageString() {
@@ -11371,7 +11385,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 15,
+      'schemaVersion': 16,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -11412,6 +11426,7 @@ class _Act0PersistedProgressV1 {
       'reviewResolutionReceipts': reviewResolutionReceiptHistory.toPayload(),
       'conceptFamilyStateHistory': conceptFamilyStateHistory.toPayload(),
       'sessionIdentityState': sessionIdentityState.toPayload(),
+      'repairOutcomeProjection': repairOutcomeProjection.toPayload(),
       if (lastSessionLearnerState != null)
         'lastSessionLearnerState': lastSessionLearnerState!.toJson(),
       if (firstValueReturnCarry != null)
@@ -11433,7 +11448,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v15 as the shell snapshot evolves.
+    // Accept v1-v16 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -11448,7 +11463,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 12 &&
         schemaVersion != 13 &&
         schemaVersion != 14 &&
-        schemaVersion != 15) {
+        schemaVersion != 15 &&
+        schemaVersion != 16) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -11525,6 +11541,9 @@ class _Act0PersistedProgressV1 {
     final sessionIdentityState = Act0SessionIdentityStateV1.tryParse(
       map['sessionIdentityState'],
     );
+    final repairOutcomeProjection = Act0RepairOutcomeProjectionV1.tryParse(
+      map['repairOutcomeProjection'],
+    );
     final lastSessionLearnerState = Act0LastSessionLearnerStateV1.tryParse(
       map['lastSessionLearnerState'],
     );
@@ -11567,6 +11586,7 @@ class _Act0PersistedProgressV1 {
       reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,
       conceptFamilyStateHistory: conceptFamilyStateHistory,
       sessionIdentityState: sessionIdentityState,
+      repairOutcomeProjection: repairOutcomeProjection,
       lastSessionLearnerState: lastSessionLearnerState,
     );
   }
