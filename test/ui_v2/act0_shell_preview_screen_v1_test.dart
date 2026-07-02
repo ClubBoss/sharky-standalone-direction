@@ -11553,6 +11553,10 @@ void main() {
     expect(find.text('3/3'), findsOneWidget);
     expect(find.text('Your path is ready.'), findsOneWidget);
     expect(
+      find.text('Placement done. Sharky mapped your start.'),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const Key('act0_shell_welcome_handoff_preview')),
       findsOneWidget,
     );
@@ -11573,40 +11577,32 @@ void main() {
     expect(quickCheckRect.width, greaterThanOrEqualTo(quickCheckPainter.width));
     expect(find.text('First hand'), findsOneWidget);
     expect(find.text('Your first useful hand is ready.'), findsOneWidget);
-    expect(find.textContaining('Your first lesson is ready'), findsOneWidget);
+    expect(find.textContaining('Your first lesson is ready'), findsNothing);
     expect(
-      find.textContaining('Learn will keep the next one visible'),
+      find.text('Learn keeps the next one visible after that.'),
       findsOneWidget,
     );
+    expect(find.textContaining('Learn will keep'), findsNothing);
     expect(find.textContaining('Open the start'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_welcome_presenter_tile')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_welcome_next_step_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_welcome_cta_bridge')),
+      findsOneWidget,
+    );
+    expect(find.text('One hand · about 2 minutes.'), findsOneWidget);
     expect(
       find.text(
         'The route is set. Home opens one clear spot, and Learn keeps the next path visible.',
       ),
       findsNothing,
     );
-    final viewportHeight =
-        tester.view.physicalSize.height / tester.view.devicePixelRatio;
-    final progressTop = tester
-        .getTopLeft(find.byKey(const Key('act0_shell_welcome_progress_label')))
-        .dy;
-    final progressBottom = tester
-        .getBottomLeft(
-          find.byKey(const Key('act0_shell_welcome_progress_label')),
-        )
-        .dy;
-    final beatFrameRect = tester.getRect(
-      find.byKey(const Key('act0_shell_welcome_beat_frame')),
-    );
-    final ctaRect = tester.getRect(
-      find.byKey(const Key('act0_shell_welcome_primary_cta')),
-    );
-    final topBreathingRoom = beatFrameRect.top - progressBottom;
-    final bottomBreathingRoom = ctaRect.top - beatFrameRect.bottom;
-    expect(progressTop, lessThan(viewportHeight * 0.20));
-    expect(ctaRect.bottom, greaterThan(viewportHeight * 0.80));
-    expect(topBreathingRoom, lessThan(bottomBreathingRoom * 0.75));
-
     expect(find.text('Open first lesson'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();

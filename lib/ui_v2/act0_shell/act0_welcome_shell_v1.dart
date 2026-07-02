@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -128,18 +131,26 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         detail: _copyV1(
           en: widget.replayMode
               ? 'Go back when you are ready. Your progress stays exactly where it was.'
-              : 'Your first lesson is ready. Learn will keep the next one visible after that.',
+              : 'Learn keeps the next one visible after that.',
           ru: widget.replayMode
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
-              : 'Первый урок готов. Затем Learn покажет следующий урок.',
+              : 'Затем Learn покажет следующий урок.',
         ),
         mood: Act0SharkyMoodV1.celebrate,
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'First hand ready', ru: 'Первая раздача готова'),
+          title: _copyV1(en: 'FIRST HAND READY', ru: 'ПЕРВАЯ РАЗДАЧА ГОТОВА'),
           accent: Act0ShellTokensV1.gold,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
+          line: _copyV1(
+            en: 'Your first useful hand is ready.',
+            ru: 'Твоя первая полезная раздача готова.',
+          ),
+          detail: _copyV1(
+            en: 'Learn keeps the next one visible after that.',
+            ru: 'Затем Learn покажет следующий урок.',
+          ),
           child: Container(
             key: const Key('act0_shell_welcome_handoff_proof_block'),
             child: _WelcomeLaunchPathV1(
@@ -152,6 +163,18 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           en: widget.replayMode ? 'Back to profile' : 'Open first lesson',
           ru: widget.replayMode ? 'Назад в профиль' : 'Открыть свой старт',
         ),
+        subline: widget.replayMode
+            ? null
+            : _copyV1(
+                en: 'Placement done. Sharky mapped your start.',
+                ru: 'Размещение готово. Sharky наметил твой старт.',
+              ),
+        ctaBridgeLine: widget.replayMode
+            ? null
+            : _copyV1(
+                en: 'One hand · about 2 minutes.',
+                ru: 'Одна раздача · около 2 минут.',
+              ),
         onNext: widget.onCompleted,
       ),
     };
@@ -172,6 +195,8 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
     required this.ctaLabel,
     this.visual,
     this.onClose,
+    this.subline,
+    this.ctaBridgeLine,
   });
 
   final int beatIndex;
@@ -186,12 +211,131 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   final String ctaLabel;
   final Widget? visual;
   final VoidCallback? onClose;
+  final String? subline;
+  final String? ctaBridgeLine;
 
   @override
   Widget build(BuildContext context) {
     final blocks = act0BuildInstructionBlocksV1(text: detail, compact: true);
     final centerContent = beatIndex == beatCount;
-    final beatFrame = Container(
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final horizontalPadding = constraints.maxWidth < 380 ? 20.0 : 24.0;
+          final contentMaxWidth = math.min(
+            math.max(0.0, constraints.maxWidth - 48),
+            400.0,
+          );
+          final smallPhone = constraints.maxHeight < 700;
+          final bottomPadding = math.max(
+            Act0ShellTokensV1.gapLg,
+            MediaQuery.viewPaddingOf(context).bottom,
+          );
+          final content = centerContent
+              ? _WelcomeHandoffContentGroupV1(
+                  title: title,
+                  subline: subline ?? '',
+                  mood: mood,
+                  visual: visual,
+                  smallPhone: smallPhone,
+                )
+              : _WelcomeStandardBeatFrameV1(
+                  title: title,
+                  eyebrow: eyebrow,
+                  line: line,
+                  detail: blocks.join(' '),
+                  mood: mood,
+                  visual: visual,
+                );
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: SizedBox(
+                  height: constraints.maxHeight,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      horizontalPadding,
+                      Act0ShellTokensV1.gapLg,
+                      horizontalPadding,
+                      bottomPadding,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _WelcomeTopBarV1(
+                          beatIndex: beatIndex,
+                          beatCount: beatCount,
+                          replayMode: replayMode,
+                          onClose: onClose,
+                        ),
+                        const Spacer(flex: 45),
+                        Center(
+                          child: SizedBox(
+                            width: contentMaxWidth,
+                            child: content,
+                          ),
+                        ),
+                        const Spacer(flex: 55),
+                        if (ctaBridgeLine != null &&
+                            ctaBridgeLine!.trim().isNotEmpty) ...[
+                          Text(
+                            ctaBridgeLine!,
+                            key: const Key('act0_shell_welcome_cta_bridge'),
+                            textAlign: TextAlign.center,
+                            style: Act0ShellTokensV1.muted.copyWith(
+                              fontSize: 13,
+                              color: Act0ShellTokensV1.text.withValues(
+                                alpha: 0.60,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        ] else
+                          const SizedBox(height: Act0ShellTokensV1.gapLg),
+                        SizedBox(
+                          width: double.infinity,
+                          height: Act0ShellTokensV1.primaryCtaHeight,
+                          child: FilledButton(
+                            key: const Key('act0_shell_welcome_primary_cta'),
+                            onPressed: onNext,
+                            style: Act0ShellTokensV1.primaryButtonStyle(),
+                            child: Text(ctaLabel),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
+  const _WelcomeStandardBeatFrameV1({
+    required this.title,
+    required this.eyebrow,
+    required this.line,
+    required this.detail,
+    required this.mood,
+    required this.visual,
+  });
+
+  final String title;
+  final String eyebrow;
+  final String line;
+  final String detail;
+  final Act0SharkyMoodV1 mood;
+  final Widget? visual;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
       key: const Key('act0_shell_welcome_beat_frame'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
@@ -210,54 +354,117 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
           Act0SharkyGuideCardV1(
             eyebrow: eyebrow,
             line: line,
-            detail: blocks.join(' '),
+            detail: detail,
             mood: mood,
             compact: true,
           ),
         ],
       ),
     );
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          Act0ShellTokensV1.pageX,
-          Act0ShellTokensV1.gapLg,
-          Act0ShellTokensV1.pageX,
-          Act0ShellTokensV1.gapLg,
+  }
+}
+
+class _WelcomeHandoffContentGroupV1 extends StatelessWidget {
+  const _WelcomeHandoffContentGroupV1({
+    required this.title,
+    required this.subline,
+    required this.mood,
+    required this.visual,
+    required this.smallPhone,
+  });
+
+  final String title;
+  final String subline;
+  final Act0SharkyMoodV1 mood;
+  final Widget? visual;
+  final bool smallPhone;
+
+  @override
+  Widget build(BuildContext context) {
+    final titleFontSize = smallPhone ? 24.0 : 28.0;
+    final headlineGap = smallPhone ? Act0ShellTokensV1.gapSm : 14.0;
+    final proofGap = smallPhone ? Act0ShellTokensV1.gapLg : 18.0;
+    return Column(
+      key: const Key('act0_shell_welcome_next_step_line'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Center(
+          child: _WelcomeSharkyPresenterTileV1(
+            mood: mood,
+            size: smallPhone ? 64 : 80,
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _WelcomeTopBarV1(
-              beatIndex: beatIndex,
-              beatCount: beatCount,
-              replayMode: replayMode,
-              onClose: onClose,
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
-            Expanded(
-              child: Align(
-                alignment: centerContent
-                    ? const Alignment(0, -0.4)
-                    : Alignment.topCenter,
-                child: SingleChildScrollView(child: beatFrame),
-              ),
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapLg),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                key: const Key('act0_shell_welcome_primary_cta'),
-                onPressed: onNext,
-                style: Act0ShellTokensV1.primaryButtonStyle(),
-                child: Text(ctaLabel),
-              ),
-            ),
-          ],
+        SizedBox(height: headlineGap),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: Act0ShellTokensV1.sectionTitle.copyWith(
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.w700,
+            color: Act0ShellTokensV1.text,
+          ),
         ),
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        if (subline.trim().isNotEmpty)
+          Text(
+            subline,
+            textAlign: TextAlign.center,
+            style: Act0ShellTokensV1.muted.copyWith(
+              fontSize: 14,
+              color: Act0ShellTokensV1.text.withValues(alpha: 0.65),
+              height: 1.22,
+            ),
+          ),
+        if (visual != null) ...[SizedBox(height: proofGap), visual!],
+      ],
+    );
+  }
+}
+
+class _WelcomeSharkyPresenterTileV1 extends StatelessWidget {
+  const _WelcomeSharkyPresenterTileV1({required this.mood, required this.size});
+
+  final Act0SharkyMoodV1 mood;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    const tone = Act0ShellTokensV1.primary;
+    return Container(
+      key: const Key('act0_shell_welcome_presenter_tile'),
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(size * 0.28),
+        border: Border.all(color: tone.withValues(alpha: 0.50)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: tone.withValues(alpha: 0.25),
+            blurRadius: 22,
+            offset: Offset(0, size * 0.08),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(size * 0.08),
+      child: SvgPicture.asset(
+        _welcomePresenterAssetForMoodV1(mood),
+        key: Key('act0_shell_sharky_presence_mascot_${mood.name}'),
+        fit: BoxFit.contain,
       ),
     );
   }
+}
+
+String _welcomePresenterAssetForMoodV1(Act0SharkyMoodV1 mood) {
+  return switch (mood) {
+    Act0SharkyMoodV1.thinking => 'assets/mascot/poker_shark_thinking.svg',
+    Act0SharkyMoodV1.celebrate => 'assets/mascot/poker_shark_celebrate.svg',
+    Act0SharkyMoodV1.happy ||
+    Act0SharkyMoodV1.neutral ||
+    Act0SharkyMoodV1.repair => 'assets/mascot/poker_shark_idle.svg',
+  };
 }
 
 class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
@@ -266,6 +473,8 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
     required this.accent,
     required this.child,
     this.bridge,
+    this.line,
+    this.detail,
     this.previewKey = const Key('act0_shell_welcome_visual_preview'),
   });
 
@@ -273,6 +482,8 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
   final Color accent;
   final Widget child;
   final Widget? bridge;
+  final String? line;
+  final String? detail;
   final Key previewKey;
 
   @override
@@ -294,6 +505,26 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
           if (child is! SizedBox) ...[
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             child,
+          ],
+          if (line != null && line!.trim().isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            Text(
+              line!,
+              style: Act0ShellTokensV1.body.copyWith(
+                fontWeight: FontWeight.w800,
+                color: Act0ShellTokensV1.text,
+              ),
+            ),
+          ],
+          if (detail != null && detail!.trim().isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              detail!,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                height: 1.22,
+              ),
+            ),
           ],
         ],
       ),

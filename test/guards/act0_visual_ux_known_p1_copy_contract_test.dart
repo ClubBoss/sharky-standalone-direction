@@ -20,8 +20,16 @@ void main() {
     expect(learnSource, contains('Start Volume I'));
     expect(learnSource, isNot(contains('The 36-world path starts here')));
 
-    expect(welcomeSource, contains('Your first lesson is ready'));
-    expect(welcomeSource, contains('Learn will keep the next one visible'));
+    expect(welcomeSource, isNot(contains('Your first lesson is ready')));
+    expect(
+      welcomeSource,
+      contains('Placement done. Sharky mapped your start.'),
+    );
+    expect(
+      welcomeSource,
+      contains('Learn keeps the next one visible after that.'),
+    );
+    expect(welcomeSource, isNot(contains('Learn will keep')));
     expect(welcomeSource, contains('Open first lesson'));
     expect(welcomeSource, isNot(contains('Open the start')));
 
