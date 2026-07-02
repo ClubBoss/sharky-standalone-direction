@@ -86,7 +86,7 @@ void main() {
   });
 
   test(
-    'milestone role is scoped only to the W1 completion payoff widget',
+    'milestone role is scoped only to the shared world-completion card',
     () {
       final profileSource = File(
         'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
@@ -99,23 +99,25 @@ void main() {
       ).readAsStringSync();
 
       // Profile and the ordinary repair-outcome/session receipt contract must
-      // never emit a milestone icon; only a true W1 completion may.
+      // never emit a milestone icon; only true world completion may, and
+      // only through the one shared card both World 1 and World 2-6 delegate
+      // to (no per-world duplicate milestone usage).
       expect(profileSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
       expect(consumerSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
 
       final classStart = lessonRunnerSource.indexOf(
-        'class _WorldOneCompletionPayoffV1',
+        'class _WorldMilestoneCardV1',
       );
       expect(
         classStart,
         greaterThan(-1),
-        reason: 'W1 completion payoff widget must exist',
+        reason: 'shared world-completion milestone card must exist',
       );
       final nextClassStart = lessonRunnerSource.indexOf(
         '\nclass ',
         classStart + 1,
       );
-      final worldOneWidgetBody = lessonRunnerSource.substring(
+      final sharedCardBody = lessonRunnerSource.substring(
         classStart,
         nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
       );
@@ -126,14 +128,27 @@ void main() {
           );
 
       expect(
-        worldOneWidgetBody,
+        sharedCardBody,
         contains('Act0ProofIconRoleV1.milestone'),
-        reason: 'W1 completion is the milestone role\'s first valid consumer',
+        reason:
+            'world completion is the milestone role\'s only valid consumer',
       );
       expect(
         restOfFile,
         isNot(contains('Act0ProofIconRoleV1.milestone')),
-        reason: 'milestone must not leak into any other surface',
+        reason:
+            'milestone must not leak into any other surface, including a '
+            'per-world duplicate usage outside the shared card',
+      );
+      expect(
+        lessonRunnerSource,
+        contains('class _WorldOneCompletionPayoffV1'),
+        reason: 'World 1 keeps its own dedicated wrapper',
+      );
+      expect(
+        lessonRunnerSource,
+        contains('class _WorldCompletionPayoffV1'),
+        reason: 'Worlds 2-6 share one ordinary wrapper, not five widgets',
       );
     },
   );

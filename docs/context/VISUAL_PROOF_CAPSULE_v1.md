@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_completion_payoff_v1.md`.
+Verified active route artifact: `docs/_reviews/w2_w6_completion_payoff_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -47,30 +47,42 @@ card: it consumes lifetime and recent proof while preserving the navy-glass
 hierarchy. Achievement Visual Language / Icons v1 landed a small shared
 `Act0ProofIconV1` seam (`lib/ui_v2/act0_shell/act0_proof_icon_v1.dart`) with
 three semantic roles (`repairCompleted`, `reinforced`, `milestone`). W1
-Completion Payoff v1 gave `milestone` its first valid consumer: the existing
-`_WorldOneCompletionPayoffV1` card (inside `Act0BlockCompletionShellV1`) now
-shows a milestone seal, a concrete learning-takeaway line, and a gated
+Completion Payoff v1 gave `milestone` its first valid consumer via a shared
+`_WorldMilestoneCardV1` layout inside `Act0BlockCompletionShellV1`. W2-W6
+Completion Payoff v1 extended that same shared card to ordinary World 2-6
+completions (`_WorldCompletionPayoffV1`, gate
+`Act0BlockCompletionSummaryV1.hasWorldCompletionPayoff`): one milestone seal,
+one deterministic curriculum-true learning-takeaway line per world (sourced
+from each world's real title/subtitle in `act0_shell_state_v1.dart`), a gated
 `repairCompleted`/`reinforced` proof row sourced from the same banked-fix
-receipt used by Session Summary, with a safe no-proof fallback line. The W1
-completion identity headline ("World 1 complete") is now protected from being
-overridden by a generic proof-hero headline. No gallery, grid, motion, XP,
-level, mastery, or RPG badge economy was introduced. The active task is
-`W2-W6 Completion Payoff`.
+receipt, a safe no-proof fallback, and a route-truth next-world preview. World
+1 keeps its own dedicated wrapper/copy unchanged; World 4 intentionally
+receives the same ordinary treatment as W2/W3/W5/W6 (no band-transition
+copy, no larger seal) so the future W4->W5 PR can safely claim a stronger
+variant. No gallery, grid, motion, XP, level, mastery, or RPG badge economy
+was introduced. The active task is `W4->W5 Band Transition Milestone`.
 
 ## Remaining Visual Route
 
 1. Achievement Visual Language / Icons - CLOSED
 2. W1 Completion Payoff - CLOSED
-3. W2-W6 Completion Payoff - ACTIVE
-4. W4->W5 Band Transition Milestone
+3. W2-W6 Completion Payoff - CLOSED
+4. W4->W5 Band Transition Milestone - ACTIVE
 
-No motion or generalized completion-payoff framework exists yet; W1's payoff
-remains a bounded, world-ID-gated variant, not a reusable component. `milestone`
-proof-icon role is now used only by the W1 completion moment and must remain
-scoped to true world-completion moments (W1 now; later worlds and the
-W4->W5 band transition when their own stages open) rather than becoming a
-generic achievement badge. Do not reopen generic visual design outside a
-dedicated stage or concrete new regression evidence.
+No motion or generalized completion-payoff framework exists yet; the shared
+`_WorldMilestoneCardV1` is a bounded, world-ID-gated layout reused by two
+thin wrappers (W1-specific, W2-6 ordinary), not a public/reusable component.
+`milestone` proof-icon role is used only by true world-completion moments
+(W1-W6 now) and must remain scoped that way — W7-W12 payoff and the
+W4->W5 band transition are the next dedicated stages, not a green light to
+treat `milestone` as a generic achievement badge. The seam for the next PR:
+`Act0BlockCompletionSummaryV1.hasWorldCompletionPayoff` currently admits
+worldNumber 4 into the ordinary path; the W4->W5 PR should add a
+higher-priority `hasBandTransitionPayoff` gate (worldNumber == 4 &&
+nextWorldNumber == 5) with its own dedicated widget, mirroring how W1 has its
+own dedicated wrapper today, so W4 renders the stronger transition instead of
+falling through to the ordinary card. Do not reopen generic visual design
+outside a dedicated stage or concrete new regression evidence.
 
 ## Proof / Progression Rules
 
@@ -124,3 +136,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/cross_session_proof_profile_v1.md`
 - `docs/_reviews/achievement_visual_language_icons_v1.md`
 - `docs/_reviews/w1_completion_payoff_v1.md`
+- `docs/_reviews/w2_w6_completion_payoff_v1.md`

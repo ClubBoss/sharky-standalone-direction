@@ -373,50 +373,60 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('other world completion behavior remains unchanged', (
-    tester,
-  ) async {
-    const otherWorldSummary = Act0BlockCompletionSummaryV1(
-      lessonTitle: 'Hand ranges',
-      xpEarned: 24,
-      errorCount: 0,
-      taskCount: 4,
-      correctCount: 4,
-      startLevel: 2,
-      endLevel: 3,
-      startXp: 188,
-      endXp: 12,
-      xpTarget: 200,
-      milestoneTier: Act0ProgressMilestoneTierV1.world,
-      worldNumber: 2,
-      worldTitle: 'Hand Discipline',
-      nextWorldNumber: 3,
-      nextWorldTitle: 'Board Reading',
-      perfectClearCount: 12,
-      completedClearCount: 12,
-    );
+  testWidgets(
+    'completion for a world outside the covered payoff range is unaffected',
+    (tester) async {
+      // World 8 is beyond the accepted W1 / W2-6 payoff coverage; it must
+      // fall back to the ordinary milestone panel with no payoff card.
+      const otherWorldSummary = Act0BlockCompletionSummaryV1(
+        lessonTitle: 'Hand ranges',
+        xpEarned: 24,
+        errorCount: 0,
+        taskCount: 4,
+        correctCount: 4,
+        startLevel: 2,
+        endLevel: 3,
+        startXp: 188,
+        endXp: 12,
+        xpTarget: 200,
+        milestoneTier: Act0ProgressMilestoneTierV1.world,
+        worldNumber: 8,
+        worldTitle: 'Advanced Reads',
+        nextWorldNumber: 9,
+        nextWorldTitle: 'Range Construction',
+        perfectClearCount: 12,
+        completedClearCount: 12,
+      );
 
-    expect(otherWorldSummary.hasWorldOneCompletionPayoff, isFalse);
+      expect(otherWorldSummary.hasWorldOneCompletionPayoff, isFalse);
+      expect(otherWorldSummary.hasWorldCompletionPayoff, isFalse);
 
-    await tester.pumpWidget(_host(otherWorldSummary));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_host(otherWorldSummary));
+      await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const Key('act0_shell_world1_completion_payoff')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_proof_icon_v1_milestone')),
-      findsNothing,
-    );
-    expect(
-      tester
-          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
-          .data,
-      'World 2 complete',
-    );
-    expect(find.text('Open next world'), findsOneWidget);
-  });
+      expect(
+        find.byKey(const Key('act0_shell_world1_completion_payoff')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_world_completion_payoff')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_proof_icon_v1_milestone')),
+        findsNothing,
+      );
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const Key('act0_shell_block_summary_title')),
+            )
+            .data,
+        'World 8 complete',
+      );
+      expect(find.text('Open next world'), findsOneWidget);
+    },
+  );
 
   testWidgets('no blank CTA or template token appears', (tester) async {
     await tester.pumpWidget(_host(_worldOneCompleteSummary));

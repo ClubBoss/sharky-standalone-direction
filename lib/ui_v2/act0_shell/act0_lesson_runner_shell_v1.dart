@@ -441,6 +441,37 @@ class Act0BlockCompletionSummaryV1 {
   String get worldOneCompletionProofFallbackLabel =>
       'Repair proof banks the next time you fix one.';
 
+  /// True only for an ordinary World 2-6 completion with valid, sequential
+  /// next-world route truth. World 1 keeps its own dedicated gate/copy above;
+  /// World 7+ payoff and the special W4->W5 band transition remain deferred.
+  bool get hasWorldCompletionPayoff =>
+      isWorldComplete &&
+      worldNumber >= 2 &&
+      worldNumber <= 6 &&
+      nextWorldNumber == worldNumber + 1 &&
+      nextWorldTitle != null &&
+      nextWorldTitle!.trim().isNotEmpty;
+
+  _WorldCompletionMetaV1? get _worldCompletionMeta =>
+      _worldCompletionMetaByNumberV1[worldNumber];
+
+  String get worldCompletionPayoffLabel => act0SharkyCoachLineForMomentV1(
+    Act0SharkyCoachMomentV1.worldCompletionPayoff,
+    tier: act0SharkyCoachTierForWorldNumberV1(worldNumber),
+  );
+
+  String get worldCompletionLearningLabel =>
+      _worldCompletionMeta?.learningLabel ?? '';
+
+  String get worldCompletionNextLabel =>
+      'Next: ${nextWorldTitle?.trim() ?? ''}';
+
+  String get worldCompletionPreviewLine =>
+      _worldCompletionMeta?.previewLine ?? '';
+
+  String get worldCompletionProofFallbackLabel =>
+      worldOneCompletionProofFallbackLabel;
+
   bool get shouldReviewFirst =>
       deepLeakCount > 0 && qualifiesForNextLesson && hasSafeReviewTarget;
 
@@ -608,6 +639,61 @@ class Act0BlockCompletionSummaryV1 {
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
 }
+
+/// Deterministic, curriculum-true completion copy for Worlds 2-6, sourced
+/// from each world's own accepted title/subtitle theme
+/// (`lib/ui_v2/act0_shell/act0_shell_state_v1.dart`). World 1 keeps its own
+/// dedicated copy above; World 7+ is deferred and intentionally absent here.
+class _WorldCompletionMetaV1 {
+  const _WorldCompletionMetaV1({
+    required this.learningLabel,
+    required this.previewLine,
+  });
+
+  final String learningLabel;
+  final String previewLine;
+}
+
+const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
+    <int, _WorldCompletionMetaV1>{
+      2: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to separate playable hands from tempting ones.',
+        previewLine:
+            'World 3 starts with a simple question: does your seat change '
+            'what you should play?',
+      ),
+      3: _WorldCompletionMetaV1(
+        learningLabel: 'You learned how position changes what a hand can do.',
+        previewLine:
+            'World 4 starts with a simple question: why did that bet '
+            'happen?',
+      ),
+      4: _WorldCompletionMetaV1(
+        learningLabel:
+            "You learned why a bet happens and what price it's asking you "
+            'to risk.',
+        previewLine:
+            'World 5 starts with a simple question: what does the board '
+            'let you keep doing?',
+      ),
+      5: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to read board texture and let streets change '
+            'your plan.',
+        previewLine:
+            'World 6 starts with a simple question: what could they still '
+            'be holding?',
+      ),
+      6: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to group hands into ranges and compare who '
+            'is ahead.',
+        previewLine:
+            'World 7 starts with a simple question: what do the visible '
+            'cards rule out?',
+      ),
+    };
 
 String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
   if (gains.isEmpty) {
@@ -5956,7 +6042,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          summary.hasWorldOneCompletionPayoff
+                          summary.hasWorldOneCompletionPayoff ||
+                                  summary.hasWorldCompletionPayoff
                               ? summary.milestoneTitle
                               : payoffHero?.headline ?? summary.milestoneTitle,
                           key: const Key('act0_shell_block_summary_title'),
@@ -5966,7 +6053,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          summary.hasWorldOneCompletionPayoff
+                          summary.hasWorldOneCompletionPayoff ||
+                                  summary.hasWorldCompletionPayoff
                               ? summary.milestoneDetailTitle
                               : payoffHero?.detail ??
                                     summary.milestoneDetailTitle,
@@ -6015,6 +6103,14 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         if (summary.hasWorldOneCompletionPayoff) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           _WorldOneCompletionPayoffV1(
+                            summary: summary,
+                            tone: celebrateTone,
+                            receipt: visibleRepairOutcomeReceipt,
+                          ),
+                        ],
+                        if (summary.hasWorldCompletionPayoff) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          _WorldCompletionPayoffV1(
                             summary: summary,
                             tone: celebrateTone,
                             receipt: visibleRepairOutcomeReceipt,
@@ -6345,6 +6441,78 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
   final Color tone;
   final Act0RepairOutcomeSessionReceiptV1? receipt;
 
+  @override
+  Widget build(BuildContext context) {
+    return _WorldMilestoneCardV1(
+      keyPrefix: 'act0_shell_world1_completion',
+      tone: tone,
+      payoffLabel: summary.worldOneCompletionPayoffLabel,
+      learningLabel: summary.worldOneCompletionLearningLabel,
+      nextLabel: summary.worldOneCompletionNextLabel,
+      previewLine: summary.worldOneCompletionPreviewLine,
+      proofFallbackLabel: summary.worldOneCompletionProofFallbackLabel,
+      receipt: receipt,
+    );
+  }
+}
+
+/// Ordinary World 2-6 completion payoff. Shares the exact hierarchy/visual
+/// grammar accepted for World 1 via [_WorldMilestoneCardV1]; only the
+/// deterministic per-world copy differs (`_worldCompletionMetaByNumberV1`).
+/// World 4 intentionally receives no special treatment here — the future
+/// W4->W5 band transition PR can key off `summary.worldNumber == 4` to swap
+/// in its own stronger variant before this widget is reached.
+class _WorldCompletionPayoffV1 extends StatelessWidget {
+  const _WorldCompletionPayoffV1({
+    required this.summary,
+    required this.tone,
+    this.receipt,
+  });
+
+  final Act0BlockCompletionSummaryV1 summary;
+  final Color tone;
+  final Act0RepairOutcomeSessionReceiptV1? receipt;
+
+  @override
+  Widget build(BuildContext context) {
+    return _WorldMilestoneCardV1(
+      keyPrefix: 'act0_shell_world_completion',
+      tone: tone,
+      payoffLabel: summary.worldCompletionPayoffLabel,
+      learningLabel: summary.worldCompletionLearningLabel,
+      nextLabel: summary.worldCompletionNextLabel,
+      previewLine: summary.worldCompletionPreviewLine,
+      proofFallbackLabel: summary.worldCompletionProofFallbackLabel,
+      receipt: receipt,
+    );
+  }
+}
+
+/// Shared card layout for the accepted world-completion payoff hierarchy:
+/// milestone identity, learning takeaway, gated proof row, next-world
+/// preview. Used by both the World 1 dedicated copy and the ordinary
+/// World 2-6 copy so the visual grammar never forks per world.
+class _WorldMilestoneCardV1 extends StatelessWidget {
+  const _WorldMilestoneCardV1({
+    required this.keyPrefix,
+    required this.tone,
+    required this.payoffLabel,
+    required this.learningLabel,
+    required this.nextLabel,
+    required this.previewLine,
+    required this.proofFallbackLabel,
+    this.receipt,
+  });
+
+  final String keyPrefix;
+  final Color tone;
+  final String payoffLabel;
+  final String learningLabel;
+  final String nextLabel;
+  final String previewLine;
+  final String proofFallbackLabel;
+  final Act0RepairOutcomeSessionReceiptV1? receipt;
+
   bool get _hasEarnedProof => receipt?.isBankedFixProof == true;
 
   @override
@@ -6355,7 +6523,7 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
         ? Act0ProofIconRoleV1.reinforced
         : Act0ProofIconRoleV1.repairCompleted;
     return Container(
-      key: const Key('act0_shell_world1_completion_payoff'),
+      key: Key('${keyPrefix}_payoff'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
       decoration: BoxDecoration(
         color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
@@ -6368,16 +6536,16 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Act0ProofIconV1(
-                key: Key('act0_shell_world1_completion_milestone_icon'),
+              Act0ProofIconV1(
+                key: Key('${keyPrefix}_milestone_icon'),
                 role: Act0ProofIconRoleV1.milestone,
                 size: Act0ProofIconSizeV1.seal,
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  summary.worldOneCompletionPayoffLabel,
-                  key: const Key('act0_shell_world1_completion_payoff_label'),
+                  payoffLabel,
+                  key: Key('${keyPrefix}_payoff_label'),
                   style: Act0ShellTokensV1.body.copyWith(
                     color: Act0ShellTokensV1.text,
                     fontWeight: FontWeight.w900,
@@ -6388,8 +6556,8 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            summary.worldOneCompletionLearningLabel,
-            key: const Key('act0_shell_world1_completion_learning_label'),
+            learningLabel,
+            key: Key('${keyPrefix}_learning_label'),
             maxLines: 2,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.muted.copyWith(
@@ -6403,17 +6571,15 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
             children: [
               if (proofIconRole != null) ...[
                 Act0ProofIconV1(
-                  key: const Key('act0_shell_world1_completion_proof_icon'),
+                  key: Key('${keyPrefix}_proof_icon'),
                   role: proofIconRole,
                 ),
                 const SizedBox(width: Act0ShellTokensV1.gapXs),
               ],
               Expanded(
                 child: Text(
-                  _hasEarnedProof
-                      ? receipt!.lines.first
-                      : summary.worldOneCompletionProofFallbackLabel,
-                  key: const Key('act0_shell_world1_completion_proof_line'),
+                  _hasEarnedProof ? receipt!.lines.first : proofFallbackLabel,
+                  key: Key('${keyPrefix}_proof_line'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
                   style: Act0ShellTokensV1.muted.copyWith(
@@ -6426,8 +6592,8 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            summary.worldOneCompletionNextLabel,
-            key: const Key('act0_shell_world1_completion_next_label'),
+            nextLabel,
+            key: Key('${keyPrefix}_next_label'),
             style: Act0ShellTokensV1.body.copyWith(
               color: tone,
               fontWeight: FontWeight.w900,
@@ -6435,8 +6601,8 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            summary.worldOneCompletionPreviewLine,
-            key: const Key('act0_shell_world1_completion_preview_line'),
+            previewLine,
+            key: Key('${keyPrefix}_preview_line'),
             maxLines: 3,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(

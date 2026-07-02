@@ -7,6 +7,7 @@ enum Act0SharkyCoachMomentV1 {
   repairResultProof,
   sessionSummaryProof,
   worldOneCompletionPayoff,
+  worldCompletionPayoff,
 }
 
 Act0SharkyCoachTierV1 act0SharkyCoachTierForWorldNumberV1(int worldNumber) {
@@ -36,6 +37,8 @@ String act0SharkyCoachLineForMomentV1(
       Act0SharkyCoachMomentV1.sessionSummaryProof => 'Small win, real proof.',
       Act0SharkyCoachMomentV1.worldOneCompletionPayoff =>
         'You banked the first table read.',
+      Act0SharkyCoachMomentV1.worldCompletionPayoff =>
+        "You banked this world's core read.",
     },
     Act0SharkyCoachTierV1.developing => switch (moment) {
       Act0SharkyCoachMomentV1.homeActiveRepair =>
@@ -50,6 +53,8 @@ String act0SharkyCoachLineForMomentV1(
         'Clean proof. Keep the pattern ready.',
       Act0SharkyCoachMomentV1.worldOneCompletionPayoff =>
         'Foundation read banked.',
+      Act0SharkyCoachMomentV1.worldCompletionPayoff =>
+        "This world's read is now yours to use.",
     },
     Act0SharkyCoachTierV1.sharp => switch (moment) {
       Act0SharkyCoachMomentV1.homeActiveRepair =>
@@ -64,6 +69,8 @@ String act0SharkyCoachLineForMomentV1(
         'Proof logged. Pattern stays ready.',
       Act0SharkyCoachMomentV1.worldOneCompletionPayoff =>
         'Foundation signal banked.',
+      Act0SharkyCoachMomentV1.worldCompletionPayoff =>
+        "This world's read is locked into your reads.",
     },
   };
 }
