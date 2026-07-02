@@ -410,7 +410,9 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
                   tone.withValues(alpha: 0.06),
                 ],
               ),
-        borderRadius: BorderRadius.circular(size * 0.34),
+        borderRadius: BorderRadius.circular(
+          size * Act0ShellTokensV1.sharkyTileRadiusRatio,
+        ),
         border: simpleFrame
             ? null
             : Border.all(color: tone.withValues(alpha: 0.22)),

@@ -137,6 +137,7 @@ class Act0ShellTokensV1 {
   static const double radiusOverlay = 24;
   static const double ctaRadius = 16;
   static const double radiusPill = radiusBase;
+  static const double sharkyTileRadiusRatio = 0.34;
   static const double topBarHeight = 54;
   static const double bottomNavHeight = 66;
   static const double runnerActionDockMinHeight = 68;

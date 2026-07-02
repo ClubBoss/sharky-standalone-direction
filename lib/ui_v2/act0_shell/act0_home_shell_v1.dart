@@ -474,7 +474,9 @@ class _HomeIdentityRowV1 extends StatelessWidget {
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: tone.withOpacity(0.12),
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(
+              38 * Act0ShellTokensV1.sharkyTileRadiusRatio,
+            ),
             border: Border.all(color: tone.withOpacity(0.18)),
           ),
           child: Act0SharkyPresenceMascotV1(

@@ -3098,7 +3098,9 @@ class Act0SharkyMascotV1 extends StatelessWidget {
             height: size,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(
+                  size * Act0ShellTokensV1.sharkyTileRadiusRatio,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: tone.withValues(alpha: 0.20),
