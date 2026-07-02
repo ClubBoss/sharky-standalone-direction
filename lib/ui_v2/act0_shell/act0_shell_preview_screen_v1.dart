@@ -14,10 +14,12 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
@@ -5592,20 +5594,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String? _homePersonalizedReturnReasonLine() {
-    return act0PersonalizedReturnReasonLineV1(
-      _lastSessionLearnerStateV1,
-      repairFocusLabelsById: _lastSessionRepairFocusLabelsByIdV1,
+    final reason = Act0PersonalizedReturnReasonV1.fromSources(
+      activeRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
+        growable: false,
+      ),
+      conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
+      transferMeasurement:
+          Act0LearningTransferMeasurementV1.fromLearningEvidence(
+            _learningEvidenceHistoryV1,
+          ),
     );
+    return reason.copyLine;
   }
-
-  static const Map<String, String> _lastSessionRepairFocusLabelsByIdV1 =
-      <String, String>{
-        'no_bet_yet': 'no-bet-yet clue',
-        'action_read': 'action-read clue',
-        'table_position_read': 'position clue',
-        'board_read': 'board clue',
-        'price_read': 'price clue',
-      };
 
   String _homeRepairLabel(
     Act0WorldCardV1 selectedWorld,
