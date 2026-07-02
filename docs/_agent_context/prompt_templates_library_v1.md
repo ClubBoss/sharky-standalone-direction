@@ -17,6 +17,7 @@ Status: advisory prompt templates, not SSOT.
 - A docs/process push gate may be followed by the next local docs task after a
   successful push. Keep product or high-risk code waves as separate gates.
 - State generated-output policy explicitly in every template.
+- Before commit, advance route-critical capsules to the accepted HEAD and next task when the route is unambiguous.
 
 ## Capsule Header Template
 

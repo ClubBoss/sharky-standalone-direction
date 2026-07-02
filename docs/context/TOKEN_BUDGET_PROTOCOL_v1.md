@@ -130,3 +130,22 @@ If product/source files changed unexpectedly, run `flutter analyze` and explain 
 - Validate with exact commands from the lane.
 - Commit or push only when the prompt asks or the branch contract requires it.
 - Target 30k-80k tokens unless the work is inherently larger.
+
+## Rolling Capsule Advance
+
+For every accepted product PR, capsule metadata is part of Definition of Done:
+
+1. Update `ACTIVE_ROUTE_CAPSULE_v1.md` in the product commit with the accepted
+   product HEAD, the closed task, and the next active task.
+2. Update exactly the relevant lane capsule when durable facts changed.
+3. Do not update unrelated capsules.
+
+Use a separate capsule-refresh PR only when the phase changes materially,
+authority documents conflict, multiple capsules need structural rewriting, or
+the prior agent cannot safely identify the next route.
+
+This is completion metadata, not a new product layer. Capsules remain compact
+summaries and never outrank SSOT, active evidence, or live source and runtime
+truth. A missing metadata update does not justify changing product direction.
+The next agent must still stop with `stale_capsule_scope` when a capsule names
+an active phase or task that conflicts with the accepted route.

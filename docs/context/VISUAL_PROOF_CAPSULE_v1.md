@@ -2,8 +2,8 @@
 
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
-Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
-Verified active route artifact: `docs/_reviews/fixes_banked_weekly_proof_v1.md`.
+Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
+Verified active route artifact: `docs/_reviews/cross_session_proof_profile_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -40,20 +40,23 @@ names that surface or new evidence shows a concrete defect.
 
 ## Current Proof State
 
-Session Summary's existing proof receipt consumes the structured banked-fix
-projection when available and retains its repair-outcome fallback. The active
-task is `Cross-Session Proof Profile v1`, not a visual-polish wave.
+Session Summary's existing gold-contained proof receipt consumes the structured
+banked-fix projection when available and retains its repair-outcome fallback.
+Cross-Session Proof Profile landed in the existing Profile `Progress proof`
+card: it consumes lifetime and recent proof while preserving the navy-glass
+hierarchy. No achievement icon system exists yet. The active task is
+`Achievement Visual Language / Icons v1`, not a generic visual-polish wave.
 
 ## Remaining Visual Route
 
-1. Cross-Session Proof Profile
-2. Achievement Visual Language / Icons
-3. W1 Completion Payoff
-4. W2-W6 Completion Payoff
-5. W4->W5 Band Transition Milestone
+1. Achievement Visual Language / Icons - ACTIVE
+2. W1 Completion Payoff
+3. W2-W6 Completion Payoff
+4. W4->W5 Band Transition Milestone
 
-Do not reopen visual design before the dedicated Achievement Visual Language
-stage or concrete new regression evidence.
+No motion or completion-payoff work is active yet. Do not reopen generic visual
+design outside the dedicated Achievement Visual Language stage or concrete new
+regression evidence.
 
 ## Proof / Progression Rules
 
@@ -104,3 +107,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/cta_rhythm_learn_cleanup_pr_v1.md`
 - `docs/_reviews/static_premium_visual_regression_check_v1.md`
 - `docs/_reviews/fixes_banked_weekly_proof_v1.md`
+- `docs/_reviews/cross_session_proof_profile_v1.md`

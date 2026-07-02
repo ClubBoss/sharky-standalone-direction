@@ -2,8 +2,8 @@
 
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
-Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
-Verified active route artifact: `docs/_reviews/fixes_banked_weekly_proof_v1.md`.
+Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
+Verified active route artifact: `docs/_reviews/cross_session_proof_profile_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -14,13 +14,13 @@ Human QA remains the last gate.
 
 Current active task:
 
-- `Cross-Session Proof Profile v1`
+- `Achievement Visual Language / Icons v1`
 
 ## Phase 4 Sequence
 
 1. Fixes Banked / Recent-Session Proof - CLOSED
-2. Cross-Session Proof Profile - ACTIVE
-3. Achievement Visual Language / Icons
+2. Cross-Session Proof Profile - CLOSED
+3. Achievement Visual Language / Icons - ACTIVE
 4. W1 Completion Payoff
 5. W2-W6 Completion Payoff
 6. W4->W5 Band Transition Milestone

@@ -2,8 +2,8 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-03.
-Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
-Verified active task: `Cross-Session Proof Profile v1`.
+Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
+Verified active task: `Achievement Visual Language / Icons v1`.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 

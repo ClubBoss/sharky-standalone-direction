@@ -2,8 +2,8 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
-Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
-Verified active route artifact: `docs/_reviews/fixes_banked_weekly_proof_v1.md`.
+Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
+Verified active route artifact: `docs/_reviews/cross_session_proof_profile_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -36,6 +36,8 @@ reason it is not an improvement claim.
 - Banked-fix proof derives from Review resolution receipts, matching successful
   repair outcomes, and later same-family transfer evidence. Its aggregate uses
   a recent-session window, not calendar-week reporting.
+- Profile's existing `Progress proof` card consumes source-backed lifetime and
+  recent banked-fix proof without owning or mutating the proof projection.
 
 ## Constraints
 
@@ -53,8 +55,9 @@ reason it is not an improvement claim.
 
 `concept-family state + session identity + transfer evidence + repair outcomes + Review resolution receipts -> banked-fix projection -> bounded proof consumer`
 
-Cross-Session Proof Profile may consume this chain. It must not invent mastery,
-scores, percentages, causal learning claims, or broad outcome history.
+Profile consumes this chain through the accepted Cross-Session Proof contract.
+It must not invent mastery, scores, percentages, causal learning claims, or
+broad outcome history.
 
 ## Telemetry Ownership
 
@@ -103,6 +106,7 @@ Likely owner areas:
 - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
 - `docs/_reviews/review_multi_session_pattern_coaching_v1.md`
 - `docs/_reviews/fixes_banked_weekly_proof_v1.md`
+- `docs/_reviews/cross_session_proof_profile_v1.md`
 
 ## Claim Language
 
