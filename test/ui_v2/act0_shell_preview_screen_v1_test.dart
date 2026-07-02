@@ -11590,11 +11590,22 @@ void main() {
     final progressTop = tester
         .getTopLeft(find.byKey(const Key('act0_shell_welcome_progress_label')))
         .dy;
-    final ctaBottom = tester
-        .getBottomLeft(find.byKey(const Key('act0_shell_welcome_primary_cta')))
+    final progressBottom = tester
+        .getBottomLeft(
+          find.byKey(const Key('act0_shell_welcome_progress_label')),
+        )
         .dy;
+    final beatFrameRect = tester.getRect(
+      find.byKey(const Key('act0_shell_welcome_beat_frame')),
+    );
+    final ctaRect = tester.getRect(
+      find.byKey(const Key('act0_shell_welcome_primary_cta')),
+    );
+    final topBreathingRoom = beatFrameRect.top - progressBottom;
+    final bottomBreathingRoom = ctaRect.top - beatFrameRect.bottom;
     expect(progressTop, lessThan(viewportHeight * 0.20));
-    expect(ctaBottom, greaterThan(viewportHeight * 0.80));
+    expect(ctaRect.bottom, greaterThan(viewportHeight * 0.80));
+    expect(topBreathingRoom, lessThan(bottomBreathingRoom * 0.75));
 
     expect(find.text('Open first lesson'), findsOneWidget);
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));

@@ -238,7 +238,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: centerContent
-                    ? Alignment.center
+                    ? const Alignment(0, -0.4)
                     : Alignment.topCenter,
                 child: SingleChildScrollView(child: beatFrame),
               ),
