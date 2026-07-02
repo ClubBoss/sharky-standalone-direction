@@ -472,6 +472,35 @@ class Act0BlockCompletionSummaryV1 {
   String get worldCompletionProofFallbackLabel =>
       worldOneCompletionProofFallbackLabel;
 
+  /// True only for the exact W4->W5 Foundation -> Developing Player band
+  /// transition. Checked with higher priority than
+  /// [hasWorldCompletionPayoff] at the render site so World 4 renders this
+  /// stronger, bounded variant instead of falling through to the ordinary
+  /// World 2-6 card. This gate is intentionally worldNumber == 4 only; it is
+  /// not a general multi-band framework and must not be widened to cover any
+  /// other world boundary.
+  bool get hasBandTransitionPayoff =>
+      isWorldComplete &&
+      worldNumber == 4 &&
+      nextWorldNumber == 5 &&
+      nextWorldTitle != null &&
+      nextWorldTitle!.trim().isNotEmpty;
+
+  String get bandTransitionIdentityLabel => 'Foundation complete';
+
+  String get bandTransitionLearningLabel =>
+      'You can now read the table, hand, action, and position before '
+      'deciding.';
+
+  String get bandTransitionNextLabel => 'Next: Developing Player';
+
+  String get bandTransitionPreviewLine =>
+      'World 5 starts connecting board texture and street changes into '
+      'one plan.';
+
+  String get bandTransitionProofFallbackLabel =>
+      worldOneCompletionProofFallbackLabel;
+
   bool get shouldReviewFirst =>
       deepLeakCount > 0 && qualifiesForNextLesson && hasSafeReviewTarget;
 
@@ -6108,7 +6137,14 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             receipt: visibleRepairOutcomeReceipt,
                           ),
                         ],
-                        if (summary.hasWorldCompletionPayoff) ...[
+                        if (summary.hasBandTransitionPayoff) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          _BandTransitionPayoffV1(
+                            summary: summary,
+                            tone: celebrateTone,
+                            receipt: visibleRepairOutcomeReceipt,
+                          ),
+                        ] else if (summary.hasWorldCompletionPayoff) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           _WorldCompletionPayoffV1(
                             summary: summary,
@@ -6488,6 +6524,41 @@ class _WorldCompletionPayoffV1 extends StatelessWidget {
   }
 }
 
+/// The one W4->W5 Foundation -> Developing Player band-transition milestone.
+/// Strictly gated to `worldNumber == 4` with valid World 5 route truth
+/// (see [Act0BlockCompletionSummaryV1.hasBandTransitionPayoff]) and checked
+/// with higher priority than [_WorldCompletionPayoffV1] at the render site,
+/// so World 4 never also renders the ordinary card. Reuses the exact shared
+/// [_WorldMilestoneCardV1] hierarchy with band-specific copy and the
+/// reserved emphasized milestone seal. Not a general multi-band framework:
+/// no other world number reaches this widget.
+class _BandTransitionPayoffV1 extends StatelessWidget {
+  const _BandTransitionPayoffV1({
+    required this.summary,
+    required this.tone,
+    this.receipt,
+  });
+
+  final Act0BlockCompletionSummaryV1 summary;
+  final Color tone;
+  final Act0RepairOutcomeSessionReceiptV1? receipt;
+
+  @override
+  Widget build(BuildContext context) {
+    return _WorldMilestoneCardV1(
+      keyPrefix: 'act0_shell_band_transition_completion',
+      tone: tone,
+      payoffLabel: summary.bandTransitionIdentityLabel,
+      learningLabel: summary.bandTransitionLearningLabel,
+      nextLabel: summary.bandTransitionNextLabel,
+      previewLine: summary.bandTransitionPreviewLine,
+      proofFallbackLabel: summary.bandTransitionProofFallbackLabel,
+      receipt: receipt,
+      emphasizeMilestone: true,
+    );
+  }
+}
+
 /// Shared card layout for the accepted world-completion payoff hierarchy:
 /// milestone identity, learning takeaway, gated proof row, next-world
 /// preview. Used by both the World 1 dedicated copy and the ordinary
@@ -6502,6 +6573,7 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
     required this.previewLine,
     required this.proofFallbackLabel,
     this.receipt,
+    this.emphasizeMilestone = false,
   });
 
   final String keyPrefix;
@@ -6512,6 +6584,11 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
   final String previewLine;
   final String proofFallbackLabel;
   final Act0RepairOutcomeSessionReceiptV1? receipt;
+
+  /// Reserved for the one W4->W5 band-transition consumer. Every ordinary
+  /// world-completion wrapper leaves this at its default so the accepted
+  /// W1-W6 card renders byte-identically.
+  final bool emphasizeMilestone;
 
   bool get _hasEarnedProof => receipt?.isBankedFixProof == true;
 
@@ -6528,7 +6605,10 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
       decoration: BoxDecoration(
         color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: tone.withValues(alpha: 0.24)),
+        border: Border.all(
+          color: tone.withValues(alpha: emphasizeMilestone ? 0.34 : 0.24),
+          width: emphasizeMilestone ? 1.4 : 1.0,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -6540,6 +6620,7 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 key: Key('${keyPrefix}_milestone_icon'),
                 role: Act0ProofIconRoleV1.milestone,
                 size: Act0ProofIconSizeV1.seal,
+                emphasized: emphasizeMilestone,
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(

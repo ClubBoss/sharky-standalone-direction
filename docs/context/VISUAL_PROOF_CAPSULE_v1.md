@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w2_w6_completion_payoff_v1.md`.
+Verified active route artifact: `docs/_reviews/w4_w5_band_transition_milestone_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -51,38 +51,42 @@ Completion Payoff v1 gave `milestone` its first valid consumer via a shared
 `_WorldMilestoneCardV1` layout inside `Act0BlockCompletionShellV1`. W2-W6
 Completion Payoff v1 extended that same shared card to ordinary World 2-6
 completions (`_WorldCompletionPayoffV1`, gate
-`Act0BlockCompletionSummaryV1.hasWorldCompletionPayoff`): one milestone seal,
-one deterministic curriculum-true learning-takeaway line per world (sourced
-from each world's real title/subtitle in `act0_shell_state_v1.dart`), a gated
-`repairCompleted`/`reinforced` proof row sourced from the same banked-fix
-receipt, a safe no-proof fallback, and a route-truth next-world preview. World
-1 keeps its own dedicated wrapper/copy unchanged; World 4 intentionally
-receives the same ordinary treatment as W2/W3/W5/W6 (no band-transition
-copy, no larger seal) so the future W4->W5 PR can safely claim a stronger
-variant. No gallery, grid, motion, XP, level, mastery, or RPG badge economy
-was introduced. The active task is `W4->W5 Band Transition Milestone`.
+`Act0BlockCompletionSummaryV1.hasWorldCompletionPayoff`). W4->W5 Band
+Transition Milestone v1 closed Phase 4: World 4 now renders a dedicated,
+higher-priority `_BandTransitionPayoffV1` wrapper (gate
+`hasBandTransitionPayoff`, `worldNumber == 4 && nextWorldNumber == 5`,
+checked before `hasWorldCompletionPayoff` at the render site so World 4
+never falls through to the ordinary card) with its own claim-safe copy
+(`Foundation complete` / `Next: Developing Player`, mirroring the real
+`foundation`/`developing` tier boundary already encoded at world number 5 in
+`act0SharkyCoachTierForWorldNumberV1`). It reuses the exact same
+`_WorldMilestoneCardV1` hierarchy and proof contract with one bounded
+addition: `Act0ProofIconV1.emphasized` (default false) renders a stronger
+milestone rim and an extra accent ring, used only by this one moment. World
+1-3/5-6 render byte-identically to before (regression-proven). No gallery,
+grid, motion, XP, level, mastery, or RPG badge economy was introduced, and no
+general multi-band framework exists — `hasBandTransitionPayoff` is
+intentionally `worldNumber == 4` only. Phase 4 - Proof Progression is now
+CLOSED. The active task is `Sharky Phrase Tier Contract v1` (Phase 5).
 
 ## Remaining Visual Route
 
 1. Achievement Visual Language / Icons - CLOSED
 2. W1 Completion Payoff - CLOSED
 3. W2-W6 Completion Payoff - CLOSED
-4. W4->W5 Band Transition Milestone - ACTIVE
+4. W4->W5 Band Transition Milestone - CLOSED
 
-No motion or generalized completion-payoff framework exists yet; the shared
-`_WorldMilestoneCardV1` is a bounded, world-ID-gated layout reused by two
-thin wrappers (W1-specific, W2-6 ordinary), not a public/reusable component.
+Phase 4 - Proof Progression is fully CLOSED. No motion or generalized
+completion-payoff framework exists; the shared `_WorldMilestoneCardV1` is a
+bounded, world-ID-gated layout reused by three thin wrappers (W1-specific,
+W2-6 ordinary, W4->W5 band-transition), not a public/reusable component.
 `milestone` proof-icon role is used only by true world-completion moments
-(W1-W6 now) and must remain scoped that way — W7-W12 payoff and the
-W4->W5 band transition are the next dedicated stages, not a green light to
-treat `milestone` as a generic achievement badge. The seam for the next PR:
-`Act0BlockCompletionSummaryV1.hasWorldCompletionPayoff` currently admits
-worldNumber 4 into the ordinary path; the W4->W5 PR should add a
-higher-priority `hasBandTransitionPayoff` gate (worldNumber == 4 &&
-nextWorldNumber == 5) with its own dedicated widget, mirroring how W1 has its
-own dedicated wrapper today, so W4 renders the stronger transition instead of
-falling through to the ordinary card. Do not reopen generic visual design
-outside a dedicated stage or concrete new regression evidence.
+(W1-W6, including the stronger W4 band-transition variant) and must remain
+scoped that way — W7-W12 payoff is the next dedicated completion-payoff
+stage, not a green light to treat `milestone` as a generic achievement badge
+or to widen `hasBandTransitionPayoff` to any other world boundary. Do not
+reopen generic visual design outside a dedicated stage or concrete new
+regression evidence.
 
 ## Proof / Progression Rules
 
@@ -137,3 +141,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/achievement_visual_language_icons_v1.md`
 - `docs/_reviews/w1_completion_payoff_v1.md`
 - `docs/_reviews/w2_w6_completion_payoff_v1.md`
+- `docs/_reviews/w4_w5_band_transition_milestone_v1.md`

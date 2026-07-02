@@ -25,10 +25,16 @@ class Act0ProofIconV1 extends StatelessWidget {
     super.key,
     required this.role,
     this.size = Act0ProofIconSizeV1.inline,
+    this.emphasized = false,
   });
 
   final Act0ProofIconRoleV1 role;
   final Act0ProofIconSizeV1 size;
+
+  /// Reserved for the strongest milestone moment (the W4->W5 band
+  /// transition). Ignored for every other role; defaults to false so every
+  /// existing consumer renders byte-identically.
+  final bool emphasized;
 
   double get _boxSize => switch (size) {
     Act0ProofIconSizeV1.inline => 20,
@@ -48,12 +54,20 @@ class Act0ProofIconV1 extends StatelessWidget {
     Act0ProofIconRoleV1.milestone => Icons.verified_rounded,
   };
 
-  double get _rimWidth => role == Act0ProofIconRoleV1.milestone ? 1.6 : 1.1;
+  bool get _isEmphasizedMilestone =>
+      role == Act0ProofIconRoleV1.milestone && emphasized;
+
+  double get _rimWidth {
+    if (role != Act0ProofIconRoleV1.milestone) {
+      return 1.1;
+    }
+    return _isEmphasizedMilestone ? 2.2 : 1.6;
+  }
 
   double get _rimOpacity => switch (role) {
     Act0ProofIconRoleV1.repairCompleted => 0.45,
     Act0ProofIconRoleV1.reinforced => 0.65,
-    Act0ProofIconRoleV1.milestone => 0.85,
+    Act0ProofIconRoleV1.milestone => _isEmphasizedMilestone ? 1.0 : 0.85,
   };
 
   @override
@@ -74,31 +88,56 @@ class Act0ProofIconV1 extends StatelessWidget {
       ),
       child: Icon(_glyph, size: _glyphSize, color: Act0ShellTokensV1.gold),
     );
-    if (role != Act0ProofIconRoleV1.reinforced) {
-      return mark;
-    }
-    final echoBox = box + 6;
-    return SizedBox(
-      key: const Key('act0_proof_icon_v1_reinforced_echo'),
-      width: echoBox,
-      height: echoBox,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: echoBox,
-            height: echoBox,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(echoBox * 0.32),
-              border: Border.all(
-                color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-                width: 1,
+    if (role == Act0ProofIconRoleV1.reinforced) {
+      final echoBox = box + 6;
+      return SizedBox(
+        key: const Key('act0_proof_icon_v1_reinforced_echo'),
+        width: echoBox,
+        height: echoBox,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: echoBox,
+              height: echoBox,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(echoBox * 0.32),
+                border: Border.all(
+                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+                  width: 1,
+                ),
               ),
             ),
-          ),
-          mark,
-        ],
-      ),
-    );
+            mark,
+          ],
+        ),
+      );
+    }
+    if (_isEmphasizedMilestone) {
+      final ringBox = box + 8;
+      return SizedBox(
+        key: const Key('act0_proof_icon_v1_milestone_emphasis_ring'),
+        width: ringBox,
+        height: ringBox,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: ringBox,
+              height: ringBox,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(ringBox * 0.32),
+                border: Border.all(
+                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+            ),
+            mark,
+          ],
+        ),
+      );
+    }
+    return mark;
   }
 }

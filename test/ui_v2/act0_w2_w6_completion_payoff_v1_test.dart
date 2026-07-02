@@ -27,7 +27,10 @@ class _WorldCase {
 }
 
 // Real, live curriculum truth from lib/ui_v2/act0_shell/act0_shell_state_v1.dart
-// (`_act0PreviewWorlds`), not invented.
+// (`_act0PreviewWorlds`), not invented. World 4 is intentionally absent here:
+// it now receives the stronger, dedicated W4->W5 band-transition milestone
+// instead of this ordinary card (see
+// test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart).
 const _worldCases = <_WorldCase>[
   _WorldCase(
     worldNumber: 2,
@@ -43,15 +46,6 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 4,
     nextWorldTitle: 'Bet Purpose / Price',
     learningLabel: 'You learned how position changes what a hand can do.',
-  ),
-  _WorldCase(
-    worldNumber: 4,
-    worldTitle: 'Bet Purpose / Price',
-    nextWorldNumber: 5,
-    nextWorldTitle: 'Board Awareness',
-    learningLabel:
-        "You learned why a bet happens and what price it's asking you to "
-        'risk.',
   ),
   _WorldCase(
     worldNumber: 5,
@@ -415,49 +409,37 @@ void main() {
     });
   }
 
-  testWidgets('World 4 receives only the ordinary payoff, no band-transition '
-      'treatment', (tester) async {
-    const world4Case = _WorldCase(
-      worldNumber: 4,
-      worldTitle: 'Bet Purpose / Price',
-      nextWorldNumber: 5,
-      nextWorldTitle: 'Board Awareness',
-      learningLabel:
-          "You learned why a bet happens and what price it's asking you to "
-          'risk.',
-    );
+  testWidgets(
+    'World 4 no longer uses the ordinary card; it is now owned by the '
+    'dedicated W4->W5 band-transition milestone',
+    (tester) async {
+      const world4Case = _WorldCase(
+        worldNumber: 4,
+        worldTitle: 'Bet Purpose / Price',
+        nextWorldNumber: 5,
+        nextWorldTitle: 'Board Awareness',
+        learningLabel:
+            "You learned why a bet happens and what price it's asking you "
+            'to risk.',
+      );
 
-    await tester.pumpWidget(_host(_summaryFor(world4Case)));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_host(_summaryFor(world4Case)));
+      await tester.pumpAndSettle();
 
-    // Same key namespace and seal size as every other ordinary world; no
-    // separate band-transition widget/key exists yet.
-    expect(
-      find.byKey(const Key('act0_shell_world_completion_payoff')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_world4_band_transition_payoff')),
-      findsNothing,
-    );
-    final text = tester
-        .widgetList<Text>(
-          find.descendant(
-            of: find.byKey(const Key('act0_shell_world_completion_payoff')),
-            matching: find.byType(Text),
-          ),
-        )
-        .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
-        .join(' ')
-        .toLowerCase();
-    for (final forbidden in <String>[
-      'developing player',
-      'band transition',
-      'volume ii',
-    ]) {
-      expect(text, isNot(contains(forbidden)));
-    }
-  });
+      // World 4 now renders the dedicated band-transition card, not the
+      // ordinary World 2-6 card. See
+      // test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart for the
+      // full band-transition contract.
+      expect(
+        find.byKey(const Key('act0_shell_world_completion_payoff')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_band_transition_completion_payoff')),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('World 6 completion does not claim Volume I or W12 completion', (
     tester,

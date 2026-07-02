@@ -3,35 +3,35 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w2_w6_completion_payoff_v1.md`.
+Verified active route artifact: `docs/_reviews/w4_w5_band_transition_milestone_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
 
-Phase 4 - Proof Progression is ACTIVE. Phase 1 - Premium Visual Foundation,
-Phase 2 - Learning Truth Foundation, and Phase 3 - Repair Depth are CLOSED.
-Human QA remains the last gate.
+Phase 4 - Proof Progression is CLOSED. Phase 1 - Premium Visual Foundation,
+Phase 2 - Learning Truth Foundation, and Phase 3 - Repair Depth are also
+CLOSED. Phase 5 - Sharky Companion is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `W4->W5 Band Transition Milestone`
+- `Sharky Phrase Tier Contract v1`
 
-## Phase 4 Sequence
+## Phase 4 Sequence (closed)
 
 1. Fixes Banked / Recent-Session Proof - CLOSED
 2. Cross-Session Proof Profile - CLOSED
 3. Achievement Visual Language / Icons - CLOSED
 4. W1 Completion Payoff - CLOSED
 5. W2-W6 Completion Payoff - CLOSED
-6. W4->W5 Band Transition Milestone - ACTIVE
+6. W4->W5 Band Transition Milestone - CLOSED
 
 ## Compact Phase Map
 
 1. Premium Visual Foundation - CLOSED
 2. Learning Truth Foundation - CLOSED
 3. Repair Depth - CLOSED
-4. Proof Progression - ACTIVE
-5. Sharky Companion
+4. Proof Progression - CLOSED
+5. Sharky Companion - ACTIVE
 6. Advanced Learning Presentation
 7. Content & Correctness
 8. Motion
