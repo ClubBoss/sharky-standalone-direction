@@ -32,6 +32,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_cons
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -709,6 +710,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       const Act0ConceptFamilyStateHistoryV1();
   Act0EvidenceRunKeyV1? _activeLearningEvidenceRunKeyV1;
   int _learningEvidenceRunOrdinalV1 = 0;
+  Act0SessionIdentityStateV1 _sessionIdentityStateV1 =
+      const Act0SessionIdentityStateV1();
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -785,10 +788,57 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     try {
-      sink.record(Act0TelemetryEventV1(name: name, fields: fields));
+      sink.record(
+        Act0TelemetryEventV1(
+          name: name,
+          fields: _sessionTelemetryFieldsV1(name, fields),
+        ),
+      );
     } catch (_) {
       // Telemetry must never interrupt the learner route.
     }
+  }
+
+  Map<String, Object?> _sessionTelemetryFieldsV1(
+    String name,
+    Map<String, Object?> fields,
+  ) {
+    if (fields.containsKey('sessionId') || fields.containsKey('session_id')) {
+      return fields;
+    }
+    final sessionId = _sessionIdForTelemetryEventV1(name);
+    if (sessionId.isEmpty) {
+      return fields;
+    }
+    return <String, Object?>{
+      ...fields,
+      'sessionId': sessionId,
+      'session_id': sessionId,
+    };
+  }
+
+  String _sessionIdForTelemetryEventV1(String name) {
+    final active = _sessionIdentityStateV1.currentActiveSessionId;
+    if (active.isNotEmpty) {
+      return active;
+    }
+    if (name == 'session_complete' ||
+        name == 'day2_return' ||
+        name == 'world_complete') {
+      return _sessionIdentityStateV1.currentOrLatestSession?.sessionId ?? '';
+    }
+    return '';
+  }
+
+  Act0TelemetrySinkV1? _sessionAwareTelemetrySinkV1() {
+    final sink = widget.telemetrySink;
+    if (sink == null) {
+      return null;
+    }
+    return _Act0SessionTelemetrySinkV1(
+      sink,
+      () => _sessionIdentityStateV1.currentActiveSessionId,
+    );
   }
 
   void _emitSessionStartTelemetryV1({
@@ -796,6 +846,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required String taskId,
     required String sourceSurface,
   }) {
+    final result = _ensureActiveSessionIdentityV1(
+      worldId: _selectedWorldId,
+      lessonId: lessonId,
+    );
+    if (!result.startedNewSession) {
+      return;
+    }
     _recordTelemetryEventV1('session_start', <String, Object?>{
       'schemaVersion': 1,
       'worldId': _selectedWorldId,
@@ -815,6 +872,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     int? cleanRepCount,
     String? resultSummary,
   }) {
+    final result = _completeActiveSessionIdentityV1(
+      completionReason: sourceSurface,
+    );
+    if (!result.completedNow) {
+      return;
+    }
     _recordTelemetryEventV1('session_complete', <String, Object?>{
       'schemaVersion': 1,
       'worldId': _selectedWorldId,
@@ -836,6 +899,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (resultSummary != null) 'result_summary': resultSummary,
       'source_surface': sourceSurface,
     });
+    _persistProgress();
   }
 
   void _emitDay2ReturnTelemetryV1(Act0LastSessionLearnerStateV1 lastSession) {
@@ -890,6 +954,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return List<Map<String, Object?>>.unmodifiable(
       _conceptFamilyStateHistoryV1.toPayload(),
     );
+  }
+
+  @visibleForTesting
+  Map<String, Object?> debugSessionIdentityStatePayloadV1() {
+    return _sessionIdentityStateV1.toPayload();
   }
 
   @visibleForTesting
@@ -2784,6 +2853,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _reviewMistakeHistoryV1 = parsed.reviewMistakeHistory;
       _conceptFamilyStateHistoryV1 = parsed.conceptFamilyStateHistory;
+      _sessionIdentityStateV1 = parsed.sessionIdentityState;
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -3016,6 +3086,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       reviewMistakeHistory: _reviewMistakeHistoryV1,
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
+      sessionIdentityState: _sessionIdentityStateV1,
       lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
@@ -3038,6 +3109,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         .appendCompletedDecision(
           decision,
           runKey: _activeLearningEvidenceRunKeyV1,
+          sessionId: _sessionIdentityStateV1.currentActiveSessionId,
         );
     _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
       decision,
@@ -3117,6 +3189,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
       _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
       _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
+      _sessionIdentityStateV1 = const Act0SessionIdentityStateV1();
       _repairOutcomeProjectionV1 = const Act0RepairOutcomeProjectionV1();
       _repairOutcomeSequenceV1 = 0;
       _retentionSequence = 0;
@@ -4271,7 +4344,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 selectedTaskId: playSelectedTask?.taskId,
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
-                                telemetrySink: widget.telemetrySink,
+                                telemetrySink: _sessionAwareTelemetrySinkV1(),
                                 theoryRecallStep: theoryRecallStep,
                                 framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
@@ -8010,6 +8083,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!lessonAvailable || !taskAvailable) {
       return;
     }
+    _selectedWorldId = selectedWorld.worldId;
+    _selectedLessonId = lesson.lessonId;
+    _selectedTaskId = task.taskId;
     _emitLessonStartedTelemetryV1(
       lessonId: lesson.lessonId,
       taskId: task.taskId,
@@ -8020,9 +8096,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       runKind: evidenceRunKind,
       startedBy: evidenceStartedBy,
     );
-    _selectedWorldId = selectedWorld.worldId;
-    _selectedLessonId = lesson.lessonId;
-    _selectedTaskId = task.taskId;
     _tab = Act0ShellTabV1.play;
     _showPlayHub = false;
     _returnToPlayHubOnBack = true;
@@ -8036,6 +8109,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? task.runner.teachingSteps.length
         : 0;
     _blockCompletionSummary = null;
+    _persistProgress();
   }
 
   void _startLearningEvidenceRunV1({
@@ -8071,6 +8145,36 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       runKind: normalizedRunKind,
       startedBy: normalizedStartedBy,
     );
+  }
+
+  Act0SessionIdentityStartResultV1 _ensureActiveSessionIdentityV1({
+    required String worldId,
+    String lessonId = '',
+  }) {
+    final result = _sessionIdentityStateV1.startOrResume(
+      startedAtOrder: _sessionLifecycleOrderV1(),
+      startedWorldId: worldId,
+      startedLessonId: lessonId,
+    );
+    _sessionIdentityStateV1 = result.state;
+    return result;
+  }
+
+  Act0SessionIdentityCompleteResultV1 _completeActiveSessionIdentityV1({
+    required String completionReason,
+  }) {
+    final result = _sessionIdentityStateV1.complete(
+      completedAtOrder: _sessionLifecycleOrderV1(),
+      completionReason: completionReason,
+    );
+    _sessionIdentityStateV1 = result.state;
+    return result;
+  }
+
+  int _sessionLifecycleOrderV1() {
+    final evidenceCount = _learningEvidenceHistoryV1.records.length;
+    final repairCount = _repairOutcomeSequenceV1;
+    return evidenceCount + repairCount + 1;
   }
 
   int _latestLearningEvidenceRunOrdinalV1() {
@@ -8284,6 +8388,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
+    if (_sessionIdentityStateV1.currentActiveSessionId.isEmpty) {
+      final startResult = _ensureActiveSessionIdentityV1(
+        worldId: request.targetWorldId,
+        lessonId: request.targetLessonId,
+      );
+      if (startResult.startedNewSession) {
+        _recordTelemetryEventV1('session_start', <String, Object?>{
+          'schemaVersion': 1,
+          'worldId': request.targetWorldId,
+          'world_id': request.targetWorldId,
+          'lessonId': request.targetLessonId,
+          'lesson_id': request.targetLessonId,
+          'taskId': request.targetTaskId,
+          'task_id': request.targetTaskId,
+          'source_surface': 'act0_review',
+        });
+      }
+    }
     _repairOutcomeSequenceV1 += 1;
     _repairOutcomeProjectionV1 = _repairOutcomeProjectionV1.appendAnsweredTask(
       launchRequest: request,
@@ -8291,6 +8413,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       correctChoiceId: _correctOptionIdV1(selectedTask.runner),
       isCorrect: option.isCorrect,
       sequence: _repairOutcomeSequenceV1,
+      sessionId: _sessionIdentityStateV1.currentActiveSessionId,
     );
     if (_repairOutcomeProjectionV1.outcomes.isNotEmpty) {
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
@@ -11014,6 +11137,37 @@ class _Act0PlacementSkipPlanV1 {
   final List<String> orderedTaskIds;
 }
 
+class _Act0SessionTelemetrySinkV1 implements Act0TelemetrySinkV1 {
+  const _Act0SessionTelemetrySinkV1(this.delegate, this.sessionId);
+
+  final Act0TelemetrySinkV1 delegate;
+  final String Function() sessionId;
+
+  @override
+  void record(Act0TelemetryEventV1 event) {
+    final id = sessionId().trim();
+    if (id.isEmpty ||
+        event.fields.containsKey('sessionId') ||
+        event.fields.containsKey('session_id') ||
+        !_runnerSessionTelemetryEventsV1.contains(event.name)) {
+      delegate.record(event);
+      return;
+    }
+    delegate.record(
+      Act0TelemetryEventV1(
+        name: event.name,
+        fields: <String, Object?>{
+          ...event.fields,
+          'sessionId': id,
+          'session_id': id,
+        },
+      ),
+    );
+  }
+}
+
+const Set<String> _runnerSessionTelemetryEventsV1 = <String>{'decision_made'};
+
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
@@ -11041,6 +11195,7 @@ class _Act0PersistedProgressV1 {
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
     this.conceptFamilyStateHistory = const Act0ConceptFamilyStateHistoryV1(),
+    this.sessionIdentityState = const Act0SessionIdentityStateV1(),
     this.lastSessionLearnerState,
   });
 
@@ -11069,6 +11224,7 @@ class _Act0PersistedProgressV1 {
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
   final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
+  final Act0SessionIdentityStateV1 sessionIdentityState;
   final Act0LastSessionLearnerStateV1? lastSessionLearnerState;
 
   String toStorageString() {
@@ -11082,7 +11238,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 13,
+      'schemaVersion': 14,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -11119,6 +11275,7 @@ class _Act0PersistedProgressV1 {
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
       'conceptFamilyStateHistory': conceptFamilyStateHistory.toPayload(),
+      'sessionIdentityState': sessionIdentityState.toPayload(),
       if (lastSessionLearnerState != null)
         'lastSessionLearnerState': lastSessionLearnerState!.toJson(),
       if (firstValueReturnCarry != null)
@@ -11140,7 +11297,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v13 as the shell snapshot evolves.
+    // Accept v1-v14 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -11153,7 +11310,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 10 &&
         schemaVersion != 11 &&
         schemaVersion != 12 &&
-        schemaVersion != 13) {
+        schemaVersion != 13 &&
+        schemaVersion != 14) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -11214,6 +11372,9 @@ class _Act0PersistedProgressV1 {
     final conceptFamilyStateHistory = Act0ConceptFamilyStateHistoryV1.tryParse(
       map['conceptFamilyStateHistory'],
     );
+    final sessionIdentityState = Act0SessionIdentityStateV1.tryParse(
+      map['sessionIdentityState'],
+    );
     final lastSessionLearnerState = Act0LastSessionLearnerStateV1.tryParse(
       map['lastSessionLearnerState'],
     );
@@ -11250,6 +11411,7 @@ class _Act0PersistedProgressV1 {
       learningEvidenceHistory: learningEvidenceHistory,
       reviewMistakeHistory: reviewMistakeHistory,
       conceptFamilyStateHistory: conceptFamilyStateHistory,
+      sessionIdentityState: sessionIdentityState,
       lastSessionLearnerState: lastSessionLearnerState,
     );
   }

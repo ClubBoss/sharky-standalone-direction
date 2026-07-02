@@ -20,6 +20,7 @@ class Act0RepairOutcomeProjectionV1 {
     required String correctChoiceId,
     required bool? isCorrect,
     required int sequence,
+    String sessionId = '',
   }) {
     final request = launchRequest;
     if (request == null || !request.isLaunchable) {
@@ -57,6 +58,7 @@ class Act0RepairOutcomeProjectionV1 {
       outcomeState: _outcomeStateForCorrectnessV1(isCorrect),
       sequence: sequence < 0 ? 0 : sequence,
       sourceType: request.sourceType,
+      sessionId: sessionId.trim(),
     );
     final next = <Act0RepairOutcomeV1>[...outcomes, outcome]
       ..sort((a, b) {
@@ -91,6 +93,7 @@ class Act0RepairOutcomeV1 {
     required this.outcomeState,
     required this.sequence,
     required this.sourceType,
+    this.sessionId = '',
   });
 
   final int schemaVersion;
@@ -107,6 +110,7 @@ class Act0RepairOutcomeV1 {
   final String outcomeState;
   final int sequence;
   final String sourceType;
+  final String sessionId;
 
   Map<String, Object?> toPayload() => <String, Object?>{
     'schemaVersion': schemaVersion,
@@ -123,6 +127,7 @@ class Act0RepairOutcomeV1 {
     'outcomeState': outcomeState,
     'sequence': sequence,
     'sourceType': sourceType,
+    if (sessionId.isNotEmpty) 'sessionId': sessionId,
   };
 }
 

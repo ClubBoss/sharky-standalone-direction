@@ -21,6 +21,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   Act0CompletedDecisionV1 decision, {
   required int createdOrder,
   Act0EvidenceRunKeyV1? runKey,
+  String sessionId = '',
 }) {
   final worldId = decision.worldId?.trim();
   final lessonId = decision.lessonId.trim();
@@ -68,6 +69,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     sourceWorldId: runKey?.worldId ?? '',
     sourceLessonId: runKey?.lessonId ?? '',
     startedBy: runKey?.startedBy ?? '',
+    sessionId: sessionId.trim(),
   );
 }
 
@@ -181,6 +183,7 @@ class Act0LearningEvidenceRecordV1 {
     this.sourceWorldId = '',
     this.sourceLessonId = '',
     this.startedBy = '',
+    this.sessionId = '',
   });
 
   final int schemaVersion;
@@ -204,6 +207,7 @@ class Act0LearningEvidenceRecordV1 {
   final String sourceWorldId;
   final String sourceLessonId;
   final String startedBy;
+  final String sessionId;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -241,6 +245,9 @@ class Act0LearningEvidenceRecordV1 {
     if (startedBy.isNotEmpty) {
       payload['startedBy'] = startedBy;
     }
+    if (sessionId.isNotEmpty) {
+      payload['sessionId'] = sessionId;
+    }
     return payload;
   }
 
@@ -272,6 +279,7 @@ class Act0LearningEvidenceRecordV1 {
     final sourceWorldId = _optionalString(map['sourceWorldId']);
     final sourceLessonId = _optionalString(map['sourceLessonId']);
     final startedBy = _optionalString(map['startedBy']);
+    final sessionId = _optionalString(map['sessionId']);
     if (schemaVersion != 1 ||
         createdOrder == null ||
         recordId == null ||
@@ -313,6 +321,7 @@ class Act0LearningEvidenceRecordV1 {
       sourceWorldId: sourceWorldId,
       sourceLessonId: sourceLessonId,
       startedBy: startedBy,
+      sessionId: sessionId,
     );
   }
 
@@ -339,7 +348,8 @@ class Act0LearningEvidenceRecordV1 {
       other.runOrdinal == runOrdinal &&
       other.sourceWorldId == sourceWorldId &&
       other.sourceLessonId == sourceLessonId &&
-      other.startedBy == startedBy;
+      other.startedBy == startedBy &&
+      other.sessionId == sessionId;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -364,6 +374,7 @@ class Act0LearningEvidenceRecordV1 {
     sourceWorldId,
     sourceLessonId,
     startedBy,
+    sessionId,
   ]);
 }
 
@@ -648,6 +659,7 @@ class Act0LearningEvidenceHistoryV1 {
   Act0LearningEvidenceHistoryV1 appendCompletedDecision(
     Act0CompletedDecisionV1 decision, {
     Act0EvidenceRunKeyV1? runKey,
+    String sessionId = '',
   }) {
     if (records.any((record) => record.recordId == decision.attemptKey)) {
       return this;
@@ -663,6 +675,7 @@ class Act0LearningEvidenceHistoryV1 {
       decision,
       createdOrder: createdOrder,
       runKey: runKey,
+      sessionId: sessionId,
     );
     return record == null ? this : append(record);
   }

@@ -212,6 +212,41 @@ void main() {
     expect(history.familyById('action')!.missCount, 1);
   });
 
+  test('miss repair attempt and proof share optional session id', () {
+    final history = const Act0ConceptFamilyStateHistoryV1()
+        .appendLearningEvidence(
+          _record(
+            order: 1,
+            conceptFamilyId: 'action',
+            sessionId: 'session_v1|1',
+          ),
+        )
+        .appendLearningEvidence(
+          _record(
+            order: 2,
+            conceptFamilyId: 'action',
+            runKind: 'repair',
+            sessionId: 'session_v1|1',
+          ),
+        )
+        .appendRepairOutcome(
+          _repairOutcome(
+            isCorrect: true,
+            sequence: 3,
+            sessionId: 'session_v1|1',
+          ),
+          sourceOrder: 3,
+        );
+
+    final family = history.familyById('action');
+
+    expect(family!.lastSessionId, 'session_v1|1');
+    expect(family.missCount, 2);
+    expect(family.repairAttemptCount, 2);
+    expect(family.successfulRepairCount, 1);
+    expect(family.lastOutcome, act0ConceptFamilyOutcomeRepairSucceededV1);
+  });
+
   test('read model exposes known families and recent active family only', () {
     final history = const Act0ConceptFamilyStateHistoryV1()
         .appendLearningEvidence(_record(order: 1, conceptFamilyId: 'action'))
@@ -246,6 +281,7 @@ Act0LearningEvidenceRecordV1 _record({
   String skillAtomId = 'action_read',
   String runKind = '',
   bool isCorrect = false,
+  String sessionId = '',
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: 'record_$order',
@@ -263,12 +299,14 @@ Act0LearningEvidenceRecordV1 _record({
     decisionTimeBucket: 'under_3s',
     resultKind: isCorrect ? 'correct' : 'incorrect',
     runKind: runKind,
+    sessionId: sessionId,
   );
 }
 
 Act0RepairOutcomeV1 _repairOutcome({
   required bool? isCorrect,
   required int sequence,
+  String sessionId = '',
 }) {
   return Act0RepairOutcomeV1(
     sourceTaskId: 'actions_legal_context',
@@ -288,5 +326,6 @@ Act0RepairOutcomeV1 _repairOutcome({
         : act0RepairOutcomeStateAttemptedV1,
     sequence: sequence,
     sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+    sessionId: sessionId,
   );
 }

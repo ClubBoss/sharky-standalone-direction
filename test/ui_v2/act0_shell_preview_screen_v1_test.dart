@@ -31830,12 +31830,13 @@ void main() {
       await tester.pumpAndSettle();
 
       final decoded = await persistedProgressMapFromPrefsV1();
-      expect(decoded['schemaVersion'], 13);
+      expect(decoded['schemaVersion'], 14);
       expect(decoded['retentionSequence'], 0);
       expect(decoded['retentionMemory'], isEmpty);
       expect(decoded['learningEvidenceHistory'], isEmpty);
       expect(decoded['reviewMistakeHistory'], isEmpty);
       expect(decoded['conceptFamilyStateHistory'], isEmpty);
+      expect(decoded['sessionIdentityState'], isNotNull);
       expect(
         decoded['selectedWorldId'],
         Act0ShellStateV1.sample.selectedWorldId,
@@ -31923,6 +31924,76 @@ void main() {
     expect(history.single['lastOutcome'], 'missed');
   });
 
+  testWidgets('Persisted session identity state round-trips', (tester) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 14,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['sessionIdentityState'] = <String, Object?>{
+            'schemaVersion': 1,
+            'nextSessionOrdinal': 3,
+            'currentSession': <String, Object?>{
+              'schemaVersion': 1,
+              'sessionId': 'session_v1|2',
+              'startedAtOrder': 4,
+              'startedWorldId': 'world_1',
+              'startedLessonId': 'fold_check_call_raise',
+              'status': 'active',
+            },
+            'latestSession': <String, Object?>{
+              'schemaVersion': 1,
+              'sessionId': 'session_v1|2',
+              'startedAtOrder': 4,
+              'startedWorldId': 'world_1',
+              'startedLessonId': 'fold_check_call_raise',
+              'status': 'active',
+            },
+          };
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    final identity = decoded['sessionIdentityState'] as Map<String, dynamic>;
+    expect(identity['nextSessionOrdinal'], 3);
+    expect(identity['currentSession']['sessionId'], 'session_v1|2');
+    expect(identity['currentSession']['status'], 'active');
+  });
+
+  testWidgets('Malformed persisted session identity defaults safely', (
+    tester,
+  ) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 14,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['sessionIdentityState'] = <String, Object?>{
+            'schemaVersion': 1,
+            'nextSessionOrdinal': 'bad',
+            'currentSession': <String, Object?>{'schemaVersion': 1},
+          };
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    final identity = decoded['sessionIdentityState'] as Map<String, dynamic>;
+    expect(identity['nextSessionOrdinal'], 1);
+    expect(identity.containsKey('currentSession'), isFalse);
+  });
+
   testWidgets(
     'Incorrect completed decisions persist unresolved mistake history',
     (tester) async {
@@ -31948,6 +32019,13 @@ void main() {
       expect(conceptFamilies.single['conceptFamilyId'], 'no_bet_yet');
       expect(conceptFamilies.single['missCount'], 1);
       expect(conceptFamilies.single['lastOutcome'], 'missed');
+      expect(conceptFamilies.single['lastSessionId'], isNotEmpty);
+      final sessionIdentity =
+          decoded['sessionIdentityState'] as Map<String, dynamic>;
+      expect(
+        conceptFamilies.single['lastSessionId'],
+        sessionIdentity['currentSession']['sessionId'],
+      );
     },
   );
 
@@ -32102,6 +32180,12 @@ void main() {
     expect(firstRunId, isNotEmpty);
     expect(history.single['runKind'], 'lesson');
     expect(history.single['runOrdinal'], 1);
+    expect(history.single['sessionId'], isNotEmpty);
+    final sessionIdentity = decoded['sessionIdentityState'] as Map;
+    expect(
+      history.single['sessionId'],
+      sessionIdentity['currentSession']['sessionId'],
+    );
 
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();

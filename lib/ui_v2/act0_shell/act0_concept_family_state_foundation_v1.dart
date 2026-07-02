@@ -95,6 +95,7 @@ class Act0ConceptFamilyStateHistoryV1 {
       successfulRepairDelta: isRepairAttempt && record.isCorrect ? 1 : 0,
       lastOutcome: lastOutcome,
       lastTaskId: record.taskId,
+      lastSessionId: record.sessionId,
     );
   }
 
@@ -130,6 +131,7 @@ class Act0ConceptFamilyStateHistoryV1 {
           ? act0ConceptFamilyOutcomeRepairNotYetSucceededV1
           : act0ConceptFamilyOutcomeRepairAttemptedV1,
       lastTaskId: outcome.targetTaskId,
+      lastSessionId: outcome.sessionId,
     );
   }
 
@@ -180,6 +182,7 @@ class Act0ConceptFamilyStateHistoryV1 {
     required int successfulRepairDelta,
     required String lastOutcome,
     required String lastTaskId,
+    required String lastSessionId,
   }) {
     final current = familyById(conceptFamilyId);
     final nextFamily =
@@ -209,6 +212,9 @@ class Act0ConceptFamilyStateHistoryV1 {
                   : current.successfulRepairCount + successfulRepairDelta,
               lastOutcome: lastOutcome,
               lastTaskId: lastTaskId.trim().isEmpty ? null : lastTaskId.trim(),
+              lastSessionId: lastSessionId.trim().isEmpty
+                  ? null
+                  : lastSessionId.trim(),
             );
     final next = <Act0ConceptFamilyStateV1>[
       for (final family in families)
@@ -256,6 +262,7 @@ class Act0ConceptFamilyStateV1 {
     required this.successfulRepairCount,
     required this.lastOutcome,
     this.lastTaskId,
+    this.lastSessionId,
   });
 
   final int schemaVersion;
@@ -269,6 +276,7 @@ class Act0ConceptFamilyStateV1 {
   final int successfulRepairCount;
   final String lastOutcome;
   final String? lastTaskId;
+  final String? lastSessionId;
 
   Act0ConceptFamilyStateV1 copyWith({
     String? worldId,
@@ -280,6 +288,7 @@ class Act0ConceptFamilyStateV1 {
     int? successfulRepairCount,
     String? lastOutcome,
     String? lastTaskId,
+    String? lastSessionId,
   }) {
     return Act0ConceptFamilyStateV1(
       conceptFamilyId: conceptFamilyId,
@@ -293,6 +302,7 @@ class Act0ConceptFamilyStateV1 {
           successfulRepairCount ?? this.successfulRepairCount,
       lastOutcome: lastOutcome ?? this.lastOutcome,
       lastTaskId: lastTaskId ?? this.lastTaskId,
+      lastSessionId: lastSessionId ?? this.lastSessionId,
     );
   }
 
@@ -308,6 +318,7 @@ class Act0ConceptFamilyStateV1 {
     'successfulRepairCount': successfulRepairCount,
     'lastOutcome': lastOutcome,
     if ((lastTaskId ?? '').isNotEmpty) 'lastTaskId': lastTaskId,
+    if ((lastSessionId ?? '').isNotEmpty) 'lastSessionId': lastSessionId,
   };
 
   static Act0ConceptFamilyStateV1? tryParse(Object? raw) {
@@ -330,6 +341,7 @@ class Act0ConceptFamilyStateV1 {
     final successfulRepairCount = _nonNegativeInt(map['successfulRepairCount']);
     final lastOutcome = _requiredString(map['lastOutcome']);
     final lastTaskId = _optionalString(map['lastTaskId']);
+    final lastSessionId = _optionalString(map['lastSessionId']);
     if (schemaVersion != 1 ||
         conceptFamilyId == null ||
         worldId == null ||
@@ -353,6 +365,7 @@ class Act0ConceptFamilyStateV1 {
       successfulRepairCount: successfulRepairCount,
       lastOutcome: lastOutcome,
       lastTaskId: lastTaskId.isEmpty ? null : lastTaskId,
+      lastSessionId: lastSessionId.isEmpty ? null : lastSessionId,
     );
   }
 
@@ -369,7 +382,8 @@ class Act0ConceptFamilyStateV1 {
       other.repairAttemptCount == repairAttemptCount &&
       other.successfulRepairCount == successfulRepairCount &&
       other.lastOutcome == lastOutcome &&
-      other.lastTaskId == lastTaskId;
+      other.lastTaskId == lastTaskId &&
+      other.lastSessionId == lastSessionId;
 
   @override
   int get hashCode => Object.hash(
@@ -384,6 +398,7 @@ class Act0ConceptFamilyStateV1 {
     successfulRepairCount,
     lastOutcome,
     lastTaskId,
+    lastSessionId,
   );
 }
 

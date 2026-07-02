@@ -117,6 +117,35 @@ void main() {
     expect(record.toPayload(), isNot(containsPair('label', anything)));
   });
 
+  test('optional session id round trips without breaking old records', () {
+    const record = Act0LearningEvidenceRecordV1(
+      recordId: '1:world_1:actions_legal_context:fold',
+      createdOrder: 1,
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_legal_context',
+      choiceId: 'fold',
+      expectedChoiceId: 'check',
+      isCorrect: false,
+      errorType: 'missed_action_read',
+      repairFocusId: 'no_bet_yet',
+      skillAtomId: 'action_read',
+      decisionTimeBucket: '3_to_10s',
+      resultKind: 'incorrect',
+      sessionId: 'session_v1|1',
+    );
+    final oldPayload = _record(order: 2).toPayload()..remove('sessionId');
+
+    expect(
+      Act0LearningEvidenceRecordV1.tryParse(record.toPayload())!.sessionId,
+      'session_v1|1',
+    );
+    expect(
+      Act0LearningEvidenceRecordV1.tryParse(oldPayload)!.sessionId,
+      isEmpty,
+    );
+  });
+
   test('incomplete completed decision does not create durable evidence', () {
     const decision = Act0CompletedDecisionV1(
       attemptKey: 'v1|world_1|lesson|task|seat|co|1',
@@ -747,6 +776,7 @@ Act0LearningEvidenceRecordV1 _record({
   String runKind = '',
   int? runOrdinal,
   String startedBy = '',
+  String sessionId = '',
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: '$order:world_1:actions_legal_context:fold',
@@ -766,5 +796,6 @@ Act0LearningEvidenceRecordV1 _record({
     runKind: runKind,
     runOrdinal: runOrdinal,
     startedBy: startedBy,
+    sessionId: sessionId,
   );
 }

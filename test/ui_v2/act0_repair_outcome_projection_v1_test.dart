@@ -45,6 +45,20 @@ void main() {
     expect(projection.outcomes.single.isCorrect, isFalse);
   });
 
+  test('repair outcome carries optional session id', () {
+    final projection = const Act0RepairOutcomeProjectionV1().appendAnsweredTask(
+      launchRequest: _launchRequest(),
+      selectedChoiceId: 'check',
+      correctChoiceId: 'check',
+      isCorrect: true,
+      sequence: 10,
+      sessionId: 'session_v1|1',
+    );
+
+    expect(projection.outcomes.single.sessionId, 'session_v1|1');
+    expect(projection.toPayload().single['sessionId'], 'session_v1|1');
+  });
+
   test(
     'repair-launched answer without correctness creates attempted outcome',
     () {

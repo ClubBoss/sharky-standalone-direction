@@ -671,6 +671,21 @@ void main() {
         repairAttemptedEvents.single.fields['source_surface'],
         'act0_review',
       );
+      final sessionStart = sink.events.firstWhere(
+        (event) => event.name == 'session_start',
+      );
+      final decisionMade = sink.events.lastWhere(
+        (event) => event.name == 'decision_made',
+      );
+      expect(sessionStart.fields['session_id'], isNot(isEmpty));
+      expect(
+        repairAttemptedEvents.single.fields['session_id'],
+        sessionStart.fields['session_id'],
+      );
+      expect(
+        decisionMade.fields['session_id'],
+        sessionStart.fields['session_id'],
+      );
 
       final repairEvents = sink.events
           .where((event) => event.name == 'repair_completed')
@@ -697,6 +712,10 @@ void main() {
         repairStart['sourceTaskId'],
       );
       expect(fixLandedEvents.single.fields['source_surface'], 'act0_review');
+      expect(
+        fixLandedEvents.single.fields['session_id'],
+        sessionStart.fields['session_id'],
+      );
 
       final repairItemEvents = sink.events
           .where((event) => event.name == 'repair_item_completed')
@@ -747,6 +766,7 @@ void main() {
     expect(sessionStart.fields['lesson_id'], 'fold_check_call_raise');
     expect(sessionStart.fields['task_id'], 'actions_theory');
     expect(sessionStart.fields['source_surface'], 'act0_learn');
+    expect(sessionStart.fields['session_id'], isNot(isEmpty));
 
     expectNoForbiddenTelemetryFieldsV1(sink.events);
   });
@@ -792,13 +812,41 @@ void main() {
       final sessionComplete = sink.events.firstWhere(
         (event) => event.name == 'session_complete',
       );
+      final sessionStartEvents = sink.events
+          .where((event) => event.name == 'session_start')
+          .toList(growable: false);
+      final sessionCompleteEvents = sink.events
+          .where((event) => event.name == 'session_complete')
+          .toList(growable: false);
+      expect(sessionStartEvents, hasLength(1));
+      expect(sessionCompleteEvents, hasLength(1));
       expect(sessionComplete.fields['source_surface'], 'act0_practice');
       expect(sessionComplete.fields['practice_group_id'], 'daily');
       expect(sessionComplete.fields['completed_rep_count'], 3);
+      expect(
+        sessionComplete.fields['session_id'],
+        sessionStartEvents.single.fields['session_id'],
+      );
 
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },
   );
+
+  testWidgets('Act0 render alone does not create a session id', (tester) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+
+    await tester.pumpWidget(previewHost(telemetrySink: sink));
+    await tester.pumpAndSettle();
+
+    expect(
+      sink.events.where((event) => event.name == 'session_start'),
+      isEmpty,
+    );
+    expect(
+      sink.events.any((event) => event.fields.containsKey('session_id')),
+      isFalse,
+    );
+  });
 
   testWidgets('Act0 debug surfaces emit day2_return and world_complete', (
     tester,
