@@ -958,6 +958,18 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
+          if (item.patternLine != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              item.patternLine!,
+              key: Key('act0_shell_review_pattern_line_${item.stableKey}'),
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.gold,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0,
+              ),
+            ),
+          ],
         ],
       ),
     );

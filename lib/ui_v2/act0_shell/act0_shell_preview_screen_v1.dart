@@ -34,6 +34,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_pattern_coaching_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
@@ -3061,6 +3062,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  Act0ReviewResolutionStateV1 _reviewResolutionStateV1() {
+    return Act0ReviewResolutionStateV1.fromSources(
+      reviewMistakeHistory: _reviewMistakeHistoryV1,
+      activeRepairIntents: _activeRepairIntentsV1(),
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+      receiptHistory: _reviewResolutionReceiptHistoryV1,
+    );
+  }
+
+  Act0ReviewPatternCoachingProjectionV1 _reviewPatternCoachingProjectionV1() {
+    return Act0ReviewPatternCoachingProjectionV1.fromSources(
+      learningEvidenceHistory: _learningEvidenceHistoryV1,
+      reviewMistakeHistory: _reviewMistakeHistoryV1,
+      reviewResolutionState: _reviewResolutionStateV1(),
+      activeRepairIntents: _activeRepairIntentsV1(),
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+      transferMeasurement:
+          Act0LearningTransferMeasurementV1.fromLearningEvidence(
+            _learningEvidenceHistoryV1,
+          ),
+    );
+  }
+
   void _syncOpenRepairIntentIndexFromQueueV1() {
     _openRepairIntentBySourceTaskId
       ..clear()
@@ -4866,17 +4890,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 for (final mistake in reviewState.mistakes)
                                   mistake.taskId,
                               },
-                              reviewResolutionState:
-                                  Act0ReviewResolutionStateV1.fromSources(
-                                    reviewMistakeHistory:
-                                        _reviewMistakeHistoryV1,
-                                    activeRepairIntents:
-                                        _activeRepairIntentsV1(),
-                                    repairOutcomeProjection:
-                                        _repairOutcomeProjectionV1,
-                                    receiptHistory:
-                                        _reviewResolutionReceiptHistoryV1,
-                                  ),
+                              reviewResolutionState: _reviewResolutionStateV1(),
+                              patternCoachingProjection:
+                                  _reviewPatternCoachingProjectionV1(),
                             ).items,
                         onStartSessionDrillRecheck: (item) {
                           unawaited(

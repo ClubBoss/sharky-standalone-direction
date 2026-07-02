@@ -99,6 +99,18 @@ void main() {
     orderLabel: 'Most recent',
   );
 
+  const patternedHistoryItem = Act0ReviewMistakeHistoryItemV1(
+    stableKey: 'history-pattern-1',
+    sourceTaskId: 'actions_legal_context',
+    primaryLabel: 'Action read',
+    detailLine: 'Missed action read',
+    decisionLine: 'You chose fold; better was check.',
+    contextLine: 'fold check call raise',
+    orderLabel: 'Most recent',
+    patternLine:
+        'This table-reading mistake showed up in more than one session.',
+  );
+
   testWidgets(
     'Review keeps one compact active repair note without a Home redirect',
     (tester) async {
@@ -708,6 +720,43 @@ void main() {
       expect(find.byType(OutlinedButton), findsNothing);
     },
   );
+
+  testWidgets('Review renders one bounded pattern line inside history row', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Confidence repair board',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Fold',
+          betterLabel: 'Check',
+        ),
+        historyItems: const <Act0ReviewMistakeHistoryItemV1>[
+          patternedHistoryItem,
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_review_pattern_line_history-pattern-1')),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'This table-reading mistake showed up in more than one session.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('score'), findsNothing);
+    expect(find.textContaining('weakest'), findsNothing);
+    expect(find.textContaining('mastery'), findsNothing);
+    expect(find.textContaining('%'), findsNothing);
+  });
 
   testWidgets('Active repair next step stays separate from read-only history', (
     tester,

@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_pattern_coaching_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 
 class Act0ReviewMistakeHistoryConsumerV1 {
@@ -12,12 +13,14 @@ class Act0ReviewMistakeHistoryConsumerV1 {
     Act0ReviewMistakeHistoryV1 history, {
     Set<String> activeRepairSourceTaskIds = const <String>{},
     Act0ReviewResolutionStateV1? reviewResolutionState,
+    Act0ReviewPatternCoachingProjectionV1? patternCoachingProjection,
   }) {
     final activeSources = activeRepairSourceTaskIds
         .map((value) => value.trim())
         .where((value) => value.isNotEmpty)
         .toSet();
     final items = <Act0ReviewMistakeHistoryItemV1>[];
+    var didAttachPattern = false;
     for (final record in history.records) {
       final resolution = reviewResolutionState?.resolutionForReviewItemId(
         record.recordId,
@@ -27,6 +30,14 @@ class Act0ReviewMistakeHistoryConsumerV1 {
       }
       if (activeSources.contains(record.sourceTaskId.trim())) {
         continue;
+      }
+      final patternLine =
+          !didAttachPattern &&
+              _recordMatchesPrimaryPattern(record, patternCoachingProjection)
+          ? patternCoachingProjection?.copyLine
+          : null;
+      if (patternLine != null) {
+        didAttachPattern = true;
       }
       items.add(
         Act0ReviewMistakeHistoryItemV1(
@@ -47,6 +58,7 @@ class Act0ReviewMistakeHistoryConsumerV1 {
               '${_readableAction(record.expectedId)}.',
           contextLine: _readableContext(record),
           orderLabel: items.isEmpty ? 'Most recent' : 'Earlier',
+          patternLine: patternLine,
         ),
       );
     }
@@ -65,6 +77,7 @@ class Act0ReviewMistakeHistoryItemV1 {
     required this.decisionLine,
     required this.contextLine,
     required this.orderLabel,
+    this.patternLine,
   });
 
   final String stableKey;
@@ -74,6 +87,32 @@ class Act0ReviewMistakeHistoryItemV1 {
   final String decisionLine;
   final String contextLine;
   final String orderLabel;
+  final String? patternLine;
+}
+
+bool _recordMatchesPrimaryPattern(
+  Act0ReviewMistakeRecordV1 record,
+  Act0ReviewPatternCoachingProjectionV1? projection,
+) {
+  final pattern = projection?.primaryPattern;
+  if (pattern == null) {
+    return false;
+  }
+  return _conceptFamilyIdForRecord(record) == pattern.conceptFamilyId;
+}
+
+String _conceptFamilyIdForRecord(Act0ReviewMistakeRecordV1 record) {
+  for (final raw in <String>[
+    record.repairFocusId,
+    record.skillAtomId,
+    record.errorType,
+  ]) {
+    final value = raw.trim();
+    if (value.isNotEmpty && value != 'none') {
+      return value;
+    }
+  }
+  return '';
 }
 
 String _firstReadableLabel(List<String> values) {

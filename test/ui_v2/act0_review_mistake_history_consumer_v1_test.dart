@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_pattern_coaching_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -113,6 +115,60 @@ void main() {
     expect(model.items.single.sourceTaskId, 'actions_legal_context');
   });
 
+  test('consumer attaches one matching pattern line to read-only history', () {
+    final history = const Act0ReviewMistakeHistoryV1()
+        .appendCompletedDecision(_decision(attempt: 1))
+        .appendCompletedDecision(_decision(attempt: 2));
+    final projection = Act0ReviewPatternCoachingProjectionV1.fromSources(
+      learningEvidenceHistory: Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _learningRecord(order: 1, sessionId: 'session_a'),
+          _learningRecord(order: 2, sessionId: 'session_b'),
+        ],
+      ),
+    );
+
+    final model = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      patternCoachingProjection: projection,
+    );
+
+    expect(model.items, hasLength(1));
+    expect(
+      model.items.single.patternLine,
+      'This table-reading mistake showed up in more than one session.',
+    );
+  });
+
+  test('consumer does not attach pattern line to unrelated family', () {
+    final history = const Act0ReviewMistakeHistoryV1().appendCompletedDecision(
+      _decision(attempt: 1),
+    );
+    final projection = Act0ReviewPatternCoachingProjectionV1.fromSources(
+      learningEvidenceHistory: Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _learningRecord(
+            order: 1,
+            conceptFamilyId: 'open_pot',
+            sessionId: 'session_a',
+          ),
+          _learningRecord(
+            order: 2,
+            conceptFamilyId: 'open_pot',
+            sessionId: 'session_b',
+          ),
+        ],
+      ),
+    );
+
+    final model = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      patternCoachingProjection: projection,
+    );
+
+    expect(model.items.single.patternLine, isNull);
+  });
+
   test('consumer emits no forbidden action or capability claims', () {
     final history = const Act0ReviewMistakeHistoryV1().appendCompletedDecision(
       _decision(attempt: 1),
@@ -127,6 +183,7 @@ void main() {
             item.decisionLine,
             item.contextLine,
             item.orderLabel,
+            item.patternLine ?? '',
           ],
         )
         .join(' ');
@@ -140,6 +197,30 @@ void main() {
     expect(text, isNot(contains('GTO')));
     expect(text, isNot(contains('solver')));
   });
+}
+
+Act0LearningEvidenceRecordV1 _learningRecord({
+  required int order,
+  required String sessionId,
+  String conceptFamilyId = 'no_bet_yet',
+}) {
+  return Act0LearningEvidenceRecordV1(
+    recordId: 'learning_$order',
+    createdOrder: order,
+    worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    taskId: 'actions_legal_context',
+    choiceId: 'fold',
+    expectedChoiceId: 'check',
+    isCorrect: false,
+    errorType: 'missed_action_read',
+    conceptFamilyId: conceptFamilyId,
+    repairFocusId: conceptFamilyId,
+    skillAtomId: 'action_read',
+    decisionTimeBucket: 'under_3s',
+    resultKind: 'incorrect',
+    sessionId: sessionId,
+  );
 }
 
 const Act0RepairIntentV1 _activeRepairIntent = Act0RepairIntentV1(
