@@ -7319,7 +7319,7 @@ class _Act0TableV1 extends StatelessWidget {
                           ),
                           border: Border.all(
                             color: Act0ShellTokensV1.feltLine.withValues(
-                              alpha: 0.28,
+                              alpha: 0.30,
                             ),
                           ),
                         ),
@@ -7514,28 +7514,18 @@ class _TableRepairCalloutV1 extends StatelessWidget {
     return IgnorePointer(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: Act0ShellTokensV1.danger.withValues(alpha: 0.13),
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-          border: Border.all(
-            color: Act0ShellTokensV1.danger.withValues(alpha: 0.34),
-          ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.22),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
+        decoration: Act0ShellTokensV1.onFeltPanelDecoration(
+          radius: Act0ShellTokensV1.radiusPill,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline_rounded,
+            const Icon(
+              Icons.flag_rounded,
+              key: Key('act0_shell_table_repair_callout_icon'),
               size: 13,
-              color: Act0ShellTokensV1.danger,
+              color: Act0TableFeltCanonV1.innerHairline,
             ),
             const SizedBox(width: 6),
             Flexible(
@@ -7892,22 +7882,7 @@ class _CenterPotV1 extends StatelessWidget {
         horizontal: refined ? 6 : 4,
         vertical: refined ? 4 : 3,
       ),
-      decoration: refined
-          ? BoxDecoration(
-              color: Act0TableFeltCanonV1.railOuter.withValues(alpha: 0.22),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-              border: Border.all(
-                color: Act0TableFeltCanonV1.railLine.withValues(alpha: 0.14),
-              ),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Act0TableFeltCanonV1.railOuter.withValues(alpha: 0.14),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            )
-          : null,
+      decoration: refined ? Act0ShellTokensV1.onFeltPanelDecoration() : null,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

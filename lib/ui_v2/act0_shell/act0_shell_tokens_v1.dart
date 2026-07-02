@@ -63,15 +63,21 @@ class Act0VisualMetricsV1 {
 class Act0TableFeltCanonV1 {
   Act0TableFeltCanonV1._();
 
-  static const Color feltEdge = Color(0xFF041E1A);
-  static const Color feltOuter = Color(0xFF063827);
-  static const Color feltMid = Color(0xFF07583C);
-  static const Color feltInner = Color(0xFF08704D);
-  static const Color feltSoftLift = Color(0xFF0B8A5D);
-  static const Color railOuter = Color(0xFF050D18);
-  static const Color railMid = Color(0xFF0A1A2A);
-  static const Color railInner = Color(0xFF10283A);
-  static const Color railLine = Color(0xFF1A4960);
+  static const Color feltCenter = Color(0xFF146B56);
+  static const Color feltMid = Color(0xFF0F5A47);
+  static const Color feltEdge = Color(0xFF0B4A3B);
+  static const Color feltInner = feltCenter;
+  static const Color feltOuter = feltMid;
+  static const Color feltSoftLift = feltCenter;
+  static const Color railFill = Color(0xFF14273A);
+  static const Color railOuter = railFill;
+  static const Color railMid = railFill;
+  static const Color railInner = railFill;
+  static const Color innerHairline = Color(0xFF7ADCC8);
+  static const Color railLine = innerHairline;
+  static const Color railAmbientShadow = Color(0x59143C50);
+  static const Color onFeltPanelFill = Color(0x8C0A1420);
+  static const Color onFeltPanelBorder = Color(0x387ADCC8);
 }
 
 class Act0ShellTokensV1 {
@@ -296,9 +302,12 @@ class Act0ShellTokensV1 {
 
   static BoxDecoration tableRimDecoration() {
     return BoxDecoration(
-      color: Act0TableFeltCanonV1.railOuter,
+      color: Act0TableFeltCanonV1.railFill,
       borderRadius: BorderRadius.circular(tableOuterRadius),
-      border: Border.all(color: Act0TableFeltCanonV1.railLine, width: 1.5),
+      border: Border.all(
+        color: Act0TableFeltCanonV1.innerHairline.withValues(alpha: 0.30),
+        width: 1.5,
+      ),
       boxShadow: const <BoxShadow>[
         // Outer drop shadow
         BoxShadow(
@@ -306,17 +315,10 @@ class Act0ShellTokensV1 {
           blurRadius: 50,
           offset: Offset(0, 30),
         ),
-        // Faux 3D bevel / rim lip
         BoxShadow(
-          color: Act0TableFeltCanonV1.railLine,
-          blurRadius: 5,
-          spreadRadius: 0,
-          offset: Offset(0, 2),
-        ),
-        BoxShadow(
-          color: Act0TableFeltCanonV1.railOuter,
-          blurRadius: 12,
-          spreadRadius: 5,
+          color: Act0TableFeltCanonV1.railAmbientShadow,
+          blurRadius: 18,
+          spreadRadius: 3,
           offset: Offset(0, 6),
         ),
       ],
@@ -336,18 +338,37 @@ class Act0ShellTokensV1 {
   static BoxDecoration feltDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(tableInnerRadius),
-      border: Border.all(color: feltLine, width: 2),
+      border: Border.all(color: feltLine.withValues(alpha: 0.30), width: 2),
       gradient: RadialGradient(
-        center: const Alignment(0, -0.12),
+        center: const Alignment(0, -0.16),
         radius: 1.08,
         colors: const <Color>[
-          Act0TableFeltCanonV1.feltInner,
+          Act0TableFeltCanonV1.feltCenter,
           Act0TableFeltCanonV1.feltMid,
-          Act0TableFeltCanonV1.feltOuter,
           Act0TableFeltCanonV1.feltEdge,
         ],
-        stops: const <double>[0, 0.44, 0.76, 1],
+        stops: const <double>[0, 0.55, 1],
       ),
+    );
+  }
+
+  static BoxDecoration onFeltPanelDecoration({
+    double radius = radiusCard,
+    bool shadow = true,
+  }) {
+    return BoxDecoration(
+      color: Act0TableFeltCanonV1.onFeltPanelFill,
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(color: Act0TableFeltCanonV1.onFeltPanelBorder),
+      boxShadow: shadow
+          ? const <BoxShadow>[
+              BoxShadow(
+                color: Act0TableFeltCanonV1.railAmbientShadow,
+                blurRadius: 18,
+                offset: Offset(0, 6),
+              ),
+            ]
+          : null,
     );
   }
 

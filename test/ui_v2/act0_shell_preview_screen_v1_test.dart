@@ -13560,32 +13560,37 @@ void main() {
     expect(Act0VisualCanonV1.greenTable, const Color(0xFF16C784));
   });
 
-  test('Act0 table felt canon uses deep material greens', () {
-    expect(Act0TableFeltCanonV1.feltEdge, const Color(0xFF041E1A));
-    expect(Act0TableFeltCanonV1.feltOuter, const Color(0xFF063827));
-    expect(Act0TableFeltCanonV1.feltMid, const Color(0xFF07583C));
-    expect(Act0TableFeltCanonV1.feltInner, const Color(0xFF08704D));
-    expect(Act0TableFeltCanonV1.feltSoftLift, const Color(0xFF0B8A5D));
-    expect(Act0TableFeltCanonV1.railOuter, const Color(0xFF050D18));
-    expect(Act0TableFeltCanonV1.railMid, const Color(0xFF0A1A2A));
-    expect(Act0TableFeltCanonV1.railInner, const Color(0xFF10283A));
-    expect(Act0TableFeltCanonV1.railLine, const Color(0xFF1A4960));
+  test('Act0 table felt canon uses final deep teal-green material tokens', () {
+    expect(Act0TableFeltCanonV1.feltCenter, const Color(0xFF146B56));
+    expect(Act0TableFeltCanonV1.feltMid, const Color(0xFF0F5A47));
+    expect(Act0TableFeltCanonV1.feltEdge, const Color(0xFF0B4A3B));
+    expect(Act0TableFeltCanonV1.railFill, const Color(0xFF14273A));
+    expect(Act0TableFeltCanonV1.innerHairline, const Color(0xFF7ADCC8));
+    expect(Act0TableFeltCanonV1.railAmbientShadow, const Color(0x59143C50));
+    expect(Act0TableFeltCanonV1.onFeltPanelFill, const Color(0x8C0A1420));
+    expect(Act0TableFeltCanonV1.onFeltPanelBorder, const Color(0x387ADCC8));
   });
 
   test('Act0 felt decoration keeps the center clean and edge-weighted', () {
     final decoration = Act0ShellTokensV1.feltDecoration();
-    expect(decoration.border?.top.color, Act0TableFeltCanonV1.railLine);
+    expect(
+      decoration.border?.top.color,
+      Act0TableFeltCanonV1.innerHairline.withValues(alpha: 0.30),
+    );
 
     final gradient = decoration.gradient;
     expect(gradient, isA<RadialGradient>());
     final radial = gradient! as RadialGradient;
     expect(radial.colors, isNot(contains(Act0VisualCanonV1.greenTable)));
-    expect(radial.colors.first, Act0TableFeltCanonV1.feltInner);
+    expect(radial.center, const Alignment(0, -0.16));
+    expect(radial.stops, const <double>[0, 0.55, 1]);
+    expect(radial.colors, hasLength(3));
+    expect(radial.colors.first, Act0TableFeltCanonV1.feltCenter);
+    expect(radial.colors[1], Act0TableFeltCanonV1.feltMid);
     expect(radial.colors.last, Act0TableFeltCanonV1.feltEdge);
     expect(radial.colors, contains(Act0TableFeltCanonV1.feltEdge));
-    expect(radial.colors, contains(Act0TableFeltCanonV1.feltOuter));
     expect(radial.colors, contains(Act0TableFeltCanonV1.feltMid));
-    expect(radial.colors, contains(Act0TableFeltCanonV1.feltInner));
+    expect(radial.colors, contains(Act0TableFeltCanonV1.feltCenter));
     expect(
       radial.colors.first.computeLuminance(),
       greaterThan(radial.colors.last.computeLuminance()),
@@ -13597,14 +13602,39 @@ void main() {
     final decoration = Act0ShellTokensV1.tableRimDecoration();
 
     expect(decoration.color, Act0TableFeltCanonV1.railOuter);
-    expect(decoration.border?.top.color, Act0TableFeltCanonV1.railLine);
+    expect(
+      decoration.border?.top.color,
+      Act0TableFeltCanonV1.innerHairline.withValues(alpha: 0.30),
+    );
 
     final gradient = decoration.gradient;
     expect(gradient, isA<LinearGradient>());
     final linear = gradient! as LinearGradient;
-    expect(linear.colors, contains(Act0TableFeltCanonV1.railOuter));
-    expect(linear.colors, contains(Act0TableFeltCanonV1.railMid));
-    expect(linear.colors, contains(Act0TableFeltCanonV1.railInner));
+    expect(linear.colors.toSet(), {Act0TableFeltCanonV1.railFill});
+    expect(
+      decoration.boxShadow,
+      contains(
+        isA<BoxShadow>()
+            .having((shadow) => shadow.color, 'color', const Color(0x59143C50))
+            .having((shadow) => shadow.blurRadius, 'blurRadius', 18),
+      ),
+    );
+  });
+
+  test('Act0 on-felt repair callout uses neutral table identity material', () {
+    final source = File(
+      'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
+    ).readAsStringSync();
+    final calloutSource = source.substring(
+      source.indexOf('class _TableRepairCalloutV1'),
+      source.indexOf('double _compactDockTableScaleV1'),
+    );
+
+    expect(calloutSource, contains('Act0ShellTokensV1.onFeltPanelDecoration'));
+    expect(calloutSource, contains('Icons.flag_rounded'));
+    expect(calloutSource, contains('Act0TableFeltCanonV1.innerHairline'));
+    expect(calloutSource, isNot(contains('Icons.error_outline_rounded')));
+    expect(calloutSource, isNot(contains('Act0ShellTokensV1.danger')));
   });
 
   testWidgets('Learn shell support and inactive nav avoid green table text', (
