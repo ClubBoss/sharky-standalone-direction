@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 
 class Act0ReviewMistakeHistoryConsumerV1 {
   const Act0ReviewMistakeHistoryConsumerV1({required this.items});
@@ -10,6 +11,7 @@ class Act0ReviewMistakeHistoryConsumerV1 {
   static Act0ReviewMistakeHistoryConsumerV1 fromHistory(
     Act0ReviewMistakeHistoryV1 history, {
     Set<String> activeRepairSourceTaskIds = const <String>{},
+    Act0ReviewResolutionStateV1? reviewResolutionState,
   }) {
     final activeSources = activeRepairSourceTaskIds
         .map((value) => value.trim())
@@ -17,6 +19,12 @@ class Act0ReviewMistakeHistoryConsumerV1 {
         .toSet();
     final items = <Act0ReviewMistakeHistoryItemV1>[];
     for (final record in history.records) {
+      final resolution = reviewResolutionState?.resolutionForReviewItemId(
+        record.recordId,
+      );
+      if (resolution != null && !resolution.isVisibleInActiveReview) {
+        continue;
+      }
       if (activeSources.contains(record.sourceTaskId.trim())) {
         continue;
       }

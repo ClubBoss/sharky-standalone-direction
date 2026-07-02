@@ -32161,6 +32161,77 @@ void main() {
     );
   });
 
+  testWidgets('Persisted review resolution receipt hides resolved note', (
+    tester,
+  ) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 14,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['reviewMistakeHistory'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'recordId':
+                  'review_mistake_v1|21:actions_raise_drill|10:no_bet_yet|11:action_read|18:missed_action_read',
+              'sourceDecisionId':
+                  'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              'createdOrder': 1,
+              'updatedOrder': 1,
+              'worldId': 'world_1',
+              'lessonId': 'fold_check_call_raise',
+              'decisionTaskId': 'actions_raise_drill',
+              'sourceTaskId': 'actions_raise_drill',
+              'decisionKind': 'actionList',
+              'selectedId': 'fold',
+              'expectedId': 'check',
+              'resultKind': 'incorrect',
+              'errorType': 'missed_action_read',
+              'skillAtomId': 'action_read',
+              'repairFocusId': 'no_bet_yet',
+              'runId': 'run_v1|world_1|fold_check_call_raise|lesson|1',
+              'runKind': 'lesson',
+              'runOrdinal': 1,
+              'attemptRecordIds': <String>[
+                'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              ],
+              'dedupUsesFallback': false,
+              'state': 'unresolved_only_v1',
+            },
+          ]
+          ..['reviewResolutionReceipts'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'reviewItemId':
+                  'review_mistake_v1|21:actions_raise_drill|10:no_bet_yet|11:action_read|18:missed_action_read',
+              'learningEvidenceId':
+                  'v1|world_1|fold_check_call_raise|actions_raise_drill|actionList|fold|1',
+              'repairIntentId': 'same_signal_action_read_no_bet_yet',
+              'conceptFamilyId': 'no_bet_yet',
+              'sourceTaskId': 'actions_raise_drill',
+              'reviewState': 'resolved',
+              'resolutionReason': 'repair_succeeded',
+              'repairOutcomeId':
+                  'repair_outcome_v1|3|practice_repair_queue_v1|active|73:19:actions_raise_drill|10:no_bet_yet|11:action_read|18:missed_action_read',
+              'resolvedAtOrder': 3,
+            },
+          ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host(tab: Act0ShellTabV1.review));
+
+    expect(
+      find.byKey(const Key('act0_shell_review_mistake_history_list')),
+      findsNothing,
+    );
+    expect(find.text('Action read'), findsNothing);
+    final decoded = await persistedProgressMapFromPrefsV1();
+    expect(decoded['reviewResolutionReceipts'], hasLength(1));
+  });
+
   testWidgets('New lesson-run evidence records carry one shared run key', (
     tester,
   ) async {

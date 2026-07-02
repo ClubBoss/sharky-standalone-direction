@@ -32,6 +32,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
@@ -708,6 +709,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       const Act0LearningEvidenceHistoryV1();
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
+  Act0ReviewResolutionReceiptHistoryV1 _reviewResolutionReceiptHistoryV1 =
+      const Act0ReviewResolutionReceiptHistoryV1();
   Act0ConceptFamilyStateHistoryV1 _conceptFamilyStateHistoryV1 =
       const Act0ConceptFamilyStateHistoryV1();
   Act0EvidenceRunKeyV1? _activeLearningEvidenceRunKeyV1;
@@ -2854,6 +2857,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _reviewMistakeHistoryV1 = parsed.reviewMistakeHistory;
+      _reviewResolutionReceiptHistoryV1 = parsed.reviewResolutionReceiptHistory;
       _conceptFamilyStateHistoryV1 = parsed.conceptFamilyStateHistory;
       _sessionIdentityStateV1 = parsed.sessionIdentityState;
       _selectedWorldId = selectedWorld.worldId;
@@ -3087,6 +3091,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       reviewMistakeHistory: _reviewMistakeHistoryV1,
+      reviewResolutionReceiptHistory: _reviewResolutionReceiptHistoryV1,
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
       sessionIdentityState: _sessionIdentityStateV1,
       lastSessionLearnerState: _lastSessionLearnerStateV1,
@@ -3190,6 +3195,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _learningEvidenceRunOrdinalV1 = 0;
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
       _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
+      _reviewResolutionReceiptHistoryV1 =
+          const Act0ReviewResolutionReceiptHistoryV1();
       _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
       _sessionIdentityStateV1 = const Act0SessionIdentityStateV1();
       _repairOutcomeProjectionV1 = const Act0RepairOutcomeProjectionV1();
@@ -4807,6 +4814,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 for (final mistake in reviewState.mistakes)
                                   mistake.taskId,
                               },
+                              reviewResolutionState:
+                                  Act0ReviewResolutionStateV1.fromSources(
+                                    reviewMistakeHistory:
+                                        _reviewMistakeHistoryV1,
+                                    activeRepairIntents:
+                                        _openRepairIntentBySourceTaskId.values
+                                            .toList(growable: false),
+                                    repairOutcomeProjection:
+                                        _repairOutcomeProjectionV1,
+                                    receiptHistory:
+                                        _reviewResolutionReceiptHistoryV1,
+                                  ),
                             ).items,
                         onStartSessionDrillRecheck: (item) {
                           unawaited(
@@ -8415,6 +8434,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sequence: _repairOutcomeSequenceV1,
       sessionId: _sessionIdentityStateV1.currentActiveSessionId,
     );
+    _reviewResolutionReceiptHistoryV1 =
+        reviewResolutionReceiptHistoryFromSourcesV1(
+          reviewMistakeHistory: _reviewMistakeHistoryV1,
+          activeRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
+            growable: false,
+          ),
+          repairOutcomeProjection: _repairOutcomeProjectionV1,
+          existingReceiptHistory: _reviewResolutionReceiptHistoryV1,
+        );
     if (_repairOutcomeProjectionV1.outcomes.isNotEmpty) {
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendRepairOutcome(
@@ -11194,6 +11222,8 @@ class _Act0PersistedProgressV1 {
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
+    this.reviewResolutionReceiptHistory =
+        const Act0ReviewResolutionReceiptHistoryV1(),
     this.conceptFamilyStateHistory = const Act0ConceptFamilyStateHistoryV1(),
     this.sessionIdentityState = const Act0SessionIdentityStateV1(),
     this.lastSessionLearnerState,
@@ -11223,6 +11253,7 @@ class _Act0PersistedProgressV1 {
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
+  final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
   final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
   final Act0SessionIdentityStateV1 sessionIdentityState;
   final Act0LastSessionLearnerStateV1? lastSessionLearnerState;
@@ -11274,6 +11305,7 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
+      'reviewResolutionReceipts': reviewResolutionReceiptHistory.toPayload(),
       'conceptFamilyStateHistory': conceptFamilyStateHistory.toPayload(),
       'sessionIdentityState': sessionIdentityState.toPayload(),
       if (lastSessionLearnerState != null)
@@ -11369,6 +11401,10 @@ class _Act0PersistedProgressV1 {
     final reviewMistakeHistory =
         Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
         const Act0ReviewMistakeHistoryV1();
+    final reviewResolutionReceiptHistory =
+        Act0ReviewResolutionReceiptHistoryV1.tryParse(
+          map['reviewResolutionReceipts'],
+        );
     final conceptFamilyStateHistory = Act0ConceptFamilyStateHistoryV1.tryParse(
       map['conceptFamilyStateHistory'],
     );
@@ -11410,6 +11446,7 @@ class _Act0PersistedProgressV1 {
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
       reviewMistakeHistory: reviewMistakeHistory,
+      reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,
       conceptFamilyStateHistory: conceptFamilyStateHistory,
       sessionIdentityState: sessionIdentityState,
       lastSessionLearnerState: lastSessionLearnerState,
