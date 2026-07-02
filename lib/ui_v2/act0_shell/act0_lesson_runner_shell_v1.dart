@@ -429,13 +429,17 @@ class Act0BlockCompletionSummaryV1 {
     Act0SharkyCoachMomentV1.worldOneCompletionPayoff,
   );
 
-  String get worldOneCompletionPathLabel => 'First milestone in Volume I.';
+  String get worldOneCompletionLearningLabel =>
+      'You learned how to read the table before acting.';
 
   String get worldOneCompletionNextLabel =>
       'Next: ${nextWorldTitle?.trim() ?? 'Hand Discipline'}';
 
   String get worldOneCompletionPreviewLine =>
       'World 2 starts with a simple question: which hands deserve action?';
+
+  String get worldOneCompletionProofFallbackLabel =>
+      'Repair proof banks the next time you fix one.';
 
   bool get shouldReviewFirst =>
       deepLeakCount > 0 && qualifiesForNextLesson && hasSafeReviewTarget;
@@ -5952,7 +5956,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          payoffHero?.headline ?? summary.milestoneTitle,
+                          summary.hasWorldOneCompletionPayoff
+                              ? summary.milestoneTitle
+                              : payoffHero?.headline ?? summary.milestoneTitle,
                           key: const Key('act0_shell_block_summary_title'),
                           style: Act0ShellTokensV1.screenTitle.copyWith(
                             fontSize: 28,
@@ -5960,7 +5966,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          payoffHero?.detail ?? summary.milestoneDetailTitle,
+                          summary.hasWorldOneCompletionPayoff
+                              ? summary.milestoneDetailTitle
+                              : payoffHero?.detail ??
+                                    summary.milestoneDetailTitle,
                           key: const Key(
                             'act0_shell_block_summary_detail_title',
                           ),
@@ -6008,6 +6017,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           _WorldOneCompletionPayoffV1(
                             summary: summary,
                             tone: celebrateTone,
+                            receipt: visibleRepairOutcomeReceipt,
                           ),
                         ],
                         if (foldUnlockIntoMilestonePanel) ...[
@@ -6328,13 +6338,22 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
   const _WorldOneCompletionPayoffV1({
     required this.summary,
     required this.tone,
+    this.receipt,
   });
 
   final Act0BlockCompletionSummaryV1 summary;
   final Color tone;
+  final Act0RepairOutcomeSessionReceiptV1? receipt;
+
+  bool get _hasEarnedProof => receipt?.isBankedFixProof == true;
 
   @override
   Widget build(BuildContext context) {
+    final proofIconRole = !_hasEarnedProof
+        ? null
+        : receipt!.hasReinforcedEvidence
+        ? Act0ProofIconRoleV1.reinforced
+        : Act0ProofIconRoleV1.repairCompleted;
     return Container(
       key: const Key('act0_shell_world1_completion_payoff'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
@@ -6346,24 +6365,64 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            summary.worldOneCompletionPayoffLabel,
-            key: const Key('act0_shell_world1_completion_payoff_label'),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
-              fontWeight: FontWeight.w900,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Act0ProofIconV1(
+                key: Key('act0_shell_world1_completion_milestone_icon'),
+                role: Act0ProofIconRoleV1.milestone,
+                size: Act0ProofIconSizeV1.seal,
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Text(
+                  summary.worldOneCompletionPayoffLabel,
+                  key: const Key('act0_shell_world1_completion_payoff_label'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            summary.worldOneCompletionPathLabel,
-            key: const Key('act0_shell_world1_completion_path_label'),
+            summary.worldOneCompletionLearningLabel,
+            key: const Key('act0_shell_world1_completion_learning_label'),
             maxLines: 2,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.textMuted,
               fontWeight: FontWeight.w700,
             ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (proofIconRole != null) ...[
+                Act0ProofIconV1(
+                  key: const Key('act0_shell_world1_completion_proof_icon'),
+                  role: proofIconRole,
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapXs),
+              ],
+              Expanded(
+                child: Text(
+                  _hasEarnedProof
+                      ? receipt!.lines.first
+                      : summary.worldOneCompletionProofFallbackLabel,
+                  key: const Key('act0_shell_world1_completion_proof_line'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(

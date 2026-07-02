@@ -85,18 +85,56 @@ void main() {
     }
   });
 
-  test('milestone role is reserved and not wired into any active consumer', () {
-    final profileSource = File(
-      'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
-    ).readAsStringSync();
-    final sessionSummarySource = File(
-      'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
-    ).readAsStringSync();
+  test(
+    'milestone role is scoped only to the W1 completion payoff widget',
+    () {
+      final profileSource = File(
+        'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
+      ).readAsStringSync();
+      final consumerSource = File(
+        'lib/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart',
+      ).readAsStringSync();
+      final lessonRunnerSource = File(
+        'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
+      ).readAsStringSync();
 
-    expect(profileSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
-    expect(
-      sessionSummarySource,
-      isNot(contains('Act0ProofIconRoleV1.milestone')),
-    );
-  });
+      // Profile and the ordinary repair-outcome/session receipt contract must
+      // never emit a milestone icon; only a true W1 completion may.
+      expect(profileSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
+      expect(consumerSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
+
+      final classStart = lessonRunnerSource.indexOf(
+        'class _WorldOneCompletionPayoffV1',
+      );
+      expect(
+        classStart,
+        greaterThan(-1),
+        reason: 'W1 completion payoff widget must exist',
+      );
+      final nextClassStart = lessonRunnerSource.indexOf(
+        '\nclass ',
+        classStart + 1,
+      );
+      final worldOneWidgetBody = lessonRunnerSource.substring(
+        classStart,
+        nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
+      );
+      final restOfFile =
+          lessonRunnerSource.substring(0, classStart) +
+          lessonRunnerSource.substring(
+            nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
+          );
+
+      expect(
+        worldOneWidgetBody,
+        contains('Act0ProofIconRoleV1.milestone'),
+        reason: 'W1 completion is the milestone role\'s first valid consumer',
+      );
+      expect(
+        restOfFile,
+        isNot(contains('Act0ProofIconRoleV1.milestone')),
+        reason: 'milestone must not leak into any other surface',
+      );
+    },
+  );
 }

@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/achievement_visual_language_icons_v1.md`.
+Verified active route artifact: `docs/_reviews/w1_completion_payoff_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -14,15 +14,15 @@ Human QA remains the last gate.
 
 Current active task:
 
-- `W1 Completion Payoff`
+- `W2-W6 Completion Payoff`
 
 ## Phase 4 Sequence
 
 1. Fixes Banked / Recent-Session Proof - CLOSED
 2. Cross-Session Proof Profile - CLOSED
 3. Achievement Visual Language / Icons - CLOSED
-4. W1 Completion Payoff - ACTIVE
-5. W2-W6 Completion Payoff
+4. W1 Completion Payoff - CLOSED
+5. W2-W6 Completion Payoff - ACTIVE
 6. W4->W5 Band Transition Milestone
 
 ## Compact Phase Map
