@@ -1,4 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_queue_resolution_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 
 const String act0PracticeRepairQueueSourceReviewHistoryV1 =
@@ -29,6 +31,9 @@ class Act0PracticeRepairQueueProjectionV1 {
     Act0ReviewMistakeHistoryV1 reviewMistakeHistory =
         const Act0ReviewMistakeHistoryV1(),
     List<Act0RepairIntentV1> activeRepairIntents = const <Act0RepairIntentV1>[],
+    Act0RepairOutcomeProjectionV1 repairOutcomeProjection =
+        const Act0RepairOutcomeProjectionV1(),
+    Act0QueueResolutionStateV1? queueResolutionState,
     int maxCandidates = maxCandidateCount,
   }) {
     final safeMax = maxCandidates < 1
@@ -36,23 +41,28 @@ class Act0PracticeRepairQueueProjectionV1 {
         : maxCandidates.clamp(1, maxCandidateCount);
     final candidates = <_QueueCandidateV1>[];
     final seenDedupKeys = <String>{};
+    final resolutionState =
+        queueResolutionState ??
+        Act0QueueResolutionStateV1.fromSources(
+          activeRepairIntents: activeRepairIntents,
+          repairOutcomeProjection: repairOutcomeProjection,
+        );
 
     final activeRepairs = <Act0RepairIntentV1>[...activeRepairIntents]
       ..sort(
         (a, b) => _activeRepairSortKey(a).compareTo(_activeRepairSortKey(b)),
       );
     for (final intent in activeRepairs) {
-      final key = _dedupKey(
-        sourceTaskId: intent.sourceTaskId,
-        repairFocusId: intent.missedSignalId,
-        skillTag: intent.skillAtomId,
-        errorDetail: intent.errorType,
-      );
+      final key = repairQueueIdentityKeyForAct0RepairIntentV1(intent);
       if (key.isEmpty || seenDedupKeys.contains(key)) {
         continue;
       }
       seenDedupKeys.add(key);
-      final itemId = 'practice_repair_queue_v1|active|${_keyPart(key)}';
+      final itemId = queueItemIdForAct0RepairIntentV1(intent);
+      final resolution = resolutionState.resolutionForQueueItemId(itemId);
+      if (resolution != null && !resolution.isActionable) {
+        continue;
+      }
       final launchTarget = _activeRepairLaunchTarget(intent);
       candidates.add(
         _QueueCandidateV1(

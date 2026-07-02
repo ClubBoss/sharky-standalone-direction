@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 
 void main() {
@@ -165,7 +166,48 @@ void main() {
     });
   });
 
-  test('active repair row without target remains passive', () {
+  test('resolved active repair row is excluded from active queue', () {
+    final initial = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
+    );
+    final resolved = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
+      repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+        outcomes: <Act0RepairOutcomeV1>[
+          _repairOutcome(queueItemId: initial.items.single.itemId),
+        ],
+      ),
+    );
+
+    expect(resolved.items, isEmpty);
+    expect(resolved.hasItems, isFalse);
+  });
+
+  test('failed active repair row remains actionable in active queue', () {
+    final initial = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
+    );
+    final attempted = Act0PracticeRepairQueueProjectionV1.fromSources(
+      activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
+      repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+        outcomes: <Act0RepairOutcomeV1>[
+          _repairOutcome(
+            queueItemId: initial.items.single.itemId,
+            isCorrect: false,
+          ),
+        ],
+      ),
+    );
+
+    expect(attempted.items, hasLength(1));
+    expect(
+      attempted.items.single.sourceType,
+      act0PracticeRepairQueueSourceActiveRepairV1,
+    );
+    expect(attempted.items.single.launchRequest?.isLaunchable, isTrue);
+  });
+
+  test('active repair row without target fails closed', () {
     final projection = Act0PracticeRepairQueueProjectionV1.fromSources(
       activeRepairIntents: const <Act0RepairIntentV1>[
         Act0RepairIntentV1(
@@ -188,17 +230,8 @@ void main() {
       ],
     );
 
-    final item = projection.items.single;
-    expect(item.launchTarget.isLaunchable, isFalse);
-    expect(item.launchRequest, isNull);
-    expect(
-      item.launchTarget.targetType,
-      act0PracticeRepairQueueTargetTypeNotLaunchableV1,
-    );
-    expect(item.toPayload()['launchTarget'], <String, Object>{
-      'source': act0PracticeRepairQueueSourceActiveRepairV1,
-      'targetType': act0PracticeRepairQueueTargetTypeNotLaunchableV1,
-    });
+    expect(projection.items, isEmpty);
+    expect(projection.hasItems, isFalse);
   });
 
   test('history rows remain passive and expose no launch target ids', () {
@@ -337,5 +370,29 @@ Act0ReviewMistakeRecordV1 _mistakeRecord({
     runOrdinal: 1,
     attemptRecordIds: <String>['decision_v1|$order'],
     dedupUsesFallback: false,
+  );
+}
+
+Act0RepairOutcomeV1 _repairOutcome({
+  required String queueItemId,
+  bool isCorrect = true,
+}) {
+  return Act0RepairOutcomeV1(
+    sourceTaskId: 'actions_legal_context',
+    repairTaskId: 'actions_check_drill',
+    repairFocusKey:
+        '21:actions_legal_context|10:no_bet_yet|11:action_read|18:missed_action_read',
+    queueItemId: queueItemId,
+    targetWorldId: 'world_1',
+    targetLessonId: 'fold_check_call_raise',
+    targetTaskId: 'actions_check_drill',
+    selectedChoiceId: isCorrect ? 'check' : 'fold',
+    correctChoiceId: 'check',
+    isCorrect: isCorrect,
+    outcomeState: isCorrect
+        ? act0RepairOutcomeStateCorrectV1
+        : act0RepairOutcomeStateStillNeedsRepV1,
+    sequence: 1,
+    sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
   );
 }
