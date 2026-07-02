@@ -58,6 +58,7 @@ Do not ask any agent to read all capsules by default.
 | Task shape | Required capsule |
 | --- | --- |
 | route choice, next wave, scope boundary | `ACTIVE_ROUTE_CAPSULE_v1.md` |
+| Proof Progression, Cross-Session Proof Profile, achievement/payoff proof | `ACTIVE_ROUTE_CAPSULE_v1.md` + `VISUAL_PROOF_CAPSULE_v1.md`; add `LEARNING_REPAIR_CAPSULE_v1.md` only when proof source contracts are relevant |
 | UI polish, visual audit, design packet, screenshot review | `VISUAL_PROOF_CAPSULE_v1.md` |
 | Session Summary proof, Review repair, Practice repair, learning claims | `LEARNING_REPAIR_CAPSULE_v1.md` |
 | commit, preflight, validation, generated drift, output handling | `WORKTREE_EVIDENCE_CAPSULE_v1.md` |

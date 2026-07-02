@@ -1,9 +1,9 @@
 # Learning Repair Capsule v1
 
 Status: ACTIVE learning/repair capsule.
-Freshness date: 2026-07-02.
-Verified HEAD: `f9a1909f70ae3ad51ac731e3782c34c861d627f5`.
-Verified active route artifact: `docs/_reviews/context_capsule_bounded_refresh_v1.md`.
+Freshness date: 2026-07-03.
+Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
+Verified active route artifact: `docs/_reviews/fixes_banked_weekly_proof_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -14,18 +14,28 @@ Review, Session Summary, telemetry, or learning-claim change.
 Every learner-facing improvement claim must map back to this loop or name the
 reason it is not an improvement claim.
 
-## Accepted Repair Spine
+## Accepted Durable Truth
 
-- Deterministic repair decision.
-- Visible missed-signal reason.
-- Repair target through existing owners.
-- Repair outcome.
-- Session Summary receipt.
-- Review / Profile proof.
-- Local telemetry truth.
-
-This spine is rule-based and local. It is not an AI coach, solver, or public
-learning-effect claim.
+- Concept-family state uses source-owned family ids and raw outcomes; it does
+  not create mastery or a score.
+- Session identity is local, deterministic, persisted, and ordered across
+  source-backed evidence.
+- Transfer measurement is conservative local evidence, not causal proof of
+  practice transfer or a public learning-effect claim.
+- Personalized return reasons are deterministic explanations, not scheduling
+  or AI/adaptive recommendations.
+- Spaced repetition is engine-ready; its Practice consumer and concept-family
+  target mapping remain deferred.
+- Repair identity is the exact composite of source task, missed signal, skill
+  atom, and error type. Same-family but different exact identity stays distinct.
+- Practice queue and Review share exact resolution truth and durable receipts.
+- The queue holds three active unresolved items while the visible Practice
+  consumer remains one pinned row.
+- Review pattern coaching reads repeated source-backed evidence across sessions
+  without resurrecting resolved work or owning queue state.
+- Banked-fix proof derives from Review resolution receipts, matching successful
+  repair outcomes, and later same-family transfer evidence. Its aggregate uses
+  a recent-session window, not calendar-week reporting.
 
 ## Constraints
 
@@ -36,19 +46,15 @@ learning-effect claim.
 - No Review recovery claim without a resolution contract.
 - No fixed-forever, solved, mastered, launch-ready, or Human-QA-proven copy.
 - No W13+ expansion, route opening, or monetization gating through repair work.
+- No Practice target mapping, multi-repair visible expansion, passive recovered
+  history, calendar-week proof, or broad dashboard in this active wave.
 
-## Next Learning Phases
+## Current Proof Source Chain
 
-- concept-family state
-- deterministic session identity
-- transfer measurement
-- personalized return reason
-- spaced repetition
-- multi-repair
-- multi-session Review
+`concept-family state + session identity + transfer evidence + repair outcomes + Review resolution receipts -> banked-fix projection -> bounded proof consumer`
 
-These are future bounded phases. Do not smuggle them into a narrower proof,
-copy, visual, or telemetry task.
+Cross-Session Proof Profile may consume this chain. It must not invent mastery,
+scores, percentages, causal learning claims, or broad outcome history.
 
 ## Telemetry Ownership
 
@@ -95,8 +101,8 @@ Likely owner areas:
 
 - `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`
 - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
-- latest Session Summary / repair / Review artifacts named by the prompt
-- `docs/_reviews/context_capsule_bounded_refresh_v1.md`
+- `docs/_reviews/review_multi_session_pattern_coaching_v1.md`
+- `docs/_reviews/fixes_banked_weekly_proof_v1.md`
 
 ## Claim Language
 

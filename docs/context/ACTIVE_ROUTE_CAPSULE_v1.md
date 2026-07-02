@@ -1,44 +1,36 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-02.
-Verified HEAD: `f9a1909f70ae3ad51ac731e3782c34c861d627f5`.
-Verified active route artifact: `docs/_reviews/context_capsule_bounded_refresh_v1.md`.
+Freshness date: 2026-07-03.
+Verified HEAD: `2472b68c7ff0c35c539649c4bd46803a7fd94fe8`.
+Verified active route artifact: `docs/_reviews/fixes_banked_weekly_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
 
-Sharky is in the pre-Human TOP1 completion route. The product sequence is
-static proof and polish first, motion and E2E later, Human QA strictly at the
-end. Do not move Human QA earlier to compensate for unresolved product proof.
+Phase 4 - Proof Progression is ACTIVE. Phase 1 - Premium Visual Foundation,
+Phase 2 - Learning Truth Foundation, and Phase 3 - Repair Depth are CLOSED.
+Human QA remains the last gate.
 
-Immediate next product task after this capsule refresh:
+Current active task:
 
-- `Session Summary Gold Containment PR`
+- `Cross-Session Proof Profile v1`
 
-## Recently Closed Gates
+## Phase 4 Sequence
 
-- Terminal copy/evidence: W12 terminal keep-sharp copy repaired and route
-  evidence locked without opening W13.
-- Welcome Variant B: composition, proof pill, and handoff copy accepted.
-- Review Variant B and follow-up: repair bench density and footer balance
-  accepted.
-- Deep teal-green felt: table felt material accepted.
-- CTA rhythm + Learn cleanup: primary CTA contrast fixed, Learn Start unified,
-  redundant Learn progress copy removed.
-
-## Next 2-3 Steps
-
-1. `Session Summary Gold Containment PR`
-2. `Sharky Visual Consistency Foundation`
-3. static regression check before motion or Human QA expansion
+1. Fixes Banked / Recent-Session Proof - CLOSED
+2. Cross-Session Proof Profile - ACTIVE
+3. Achievement Visual Language / Icons
+4. W1 Completion Payoff
+5. W2-W6 Completion Payoff
+6. W4->W5 Band Transition Milestone
 
 ## Compact Phase Map
 
-1. Premium Visual Foundation
-2. Learning Truth Foundation
-3. Repair Depth
-4. Proof Progression
+1. Premium Visual Foundation - CLOSED
+2. Learning Truth Foundation - CLOSED
+3. Repair Depth - CLOSED
+4. Proof Progression - ACTIVE
 5. Sharky Companion
 6. Advanced Learning Presentation
 7. Content & Correctness
@@ -49,6 +41,14 @@ Immediate next product task after this capsule refresh:
 
 ## Current Forbidden Scope
 
+- Spaced Repetition -> Practice target integration
+- Concept Family -> Practice target mapping
+- Multi-Repair Visible Consumer Follow-up
+- passive recovered-history UI
+- calendar-week proof reporting
+- broad outcome-history dashboard
+- achievement icons before their dedicated Phase 4 stage
+- motion or Sharky growth before their dedicated stages
 - W13-W36 pre-Human expansion
 - hand import
 - advanced analytics dashboard
@@ -64,10 +64,9 @@ Immediate next product task after this capsule refresh:
 
 ## Human QA Boundary
 
-Human QA is the final external evidence gate. It starts only after static,
-motion, E2E, and final regression closeout are complete enough to avoid asking
-humans to find already-known product debt. Human QA can lower confidence; it
-cannot be simulated or claimed from internal tests.
+Human QA is the final external evidence gate. Do not return to general visual
+polish or move Human QA earlier to compensate for unresolved product proof.
+Human QA can lower confidence; it cannot be simulated or claimed internally.
 
 ## SSOT Pointers
 
