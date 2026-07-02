@@ -20,12 +20,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_premium_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_queue_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
@@ -751,6 +753,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       <String, _Act0MistakeRecordV1>{};
   final Map<String, Act0RepairIntentV1> _openRepairIntentBySourceTaskId =
       <String, Act0RepairIntentV1>{};
+  Act0MultiRepairQueueV1 _multiRepairQueueV1 = const Act0MultiRepairQueueV1();
+  int _multiRepairQueueOrderV1 = 0;
   final List<_Act0RepairIntentAuditEntryV1> _repairIntentAuditTrailV1 =
       <_Act0RepairIntentAuditEntryV1>[];
   final Set<String> _resolvedMistakeTaskIds = <String>{};
@@ -2902,7 +2906,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _openRepairIntentBySourceTaskId
         ..clear()
         ..addEntries(
-          parsed.openRepairIntents
+          parsed.multiRepairQueue
+              .activeRepairIntents()
               .where((intent) {
                 final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
                 return retention != null &&
@@ -2913,6 +2918,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               })
               .map((intent) => MapEntry(intent.sourceTaskId, intent)),
         );
+      _multiRepairQueueV1 = Act0MultiRepairQueueV1(
+        entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
+          parsed.multiRepairQueue.entries.where((entry) {
+            final intent = entry.repairIntent;
+            final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
+            return retention != null &&
+                retention.status == _Act0RetentionMemoryStatusV1.openRepair &&
+                retention.lessonId == intent.sourceLessonId &&
+                retention.worldId == intent.sourceWorldId;
+          }),
+        ),
+      );
+      _multiRepairQueueOrderV1 = parsed.multiRepairQueueOrder;
       _restorePersistedOpenRepairRecordsV1(state);
       _refreshRetentionMemoryStatusesV1();
       _firstValueReceiptCarry = restoredFirstValueCarry;
@@ -3028,6 +3046,42 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  List<Act0RepairIntentV1> _activeRepairIntentsV1() {
+    if (!_multiRepairQueueV1.hasItems) {
+      return _multiRepairQueueOrderV1 == 0
+          ? _openRepairIntentBySourceTaskId.values.toList(growable: false)
+          : const <Act0RepairIntentV1>[];
+    }
+    final resolutionState = Act0QueueResolutionStateV1.fromSources(
+      activeRepairIntents: _multiRepairQueueV1.activeRepairIntents(),
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+    );
+    return _multiRepairQueueV1.activeRepairIntents(
+      resolutionState: resolutionState,
+    );
+  }
+
+  void _syncOpenRepairIntentIndexFromQueueV1() {
+    _openRepairIntentBySourceTaskId
+      ..clear()
+      ..addEntries(
+        _activeRepairIntentsV1().map(
+          (intent) =>
+              MapEntry<String, Act0RepairIntentV1>(intent.sourceTaskId, intent),
+        ),
+      );
+  }
+
+  void _pruneMultiRepairQueueWithResolutionV1() {
+    final resolutionState = Act0QueueResolutionStateV1.fromSources(
+      activeRepairIntents: _multiRepairQueueV1.activeRepairIntents(),
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+    );
+    _multiRepairQueueV1 = _multiRepairQueueV1.prunedWithResolution(
+      resolutionState,
+    );
+  }
+
   static String _todayDateString() {
     final now = DateTime.now();
     return '${now.year.toString().padLeft(4, '0')}-'
@@ -3075,9 +3129,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       persistedStreakDays: currentStreak,
       retentionSequence: _retentionSequence,
       retentionMemory: _retentionMemoryByTaskId.values.toList(growable: false),
-      openRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
-        growable: false,
-      ),
+      openRepairIntents: _activeRepairIntentsV1(),
+      multiRepairQueue: _multiRepairQueueV1,
+      multiRepairQueueOrder: _multiRepairQueueOrderV1,
       resumeInRunner:
           _tab == Act0ShellTabV1.play &&
           !_showPlayHub &&
@@ -4177,9 +4231,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     Act0PracticeRepairQueueConsumerV1.fromProjection(
                                       Act0PracticeRepairQueueProjectionV1.fromSources(
                                         activeRepairIntents:
-                                            _openRepairIntentBySourceTaskId
-                                                .values
-                                                .toList(growable: false),
+                                            _activeRepairIntentsV1(),
                                         reviewMistakeHistory:
                                             _reviewMistakeHistoryV1,
                                       ),
@@ -4819,8 +4871,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     reviewMistakeHistory:
                                         _reviewMistakeHistoryV1,
                                     activeRepairIntents:
-                                        _openRepairIntentBySourceTaskId.values
-                                            .toList(growable: false),
+                                        _activeRepairIntentsV1(),
                                     repairOutcomeProjection:
                                         _repairOutcomeProjectionV1,
                                     receiptHistory:
@@ -4846,9 +4897,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               Act0AchievementSeedProjectionV1.fromSources(
                                 learningEvidenceHistory:
                                     _learningEvidenceHistoryV1,
-                                repairIntents: _openRepairIntentBySourceTaskId
-                                    .values
-                                    .toList(growable: false),
+                                repairIntents: _activeRepairIntentsV1(),
                                 reviewMistakeHistory: _reviewMistakeHistoryV1,
                                 profileStreakDays: profileState.streakDays,
                               ),
@@ -5614,9 +5663,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   String? _homePersonalizedReturnReasonLine() {
     final reason = Act0PersonalizedReturnReasonV1.fromSources(
-      activeRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
-        growable: false,
-      ),
+      activeRepairIntents: _activeRepairIntentsV1(),
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
@@ -8437,9 +8484,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
-          activeRepairIntents: _openRepairIntentBySourceTaskId.values.toList(
-            growable: false,
-          ),
+          activeRepairIntents: _activeRepairIntentsV1(),
           repairOutcomeProjection: _repairOutcomeProjectionV1,
           existingReceiptHistory: _reviewResolutionReceiptHistoryV1,
         );
@@ -8462,6 +8507,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastSessionDate: _todayDateString(),
       lastSessionWorldId: request.targetWorldId.trim(),
     );
+    _pruneMultiRepairQueueWithResolutionV1();
     _persistProgress();
   }
 
@@ -8504,7 +8550,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (intent == null) {
       return;
     }
-    _openRepairIntentBySourceTaskId[sourceTaskId] = intent;
+    _multiRepairQueueOrderV1 += 1;
+    _multiRepairQueueV1 = _multiRepairQueueV1.upsertIntent(
+      intent,
+      order: _multiRepairQueueOrderV1,
+    );
+    _syncOpenRepairIntentIndexFromQueueV1();
+    final stored = _activeRepairIntentsV1().any(
+      (entry) =>
+          queueItemIdForAct0RepairIntentV1(entry) ==
+          queueItemIdForAct0RepairIntentV1(intent),
+    );
+    if (!stored) {
+      return;
+    }
     _appendRepairIntentAuditEntryV1(
       _Act0RepairIntentAuditEntryV1(
         transition: 'intent_created',
@@ -8530,6 +8589,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedMappedTarget = completedTaskId == intent.targetTaskId;
     if (completedExactReplay || completedMappedTarget) {
       _openRepairIntentBySourceTaskId.remove(sourceTaskId);
+      _multiRepairQueueV1 = Act0MultiRepairQueueV1(
+        entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
+          _multiRepairQueueV1.entries.where(
+            (entry) =>
+                entry.queueItemId != queueItemIdForAct0RepairIntentV1(intent),
+          ),
+        ),
+      );
+      _syncOpenRepairIntentIndexFromQueueV1();
       _appendRepairIntentAuditEntryV1(
         _Act0RepairIntentAuditEntryV1(
           transition: 'intent_cleared',
@@ -11213,6 +11281,8 @@ class _Act0PersistedProgressV1 {
     this.retentionSequence = 0,
     this.retentionMemory = const <_Act0RetentionMemoryEntryV1>[],
     this.openRepairIntents = const <Act0RepairIntentV1>[],
+    this.multiRepairQueue = const Act0MultiRepairQueueV1(),
+    this.multiRepairQueueOrder = 0,
     this.resumeInRunner = false,
     this.resumePhase = '',
     this.resumeTeachingStepIndex = 0,
@@ -11244,6 +11314,8 @@ class _Act0PersistedProgressV1 {
   final int retentionSequence;
   final List<_Act0RetentionMemoryEntryV1> retentionMemory;
   final List<Act0RepairIntentV1> openRepairIntents;
+  final Act0MultiRepairQueueV1 multiRepairQueue;
+  final int multiRepairQueueOrder;
   final bool resumeInRunner;
   final String resumePhase;
   final int resumeTeachingStepIndex;
@@ -11269,7 +11341,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 14,
+      'schemaVersion': 15,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -11298,6 +11370,8 @@ class _Act0PersistedProgressV1 {
       'openRepairIntents': <Map<String, Object>>[
         for (final intent in sortedOpenRepairIntents) intent.toPayload(),
       ],
+      'multiRepairQueue': multiRepairQueue.toPayload(),
+      'multiRepairQueueOrder': multiRepairQueueOrder,
       'resumeInRunner': resumeInRunner,
       'resumePhase': resumePhase,
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
@@ -11329,7 +11403,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v14 as the shell snapshot evolves.
+    // Accept v1-v15 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -11343,7 +11417,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 11 &&
         schemaVersion != 12 &&
         schemaVersion != 13 &&
-        schemaVersion != 14) {
+        schemaVersion != 14 &&
+        schemaVersion != 15) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -11376,6 +11451,15 @@ class _Act0PersistedProgressV1 {
               completedTaskIds.length;
     final retentionMemory = _retentionMemoryList(map['retentionMemory']);
     final openRepairIntents = _openRepairIntentList(map['openRepairIntents']);
+    final multiRepairQueue = Act0MultiRepairQueueV1.tryParse(
+      map['multiRepairQueue'],
+      legacyOpenRepairIntents: openRepairIntents,
+    );
+    final multiRepairQueueOrderRaw = map['multiRepairQueueOrder'];
+    final multiRepairQueueOrder = multiRepairQueueOrderRaw is int
+        ? multiRepairQueueOrderRaw
+        : int.tryParse(multiRepairQueueOrderRaw?.toString() ?? '') ??
+              _maxMultiRepairQueueOrder(multiRepairQueue);
     final resumeInRunner = map['resumeInRunner'] == true;
     final resumePhase = (map['resumePhase'] ?? '').toString();
     final resumeTeachingStepRaw = map['resumeTeachingStepIndex'];
@@ -11434,7 +11518,11 @@ class _Act0PersistedProgressV1 {
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
       retentionMemory: retentionMemory,
-      openRepairIntents: openRepairIntents,
+      openRepairIntents: multiRepairQueue.activeRepairIntents(),
+      multiRepairQueue: multiRepairQueue,
+      multiRepairQueueOrder: multiRepairQueueOrder < 0
+          ? 0
+          : multiRepairQueueOrder,
       resumeInRunner: resumeInRunner,
       resumePhase: resumePhase,
       resumeTeachingStepIndex: resumeTeachingStepIndex < 0
@@ -11522,16 +11610,33 @@ class _Act0PersistedProgressV1 {
     if (raw is! List) {
       return const <Act0RepairIntentV1>[];
     }
-    final intentsBySourceTaskId = <String, Act0RepairIntentV1>{};
+    final intentsByIdentity = <String, Act0RepairIntentV1>{};
     for (final item in raw) {
       final parsed = Act0RepairIntentV1.tryParse(item);
       if (parsed != null) {
-        intentsBySourceTaskId[parsed.sourceTaskId] = parsed;
+        final key = repairQueueIdentityKeyForAct0RepairIntentV1(parsed);
+        if (key.isNotEmpty) {
+          intentsByIdentity[key] = parsed;
+        }
       }
     }
-    final intents = intentsBySourceTaskId.values.toList(growable: false)
-      ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
+    final intents = intentsByIdentity.values.toList(growable: false)
+      ..sort(
+        (a, b) => repairQueueIdentityKeyForAct0RepairIntentV1(
+          a,
+        ).compareTo(repairQueueIdentityKeyForAct0RepairIntentV1(b)),
+      );
     return intents;
+  }
+
+  static int _maxMultiRepairQueueOrder(Act0MultiRepairQueueV1 queue) {
+    var maxOrder = 0;
+    for (final entry in queue.entries) {
+      if (entry.lastUpdatedAtOrder > maxOrder) {
+        maxOrder = entry.lastUpdatedAtOrder;
+      }
+    }
+    return maxOrder;
   }
 }
 

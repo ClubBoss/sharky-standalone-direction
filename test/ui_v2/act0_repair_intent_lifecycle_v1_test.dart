@@ -42,17 +42,13 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Repair focus'), findsOneWidget);
-    expect(find.text('You missed the no-bet-yet clue.'), findsOneWidget);
     expect(
       find.text(
-        'You missed that nobody has bet yet. This hand repeats that table clue.',
+        'This rep repeats the same clue. Before choosing, ask whether a bet faces you.',
       ),
       findsOneWidget,
     );
-    expect(
-      find.text('Before choosing, ask whether a bet faces you.'),
-      findsOneWidget,
-    );
+    expect(find.text('You missed the no-bet-yet clue.'), findsNothing);
 
     final repeat = _openRepairIntentPayload(tester, 'actions_legal_context');
     expect(repeat, intent);
@@ -94,8 +90,8 @@ void main() {
 
     await _answerOption(tester, 'check');
 
-    expect(_openRepairIntentPayload(tester, 'actions_legal_context'), isNull);
-    expect(_openRepairIntentCount(tester), 0);
+    await _openPractice(tester);
+    expect(find.byKey(const Key('act0_shell_play_repair_queue')), findsNothing);
   });
 
   testWidgets('showing Review does not clear open repair intent prematurely', (
@@ -123,12 +119,16 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
     expect(
+      find.byKey(const Key('act0_shell_review_fix_next_cta')),
+      findsNothing,
+    );
+    expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       beforeReview,
     );
   });
 
-  testWidgets('successful mapped repair completion clears matching intent', (
+  testWidgets('successful Practice queue repair clears matching intent', (
     tester,
   ) async {
     await _pumpLifecycleHost(
@@ -142,7 +142,7 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerOption(tester, 'fold');
 
-    await _launchReviewRepair(tester);
+    await _launchPracticeQueueRepair(tester);
     expect(_activeTaskId(tester), 'actions_check_drill');
 
     await _advanceTeachingToDrill(tester);
@@ -150,11 +150,15 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
 
-    expect(_openRepairIntentPayload(tester, 'actions_legal_context'), isNull);
-    expect(_openRepairIntentCount(tester), 0);
+    await _openPractice(tester);
+    final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+    expect(
+      find.descendant(of: queue, matching: find.text('Practice this')),
+      findsNothing,
+    );
   });
 
-  testWidgets('failed repair completion keeps matching intent open', (
+  testWidgets('failed Practice queue repair keeps matching intent active', (
     tester,
   ) async {
     await _pumpLifecycleHost(
@@ -168,7 +172,7 @@ void main() {
     await _advanceTeachingToDrill(tester);
     await _answerOption(tester, 'fold');
 
-    await _launchReviewRepair(tester);
+    await _launchPracticeQueueRepair(tester);
     await _advanceTeachingToDrill(tester);
     await _answerWrongly(tester);
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
@@ -387,12 +391,25 @@ Future<void> _answerWrongly(WidgetTester tester) async {
   await _answerOption(tester, option.id);
 }
 
-Future<void> _launchReviewRepair(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+Future<void> _launchPracticeQueueRepair(WidgetTester tester) async {
+  await _openPractice(tester);
+  final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+  expect(queue, findsOneWidget);
+  expect(
+    find.descendant(of: queue, matching: find.text('Practice this')),
+    findsOneWidget,
+  );
+  await tester.tap(find.text('Practice this'));
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Review'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.byKey(const Key('act0_shell_review_fix_next_cta')));
+}
+
+Future<void> _openPractice(WidgetTester tester) async {
+  final runnerBack = find.byKey(const Key('act0_shell_runner_back'));
+  if (runnerBack.evaluate().isNotEmpty) {
+    await tester.tap(runnerBack);
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(find.text('Practice'));
   await tester.pumpAndSettle();
 }
 
