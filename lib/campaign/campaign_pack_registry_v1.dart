@@ -1590,7 +1590,7 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
 
 List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
   MicroTaskStep(
-    prompt: 'Volume I review is complete. Tap Button for a keep-sharp review.',
+    prompt: 'Volume I review is complete. Start the keep-sharp review.',
     hint: 'The route is at a terminal review state.',
     expectedSeatIds: <String>['btn'],
     contextText:

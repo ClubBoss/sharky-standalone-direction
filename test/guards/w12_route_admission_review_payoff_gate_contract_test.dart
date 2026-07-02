@@ -122,6 +122,7 @@ void main() {
     expect(copy, contains('review'));
     expect(copy, contains('intentional'));
     expect(copy, contains('later worlds'));
+    expect(copy, isNot(contains('tap button for a keep-sharp review')));
     expect(copy, isNot(contains('seat label')));
     expect(copy, isNot(contains('practice cta')));
     expect(copy, isNot(contains('mapper')));
