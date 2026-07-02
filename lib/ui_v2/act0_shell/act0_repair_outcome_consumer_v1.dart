@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 
 class Act0RepairOutcomeConsumerV1 {
@@ -10,8 +11,9 @@ class Act0RepairOutcomeConsumerV1 {
   bool get hasSessionReceipt => sessionReceipt != null;
 
   static Act0RepairOutcomeConsumerV1 fromProjection(
-    Act0RepairOutcomeProjectionV1 projection,
-  ) {
+    Act0RepairOutcomeProjectionV1 projection, {
+    Act0FixProofProjectionV1? fixProofProjection,
+  }) {
     if (projection.outcomes.isEmpty) {
       return const Act0RepairOutcomeConsumerV1();
     }
@@ -25,7 +27,9 @@ class Act0RepairOutcomeConsumerV1 {
       });
     final latest = ordered.last;
     final detail = _detailForOutcomeStateV1(latest.outcomeState);
-    final receipt = _sessionReceiptForOutcomesV1(ordered);
+    final receipt =
+        _sessionReceiptForFixProofV1(fixProofProjection) ??
+        _sessionReceiptForOutcomesV1(ordered);
     if (detail.isEmpty && receipt == null) {
       return const Act0RepairOutcomeConsumerV1();
     }
@@ -43,6 +47,19 @@ class Act0RepairOutcomeConsumerV1 {
       sessionReceipt: receipt,
     );
   }
+}
+
+Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForFixProofV1(
+  Act0FixProofProjectionV1? projection,
+) {
+  final lines = projection?.aggregate.lines ?? const <String>[];
+  if (lines.isEmpty) {
+    return null;
+  }
+  return Act0RepairOutcomeSessionReceiptV1(
+    title: "Fixes you've banked",
+    lines: lines,
+  );
 }
 
 class Act0RepairOutcomeProofV1 {

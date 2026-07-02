@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 
 void main() {
   testWidgets('Session Summary renders no earned moment with empty consumer', (
@@ -71,6 +73,52 @@ void main() {
     expect(find.text('Still to fix: 1'), findsNothing);
     expect(find.text('Fixes tried: 1'), findsNothing);
   });
+
+  testWidgets(
+    'Session Summary shows structured banked fix proof when supplied',
+    (tester) async {
+      final repairOutcomes = _repairOutcomeProjection(
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+      );
+      final fixProof = Act0FixProofProjectionV1.fromSources(
+        repairOutcomeProjection: repairOutcomes,
+        reviewResolutionReceiptHistory:
+            const Act0ReviewResolutionReceiptHistoryV1(
+              receipts: <Act0ReviewResolutionReceiptV1>[
+                Act0ReviewResolutionReceiptV1(
+                  reviewItemId: 'review_queue_item',
+                  conceptFamilyId: 'no_bet_yet',
+                  sourceTaskId: 'actions_legal_context',
+                  sourceSessionId: 'session_1',
+                  reviewState: act0ReviewResolutionStateResolvedV1,
+                  resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                  repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+                  resolvedAtOrder: 1,
+                ),
+              ],
+            ),
+      );
+
+      await _pumpSummary(
+        tester,
+        consumer: const Act0AchievementSeedConsumerV1(),
+        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+          repairOutcomes,
+          fixProofProjection: fixProof,
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+        findsOneWidget,
+      );
+      expect(find.text("Fixes you've banked"), findsOneWidget);
+      expect(find.text('1 repair completed'), findsOneWidget);
+      expect(find.text('Good fixes: 1'), findsNothing);
+      expect(find.textContaining('master'), findsNothing);
+      expect(find.textContaining('score'), findsNothing);
+    },
+  );
 
   testWidgets('Session Summary shows worth repeating repair receipt', (
     tester,

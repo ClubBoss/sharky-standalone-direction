@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -3085,6 +3086,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  Act0FixProofProjectionV1 _fixProofProjectionV1() {
+    return Act0FixProofProjectionV1.fromSources(
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+      reviewResolutionReceiptHistory: _reviewResolutionReceiptHistoryV1,
+      transferMeasurement:
+          Act0LearningTransferMeasurementV1.fromLearningEvidence(
+            _learningEvidenceHistoryV1,
+          ),
+    );
+  }
+
   void _syncOpenRepairIntentIndexFromQueueV1() {
     _openRepairIntentBySourceTaskId
       ..clear()
@@ -4305,6 +4317,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 repairOutcomeConsumer:
                                     Act0RepairOutcomeConsumerV1.fromProjection(
                                       _repairOutcomeProjectionV1,
+                                      fixProofProjection:
+                                          _fixProofProjectionV1(),
                                     ),
                                 onLaunchPracticeRepairQueueTarget: (target) =>
                                     setState(() {

@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
 
 void main() {
   test('empty projection produces no local proof', () {
@@ -77,6 +79,44 @@ void main() {
     expect(consumer.sessionReceipt?.title, "Fixes you've banked");
     expect(consumer.sessionReceipt?.lines, <String>['Good fixes: 1']);
   });
+
+  test(
+    'structured fix proof replaces generic activity receipt when supplied',
+    () {
+      final repairOutcomes = _projection(
+        isCorrect: true,
+        selectedChoiceId: 'check',
+        sequence: 2,
+      );
+      final fixProof = Act0FixProofProjectionV1.fromSources(
+        repairOutcomeProjection: repairOutcomes,
+        reviewResolutionReceiptHistory:
+            const Act0ReviewResolutionReceiptHistoryV1(
+              receipts: <Act0ReviewResolutionReceiptV1>[
+                Act0ReviewResolutionReceiptV1(
+                  reviewItemId: 'review_queue_item',
+                  conceptFamilyId: 'no_bet_yet',
+                  sourceTaskId: 'actions_legal_context',
+                  sourceSessionId: 'session_1',
+                  reviewState: act0ReviewResolutionStateResolvedV1,
+                  resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                  repairOutcomeId: 'repair_outcome_v1|2|queue_item',
+                  resolvedAtOrder: 2,
+                ),
+              ],
+            ),
+      );
+
+      final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+        repairOutcomes,
+        fixProofProjection: fixProof,
+      );
+
+      expect(consumer.sessionReceipt?.title, "Fixes you've banked");
+      expect(consumer.sessionReceipt?.lines, <String>['1 repair completed']);
+      expect(consumer.sessionReceipt?.lines, isNot(contains('Good fixes: 1')));
+    },
+  );
 
   test('incorrect outcomes summarize as worth repeating', () {
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
