@@ -2,8 +2,8 @@
 
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
-Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
-Verified active route artifact: `docs/_reviews/cross_session_proof_profile_v1.md`.
+Verified product HEAD: pending commit (this task's own commit advances it).
+Verified active route artifact: `docs/_reviews/achievement_visual_language_icons_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -44,19 +44,24 @@ Session Summary's existing gold-contained proof receipt consumes the structured
 banked-fix projection when available and retains its repair-outcome fallback.
 Cross-Session Proof Profile landed in the existing Profile `Progress proof`
 card: it consumes lifetime and recent proof while preserving the navy-glass
-hierarchy. No achievement icon system exists yet. The active task is
-`Achievement Visual Language / Icons v1`, not a generic visual-polish wave.
+hierarchy. Achievement Visual Language / Icons v1 landed a small shared
+`Act0ProofIconV1` seam (`lib/ui_v2/act0_shell/act0_proof_icon_v1.dart`) with
+three semantic roles (`repairCompleted`, `reinforced`, `milestone` reserved).
+It is wired into the two admitted consumers only: Profile's Fixes/Reinforced
+tiles and Session Summary's banked-fix receipt. No gallery, grid, motion, or
+RPG badge economy was introduced. The active task is `W1 Completion Payoff`.
 
 ## Remaining Visual Route
 
-1. Achievement Visual Language / Icons - ACTIVE
-2. W1 Completion Payoff
+1. Achievement Visual Language / Icons - CLOSED
+2. W1 Completion Payoff - ACTIVE
 3. W2-W6 Completion Payoff
 4. W4->W5 Band Transition Milestone
 
-No motion or completion-payoff work is active yet. Do not reopen generic visual
-design outside the dedicated Achievement Visual Language stage or concrete new
-regression evidence.
+No motion or completion-payoff work is active yet. `milestone` proof-icon role
+is reserved and must remain unused until a true W1+ completion-payoff/band-
+transition state exists. Do not reopen generic visual design outside a
+dedicated stage or concrete new regression evidence.
 
 ## Proof / Progression Rules
 
@@ -108,3 +113,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/static_premium_visual_regression_check_v1.md`
 - `docs/_reviews/fixes_banked_weekly_proof_v1.md`
 - `docs/_reviews/cross_session_proof_profile_v1.md`
+- `docs/_reviews/achievement_visual_language_icons_v1.md`

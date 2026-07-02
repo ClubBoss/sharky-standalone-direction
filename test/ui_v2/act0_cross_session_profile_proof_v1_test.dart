@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
@@ -245,6 +246,82 @@ void main() {
       await tester.pump();
 
       expect(homeTapCount, 1);
+    });
+
+    testWidgets(
+      'banked fix maps to repairCompleted and reinforced proof icons',
+      (tester) async {
+        await _pumpProfile(tester, proof: _visibleProfileProof());
+
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_profile_progress_proof')),
+            matching: find.byKey(
+              const Key('act0_proof_icon_v1_repairCompleted'),
+            ),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_profile_progress_proof')),
+            matching: find.byKey(const Key('act0_proof_icon_v1_reinforced')),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets('missing proof yields no earned proof icon', (tester) async {
+      await _pumpProfile(tester);
+
+      expect(find.byType(Act0ProofIconV1), findsNothing);
+    });
+
+    testWidgets(
+      'banked fix without reinforcement does not show a reinforced icon',
+      (tester) async {
+        final proof = Act0CrossSessionProfileProofV1.fromFixProof(
+          Act0FixProofProjectionV1(
+            proofs: <Act0FixProofItemV1>[
+              _proof(id: 'proof_a', sessionId: 'session_1', order: 1),
+            ],
+          ),
+        );
+        await _pumpProfile(tester, proof: proof);
+
+        expect(
+          find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_proof_icon_v1_reinforced')),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets('ordinary fix proof never maps to a milestone icon', (
+      tester,
+    ) async {
+      await _pumpProfile(tester, proof: _visibleProfileProof());
+
+      expect(
+        find.byKey(const Key('act0_proof_icon_v1_milestone')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('proof icon rendering does not mutate proof state', (
+      tester,
+    ) async {
+      final proof = _visibleProfileProof();
+      final before = proof.toPayload();
+
+      await _pumpProfile(tester, proof: proof);
+      await tester.pump();
+
+      expect(proof.toPayload(), before);
     });
 
     testWidgets('compact Profile proof has no overflow', (tester) async {

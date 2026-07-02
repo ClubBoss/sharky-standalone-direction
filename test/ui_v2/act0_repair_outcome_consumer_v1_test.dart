@@ -118,6 +118,48 @@ void main() {
     },
   );
 
+  test('structured fix proof receipt flags itself as banked fix proof', () {
+    final repairOutcomes = _projection(
+      isCorrect: true,
+      selectedChoiceId: 'check',
+      sequence: 2,
+    );
+    final fixProof = Act0FixProofProjectionV1.fromSources(
+      repairOutcomeProjection: repairOutcomes,
+      reviewResolutionReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(
+        receipts: <Act0ReviewResolutionReceiptV1>[
+          Act0ReviewResolutionReceiptV1(
+            reviewItemId: 'review_queue_item',
+            conceptFamilyId: 'no_bet_yet',
+            sourceTaskId: 'actions_legal_context',
+            sourceSessionId: 'session_1',
+            reviewState: act0ReviewResolutionStateResolvedV1,
+            resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+            repairOutcomeId: 'repair_outcome_v1|2|queue_item',
+            resolvedAtOrder: 2,
+          ),
+        ],
+      ),
+    );
+
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      repairOutcomes,
+      fixProofProjection: fixProof,
+    );
+
+    expect(consumer.sessionReceipt?.isBankedFixProof, isTrue);
+    expect(consumer.sessionReceipt?.hasReinforcedEvidence, isFalse);
+  });
+
+  test('activity-only fallback receipt is not flagged as banked fix proof', () {
+    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+      _projection(isCorrect: true, selectedChoiceId: 'check'),
+    );
+
+    expect(consumer.sessionReceipt?.isBankedFixProof, isFalse);
+    expect(consumer.sessionReceipt?.hasReinforcedEvidence, isFalse);
+  });
+
   test('incorrect outcomes summarize as worth repeating', () {
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
       _projection(isCorrect: false, selectedChoiceId: 'fold'),

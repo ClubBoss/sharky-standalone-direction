@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -6792,6 +6793,34 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final proofIconRole = !receipt.isBankedFixProof
+        ? null
+        : receipt.hasReinforcedEvidence
+        ? Act0ProofIconRoleV1.reinforced
+        : Act0ProofIconRoleV1.repairCompleted;
+    final titleRow = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (proofIconRole != null) ...[
+          Act0ProofIconV1(
+            key: const Key('act0_shell_session_repair_outcome_proof_icon'),
+            role: proofIconRole,
+            size: Act0ProofIconSizeV1.tile,
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+        ],
+        Expanded(
+          child: Text(
+            receipt.title,
+            key: const Key('act0_shell_session_repair_outcome_title'),
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+              letterSpacing: 0.35,
+            ),
+          ),
+        ),
+      ],
+    );
     return Container(
       key: const Key('act0_shell_session_repair_outcome_receipt'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -6803,14 +6832,7 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            receipt.title,
-            key: const Key('act0_shell_session_repair_outcome_title'),
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.info,
-              letterSpacing: 0.35,
-            ),
-          ),
+          titleRow,
           const SizedBox(height: 6),
           for (var index = 0; index < receipt.lines.length; index++) ...[
             if (index > 0) const SizedBox(height: 4),

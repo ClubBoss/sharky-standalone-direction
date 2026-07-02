@@ -52,13 +52,16 @@ class Act0RepairOutcomeConsumerV1 {
 Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForFixProofV1(
   Act0FixProofProjectionV1? projection,
 ) {
-  final lines = projection?.aggregate.lines ?? const <String>[];
+  final aggregate = projection?.aggregate;
+  final lines = aggregate?.lines ?? const <String>[];
   if (lines.isEmpty) {
     return null;
   }
   return Act0RepairOutcomeSessionReceiptV1(
     title: "Fixes you've banked",
     lines: lines,
+    isBankedFixProof: true,
+    hasReinforcedEvidence: (aggregate?.reinforcedFixCount ?? 0) > 0,
   );
 }
 
@@ -80,10 +83,20 @@ class Act0RepairOutcomeSessionReceiptV1 {
   const Act0RepairOutcomeSessionReceiptV1({
     required this.title,
     required this.lines,
+    this.isBankedFixProof = false,
+    this.hasReinforcedEvidence = false,
   });
 
   final String title;
   final List<String> lines;
+
+  /// True only when this receipt is sourced from the structured banked-fix
+  /// projection (Review resolution receipts), not the raw activity fallback.
+  final bool isBankedFixProof;
+
+  /// True only when a banked fix in this receipt has later transfer
+  /// evidence. Meaningless unless [isBankedFixProof] is true.
+  final bool hasReinforcedEvidence;
 }
 
 String _detailForOutcomeStateV1(String outcomeState) {

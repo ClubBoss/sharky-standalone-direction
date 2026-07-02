@@ -4,8 +4,10 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
@@ -117,6 +119,161 @@ void main() {
       expect(find.text('Good fixes: 1'), findsNothing);
       expect(find.textContaining('master'), findsNothing);
       expect(find.textContaining('score'), findsNothing);
+    },
+  );
+
+  testWidgets('Session Summary maps banked fix proof to repairCompleted', (
+    tester,
+  ) async {
+    final repairOutcomes = _repairOutcomeProjection(
+      outcomeState: act0RepairOutcomeStateCorrectV1,
+    );
+    final fixProof = Act0FixProofProjectionV1.fromSources(
+      repairOutcomeProjection: repairOutcomes,
+      reviewResolutionReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(
+        receipts: <Act0ReviewResolutionReceiptV1>[
+          Act0ReviewResolutionReceiptV1(
+            reviewItemId: 'review_queue_item',
+            conceptFamilyId: 'no_bet_yet',
+            sourceTaskId: 'actions_legal_context',
+            sourceSessionId: 'session_1',
+            reviewState: act0ReviewResolutionStateResolvedV1,
+            resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+            repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+            resolvedAtOrder: 1,
+          ),
+        ],
+      ),
+    );
+
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        repairOutcomes,
+        fixProofProjection: fixProof,
+      ),
+    );
+
+    expect(
+      find.descendant(
+        of: find.byKey(
+          const Key('act0_shell_session_repair_outcome_receipt'),
+        ),
+        matching: find.byKey(
+          const Key('act0_proof_icon_v1_repairCompleted'),
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_proof_icon_v1_reinforced')),
+      findsNothing,
+    );
+  });
+
+  testWidgets(
+    'Session Summary maps later-supported fix proof to reinforced',
+    (tester) async {
+      final history = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          Act0LearningEvidenceRecordV1(
+            recordId: 'record_1',
+            createdOrder: 1,
+            worldId: 'world_1',
+            lessonId: 'fold_check_call_raise',
+            taskId: 'actions_legal_context',
+            choiceId: 'fold',
+            expectedChoiceId: 'check',
+            isCorrect: false,
+            errorType: 'missed_action_read',
+            conceptFamilyId: 'no_bet_yet',
+            repairFocusId: 'no_bet_yet',
+            skillAtomId: 'action_read',
+            decisionTimeBucket: 'under_3s',
+            resultKind: 'incorrect',
+            sessionId: 'session_1',
+          ),
+          Act0LearningEvidenceRecordV1(
+            recordId: 'record_2',
+            createdOrder: 5,
+            worldId: 'world_1',
+            lessonId: 'fold_check_call_raise',
+            taskId: 'actions_check_drill',
+            choiceId: 'check',
+            expectedChoiceId: 'check',
+            isCorrect: true,
+            errorType: 'none',
+            conceptFamilyId: 'no_bet_yet',
+            repairFocusId: 'no_bet_yet',
+            skillAtomId: 'action_read',
+            decisionTimeBucket: 'under_3s',
+            resultKind: 'correct',
+            sessionId: 'session_3',
+          ),
+        ],
+      );
+      final repairOutcomes = _repairOutcomeProjection(
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+      );
+      final fixProof = Act0FixProofProjectionV1.fromSources(
+        repairOutcomeProjection: repairOutcomes,
+        reviewResolutionReceiptHistory:
+            const Act0ReviewResolutionReceiptHistoryV1(
+              receipts: <Act0ReviewResolutionReceiptV1>[
+                Act0ReviewResolutionReceiptV1(
+                  reviewItemId: 'review_queue_item',
+                  conceptFamilyId: 'no_bet_yet',
+                  sourceTaskId: 'actions_legal_context',
+                  sourceSessionId: 'session_1',
+                  reviewState: act0ReviewResolutionStateResolvedV1,
+                  resolutionReason:
+                      act0ReviewResolutionReasonRepairSucceededV1,
+                  repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+                  resolvedAtOrder: 1,
+                ),
+              ],
+            ),
+        transferMeasurement: Act0LearningTransferMeasurementV1.fromLearningEvidence(
+          history,
+        ),
+      );
+
+      await _pumpSummary(
+        tester,
+        consumer: const Act0AchievementSeedConsumerV1(),
+        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+          repairOutcomes,
+          fixProofProjection: fixProof,
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('act0_proof_icon_v1_reinforced')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'insufficient proof (activity fallback only) shows no earned proof icon',
+    (tester) async {
+      await _pumpSummary(
+        tester,
+        consumer: const Act0AchievementSeedConsumerV1(),
+        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+          _repairOutcomeProjection(
+            outcomeState: act0RepairOutcomeStateCorrectV1,
+          ),
+        ),
+      );
+
+      expect(find.text('Good fixes: 1'), findsOneWidget);
+      expect(find.byType(Act0ProofIconV1), findsNothing);
     },
   );
 

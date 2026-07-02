@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -1189,6 +1190,7 @@ List<_ProfileProofTileDataV1> _crossSessionProofTilesV1(
       value: '${proof.totalBankedFixCount} banked',
       icon: Icons.check_circle_outline_rounded,
       tone: Act0ShellTokensV1.gold,
+      proofIconRole: Act0ProofIconRoleV1.repairCompleted,
     ),
     _ProfileProofTileDataV1(
       title: _profileCopyV1(context, en: 'Reinforced'),
@@ -1197,6 +1199,7 @@ List<_ProfileProofTileDataV1> _crossSessionProofTilesV1(
           : '$reinforced on later hands',
       icon: Icons.replay_circle_filled_rounded,
       tone: Act0VisualCanonV1.greenTable,
+      proofIconRole: reinforced > 0 ? Act0ProofIconRoleV1.reinforced : null,
     ),
     _ProfileProofTileDataV1(
       title: _profileCopyV1(context, en: 'Concepts'),
@@ -1293,6 +1296,7 @@ class _ProfileProofTileDataV1 {
     required this.value,
     required this.icon,
     required this.tone,
+    this.proofIconRole,
     this.valueKey,
   });
 
@@ -1300,6 +1304,7 @@ class _ProfileProofTileDataV1 {
   final String value;
   final IconData icon;
   final Color tone;
+  final Act0ProofIconRoleV1? proofIconRole;
   final Key? valueKey;
 }
 
@@ -1323,7 +1328,9 @@ class _ProfileProofTileV1 extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(tile.icon, color: tile.tone, size: 18),
+              tile.proofIconRole != null
+                  ? Act0ProofIconV1(role: tile.proofIconRole!)
+                  : Icon(tile.icon, color: tile.tone, size: 18),
               const SizedBox(width: 7),
               Expanded(
                 child: Text(
