@@ -10,6 +10,11 @@ Preserve quality by reading the right current capsule, exact touched files, and 
 
 If more context is needed, explain why and split the task.
 
+Read one route capsule plus one lane capsule, not all capsules. Direct source,
+tests, runtime truth, and active task evidence override capsule summaries.
+Implementation prompts should name capsule freshness: date, verified HEAD, and
+active route artifact.
+
 ## Budget Targets
 
 - Repo hygiene / sync checkpoint: 5k-15k tokens.
@@ -24,18 +29,24 @@ If more context is needed, explain why and split the task.
 
 1. Read `AGENTS.md`.
 2. Read `docs/context/CONTEXT_ROUTER_v1.md`.
-3. Read `docs/context/CURRENT_STATE_CAPSULE_v1.md`.
+3. Read `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`.
 4. Pick exactly one lane.
-5. Read the lane capsule.
+5. Read exactly one relevant lane capsule.
 6. Search before reading touched files.
+
+Tiny single-file or single-command tasks may skip capsules when route context
+cannot affect the answer.
 
 ## Broad-Read Prohibition
 
 - Do not broad-read repo history to feel safe.
 - Do not open old W1-W6 review artifacts unless verifying one exact fact.
 - Do not scan screenshots or `output/` folders unless the lane requires visual evidence.
+- Visual tasks may read screenshot artifacts only when visual evidence is needed.
 - Do not read W7-W12 files unless the lane is W7-W12 admission planning or a bug report names them.
 - Do not read archive docs unless the user explicitly asks for historical retrieval.
+- Do not paste whole historical artifacts into new artifacts; link or name the
+  source instead.
 
 ## Search-Before-Read Rule
 
@@ -48,7 +59,7 @@ If more context is needed, explain why and split the task.
 
 - Read ledgers by targeted `rg` first.
 - Open the full ledger only when the task is ledger editing or score-policy work.
-- For W1-W6 frozen truth, prefer `docs/context/CURRENT_STATE_CAPSULE_v1.md`.
+- For active route truth, prefer `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`.
 - For top-1 current route, grep the latest active section before reading the whole plan.
 
 ## Artifact Size Guidelines

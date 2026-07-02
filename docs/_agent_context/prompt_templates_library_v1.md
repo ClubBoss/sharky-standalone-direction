@@ -18,6 +18,22 @@ Status: advisory prompt templates, not SSOT.
   successful push. Keep product or high-risk code waves as separate gates.
 - State generated-output policy explicitly in every template.
 
+## Capsule Header Template
+
+Use this compact header for Sharky tasks where route context matters:
+
+```text
+Read AGENTS.md + docs/context/CONTEXT_ROUTER_v1.md +
+docs/context/ACTIVE_ROUTE_CAPSULE_v1.md + <one lane capsule> +
+SSOT sections <Y> + owner files <Z> only.
+
+Capsule freshness: date <YYYY-MM-DD>, verified HEAD <hash>, route artifact
+<path>. Capsules summarize context and never outrank Master Plan, Current
+Execution Context, Project Rules, Workflow Protocol, active task evidence, or
+live source/tests/runtime truth. Stop with stale_capsule_scope if route-critical
+facts are older than the active task evidence. Do not broad-read the repo.
+```
+
 ## 1. Docs/process local-only
 
 ```text

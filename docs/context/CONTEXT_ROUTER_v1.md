@@ -1,258 +1,106 @@
 # Context Router v1
 
-Status: ACTIVE first-read router for future Sharky Codex/Claude work.
+Status: ACTIVE first-read router for Sharky Codex, Sonnet, and Fable work.
 
-Use this before broad-reading docs. Pick one lane. Read the capsule for that lane, exact touched files, and required validators. Do not preserve quality by reading everything.
+Purpose: route agents to the smallest current capsule set. Do not broad-read
+repo history to feel safe.
 
-## Global Rules
-- Always start with `AGENTS.md` and `docs/context/CURRENT_STATE_CAPSULE_v1.md`.
-- Search before reading: use `rg` to locate exact claims, files, validators, and seams.
-- Prefer capsules and latest checkpoint artifacts over old wave history.
-- Read ledgers with targeted grep unless the lane explicitly requires a table row.
-- Do not inspect screenshots or `output/` folders unless the lane is visual regression.
-- Do not open W7-W12 unless the lane is W7-W12 admission planning.
-- If broader context would exceed the lane budget, stop with `needs_scope_split` and name the exact reason.
+## Authority And Conflict Rule
 
-## Lane: repo_hygiene
-Read first:
-- `docs/context/REPO_HYGIENE_CAPSULE_v1.md`
-- `docs/_reviews/repo_integration_mainline_sync_checkpoint_v1.md`
+Capsules summarize and route context only. They never outrank:
 
-Read only if needed:
-- `AGENTS.md` remote/root rules
+1. `docs/plan/MASTER_PLAN_v3.0.md`
+2. Current Execution Context, when supplied by the task
+3. Project Rules / repo instructions, including `AGENTS.md`
+4. Workflow Protocol / active prompt contract
+5. active task evidence
+6. live source, tests, and runtime truth
 
-Do not read:
-- W1-W6 review history
-- content fixtures
-- product runtime files
-- screenshots or `output/` contents
+If a capsule conflicts with a higher authority, use the higher authority and
+report the conflict. Do not silently reconcile stale capsule truth.
 
-Allowed actions:
-- inspect git status/log/branch/remote
-- create compact checkpoint artifact
-- merge or fast-forward only when clean and explicit
-- push only by normal non-force push when checks pass
+## Default Read Order
 
-Forbidden actions:
-- product edits
-- output staging
-- force push
-- conflict resolution without reporting
+1. `AGENTS.md`
+2. `docs/context/CONTEXT_ROUTER_v1.md`
+3. `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`
+4. exactly one relevant lane capsule
+5. task-specific SSOT sections
+6. owner files / active evidence found by search
 
-Validation expectation:
-- `git status --short --branch`; `git log --oneline --decorate -n 20`; `git diff --check`; `git diff --cached --check`; `graphify hook-check`.
+Tiny single-file or single-command tasks may skip capsules when route context
+cannot affect the answer.
 
-Token budget target: 5k-15k.
+## Active Capsule Architecture
 
-## Lane: durable_repair
-Read first:
-- `docs/context/DURABLE_REPAIR_CAPSULE_v1.md`
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
+| Capsule | Use for | Agents |
+| --- | --- | --- |
+| `ACTIVE_ROUTE_CAPSULE_v1.md` | current pre-Human TOP1 route, immediate task, next 2-3 steps, forbidden scope | all |
+| `VISUAL_PROOF_CAPSULE_v1.md` | visual system, proof/progression display, screenshot lanes, design acceptance | Fable, Sonnet, Codex |
+| `LEARNING_REPAIR_CAPSULE_v1.md` | learning loop, repair contracts, proof claims, telemetry ownership | Codex, Sonnet |
+| `WORKTREE_EVIDENCE_CAPSULE_v1.md` | branch/HEAD checks, output rules, validation, generated drift | Codex |
+| `REPO_HYGIENE_CAPSULE_v1.md` | mainline sync, branch hygiene, checkpoint tasks | Codex |
+| `HUMAN_QA_CAPSULE_v1.md` | human evidence protocol and claim safety | Codex, Sonnet |
 
-Read only if needed:
-- exact files found by `rg "repair_focus_id|user_choice|error_type|time_to_decision|session summary|mistake tracking"`
-- targeted `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` hits around repair proof
-- relevant existing tests for touched seams
+`TOKEN_BUDGET_PROTOCOL_v1.md` remains the workflow budget rule. The prompt
+templates library remains supporting reference only.
 
-Do not read:
-- old W1-W6 certification artifacts
-- W7-W12 content
-- screenshot folders
+## Agent Mapping
 
-Allowed actions:
-- plan or implement deterministic repair-memory slices if explicitly admitted
-- add focused tests/validators for repair memory
-- document claim limits
+- Codex: read route capsule + one lane capsule + worktree/evidence capsule.
+- Sonnet: read route capsule + relevant lane capsule.
+- Fable / Claude Design: read route capsule + visual/proof capsule.
 
-Forbidden actions:
-- ML/AI chat/persona
-- solver/GTO claims
-- W1-W6 content rework
-- W7-W12 opening
-- UI redesign
+Do not ask any agent to read all capsules by default.
 
-Validation expectation:
-- focused unit/guard tests for touched repair seams; `flutter analyze` if Dart changes; `graphify hook-check`; diff/ASCII/whitespace checks.
+## Task To Capsule Mapping
 
-Token budget target: decision 10k-25k; implementation 30k-80k.
+| Task shape | Required capsule |
+| --- | --- |
+| route choice, next wave, scope boundary | `ACTIVE_ROUTE_CAPSULE_v1.md` |
+| UI polish, visual audit, design packet, screenshot review | `VISUAL_PROOF_CAPSULE_v1.md` |
+| Session Summary proof, Review repair, Practice repair, learning claims | `LEARNING_REPAIR_CAPSULE_v1.md` |
+| commit, preflight, validation, generated drift, output handling | `WORKTREE_EVIDENCE_CAPSULE_v1.md` |
+| mainline merge, push, repo integration checkpoint | `REPO_HYGIENE_CAPSULE_v1.md` |
+| novice evidence, launch/9.0/learning-effect claims | `HUMAN_QA_CAPSULE_v1.md` |
+| content/correctness wave | route capsule + exact content SSOT/owner files |
+| motion wave | visual/proof capsule + exact motion owner/evidence files |
+| telemetry wave | learning/repair capsule + exact telemetry owner files |
 
-## Lane: human_qa
-Read first:
-- `docs/context/HUMAN_QA_CAPSULE_v1.md`
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
+## Freshness Rule
 
-Read only if needed:
-- W1 Human QA protocol artifact
-- exact W1-W6 fixture/test evidence referenced by the QA plan
-- current ledger rows for W1-W6 using targeted grep
+Every implementation prompt should name capsule freshness: date, verified HEAD,
+and active route artifact. A capsule is stale when its verified HEAD, route
+artifact, or immediate task is older than the active prompt evidence.
 
-Do not read:
-- W7-W12 route files
-- product UI unless the QA protocol executes against it
-- old certification history beyond exact evidence references
+Stop with `stale_capsule_scope` when route-critical facts are stale and the
+task depends on them. For narrow implementation tasks, continue from live source
+and note the stale capsule as a non-blocking context risk.
 
-Allowed actions:
-- design or execute honest Human QA protocol when participants exist
-- collect confusion, time-to-decision, and error-type evidence
-- update readiness only from real evidence
+## Search Before Reading
 
-Forbidden actions:
-- fake Human QA
-- synthetic participant claims
-- 9.0 or launch claims before real evidence
+Use `rg` before opening files. Search for exact route ids, widget keys,
+validator names, fixture ids, copy strings, field names, or artifact titles.
+Open the smallest useful file slice. Prefer exact owner files over broad
+ledgers or historical review chains.
 
-Validation expectation:
-- evidence log integrity; participant/session traceability; claim-safety review; docs diff checks.
+## Do Not Read By Default
 
-Token budget target: planning 8k-20k; execution synthesis 20k-50k.
+- `output/**`, unless visual evidence is the task
+- archive docs, unless historical retrieval is requested
+- old wave histories, unless one exact fact must be verified
+- W13-W36, unless the prompt explicitly opens that scope
+- Modern Table files, unless a concrete dependency is proven
+- all capsules, all ledgers, or all reviews
 
-## Lane: w1_w6_regression_only
-Read first:
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
-- latest failing test, validator, or bug report
+## Validation Routing
 
-Read only if needed:
-- exact source/fixture/test named by the regression
-- current W1-W6 ledger row via targeted grep
-- latest accepted review artifact for the failing family
+- Docs/workflow: graphify hook, diff checks, status.
+- Product code: focused tests, analyzer, graphify hook, diff checks.
+- UI: focused tests plus screenshot evidence when making visual claims.
+- Motion: motion evidence, screenshot/video packet, focused checks.
+- Content: content validators and claim-safety checks.
+- Telemetry: owner tests plus claim-safety review.
 
-Do not read:
-- broad W1-W6 history
-- unrelated worlds
-- W7-W12
-
-Allowed actions:
-- fix a concrete regression
-- add or update focused regression tests
-- document any claim impact
-
-Forbidden actions:
-- new W1-W6 content families
-- score increases
-- Human QA or launch claims
-- broad migration
-
-Validation expectation:
-- reproduce failure when possible; focused test/validator proving fix; `flutter analyze` if source changed; graphify/diff checks.
-
-Token budget target: 10k-40k.
-
-## Lane: w7_w12_admission_planning
-Read first:
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
-- targeted W7-W12 lock lines in `docs/plan/TOP1_LONG_HORIZON_100_PERCENT_ROUTE_v1.md`
-
-Read only if needed:
-- W7-W10 route-lock guard tests
-- exact route files named by the planning prompt
-- topology map sections on active route boundaries
-
-Do not read:
-- W1-W6 certification history except current freeze facts
-- W13-W36
-- output screenshots
-
-Allowed actions:
-- docs-only admission plan
-- route-lock audit
-- blocker map
-
-Forbidden actions:
-- route/runtime opening
-- source authoring
-- fixture creation unless a later implementation wave explicitly admits it
-
-Validation expectation:
-- graphify/diff checks; route-lock guard only if touched or explicitly required.
-
-Token budget target: 10k-35k.
-
-## Lane: market_competitor_review
-Read first:
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
-- targeted `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` sections
-
-Read only if needed:
-- current public competitor evidence, with browsing if latest claims matter
-- existing top-1 review artifacts named by the prompt
-
-Do not read:
-- fixture files
-- validators
-- W1-W6 artifacts unless the review names exact evidence
-
-Allowed actions:
-- compact strategic audit
-- recommendation matrix
-- claim-safety notes
-
-Forbidden actions:
-- product edits
-- copied competitor assets/layouts
-- monetization activation
-
-Validation expectation:
-- source links for current external claims; docs diff checks if artifact created.
-
-Token budget target: Claude text audit 2k-6k; Codex strategy artifact 10k-25k.
-
-## Lane: visual_regression_only
-Read first:
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
-- exact visual bug report or screenshot packet named by prompt
-
-Read only if needed:
-- current Act0 route files touched by the visual issue
-- screenshot manifest named by prompt
-- focused Playwright/simulator scripts
-
-Do not read:
-- old screenshot folders
-- W1-W6 review history
-- content fixtures
-
-Allowed actions:
-- inspect targeted screenshots
-- run focused screenshot/regression checks
-- patch exact visual regression if admitted
-
-Forbidden actions:
-- design iteration from screenshots alone
-- Modern Table redesign
-- broad UI refresh
-
-Validation expectation:
-- targeted screenshot or UI test evidence; `flutter analyze` if Dart changed; diff checks.
-
-Token budget target: audit 5k-20k; focused fix 20k-50k.
-
-## Lane: emergency_bugfix
-Read first:
-- `AGENTS.md`
-- `docs/context/CURRENT_STATE_CAPSULE_v1.md`
-- failing command, stack trace, or exact bug report
-
-Read only if needed:
-- exact source files in stack trace
-- nearest focused tests
-- topology map only if route ownership is unclear
-
-Do not read:
-- planning ledgers unless claim/scope changes
-- old review artifacts
-- screenshot folders unless the bug is visual
-
-Allowed actions:
-- minimal fix for the concrete bug
-- regression test
-- concise repair artifact if the bug affects readiness claims
-
-Forbidden actions:
-- opportunistic refactors
-- adjacent feature work
-- score movement without explicit evidence
-
-Validation expectation:
-- reproduce or characterize bug; focused test/command proving fix; `flutter analyze` for Dart changes; graphify/diff checks.
-
-Token budget target: 10k-40k.
+If required context exceeds the lane budget, stop with `needs_scope_split` and
+name the exact missing evidence or authority.

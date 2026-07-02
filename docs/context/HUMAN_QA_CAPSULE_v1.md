@@ -2,6 +2,10 @@
 
 Status: ACTIVE future evidence-gate capsule. Human QA is not currently executed.
 
+Route pointer: current pre-Human route state lives in
+`docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`. This file owns human-specific
+protocol and claim-safety guidance only; it does not duplicate route truth.
+
 ## Current State
 
 - Human QA has not been executed.
@@ -9,6 +13,8 @@ Status: ACTIVE future evidence-gate capsule. Human QA is not currently executed.
 - W1-W6 have technical source/fixture/validator support, not learner-outcome proof.
 - Do not claim 9.0, launch readiness, beginner mastery, or durable learning before Human QA.
 - Participant requirements can be deferred until a Human QA execution wave is explicitly admitted.
+- Human QA is the final external gate after static proof, motion, E2E, final
+  10/10 audit, and regression closeout.
 
 ## When To Use This Capsule
 
