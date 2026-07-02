@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
@@ -54,11 +53,10 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = Act0ShellTokensV1.isTabletWidth(context);
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final localeIsRu = _isRuLocaleV1(context);
-    final nextMistake = review.mistakes.isEmpty ? null : review.mistakes.first;
-    final isClean = nextMistake == null;
+    final missCount = review.mistakes.length;
+    final showBenchExplainer = missCount <= 1;
     final recovered = <Act0MistakeCardV1>[
       ...review.fixedMistakes.where(
         (mistake) => mistake.severityLabel != 'Quick fix',
@@ -67,19 +65,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
         (mistake) => mistake.severityLabel == 'Quick fix',
       ),
     ];
-    final leftColumn = <Widget>[
-      _ReviewBoardV1(
-        review: review,
-        nextMistake: null,
-        hasMistakeHistory: mistakeHistoryItems.isNotEmpty,
-        onFixMistake: onFixMistake,
-      ),
-      if (mistakeHistoryItems.isNotEmpty) ...[
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        _MistakeHistoryListV1(items: mistakeHistoryItems.take(3).toList()),
-      ],
-    ];
-    final activeRepairColumn = <Widget>[
+    final queueCard = <Widget>[
       if (sessionDrillRecheckQueueItems.isNotEmpty &&
           onStartSessionDrillRecheck != null) ...[
         _SessionDrillRecheckQueueCardV1(
@@ -88,20 +74,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
-      if (!isClean) ...[
-        _ReviewRepairCoachCardV1(
-          mistake: review.mistakes.first,
-          onFixMistake: onFixMistake,
-        ),
-      ],
     ];
-    final historyColumn = <Widget>[
+    final historyAndRecovered = <Widget>[
       if (mistakeHistoryItems.isNotEmpty) ...[
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         _MistakeHistoryListV1(items: mistakeHistoryItems.take(3).toList()),
       ],
-    ];
-    final recoveredColumn = <Widget>[
       if (recovered.isNotEmpty) ...[
         const SizedBox(height: Act0ShellTokensV1.gapLg),
         Text(
@@ -165,79 +143,209 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ],
       ],
     ];
-    final rightColumn = <Widget>[...activeRepairColumn, ...recoveredColumn];
-    return ListView(
-      key: const Key('act0_shell_review_screen'),
-      padding: EdgeInsets.fromLTRB(
-        pagePadding,
-        Act0ShellTokensV1.gapLg,
-        pagePadding,
-        Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
-      ),
-      children: [
-        Act0ShellScreenHeaderV1(
-          title: _reviewCopyV1(context, fallback: 'Review'),
-          subtitle: isClean
-              ? _reviewCopyV1(
-                  context,
-                  fallback: 'Review notes and what to revisit.',
-                )
-              : _reviewCopyV1(
-                  context,
-                  en: 'One miss to fix.',
-                  ru: 'Один промах для исправления.',
-                ),
-          eyebrow: _reviewHeaderEyebrowV1(
-            localeIsRu: localeIsRu,
-            hasActiveRepair: !isClean,
-          ),
-          eyebrowTone: review.mistakes.isEmpty
-              ? Act0ShellTokensV1.primary
-              : Act0ShellTokensV1.gold,
+
+    final header = <Widget>[
+      const _ReviewTodayBarV1(),
+      const SizedBox(height: Act0ShellTokensV1.gapMd),
+      _ReviewCompactHeaderV1(missCount: missCount),
+      const SizedBox(height: Act0ShellTokensV1.gapMd),
+    ];
+
+    if (!showBenchExplainer) {
+      return ListView(
+        key: const Key('act0_shell_review_screen'),
+        padding: EdgeInsets.fromLTRB(
+          pagePadding,
+          Act0ShellTokensV1.gapLg,
+          pagePadding,
+          Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapLg),
-        Act0ShellTokensV1.centeredContent(
-          context,
-          tabletMaxWidth: 1080,
-          child: isTablet && isClean
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: leftColumn,
-                      ),
-                    ),
-                    const SizedBox(width: Act0ShellTokensV1.gapLg),
-                    Expanded(
-                      flex: 5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: rightColumn,
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (isClean) ...[
-                      ...leftColumn,
-                      if (rightColumn.isNotEmpty) ...[
-                        const SizedBox(height: Act0ShellTokensV1.gapLg),
-                        ...rightColumn,
-                      ],
-                    ] else ...[
-                      ...activeRepairColumn,
-                      ...historyColumn,
-                      ...recoveredColumn,
+        children: [
+          ...header,
+          Act0ShellTokensV1.centeredContent(
+            context,
+            tabletMaxWidth: 720,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...queueCard,
+                for (final mistake in review.mistakes) ...[
+                  _ReviewRepairCoachCardV1(
+                    mistake: mistake,
+                    onFixMistake: onFixMistake,
+                  ),
+                  if (mistake != review.mistakes.last)
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                ],
+                ...historyAndRecovered,
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    final activeMistake = review.mistakes.isEmpty
+        ? null
+        : review.mistakes.first;
+    final hasPassiveNotes =
+        mistakeHistoryItems.isNotEmpty || recovered.isNotEmpty;
+    final benchBody = <Widget>[
+      ...queueCard,
+      if (activeMistake == null && queueCard.isEmpty && !hasPassiveNotes)
+        const _ReviewEmptyRepairCardV1()
+      else if (activeMistake != null)
+        _ReviewRepairCoachCardV1(
+          mistake: activeMistake,
+          onFixMistake: onFixMistake,
+        ),
+      const SizedBox(height: Act0ShellTokensV1.gapMd),
+      _ReviewHowItWorksStripV1(mistake: activeMistake),
+      ...historyAndRecovered,
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final fixedLayout = constraints.maxHeight >= 760;
+        final content = Padding(
+          padding: EdgeInsets.fromLTRB(
+            pagePadding,
+            Act0ShellTokensV1.gapLg,
+            pagePadding,
+            fixedLayout ? Act0ShellTokensV1.gapLg : Act0ShellTokensV1.gapXl,
+          ),
+          child: Act0ShellTokensV1.centeredContent(
+            context,
+            tabletMaxWidth: 720,
+            child: fixedLayout
+                ? Column(
+                    key: const Key('act0_shell_review_screen'),
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ...header,
+                      ...benchBody,
+                      const Spacer(),
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      const _ReviewBenchFooterV1(),
                     ],
-                  ],
-                ),
+                  )
+                : Column(
+                    key: const Key('act0_shell_review_screen'),
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ...header,
+                      ...benchBody,
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      const _ReviewBenchFooterV1(),
+                    ],
+                  ),
+          ),
+        );
+        if (fixedLayout) {
+          return content;
+        }
+        return SingleChildScrollView(child: content);
+      },
+    );
+  }
+}
+
+class _ReviewTodayBarV1 extends StatelessWidget {
+  const _ReviewTodayBarV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('act0_shell_review_today_bar'),
+      children: [
+        Text(
+          'Today',
+          style: Act0ShellTokensV1.label.copyWith(
+            color: Act0ShellTokensV1.textMuted,
+            fontSize: 12,
+            letterSpacing: 0.4,
+          ),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: Act0ShellTokensV1.border.withOpacity(0.58),
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _ReviewCompactHeaderV1 extends StatelessWidget {
+  const _ReviewCompactHeaderV1({required this.missCount});
+
+  final int missCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      key: const Key('act0_shell_review_compact_header'),
+      height: 48,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Review',
+              style: Act0ShellTokensV1.screenTitle.copyWith(
+                fontSize: 25,
+                fontWeight: FontWeight.w700,
+                height: 1.08,
+              ),
+            ),
+          ),
+          if (missCount > 0) _ReviewMissCountPillV1(missCount: missCount),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewMissCountPillV1 extends StatelessWidget {
+  const _ReviewMissCountPillV1({required this.missCount});
+
+  final int missCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_review_miss_count_pill'),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: Act0ShellTokensV1.gold.withOpacity(0.45)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '●',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontSize: 12,
+              letterSpacing: 0,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            '$missCount ${missCount == 1 ? 'miss' : 'misses'} to fix',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontSize: 12,
+              letterSpacing: 0,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -313,6 +421,50 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
   }
 }
 
+class _ReviewEmptyRepairCardV1 extends StatelessWidget {
+  const _ReviewEmptyRepairCardV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_review_empty_repair_card'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.64),
+        borderColor: Act0ShellTokensV1.primary.withOpacity(0.20),
+        glow: false,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            ),
+            child: const Icon(
+              Icons.check_circle_rounded,
+              color: Act0VisualCanonV1.greenTable,
+              size: 19,
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: Text(
+              'Nothing to fix right now.',
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.text,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ReviewRepairCoachCardV1 extends StatelessWidget {
   const _ReviewRepairCoachCardV1({required this.mistake, this.onFixMistake});
 
@@ -339,127 +491,289 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
         borderColor: Act0ShellTokensV1.primary.withOpacity(0.22),
         glow: false,
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-            ),
-            child: const Icon(
-              Icons.bookmark_outline_rounded,
-              color: Act0ShellTokensV1.primary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Practice this clue next',
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusMd,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.bookmark_outline_rounded,
+                  color: Act0ShellTokensV1.primary,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Text(
+                  'PRACTICE THIS CLUE NEXT',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  clueLine,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                if (patternFocus.isNotEmpty) ...[
-                  const SizedBox(height: Act0ShellTokensV1.gapSm),
-                  Container(
-                    key: const Key('act0_shell_review_pattern_coaching'),
-                    padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
-                    decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusMd,
-                      ),
-                      border: Border.all(
-                        color: Act0ShellTokensV1.primary.withOpacity(0.18),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Pattern to practice',
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.primary,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapXs),
-                        Text(
-                          'You are working on $patternFocus.',
-                          key: const Key(
-                            'act0_shell_review_pattern_focus_line',
-                          ),
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: Act0ShellTokensV1.gapXs),
-                        Text(
-                          'Next rep: spot the clue before choosing.',
-                          style: Act0ShellTokensV1.muted.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(actionLine, style: Act0ShellTokensV1.muted),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  'Keep this clue in view before your next hand.',
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textDim,
-                  ),
-                ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                Text(
-                  act0SharkyCoachLineForMomentV1(
-                    Act0SharkyCoachMomentV1.reviewActiveRepair,
-                  ),
-                  key: const Key('act0_shell_review_sharky_coach_line'),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.gold,
                     fontSize: 11,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.3,
                   ),
                 ),
-                if (onFixMistake != null) ...[
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
-                  FilledButton(
-                    key: const Key('act0_shell_review_practice_cta'),
-                    onPressed: () => onFixMistake!(mistake),
-                    style: Act0ShellTokensV1.primaryButtonStyle(
-                      height: Act0ShellTokensV1.compactCtaHeight,
+              ),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Text(
+            clueLine,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          if (patternFocus.isNotEmpty) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Container(
+              key: const Key('act0_shell_review_pattern_coaching'),
+              padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+                border: Border.all(
+                  color: Act0ShellTokensV1.primary.withOpacity(0.18),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pattern to practice',
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.primary,
+                      fontWeight: FontWeight.w900,
                     ),
-                    child: const Text('Practice this spot'),
+                  ),
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                  Text(
+                    'You are working on $patternFocus.',
+                    key: const Key('act0_shell_review_pattern_focus_line'),
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: Act0ShellTokensV1.gapXs),
+                  Text(
+                    'Next rep: spot the clue before choosing.',
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                    ),
                   ),
                 ],
-              ],
+              ),
+            ),
+          ],
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(actionLine, style: Act0ShellTokensV1.muted),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            'Keep this clue in view before your next hand.',
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textDim,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            act0SharkyCoachLineForMomentV1(
+              Act0SharkyCoachMomentV1.reviewActiveRepair,
+            ),
+            key: const Key('act0_shell_review_sharky_coach_line'),
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0,
+            ),
+          ),
+          if (onFixMistake != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            FilledButton(
+              key: const Key('act0_shell_review_practice_cta'),
+              onPressed: () => onFixMistake!(mistake),
+              style: Act0ShellTokensV1.primaryButtonStyle(
+                height: Act0ShellTokensV1.compactCtaHeight,
+              ),
+              child: const Text('Practice this spot'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewHowItWorksStripV1 extends StatelessWidget {
+  const _ReviewHowItWorksStripV1({required this.mistake});
+
+  final Act0MistakeCardV1? mistake;
+
+  @override
+  Widget build(BuildContext context) {
+    final missText = mistake == null
+        ? 'miss lands here'
+        : _reviewMissSlotLabelV1(mistake!);
+    return Column(
+      key: const Key('act0_shell_review_how_it_works_strip'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'HOW REVIEW WORKS',
+          style: Act0ShellTokensV1.label.copyWith(
+            color: Act0ShellTokensV1.text.withOpacity(0.50),
+            fontSize: 11,
+            letterSpacing: 1.3,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapSm),
+        Row(
+          children: [
+            Expanded(
+              child: _ReviewBenchSlotV1(
+                label: 'MISS',
+                value: missText,
+                filled: mistake != null,
+              ),
+            ),
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            const Expanded(
+              child: _ReviewBenchSlotV1(
+                label: 'REPAIR',
+                value: 'one clean rep',
+                filled: false,
+              ),
+            ),
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            const Expanded(
+              child: _ReviewBenchSlotV1(
+                label: 'PROOF',
+                value: 'banked read',
+                filled: false,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewBenchSlotV1 extends StatelessWidget {
+  const _ReviewBenchSlotV1({
+    required this.label,
+    required this.value,
+    required this.filled,
+  });
+
+  final String label;
+  final String value;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 60),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+      decoration: BoxDecoration(
+        color: filled
+            ? Act0ShellTokensV1.surface2.withOpacity(0.72)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: filled
+              ? Act0ShellTokensV1.primary.withOpacity(0.35)
+              : Act0ShellTokensV1.text.withOpacity(0.14),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: filled
+                  ? Act0ShellTokensV1.text
+                  : Act0ShellTokensV1.text.withOpacity(0.55),
+              fontSize: 11,
+              letterSpacing: 0.8,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: filled
+                  ? Act0ShellTokensV1.textMuted
+                  : Act0ShellTokensV1.text.withOpacity(0.48),
+              fontSize: 12,
+              height: 1.12,
             ),
           ),
         ],
       ),
     );
   }
+}
+
+class _ReviewBenchFooterV1 extends StatelessWidget {
+  const _ReviewBenchFooterV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('act0_shell_review_bench_footer'),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.check_circle_rounded,
+          color: Act0VisualCanonV1.greenTable,
+          size: 17,
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapXs),
+        Flexible(
+          child: Text(
+            'Nothing else is due. Misses land here the moment they happen.',
+            textAlign: TextAlign.center,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.text.withOpacity(0.55),
+              fontSize: 13,
+              height: 1.18,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+String _reviewMissSlotLabelV1(Act0MistakeCardV1 mistake) {
+  final title = mistake.title.trim();
+  if (title.isEmpty) {
+    return 'current clue';
+  }
+  final normalized = title
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+      .replaceAll(RegExp(r'^-+|-+$'), '');
+  if (normalized.isEmpty) {
+    return title;
+  }
+  return '$normalized clue';
 }
 
 String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {
@@ -503,244 +817,6 @@ String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {
     return override;
   }
   return title;
-}
-
-String _reviewHeaderEyebrowV1({
-  required bool localeIsRu,
-  required bool hasActiveRepair,
-}) {
-  return hasActiveRepair
-      ? (localeIsRu ? 'Активный разбор' : 'Active repair')
-      : (localeIsRu ? 'Обзор' : 'Review');
-}
-
-class _ReviewBoardV1 extends StatelessWidget {
-  const _ReviewBoardV1({
-    required this.review,
-    required this.nextMistake,
-    required this.hasMistakeHistory,
-    this.onFixMistake,
-  });
-
-  final Act0ReviewStateV1 review;
-  final Act0MistakeCardV1? nextMistake;
-  final bool hasMistakeHistory;
-  final ValueChanged<Act0MistakeCardV1>? onFixMistake;
-
-  @override
-  Widget build(BuildContext context) {
-    final hasRepair = nextMistake != null;
-    final hasRecovered = review.fixedMistakes.isNotEmpty;
-    final isEmpty = !hasRepair && !hasRecovered && !hasMistakeHistory;
-    final tone = hasRepair ? Act0ShellTokensV1.gold : Act0ShellTokensV1.primary;
-    final title = isEmpty
-        ? _reviewCopyV1(context, fallback: 'Review notes')
-        : hasRepair
-        ? _reviewCopyV1(
-            context,
-            atomId: 'review_board_title_fix',
-            fallback: 'One reread',
-          )
-        : _reviewCopyV1(
-            context,
-            atomId: 'review_board_title_clean',
-            fallback: 'Clean board',
-          );
-    final headline = isEmpty
-        ? _reviewCopyV1(context, fallback: 'No misses saved yet')
-        : hasRepair
-        ? nextMistake!.title
-        : hasMistakeHistory
-        ? _reviewCopyV1(context, fallback: 'Past spots to review')
-        : _reviewCopyV1(
-            context,
-            atomId: 'review_board_headline_clean',
-            fallback: 'Board is clean',
-          );
-    final body = isEmpty
-        ? _reviewCopyV1(
-            context,
-            fallback:
-                'Useful misses will appear here after a hand is worth repeating.',
-          )
-        : hasRepair
-        ? nextMistake!.reason
-        : hasMistakeHistory
-        ? _reviewCopyV1(
-            context,
-            fallback: 'Read-only notes from completed hands.',
-          )
-        : _reviewCopyV1(
-            context,
-            atomId: 'review_board_body_clean',
-            fallback:
-                'No active repair right now. Useful replay notes stay below.',
-          );
-    final support = hasRepair
-        ? (nextMistake!.repairActionLabel.trim().isNotEmpty
-              ? nextMistake!.repairActionLabel
-              : _reviewCopyV1(
-                  context,
-                  fallback:
-                      'Stabilize this spot first. Then come back for the next check.',
-                ))
-        : hasMistakeHistory
-        ? _reviewCopyV1(
-            context,
-            fallback:
-                'Active repairs stay separate. These notes do not change progress.',
-          )
-        : _reviewCopyV1(
-            context,
-            en: isEmpty
-                ? 'Review stays quiet until completed hands create something useful to revisit.'
-                : 'That repair work stuck. Keep the next read light.',
-            ru: 'Этот ремонт закрепился. Держи следующее чтение лёгким.',
-          );
-
-    return Container(
-      key: const Key('act0_shell_review_board'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            tone.withOpacity(0.16),
-            Act0ShellTokensV1.surface,
-            Act0ShellTokensV1.surface2,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
-        border: Border.all(color: tone.withOpacity(0.30)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: tone.withOpacity(0.12),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: tone.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
-                  ),
-                  border: Border.all(color: tone.withOpacity(0.28)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      hasRepair
-                          ? Icons.priority_high_rounded
-                          : Icons.verified_rounded,
-                      size: 14,
-                      color: tone,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      title,
-                      key: const Key('act0_shell_review_board_title'),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: tone,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              if (hasRepair)
-                Text(
-                  nextMistake!.weaknessLabel,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
-            headline,
-            key: const Key('act0_shell_review_board_headline'),
-            style: Act0ShellTokensV1.screenTitle.copyWith(fontSize: 26),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            body,
-            key: const Key('act0_shell_review_board_body'),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          Container(
-            key: const Key('act0_shell_review_board_support_line'),
-            padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-            decoration: BoxDecoration(
-              color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
-              border: Border.all(color: Act0ShellTokensV1.border),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  hasRepair ? Icons.route_rounded : Icons.support_agent_rounded,
-                  size: 18,
-                  color: tone,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Expanded(
-                  child: Text(
-                    support,
-                    key: hasRepair
-                        ? const Key('act0_shell_review_board_support_text')
-                        : const Key('act0_shell_review_clean_sharky_line'),
-                    maxLines: 4,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: hasRepair
-                          ? Act0ShellTokensV1.text
-                          : Act0ShellTokensV1.textMuted,
-                      fontWeight: hasRepair ? FontWeight.w800 : FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (hasRepair && onFixMistake != null) ...<Widget>[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            OutlinedButton.icon(
-              key: const Key('act0_shell_review_board_fix_cta'),
-              onPressed: () => onFixMistake!(nextMistake!),
-              style: Act0ShellTokensV1.quietButtonStyle(),
-              icon: const Icon(Icons.build_rounded, size: 18),
-              label: Text(
-                _reviewCopyV1(
-                  context,
-                  en: 'Repair this clue',
-                  ru: 'Разобрать эту подсказку',
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 }
 
 class _MistakeHistoryListV1 extends StatelessWidget {
