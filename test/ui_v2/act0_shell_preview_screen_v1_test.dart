@@ -31830,11 +31830,12 @@ void main() {
       await tester.pumpAndSettle();
 
       final decoded = await persistedProgressMapFromPrefsV1();
-      expect(decoded['schemaVersion'], 11);
+      expect(decoded['schemaVersion'], 13);
       expect(decoded['retentionSequence'], 0);
       expect(decoded['retentionMemory'], isEmpty);
       expect(decoded['learningEvidenceHistory'], isEmpty);
       expect(decoded['reviewMistakeHistory'], isEmpty);
+      expect(decoded['conceptFamilyStateHistory'], isEmpty);
       expect(
         decoded['selectedWorldId'],
         Act0ShellStateV1.sample.selectedWorldId,
@@ -31885,6 +31886,43 @@ void main() {
     expect(history.single['skillAtomId'], 'action_read');
   });
 
+  testWidgets('Persisted concept family state history round-trips', (
+    tester,
+  ) async {
+    final snapshot =
+        minimalPersistedProgressMapV1(
+            schemaVersion: 13,
+            completedTaskIds: <String>['actions_terms_intro'],
+          )
+          ..['selectedTaskId'] = 'actions_check_drill'
+          ..['conceptFamilyStateHistory'] = <Map<String, Object?>>[
+            <String, Object?>{
+              'schemaVersion': 1,
+              'conceptFamilyId': 'no_bet_yet',
+              'worldId': 'world_1',
+              'lastSeenAt': 1,
+              'missCount': 1,
+              'repairAttemptCount': 0,
+              'successfulRepairCount': 0,
+              'lastOutcome': 'missed',
+              'lastTaskId': 'actions_raise_drill',
+            },
+          ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'act0_shell_progress_v1': jsonEncode(snapshot),
+    });
+
+    await pumpTall(tester, host());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+
+    final decoded = await persistedProgressMapFromPrefsV1();
+    final history = decoded['conceptFamilyStateHistory'] as List<dynamic>;
+    expect(history, hasLength(1));
+    expect(history.single['conceptFamilyId'], 'no_bet_yet');
+    expect(history.single['lastOutcome'], 'missed');
+  });
+
   testWidgets(
     'Incorrect completed decisions persist unresolved mistake history',
     (tester) async {
@@ -31904,6 +31942,12 @@ void main() {
       expect(history.single['sourceTaskId'], isNotEmpty);
       expect(history.single['runKind'], 'lesson');
       expect(decoded['openRepairIntents'], hasLength(1));
+      final conceptFamilies =
+          decoded['conceptFamilyStateHistory'] as List<dynamic>;
+      expect(conceptFamilies, hasLength(1));
+      expect(conceptFamilies.single['conceptFamilyId'], 'no_bet_yet');
+      expect(conceptFamilies.single['missCount'], 1);
+      expect(conceptFamilies.single['lastOutcome'], 'missed');
     },
   );
 

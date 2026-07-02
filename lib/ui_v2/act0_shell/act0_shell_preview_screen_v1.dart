@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
@@ -704,6 +705,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       const Act0LearningEvidenceHistoryV1();
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
+  Act0ConceptFamilyStateHistoryV1 _conceptFamilyStateHistoryV1 =
+      const Act0ConceptFamilyStateHistoryV1();
   Act0EvidenceRunKeyV1? _activeLearningEvidenceRunKeyV1;
   int _learningEvidenceRunOrdinalV1 = 0;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
@@ -879,6 +882,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Map<String, Object?>> debugRepairOutcomeProjectionPayloadV1() {
     return List<Map<String, Object?>>.unmodifiable(
       _repairOutcomeProjectionV1.toPayload(),
+    );
+  }
+
+  @visibleForTesting
+  List<Map<String, Object?>> debugConceptFamilyStatePayloadV1() {
+    return List<Map<String, Object?>>.unmodifiable(
+      _conceptFamilyStateHistoryV1.toPayload(),
     );
   }
 
@@ -2500,6 +2510,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       ],
     );
+    _conceptFamilyStateHistoryV1 =
+        Act0ConceptFamilyStateHistoryV1.fromLearningEvidence(
+          _learningEvidenceHistoryV1,
+        );
     _blockCompletionSummary = const Act0BlockCompletionSummaryV1(
       lessonTitle: 'Fold, check, call, raise',
       xpEarned: 20,
@@ -2600,6 +2614,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       ],
     );
+    _conceptFamilyStateHistoryV1 =
+        Act0ConceptFamilyStateHistoryV1.fromLearningEvidence(
+          _learningEvidenceHistoryV1,
+        );
   }
 
   bool _handleLearnLessonSelectV1({
@@ -2765,6 +2783,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _reviewMistakeHistoryV1 = parsed.reviewMistakeHistory;
+      _conceptFamilyStateHistoryV1 = parsed.conceptFamilyStateHistory;
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
@@ -2996,6 +3015,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       reviewMistakeHistory: _reviewMistakeHistoryV1,
+      conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
       lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
@@ -3025,6 +3045,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       runKind: _activeLearningEvidenceRunKeyV1?.runKind ?? '',
       runOrdinal: _activeLearningEvidenceRunKeyV1?.runOrdinal,
     );
+    final latestRecord = _learningEvidenceHistoryV1.records
+        .cast<Act0LearningEvidenceRecordV1?>()
+        .lastWhere(
+          (record) => record?.recordId == decision.attemptKey,
+          orElse: () => null,
+        );
+    if (latestRecord != null) {
+      _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
+          .appendLearningEvidence(latestRecord);
+    }
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {
@@ -3084,6 +3114,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _rapidPracticeLoop = false;
       _activeLearningEvidenceRunKeyV1 = null;
       _learningEvidenceRunOrdinalV1 = 0;
+      _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
+      _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
+      _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
+      _repairOutcomeProjectionV1 = const Act0RepairOutcomeProjectionV1();
+      _repairOutcomeSequenceV1 = 0;
       _retentionSequence = 0;
       _retentionMemoryByTaskId.clear();
       _activePracticeGroupId = null;
@@ -8257,6 +8292,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       isCorrect: option.isCorrect,
       sequence: _repairOutcomeSequenceV1,
     );
+    if (_repairOutcomeProjectionV1.outcomes.isNotEmpty) {
+      _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
+          .appendRepairOutcome(
+            _repairOutcomeProjectionV1.outcomes.last,
+            sourceOrder:
+                _learningEvidenceHistoryV1.records.length +
+                _repairOutcomeSequenceV1,
+          );
+    }
     _lastSessionLearnerStateV1 = Act0LastSessionLearnerStateV1(
       lastSessionRepairFocusId: request.repairFocusKey.trim().isNotEmpty
           ? request.repairFocusKey.trim()
@@ -10996,6 +11040,7 @@ class _Act0PersistedProgressV1 {
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
+    this.conceptFamilyStateHistory = const Act0ConceptFamilyStateHistoryV1(),
     this.lastSessionLearnerState,
   });
 
@@ -11023,6 +11068,7 @@ class _Act0PersistedProgressV1 {
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
+  final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
   final Act0LastSessionLearnerStateV1? lastSessionLearnerState;
 
   String toStorageString() {
@@ -11036,7 +11082,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 12,
+      'schemaVersion': 13,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -11072,6 +11118,7 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
+      'conceptFamilyStateHistory': conceptFamilyStateHistory.toPayload(),
       if (lastSessionLearnerState != null)
         'lastSessionLearnerState': lastSessionLearnerState!.toJson(),
       if (firstValueReturnCarry != null)
@@ -11093,7 +11140,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v12 as the shell snapshot evolves.
+    // Accept v1-v13 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -11105,7 +11152,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 9 &&
         schemaVersion != 10 &&
         schemaVersion != 11 &&
-        schemaVersion != 12) {
+        schemaVersion != 12 &&
+        schemaVersion != 13) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -11163,6 +11211,9 @@ class _Act0PersistedProgressV1 {
     final reviewMistakeHistory =
         Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
         const Act0ReviewMistakeHistoryV1();
+    final conceptFamilyStateHistory = Act0ConceptFamilyStateHistoryV1.tryParse(
+      map['conceptFamilyStateHistory'],
+    );
     final lastSessionLearnerState = Act0LastSessionLearnerStateV1.tryParse(
       map['lastSessionLearnerState'],
     );
@@ -11198,6 +11249,7 @@ class _Act0PersistedProgressV1 {
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
       reviewMistakeHistory: reviewMistakeHistory,
+      conceptFamilyStateHistory: conceptFamilyStateHistory,
       lastSessionLearnerState: lastSessionLearnerState,
     );
   }
