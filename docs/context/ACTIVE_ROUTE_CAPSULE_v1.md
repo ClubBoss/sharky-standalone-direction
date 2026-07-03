@@ -2,7 +2,14 @@
 
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
-Verified product HEAD: pending commit (this task's own commit advances it).
+Verified branch state: `codex/apply-owner-patch-sequence-a-b-c-d-v1` contains
+accepted branch HEAD `b8c1d41a2e671d18d3446701081b547954ae8222` plus this
+capsule-truth repair commit; `origin/main` remains
+`05bd3fa4da7360d45e6cbf6f72e5804c3a840e40`. This route state is branch-only
+until a later explicit integration/push; do not treat it as already merged to
+main.
+Current active task: `Sharky Character Final Direction Lock`; final character
+direction is not locked, and Sharky Micro-Animations v1 remains BLOCKED.
 Verified active route artifact: `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
