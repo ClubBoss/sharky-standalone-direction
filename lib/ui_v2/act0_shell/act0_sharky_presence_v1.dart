@@ -64,6 +64,7 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
     this.tone = Act0ShellTokensV1.primary,
     this.badgeLabel,
     this.compact = false,
+    this.growthStage = Act0SharkyGrowthStageV1.foundation,
   });
 
   final String eyebrow;
@@ -73,6 +74,11 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
   final Color tone;
   final String? badgeLabel;
   final bool compact;
+
+  /// Sharky's persistent growth stage. Defaults to
+  /// [Act0SharkyGrowthStageV1.foundation] so every existing caller renders
+  /// byte-identically unless it explicitly passes structured stage truth.
+  final Act0SharkyGrowthStageV1 growthStage;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +118,7 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
                           tone: tone,
                           size: mascotSize,
                           animated: true,
+                          growthStage: growthStage,
                         ),
                         const SizedBox(width: Act0ShellTokensV1.gapMd),
                         Expanded(child: content),
@@ -233,6 +240,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
     this.mascotSize = 64,
     this.bubblePadding,
     this.ringed = false,
+    this.growthStage = Act0SharkyGrowthStageV1.foundation,
   });
 
   final String line;
@@ -247,6 +255,11 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
   /// (`improve`, `milestone`). Defaults to false so every existing caller
   /// renders byte-identically.
   final bool ringed;
+
+  /// Sharky's persistent growth stage. Defaults to
+  /// [Act0SharkyGrowthStageV1.foundation] so every existing caller renders
+  /// byte-identically unless it explicitly passes structured stage truth.
+  final Act0SharkyGrowthStageV1 growthStage;
 
   @override
   Widget build(BuildContext context) {
@@ -263,6 +276,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
           animated: true,
           simpleFrame: true,
           ringed: ringed,
+          growthStage: growthStage,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -416,6 +430,7 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
     this.animated = false,
     this.simpleFrame = false,
     this.ringed = false,
+    this.growthStage = Act0SharkyGrowthStageV1.foundation,
   });
 
   final Act0SharkyMoodV1 mood;
@@ -428,6 +443,13 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
   /// (`improve`, `milestone`). Defaults to false so every existing caller
   /// renders byte-identically.
   final bool ringed;
+
+  /// Sharky's persistent growth stage. Defaults to
+  /// [Act0SharkyGrowthStageV1.foundation] so every existing caller renders
+  /// byte-identically unless it explicitly passes structured stage truth.
+  final Act0SharkyGrowthStageV1 growthStage;
+
+  bool get _isDeveloping => growthStage == Act0SharkyGrowthStageV1.developing;
 
   @override
   Widget build(BuildContext context) {
@@ -456,11 +478,14 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
         ),
         border: simpleFrame
             ? null
-            : Border.all(color: tone.withValues(alpha: 0.22)),
+            : Border.all(
+                color: tone.withValues(alpha: _isDeveloping ? 0.30 : 0.22),
+                width: _isDeveloping ? 1.3 : 1.0,
+              ),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: tone.withValues(alpha: 0.18),
-            blurRadius: size * 0.28,
+            color: tone.withValues(alpha: _isDeveloping ? 0.25 : 0.18),
+            blurRadius: size * (_isDeveloping ? 0.34 : 0.28),
             offset: Offset(0, size * 0.08),
           ),
         ],
@@ -468,31 +493,65 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
       padding: EdgeInsets.all(size * 0.08),
       child: mascot,
     );
-    if (!ringed) {
-      return frame;
-    }
-    final ringBox = size + 8;
-    return SizedBox(
-      key: const Key('act0_shell_sharky_mascot_frame_accent_ring'),
-      width: ringBox,
-      height: ringBox,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: ringBox,
-            height: ringBox,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                ringBox * Act0ShellTokensV1.sharkyTileRadiusRatio,
+
+    Widget layered = frame;
+    var effectiveSize = size;
+    if (ringed) {
+      final ringBox = effectiveSize + 8;
+      layered = SizedBox(
+        key: const Key('act0_shell_sharky_mascot_frame_accent_ring'),
+        width: ringBox,
+        height: ringBox,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: ringBox,
+              height: ringBox,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  ringBox * Act0ShellTokensV1.sharkyTileRadiusRatio,
+                ),
+                border: Border.all(
+                  color: tone.withValues(alpha: 0.3),
+                  width: 1,
+                ),
               ),
-              border: Border.all(color: tone.withValues(alpha: 0.3), width: 1),
             ),
-          ),
-          frame,
-        ],
-      ),
-    );
+            layered,
+          ],
+        ),
+      );
+      effectiveSize = ringBox;
+    }
+    if (_isDeveloping) {
+      final growthBox = effectiveSize + 6;
+      layered = SizedBox(
+        key: const Key('act0_shell_sharky_mascot_frame_growth_ring'),
+        width: growthBox,
+        height: growthBox,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: growthBox,
+              height: growthBox,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  growthBox * Act0ShellTokensV1.sharkyTileRadiusRatio,
+                ),
+                border: Border.all(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
+                  width: 1,
+                ),
+              ),
+            ),
+            layered,
+          ],
+        ),
+      );
+    }
+    return layered;
   }
 }
 
@@ -508,11 +567,17 @@ class Act0SharkyCompanionAvatarV1 extends StatelessWidget {
     required this.state,
     this.size = 64,
     this.simpleFrame = false,
+    this.growthStage = Act0SharkyGrowthStageV1.foundation,
   });
 
   final Act0SharkyCompanionStateV1 state;
   final double size;
   final bool simpleFrame;
+
+  /// Sharky's persistent growth stage — a separate axis from [state].
+  /// Consumers pass structured stage truth (see
+  /// `act0SharkyGrowthStageForWorldNumberV1`), never a style token.
+  final Act0SharkyGrowthStageV1 growthStage;
 
   @override
   Widget build(BuildContext context) {
@@ -527,6 +592,7 @@ class Act0SharkyCompanionAvatarV1 extends StatelessWidget {
         animated: true,
         simpleFrame: simpleFrame,
         ringed: act0SharkyCompanionStateHasAccentRingV1(state),
+        growthStage: growthStage,
       ),
     );
   }

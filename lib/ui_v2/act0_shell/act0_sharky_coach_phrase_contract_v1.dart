@@ -265,6 +265,38 @@ Act0SharkyCoachTierV1 act0SharkyCoachTierForWorldNumberV1(int worldNumber) {
   return Act0SharkyCoachTierV1.foundation;
 }
 
+/// Sharky's long-term visual growth stage. Exactly two stages, both derived
+/// only from accepted tier truth (the same W4->W5 boundary already encoded
+/// in [act0SharkyCoachTierForWorldNumberV1]) — never from proof count,
+/// companion state, completion events, or improvement observations alone.
+/// This is a separate axis from [Act0SharkyCompanionStateV1]: growth stage
+/// is persistent presence; companion state is the current learning moment.
+enum Act0SharkyGrowthStageV1 { foundation, developing }
+
+/// Converts an existing phrase tier into the matching growth stage. A
+/// missing/unknown tier falls back to [Act0SharkyGrowthStageV1.foundation].
+Act0SharkyGrowthStageV1 act0SharkyGrowthStageForTierV1(
+  Act0SharkyCoachTierV1? tier,
+) {
+  return switch (tier ?? Act0SharkyCoachTierV1.foundation) {
+    Act0SharkyCoachTierV1.foundation => Act0SharkyGrowthStageV1.foundation,
+    Act0SharkyCoachTierV1.developing => Act0SharkyGrowthStageV1.developing,
+  };
+}
+
+/// Convenience wrapper matching [act0SharkyCoachTierForWorldNumberV1]
+/// exactly, so growth stage and phrase tier can never disagree about which
+/// world number crosses the W4->W5 boundary. W13+ resolves the same
+/// `developing` stage as W5-W12 — no new stage is introduced for later
+/// worlds.
+Act0SharkyGrowthStageV1 act0SharkyGrowthStageForWorldNumberV1(
+  int worldNumber,
+) {
+  return act0SharkyGrowthStageForTierV1(
+    act0SharkyCoachTierForWorldNumberV1(worldNumber),
+  );
+}
+
 Act0SharkyCoachPhraseV1 act0ResolveSharkyCoachPhraseV1(
   Act0SharkyCoachPhraseContextV1 context,
 ) {

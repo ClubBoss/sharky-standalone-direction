@@ -5882,6 +5882,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final sessionSummaryCompanionRinged = act0SharkyCompanionStateHasAccentRingV1(
       sessionSummaryCompanionState,
     );
+    final sessionSummaryGrowthStage = act0SharkyGrowthStageForWorldNumberV1(
+      summary.worldNumber,
+    );
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5937,6 +5940,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   line: summarySharkyLine,
                   mood: sessionSummaryCompanionMood,
                   ringed: sessionSummaryCompanionRinged,
+                  growthStage: sessionSummaryGrowthStage,
                   textKey: const Key('act0_shell_block_summary_sharky_line'),
                   mascotSize: 68,
                   bubblePadding: const EdgeInsets.symmetric(
@@ -6131,6 +6135,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             line: summarySharkyLine,
                             mood: sessionSummaryCompanionMood,
                             ringed: sessionSummaryCompanionRinged,
+                            growthStage: sessionSummaryGrowthStage,
                             textKey: const Key(
                               'act0_shell_block_summary_sharky_line',
                             ),

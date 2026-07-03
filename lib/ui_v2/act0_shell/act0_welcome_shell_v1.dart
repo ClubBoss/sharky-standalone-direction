@@ -363,6 +363,7 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
             detail: detail,
             mood: mood,
             compact: true,
+            growthStage: Act0SharkyGrowthStageV1.foundation,
           ),
         ],
       ),

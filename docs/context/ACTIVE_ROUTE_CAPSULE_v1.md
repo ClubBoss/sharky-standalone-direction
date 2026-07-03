@@ -3,31 +3,45 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_completion_copy_regression_repair_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_visual_growth_evolution_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
 
-Phase 4 - Proof Progression is CLOSED. Phase 1 - Premium Visual Foundation,
-Phase 2 - Learning Truth Foundation, and Phase 3 - Repair Depth are also
-CLOSED. Phase 5 - Sharky Companion is ACTIVE. Human QA remains the last gate.
+Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
+Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
+Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
+is ACTIVE. Phase 6 does not begin until both the Companion Semantic
+Consistency Gate and the Claude Implementation Quality Gate pass. Human QA
+remains the last gate.
 
 Current active task:
 
-- `Sharky Visual Growth / Evolution v1`
+- `Companion Semantic Consistency Gate v1`
 
-## Phase 5 Sequence
+## Phase 5 Sequence (closed)
 
 1. Sharky Phrase Tier Contract - CLOSED
 2. Foundation + Developing Phrase Sets - CLOSED
 3. Sharky Saw You Improve - CLOSED
 4. Sharky Companion States - CLOSED
-5. Sharky Visual Growth / Evolution - ACTIVE
+5. Sharky Visual Growth / Evolution - CLOSED
 
-Temporary regression repair: W1 Completion Copy Regression Repair v1 is
-REPAIRED. The accepted W1 payoff identity line (`You banked the first table
-read.`) is restored through the phrase resolver. Companion State Consumer
-Follow-up remains deferred; do not activate Home migration in this route.
+Sharky Visual Growth / Evolution v1 landed a bounded two-stage
+(`foundation`/`developing`) growth-stage contract, derived only from
+existing W4->W5 tier truth, admitted into Session Summary and Welcome. Home
+companion-state migration remains deferred (unchanged ad hoc ownership); do
+not activate it in this route. W1 Completion Copy Regression Repair v1 (the
+accepted W1 payoff identity line, `You banked the first table read.`)
+remains intact and regression-tested.
+
+## Post-Phase-5 Gates
+
+- `Companion Semantic Consistency Gate` - ACTIVE (current task)
+- `Claude Implementation Quality Gate` - pending, gates Phase 6 alongside it
+
+Do not activate Phase 6 - Advanced Learning Presentation until both gates
+above pass.
 
 ## Phase 4 Sequence (closed)
 
@@ -44,7 +58,8 @@ Follow-up remains deferred; do not activate Home migration in this route.
 2. Learning Truth Foundation - CLOSED
 3. Repair Depth - CLOSED
 4. Proof Progression - CLOSED
-5. Sharky Companion - ACTIVE
+5. Sharky Companion - CLOSED (pending Companion Semantic Consistency Gate +
+   Claude Implementation Quality Gate before Phase 6 opens)
 6. Advanced Learning Presentation
 7. Content & Correctness
 8. Motion

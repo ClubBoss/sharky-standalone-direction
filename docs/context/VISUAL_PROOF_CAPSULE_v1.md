@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_completion_copy_regression_repair_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_visual_growth_evolution_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -116,8 +116,34 @@ Completion Copy Regression Repair v1 then restored the accepted W1-specific
 payoff identity line (`You banked the first table read.`) through the existing
 phrase resolver by marking the W1 completion context with `worldNumber == 1`;
 generic W2-W6 completion copy, W4->W5 band-transition copy, companion states,
-and Home's deferred state migration remain unchanged. The active task is
-`Sharky Visual Growth / Evolution v1` (Phase 5).
+and Home's deferred state migration remain unchanged. Sharky Visual Growth /
+Evolution v1 then closed Phase 5: a bounded `Act0SharkyGrowthStageV1`
+(`foundation`, `developing` — exactly two stages) is derived only from the
+existing W4->W5 tier boundary (`act0SharkyGrowthStageForWorldNumberV1`,
+built directly on `act0SharkyCoachTierForWorldNumberV1`, so growth and tier
+can never disagree). It is a strictly separate axis from
+`Act0SharkyCompanionStateV1` — proof count, companion state, and completion
+events never change growth stage; only world number does. The shared seam
+(`Act0SharkyCompanionAvatarV1`, `Act0SharkyGuideCardV1`,
+`Act0SharkyPresenceBubbleV1`) gained an additive, default-`foundation`
+`growthStage` parameter that composes a second, independent visual layer: a
+persistent `act0_shell_sharky_mascot_frame_growth_ring` (using the app's
+existing `primary` token, not a mood color) plus a marginally stronger
+border/shadow on the base frame — both structural, not color-only, signals.
+The existing `improve`/`milestone` companion-state accent ring is untouched
+and composes cleanly underneath the growth ring when both are present. Two
+consumers were admitted: Welcome (fixed `foundation`, since Welcome always
+precedes any world) and Session Summary (derived from
+`summary.worldNumber`, the same real per-completion world field already
+used for copy — covers both ordinary lesson completions and world
+completions). Profile was evaluated as a candidate third consumer (it
+already renders `Act0SharkyPresenceMascotV1` in its accepted hero card) but
+was deliberately deferred: its frame is a bespoke, frozen `Act0VisualCanonV1`
+gradient/border implementation, and giving it growth truth would require
+either forbidden consumer-specific styling logic or a risky swap onto the
+shared seam that could regress a frozen surface. No new asset, animation,
+cosmetics, rarity, XP, level, or rank was introduced. The active task is
+`Companion Semantic Consistency Gate v1`.
 
 ## Remaining Visual Route
 
@@ -197,3 +223,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/sharky_saw_you_improve_v1.md`
 - `docs/_reviews/sharky_companion_states_v1.md`
 - `docs/_reviews/w1_completion_copy_regression_repair_v1.md`
+- `docs/_reviews/sharky_visual_growth_evolution_v1.md`
