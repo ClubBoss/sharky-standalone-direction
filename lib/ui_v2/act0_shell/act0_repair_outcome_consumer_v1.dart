@@ -1,5 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 
 class Act0RepairOutcomeConsumerV1 {
   const Act0RepairOutcomeConsumerV1({this.proof, this.sessionReceipt});
@@ -13,6 +14,8 @@ class Act0RepairOutcomeConsumerV1 {
   static Act0RepairOutcomeConsumerV1 fromProjection(
     Act0RepairOutcomeProjectionV1 projection, {
     Act0FixProofProjectionV1? fixProofProjection,
+    Act0SharkyImprovementObservationProjectionV1?
+    improvementObservationProjection,
   }) {
     if (projection.outcomes.isEmpty) {
       return const Act0RepairOutcomeConsumerV1();
@@ -28,7 +31,10 @@ class Act0RepairOutcomeConsumerV1 {
     final latest = ordered.last;
     final detail = _detailForOutcomeStateV1(latest.outcomeState);
     final receipt =
-        _sessionReceiptForFixProofV1(fixProofProjection) ??
+        _sessionReceiptForFixProofV1(
+          fixProofProjection,
+          improvementObservationProjection: improvementObservationProjection,
+        ) ??
         _sessionReceiptForOutcomesV1(ordered);
     if (detail.isEmpty && receipt == null) {
       return const Act0RepairOutcomeConsumerV1();
@@ -50,18 +56,28 @@ class Act0RepairOutcomeConsumerV1 {
 }
 
 Act0RepairOutcomeSessionReceiptV1? _sessionReceiptForFixProofV1(
-  Act0FixProofProjectionV1? projection,
-) {
+  Act0FixProofProjectionV1? projection, {
+  Act0SharkyImprovementObservationProjectionV1?
+  improvementObservationProjection,
+}) {
   final aggregate = projection?.aggregate;
   final lines = aggregate?.lines ?? const <String>[];
   if (lines.isEmpty) {
     return null;
   }
+  final improvementLine =
+      improvementObservationProjection?.latestObservation?.line.trim() ?? '';
+  final receiptLines = <String>[
+    ...lines,
+    if (improvementLine.isNotEmpty && !lines.contains(improvementLine))
+      improvementLine,
+  ];
   return Act0RepairOutcomeSessionReceiptV1(
     title: "Fixes you've banked",
-    lines: lines,
+    lines: List<String>.unmodifiable(receiptLines),
     isBankedFixProof: true,
     hasReinforcedEvidence: (aggregate?.reinforcedFixCount ?? 0) > 0,
+    hasImprovementObservation: improvementLine.isNotEmpty,
   );
 }
 
@@ -85,6 +101,7 @@ class Act0RepairOutcomeSessionReceiptV1 {
     required this.lines,
     this.isBankedFixProof = false,
     this.hasReinforcedEvidence = false,
+    this.hasImprovementObservation = false,
   });
 
   final String title;
@@ -97,6 +114,10 @@ class Act0RepairOutcomeSessionReceiptV1 {
   /// True only when a banked fix in this receipt has later transfer
   /// evidence. Meaningless unless [isBankedFixProof] is true.
   final bool hasReinforcedEvidence;
+
+  /// True only when the receipt includes a read-only Sharky companion
+  /// observation derived from source-backed reinforced Fix Proof.
+  final bool hasImprovementObservation;
 }
 
 String _detailForOutcomeStateV1(String outcomeState) {

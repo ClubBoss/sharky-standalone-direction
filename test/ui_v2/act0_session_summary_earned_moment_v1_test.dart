@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 
 void main() {
   testWidgets('Session Summary renders no earned moment with empty consumer', (
@@ -702,6 +703,91 @@ void main() {
     );
   });
 
+  testWidgets(
+    'Session Summary shows Sharky improvement observation in receipt',
+    (tester) async {
+      var continued = false;
+      final repairOutcomes = _repairOutcomeProjection(
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+      );
+      final fixProof = Act0FixProofProjectionV1.fromSources(
+        repairOutcomeProjection: repairOutcomes,
+        reviewResolutionReceiptHistory:
+            const Act0ReviewResolutionReceiptHistoryV1(
+              receipts: <Act0ReviewResolutionReceiptV1>[
+                Act0ReviewResolutionReceiptV1(
+                  reviewItemId: 'review_queue_item',
+                  conceptFamilyId: 'no_bet_yet',
+                  sourceTaskId: 'actions_legal_context',
+                  sourceSessionId: 'session_1',
+                  reviewState: act0ReviewResolutionStateResolvedV1,
+                  resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                  repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+                  resolvedAtOrder: 1,
+                ),
+              ],
+            ),
+        transferMeasurement:
+            Act0LearningTransferMeasurementV1.fromLearningEvidence(
+              Act0LearningEvidenceHistoryV1(
+                records: <Act0LearningEvidenceRecordV1>[
+                  _learningRecord(
+                    order: 0,
+                    taskId: 'actions_legal_context',
+                    sessionId: 'session_1',
+                  ),
+                  _learningRecord(
+                    order: 3,
+                    taskId: 'actions_check_drill',
+                    sessionId: 'session_2',
+                    isCorrect: true,
+                    resultKind: 'correct',
+                    errorType: 'none',
+                  ),
+                ],
+              ),
+            ),
+      );
+      final observation =
+          Act0SharkyImprovementObservationProjectionV1.fromFixProof(
+            fixProof,
+            completedSessionId: 'session_2',
+          );
+
+      await _pumpSummary(
+        tester,
+        consumer: const Act0AchievementSeedConsumerV1(),
+        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+          repairOutcomes,
+          fixProofProjection: fixProof,
+          improvementObservationProjection: observation,
+        ),
+        onContinue: () => continued = true,
+        errorCount: 0,
+        correctCount: 2,
+      );
+
+      expect(
+        find.text(
+          'You missed this clue before. On a later hand, you caught it.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+        findsOneWidget,
+      );
+      final cta = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
+      await tester.ensureVisible(cta);
+      await tester.pumpAndSettle();
+      await tester.tap(cta);
+      await tester.pump();
+      expect(continued, isTrue);
+    },
+  );
+
   testWidgets('Session Summary shows Practice CTA for safe mapper target', (
     tester,
   ) async {
@@ -1027,6 +1113,33 @@ Act0AchievementSeedV1 _seed(
     earnedSequence: sequence,
     sourceSummary: const <String, Object?>{},
     eligibilityState: state,
+  );
+}
+
+Act0LearningEvidenceRecordV1 _learningRecord({
+  required int order,
+  required String taskId,
+  required String sessionId,
+  bool isCorrect = false,
+  String resultKind = 'incorrect',
+  String errorType = 'missed_action_read',
+}) {
+  return Act0LearningEvidenceRecordV1(
+    recordId: 'record_$order',
+    createdOrder: order,
+    worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    taskId: taskId,
+    choiceId: isCorrect ? 'check' : 'fold',
+    expectedChoiceId: 'check',
+    isCorrect: isCorrect,
+    errorType: errorType,
+    conceptFamilyId: 'no_bet_yet',
+    repairFocusId: 'no_bet_yet',
+    skillAtomId: 'action_read',
+    decisionTimeBucket: '3_to_10s',
+    resultKind: resultKind,
+    sessionId: sessionId,
   );
 }
 

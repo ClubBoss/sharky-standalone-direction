@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_proje
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 
 void main() {
   test('empty projection produces no local proof', () {
@@ -126,20 +127,21 @@ void main() {
     );
     final fixProof = Act0FixProofProjectionV1.fromSources(
       repairOutcomeProjection: repairOutcomes,
-      reviewResolutionReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(
-        receipts: <Act0ReviewResolutionReceiptV1>[
-          Act0ReviewResolutionReceiptV1(
-            reviewItemId: 'review_queue_item',
-            conceptFamilyId: 'no_bet_yet',
-            sourceTaskId: 'actions_legal_context',
-            sourceSessionId: 'session_1',
-            reviewState: act0ReviewResolutionStateResolvedV1,
-            resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
-            repairOutcomeId: 'repair_outcome_v1|2|queue_item',
-            resolvedAtOrder: 2,
+      reviewResolutionReceiptHistory:
+          const Act0ReviewResolutionReceiptHistoryV1(
+            receipts: <Act0ReviewResolutionReceiptV1>[
+              Act0ReviewResolutionReceiptV1(
+                reviewItemId: 'review_queue_item',
+                conceptFamilyId: 'no_bet_yet',
+                sourceTaskId: 'actions_legal_context',
+                sourceSessionId: 'session_1',
+                reviewState: act0ReviewResolutionStateResolvedV1,
+                resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                repairOutcomeId: 'repair_outcome_v1|2|queue_item',
+                resolvedAtOrder: 2,
+              ),
+            ],
           ),
-        ],
-      ),
     );
 
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
@@ -150,6 +152,49 @@ void main() {
     expect(consumer.sessionReceipt?.isBankedFixProof, isTrue);
     expect(consumer.sessionReceipt?.hasReinforcedEvidence, isFalse);
   });
+
+  test(
+    'eligible Sharky improvement observation enriches banked receipt once',
+    () {
+      final repairOutcomes = _projection(
+        isCorrect: true,
+        selectedChoiceId: 'check',
+        sequence: 2,
+      );
+      final fixProof = _reinforcedFixProof();
+      final observation =
+          Act0SharkyImprovementObservationProjectionV1.fromFixProof(
+            fixProof,
+            completedSessionId: 'session_later',
+          );
+
+      final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+        repairOutcomes,
+        fixProofProjection: fixProof,
+        improvementObservationProjection: observation,
+      );
+
+      expect(consumer.sessionReceipt?.title, "Fixes you've banked");
+      expect(
+        consumer.sessionReceipt?.lines,
+        contains(
+          'You missed this clue before. On a later hand, you caught it.',
+        ),
+      );
+      expect(
+        consumer.sessionReceipt?.lines
+            .where(
+              (line) =>
+                  line ==
+                  'You missed this clue before. On a later hand, you caught it.',
+            )
+            .length,
+        1,
+      );
+      expect(consumer.sessionReceipt?.hasReinforcedEvidence, isTrue);
+      expect(consumer.sessionReceipt?.hasImprovementObservation, isTrue);
+    },
+  );
 
   test('activity-only fallback receipt is not flagged as banked fix proof', () {
     final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
@@ -320,10 +365,34 @@ void main() {
     ).readAsStringSync();
 
     expect(source, contains('act0_repair_outcome_projection_v1.dart'));
+    expect(source, contains('act0_sharky_improvement_observation_v1.dart'));
     expect(source, isNot(contains('act0_practice_repair_queue')));
     expect(source, isNot(contains('act0_review_mistake_history')));
     expect(source, isNot(contains('telemetry')));
   });
+}
+
+Act0FixProofProjectionV1 _reinforcedFixProof() {
+  return const Act0FixProofProjectionV1(
+    proofs: <Act0FixProofItemV1>[
+      Act0FixProofItemV1(
+        fixProofId: 'fix_proof_v1|queue_item',
+        queueItemId: 'queue_item',
+        conceptFamilyId: 'no_bet_yet',
+        repairFocusId: 'no_bet_yet',
+        sourceTaskId: 'actions_legal_context',
+        repairSessionId: 'session_repair',
+        repairOutcomeRef: 'repair_outcome_v1|2|queue_item',
+        proofState: act0FixProofStateReinforcedByLaterEvidenceV1,
+        laterEvidenceSessionId: 'session_later',
+        laterEvidenceTaskId: 'actions_check_drill',
+        laterEvidenceOrder: 5,
+        transferVerdict: 'improved_v1',
+        bankedAtOrder: 2,
+        messageKey: 'fix_proof_reinforced_v1',
+      ),
+    ],
+  );
 }
 
 Act0RepairOutcomeProjectionV1 _projection({

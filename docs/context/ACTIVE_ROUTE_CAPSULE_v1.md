@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/foundation_developing_phrase_sets_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -14,14 +14,14 @@ CLOSED. Phase 5 - Sharky Companion is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Sharky Saw You Improve v1`
+- `Sharky Companion States v1`
 
 ## Phase 5 Sequence
 
 1. Sharky Phrase Tier Contract - CLOSED
 2. Foundation + Developing Phrase Sets - CLOSED
-3. Sharky Saw You Improve - ACTIVE
-4. Sharky Companion States
+3. Sharky Saw You Improve - CLOSED
+4. Sharky Companion States - ACTIVE
 5. Sharky Visual Growth / Evolution
 
 ## Phase 4 Sequence (closed)

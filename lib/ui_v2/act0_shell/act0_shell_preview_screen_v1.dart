@@ -41,6 +41,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -3104,6 +3105,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  Act0SharkyImprovementObservationProjectionV1
+  _sharkyImprovementObservationProjectionV1() {
+    return Act0SharkyImprovementObservationProjectionV1.fromFixProof(
+      _fixProofProjectionV1(),
+      completedSessionId:
+          _sessionIdentityStateV1.currentOrLatestSession?.sessionId ?? '',
+    );
+  }
+
   void _syncOpenRepairIntentIndexFromQueueV1() {
     _openRepairIntentBySourceTaskId
       ..clear()
@@ -4327,6 +4337,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _repairOutcomeProjectionV1,
                                       fixProofProjection:
                                           _fixProofProjectionV1(),
+                                      improvementObservationProjection:
+                                          _sharkyImprovementObservationProjectionV1(),
                                     ),
                                 onLaunchPracticeRepairQueueTarget: (target) =>
                                     setState(() {

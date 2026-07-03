@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/foundation_developing_phrase_sets_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -48,6 +48,12 @@ reason it is not an improvement claim.
   Developing wording may connect action, table state, position, price, and
   signal-action links without adding mastery, AI, solver, fixed-forever, or
   W13+ claims.
+- Sharky Saw You Improve v1 derives a companion observation only from
+  reinforced Fix Proof: successful resolved repair plus later same-family
+  improved transfer on a different task and different session, with later
+  evidence order after the repair. The only admitted consumer is the existing
+  Session Summary banked-fix receipt; no new persistence, telemetry, Review or
+  Profile expansion, mastery claim, or broad history UI exists.
 
 ## Constraints
 
@@ -124,6 +130,7 @@ Likely owner areas:
 - `docs/_reviews/cross_session_proof_profile_v1.md`
 - `docs/_reviews/sharky_phrase_tier_contract_v1.md`
 - `docs/_reviews/foundation_developing_phrase_sets_v1.md`
+- `docs/_reviews/sharky_saw_you_improve_v1.md`
 
 ## Claim Language
 

@@ -146,8 +146,40 @@ void main() {
     );
 
     expect(missing.line, Act0SharkyCoachPhraseV1.neutralFallbackLine);
-    expect(backed.line, 'You handled the same clue on a later hand.');
+    expect(
+      backed.line,
+      'You missed this clue before. On a later hand, you caught it.',
+    );
   });
+
+  test(
+    'developing later-improvement phrase stays structural and claim-safe',
+    () {
+      final phrase = act0ResolveSharkyCoachPhraseV1(
+        const Act0SharkyCoachPhraseContextV1(
+          surface: Act0SharkyCoachSurfaceV1.summary,
+          momentType: Act0SharkyCoachMomentTypeV1.laterImprovementObserved,
+          tier: Act0SharkyCoachTierV1.developing,
+          evidenceKind: Act0SharkyCoachEvidenceKindV1.transferEvidence,
+          transferState: Act0SharkyCoachTransferStateV1.laterCorrect,
+        ),
+      );
+
+      expect(
+        phrase.line,
+        'You connected this signal correctly on a later hand.',
+      );
+      expect(
+        phrase.claimBoundary,
+        Act0SharkyCoachClaimBoundaryV1.conservativeTransfer,
+      );
+      expect(phrase.line.toLowerCase(), isNot(contains('master')));
+      expect(phrase.line.toLowerCase(), isNot(contains('fixed forever')));
+      expect(phrase.line.toLowerCase(), isNot(contains('weakest')));
+      expect(phrase.line, isNot(contains('%')));
+      expect(phrase.line, isNot(contains('AI')));
+    },
+  );
 
   test('pattern phrase requires multi-session evidence', () {
     final missing = act0ResolveSharkyCoachPhraseV1(

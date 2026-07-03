@@ -266,8 +266,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'You handled the same clue on a later hand.'
-            : 'Later hand, cleaner signal-to-action link.',
+            ? 'You missed this clue before. On a later hand, you caught it.'
+            : 'You connected this signal correctly on a later hand.',
         family: Act0SharkyCoachPhraseFamilyV1.reflect,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.conservativeTransfer,

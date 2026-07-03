@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/foundation_developing_phrase_sets_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -84,9 +84,12 @@ support lines, and Session Summary earned-moment proof line. Foundation copy
 names one concrete table clue or local proof; Developing copy can connect
 action, table state, position, price, and signal-action links while staying
 claim-safe. Widgets no longer own the migrated English phrase text, and W13+
-still falls back to the proven Developing tier. No new visual state, pose,
-asset, motion, animation, chat, AI copy, or personality engine exists. The
-active task is `Sharky Saw You Improve v1` (Phase 5).
+still falls back to the proven Developing tier. Sharky Saw You Improve v1 then
+added a source-backed later-improvement observation derived only from
+reinforced Fix Proof and admitted it into the existing Session Summary
+banked-fix receipt. It adds no new card, route, visual state, pose, asset,
+motion, animation, chat, AI copy, telemetry, or personality engine. The active
+task is `Sharky Companion States v1` (Phase 5).
 
 ## Remaining Visual Route
 
@@ -163,3 +166,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/w4_w5_band_transition_milestone_v1.md`
 - `docs/_reviews/sharky_phrase_tier_contract_v1.md`
 - `docs/_reviews/foundation_developing_phrase_sets_v1.md`
+- `docs/_reviews/sharky_saw_you_improve_v1.md`

@@ -150,6 +150,7 @@ class Act0FixProofItemV1 {
     required this.proofState,
     this.laterEvidenceSessionId = '',
     this.laterEvidenceTaskId = '',
+    this.laterEvidenceOrder,
     this.transferVerdict = '',
     required this.bankedAtOrder,
     required this.messageKey,
@@ -166,6 +167,7 @@ class Act0FixProofItemV1 {
   final String proofState;
   final String laterEvidenceSessionId;
   final String laterEvidenceTaskId;
+  final int? laterEvidenceOrder;
   final String transferVerdict;
   final int bankedAtOrder;
   final String messageKey;
@@ -194,6 +196,7 @@ class Act0FixProofItemV1 {
       'laterEvidenceSessionId': laterEvidenceSessionId,
     if (laterEvidenceTaskId.isNotEmpty)
       'laterEvidenceTaskId': laterEvidenceTaskId,
+    if (laterEvidenceOrder != null) 'laterEvidenceOrder': laterEvidenceOrder,
     if (transferVerdict.isNotEmpty) 'transferVerdict': transferVerdict,
     'bankedAtOrder': bankedAtOrder,
     'messageKey': messageKey,
@@ -237,6 +240,7 @@ class Act0FixProofItemV1 {
       laterEvidenceSessionId:
           map['laterEvidenceSessionId']?.toString().trim() ?? '',
       laterEvidenceTaskId: map['laterEvidenceTaskId']?.toString().trim() ?? '',
+      laterEvidenceOrder: _nonNegativeInt(map['laterEvidenceOrder']),
       transferVerdict: map['transferVerdict']?.toString().trim() ?? '',
       bankedAtOrder: bankedAtOrder,
       messageKey: messageKey,
@@ -327,6 +331,7 @@ Act0FixProofItemV1 _reinforcedIfEligible(
       proofState: act0FixProofStateReinforcedByLaterEvidenceV1,
       laterEvidenceSessionId: signal.comparisonSessionId.trim(),
       laterEvidenceTaskId: signal.comparisonTaskId.trim(),
+      laterEvidenceOrder: signal.comparisonOrder,
       transferVerdict: signal.verdict,
       bankedAtOrder: proof.bankedAtOrder,
       messageKey: _messageReinforcedV1,

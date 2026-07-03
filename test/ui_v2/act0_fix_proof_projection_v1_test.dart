@@ -143,6 +143,7 @@ void main() {
       act0FixProofStateReinforcedByLaterEvidenceV1,
     );
     expect(projection.proofs.single.laterEvidenceSessionId, 'session_3');
+    expect(projection.proofs.single.laterEvidenceOrder, 5);
     expect(
       projection.proofs.single.transferVerdict,
       act0LearningTransferImprovedV1,
@@ -357,6 +358,7 @@ void main() {
     });
 
     expect(parsed.proofs, hasLength(1));
+    expect(parsed.proofs.single.laterEvidenceOrder, isNull);
     expect(parsed.aggregate.completedFixCount, 1);
   });
 
