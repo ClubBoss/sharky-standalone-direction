@@ -223,6 +223,21 @@ void main() {
     expect(complete.line, 'World complete with a real table read.');
   });
 
+  test('W1 completion payoff keeps its distinct accepted copy', () {
+    expect(
+      act0SharkyCoachLineForMomentV1(
+        Act0SharkyCoachMomentV1.worldOneCompletionPayoff,
+      ),
+      'You banked the first table read.',
+    );
+    expect(
+      act0SharkyCoachLineForMomentV1(
+        Act0SharkyCoachMomentV1.worldCompletionPayoff,
+      ),
+      'World complete with a real table read.',
+    );
+  });
+
   test('band transition phrase is only W4 to W5', () {
     final wrongBoundary = act0ResolveSharkyCoachPhraseV1(
       const Act0SharkyCoachPhraseContextV1(

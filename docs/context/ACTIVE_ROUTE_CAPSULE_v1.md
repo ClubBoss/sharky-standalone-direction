@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_companion_states_v1.md`.
+Verified active route artifact: `docs/_reviews/w1_completion_copy_regression_repair_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -23,6 +23,11 @@ Current active task:
 3. Sharky Saw You Improve - CLOSED
 4. Sharky Companion States - CLOSED
 5. Sharky Visual Growth / Evolution - ACTIVE
+
+Temporary regression repair: W1 Completion Copy Regression Repair v1 is
+REPAIRED. The accepted W1 payoff identity line (`You banked the first table
+read.`) is restored through the phrase resolver. Companion State Consumer
+Follow-up remains deferred; do not activate Home migration in this route.
 
 ## Phase 4 Sequence (closed)
 

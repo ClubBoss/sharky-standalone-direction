@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_companion_states_v1.md`.
+Verified active route artifact: `docs/_reviews/w1_completion_copy_regression_repair_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -111,8 +111,13 @@ moods). Home's identity-row mood was deliberately deferred: it is threaded
 through ~9 ad hoc `preSessionMood:` literals inside the large
 `act0_shell_preview_screen_v1.dart` preview-screen file, and migrating it
 safely was out of this bounded wave's scope. No new screen, route, asset,
-animation, growth/evolution, or mood/rank/XP semantics were added. The active
-task is `Sharky Visual Growth / Evolution v1` (Phase 5).
+animation, growth/evolution, or mood/rank/XP semantics were added. W1
+Completion Copy Regression Repair v1 then restored the accepted W1-specific
+payoff identity line (`You banked the first table read.`) through the existing
+phrase resolver by marking the W1 completion context with `worldNumber == 1`;
+generic W2-W6 completion copy, W4->W5 band-transition copy, companion states,
+and Home's deferred state migration remain unchanged. The active task is
+`Sharky Visual Growth / Evolution v1` (Phase 5).
 
 ## Remaining Visual Route
 
@@ -191,3 +196,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/foundation_developing_phrase_sets_v1.md`
 - `docs/_reviews/sharky_saw_you_improve_v1.md`
 - `docs/_reviews/sharky_companion_states_v1.md`
+- `docs/_reviews/w1_completion_copy_regression_repair_v1.md`

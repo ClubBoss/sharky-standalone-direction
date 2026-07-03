@@ -154,7 +154,14 @@ class Act0SharkyCoachPhraseV1 {
 /// - [confirm]: successful repair or source-backed completed proof.
 /// - [improve]: a valid Sharky-Saw-You-Improve later-transfer observation.
 /// - [milestone]: real world/band completion only.
-enum Act0SharkyCompanionStateV1 { neutral, coach, repair, confirm, improve, milestone }
+enum Act0SharkyCompanionStateV1 {
+  neutral,
+  coach,
+  repair,
+  confirm,
+  improve,
+  milestone,
+}
 
 /// Pure, deterministic companion-state resolver. Uses the exact same
 /// structured [Act0SharkyCoachPhraseContextV1] fields the phrase resolver
@@ -178,17 +185,20 @@ Act0SharkyCompanionStateV1 act0ResolveSharkyCompanionStateV1(
           ? Act0SharkyCompanionStateV1.repair
           : Act0SharkyCompanionStateV1.neutral;
     case Act0SharkyCoachMomentTypeV1.repairPrompt:
-      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairTarget &&
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.repairTarget &&
               context.repairState == Act0SharkyCoachRepairStateV1.open
           ? Act0SharkyCompanionStateV1.coach
           : Act0SharkyCompanionStateV1.neutral;
     case Act0SharkyCoachMomentTypeV1.repairFailed:
-      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairOutcome &&
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.repairOutcome &&
               context.repairState == Act0SharkyCoachRepairStateV1.failed
           ? Act0SharkyCompanionStateV1.repair
           : Act0SharkyCompanionStateV1.neutral;
     case Act0SharkyCoachMomentTypeV1.repairCompleted:
-      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairOutcome &&
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.repairOutcome &&
               context.repairState == Act0SharkyCoachRepairStateV1.completed
           ? Act0SharkyCompanionStateV1.confirm
           : Act0SharkyCompanionStateV1.neutral;
@@ -219,7 +229,8 @@ Act0SharkyCompanionStateV1 act0ResolveSharkyCompanionStateV1(
           ? Act0SharkyCompanionStateV1.milestone
           : Act0SharkyCompanionStateV1.neutral;
     case Act0SharkyCoachMomentTypeV1.returnReason:
-      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairTarget &&
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.repairTarget &&
               context.repairState == Act0SharkyCoachRepairStateV1.open
           ? Act0SharkyCompanionStateV1.coach
           : Act0SharkyCompanionStateV1.neutral;
@@ -395,7 +406,9 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
         return null;
       }
       return _act0PhraseV1(
-        line: tier == Act0SharkyCoachTierV1.foundation
+        line: context.worldNumber == 1
+            ? 'You banked the first table read.'
+            : tier == Act0SharkyCoachTierV1.foundation
             ? 'World complete with a real table read.'
             : 'World complete with action, table, and price connected.',
         family: Act0SharkyCoachPhraseFamilyV1.transition,
@@ -541,6 +554,8 @@ Act0SharkyCoachPhraseContextV1 _act0LegacyMomentContextV1(
         tier: Act0SharkyCoachTierV1.foundation,
         evidenceKind: Act0SharkyCoachEvidenceKindV1.completion,
         completionState: Act0SharkyCoachCompletionStateV1.worldCompleted,
+        worldNumber: 1,
+        nextWorldNumber: 2,
       );
     case Act0SharkyCoachMomentV1.worldCompletionPayoff:
       return Act0SharkyCoachPhraseContextV1(
