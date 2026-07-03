@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/motion_direction_system_v1.md`.
+Verified active route artifact: `docs/_reviews/premium_transitions_replay_motion_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -27,11 +27,28 @@ composition/priority rules, a reduced-motion contract reusing the existing
 without implementing it, classified every candidate surface, and selected
 `World completion` + `W4->W5 band-transition milestone` (both currently
 motion-less despite being the product's highest-emphasis payoff moments) as
-the first two-surface implementation slice. Human QA remains the last gate.
+the first two-surface implementation slice. `Premium Transitions / Replay
+Motion v1` then landed that slice: a shared `_MilestoneMotionRevealV1`
+primitive (staged identity-then-details reveal, using the accepted
+`Act0MotionTokensV1` duration/easing tokens) is now used by both
+`_WorldCompletionPayoffV1` and `_BandTransitionPayoffV1` via their existing
+common `_WorldMilestoneCardV1` render path; the band transition gets a
+stronger `milestone`-token identity settle, no new asset. Reduced motion
+structurally bypasses all animated widgets (matching the existing
+`_ProofMotionRevealV1` pattern); state does not replay on rebuild; the CTA
+(owned outside this card) is unaffected and was proven tap-safe mid-motion.
+The only open item is evidence-only: no existing screenshot lane reaches an
+actual world-complete/W4-complete state, and an ad-hoc capture script hit an
+unresolved `RenderRepaintBoundary.toImage()` rendering anomaly (widget
+introspection reports the details block fully revealed; the rasterized PNG
+does not show it) that a future dedicated capture-tooling investigation
+should resolve if PNG proof of this exact state is ever required - this did
+not block landing the motion itself, which is fully verified by the widget-
+test suite. Human QA remains the last gate.
 
 Current active task:
 
-- `Premium Transitions / Replay Motion v1`
+- `Sharky Micro-Animations v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -97,7 +114,8 @@ direction doc's first implementation slice.
 ## Phase 8 Sequence (active)
 
 1. Motion Direction System - CLOSED
-2. Premium Transitions / Replay Motion v1 - ACTIVE
+2. Premium Transitions / Replay Motion v1 - CLOSED
+3. Sharky Micro-Animations v1 - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
@@ -131,9 +149,11 @@ direction doc's first implementation slice.
 - calendar-week proof reporting
 - broad outcome-history dashboard
 - achievement icons before their dedicated Phase 4 stage
-- motion implementation beyond the two-surface `Premium Transitions / Replay
-  Motion v1` slice (World completion, W4->W5 band-transition milestone) that
-  `docs/_reviews/motion_direction_system_v1.md` explicitly authorized
+- motion implementation beyond what `docs/_reviews/motion_direction_system_v1.md`
+  explicitly authorized: the `Premium Transitions / Replay Motion v1` slice
+  (World completion, W4->W5 band-transition milestone) is now CLOSED/landed;
+  navigation crossfade and Street Replay entrance motion remain explicit
+  deferrals, not open scope, until a future task names them
 - W13-W36 pre-Human expansion
 - hand import
 - advanced analytics dashboard

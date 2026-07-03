@@ -502,3 +502,36 @@ class Act0ShellTokensV1 {
     );
   }
 }
+
+/// Bounded semantic motion tokens accepted by
+/// `docs/_reviews/motion_direction_system_v1.md`. Every new/touched animated
+/// widget in the active surface must use one of these durations/easings
+/// instead of an arbitrary per-widget value; no widget may add a new
+/// duration constant without a documented hard technical reason.
+class Act0MotionTokensV1 {
+  Act0MotionTokensV1._();
+
+  /// Small settle-in motion (a card/line arriving after a state change).
+  static const Duration micro = Duration(milliseconds: 140);
+
+  /// Ordinary transitions/navigation-scale reveals.
+  static const Duration standard = Duration(milliseconds: 260);
+
+  /// Chip/table-adjacent or stronger confirmation moments.
+  static const Duration emphasis = Duration(milliseconds: 420);
+
+  /// Rare, high-stakes payoff moments only (world/band completion).
+  static const Duration milestone = Duration(milliseconds: 900);
+
+  /// Anything appearing.
+  static const Curve enter = Curves.easeOutCubic;
+
+  /// Anything leaving/fading out.
+  static const Curve exit = Curves.easeIn;
+
+  /// A value/position resolving to its final state.
+  static const Curve settle = Curves.easeInOutCubic;
+
+  /// The accented portion of a milestone/confirmation composite.
+  static const Curve emphasisCurve = Curves.easeOut;
+}

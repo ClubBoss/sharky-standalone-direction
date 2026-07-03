@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/motion_direction_system_v1.md`.
+Verified active route artifact: `docs/_reviews/premium_transitions_replay_motion_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -245,6 +245,30 @@ were selected as the bounded first implementation slice,
 Replay's own entrance motion are real but explicitly deferred (lower EV,
 would add unrelated surfaces beyond the two-surface slice limit). No source
 code changed and no motion was implemented in this direction-setting wave.
+`Premium Transitions / Replay Motion v1` then landed that exact slice: a new
+shared `_MilestoneMotionRevealV1` primitive (in
+`act0_lesson_runner_shell_v1.dart`, alongside the existing
+`_WorldMilestoneCardV1` it now wraps) gives both `_WorldCompletionPayoffV1`
+and `_BandTransitionPayoffV1` one staged identity-then-details reveal, using
+the new `Act0MotionTokensV1` tokens (`act0_shell_tokens_v1.dart`) exclusively
+- no bespoke duration was introduced. The band transition alone gets the
+`milestone` (900ms) identity duration and a marginally stronger icon settle;
+no new asset was added, the existing accepted `Act0ProofIconV1` emphasis
+ring remains the sole static differentiator. Reduced motion structurally
+bypasses every animated widget in the reveal (matching the existing
+`_ProofMotionRevealV1` pattern exactly); the reveal's `State` does not reset
+on an ancestor rebuild; the CTA (owned outside this card, unaffected) was
+proven tap-safe mid-motion. A ten-test focused suite locks all of this down,
+and 116 pre-existing tests across the World 1/2-6/W4-W5/Session-Summary
+payoff surfaces continue to pass unmodified. The one open item is evidence-
+only: neither existing screenshot lane (`first_week_fast`, `full_scroll_fast`)
+reaches an actual world-complete/W4-complete fixture state, and a one-off,
+discarded `toImage()` capture script hit an unreproduced rendering anomaly
+(the widget tree reports the details block fully revealed - correct opacity,
+color, text - but it is absent from the rasterized PNG); this is classified
+as a screenshot-tooling limitation, not a product defect, and is deferred to
+a future dedicated capture-tooling investigation rather than blocking this
+wave. `Sharky Micro-Animations v1` is the next active task.
 
 ## Remaining Visual Route
 
@@ -330,3 +354,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1.md`
 - `docs/_reviews/product_surface_visual_evidence_repair_v1.md`
 - `docs/_reviews/motion_direction_system_v1.md`
+- `docs/_reviews/premium_transitions_replay_motion_v1.md`

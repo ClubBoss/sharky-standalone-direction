@@ -6601,89 +6601,199 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
           width: emphasizeMilestone ? 1.4 : 1.0,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Act0ProofIconV1(
-                key: Key('${keyPrefix}_milestone_icon'),
-                role: Act0ProofIconRoleV1.milestone,
-                size: Act0ProofIconSizeV1.seal,
-                emphasized: emphasizeMilestone,
+      child: _MilestoneMotionRevealV1(
+        key: Key('${keyPrefix}_motion_reveal'),
+        emphasized: emphasizeMilestone,
+        identity: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Act0ProofIconV1(
+              key: Key('${keyPrefix}_milestone_icon'),
+              role: Act0ProofIconRoleV1.milestone,
+              size: Act0ProofIconSizeV1.seal,
+              emphasized: emphasizeMilestone,
+            ),
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            Expanded(
+              child: Text(
+                payoffLabel,
+                key: Key('${keyPrefix}_payoff_label'),
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.text,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Expanded(
-                child: Text(
-                  payoffLabel,
-                  key: Key('${keyPrefix}_payoff_label'),
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontWeight: FontWeight.w900,
+            ),
+          ],
+        ),
+        details: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              learningLabel,
+              key: Key('${keyPrefix}_learning_label'),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (proofIconRole != null) ...[
+                  Act0ProofIconV1(
+                    key: Key('${keyPrefix}_proof_icon'),
+                    role: proofIconRole,
+                  ),
+                  const SizedBox(width: Act0ShellTokensV1.gapXs),
+                ],
+                Expanded(
+                  child: Text(
+                    _hasEarnedProof
+                        ? receipt!.lines.first
+                        : proofFallbackLabel,
+                    key: Key('${keyPrefix}_proof_line'),
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            learningLabel,
-            key: Key('${keyPrefix}_learning_label'),
-            maxLines: 2,
-            overflow: TextOverflow.fade,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (proofIconRole != null) ...[
-                Act0ProofIconV1(
-                  key: Key('${keyPrefix}_proof_icon'),
-                  role: proofIconRole,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapXs),
               ],
-              Expanded(
-                child: Text(
-                  _hasEarnedProof ? receipt!.lines.first : proofFallbackLabel,
-                  key: Key('${keyPrefix}_proof_line'),
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            Text(
+              nextLabel,
+              key: Key('${keyPrefix}_next_label'),
+              style: Act0ShellTokensV1.body.copyWith(
+                color: tone,
+                fontWeight: FontWeight.w900,
               ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
-            nextLabel,
-            key: Key('${keyPrefix}_next_label'),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: tone,
-              fontWeight: FontWeight.w900,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            previewLine,
-            key: Key('${keyPrefix}_preview_line'),
-            maxLines: 3,
-            overflow: TextOverflow.fade,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-              fontWeight: FontWeight.w600,
+            const SizedBox(height: 4),
+            Text(
+              previewLine,
+              key: Key('${keyPrefix}_preview_line'),
+              maxLines: 3,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.body.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// Shared `milestone`-category motion contract for
+/// [_WorldCompletionPayoffV1] and [_BandTransitionPayoffV1] (see
+/// `docs/_reviews/motion_direction_system_v1.md`). A single, bounded
+/// staged reveal: the milestone identity (icon + payoff label) settles in
+/// first, then the supporting details (learning line, proof row, next-world
+/// preview) follow. `emphasized` (the same flag [_WorldMilestoneCardV1]
+/// already uses for the W4->W5 seal) drives a slightly stronger identity
+/// settle for the band transition only - no new asset, no new category.
+///
+/// Runs once per admitted milestone appearance: state lives in this
+/// [StatefulWidget]'s [State], so a parent rebuild while this element stays
+/// mounted (identical `Key`, same tree position) does not replay it. A real
+/// unmount/remount (a new completion actually appearing) starts fresh,
+/// which is the correct semantics for "once per admitted appearance".
+///
+/// Reduced motion ([MediaQuery.disableAnimations]) resolves both stages to
+/// their settled state on the very first build, before any post-frame
+/// callback runs, so no content is ever hidden while motion is off and no
+/// animated frame is produced.
+class _MilestoneMotionRevealV1 extends StatefulWidget {
+  const _MilestoneMotionRevealV1({
+    super.key,
+    required this.emphasized,
+    required this.identity,
+    required this.details,
+  });
+
+  final bool emphasized;
+  final Widget identity;
+  final Widget details;
+
+  @override
+  State<_MilestoneMotionRevealV1> createState() =>
+      _MilestoneMotionRevealV1State();
+}
+
+class _MilestoneMotionRevealV1State extends State<_MilestoneMotionRevealV1> {
+  var _identityRevealed = false;
+  var _detailsRevealed = false;
+  Timer? _detailsTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() => _identityRevealed = true);
+      if (MediaQuery.of(context).disableAnimations) {
+        setState(() => _detailsRevealed = true);
+        return;
+      }
+      _detailsTimer = Timer(Act0MotionTokensV1.micro, () {
+        if (!mounted) return;
+        setState(() => _detailsRevealed = true);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _detailsTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.of(context).disableAnimations) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [widget.identity, widget.details],
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedScale(
+          scale: _identityRevealed ? 1.0 : (widget.emphasized ? 0.94 : 0.97),
+          duration: widget.emphasized
+              ? Act0MotionTokensV1.milestone
+              : Act0MotionTokensV1.standard,
+          curve: Act0MotionTokensV1.emphasisCurve,
+          child: AnimatedOpacity(
+            opacity: _identityRevealed ? 1 : 0,
+            duration: Act0MotionTokensV1.micro,
+            curve: Act0MotionTokensV1.enter,
+            child: widget.identity,
+          ),
+        ),
+        AnimatedSlide(
+          offset: _detailsRevealed ? Offset.zero : const Offset(0, 0.02),
+          duration: Act0MotionTokensV1.standard,
+          curve: Act0MotionTokensV1.enter,
+          child: AnimatedOpacity(
+            opacity: _detailsRevealed ? 1 : 0,
+            duration: Act0MotionTokensV1.standard,
+            curve: Act0MotionTokensV1.enter,
+            child: widget.details,
+          ),
+        ),
+      ],
     );
   }
 }
