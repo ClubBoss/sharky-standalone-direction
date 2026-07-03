@@ -122,6 +122,44 @@ void main() {
     },
   );
 
+  test('caps board cards by street to avoid future information leakage', () {
+    final replay = act0StreetReplayFromTableV1(multiStreetTable);
+
+    expect(replay, isNotNull);
+    final stepsByStreet =
+        <Act0StreetReplayStreetV1, List<Act0StreetReplayStepV1>>{};
+    for (final step in replay!.steps) {
+      stepsByStreet
+          .putIfAbsent(step.street, () => <Act0StreetReplayStepV1>[])
+          .add(step);
+    }
+
+    expect(
+      stepsByStreet[Act0StreetReplayStreetV1.preflop]!.map(
+        (step) => step.boardCardsAtStreet,
+      ),
+      everyElement(isEmpty),
+    );
+    expect(
+      stepsByStreet[Act0StreetReplayStreetV1.flop]!.map(
+        (step) => step.boardCardsAtStreet,
+      ),
+      everyElement(<String>['Kc', 'Qh', 'Jc']),
+    );
+    expect(
+      stepsByStreet[Act0StreetReplayStreetV1.turn]!.map(
+        (step) => step.boardCardsAtStreet,
+      ),
+      everyElement(<String>['Kc', 'Qh', 'Jc', '2d']),
+    );
+    expect(
+      stepsByStreet[Act0StreetReplayStreetV1.river]!.map(
+        (step) => step.boardCardsAtStreet,
+      ),
+      everyElement(<String>['Kc', 'Qh', 'Jc', '2d', '9c']),
+    );
+  });
+
   test('fails closed when actor truth is missing from an action step', () {
     final replay = act0StreetReplayFromTableV1(
       multiStreetTable.copyWith(

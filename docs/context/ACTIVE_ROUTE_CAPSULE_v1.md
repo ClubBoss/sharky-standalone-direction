@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w7_w12_table_context_readiness_audit_v1.md`.
+Verified active route artifact: `docs/_reviews/phase_6_closure_audit_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -12,11 +12,12 @@ Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
 Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
 Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
 is CLOSED. `Claude Implementation Quality Gate` is CLOSED. Phase 6 -
-Advanced Learning Presentation is ACTIVE. Human QA remains the last gate.
+Advanced Learning Presentation is CLOSED. Phase 7 - Content & Correctness is
+ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Phase 6 Closure Audit v1`
+- `W1-W12 Content Depth Gate v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -39,15 +40,20 @@ remains intact and regression-tested.
 - `Companion Semantic Consistency Gate` - CLOSED
 - `Claude Implementation Quality Gate` - CLOSED
 
-Phase 6 - Advanced Learning Presentation is active. Street Replay and the
-W7-W12 Table-Context Readiness Audit are closed; do not skip directly past the
-Phase 6 Closure Audit.
+Phase 6 - Advanced Learning Presentation is closed. Street Replay, W7-W12
+Table-Context Readiness Audit, and Phase 6 Closure Audit are closed.
+Phase 7 - Content & Correctness is active; do not skip directly to glossary or
+poker-correctness review before `W1-W12 Content Depth Gate v1`.
 
 ## Phase 6 Sequence (active)
 
 1. Street Replay / How We Got Here - CLOSED
 2. W7-W12 Table-Context Readiness Audit - CLOSED
-3. Phase 6 Closure Audit - ACTIVE
+3. Phase 6 Closure Audit - CLOSED
+
+## Phase 7 Sequence (active)
+
+1. W1-W12 Content Depth Gate - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
@@ -65,8 +71,8 @@ Phase 6 Closure Audit.
 3. Repair Depth - CLOSED
 4. Proof Progression - CLOSED
 5. Sharky Companion - CLOSED
-6. Advanced Learning Presentation - ACTIVE
-7. Content & Correctness
+6. Advanced Learning Presentation - CLOSED
+7. Content & Correctness - ACTIVE
 8. Motion
 9. E2E Product Integrity
 10. Final 10/10 Audit

@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w7_w12_table_context_readiness_audit_v1.md`.
+Verified active route artifact: `docs/_reviews/phase_6_closure_audit_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -186,6 +186,18 @@ multi-street action history) remain deferred until a future task admits a
 source-backed owner. No production repair, route expansion, Modern Table
 redesign, solver layer, Practice mapping, W13+, or broad curriculum rewrite was
 introduced. The active task is now `Phase 6 Closure Audit v1`.
+Phase 6 Closure Audit v1 then closed Advanced Learning Presentation with
+optional gaps only (`phase_6_closed_with_optional_gaps`). Closure evidence:
+Street Replay remains source-truth-safe, deterministic, compact, table-adjacent
+but not table-replacing, and fail-closed on incomplete truth; W7-W12 route
+captures remain context-ready with BTN hero/active context, flop board, pot
+labels, and W9 call-price context; active route screenshots show the table
+hierarchy and action buttons remain clear; first_week and full_scroll compact
+lanes remain clean. Optional deferred gaps are stack labels, full multi-street
+history, full replay/browser/motion, and broader content/glossary depth. No
+unresolved Phase 6 blocker remains. Phase 6 - Advanced Learning Presentation is
+CLOSED; Phase 7 - Content & Correctness is ACTIVE with
+`W1-W12 Content Depth Gate v1`.
 
 ## Remaining Visual Route
 
