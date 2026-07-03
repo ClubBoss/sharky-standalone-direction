@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/companion_semantic_consistency_gate_v1.md`.
+Verified active route artifact: `docs/_reviews/claude_implementation_quality_gate_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -152,8 +152,18 @@ on the World 4 transition screen, Developing growth beginning only in World
 5); and Home/Profile remain deferred, harmless legacy surfaces rather than
 active contradictions. The remaining evidence gap is that deterministic
 screenshot lanes do not naturally expose a W5+ Developing fixture, so
-structural/widget tests remain the proof source for that state. The active
-task is `Claude Implementation Quality Gate v1`.
+structural/widget tests remain the proof source for that state. Claude
+Implementation Quality Gate v1 then accepted the implementation with one
+bounded repair: `Act0SharkyGuideCardV1` now forwards `growthStage` in both
+compact-stacked and row layout branches, so the shared API behaves
+consistently. Architecture conclusions: proof truth remains outside widgets,
+phrase/state/growth each have one resolver owner, Session Summary composition
+is dense but explicit, and completion payoff wrappers remain bounded rather
+than a future-world framework. Home/Profile remain deferred. Hygiene backlog
+candidates: `_worldCompletionMetaByNumberV1[4]`, Profile fallback trophy
+metaphor, Home `preSessionMood:` literals, Profile growth integration, and
+legacy `Good fixes:` payoff-hero compatibility. No unresolved blocker remains
+for Phase 6. The active task is `Street Replay / How We Got Here v1`.
 
 ## Remaining Visual Route
 
@@ -235,3 +245,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/w1_completion_copy_regression_repair_v1.md`
 - `docs/_reviews/sharky_visual_growth_evolution_v1.md`
 - `docs/_reviews/companion_semantic_consistency_gate_v1.md`
+- `docs/_reviews/claude_implementation_quality_gate_v1.md`

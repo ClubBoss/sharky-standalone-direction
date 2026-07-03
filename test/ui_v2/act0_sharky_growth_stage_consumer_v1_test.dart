@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 
 const _stateRingKey = Key('act0_shell_sharky_mascot_frame_accent_ring');
@@ -356,6 +357,29 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsOneWidget);
+    });
+
+    testWidgets('GuideCard forwards Developing growth in row layout', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 520,
+              child: Act0SharkyGuideCardV1(
+                eyebrow: 'SHARKY',
+                line: 'Read the full signal before acting.',
+                mood: Act0SharkyMoodV1.neutral,
+                growthStage: Act0SharkyGrowthStageV1.developing,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(_growthRingKey), findsOneWidget);
     });
   });
 

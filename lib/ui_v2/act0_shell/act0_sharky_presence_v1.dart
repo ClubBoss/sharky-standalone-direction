@@ -134,6 +134,7 @@ class Act0SharkyGuideCardV1 extends StatelessWidget {
                       tone: tone,
                       size: mascotSize,
                       animated: true,
+                      growthStage: growthStage,
                     ),
                     SizedBox(
                       width: compact

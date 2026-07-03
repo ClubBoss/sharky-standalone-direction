@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/companion_semantic_consistency_gate_v1.md`.
+Verified active route artifact: `docs/_reviews/claude_implementation_quality_gate_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -11,13 +11,12 @@ Refresh trigger: every committed route, phase, immediate-task, or forbidden-scop
 Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
 Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
 Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
-is CLOSED. `Claude Implementation Quality Gate` is ACTIVE. Phase 6 does not
-begin until the Claude Implementation Quality Gate passes. Human QA remains
-the last gate.
+is CLOSED. `Claude Implementation Quality Gate` is CLOSED. Phase 6 -
+Advanced Learning Presentation is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Claude Implementation Quality Gate v1`
+- `Street Replay / How We Got Here v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -38,10 +37,14 @@ remains intact and regression-tested.
 ## Post-Phase-5 Gates
 
 - `Companion Semantic Consistency Gate` - CLOSED
-- `Claude Implementation Quality Gate` - ACTIVE (current task), gates Phase 6
+- `Claude Implementation Quality Gate` - CLOSED
 
-Do not activate Phase 6 - Advanced Learning Presentation until the Claude
-Implementation Quality Gate passes.
+Phase 6 - Advanced Learning Presentation is now active. Do not skip directly
+to later Phase 6 items.
+
+## Phase 6 Sequence (active)
+
+1. Street Replay / How We Got Here - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
@@ -58,9 +61,8 @@ Implementation Quality Gate passes.
 2. Learning Truth Foundation - CLOSED
 3. Repair Depth - CLOSED
 4. Proof Progression - CLOSED
-5. Sharky Companion - CLOSED (pending Claude Implementation Quality Gate
-   before Phase 6 opens)
-6. Advanced Learning Presentation
+5. Sharky Companion - CLOSED
+6. Advanced Learning Presentation - ACTIVE
 7. Content & Correctness
 8. Motion
 9. E2E Product Integrity
