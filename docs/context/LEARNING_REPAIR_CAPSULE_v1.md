@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_w12_poker_correctness_review_v1.md`.
+Verified active route artifact: `docs/_reviews/solver_light_selected_checks_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -175,6 +175,54 @@ Route impact: Poker Correctness Review is closed and
 `Solver-Light Selected Checks v1` is active. Practice mapping remains blocked,
 W13+ remains closed, and no learner-facing mastery, launch, or public
 learning-effect claim changes.
+
+## Phase 7 Solver-Light Selected Checks
+
+`Solver-Light Selected Checks v1` closed with
+`solver_light_selected_checks_complete_with_repairs_required`. No selected
+spot proved a route blocker, fake solver claim, illegal action, impossible
+board, W13+ leak, or answer-key failure. The route safety verdict is
+`route_safe_until_repair`.
+
+Selected-check verdicts:
+
+- SL-001: W5 texture-to-action requires context-assumption repair. Texture
+  labels alone do not justify unique raise/call/fold action keys.
+- SL-002: W4 value sizing requires copy precision repair. Half pot is a
+  reasonable beginner size, but exact sizing is not uniquely proven without
+  board, stack, range, and street assumptions.
+- SL-003: W4 raise-purpose requires copy precision repair. Raise is coherent
+  when the taught purpose is supplied, but the drills must remain
+  purpose-recognition reps rather than full strategy claims.
+- SL-004: W11 continue/fold requires copy precision repair only. Answer keys
+  remain defensible for one-focus beginner transfer; exact EV is not claimed.
+- SL-005: W10 purpose taxonomy requires copy precision repair. The value vs
+  stronger-fold pressure question is coherent only inside the taught beginner
+  purpose set.
+
+Final PC ledger dispositions:
+
+- PC-001, PC-002, PC-003, PC-004, PC-005, PC-006, and PC-009 remain
+  repair-required for the consolidated targeted repair wave.
+- PC-007, PC-008, and PC-010 are safe beginner simplifications.
+- PC-011 remains an explicit source-truth defer for broad W11/W12 corpus
+  parity.
+
+Consolidated repair ledger carried forward:
+
+- SLCR-001: W5 texture-to-action context-assumption repair.
+- SLCR-002: W4 value sizing copy precision repair.
+- SLCR-003: W4 raise-purpose copy precision repair.
+- SLCR-004: W11 one-focus feedback copy precision repair.
+- SLCR-005: W10 purpose taxonomy copy precision repair.
+- SLCR-006: W3 best-first-action copy precision repair.
+- SLCR-007: touched-family heuristic wording trim.
+- SLCR-008: W11/W12 broad corpus parity explicit defer.
+
+Route impact: Solver-Light Selected Checks is closed and
+`Targeted Content Repairs v1` is active. Practice mapping remains blocked,
+W13+ remains closed, and no learner-facing mastery, launch, public
+learning-effect, full solver, or GTO authority claim changes.
 
 ## Canonical Learning Loop
 

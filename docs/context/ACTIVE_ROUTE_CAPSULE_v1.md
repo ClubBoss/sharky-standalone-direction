@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_w12_poker_correctness_review_v1.md`.
+Verified active route artifact: `docs/_reviews/solver_light_selected_checks_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -17,7 +17,7 @@ ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Solver-Light Selected Checks v1`
+- `Targeted Content Repairs v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -51,11 +51,11 @@ Audit v1` is closed with optional gaps and advanced the route to
 `W1-W12 Poker Correctness Review v1`. The active prompt then inserted
 `Targeted Same-Signal / Transfer Repairs v1` before poker correctness; that
 targeted repair wave is now closed with explicit deferrals. `W1-W12 Poker
-Correctness Review v1` is now closed with selected solver-light candidates,
-and the active route is `Solver-Light Selected Checks v1`. Do not skip
-directly to broad targeted content repairs before solver-light resolves the
-carried candidate list unless a new route authority explicitly reorders Phase
-7.
+Correctness Review v1` is now closed with selected solver-light candidates.
+`Solver-Light Selected Checks v1` is also closed with a consolidated repair
+ledger, and the active route is `Targeted Content Repairs v1`. Do not skip
+outside that bounded repair ledger unless a new route authority explicitly
+reorders Phase 7.
 
 ## Phase 6 Sequence (closed)
 
@@ -70,8 +70,8 @@ carried candidate list unless a new route authority explicitly reorders Phase
 3. Same-Signal / Transfer Coverage Audit - CLOSED
 4. Targeted Same-Signal / Transfer Repairs - CLOSED
 5. W1-W12 Poker Correctness Review - CLOSED
-6. Solver-Light Selected Checks - ACTIVE
-7. Targeted Content Repairs - PENDING
+6. Solver-Light Selected Checks - CLOSED
+7. Targeted Content Repairs - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
