@@ -16,6 +16,9 @@ void main() {
     final runtimeCopySource = File(
       'lib/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart',
     ).readAsStringSync();
+    final sharkyPhraseSource = File(
+      'lib/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart',
+    ).readAsStringSync();
 
     expect(learnSource, contains('Start Volume I'));
     expect(learnSource, isNot(contains('The 36-world path starts here')));
@@ -36,7 +39,11 @@ void main() {
     expect(runtimeCopySource, contains('Use the table, then retry.'));
     expect(runtimeCopySource, isNot(contains('One table retry')));
 
-    expect(runnerSource, contains('First milestone in Volume I.'));
+    expect(sharkyPhraseSource, contains('You banked the first table read.'));
+    expect(
+      runnerSource,
+      contains('You learned how to read the table before acting.'),
+    );
     expect(
       runnerSource,
       contains('Keep replaying this clue to deepen the read before moving on.'),

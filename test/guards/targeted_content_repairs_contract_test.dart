@@ -112,7 +112,8 @@ void main() {
       final activeRoute = _readText('docs/context/ACTIVE_ROUTE_CAPSULE_v1.md');
       expect(activeRoute, contains('Targeted Content Repairs - CLOSED'));
       expect(activeRoute, contains('Phase 7 Closure Audit - CLOSED'));
-      expect(activeRoute, contains('Motion Direction System - ACTIVE'));
+      expect(activeRoute, contains('Motion Direction System - CLOSED'));
+      expect(activeRoute, contains('Sharky Micro-Animations v1 - BLOCKED'));
 
       final learning = _readText('docs/context/LEARNING_REPAIR_CAPSULE_v1.md');
       expect(learning, contains('no unresolved actionable P1-P4'));

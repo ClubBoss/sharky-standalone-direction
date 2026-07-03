@@ -82,11 +82,16 @@ void main() {
 
     expect(
       activeRoute,
-      contains('Verified active route artifact: `$reviewPath`'),
+      contains(
+        'Verified active route artifact: '
+        '`docs/_reviews/sharky_character_growth_evidence_pack_v1.md`',
+      ),
     );
     expect(activeRoute, contains('Phase 7 - Content & Correctness is CLOSED'));
-    expect(activeRoute, contains('Phase 8 - Motion is ACTIVE'));
+    expect(activeRoute, contains('Phase 8 - Motion is active'));
     expect(activeRoute, contains('Motion Direction System v1'));
+    expect(activeRoute, contains('Phase 7 Closure Audit - CLOSED'));
+    expect(activeRoute, contains('Sharky Micro-Animations v1 - BLOCKED'));
     expect(activeRoute, contains('7. Content & Correctness - CLOSED'));
     expect(activeRoute, contains('8. Motion - ACTIVE'));
 

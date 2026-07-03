@@ -76,7 +76,8 @@ void main() {
     expect(activeRoute, contains('Solver-Light Selected Checks - CLOSED'));
     expect(activeRoute, contains('Targeted Content Repairs - CLOSED'));
     expect(activeRoute, contains('Phase 7 Closure Audit - CLOSED'));
-    expect(activeRoute, contains('Motion Direction System - ACTIVE'));
+    expect(activeRoute, contains('Motion Direction System - CLOSED'));
+    expect(activeRoute, contains('Sharky Micro-Animations v1 - BLOCKED'));
     expect(
       activeRoute,
       isNot(contains('W13-W36 pre-Human expansion - ACTIVE')),
