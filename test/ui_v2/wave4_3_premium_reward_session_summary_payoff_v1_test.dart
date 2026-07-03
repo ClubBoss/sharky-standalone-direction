@@ -53,7 +53,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Collected proof'), findsOneWidget);
-    expect(find.text('Small win earned. Sharky can prove it.'), findsOneWidget);
+    expect(find.text('One clear win Sharky can prove.'), findsOneWidget);
 
     final blockText = tester
         .widgetList<Text>(

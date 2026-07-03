@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_phrase_tier_contract_v1.md`.
+Verified active route artifact: `docs/_reviews/foundation_developing_phrase_sets_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -42,6 +42,12 @@ reason it is not an improvement claim.
   structured evidence state instead of owning truth. Direct-observation,
   repair, transfer, pattern, and completion claims require matching source
   evidence; missing evidence resolves to a neutral fallback.
+- Foundation + Developing Phrase Sets v1 moves the first Welcome, Home, and
+  Session Summary Sharky support/proof lines into the deterministic phrase
+  resolver. Foundation wording stays concrete and one-clue/local-proof based;
+  Developing wording may connect action, table state, position, price, and
+  signal-action links without adding mastery, AI, solver, fixed-forever, or
+  W13+ claims.
 
 ## Constraints
 
@@ -116,6 +122,8 @@ Likely owner areas:
 - `docs/_reviews/review_multi_session_pattern_coaching_v1.md`
 - `docs/_reviews/fixes_banked_weekly_proof_v1.md`
 - `docs/_reviews/cross_session_proof_profile_v1.md`
+- `docs/_reviews/sharky_phrase_tier_contract_v1.md`
+- `docs/_reviews/foundation_developing_phrase_sets_v1.md`
 
 ## Claim Language
 

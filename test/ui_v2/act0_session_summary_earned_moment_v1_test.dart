@@ -130,20 +130,21 @@ void main() {
     );
     final fixProof = Act0FixProofProjectionV1.fromSources(
       repairOutcomeProjection: repairOutcomes,
-      reviewResolutionReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(
-        receipts: <Act0ReviewResolutionReceiptV1>[
-          Act0ReviewResolutionReceiptV1(
-            reviewItemId: 'review_queue_item',
-            conceptFamilyId: 'no_bet_yet',
-            sourceTaskId: 'actions_legal_context',
-            sourceSessionId: 'session_1',
-            reviewState: act0ReviewResolutionStateResolvedV1,
-            resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
-            repairOutcomeId: 'repair_outcome_v1|1|queue_item',
-            resolvedAtOrder: 1,
+      reviewResolutionReceiptHistory:
+          const Act0ReviewResolutionReceiptHistoryV1(
+            receipts: <Act0ReviewResolutionReceiptV1>[
+              Act0ReviewResolutionReceiptV1(
+                reviewItemId: 'review_queue_item',
+                conceptFamilyId: 'no_bet_yet',
+                sourceTaskId: 'actions_legal_context',
+                sourceSessionId: 'session_1',
+                reviewState: act0ReviewResolutionStateResolvedV1,
+                resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+                resolvedAtOrder: 1,
+              ),
+            ],
           ),
-        ],
-      ),
     );
 
     await _pumpSummary(
@@ -157,12 +158,8 @@ void main() {
 
     expect(
       find.descendant(
-        of: find.byKey(
-          const Key('act0_shell_session_repair_outcome_receipt'),
-        ),
-        matching: find.byKey(
-          const Key('act0_proof_icon_v1_repairCompleted'),
-        ),
+        of: find.byKey(const Key('act0_shell_session_repair_outcome_receipt')),
+        matching: find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
       ),
       findsOneWidget,
     );
@@ -172,92 +169,89 @@ void main() {
     );
   });
 
-  testWidgets(
-    'Session Summary maps later-supported fix proof to reinforced',
-    (tester) async {
-      final history = Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_1',
-            createdOrder: 1,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_legal_context',
-            choiceId: 'fold',
-            expectedChoiceId: 'check',
-            isCorrect: false,
-            errorType: 'missed_action_read',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'incorrect',
-            sessionId: 'session_1',
-          ),
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_2',
-            createdOrder: 5,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_check_drill',
-            choiceId: 'check',
-            expectedChoiceId: 'check',
-            isCorrect: true,
-            errorType: 'none',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'correct',
-            sessionId: 'session_3',
-          ),
-        ],
-      );
-      final repairOutcomes = _repairOutcomeProjection(
-        outcomeState: act0RepairOutcomeStateCorrectV1,
-      );
-      final fixProof = Act0FixProofProjectionV1.fromSources(
-        repairOutcomeProjection: repairOutcomes,
-        reviewResolutionReceiptHistory:
-            const Act0ReviewResolutionReceiptHistoryV1(
-              receipts: <Act0ReviewResolutionReceiptV1>[
-                Act0ReviewResolutionReceiptV1(
-                  reviewItemId: 'review_queue_item',
-                  conceptFamilyId: 'no_bet_yet',
-                  sourceTaskId: 'actions_legal_context',
-                  sourceSessionId: 'session_1',
-                  reviewState: act0ReviewResolutionStateResolvedV1,
-                  resolutionReason:
-                      act0ReviewResolutionReasonRepairSucceededV1,
-                  repairOutcomeId: 'repair_outcome_v1|1|queue_item',
-                  resolvedAtOrder: 1,
-                ),
-              ],
-            ),
-        transferMeasurement: Act0LearningTransferMeasurementV1.fromLearningEvidence(
-          history,
+  testWidgets('Session Summary maps later-supported fix proof to reinforced', (
+    tester,
+  ) async {
+    final history = Act0LearningEvidenceHistoryV1(
+      records: <Act0LearningEvidenceRecordV1>[
+        Act0LearningEvidenceRecordV1(
+          recordId: 'record_1',
+          createdOrder: 1,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_legal_context',
+          choiceId: 'fold',
+          expectedChoiceId: 'check',
+          isCorrect: false,
+          errorType: 'missed_action_read',
+          conceptFamilyId: 'no_bet_yet',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: 'under_3s',
+          resultKind: 'incorrect',
+          sessionId: 'session_1',
         ),
-      );
-
-      await _pumpSummary(
-        tester,
-        consumer: const Act0AchievementSeedConsumerV1(),
-        repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
-          repairOutcomes,
-          fixProofProjection: fixProof,
+        Act0LearningEvidenceRecordV1(
+          recordId: 'record_2',
+          createdOrder: 5,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          choiceId: 'check',
+          expectedChoiceId: 'check',
+          isCorrect: true,
+          errorType: 'none',
+          conceptFamilyId: 'no_bet_yet',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: 'under_3s',
+          resultKind: 'correct',
+          sessionId: 'session_3',
         ),
-      );
+      ],
+    );
+    final repairOutcomes = _repairOutcomeProjection(
+      outcomeState: act0RepairOutcomeStateCorrectV1,
+    );
+    final fixProof = Act0FixProofProjectionV1.fromSources(
+      repairOutcomeProjection: repairOutcomes,
+      reviewResolutionReceiptHistory:
+          const Act0ReviewResolutionReceiptHistoryV1(
+            receipts: <Act0ReviewResolutionReceiptV1>[
+              Act0ReviewResolutionReceiptV1(
+                reviewItemId: 'review_queue_item',
+                conceptFamilyId: 'no_bet_yet',
+                sourceTaskId: 'actions_legal_context',
+                sourceSessionId: 'session_1',
+                reviewState: act0ReviewResolutionStateResolvedV1,
+                resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+                repairOutcomeId: 'repair_outcome_v1|1|queue_item',
+                resolvedAtOrder: 1,
+              ),
+            ],
+          ),
+      transferMeasurement:
+          Act0LearningTransferMeasurementV1.fromLearningEvidence(history),
+    );
 
-      expect(
-        find.byKey(const Key('act0_proof_icon_v1_reinforced')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
-        findsNothing,
-      );
-    },
-  );
+    await _pumpSummary(
+      tester,
+      consumer: const Act0AchievementSeedConsumerV1(),
+      repairOutcomeConsumer: Act0RepairOutcomeConsumerV1.fromProjection(
+        repairOutcomes,
+        fixProofProjection: fixProof,
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_proof_icon_v1_reinforced')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
+      findsNothing,
+    );
+  });
 
   testWidgets(
     'insufficient proof (activity fallback only) shows no earned proof icon',
@@ -391,7 +385,10 @@ void main() {
       expect(find.text('Replay before next lesson'), findsOneWidget);
       expect(find.text("Fixes you've banked"), findsOneWidget);
       expect(find.text('Good fixes: 1'), findsOneWidget);
-      expect(find.text('Small win, real proof.'), findsOneWidget);
+      expect(
+        find.text('You finished with one clear table-reading lesson.'),
+        findsOneWidget,
+      );
 
       final next = find.byKey(const Key('act0_shell_block_summary_next_label'));
       final habit = find.byKey(
@@ -468,7 +465,10 @@ void main() {
       'Fix landed.',
     );
     expect(find.text('You turned one miss into a fix.'), findsOneWidget);
-    expect(find.text('Small win, real proof.'), findsOneWidget);
+    expect(
+      find.text('You finished with one clear table-reading lesson.'),
+      findsOneWidget,
+    );
     expect(find.text('Almost there - replay to unlock'), findsNothing);
   });
 
@@ -813,7 +813,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Collected proof'), findsOneWidget);
-    expect(find.text('Small win earned. Sharky can prove it.'), findsOneWidget);
+    expect(find.text('One clear win Sharky can prove.'), findsOneWidget);
     expect(find.text('Earned moment'), findsNothing);
     expect(find.text('First correct read'), findsOneWidget);
     expect(find.text('First repair note'), findsNothing);
@@ -855,7 +855,7 @@ void main() {
     expect(find.text('Clean mini-drill'), findsNothing);
     expect(find.text('First evidence signal'), findsNothing);
     expect(find.text('Collected proof'), findsNothing);
-    expect(find.text('Small win earned. Sharky can prove it.'), findsNothing);
+    expect(find.text('One clear win Sharky can prove.'), findsNothing);
   });
 
   testWidgets('Session Summary earned moment contains no forbidden copy', (

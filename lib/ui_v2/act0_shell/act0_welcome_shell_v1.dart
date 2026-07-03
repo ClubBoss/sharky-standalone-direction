@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 
@@ -71,8 +72,9 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
         line: _atomV1(
           'welcome_intro_line',
-          fallback:
-              'Answer two quick questions. Then Sharky opens the first useful hand.',
+          fallback: act0SharkyCoachLineForMomentV1(
+            Act0SharkyCoachMomentV1.welcomeOrientation,
+          ),
         ),
         detail: _atomV1(
           'welcome_intro_detail',

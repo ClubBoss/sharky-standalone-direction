@@ -6788,7 +6788,7 @@ void main() {
     );
     expect(sharkyLine, findsOneWidget);
     final text = tester.widget<Text>(sharkyLine);
-    expect(text.data, 'Sharky has one clean read ready.');
+    expect(text.data, 'Sharky has one table clue ready.');
     expect(text.style?.letterSpacing ?? 0, 0);
     expect(text.style?.fontSize, greaterThanOrEqualTo(12));
     expect(text.style?.color, isNot(Act0ShellTokensV1.textDim));
@@ -7873,7 +7873,7 @@ void main() {
     expect(find.text('Session complete'), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_main_cta')), findsOneWidget);
     expect(
-      find.text('Come back tomorrow for the next useful hand'),
+      find.text('Come back tomorrow for the next useful hand.'),
       findsOneWidget,
     );
     expect(find.textContaining('blocked'), findsNothing);
@@ -27670,7 +27670,7 @@ void main() {
     expect(find.text('Session complete'), findsOneWidget);
     expect(find.text('Table read improved'), findsOneWidget);
     expect(
-      find.text('One table clue warmed. Sharky has tomorrow\'s read ready.'),
+      find.text("Today's table clue is warm for next time."),
       findsOneWidget,
     );
     expect(
@@ -27686,7 +27686,7 @@ void main() {
       findsNothing,
     );
     expect(
-      find.text('Come back tomorrow for the next useful hand'),
+      find.text('Come back tomorrow for the next useful hand.'),
       findsOneWidget,
     );
     expect(find.textContaining('AI'), findsNothing);

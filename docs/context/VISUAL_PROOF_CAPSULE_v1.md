@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_phrase_tier_contract_v1.md`.
+Verified active route artifact: `docs/_reviews/foundation_developing_phrase_sets_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -76,11 +76,17 @@ introduce a new phrase tier and falls back to the currently proven developing
 contract until a later explicit scope reopens it. Phrase families are bounded
 to `orient`, `explain`, `repair`, `confirm`, `reinforce`, `reflect`, and
 `transition`. Missing evidence returns the neutral fallback, not a specific
-claim. The only product migration was the existing W4->W5 `Foundation complete`
-identity label moving under the phrase contract while preserving rendered
-copy. No new visual state, pose, asset, motion, animation, chat, AI copy, or
-personality engine exists. The active task is `Foundation + Developing Phrase
-Sets v1` (Phase 5).
+claim. The initial product migration was the existing W4->W5 `Foundation
+complete` identity label moving under the phrase contract while preserving
+rendered copy. Foundation + Developing Phrase Sets v1 then added the first
+bounded phrase set for the Welcome orientation line, Home mission/done/return
+support lines, and Session Summary earned-moment proof line. Foundation copy
+names one concrete table clue or local proof; Developing copy can connect
+action, table state, position, price, and signal-action links while staying
+claim-safe. Widgets no longer own the migrated English phrase text, and W13+
+still falls back to the proven Developing tier. No new visual state, pose,
+asset, motion, animation, chat, AI copy, or personality engine exists. The
+active task is `Sharky Saw You Improve v1` (Phase 5).
 
 ## Remaining Visual Route
 
@@ -155,3 +161,5 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/w1_completion_payoff_v1.md`
 - `docs/_reviews/w2_w6_completion_payoff_v1.md`
 - `docs/_reviews/w4_w5_band_transition_milestone_v1.md`
+- `docs/_reviews/sharky_phrase_tier_contract_v1.md`
+- `docs/_reviews/foundation_developing_phrase_sets_v1.md`

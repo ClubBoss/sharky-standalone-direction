@@ -7072,7 +7072,9 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Small win earned. Sharky can prove it.',
+                  act0SharkyCoachLineForMomentV1(
+                    Act0SharkyCoachMomentV1.sessionSummaryEarnedMoment,
+                  ),
                   key: const Key('act0_shell_block_summary_earned_proof'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,

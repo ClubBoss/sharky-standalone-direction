@@ -65,11 +65,16 @@ enum Act0SharkyCoachPhraseFamilyV1 {
 }
 
 enum Act0SharkyCoachMomentV1 {
+  welcomeOrientation,
   homeActiveRepair,
+  homeMissionSupport,
+  homeDoneSupport,
+  homeDoneReturn,
   practiceCurrentFix,
   reviewActiveRepair,
   repairResultProof,
   sessionSummaryProof,
+  sessionSummaryEarnedMoment,
   worldOneCompletionPayoff,
   worldCompletionPayoff,
   bandTransitionPayoff,
@@ -184,7 +189,7 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
             ? 'Start with one clear table clue.'
-            : 'Start with the signal that shapes the decision.',
+            : 'Start with the signal that shapes this decision.',
         family: Act0SharkyCoachPhraseFamilyV1.orient,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.neutral,
@@ -196,8 +201,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'Good read. You used the table clue.'
-            : 'Good. The signal and action lined up.',
+            ? 'Good read - nobody had bet yet.'
+            : 'Good - action and table state lined up.',
         family: Act0SharkyCoachPhraseFamilyV1.confirm,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.directObservation,
@@ -209,8 +214,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'You missed the no-bet-yet clue.'
-            : 'The early action signal got skipped.',
+            ? 'The missed clue was that no bet faced you.'
+            : 'Action and price pointed in different directions.',
         family: Act0SharkyCoachPhraseFamilyV1.explain,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.directObservation,
@@ -233,7 +238,7 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'Try the repair again with one clue first.'
+            ? 'Try the repair again with that clue first.'
             : 'Run it again and isolate the missed signal.',
         family: Act0SharkyCoachPhraseFamilyV1.repair,
         tier: tier,
@@ -247,7 +252,7 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
             ? 'That repair landed.'
-            : 'Clean proof. Keep the pattern ready.',
+            : 'You corrected the read and decision frame.',
         family: Act0SharkyCoachPhraseFamilyV1.reinforce,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.repair,
@@ -261,7 +266,7 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'You handled this clue correctly on a later hand.'
+            ? 'You handled the same clue on a later hand.'
             : 'Later hand, cleaner signal-to-action link.',
         family: Act0SharkyCoachPhraseFamilyV1.reflect,
         tier: tier,
@@ -274,8 +279,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'Small win, real proof.'
-            : 'Clean proof. Keep the pattern ready.',
+            ? _act0SessionCompleteLineV1(context.fallbackKey)
+            : _act0DevelopingSessionCompleteLineV1(context.fallbackKey),
         family: Act0SharkyCoachPhraseFamilyV1.reinforce,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.repair,
@@ -288,8 +293,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? "You banked this world's core read."
-            : "This world's read is ready for the next pattern.",
+            ? 'World complete with a real table read.'
+            : 'World complete with action, table, and price connected.',
         family: Act0SharkyCoachPhraseFamilyV1.transition,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.progression,
@@ -315,8 +320,8 @@ Act0SharkyCoachPhraseV1? _act0ResolveSharkyCoachPhraseLineV1(
       }
       return _act0PhraseV1(
         line: tier == Act0SharkyCoachTierV1.foundation
-            ? 'This is the next useful hand.'
-            : 'Return here while the pattern is still live.',
+            ? _act0ReturnReasonLineV1(context.fallbackKey)
+            : _act0DevelopingReturnReasonLineV1(context.fallbackKey),
         family: Act0SharkyCoachPhraseFamilyV1.orient,
         tier: tier,
         claimBoundary: Act0SharkyCoachClaimBoundaryV1.repair,
@@ -344,6 +349,12 @@ Act0SharkyCoachPhraseContextV1 _act0LegacyMomentContextV1(
   Act0SharkyCoachTierV1 tier,
 ) {
   switch (moment) {
+    case Act0SharkyCoachMomentV1.welcomeOrientation:
+      return const Act0SharkyCoachPhraseContextV1(
+        surface: Act0SharkyCoachSurfaceV1.welcome,
+        momentType: Act0SharkyCoachMomentTypeV1.welcome,
+        tier: Act0SharkyCoachTierV1.foundation,
+      );
     case Act0SharkyCoachMomentV1.homeActiveRepair:
       return Act0SharkyCoachPhraseContextV1(
         surface: Act0SharkyCoachSurfaceV1.home,
@@ -351,6 +362,33 @@ Act0SharkyCoachPhraseContextV1 _act0LegacyMomentContextV1(
         tier: tier,
         evidenceKind: Act0SharkyCoachEvidenceKindV1.repairTarget,
         repairState: Act0SharkyCoachRepairStateV1.open,
+      );
+    case Act0SharkyCoachMomentV1.homeMissionSupport:
+      return Act0SharkyCoachPhraseContextV1(
+        surface: Act0SharkyCoachSurfaceV1.home,
+        momentType: Act0SharkyCoachMomentTypeV1.returnReason,
+        tier: tier,
+        evidenceKind: Act0SharkyCoachEvidenceKindV1.repairTarget,
+        repairState: Act0SharkyCoachRepairStateV1.open,
+        fallbackKey: 'home_mission_support',
+      );
+    case Act0SharkyCoachMomentV1.homeDoneSupport:
+      return Act0SharkyCoachPhraseContextV1(
+        surface: Act0SharkyCoachSurfaceV1.home,
+        momentType: Act0SharkyCoachMomentTypeV1.returnReason,
+        tier: tier,
+        evidenceKind: Act0SharkyCoachEvidenceKindV1.repairTarget,
+        repairState: Act0SharkyCoachRepairStateV1.open,
+        fallbackKey: 'home_done_support',
+      );
+    case Act0SharkyCoachMomentV1.homeDoneReturn:
+      return Act0SharkyCoachPhraseContextV1(
+        surface: Act0SharkyCoachSurfaceV1.home,
+        momentType: Act0SharkyCoachMomentTypeV1.returnReason,
+        tier: tier,
+        evidenceKind: Act0SharkyCoachEvidenceKindV1.repairTarget,
+        repairState: Act0SharkyCoachRepairStateV1.open,
+        fallbackKey: 'home_done_return',
       );
     case Act0SharkyCoachMomentV1.practiceCurrentFix:
       return Act0SharkyCoachPhraseContextV1(
@@ -383,6 +421,15 @@ Act0SharkyCoachPhraseContextV1 _act0LegacyMomentContextV1(
         tier: tier,
         evidenceKind: Act0SharkyCoachEvidenceKindV1.proof,
         proofState: Act0SharkyCoachProofStateV1.localProof,
+      );
+    case Act0SharkyCoachMomentV1.sessionSummaryEarnedMoment:
+      return Act0SharkyCoachPhraseContextV1(
+        surface: Act0SharkyCoachSurfaceV1.summary,
+        momentType: Act0SharkyCoachMomentTypeV1.sessionComplete,
+        tier: tier,
+        evidenceKind: Act0SharkyCoachEvidenceKindV1.proof,
+        proofState: Act0SharkyCoachProofStateV1.localProof,
+        fallbackKey: 'session_summary_earned_moment',
       );
     case Act0SharkyCoachMomentV1.worldOneCompletionPayoff:
       return Act0SharkyCoachPhraseContextV1(
@@ -438,6 +485,44 @@ String _act0RepairPromptLineV1(
         : 'Review the signal before the next decision.';
   }
   return tier == Act0SharkyCoachTierV1.foundation
-      ? 'Run one quick rep while the clue is fresh.'
-      : 'Repeat the key signal before adding pressure.';
+      ? 'Before choosing, check whether a bet is in front of you.'
+      : 'Rebuild the spot from position, action, and price.';
+}
+
+String _act0SessionCompleteLineV1(String fallbackKey) {
+  if (fallbackKey == 'session_summary_earned_moment') {
+    return 'One clear win Sharky can prove.';
+  }
+  return 'You finished with one clear table-reading lesson.';
+}
+
+String _act0DevelopingSessionCompleteLineV1(String fallbackKey) {
+  if (fallbackKey == 'session_summary_earned_moment') {
+    return 'One connected read Sharky can prove.';
+  }
+  return 'You connected more than one signal before acting.';
+}
+
+String _act0ReturnReasonLineV1(String fallbackKey) {
+  switch (fallbackKey) {
+    case 'home_mission_support':
+      return 'Sharky has one table clue ready.';
+    case 'home_done_support':
+      return "Today's table clue is warm for next time.";
+    case 'home_done_return':
+      return 'Come back tomorrow for the next useful hand.';
+  }
+  return 'This is the next useful hand.';
+}
+
+String _act0DevelopingReturnReasonLineV1(String fallbackKey) {
+  switch (fallbackKey) {
+    case 'home_mission_support':
+      return 'Sharky has the next signal-action link ready.';
+    case 'home_done_support':
+      return 'Today connected action and table state for next time.';
+    case 'home_done_return':
+      return 'Return tomorrow while the pattern is still live.';
+  }
+  return 'Return here while the pattern is still live.';
 }

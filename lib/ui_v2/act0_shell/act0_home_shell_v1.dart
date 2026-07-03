@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -631,7 +632,9 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
             Text(
               localeIsRu
                   ? 'Sharky держит одно чистое чтение готовым.'
-                  : 'Sharky has one clean read ready.',
+                  : act0SharkyCoachLineForMomentV1(
+                      Act0SharkyCoachMomentV1.homeMissionSupport,
+                    ),
               key: const Key('act0_shell_home_mission_sharky_line'),
               maxLines: 1,
               overflow: TextOverflow.fade,
@@ -1119,8 +1122,9 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
             act0LocalizedSurfaceAtomV1(
               context,
               'home_daily_done_detail',
-              fallback:
-                  'One table clue warmed. Sharky has tomorrow\'s read ready.',
+              fallback: act0SharkyCoachLineForMomentV1(
+                Act0SharkyCoachMomentV1.homeDoneSupport,
+              ),
             ),
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.textMuted,
@@ -1142,7 +1146,9 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
             act0LocalizedSurfaceAtomV1(
               context,
               'home_daily_done_continue_hint',
-              fallback: 'Come back tomorrow for the next useful hand',
+              fallback: act0SharkyCoachLineForMomentV1(
+                Act0SharkyCoachMomentV1.homeDoneReturn,
+              ),
             ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.primary,
