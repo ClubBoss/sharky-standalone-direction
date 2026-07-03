@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/premium_transitions_replay_motion_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -46,9 +46,20 @@ should resolve if PNG proof of this exact state is ever required - this did
 not block landing the motion itself, which is fully verified by the widget-
 test suite. Human QA remains the last gate.
 
+`Sharky Character & Growth Evidence Pack v1` then paused the planned Sharky
+micro-animation slice for independent design review. It inventories active PNG
+and legacy SVG assets, proves the six-state mapping and two-stage growth
+contract, documents real sizes and consumer contexts, and records bounded
+capture gaps for Developing, improve, and milestone. Live source proves that
+the legacy `poker_shark_*.svg` family remains in limited production use in
+Welcome and as PNG load-error fallback, so it is classified as a legacy
+direction to migrate deliberately rather than falsely marked unused. No source
+behavior or art changed. Micro-animation remains blocked until Claude Design
+selects a direction and any required pre-motion normalization/migration scope.
+
 Current active task:
 
-- `Sharky Micro-Animations v1`
+- `Sharky Character & Growth Design Review v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -89,10 +100,9 @@ ledger. `Targeted Content Repairs v1` is closed with explicit deferrals.
 Phase 7 blocker. Phase 8 - Motion is active. `Motion Direction System v1`
 closed with the semantic motion system defined (see
 `docs/_reviews/motion_direction_system_v1.md`) and no motion-phase
-implementation performed. The active task is now
-`Premium Transitions / Replay Motion v1`, bounded to exactly two related
-surfaces (World completion, W4->W5 band-transition milestone) per the
-direction doc's first implementation slice.
+implementation performed. The premium milestone slice is now closed.
+`Sharky Character & Growth Design Review v1` is the active Phase 8 checkpoint
+before any Sharky micro-animation work.
 
 ## Phase 6 Sequence (closed)
 
@@ -115,7 +125,8 @@ direction doc's first implementation slice.
 
 1. Motion Direction System - CLOSED
 2. Premium Transitions / Replay Motion v1 - CLOSED
-3. Sharky Micro-Animations v1 - ACTIVE
+3. Sharky Character & Growth Design Review v1 - ACTIVE
+4. Sharky Micro-Animations v1 - BLOCKED pending design verdict
 
 ## Phase 4 Sequence (closed)
 

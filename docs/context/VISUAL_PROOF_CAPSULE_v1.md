@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/premium_transitions_replay_motion_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -268,7 +268,22 @@ discarded `toImage()` capture script hit an unreproduced rendering anomaly
 color, text - but it is absent from the rasterized PNG); this is classified
 as a screenshot-tooling limitation, not a product defect, and is deferred to
 a future dedicated capture-tooling investigation rather than blocking this
-wave. `Sharky Micro-Animations v1` is the next active task.
+wave. `Sharky Character & Growth Evidence Pack v1` then established a
+source-truth checkpoint before Sharky micro-animation: five primary active PNG
+moods map to six semantic states (`confirm` and `improve` share
+`sharky_happy.png`, with improve relying on its accent ring and evidence
+copy); `sharky_sleeping.png` is unused/future-only and excluded from the
+active state set; and the three flat `poker_shark_*.svg` assets are a legacy
+direction with limited active production use in Welcome plus PNG load-error
+fallback, not unused assets. Current deterministic lanes prove Foundation and
+several states, but no natural fixture reaches Developing, improve, or
+milestone; wrong feedback also reproducibly displays the SVG fallback, so that
+image is disclosed rather than misrepresented as primary repair-PNG proof.
+The local handoff is
+`output/sharky_character_growth_evidence_pack_v1/sharky_character_growth_design_handoff_v1.zip`.
+`Sharky Character & Growth Design Review v1` is ACTIVE and Sharky
+micro-animation remains BLOCKED pending its verdict. No art, mapping, runtime,
+or motion implementation changed in the evidence wave.
 
 ## Remaining Visual Route
 
@@ -355,3 +370,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/product_surface_visual_evidence_repair_v1.md`
 - `docs/_reviews/motion_direction_system_v1.md`
 - `docs/_reviews/premium_transitions_replay_motion_v1.md`
+- `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`
