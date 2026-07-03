@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/product_surface_visual_evidence_repair_v1.md`.
+Verified active route artifact: `docs/_reviews/motion_direction_system_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -224,7 +224,27 @@ CTA/nav proximity - clean at the two scroll positions a real user actually
 rests at), and Review's remaining empty space was accepted as intentional
 (matches Home's already-accepted "nothing due" pattern; Review structure
 remains frozen). Phase 8 - Motion is restored ACTIVE with
-`Motion Direction System v1`.
+`Motion Direction System v1`. Motion Direction System v1 then defined one
+bounded semantic motion system for the active surface without implementing
+it: 7 categories (`navigation`, `reveal`, `state_transition`,
+`repair_correction`, `confirmation_proof`, `milestone`,
+`sharky_micro_response`), 4 duration tokens (`micro` 140ms, `standard`
+260ms, `emphasis` 420ms, `milestone` 900ms) and 4 easing tokens (`enter`,
+`exit`, `settle`, `emphasis`) replacing 23 ad hoc millisecond values found
+scattered across 6 owner files, explicit composition/priority rules (fade
+for in-place meaning changes, slide only paired with fade, scale reserved
+for `milestone`/`confirmation_proof`, never obscure a CTA, never animate two
+payoff moments at once, never imply unearned proof), and a reduced-motion
+contract that reuses the one existing accessibility seam already proven in
+`_ProofMotionRevealV1` (`MediaQuery.disableAnimations`) rather than inventing
+a new one. Every candidate surface was classified; the two real gaps found -
+World completion and the W4->W5 band-transition milestone, both currently
+motion-less despite being the product's highest-emphasis payoff moments -
+were selected as the bounded first implementation slice,
+`Premium Transitions / Replay Motion v1`. Navigation crossfade and Street
+Replay's own entrance motion are real but explicitly deferred (lower EV,
+would add unrelated surfaces beyond the two-surface slice limit). No source
+code changed and no motion was implemented in this direction-setting wave.
 
 ## Remaining Visual Route
 
@@ -309,3 +329,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/claude_implementation_quality_gate_v1.md`
 - `docs/_reviews/full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1.md`
 - `docs/_reviews/product_surface_visual_evidence_repair_v1.md`
+- `docs/_reviews/motion_direction_system_v1.md`

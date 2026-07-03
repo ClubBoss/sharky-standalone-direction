@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/product_surface_visual_evidence_repair_v1.md`.
+Verified active route artifact: `docs/_reviews/motion_direction_system_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -20,11 +20,18 @@ production bugs), tightened the Welcome handoff content-to-CTA gap, and
 re-verified the prior `full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1`
 ledger against fresh live evidence (most items already fixed by intervening
 commits; one item disproved as a scroll-jump capture artifact). Phase 8 -
-Motion is ACTIVE again. Human QA remains the last gate.
+Motion is ACTIVE. `Motion Direction System v1` then defined the semantic
+motion system (principles, categories, bounded duration/easing tokens,
+composition/priority rules, a reduced-motion contract reusing the existing
+`MediaQuery.disableAnimations` seam already proven in `_ProofMotionRevealV1`)
+without implementing it, classified every candidate surface, and selected
+`World completion` + `W4->W5 band-transition milestone` (both currently
+motion-less despite being the product's highest-emphasis payoff moments) as
+the first two-surface implementation slice. Human QA remains the last gate.
 
 Current active task:
 
-- `Motion Direction System v1`
+- `Premium Transitions / Replay Motion v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -62,9 +69,13 @@ Correctness Review v1` is now closed with selected solver-light candidates.
 `Solver-Light Selected Checks v1` is also closed with a consolidated repair
 ledger. `Targeted Content Repairs v1` is closed with explicit deferrals.
 `Phase 7 Closure Audit v1` closed Content & Correctness with no unresolved
-Phase 7 blocker. Phase 8 - Motion is active with
-`Motion Direction System v1`; this activates direction-setting only, not motion
-implementation.
+Phase 7 blocker. Phase 8 - Motion is active. `Motion Direction System v1`
+closed with the semantic motion system defined (see
+`docs/_reviews/motion_direction_system_v1.md`) and no motion-phase
+implementation performed. The active task is now
+`Premium Transitions / Replay Motion v1`, bounded to exactly two related
+surfaces (World completion, W4->W5 band-transition milestone) per the
+direction doc's first implementation slice.
 
 ## Phase 6 Sequence (closed)
 
@@ -85,7 +96,8 @@ implementation.
 
 ## Phase 8 Sequence (active)
 
-1. Motion Direction System - ACTIVE
+1. Motion Direction System - CLOSED
+2. Premium Transitions / Replay Motion v1 - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
@@ -119,7 +131,9 @@ implementation.
 - calendar-week proof reporting
 - broad outcome-history dashboard
 - achievement icons before their dedicated Phase 4 stage
-- motion implementation before Motion Direction System closes
+- motion implementation beyond the two-surface `Premium Transitions / Replay
+  Motion v1` slice (World completion, W4->W5 band-transition milestone) that
+  `docs/_reviews/motion_direction_system_v1.md` explicitly authorized
 - W13-W36 pre-Human expansion
 - hand import
 - advanced analytics dashboard
