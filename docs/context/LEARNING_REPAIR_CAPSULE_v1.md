@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/targeted_content_repairs_v1.md`.
+Verified active route artifact: `docs/_reviews/phase_7_closure_audit_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -266,6 +266,41 @@ Route impact: Targeted Content Repairs is closed and
 `Phase 7 Closure Audit v1` is active. W13+ remains closed, Practice mapping
 remains blocked, and no learner-facing mastery, launch, public learning-effect,
 full solver, or GTO authority claim changes.
+
+## Phase 7 Closure Audit
+
+`Phase 7 Closure Audit v1` closed with
+`phase_7_closed_with_explicit_deferrals`. Content depth, first-use terminology,
+same-signal variation, conservative cross-session transfer, repair-to-transfer
+continuity, poker correctness, solver-light adjudication, explanation precision,
+beginner simplification safety, route/admission integrity, and evidence
+sufficiency are closed for the current W1-W12 route.
+
+Final P1-P4 disposition:
+
+- fixed: 7 merged items;
+- accepted: 3 negligible beginner simplifications;
+- deferred: 1 source-truth corpus-parity item;
+- unresolved actionable P1-P4: 0.
+
+PC-001 through PC-011 and SLCR-001 through SLCR-008 have explicit final
+dispositions. PC-011 / SLCR-008 remains a legitimate W11/W12 broad-corpus
+source-truth defer. Practice mapping remains blocked as separate product scope,
+and W13+ remains closed.
+
+Known lower-level failures do not invalidate Phase 7 proof:
+
+- removed Modern Table/session-player import coverage is classified
+  `pre_existing_stale_harness`;
+- the W6 generic runtime parser mismatch is `unrelated_tooling_debt` and a
+  `hygiene_backlog_candidate`.
+
+Neither failure reaches the canonical Act0 route or changes current Phase 7
+source truth. There is no unresolved Phase 7 blocker.
+
+Route impact: Phase 7 - Content & Correctness is closed. Phase 8 - Motion is
+active with `Motion Direction System v1`. This opens direction-setting only;
+it does not add motion, route, mapper, telemetry, or persistence behavior.
 
 ## Canonical Learning Loop
 

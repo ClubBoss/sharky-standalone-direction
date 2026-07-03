@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/targeted_content_repairs_v1.md`.
+Verified active route artifact: `docs/_reviews/phase_7_closure_audit_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -12,12 +12,12 @@ Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
 Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
 Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
 is CLOSED. `Claude Implementation Quality Gate` is CLOSED. Phase 6 -
-Advanced Learning Presentation is CLOSED. Phase 7 - Content & Correctness is
-ACTIVE. Human QA remains the last gate.
+Advanced Learning Presentation is CLOSED. Phase 7 - Content & Correctness is CLOSED.
+Phase 8 - Motion is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Phase 7 Closure Audit v1`
+- `Motion Direction System v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -42,7 +42,7 @@ remains intact and regression-tested.
 
 Phase 6 - Advanced Learning Presentation is closed. Street Replay, W7-W12
 Table-Context Readiness Audit, and Phase 6 Closure Audit are closed.
-Phase 7 - Content & Correctness is active. `W1-W12 Content Depth Gate v1` is
+Phase 7 - Content & Correctness is closed. `W1-W12 Content Depth Gate v1` is
 closed with optional gaps and advanced the route to
 `Term Introduction / Glossary Audit v1`. `Term Introduction / Glossary Audit
 v1` is closed with optional gaps and advanced the route to
@@ -53,9 +53,11 @@ Audit v1` is closed with optional gaps and advanced the route to
 targeted repair wave is now closed with explicit deferrals. `W1-W12 Poker
 Correctness Review v1` is now closed with selected solver-light candidates.
 `Solver-Light Selected Checks v1` is also closed with a consolidated repair
-ledger. `Targeted Content Repairs v1` is closed with explicit deferrals, and
-the active route is `Phase 7 Closure Audit v1`. Do not activate Phase 8 before
-the closure audit unless a new route authority explicitly reorders Phase 7.
+ledger. `Targeted Content Repairs v1` is closed with explicit deferrals.
+`Phase 7 Closure Audit v1` closed Content & Correctness with no unresolved
+Phase 7 blocker. Phase 8 - Motion is active with
+`Motion Direction System v1`; this activates direction-setting only, not motion
+implementation.
 
 ## Phase 6 Sequence (closed)
 
@@ -63,7 +65,7 @@ the closure audit unless a new route authority explicitly reorders Phase 7.
 2. W7-W12 Table-Context Readiness Audit - CLOSED
 3. Phase 6 Closure Audit - CLOSED
 
-## Phase 7 Sequence (active)
+## Phase 7 Sequence (closed)
 
 1. W1-W12 Content Depth Gate - CLOSED
 2. Term Introduction / Glossary Audit - CLOSED
@@ -72,7 +74,11 @@ the closure audit unless a new route authority explicitly reorders Phase 7.
 5. W1-W12 Poker Correctness Review - CLOSED
 6. Solver-Light Selected Checks - CLOSED
 7. Targeted Content Repairs - CLOSED
-8. Phase 7 Closure Audit - ACTIVE
+8. Phase 7 Closure Audit - CLOSED
+
+## Phase 8 Sequence (active)
+
+1. Motion Direction System - ACTIVE
 
 ## Phase 4 Sequence (closed)
 
@@ -91,8 +97,8 @@ the closure audit unless a new route authority explicitly reorders Phase 7.
 4. Proof Progression - CLOSED
 5. Sharky Companion - CLOSED
 6. Advanced Learning Presentation - CLOSED
-7. Content & Correctness - ACTIVE
-8. Motion
+7. Content & Correctness - CLOSED
+8. Motion - ACTIVE
 9. E2E Product Integrity
 10. Final 10/10 Audit
 11. Human QA
@@ -106,7 +112,7 @@ the closure audit unless a new route authority explicitly reorders Phase 7.
 - calendar-week proof reporting
 - broad outcome-history dashboard
 - achievement icons before their dedicated Phase 4 stage
-- motion or Sharky growth before their dedicated stages
+- motion implementation before Motion Direction System closes
 - W13-W36 pre-Human expansion
 - hand import
 - advanced analytics dashboard
