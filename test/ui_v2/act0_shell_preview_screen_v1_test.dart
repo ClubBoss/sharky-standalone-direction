@@ -20782,6 +20782,10 @@ void main() {
               runner: trailTask.runner.copyWith(
                 phase: Act0LessonPhaseV1.drill,
                 teachingStepIndex: trailTask.runner.teachingSteps.length,
+                table: trailTask.runner.table.copyWith(
+                  activeSeatId: 'btn',
+                  heroSeatId: 'btn',
+                ),
               ),
               tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
               onBack: () {},
@@ -20822,7 +20826,7 @@ void main() {
   );
 
   testWidgets(
-    'Street replay opens structured how-we-got-here sheet without hiding decisions',
+    'Street replay renders compact how-we-got-here context without hiding decisions',
     (tester) async {
       final trailTask = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -20838,6 +20842,10 @@ void main() {
               runner: trailTask.runner.copyWith(
                 phase: Act0LessonPhaseV1.drill,
                 teachingStepIndex: trailTask.runner.teachingSteps.length,
+                table: trailTask.runner.table.copyWith(
+                  activeSeatId: 'btn',
+                  heroSeatId: 'btn',
+                ),
               ),
               tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
               onBack: () {},
@@ -20850,55 +20858,58 @@ void main() {
       );
 
       expect(
-        find.byKey(const Key('act0_shell_street_replay_entry')),
+        find.byKey(const Key('act0_shell_street_replay_inline')),
         findsOneWidget,
       );
       expect(find.text('How we got here'), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('act0_shell_street_replay_entry')));
-      await tester.pumpAndSettle();
-
       expect(
         find.byKey(const Key('act0_shell_street_replay_sheet')),
-        findsOneWidget,
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_entry')),
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_street_replay_step_motion_0')),
-        findsOneWidget,
-      );
-      final replaySheet = find.byKey(
-        const Key('act0_shell_street_replay_sheet'),
+        findsNothing,
       );
       expect(
-        find.descendant(
-          of: replaySheet,
-          matching: find.text('Street by street'),
-        ),
+        find.byKey(const Key('act0_shell_street_replay_step_0')),
         findsOneWidget,
       );
       expect(
-        find.descendant(of: replaySheet, matching: find.text('You are here')),
+        find.byKey(const Key('act0_shell_street_replay_current_street')),
         findsOneWidget,
       );
       expect(
-        find.descendant(of: replaySheet, matching: find.text('Hand history')),
+        find.byKey(const Key('act0_shell_street_replay_here_marker')),
+        findsOneWidget,
+      );
+      expect(find.text('You are here'), findsOneWidget);
+      final replayInline = find.byKey(
+        const Key('act0_shell_street_replay_inline'),
+      );
+      expect(
+        find.descendant(of: replayInline, matching: find.text('Hand history')),
         findsNothing,
       );
       expect(
         find.descendant(
-          of: replaySheet,
+          of: replayInline,
           matching: find.textContaining('tracker'),
         ),
         findsNothing,
       );
       expect(
-        find.descendant(of: replaySheet, matching: find.textContaining('GTO')),
+        find.descendant(of: replayInline, matching: find.textContaining('GTO')),
         findsNothing,
       );
       expect(
         find.descendant(
-          of: replaySheet,
+          of: replayInline,
           matching: find.textContaining('solver'),
         ),
         findsNothing,
@@ -20946,6 +20957,10 @@ void main() {
 
       expect(
         find.byKey(const Key('act0_shell_street_replay_entry')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_inline')),
         findsNothing,
       );
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);

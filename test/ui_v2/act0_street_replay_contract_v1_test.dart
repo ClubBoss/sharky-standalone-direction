@@ -72,11 +72,29 @@ void main() {
       final replay = act0StreetReplayFromTableV1(multiStreetTable);
 
       expect(replay, isNotNull);
+      expect(replay!.completeness, Act0StreetReplayCompletenessV1.complete);
+      expect(replay.heroPosition, 'BTN');
+      expect(replay.opponentPosition, 'BB');
+      expect(replay.effectiveStackBb, '40 BB');
+      expect(replay.currentDecisionActor, 'Hero');
+      expect(replay.currentDecisionSummaryKey, 'Facing river shove');
+      expect(replay.sourceRefs, <String>[
+        'streetLabel',
+        'actionTrail',
+        'activeSeatId',
+        'heroSeatId',
+      ]);
       expect(
-        replay!.steps.map((step) => step.street),
+        replay.steps.map((step) => step.street).toList(growable: false),
         <Act0StreetReplayStreetV1>[
           Act0StreetReplayStreetV1.preflop,
+          Act0StreetReplayStreetV1.preflop,
+          Act0StreetReplayStreetV1.preflop,
+          Act0StreetReplayStreetV1.preflop,
           Act0StreetReplayStreetV1.flop,
+          Act0StreetReplayStreetV1.flop,
+          Act0StreetReplayStreetV1.flop,
+          Act0StreetReplayStreetV1.turn,
           Act0StreetReplayStreetV1.turn,
           Act0StreetReplayStreetV1.river,
         ],
@@ -84,6 +102,10 @@ void main() {
       expect(replay.currentStreet, Act0StreetReplayStreetV1.river);
       expect(replay.steps.last.isCurrentStreet, isTrue);
       expect(replay.steps.last.youAreHereLabel, 'You are here');
+      expect(replay.steps.last.actorLabel, 'BB');
+      expect(replay.steps.last.actionTypeLabel, 'shoves');
+      expect(replay.steps.last.amountLabel, '4 BB');
+      expect(replay.steps.last.order, 9);
       expect(replay.steps.last.boardCardsAtStreet, <String>[
         'Kc',
         'Qh',
@@ -99,6 +121,22 @@ void main() {
       expect(replay.keyClue, 'Board completes the flush.');
     },
   );
+
+  test('fails closed when actor truth is missing from an action step', () {
+    final replay = act0StreetReplayFromTableV1(
+      multiStreetTable.copyWith(
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+          Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+          Act0ActionTrailItemV1(label: 'raises 3 BB'),
+        ],
+      ),
+    );
+
+    expect(replay, isNotNull);
+    expect(replay!.completeness, Act0StreetReplayCompletenessV1.insufficient);
+    expect(replay.steps, isEmpty);
+  });
 
   test('does not create replay without source-owned street context', () {
     final replay = act0StreetReplayFromTableV1(

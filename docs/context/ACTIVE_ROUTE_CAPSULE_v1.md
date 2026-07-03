@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/claude_implementation_quality_gate_v1.md`.
+Verified active route artifact: `docs/_reviews/street_replay_how_we_got_here_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -16,7 +16,7 @@ Advanced Learning Presentation is ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Street Replay / How We Got Here v1`
+- `W7-W12 Table-Context Readiness Audit v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -39,12 +39,13 @@ remains intact and regression-tested.
 - `Companion Semantic Consistency Gate` - CLOSED
 - `Claude Implementation Quality Gate` - CLOSED
 
-Phase 6 - Advanced Learning Presentation is now active. Do not skip directly
-to later Phase 6 items.
+Phase 6 - Advanced Learning Presentation is active. Street Replay is closed;
+do not skip directly past the W7-W12 Table-Context Readiness Audit.
 
 ## Phase 6 Sequence (active)
 
-1. Street Replay / How We Got Here - ACTIVE
+1. Street Replay / How We Got Here - CLOSED
+2. W7-W12 Table-Context Readiness Audit - ACTIVE
 
 ## Phase 4 Sequence (closed)
 

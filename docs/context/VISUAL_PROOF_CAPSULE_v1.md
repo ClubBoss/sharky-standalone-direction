@@ -163,7 +163,18 @@ than a future-world framework. Home/Profile remain deferred. Hygiene backlog
 candidates: `_worldCompletionMetaByNumberV1[4]`, Profile fallback trophy
 metaphor, Home `preSessionMood:` literals, Profile growth integration, and
 legacy `Good fixes:` payoff-hero compatibility. No unresolved blocker remains
-for Phase 6. The active task is `Street Replay / How We Got Here v1`.
+for Phase 6. Street Replay / How We Got Here v1 then landed as a bounded
+inline Act0 decision-context consumer, not a modal or replay engine. Its
+contract derives from existing `Act0TableStateV1` street, board, seat,
+active-actor, pot/price, and ordered action-trail truth. It supports preflop,
+flop, turn, and river only when source truth exists; board cards are
+street-capped, the pending action is excluded, missing optional values are not
+guessed, and missing actor/action truth fails closed. The visible consumer is
+one compact `How we got here` block inside the existing decision panel, with a
+separate `You are here` marker when the current street has no prior action.
+No motion, sheet, timeline scrubber, persistence, solver, Modern Table change,
+or full replay architecture was admitted. The active task is now
+`W7-W12 Table-Context Readiness Audit v1`.
 
 ## Remaining Visual Route
 

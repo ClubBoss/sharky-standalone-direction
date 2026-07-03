@@ -2,10 +2,19 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 enum Act0StreetReplayStreetV1 { preflop, flop, turn, river }
 
+enum Act0StreetReplayCompletenessV1 { complete, partialSafe, insufficient }
+
 class Act0StreetReplayV1 {
   const Act0StreetReplayV1({
     required this.steps,
     required this.currentStreet,
+    required this.completeness,
+    required this.heroPosition,
+    this.opponentPosition = '',
+    this.effectiveStackBb = '',
+    required this.currentDecisionActor,
+    this.currentDecisionSummaryKey = '',
+    this.sourceRefs = const <String>[],
     this.keyClue = '',
     this.decisionContext = '',
     this.sourceLabel = 'act0_table_action_trail_v1',
@@ -13,15 +22,30 @@ class Act0StreetReplayV1 {
 
   final List<Act0StreetReplayStepV1> steps;
   final Act0StreetReplayStreetV1 currentStreet;
+  final Act0StreetReplayCompletenessV1 completeness;
+  final String heroPosition;
+  final String opponentPosition;
+  final String effectiveStackBb;
+  final String currentDecisionActor;
+  final String currentDecisionSummaryKey;
+  final List<String> sourceRefs;
   final String keyClue;
   final String decisionContext;
   final String sourceLabel;
+
+  bool get isConsumerSafe =>
+      completeness != Act0StreetReplayCompletenessV1.insufficient &&
+      steps.isNotEmpty;
 }
 
 class Act0StreetReplayStepV1 {
   const Act0StreetReplayStepV1({
     required this.street,
     required this.actionSummary,
+    required this.actorLabel,
+    required this.actionTypeLabel,
+    required this.order,
+    this.amountLabel = '',
     this.boardCardsAtStreet = const <String>[],
     this.potAtStreet = '',
     this.isCurrentStreet = false,
@@ -30,6 +54,10 @@ class Act0StreetReplayStepV1 {
 
   final Act0StreetReplayStreetV1 street;
   final String actionSummary;
+  final String actorLabel;
+  final String actionTypeLabel;
+  final String amountLabel;
+  final int order;
   final List<String> boardCardsAtStreet;
   final String potAtStreet;
   final bool isCurrentStreet;
@@ -55,11 +83,45 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     return null;
   }
 
-  final grouped = <Act0StreetReplayStreetV1, List<String>>{
-    Act0StreetReplayStreetV1.preflop: <String>[],
-  };
+  final heroSeat = table.heroSeat;
+  final heroPosition = heroSeat.seatLabel.trim();
+  final activeSeat = _act0StreetReplaySeatByIdV1(table, table.activeSeatId);
+  final currentDecisionActor = activeSeat?.displayName.trim().isNotEmpty == true
+      ? activeSeat!.displayName.trim()
+      : activeSeat?.seatLabel.trim() ?? '';
+  final opponentPosition = table.seats
+      .where((seat) => !seat.isHero)
+      .map((seat) => seat.seatLabel.trim())
+      .firstWhere((label) => label.isNotEmpty, orElse: () => '');
+  final effectiveStackBb = _act0StreetReplayEffectiveStackV1(table);
+  final sourceRefs = <String>[
+    'streetLabel',
+    'actionTrail',
+    if ((table.activeSeatId ?? '').trim().isNotEmpty) 'activeSeatId',
+    if ((table.heroSeatId ?? '').trim().isNotEmpty) 'heroSeatId',
+  ];
+
+  if (heroPosition.isEmpty || currentDecisionActor.isEmpty) {
+    return Act0StreetReplayV1(
+      steps: const <Act0StreetReplayStepV1>[],
+      currentStreet: currentStreet,
+      completeness: Act0StreetReplayCompletenessV1.insufficient,
+      heroPosition: heroPosition,
+      opponentPosition: opponentPosition,
+      effectiveStackBb: effectiveStackBb,
+      currentDecisionActor: currentDecisionActor,
+      currentDecisionSummaryKey: table.centerLabel.trim(),
+      sourceRefs: List<String>.unmodifiable(sourceRefs),
+      keyClue: table.focusCalloutLabel.trim(),
+      decisionContext: _act0StreetReplayDecisionContextV1(table),
+    );
+  }
+
+  final steps = <Act0StreetReplayStepV1>[];
   var activeStreet = Act0StreetReplayStreetV1.preflop;
-  for (final rawLabel in trailLabels) {
+  var failedActionTruth = false;
+  for (var index = 0; index < trailLabels.length; index++) {
+    final rawLabel = trailLabels[index];
     final parsedStreet = _act0StreetReplayStreetFromTrailLabelV1(rawLabel);
     if (parsedStreet != null) {
       activeStreet = parsedStreet;
@@ -68,44 +130,48 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     if (action.isEmpty) {
       continue;
     }
-    grouped.putIfAbsent(activeStreet, () => <String>[]).add(action);
-  }
-
-  final steps = <Act0StreetReplayStepV1>[];
-  for (final street in Act0StreetReplayStreetV1.values) {
-    final actions = grouped[street] ?? const <String>[];
-    if (actions.isEmpty && street.index > currentStreet.index) {
-      continue;
+    final parsedAction = _act0StreetReplayParseActionV1(action);
+    if (parsedAction == null) {
+      failedActionTruth = true;
+      break;
     }
-    if (actions.isEmpty && street != currentStreet) {
-      continue;
-    }
-    final boardCards = _act0StreetReplayBoardCardsForStreetV1(
-      table.boardCards,
-      street,
-    );
-    final isCurrentStreet = street == currentStreet;
     steps.add(
       Act0StreetReplayStepV1(
-        street: street,
-        actionSummary: actions.isEmpty
-            ? 'Current decision.'
-            : actions.join('. '),
-        boardCardsAtStreet: boardCards,
-        potAtStreet: isCurrentStreet ? table.potLabel.trim() : '',
-        isCurrentStreet: isCurrentStreet,
-        compactLabel: isCurrentStreet ? 'Current street' : '',
+        street: activeStreet,
+        actionSummary: action,
+        actorLabel: parsedAction.actorLabel,
+        actionTypeLabel: parsedAction.actionTypeLabel,
+        amountLabel: parsedAction.amountLabel,
+        order: index,
+        boardCardsAtStreet: _act0StreetReplayBoardCardsForStreetV1(
+          table.boardCards,
+          activeStreet,
+        ),
+        potAtStreet: activeStreet == currentStreet ? table.potLabel.trim() : '',
+        isCurrentStreet: activeStreet == currentStreet,
+        compactLabel: activeStreet == currentStreet ? 'Current street' : '',
       ),
     );
   }
 
-  if (steps.isEmpty || !steps.any((step) => step.isCurrentStreet)) {
-    return null;
-  }
-
   return Act0StreetReplayV1(
-    steps: List<Act0StreetReplayStepV1>.unmodifiable(steps),
+    steps: failedActionTruth
+        ? const <Act0StreetReplayStepV1>[]
+        : List<Act0StreetReplayStepV1>.unmodifiable(steps),
     currentStreet: currentStreet,
+    completeness: failedActionTruth || steps.isEmpty
+        ? Act0StreetReplayCompletenessV1.insufficient
+        : _act0StreetReplayCompletenessV1(
+            table: table,
+            heroPosition: heroPosition,
+            currentDecisionActor: currentDecisionActor,
+          ),
+    heroPosition: heroPosition,
+    opponentPosition: opponentPosition,
+    effectiveStackBb: effectiveStackBb,
+    currentDecisionActor: currentDecisionActor,
+    currentDecisionSummaryKey: table.centerLabel.trim(),
+    sourceRefs: List<String>.unmodifiable(sourceRefs),
     keyClue: table.focusCalloutLabel.trim(),
     decisionContext: _act0StreetReplayDecisionContextV1(table),
   );
@@ -185,4 +251,105 @@ String _act0StreetReplayDecisionContextV1(Act0TableStateV1 table) {
     return '';
   }
   return '${parts.join('. ')}.';
+}
+
+({String actorLabel, String actionTypeLabel, String amountLabel})?
+_act0StreetReplayParseActionV1(String action) {
+  final tokens = action.trim().split(RegExp(r'\s+'));
+  if (tokens.length < 2) {
+    return null;
+  }
+  final actor = tokens.first.trim();
+  final actionType = tokens[1].trim();
+  if (!_act0StreetReplayLooksLikeActorV1(actor) ||
+      !_act0StreetReplayLooksLikeActionV1(actionType)) {
+    return null;
+  }
+  final amountMatch = RegExp(
+    r'(\d+(?:\.\d+)?)\s*BB\b',
+    caseSensitive: false,
+  ).firstMatch(action);
+  return (
+    actorLabel: actor,
+    actionTypeLabel: actionType,
+    amountLabel: amountMatch == null ? '' : '${amountMatch.group(1)} BB',
+  );
+}
+
+bool _act0StreetReplayLooksLikeActorV1(String value) {
+  final normalized = value.trim().toUpperCase();
+  if (normalized.isEmpty) return false;
+  return normalized == 'SB' ||
+      normalized == 'BB' ||
+      normalized == 'BTN' ||
+      normalized == 'CO' ||
+      normalized == 'HJ' ||
+      normalized == 'LJ' ||
+      normalized == 'UTG' ||
+      normalized == 'MP' ||
+      normalized.startsWith('UTG+');
+}
+
+bool _act0StreetReplayLooksLikeActionV1(String value) {
+  return switch (value.trim().toLowerCase()) {
+    'blind' ||
+    'posts' ||
+    'checks' ||
+    'check' ||
+    'bets' ||
+    'bet' ||
+    'raises' ||
+    'raise' ||
+    'calls' ||
+    'call' ||
+    'folds' ||
+    'fold' ||
+    'shoves' ||
+    'shove' ||
+    'jams' ||
+    'jam' => true,
+    _ => false,
+  };
+}
+
+Act0SeatStateV1? _act0StreetReplaySeatByIdV1(
+  Act0TableStateV1 table,
+  String? seatId,
+) {
+  final normalized = seatId?.trim();
+  if (normalized == null || normalized.isEmpty) {
+    return null;
+  }
+  for (final seat in table.seats) {
+    if (seat.seatId == normalized) {
+      return seat;
+    }
+  }
+  return null;
+}
+
+String _act0StreetReplayEffectiveStackV1(Act0TableStateV1 table) {
+  final labels = table.seats
+      .map((seat) => seat.stackLabel?.trim() ?? '')
+      .where((label) => label.isNotEmpty)
+      .toList(growable: false);
+  if (labels.isEmpty) {
+    return '';
+  }
+  return labels.first;
+}
+
+Act0StreetReplayCompletenessV1 _act0StreetReplayCompletenessV1({
+  required Act0TableStateV1 table,
+  required String heroPosition,
+  required String currentDecisionActor,
+}) {
+  final hasCompleteContext =
+      heroPosition.trim().isNotEmpty &&
+      currentDecisionActor.trim().isNotEmpty &&
+      table.potLabel.trim().isNotEmpty &&
+      table.centerLabel.trim().isNotEmpty;
+  return hasCompleteContext
+      ? Act0StreetReplayCompletenessV1.complete
+      : Act0StreetReplayCompletenessV1.partialSafe;
 }
