@@ -30,6 +30,29 @@ same-signal/transfer inventory. Route impact is capsule-only: content depth is
 closed, glossary/term introduction is active, Practice mapping remains blocked,
 W13+ remains closed, and no learner-facing repair or proof claim changes.
 
+## Phase 7 Term Introduction / Glossary Audit
+
+`Term Introduction / Glossary Audit v1` closed with
+`term_introduction_glossary_ready_with_optional_gaps`. Existing lightweight
+ownership is sufficient: `content/_meta/term_introduction_contract_v1.json`
+owns priority first-use definitions, `tools/term_coverage_scanner.dart`
+enforces ordering, and lesson-local definitions remain preferred over glossary
+UI.
+
+High-risk terms were classified as route-safe with optional gaps: W5/W8 draw
+language, W6/W7 range language, W9 price/pot-odds language, W10 value/bluff
+target language, W11 texture/danger language, and W12 review/process language.
+Scanner-owned terms pass first-use order: `EQUITY`, `PROBE`, `BLOCKERS`,
+`OUTS`, `OOP`, `PAIRED`, `SPR`, `ICM`, `EV`, `EXPLOIT`, and `COMBO`.
+Reference-only `PFA` and `DB` remain excluded from active learner content.
+
+Deferred glossary/watch items: compact seat labels (`SB`, `BB`, `BTN`, `CO`),
+late `UTG`, `one-gap`, and `No-bet-yet clue`. No learner-visible
+concept-family ids, route ids, snake_case, telemetry keys, or source task ids
+were found in screenshot lanes. Route impact is capsule-only: glossary audit is
+closed, `Same-Signal / Transfer Coverage Audit v1` is active, Practice mapping
+remains blocked, W13+ remains closed, and no learner-facing proof claim changes.
+
 ## Canonical Learning Loop
 
 `choice -> visible table signal -> why -> repair -> proof -> return reason`

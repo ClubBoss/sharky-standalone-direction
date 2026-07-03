@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/w1_w12_content_depth_gate_v1.md`.
+Verified active route artifact: `docs/_reviews/term_introduction_glossary_audit_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -17,7 +17,7 @@ ACTIVE. Human QA remains the last gate.
 
 Current active task:
 
-- `Term Introduction / Glossary Audit v1`
+- `Same-Signal / Transfer Coverage Audit v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -44,9 +44,11 @@ Phase 6 - Advanced Learning Presentation is closed. Street Replay, W7-W12
 Table-Context Readiness Audit, and Phase 6 Closure Audit are closed.
 Phase 7 - Content & Correctness is active. `W1-W12 Content Depth Gate v1` is
 closed with optional gaps and advanced the route to
-`Term Introduction / Glossary Audit v1`. Do not skip directly to
-poker-correctness review before glossary/term introduction is audited unless a
-new route authority explicitly reorders Phase 7.
+`Term Introduction / Glossary Audit v1`. `Term Introduction / Glossary Audit
+v1` is closed with optional gaps and advanced the route to
+`Same-Signal / Transfer Coverage Audit v1`. Do not skip directly to
+poker-correctness review before same-signal / transfer coverage is audited
+unless a new route authority explicitly reorders Phase 7.
 
 ## Phase 6 Sequence (closed)
 
@@ -57,8 +59,8 @@ new route authority explicitly reorders Phase 7.
 ## Phase 7 Sequence (active)
 
 1. W1-W12 Content Depth Gate - CLOSED
-2. Term Introduction / Glossary Audit - ACTIVE
-3. Same-Signal / Transfer Coverage Audit - PENDING
+2. Term Introduction / Glossary Audit - CLOSED
+3. Same-Signal / Transfer Coverage Audit - ACTIVE
 4. W1-W12 Poker Correctness Review - PENDING
 5. Solver-Light Selected Checks - PENDING
 6. Targeted Content Repairs - PENDING
