@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/targeted_same_signal_transfer_repairs_v1.md`.
+Verified active route artifact: `docs/_reviews/w1_w12_poker_correctness_review_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -128,6 +128,52 @@ Explicit deferrals:
 Route impact: targeted repairs are closed and
 `W1-W12 Poker Correctness Review v1` is active. Practice mapping remains
 blocked, W13+ remains closed, and no learner-facing mastery, launch, or public
+learning-effect claim changes.
+
+## Phase 7 W1-W12 Poker Correctness Review
+
+`W1-W12 Poker Correctness Review v1` closed with
+`w1_w12_poker_correctness_requires_solver_light`. No P1 route-fail truth
+conflict was found: admitted content keeps answer IDs/options coherent,
+W7-W12 route specs retain feedback and repair identity, W5 outs counts are
+correct, W9 stays classification-only, W13+ remains absent, and no solver/GTO
+or mastery claim was found in admitted route copy.
+
+World-level correctness matrix summary:
+
+- W1, W6, W8, W9, and W12 are route-safe for current beginner scope.
+- W2, W3, and W10 are route-safe with bounded copy repairs.
+- W4, W5, and W11 require selected solver-light checks before targeted repair
+  because current strategic action/sizing answers depend on omitted
+  assumptions.
+- No world has a route blocker or immediate fail-closed P1 truth conflict.
+
+Full P1-P4 ledger summary:
+
+- PC-001: W5 texture/board-shift action tasks need solver-light before repair.
+- PC-002: W11 source-packet one-focus continue/fold reps need solver-light.
+- PC-003: W4 value sizing tasks need solver-light.
+- PC-004: W4 protection/bluff/denial raise tasks need solver-light.
+- PC-005: W10 purpose-transfer taxonomy needs bounded content repair after
+  solver-light sequencing.
+- PC-006: W3 best-first-action wording needs bounded content repair.
+- PC-007/PC-008/PC-010: W6 range, W8 draw comparison, and W9 price
+  simplifications are intentionally accepted for current scope.
+- PC-009: heuristic universal wording should be trimmed where the targeted
+  repair wave touches the same content.
+- PC-011: W11/W12 broad corpus parity remains deferred with source-truth reason.
+
+Solver-light candidate list:
+
+- SL-001: W5 texture-to-action fixtures.
+- SL-002: W4 value sizing fixtures.
+- SL-003: W4 raise-purpose fixtures.
+- SL-004: W11 one-focus continue/fold source reps.
+- SL-005: W10 purpose-transfer taxonomy sanity check.
+
+Route impact: Poker Correctness Review is closed and
+`Solver-Light Selected Checks v1` is active. Practice mapping remains blocked,
+W13+ remains closed, and no learner-facing mastery, launch, or public
 learning-effect claim changes.
 
 ## Canonical Learning Loop
