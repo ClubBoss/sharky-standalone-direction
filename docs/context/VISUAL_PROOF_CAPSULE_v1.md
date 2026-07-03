@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/claude_implementation_quality_gate_v1.md`.
+Verified active route artifact: `docs/_reviews/w7_w12_table_context_readiness_audit_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -174,7 +174,18 @@ one compact `How we got here` block inside the existing decision panel, with a
 separate `You are here` marker when the current street has no prior action.
 No motion, sheet, timeline scrubber, persistence, solver, Modern Table change,
 or full replay architecture was admitted. The active task is now
-`W7-W12 Table-Context Readiness Audit v1`.
+`W7-W12 Table-Context Readiness Audit v1`. W7-W12 Table-Context Readiness
+Audit v1 then passed with optional gaps only. The active W7-W12 screenshot lane
+renders source-owned route specs through `Act0LessonRunnerShellV1` with BTN
+hero/active position, flop board, pot label, source-owned board/context copy,
+and W9-only call-price context. Street Replay remains intentionally hidden for
+those captures because their action-trail value is learning-purpose prose, not
+source-owned poker action history; the new guard proves the replay projection
+fails closed instead of fabricating steps. Optional gaps (stack labels and
+multi-street action history) remain deferred until a future task admits a
+source-backed owner. No production repair, route expansion, Modern Table
+redesign, solver layer, Practice mapping, W13+, or broad curriculum rewrite was
+introduced. The active task is now `Phase 6 Closure Audit v1`.
 
 ## Remaining Visual Route
 
