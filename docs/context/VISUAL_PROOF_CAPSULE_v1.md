@@ -292,6 +292,13 @@ normalization, forced-fallback proof, reduced-motion proof, and regenerated
 deterministic evidence. It is technical preparation only; no art, mapping,
 runtime, screenshot, or motion implementation changed. Sharky micro-animation
 remains BLOCKED pending the final direction lock and those preconditions.
+`Mascot Visual Concept Challenge Pack v1` then created a local-only challenge
+brief under `output/mascot_visual_concept_challenge_pack_v1/` for Fable to
+visualize Route B, Route C, and B/C Hybrid at equal depth after the owner-level
+challenger review. The pack standardizes concept views, semantic states,
+growth, size tiers, dark-UI context, anti-anchoring controls, and final
+comparison scoring; it includes no generated mascot images and does not choose
+or imply a winning direction.
 
 ## Remaining Visual Route
 
@@ -380,3 +387,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/premium_transitions_replay_motion_v1.md`
 - `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`
 - `docs/_reviews/mascot_production_feasibility_migration_audit_v1.md`
+- `docs/_reviews/mascot_visual_concept_challenge_pack_v1.md`

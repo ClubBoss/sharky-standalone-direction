@@ -61,7 +61,12 @@ require final art-direction lock, one on-identity fallback system, Welcome
 migration, renderer apparent-scale/anchor/baseline normalization, reduced-
 motion proof, and refreshed deterministic evidence before Sharky micro-
 animation. The audit does not choose a final visual route and does not activate
-implementation.
+implementation. `Mascot Visual Concept Challenge Pack v1` then prepared a
+local-only, self-contained Fable handoff that gives Route B, Route C, and B/C
+Hybrid identical product context, output matrix, anti-anchoring controls,
+comparison rubric, and a compact post-Fable Claude comparison input. It
+contains no generated art, does not choose a winner, and does not activate
+concept production or implementation.
 
 Current active task:
 
