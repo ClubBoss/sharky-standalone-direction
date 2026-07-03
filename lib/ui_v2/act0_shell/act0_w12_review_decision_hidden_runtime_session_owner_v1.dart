@@ -231,8 +231,8 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
             'Identify what changed when a new card altered the texture.',
         expectedChoiceId: 'turn_added_draw_pressure',
         choiceIds: <String>[
-          'turn_added_draw_pressure',
           'turn_changed_nothing',
+          'turn_added_draw_pressure',
           'turn_set_final_result',
           'preflop_action_only_matters',
         ],
@@ -275,9 +275,9 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
             'overclaiming.',
         expectedChoiceId: 'simple_clues_explain_caution',
         choiceIds: <String>[
-          'simple_clues_explain_caution',
           'one_clue_solves_everything',
           'ignore_board_and_action',
+          'simple_clues_explain_caution',
           'answer_is_known_before_choice',
         ],
         learnerPrompt:
@@ -319,10 +319,10 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
             'Transfer the review habit by combining several simple clues.',
         expectedChoiceId: 'combine_texture_draw_price_purpose',
         choiceIds: <String>[
-          'combine_texture_draw_price_purpose',
           'use_only_last_card',
           'ignore_bet_purpose',
           'call_price_predicts_result',
+          'combine_texture_draw_price_purpose',
         ],
         learnerPrompt:
             'A spot has board texture, draw pressure, call price, and bet '

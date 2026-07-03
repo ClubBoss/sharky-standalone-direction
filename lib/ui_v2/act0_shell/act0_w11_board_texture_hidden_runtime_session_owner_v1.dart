@@ -232,8 +232,8 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
         'Recognize that connected ranks can create more straight paths.',
     expectedChoiceId: 'connected_cards_create_more_paths',
     choiceIds: <String>[
-      'connected_cards_create_more_paths',
       'dry_board_safer_texture',
+      'connected_cards_create_more_paths',
       'suit_pattern_only_matters',
       'rank_connection_never_matters',
     ],
@@ -276,9 +276,9 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
         'Recognize when suited board cards create flush-draw or flush pressure.',
     expectedChoiceId: 'suited_cards_add_flush_pressure',
     choiceIds: <String>[
-      'suited_cards_add_flush_pressure',
       'rainbow_board_more_flush_pressure',
       'suits_do_not_matter',
+      'suited_cards_add_flush_pressure',
       'flush_result_already_known',
     ],
     learnerPrompt:
@@ -319,10 +319,10 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
         'Transfer texture awareness to a one-pair danger comparison.',
     expectedChoiceId: 'coordinated_board_more_danger_for_one_pair',
     choiceIds: <String>[
-      'coordinated_board_more_danger_for_one_pair',
       'dry_board_more_danger_for_one_pair',
       'one_pair_always_safe',
       'texture_predicts_result',
+      'coordinated_board_more_danger_for_one_pair',
     ],
     learnerPrompt:
         'You have one pair. One board is dry; another is connected and suited. '

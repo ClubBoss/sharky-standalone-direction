@@ -230,8 +230,8 @@ act0W9PriceHiddenTaskSpecsV1 = <Act0W9PriceHiddenTaskSpecV1>[
         'Recognize when the amount to call is large compared with the pot.',
     expectedChoiceId: 'large_call_price',
     choiceIds: <String>[
-      'large_call_price',
       'small_call_price',
+      'large_call_price',
       'call_is_free',
       'result_is_known',
     ],
@@ -270,9 +270,9 @@ act0W9PriceHiddenTaskSpecsV1 = <Act0W9PriceHiddenTaskSpecV1>[
     learningPurpose: 'Compare two call prices using pot-relative cost.',
     expectedChoiceId: 'smaller_call_is_better_price',
     choiceIds: <String>[
-      'smaller_call_is_better_price',
       'larger_call_is_better_price',
       'both_prices_same',
+      'smaller_call_is_better_price',
       'price_does_not_matter',
     ],
     learnerPrompt:
@@ -310,10 +310,10 @@ act0W9PriceHiddenTaskSpecsV1 = <Act0W9PriceHiddenTaskSpecV1>[
     learningPurpose: 'Transfer the price idea to a fresh call comparison.',
     expectedChoiceId: 'lower_call_relative_to_pot',
     choiceIds: <String>[
-      'lower_call_relative_to_pot',
       'higher_call_relative_to_pot',
       'both_spots_are_made_hands',
       'price_predicts_next_card',
+      'lower_call_relative_to_pot',
     ],
     learnerPrompt:
         'One spot asks for a lower call relative to the pot. Another asks '

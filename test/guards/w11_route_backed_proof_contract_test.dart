@@ -47,8 +47,18 @@ void main() {
       );
       expect(
         kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+        const <String>[
+          'world12_spine_campaign_v1',
+          'world12_spine_followup_v1_b0',
+          'world12_spine_followup_v1_b1',
+          'world12_spine_followup_v1_b2',
+        ],
+        reason: 'W12 is admitted after W11 while W13 remains closed.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
         isEmpty,
-        reason: 'W11 proof must not register W12 packs.',
+        reason: 'W11/W12 proof must not open W13+ packs.',
       );
 
       final registrySource = File(

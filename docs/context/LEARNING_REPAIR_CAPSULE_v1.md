@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
+Verified active route artifact: `docs/_reviews/targeted_same_signal_transfer_repairs_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -94,6 +94,41 @@ Route impact is capsule-only: same-signal/transfer audit is closed,
 `W1-W12 Poker Correctness Review v1` is active, Practice mapping remains
 blocked, W13+ remains closed, and no learner-facing proof or Practice claim
 changes.
+
+## Phase 7 Targeted Same-Signal / Transfer Repairs
+
+`Targeted Same-Signal / Transfer Repairs v1` closed with
+`targeted_same_signal_transfer_repairs_landed_with_explicit_deferrals`.
+Non-strategic repair landed for the W7-W12 repeated-answer-slot pattern: W7,
+W8, W9, W10, W11, and W12 hidden task arcs now vary correct-answer position
+while preserving expected answer ids and source-owned task meaning.
+
+Fixed gaps:
+
+- Stale W11-only route-admission guard now asserts current W11 and W12 pack
+  admission, W13+ absence, W11 source-contract isolation, W11/W12 Practice CTA
+  absence, and mapper no-target reasons.
+- W7-W12 repeated answer-position risk is regression-tested by
+  `test/guards/targeted_same_signal_transfer_repairs_contract_test.dart`.
+- W3, W5, and W6 bounded same-signal/transfer coverage is regression-tested in
+  the same repair contract.
+- W11/W12 registry parity is explicit while broad W11/W12 corpus parity is not
+  claimed.
+
+Explicit deferrals:
+
+- W5/W8 draw nuance and W10 value/bluff nuance are correctness-review items,
+  not guessed in this repair wave.
+- W11/W12 broad `drills/*.json` corpus parity requires source-truth follow-up.
+- W7-W12 Practice mapper targets remain blocked until exact source-owned
+  target tuples exist.
+- W3 extra density and W6 broader range breadth are accepted for current-route
+  EV and should reopen only with source-owned content or correctness evidence.
+
+Route impact: targeted repairs are closed and
+`W1-W12 Poker Correctness Review v1` is active. Practice mapping remains
+blocked, W13+ remains closed, and no learner-facing mastery, launch, or public
+learning-effect claim changes.
 
 ## Canonical Learning Loop
 

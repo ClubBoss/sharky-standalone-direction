@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/same_signal_transfer_coverage_audit_v1.md`.
+Verified active route artifact: `docs/_reviews/targeted_same_signal_transfer_repairs_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -48,9 +48,12 @@ closed with optional gaps and advanced the route to
 v1` is closed with optional gaps and advanced the route to
 `Same-Signal / Transfer Coverage Audit v1`. `Same-Signal / Transfer Coverage
 Audit v1` is closed with optional gaps and advanced the route to
-`W1-W12 Poker Correctness Review v1`. Do not skip directly to solver-light
-checks or targeted content repairs before poker correctness is audited unless a
-new route authority explicitly reorders Phase 7.
+`W1-W12 Poker Correctness Review v1`. The active prompt then inserted
+`Targeted Same-Signal / Transfer Repairs v1` before poker correctness; that
+targeted repair wave is now closed with explicit deferrals and the route has
+advanced back to `W1-W12 Poker Correctness Review v1`. Do not skip directly to
+solver-light checks or broad targeted content repairs before poker correctness
+is audited unless a new route authority explicitly reorders Phase 7.
 
 ## Phase 6 Sequence (closed)
 
@@ -63,9 +66,10 @@ new route authority explicitly reorders Phase 7.
 1. W1-W12 Content Depth Gate - CLOSED
 2. Term Introduction / Glossary Audit - CLOSED
 3. Same-Signal / Transfer Coverage Audit - CLOSED
-4. W1-W12 Poker Correctness Review - ACTIVE
-5. Solver-Light Selected Checks - PENDING
-6. Targeted Content Repairs - PENDING
+4. Targeted Same-Signal / Transfer Repairs - CLOSED
+5. W1-W12 Poker Correctness Review - ACTIVE
+6. Solver-Light Selected Checks - PENDING
+7. Targeted Content Repairs - PENDING
 
 ## Phase 4 Sequence (closed)
 

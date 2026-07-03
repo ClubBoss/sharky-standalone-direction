@@ -232,8 +232,8 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
         'Recognize a bet whose main purpose is making stronger hands fold.',
     expectedChoiceId: 'bet_to_make_stronger_hands_fold',
     choiceIds: <String>[
-      'bet_to_make_stronger_hands_fold',
       'bet_for_worse_to_call',
+      'bet_to_make_stronger_hands_fold',
       'bet_already_won',
       'bet_shows_exact_hand',
     ],
@@ -276,9 +276,9 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
         'Recognize when a value bet is close because worse calls are unclear.',
     expectedChoiceId: 'worse_calls_are_unclear',
     choiceIds: <String>[
-      'worse_calls_are_unclear',
       'many_worse_hands_clearly_call',
       'bet_must_be_bluff',
+      'worse_calls_are_unclear',
       'purpose_does_not_matter',
     ],
     learnerPrompt:
@@ -321,10 +321,10 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
         'Transfer the value-versus-pressure purpose read across spots.',
     expectedChoiceId: 'main_purpose_value_or_fold_pressure',
     choiceIds: <String>[
-      'main_purpose_value_or_fold_pressure',
       'bet_size_predicts_result',
       'all_bets_have_same_purpose',
       'answer_already_known',
+      'main_purpose_value_or_fold_pressure',
     ],
     learnerPrompt:
         'In a new betting spot, what is the safest first question about the '

@@ -235,8 +235,8 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
         learningPurpose: 'Visible kings reduce king-containing combinations.',
         expectedChoiceId: 'king_combos_reduced',
         choiceIds: <String>[
-          'king_combos_reduced',
           'king_combos_unchanged',
+          'king_combos_reduced',
           'king_combos_certain',
           'king_combos_impossible',
         ],
@@ -283,9 +283,9 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
             'Paired boards change which strong hand combinations remain.',
         expectedChoiceId: 'seven_combos_reduced_trips_still_possible',
         choiceIds: <String>[
-          'seven_combos_reduced_trips_still_possible',
           'all_strong_hands_removed',
           'pair_does_not_change_combos',
+          'seven_combos_reduced_trips_still_possible',
           'opponent_always_has_trips',
         ],
         learnerPrompt:
@@ -330,10 +330,10 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
             'Transfer the visible-card reduction idea across ranks.',
         expectedChoiceId: 'visible_rank_reduces_matching_rank_combos',
         choiceIds: <String>[
-          'visible_rank_reduces_matching_rank_combos',
           'visible_rank_increases_matching_rank_combos',
           'only_board_low_cards_matter',
           'visible_cards_show_exact_hand',
+          'visible_rank_reduces_matching_rank_combos',
         ],
         learnerPrompt:
             'Across A72 rainbow and K84 rainbow, what shared idea should you '

@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
 import 'package:poker_analyzer/campaign/w11_campaign_fixture_projection_v1.dart';
 import 'package:poker_analyzer/campaign/w11_route_admission_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w11_board_texture_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w12_review_decision_hidden_runtime_session_owner_v1.dart';
 
 const _fixturePath =
     'content/worlds/world11/v1/sessions/w11.s01/campaign/'
@@ -64,8 +66,18 @@ void main() {
       );
       expect(
         kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+        const <String>[
+          'world12_spine_campaign_v1',
+          'world12_spine_followup_v1_b0',
+          'world12_spine_followup_v1_b1',
+          'world12_spine_followup_v1_b2',
+        ],
+        reason: 'W12 is admitted after W11 while W13 remains closed.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
         isEmpty,
-        reason: 'W11 admission must not register W12 packs.',
+        reason: 'W11/W12 admission must not open W13+ packs.',
       );
 
       final contractSource = File(
@@ -83,6 +95,28 @@ void main() {
           contractSource,
           isNot(contains(forbidden)),
           reason: 'W11 route contract must not depend on $forbidden.',
+        );
+      }
+
+      const w11Owner = Act0W11BoardTextureHiddenRuntimeSessionOwnerV1();
+      expect(w11Owner.practiceLaunchRequest, isNull);
+      for (final spec in act0W11BoardTextureHiddenTaskSpecsV1) {
+        expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId);
+        expect(
+          spec.mapperNoTargetReason,
+          contains('no_safe_practice_target'),
+          reason: spec.taskId,
+        );
+      }
+
+      const w12Owner = Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1();
+      expect(w12Owner.practiceLaunchRequest, isNull);
+      for (final spec in act0W12ReviewDecisionHiddenTaskSpecsV1) {
+        expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId);
+        expect(
+          spec.mapperNoTargetReason,
+          contains('no_safe_practice_target'),
+          reason: spec.taskId,
         );
       }
     },

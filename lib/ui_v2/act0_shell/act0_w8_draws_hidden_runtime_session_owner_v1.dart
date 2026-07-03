@@ -230,8 +230,8 @@ act0W8DrawsHiddenTaskSpecsV1 = <Act0W8DrawsHiddenTaskSpecV1>[
         'improvement cards.',
     expectedChoiceId: 'straight_draw_multiple_cards',
     choiceIds: <String>[
-      'straight_draw_multiple_cards',
       'straight_draw_only_one_card',
+      'straight_draw_multiple_cards',
       'straight_draw_already_made',
       'straight_draw_no_cards_help',
     ],
@@ -273,9 +273,9 @@ act0W8DrawsHiddenTaskSpecsV1 = <Act0W8DrawsHiddenTaskSpecV1>[
     learningPurpose: 'Compare a one-gap straight draw with an open-ended draw.',
     expectedChoiceId: 'open_ended_has_more_clear_improvement',
     choiceIds: <String>[
-      'open_ended_has_more_clear_improvement',
       'gutshot_always_has_more_improvement',
       'both_draws_are_made_hands',
+      'open_ended_has_more_clear_improvement',
       'draw_shape_does_not_matter',
     ],
     learnerPrompt:
@@ -318,10 +318,10 @@ act0W8DrawsHiddenTaskSpecsV1 = <Act0W8DrawsHiddenTaskSpecV1>[
         'Transfer the improvement-potential idea across draw types.',
     expectedChoiceId: 'flush_draw_has_more_improvement_potential',
     choiceIds: <String>[
-      'flush_draw_has_more_improvement_potential',
       'no_draw_has_more_improvement_potential',
       'both_spots_are_already_complete',
       'visible_cards_show_next_card',
+      'flush_draw_has_more_improvement_potential',
     ],
     learnerPrompt:
         'One hand has a flush draw. Another has no clear draw. Which has '
