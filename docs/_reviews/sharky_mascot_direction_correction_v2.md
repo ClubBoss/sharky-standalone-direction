@@ -8,6 +8,11 @@ Mode: documentation-only strategic correction; no production code, tests,
 assets, runtime behavior, mascot files, motion, Modern Table work, telemetry,
 route logic, content, screenshots, or generated images changed.
 
+Supersession note: this v2 document remains the historical route-correction
+record. Active character-system authority is clarified by
+`docs/_reviews/sharky_three_register_system_lock_v3.md`, which selects
+`THREE_REGISTER_ICONIC_COMPANION_SELECTED`.
+
 ## 1. Verdict
 
 `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`

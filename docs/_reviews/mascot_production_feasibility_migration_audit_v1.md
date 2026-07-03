@@ -38,7 +38,11 @@ fresh deterministic evidence before Sharky micro-animation can resume.
 - Mascot remains strategically valuable.
 - Shark remains the leading metaphor.
 - Superseded strategic-direction note: `Sharky Mascot Direction Correction v2`
-  selects `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`.
+  remains the route-correction record; `Sharky Three-Register System Lock v3`
+  selects `THREE_REGISTER_ICONIC_COMPANION_SELECTED`.
+- The canonical base Sharky is Product-first; Progress and Marketing expand
+  energy, motion, staging, props, and expression range without creating
+  separate base-character identities.
 - Claude Design's earlier major-evolution recommendation remains
   historical/reference evidence, not production authorization.
 - Final visual execution has not happened in repo authority.
@@ -219,9 +223,9 @@ style decision:
 
 This contract deliberately does not specify art style, proportions, expression,
 palette, silhouette design, or brand DNA. Its active strategic-direction input
-is now `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`; exact visual execution still
-requires the controlled Claude Design board described in
-`docs/_reviews/sharky_mascot_direction_correction_v2.md`.
+is now `THREE_REGISTER_ICONIC_COMPANION_SELECTED`; exact visual execution
+still requires the controlled Claude Design board described in
+`docs/_reviews/sharky_three_register_system_lock_v3.md`.
 
 ## 6. Renderer normalization options
 
@@ -496,8 +500,10 @@ history for this wave.
 
 Capsules should record:
 
-- `Sharky Mascot Direction Correction v2` selects
-  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction;
+- `Sharky Three-Register System Lock v3` selects
+  `THREE_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction;
+- Product-first base identity is mandatory across Product, Progress, and
+  Marketing;
 - exact final visual execution remains pending controlled board evidence;
 - Sharky Micro-Animations remain BLOCKED;
 - this audit is technical preparation only;

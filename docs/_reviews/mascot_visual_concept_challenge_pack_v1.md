@@ -30,10 +30,13 @@ survive.
 
 ## 2. Decision status
 
-- Superseded by `docs/_reviews/sharky_mascot_direction_correction_v2.md` for
-  active strategic direction.
+- Superseded by `docs/_reviews/sharky_three_register_system_lock_v3.md` for
+  active strategic direction; v2 remains the route-correction record.
 - Active strategic direction is now
-  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`.
+  `THREE_REGISTER_ICONIC_COMPANION_SELECTED`.
+- The canonical base Sharky is Product-first; Progress and Marketing expand
+  energy, motion, staging, props, and expression range without creating
+  separate base-character identities.
 - Final visual execution is not locked.
 - Claude Design's earlier Route B recommendation and the Route B/C/Hybrid
   challenge framing remain historical/reference evidence, not production
@@ -222,8 +225,10 @@ Final command results are recorded in the completion response.
 
 Capsules should record:
 
-- `Sharky Mascot Direction Correction v2` selects
-  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction.
+- `Sharky Three-Register System Lock v3` selects
+  `THREE_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction.
+- Product-first base identity is mandatory across Product, Progress, and
+  Marketing.
 - Exact final visual execution remains pending controlled board evidence.
 - Sharky Micro-Animations remain BLOCKED.
 - This challenge pack is superseded as the next active visual route, but
@@ -240,7 +245,9 @@ pack and ZIP remain local under `output/**` and uncommitted.
 ## 16. Next recommendation
 
 Do not continue from this Route B/C/Hybrid pack as the default next visual
-route. Use `Sharky Mascot Direction Correction v2` to ask Claude Design for a
+route. Use `Sharky Three-Register System Lock v3` to ask Claude Design for a
 controlled three-direction board: Warm Compact Companion, Balanced
-Dual-Register Sharky, and Premium Iconic Shark. Only after that board and an
-explicit owner visual lock should a bounded implementation prompt be written.
+Three-Register Sharky, and Premium Iconic Shark. All directions must use one
+Product-first base identity and demonstrate continuity across Product,
+Progress, and Marketing. Only after that board and an explicit owner visual
+lock should a bounded implementation prompt be written.
