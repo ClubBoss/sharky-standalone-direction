@@ -7,6 +7,29 @@ Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
+## Phase 7 Content Depth Gate
+
+`W1-W12 Content Depth Gate v1` closed with
+`w1_w12_content_depth_ready_with_optional_gaps`. The current W1-W12 route has
+enough content depth to advance to `Term Introduction / Glossary Audit v1`, but
+the result does not certify poker correctness, Human QA, launch readiness,
+public learning effect, premium readiness, or mastery.
+
+World matrix summary:
+
+- W1-W2 and W4 are content-depth ready for the current route.
+- W3, W5, W6, W8, W10, W11, and W12 are route-ready with optional gaps.
+- W7 and W9 are route-ready for their active owner specs.
+- W11/W12 now have source-owned packets and campaign fixtures, but not broad
+  `drills/*.json` corpus parity with W1-W10.
+
+Thin concepts and repair candidates are deferred, not active implementation:
+W3 raw drill density, W5/W8 draw-term first use, W6 range scope boundaries,
+W10 value/bluff nuance, W11/W12 drill-corpus parity, and per-family
+same-signal/transfer inventory. Route impact is capsule-only: content depth is
+closed, glossary/term introduction is active, Practice mapping remains blocked,
+W13+ remains closed, and no learner-facing repair or proof claim changes.
+
 ## Canonical Learning Loop
 
 `choice -> visible table signal -> why -> repair -> proof -> return reason`
