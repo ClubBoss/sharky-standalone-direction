@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_visual_growth_evolution_v1.md`.
+Verified active route artifact: `docs/_reviews/companion_semantic_consistency_gate_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -142,8 +142,18 @@ was deliberately deferred: its frame is a bespoke, frozen `Act0VisualCanonV1`
 gradient/border implementation, and giving it growth truth would require
 either forbidden consumer-specific styling logic or a risky swap onto the
 shared seam that could regress a frozen surface. No new asset, animation,
-cosmetics, rarity, XP, level, or rank was introduced. The active task is
-`Companion Semantic Consistency Gate v1`.
+cosmetics, rarity, XP, level, or rank was introduced. Companion Semantic
+Consistency Gate v1 then passed without production repair: phrase, companion
+state, and growth stage all resolve from structured evidence rather than
+English text or mood inference; Session Summary priority remains
+`milestone` > `improve` > `confirm` > `repair` > `neutral`; the W4->W5
+transition is classified as `intentional_boundary_behavior` (milestone state
+on the World 4 transition screen, Developing growth beginning only in World
+5); and Home/Profile remain deferred, harmless legacy surfaces rather than
+active contradictions. The remaining evidence gap is that deterministic
+screenshot lanes do not naturally expose a W5+ Developing fixture, so
+structural/widget tests remain the proof source for that state. The active
+task is `Claude Implementation Quality Gate v1`.
 
 ## Remaining Visual Route
 
@@ -224,3 +234,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/sharky_companion_states_v1.md`
 - `docs/_reviews/w1_completion_copy_regression_repair_v1.md`
 - `docs/_reviews/sharky_visual_growth_evolution_v1.md`
+- `docs/_reviews/companion_semantic_consistency_gate_v1.md`

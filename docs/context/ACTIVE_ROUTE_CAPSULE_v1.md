@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_visual_growth_evolution_v1.md`.
+Verified active route artifact: `docs/_reviews/companion_semantic_consistency_gate_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -11,13 +11,13 @@ Refresh trigger: every committed route, phase, immediate-task, or forbidden-scop
 Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
 Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
 Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
-is ACTIVE. Phase 6 does not begin until both the Companion Semantic
-Consistency Gate and the Claude Implementation Quality Gate pass. Human QA
-remains the last gate.
+is CLOSED. `Claude Implementation Quality Gate` is ACTIVE. Phase 6 does not
+begin until the Claude Implementation Quality Gate passes. Human QA remains
+the last gate.
 
 Current active task:
 
-- `Companion Semantic Consistency Gate v1`
+- `Claude Implementation Quality Gate v1`
 
 ## Phase 5 Sequence (closed)
 
@@ -37,11 +37,11 @@ remains intact and regression-tested.
 
 ## Post-Phase-5 Gates
 
-- `Companion Semantic Consistency Gate` - ACTIVE (current task)
-- `Claude Implementation Quality Gate` - pending, gates Phase 6 alongside it
+- `Companion Semantic Consistency Gate` - CLOSED
+- `Claude Implementation Quality Gate` - ACTIVE (current task), gates Phase 6
 
-Do not activate Phase 6 - Advanced Learning Presentation until both gates
-above pass.
+Do not activate Phase 6 - Advanced Learning Presentation until the Claude
+Implementation Quality Gate passes.
 
 ## Phase 4 Sequence (closed)
 
@@ -58,8 +58,8 @@ above pass.
 2. Learning Truth Foundation - CLOSED
 3. Repair Depth - CLOSED
 4. Proof Progression - CLOSED
-5. Sharky Companion - CLOSED (pending Companion Semantic Consistency Gate +
-   Claude Implementation Quality Gate before Phase 6 opens)
+5. Sharky Companion - CLOSED (pending Claude Implementation Quality Gate
+   before Phase 6 opens)
 6. Advanced Learning Presentation
 7. Content & Correctness
 8. Motion
