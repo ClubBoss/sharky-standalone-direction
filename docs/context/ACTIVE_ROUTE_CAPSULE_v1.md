@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/phase_7_closure_audit_v1.md`.
+Verified active route artifact: `docs/_reviews/product_surface_visual_evidence_repair_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -13,7 +13,14 @@ Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
 Phase 3 - Repair Depth are also CLOSED. `Companion Semantic Consistency Gate`
 is CLOSED. `Claude Implementation Quality Gate` is CLOSED. Phase 6 -
 Advanced Learning Presentation is CLOSED. Phase 7 - Content & Correctness is CLOSED.
-Phase 8 - Motion is ACTIVE. Human QA remains the last gate.
+`Product Surface & Visual Evidence Repair v1` closed a pre-Motion repair
+checkpoint: it fixed the W7-W12 copy-detail screenshot canvas mismatch and
+missing text-repair-overlay wiring (both screenshot-tooling regressions, not
+production bugs), tightened the Welcome handoff content-to-CTA gap, and
+re-verified the prior `full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1`
+ledger against fresh live evidence (most items already fixed by intervening
+commits; one item disproved as a scroll-jump capture artifact). Phase 8 -
+Motion is ACTIVE again. Human QA remains the last gate.
 
 Current active task:
 

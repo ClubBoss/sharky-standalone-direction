@@ -137,6 +137,65 @@ void main() {
     },
   );
 
+  test(
+    'active W7-W12 copy-detail canvas matches the compact table canvas',
+    () {
+      final capture = File(
+        'tools/act0_real_text_surface_capture_v1.dart',
+      ).readAsStringSync();
+      final activeSection = _activeRouteSection(capture);
+
+      // Regression guard for product_surface_visual_evidence_repair_v1:
+      // copyDetailSize was previously Size(760, 1200), a canvas with a
+      // different aspect ratio than the compact phone viewport the shell is
+      // designed for. That mismatch made the table render tiny/centered
+      // with a large dead dark gap below it in every copy-detail capture.
+      // copyDetailSize must stay pinned to compactSize so the same clean
+      // composition proven by the table captures applies here too.
+      expect(
+        activeSection,
+        contains('const copyDetailSize = compactSize;'),
+        reason:
+            'copy_detail captures must reuse the compact phone canvas, not '
+            'an oversized/disproportionate one.',
+      );
+      expect(activeSection, isNot(contains('Size(760, 1200)')));
+    },
+  );
+
+  test(
+    'active W7-W12 capture writes text-repair overlays like every other lane',
+    () {
+      final capture = File(
+        'tools/act0_real_text_surface_capture_v1.dart',
+      ).readAsStringSync();
+      final activeSection = _activeRouteSection(capture);
+
+      // Regression guard for product_surface_visual_evidence_repair_v1: the
+      // active-route capture function never called writeTextRepairOverlays,
+      // so screen_review_fast_text_repair_v1.py had no `.text_overlays.json`
+      // sidecar to repair, and the primary CTA button (which uses a
+      // fontFamily-less TextStyle and so falls back to the flutter_test
+      // Ahem font) rendered as an unreadable solid block in every
+      // copy-detail screenshot instead of legible text.
+      expect(
+        activeSection,
+        contains('void writeTextRepairOverlays('),
+        reason:
+            'The active-route lane must define the same overlay-recording '
+            'helper the other capture lanes use.',
+      );
+      expect(
+        activeSection,
+        contains('writeTextRepairOverlays(tester, fileName);'),
+        reason:
+            'captureActiveRouteSurface must call writeTextRepairOverlays '
+            'before capturing the boundary image, so Ahem-rendered button '
+            'labels get detected and repaired like every other lane.',
+      );
+    },
+  );
+
   test('active W7-W12 metadata is final-audit eligible', () {
     final capture = File(
       'tools/act0_real_text_surface_capture_v1.dart',

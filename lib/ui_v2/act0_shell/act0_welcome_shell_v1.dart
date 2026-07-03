@@ -275,14 +275,14 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                           replayMode: replayMode,
                           onClose: onClose,
                         ),
-                        const Spacer(flex: 45),
+                        Spacer(flex: centerContent ? 65 : 45),
                         Center(
                           child: SizedBox(
                             width: contentMaxWidth,
                             child: content,
                           ),
                         ),
-                        const Spacer(flex: 55),
+                        Spacer(flex: centerContent ? 20 : 55),
                         if (ctaBridgeLine != null &&
                             ctaBridgeLine!.trim().isNotEmpty) ...[
                           Text(

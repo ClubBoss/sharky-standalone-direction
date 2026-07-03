@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/phase_6_closure_audit_v1.md`.
+Verified active route artifact: `docs/_reviews/product_surface_visual_evidence_repair_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -197,7 +197,34 @@ lanes remain clean. Optional deferred gaps are stack labels, full multi-street
 history, full replay/browser/motion, and broader content/glossary depth. No
 unresolved Phase 6 blocker remains. Phase 6 - Advanced Learning Presentation is
 CLOSED; Phase 7 - Content & Correctness is ACTIVE with
-`W1-W12 Content Depth Gate v1`.
+`W1-W12 Content Depth Gate v1`. Phase 7 subsequently closed (see
+`docs/_reviews/phase_7_closure_audit_v1.md`). Product Surface & Visual
+Evidence Repair v1 then ran as a pre-Motion checkpoint. It root-caused the
+reported "strange right-side W7-W12 table captures" to two
+screenshot-tooling regressions in `tools/act0_real_text_surface_capture_v1.dart`,
+not a production defect: `copyDetailSize` (`Size(760, 1200)`) did not match
+the one supported compact-phone viewport (`compactSize`, `Size(375, 812)`),
+producing a tiny centered table with a large dead gap below it; and the
+active-route capture function never called `writeTextRepairOverlays`, so the
+primary feedback CTA (which uses a fontFamily-less `TextStyle` and falls back
+to the `flutter_test` Ahem font) rendered as an unreadable solid block in all
+8 copy-detail screenshots instead of legible "Continue" text. Both are fixed:
+`copyDetailSize` now equals `compactSize`, and the missing overlay-recording
+call was added, matching every other capture lane. No production layout,
+route, or Modern Table code was touched for either fix. The same wave
+re-verified the prior `full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1`
+ledger (GR-01 through GR-17) against fresh live evidence: most items were
+already resolved by intervening commits (raw concept-family ids, Practice
+lock icons, Review label copy, CTA fill consistency, Profile
+heading/task-count), one real gap remained and was fixed (Welcome handoff's
+content-to-CTA gap, rebalanced from a `45:55` to a `65:20` flex split scoped
+to the handoff beat only), one item was disproved as a scroll-jump capture
+artifact rather than a static defect (Session Summary `scroll_02_mid`
+CTA/nav proximity - clean at the two scroll positions a real user actually
+rests at), and Review's remaining empty space was accepted as intentional
+(matches Home's already-accepted "nothing due" pattern; Review structure
+remains frozen). Phase 8 - Motion is restored ACTIVE with
+`Motion Direction System v1`.
 
 ## Remaining Visual Route
 
@@ -280,3 +307,5 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/sharky_visual_growth_evolution_v1.md`
 - `docs/_reviews/companion_semantic_consistency_gate_v1.md`
 - `docs/_reviews/claude_implementation_quality_gate_v1.md`
+- `docs/_reviews/full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1.md`
+- `docs/_reviews/product_surface_visual_evidence_repair_v1.md`

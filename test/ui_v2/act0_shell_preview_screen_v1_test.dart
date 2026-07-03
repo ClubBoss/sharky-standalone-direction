@@ -11620,6 +11620,26 @@ void main() {
       findsNothing,
     );
     expect(find.text('Open first lesson'), findsOneWidget);
+
+    // Regression guard for product_surface_visual_evidence_repair_v1: the
+    // handoff content group and its primary CTA used to float apart with a
+    // large disconnected dead-space gap between them (GR-06), split evenly
+    // with the gap above the content (45:55 flex). The gap below content
+    // must now be clearly smaller than the gap above it, so the payload and
+    // its action read as one grouped unit instead of floating apart.
+    final topBarBottom = tester.getRect(find.text('3/3')).bottom;
+    final previewTop = tester
+        .getRect(find.byKey(const Key('act0_shell_welcome_handoff_preview')))
+        .top;
+    final proofBlockBottom = tester
+        .getRect(find.byKey(const Key('act0_shell_welcome_handoff_proof_block')))
+        .bottom;
+    final ctaTop = tester
+        .getRect(find.byKey(const Key('act0_shell_welcome_primary_cta')))
+        .top;
+    final gapAboveContent = previewTop - topBarBottom;
+    final gapBelowContent = ctaTop - proofBlockBottom;
+    expect(gapBelowContent, lessThan(gapAboveContent));
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();
 

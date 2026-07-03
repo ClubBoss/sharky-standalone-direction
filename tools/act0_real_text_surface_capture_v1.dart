@@ -836,7 +836,7 @@ void main() {
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
   final activeRouteEntries = <Map<String, Object?>>[];
   const compactSize = Size(375, 812);
-  const copyDetailSize = Size(760, 1200);
+  const copyDetailSize = compactSize;
 
   _TerminalTaskSpecV1 _terminalTaskSpec(int taskIndex) {
     final pack = kCampaignPacksV1['volume_i_terminal_review_v1']!;
@@ -1209,6 +1209,58 @@ void main() {
     await loadIconFonts();
   });
 
+  String colorToHex(Color color) {
+    final alpha = (color.a * 255).round().clamp(0, 255);
+    final red = (color.r * 255).round().clamp(0, 255);
+    final green = (color.g * 255).round().clamp(0, 255);
+    final blue = (color.b * 255).round().clamp(0, 255);
+    return '#'
+        '\${alpha.toRadixString(16).padLeft(2, '0')}'
+        '\${red.toRadixString(16).padLeft(2, '0')}'
+        '\${green.toRadixString(16).padLeft(2, '0')}'
+        '\${blue.toRadixString(16).padLeft(2, '0')}';
+  }
+
+  void writeTextRepairOverlays(WidgetTester tester, String fileName) {
+    final overlays = <Map<String, Object?>>[];
+    for (final element in find.byType(Text).evaluate()) {
+      final widget = element.widget;
+      if (widget is! Text) {
+        continue;
+      }
+      final text = widget.data ?? widget.textSpan?.toPlainText() ?? '';
+      if (text.trim().isEmpty) {
+        continue;
+      }
+      final defaultStyle = DefaultTextStyle.of(element).style;
+      final explicitStyle = widget.style;
+      if (defaultStyle.fontFamily != null || explicitStyle?.fontFamily != null) {
+        continue;
+      }
+      final renderObject = element.renderObject;
+      if (renderObject is! RenderBox || !renderObject.hasSize) {
+        continue;
+      }
+      final topLeft = renderObject.localToGlobal(Offset.zero);
+      final size = renderObject.size;
+      if (size.width <= 0 || size.height <= 0) {
+        continue;
+      }
+      overlays.add(<String, Object?>{
+        'text': text,
+        'left': topLeft.dx,
+        'top': topLeft.dy,
+        'width': size.width,
+        'height': size.height,
+        'fontSize': (explicitStyle?.fontSize ?? defaultStyle.fontSize ?? 14),
+        'fontWeight': (explicitStyle?.fontWeight ?? defaultStyle.fontWeight ?? FontWeight.w400).value,
+        'color': colorToHex(explicitStyle?.color ?? defaultStyle.color ?? Colors.white),
+      });
+    }
+    final overlayFile = File('\${outputDir.path}/' + fileName + '.text_overlays.json');
+    overlayFile.writeAsStringSync(jsonEncode(overlays));
+  }
+
   Future<void> captureActiveRouteSurface(
     WidgetTester tester,
     String fileName, {
@@ -1224,6 +1276,7 @@ void main() {
     await tester.pumpWidget(host(task: task, captureKind: captureKind));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 900));
+    writeTextRepairOverlays(tester, fileName);
     final boundary = tester.renderObject<RenderRepaintBoundary>(
       find.byKey(const Key('act0_real_text_capture_boundary')),
     );
