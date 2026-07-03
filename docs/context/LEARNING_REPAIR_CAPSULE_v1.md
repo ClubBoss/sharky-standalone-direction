@@ -50,8 +50,50 @@ Deferred glossary/watch items: compact seat labels (`SB`, `BB`, `BTN`, `CO`),
 late `UTG`, `one-gap`, and `No-bet-yet clue`. No learner-visible
 concept-family ids, route ids, snake_case, telemetry keys, or source task ids
 were found in screenshot lanes. Route impact is capsule-only: glossary audit is
-closed, `Same-Signal / Transfer Coverage Audit v1` is active, Practice mapping
-remains blocked, W13+ remains closed, and no learner-facing proof claim changes.
+closed and advanced to `Same-Signal / Transfer Coverage Audit v1`; later route
+state is recorded below. Practice mapping remains blocked, W13+ remains closed,
+and no learner-facing proof claim changes.
+
+## Phase 7 Same-Signal / Transfer Coverage Audit
+
+`Same-Signal / Transfer Coverage Audit v1` closed with
+`same_signal_transfer_coverage_ready_with_optional_gaps`. The admitted W1-W12
+route has enough same-signal, changed-context, and later-transfer evidence to
+advance to `W1-W12 Poker Correctness Review v1`, but this does not certify
+poker correctness, Human QA, launch readiness, public learning effect, Practice
+target admission, or W13+.
+
+Concept-family matrix summary:
+
+- W1-W2 and W4 are same-signal/transfer ready for current route claims.
+- W3, W5, W6, W8, W10, W11, and W12 are route-ready with optional gaps.
+- W7 and W9 are route-ready for their active owner specs.
+- W7-W12 each keep a source-owned four-task arc with a later transfer/checkpoint
+  task, while Practice CTA and mapper target admission remain blocked.
+
+Transfer-thin families and exact-repeat risks are deferred, not active
+implementation: W3 raw drill density, W5/W8 draw-term and draw-example nuance,
+W6 broad range-scope claims, W10 value/bluff nuance, W11/W12 drill-corpus
+parity, and W7-W12 Practice target mapping. No family was found to be
+exact-repeat-only for route advancement.
+
+Repair-to-transfer chain result: source-backed miss, repair focus, repair
+outcome, Review resolution, later same-family transfer evidence, Fix Proof,
+Profile proof, and Sharky acknowledgement are available for admitted
+source-backed families. The chain remains conservative: same-task, same-session,
+different-family, unsafe-order, malformed, duplicate, and unmapped evidence fail
+closed.
+
+Mapper/Practice relationship: W1-W6 mapping policy remains unchanged and the
+only default concept-candidate mapper target is the source-owned W1 no-bet-yet
+target. W7-W12 remain route-locked no-target for Practice/mapper purposes.
+Spaced repetition remains engine-ready but consumer-blocked without exact
+source-owned target tuples.
+
+Route impact is capsule-only: same-signal/transfer audit is closed,
+`W1-W12 Poker Correctness Review v1` is active, Practice mapping remains
+blocked, W13+ remains closed, and no learner-facing proof or Practice claim
+changes.
 
 ## Canonical Learning Loop
 
