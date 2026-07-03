@@ -2516,8 +2516,9 @@ exportW5BoardTextureClassificationCanonicalPilotV1({bool writeFiles = false}) {
         misconceptionId: 'overplays_wet_texture',
         feedbackReason:
             'A draw is an incomplete hand that can become strong if the right '
-            'card comes. Wet boards carry more draw pressure, so calling '
-            'controls risk while still continuing.',
+            'card comes. Wet boards carry more draw pressure. In this '
+            'source-backed drill, calling is the controlled response without '
+            'making wet texture an automatic call rule.',
       ),
       spec(
         sourcePath:
@@ -2630,9 +2631,8 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         transferSurfaceId: 'protection_raise_action_v1',
         misconceptionId: 'chooses_price_before_protection_purpose',
         feedbackReason:
-            'Protection means betting so drawing hands pay more to continue; '
-            'raising here charges overcards and draws instead of giving them '
-            'a free card.',
+            'The taught purpose is protection: raise in this simplified rep '
+            'to charge overcards and draws instead of giving them a free card.',
       ),
       spec(
         sourcePath:
@@ -2654,8 +2654,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         transferSurfaceId: 'denial_raise_action_v1',
         misconceptionId: 'undercharges_denial_spot',
         feedbackReason:
-            'Equity means chance to win the hand. Raise here to make drawing '
-            'hands pay more instead of letting them use that chance cheaply.',
+            'Equity means chance to win the hand. The taught purpose is '
+            'denial: raise in this simplified rep to make drawing hands pay '
+            'more instead of using that chance cheaply.',
       ),
       spec(
         sourcePath:
@@ -2680,8 +2681,9 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         transferSurfaceId: 'bluff_raise_action_v1',
         misconceptionId: 'ignores_blocker_bluff_pressure',
         feedbackReason:
-            'Raise as a bluff when the spot creates enough simple pressure '
-            'and opponents can still fold.',
+            'The taught purpose is bluff pressure: raise in this simplified '
+            'rep when the spot creates enough simple pressure and opponents '
+            'can still fold.',
       ),
       spec(
         sourcePath:
@@ -2693,8 +2695,8 @@ exportW4IntentActionDisciplineCanonicalPr2V1({bool writeFiles = false}) {
         transferSurfaceId: 'protection_raise_action_v1',
         misconceptionId: 'misses_repeat_protection_raise',
         feedbackReason:
-            'Protection means betting so drawing hands pay more to continue; '
-            'raise here to charge draws instead of giving a free card.',
+            'The taught purpose is protection: raise in this simplified '
+            'repeat rep to charge draws instead of giving a free card.',
       ),
     ],
   );

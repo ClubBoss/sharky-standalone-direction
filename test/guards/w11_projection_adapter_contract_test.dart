@@ -64,8 +64,13 @@ void main() {
     );
     expect(
       kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+      isNotEmpty,
+      reason: 'W11 projection must coexist with admitted W12 route packs.',
+    );
+    expect(
+      kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
       isEmpty,
-      reason: 'W11 projection must not add a W12 campaign registration.',
+      reason: 'W11 projection must not add a W13 campaign registration.',
     );
 
     final adapter = File(_adapterPath).readAsStringSync().toLowerCase();

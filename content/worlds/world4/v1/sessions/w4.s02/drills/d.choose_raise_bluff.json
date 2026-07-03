@@ -1,13 +1,13 @@
 {
   "id": "choose_raise_bluff",
   "kind": "action_choice",
-  "prompt": "With fold pressure available, choose action.",
+  "prompt": "Given the bluff-pressure purpose in this simplified rep, choose action.",
   "intent_v1": "bet_as_bluff",
-  "why_v1": "Raise as a bluff when opponents can still fold enough hands.",
+  "why_v1": "The taught purpose is bluff pressure: raise in this simplified rep when opponents can still fold enough hands.",
   "expected": {
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Raise is expected for bluff intent.",
-  "feedback_incorrect_v1": "Incorrect. When enough better hands can still fold, raising applies the pressure this bluff needs."
+  "feedback_correct_v1": "Correct. Raise matches the bluff-pressure purpose in this simplified rep.",
+  "feedback_incorrect_v1": "Incorrect. First name the bluff-pressure purpose, then choose the action that applies pressure in this drill."
 }

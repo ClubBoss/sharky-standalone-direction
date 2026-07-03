@@ -3,7 +3,7 @@
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/solver_light_selected_checks_v1.md`.
+Verified active route artifact: `docs/_reviews/targeted_content_repairs_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -223,6 +223,49 @@ Route impact: Solver-Light Selected Checks is closed and
 `Targeted Content Repairs v1` is active. Practice mapping remains blocked,
 W13+ remains closed, and no learner-facing mastery, launch, public
 learning-effect, full solver, or GTO authority claim changes.
+
+## Phase 7 Targeted Content Repairs
+
+`Targeted Content Repairs v1` closed with
+`targeted_content_repairs_landed_with_explicit_deferrals`. All actionable
+bounded P1-P4 content/correctness items in the current route scope are fixed,
+intentionally accepted with negligible EV, or deferred with explicit reason.
+There is no unresolved actionable P1-P4 issue in current scope.
+
+Fixed items:
+
+- PC-001 / SLCR-001: W5 texture/action copy now treats texture as an
+  observation cue, not an automatic raise/call/fold rule.
+- PC-002 / SLCR-004: W11 one-focus continue/fold feedback now avoids exact-EV
+  certainty while preserving defensible answer keys.
+- PC-003 / SLCR-002: W4 value sizing now frames half-pot/pot as practical
+  beginner examples rather than unique or optimal sizes.
+- PC-004 / SLCR-003: W4 raise-purpose tasks now teach purpose recognition in
+  simplified reps, not full strategy adjudication.
+- PC-005 / SLCR-005: W10 purpose taxonomy is scoped to the beginner purposes
+  taught here.
+- PC-006 / SLCR-006: W3 facing-open continue/fold wording is source-framed.
+- PC-009 / SLCR-007: heuristic wording was trimmed in touched W3/W5 families.
+
+Accepted safe simplifications:
+
+- PC-007: W6 range-width simplification.
+- PC-008: W8 draw comparison simplification.
+- PC-010: W9 price classification simplification.
+
+Explicit legitimate deferrals:
+
+- PC-011 / SLCR-008: broad W11/W12 `drills/*.json` corpus parity remains a
+  source-truth expansion follow-up, not a correctness repair. Current admitted
+  W11/W12 route truth is safe through source packets, campaign fixtures, and
+  route-owner guards.
+- Practice mapping remains blocked as a separate target-contract product
+  scope.
+
+Route impact: Targeted Content Repairs is closed and
+`Phase 7 Closure Audit v1` is active. W13+ remains closed, Practice mapping
+remains blocked, and no learner-facing mastery, launch, public learning-effect,
+full solver, or GTO authority claim changes.
 
 ## Canonical Learning Loop
 

@@ -316,9 +316,10 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
     errorType: 'missed_bet_purpose_transfer',
     drillKind: 'bet_purpose_transfer_choice_v1',
     boardContext:
-        'Compare value purpose with pressure to make stronger hands fold',
+        'Compare the beginner-taught value purpose with pressure to make '
+        'stronger hands fold',
     learningPurpose:
-        'Transfer the value-versus-pressure purpose read across spots.',
+        'Transfer the taught value-versus-pressure purpose read across spots.',
     expectedChoiceId: 'main_purpose_value_or_fold_pressure',
     choiceIds: <String>[
       'bet_size_predicts_result',
@@ -327,18 +328,19 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
       'main_purpose_value_or_fold_pressure',
     ],
     learnerPrompt:
-        'In a new betting spot, what is the safest first question about the '
-        'bet?',
+        'In a new betting spot, what is the safest first question among the '
+        'beginner purposes taught here?',
     choiceLabels: <String, String>{
       'main_purpose_value_or_fold_pressure':
-          'Ask whether the main purpose is value or making stronger hands fold.',
+          'Ask whether the taught main purpose is value or making stronger '
+          'hands fold.',
       'bet_size_predicts_result': 'The bet size predicts the result.',
       'all_bets_have_same_purpose': 'All bets have the same purpose.',
       'answer_already_known': 'The answer is already known.',
     },
     feedbackReason:
-        'The first purpose question is whether the bet mainly wants worse '
-        'calls or stronger folds.',
+        'Among the beginner purposes taught here, ask whether the bet mainly '
+        'wants worse calls or stronger folds.',
     incorrectFeedback: <String, String>{
       'bet_size_predicts_result':
           'Bet size can inform a read, but it does not predict the result.',

@@ -1,13 +1,13 @@
 {
   "id": "classify_river_closure_wet_raise_v1",
   "kind": "board_texture_classifier_v1",
-  "prompt": "The final river card completes heavy pressure on a wet board. Choose the best action.",
+  "prompt": "The final river card completes heavy pressure on a wet texture. Choose the response that fits this drill.",
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "wet",
   "expected_action": "raise",
   "acceptable_actions": ["call"],
-  "why_v1": "When the final river card completes the wet-board pressure cleanly, raising captures value before weaker hands check through.",
+  "why_v1": "When the final river card completes the wet-texture pressure cleanly in this source-backed drill, raising captures value without making wet texture an automatic raise.",
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. The wet final river card supports a raise.",
+  "feedback_correct_v1": "Correct. In this simplified drill, the wet final river card supports a raise.",
   "feedback_incorrect_v1": "Incorrect. Let the final river card lead the action."
 }

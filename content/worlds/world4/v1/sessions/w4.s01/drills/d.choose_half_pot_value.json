@@ -1,9 +1,9 @@
 {
   "id": "choose_half_pot_value",
   "kind": "bet_sizing_choice_v1",
-  "prompt": "Pick the value size that still keeps worse hands in.",
+  "prompt": "Pick a reasonable beginner value size that still keeps worse hands in.",
   "intent_v1": "bet_for_value",
-  "why_v1": "Half pot builds value without pushing marginal hands out as often.",
+  "why_v1": "Half pot is one practical beginner size here: it builds value without pushing marginal hands out as often.",
   "expected": {
     "presetId": "half_pot"
   },

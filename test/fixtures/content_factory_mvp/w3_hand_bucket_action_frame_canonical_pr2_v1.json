@@ -194,7 +194,7 @@
       "drill_kind": "hand_chain_v1",
       "correct_action": "call",
       "acceptable_actions": [],
-      "feedback_reason": "Facing an open does not erase playability, but it often changes the best first action from raise to call.",
+      "feedback_reason": "Facing an open does not erase playability. In this source-framed button-versus-cutoff spot, call is the disciplined continue.",
       "validation_status": "source_validated",
       "preview_only": false,
       "source_truth_status": "migrated",

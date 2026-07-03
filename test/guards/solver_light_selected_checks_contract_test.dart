@@ -68,16 +68,14 @@ void main() {
     },
   );
 
-  test('solver-light capsule advance opens targeted content repairs only', () {
+  test('solver-light capsule closure remains recorded after later repairs', () {
     final activeRoute = File(activeRouteCapsulePath).readAsStringSync();
     final learningRepair = File(learningRepairCapsulePath).readAsStringSync();
 
-    expect(
-      activeRoute,
-      contains('Verified active route artifact: `$reviewPath`'),
-    );
+    expect(activeRoute, contains('Solver-Light Selected Checks v1'));
     expect(activeRoute, contains('Solver-Light Selected Checks - CLOSED'));
-    expect(activeRoute, contains('Targeted Content Repairs - ACTIVE'));
+    expect(activeRoute, contains('Targeted Content Repairs - CLOSED'));
+    expect(activeRoute, contains('Phase 7 Closure Audit - ACTIVE'));
     expect(
       activeRoute,
       isNot(contains('W13-W36 pre-Human expansion - ACTIVE')),

@@ -21,7 +21,7 @@
       "feedback_correct_v1": "Correct. This is a disciplined in-position continue after the open.",
       "feedback_incorrect_v1": "Incorrect. QTs on the button after a cutoff open is a playable in-position continue, so calling is cleaner than forcing aggression or giving up too much equity.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "Facing an open does not erase playability, but it often changes the best first action from raise to call."
+      "why_v1": "Facing an open does not erase playability. In this source-framed button-versus-cutoff spot, call is the disciplined continue."
     },
     {
       "street": "preflop",

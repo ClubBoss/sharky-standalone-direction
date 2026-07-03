@@ -133,8 +133,13 @@ void main() {
       );
       expect(
         kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
+        isNotEmpty,
+        reason: 'The fixture must coexist with admitted W12 route packs.',
+      );
+      expect(
+        kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
         isEmpty,
-        reason: 'The fixture must not create a W12 campaign registration.',
+        reason: 'The fixture must not create a W13 campaign registration.',
       );
     },
   );

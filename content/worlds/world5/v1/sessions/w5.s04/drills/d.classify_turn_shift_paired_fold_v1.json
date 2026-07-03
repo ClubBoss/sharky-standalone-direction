@@ -1,13 +1,13 @@
 {
   "id": "classify_turn_shift_paired_fold_v1",
   "kind": "board_texture_classifier_v1",
-  "prompt": "The turn shift pairs the board and weakens your clean improvement path. Choose the best action.",
+  "prompt": "The turn texture shift pairs the board and weakens your clean improvement path. Choose the response that fits this drill.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "paired",
   "expected_action": "fold",
   "acceptable_actions": ["call"],
-  "why_v1": "Paired turn shifts can reduce clean improvement and make disciplined folds better than forcing thin continues.",
+  "why_v1": "Paired turn texture shifts can reduce clean improvement. In this source-backed drill, that weaker path supports a disciplined fold without making every paired turn an automatic fold.",
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. The paired turn shift points to a fold.",
-  "feedback_incorrect_v1": "Incorrect. Begin with the paired turn shift: once the board pairs and your clean improvement path shrinks, the disciplined action is to fold rather than continue thinly."
+  "feedback_correct_v1": "Correct. In this simplified drill, the paired turn shift supports a fold.",
+  "feedback_incorrect_v1": "Incorrect. Begin with the paired turn-shift cue and the weaker improvement path in this drill."
 }

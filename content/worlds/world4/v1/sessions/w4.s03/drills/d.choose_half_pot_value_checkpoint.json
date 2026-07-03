@@ -1,9 +1,9 @@
 {
   "id": "choose_half_pot_value_checkpoint",
   "kind": "bet_sizing_choice_v1",
-  "prompt": "Pick the value size that still keeps worse hands in.",
+  "prompt": "Pick a reasonable beginner value size that still keeps worse hands in.",
   "intent_v1": "bet_for_value",
-  "why_v1": "Half pot balances value and price so weaker continues still stay available.",
+  "why_v1": "Half pot is one practical beginner size here: it balances value and price so weaker continues still stay available.",
   "expected": {
     "presetId": "half_pot"
   },

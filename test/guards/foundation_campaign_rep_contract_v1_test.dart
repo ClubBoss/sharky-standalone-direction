@@ -35,7 +35,7 @@ void main() {
     }
   });
 
-  test('W11 packet has six complete non-routed foundation reps', () {
+  test('W11 packet has six complete foundation reps', () {
     final packetFile = File(_packetPath);
     const sessionPath = 'content/worlds/world11/v1/sessions/w11.s01/session.md';
     expect(packetFile.existsSync(), isTrue);
@@ -123,9 +123,9 @@ void main() {
     }
 
     expect(
-      kCampaignPackIdsV1.where((id) => id.startsWith('world11_')),
+      kCampaignPackIdsV1.where((id) => id.startsWith('world13_')),
       isEmpty,
-      reason: 'The source packet must not create a W11 campaign registration.',
+      reason: 'The W11 source packet must not open W13 campaign registration.',
     );
   });
 }

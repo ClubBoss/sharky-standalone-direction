@@ -29,8 +29,8 @@
       "expected_answer": "continue",
       "target_skill_id": "price_draw_continue",
       "error_type": "overfolded_good_price_draw",
-      "correct_feedback": "Good continue. The price is small and your draw has a clear improvement path.",
-      "incorrect_feedback": "Folding gives up too much when the price is small and your draw is real. Re-check the bet size and your improvement cards.",
+      "correct_feedback": "Good continue for this one-focus drill. The price is small and your draw has a clear improvement path.",
+      "incorrect_feedback": "Folding is too cautious for this one-focus drill when the price is small and your draw is real. Re-check the bet size and your improvement cards.",
       "repair_cue": "Re-check price and improvement path.",
       "telemetry_inputs": ["user_choice", "correct_or_incorrect", "error_type", "time_to_decision", "world11/w11.s01/w11.s01.r02"]
     },
@@ -61,7 +61,7 @@
       "expected_answer": "continue",
       "target_skill_id": "tendency_price_continue",
       "error_type": "ignored_bluffy_tendency",
-      "correct_feedback": "Good continue. Player tendency and price make this a spot where folding too quickly gives up value.",
+      "correct_feedback": "Good continue for this one-focus drill. Player tendency and price make folding too quickly too cautious in this setup.",
       "incorrect_feedback": "Folding ignores the opponent's tendency. Re-check whether the small bet comes from a player who bluffs too often.",
       "repair_cue": "Re-check opponent tendency before folding.",
       "telemetry_inputs": ["user_choice", "correct_or_incorrect", "error_type", "time_to_decision", "world11/w11.s01/w11.s01.r04"]
@@ -93,8 +93,8 @@
       "expected_answer": "continue",
       "target_skill_id": "position_price_showdown_continue",
       "error_type": "overfolded_reasonable_showdown_value",
-      "correct_feedback": "Good continue. You have position, a fair price, and a hand that can still win at showdown.",
-      "incorrect_feedback": "Folding is too tight here. Re-check your position, the small price, and your showdown value.",
+      "correct_feedback": "Good continue for this one-focus drill. You have position, a fair price, and a hand that can still win at showdown.",
+      "incorrect_feedback": "Folding is too cautious for this one-focus drill. Re-check your position, the small price, and your showdown value.",
       "repair_cue": "Re-check position, price, and showdown value.",
       "telemetry_inputs": ["user_choice", "correct_or_incorrect", "error_type", "time_to_decision", "world11/w11.s01/w11.s01.r06"]
     }
