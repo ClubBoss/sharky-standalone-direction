@@ -144,6 +144,109 @@ class Act0SharkyCoachPhraseV1 {
       Object.hash(line, family, tier, claimBoundary, fallbackKey);
 }
 
+/// The bounded Sharky Companion Visual State vocabulary. Reflects product
+/// truth only (the same structured evidence the phrase resolver already
+/// consumes) — never an inferred emotion, mood engine, or random choice.
+///
+/// - [neutral]: orientation/welcome/default; no earned or corrective claim.
+/// - [coach]: active instruction or repair prompt.
+/// - [repair]: a missed clue or failed repair; supportive, never punitive.
+/// - [confirm]: successful repair or source-backed completed proof.
+/// - [improve]: a valid Sharky-Saw-You-Improve later-transfer observation.
+/// - [milestone]: real world/band completion only.
+enum Act0SharkyCompanionStateV1 { neutral, coach, repair, confirm, improve, milestone }
+
+/// Pure, deterministic companion-state resolver. Uses the exact same
+/// structured [Act0SharkyCoachPhraseContextV1] fields the phrase resolver
+/// gates on, so visual state and phrase copy can never disagree about what
+/// evidence is present. This function never reads or infers from resolved
+/// phrase text.
+Act0SharkyCompanionStateV1 act0ResolveSharkyCompanionStateV1(
+  Act0SharkyCoachPhraseContextV1 context,
+) {
+  switch (context.momentType) {
+    case Act0SharkyCoachMomentTypeV1.welcome:
+      return Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.decisionCorrect:
+      return context.evidenceKind ==
+              Act0SharkyCoachEvidenceKindV1.directObservation
+          ? Act0SharkyCompanionStateV1.confirm
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.decisionIncorrect:
+      return context.evidenceKind ==
+              Act0SharkyCoachEvidenceKindV1.directObservation
+          ? Act0SharkyCompanionStateV1.repair
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.repairPrompt:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairTarget &&
+              context.repairState == Act0SharkyCoachRepairStateV1.open
+          ? Act0SharkyCompanionStateV1.coach
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.repairFailed:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairOutcome &&
+              context.repairState == Act0SharkyCoachRepairStateV1.failed
+          ? Act0SharkyCompanionStateV1.repair
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.repairCompleted:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairOutcome &&
+              context.repairState == Act0SharkyCoachRepairStateV1.completed
+          ? Act0SharkyCompanionStateV1.confirm
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.laterImprovementObserved:
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.transferEvidence &&
+              context.transferState ==
+                  Act0SharkyCoachTransferStateV1.laterCorrect
+          ? Act0SharkyCompanionStateV1.improve
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.sessionComplete:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.proof &&
+              context.proofState == Act0SharkyCoachProofStateV1.localProof
+          ? Act0SharkyCompanionStateV1.confirm
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.worldComplete:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.completion &&
+              context.completionState ==
+                  Act0SharkyCoachCompletionStateV1.worldCompleted
+          ? Act0SharkyCompanionStateV1.milestone
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.bandTransition:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.completion &&
+              context.completionState ==
+                  Act0SharkyCoachCompletionStateV1.bandTransition &&
+              context.worldNumber == 4 &&
+              context.nextWorldNumber == 5
+          ? Act0SharkyCompanionStateV1.milestone
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.returnReason:
+      return context.evidenceKind == Act0SharkyCoachEvidenceKindV1.repairTarget &&
+              context.repairState == Act0SharkyCoachRepairStateV1.open
+          ? Act0SharkyCompanionStateV1.coach
+          : Act0SharkyCompanionStateV1.neutral;
+    case Act0SharkyCoachMomentTypeV1.reviewPattern:
+      return context.evidenceKind ==
+                  Act0SharkyCoachEvidenceKindV1.multiSessionPattern &&
+              context.proofState ==
+                  Act0SharkyCoachProofStateV1.multiSessionPattern
+          ? Act0SharkyCompanionStateV1.repair
+          : Act0SharkyCompanionStateV1.neutral;
+  }
+}
+
+/// Legacy-moment convenience wrapper, mirroring
+/// [act0SharkyCoachLineForMomentV1]'s own context construction so a call
+/// site that already resolves a moment's phrase can resolve its companion
+/// state from the exact same evidence without duplicating context-building
+/// logic.
+Act0SharkyCompanionStateV1 act0SharkyCompanionStateForMomentV1(
+  Act0SharkyCoachMomentV1 moment, {
+  Act0SharkyCoachTierV1 tier = Act0SharkyCoachTierV1.foundation,
+}) {
+  return act0ResolveSharkyCompanionStateV1(
+    _act0LegacyMomentContextV1(moment, tier),
+  );
+}
+
 Act0SharkyCoachTierV1 act0SharkyCoachTierForWorldNumberV1(int worldNumber) {
   if (worldNumber >= 5) {
     return Act0SharkyCoachTierV1.developing;

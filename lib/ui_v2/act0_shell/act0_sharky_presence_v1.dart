@@ -2,7 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+/// Maps the bounded Sharky Companion Visual State onto the existing,
+/// already-approved [Act0SharkyMoodV1] asset/tone family. No new Sharky
+/// asset is introduced — every state reuses one of the five existing mood
+/// variants.
+Act0SharkyMoodV1 act0SharkyMoodForCompanionStateV1(
+  Act0SharkyCompanionStateV1 state,
+) {
+  return switch (state) {
+    Act0SharkyCompanionStateV1.neutral => Act0SharkyMoodV1.neutral,
+    Act0SharkyCompanionStateV1.coach => Act0SharkyMoodV1.thinking,
+    Act0SharkyCompanionStateV1.repair => Act0SharkyMoodV1.repair,
+    Act0SharkyCompanionStateV1.confirm => Act0SharkyMoodV1.happy,
+    Act0SharkyCompanionStateV1.improve => Act0SharkyMoodV1.happy,
+    Act0SharkyCompanionStateV1.milestone => Act0SharkyMoodV1.celebrate,
+  };
+}
+
+/// Only `improve` and `milestone` earn the extra accent ring — a stronger
+/// evidence echo for improve, the strongest contained treatment for a real
+/// completion boundary. Every other state renders the plain frame.
+bool act0SharkyCompanionStateHasAccentRingV1(
+  Act0SharkyCompanionStateV1 state,
+) {
+  return state == Act0SharkyCompanionStateV1.improve ||
+      state == Act0SharkyCompanionStateV1.milestone;
+}
 
 Color act0SharkyToneForMoodV1(Act0SharkyMoodV1 mood) {
   return switch (mood) {
@@ -204,6 +232,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
     this.textKey,
     this.mascotSize = 64,
     this.bubblePadding,
+    this.ringed = false,
   });
 
   final String line;
@@ -213,6 +242,11 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
   final Key? textKey;
   final double mascotSize;
   final EdgeInsetsGeometry? bubblePadding;
+
+  /// Reserved for the companion states that earn a stronger evidence echo
+  /// (`improve`, `milestone`). Defaults to false so every existing caller
+  /// renders byte-identically.
+  final bool ringed;
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +262,7 @@ class Act0SharkyPresenceBubbleV1 extends StatelessWidget {
           size: mascotSize,
           animated: true,
           simpleFrame: true,
+          ringed: ringed,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -380,6 +415,7 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
     required this.size,
     this.animated = false,
     this.simpleFrame = false,
+    this.ringed = false,
   });
 
   final Act0SharkyMoodV1 mood;
@@ -387,6 +423,11 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
   final double size;
   final bool animated;
   final bool simpleFrame;
+
+  /// Reserved for the companion states that earn a stronger evidence echo
+  /// (`improve`, `milestone`). Defaults to false so every existing caller
+  /// renders byte-identically.
+  final bool ringed;
 
   @override
   Widget build(BuildContext context) {
@@ -396,7 +437,7 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
             act0SharkyCompanionAssetForMoodV1(mood),
             fit: BoxFit.contain,
           );
-    return Container(
+    final frame = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
@@ -426,6 +467,67 @@ class _SharkyMascotFrameV1 extends StatelessWidget {
       ),
       padding: EdgeInsets.all(size * 0.08),
       child: mascot,
+    );
+    if (!ringed) {
+      return frame;
+    }
+    final ringBox = size + 8;
+    return SizedBox(
+      key: const Key('act0_shell_sharky_mascot_frame_accent_ring'),
+      width: ringBox,
+      height: ringBox,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: ringBox,
+            height: ringBox,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                ringBox * Act0ShellTokensV1.sharkyTileRadiusRatio,
+              ),
+              border: Border.all(color: tone.withValues(alpha: 0.3), width: 1),
+            ),
+          ),
+          frame,
+        ],
+      ),
+    );
+  }
+}
+
+/// The shared Sharky Companion Visual State renderer. Accepts only the
+/// semantic state and a size — no mood, score, level, percentage, rarity,
+/// animation config, arbitrary color, arbitrary icon, or random seed. State
+/// determines the mood/tone/ring exactly as defined by
+/// [act0SharkyMoodForCompanionStateV1] and
+/// [act0SharkyCompanionStateHasAccentRingV1]; no new Sharky asset is used.
+class Act0SharkyCompanionAvatarV1 extends StatelessWidget {
+  const Act0SharkyCompanionAvatarV1({
+    super.key,
+    required this.state,
+    this.size = 64,
+    this.simpleFrame = false,
+  });
+
+  final Act0SharkyCompanionStateV1 state;
+  final double size;
+  final bool simpleFrame;
+
+  @override
+  Widget build(BuildContext context) {
+    final mood = act0SharkyMoodForCompanionStateV1(state);
+    final tone = act0SharkyToneForMoodV1(mood);
+    return KeyedSubtree(
+      key: Key('act0_shell_sharky_companion_avatar_${state.name}'),
+      child: _SharkyMascotFrameV1(
+        mood: mood,
+        tone: tone,
+        size: size,
+        animated: true,
+        simpleFrame: simpleFrame,
+        ringed: act0SharkyCompanionStateHasAccentRingV1(state),
+      ),
     );
   }
 }

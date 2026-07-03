@@ -5868,6 +5868,20 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             Act0SharkyCoachMomentV1.sessionSummaryProof,
           )
         : '';
+    final sessionSummaryCompanionState = _act0SessionSummaryCompanionStateV1(
+      hasWorldCompletionMoment:
+          summary.hasWorldOneCompletionPayoff ||
+          summary.hasWorldCompletionPayoff ||
+          summary.hasBandTransitionPayoff,
+      qualifiesForNextLesson: summary.qualifiesForNextLesson,
+      receipt: visibleRepairOutcomeReceipt,
+    );
+    final sessionSummaryCompanionMood = act0SharkyMoodForCompanionStateV1(
+      sessionSummaryCompanionState,
+    );
+    final sessionSummaryCompanionRinged = act0SharkyCompanionStateHasAccentRingV1(
+      sessionSummaryCompanionState,
+    );
     final foldUnlockIntoMilestonePanel =
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
@@ -5921,12 +5935,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 const SizedBox(height: 6),
                 Act0SharkyPresenceBubbleV1(
                   line: summarySharkyLine,
-                  mood: summary.qualifiesForNextLesson
-                      ? Act0SharkyMoodV1.celebrate
-                      : Act0SharkyMoodV1.repair,
-                  tone: summary.qualifiesForNextLesson
-                      ? Act0ShellTokensV1.primary
-                      : Act0ShellTokensV1.gold,
+                  mood: sessionSummaryCompanionMood,
+                  ringed: sessionSummaryCompanionRinged,
                   textKey: const Key('act0_shell_block_summary_sharky_line'),
                   mascotSize: 68,
                   bubblePadding: const EdgeInsets.symmetric(
@@ -6119,8 +6129,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               'act0_shell_session_summary_payoff_sharky',
                             ),
                             line: summarySharkyLine,
-                            mood: Act0SharkyMoodV1.celebrate,
-                            tone: Act0ShellTokensV1.primary,
+                            mood: sessionSummaryCompanionMood,
+                            ringed: sessionSummaryCompanionRinged,
                             textKey: const Key(
                               'act0_shell_block_summary_sharky_line',
                             ),
@@ -6697,6 +6707,33 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Resolves the Session Summary Sharky companion state from the exact same
+/// structured evidence already used to decide this screen's copy and proof
+/// icons: real world/band completion, a source-backed improvement
+/// observation, banked-fix proof, and the ordinary repair-vs-forward gate.
+/// Priority is milestone > improve > confirm > repair > neutral, so a
+/// genuine completion boundary always wins and `repair` can never coexist
+/// with a success/milestone moment. Never parses copy text.
+Act0SharkyCompanionStateV1 _act0SessionSummaryCompanionStateV1({
+  required bool hasWorldCompletionMoment,
+  required bool qualifiesForNextLesson,
+  Act0RepairOutcomeSessionReceiptV1? receipt,
+}) {
+  if (hasWorldCompletionMoment) {
+    return Act0SharkyCompanionStateV1.milestone;
+  }
+  if (receipt?.hasImprovementObservation == true) {
+    return Act0SharkyCompanionStateV1.improve;
+  }
+  if (receipt?.isBankedFixProof == true) {
+    return Act0SharkyCompanionStateV1.confirm;
+  }
+  if (!qualifiesForNextLesson) {
+    return Act0SharkyCompanionStateV1.repair;
+  }
+  return Act0SharkyCompanionStateV1.neutral;
 }
 
 class _SessionSummaryPayoffHeroV1 {

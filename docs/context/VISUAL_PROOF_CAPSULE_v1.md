@@ -3,7 +3,7 @@
 Status: ACTIVE visual/proof capsule.
 Freshness date: 2026-07-03.
 Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/sharky_saw_you_improve_v1.md`.
+Verified active route artifact: `docs/_reviews/sharky_companion_states_v1.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -88,8 +88,31 @@ still falls back to the proven Developing tier. Sharky Saw You Improve v1 then
 added a source-backed later-improvement observation derived only from
 reinforced Fix Proof and admitted it into the existing Session Summary
 banked-fix receipt. It adds no new card, route, visual state, pose, asset,
-motion, animation, chat, AI copy, telemetry, or personality engine. The active
-task is `Sharky Companion States v1` (Phase 5).
+motion, animation, chat, AI copy, telemetry, or personality engine. Sharky
+Companion States v1 then closed Phase 5's visual-state gap: a bounded
+`Act0SharkyCompanionStateV1` vocabulary (`neutral`, `coach`, `repair`,
+`confirm`, `improve`, `milestone`) is resolved deterministically in
+`act0_sharky_coach_phrase_contract_v1.dart` from the exact same structured
+context (`Act0SharkyCoachPhraseContextV1`) the phrase resolver already
+gates on — never from resolved phrase text, never random, never an inferred
+emotion. `act0_sharky_presence_v1.dart` maps each state onto the existing
+five-mood asset family (no new Sharky asset) via
+`act0SharkyMoodForCompanionStateV1`, and adds one bounded, opt-in visual
+seam: `Act0SharkyCompanionAvatarV1` plus an additive `ringed`/`emphasized`
+accent (reusing the same echo-ring pattern already accepted for
+`Act0ProofIconV1`) reserved for `improve`/`milestone` only. Two consumers
+were admitted: Session Summary's two existing Sharky bubbles (now resolving
+`milestone` > `improve` > `confirm` > `repair` > `neutral` from the same
+receipt/completion flags already on screen, replacing two previously
+hardcoded mood picks — including one bubble that used to always render
+`celebrate` regardless of context) and Welcome's two existing beats (intro
+now `neutral`, handoff now `coach`, replacing hardcoded `happy`/`celebrate`
+moods). Home's identity-row mood was deliberately deferred: it is threaded
+through ~9 ad hoc `preSessionMood:` literals inside the large
+`act0_shell_preview_screen_v1.dart` preview-screen file, and migrating it
+safely was out of this bounded wave's scope. No new screen, route, asset,
+animation, growth/evolution, or mood/rank/XP semantics were added. The active
+task is `Sharky Visual Growth / Evolution v1` (Phase 5).
 
 ## Remaining Visual Route
 
@@ -167,3 +190,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/sharky_phrase_tier_contract_v1.md`
 - `docs/_reviews/foundation_developing_phrase_sets_v1.md`
 - `docs/_reviews/sharky_saw_you_improve_v1.md`
+- `docs/_reviews/sharky_companion_states_v1.md`

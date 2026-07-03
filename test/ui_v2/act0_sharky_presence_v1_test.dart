@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -137,5 +138,63 @@ void main() {
     expect(lineTop.dy, greaterThan(eyebrowTop.dy));
     expect(detailTop.dy, greaterThan(lineTop.dy));
     expect(tester.takeException(), isNull);
+  });
+
+  group('Act0SharkyCompanionAvatarV1', () {
+    testWidgets('renders one keyed avatar per companion state, no exceptions', (
+      tester,
+    ) async {
+      for (final state in Act0SharkyCompanionStateV1.values) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(body: Act0SharkyCompanionAvatarV1(state: state)),
+          ),
+        );
+        await tester.pump();
+
+        expect(
+          find.byKey(Key('act0_shell_sharky_companion_avatar_${state.name}')),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets(
+      'improve and milestone render the accent ring, other states do not',
+      (tester) async {
+        for (final state in Act0SharkyCompanionStateV1.values) {
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Act0SharkyCompanionAvatarV1(state: state)),
+            ),
+          );
+          await tester.pump();
+
+          final expectRing =
+              state == Act0SharkyCompanionStateV1.improve ||
+              state == Act0SharkyCompanionStateV1.milestone;
+          expect(
+            find.byKey(
+              const Key('act0_shell_sharky_mascot_frame_accent_ring'),
+            ),
+            expectRing ? findsOneWidget : findsNothing,
+            reason: 'state $state ring mismatch',
+          );
+        }
+      },
+    );
+
+    testWidgets('every state resolves to an existing approved mood asset', (
+      tester,
+    ) async {
+      for (final state in Act0SharkyCompanionStateV1.values) {
+        final mood = act0SharkyMoodForCompanionStateV1(state);
+        expect(
+          act0SharkyCompanionAssetForMoodV1(mood),
+          startsWith('assets/images/mascot/sharky_'),
+        );
+      }
+    });
   });
 }

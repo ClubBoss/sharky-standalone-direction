@@ -80,7 +80,9 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           'welcome_intro_detail',
           fallback: 'About two minutes. Then your first lesson is ready.',
         ),
-        mood: Act0SharkyMoodV1.happy,
+        mood: act0SharkyMoodForCompanionStateV1(
+          Act0SharkyCompanionStateV1.neutral,
+        ),
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
@@ -138,7 +140,9 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
               : 'Затем Learn покажет следующий урок.',
         ),
-        mood: Act0SharkyMoodV1.celebrate,
+        mood: act0SharkyMoodForCompanionStateV1(
+          Act0SharkyCompanionStateV1.coach,
+        ),
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
