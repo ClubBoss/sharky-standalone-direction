@@ -1,16 +1,15 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-03.
-Verified branch state: `codex/apply-owner-patch-sequence-a-b-c-d-v1` contains
-accepted branch HEAD `b8c1d41a2e671d18d3446701081b547954ae8222` plus this
-capsule-truth repair commit; `origin/main` remains
-`05bd3fa4da7360d45e6cbf6f72e5804c3a840e40`. This route state is branch-only
-until a later explicit integration/push; do not treat it as already merged to
-main.
-Current active task: `Sharky Character Final Direction Lock`; final character
-direction is not locked, and Sharky Micro-Animations v1 remains BLOCKED.
-Verified active route artifact: `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`.
+Freshness date: 2026-07-04.
+Verified branch state: `codex/mascot-direction-correction-v2` is a docs-only
+bounded branch off `main` / `origin/main`
+`beb7aabc64c61ae6ea9bc051d6b48a11ca30c9bd`.
+Current active task: `Sharky Mascot Direction Correction v2`; active strategic
+character direction is `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`, exact final
+visual execution remains unlocked pending controlled board evidence, and
+Sharky Micro-Animations v1 remains BLOCKED.
+Verified active route artifact: `docs/_reviews/sharky_mascot_direction_correction_v2.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -71,13 +70,22 @@ animation. The audit does not choose a final visual route and does not activate
 implementation. `Mascot Visual Concept Challenge Pack v1` then prepared a
 local-only, self-contained Fable handoff that gives Route B, Route C, and B/C
 Hybrid identical product context, output matrix, anti-anchoring controls,
-comparison rubric, and a compact post-Fable Claude comparison input. It
-contains no generated art, does not choose a winner, and does not activate
-concept production or implementation.
+comparison rubric, and a compact post-Fable Claude comparison input. `Sharky
+Mascot Direction Correction v2` supersedes the serious-premium visual
+trajectory as final direction and selects
+`DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as the active strategic character
+direction. The prior serious shark boards and Route B/C/Hybrid challenge
+framing remain archived/reference evidence under
+`superseded_visual_exploration_serious_premium_shark_v1`; they are not
+production art direction. The next visual step is a controlled Claude Design
+three-direction board: Warm Compact Companion, Balanced Dual-Register Sharky,
+and Premium Iconic Shark. No generated art, asset replacement, runtime, route,
+content, telemetry, Modern Table, cosmetic, or motion implementation is
+activated by this correction.
 
 Current active task:
 
-- `Sharky Character Final Direction Lock`
+- `Sharky Mascot Direction Correction v2`
 
 ## Phase 5 Sequence (closed)
 
@@ -119,8 +127,10 @@ Phase 7 blocker. Phase 8 - Motion is active. `Motion Direction System v1`
 closed with the semantic motion system defined (see
 `docs/_reviews/motion_direction_system_v1.md`) and no motion-phase
 implementation performed. The premium milestone slice is now closed.
-`Sharky Character & Growth Design Review v1` is the active Phase 8 checkpoint
-before any Sharky micro-animation work.
+`Sharky Mascot Direction Correction v2` is the active Phase 8 strategic
+direction correction before any Sharky micro-animation work. The strategic
+direction is selected, but final visual execution remains pending controlled
+visual evidence.
 
 ## Phase 6 Sequence (closed)
 
@@ -145,7 +155,10 @@ before any Sharky micro-animation work.
 2. Premium Transitions / Replay Motion v1 - CLOSED
 3. Sharky Character & Growth Design Review v1 - CLOSED with technical audit
    follow-up
-4. Sharky Micro-Animations v1 - BLOCKED pending design verdict
+4. Sharky Mascot Direction Correction v2 - SELECTED strategic direction;
+   visual execution still pending controlled board evidence
+5. Sharky Micro-Animations v1 - BLOCKED pending controlled visual verdict,
+   fallback parity, renderer normalization, and reduced-motion proof
 
 ## Phase 4 Sequence (closed)
 

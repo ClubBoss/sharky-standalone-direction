@@ -30,10 +30,16 @@ survive.
 
 ## 2. Decision status
 
-- Final Sharky art direction is not locked.
-- Claude Design's earlier Route B recommendation remains provisional evidence,
-  not production authorization.
-- Route B, Route C, and B/C Hybrid remain legitimate challengers.
+- Superseded by `docs/_reviews/sharky_mascot_direction_correction_v2.md` for
+  active strategic direction.
+- Active strategic direction is now
+  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`.
+- Final visual execution is not locked.
+- Claude Design's earlier Route B recommendation and the Route B/C/Hybrid
+  challenge framing remain historical/reference evidence, not production
+  authorization.
+- The serious-premium shark trajectory is classified as
+  `superseded_visual_exploration_serious_premium_shark_v1`.
 - Current art is treated as pre-public placeholder material.
 - Sharky Micro-Animations remain `BLOCKED`.
 - This pack is preparation only.
@@ -216,9 +222,12 @@ Final command results are recorded in the completion response.
 
 Capsules should record:
 
-- `Sharky Character Final Direction Lock` remains ACTIVE.
+- `Sharky Mascot Direction Correction v2` selects
+  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction.
+- Exact final visual execution remains pending controlled board evidence.
 - Sharky Micro-Animations remain BLOCKED.
-- This challenge pack is preparation only.
+- This challenge pack is superseded as the next active visual route, but
+  retained as reference evidence.
 - Concept production is not automatically activated by this pack.
 
 ## 15. Scope safety
@@ -230,7 +239,8 @@ pack and ZIP remain local under `output/**` and uncommitted.
 
 ## 16. Next recommendation
 
-Use the pack to ask Fable for three equal-depth visual concept studies after
-the owner-level challenger review. After Fable outputs exist, use the compact
-Claude final-comparison input to lock one art direction. Only then should a
-bounded implementation prompt be written.
+Do not continue from this Route B/C/Hybrid pack as the default next visual
+route. Use `Sharky Mascot Direction Correction v2` to ask Claude Design for a
+controlled three-direction board: Warm Compact Companion, Balanced
+Dual-Register Sharky, and Premium Iconic Shark. Only after that board and an
+explicit owner visual lock should a bounded implementation prompt be written.

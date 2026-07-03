@@ -37,8 +37,13 @@ fresh deterministic evidence before Sharky micro-animation can resume.
 
 - Mascot remains strategically valuable.
 - Shark remains the leading metaphor.
-- Claude Design provisionally recommends major evolution of current DNA.
-- Final Route B versus Route C/hybrid lock has not happened in repo authority.
+- Superseded strategic-direction note: `Sharky Mascot Direction Correction v2`
+  selects `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`.
+- Claude Design's earlier major-evolution recommendation remains
+  historical/reference evidence, not production authorization.
+- Final visual execution has not happened in repo authority.
+- The serious-premium shark trajectory is classified as
+  `superseded_visual_exploration_serious_premium_shark_v1`.
 - Current PNG art must not be preserved by implementation convenience.
 - Current art must not be discarded by implementation convenience.
 - Sharky Micro-Animations remain `BLOCKED`.
@@ -213,7 +218,10 @@ style decision:
   - reduced-motion must bypass or settle all mascot motion.
 
 This contract deliberately does not specify art style, proportions, expression,
-palette, silhouette design, emotional direction, or brand DNA.
+palette, silhouette design, or brand DNA. Its active strategic-direction input
+is now `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`; exact visual execution still
+requires the controlled Claude Design board described in
+`docs/_reviews/sharky_mascot_direction_correction_v2.md`.
 
 ## 6. Renderer normalization options
 
@@ -488,7 +496,9 @@ history for this wave.
 
 Capsules should record:
 
-- `Sharky Character Final Direction Lock` remains ACTIVE/unresolved;
+- `Sharky Mascot Direction Correction v2` selects
+  `DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as active strategic direction;
+- exact final visual execution remains pending controlled board evidence;
 - Sharky Micro-Animations remain BLOCKED;
 - this audit is technical preparation only;
 - implementation is not activated;

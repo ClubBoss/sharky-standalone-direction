@@ -1,16 +1,15 @@
 # Visual Proof Capsule v1
 
 Status: ACTIVE visual/proof capsule.
-Freshness date: 2026-07-03.
-Verified branch state: `codex/apply-owner-patch-sequence-a-b-c-d-v1` contains
-accepted branch HEAD `b8c1d41a2e671d18d3446701081b547954ae8222` plus this
-capsule-truth repair commit; `origin/main` remains
-`05bd3fa4da7360d45e6cbf6f72e5804c3a840e40`. This visual/proof state is
-branch-only until a later explicit integration/push; do not treat it as
-already merged to main.
-Current active task: `Sharky Character Final Direction Lock`; final character
-direction is not locked, and Sharky Micro-Animations v1 remains BLOCKED.
-Verified active route artifact: `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`.
+Freshness date: 2026-07-04.
+Verified branch state: `codex/mascot-direction-correction-v2` is a docs-only
+bounded branch off `main` / `origin/main`
+`beb7aabc64c61ae6ea9bc051d6b48a11ca30c9bd`.
+Current active task: `Sharky Mascot Direction Correction v2`; active strategic
+character direction is `DUAL_REGISTER_ICONIC_COMPANION_SELECTED`, exact final
+visual execution remains unlocked pending controlled board evidence, and
+Sharky Micro-Animations v1 remains BLOCKED.
+Verified active route artifact: `docs/_reviews/sharky_mascot_direction_correction_v2.md`.
 Refresh trigger: every committed visual token, surface acceptance, screenshot
 lane, proof/progression, motion, or design-system change.
 
@@ -304,8 +303,17 @@ brief under `output/mascot_visual_concept_challenge_pack_v1/` for Fable to
 visualize Route B, Route C, and B/C Hybrid at equal depth after the owner-level
 challenger review. The pack standardizes concept views, semantic states,
 growth, size tiers, dark-UI context, anti-anchoring controls, and final
-comparison scoring; it includes no generated mascot images and does not choose
-or imply a winning direction.
+comparison scoring; it includes no generated mascot images. `Sharky Mascot
+Direction Correction v2` supersedes the serious-premium visual trajectory as
+final direction and selects `DUAL_REGISTER_ICONIC_COMPANION_SELECTED` as the
+active strategic character direction. The serious shark boards and Route
+B/C/Hybrid challenge framing remain reference evidence under
+`superseded_visual_exploration_serious_premium_shark_v1`, not production art
+direction. The next visual step is a controlled Claude Design board comparing
+Warm Compact Companion, Balanced Dual-Register Sharky, and Premium Iconic
+Shark. No asset replacement, runtime, motion, cosmetic, Modern Table, route,
+content, telemetry, or screenshot implementation is activated by this
+correction.
 
 ## Remaining Visual Route
 
@@ -395,3 +403,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`
 - `docs/_reviews/mascot_production_feasibility_migration_audit_v1.md`
 - `docs/_reviews/mascot_visual_concept_challenge_pack_v1.md`
+- `docs/_reviews/sharky_mascot_direction_correction_v2.md`
