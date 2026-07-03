@@ -54,12 +54,18 @@ capture gaps for Developing, improve, and milestone. Live source proves that
 the legacy `poker_shark_*.svg` family remains in limited production use in
 Welcome and as PNG load-error fallback, so it is classified as a legacy
 direction to migrate deliberately rather than falsely marked unused. No source
-behavior or art changed. Micro-animation remains blocked until Claude Design
-selects a direction and any required pre-motion normalization/migration scope.
+behavior or art changed. `Mascot Production Feasibility & Migration Audit v1`
+then converted the evidence pack plus Claude Design's strategy review into a
+direction-neutral engineering map: Route B, Route C, and a B/C hybrid all
+require final art-direction lock, one on-identity fallback system, Welcome
+migration, renderer apparent-scale/anchor/baseline normalization, reduced-
+motion proof, and refreshed deterministic evidence before Sharky micro-
+animation. The audit does not choose a final visual route and does not activate
+implementation.
 
 Current active task:
 
-- `Sharky Character & Growth Design Review v1`
+- `Sharky Character Final Direction Lock`
 
 ## Phase 5 Sequence (closed)
 
@@ -125,7 +131,8 @@ before any Sharky micro-animation work.
 
 1. Motion Direction System - CLOSED
 2. Premium Transitions / Replay Motion v1 - CLOSED
-3. Sharky Character & Growth Design Review v1 - ACTIVE
+3. Sharky Character & Growth Design Review v1 - CLOSED with technical audit
+   follow-up
 4. Sharky Micro-Animations v1 - BLOCKED pending design verdict
 
 ## Phase 4 Sequence (closed)

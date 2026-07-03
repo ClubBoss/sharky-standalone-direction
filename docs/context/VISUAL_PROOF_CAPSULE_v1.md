@@ -281,9 +281,17 @@ milestone; wrong feedback also reproducibly displays the SVG fallback, so that
 image is disclosed rather than misrepresented as primary repair-PNG proof.
 The local handoff is
 `output/sharky_character_growth_evidence_pack_v1/sharky_character_growth_design_handoff_v1.zip`.
-`Sharky Character & Growth Design Review v1` is ACTIVE and Sharky
-micro-animation remains BLOCKED pending its verdict. No art, mapping, runtime,
-or motion implementation changed in the evidence wave.
+Claude Design's local `Sharky Mascot Strategy Review.pdf` provisionally
+recommends major evolution of the current Sharky DNA, but repo implementation
+authority remains unlocked until the owner explicitly selects Route B, Route C,
+or a B/C hybrid. `Mascot Production Feasibility & Migration Audit v1` records
+the engineering migration map without choosing an aesthetic winner: every
+future route needs a single on-identity runtime mascot system, replacement of
+the legacy SVG Welcome/fallback paths, renderer apparent-scale/anchor/baseline
+normalization, forced-fallback proof, reduced-motion proof, and regenerated
+deterministic evidence. It is technical preparation only; no art, mapping,
+runtime, screenshot, or motion implementation changed. Sharky micro-animation
+remains BLOCKED pending the final direction lock and those preconditions.
 
 ## Remaining Visual Route
 
@@ -371,3 +379,4 @@ explicitly admits a specific output artifact.
 - `docs/_reviews/motion_direction_system_v1.md`
 - `docs/_reviews/premium_transitions_replay_motion_v1.md`
 - `docs/_reviews/sharky_character_growth_evidence_pack_v1.md`
+- `docs/_reviews/mascot_production_feasibility_migration_audit_v1.md`
