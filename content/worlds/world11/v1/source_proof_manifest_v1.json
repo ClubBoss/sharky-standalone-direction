@@ -1,0 +1,129 @@
+{
+  "schema_version": "w11_w12_source_proof_manifest_v1",
+  "validator_classification": "metadata_only_source_proof",
+  "world_id": "world_11",
+  "packet_world_id": "world11",
+  "live_owner_symbol": "_realPlayTransferLessons",
+  "source_root": "content/worlds/world11/v1",
+  "index_path": "content/worlds/world11/v1/index.md",
+  "runtime_source_path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
+  "packet_path": "content/worlds/world11/v1/sessions/w11.s01/w11.s01_deterministic_source_packet_v1.md",
+  "campaign_fixture_path": "content/worlds/world11/v1/sessions/w11.s01/campaign/w11.s01_campaign_fixture_v1.json",
+  "route_proof_id": "w11_source_route_proof_v1",
+  "route_proof_source_path": "lib/campaign/w11_route_backed_proof_registry_v1.dart",
+  "lessons": [
+    {
+      "lesson_id": "session_plan_basics",
+      "task_ids": [
+        "w11_session_plan_intro",
+        "w11_plan_focus_choice",
+        "w11_plan_avoid_overload",
+        "w11_plan_table_focus_transfer",
+        "w11_session_plan_recap"
+      ]
+    },
+    {
+      "lesson_id": "table_trigger_reads",
+      "task_ids": [
+        "w11_trigger_intro",
+        "w11_trigger_overfold_blinds",
+        "w11_trigger_overcall_flop",
+        "w11_trigger_small_price_continue",
+        "w11_trigger_bad_price_fold",
+        "w11_trigger_recap"
+      ]
+    },
+    {
+      "lesson_id": "post_session_review_loop",
+      "task_ids": [
+        "w11_review_loop_intro",
+        "w11_review_pick_leak",
+        "w11_review_define_fix",
+        "w11_review_loop_recap"
+      ]
+    },
+    {
+      "lesson_id": "real_play_transfer_checkpoint",
+      "task_ids": [
+        "w11_checkpoint_intro",
+        "w11_checkpoint_plan_line",
+        "w11_checkpoint_trigger_line",
+        "w11_checkpoint_review_line",
+        "w11_checkpoint_mixed_table_line",
+        "w11_checkpoint_review"
+      ]
+    }
+  ],
+  "packet_rep_ids": [
+    "w11.s01.r01",
+    "w11.s01.r02",
+    "w11.s01.r03",
+    "w11.s01.r04",
+    "w11.s01.r05",
+    "w11.s01.r06"
+  ],
+  "campaign_pack_ids": [
+    "world11_spine_campaign_v1",
+    "world11_spine_followup_v1_b0",
+    "world11_spine_followup_v1_b1",
+    "world11_spine_followup_v1_b2"
+  ],
+  "coverage": {
+    "repair": {
+      "act0_task_ids": [
+        "w11_review_loop_intro",
+        "w11_review_pick_leak",
+        "w11_review_define_fix",
+        "w11_review_loop_recap",
+        "w11_checkpoint_review_line",
+        "w11_checkpoint_review"
+      ],
+      "packet_rep_ids": [
+        "w11.s01.r01",
+        "w11.s01.r02",
+        "w11.s01.r03",
+        "w11.s01.r04",
+        "w11.s01.r05",
+        "w11.s01.r06"
+      ]
+    },
+    "transfer": {
+      "act0_task_ids": [
+        "w11_plan_table_focus_transfer",
+        "w11_trigger_small_price_continue",
+        "w11_trigger_bad_price_fold",
+        "w11_checkpoint_review_line",
+        "w11_checkpoint_mixed_table_line"
+      ],
+      "packet_rep_ids": [
+        "w11.s01.r01",
+        "w11.s01.r02",
+        "w11.s01.r03",
+        "w11.s01.r04",
+        "w11.s01.r05",
+        "w11.s01.r06"
+      ]
+    },
+    "review": {
+      "act0_task_ids": [
+        "w11_session_plan_recap",
+        "w11_trigger_recap",
+        "w11_review_loop_recap",
+        "w11_checkpoint_review"
+      ],
+      "packet_rep_ids": [
+        "w11.s01.r01",
+        "w11.s01.r02",
+        "w11.s01.r03",
+        "w11.s01.r04",
+        "w11.s01.r05",
+        "w11.s01.r06"
+      ]
+    }
+  },
+  "ownership": {
+    "runtime_content_owner": "existing_dart_owner",
+    "packet_content_owner": "existing_deterministic_packet",
+    "duplicates_learner_facing_content": false
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "schema_version": "w11_w12_source_proof_manifest_v1",
+  "validator_classification": "metadata_only_source_proof",
+  "world_id": "world_12",
+  "packet_world_id": "world12",
+  "live_owner_symbol": "_mindsetBridgeLessons",
+  "source_root": "content/worlds/world12/v1",
+  "index_path": "content/worlds/world12/v1/index.md",
+  "runtime_source_path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
+  "packet_path": "content/worlds/world12/v1/sessions/w12.s01/w12.s01_deterministic_source_packet_v1.md",
+  "campaign_fixture_path": "content/worlds/world12/v1/sessions/w12.s01/campaign/w12.s01_campaign_fixture_v1.json",
+  "route_proof_id": "w12_source_route_proof_v1",
+  "route_proof_source_path": "lib/campaign/w12_route_backed_proof_registry_v1.dart",
+  "lessons": [
+    {
+      "lesson_id": "decision_over_outcome",
+      "task_ids": [
+        "w12_decision_quality_intro",
+        "w12_good_fold_bad_result",
+        "w12_bad_call_good_result",
+        "w12_decision_quality_recap"
+      ]
+    },
+    {
+      "lesson_id": "tilt_reset_protocol",
+      "task_ids": [
+        "w12_tilt_reset_intro",
+        "w12_after_bad_beat_reset",
+        "w12_after_mistake_reset",
+        "w12_tilt_reset_recap"
+      ]
+    },
+    {
+      "lesson_id": "confidence_and_discipline",
+      "task_ids": [
+        "w12_confidence_intro",
+        "w12_assertive_not_ego",
+        "w12_discipline_under_pressure",
+        "w12_pretty_hand_bad_price_fold",
+        "w12_revenge_raise_trap",
+        "w12_confidence_recap"
+      ]
+    },
+    {
+      "lesson_id": "mindset_bridge_checkpoint",
+      "task_ids": [
+        "w12_checkpoint_intro",
+        "w12_checkpoint_process_line",
+        "w12_checkpoint_reset_line",
+        "w12_checkpoint_discipline_line",
+        "w12_checkpoint_full_loop_line",
+        "w12_checkpoint_review"
+      ]
+    }
+  ],
+  "packet_rep_ids": [
+    "w12.s01.r01",
+    "w12.s01.r02",
+    "w12.s01.r03",
+    "w12.s01.r04",
+    "w12.s01.r05",
+    "w12.s01.r06"
+  ],
+  "campaign_pack_ids": [
+    "world12_spine_campaign_v1",
+    "world12_spine_followup_v1_b0",
+    "world12_spine_followup_v1_b1",
+    "world12_spine_followup_v1_b2"
+  ],
+  "coverage": {
+    "repair": {
+      "act0_task_ids": [
+        "w12_tilt_reset_intro",
+        "w12_after_bad_beat_reset",
+        "w12_after_mistake_reset",
+        "w12_tilt_reset_recap",
+        "w12_checkpoint_reset_line",
+        "w12_checkpoint_review"
+      ],
+      "packet_rep_ids": [
+        "w12.s01.r01",
+        "w12.s01.r02",
+        "w12.s01.r03",
+        "w12.s01.r04",
+        "w12.s01.r05",
+        "w12.s01.r06"
+      ]
+    },
+    "transfer": {
+      "act0_task_ids": [
+        "w12_bad_call_good_result",
+        "w12_after_mistake_reset",
+        "w12_discipline_under_pressure",
+        "w12_pretty_hand_bad_price_fold",
+        "w12_revenge_raise_trap",
+        "w12_checkpoint_full_loop_line",
+        "w12_checkpoint_review"
+      ],
+      "packet_rep_ids": [
+        "w12.s01.r01",
+        "w12.s01.r02",
+        "w12.s01.r03",
+        "w12.s01.r04",
+        "w12.s01.r05",
+        "w12.s01.r06"
+      ]
+    },
+    "review": {
+      "act0_task_ids": [
+        "w12_decision_quality_recap",
+        "w12_tilt_reset_recap",
+        "w12_confidence_recap",
+        "w12_checkpoint_review"
+      ],
+      "packet_rep_ids": [
+        "w12.s01.r01",
+        "w12.s01.r02",
+        "w12.s01.r03",
+        "w12.s01.r04",
+        "w12.s01.r05",
+        "w12.s01.r06"
+      ]
+    }
+  },
+  "ownership": {
+    "runtime_content_owner": "existing_dart_owner",
+    "packet_content_owner": "existing_deterministic_packet",
+    "duplicates_learner_facing_content": false
+  }
+}

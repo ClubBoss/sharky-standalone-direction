@@ -35,9 +35,14 @@ void main() {
       reason: 'The active source draft now coexists with admitted W11 packs.',
     );
     expect(
-      kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
-      isEmpty,
-      reason: 'The active source draft must not register W12 as a campaign.',
+      kCampaignPackIdsV1.where((id) => id.startsWith('world12_')).toSet(),
+      const <String>{
+        'world12_spine_campaign_v1',
+        'world12_spine_followup_v1_b0',
+        'world12_spine_followup_v1_b1',
+        'world12_spine_followup_v1_b2',
+      },
+      reason: 'The active source draft coexists with admitted W12 packs.',
     );
   });
 

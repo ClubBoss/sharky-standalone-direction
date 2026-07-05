@@ -7,3 +7,9 @@ World 12 currently contains one deterministic source-owned session:
 
 This index is an authored content pointer only. It does not register a campaign
 pack or change the active route.
+
+## Source proof
+
+- `source_proof_manifest_v1.json`: metadata-only inventory of existing Act0,
+  packet, and admitted campaign IDs. It references existing content and does
+  not duplicate learner-facing copy.
