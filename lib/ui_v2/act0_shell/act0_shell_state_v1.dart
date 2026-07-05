@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
 
@@ -4678,6 +4679,108 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
   ),
 ];
 
+final _w7VisibleCardComboDensityLesson = Act0LessonCardV1(
+  lessonId: 'range_thinking_lite_combo_density',
+  title: 'Visible Cards Change Ranges',
+  subtitle: act0W7VisibleAceHiddenTaskSpecsV1.first.learningPurpose,
+  state: Act0LessonStateV1.locked,
+  phaseLabel: 'Visible Cards Change Ranges',
+  primaryCtaLabel: 'Locked',
+  isSelectable: false,
+  isLocked: true,
+  rewardXp: 45,
+  runner: _w7VisibleCardRunnerFromSpecV1(
+    act0W7VisibleAceHiddenTaskSpecsV1.first,
+    phase: Act0LessonPhaseV1.theory,
+  ),
+  tasks: _w7VisibleCardTasksFromSpecsV1(),
+);
+
+final _rangeThinkingFoundationLessons = <Act0LessonCardV1>[
+  _rangeThinkingLiteLessons[0],
+  _rangeThinkingLiteLessons[1],
+  _rangeThinkingLiteLessons[2],
+];
+
+final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
+  _rangeThinkingLiteLessons[3],
+  _rangeThinkingLiteLessons[4],
+  _w7VisibleCardComboDensityLesson,
+];
+
+List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
+  final tasks = <Act0LessonTaskV1>[];
+  for (
+    var index = 0;
+    index < act0W7VisibleAceHiddenTaskSpecsV1.length;
+    index++
+  ) {
+    final spec = act0W7VisibleAceHiddenTaskSpecsV1[index];
+    final isIntro = index == 0;
+    final isTransfer = spec.drillKind.contains('transfer');
+    final phase = isIntro ? Act0LessonPhaseV1.theory : Act0LessonPhaseV1.drill;
+    tasks.add(
+      Act0LessonTaskV1(
+        taskId: spec.taskId,
+        title: spec.learningPurpose,
+        phase: phase,
+        runner: _w7VisibleCardRunnerFromSpecV1(spec, phase: phase),
+        rewardXp: isTransfer ? 12 : 10,
+        stepKind: isIntro
+            ? Act0LessonStepKindV1.learn
+            : (isTransfer
+                  ? Act0LessonStepKindV1.proveIt
+                  : Act0LessonStepKindV1.practice),
+        taskFamily: isTransfer ? Act0TaskFamilyV1.transfer : null,
+      ),
+    );
+  }
+  return tasks;
+}
+
+Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
+  Act0W7VisibleAceHiddenTaskSpecV1 spec, {
+  required Act0LessonPhaseV1 phase,
+}) {
+  return _w6ComboCountsIntroRunner.copyWith(
+    lessonId: spec.taskId,
+    lessonTitle: 'Visible Cards Change Ranges',
+    lessonSubtitle: 'Visible Cards Change Ranges',
+    phase: phase,
+    caption: spec.boardContext,
+    hint: spec.learningPurpose,
+    question: spec.learnerPrompt,
+    options: <Act0RunnerOptionV1>[
+      for (final choiceId in spec.choiceIds)
+        Act0RunnerOptionV1(
+          id: choiceId,
+          label: spec.choiceLabels[choiceId]!,
+          isCorrect: choiceId == spec.expectedChoiceId,
+          preferredLabel: spec.choiceLabels[spec.expectedChoiceId]!,
+          quality: choiceId == spec.expectedChoiceId
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          feedbackTitle: spec.learningPurpose,
+          feedbackReason: choiceId == spec.expectedChoiceId
+              ? spec.feedbackReason
+              : spec.incorrectFeedback[choiceId]!,
+        ),
+    ],
+    feedbackTitle: spec.learningPurpose,
+    feedbackReason: spec.feedbackReason,
+    table: _w6ComboCountsIntroRunner.table.copyWith(
+      centerLabel: spec.boardContext,
+    ),
+    teachingSteps: <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: spec.learningPurpose,
+        body: spec.learnerPrompt,
+        focusLabels: <String>[spec.boardContext, spec.conceptFamilyId],
+      ),
+    ],
+  );
+}
+
 final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'effective_stack_basics',
@@ -5961,7 +6064,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     isSelectable: false,
     isLocked: true,
     rewardXp: 205,
-    lessons: _preflopFrameworkLessons,
+    lessons: _betPurposePriceLessons,
   ),
   Act0WorldCardV1(
     worldId: 'world_5',
@@ -5975,7 +6078,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     isSelectable: false,
     isLocked: true,
     rewardXp: 225,
-    lessons: _betPurposePriceLessons,
+    lessons: _boardDrawsLessons,
   ),
   Act0WorldCardV1(
     worldId: 'world_6',
@@ -5989,7 +6092,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     isSelectable: false,
     isLocked: true,
     rewardXp: 240,
-    lessons: _boardDrawsLessons,
+    lessons: _rangeThinkingFoundationLessons,
   ),
   Act0WorldCardV1(
     worldId: 'world_7',
@@ -6003,7 +6106,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     isSelectable: false,
     isLocked: true,
     rewardXp: 260,
-    lessons: _rangeThinkingLiteLessons,
+    lessons: _visibleCardRangeContinuationLessons,
   ),
   Act0WorldCardV1(
     worldId: 'world_8',
