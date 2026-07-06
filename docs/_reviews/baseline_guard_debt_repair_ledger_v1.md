@@ -108,3 +108,43 @@ Wave 4 admission remains blocked. The blocker is no longer the repaired
 canonical Tier0 root-cause groups above; it is the remaining broad Act0 preview
 behavioral/copy backlog, which requires a separate admitted wave or explicit
 retirement/reclassification decision.
+
+## Act0 Preview Decomposition + Canonical World Identity Addendum
+
+Branch:
+`codex/act0-preview-decomposition-world-identity-lock-v1`
+
+Parent branch:
+`codex/tier0-root-cause-repair-wave4-admission-core-v1`
+
+Required parent HEAD:
+`5d3f77880cc8d55c8252bf2882fd9fd16242b17c`
+
+Status:
+`canonical_world_identity_locked_act0_preview_green_wave4_admitted`
+
+This addendum covers the follow-on pass that closed the remaining authoritative
+Act0 preview blocker without patching the 128 failures individually.
+
+| Root-cause group | Initial evidence | Repair / decision | Current evidence | Wave 4 admission result |
+| --- | ---: | --- | ---: | --- |
+| Canonical World identity ambiguity | Active paths contained the retired W4 Preflop, W5 Bet Purpose, W6 Board Awareness model beside the current W4 Bet Purpose / Price, W5 Board Awareness, W6 Range Thinking model. | Extended `lib/canonical/canonical_truth_map_v1.dart` as the single W1-W12 identity SSOT and migrated active launch/calibration docs to the normalized model. | `test/guards/canonical_truth_map_v1_contract_test.dart` passes. | Closed. |
+| W12 terminal pack ownership | `volume_i_terminal_review_v1` was in the active campaign pack list but had no `worldN_` prefix for truth-map ownership inference. | Explicitly assigned the Volume I terminal review pack to W12 in the canonical truth map. | Canonical truth guard asserts W12 owner and session-drill host surface. | Closed. |
+| Broad Act0 preview backlog | Selected Tier0 was `602 success / 128 error`, all concentrated in the 33,273-line preview file. | Moved the mixed preview file to a non-test legacy backlog artifact and replaced the canonical preview path with a narrow root/state/Learn smoke contract. | `test/ui_v2/act0_shell_preview_screen_v1_test.dart` passes. | Closed for admission; legacy backlog is non-authoritative until decomposed per owner. |
+| Source-reading route guards | Existing source guards expected the old preview file to own Home/Learn/Play/Review broad contracts. | Updated guards to assert the decomposition boundary and legacy provenance marker. | Route source guards pass in focused validation. | Closed. |
+
+Act0 preview failure family matrix:
+
+| Contract family | Failure count | Admission classification |
+| --- | ---: | --- |
+| Review shell / repair loop | 33 | active owner work, not Wave 4 admission |
+| RU localization | 25 | focused RU guard owner |
+| Learn shell / runner lesson flow | 16 | focused owner work |
+| World identity / curriculum mapping | 16 | repaired/guarded by canonical truth map |
+| Home shell / retention-progress | 13 | active owner work, not Wave 4 admission |
+| Legacy-only runner expectations | 8 | legacy/non-authoritative until decomposed |
+| Feedback/debug flows | 6 | mixed; debug capture retired from admission |
+| Widget structure/layout | 6 | active visual/layout owner work, not Wave 4 admission |
+| Shell chrome / placement / profile | 5 | active owner work, not Wave 4 admission |
+
+Wave 4 admission is restored. Wave 4 itself was not started.
