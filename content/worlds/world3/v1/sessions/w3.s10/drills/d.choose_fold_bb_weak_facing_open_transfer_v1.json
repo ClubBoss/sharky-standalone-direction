@@ -1,0 +1,14 @@
+{
+  "id": "choose_fold_bb_weak_facing_open_transfer_v1",
+  "kind": "action_choice",
+  "prompt": "Button opened first and hero is in the big blind with T6o. Which compact preflop action fits this transfer spot?",
+  "intent_v1": "world3_transfer_fold_big_blind_weak_facing_open",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "fold"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "The big blind is out of position and T6o is too weak to continue cleanly against a button open.",
+  "feedback_correct_v1": "Correct. Weak offsuit hand plus out-of-position pressure makes folding the disciplined preflop action.",
+  "feedback_incorrect_v1": "Incorrect. T6o in the big blind is too weak to continue cleanly after the button opens, so the compact action is fold."
+}

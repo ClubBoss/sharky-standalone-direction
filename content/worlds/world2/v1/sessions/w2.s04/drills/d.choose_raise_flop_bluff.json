@@ -8,6 +8,7 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling keeps the hand alive, but this flop is a better bluff spot because raising applies fold pressure now.",
   "feedback_correct_v1": "Correct. Bluff c-bet is enabled in this specific spot.",
   "feedback_incorrect_v1": "Incorrect. This flop is one of the better bluffing spots, so betting now creates fold pressure that checking gives away.",
   "acceptable_actions": [

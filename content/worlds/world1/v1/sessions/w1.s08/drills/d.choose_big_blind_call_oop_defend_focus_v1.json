@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "From the big blind, a playable broadway hand can still continue by calling even without position.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. QTo can defend from the big blind by calling, even without position.",
   "feedback_incorrect_v1": "Incorrect. QTo is playable enough to defend from the big blind, but out of position the cleaner continue is call, not a loose raise."
 }

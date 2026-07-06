@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "A strong hand in a clean unopened spot can still raise first in, even from the small blind.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. AQs is strong enough to raise first in, even from the small blind.",
   "feedback_incorrect_v1": "Incorrect. Being out of position does not cancel a strong clean start, so AQs in the small blind should still open with a raise."
 }

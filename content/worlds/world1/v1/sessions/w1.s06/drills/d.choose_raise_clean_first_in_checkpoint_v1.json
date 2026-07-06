@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "A strong suited broadway hand in a clean unopened spot should still raise at the checkpoint.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. AJs in an unopened cutoff spot is strong enough to raise at the checkpoint.",
   "feedback_incorrect_v1": "Incorrect. With folds to the cutoff, AJs is still a strong clean start, so the right simple action is to raise."
 }

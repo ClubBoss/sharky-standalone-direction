@@ -8,6 +8,7 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling controls the pot, but the preferred turn action keeps pressure on weaker continues.",
   "feedback_correct_v1": "Correct. Continue betting in this pressure node.",
   "feedback_incorrect_v1": "Incorrect. This turn still lets you pressure weaker continues, so a second barrel is stronger than backing off.",
   "acceptable_actions": [

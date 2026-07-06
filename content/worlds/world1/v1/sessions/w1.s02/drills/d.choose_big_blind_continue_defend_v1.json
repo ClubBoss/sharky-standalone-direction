@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "A stronger broadway hand can continue from the big blind, but the clean response to late-position pressure is a call.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. QJs is strong enough to continue from the big blind, and calling answers the button open cleanly.",
   "feedback_incorrect_v1": "Incorrect. After the button opens first, QJs in the big blind is a defend-by-calling spot, not a fresh first-in raise or a scared fold."
 }

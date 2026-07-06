@@ -1,0 +1,14 @@
+{
+  "id": "choose_call_btn_facing_open_transfer_v1",
+  "kind": "action_choice",
+  "prompt": "Cutoff opened first and hero is on the button with QJs. Which compact preflop action fits this transfer spot?",
+  "intent_v1": "world3_transfer_call_button_facing_open",
+  "available_actions_v1": ["fold", "call", "raise"],
+  "expected": {
+    "actionId": "call"
+  },
+  "error_class": "expected_action_mismatch",
+  "why_v1": "The hand is playable and hero has position, but the open in front changes the action from first-in raise to call.",
+  "feedback_correct_v1": "Correct. QJs can continue in position after the cutoff opens, and calling respects the facing-open frame.",
+  "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, QJs on the button is a playable in-position continue, but the compact action is call instead of a first-in raise."
+}

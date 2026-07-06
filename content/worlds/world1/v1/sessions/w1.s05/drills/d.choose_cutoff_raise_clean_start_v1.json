@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "A clean first-in spot with a playable suited ace should still raise before later pressure appears.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. ATs in the cutoff is a clean first-in raise before later pressure appears.",
   "feedback_incorrect_v1": "Incorrect. With folds to the cutoff, ATs keeps the start clean enough to open for a raise before later pressure appears."
 }

@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "Facing an open with a playable hand in position, the stable World 1 checkpoint response is to continue by calling.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. KQs can continue in position after the cutoff opens, so the final checkpoint call fits.",
   "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, this spot shifts from clean first-in aggression to a calmer in-position continue, so call fits best."
 }

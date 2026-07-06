@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "Under pressure and out of position with a weak offsuit hand, the disciplined response is still to fold.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. T5o is weak and out of position against pressure, so folding is the disciplined response.",
   "feedback_incorrect_v1": "Incorrect. Facing a hijack open from the big blind, T5o is too weak to continue out of position, so the disciplined answer is to fold."
 }

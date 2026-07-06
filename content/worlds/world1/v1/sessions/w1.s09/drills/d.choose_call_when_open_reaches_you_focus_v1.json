@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "When the pot is already opened, a playable hand like KTs continues most cleanly with a call.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. KTs can continue after the cutoff opens, and calling keeps the response simple.",
   "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KTs on the button is no longer a clean first-in raise, so the simple continue is call."
 }

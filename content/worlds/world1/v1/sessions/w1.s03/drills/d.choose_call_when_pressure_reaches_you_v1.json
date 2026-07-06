@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "Once an open reaches you, the hand can still continue, but the cleaner response is a call rather than treating it like a first-in raise.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. KQs can continue after the cutoff opens, but calling fits the facing-open frame.",
   "feedback_incorrect_v1": "Incorrect. Once the cutoff opens first, KQs on the button is no longer a clean first-in raise, so the simpler continue is call."
 }

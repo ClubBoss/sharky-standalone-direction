@@ -8,6 +8,7 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
+  "feedback_acceptable_v1": "Acceptable. Calling avoids overplaying, but raising is preferred because the denial bet removes free overcard equity.",
   "feedback_correct_v1": "Correct. Denial line is bet in this spot.",
   "feedback_incorrect_v1": "Incorrect. This denial spot wants a bet now so weaker overcards do not get a free turn.",
   "acceptable_actions": [

@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "A weak offsuit hand from the small blind is not a clean enough start to continue.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. Q6o is not strong enough to start from the small blind, so folding keeps discipline.",
   "feedback_incorrect_v1": "Incorrect. Q6o from the small blind is still too weak to start the pot out of position, so the clean answer is to fold."
 }

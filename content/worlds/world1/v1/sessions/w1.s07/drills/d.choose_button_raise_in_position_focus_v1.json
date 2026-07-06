@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "On the button in a clean first-in spot, a playable broadway hand should still raise.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. KJo on the button in an unopened pot is a clean in-position raise.",
   "feedback_incorrect_v1": "Incorrect. On the button with KJo and no prior open, position turns this into a clean first-in raise rather than a passive or fearful response."
 }

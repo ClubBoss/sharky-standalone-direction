@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "From the small blind, a weak offsuit hand should still release instead of forcing a continue.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. T6o is too weak from the small blind, so the stable answer is still fold.",
   "feedback_incorrect_v1": "Incorrect. From the small blind with T6o, the hand is still too weak to force action out of position, so the stable answer is to fold."
 }

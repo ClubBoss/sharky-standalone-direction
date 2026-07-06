@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "Out of position with a weak offsuit hand, the disciplined checkpoint answer is still to fold.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. J4o is too weak out of position against a button open, so folding is disciplined.",
   "feedback_incorrect_v1": "Incorrect. Facing a button open from the big blind, J4o is too weak to continue out of position, so the disciplined answer is to fold."
 }

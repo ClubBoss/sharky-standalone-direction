@@ -8,6 +8,7 @@
     "actionId": "raise"
   },
   "error_class": "value_bluff_confusion",
+  "feedback_acceptable_v1": "Acceptable. Calling keeps the pot smaller, but the blocker cue makes raising better because it creates fold pressure.",
   "feedback_correct_v1": "Correct. Bluff line is active in this river spot.",
   "feedback_incorrect_v1": "Incorrect. The blocker cue matters here, so betting the river applies fold pressure better than checking.",
   "acceptable_actions": [

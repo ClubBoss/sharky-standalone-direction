@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "With position and a playable suited broadway hand, the clean response to existing pressure is a call.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. QJs can continue with position after the hijack opens, so calling fits.",
   "feedback_incorrect_v1": "Incorrect. Once the hijack opens first, QJs in the cutoff becomes an in-position continue spot, so the cleaner action is call."
 }

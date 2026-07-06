@@ -13,6 +13,6 @@
   },
   "error_class": "expected_action_mismatch",
   "why_v1": "Once earlier players fold, a strong hand in a clean first-in spot should raise before the big blind acts.",
-  "feedback_correct_v1": "Correct.",
+  "feedback_correct_v1": "Correct. AQs is strong enough to raise once the earlier seats fold and the start is clean.",
   "feedback_incorrect_v1": "Incorrect. After the cutoff and button both fold, AQs in the small blind becomes a clean unopened spot, so the right action is to raise."
 }
