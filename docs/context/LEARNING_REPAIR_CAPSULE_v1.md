@@ -2,11 +2,12 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `fbe670f06fedc3fcb7a5e9f76144bf84edd20f87`
-(W1-W6 grouped repair program Waves 1-3 closed, integrated before this
-capsule refresh).
+Verified product HEAD: `1d7a76215ac008eb3066c5030e514c5fa80029c7` (frozen Wave 4 HEAD on `origin/main`;
+W1-W6 grouped repair program Waves 1-3 remain closed; repository hygiene,
+dead-system decommission, and repository-truth stabilization/integration are
+also closed).
 Verified active route artifact:
-`docs/_reviews/w1_w6_repair_wave3_authority_drift_v1.md`.
+`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 

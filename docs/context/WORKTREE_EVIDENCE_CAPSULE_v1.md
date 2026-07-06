@@ -2,10 +2,10 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `fbe670f06fedc3fcb7a5e9f76144bf84edd20f87`
-(W1-W6 grouped repair program Waves 1-3 closed, integrated before this
-capsule refresh).
-Verified active task: `Repository Hygiene + Context Cost Reduction v1`.
+Verified product HEAD: `1d7a76215ac008eb3066c5030e514c5fa80029c7` (frozen Wave 4 HEAD on `origin/main`;
+repository hygiene, dead-system decommission, and repository-truth
+stabilization/integration are closed).
+Verified active task: none active; parked at the frozen HEAD above.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
