@@ -1,11 +1,40 @@
 # Learning Repair Capsule v1
 
 Status: ACTIVE learning/repair capsule.
-Freshness date: 2026-07-03.
-Verified product HEAD: pending commit (this task's own commit advances it).
-Verified active route artifact: `docs/_reviews/phase_7_closure_audit_v1.md`.
+Freshness date: 2026-07-06.
+Verified product HEAD: `e467090960d41e2f128655c417f56ff33fe19d70`
+(integrated Stage 1B product state before this capsule refresh).
+Verified active route artifact:
+`docs/_reviews/stage_1b_wave_d_minimum_same_signal_repair_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
+
+## Stage 1B Integrated Repair State
+
+Stage 1B Waves A-D are integrated. The repair lifecycle now has bounded,
+source-owned same-signal targets for:
+
+- W4 denial action choice: `w4.s02/choose_raise_denial` to
+  `w4.s06/choose_raise_repeat`;
+- W5 dry board texture: the reciprocal `w5.s06` in-position and `w5.s10`
+  synthesis pair;
+- W6 range width: reciprocal two-row pairs for `wider` and `narrower`;
+- W6.s01 board fit: the D0-owned
+  `range_bucket_board_fit_classifier_v1` strong/missed directions.
+
+W6.s01 remains `DrillKindV1.actionChoice`; medium/weak board-fit rows remain
+ineligible. W5 wet, connected, paired/high-card, street-change, draw,
+blocker-modifier, and recap-chain families remain deferred until telemetry,
+final QA, or an approved exact partner identifies a real recovery gap. W6
+`less_constrained` and `stronger_on_average` require distinct same-answer
+targets. W4 sizing and adjacent action-purpose families require their own
+evidence and authorization.
+
+Receipts and retained results provide deterministic source, choice, expected
+answer, signal, family, target, and outcome provenance. Per-decision telemetry
+and time-to-decision are not available and must not be inferred. The next
+admitted task is `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate`; it
+has not started. W7+ repair expansion remains closed.
 
 ## Phase 7 Content Depth Gate
 

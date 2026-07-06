@@ -1,18 +1,28 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-04.
-Verified branch state: `codex/mascot-direction-correction-v2` is a docs-only
-bounded branch off `main` / `origin/main`
-`beb7aabc64c61ae6ea9bc051d6b48a11ca30c9bd`.
-Current active task: `Sharky Three-Register System Lock v3`; active strategic
-character direction is `THREE_REGISTER_ICONIC_COMPANION_SELECTED`, exact final
-visual execution remains unlocked pending controlled board evidence, and
-Sharky Micro-Animations v1 remains BLOCKED.
-Verified active route artifact: `docs/_reviews/sharky_three_register_system_lock_v3.md`.
+Freshness date: 2026-07-06.
+Verified branch state: Stage 1B Waves A-D are fast-forward integrated on
+`main`; the integrated product HEAD before this capsule refresh is
+`e467090960d41e2f128655c417f56ff33fe19d70`.
+Current active task: `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate`.
+The gate has not started. W7+ expansion and visual, mascot, and motion work are
+deferred while this route is active.
+Verified active route artifact:
+`docs/_reviews/stage_1b_wave_d_minimum_same_signal_repair_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
+
+Stage 1B is integrated with state
+`stage_1b_w4_w6_repairs_complete_pending_final_learner_truth_gate`. Its W4
+denial, W5 dry-texture, and W6 board-fit/range-width repair slices are closed.
+The next admitted task is the consolidated W1-W6 final learner-truth audit and
+AI-simulated QA gate; this refresh records that handoff but does not start the
+audit. No W7+ route expansion, visual direction, asset replacement, mascot,
+motion, telemetry, Modern Table, or monetization work is activated.
+
+## Prior Visual and Phase Closure Record
 
 Phase 4 - Proof Progression and Phase 5 - Sharky Companion are both CLOSED.
 Phase 1 - Premium Visual Foundation, Phase 2 - Learning Truth Foundation, and
@@ -90,7 +100,7 @@ direction. No generated art, asset replacement, runtime, route, content,
 telemetry, Modern Table, cosmetic, or motion implementation is activated by
 this correction.
 
-Current active task:
+Last visual-direction task:
 
 - `Sharky Three-Register System Lock v3`
 

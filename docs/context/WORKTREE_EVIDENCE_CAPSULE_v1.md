@@ -1,23 +1,43 @@
 # Worktree Evidence Capsule v1
 
 Status: ACTIVE worktree/evidence capsule.
-Freshness date: 2026-07-03.
-Verified product HEAD: `99783a3da9fce8a5f9f067be8b8503aa68de3098`.
-Verified active task: `Achievement Visual Language / Icons v1`.
+Freshness date: 2026-07-06.
+Verified product HEAD: `e467090960d41e2f128655c417f56ff33fe19d70`
+(integrated Stage 1B product state before this capsule refresh).
+Verified active task: `Stage 1B Integration + Context Capsule Refresh v1`.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
 ## Current Worktree Pattern
 
 Use isolated worktrees for bounded Sharky waves when the active checkout may
-contain unrelated local state.
+contain unrelated local state. The current integration runs in the canonical
+standalone checkout because preflight proved it clean and non-diverged.
 
 Current active worktree:
 
-`/Users/elmarsalimzade/.config/superpowers/worktrees/Sharky_1.0/apply-owner-patch-sequence-a-b-c-d-v1`
+`/Users/elmarsalimzade/Sharky_1.0`
 
 Current active branch:
-`codex/apply-owner-patch-sequence-a-b-c-d-v1`
+`main`
+
+## Current Integration Evidence
+
+- Pre-integration `origin/main`:
+  `17d3d3a68da72ba09fb9cee6e0a2166f4c3c00c1`.
+- Source branch: `codex/stage-1b-wave-d-minimum-same-signal-repair-v1` at
+  `e467090960d41e2f128655c417f56ff33fe19d70`.
+- Ancestry: source is 15 commits ahead and zero behind `origin/main`; the
+  integration used `git merge --ff-only` with no merge commit.
+- Focused Stage 1B suite: `84/84` passed on source and integrated `main`.
+- Checkpoint lint and `flutter analyze`: passed.
+- Checkpoint selected tests: `+559 -164` on both integrated `main` and detached
+  pre-integration `origin/main`; this is a baseline-identical stale-checkpoint
+  limitation, not an observed Stage 1B regression. The checkpoint stopped
+  before its full-suite phase.
+- Final diff, graph, analyzer, clean-state, and push proofs are recorded in
+  `docs/_reviews/stage_1b_integration_and_capsule_refresh_v1.md` and the
+  post-push report.
 
 ## HEAD Freshness Rule
 
