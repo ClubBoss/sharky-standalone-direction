@@ -77,7 +77,7 @@ void main() {
     'world1 runner sources avoid generic feedback family and policy-style early-path leakage',
     () {
       final runnerSource = File(
-        'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
+        'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart',
       ).readAsStringSync();
       final scenarioTruthSource = File(
         'lib/campaign/world1_scenario_truth_pilot_v1.dart',

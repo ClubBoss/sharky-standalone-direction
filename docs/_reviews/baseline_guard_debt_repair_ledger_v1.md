@@ -1,0 +1,62 @@
+# Baseline Guard Debt Repair Ledger v1
+
+Status: `baseline_guard_debt_partially_repaired_wave4_blocked`
+
+Branch: `codex/baseline-guard-debt-wave4-admission-v1`
+
+Base HEAD: `0e913732178c1d1d00f6c5c4f9a41dfd1fe509b3`
+
+## Scope
+
+This ledger covers the baseline guard debt discovered before opening
+`W1-W6 Repair Wave 4 - Prompt/Table Structured Context + Mobile Actionability`.
+It is not a Wave 4 implementation artifact.
+
+The active prompt and live preflight supersede stale capsule references to
+`1d7a76215ac008eb3066c5030e514c5fa80029c7` as the frozen Wave 4 HEAD.
+Because the gate did not close, the capsules were not refreshed in this pass.
+
+## Initial Inventory
+
+| Cluster | Initial result | Test files | Repeated error | Current owner candidate |
+| --- | ---: | --- | --- | --- |
+| A - World 1 foundations guard | 31 failing assertions after 79 sub-tests ran | `test/guards/world1_foundations_microtask_contract_test.dart` | stale expected why copy, missing board-strip/table keys, seat-quiz geometry/caption expectations, runner state progression expectations | `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart`, `lib/archive/legacy_runners/modern_table_screen_v1.dart`, W1 campaign proof/truth helpers |
+| B1 - Act0 Tier0 surface contracts | 43 direct failures plus cascaded widget failures inside the seven-file Tier0 run | `test/ui_v2/act0_shell_preview_screen_v1_test.dart` | duplicate text matches, stale Home checklist keys, compact layout thresholds, stale selected-world copy, RU tab flow assumptions | `lib/ui_v2/act0_shell/*` and Act0 route/support copy owners |
+| B2 - RU localization residue | repeated failures inside Tier0 | `test/ui_v2/act0_shell_preview_screen_v1_test.dart`, `test/ui_v2/act0_ru_surface_no_unapproved_latin_test.dart` | expected Russian copy is still English or RU fallback set changed | Act0 localization helpers and RU coverage expectations |
+| B3 - Campaign registry invariants | repeated failures inside Tier0 | `test/guards/campaign_pack_registry_invariants_test.dart`, `test/guards/campaign_followup_pack_registry_invariants_test.dart` | expected IDs/source groups differ from current campaign registry | `lib/campaign/campaign_pack_registry_v1.dart`, `assets/packs/`, source-owned campaign fixtures |
+| C1 - Additional stale runner-owner file reads | 2 file-read failures | `test/guards/world1_failure_to_learning_conversion_contract_test.dart`, `test/guards/world1_feedback_family_routing_contract_test.dart` | `PathNotFoundException` for removed `lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart` | current owner is `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart` |
+| C2 - Additional files already green | 0 failures | `test/guards/world_campaign_map_home_contract_test.dart`, `test/tools/product_surface_audit_v1_test.dart` | none | current Act0/map retirement and product-surface audit owners |
+| C3 - Modern Table entry compile blocker | file-load failure, then 21 assertion failures after import repair | `test/ui_v2/modern_table_entry_test.dart` | removed map import; stale visual/aesthetic assertions against archived Modern Table | current owner is `lib/archive/legacy_runners/modern_table_screen_v1.dart`; map owner has no active replacement |
+
+## Root-Cause Groups
+
+| Group | Initial failure count | Affected tests | Canonical owner | Classification | Repair | Final count | Behavior change | Wave 4 relevance |
+| --- | ---: | --- | --- | --- | --- | ---: | --- | --- |
+| Stale archived runner path reads | 2 | `world1_failure_to_learning_conversion_contract_test.dart`, `world1_feedback_family_routing_contract_test.dart` | `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart` | `stale_path_or_owner` | Repointed source-file reads to the current archived owner already used by the canonical terminal cutover guard. | 0 | None; tests only. | Medium: preserves W1 runner feedback/next-step contract coverage without restoring retired paths. |
+| Modern Table removed import path | 1 file-load blocker | `modern_table_entry_test.dart` | `lib/archive/legacy_runners/modern_table_screen_v1.dart`; retired map path has no active owner | `stale_path_or_owner` plus `obsolete_contract` for map entry dependency | Repointed Modern Table import/source read to archived owner and made the helper open `ModernTableScreenV1` directly instead of depending on removed `UiV2ProgressMapScreenV2`. | 21 remaining assertion failures | None; tests only. | Low-to-medium: compile blocker removed, but remaining assertions are legacy Modern Table reference-only debt, not an active Act0 Wave 4 regression. |
+| Modern Table stale visual assertions | 21 | `modern_table_entry_test.dart` | `lib/archive/legacy_runners/modern_table_screen_v1.dart` | `unrelated_deferred_baseline_debt` / `obsolete_contract` for active Wave 4 admission | Not repaired in this pass. Changing Modern Table appearance is forbidden, and broad assertion retirement would require a dedicated contract review. | 21 | None. | Low for active Wave 4 because Modern Table is archived reference-only in current instructions; still blocks this file from green. |
+| World 1 foundations behavioral assertions | 31 | `world1_foundations_microtask_contract_test.dart` | archived W1 microtask runner, archived Modern Table, W1 campaign truth helpers | mixed `stale_expected_copy_or_schema`, `obsolete_contract`, possible `real_product_regression` | Not repaired in this pass beyond inventory. | 31 | None. | Mixed: some prompt/table/actionability checks may matter to Wave 4; owner resolution remains required before edits. |
+| Act0 Tier0 contract failures | 164 in seven-file Tier0 run | seven canonical Tier0 guard files | Act0 shell, localization, campaign registry/source owners | mixed; unresolved | Not repaired in this pass beyond inventory. | 164 | None. | High: blocks authoritative Wave 4 baseline. |
+
+## Repairs Landed
+
+- Repaired stale source-file path reads in two additional discovered guard files.
+- Repaired `modern_table_entry_test.dart` compile/load ownership by importing the current archived Modern Table owner.
+- Removed the retired map-entry dependency from the Modern Table test helper without restoring aliases or changing runtime entry.
+
+## Obsolete Assertions Not Yet Retired
+
+- `modern_table_entry_test.dart` still contains 21 visual/layout assertions against an archived Modern Table reference surface. Retiring these safely requires a separate decision about which Modern Table contracts, if any, remain authoritative outside the active Act0 route.
+
+## Real Product Regressions Fixed
+
+None. No production files were changed.
+
+## Current Blocker
+
+`baseline_guard_debt_partially_repaired_wave4_blocked`
+
+The canonical Tier0 set is still red, and the W1 foundations guard still has
+31 unresolved failures. The remaining failures require root-cause resolution
+against current Act0, campaign, RU/localization, and archived-runner contract
+owners before the Wave 4 admission set can be trusted.

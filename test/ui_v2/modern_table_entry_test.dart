@@ -11,8 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/engine/scenario_replayer_fsm_v1.dart';
 import 'package:poker_analyzer/content/scenario_asset_index_v1.dart';
-import 'package:poker_analyzer/ui_v2/map/ui_v2_progress_map_screen_v2.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/modern_table_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/theme/ui_v2_colors.dart';
 
 class FakeAssetBundle extends AssetBundle {
@@ -55,7 +54,8 @@ class FakeAssetBundle extends AssetBundle {
   void evict(String key) {}
 }
 
-const _modernTableSourcePath = 'lib/ui_v2/screens/modern_table_screen_v1.dart';
+const _modernTableSourcePath =
+    'lib/archive/legacy_runners/modern_table_screen_v1.dart';
 
 String _readSource(String path) {
   final file = File(path);
@@ -1056,7 +1056,9 @@ void main() {
     bool skipInitialSettle = false,
   }) async {
     SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const MaterialApp(home: UiV2ProgressMapScreenV2()));
+    await tester.pumpWidget(
+      const MaterialApp(home: ModernTableScreenV1(seatCount: 6)),
+    );
     await tester.pump();
     if (!skipInitialSettle) {
       await tester.pumpAndSettle();
@@ -2443,7 +2445,7 @@ void main() {
 
   test('modern table screen avoids legacy imports', () {
     final sourceFile = File(
-      'lib/ui_v2/screens/modern_table_screen_v1.dart',
+      'lib/archive/legacy_runners/modern_table_screen_v1.dart',
     ).readAsStringSync();
     const forbidden = [
       'package:poker_analyzer/table/',
