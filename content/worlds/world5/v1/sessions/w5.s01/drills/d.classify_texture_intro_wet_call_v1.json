@@ -9,5 +9,6 @@
   "why_v1": "Wet boards carry more draw pressure. Here calling controls the response, but wet texture does not automatically mean call.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, wet texture with live draws supports call first.",
+  "feedback_acceptable_v1": "Folding is playable because wet boards can become volatile, but call is preferred when live improvements make control worth taking.",
   "feedback_incorrect_v1": "Incorrect. Start from the wet texture cue, then choose the controlled response for this drill."
 }

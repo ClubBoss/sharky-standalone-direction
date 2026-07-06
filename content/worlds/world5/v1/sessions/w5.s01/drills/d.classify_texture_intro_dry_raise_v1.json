@@ -9,5 +9,6 @@
   "why_v1": "Dry boards leave fewer immediate draws. Here that clean cue supports pressure, but dry texture does not automatically mean raise.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, dry texture with a clean value cue supports raise.",
+  "feedback_acceptable_v1": "Calling is playable because the dry board is stable, but raise is preferred when the clean value cue can apply pressure.",
   "feedback_incorrect_v1": "Incorrect. Start from the dry texture cue, then match the source-backed value response for this drill."
 }

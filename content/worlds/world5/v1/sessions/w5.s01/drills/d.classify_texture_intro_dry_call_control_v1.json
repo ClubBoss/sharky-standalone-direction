@@ -9,5 +9,6 @@
   "why_v1": "Dry boards stay calmer, but a large action can make calling the cleaner control choice.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. Dry texture stays stable, and the large action points to call.",
+  "feedback_acceptable_v1": "Folding is playable because the action is already large, but call is preferred when the dry board stays stable enough to control.",
   "feedback_incorrect_v1": "Incorrect. Start from the dry texture, then respect the larger action."
 }

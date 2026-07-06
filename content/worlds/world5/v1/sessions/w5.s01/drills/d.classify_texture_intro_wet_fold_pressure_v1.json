@@ -9,5 +9,6 @@
   "why_v1": "Wet boards create more changing turn cards, so high pressure can make a weak continue too costly.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. Wet texture plus high pressure can make fold the disciplined action.",
+  "feedback_acceptable_v1": "Calling is playable because the board is wet with possible improvement, but fold is preferred when high pressure makes the continue too costly.",
   "feedback_incorrect_v1": "Incorrect. Start from the wet texture and notice how much pressure you face."
 }

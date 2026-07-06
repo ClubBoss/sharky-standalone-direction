@@ -9,5 +9,6 @@
   "why_v1": "When every cue reinforces wet-board pressure and your improvement path stays weak, folding is the disciplined synthesis result.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. The wet synthesis read points to a fold.",
+  "feedback_acceptable_v1": "Calling is playable because wet boards can leave improvement paths, but fold is preferred when the full wet synthesis confirms heavy pressure and weak improvement.",
   "feedback_incorrect_v1": "Incorrect. Start from the full wet-board synthesis before deciding."
 }
