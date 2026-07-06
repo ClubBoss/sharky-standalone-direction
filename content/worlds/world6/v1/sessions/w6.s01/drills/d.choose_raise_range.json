@@ -1,13 +1,13 @@
 {
   "id": "choose_raise_range",
   "kind": "action_choice",
-  "prompt": "Range pressure spot: choose raise.",
+  "prompt": "UTG holds AsKd on Kh-8d-3c-2s after BB checks twice. Hero's top-pair range keeps the better board fit and can pressure weaker continues to fold. Choose the best action.",
   "intent_v1": "think_in_ranges",
   "expected": {
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "why_v1": "Raise applies pressure when range and price support aggression.",
-  "feedback_correct_v1": "Correct. Raising fits when range edge and price line up to create a real pressure advantage.",
-  "feedback_incorrect_v1": "Incorrect. When range edge and price both support pressure, this spot should lean into the raise instead of staying passive."
+  "why_v1": "Raise applies pressure when board fit and range edge can make weaker continues fold.",
+  "feedback_correct_v1": "Correct. Raising fits because the board fit and range edge create pressure against weaker continues.",
+  "feedback_incorrect_v1": "Incorrect. Calling would underuse the board fit and range edge; this spot can pressure weaker continues with a raise."
 }

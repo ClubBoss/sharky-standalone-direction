@@ -1,13 +1,13 @@
 {
   "id": "choose_call_range",
   "kind": "action_choice",
-  "prompt": "Range proxy: choose the best action, not a single-hand snap raise.",
+  "prompt": "UTG holds AsKd on Kh-8d-3c-2s in position after BB checks. Hero has a medium range edge, but the board is not enough for clean pressure. Choose the best action.",
   "intent_v1": "range_vs_hand",
   "expected": {
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "why_v1": "Call controls risk when range edge is not strong enough to raise.",
-  "feedback_correct_v1": "Correct. Calling fits when the range edge is real but not strong enough to build a bigger pot cleanly.",
-  "feedback_incorrect_v1": "Incorrect. When the range edge is real but not strong enough to press, this spot should stay controlled with a call."
+  "why_v1": "Call realizes the medium range edge in position while keeping the pot controlled.",
+  "feedback_correct_v1": "Correct. Calling fits because position and a medium range edge support controlled realization more than a bigger pot.",
+  "feedback_incorrect_v1": "Incorrect. Raising overstates the range edge, while folding gives up too much position; this spot should stay controlled with a call."
 }
