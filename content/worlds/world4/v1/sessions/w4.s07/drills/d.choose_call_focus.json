@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control value spot.",
+  "feedback_correct_v1": "Correct. Medium value and price control favor a call because raising would narrow too hard.",
   "feedback_incorrect_v1": "Incorrect. Medium value plus price control makes call the cleaner line than narrowing the field with a raise."
 }

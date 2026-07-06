@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_correct_v1": "Correct. Medium strength and a fair price favor a call because raising adds risk without enough reward.",
   "feedback_incorrect_v1": "Incorrect. Medium strength plus a fair price makes calling the clean control line without bloating the pot."
 }

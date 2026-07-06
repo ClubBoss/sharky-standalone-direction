@@ -8,6 +8,6 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Raise is expected for denial intent.",
+  "feedback_correct_v1": "Correct. Equity denial is the priority, so raise charges weak draws and overcards.",
   "feedback_incorrect_v1": "Incorrect. When denying equity is the priority, raise now to charge overcards and weak draws."
 }

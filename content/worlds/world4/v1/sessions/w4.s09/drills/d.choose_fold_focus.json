@@ -8,6 +8,6 @@
     "actionId": "fold"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Fold is expected in this failed bluff spot.",
+  "feedback_correct_v1": "Correct. With bluff pressure gone and price unfavorable, fold releases the failed pressure line.",
   "feedback_incorrect_v1": "Incorrect. With no fold pressure and a poor price, the bluff has failed and should be released."
 }

@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_correct_v1": "Correct. Fair price and manageable risk favor a call because raising adds too much variance.",
   "feedback_incorrect_v1": "Incorrect. Fair price with manageable risk supports a controlled call instead of adding unnecessary variance."
 }

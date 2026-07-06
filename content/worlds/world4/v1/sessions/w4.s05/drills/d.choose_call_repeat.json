@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_correct_v1": "Correct. Fair price and medium strength favor a call because raising would overcommit.",
   "feedback_incorrect_v1": "Incorrect. Fair price plus medium strength makes call the safer protection line than an overcommitting raise."
 }

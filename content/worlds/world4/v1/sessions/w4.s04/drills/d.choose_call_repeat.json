@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control spot.",
+  "feedback_correct_v1": "Correct. Medium strength and fair price favor a call because a raise would be too thin.",
   "feedback_incorrect_v1": "Incorrect. Medium strength with a fair price prefers a controlled call over a thinner raise."
 }

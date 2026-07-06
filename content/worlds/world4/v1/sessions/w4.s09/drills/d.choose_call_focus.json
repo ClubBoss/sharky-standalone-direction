@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this control bluff spot.",
+  "feedback_correct_v1": "Correct. Limited fold equity and a fair price favor a call because raise pressure is weak.",
   "feedback_incorrect_v1": "Incorrect. Limited fold equity with a fair price makes call the cleaner bluff-control line."
 }

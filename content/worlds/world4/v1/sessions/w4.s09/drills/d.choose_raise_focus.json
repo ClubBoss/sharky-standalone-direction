@@ -8,6 +8,6 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Raise is expected for bluff pressure.",
+  "feedback_correct_v1": "Correct. Available fold pressure supports a raise because it pushes capped value hands.",
   "feedback_incorrect_v1": "Incorrect. When fold pressure is available, raise is the bluff action that puts the opponent to the harder decision."
 }

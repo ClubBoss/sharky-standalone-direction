@@ -8,6 +8,6 @@
     "actionId": "call"
   },
   "error_class": "expected_action_mismatch",
-  "feedback_correct_v1": "Correct. Call is expected in this trap spot.",
+  "feedback_correct_v1": "Correct. The trap cue favors a call because it keeps weaker bluffs in without inflating the pot.",
   "feedback_incorrect_v1": "Incorrect. Calling keeps weaker bluffs in and avoids inflating the pot when this hand wants to trap."
 }
