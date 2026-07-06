@@ -5,10 +5,13 @@ import 'package:test/test.dart';
 
 void main() {
   test('production contract owns first-use learner terms', () {
-    final contract = jsonDecode(
-      File('content/_meta/term_introduction_contract_v1.json')
-          .readAsStringSync(),
-    ) as Map<String, dynamic>;
+    final contract =
+        jsonDecode(
+              File(
+                'content/_meta/term_introduction_contract_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     final terms = (contract['priority_terms'] as List<dynamic>)
         .cast<Map<String, dynamic>>();
     final byTerm = <String, Map<String, dynamic>>{
@@ -49,28 +52,33 @@ void main() {
           'A combo is one specific set of hole cards a player can hold.',
     });
     expect(
-      File('content/worlds/world8/v1/sessions/w8.s01/session.md')
-          .readAsStringSync(),
+      File(
+        'content/worlds/world8/v1/sessions/w8.s01/session.md',
+      ).readAsStringSync(),
       contains(byTerm['ICM']!['definition']),
     );
     expect(
-      File('content/worlds/world2/v1/sessions/w2.s06/session.md')
-          .readAsStringSync(),
+      File(
+        'content/worlds/world2/v1/sessions/w2.s06/session.md',
+      ).readAsStringSync(),
       contains(byTerm['OUTS']!['definition']),
     );
     expect(
-      File('content/worlds/world2/v1/sessions/w2.s03/session.md')
-          .readAsStringSync(),
+      File(
+        'content/worlds/world2/v1/sessions/w2.s03/session.md',
+      ).readAsStringSync(),
       contains(byTerm['OOP']!['definition']),
     );
     expect(
-      File('content/worlds/world2/v1/sessions/w2.s04/session.md')
-          .readAsStringSync(),
+      File(
+        'content/worlds/world2/v1/sessions/w2.s04/session.md',
+      ).readAsStringSync(),
       contains(byTerm['PAIRED']!['definition']),
     );
     expect(
-      File('content/worlds/world6/v1/sessions/w6.s01/session.md')
-          .readAsStringSync(),
+      File(
+        'content/worlds/world6/v1/sessions/w6.s01/session.md',
+      ).readAsStringSync(),
       contains(byTerm['COMBO']!['definition']),
     );
   });
@@ -227,6 +235,162 @@ void main() {
 
       expect(result.exitCode, isNot(0));
       expect(result.stderr.toString(), contains('before its definition'));
+    },
+  );
+
+  test('production beginner term contract owns Wave 1 table vocabulary', () {
+    final contract =
+        jsonDecode(
+              File(
+                'content/_meta/term_introduction_contract_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final beginnerGuard =
+        contract['beginner_term_guard'] as Map<String, dynamic>;
+    final terms = (beginnerGuard['terms'] as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+    final byTerm = <String, Map<String, dynamic>>{
+      for (final term in terms) term['term'] as String: term,
+    };
+
+    expect(
+      byTerm.keys,
+      containsAll(<String>[
+        'HERO',
+        'VILLAIN',
+        'BUTTON',
+        'CUTOFF',
+        'SMALL_BLIND',
+        'BIG_BLIND',
+        'BLINDS',
+        'PREFLOP',
+        'POSTFLOP',
+        'BOARD',
+        'POT',
+        'SIZING',
+        'RANGE',
+      ]),
+    );
+
+    for (final entry in byTerm.values) {
+      expect(entry['canonical_form'], isA<String>());
+      expect(entry['aliases'], isA<List<dynamic>>());
+      expect(entry['first_permitted_appearance'], isA<Map<String, dynamic>>());
+      expect(entry['first_explanation'], isA<Map<String, dynamic>>());
+      expect(
+        entry['first_contextual_demonstration'],
+        isA<Map<String, dynamic>>(),
+      );
+      expect(entry['first_permitted_assessment'], isA<Map<String, dynamic>>());
+      expect(entry['later_reuse'], isA<Map<String, dynamic>>());
+    }
+
+    expect(
+      byTerm['BUTTON']!['aliases'],
+      containsAll(<String>['BTN', 'button']),
+    );
+    expect(byTerm['CUTOFF']!['aliases'], containsAll(<String>['CO', 'cutoff']));
+  });
+
+  test(
+    'term scanner enforces explanation before beginner assessment and alias expansion',
+    () async {
+      final root = await Directory.systemTemp.createTemp(
+        'beginner_term_order_safety_',
+      );
+      addTearDown(() => root.delete(recursive: true));
+
+      final meta = Directory('${root.path}/content/_meta')
+        ..createSync(recursive: true);
+      final session = Directory(
+        '${root.path}/content/worlds/world1/v1/sessions/w1.s01',
+      )..createSync(recursive: true);
+      final drills = Directory('${session.path}/drills')
+        ..createSync(recursive: true);
+
+      File('${meta.path}/term_introduction_contract_v1.json').writeAsStringSync(
+        jsonEncode(<String, Object>{
+          'active_learner_content_root': 'content/worlds',
+          'reference_only_tokens': <Object>[],
+          'priority_terms': <Object>[],
+          'beginner_term_guard': <String, Object>{
+            'guarded_paths': <String>[
+              'content/worlds/world1/v1/sessions/w1.s01/session.md',
+              'content/worlds/world1/v1/sessions/w1.s01/drills/d.assess.json',
+            ],
+            'terms': <Object>[
+              <String, Object>{
+                'term': 'BUTTON',
+                'canonical_form': 'button',
+                'aliases': <String>['BTN', 'button'],
+                'first_permitted_appearance': <String, String>{
+                  'path': 'content/worlds/world1/v1/sessions/w1.s01/session.md',
+                  'contains':
+                      'The dealer button is the seat marked BTN/button.',
+                },
+                'first_explanation': <String, String>{
+                  'path': 'content/worlds/world1/v1/sessions/w1.s01/session.md',
+                  'contains':
+                      'The dealer button is the seat marked BTN/button.',
+                },
+                'first_contextual_demonstration': <String, String>{
+                  'path': 'content/worlds/world1/v1/sessions/w1.s01/session.md',
+                  'contains': 'Hero starts this example on the BTN/button.',
+                },
+                'first_permitted_assessment': <String, String>{
+                  'path':
+                      'content/worlds/world1/v1/sessions/w1.s01/drills/d.assess.json',
+                  'contains': 'Hero is on BTN/button.',
+                },
+                'later_reuse': <String, String>{
+                  'path':
+                      'content/worlds/world1/v1/sessions/w1.s01/drills/d.assess.json',
+                  'contains': 'BTN/button',
+                },
+              },
+            ],
+          },
+        }),
+      );
+      File('${session.path}/session.md').writeAsStringSync(
+        '# Session\n\n'
+        'Hero starts this example on the BTN/button.\n'
+        'The dealer button is the seat marked BTN/button.\n',
+      );
+      File(
+        '${drills.path}/d.assess.json',
+      ).writeAsStringSync('{"prompt":"Hero is on BTN/button."}');
+
+      final result = await Process.run('dart', <String>[
+        'run',
+        'tools/term_coverage_scanner.dart',
+        '--root',
+        root.path,
+      ]);
+
+      expect(result.exitCode, isNot(0));
+      expect(
+        result.stderr.toString(),
+        contains('abbreviation/context appears before explanation'),
+      );
+    },
+  );
+
+  test(
+    'term scanner accepts the production beginner term-order contract',
+    () async {
+      final result = await Process.run('dart', <String>[
+        'run',
+        'tools/term_coverage_scanner.dart',
+        '--root',
+        Directory.current.path,
+      ]);
+
+      expect(result.exitCode, 0, reason: result.stderr.toString());
+      expect(result.stdout.toString(), contains('beginner terms checked:'));
+      expect(result.stdout.toString(), contains('BUTTON'));
+      expect(result.stdout.toString(), contains('CUTOFF'));
     },
   );
 }

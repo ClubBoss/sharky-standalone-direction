@@ -9639,13 +9639,14 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_btn_preflop_setup',
-      label: 'Hero is BTN, blinds are posted, and no board is out yet',
+      label: 'Hero is BTN/button, blinds are posted, and no board is out yet',
       isCorrect: true,
-      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      preferredLabel:
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'That is the setup.',
       feedbackReason:
-          'That is the clean first read. Hero is on the Button, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
+          'That is the clean first read. Hero is on BTN/button, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
@@ -9656,15 +9657,16 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'co_still_acting',
-      label: 'CO is still in the hand and Hero must wait',
+      label: 'CO/cutoff already folded, so Hero on BTN/button acts next',
       isCorrect: false,
-      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      preferredLabel:
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
       betterAnswerLabel:
-          'Hero is BTN, blinds are posted, and no board is out yet',
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Read one seat earlier.',
+      feedbackTitle: 'Close, but name the full setup.',
       feedbackReason:
-          'CO already folded in this setup, so action is on Hero now. The next safe job is to name who acts, not to solve the whole hand.',
+          'CO/cutoff already folded and action is on Hero now. The full clue also includes BTN/button, posted blinds, Hero has cards, and no board yet.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
@@ -9674,16 +9676,17 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       ],
     ),
     Act0RunnerOptionV1(
-      id: 'flop_already_out',
-      label: 'The flop is already out and this is postflop',
+      id: 'hero_has_no_cards',
+      label: 'Blinds are posted, but Hero on BTN/button has no cards',
       isCorrect: false,
-      preferredLabel: 'Hero is BTN, blinds are posted, and no board is out yet',
+      preferredLabel:
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
       betterAnswerLabel:
-          'Hero is BTN, blinds are posted, and no board is out yet',
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Not yet.',
+      feedbackTitle: 'Use the visible cards too.',
       feedbackReason:
-          'No board cards are out yet, so this is still preflop. The clean setup read comes before any later action choice.',
+          'The blinds are posted and no board is out, but Hero has K and T showing at BTN/button. The setup is preflop with Hero acting next.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[

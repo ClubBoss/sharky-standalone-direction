@@ -67,5 +67,346 @@
       "introduction_path": "content/worlds/world6/v1/sessions/w6.s01/session.md",
       "definition": "A combo is one specific set of hole cards a player can hold."
     }
-  ]
+  ],
+  "beginner_term_guard": {
+    "guarded_paths": [
+      "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+      "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_half_pot_value.json",
+      "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_one_third_pot_keep_price.json",
+      "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_pot_pressure.json",
+      "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_min_raise_reopen.json"
+    ],
+    "blocked_unowned_aliases": [
+      "cut-off",
+      "dealer-button"
+    ],
+    "terms": [
+      {
+        "term": "HERO",
+        "canonical_form": "Hero",
+        "aliases": ["Hero", "hero"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero means you, and Villain means the opponent in the spot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero means you, and Villain means the opponent in the spot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "CO/cutoff opened and Hero is on BTN/button with QJs."
+        },
+        "later_reuse": {
+          "path": "content/worlds/world2/v1/sessions/w2.s12/drills/d.chain_world2_capstone_v1.json",
+          "contains": "Hero is on the button and villain is in the big blind."
+        }
+      },
+      {
+        "term": "VILLAIN",
+        "canonical_form": "Villain",
+        "aliases": ["Villain", "villain"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero means you, and Villain means the opponent in the spot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero means you, and Villain means the opponent in the spot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Villain already put chips in"
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Villain already put chips in"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world2/v1/sessions/w2.s02/drills/d.choose_villain_acts_later_co_vs_btn.json",
+          "contains": "Hero is in the cutoff and villain is on the button."
+        }
+      },
+      {
+        "term": "BUTTON",
+        "canonical_form": "button",
+        "aliases": ["BTN", "button", "Button"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The dealer button is the seat marked BTN/button."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The dealer button is the seat marked BTN/button."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Hero is on BTN/button with QJs."
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "BTN is the button, and SB/BB are the blinds."
+        }
+      },
+      {
+        "term": "CUTOFF",
+        "canonical_form": "cutoff",
+        "aliases": ["CO", "cutoff", "Cutoff"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "CO/cutoff is the seat just before BTN/button."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "CO/cutoff is the seat just before BTN/button."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "CO/cutoff opened and Hero is on BTN/button with QJs."
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "HJ and CO are middle-to-late seats."
+        }
+      },
+      {
+        "term": "SMALL_BLIND",
+        "canonical_form": "small blind",
+        "aliases": ["SB", "small blind", "Small blind"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Hero is in SB/small blind with T6o"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "BTN is the button, and SB/BB are the blinds."
+        }
+      },
+      {
+        "term": "BIG_BLIND",
+        "canonical_form": "big blind",
+        "aliases": ["BB", "big blind", "Big blind"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "BB/big blind is still behind."
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "BTN is the button, and SB/BB are the blinds."
+        }
+      },
+      {
+        "term": "BLINDS",
+        "canonical_form": "blinds",
+        "aliases": ["blinds", "blind"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "BB/big blind is still behind."
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "BTN is the button, and SB/BB are the blinds."
+        }
+      },
+      {
+        "term": "PREFLOP",
+        "canonical_form": "preflop",
+        "aliases": ["preflop", "Preflop"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Preflop means before any board cards are dealt; postflop means after board cards appear."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Preflop means before any board cards are dealt; postflop means after board cards appear."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "\"street\": \"preflop\""
+        },
+        "later_reuse": {
+          "path": "content/worlds/world1/v1/sessions/w1.s02/session.md",
+          "contains": "plain preflop terms"
+        }
+      },
+      {
+        "term": "POSTFLOP",
+        "canonical_form": "postflop",
+        "aliases": ["postflop", "Postflop"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Preflop means before any board cards are dealt; postflop means after board cards appear."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Preflop means before any board cards are dealt; postflop means after board cards appear."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Postflop board/sizing preview. On the flop board"
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Postflop board/sizing preview. On the flop board"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world2/v1/sessions/w2.s02/session.md",
+          "contains": "postflop action order"
+        }
+      },
+      {
+        "term": "BOARD",
+        "canonical_form": "board",
+        "aliases": ["board", "Board"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The board is the shared community-card area."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The board is the shared community-card area."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "On the flop board"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world2/v1/sessions/w2.s01/session.md",
+          "contains": "visible hero cards, villain cards, and board cards."
+        }
+      },
+      {
+        "term": "POT",
+        "canonical_form": "pot",
+        "aliases": ["pot", "Pot"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The pot is the chips in the middle."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "The pot is the chips in the middle."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "no board is out, and the pot is 1.5 BB."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "keeps the pot price easy"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world2/v1/sessions/w2.s01/session.md",
+          "contains": "Price means what calling costs before you continue."
+        }
+      },
+      {
+        "term": "SIZING",
+        "canonical_form": "sizing",
+        "aliases": ["sizing", "Sizing"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Sizing means the size label on a bet button, such as one third pot or half pot."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Sizing means the size label on a bet button, such as one third pot or half pot."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "Postflop board/sizing preview."
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json",
+          "contains": "which sizing label still keeps the pot price easy"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world4/v1/world.md",
+          "contains": "This world teaches that sizing is not decoration."
+        }
+      },
+      {
+        "term": "RANGE",
+        "canonical_form": "range",
+        "aliases": ["range", "Range"],
+        "first_permitted_appearance": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Range means the set of hands a player could reasonably have; W1 only names the word so later worlds can teach it."
+        },
+        "first_explanation": {
+          "path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+          "contains": "Range means the set of hands a player could reasonably have; W1 only names the word so later worlds can teach it."
+        },
+        "first_contextual_demonstration": {
+          "path": "content/worlds/world6/v1/sessions/w6.s01/session.md",
+          "contains": "Each rep shows a simple action frame and asks which broad hand bucket best fits the likely range:"
+        },
+        "first_permitted_assessment": {
+          "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.choose_raise_range.json",
+          "contains": "Hero's top-pair range keeps the better board fit"
+        },
+        "later_reuse": {
+          "path": "content/worlds/world6/v1/sessions/w6.s03/session.md",
+          "contains": "which range has the clearer early advantage on the flop."
+        }
+      }
+    ]
+  }
 }

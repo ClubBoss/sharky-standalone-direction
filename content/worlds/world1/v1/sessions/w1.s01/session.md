@@ -1,5 +1,16 @@
 # Session w1.s01
 
+## Vocabulary
+Hero means you, and Villain means the opponent in the spot.
+The dealer button is the seat marked BTN/button.
+CO/cutoff is the seat just before BTN/button.
+The board is the shared community-card area. The pot is the chips in the middle.
+SB/small blind and BB/big blind are the blind seats; blinds are the forced chips that start the pot.
+Preflop means before any board cards are dealt; postflop means after board cards appear.
+Sizing means the size label on a bet button, such as one third pot or half pot.
+Range means the set of hands a player could reasonably have; W1 only names the word so later worlds can teach it.
+Hero starts this example on BTN/button with CO/cutoff already folded, SB/small blind and BB/big blind posted, no board is out, and the pot is 1.5 BB.
+
 ## Objective
 Build the first World 1 bridge by making position-first choices from clean preflop starts.
 

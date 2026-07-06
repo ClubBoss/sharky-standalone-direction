@@ -10776,6 +10776,30 @@ void main() {
         actionTask.runner.options.map((option) => option.label),
         isNot(contains('Raise')),
       );
+      expect(
+        actionTask.runner.options.map((option) => option.label),
+        isNot(contains('The flop is already out and this is postflop')),
+      );
+      expect(
+        actionTask.runner.options.map((option) => option.label),
+        containsAll(<String>[
+          'Hero is BTN/button, blinds are posted, and no board is out yet',
+          'CO/cutoff already folded, so Hero on BTN/button acts next',
+          'Blinds are posted, but Hero on BTN/button has no cards',
+        ]),
+      );
+      expect(
+        actionTask.runner.options
+            .map((option) => option.feedbackReason)
+            .join(' ')
+            .toLowerCase(),
+        allOf(
+          contains('btn/button'),
+          contains('co/cutoff already folded'),
+          contains('no board'),
+          contains('hero has cards'),
+        ),
+      );
     },
   );
 
@@ -11632,7 +11656,9 @@ void main() {
         .getRect(find.byKey(const Key('act0_shell_welcome_handoff_preview')))
         .top;
     final proofBlockBottom = tester
-        .getRect(find.byKey(const Key('act0_shell_welcome_handoff_proof_block')))
+        .getRect(
+          find.byKey(const Key('act0_shell_welcome_handoff_proof_block')),
+        )
         .bottom;
     final ctaTop = tester
         .getRect(find.byKey(const Key('act0_shell_welcome_primary_cta')))
