@@ -1769,24 +1769,6 @@
               "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.classify_texture_synthesis_wet_fold_v1.json"
             }
           ]
-        },
-        {
-          "id": "w5.s11",
-          "path": "content/worlds/world5/v1/sessions/w5.s11/",
-          "drills": [
-            {
-              "id": "count_flush_draw_nine_outs_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_flush_draw_nine_outs_v1.json"
-            },
-            {
-              "id": "count_gutshot_four_outs_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_gutshot_four_outs_v1.json"
-            },
-            {
-              "id": "count_open_ended_straight_draw_eight_outs_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_open_ended_straight_draw_eight_outs_v1.json"
-            }
-          ]
         }
       ]
     },
