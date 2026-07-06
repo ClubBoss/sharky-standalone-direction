@@ -931,12 +931,20 @@
           "path": "content/worlds/world3/v1/sessions/w3.s10/",
           "drills": [
             {
-              "id": "choose_fold_final_preflop_checkpoint_v1",
-              "path": "content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_fold_final_preflop_checkpoint_v1.json"
-            },
-            {
               "id": "chain_preflop_final_checkpoint_v1",
               "path": "content/worlds/world3/v1/sessions/w3.s10/drills/d.chain_preflop_final_checkpoint_v1.json"
+            },
+            {
+              "id": "choose_call_btn_facing_open_transfer_v1",
+              "path": "content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_call_btn_facing_open_transfer_v1.json"
+            },
+            {
+              "id": "choose_fold_bb_weak_facing_open_transfer_v1",
+              "path": "content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_fold_bb_weak_facing_open_transfer_v1.json"
+            },
+            {
+              "id": "choose_raise_btn_clean_transfer_v1",
+              "path": "content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_raise_btn_clean_transfer_v1.json"
             }
           ]
         },

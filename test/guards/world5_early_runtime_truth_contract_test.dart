@@ -90,6 +90,32 @@ void main() {
         reason:
             'Owner decision preserves W5.s11 as noncanonical/deferred source.',
       );
+
+      final topIndexText = File(
+        'content/worlds/world5/v1/index.md',
+      ).readAsStringSync();
+      final topIndexSessions = RegExp(
+        r'^- (w5\.s\d+):',
+        multiLine: true,
+      ).allMatches(topIndexText).map((match) => match.group(1)!).toList();
+      expect(
+        topIndexSessions,
+        activeW5Sessions,
+        reason:
+            'Top-level W5 index must not list w5.s11 as an active session row.',
+      );
+      expect(
+        topIndexText,
+        contains('w5.s11'),
+        reason:
+            'Top-level W5 index must still name w5.s11 as preserved-only source.',
+      );
+      expect(
+        topIndexText,
+        contains('inactive'),
+        reason:
+            'Top-level W5 index must state w5.s11 is inactive, not just absent.',
+      );
     },
   );
 

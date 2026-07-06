@@ -1,9 +1,70 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('W3.s10 active drill-manifest truth matches active drills index', () {
+    const activeW3S10Drills = <String>[
+      'chain_preflop_final_checkpoint_v1',
+      'choose_call_btn_facing_open_transfer_v1',
+      'choose_fold_bb_weak_facing_open_transfer_v1',
+      'choose_raise_btn_clean_transfer_v1',
+    ];
+
+    final indexText = File(
+      'content/worlds/world3/v1/sessions/w3.s10/drills/index.md',
+    ).readAsStringSync();
+    final indexDrillIds =
+        RegExp(
+          r'^- ([a-z0-9_]+):',
+          multiLine: true,
+        ).allMatches(indexText).map((match) => match.group(1)!).toList()
+          ..sort();
+    expect(indexDrillIds, activeW3S10Drills);
+
+    final drillManifest =
+        jsonDecode(
+              File(
+                'content/_meta/world_drills_manifest_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    final worlds = drillManifest['worlds'] as List<dynamic>;
+    final world3 = worlds.cast<Map<String, dynamic>>().singleWhere(
+      (world) => world['world'] == 3,
+    );
+    final w3s10Manifest = (world3['sessions'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .singleWhere((session) => session['id'] == 'w3.s10');
+    final manifestDrillIds =
+        (w3s10Manifest['drills'] as List<dynamic>)
+            .cast<Map<String, dynamic>>()
+            .map((drill) => drill['id'] as String)
+            .toList()
+          ..sort();
+    expect(
+      manifestDrillIds,
+      activeW3S10Drills,
+      reason:
+          'W3.s10 drill-manifest truth must match the active drills index; '
+          'superseded source drills must not be manifest-admitted.',
+    );
+
+    expect(
+      File(
+        'content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_fold_final_preflop_checkpoint_v1.json',
+      ).existsSync(),
+      isTrue,
+      reason:
+          'Superseded W3.s10 drill source is preserved but must stay '
+          'inactive and manifest-excluded.',
+    );
+  });
 
   testWidgets('w3.s01-w3.s10 use preflop hand-chain runtime truth', (
     tester,
@@ -165,9 +226,13 @@ void main() {
     ))!;
     expect(w3s10.map((item) => item.drillId).toList(), <String>[
       'chain_preflop_final_checkpoint_v1',
+      'choose_raise_btn_clean_transfer_v1',
+      'choose_call_btn_facing_open_transfer_v1',
+      'choose_fold_bb_weak_facing_open_transfer_v1',
     ]);
-    expect(w3s10.single.spec.kind, DrillKindV1.handChain);
-    final w3s10Steps = w3s10.single.spec.chainStepsV1;
+    final w3s10Chain = w3s10.first;
+    expect(w3s10Chain.spec.kind, DrillKindV1.handChain);
+    final w3s10Steps = w3s10Chain.spec.chainStepsV1;
     expect(w3s10Steps, isNotNull);
     expect(w3s10Steps!, hasLength(3));
     expect(w3s10Steps.every((step) => step.street == 'preflop'), isTrue);
@@ -175,6 +240,18 @@ void main() {
     expect(
       w3s10Steps.last.prompt,
       contains('cutoff with J8o and the pot is unopened'),
+    );
+
+    final w3s10TransferDrills = w3s10.skip(1).toList();
+    expect(w3s10TransferDrills, hasLength(3));
+    expect(
+      w3s10TransferDrills.every(
+        (item) => item.spec.kind == DrillKindV1.actionChoice,
+      ),
+      isTrue,
+      reason:
+          'W3.s10 independent transfer drills must remain distinct from '
+          'the hand-chain checkpoint.',
     );
   });
 }

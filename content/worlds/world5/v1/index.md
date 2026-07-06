@@ -11,4 +11,6 @@
 - w5.s08: Draw Completion Awareness
 - w5.s09: Texture and Blocker Context
 - w5.s10: Texture Synthesis Checkpoint
-- w5.s11: Basic Outs Awareness
+
+Active W5 sessions end at w5.s10. `w5.s11` (Basic Outs Awareness) source is
+preserved but inactive and is not admitted by active manifests.
