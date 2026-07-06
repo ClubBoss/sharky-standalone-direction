@@ -19,6 +19,7 @@ No Stage 1B work was started. No Claude re-audit was run.
 | Verification artifact | `docs/_reviews/stage_1a_w1_w3_claude_findings_verification_v1.md` |
 | Wave 1 commit | `b1bb29418b8adf208be0beb825530ab9e7d565b6` |
 | Wave 2 commit | `ce5d52f50b046bd28fd9630a5f5824f053f5b618` |
+| Targeted post-fix baseline | `5b537250877d102c62724145255e13196947fe50` |
 
 ## 3. Exact files changed
 
@@ -47,6 +48,20 @@ No Stage 1B work was started. No Claude re-audit was run.
 ### Closure artifact
 
 - `docs/_reviews/stage_1a_w1_w3_repair_closure_v1.md`
+
+### Final targeted post-fix correction
+
+- `content/worlds/world1/v1/sessions/w1.s02/session.md`
+- `content/worlds/world1/v1/sessions/w1.s04/drills/d.choose_button_open_repeat_stability_v1.json`
+- `content/worlds/world1/v1/sessions/w1.s05/drills/d.choose_cutoff_raise_clean_start_v1.json`
+- `content/worlds/world1/v1/sessions/w1.s08/drills/d.choose_small_blind_raise_oop_clean_start_v1.json`
+- `content/worlds/world2/v1/sessions/w2.s04/drills/d.choose_raise_flop_denial.json`
+- `content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_raise_btn_clean_transfer_v1.json`
+- `content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_call_btn_facing_open_transfer_v1.json`
+- `test/tools/stage1a_wave1_signposting_terminology_contract_test.dart`
+- `test/tools/stage1a_wave2_feedback_transfer_contract_test.dart`
+- `docs/_reviews/stage_1a_w1_w3_repair_closure_v1.md`
+- `docs/_reviews/stage_1a_w1_w3_targeted_postfix_packet_v1.md`
 
 ## 4. Finding-by-finding closure
 
@@ -133,7 +148,9 @@ W3 -> W4 bridge:
 
 - W1 price: `Price means what you must pay to continue.`
 - W1 dealer button: `The dealer button is the seat marked BTN.`
-- W1 seat abbreviations: `Seat labels stay short: UTG acts first preflop, HJ and CO are middle-to-late seats, BTN is the button, and SB/BB are the blinds.`
+- W1 seat abbreviations:
+  - `Seat labels stay short: UTG acts first preflop, while HJ and CO are middle-to-late seats.`
+  - `BTN is the button, and SB/BB are the blinds.`
 - W2 price: `Price means what calling costs before you continue.`
 - W2 OOP: `OOP, or out of position, means acting before your opponent on later streets.`
 
@@ -201,6 +218,41 @@ Justification:
 
 Suggested scope: only the final excerpts and changed W1/W2/W3 drills listed in this closure artifact.
 
-## 14. Batch verdict
+Final correction note: the owner supplied that targeted post-fix review, with verdict `targeted_postfix_minor_correction_required`. This correction pass did not issue or run any Claude prompt.
+
+## 14. Final targeted post-fix correction
+
+Claude targeted post-fix verdict received from owner packet: `targeted_postfix_minor_correction_required`.
+
+The final correction-only pass closed exactly four bounded categories:
+
+1. W1 seat-label density: the compact seat definition was split into two beginner-readable lines while preserving all six abbreviations.
+2. W1 premature first-in wording: three targeted W1 raise feedback surfaces now avoid `first-in` / `first in` final learner-facing copy.
+3. W2 denial equity jargon: the denial acceptable feedback and rationale now avoid `equity` and use beginner-safe overcard language.
+4. W3 transfer independence: the two non-fold W3 transfer drills now differ from the nearest guided chain steps by card/hand surface while preserving expected action and concept job.
+
+Final W3 transfer surfaces:
+
+- Drill A: `Hero is on the button with AJs and the pot is unopened. Which compact preflop action fits this transfer spot?` Expected action: `raise`.
+- Drill B: `Cutoff opened first and hero is on the button with KTs. Which compact preflop action fits this transfer spot?` Expected action: `call`.
+- Drill C remained unchanged: `Button opened first and hero is in the big blind with T6o. Which compact preflop action fits this transfer spot?` Expected action: `fold`.
+
+Final validation after this correction:
+
+- JSON parse/minimal schema validation for the six changed drill JSON files: passed.
+- Wave 1 signposting/terminology guard: passed.
+- Wave 2 feedback/transfer guard: passed.
+- W3 session-drill hand-chain projection guard: passed.
+- W2 policy validator: passed.
+- Drill runtime evaluator: passed.
+- `flutter analyze` on changed focused guards: passed.
+- `git diff --check`: passed.
+- `graphify hook-check`: passed.
+
+Updated Stage 1A verdict remains `batch_closed_after_bounded_repairs`.
+
+No Stage 1B work was started. No Claude prompt was issued or run during this correction pass.
+
+## 15. Batch verdict
 
 `batch_closed_after_bounded_repairs`

@@ -78,6 +78,45 @@ void main() {
     expect(genericCorrect, isEmpty);
   });
 
+  test('targeted W1 feedback corrections avoid premature first-in wording', () {
+    const targetedIds = <String>{
+      'choose_button_open_repeat_stability_v1',
+      'choose_cutoff_raise_clean_start_v1',
+      'choose_small_blind_raise_oop_clean_start_v1',
+    };
+    final seen = <String>{};
+
+    for (final file in _drillFiles('world1')) {
+      final drill = _json(file);
+      final id = drill['id'];
+      if (id is! String || !targetedIds.contains(id)) continue;
+      seen.add(id);
+      final joined = jsonEncode(drill).toLowerCase();
+      expect(joined, isNot(contains('first-in')));
+      expect(joined, isNot(contains('first in')));
+    }
+
+    expect(seen, targetedIds);
+  });
+
+  test('W2 flop denial acceptable feedback avoids advanced equity jargon', () {
+    final drill = _json(
+      File(
+        'content/worlds/world2/v1/sessions/w2.s04/drills/d.choose_raise_flop_denial.json',
+      ),
+    );
+    final joined = jsonEncode(drill).toLowerCase();
+
+    expect(joined, isNot(contains('equity')));
+    expect(drill['feedback_acceptable_v1'], contains('Acceptable.'));
+    expect(
+      drill['feedback_acceptable_v1'],
+      contains('keeps weaker overcards from catching up for free'),
+    );
+    expect(_expectedAction(drill), 'raise');
+    expect(drill['acceptable_actions'], contains('call'));
+  });
+
   test(
     'W3 has exactly three new standalone independent transfer decisions',
     () {
@@ -123,4 +162,36 @@ void main() {
       }
     },
   );
+
+  test('two W3 transfer drills differ from nearest chain-step surfaces', () {
+    final transferRaise = _json(
+      File(
+        'content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_raise_btn_clean_transfer_v1.json',
+      ),
+    );
+    final transferCall = _json(
+      File(
+        'content/worlds/world3/v1/sessions/w3.s10/drills/d.choose_call_btn_facing_open_transfer_v1.json',
+      ),
+    );
+    final chain = _json(
+      File(
+        'content/worlds/world3/v1/sessions/w3.s10/drills/d.chain_preflop_final_checkpoint_v1.json',
+      ),
+    );
+    final steps = (chain['steps'] as List).cast<Map<String, dynamic>>();
+    final raiseStep = steps[0];
+    final callStep = steps[1];
+
+    expect(_expectedAction(transferRaise), raiseStep['expected_action']);
+    expect(_expectedAction(transferCall), callStep['expected_action']);
+    expect(transferRaise['prompt'], contains('AJs'));
+    expect(transferRaise['prompt'], isNot(contains('KQs')));
+    expect(raiseStep['prompt'], contains('KQs'));
+    expect(transferCall['prompt'], contains('KTs'));
+    expect(transferCall['prompt'], isNot(contains('QJs')));
+    expect(callStep['prompt'], contains('QJs'));
+    expect(transferRaise.containsKey('acceptable_actions'), isFalse);
+    expect(transferCall.containsKey('acceptable_actions'), isFalse);
+  });
 }

@@ -49,7 +49,19 @@ void main() {
     expect(
       w1s02,
       contains(
-        'Seat labels stay short: UTG acts first preflop, HJ and CO are middle-to-late seats, BTN is the button, and SB/BB are the blinds.',
+        'Seat labels stay short: UTG acts first preflop, while HJ and CO are middle-to-late seats.',
+      ),
+    );
+    expect(w1s02, contains('BTN is the button, and SB/BB are the blinds.'));
+    for (final abbreviation in <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']) {
+      expect(w1s02, contains(abbreviation));
+    }
+    expect(
+      w1s02,
+      isNot(
+        contains(
+          'UTG acts first preflop, HJ and CO are middle-to-late seats, BTN is the button, and SB/BB are the blinds.',
+        ),
       ),
     );
     expect(

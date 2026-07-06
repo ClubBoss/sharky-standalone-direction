@@ -1,14 +1,14 @@
 {
   "id": "choose_raise_btn_clean_transfer_v1",
   "kind": "action_choice",
-  "prompt": "Hero is on the button with KQs and the pot is unopened. Which compact preflop action fits this transfer spot?",
+  "prompt": "Hero is on the button with AJs and the pot is unopened. Which compact preflop action fits this transfer spot?",
   "intent_v1": "world3_transfer_raise_button_unopened",
   "available_actions_v1": ["fold", "call", "raise"],
   "expected": {
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "why_v1": "The pot is unopened, the hand is strong, and the button has position, so this is the clean open-raise frame.",
-  "feedback_correct_v1": "Correct. Strong hand plus button position in an unopened pot makes raising the clean preflop action.",
-  "feedback_incorrect_v1": "Incorrect. KQs on the button with no open in front should not drift into call or fold; the clean position-informed action is raise."
+  "why_v1": "The pot is unopened, the suited broadway hand is strong, and the button has position, so this is the clean open-raise frame.",
+  "feedback_correct_v1": "Correct. AJs plus button position in an unopened pot makes raising the clean preflop action.",
+  "feedback_incorrect_v1": "Incorrect. AJs on the button with no open in front should not drift into call or fold; the clean position-informed action is raise."
 }

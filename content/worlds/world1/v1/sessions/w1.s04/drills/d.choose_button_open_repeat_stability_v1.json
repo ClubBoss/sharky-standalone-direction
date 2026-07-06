@@ -12,7 +12,7 @@
     "actionId": "raise"
   },
   "error_class": "expected_action_mismatch",
-  "why_v1": "Late position with a playable suited broadway hand should keep the same clean first-in raise habit.",
-  "feedback_correct_v1": "Correct. QJs on the button keeps the clean first-in raise habit.",
-  "feedback_incorrect_v1": "Incorrect. On the button with QJs and no prior action, position stability means keeping the same clean first-in raise."
+  "why_v1": "Late position with a playable suited broadway hand should keep the same clean raise habit when no one has entered yet.",
+  "feedback_correct_v1": "Correct. QJs on the button keeps the clean raise habit when no one has entered yet.",
+  "feedback_incorrect_v1": "Incorrect. On the button with QJs and no prior action, position stability means raising when no one has entered yet."
 }
