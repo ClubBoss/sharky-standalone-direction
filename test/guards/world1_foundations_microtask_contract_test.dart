@@ -8,12 +8,12 @@ import 'package:poker_analyzer/engine_v2/model/action_v1.dart';
 import 'package:poker_analyzer/engine_v2/model/money_state_v1.dart';
 import 'package:poker_analyzer/sharky/design_tokens_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/modern_table_screen_v1.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
+import 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart';
 import 'package:poker_analyzer/widgets/playing_card_widget.dart';
 
 class _OverrideInstructionSourceV1 implements RunnerInstructionSourceV1 {
@@ -3732,8 +3732,8 @@ void main() {
 
       final pack = kCampaignPacksV1[packId];
       expect(pack, isNotNull);
-        final expectedSeatId =
-          pack![startIndex].expectedSeatIds.first.toLowerCase();
+      final expectedSeatId = pack![startIndex].expectedSeatIds.first
+          .toLowerCase();
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -3763,7 +3763,14 @@ void main() {
       );
 
       Finder? wrongSeatFinder;
-      for (final seatId in const <String>['btn', 'sb', 'bb', 'utg', 'hj', 'co']) {
+      for (final seatId in const <String>[
+        'btn',
+        'sb',
+        'bb',
+        'utg',
+        'hj',
+        'co',
+      ]) {
         if (seatId == expectedSeatId) continue;
         final candidate = visibleSeatFinderForId(seatId);
         if (candidate == null || candidate.evaluate().isEmpty) continue;
@@ -3943,7 +3950,9 @@ void main() {
           sawReviewInteractionSurface = true;
         }
 
-        if (await tapIfVisible(find.byKey(const Key('microtask_continue_cta')))) {
+        if (await tapIfVisible(
+          find.byKey(const Key('microtask_continue_cta')),
+        )) {
           continue;
         }
         if (await _tapIfEnabledButtonByKeyV1(
@@ -3958,7 +3967,10 @@ void main() {
         )) {
           continue;
         }
-        if (find.byKey(const Key('microtask_campaign_action_bar')).evaluate().isNotEmpty) {
+        if (find
+            .byKey(const Key('microtask_campaign_action_bar'))
+            .evaluate()
+            .isNotEmpty) {
           await _tapCampaignActionTokenV1(
             tester,
             actionToken: expectedActionToken,
@@ -4006,14 +4018,12 @@ void main() {
     final queuedStep = pack12(kCampaignPacksV1[packId]!)[queuedStepIndex];
     final expectedActionKind = world1SpineExpectedActionKindV1(queuedStep);
     expect(expectedActionKind, isNotNull);
-    final expectedActionToken =
-        (queuedStep.allowedActions ?? const <String>[])
-            .map((value) => value.trim().toLowerCase())
-            .firstWhere(
-              (token) =>
-                  _actionKindFromAllowedTokenV1(token) == expectedActionKind,
-              orElse: () => '',
-            );
+    final expectedActionToken = (queuedStep.allowedActions ?? const <String>[])
+        .map((value) => value.trim().toLowerCase())
+        .firstWhere(
+          (token) => _actionKindFromAllowedTokenV1(token) == expectedActionKind,
+          orElse: () => '',
+        );
     expect(expectedActionToken, isNotEmpty);
     final seededQueueJson = jsonEncode(<Map<String, Object>>[
       <String, Object>{'packId': packId, 'stepIndex': queuedStepIndex},
@@ -4077,6 +4087,7 @@ void main() {
       }
       return legacyFallbacks[tick % legacyFallbacks.length];
     }
+
     for (var i = 0; i < 180; i++) {
       if (await _tapIfEnabledButtonByKeyV1(
         tester,
@@ -4099,7 +4110,10 @@ void main() {
         interacted = true;
         continue;
       }
-      if (find.byKey(const Key('microtask_campaign_action_bar')).evaluate().isNotEmpty) {
+      if (find
+          .byKey(const Key('microtask_campaign_action_bar'))
+          .evaluate()
+          .isNotEmpty) {
         await _tapCampaignActionTokenV1(
           tester,
           actionToken: expectedActionToken,
@@ -4108,7 +4122,7 @@ void main() {
         interacted = true;
         break;
       }
-        final seatFinder =
+      final seatFinder =
           _seatFinderFromPromptV1(tester) ?? fallbackSeatFinderForTick(i);
       if (seatFinder.evaluate().isNotEmpty) {
         await tester.tap(seatFinder.first, warnIfMissed: false);

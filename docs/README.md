@@ -12,6 +12,10 @@ Before reading anything else or exploring the repository, you **MUST** read thes
 
 **WARNING**: Do not blindly search for files with "SSOT", "AUDIT", or "PLAN" in their names. Many historical snapshots exist in the `archive/` folder. Only trust the files explicitly listed in the `PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md`.
 
+## Readiness Authority
+
+Launch/readiness reporting authority is `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`.
+
 ## Active Core Directories
 
 - `docs/plan/` - Active planning, pacing, policies, and contracts.

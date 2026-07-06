@@ -26,14 +26,11 @@ void main() {
       final intake = File(
         'lib/ui_v2/screens/universal_intake_plan_screen.dart',
       ).readAsStringSync();
-      final map = File(
-        'lib/ui_v2/map/ui_v2_progress_map_screen_v2.dart',
-      ).readAsStringSync();
       final tableFirstNav = File(
         'lib/ui_v2/screens/table_first_navigation.dart',
       ).readAsStringSync();
       final runner = File(
-        'lib/ui_v2/screens/world1_foundations_microtask_runner_screen.dart',
+        'lib/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart',
       ).readAsStringSync();
       final result = File(
         'lib/ui_v2/screens/session_result_screen.dart',
@@ -113,11 +110,6 @@ void main() {
         intake.contains('training_session_launcher.dart'),
         isFalse,
         reason: 'Canonical intake must not import the generic legacy launcher.',
-      );
-      expect(
-        map.contains('training_session_launcher.dart'),
-        isFalse,
-        reason: 'Canonical map must not import the generic legacy launcher.',
       );
       expect(
         tableFirstNav.contains('training_session_launcher.dart'),

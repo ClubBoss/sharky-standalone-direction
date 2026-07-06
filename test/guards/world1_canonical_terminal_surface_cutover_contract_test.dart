@@ -29,15 +29,15 @@ void main() {
 
   test('world1 runner owner lives on the shared runner-layer shell path', () {
     final wrapper = File(
-      'lib/ui_v2/screens/world1_foundations_microtask_runner_screen.dart',
+      'lib/archive/legacy_runners/world1_foundations_microtask_runner_screen.dart',
     ).readAsStringSync();
     final owner = File(
-      'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
+      'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart',
     ).readAsStringSync();
 
     expect(
       wrapper.contains(
-        "export 'package:poker_analyzer/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart';",
+        "export 'package:poker_analyzer/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart';",
       ),
       isTrue,
     );
@@ -49,7 +49,7 @@ void main() {
     'world1 compact surfaced path uses canonical shell chrome instead of a duplicate local header and overlay lane',
     () {
       final owner = File(
-        'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
+        'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart',
       ).readAsStringSync();
       final shell = File(
         'lib/ui_v2/runner/world1_canonical_shell_contract_v1.dart',
@@ -87,10 +87,10 @@ void main() {
     'world1 active surfaced table path uses the canonical modern table host instead of the bespoke table renderer',
     () {
       final owner = File(
-        'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
+        'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart',
       ).readAsStringSync();
       final adapter = File(
-        'lib/ui_v2/runner/world1_modern_table_adapter_v1.dart',
+        'lib/archive/legacy_runners/world1_modern_table_adapter_v1.dart',
       ).readAsStringSync();
 
       expect(owner.contains('_buildWorld1CanonicalEmbeddedTableV1('), isTrue);
@@ -107,10 +107,10 @@ void main() {
     'world1 and canonical session worlds stay on the same modern table host family',
     () {
       final owner = File(
-        'lib/ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart',
+        'lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart',
       ).readAsStringSync();
       final canonical = File(
-        'lib/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart',
+        'lib/archive/legacy_runners/canonical_terminal_session_drill_surfaced_runner_v1.dart',
       ).readAsStringSync();
 
       expect(owner.contains('child: ModernTableScreenV1('), isTrue);
@@ -145,7 +145,7 @@ void main() {
     'embedded modern table host strips debug loader chrome from learner-facing runner paths',
     () {
       final source = File(
-        'lib/ui_v2/screens/modern_table_screen_v1.dart',
+        'lib/archive/legacy_runners/modern_table_screen_v1.dart',
       ).readAsStringSync();
 
       expect(source.contains('if (kDebugMode && !widget.embeddedV1)'), isTrue);

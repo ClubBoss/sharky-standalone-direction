@@ -10,7 +10,7 @@ void main() {
         'docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md',
       ).readAsStringSync();
       final historical = File(
-        'docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md',
+        'docs/archive/obsolete_plans/TRUE_RELEASE_READINESS_SSOT_v1.md',
       ).readAsStringSync();
       final reset = File(
         'docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md',
@@ -37,7 +37,7 @@ void main() {
         ),
       );
 
-      expect(readiness, contains('Core Product Readiness'));
+      expect(readiness, contains('Minimal Readiness Model'));
       expect(
         reset,
         contains('Main-First Final-Readiness SSOT / Authority Migration'),

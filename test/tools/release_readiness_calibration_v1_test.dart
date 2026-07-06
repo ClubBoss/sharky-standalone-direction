@@ -8,14 +8,12 @@ void main() {
     () {
       const activeFiles = <String>[
         'AGENTS.md',
-        'docs/README_SSOT.md',
         'docs/README.md',
         'docs/reference/README.md',
         'docs/plan/MASTER_PLAN_v2.2.md',
         'docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md',
         'docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md',
         'docs/plan/BETA_SHIP_RUNBOOK_CHECKLIST_v1.md',
-        'docs/ROADMAP_FINAL_100_SSOT.md',
         'docs/EXECUTION_RULES.md',
         'docs/governance/EXECUTION_GOVERNANCE_HISTORY.md',
       ];
@@ -30,7 +28,7 @@ void main() {
       }
 
       final historical = File(
-        'docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md',
+        'docs/archive/obsolete_plans/TRUE_RELEASE_READINESS_SSOT_v1.md',
       ).readAsStringSync();
       expect(historical, contains('SUPERSEDED / HISTORICAL'));
       expect(

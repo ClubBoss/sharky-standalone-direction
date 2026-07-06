@@ -101,7 +101,14 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart`
   - `lib/archive/legacy_runners/canonical_terminal_session_drill_surfaced_runner_v1.dart`
   - `lib/archive/legacy_runners/world1_modern_table_adapter_v1.dart`
-  - These are preserved for compilation but are no longer active runtime surfaces.
+  - These are non-canonical for the Act0 default entry, but they remain
+    live-wired and reachable through the non-Act0 legacy/compatibility
+    training flow (`lib/ui_v2/screens/table_first_navigation.dart` ->
+    `pushWorld1FoundationsRunnerV1`, called from `module_launcher_screen.dart`
+    and `module_summary_screen.dart`), confirmed by production imports and
+    direct test coverage. Not safe to delete; do not treat "legacy" as
+    "unreachable" for this family. Compatibility retention here is not a
+    promotion of legacy runners to new product direction.
 
 - Legacy table path:
   - `lib/ui_v2/screens/drill_runner_screen.dart`
@@ -120,7 +127,9 @@ Purpose: primary orientation layer for future agents before repo investigation.
 
 - Canonical vs legacy-only:
   - canonical learner-facing runtime truth is the **Act0 shell route** (`lib/ui_v2/act0_shell/*`)
-  - legacy paths (World1 runners, ModernTable) are archived and no longer active
+  - legacy paths (World1 runners, ModernTable) are non-canonical for Act0 but
+    remain live-wired in the non-Act0 legacy/compatibility training flow, not
+    archived-and-unreachable
 
 ## 2a. Active app boundary
 
@@ -130,11 +139,16 @@ Purpose: primary orientation layer for future agents before repo investigation.
   - `lib/ui_v2/app_root.dart`
   - `lib/ui_v2/ui_v2_beta_shell.dart`
 - Treat these as dormant/non-route unless explicitly reopened:
-  - `lib/ui_v2/persona/*`
   - `lib/ui_v2/ai_coach/*`
-  - `lib/personalization/*`
-  - `lib/ui_v3/*`
+  - `lib/personalization/*` (note: has live non-Act0 production consumers —
+    `session_result_screen.dart`, `universal_intake_plan_screen.dart` — and
+    direct test coverage; dormant relative to Act0 only, not unused)
+  - `lib/ui_v3/*` (note: its remaining stub, `visual_theme_v3.dart`, is a
+    load-bearing compile dependency of live `ui_v2/table` widgets; do not
+    delete)
   - older non-Act0 learner surfaces that are not the current canonical entry path
+  - `lib/ui_v2/persona/*` does not exist in the current repository; do not
+    treat it as a present dormant system
 
 ## 3. Core runtime seams
 
