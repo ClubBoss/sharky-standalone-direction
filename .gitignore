@@ -43,6 +43,13 @@ codex_*.txt
 flutter_*.txt
 dart_analyze*.txt
 dartanalyze*.log
+fast_loop_out.txt
+*_diff.txt
+
+# Playwright CLI internal debug snapshots (accessibility-tree yml/png dumps);
+# proven repeated pollution: 240 tracked files across 46 dirs removed in
+# repository_hygiene_context_cost_reduction_v1.
+.playwright-cli/
 
 # --- Duplicate snapshots ---
 * copy.md
