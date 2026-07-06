@@ -8,8 +8,11 @@ void main() {
       'lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart',
     ).readAsStringSync();
     final appRoot = File('lib/ui_v2/app_root.dart').readAsStringSync();
-    final broadPreviewTest = File(
+    final previewCoreTest = File(
       'test/ui_v2/act0_shell_preview_screen_v1_test.dart',
+    ).readAsStringSync();
+    final legacyPreviewBacklog = File(
+      'test/ui_v2/act0_shell_preview_screen_v1_legacy_backlog.dart',
     ).readAsStringSync();
 
     expect(canonicalRoot, contains('Act0ShellPreviewScreenV1'));
@@ -18,13 +21,16 @@ void main() {
     expect(appRoot, contains('builder: (_) => buildCanonicalPathRootV1()'));
     expect(appRoot, contains('Act0ShellPreviewScreenV1'));
     expect(
-      broadPreviewTest,
+      previewCoreTest,
       contains('Canonical path root remains Act0 preview shell'),
     );
-    expect(broadPreviewTest, contains('Home shell shows Poker from Zero'));
     expect(
-      broadPreviewTest,
-      contains('Home mission command opens runner after checklist activation'),
+      previewCoreTest,
+      contains('Act0 sample state keeps canonical W1-W12 runtime identity'),
+    );
+    expect(
+      legacyPreviewBacklog,
+      contains('Legacy Act0 preview backlog retained for provenance only.'),
     );
   });
 
