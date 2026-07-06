@@ -1,3 +1,13 @@
+// Legacy Act0 preview backlog retained for provenance only.
+//
+// This file was removed from the canonical Wave 4 admission lane because it
+// mixed unrelated debug capture, localization, layout, repair, review, and
+// source-data expectations in one 33k-line `_test.dart` file. Focused active
+// contracts now live in owner-specific guard files plus
+// act0_shell_preview_screen_v1_test.dart for the narrow preview-shell core.
+// Do not rename this file back to `_test.dart` without first decomposing the
+// relevant contract family into an owner-aligned focused test.
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
