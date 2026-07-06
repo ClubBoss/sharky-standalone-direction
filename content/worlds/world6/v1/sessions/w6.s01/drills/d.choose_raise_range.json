@@ -1,7 +1,7 @@
 {
   "id": "choose_raise_range",
   "kind": "action_choice",
-  "prompt": "UTG holds AsKd on Kh-8d-3c-2s after BB checks twice. Hero's top-pair range keeps the better board fit and can pressure weaker continues to fold. Choose the best action.",
+  "prompt": "Hero is UTG with AsKd on Kh-8d-3c-2s after BB checks twice. Hero's top-pair range keeps the better board fit and can pressure weaker continues to fold. Choose the best action.",
   "intent_v1": "think_in_ranges",
   "expected": {
     "actionId": "raise"

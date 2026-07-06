@@ -1,7 +1,7 @@
 {
   "id": "choose_fold_trap",
   "kind": "action_choice",
-  "prompt": "UTG holds one pair with AsKd on Kh-8d-3c-2s, but BB pressure represents the stronger range after the turn. The hand is tempting, not secure. Choose the best action.",
+  "prompt": "Hero is UTG with one pair from AsKd on Kh-8d-3c-2s, but BB pressure represents the stronger range after the turn. The hand is tempting, not secure. Choose the best action.",
   "intent_v1": "range_vs_hand",
   "expected": {
     "actionId": "fold"

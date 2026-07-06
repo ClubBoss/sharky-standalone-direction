@@ -1,7 +1,7 @@
 {
   "id": "choose_raise_range",
   "kind": "action_choice",
-  "prompt": "UTG holds QsTc on Jd-7c-3h-2s after BB checks. Hero's nut advantage and board fit can pressure weaker continues. Choose the best action.",
+  "prompt": "Hero is UTG with QsTc on Jd-7c-3h-2s after BB checks. Hero's nut advantage and board fit can pressure weaker continues. Choose the best action.",
   "intent_v1": "think_in_ranges",
   "expected": {
     "actionId": "raise"

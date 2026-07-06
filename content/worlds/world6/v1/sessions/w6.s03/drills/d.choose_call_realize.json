@@ -1,7 +1,7 @@
 {
   "id": "choose_call_realize",
   "kind": "action_choice",
-  "prompt": "UTG holds QsTc on Jd-7c-3h-2s after BB checks the turn. Hero has live equity and a medium range edge, but not enough pressure to build the pot. Choose the best action.",
+  "prompt": "Hero is UTG with QsTc on Jd-7c-3h-2s after BB checks the turn. Hero has live equity and a medium range edge, but not enough pressure to build the pot. Choose the best action.",
   "intent_v1": "equity_realization",
   "expected": {
     "actionId": "call"

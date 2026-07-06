@@ -1,7 +1,7 @@
 {
   "id": "choose_call_range",
   "kind": "action_choice",
-  "prompt": "UTG holds AsKd on Kh-8d-3c-2s in position after BB checks. Hero has a medium range edge, but the board is not enough for clean pressure. Choose the best action.",
+  "prompt": "Hero is UTG with AsKd on Kh-8d-3c-2s, in position after BB checks. Hero has a medium range edge, but the board is not enough for clean pressure. Choose the best action.",
   "intent_v1": "range_vs_hand",
   "expected": {
     "actionId": "call"
