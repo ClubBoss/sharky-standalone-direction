@@ -222,17 +222,17 @@ Session placement: `w3.s10`, listed after `chain_preflop_final_checkpoint_v1` in
 
 | Field | Evidence |
 | --- | --- |
-| Prompt | `Cutoff opened first and hero is on the button with KTs. Which compact preflop action fits this transfer spot?` |
-| Cards | `KTs` |
+| Prompt | `Cutoff opened first and hero is on the button with KQs. Which compact preflop action fits this transfer spot?` |
+| Cards | `KQs` |
 | Seat / position | button / in position |
 | Prior action | cutoff opened first |
 | Available options | `fold`, `call`, `raise` |
 | Expected action | `call` |
-| Correct feedback | `Correct. KTs can continue in position after the cutoff opens, and calling respects the facing-open frame.` |
-| Incorrect feedback | `Incorrect. Once the cutoff opens first, KTs on the button is a playable in-position continue, but the compact action is call instead of raising first.` |
-| `why_v1` | `The suited broadway hand is playable and hero has position, but the open in front changes the action from raising first to calling.` |
+| Correct feedback | `Correct. KQs can continue in position after the cutoff opens, and calling respects the facing-open frame.` |
+| Incorrect feedback | `Incorrect. Once the cutoff opens first, KQs on the button is a strong in-position continue, but the compact action is call instead of raising first.` |
+| `why_v1` | `The suited broadway hand is strong and hero has position, but the open in front changes the action from raising first to calling.` |
 | Concepts integrated | hand category, position, facing-open frame, call action |
-| Nearest existing drill and difference | Nearest existing surface is `chain_preflop_final_checkpoint_v1` step 2 with QJs/button/facing cutoff open/call; this new drill keeps the same expected action but changes the hand surface to KTs and makes the transfer independent instead of guided. |
+| Nearest existing drill and difference | Nearest existing surface is `chain_preflop_final_checkpoint_v1` step 2 with QJs/button/facing cutoff open/call; this new drill keeps the same expected action but changes the hand surface to KQs and makes the transfer independent instead of guided. |
 
 ### `choose_fold_bb_weak_facing_open_transfer_v1`
 
@@ -263,17 +263,17 @@ Final targeted correction evidence:
 - The three targeted W1 feedback rows above avoid final learner-facing `first-in` / `first in` wording.
 - The W2 denial acceptable feedback and `why_v1` avoid advanced `equity` wording.
 - W3 Drill A now uses AJs, not the nearest chain step's KQs, while retaining expected `raise`.
-- W3 Drill B now uses KTs, not the nearest chain step's QJs, while retaining expected `call`.
+- W3 Drill B now uses KQs, not the nearest chain step's QJs, while retaining expected `call`.
+- Final poker-clarity micro-correction changed Drill B from KTs to KQs; bounded W3 inspection found no existing exact KQs/button/facing-cutoff-open surface.
 
 Focused guard evidence:
 
 - Wave 1 focused guard: `test/tools/stage1a_wave1_signposting_terminology_contract_test.dart`
 - Wave 2 focused guard: `test/tools/stage1a_wave2_feedback_transfer_contract_test.dart`
-- Final focused Wave 1/Wave 2 guard result: 9 tests passed, 0 failed.
+- Final Stage 1A Wave 2 focused guard result: 6 tests passed, 0 failed.
 - W3/session-drill projection result: 3 tests passed, 0 failed.
-- W2 policy/evaluator result: 25 tests passed, 0 failed.
-- Analyze result after final targeted correction: `No issues found`.
-- JSON validation result after final targeted correction: 6 changed drill JSON files validated.
+- Analyze result after final poker-clarity micro-correction: `No issues found`.
+- JSON validation result after final poker-clarity micro-correction: `choose_call_btn_facing_open_transfer_v1` validated.
 - `git diff --check`: passed.
 - `graphify hook-check`: passed.
 

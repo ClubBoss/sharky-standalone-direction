@@ -188,7 +188,7 @@ void main() {
     expect(transferRaise['prompt'], contains('AJs'));
     expect(transferRaise['prompt'], isNot(contains('KQs')));
     expect(raiseStep['prompt'], contains('KQs'));
-    expect(transferCall['prompt'], contains('KTs'));
+    expect(transferCall['prompt'], contains('KQs'));
     expect(transferCall['prompt'], isNot(contains('QJs')));
     expect(callStep['prompt'], contains('QJs'));
     expect(transferRaise.containsKey('acceptable_actions'), isFalse);

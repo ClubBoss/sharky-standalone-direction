@@ -234,18 +234,17 @@ The final correction-only pass closed exactly four bounded categories:
 Final W3 transfer surfaces:
 
 - Drill A: `Hero is on the button with AJs and the pot is unopened. Which compact preflop action fits this transfer spot?` Expected action: `raise`.
-- Drill B: `Cutoff opened first and hero is on the button with KTs. Which compact preflop action fits this transfer spot?` Expected action: `call`.
+- Drill B: `Cutoff opened first and hero is on the button with KQs. Which compact preflop action fits this transfer spot?` Expected action: `call`.
 - Drill C remained unchanged: `Button opened first and hero is in the big blind with T6o. Which compact preflop action fits this transfer spot?` Expected action: `fold`.
+
+Final poker-clarity micro-correction: Drill B was changed from KTs to KQs because KQs is already active W3 suited-broadway vocabulary, is stronger and less borderline than QJs, and does not duplicate an existing W3 button-facing-cutoff-open exact surface.
 
 Final validation after this correction:
 
-- JSON parse/minimal schema validation for the six changed drill JSON files: passed.
-- Wave 1 signposting/terminology guard: passed.
+- JSON parse/minimal schema validation for `choose_call_btn_facing_open_transfer_v1`: passed.
 - Wave 2 feedback/transfer guard: passed.
 - W3 session-drill hand-chain projection guard: passed.
-- W2 policy validator: passed.
-- Drill runtime evaluator: passed.
-- `flutter analyze` on changed focused guards: passed.
+- `flutter analyze` on the affected focused guard: passed.
 - `git diff --check`: passed.
 - `graphify hook-check`: passed.
 
