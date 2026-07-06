@@ -55,20 +55,20 @@ void main() {
 
   const w6RecheckItem = SessionDrillRecheckLaunchQueueItemV1(
     queueKind: 'session_drill_recheck',
-    jobId: 'session_drill_recheck:w6.s01:classify_missed_fold_recheck',
+    jobId: 'session_drill_recheck:w6.s01:classify_missed_low_cards_no_draw',
     launchSessionId: 'w6.s01',
     sourceWorldId: 'world_6',
     sourceSessionId: 'w6.s01',
-    sourceDrillId: 'classify_missed_fold',
-    drillFamilyId: 'range_bucket_classifier_v1',
+    sourceDrillId: 'classify_missed_overcards_no_draw',
+    drillFamilyId: 'range_bucket_board_fit_classifier_v1',
     missedSignalId: 'range_bucket_missed',
     missedSignalLabel: 'Missed range bucket',
-    chosenActionId: 'raise',
-    expectedActionId: 'fold',
+    chosenActionId: 'strong',
+    expectedActionId: 'missed',
     targetSessionId: 'w6.s01',
-    targetDrillId: 'classify_missed_fold_recheck',
+    targetDrillId: 'classify_missed_low_cards_no_draw',
     targetKind: 'same_signal_recheck',
-    errorClass: 'expected_action_mismatch',
+    errorClass: 'range_bucket_mismatch',
   );
 
   const boardTextureRecheckItem = SessionDrillRecheckLaunchQueueItemV1(

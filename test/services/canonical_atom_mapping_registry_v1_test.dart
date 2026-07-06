@@ -40,7 +40,7 @@ void main() {
         sourceFamily: 'w6_session_drill',
         sourceWorld: 'world_6',
         sourceSessionId: 'w6.s01',
-        exactTargetId: 'classify_missed_fold_recheck',
+        exactTargetId: 'classify_missed_low_cards_no_draw',
         signalFamilyId: 'range_bucket_missed',
       ),
     );
@@ -73,14 +73,14 @@ void main() {
       sourceFamily: 'w6_session_drill',
       sourceWorld: 'world_6',
       sourceSessionId: 'w6.s01',
-      exactTargetId: 'classify_missed_fold_recheck',
+      exactTargetId: 'classify_missed_low_cards_no_draw',
       signalFamilyId: 'range_bucket_missed',
     );
     final differentTarget = mappingInput(
       sourceFamily: 'w6_session_drill',
       sourceWorld: 'world_6',
       sourceSessionId: 'w6.s01',
-      exactTargetId: 'classify_missed_fold',
+      exactTargetId: 'classify_missed_overcards_no_draw',
       signalFamilyId: 'range_bucket_missed',
     );
 

@@ -6,6 +6,8 @@ import 'package:poker_analyzer/services/session_drill_repair_receipt_persistence
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   const runtime = DrillRuntimeAdapterV1();
   const evaluator = DrillEvaluatorV1();
   const store = SessionDrillRepairReceiptPersistenceV1();
@@ -13,17 +15,17 @@ void main() {
   Future<SessionDrillRepairReceiptCandidateV1> candidate() async {
     final drills = await runtime.loadSessionDrills('w6.s01');
     final source = drills.firstWhere(
-      (item) => item.drillId == 'classify_missed_fold',
+      (item) => item.drillId == 'classify_missed_overcards_no_draw',
     );
     final evaluation = evaluator.evaluate(
       source.spec,
-      DrillUserEventV1.actionChoice('raise'),
+      DrillUserEventV1.actionChoice('strong'),
     );
     final candidate = buildSessionDrillRepairReceiptCandidateV1(
       sourceSessionId: 'w6.s01',
       sourceDrill: source,
       evaluation: evaluation,
-      chosenActionId: 'raise',
+      chosenActionId: 'strong',
     );
     return candidate!;
   }
@@ -40,10 +42,10 @@ void main() {
     final loaded = await store.loadCandidates();
     expect(loaded, hasLength(1));
     expect(loaded.single.sourceSessionId, 'w6.s01');
-    expect(loaded.single.sourceDrillId, 'classify_missed_fold');
-    expect(loaded.single.drillFamilyId, 'range_bucket_classifier_v1');
+    expect(loaded.single.sourceDrillId, 'classify_missed_overcards_no_draw');
+    expect(loaded.single.drillFamilyId, 'range_bucket_board_fit_classifier_v1');
     expect(loaded.single.missedSignalId, 'range_bucket_missed');
-    expect(loaded.single.targetDrillId, 'classify_missed_fold_recheck');
+    expect(loaded.single.targetDrillId, 'classify_missed_low_cards_no_draw');
     expect(loaded.single.targetKind, 'same_signal_recheck');
   });
 
@@ -52,11 +54,11 @@ void main() {
     () async {
       final drills = await runtime.loadSessionDrills('w6.s01');
       final source = drills.firstWhere(
-        (item) => item.drillId == 'classify_missed_fold',
+        (item) => item.drillId == 'classify_missed_overcards_no_draw',
       );
       final evaluation = evaluator.evaluate(
         source.spec,
-        DrillUserEventV1.actionChoice('raise'),
+        DrillUserEventV1.actionChoice('strong'),
       );
 
       final persisted =
@@ -64,25 +66,25 @@ void main() {
             sourceSessionId: 'w6.s01',
             sourceDrill: source,
             evaluation: evaluation,
-            chosenActionId: 'raise',
+            chosenActionId: 'strong',
           );
 
       expect(persisted, isNotNull);
       final loaded = await store.loadCandidates();
       expect(loaded, hasLength(1));
-      expect(loaded.single.sourceDrillId, 'classify_missed_fold');
-      expect(loaded.single.targetDrillId, 'classify_missed_fold_recheck');
+      expect(loaded.single.sourceDrillId, 'classify_missed_overcards_no_draw');
+      expect(loaded.single.targetDrillId, 'classify_missed_low_cards_no_draw');
     },
   );
 
   test('ineligible result inputs do not write receipts', () async {
     final drills = await runtime.loadSessionDrills('w6.s01');
     final source = drills.firstWhere(
-      (item) => item.drillId == 'classify_missed_fold',
+      (item) => item.drillId == 'classify_missed_overcards_no_draw',
     );
     final evaluation = evaluator.evaluate(
       source.spec,
-      DrillUserEventV1.actionChoice('fold'),
+      DrillUserEventV1.actionChoice('missed'),
     );
 
     final persisted =
@@ -90,7 +92,7 @@ void main() {
           sourceSessionId: 'w6.s01',
           sourceDrill: source,
           evaluation: evaluation,
-          chosenActionId: 'fold',
+          chosenActionId: 'missed',
         );
 
     expect(persisted, isNull);
@@ -105,7 +107,7 @@ void main() {
 
     final loaded = await store.loadCandidates();
     expect(loaded, hasLength(1));
-    expect(loaded.single.sourceDrillId, 'classify_missed_fold');
+    expect(loaded.single.sourceDrillId, 'classify_missed_overcards_no_draw');
   });
 
   test('ignores invalid or legacy stored payloads', () async {

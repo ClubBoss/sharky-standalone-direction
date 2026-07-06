@@ -18,17 +18,20 @@ void main() {
     return drills.firstWhere((item) => item.drillId == drillId);
   }
 
-  Future<void> seedW6Receipt() async {
-    final source = await drill('w6.s01', 'classify_missed_fold');
+  Future<void> seedW6Receipt({
+    String sourceId = 'classify_missed_overcards_no_draw',
+    String wrongChoice = 'strong',
+  }) async {
+    final source = await drill('w6.s01', sourceId);
     final evaluation = evaluator.evaluate(
       source.spec,
-      DrillUserEventV1.actionChoice('raise'),
+      DrillUserEventV1.actionChoice(wrongChoice),
     );
     await persistSessionDrillRepairReceiptCandidateIfEligibleV1(
       sourceSessionId: 'w6.s01',
       sourceDrill: source,
       evaluation: evaluation,
-      chosenActionId: 'raise',
+      chosenActionId: wrongChoice,
       store: receiptStore,
     );
   }
@@ -52,38 +55,88 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
-  test('W6 exact recheck success appends immutable retained result evidence', () async {
-    await seedW6Receipt();
-    final target = await drill('w6.s01', 'classify_missed_fold_recheck');
-    final evaluation = evaluator.evaluate(
-      target.spec,
-      DrillUserEventV1.actionChoice('fold'),
-    );
+  test(
+    'all four W6 same-signal rechecks append current retained proof',
+    () async {
+      const cases =
+          <
+            ({
+              String sourceId,
+              String wrongChoice,
+              String targetId,
+              String expectedChoice,
+              String signal,
+            })
+          >[
+            (
+              sourceId: 'classify_strong_clean_fit',
+              wrongChoice: 'missed',
+              targetId: 'classify_strong_overpair_fit',
+              expectedChoice: 'strong',
+              signal: 'range_bucket_strong',
+            ),
+            (
+              sourceId: 'classify_strong_overpair_fit',
+              wrongChoice: 'missed',
+              targetId: 'classify_strong_clean_fit',
+              expectedChoice: 'strong',
+              signal: 'range_bucket_strong',
+            ),
+            (
+              sourceId: 'classify_missed_overcards_no_draw',
+              wrongChoice: 'strong',
+              targetId: 'classify_missed_low_cards_no_draw',
+              expectedChoice: 'missed',
+              signal: 'range_bucket_missed',
+            ),
+            (
+              sourceId: 'classify_missed_low_cards_no_draw',
+              wrongChoice: 'strong',
+              targetId: 'classify_missed_overcards_no_draw',
+              expectedChoice: 'missed',
+              signal: 'range_bucket_missed',
+            ),
+          ];
 
-    final event = await persistSessionDrillRetainedResultIfEligibleV1(
-      isRecheckLaunchV1: true,
-      initialDrillId: target.drillId,
-      sourceSessionId: 'w6.s01',
-      currentDrill: target,
-      evaluation: evaluation,
-      chosenActionId: 'fold',
-      receiptStore: receiptStore,
-      resultStore: resultStore,
-    );
+      for (final entry in cases) {
+        SharedPreferences.setMockInitialValues(<String, Object>{});
+        await seedW6Receipt(
+          sourceId: entry.sourceId,
+          wrongChoice: entry.wrongChoice,
+        );
+        final target = await drill('w6.s01', entry.targetId);
+        final evaluation = evaluator.evaluate(
+          target.spec,
+          DrillUserEventV1.actionChoice(entry.expectedChoice),
+        );
 
-    expect(event, isNotNull);
-    expect(event!.result, 'success');
-    expect(event.context, 'recheck');
-    expect(event.sourceFamily, 'w6_session_drill');
-    expect(event.targetDrillId, 'classify_missed_fold_recheck');
-    expect(event.signalFamilyId, 'range_bucket_missed');
-    expect(event.skillAtomId, isNull);
-    expect(event.selectedActionId, 'fold');
-    expect(event.expectedActionId, 'fold');
-    expect(event.isRetainedForMasteryEvidence, isTrue);
-    expect(event.toPayload().containsKey('missedSignalLabel'), isFalse);
-    expect(await resultStore.loadEvents(), <Object>[event]);
-  });
+        final event = await persistSessionDrillRetainedResultIfEligibleV1(
+          isRecheckLaunchV1: true,
+          initialDrillId: target.drillId,
+          sourceSessionId: 'w6.s01',
+          currentDrill: target,
+          evaluation: evaluation,
+          chosenActionId: entry.expectedChoice,
+          receiptStore: receiptStore,
+          resultStore: resultStore,
+        );
+
+        expect(event, isNotNull, reason: entry.sourceId);
+        expect(event!.result, 'success');
+        expect(event.context, 'recheck');
+        expect(event.sourceFamily, 'w6_session_drill');
+        expect(event.targetDrillId, entry.targetId);
+        expect(event.signalFamilyId, entry.signal);
+        expect(event.skillAtomId, isNull);
+        expect(event.selectedActionId, entry.expectedChoice);
+        expect(event.expectedActionId, entry.expectedChoice);
+        expect(event.sourceReceiptKey, 'w6.s01:${entry.sourceId}');
+        expect(event.isRetainedForMasteryEvidence, isTrue);
+        expect(event.toPayload().containsKey('missedSignalLabel'), isFalse);
+        expect(await resultStore.loadEvents(), <Object>[event]);
+      }
+    },
+  );
 
   test('W5 exact recheck miss appends retained miss evidence', () async {
     await seedW5Receipt();
@@ -108,68 +161,77 @@ void main() {
     expect(event!.result, 'miss');
     expect(event.sourceFamily, 'w5_session_drill');
     expect(event.targetKind, 'exact_replay');
-    expect(event.sourceReceiptKey, 'w5.s01:classify_texture_intro_dry_raise_v1');
+    expect(
+      event.sourceReceiptKey,
+      'w5.s01:classify_texture_intro_dry_raise_v1',
+    );
   });
 
-  test('launch, non-target answer, and receipt copy state create no result event', () async {
-    await seedW6Receipt();
-    final target = await drill('w6.s01', 'classify_missed_fold_recheck');
-    final evaluation = evaluator.evaluate(
-      target.spec,
-      DrillUserEventV1.actionChoice('fold'),
-    );
+  test(
+    'launch, non-target answer, and receipt copy state create no result event',
+    () async {
+      await seedW6Receipt();
+      final target = await drill('w6.s01', 'classify_missed_low_cards_no_draw');
+      final evaluation = evaluator.evaluate(
+        target.spec,
+        DrillUserEventV1.actionChoice('missed'),
+      );
 
-    expect(
+      expect(
+        await persistSessionDrillRetainedResultIfEligibleV1(
+          isRecheckLaunchV1: false,
+          initialDrillId: target.drillId,
+          sourceSessionId: 'w6.s01',
+          currentDrill: target,
+          evaluation: evaluation,
+          chosenActionId: 'missed',
+          receiptStore: receiptStore,
+          resultStore: resultStore,
+        ),
+        isNull,
+      );
+      expect(
+        await persistSessionDrillRetainedResultIfEligibleV1(
+          isRecheckLaunchV1: true,
+          initialDrillId: 'other_target',
+          sourceSessionId: 'w6.s01',
+          currentDrill: target,
+          evaluation: evaluation,
+          chosenActionId: 'missed',
+          receiptStore: receiptStore,
+          resultStore: resultStore,
+        ),
+        isNull,
+      );
+      expect(await resultStore.loadEvents(), isEmpty);
+    },
+  );
+
+  test(
+    'retained result leaves receipt and derived Review queue intact',
+    () async {
+      await seedW6Receipt();
+      final target = await drill('w6.s01', 'classify_missed_low_cards_no_draw');
+      final evaluation = evaluator.evaluate(
+        target.spec,
+        DrillUserEventV1.actionChoice('missed'),
+      );
+
       await persistSessionDrillRetainedResultIfEligibleV1(
-        isRecheckLaunchV1: false,
+        isRecheckLaunchV1: true,
         initialDrillId: target.drillId,
         sourceSessionId: 'w6.s01',
         currentDrill: target,
         evaluation: evaluation,
-        chosenActionId: 'fold',
+        chosenActionId: 'missed',
         receiptStore: receiptStore,
         resultStore: resultStore,
-      ),
-      isNull,
-    );
-    expect(
-      await persistSessionDrillRetainedResultIfEligibleV1(
-        isRecheckLaunchV1: true,
-        initialDrillId: 'other_target',
-        sourceSessionId: 'w6.s01',
-        currentDrill: target,
-        evaluation: evaluation,
-        chosenActionId: 'fold',
-        receiptStore: receiptStore,
-        resultStore: resultStore,
-      ),
-      isNull,
-    );
-    expect(await resultStore.loadEvents(), isEmpty);
-  });
+      );
 
-  test('retained result leaves receipt and derived Review queue intact', () async {
-    await seedW6Receipt();
-    final target = await drill('w6.s01', 'classify_missed_fold_recheck');
-    final evaluation = evaluator.evaluate(
-      target.spec,
-      DrillUserEventV1.actionChoice('fold'),
-    );
-
-    await persistSessionDrillRetainedResultIfEligibleV1(
-      isRecheckLaunchV1: true,
-      initialDrillId: target.drillId,
-      sourceSessionId: 'w6.s01',
-      currentDrill: target,
-      evaluation: evaluation,
-      chosenActionId: 'fold',
-      receiptStore: receiptStore,
-      resultStore: resultStore,
-    );
-
-    expect(await receiptStore.loadCandidates(), hasLength(1));
-    final queue = await const SessionDrillRecheckLaunchQueueV1()
-        .loadRangeBucketLaunchQueueItems();
-    expect(queue, hasLength(1));
-  });
+      expect(await receiptStore.loadCandidates(), hasLength(1));
+      final queue = await const SessionDrillRecheckLaunchQueueV1()
+          .loadRangeBucketLaunchQueueItems();
+      expect(queue, hasLength(1));
+    },
+  );
 }

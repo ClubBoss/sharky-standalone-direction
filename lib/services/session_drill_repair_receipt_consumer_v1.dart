@@ -162,7 +162,7 @@ bool _isSupportedRangeBucketReceiptV1(
       receipt.sourceWorldId.trim() == 'world_6' &&
       receipt.sourceSessionId.trim() == 'w6.s01' &&
       receipt.targetSessionId.trim() == 'w6.s01' &&
-      receipt.drillFamilyId.trim() == 'range_bucket_classifier_v1' &&
+      receipt.drillFamilyId.trim() == 'range_bucket_board_fit_classifier_v1' &&
       receipt.missedSignalId.trim().startsWith('range_bucket_') &&
       _supportedTargetKindsV1.contains(receipt.targetKind.trim());
 }

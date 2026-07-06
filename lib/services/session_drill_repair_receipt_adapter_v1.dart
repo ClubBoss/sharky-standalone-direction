@@ -49,7 +49,7 @@ class SessionDrillRepairReceiptCandidateV1 {
   };
 }
 
-/// Creates provenance for an authored W6 range-bucket miss only.
+/// Creates provenance for an authored W6 board-fit range-bucket miss only.
 ///
 /// This is intentionally not wired to Act0 repair intents or Review. A later
 /// bridge may consume this candidate after it owns the session-drill launch
@@ -72,7 +72,7 @@ buildSessionDrillRepairReceiptCandidateV1({
   if (sessionId != 'w6.s01' ||
       drillId.isEmpty ||
       drillId != spec.id.trim() ||
-      spec.kind != DrillKindV1.rangeBucketClassifier ||
+      spec.kind != DrillKindV1.actionChoice ||
       evaluation.isPass ||
       actionId.isEmpty ||
       expectedActionId.isEmpty ||
@@ -86,28 +86,24 @@ buildSessionDrillRepairReceiptCandidateV1({
     sourceWorldId: 'world_6',
     sourceSessionId: sessionId,
     sourceDrillId: drillId,
-    drillFamilyId: 'range_bucket_classifier_v1',
+    drillFamilyId: 'range_bucket_board_fit_classifier_v1',
     missedSignalId: 'range_bucket_$bucket',
     missedSignalLabel: _rangeBucketSignalLabelV1(bucket),
     chosenActionId: actionId,
     expectedActionId: expectedActionId,
     targetSessionId: sessionId,
     targetDrillId: targetDrillId,
-    targetKind: targetDrillId == drillId
-        ? 'exact_replay'
-        : 'same_signal_recheck',
+    targetKind: 'same_signal_recheck',
     errorClass: evaluation.errorClass?.trim() ?? 'range_bucket_miss',
   );
 }
 
 const Map<String, String> _rangeBucketRepairTargetBySourceDrillIdV1 =
     <String, String>{
-      'classify_strong_raise': 'classify_strong_call_control',
-      'classify_strong_call_control': 'classify_strong_raise',
-      'classify_medium_call_control': 'classify_medium_call_control',
-      'classify_weak_fold_pressure': 'classify_weak_fold_pressure',
-      'classify_missed_fold': 'classify_missed_fold_recheck',
-      'classify_missed_fold_recheck': 'classify_missed_fold',
+      'classify_strong_clean_fit': 'classify_strong_overpair_fit',
+      'classify_strong_overpair_fit': 'classify_strong_clean_fit',
+      'classify_missed_overcards_no_draw': 'classify_missed_low_cards_no_draw',
+      'classify_missed_low_cards_no_draw': 'classify_missed_overcards_no_draw',
     };
 
 String _rangeBucketSignalLabelV1(String bucket) {

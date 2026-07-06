@@ -7,6 +7,8 @@ import 'package:poker_analyzer/services/session_drill_repair_receipt_persistence
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   const runtime = DrillRuntimeAdapterV1();
   const evaluator = DrillEvaluatorV1();
   const store = SessionDrillRepairReceiptPersistenceV1();
@@ -18,16 +20,16 @@ void main() {
   }
 
   Future<SessionDrillRepairReceiptCandidateV1> missedReceipt() async {
-    final source = await drill('classify_missed_fold');
+    final source = await drill('classify_missed_overcards_no_draw');
     final evaluation = evaluator.evaluate(
       source.spec,
-      DrillUserEventV1.actionChoice('raise'),
+      DrillUserEventV1.actionChoice('strong'),
     );
     final receipt = buildSessionDrillRepairReceiptCandidateV1(
       sourceSessionId: 'w6.s01',
       sourceDrill: source,
       evaluation: evaluation,
-      chosenActionId: 'raise',
+      chosenActionId: 'strong',
     );
     return receipt!;
   }
@@ -49,16 +51,16 @@ void main() {
       expect(candidate.consumerKind, 'session_drill_recheck');
       expect(candidate.sourceWorldId, 'world_6');
       expect(candidate.sourceSessionId, 'w6.s01');
-      expect(candidate.sourceDrillId, 'classify_missed_fold');
-      expect(candidate.drillFamilyId, 'range_bucket_classifier_v1');
+      expect(candidate.sourceDrillId, 'classify_missed_overcards_no_draw');
+      expect(candidate.drillFamilyId, 'range_bucket_board_fit_classifier_v1');
       expect(candidate.missedSignalId, 'range_bucket_missed');
       expect(candidate.missedSignalLabel, 'Missed range bucket');
-      expect(candidate.chosenActionId, 'raise');
-      expect(candidate.expectedActionId, 'fold');
+      expect(candidate.chosenActionId, 'strong');
+      expect(candidate.expectedActionId, 'missed');
       expect(candidate.targetSessionId, 'w6.s01');
-      expect(candidate.targetDrillId, 'classify_missed_fold_recheck');
+      expect(candidate.targetDrillId, 'classify_missed_low_cards_no_draw');
       expect(candidate.targetKind, 'same_signal_recheck');
-      expect(candidate.errorClass, 'expected_action_mismatch');
+      expect(candidate.errorClass, 'range_bucket_mismatch');
     },
   );
 
@@ -68,16 +70,16 @@ void main() {
         schemaVersion: 1,
         sourceWorldId: 'world_6',
         sourceSessionId: 'w6.s01',
-        sourceDrillId: 'classify_missed_fold',
-        drillFamilyId: 'other_family_v1',
+        sourceDrillId: 'classify_missed_overcards_no_draw',
+        drillFamilyId: 'range_bucket_classifier_v1',
         missedSignalId: 'range_bucket_missed',
         missedSignalLabel: 'Missed range bucket',
-        chosenActionId: 'raise',
-        expectedActionId: 'fold',
+        chosenActionId: 'strong',
+        expectedActionId: 'missed',
         targetSessionId: 'w6.s01',
-        targetDrillId: 'classify_missed_fold_recheck',
+        targetDrillId: 'classify_missed_low_cards_no_draw',
         targetKind: 'same_signal_recheck',
-        errorClass: 'expected_action_mismatch',
+        errorClass: 'range_bucket_mismatch',
       ),
     );
 
@@ -85,10 +87,10 @@ void main() {
   });
 
   test('correct answers do not create consumer candidates', () async {
-    final source = await drill('classify_missed_fold');
+    final source = await drill('classify_missed_overcards_no_draw');
     final evaluation = evaluator.evaluate(
       source.spec,
-      DrillUserEventV1.actionChoice('fold'),
+      DrillUserEventV1.actionChoice('missed'),
     );
 
     final persisted =
@@ -96,10 +98,39 @@ void main() {
           sourceSessionId: 'w6.s01',
           sourceDrill: source,
           evaluation: evaluation,
-          chosenActionId: 'fold',
+          chosenActionId: 'missed',
         );
 
     expect(persisted, isNull);
     expect(await consumer.loadRangeBucketRecheckCandidates(), isEmpty);
   });
+
+  test(
+    'medium and weak misses create no persisted receipt or queue candidate',
+    () async {
+      for (final id in <String>{
+        'classify_medium_second_pair_fit',
+        'classify_weak_bottom_pair_fit',
+      }) {
+        final source = await drill(id);
+        final evaluation = evaluator.evaluate(
+          source.spec,
+          DrillUserEventV1.actionChoice('missed'),
+        );
+        expect(
+          await persistSessionDrillRepairReceiptCandidateIfEligibleV1(
+            sourceSessionId: 'w6.s01',
+            sourceDrill: source,
+            evaluation: evaluation,
+            chosenActionId: 'missed',
+          ),
+          isNull,
+          reason: id,
+        );
+      }
+
+      expect(await store.loadCandidates(), isEmpty);
+      expect(await consumer.loadRangeBucketRecheckCandidates(), isEmpty);
+    },
+  );
 }

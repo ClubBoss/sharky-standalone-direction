@@ -148,7 +148,7 @@ bool _isSupportedRepairFamilyCandidateV1(
       sourceWorldId == 'world_6' &&
       sourceSessionId == 'w6.s01' &&
       targetSessionId == 'w6.s01' &&
-      drillFamilyId == 'range_bucket_classifier_v1' &&
+      drillFamilyId == 'range_bucket_board_fit_classifier_v1' &&
       missedSignalId.startsWith('range_bucket_');
   final isBoardTexture =
       sourceWorldId == 'world_5' &&

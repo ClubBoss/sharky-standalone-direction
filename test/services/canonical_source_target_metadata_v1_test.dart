@@ -85,37 +85,30 @@ void main() {
             (
               sourceFamily: 'w6_session_drill',
               sourceWorld: 'world_6',
-              exactTargetId: 'classify_strong_call_control',
+              exactTargetId: 'classify_strong_overpair_fit',
               signalFamilyId: 'range_bucket_strong',
-              expectedActionId: 'call',
+              expectedActionId: 'strong',
             ),
             (
               sourceFamily: 'w6_session_drill',
               sourceWorld: 'world_6',
-              exactTargetId: 'classify_strong_raise',
+              exactTargetId: 'classify_strong_clean_fit',
               signalFamilyId: 'range_bucket_strong',
-              expectedActionId: 'raise',
+              expectedActionId: 'strong',
             ),
             (
               sourceFamily: 'w6_session_drill',
               sourceWorld: 'world_6',
-              exactTargetId: 'classify_medium_call_control',
-              signalFamilyId: 'range_bucket_medium',
-              expectedActionId: 'call',
-            ),
-            (
-              sourceFamily: 'w6_session_drill',
-              sourceWorld: 'world_6',
-              exactTargetId: 'classify_weak_fold_pressure',
-              signalFamilyId: 'range_bucket_weak',
-              expectedActionId: 'fold',
-            ),
-            (
-              sourceFamily: 'w6_session_drill',
-              sourceWorld: 'world_6',
-              exactTargetId: 'classify_missed_fold',
+              exactTargetId: 'classify_missed_low_cards_no_draw',
               signalFamilyId: 'range_bucket_missed',
-              expectedActionId: 'fold',
+              expectedActionId: 'missed',
+            ),
+            (
+              sourceFamily: 'w6_session_drill',
+              sourceWorld: 'world_6',
+              exactTargetId: 'classify_missed_overcards_no_draw',
+              signalFamilyId: 'range_bucket_missed',
+              expectedActionId: 'missed',
             ),
           ];
 
@@ -146,7 +139,7 @@ void main() {
         sourceFamily: 'w6_session_drill',
         sourceWorld: 'world_6',
         sourceSessionId: 'w6.s01',
-        exactTargetId: 'classify_missed_fold_recheck',
+        exactTargetId: 'classify_missed_low_cards_no_draw',
         signalFamilyId: 'range_bucket_missed',
       ),
     );
@@ -155,7 +148,7 @@ void main() {
     expect(metadata!.machineCueId, 'range_bucket_missed');
     expect(metadata.learnerFacingClueName, 'Missed range bucket');
     expect(metadata.machineCueId, isNot(metadata.learnerFacingClueName));
-    expect(metadata.expectedActionId, 'fold');
+    expect(metadata.expectedActionId, 'missed');
   });
 
   test('display clue changes do not participate in source-target identity', () {
@@ -163,7 +156,7 @@ void main() {
       sourceFamily: 'w6_session_drill',
       sourceWorld: 'world_6',
       sourceSessionId: 'w6.s01',
-      exactTargetId: 'classify_missed_fold_recheck',
+      exactTargetId: 'classify_missed_low_cards_no_draw',
       signalFamilyId: 'range_bucket_missed',
     );
 
@@ -172,12 +165,12 @@ void main() {
       eventId: 'event_w6_changed_clue',
       worldId: 'world_6',
       sourceSessionId: 'w6.s01',
-      targetDrillId: 'classify_missed_fold_recheck',
+      targetDrillId: 'classify_missed_low_cards_no_draw',
       signalFamilyId: 'range_bucket_missed',
       learnerFacingClueName: 'Any replacement learner wording',
       targetKind: 'exact',
-      selectedActionId: 'fold',
-      expectedActionId: 'fold',
+      selectedActionId: 'missed',
+      expectedActionId: 'missed',
       result: 'success',
       context: 'recheck',
       sourceFamily: 'w6_session_drill',
@@ -215,13 +208,13 @@ void main() {
         eventId: 'event_w6',
         worldId: 'world_6',
         sourceSessionId: 'w6.s01',
-        targetDrillId: 'classify_missed_fold_recheck',
+        targetDrillId: 'classify_missed_low_cards_no_draw',
         skillAtomId: null,
         signalFamilyId: 'range_bucket_missed',
         learnerFacingClueName: 'A changed clue is display-only',
         targetKind: 'exact',
-        selectedActionId: 'fold',
-        expectedActionId: 'fold',
+        selectedActionId: 'missed',
+        expectedActionId: 'missed',
         result: 'success',
         context: 'recheck',
         sourceFamily: 'w6_session_drill',
@@ -233,4 +226,25 @@ void main() {
       expect(catalog.forRetainedResult(event)!.canonicalAtomId, isNull);
     },
   );
+
+  test('medium and weak board-fit targets remain explicitly unreviewed', () {
+    for (final target in <({String id, String signal})>{
+      (id: 'classify_medium_second_pair_fit', signal: 'range_bucket_medium'),
+      (id: 'classify_weak_bottom_pair_fit', signal: 'range_bucket_weak'),
+    }) {
+      expect(
+        catalog.resolve(
+          input(
+            sourceFamily: 'w6_session_drill',
+            sourceWorld: 'world_6',
+            sourceSessionId: 'w6.s01',
+            exactTargetId: target.id,
+            signalFamilyId: target.signal,
+          ),
+        ),
+        isNull,
+        reason: target.id,
+      );
+    }
+  });
 }
