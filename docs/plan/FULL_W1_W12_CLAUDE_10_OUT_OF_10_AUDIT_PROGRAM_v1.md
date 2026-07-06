@@ -432,11 +432,11 @@ Audit purpose/price, board awareness, and range-thinking progression. Preserve t
 
 ### Stage 1C — W7-W9
 
-Audit stack/risk, tournament pressure, and player-adjustment depth; verify active ownership and route relevance before drawing any learner-facing conclusion. Do not infer availability from the mere presence of source or tests.
+Audit W7 range-thinking continuation / visible-cards-change-ranges learning, including how visible cards and actions change range weight or composition; W8 stack depth, effective risk, commitment, and risk control; and W9 tournament pressure, survival pressure, and bubble/risk-premium intuition. Test whether progression and transfer move coherently from range composition into risk/commitment and then tournament survival pressure. Verify active ownership and route relevance before drawing learner-facing conclusions; do not infer availability from source or tests alone.
 
 ### Stage 1D — W10-W12
 
-Audit capstone/transfer, real-play process, and mindset/decision-quality completion. Distinguish W11/W12 metadata-only source-proof manifests from the learner text owners they reference.
+Audit W10 Player Adjustment depth and beginner-safe exploit reasoning, W11 Real Play Transfer / Capstone and real-session decision-process proof, and W12 Mindset Bridge completion through process-over-outcome, variance understanding, tilt-reset behavior, and emotional readiness. Test whether adjustment, real-play transfer, and mindset form a coherent close to Volume I. Distinguish W11/W12 metadata-only source-proof manifests from the active learner-text owners they reference.
 
 Every Stage 1 batch follows this required audit -> verification -> repair -> closure loop:
 
