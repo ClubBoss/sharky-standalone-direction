@@ -12,5 +12,6 @@
   "feedback_incorrect_v1": "Incorrect. A wet board, expensive price, and two risky streets ahead make folding cleaner than chasing a weak continue.",
   "acceptable_actions": [
     "fold"
-  ]
+  ],
+  "feedback_acceptable_v1": "Acceptable. Fold is the source-approved line here because when the board already builds pressure and the price is poor, future streets make a weak continue worse instead of better."
 }

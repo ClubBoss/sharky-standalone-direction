@@ -6,5 +6,8 @@
   "expected": {
     "boardSlot": "flop_right"
   },
-  "error_class": "board_slot_confusion"
+  "error_class": "board_slot_confusion",
+  "why_v1": "The right flop card slot is the target board card in this table-orientation rep.",
+  "feedback_correct_v1": "Correct. The right flop card slot is the target board card in this table-orientation rep.",
+  "feedback_incorrect_v1": "Incorrect. The right flop card slot is the target board card in this table-orientation rep."
 }

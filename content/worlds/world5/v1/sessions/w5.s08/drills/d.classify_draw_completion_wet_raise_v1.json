@@ -5,9 +5,12 @@
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "wet",
   "expected_action": "raise",
-  "acceptable_actions": ["call"],
+  "acceptable_actions": [
+    "call"
+  ],
   "why_v1": "When the board clearly completes the pressure story on a wet texture, raising captures value before weaker hands slow down.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. The completed wet draw story supports a raise.",
-  "feedback_incorrect_v1": "Incorrect. Let the completed wet-board pressure guide the action."
+  "feedback_incorrect_v1": "Incorrect. Let the completed wet-board pressure guide the action.",
+  "feedback_acceptable_v1": "Acceptable. Call is playable, but raise fits this spot better because when the board clearly completes the pressure story on a wet texture, raising captures value before weaker hands slow down."
 }

@@ -5,9 +5,12 @@
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "dry",
   "expected_action": "raise",
-  "acceptable_actions": ["call"],
+  "acceptable_actions": [
+    "call"
+  ],
   "why_v1": "Dry textures in position make it easier to press value before later cards add noise.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In-position dry texture supports a raise.",
-  "feedback_incorrect_v1": "Incorrect. Start from the dry board and in-position edge first."
+  "feedback_incorrect_v1": "Incorrect. Start from the dry board and in-position edge first.",
+  "feedback_acceptable_v1": "Acceptable. Call is playable, but raise fits this spot better because dry textures in position make it easier to press value before later cards add noise."
 }

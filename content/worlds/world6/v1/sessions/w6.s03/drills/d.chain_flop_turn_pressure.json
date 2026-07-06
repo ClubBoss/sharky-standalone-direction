@@ -20,11 +20,14 @@
       "street": "turn",
       "prompt": "Turn: pressure spot continues. Choose action.",
       "expected_action": "raise",
-      "acceptable_actions": ["call"],
+      "acceptable_actions": [
+        "call"
+      ],
       "why_v1": "Raise applies pressure when the turn keeps your leverage.",
       "feedback_correct_v1": "Correct. Raise fits this turn pressure step.",
       "feedback_incorrect_v1": "Incorrect. When the turn keeps your leverage intact, this pressure line should continue with a raise instead of backing off.",
-      "error_class": "expected_action_mismatch"
+      "error_class": "expected_action_mismatch",
+      "feedback_acceptable_v1": "Acceptable. Call is playable, but raise fits this spot better because raise applies pressure when the turn keeps your leverage."
     }
   ]
 }

@@ -365,7 +365,7 @@ void main() {
     'hand_chain_v1 parsing/evaluation supports deterministic 2-step action flow',
     () {
       final spec = DrillSpecV1.fromJsonString(
-        '{"id":"chain_a","kind":"hand_chain_v1","chain_id":"chain_demo","prompt":"Play 2-step chain.","expected":{},"error_class":"unused","steps":[{"street":"preflop","prompt":"Step 1 choose call.","expected_action":"call","acceptable_actions":["fold"],"why_v1":"Call keeps weaker hands in.","feedback_correct_v1":"Correct.","feedback_incorrect_v1":"Incorrect.","error_class":"expected_action_mismatch"},{"street":"flop","prompt":"Step 2 choose raise.","expected_action":"raise","feedback_correct_v1":"Correct.","feedback_incorrect_v1":"Incorrect.","error_class":"expected_action_mismatch"}]}',
+        '{"id":"chain_a","kind":"hand_chain_v1","chain_id":"chain_demo","prompt":"Play 2-step chain.","expected":{},"error_class":"unused","steps":[{"street":"preflop","prompt":"Step 1 choose call.","expected_action":"call","acceptable_actions":["fold"],"why_v1":"Call keeps weaker hands in.","feedback_acceptable_v1":"Acceptable. Folding is playable, but call keeps weaker hands in better.","feedback_correct_v1":"Correct.","feedback_incorrect_v1":"Incorrect.","error_class":"expected_action_mismatch"},{"street":"flop","prompt":"Step 2 choose raise.","expected_action":"raise","feedback_correct_v1":"Correct.","feedback_incorrect_v1":"Incorrect.","error_class":"expected_action_mismatch"}]}',
       );
 
       final step0Pass = evaluator.evaluate(
@@ -388,6 +388,14 @@ void main() {
       expect(spec.kind, DrillKindV1.handChain);
       expect(spec.chainIdV1, 'chain_demo');
       expect(spec.chainStepsV1?.length, 2);
+      expect(
+        spec.chainStepsV1?.first.feedbackAcceptableV1,
+        'Acceptable. Folding is playable, but call keeps weaker hands in better.',
+      );
+      expect(
+        spec.chainStepsV1?.first.scenarioCoreV1.feedbackAcceptableV1,
+        'Acceptable. Folding is playable, but call keeps weaker hands in better.',
+      );
       expect(step0Pass.isPass, isTrue);
       expect(step0Pass.isSoftPass, isFalse);
       expect(step0Soft.isPass, isTrue);

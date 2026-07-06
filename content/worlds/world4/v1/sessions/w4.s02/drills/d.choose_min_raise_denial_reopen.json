@@ -10,5 +10,8 @@
   "acceptable_preset_ids": [
     "half_pot"
   ],
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. Min raise matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: Min raise reopens the action and denies a free continue without committing as much as a bigger raise.",
+  "feedback_acceptable_v1": "Acceptable. Half pot is playable, but min raise fits this spot better because min raise reopens the action and denies a free continue without committing as much as a bigger raise."
 }

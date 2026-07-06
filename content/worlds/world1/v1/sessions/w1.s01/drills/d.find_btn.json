@@ -7,5 +7,7 @@
   "expected": {
     "role": "btn"
   },
-  "error_class": "seat_role_confusion"
+  "error_class": "seat_role_confusion",
+  "feedback_correct_v1": "Correct. This cue trains hand discipline before action.",
+  "feedback_incorrect_v1": "Incorrect. This cue trains hand discipline before action."
 }

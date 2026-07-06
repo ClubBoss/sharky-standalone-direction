@@ -10,5 +10,8 @@
   "acceptable_preset_ids": [
     "half_pot"
   ],
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. One third pot matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: One third pot keeps the continue cheap enough for weaker hands you still want involved.",
+  "feedback_acceptable_v1": "Acceptable. Half pot is playable, but one third pot fits this spot better because one third pot keeps the continue cheap enough for weaker hands you still want involved."
 }

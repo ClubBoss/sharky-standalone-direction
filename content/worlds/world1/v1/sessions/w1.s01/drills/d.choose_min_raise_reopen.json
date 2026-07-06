@@ -7,5 +7,7 @@
   "expected": {
     "presetId": "min_raise"
   },
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. Min raise matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: Min raise is the smallest legal raise label in this World 1 preview."
 }

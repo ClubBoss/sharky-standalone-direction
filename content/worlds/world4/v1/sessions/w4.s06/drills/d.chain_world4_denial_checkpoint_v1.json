@@ -16,7 +16,8 @@
       "feedback_correct_v1": "Correct. One third pot is the lighter denial preset in this checkpoint block.",
       "feedback_incorrect_v1": "Incorrect. This spot still wants the lighter denial size that makes realization less free without jumping to maximum pressure.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "Denial does not always mean the biggest size. Sometimes it only needs to make realization a little less free."
+      "why_v1": "Denial does not always mean the biggest size. Sometimes it only needs to make realization a little less free.",
+      "feedback_acceptable_v1": "Acceptable. Half pot is playable, but one third pot fits this spot better because denial does not always mean the biggest size. Sometimes it only needs to make realization a little less free."
     },
     {
       "street": "flop",
@@ -28,7 +29,8 @@
       "feedback_correct_v1": "Correct. Half pot is the standard denial checkpoint size.",
       "feedback_incorrect_v1": "Incorrect. This spot wants the standard controlled denial size, which is half pot once one-third no longer taxes enough.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "Half pot is the baseline denial size when one-third no longer taxes realization enough."
+      "why_v1": "Half pot is the baseline denial size when one-third no longer taxes realization enough.",
+      "feedback_acceptable_v1": "Acceptable. One third pot is playable, but half pot fits this spot better because half pot is the baseline denial size when one-third no longer taxes realization enough."
     },
     {
       "street": "turn",
@@ -40,7 +42,8 @@
       "feedback_correct_v1": "Correct. Min raise is the controlled reopen in this denial checkpoint chain.",
       "feedback_incorrect_v1": "Incorrect. This spot wants the smallest legal reopen that keeps denial active without bloating the pot, so min raise fits best.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "Min raise belongs to the same denial family when the goal is to reopen the action without bloating the pot."
+      "why_v1": "Min raise belongs to the same denial family when the goal is to reopen the action without bloating the pot.",
+      "feedback_acceptable_v1": "Acceptable. Half pot is playable, but min raise fits this spot better because min raise belongs to the same denial family when the goal is to reopen the action without bloating the pot."
     },
     {
       "street": "turn",
@@ -53,7 +56,8 @@
       "feedback_incorrect_v1": "Incorrect. This spot now wants the strongest immediate lockout cost, which points to the pot-sized preset.",
       "recap_v1": "World 4 denial checkpoints should now feel tiered: one third pot for lighter gates, half pot for the standard tax, min raise for controlled reopens, and pot when denial needs the biggest immediate price.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "This is the reusable denial recap pattern: denial is a family of price effects, not a single button."
+      "why_v1": "This is the reusable denial recap pattern: denial is a family of price effects, not a single button.",
+      "feedback_acceptable_v1": "Acceptable. Half pot is playable, but pot fits this spot better because this is the reusable denial recap pattern: denial is a family of price effects, not a single button."
     }
   ]
 }

@@ -5,9 +5,12 @@
   "intent_v1": "texture_high_card",
   "board_texture_v1": "high_card",
   "expected_action": "raise",
-  "acceptable_actions": ["call"],
+  "acceptable_actions": [
+    "call"
+  ],
   "why_v1": "High-card textures let strong value hands press before later cards create noise.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. High-card texture supports a value raise.",
-  "feedback_incorrect_v1": "Incorrect. Start from the high-card texture: with limited draw pressure and a clean value edge, this spot leans toward a raise before later cards muddy the story."
+  "feedback_incorrect_v1": "Incorrect. Start from the high-card texture: with limited draw pressure and a clean value edge, this spot leans toward a raise before later cards muddy the story.",
+  "feedback_acceptable_v1": "Acceptable. Call is playable, but raise fits this spot better because high-card textures let strong value hands press before later cards create noise."
 }

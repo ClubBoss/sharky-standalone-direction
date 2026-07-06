@@ -1222,6 +1222,7 @@ class DrillChainStepV1 {
     this.acceptableActions,
     this.acceptablePresetIds,
     this.whyV1,
+    this.feedbackAcceptableV1,
     this.feedbackCorrectV1,
     this.feedbackIncorrectV1,
   });
@@ -1254,6 +1255,7 @@ class DrillChainStepV1 {
   final List<String>? acceptableActions;
   final List<String>? acceptablePresetIds;
   final String? whyV1;
+  final String? feedbackAcceptableV1;
   final String? feedbackCorrectV1;
   final String? feedbackIncorrectV1;
 
@@ -1263,6 +1265,7 @@ class DrillChainStepV1 {
       availableActionsV1: availableActionsV1,
       expectedActionIdV1: expectedActionV1,
       acceptableActionsV1: acceptableActions,
+      feedbackAcceptableV1: feedbackAcceptableV1,
       feedbackCorrectV1: feedbackCorrectV1,
       feedbackIncorrectV1: feedbackIncorrectV1,
     );
@@ -1534,6 +1537,9 @@ List<DrillChainStepV1> _parseChainStepsV1(Object raw) {
         acceptableActions: acceptableActions,
         acceptablePresetIds: acceptablePresetIds,
         whyV1: _parseOptionalWhyV1(step['why_v1']),
+        feedbackAcceptableV1: _parseOptionalShortCopyV1(
+          step['feedback_acceptable_v1'],
+        ),
         feedbackCorrectV1: step['feedback_correct_v1'] as String?,
         feedbackIncorrectV1: step['feedback_incorrect_v1'] as String?,
       ),

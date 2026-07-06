@@ -7,5 +7,7 @@
   "expected": {
     "presetId": "one_third_pot"
   },
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. One third pot matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: One third pot is the smaller keep-the-price-easy size label in this World 1 preview."
 }

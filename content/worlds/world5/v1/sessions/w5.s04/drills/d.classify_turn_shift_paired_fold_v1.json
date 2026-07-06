@@ -5,9 +5,12 @@
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "paired",
   "expected_action": "fold",
-  "acceptable_actions": ["call"],
+  "acceptable_actions": [
+    "call"
+  ],
   "why_v1": "A paired turn can reduce clean improvement. Here that weaker path supports release, but a paired turn does not automatically mean fold.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, the paired turn shift supports a fold.",
-  "feedback_incorrect_v1": "Incorrect. Begin with the paired turn-shift cue and the weaker improvement path in this drill."
+  "feedback_incorrect_v1": "Incorrect. Begin with the paired turn-shift cue and the weaker improvement path in this drill.",
+  "feedback_acceptable_v1": "Acceptable. Call is playable, but fold fits this spot better because a paired turn can reduce clean improvement. Here that weaker path supports release, but a paired turn does not automatically mean fold."
 }

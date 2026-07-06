@@ -12,5 +12,6 @@
   "feedback_incorrect_v1": "Incorrect. A paired board and fair price keep this spot stable enough to continue instead of releasing too early.",
   "acceptable_actions": [
     "call"
-  ]
+  ],
+  "feedback_acceptable_v1": "Acceptable. Call is the source-approved line here because paired boards usually stay calmer, and a fair price with limited future-street risk supports continuing."
 }

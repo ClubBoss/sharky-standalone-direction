@@ -12,5 +12,6 @@
   "feedback_incorrect_v1": "Incorrect. A connected board, weak improvement path, and bad price make folding cleaner than paying for a risky river.",
   "acceptable_actions": [
     "fold"
-  ]
+  ],
+  "feedback_acceptable_v1": "Acceptable. Fold is the source-approved line here because a connected board that can keep changing on later streets punishes weak continues when the price is already bad."
 }

@@ -5,9 +5,12 @@
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "dry",
   "expected_action": "fold",
-  "acceptable_actions": ["call"],
+  "acceptable_actions": [
+    "call"
+  ],
   "why_v1": "When draw completion never arrives on a dry finish, continuing usually overstates how much pressure the board really supports.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. The dry missed-completion read points to a fold.",
-  "feedback_incorrect_v1": "Incorrect. Let the dry finish and missed improvement drive the choice."
+  "feedback_incorrect_v1": "Incorrect. Let the dry finish and missed improvement drive the choice.",
+  "feedback_acceptable_v1": "Acceptable. Call is playable, but fold fits this spot better because when draw completion never arrives on a dry finish, continuing usually overstates how much pressure the board really supports."
 }

@@ -6,5 +6,8 @@
   "expected": {
     "cardSlot": "p0"
   },
-  "error_class": "hole_card_slot_confusion"
+  "error_class": "hole_card_slot_confusion",
+  "why_v1": "Your left hole card is the target hand card in this table-orientation rep.",
+  "feedback_correct_v1": "Correct. Your left hole card is the target hand card in this table-orientation rep.",
+  "feedback_incorrect_v1": "Incorrect. Your left hole card is the target hand card in this table-orientation rep."
 }

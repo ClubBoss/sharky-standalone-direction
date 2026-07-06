@@ -12,5 +12,6 @@
   "feedback_incorrect_v1": "Incorrect. A dry rainbow board and cheap price leave enough room to continue before later streets add real pressure.",
   "acceptable_actions": [
     "call"
-  ]
+  ],
+  "feedback_acceptable_v1": "Acceptable. Call is the source-approved line here because a calmer board plus a cheap price makes continuing reasonable before future streets add real pressure."
 }

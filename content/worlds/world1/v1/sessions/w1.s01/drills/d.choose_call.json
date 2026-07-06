@@ -6,5 +6,8 @@
   "expected": {
     "actionId": "call"
   },
-  "error_class": "action_selection"
+  "error_class": "action_selection",
+  "why_v1": "Calling is the intended action in this starter hand-discipline rep.",
+  "feedback_correct_v1": "Correct. Call matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. This source cue points to call, not the other option."
 }

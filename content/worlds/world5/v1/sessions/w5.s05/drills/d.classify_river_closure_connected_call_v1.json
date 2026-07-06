@@ -5,9 +5,12 @@
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "connected",
   "expected_action": "call",
-  "acceptable_actions": ["fold"],
+  "acceptable_actions": [
+    "fold"
+  ],
   "why_v1": "A connected river can keep pressure live. Here the thin edge favors control, but connected rivers do not automatically mean call.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, the connected final river card supports a controlled call.",
-  "feedback_incorrect_v1": "Incorrect. Start from the final river card before deciding."
+  "feedback_incorrect_v1": "Incorrect. Start from the final river card before deciding.",
+  "feedback_acceptable_v1": "Acceptable. Fold is playable, but call fits this spot better because a connected river can keep pressure live. Here the thin edge favors control, but connected rivers do not automatically mean call."
 }

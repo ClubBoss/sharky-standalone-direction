@@ -6,5 +6,8 @@
   "expected": {
     "seatId": "S3"
   },
-  "error_class": "seat_id_confusion"
+  "error_class": "seat_id_confusion",
+  "why_v1": "Seat S3 is the target seat in this table-orientation rep.",
+  "feedback_correct_v1": "Correct. Seat S3 is the target seat in this table-orientation rep.",
+  "feedback_incorrect_v1": "Incorrect. Seat S3 is the target seat in this table-orientation rep."
 }

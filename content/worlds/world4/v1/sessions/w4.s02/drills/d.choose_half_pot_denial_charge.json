@@ -10,5 +10,8 @@
   "acceptable_preset_ids": [
     "pot"
   ],
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. Half pot matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: Half pot charges weak continues and draws while staying more controlled than a full-pot blast.",
+  "feedback_acceptable_v1": "Acceptable. Pot is playable, but half pot fits this spot better because half pot charges weak continues and draws while staying more controlled than a full-pot blast."
 }

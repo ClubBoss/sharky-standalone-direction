@@ -16,7 +16,8 @@
       "feedback_correct_v1": "Correct. One third pot is the light price-keeping preset.",
       "feedback_incorrect_v1": "Incorrect. This spot wants the lighter preset that still keeps the price comfortable for weaker continues.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "World 4 starts by matching the preset to the purpose, not by memorizing button names in isolation."
+      "why_v1": "World 4 starts by matching the preset to the purpose, not by memorizing button names in isolation.",
+      "feedback_acceptable_v1": "Acceptable. Half pot is playable, but one third pot fits this spot better because world 4 starts by matching the preset to the purpose, not by memorizing button names in isolation."
     },
     {
       "street": "flop",
@@ -28,7 +29,8 @@
       "feedback_correct_v1": "Correct. Half pot is the standard value size in this World 4 checkpoint frame.",
       "feedback_incorrect_v1": "Incorrect. This spot wants the value size that still keeps worse hands in, which points to half pot.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "Half pot is the clean value checkpoint size when you still want worse hands to continue."
+      "why_v1": "Half pot is the clean value checkpoint size when you still want worse hands to continue.",
+      "feedback_acceptable_v1": "Acceptable. One third pot is playable, but half pot fits this spot better because half pot is the clean value checkpoint size when you still want worse hands to continue."
     },
     {
       "street": "flop",
@@ -41,7 +43,8 @@
       "feedback_incorrect_v1": "Incorrect. This spot wants the size that applies the most immediate bluff pressure, which is pot.",
       "recap_v1": "World 4 purpose checkpoints should now feel ordered: lighter price keepers first, standard value in the middle, and the biggest immediate pressure size when the goal is strongest bluff pressure.",
       "error_class": "expected_action_mismatch",
-      "why_v1": "The first World 4 recap pattern is to connect each preset to the job it is actually trying to do."
+      "why_v1": "The first World 4 recap pattern is to connect each preset to the job it is actually trying to do.",
+      "feedback_acceptable_v1": "Acceptable. Half pot is playable, but pot fits this spot better because the first World 4 recap pattern is to connect each preset to the job it is actually trying to do."
     }
   ]
 }

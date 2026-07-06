@@ -5,9 +5,12 @@
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "wet",
   "expected_action": "call",
-  "acceptable_actions": ["fold"],
+  "acceptable_actions": [
+    "fold"
+  ],
   "why_v1": "Wet boards in position often reward control when pressure is not clean enough to force immediately.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In-position wet texture points to a call.",
-  "feedback_incorrect_v1": "Incorrect. Let the wet texture and control value lead the choice."
+  "feedback_incorrect_v1": "Incorrect. Let the wet texture and control value lead the choice.",
+  "feedback_acceptable_v1": "Acceptable. Fold is playable, but call fits this spot better because wet boards in position often reward control when pressure is not clean enough to force immediately."
 }

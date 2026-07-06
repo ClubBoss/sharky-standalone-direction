@@ -7,5 +7,7 @@
   "expected": {
     "presetId": "pot"
   },
-  "error_class": "bet_sizing_selection"
+  "error_class": "bet_sizing_selection",
+  "feedback_correct_v1": "Correct. Pot matches this source cue.",
+  "feedback_incorrect_v1": "Incorrect. Match the sizing purpose first: Pot is the largest pressure-size label in this World 1 preview."
 }
