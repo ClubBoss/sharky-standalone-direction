@@ -123,11 +123,14 @@ void main() {
     final routingReason = tester.widget<Text>(
       find.byKey(const Key('today_plan_routing_reason_v1')),
     );
-    expect(summaryTitle.data, 'Next route');
-    expect(summaryValue.data, 'World 6 sessions');
+    expect(summaryTitle.data, 'What changes now');
+    expect(
+      summaryValue.data,
+      'Build Range Thinking from board-aware pressure and likely hand groups',
+    );
     expect(
       routingReason.data,
-      'Why: Your next learning route is World 6 sessions.',
+      'Why: World 5 trained Board Awareness before action. World 6 now introduces Range Thinking by connecting board-aware pressure to likely hand groups.',
     );
     expect(tester.takeException(), isNull);
   });
