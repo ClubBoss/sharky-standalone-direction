@@ -16,4 +16,5 @@ World 1 starts when learners stop clicking actions in isolation.
 Position changes how safely a hand can continue,
 so the first habit is to read where you are seated before deciding whether a start is clean enough to play.
 A few closing reps introduce common size labels only as vocabulary preview.
+Price means what you must pay to continue.
 The full mainline home for bet-sizing purpose and price tradeoffs is World 4.

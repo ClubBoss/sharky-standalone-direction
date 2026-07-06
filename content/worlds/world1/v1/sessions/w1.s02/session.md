@@ -5,6 +5,8 @@ Continue the World 1 learner-facing expansion by teaching blind and button basic
 
 ## Scenario
 Each rep compares simple blind and button spots and asks whether the hand should continue or release from that seat.
+The dealer button is the seat marked BTN.
+Seat labels stay short: UTG acts first preflop, HJ and CO are middle-to-late seats, BTN is the button, and SB/BB are the blinds.
 The goal is to feel that late position usually gives cleaner options,
 while the blinds often demand more caution and simpler discipline.
 

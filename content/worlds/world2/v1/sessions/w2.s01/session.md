@@ -6,6 +6,7 @@ Build the first World 2 bridge by reading who wins from visible hand and board t
 ## Scenario
 Each rep shows a simple showdown spot with visible hero cards, villain cards, and board cards.
 You succeed by comparing what is actually made on the table before using any later World 2 decision language.
+Price means what calling costs before you continue.
 
 ## Decision
 Read the board and both hands first, then identify who wins or whether the board plays.

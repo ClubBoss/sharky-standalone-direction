@@ -698,7 +698,7 @@ const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
         learningLabel: 'You learned how position changes what a hand can do.',
         previewLine:
             'World 4 starts with a simple question: why did that bet '
-            'happen?',
+            'happen, and what price did it create?',
       ),
       4: _WorldCompletionMetaV1(
         learningLabel:
@@ -6653,9 +6653,7 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 ],
                 Expanded(
                   child: Text(
-                    _hasEarnedProof
-                        ? receipt!.lines.first
-                        : proofFallbackLabel,
+                    _hasEarnedProof ? receipt!.lines.first : proofFallbackLabel,
                     key: Key('${keyPrefix}_proof_line'),
                     maxLines: 2,
                     overflow: TextOverflow.fade,
