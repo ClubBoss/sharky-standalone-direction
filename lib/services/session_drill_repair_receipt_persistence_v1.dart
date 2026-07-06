@@ -94,29 +94,31 @@ class SessionDrillRetainedResultEventV1 {
       result: _stringValueV1(raw['result']),
       context: _stringValueV1(raw['context']),
       sourceFamily: _stringValueV1(raw['sourceFamily']),
-      isRetainedForMasteryEvidence:
-          raw['isRetainedForMasteryEvidence'] == true,
+      isRetainedForMasteryEvidence: raw['isRetainedForMasteryEvidence'] == true,
       sourceReceiptKey: _stringValueV1(raw['sourceReceiptKey']),
     );
     if (<String>[
-      event.eventId,
-      event.worldId,
-      event.sourceSessionId,
-      event.targetDrillId,
-      event.signalFamilyId,
-      event.learnerFacingClueName,
-      event.targetKind,
-      event.selectedActionId,
-      event.expectedActionId,
-      event.result,
-      event.context,
-      event.sourceFamily,
-      event.sourceReceiptKey,
-    ].any((value) => value.isEmpty) ||
+          event.eventId,
+          event.worldId,
+          event.sourceSessionId,
+          event.targetDrillId,
+          event.signalFamilyId,
+          event.learnerFacingClueName,
+          event.targetKind,
+          event.selectedActionId,
+          event.expectedActionId,
+          event.result,
+          event.context,
+          event.sourceFamily,
+          event.sourceReceiptKey,
+        ].any((value) => value.isEmpty) ||
         !<String>{'success', 'miss'}.contains(event.result) ||
         event.context != 'recheck' ||
-        !<String>{'w5_session_drill', 'w6_session_drill'}
-            .contains(event.sourceFamily) ||
+        !<String>{
+          'w4_session_drill',
+          'w5_session_drill',
+          'w6_session_drill',
+        }.contains(event.sourceFamily) ||
         !event.isRetainedForMasteryEvidence) {
       return null;
     }
@@ -258,29 +260,34 @@ persistSessionDrillRetainedResultIfEligibleV1({
   final initialTargetId = initialDrillId?.trim() ?? '';
   final selectedActionId = chosenActionId.trim().toLowerCase();
   final expectedActionId =
-      currentDrill.spec.expectedActionV1?.trim().toLowerCase() ?? '';
+      (currentDrill.spec.expected.actionId ??
+              currentDrill.spec.expectedActionV1)
+          ?.trim()
+          .toLowerCase() ??
+      '';
   if (!isRecheckLaunchV1 ||
-      (sessionId != 'w5.s01' && sessionId != 'w6.s01') ||
       targetDrillId.isEmpty ||
       targetDrillId != initialTargetId ||
       selectedActionId.isEmpty ||
       expectedActionId.isEmpty) {
     return null;
   }
-  final receipt = (await receiptStore.loadCandidates()).cast<
-      SessionDrillRepairReceiptCandidateV1?>().firstWhere(
+  final receipt = (await receiptStore.loadCandidates())
+      .cast<SessionDrillRepairReceiptCandidateV1?>()
+      .firstWhere(
         (candidate) =>
             candidate?.targetSessionId == sessionId &&
-            candidate?.targetDrillId == targetDrillId &&
-            candidate?.sourceWorldId ==
-                (sessionId == 'w5.s01' ? 'world_5' : 'world_6'),
+            candidate?.targetDrillId == targetDrillId,
         orElse: () => null,
       );
   if (receipt == null) return null;
+  final sourceFamily = _retainedSourceFamilyForReceiptV1(receipt);
+  if (sourceFamily == null) return null;
   final sourceReceiptKey =
       '${receipt.sourceSessionId}:${receipt.sourceDrillId}';
   final existing = await resultStore.loadEvents();
-  final attemptNumber = existing
+  final attemptNumber =
+      existing
           .where(
             (event) =>
                 event.sourceReceiptKey == sourceReceiptKey &&
@@ -293,7 +300,7 @@ persistSessionDrillRetainedResultIfEligibleV1({
     schemaVersion: 1,
     eventId: '$sourceReceiptKey:$targetDrillId:recheck:$attemptNumber',
     worldId: receipt.sourceWorldId,
-    sourceSessionId: sessionId,
+    sourceSessionId: receipt.sourceSessionId,
     targetDrillId: targetDrillId,
     skillAtomId: null,
     signalFamilyId: receipt.missedSignalId,
@@ -303,15 +310,76 @@ persistSessionDrillRetainedResultIfEligibleV1({
     expectedActionId: expectedActionId,
     result: evaluation.isPass ? 'success' : 'miss',
     context: 'recheck',
-    sourceFamily: sessionId == 'w5.s01'
-        ? 'w5_session_drill'
-        : 'w6_session_drill',
+    sourceFamily: sourceFamily,
     isRetainedForMasteryEvidence: true,
     sourceReceiptKey: sourceReceiptKey,
   );
   await resultStore.appendEvent(event);
   return event;
 }
+
+String? _retainedSourceFamilyForReceiptV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  final sourceWorldId = receipt.sourceWorldId.trim();
+  final sourceSessionId = receipt.sourceSessionId.trim();
+  final targetSessionId = receipt.targetSessionId.trim();
+  final drillFamilyId = receipt.drillFamilyId.trim();
+  final missedSignalId = receipt.missedSignalId.trim();
+  final mappingKey = _retainedReceiptMappingKeyV1(receipt);
+  if (sourceWorldId == 'world_4' &&
+      sourceSessionId == 'w4.s02' &&
+      targetSessionId == 'w4.s06' &&
+      drillFamilyId == 'denial_action_choice_v1' &&
+      _reviewedDenialRetainedKeysV1.contains(mappingKey)) {
+    return 'w4_session_drill';
+  }
+  if (sourceWorldId == 'world_5' &&
+      drillFamilyId == 'board_texture_classifier_v1' &&
+      _reviewedBoardTextureRetainedKeysV1.contains(mappingKey)) {
+    return 'w5_session_drill';
+  }
+  final isW6BoardFit =
+      sourceSessionId == 'w6.s01' &&
+      targetSessionId == 'w6.s01' &&
+      drillFamilyId == 'range_bucket_board_fit_classifier_v1' &&
+      missedSignalId.startsWith('range_bucket_');
+  final isW6RangeWidth =
+      sourceSessionId == 'w6.s02' &&
+      targetSessionId == 'w6.s02' &&
+      drillFamilyId == 'range_width_classifier_v1' &&
+      _reviewedRangeWidthRetainedKeysV1.contains(mappingKey);
+  if (sourceWorldId == 'world_6' && (isW6BoardFit || isW6RangeWidth)) {
+    return 'w6_session_drill';
+  }
+  return null;
+}
+
+String _retainedReceiptMappingKeyV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) =>
+    '${receipt.sourceSessionId.trim()}:${receipt.sourceDrillId.trim()}->'
+    '${receipt.targetSessionId.trim()}:${receipt.targetDrillId.trim()}:'
+    '${receipt.missedSignalId.trim()}';
+
+const Set<String> _reviewedBoardTextureRetainedKeysV1 = <String>{
+  'w5.s01:classify_texture_intro_dry_raise_v1->w5.s01:classify_texture_intro_dry_raise_v1:board_texture_dry',
+  'w5.s01:classify_texture_intro_wet_call_v1->w5.s01:classify_texture_intro_wet_call_v1:board_texture_wet',
+  'w5.s01:classify_texture_intro_paired_fold_v1->w5.s01:classify_texture_intro_paired_fold_v1:board_texture_paired',
+  'w5.s06:classify_in_position_dry_raise_v1->w5.s10:classify_texture_synthesis_dry_raise_v1:board_texture_dry',
+  'w5.s10:classify_texture_synthesis_dry_raise_v1->w5.s06:classify_in_position_dry_raise_v1:board_texture_dry',
+};
+
+const Set<String> _reviewedRangeWidthRetainedKeysV1 = <String>{
+  'w6.s02:classify_button_range_wider->w6.s02:classify_late_position_more_hands:range_width_wider',
+  'w6.s02:classify_late_position_more_hands->w6.s02:classify_button_range_wider:range_width_wider',
+  'w6.s02:classify_continue_range_narrower->w6.s02:classify_big_blind_continue_narrower:range_width_narrower',
+  'w6.s02:classify_big_blind_continue_narrower->w6.s02:classify_continue_range_narrower:range_width_narrower',
+};
+
+const Set<String> _reviewedDenialRetainedKeysV1 = <String>{
+  'w4.s02:choose_raise_denial->w4.s06:choose_raise_repeat:denial_equity_charge',
+};
 
 bool _sameSourceDrillV1(
   SessionDrillRepairReceiptCandidateV1 a,

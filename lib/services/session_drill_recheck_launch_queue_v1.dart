@@ -80,10 +80,30 @@ class SessionDrillRecheckLaunchQueueV1 {
   }
 
   Future<List<SessionDrillRecheckLaunchQueueItemV1>>
+  loadRangeWidthLaunchQueueItems() async {
+    final candidates = await consumer.loadRangeWidthRecheckCandidates();
+    return candidates
+        .map(buildSessionDrillRecheckLaunchQueueItemV1)
+        .whereType<SessionDrillRecheckLaunchQueueItemV1>()
+        .toList(growable: false);
+  }
+
+  Future<List<SessionDrillRecheckLaunchQueueItemV1>>
+  loadDenialLaunchQueueItems() async {
+    final candidates = await consumer.loadDenialRecheckCandidates();
+    return candidates
+        .map(buildSessionDrillRecheckLaunchQueueItemV1)
+        .whereType<SessionDrillRecheckLaunchQueueItemV1>()
+        .toList(growable: false);
+  }
+
+  Future<List<SessionDrillRecheckLaunchQueueItemV1>>
   loadSupportedLaunchQueueItems() async {
     final items = <SessionDrillRecheckLaunchQueueItemV1>[
       ...await loadRangeBucketLaunchQueueItems(),
       ...await loadBoardTextureLaunchQueueItems(),
+      ...await loadRangeWidthLaunchQueueItems(),
+      ...await loadDenialLaunchQueueItems(),
     ];
     final seenJobIds = <String>{};
     return <SessionDrillRecheckLaunchQueueItemV1>[
@@ -144,6 +164,7 @@ bool _isSupportedRepairFamilyCandidateV1(
   final targetSessionId = candidate.targetSessionId.trim();
   final drillFamilyId = candidate.drillFamilyId.trim();
   final missedSignalId = candidate.missedSignalId.trim();
+  final mappingKey = _candidateMappingKeyV1(candidate);
   final isRangeBucket =
       sourceWorldId == 'world_6' &&
       sourceSessionId == 'w6.s01' &&
@@ -152,12 +173,46 @@ bool _isSupportedRepairFamilyCandidateV1(
       missedSignalId.startsWith('range_bucket_');
   final isBoardTexture =
       sourceWorldId == 'world_5' &&
-      sourceSessionId == 'w5.s01' &&
-      targetSessionId == 'w5.s01' &&
       drillFamilyId == 'board_texture_classifier_v1' &&
-      missedSignalId.startsWith('board_texture_');
-  return isRangeBucket || isBoardTexture;
+      _reviewedBoardTextureCandidateKeysV1.contains(mappingKey);
+  final isRangeWidth =
+      sourceWorldId == 'world_6' &&
+      sourceSessionId == 'w6.s02' &&
+      targetSessionId == 'w6.s02' &&
+      drillFamilyId == 'range_width_classifier_v1' &&
+      _reviewedRangeWidthCandidateKeysV1.contains(mappingKey);
+  final isDenial =
+      sourceWorldId == 'world_4' &&
+      sourceSessionId == 'w4.s02' &&
+      targetSessionId == 'w4.s06' &&
+      drillFamilyId == 'denial_action_choice_v1' &&
+      _reviewedDenialCandidateKeysV1.contains(mappingKey);
+  return isRangeBucket || isBoardTexture || isRangeWidth || isDenial;
 }
+
+String _candidateMappingKeyV1(SessionDrillRepairRecheckCandidateV1 candidate) =>
+    '${candidate.sourceSessionId.trim()}:${candidate.sourceDrillId.trim()}->'
+    '${candidate.targetSessionId.trim()}:${candidate.targetDrillId.trim()}:'
+    '${candidate.missedSignalId.trim()}';
+
+const Set<String> _reviewedBoardTextureCandidateKeysV1 = <String>{
+  'w5.s01:classify_texture_intro_dry_raise_v1->w5.s01:classify_texture_intro_dry_raise_v1:board_texture_dry',
+  'w5.s01:classify_texture_intro_wet_call_v1->w5.s01:classify_texture_intro_wet_call_v1:board_texture_wet',
+  'w5.s01:classify_texture_intro_paired_fold_v1->w5.s01:classify_texture_intro_paired_fold_v1:board_texture_paired',
+  'w5.s06:classify_in_position_dry_raise_v1->w5.s10:classify_texture_synthesis_dry_raise_v1:board_texture_dry',
+  'w5.s10:classify_texture_synthesis_dry_raise_v1->w5.s06:classify_in_position_dry_raise_v1:board_texture_dry',
+};
+
+const Set<String> _reviewedRangeWidthCandidateKeysV1 = <String>{
+  'w6.s02:classify_button_range_wider->w6.s02:classify_late_position_more_hands:range_width_wider',
+  'w6.s02:classify_late_position_more_hands->w6.s02:classify_button_range_wider:range_width_wider',
+  'w6.s02:classify_continue_range_narrower->w6.s02:classify_big_blind_continue_narrower:range_width_narrower',
+  'w6.s02:classify_big_blind_continue_narrower->w6.s02:classify_continue_range_narrower:range_width_narrower',
+};
+
+const Set<String> _reviewedDenialCandidateKeysV1 = <String>{
+  'w4.s02:choose_raise_denial->w4.s06:choose_raise_repeat:denial_equity_charge',
+};
 
 const Set<String> _supportedTargetKindsV1 = <String>{
   'exact_replay',

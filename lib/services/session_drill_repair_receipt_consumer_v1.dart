@@ -69,6 +69,16 @@ class SessionDrillRepairReceiptConsumerV1 {
     return _loadCandidatesWhere(buildBoardTextureRepairRecheckCandidateV1);
   }
 
+  Future<List<SessionDrillRepairRecheckCandidateV1>>
+  loadRangeWidthRecheckCandidates() async {
+    return _loadCandidatesWhere(buildRangeWidthRepairRecheckCandidateV1);
+  }
+
+  Future<List<SessionDrillRepairRecheckCandidateV1>>
+  loadDenialRecheckCandidates() async {
+    return _loadCandidatesWhere(buildDenialRepairRecheckCandidateV1);
+  }
+
   Future<List<SessionDrillRepairRecheckCandidateV1>> _loadCandidatesWhere(
     SessionDrillRepairRecheckCandidateV1? Function(
       SessionDrillRepairReceiptCandidateV1 receipt,
@@ -114,6 +124,24 @@ SessionDrillRepairRecheckCandidateV1? buildBoardTextureRepairRecheckCandidateV1(
   SessionDrillRepairReceiptCandidateV1 receipt,
 ) {
   if (!_isSupportedBoardTextureReceiptV1(receipt)) {
+    return null;
+  }
+  return _buildRecheckCandidateV1(receipt);
+}
+
+SessionDrillRepairRecheckCandidateV1? buildRangeWidthRepairRecheckCandidateV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  if (!_isSupportedRangeWidthReceiptV1(receipt)) {
+    return null;
+  }
+  return _buildRecheckCandidateV1(receipt);
+}
+
+SessionDrillRepairRecheckCandidateV1? buildDenialRepairRecheckCandidateV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  if (!_isSupportedDenialReceiptV1(receipt)) {
     return null;
   }
   return _buildRecheckCandidateV1(receipt);
@@ -172,12 +200,60 @@ bool _isSupportedBoardTextureReceiptV1(
 ) {
   return receipt.schemaVersion == 1 &&
       receipt.sourceWorldId.trim() == 'world_5' &&
-      receipt.sourceSessionId.trim() == 'w5.s01' &&
-      receipt.targetSessionId.trim() == 'w5.s01' &&
       receipt.drillFamilyId.trim() == 'board_texture_classifier_v1' &&
-      receipt.missedSignalId.trim().startsWith('board_texture_') &&
+      _reviewedBoardTextureReceiptKeysV1.contains(
+        _receiptMappingKeyV1(receipt),
+      ) &&
       _supportedTargetKindsV1.contains(receipt.targetKind.trim());
 }
+
+bool _isSupportedRangeWidthReceiptV1(
+  SessionDrillRepairReceiptCandidateV1 receipt,
+) {
+  return receipt.schemaVersion == 1 &&
+      receipt.sourceWorldId.trim() == 'world_6' &&
+      receipt.sourceSessionId.trim() == 'w6.s02' &&
+      receipt.targetSessionId.trim() == 'w6.s02' &&
+      receipt.drillFamilyId.trim() == 'range_width_classifier_v1' &&
+      _reviewedRangeWidthReceiptKeysV1.contains(
+        _receiptMappingKeyV1(receipt),
+      ) &&
+      receipt.targetKind.trim() == 'same_signal_recheck';
+}
+
+bool _isSupportedDenialReceiptV1(SessionDrillRepairReceiptCandidateV1 receipt) {
+  return receipt.schemaVersion == 1 &&
+      receipt.sourceWorldId.trim() == 'world_4' &&
+      receipt.sourceSessionId.trim() == 'w4.s02' &&
+      receipt.targetSessionId.trim() == 'w4.s06' &&
+      receipt.drillFamilyId.trim() == 'denial_action_choice_v1' &&
+      _reviewedDenialReceiptKeysV1.contains(_receiptMappingKeyV1(receipt)) &&
+      receipt.targetKind.trim() == 'same_signal_recheck';
+}
+
+String _receiptMappingKeyV1(SessionDrillRepairReceiptCandidateV1 receipt) =>
+    '${receipt.sourceSessionId.trim()}:${receipt.sourceDrillId.trim()}->'
+    '${receipt.targetSessionId.trim()}:${receipt.targetDrillId.trim()}:'
+    '${receipt.missedSignalId.trim()}';
+
+const Set<String> _reviewedBoardTextureReceiptKeysV1 = <String>{
+  'w5.s01:classify_texture_intro_dry_raise_v1->w5.s01:classify_texture_intro_dry_raise_v1:board_texture_dry',
+  'w5.s01:classify_texture_intro_wet_call_v1->w5.s01:classify_texture_intro_wet_call_v1:board_texture_wet',
+  'w5.s01:classify_texture_intro_paired_fold_v1->w5.s01:classify_texture_intro_paired_fold_v1:board_texture_paired',
+  'w5.s06:classify_in_position_dry_raise_v1->w5.s10:classify_texture_synthesis_dry_raise_v1:board_texture_dry',
+  'w5.s10:classify_texture_synthesis_dry_raise_v1->w5.s06:classify_in_position_dry_raise_v1:board_texture_dry',
+};
+
+const Set<String> _reviewedRangeWidthReceiptKeysV1 = <String>{
+  'w6.s02:classify_button_range_wider->w6.s02:classify_late_position_more_hands:range_width_wider',
+  'w6.s02:classify_late_position_more_hands->w6.s02:classify_button_range_wider:range_width_wider',
+  'w6.s02:classify_continue_range_narrower->w6.s02:classify_big_blind_continue_narrower:range_width_narrower',
+  'w6.s02:classify_big_blind_continue_narrower->w6.s02:classify_continue_range_narrower:range_width_narrower',
+};
+
+const Set<String> _reviewedDenialReceiptKeysV1 = <String>{
+  'w4.s02:choose_raise_denial->w4.s06:choose_raise_repeat:denial_equity_charge',
+};
 
 const Set<String> _supportedTargetKindsV1 = <String>{
   'exact_replay',

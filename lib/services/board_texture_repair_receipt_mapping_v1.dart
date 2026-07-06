@@ -7,8 +7,8 @@ export 'package:poker_analyzer/services/session_drill_repair_receipt_adapter_v1.
 
 /// Creates provenance for authored W5 board-texture misses only.
 ///
-/// This is intentionally service-level mapping. It does not add a visible
-/// Review consumer, route owner, telemetry schema, or content expansion.
+/// This remains service-level mapping and reuses the existing Review consumer
+/// and session-drill route without telemetry, schema, or content expansion.
 SessionDrillRepairReceiptCandidateV1?
 buildBoardTextureRepairReceiptCandidateV1({
   required String sourceSessionId,
@@ -22,17 +22,17 @@ buildBoardTextureRepairReceiptCandidateV1({
   final actionId = chosenActionId.trim().toLowerCase();
   final expectedActionId = spec.expectedActionV1?.trim().toLowerCase() ?? '';
   final texture = spec.boardTextureV1?.trim().toLowerCase() ?? '';
-  final targetDrillId = _boardTextureRepairTargetBySourceDrillIdV1[drillId];
+  final target = _boardTextureRepairTargetBySourceV1['$sessionId:$drillId'];
 
-  if (sessionId != 'w5.s01' ||
-      drillId.isEmpty ||
+  if (drillId.isEmpty ||
       drillId != spec.id.trim() ||
       spec.kind != DrillKindV1.boardTextureClassifier ||
       evaluation.isPass ||
       actionId.isEmpty ||
       expectedActionId.isEmpty ||
       texture.isEmpty ||
-      targetDrillId == null) {
+      target == null ||
+      target.texture != texture) {
     return null;
   }
 
@@ -46,21 +46,49 @@ buildBoardTextureRepairReceiptCandidateV1({
     missedSignalLabel: _boardTextureSignalLabelV1(texture),
     chosenActionId: actionId,
     expectedActionId: expectedActionId,
-    targetSessionId: sessionId,
-    targetDrillId: targetDrillId,
-    targetKind: targetDrillId == drillId
+    targetSessionId: target.targetSessionId,
+    targetDrillId: target.targetDrillId,
+    targetKind:
+        target.targetSessionId == sessionId && target.targetDrillId == drillId
         ? 'exact_replay'
         : 'same_signal_recheck',
     errorClass: evaluation.errorClass?.trim() ?? 'board_texture_miss',
   );
 }
 
-const Map<String, String>
-_boardTextureRepairTargetBySourceDrillIdV1 = <String, String>{
-  'classify_texture_intro_dry_raise_v1': 'classify_texture_intro_dry_raise_v1',
-  'classify_texture_intro_wet_call_v1': 'classify_texture_intro_wet_call_v1',
-  'classify_texture_intro_paired_fold_v1':
-      'classify_texture_intro_paired_fold_v1',
+typedef _BoardTextureRepairTargetV1 = ({
+  String targetSessionId,
+  String targetDrillId,
+  String texture,
+});
+
+const Map<String, _BoardTextureRepairTargetV1>
+_boardTextureRepairTargetBySourceV1 = <String, _BoardTextureRepairTargetV1>{
+  'w5.s01:classify_texture_intro_dry_raise_v1': (
+    targetSessionId: 'w5.s01',
+    targetDrillId: 'classify_texture_intro_dry_raise_v1',
+    texture: 'dry',
+  ),
+  'w5.s01:classify_texture_intro_wet_call_v1': (
+    targetSessionId: 'w5.s01',
+    targetDrillId: 'classify_texture_intro_wet_call_v1',
+    texture: 'wet',
+  ),
+  'w5.s01:classify_texture_intro_paired_fold_v1': (
+    targetSessionId: 'w5.s01',
+    targetDrillId: 'classify_texture_intro_paired_fold_v1',
+    texture: 'paired',
+  ),
+  'w5.s06:classify_in_position_dry_raise_v1': (
+    targetSessionId: 'w5.s10',
+    targetDrillId: 'classify_texture_synthesis_dry_raise_v1',
+    texture: 'dry',
+  ),
+  'w5.s10:classify_texture_synthesis_dry_raise_v1': (
+    targetSessionId: 'w5.s06',
+    targetDrillId: 'classify_in_position_dry_raise_v1',
+    texture: 'dry',
+  ),
 };
 
 String _boardTextureSignalLabelV1(String texture) {
