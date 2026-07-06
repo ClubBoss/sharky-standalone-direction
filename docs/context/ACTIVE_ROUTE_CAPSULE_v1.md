@@ -1,26 +1,38 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-06.
-Verified branch state: Stage 1B Waves A-D are fast-forward integrated on
-`main`; the integrated product HEAD before this capsule refresh is
-`e467090960d41e2f128655c417f56ff33fe19d70`.
-Current active task: `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate`.
-The gate has not started. W7+ expansion and visual, mascot, and motion work are
+Freshness date: 2026-07-07.
+Verified branch state: the W1-W6 Final Learner-Truth Audit ran and its grouped
+repair program's Waves 1-3 are closed and fast-forward integrated; the
+integrated product HEAD before this capsule refresh is
+`fbe670f06fedc3fcb7a5e9f76144bf84edd20f87`.
+Current active task: repository hygiene + context-cost-reduction pass (this
+capsule refresh). W7+ expansion and visual, mascot, and motion work remain
 deferred while this route is active.
 Verified active route artifact:
-`docs/_reviews/stage_1b_wave_d_minimum_same_signal_repair_v1.md`.
+`docs/_reviews/w1_w6_repair_wave3_authority_drift_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
 
-Stage 1B is integrated with state
-`stage_1b_w4_w6_repairs_complete_pending_final_learner_truth_gate`. Its W4
-denial, W5 dry-texture, and W6 board-fit/range-width repair slices are closed.
-The next admitted task is the consolidated W1-W6 final learner-truth audit and
-AI-simulated QA gate; this refresh records that handoff but does not start the
-audit. No W7+ route expansion, visual direction, asset replacement, mascot,
-motion, telemetry, Modern Table, or monetization work is activated.
+The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
+closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
+repair program in `docs/_reviews/w1_w6_grouped_repair_program_v1.md` and the
+ledger in `docs/_reviews/w1_w6_final_repair_ledger_v1.md`. Waves 1-3 of that
+program are closed:
+
+- Wave 1 - beginner vocabulary/order + first-table assessment validity: CLOSED
+  (`docs/_reviews/w1_w6_repair_wave1_beginner_truth_v1.md`).
+- Wave 2 - source-owned feedback completeness: CLOSED
+  (`docs/_reviews/w1_w6_repair_wave2_feedback_completeness_v1.md`).
+- Wave 3 - active authority drift (W3.s10 / W5 index): CLOSED
+  (`docs/_reviews/w1_w6_repair_wave3_authority_drift_v1.md`).
+
+Next route: finish repository hygiene / integration-push, then Wave 4
+(prompt/table structured-context and mobile actionability) per the grouped
+repair program. Wave 4 is not opened by this refresh. No W7+ route expansion,
+visual direction, asset replacement, mascot, motion, telemetry, Modern Table,
+or monetization work is activated.
 
 ## Prior Visual and Phase Closure Record
 

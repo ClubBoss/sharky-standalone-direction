@@ -1,11 +1,12 @@
 # Learning Repair Capsule v1
 
 Status: ACTIVE learning/repair capsule.
-Freshness date: 2026-07-06.
-Verified product HEAD: `e467090960d41e2f128655c417f56ff33fe19d70`
-(integrated Stage 1B product state before this capsule refresh).
+Freshness date: 2026-07-07.
+Verified product HEAD: `fbe670f06fedc3fcb7a5e9f76144bf84edd20f87`
+(W1-W6 grouped repair program Waves 1-3 closed, integrated before this
+capsule refresh).
 Verified active route artifact:
-`docs/_reviews/stage_1b_wave_d_minimum_same_signal_repair_v1.md`.
+`docs/_reviews/w1_w6_repair_wave3_authority_drift_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -32,9 +33,12 @@ evidence and authorization.
 
 Receipts and retained results provide deterministic source, choice, expected
 answer, signal, family, target, and outcome provenance. Per-decision telemetry
-and time-to-decision are not available and must not be inferred. The next
-admitted task is `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate`; it
-has not started. W7+ repair expansion remains closed.
+and time-to-decision are not available and must not be inferred. The
+`W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate` closed with
+`w1_w6_final_gate_repair_program_ready`; its grouped repair program Waves 1-3
+(beginner truth, feedback completeness, authority drift) are closed. Wave 4
+(prompt/table structured-context and mobile actionability) is the recommended
+next wave and is not yet opened. W7+ repair expansion remains closed.
 
 ## Phase 7 Content Depth Gate
 

@@ -1,10 +1,11 @@
 # Worktree Evidence Capsule v1
 
 Status: ACTIVE worktree/evidence capsule.
-Freshness date: 2026-07-06.
-Verified product HEAD: `e467090960d41e2f128655c417f56ff33fe19d70`
-(integrated Stage 1B product state before this capsule refresh).
-Verified active task: `Stage 1B Integration + Context Capsule Refresh v1`.
+Freshness date: 2026-07-07.
+Verified product HEAD: `fbe670f06fedc3fcb7a5e9f76144bf84edd20f87`
+(W1-W6 grouped repair program Waves 1-3 closed, integrated before this
+capsule refresh).
+Verified active task: `Repository Hygiene + Context Cost Reduction v1`.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
