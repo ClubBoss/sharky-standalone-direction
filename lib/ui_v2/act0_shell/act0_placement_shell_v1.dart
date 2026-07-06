@@ -851,7 +851,7 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                   _placementCopyV1(
                     context,
                     en: 'Sharky Poker',
-                    ru: 'Sharky Poker',
+                    ru: 'Sharky Покер',
                   ),
                   style: Act0ShellTokensV1.screenTitle.copyWith(
                     fontSize: 28,

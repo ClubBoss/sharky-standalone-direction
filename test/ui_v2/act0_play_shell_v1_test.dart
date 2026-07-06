@@ -411,7 +411,9 @@ void main() {
       expect(
         find.descendant(
           of: queue,
-          matching: find.text('Run one quick rep while the clue is fresh.'),
+          matching: find.text(
+            'Before choosing, check whether a bet is in front of you.',
+          ),
         ),
         findsOneWidget,
       );
@@ -443,7 +445,9 @@ void main() {
       expect(
         find.descendant(
           of: history,
-          matching: find.text('Run one quick rep while the clue is fresh.'),
+          matching: find.text(
+            'Before choosing, check whether a bet is in front of you.',
+          ),
         ),
         findsNothing,
       );

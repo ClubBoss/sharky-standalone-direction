@@ -5,7 +5,7 @@ void main() {
   test('all campaign followup packs satisfy invariants', () {
     final followupIds = campaignFollowupPackIdsV1();
 
-    expect(followupIds.length, 30);
+    expect(followupIds.length, 36);
 
     for (final packId in followupIds) {
       expect(

@@ -60,3 +60,51 @@ The canonical Tier0 set is still red, and the W1 foundations guard still has
 31 unresolved failures. The remaining failures require root-cause resolution
 against current Act0, campaign, RU/localization, and archived-runner contract
 owners before the Wave 4 admission set can be trusted.
+
+## Tier0 Root-Cause Repair Addendum - Wave 4 Admission Core
+
+Branch:
+`codex/tier0-root-cause-repair-wave4-admission-core-v1`
+
+Parent branch:
+`codex/baseline-guard-debt-wave4-admission-v1`
+
+Required parent HEAD:
+`c597ca1ab76a3f2a0cb9ea695112fffccb052d19`
+
+Status:
+`tier0_root_cause_repaired_wave4_admission_core_still_blocked_by_act0_preview_backlog`
+
+This addendum covers the canonical Tier0 root-cause pass requested after the
+baseline guard debt branch. The pass did not start Wave 4 and did not attempt
+the known World 1 foundations or Modern Table behavioral backlogs.
+
+| Root-cause group | Initial evidence | Repair | Current evidence | Wave 4 admission result |
+| --- | ---: | --- | ---: | --- |
+| Act0 normalized W4-W6 route contract | stale preview assertions still expected deprecated W4 Preflop, W5 Bet Purpose, W6 Board Awareness ordering | Aligned the Act0 preview source-contract tests to the normalized SSOT/runtime order: W4 Bet Purpose / Price, W5 Board Awareness, W6 Range Thinking. | focused normalized-route checks pass | Closed for this root-cause group. |
+| Act0 W7 locked scaffold structure | `range_thinking_lite_combo_density` ended on a drill task | Added one locked review recap task to the generated W7 visible-card lesson. | integrity-matrix focused check passes | Closed for this root-cause group. |
+| RU localization residue | `act0_ru_surface_no_unapproved_latin_test.dart` failed on `Learn`, `Volume`, W-status English, and `Poker` residue | Translated the visible RU residues while preserving allowed `Sharky` brand token. | `act0_ru_surface_no_unapproved_latin_test.dart` passes | Closed for this root-cause group. |
+| Campaign follow-up registry invariant | follow-up invariant expected 30 packs while current registry exposes 36 | Updated the invariant to current registry truth while preserving per-pack hand-count and consequence checks. | `campaign_followup_pack_registry_invariants_test.dart` passes | Closed for this root-cause group. |
+| Practice active-repair copy contract | selected Tier0 play shell expected stale hard-coded active-repair phrase | Aligned the test to the shared Sharky coach phrase contract used by the Play surface. | `act0_play_shell_v1_test.dart` passes | Closed for this root-cause group. |
+
+Selected Tier0 evidence after repair:
+
+- Green individually: `test/ui_v2/act0_play_shell_v1_test.dart`,
+  `test/ui_v2/act0_en_alpha_residue_guard_test.dart`,
+  `test/ui_v2/act0_ru_surface_no_unapproved_latin_test.dart`,
+  `test/guards/campaign_pack_registry_invariants_test.dart`,
+  `test/guards/campaign_followup_pack_registry_invariants_test.dart`,
+  `test/ui_v2/act0_shell_state_v1_feedback_test.dart`.
+- Focused Act0 preview source-contract checks for the repaired W4-W7 and RU
+  fallback cases pass.
+- Full selected seven-file run remains red because
+  `test/ui_v2/act0_shell_preview_screen_v1_test.dart` still contains broad
+  behavioral/copy/widget errors outside this admitted repair lane:
+  `602 success / 128 error`.
+- JSON evidence:
+  `.dart_tool/codex_tier0_root_cause_wave4/tier0_7files_after.jsonl`.
+
+Wave 4 admission remains blocked. The blocker is no longer the repaired
+canonical Tier0 root-cause groups above; it is the remaining broad Act0 preview
+behavioral/copy backlog, which requires a separate admitted wave or explicit
+retirement/reclassification decision.

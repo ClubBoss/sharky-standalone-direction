@@ -138,7 +138,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
               : 'Learn keeps the next one visible after that.',
           ru: widget.replayMode
               ? 'Возвращайся, когда будешь готов. Прогресс останется ровно там, где был.'
-              : 'Затем Learn покажет следующий урок.',
+              : 'Затем учебный путь покажет следующий урок.',
         ),
         mood: act0SharkyMoodForCompanionStateV1(
           Act0SharkyCompanionStateV1.coach,
@@ -155,7 +155,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           ),
           detail: _copyV1(
             en: 'Learn keeps the next one visible after that.',
-            ru: 'Затем Learn покажет следующий урок.',
+            ru: 'Затем учебный путь покажет следующий урок.',
           ),
           child: Container(
             key: const Key('act0_shell_welcome_handoff_proof_block'),

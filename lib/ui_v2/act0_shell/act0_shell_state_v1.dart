@@ -4735,6 +4735,20 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
       ),
     );
   }
+  final recapSpec = act0W7VisibleAceHiddenTaskSpecsV1.last;
+  tasks.add(
+    Act0LessonTaskV1(
+      taskId: 'visible_card_combo_reduction_recap',
+      title: 'Visible-card recap',
+      phase: Act0LessonPhaseV1.review,
+      runner: _w7VisibleCardRunnerFromSpecV1(
+        recapSpec,
+        phase: Act0LessonPhaseV1.review,
+      ),
+      rewardXp: 12,
+      stepKind: Act0LessonStepKindV1.review,
+    ),
+  );
   return tasks;
 }
 

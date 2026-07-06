@@ -2506,7 +2506,7 @@ void main() {
     expect(customTask.resolvedTaskFamily, Act0TaskFamilyV1.counting);
 
     final world5SizingTask = sample
-        .worldById('world_5')
+        .worldById('world_4')
         .lessons
         .firstWhere((lesson) => lesson.lessonId == 'small_half_pot')
         .taskList
@@ -9757,7 +9757,7 @@ void main() {
       expect(
         fallbackRows.map((row) => row.worldId).toSet(),
         equals(<String>{
-          'world_4',
+          'world_5',
           'world_6',
           'world_7',
           'world_8',
@@ -9768,10 +9768,10 @@ void main() {
         }),
       );
       expect(
-        fallbackRows.any((row) => row.worldId == 'world_4'),
+        fallbackRows.any((row) => row.worldId == 'world_5'),
         isTrue,
         reason:
-            'World 4 should remain explicit fallback in RU after this slice-only wave.',
+            'World 5 should remain explicit fallback in RU after this slice-only wave.',
       );
     },
   );
@@ -21733,10 +21733,7 @@ void main() {
           .toList(growable: false);
       expect(
         laterBroadwayTaskIds,
-        containsAll(<String>[
-          'weak_ace_warning_weak_ace_kicker_compare',
-          'open_call_fold_frame_call',
-        ]),
+        containsAll(<String>['weak_ace_warning_weak_ace_kicker_compare']),
       );
     },
   );
@@ -23038,15 +23035,17 @@ void main() {
     expect(bridgeText, contains('frame'));
   });
 
-  test('World 4 has a real preflop framework spine', () {
+  test('World 4 has a real bet-purpose and price spine', () {
     final world4 = Act0ShellStateV1.sample.worldById('world_4');
     expect(world4.title, 'Bet Purpose / Price');
     expect(world4.lessons.map((lesson) => lesson.title), <String>[
-      'First-in open',
-      'Facing an open',
-      'Open, call, fold',
-      'Frame before action',
-      'Preflop checkpoint',
+      'Why bets happen',
+      'Value bets',
+      'Bluff pressure',
+      'Protection and denial',
+      'Call price',
+      'Small, half, pot',
+      'Price checkpoint',
     ]);
     for (final lesson in world4.lessons) {
       expect(
@@ -23075,30 +23074,32 @@ void main() {
     }
   });
 
-  test('World 4 content covers preflop framework without charts', () {
+  test('World 4 content covers purpose and price without math overload', () {
     final content = _worldContentText('world_4').toLowerCase();
     for (final topic in const <String>[
-      'preflop',
-      'bucket',
-      'open',
+      'purpose',
+      'value',
+      'bluff',
+      'protection',
+      'deny',
+      'price',
       'call',
       'fold',
-      'first in',
-      'unopened',
-      'facing open',
-      'seat',
-      'frame',
-      'action',
-      'name the frame',
+      'one-third',
+      'half-pot',
+      'pot-size',
+      'weaker',
     ]) {
       expect(content, contains(topic), reason: 'Missing World 4 topic: $topic');
     }
     for (final deferred in const <String>[
       'solver',
-      'chart memorization',
+      'gto',
+      'equity formula',
       'range construction',
-      'icm',
-      '3-bet',
+      'combo',
+      'minimum defense',
+      'draw',
     ]) {
       expect(content, isNot(contains(deferred)));
     }
@@ -23118,11 +23119,11 @@ void main() {
       decisionDrills,
       greaterThanOrEqualTo(9),
       reason:
-          'World 4 should have enough real choices before bet-purpose world',
+          'World 4 should have enough real choices before board-awareness world',
     );
   });
 
-  test('World 4 includes a real-table frame transfer rep', () {
+  test('World 4 includes a real-table price transfer rep', () {
     final world4 = Act0ShellStateV1.sample.worldById('world_4');
     final transferTasks = world4.lessons
         .expand((lesson) => lesson.taskList)
@@ -23131,15 +23132,15 @@ void main() {
 
     expect(
       transferTasks.map((task) => task.taskId),
-      contains('preflop_framework_checkpoint_checkpoint_table_frame'),
+      contains('w4_checkpoint_table_price'),
     );
 
     final transferText = transferTasks
         .map((task) => '${task.runner.caption} ${task.runner.feedbackReason}')
         .join(' ')
         .toLowerCase();
-    expect(transferText, contains('hj opens 2.5 bb'));
-    expect(transferText, contains('name the frame before choosing the action'));
+    expect(transferText, contains('pot is 7 bb'));
+    expect(transferText, contains('to call is 2 bb'));
   });
 
   test(
@@ -23224,34 +23225,34 @@ void main() {
     );
   });
 
-  test('World 4 checkpoint bridges to bet-purpose thinking', () {
+  test('World 4 checkpoint bridges to board texture thinking', () {
     final world4 = Act0ShellStateV1.sample.worldById('world_4');
     final checkpoint = world4.lessons
-        .firstWhere(
-          (lesson) => lesson.lessonId == 'preflop_framework_checkpoint',
-        )
+        .firstWhere((lesson) => lesson.lessonId == 'price_checkpoint')
         .taskList
         .last
         .runner;
 
-    final bridgeText = '${checkpoint.hint} ${checkpoint.feedbackReason}'
-        .toLowerCase();
-    expect(bridgeText, contains('bucket'));
-    expect(bridgeText, contains('frame'));
+    final bridgeText = [
+      checkpoint.hint,
+      checkpoint.feedbackReason,
+      ...checkpoint.options.map((o) => o.feedbackReason),
+    ].join(' ').toLowerCase();
+    expect(bridgeText, contains('board'));
     expect(bridgeText, contains('purpose'));
+    expect(bridgeText, contains('price'));
   });
 
-  test('World 5 has a real bet-purpose and price spine', () {
+  test('World 5 has a real board-awareness spine', () {
     final world5 = Act0ShellStateV1.sample.worldById('world_5');
     expect(world5.title, 'Board Awareness');
     expect(world5.lessons.map((lesson) => lesson.title), <String>[
-      'Why bets happen',
-      'Value bets',
-      'Bluff pressure',
-      'Protection and denial',
-      'Call price',
-      'Small, half, pot',
-      'Price checkpoint',
+      'Dry or wet board',
+      'Connected boards',
+      'Flush draws',
+      'Straight draws',
+      'Outs as improvement cards',
+      'Turn and river changes',
     ]);
     for (final lesson in world5.lessons) {
       expect(
@@ -23281,10 +23282,10 @@ void main() {
   });
 
   test(
-    'World 5 sizing lesson includes one-third half-pot and pot-size reps',
+    'World 4 sizing lesson includes one-third half-pot and pot-size reps',
     () {
-      final world5 = Act0ShellStateV1.sample.worldById('world_5');
-      final sizingLesson = world5.lessons.firstWhere(
+      final world4 = Act0ShellStateV1.sample.worldById('world_4');
+      final sizingLesson = world4.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'small_half_pot',
       );
 
@@ -23307,9 +23308,9 @@ void main() {
     },
   );
 
-  test('World 5 call-price lesson includes expanded caller-side examples', () {
-    final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    final priceLesson = world5.lessons.firstWhere(
+  test('World 4 call-price lesson includes expanded caller-side examples', () {
+    final world4 = Act0ShellStateV1.sample.worldById('world_4');
+    final priceLesson = world4.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'call_price',
     );
 
@@ -23325,9 +23326,9 @@ void main() {
     );
   });
 
-  test('World 5 call-price drills teach cheap-vs-big price contrast', () {
-    final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    final priceLesson = world5.lessons.firstWhere(
+  test('World 4 call-price drills teach cheap-vs-big price contrast', () {
+    final world4 = Act0ShellStateV1.sample.worldById('world_4');
+    final priceLesson = world4.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'call_price',
     );
 
@@ -23371,40 +23372,49 @@ void main() {
     );
   });
 
-  test('World 5 content covers purpose and price without math overload', () {
-    final content = _worldContentText('world_5').toLowerCase();
-    for (final topic in const <String>[
-      'purpose',
-      'value',
-      'bluff',
-      'protection',
-      'deny',
-      'price',
-      'call',
-      'fold',
-      'one-third',
-      'half-pot',
-      'pot-size',
-      'weaker',
-    ]) {
-      expect(content, contains(topic), reason: 'Missing World 5 topic: $topic');
-    }
-    for (final deferred in const <String>[
-      'solver',
-      'gto',
-      'equity formula',
-      'range construction',
-      'combo',
-      'minimum defense',
-      'draw',
-    ]) {
-      expect(content, isNot(contains(deferred)));
-    }
-  });
+  test(
+    'World 5 content covers board texture and draws without math overload',
+    () {
+      final content = _worldContentText('world_5').toLowerCase();
+      for (final topic in const <String>[
+        'board',
+        'texture',
+        'dry',
+        'wet',
+        'connected',
+        'disconnected',
+        'flush draw',
+        'straight draw',
+        'outs',
+        'improvement',
+        'turn',
+        'river',
+        'draw hit',
+        'draw missed',
+        'street change',
+      ]) {
+        expect(
+          content,
+          contains(topic),
+          reason: 'Missing World 5 topic: $topic',
+        );
+      }
+      for (final deferred in const <String>[
+        'blocker',
+        'equity formula',
+        'combo',
+        'minimum defense',
+        'solver',
+        'gto',
+      ]) {
+        expect(content, isNot(contains(deferred)));
+      }
+    },
+  );
 
-  test('World 5 sizing copy teaches light middle and heavy size language', () {
-    final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    final sizingLesson = world5.lessons.firstWhere(
+  test('World 4 sizing copy teaches light middle and heavy size language', () {
+    final world4 = Act0ShellStateV1.sample.worldById('world_4');
+    final sizingLesson = world4.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'small_half_pot',
     );
     final teachingText = sizingLesson.taskList
@@ -23437,7 +23447,7 @@ void main() {
       decisionDrills,
       greaterThanOrEqualTo(10),
       reason:
-          'World 5 should have enough real choices before board-texture world',
+          'World 5 should have enough real choices before range-thinking world',
     );
   });
 
@@ -23467,10 +23477,10 @@ void main() {
     );
   });
 
-  test('World 5 checkpoint bridges to board texture thinking', () {
+  test('World 5 checkpoint bridges to range grouping', () {
     final world5 = Act0ShellStateV1.sample.worldById('world_5');
     final checkpoint = world5.lessons
-        .firstWhere((lesson) => lesson.lessonId == 'price_checkpoint')
+        .firstWhere((lesson) => lesson.lessonId == 'turn_river_changes')
         .taskList
         .last
         .runner;
@@ -23480,14 +23490,13 @@ void main() {
       checkpoint.feedbackReason,
       ...checkpoint.options.map((o) => o.feedbackReason),
     ].join(' ').toLowerCase();
-    expect(bridgeText, contains('board'));
-    expect(bridgeText, contains('purpose'));
-    expect(bridgeText, contains('price'));
+    expect(bridgeText, contains('range'));
+    expect(bridgeText, contains('texture'));
   });
 
-  test('World 5 checkpoint includes a real-table price transfer rep', () {
-    final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    final checkpointLesson = world5.lessons.firstWhere(
+  test('World 4 checkpoint includes a real-table price transfer rep', () {
+    final world4 = Act0ShellStateV1.sample.worldById('world_4');
+    final checkpointLesson = world4.lessons.firstWhere(
       (lesson) => lesson.lessonId == 'price_checkpoint',
     );
     final transferTask = checkpointLesson.taskList.firstWhere(
@@ -23514,16 +23523,13 @@ void main() {
     );
   });
 
-  test('World 6 has a real board-and-draws spine', () {
+  test('World 6 has a real range-thinking spine', () {
     final world6 = Act0ShellStateV1.sample.worldById('world_6');
     expect(world6.title, 'Range Thinking');
     expect(world6.lessons.map((lesson) => lesson.title), <String>[
-      'Dry or wet board',
-      'Connected boards',
-      'Flush draws',
-      'Straight draws',
-      'Outs as improvement cards',
-      'Turn and river changes',
+      'Range buckets',
+      'Range meets board',
+      'Value, bluff, missed',
     ]);
     for (final lesson in world6.lessons) {
       expect(
@@ -23552,45 +23558,28 @@ void main() {
     }
   });
 
-  test(
-    'World 6 content covers board texture and draws without math overload',
-    () {
-      final content = _worldContentText('world_6').toLowerCase();
-      for (final topic in const <String>[
-        'board',
-        'texture',
-        'dry',
-        'wet',
-        'connected',
-        'disconnected',
-        'flush draw',
-        'straight draw',
-        'outs',
-        'improvement',
-        'turn',
-        'river',
-        'draw hit',
-        'draw missed',
-        'street change',
-      ]) {
-        expect(
-          content,
-          contains(topic),
-          reason: 'Missing World 6 topic: $topic',
-        );
-      }
-      for (final deferred in const <String>[
-        'blocker',
-        'equity formula',
-        'combo',
-        'minimum defense',
-        'solver',
-        'gto',
-      ]) {
-        expect(content, isNot(contains(deferred)));
-      }
-    },
-  );
+  test('World 6 content covers range thinking without solver overload', () {
+    final content = _worldContentText('world_6').toLowerCase();
+    for (final topic in const <String>[
+      'range',
+      'bucket',
+      'value',
+      'bluff',
+      'missed',
+      'board fit',
+      'pressure',
+    ]) {
+      expect(content, contains(topic), reason: 'Missing World 6 topic: $topic');
+    }
+    for (final deferred in const <String>[
+      'equity formula',
+      'minimum defense',
+      'solver',
+      'gto',
+    ]) {
+      expect(content, isNot(contains(deferred)));
+    }
+  });
 
   test('World 6 has enough true decision reps before World 7', () {
     final world6 = Act0ShellStateV1.sample.worldById('world_6');
@@ -23645,27 +23634,27 @@ void main() {
 
     expect(
       repairTasks.map((task) => task.taskId),
-      contains('turn_river_changes_w5_street_repair'),
+      contains('w6_wet_board_repair'),
     );
 
     final repairText = repairTasks
         .map((task) => '${task.runner.caption} ${task.runner.feedbackReason}')
         .join(' ')
         .toLowerCase();
-    expect(repairText, contains('turn connected the board'));
-    expect(repairText, contains('repair the board read'));
+    expect(repairText, contains('board gets wetter'));
+    expect(repairText, contains('repair'));
   });
 
   test(
-    'World 6 texture and draw drills teach wet pressure and incomplete-draw truth',
+    'World 5 texture and draw drills teach wet pressure and incomplete-draw truth',
     () {
-      final world6 = Act0ShellStateV1.sample.worldById('world_6');
+      final world5 = Act0ShellStateV1.sample.worldById('world_5');
 
-      final textureLesson = world6.lessons.firstWhere(
+      final textureLesson = world5.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'board_texture_basics',
       );
       final wetBoardTask = textureLesson.taskList.firstWhere(
-        (candidate) => candidate.taskId == 'board_texture_basics_w5_wet_board',
+        (candidate) => candidate.taskId == 'w5_wet_board',
       );
 
       expect(
@@ -23681,11 +23670,11 @@ void main() {
         contains('future cards'),
       );
 
-      final flushLesson = world6.lessons.firstWhere(
+      final flushLesson = world5.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'flush_draws',
       );
       final flushTask = flushLesson.taskList.firstWhere(
-        (candidate) => candidate.taskId == 'flush_draws_w5_flush_draw_find',
+        (candidate) => candidate.taskId == 'w5_flush_draw_find',
       );
 
       expect(
@@ -23707,9 +23696,9 @@ void main() {
     },
   );
 
-  test('World 6 flush lesson adds made-hand-vs-draw transfer proof', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 flush lesson adds made-hand-vs-draw transfer proof', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'flush_draws',
     );
 
@@ -23749,10 +23738,10 @@ void main() {
   });
 
   test(
-    'World 6 flush lesson adds a reuse rep for not-made-yet flush pressure',
+    'World 5 flush lesson adds a reuse rep for not-made-yet flush pressure',
     () {
-      final world6 = Act0ShellStateV1.sample.worldById('world_6');
-      final lesson = world6.lessons.firstWhere(
+      final world5 = Act0ShellStateV1.sample.worldById('world_5');
+      final lesson = world5.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'flush_draws',
       );
 
@@ -23792,9 +23781,9 @@ void main() {
     },
   );
 
-  test('World 6 straight-draw lesson adds a gutshot proof rep', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 straight-draw lesson adds a gutshot proof rep', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'straight_draws',
     );
 
@@ -23830,9 +23819,9 @@ void main() {
     );
   });
 
-  test('World 6 straight-draw lesson adds a gutshot contrast transfer rep', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 straight-draw lesson adds a gutshot contrast transfer rep', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'straight_draws',
     );
 
@@ -23874,8 +23863,8 @@ void main() {
   test(
     'World 6 turn-texture transfer keeps the made hand real while danger rises',
     () {
-      final world6 = Act0ShellStateV1.sample.worldById('world_6');
-      final lesson = world6.lessons.firstWhere(
+      final world5 = Act0ShellStateV1.sample.worldById('world_5');
+      final lesson = world5.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'turn_river_changes',
       );
       final task = lesson.taskList.firstWhere(
@@ -23900,7 +23889,7 @@ void main() {
   test('World 6 checkpoint bridges to range grouping', () {
     final world6 = Act0ShellStateV1.sample.worldById('world_6');
     final checkpoint = world6.lessons
-        .firstWhere((lesson) => lesson.lessonId == 'turn_river_changes')
+        .firstWhere((lesson) => lesson.lessonId == 'range_pressure_lines')
         .taskList
         .last
         .runner;
@@ -23910,13 +23899,14 @@ void main() {
       checkpoint.feedbackReason,
       ...checkpoint.options.map((o) => o.feedbackReason),
     ].join(' ').toLowerCase();
-    expect(bridgeText, contains('range'));
-    expect(bridgeText, contains('texture'));
+    expect(bridgeText, contains('value'));
+    expect(bridgeText, contains('bluff'));
+    expect(bridgeText, contains('missed'));
   });
 
-  test('World 6 street-change lesson keeps one draw story across streets', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final streetLesson = world6.lessons.firstWhere(
+  test('World 5 street-change lesson keeps one draw story across streets', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final streetLesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'turn_river_changes',
     );
 
@@ -23938,10 +23928,10 @@ void main() {
   });
 
   test(
-    'World 6 street-change feedback tracks the same draw across turn and river',
+    'World 5 street-change feedback tracks the same draw across turn and river',
     () {
-      final world6 = Act0ShellStateV1.sample.worldById('world_6');
-      final streetLesson = world6.lessons.firstWhere(
+      final world5 = Act0ShellStateV1.sample.worldById('world_5');
+      final streetLesson = world5.lessons.firstWhere(
         (candidate) => candidate.lessonId == 'turn_river_changes',
       );
       final turnHit = streetLesson.taskList.firstWhere(
@@ -23966,9 +23956,9 @@ void main() {
     },
   );
 
-  test('World 6 street-change lesson adds real transfer variants', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 street-change lesson adds real transfer variants', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'turn_river_changes',
     );
     final taskIds = lesson.taskList.map((task) => task.taskId).toList();
@@ -24030,9 +24020,9 @@ void main() {
     expect(riverStoryText, contains('same story'));
   });
 
-  test('World 6 outs lesson adds real live-table transfer variants', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 outs lesson adds real live-table transfer variants', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'outs_improvement',
     );
     final taskIds = lesson.taskList.map((task) => task.taskId).toList();
@@ -24094,9 +24084,9 @@ void main() {
     expect(straightText, contains('straight'));
   });
 
-  test('World 6 outs lesson adds a beginner-safe clean-vs-risky-out intro', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final lesson = world6.lessons.firstWhere(
+  test('World 5 outs lesson adds a beginner-safe clean-vs-risky-out intro', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final lesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'outs_improvement',
     );
 
@@ -24155,16 +24145,16 @@ void main() {
     },
   );
 
-  test('World 6 outs transfer stays inside the outs owner seam', () {
-    final world6 = Act0ShellStateV1.sample.worldById('world_6');
-    final outsLesson = world6.lessons.firstWhere(
+  test('World 5 outs transfer stays inside the outs owner seam', () {
+    final world5 = Act0ShellStateV1.sample.worldById('world_5');
+    final outsLesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'outs_improvement',
     );
-    final streetLesson = world6.lessons.firstWhere(
+    final streetLesson = world5.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'turn_river_changes',
     );
-    final world5 = Act0ShellStateV1.sample.worldById('world_5');
-    final priceCheckpoint = world5.lessons.firstWhere(
+    final world4 = Act0ShellStateV1.sample.worldById('world_4');
+    final priceCheckpoint = world4.lessons.firstWhere(
       (candidate) => candidate.lessonId == 'price_checkpoint',
     );
 
@@ -24201,16 +24191,14 @@ void main() {
     expect(world7.isLocked, isTrue);
     expect(world7.isSelectable, isFalse);
     expect(world7.lessons.map((lesson) => lesson.title), <String>[
-      'Range buckets',
-      'Range meets board',
-      'Value, bluff, missed',
       'Count the combos',
       'Range thinking checkpoint',
+      'Visible Cards Change Ranges',
     ]);
     for (final lesson in world7.lessons) {
       expect(
         lesson.taskList.length,
-        greaterThanOrEqualTo(5),
+        greaterThanOrEqualTo(3),
         reason: '${lesson.lessonId} should be real scaffold, not placeholder',
       );
       expect(lesson.taskList.first.phase, Act0LessonPhaseV1.theory);
@@ -25788,15 +25776,15 @@ void main() {
     'Prefixed W5-W12 task ids follow the current allowlisted owner convention',
     () {
       final state = Act0ShellStateV1.sample;
-      final allowedPrefixesByWorld = <String, String>{
-        'world_5': 'w4_',
-        'world_6': 'w5_',
-        'world_7': 'w6_',
-        'world_8': 'w7_',
-        'world_9': 'w9_',
-        'world_10': 'w10_',
-        'world_11': 'w11_',
-        'world_12': 'w12_',
+      final allowedPrefixesByWorld = <String, Set<String>>{
+        'world_5': <String>{'w5_'},
+        'world_6': <String>{'w6_'},
+        'world_7': <String>{'w6_', 'w7_'},
+        'world_8': <String>{'w7_'},
+        'world_9': <String>{'w9_'},
+        'world_10': <String>{'w10_'},
+        'world_11': <String>{'w11_'},
+        'world_12': <String>{'w12_'},
       };
 
       for (final entry in allowedPrefixesByWorld.entries) {
@@ -25807,9 +25795,10 @@ void main() {
             .toList();
         final prefixedIds = taskIds
             .where(
-              (taskId) =>
-                  taskId.startsWith(entry.value) ||
-                  taskId.contains('_${entry.value}'),
+              (taskId) => entry.value.any(
+                (prefix) =>
+                    taskId.startsWith(prefix) || taskId.contains('_$prefix'),
+              ),
             )
             .toList();
 
@@ -25823,8 +25812,10 @@ void main() {
             continue;
           }
           expect(
-            taskId.startsWith(entry.value) ||
-                taskId.contains('_${entry.value}'),
+            entry.value.any(
+              (prefix) =>
+                  taskId.startsWith(prefix) || taskId.contains('_$prefix'),
+            ),
             isTrue,
             reason:
                 '${entry.key} uses unexpected prefixed task id $taskId; keep legacy owner prefix explicit or rename in a dedicated wave',

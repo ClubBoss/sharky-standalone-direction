@@ -1123,7 +1123,7 @@ class _FoundationProofCardV1 extends StatelessWidget {
                   _learnCopyV1(
                     context,
                     en: 'Start Volume I: one clear table read at a time.',
-                    ru: 'Начни Volume I: одно ясное чтение стола за раз.',
+                    ru: 'Начни Том I: одно ясное чтение стола за раз.',
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -2499,7 +2499,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                       _learnCopyV1(
                         context,
                         en: 'W1-W6 available - W7-W10 locked preview',
-                        ru: 'W1-W6 available - W7-W10 locked preview',
+                        ru: 'Миры 1-6 доступны - миры 7-10 закрытый предпросмотр',
                       ),
                       key: const Key(
                         'act0_shell_levels_selected_world_status_line',
@@ -2551,7 +2551,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                       _learnCopyV1(
                         context,
                         en: 'W11-W12 planned foundation chapters, coming later.',
-                        ru: 'W11-W12 — главы запланированной основы, позже.',
+                        ru: 'Миры 11-12 — главы запланированной основы, позже.',
                       ),
                       key: const Key(
                         'act0_shell_levels_planned_foundation_line',
@@ -2568,7 +2568,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                       _learnCopyV1(
                         context,
                         en: 'W13+ is later strategic depth.',
-                        ru: 'W13+ — более поздняя стратегическая глубина.',
+                        ru: 'Миры 13+ — более поздняя стратегическая глубина.',
                       ),
                       key: const Key('act0_shell_levels_later_frontier_line'),
                       maxLines: 1,
