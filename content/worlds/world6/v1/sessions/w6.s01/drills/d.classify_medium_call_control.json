@@ -3,6 +3,8 @@
   "kind": "range_bucket_board_fit_classifier_v1",
   "prompt": "Hand category: second pair. Board fit: the hand has showdown value, but top pair and stronger made hands are still available. Classify the range bucket.",
   "intent_v1": "think_in_ranges",
+  "available_actions_v1": ["strong", "medium", "weak", "missed"],
+  "expected": {"actionId": "medium"},
   "hand_category_v1": "second_pair",
   "board_fit_v1": "made_but_not_top_pair",
   "expected_action": "medium",

@@ -1947,11 +1947,15 @@ DrillKindV1 _parseDrillKindV1(String raw) {
     case 'initiative_aggressor_choice_v1':
       return DrillKindV1.initiativeAggressorChoice;
     case 'outs_count_choice_v1':
+    case 'outs_count_classifier_v1':
       return DrillKindV1.outsCountChoice;
     case 'board_texture_classifier_v1':
       return DrillKindV1.boardTextureClassifier;
     case 'range_bucket_classifier_v1':
       return DrillKindV1.rangeBucketClassifier;
+    case 'range_bucket_board_fit_classifier_v1':
+    case 'range_width_classifier_v1':
+      return DrillKindV1.actionChoice;
     case 'hand_chain_v1':
       return DrillKindV1.handChain;
     case 'hole_cards_tap':

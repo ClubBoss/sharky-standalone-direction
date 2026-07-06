@@ -6,7 +6,7 @@
   "board_texture_v1": "dry",
   "expected_action": "raise",
   "acceptable_actions": ["call"],
-  "why_v1": "Dry boards leave fewer immediate draw paths. In this source-backed drill, that clean cue supports the pressure response without making dry texture an automatic raise rule.",
+  "why_v1": "Dry boards leave fewer immediate draws. Here that clean cue supports pressure, but dry texture does not automatically mean raise.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, dry texture with a clean value cue supports raise.",
   "feedback_incorrect_v1": "Incorrect. Start from the dry texture cue, then match the source-backed value response for this drill."

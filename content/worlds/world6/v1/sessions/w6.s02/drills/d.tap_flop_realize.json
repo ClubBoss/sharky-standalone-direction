@@ -3,6 +3,8 @@
   "kind": "range_width_classifier_v1",
   "prompt": "Position comparison: UTG opens before anyone else acts. Compared with the button first-in range, classify the UTG range quality.",
   "intent_v1": "position_and_range_width",
+  "available_actions_v1": ["wider", "narrower", "less_constrained", "stronger_on_average"],
+  "expected": {"actionId": "stronger_on_average"},
   "position_context_v1": "utg_first_in_vs_button_first_in",
   "expected_action": "stronger_on_average",
   "range_width_v1": "stronger_on_average",

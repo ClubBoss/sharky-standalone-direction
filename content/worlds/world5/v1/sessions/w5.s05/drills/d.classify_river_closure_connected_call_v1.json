@@ -6,7 +6,7 @@
   "board_texture_v1": "connected",
   "expected_action": "call",
   "acceptable_actions": ["fold"],
-  "why_v1": "A connected final river texture can keep pressure live. In this source-backed drill, the thin edge favors control without making connected rivers automatic calls.",
+  "why_v1": "A connected river can keep pressure live. Here the thin edge favors control, but connected rivers do not automatically mean call.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, the connected final river card supports a controlled call.",
   "feedback_incorrect_v1": "Incorrect. Start from the final river card before deciding."

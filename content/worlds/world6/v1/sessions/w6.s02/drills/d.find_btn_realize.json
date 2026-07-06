@@ -3,6 +3,8 @@
   "kind": "range_width_classifier_v1",
   "prompt": "Position comparison: the button can enter after earlier seats are out. Compared with UTG first-in, classify the button range width.",
   "intent_v1": "position_and_range_width",
+  "available_actions_v1": ["wider", "narrower", "less_constrained", "stronger_on_average"],
+  "expected": {"actionId": "wider"},
   "position_context_v1": "button_vs_utg_first_in",
   "expected_action": "wider",
   "range_width_v1": "wider",

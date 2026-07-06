@@ -1769,6 +1769,24 @@
               "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.classify_texture_synthesis_wet_fold_v1.json"
             }
           ]
+        },
+        {
+          "id": "w5.s11",
+          "path": "content/worlds/world5/v1/sessions/w5.s11/",
+          "drills": [
+            {
+              "id": "count_flush_draw_nine_outs_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_flush_draw_nine_outs_v1.json"
+            },
+            {
+              "id": "count_gutshot_four_outs_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_gutshot_four_outs_v1.json"
+            },
+            {
+              "id": "count_open_ended_straight_draw_eight_outs_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s11/drills/d.count_open_ended_straight_draw_eight_outs_v1.json"
+            }
+          ]
         }
       ]
     },
@@ -1792,27 +1810,27 @@
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.choose_raise_range.json"
             },
             {
-              "id": "classify_missed_fold",
+              "id": "classify_missed_overcards_no_draw",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold.json"
             },
             {
-              "id": "classify_missed_fold_recheck",
+              "id": "classify_missed_low_cards_no_draw",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold_recheck.json"
             },
             {
-              "id": "classify_medium_call_control",
+              "id": "classify_medium_second_pair_fit",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_medium_call_control.json"
             },
             {
-              "id": "classify_strong_raise",
+              "id": "classify_strong_clean_fit",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_strong_raise.json"
             },
             {
-              "id": "classify_strong_call_control",
+              "id": "classify_strong_overpair_fit",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_strong_call_control.json"
             },
             {
-              "id": "classify_weak_fold_pressure",
+              "id": "classify_weak_bottom_pair_fit",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_weak_fold_pressure.json"
             },
             {
@@ -1842,23 +1860,23 @@
           "path": "content/worlds/world6/v1/sessions/w6.s02/",
           "drills": [
             {
-              "id": "choose_call_realize",
+              "id": "classify_continue_range_narrower",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.choose_call_realize.json"
             },
             {
-              "id": "choose_raise_blocker",
+              "id": "classify_button_open_less_constrained",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.choose_raise_blocker.json"
             },
             {
-              "id": "find_bb",
+              "id": "classify_big_blind_continue_narrower",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.find_bb.json"
             },
             {
-              "id": "find_btn_realize",
+              "id": "classify_button_range_wider",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.find_btn_realize.json"
             },
             {
-              "id": "tap_flop_realize",
+              "id": "classify_utg_range_stronger_average",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_flop_realize.json"
             },
             {
@@ -1870,7 +1888,7 @@
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_river_trap.json"
             },
             {
-              "id": "tap_turn",
+              "id": "classify_late_position_more_hands",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_turn.json"
             }
           ]

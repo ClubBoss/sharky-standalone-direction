@@ -3,6 +3,8 @@
   "kind": "range_bucket_board_fit_classifier_v1",
   "prompt": "Hand category: overpair. Board fit: the board is low and unpaired, so the made hand still sits above the visible board. Classify the range bucket.",
   "intent_v1": "think_in_ranges",
+  "available_actions_v1": ["strong", "medium", "weak", "missed"],
+  "expected": {"actionId": "strong"},
   "hand_category_v1": "overpair",
   "board_fit_v1": "overpair_above_low_board",
   "expected_action": "strong",

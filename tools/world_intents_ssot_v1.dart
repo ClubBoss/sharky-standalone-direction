@@ -67,6 +67,7 @@ const Map<int, WorldIntentRuleV1> kWorldIntentRulesV1 =
           'texture_pairing',
           'texture_high_card',
           'texture_connectivity',
+          'basic_outs_awareness',
         },
       ),
       6: WorldIntentRuleV1(
@@ -76,6 +77,7 @@ const Map<int, WorldIntentRuleV1> kWorldIntentRulesV1 =
           'think_in_ranges',
           'equity_realization',
           'blockers_basics',
+          'position_and_range_width',
         },
       ),
       7: WorldIntentRuleV1(

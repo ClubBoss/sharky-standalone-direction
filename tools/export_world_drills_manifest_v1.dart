@@ -53,16 +53,67 @@ void main(List<String> args) {
       }
       final sortedIds = seen.toList()..sort();
       final drills = <_DrillEntry>[];
+      final sourceById = <String, File>{};
+      final drillDir = Directory('${session.path}drills');
+      final sourceFiles =
+          drillDir
+              .listSync()
+              .whereType<File>()
+              .where(
+                (file) =>
+                    file.path
+                        .split(Platform.pathSeparator)
+                        .last
+                        .startsWith('d.') &&
+                    file.path.endsWith('.json'),
+              )
+              .toList()
+            ..sort((a, b) => a.path.compareTo(b.path));
+      for (final sourceFile in sourceFiles) {
+        Object? decoded;
+        try {
+          decoded = jsonDecode(sourceFile.readAsStringSync());
+        } catch (_) {
+          errors.add('${sourceFile.path}: invalid JSON');
+          continue;
+        }
+        if (decoded is! Map<String, dynamic>) {
+          errors.add('${sourceFile.path}: drill JSON root must be object');
+          continue;
+        }
+        final sourceId = decoded['id'];
+        if (sourceId is! String || sourceId.isEmpty) {
+          errors.add('${sourceFile.path}: id must be a non-empty string');
+          continue;
+        }
+        if (sourceById.containsKey(sourceId)) {
+          errors.add(
+            '${sourceFile.path}: duplicate authored drill id $sourceId',
+          );
+          continue;
+        }
+        sourceById[sourceId] = sourceFile;
+      }
       for (final drillId in sortedIds) {
         final tuple = '${session.id}/$drillId';
         if (!tupleSeen.add(tuple)) {
           errors.add('${drillsIndex.path}: duplicate drill tuple $tuple');
           continue;
         }
+        final derivedSourceFile = File('${session.path}drills/d.$drillId.json');
+        final sourceFile = derivedSourceFile.existsSync()
+            ? derivedSourceFile
+            : sourceById[drillId];
+        if (sourceFile == null) {
+          errors.add(
+            '${drillsIndex.path}: drill id $drillId has no authored JSON source',
+          );
+          continue;
+        }
         drills.add(
           _DrillEntry(
             id: drillId,
-            path: '${session.path}drills/d.$drillId.json',
+            path: sourceFile.path.replaceAll(Platform.pathSeparator, '/'),
           ),
         );
       }

@@ -3,6 +3,8 @@
   "kind": "range_bucket_board_fit_classifier_v1",
   "prompt": "Hand category: two overcards with no pair. Board fit: the hand has not paired the board and has no clear draw. Classify the range bucket.",
   "intent_v1": "range_vs_hand",
+  "available_actions_v1": ["strong", "medium", "weak", "missed"],
+  "expected": {"actionId": "missed"},
   "hand_category_v1": "two_overcards_no_pair",
   "board_fit_v1": "no_pair_no_clear_draw",
   "expected_action": "missed",

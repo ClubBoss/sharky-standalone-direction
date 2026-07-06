@@ -3,6 +3,8 @@
   "kind": "range_width_classifier_v1",
   "prompt": "Position comparison: the button is first to enter before the flop. Compared with UTG first-in, classify how constrained the button range is.",
   "intent_v1": "position_and_range_width",
+  "available_actions_v1": ["wider", "narrower", "less_constrained", "stronger_on_average"],
+  "expected": {"actionId": "less_constrained"},
   "position_context_v1": "button_first_in_vs_utg_first_in",
   "expected_action": "less_constrained",
   "range_width_v1": "less_constrained",

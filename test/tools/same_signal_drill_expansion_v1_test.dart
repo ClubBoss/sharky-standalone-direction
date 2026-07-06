@@ -19,7 +19,9 @@ void main() {
             (file) =>
                 jsonDecode(file.readAsStringSync()) as Map<String, dynamic>,
           )
-          .where((drill) => drill['kind'] == 'range_bucket_classifier_v1')
+          .where(
+            (drill) => drill['kind'] == 'range_bucket_board_fit_classifier_v1',
+          )
           .toList(growable: false);
 
       expect(rangeBucketDrills, hasLength(6));
@@ -33,7 +35,7 @@ void main() {
         rangeBucketDrills
             .map((drill) => drill['expected_action'] as String)
             .toSet(),
-        containsAll(<String>{'raise', 'call', 'fold'}),
+        containsAll(<String>{'strong', 'medium', 'weak', 'missed'}),
       );
       for (final drill in rangeBucketDrills) {
         expect(drill['intent_v1'], isNotEmpty);
@@ -56,19 +58,17 @@ void main() {
       final session = (world6['sessions'] as List<dynamic>)
           .cast<Map<String, dynamic>>()
           .firstWhere((entry) => entry['id'] == 'w6.s01');
-      final manifestPaths = (session['drills'] as List<dynamic>)
-          .cast<Map<String, dynamic>>()
-          .map((drill) => drill['path'] as String)
-          .toSet();
+      final manifestById = <String, String>{
+        for (final drill
+            in (session['drills'] as List<dynamic>)
+                .cast<Map<String, dynamic>>())
+          drill['id'] as String: drill['path'] as String,
+      };
 
       for (final drill in rangeBucketDrills) {
         final id = drill['id'] as String;
-        expect(
-          manifestPaths,
-          contains('$sessionPath/drills/d.$id.json'),
-          reason:
-              '$id must remain available through the W6 s01 practice manifest.',
-        );
+        expect(manifestById, contains(id));
+        expect(File(manifestById[id]!).existsSync(), isTrue);
       }
     },
   );
@@ -79,19 +79,26 @@ void main() {
     final drills = (await tester.runAsync(
       () => const DrillRuntimeAdapterV1().loadSessionDrills('w6.s01'),
     ))!;
+    const ids = <String>{
+      'classify_strong_clean_fit',
+      'classify_strong_overpair_fit',
+      'classify_medium_second_pair_fit',
+      'classify_weak_bottom_pair_fit',
+      'classify_missed_overcards_no_draw',
+      'classify_missed_low_cards_no_draw',
+    };
     final rangeBucketDrills = drills
-        .where((drill) => drill.spec.kind == DrillKindV1.rangeBucketClassifier)
+        .where((drill) => ids.contains(drill.drillId))
         .toList(growable: false);
 
     expect(rangeBucketDrills, hasLength(6));
     expect(
+      rangeBucketDrills.map((drill) => drill.spec.kind).toSet(),
+      equals(<DrillKindV1>{DrillKindV1.actionChoice}),
+    );
+    expect(
       rangeBucketDrills.map((drill) => drill.drillId),
-      containsAll(<String>[
-        'classify_medium_call_control',
-        'classify_weak_fold_pressure',
-        'classify_strong_call_control',
-        'classify_missed_fold_recheck',
-      ]),
+      equals(rangeBucketDrills.map((drill) => drill.spec.id)),
     );
   });
 }

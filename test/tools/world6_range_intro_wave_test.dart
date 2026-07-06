@@ -7,7 +7,7 @@ import '../../tools/feedback_quality_audit_v2.dart';
 
 void main() {
   test(
-    'w6.s01 range intro family teaches anchor and action value instead of generic or shallow feedback',
+    'w6.s01 range intro family teaches bucket and anchor value instead of generic or shallow feedback',
     () {
       final repoRoot = Directory.current.path;
       const familyPrefix = 'content/worlds/world6/v1/sessions/w6.s01/drills/';
@@ -30,12 +30,12 @@ void main() {
       };
       const correctSnippetsByFile = <String, List<String>>{
         'd.classify_missed_fold.json': <String>[
-          'Fold fits this missed bucket',
-          'weak range under pressure',
+          'This is missed',
+          'no pair, no made-hand fit, and no clear draw',
         ],
         'd.classify_strong_raise.json': <String>[
-          'Raise fits this strong bucket',
-          'build the pot before weaker continues shut down',
+          'This is strong',
+          'beats many weaker made hands',
         ],
         'd.find_btn.json': <String>[
           'Button is the seat anchor',
@@ -60,10 +60,10 @@ void main() {
       };
       const incorrectSnippetsByFile = <String, List<String>>{
         'd.classify_missed_fold.json': <String>[
-          'weak range under pressure has too little clean equity',
+          'board did not connect with the hand',
         ],
         'd.classify_strong_raise.json': <String>[
-          'in-position value range should build the pot',
+          'board fit supports a made hand',
         ],
         'd.find_btn.json': <String>[
           'button is the correct anchor',

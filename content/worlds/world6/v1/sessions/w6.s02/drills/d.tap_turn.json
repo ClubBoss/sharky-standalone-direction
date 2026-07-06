@@ -3,6 +3,8 @@
   "kind": "range_width_classifier_v1",
   "prompt": "Position comparison: cutoff or button can enter after early seats are out. Compared with early position, classify how many hands late position can include.",
   "intent_v1": "position_and_range_width",
+  "available_actions_v1": ["wider", "narrower", "less_constrained", "stronger_on_average"],
+  "expected": {"actionId": "wider"},
   "position_context_v1": "late_position_vs_early_position",
   "expected_action": "wider",
   "range_width_v1": "wider",

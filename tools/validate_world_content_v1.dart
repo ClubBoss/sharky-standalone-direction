@@ -52,6 +52,19 @@ const Set<String> _kPositionQuestionShapesV1 = <String>{
 };
 const Set<String> _kInitiativePolicyShapesV1 = <String>{'pressure_owner'};
 const Set<String> _kOutsCountActionsV1 = <String>{'4', '8', '9', '15'};
+const Set<String> _kW5OutsClassifierActionsV1 = <String>{'4', '8', '9'};
+const Set<String> _kW6BoardFitBucketsV1 = <String>{
+  'strong',
+  'medium',
+  'weak',
+  'missed',
+};
+const Set<String> _kW6RangeWidthActionsV1 = <String>{
+  'wider',
+  'narrower',
+  'less_constrained',
+  'stronger_on_average',
+};
 const List<String> _kRequiredRelativePaths = <String>[
   'world.md',
   'atoms.md',
@@ -219,6 +232,10 @@ void main(List<String> args) {
             }
 
             final sortedDrillIds = drillSeen.toList()..sort();
+            final sourceDrillFilesById = _sourceDrillFilesById(
+              Directory('${sessionDir.path}/drills'),
+              errors,
+            );
             final sessionDrillCount = sortedDrillIds.length;
             totalDrills += sortedDrillIds.length;
             worldDrillCount += sortedDrillIds.length;
@@ -269,11 +286,16 @@ void main(List<String> args) {
             }
             var hasValidWhyV1InSession = false;
             for (final drillId in sortedDrillIds) {
-              final drillFile = File(
+              final derivedDrillFile = File(
                 '${sessionDir.path}/drills/d.$drillId.json',
               );
-              if (!drillFile.existsSync()) {
-                errors.add('${drillFile.path}: missing required file');
+              final drillFile = derivedDrillFile.existsSync()
+                  ? derivedDrillFile
+                  : sourceDrillFilesById[drillId];
+              if (drillFile == null) {
+                errors.add(
+                  '${drillsIndex.path}: drill id $drillId has no authored JSON source',
+                );
                 continue;
               }
               if (!_isAsciiBytes(drillFile.readAsBytesSync())) {
@@ -887,6 +909,34 @@ List<String> _validateDrillJsonFile(
         );
       }
       break;
+    case 'outs_count_classifier_v1':
+      if (!_matchesExactStringSetV1(
+        decoded['available_actions_v1'],
+        _kW5OutsClassifierActionsV1,
+      )) {
+        errors.add(
+          '${file.path}: outs_count_classifier_v1 requires available_actions_v1 [4, 8, 9]',
+        );
+      }
+      final actionId = expectedMap['actionId'];
+      if (actionId is! String ||
+          !_kW5OutsClassifierActionsV1.contains(actionId)) {
+        errors.add(
+          '${file.path}: outs_count_classifier_v1 requires expected.actionId (4|8|9)',
+        );
+      }
+      final correctAction = decoded['correct_action'];
+      const correctActionById = <String, String>{
+        '4': 'four_outs',
+        '8': 'eight_outs',
+        '9': 'nine_outs',
+      };
+      if (actionId is String && correctAction != correctActionById[actionId]) {
+        errors.add(
+          '${file.path}: outs_count_classifier_v1 correct_action must match expected.actionId',
+        );
+      }
+      break;
     case 'board_texture_classifier_v1':
       final boardTexture = decoded['board_texture_v1'];
       if (boardTexture is! String ||
@@ -977,6 +1027,69 @@ List<String> _validateDrillJsonFile(
             );
           }
         }
+      }
+      break;
+    case 'range_bucket_board_fit_classifier_v1':
+      final rangeBucket = decoded['range_bucket_v1'];
+      if (rangeBucket is! String ||
+          !_kW6BoardFitBucketsV1.contains(rangeBucket)) {
+        errors.add(
+          '${file.path}: range_bucket_board_fit_classifier_v1 requires range_bucket_v1 (strong|medium|weak|missed)',
+        );
+      }
+      if (!_matchesExactStringSetV1(
+        decoded['available_actions_v1'],
+        _kW6BoardFitBucketsV1,
+      )) {
+        errors.add(
+          '${file.path}: range_bucket_board_fit_classifier_v1 requires available_actions_v1 [strong, medium, weak, missed]',
+        );
+      }
+      final actionId = expectedMap['actionId'];
+      if (actionId is! String ||
+          !_kW6BoardFitBucketsV1.contains(actionId) ||
+          decoded['expected_action'] != actionId ||
+          rangeBucket != actionId) {
+        errors.add(
+          '${file.path}: range_bucket_board_fit_classifier_v1 expected.actionId, expected_action, and range_bucket_v1 must match',
+        );
+      }
+      if (decoded['hand_category_v1'] is! String ||
+          decoded['board_fit_v1'] is! String) {
+        errors.add(
+          '${file.path}: range_bucket_board_fit_classifier_v1 requires hand_category_v1 and board_fit_v1',
+        );
+      }
+      break;
+    case 'range_width_classifier_v1':
+      final rangeWidth = decoded['range_width_v1'];
+      if (rangeWidth is! String ||
+          !_kW6RangeWidthActionsV1.contains(rangeWidth)) {
+        errors.add(
+          '${file.path}: range_width_classifier_v1 requires range_width_v1 (wider|narrower|less_constrained|stronger_on_average)',
+        );
+      }
+      if (!_matchesExactStringSetV1(
+        decoded['available_actions_v1'],
+        _kW6RangeWidthActionsV1,
+      )) {
+        errors.add(
+          '${file.path}: range_width_classifier_v1 requires accepted available_actions_v1',
+        );
+      }
+      final actionId = expectedMap['actionId'];
+      if (actionId is! String ||
+          !_kW6RangeWidthActionsV1.contains(actionId) ||
+          decoded['expected_action'] != actionId ||
+          rangeWidth != actionId) {
+        errors.add(
+          '${file.path}: range_width_classifier_v1 expected.actionId, expected_action, and range_width_v1 must match',
+        );
+      }
+      if (decoded['position_context_v1'] is! String) {
+        errors.add(
+          '${file.path}: range_width_classifier_v1 requires position_context_v1',
+        );
       }
       break;
     case 'hand_chain_v1':
@@ -1667,6 +1780,7 @@ _SessionRole? _roleFromSessionIdConvention({
     if (sequence == 14) return _SessionRole.checkpoint;
     return null;
   }
+  if (worldId == 5 && sequence == 11) return _SessionRole.practice;
   if (sequence >= 1 && sequence <= 3) return _SessionRole.learn;
   if (sequence >= 4 && sequence <= 9) return _SessionRole.practice;
   if (sequence == 10) return _SessionRole.checkpoint;
@@ -1687,6 +1801,7 @@ int _minDrillsPerSessionForWorld(int worldId, String sessionId) {
 
 int _maxDrillsPerSessionForWorld(int worldId, String sessionId) {
   if (worldId == 3) return 3;
+  if (worldId == 6 && sessionId == 'w6.s01') return 14;
   return _kMaxDrillsPerSession;
 }
 
@@ -1756,6 +1871,7 @@ String _sessionRoleConventionExpectationLabel(int worldId) {
   if (worldId == 2 || worldId == 3) {
     return 'w$worldId.s01..w$worldId.s14';
   }
+  if (worldId == 5) return 'w5.s01..w5.s11';
   return 'w$worldId.s01..w$worldId.s10';
 }
 
@@ -1993,6 +2109,48 @@ bool _hasBoardCardCountV1(Object? raw, Set<int> allowedCounts) {
   return raw.every(
     (item) => item is String && _kCardIdV1Pattern.hasMatch(item),
   );
+}
+
+Map<String, File> _sourceDrillFilesById(
+  Directory drillsDirectory,
+  List<String> errors,
+) {
+  final sourceById = <String, File>{};
+  final sourceFiles =
+      drillsDirectory
+          .listSync()
+          .whereType<File>()
+          .where(
+            (file) =>
+                file.path.split(Platform.pathSeparator).last.startsWith('d.') &&
+                file.path.endsWith('.json'),
+          )
+          .toList()
+        ..sort((a, b) => a.path.compareTo(b.path));
+  for (final sourceFile in sourceFiles) {
+    Object? decoded;
+    try {
+      decoded = jsonDecode(sourceFile.readAsStringSync());
+    } catch (_) {
+      errors.add('${sourceFile.path}: invalid JSON');
+      continue;
+    }
+    if (decoded is! Map<String, dynamic>) {
+      errors.add('${sourceFile.path}: drill JSON root must be object');
+      continue;
+    }
+    final sourceId = decoded['id'];
+    if (sourceId is! String || sourceId.isEmpty) {
+      errors.add('${sourceFile.path}: id must be a non-empty string');
+      continue;
+    }
+    if (sourceById.containsKey(sourceId)) {
+      errors.add('${sourceFile.path}: duplicate authored drill id $sourceId');
+      continue;
+    }
+    sourceById[sourceId] = sourceFile;
+  }
+  return sourceById;
 }
 
 enum _SessionRole { learn, practice, checkpoint }

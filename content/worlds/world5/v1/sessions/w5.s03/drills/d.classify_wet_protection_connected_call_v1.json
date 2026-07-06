@@ -6,7 +6,7 @@
   "board_texture_v1": "connected",
   "expected_action": "call",
   "acceptable_actions": ["fold"],
-  "why_v1": "Connected boards increase volatility. In this source-backed drill, calling keeps the response controlled without making connected texture an automatic call rule.",
+  "why_v1": "Connected boards increase volatility. Here calling keeps control, but connected texture does not automatically mean call.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, connected texture supports a controlled call.",
   "feedback_incorrect_v1": "Incorrect. Start from the connected-board pressure before choosing action."

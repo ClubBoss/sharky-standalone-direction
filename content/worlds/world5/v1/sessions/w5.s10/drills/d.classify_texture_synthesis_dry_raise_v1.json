@@ -6,7 +6,7 @@
   "board_texture_v1": "dry",
   "expected_action": "raise",
   "acceptable_actions": ["call"],
-  "why_v1": "When all cues align on a dry board in this source-backed drill, the clean texture story supports pressure without making dry boards automatic raises.",
+  "why_v1": "When all cues align on a dry board, the clean texture supports pressure, but dry boards do not automatically mean raise.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, the dry synthesis read supports a raise.",
   "feedback_incorrect_v1": "Incorrect. Start from the full dry-board synthesis cue before matching the pressure response for this drill."

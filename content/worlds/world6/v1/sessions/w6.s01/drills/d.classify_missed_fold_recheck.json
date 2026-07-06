@@ -3,6 +3,8 @@
   "kind": "range_bucket_board_fit_classifier_v1",
   "prompt": "Hand category: unpaired low cards. Board fit: the hand missed the board and does not form a clear straight or flush draw. Classify the range bucket.",
   "intent_v1": "range_vs_hand",
+  "available_actions_v1": ["strong", "medium", "weak", "missed"],
+  "expected": {"actionId": "missed"},
   "hand_category_v1": "unpaired_low_cards",
   "board_fit_v1": "missed_board_no_clear_draw",
   "expected_action": "missed",
