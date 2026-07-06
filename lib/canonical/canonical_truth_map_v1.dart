@@ -81,6 +81,32 @@ class CanonicalTruthSessionEntryV1 {
   final CanonicalTruthSkeletonReadinessV1 skeletonReadiness;
 }
 
+class CanonicalTruthWorldIdentityV1 {
+  const CanonicalTruthWorldIdentityV1({
+    required this.world,
+    required this.worldId,
+    required this.learnerMeaning,
+    required this.skillFamily,
+    required this.activeSessionRange,
+    required this.activeSessionIds,
+    required this.runtimeOwner,
+    required this.registryOwner,
+    required this.telemetryWorldId,
+    required this.retiredMeanings,
+  });
+
+  final int world;
+  final String worldId;
+  final String learnerMeaning;
+  final String skillFamily;
+  final String activeSessionRange;
+  final List<String> activeSessionIds;
+  final String runtimeOwner;
+  final String registryOwner;
+  final String telemetryWorldId;
+  final List<String> retiredMeanings;
+}
+
 const Set<String> _kProductionLiveCampaignPackIdsV1 = <String>{
   'world1_act0_table_literacy',
   'world1_act0_action_literacy',
@@ -399,6 +425,302 @@ const Map<String, List<String>> _kCanonicalWorld10TrackSessionIdsByTrackV1 =
       ],
     };
 
+const List<CanonicalTruthWorldIdentityV1>
+_kCanonicalWorldIdentityEntriesV1 = <CanonicalTruthWorldIdentityV1>[
+  CanonicalTruthWorldIdentityV1(
+    world: 1,
+    worldId: 'world_1',
+    learnerMeaning: 'Poker from Zero',
+    skillFamily: 'table_rules_and_first_action',
+    activeSessionRange: 'world1 campaign modules',
+    activeSessionIds: <String>[],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/world1_canonical_module_order_v1.dart',
+    telemetryWorldId: 'world_1',
+    retiredMeanings: <String>['Table Basics'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 2,
+    worldId: 'world_2',
+    learnerMeaning: 'Hand Discipline',
+    skillFamily: 'starting_hand_discipline',
+    activeSessionRange: 'w2.s01-w2.s14',
+    activeSessionIds: <String>[
+      'w2.s01',
+      'w2.s02',
+      'w2.s03',
+      'w2.s04',
+      'w2.s05',
+      'w2.s06',
+      'w2.s07',
+      'w2.s08',
+      'w2.s09',
+      'w2.s10',
+      'w2.s11',
+      'w2.s12',
+      'w2.s13',
+      'w2.s14',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_2',
+    retiredMeanings: <String>['Hand buckets bridge'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 3,
+    worldId: 'world_3',
+    learnerMeaning: 'Position Thinking',
+    skillFamily: 'position_and_preflop_frame_bridge',
+    activeSessionRange: 'w3.s01-w3.s14',
+    activeSessionIds: <String>[
+      'w3.s01',
+      'w3.s02',
+      'w3.s03',
+      'w3.s04',
+      'w3.s05',
+      'w3.s06',
+      'w3.s07',
+      'w3.s08',
+      'w3.s09',
+      'w3.s10',
+      'w3.s11',
+      'w3.s12',
+      'w3.s13',
+      'w3.s14',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_3',
+    retiredMeanings: <String>['Preflop Framework as W4-owned route'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 4,
+    worldId: 'world_4',
+    learnerMeaning: 'Bet Purpose / Price',
+    skillFamily: 'bet_purpose_price',
+    activeSessionRange: 'w4.s01-w4.s10',
+    activeSessionIds: <String>[
+      'w4.s01',
+      'w4.s02',
+      'w4.s03',
+      'w4.s04',
+      'w4.s05',
+      'w4.s06',
+      'w4.s07',
+      'w4.s08',
+      'w4.s09',
+      'w4.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_4',
+    retiredMeanings: <String>['Preflop Framework'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 5,
+    worldId: 'world_5',
+    learnerMeaning: 'Board Awareness',
+    skillFamily: 'board_texture_draws_and_street_changes',
+    activeSessionRange: 'w5.s01-w5.s10',
+    activeSessionIds: <String>[
+      'w5.s01',
+      'w5.s02',
+      'w5.s03',
+      'w5.s04',
+      'w5.s05',
+      'w5.s06',
+      'w5.s07',
+      'w5.s08',
+      'w5.s09',
+      'w5.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_5',
+    retiredMeanings: <String>['Bet Purpose + Price', 'Bet Purpose And Price'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 6,
+    worldId: 'world_6',
+    learnerMeaning: 'Range Thinking',
+    skillFamily: 'range_buckets_and_board_fit',
+    activeSessionRange: 'w6.s01-w6.s10',
+    activeSessionIds: <String>[
+      'w6.s01',
+      'w6.s02',
+      'w6.s03',
+      'w6.s04',
+      'w6.s05',
+      'w6.s06',
+      'w6.s07',
+      'w6.s08',
+      'w6.s09',
+      'w6.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_6',
+    retiredMeanings: <String>['Board Awareness', 'Board and Draws'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 7,
+    worldId: 'world_7',
+    learnerMeaning: 'Visible Cards Change Ranges',
+    skillFamily: 'visible_card_range_narrowing',
+    activeSessionRange: 'w7.s01-w7.s10',
+    activeSessionIds: <String>[
+      'w7.s01',
+      'w7.s02',
+      'w7.s03',
+      'w7.s04',
+      'w7.s05',
+      'w7.s06',
+      'w7.s07',
+      'w7.s08',
+      'w7.s09',
+      'w7.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_7',
+    retiredMeanings: <String>['Range Thinking Lite'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 8,
+    worldId: 'world_8',
+    learnerMeaning: 'Stack Depth And Risk',
+    skillFamily: 'stack_depth_and_risk_control',
+    activeSessionRange: 'w8.s01-w8.s10',
+    activeSessionIds: <String>[
+      'w8.s01',
+      'w8.s02',
+      'w8.s03',
+      'w8.s04',
+      'w8.s05',
+      'w8.s06',
+      'w8.s07',
+      'w8.s08',
+      'w8.s09',
+      'w8.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_8',
+    retiredMeanings: <String>['Draws as W8 primary route'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 9,
+    worldId: 'world_9',
+    learnerMeaning: 'Tournament Pressure',
+    skillFamily: 'tournament_pressure_and_risk_premium',
+    activeSessionRange: 'w9.s01-w9.s10',
+    activeSessionIds: <String>[
+      'w9.s01',
+      'w9.s02',
+      'w9.s03',
+      'w9.s04',
+      'w9.s05',
+      'w9.s06',
+      'w9.s07',
+      'w9.s08',
+      'w9.s09',
+      'w9.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_9',
+    retiredMeanings: <String>['Price and Pot Odds as W9 primary route'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 10,
+    worldId: 'world_10',
+    learnerMeaning: 'Player Adjustment',
+    skillFamily: 'player_type_adjustment',
+    activeSessionRange:
+        'cash.s01-cash.s10, tournament.s01-tournament.s10, mixed.s01-mixed.s10',
+    activeSessionIds: <String>[
+      'cash.s01',
+      'cash.s02',
+      'cash.s03',
+      'cash.s04',
+      'cash.s05',
+      'cash.s06',
+      'cash.s07',
+      'cash.s08',
+      'cash.s09',
+      'cash.s10',
+      'tournament.s01',
+      'tournament.s02',
+      'tournament.s03',
+      'tournament.s04',
+      'tournament.s05',
+      'tournament.s06',
+      'tournament.s07',
+      'tournament.s08',
+      'tournament.s09',
+      'tournament.s10',
+      'mixed.s01',
+      'mixed.s02',
+      'mixed.s03',
+      'mixed.s04',
+      'mixed.s05',
+      'mixed.s06',
+      'mixed.s07',
+      'mixed.s08',
+      'mixed.s09',
+      'mixed.s10',
+    ],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/canonical/canonical_truth_map_v1.dart',
+    telemetryWorldId: 'world_10',
+    retiredMeanings: <String>['Bet Purpose transfer taxonomy as W10 route'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 11,
+    worldId: 'world_11',
+    learnerMeaning: 'Real Play Transfer',
+    skillFamily: 'real_play_transfer_and_capstone',
+    activeSessionRange: 'source-owned W11 route packet',
+    activeSessionIds: <String>[],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/campaign/w11_route_admission_contract_v1.dart',
+    telemetryWorldId: 'world_11',
+    retiredMeanings: <String>['Board Texture as W11 primary route'],
+  ),
+  CanonicalTruthWorldIdentityV1(
+    world: 12,
+    worldId: 'world_12',
+    learnerMeaning: 'Mindset Bridge',
+    skillFamily: 'process_mindset_and_tilt_reset',
+    activeSessionRange:
+        'source-owned W12 route packet plus Volume I terminal review',
+    activeSessionIds: <String>[],
+    runtimeOwner: 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    registryOwner: 'lib/campaign/w12_route_admission_contract_v1.dart',
+    telemetryWorldId: 'world_12',
+    retiredMeanings: <String>['Review Decision as W12 primary route'],
+  ),
+];
+
+List<CanonicalTruthWorldIdentityV1> canonicalTruthWorldIdentityEntriesV1() =>
+    List<CanonicalTruthWorldIdentityV1>.unmodifiable(
+      _kCanonicalWorldIdentityEntriesV1,
+    );
+
+CanonicalTruthWorldIdentityV1? canonicalTruthWorldIdentityForWorldIdV1(
+  String worldId,
+) {
+  final normalized = worldId.trim().toLowerCase();
+  for (final entry in _kCanonicalWorldIdentityEntriesV1) {
+    if (entry.worldId == normalized ||
+        entry.telemetryWorldId == normalized ||
+        entry.world == int.tryParse(normalized.replaceFirst('world_', ''))) {
+      return entry;
+    }
+  }
+  return null;
+}
+
 CanonicalTruthStatusV1 canonicalTruthStatusForCampaignPackIdV1(String packId) {
   final normalized = packId.trim().toLowerCase();
   if (normalized == 'world1_act0_table_literacy') {
@@ -573,7 +895,11 @@ canonicalTruthSkeletonReadinessForCampaignPackIdV1(String packId) {
 }
 
 int? _campaignWorldForPackIdV1(String packId) {
-  final match = RegExp(r'^world(\d+)_').firstMatch(packId.trim().toLowerCase());
+  final normalized = packId.trim().toLowerCase();
+  if (normalized == ProgressService.w7W10LearnerRouteGateTerminalPackIdV1) {
+    return 12;
+  }
+  final match = RegExp(r'^world(\d+)_').firstMatch(normalized);
   if (match == null) return null;
   return int.tryParse(match.group(1) ?? '');
 }
@@ -607,6 +933,12 @@ List<String> canonicalTruthCampaignPackOrderForWorldV1(int world) {
     }
     return a.compareTo(b);
   });
+  if (world == 12 &&
+      ProgressService.campaignPackIdsV1.contains(
+        ProgressService.w7W10LearnerRouteGateTerminalPackIdV1,
+      )) {
+    sortable.add(ProgressService.w7W10LearnerRouteGateTerminalPackIdV1);
+  }
   return List<String>.unmodifiable(sortable);
 }
 

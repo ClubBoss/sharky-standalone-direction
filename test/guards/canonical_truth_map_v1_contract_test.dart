@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:poker_analyzer/canonical/canonical_truth_map_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/map/progress_map_world1_determinism.dart';
 
 void main() {
@@ -104,6 +107,16 @@ void main() {
       );
       expect(
         nodeByPackId['world10_spine_followup_v1_b2']?.hostSurface,
+        CanonicalTruthHostSurfaceV1.sessionDrillPlayer,
+      );
+      expect(
+        nodeByPackId[ProgressService.w7W10LearnerRouteGateTerminalPackIdV1]
+            ?.world,
+        12,
+      );
+      expect(
+        nodeByPackId[ProgressService.w7W10LearnerRouteGateTerminalPackIdV1]
+            ?.hostSurface,
         CanonicalTruthHostSurfaceV1.sessionDrillPlayer,
       );
       expect(
@@ -281,6 +294,110 @@ void main() {
         canonicalTruthUsesSessionWorldCohesionSpineV1('cash.s01'),
         isFalse,
       );
+    },
+  );
+
+  test('canonical truth map v1 locks learner-facing world identity', () {
+    final identities = canonicalTruthWorldIdentityEntriesV1();
+    expect(identities.map((entry) => entry.world).toList(), <int>[
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+    ]);
+
+    expect(identities.map((entry) => entry.worldId).toSet().length, 12);
+    expect(
+      identities.map((entry) => entry.telemetryWorldId).toSet().length,
+      12,
+    );
+    expect(identities.map((entry) => entry.learnerMeaning).toSet().length, 12);
+
+    final byWorld = <int, CanonicalTruthWorldIdentityV1>{
+      for (final entry in identities) entry.world: entry,
+    };
+    expect(byWorld[1]!.learnerMeaning, 'Poker from Zero');
+    expect(byWorld[2]!.learnerMeaning, 'Hand Discipline');
+    expect(byWorld[3]!.learnerMeaning, 'Position Thinking');
+    expect(byWorld[4]!.learnerMeaning, 'Bet Purpose / Price');
+    expect(byWorld[5]!.learnerMeaning, 'Board Awareness');
+    expect(byWorld[6]!.learnerMeaning, 'Range Thinking');
+    expect(byWorld[7]!.learnerMeaning, 'Visible Cards Change Ranges');
+    expect(byWorld[8]!.learnerMeaning, 'Stack Depth And Risk');
+    expect(byWorld[9]!.learnerMeaning, 'Tournament Pressure');
+    expect(byWorld[10]!.learnerMeaning, 'Player Adjustment');
+    expect(byWorld[11]!.learnerMeaning, 'Real Play Transfer');
+    expect(byWorld[12]!.learnerMeaning, 'Mindset Bridge');
+
+    expect(
+      byWorld[4]!.retiredMeanings,
+      containsAll(<String>['Preflop Framework']),
+    );
+    expect(
+      byWorld[5]!.retiredMeanings,
+      containsAll(<String>['Bet Purpose + Price', 'Bet Purpose And Price']),
+    );
+    expect(
+      byWorld[6]!.retiredMeanings,
+      containsAll(<String>['Board Awareness', 'Board and Draws']),
+    );
+  });
+
+  test('canonical truth map v1 matches active Act0 runtime titles', () {
+    final state = Act0ShellStateV1.sample;
+    for (final identity in canonicalTruthWorldIdentityEntriesV1()) {
+      final world = state.worldById(identity.worldId);
+      expect(world.worldNumber, identity.world);
+      expect(world.title, identity.learnerMeaning);
+      expect(identity.telemetryWorldId, identity.worldId);
+    }
+  });
+
+  test('canonical truth map v1 keeps active world sessions single-owned', () {
+    final ownerBySession = <String, int>{};
+    for (final identity in canonicalTruthWorldIdentityEntriesV1()) {
+      for (final sessionId in identity.activeSessionIds) {
+        expect(
+          ownerBySession[sessionId],
+          isNull,
+          reason: '$sessionId has multiple canonical world owners.',
+        );
+        ownerBySession[sessionId] = identity.world;
+      }
+    }
+
+    expect(ownerBySession['w4.s01'], 4);
+    expect(ownerBySession['w5.s01'], 5);
+    expect(ownerBySession['w6.s01'], 6);
+    expect(ownerBySession['w9.s10'], 9);
+  });
+
+  test(
+    'canonical truth map v1 prevents retired W4-W6 aliases in active docs',
+    () {
+      final activeText = <String>[
+        File(
+          'docs/plan/FREE_VS_PREMIUM_LAUNCH_BOUNDARY_POLICY_v1.md',
+        ).readAsStringSync(),
+        File(
+          'docs/plan/VOLUME_I_WORLD_CALIBRATION_2026_05_06_v1.md',
+        ).readAsStringSync(),
+      ].join('\n');
+
+      expect(activeText, isNot(contains('| W4 | Preflop Framework |')));
+      expect(activeText, isNot(contains('| W5 | Bet Purpose + Price |')));
+      expect(activeText, isNot(contains('| W6 | Board and Draws |')));
+      expect(activeText, isNot(contains('| W4 Preflop Framework |')));
+      expect(activeText, isNot(contains('| W5 Bet Purpose + Price |')));
+      expect(activeText, isNot(contains('| W6 Board Awareness |')));
     },
   );
 }

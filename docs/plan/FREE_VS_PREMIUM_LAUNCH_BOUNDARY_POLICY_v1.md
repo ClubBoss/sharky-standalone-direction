@@ -57,14 +57,15 @@ Active launch route labels for monetization copy:
 | W1 | Poker from Zero |
 | W2 | Hand Discipline |
 | W3 | Position Thinking |
-| W4 | Preflop Framework |
-| W5 | Bet Purpose + Price |
-| W6 | Board and Draws |
+| W4 | Bet Purpose / Price |
+| W5 | Board Awareness |
+| W6 | Range Thinking |
 
-Older authored/content documents may still describe W4 as `Bet Purpose + Price`
-and W5 as `Board Awareness`. Those labels are stale or secondary for launch
-monetization until a dedicated route/content normalization wave changes the
-active route truth.
+Older authored/content documents may still describe W4-W6 with pre-normalized
+labels. Those labels are retired for launch monetization after the W4-W6
+runtime/title normalization wave. Active launch copy must use the table above
+and defer to `docs/plan/MONETIZATION_SSOT_v1.md` plus
+`lib/canonical/canonical_truth_map_v1.dart` when route labels conflict.
 
 W4 is a primary future challenger / A-B candidate, not current launch-default.
 W4 can graduate only after route truth normalization, W1-W3/W4 telemetry,
