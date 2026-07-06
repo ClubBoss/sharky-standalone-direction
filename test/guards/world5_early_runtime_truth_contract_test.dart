@@ -1,9 +1,97 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  test(
+    'active W5 content truth is s01-s10 with w5.s11 preserved only as source',
+    () {
+      const activeW5Sessions = <String>[
+        'w5.s01',
+        'w5.s02',
+        'w5.s03',
+        'w5.s04',
+        'w5.s05',
+        'w5.s06',
+        'w5.s07',
+        'w5.s08',
+        'w5.s09',
+        'w5.s10',
+      ];
+
+      final indexText = File(
+        'content/worlds/world5/v1/sessions/index.md',
+      ).readAsStringSync();
+      final indexSessions = RegExp(
+        r'^- (w5\.s\d+):',
+        multiLine: true,
+      ).allMatches(indexText).map((match) => match.group(1)!).toList();
+      expect(indexSessions, activeW5Sessions);
+      expect(indexText, isNot(contains('w5.s11:')));
+
+      final drillManifest =
+          jsonDecode(
+                File(
+                  'content/_meta/world_drills_manifest_v1.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
+      final drillManifestWorlds = drillManifest['worlds'] as List<dynamic>;
+      final drillManifestWorld5 = drillManifestWorlds
+          .cast<Map<String, dynamic>>()
+          .singleWhere((world) => world['world'] == 5);
+      final drillManifestSessions =
+          (drillManifestWorld5['sessions'] as List<dynamic>)
+              .cast<Map<String, dynamic>>()
+              .map((session) => session['id'] as String)
+              .toList();
+      expect(drillManifestSessions, activeW5Sessions);
+      expect(
+        drillManifestSessions,
+        isNot(contains('w5.s11')),
+        reason:
+            'W5.s11 authored source is preserved but must not be active drill-manifest truth.',
+      );
+
+      final sessionManifest =
+          jsonDecode(
+                File(
+                  'content/_meta/world_sessions_manifest_v1.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
+      final sessionManifestWorlds = sessionManifest['worlds'] as List<dynamic>;
+      final sessionManifestWorld5 = sessionManifestWorlds
+          .cast<Map<String, dynamic>>()
+          .singleWhere((world) => world['world'] == 5);
+      final sessionManifestSessions =
+          (sessionManifestWorld5['sessions'] as List<dynamic>)
+              .cast<Map<String, dynamic>>()
+              .map((session) => session['id'] as String)
+              .toList();
+      expect(sessionManifestSessions, activeW5Sessions);
+      expect(
+        sessionManifestSessions,
+        isNot(contains('w5.s11')),
+        reason:
+            'W5.s11 authored source is preserved but must not be active session-manifest truth.',
+      );
+
+      expect(
+        File(
+          'content/worlds/world5/v1/sessions/w5.s11/session.md',
+        ).existsSync(),
+        isTrue,
+        reason:
+            'Owner decision preserves W5.s11 as noncanonical/deferred source.',
+      );
+    },
+  );
 
   testWidgets('w5.s01-w5.s10 use board-texture classifier runtime truth', (
     tester,
@@ -15,8 +103,11 @@ void main() {
     ))!;
     expect(w5s01.map((item) => item.drillId).toList(), <String>[
       'classify_texture_intro_dry_raise_v1',
+      'classify_texture_intro_dry_call_control_v1',
       'classify_texture_intro_wet_call_v1',
+      'classify_texture_intro_wet_fold_pressure_v1',
       'classify_texture_intro_paired_fold_v1',
+      'classify_texture_intro_paired_call_control_v1',
     ]);
     expect(
       w5s01.every(
@@ -26,10 +117,16 @@ void main() {
     );
     expect(w5s01.first.spec.boardTextureV1, 'dry');
     expect(w5s01.first.spec.expectedActionV1, 'raise');
-    expect(w5s01[1].spec.boardTextureV1, 'wet');
+    expect(w5s01[1].spec.boardTextureV1, 'dry');
     expect(w5s01[1].spec.expectedActionV1, 'call');
+    expect(w5s01[2].spec.boardTextureV1, 'wet');
+    expect(w5s01[2].spec.expectedActionV1, 'call');
+    expect(w5s01[3].spec.boardTextureV1, 'wet');
+    expect(w5s01[3].spec.expectedActionV1, 'fold');
+    expect(w5s01[4].spec.boardTextureV1, 'paired');
+    expect(w5s01[4].spec.expectedActionV1, 'fold');
     expect(w5s01.last.spec.boardTextureV1, 'paired');
-    expect(w5s01.last.spec.expectedActionV1, 'fold');
+    expect(w5s01.last.spec.expectedActionV1, 'call');
 
     final w5s02 = (await tester.runAsync(
       () => adapter.loadSessionDrills('w5.s02'),

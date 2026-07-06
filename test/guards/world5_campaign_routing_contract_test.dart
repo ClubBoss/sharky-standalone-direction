@@ -62,37 +62,28 @@ void main() {
       'world5_calibration_completed_v1': false,
     });
 
-    await tester.pumpWidget(const AppRoot());
-    final mapFallback = find.byKey(const Key('map_render_fallback_v1'));
-    final world5Entry = find.byKey(const Key('world_campaign_open_5'));
-    final nextPackCta = find.byKey(const Key('world_campaign_next_pack_cta'));
-    await _pumpUntilAny(tester, <Finder>[
-      world5Entry,
-      nextPackCta,
-      mapFallback,
-    ]);
-    expect(
-      world5Entry.evaluate().isNotEmpty ||
-          nextPackCta.evaluate().isNotEmpty ||
-          mapFallback.evaluate().isNotEmpty,
-      isTrue,
+    await tester.pumpWidget(
+      const MaterialApp(home: UniversalIntakePlanScreen()),
+    );
+    await _pumpBounded(tester);
+    await PaymentService.syncCanonicalEntitlementForProductV1(
+      PaymentService.productPremiumPack,
     );
 
-    if (nextPackCta.evaluate().isNotEmpty) {
-      final ctaRect = tester.getRect(nextPackCta);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(ctaRect.top >= 0, isTrue);
-      expect(ctaRect.bottom <= logicalHeight, isTrue);
-      final ctaWidget = tester.widget<ElevatedButton>(nextPackCta);
-      expect(ctaWidget.onPressed != null, isTrue);
-    } else if (world5Entry.evaluate().isNotEmpty) {
-      final entryRect = tester.getRect(world5Entry);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(entryRect.top >= 0, isTrue);
-      expect(entryRect.bottom <= logicalHeight, isTrue);
-    }
+    final start = find.byKey(const Key('today_plan_start_cta'));
+    await _pumpUntilAny(tester, <Finder>[start]);
+
+    expect(start, findsOneWidget);
+    await tester.ensureVisible(start);
+    await tester.pumpAndSettle();
+
+    final startRect = tester.getRect(start);
+    final logicalHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    expect(startRect.top >= 0, isTrue);
+    expect(startRect.bottom <= logicalHeight, isTrue);
+    final startWidget = tester.widget<ElevatedButton>(start);
+    expect(startWidget.onPressed != null, isTrue);
 
     expect(tester.takeException(), isNull);
   });
