@@ -11,7 +11,8 @@ Started from synced `main` at `891974b` after PR #9 merge.
 ## 2. Docs Inspected
 
 - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
-- `docs/_reviews/top1_product_attack_plan_refresh_v1.md`
+- `docs/archive/historical_audits/top1_product_attack_plan_refresh_v1.md`
+  (archived; superseded by `top1_product_attack_plan_refresh_v2.md`)
 - `docs/plan/MASTER_PLAN_v3.0.md`
 - `docs/plan/MONETIZATION_SSOT_v1.md`
 - `docs/plan/FREE_VS_PREMIUM_LAUNCH_BOUNDARY_POLICY_v1.md`
