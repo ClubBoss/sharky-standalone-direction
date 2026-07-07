@@ -2,14 +2,13 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `c7ac518401a3851fcb9a07a1348e1497710d5cfc` (W1-W6
-runtime integrity gate integration HEAD on `main`; W1-W6 grouped repair
-program Waves 1-4 and the runtime integrity gate are closed and integrated;
-repository hygiene,
-dead-system decommission, and repository-truth stabilization/integration are
-also closed).
+Verified product HEAD: `38c7de59303a93206b28829e899874124e270e07` (W1-W6
+Repair Wave 5 telemetry/repair proof integration HEAD on `main`; W1-W6
+grouped repair program Waves 1-5 and the runtime integrity gate are closed
+and integrated; repository hygiene, dead-system decommission, and repository-
+truth stabilization/integration are also closed).
 Verified active route artifact:
-`docs/_reviews/w1_w6_runtime_bundle_build_integrity_v1.md`.
+`docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed learning-loop, repair, proof, Practice,
 Review, Session Summary, telemetry, or learning-claim change.
 
@@ -35,13 +34,17 @@ targets. W4 sizing and adjacent action-purpose families require their own
 evidence and authorization.
 
 Receipts and retained results provide deterministic source, choice, expected
-answer, signal, family, target, and outcome provenance. Per-decision telemetry
-and time-to-decision are not available and must not be inferred. The
+answer, signal, family, target, and outcome provenance. Wave 5 added canonical
+W1-W6 decision telemetry projection for the Act0 runner shell: exactly-once
+decision events, non-negative/resettable decision timers, canonical evaluator
+correctness, and deterministic repair projection are covered for
+representative W1/W3/W4/W5/W6 paths. The
 `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate` closed with
-`w1_w6_final_gate_repair_program_ready`; its grouped repair program Waves 1-4
+`w1_w6_final_gate_repair_program_ready`; its grouped repair program Waves 1-5
 (beginner truth, feedback completeness, authority drift, structured table
-context/mobile actionability) and the W1-W6 runtime integrity gate are closed
-and integrated into `main`. W7+ repair expansion remains closed.
+context/mobile actionability, telemetry/repair proof) and the W1-W6 runtime
+integrity gate are closed and integrated into `main`. W7+ repair expansion
+remains closed.
 
 ## Phase 7 Content Depth Gate
 

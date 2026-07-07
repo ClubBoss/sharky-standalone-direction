@@ -2,12 +2,12 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `c7ac518401a3851fcb9a07a1348e1497710d5cfc` (W1-W6
-runtime integrity gate integration HEAD on `main`; repository hygiene,
-dead-system decommission, and repository-truth stabilization/integration are
-closed).
-Verified active task: W1-W6 Repair Wave 4 and runtime integrity gate are
-integrated; no Wave 5 work is active.
+Verified product HEAD: `38c7de59303a93206b28829e899874124e270e07` (W1-W6
+Repair Wave 5 telemetry/repair proof integration HEAD on `main`; repository
+hygiene, dead-system decommission, and repository-truth stabilization/
+integration are closed).
+Verified active task: W1-W6 Repair Wave 5 telemetry/repair proof and runtime
+integrity gate are integrated; Global Baseline Debt recovery is not started.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
@@ -31,6 +31,8 @@ Current active branch:
   `970a1276cb4dcd2092ba7bd98b0076958a0f51f6`.
 - Runtime integrity gate integration HEAD:
   `c7ac518401a3851fcb9a07a1348e1497710d5cfc`.
+- Wave 5 telemetry/repair proof integration HEAD:
+  `38c7de59303a93206b28829e899874124e270e07`.
 - Structured context commit: `058ccec9` passed focused W5 parser/source/render
   validation.
 - Compact actionability commit: `4af55086` passed W4 compact portrait and
@@ -47,6 +49,8 @@ Current active branch:
   `docs/_reviews/w1_w6_repair_wave4_structured_context_actionability_v1.md`.
 - Runtime integrity closure proof is recorded in
   `docs/_reviews/w1_w6_runtime_bundle_build_integrity_v1.md`.
+- Wave 5 closure proof is recorded in
+  `docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 
 ## HEAD Freshness Rule
 

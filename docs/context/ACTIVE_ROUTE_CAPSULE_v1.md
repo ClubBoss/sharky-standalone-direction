@@ -3,7 +3,7 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-07.
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped
-repair program Waves 1-4, and the W1-W6 runtime integrity gate are closed and
+repair program Waves 1-5, and the W1-W6 runtime integrity gate are closed and
 integrated into `main`;
 repository hygiene
 (`docs/_reviews/repository_hygiene_context_cost_reduction_v1.md`), the
@@ -11,14 +11,16 @@ dead-system decommission wave
 (`docs/_reviews/repository_reduction_dead_system_decommission_v1.md`), and
 repository truth stabilization
 (`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`) are
-also closed and integrated into `main`. The current runtime-integrity
-integration HEAD is `c7ac518401a3851fcb9a07a1348e1497710d5cfc`; any later
+also closed and integrated into `main`. The current Wave 5 telemetry/repair
+integration HEAD is `38c7de59303a93206b28829e899874124e270e07`; any later
 same-wave capsule commit is documentation-only.
-Current active task: none active; Wave 4 and the runtime integrity gate are integrated and the route is parked
-for the next admitted owner task. W7+ expansion and visual, mascot, and motion
-work remain deferred while this route is active.
+Current active task: none active; Wave 5 telemetry/repair proof and the
+runtime integrity gate are integrated, and the route is parked for the next
+admitted owner task. Global Baseline Debt recovery is not started in this
+capsule refresh. W7+ expansion and visual, mascot, and motion work remain
+deferred while this route is active.
 Verified active route artifact:
-`docs/_reviews/w1_w6_runtime_bundle_build_integrity_v1.md`.
+`docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -26,8 +28,8 @@ Refresh trigger: every committed route, phase, immediate-task, or forbidden-scop
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
 repair program in `docs/_reviews/w1_w6_grouped_repair_program_v1.md` and the
-ledger in `docs/_reviews/w1_w6_final_repair_ledger_v1.md`. Waves 1-3 of that
-program are closed:
+ledger in `docs/_reviews/w1_w6_final_repair_ledger_v1.md`. Waves 1-5 of that
+program and the runtime integrity gate are closed:
 
 - Wave 1 - beginner vocabulary/order + first-table assessment validity: CLOSED
   (`docs/_reviews/w1_w6_repair_wave1_beginner_truth_v1.md`).
@@ -41,12 +43,15 @@ program are closed:
 - Runtime integrity gate - active W1-W6 manifest/index/test-bundle/runtime-
   bundle parity: CLOSED and integrated
   (`docs/_reviews/w1_w6_runtime_bundle_build_integrity_v1.md`).
+- Wave 5 - canonical W1-W6 decision telemetry + deterministic repair proof:
+  CLOSED and integrated
+  (`docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`).
 
 Repository hygiene, dead-system decommission, and repository-truth
-stabilization are all closed and integrated. Next owner action: begin Wave 5
-only under a new explicit Wave 5 prompt. No W7+ route expansion, visual
-direction, asset replacement, mascot, motion, telemetry, Modern Table, or
-monetization work is activated.
+stabilization are all closed and integrated. Next owner action: Global
+Baseline Debt recovery only under a new explicit prompt. No W7+ route
+expansion, visual direction, asset replacement, mascot, motion, Modern Table,
+external analytics dependency, or monetization work is activated.
 
 ## Prior Visual and Phase Closure Record
 
