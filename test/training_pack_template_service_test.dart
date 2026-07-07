@@ -1,8 +1,7 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/training_pack_template_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:poker_analyzer/l10n/app_localizations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +28,7 @@ void main() {
         ),
       ),
     );
-    final packs = TrainingPackTemplateService.getAllTemplates[ctx];
+    final packs = TrainingPackTemplateService.getAllTemplates(ctx);
     expect(packs.first.name, AppLocalizations.of(ctx)!.packPushFold10);
     expect(packs[1].name, AppLocalizations.of(ctx)!.packPushFold12);
     expect(packs.last.name, AppLocalizations.of(ctx)!.packPushFold15);

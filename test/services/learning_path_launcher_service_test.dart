@@ -1,32 +1,27 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/learning_path_stage_model.dart';
-import 'package:poker_analyzer/models/session_log.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
+import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/services/learning_path_launcher_service.dart';
+import 'package:poker_analyzer/services/learning_path_stage_launcher.dart';
 import 'package:poker_analyzer/services/learning_path_summary_cache_v2.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
-import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_path_progress_service_v2.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
-import 'package:poker_analyzer/services/training_session_service.dart';
+import 'package:poker_analyzer/services/training_session_outcome.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/models/game_type.dart';
+import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class _FakeLogService extends SessionLogService {
-  _FakeLogService() : super(sessions: TrainingSessionService());
-  @override
-  Future<void> load() async {}
-  @override
-  List<SessionLog> get logs => [];
-}
+import '../support/service_test_fakes.dart';
 
 class _FakeCache extends LearningPathSummaryCache {
   final LearningPathSummary? summary;
   _FakeCache(this.summary)
-    : super(progress: TrainingPathProgressServiceV2(logs: _FakeLogService()));
+    : super(
+        progress: TrainingPathProgressServiceV2(logs: TestSessionLogService()),
+      );
   @override
   Future<void> refresh() async {}
   @override
@@ -34,24 +29,41 @@ class _FakeCache extends LearningPathSummaryCache {
 }
 
 class _FakeLibrary implements PackLibraryService {
-  final Map<String, TrainingPackTemplate> packs;
+  final Map<String, v2.TrainingPackTemplateV2> packs;
   _FakeLibrary(this.packs);
   @override
-  Future<TrainingPackTemplate?> recommendedStarter() async => null;
+  void addOrUpdate(v2.TrainingPackTemplateV2 template) {}
   @override
-  Future<TrainingPackTemplate?> getById(String id) async => packs[id];
+  int count() => packs.length;
   @override
-  Future<TrainingPackTemplate?> findByTag[String tag] async =>
+  List<String> getAvailablePackIds() => packs.keys.toList();
+  @override
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
+  @override
+  Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
+      packs.values.toList();
+  @override
+  Future<v2.TrainingPackTemplateV2?> recommendedStarter() async => null;
+  @override
+  Future<v2.TrainingPackTemplateV2?> getById(String id) async => packs[id];
+  @override
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async =>
       packs.values.firstWhereOrNull((p) => p.tags.contains(tag));
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
 
 class _FakeLauncher extends TrainingSessionLauncher {
-  TrainingPackTemplate? launched;
+  v2.TrainingPackTemplateV2? launched;
   _FakeLauncher() : super();
   @override
-  Future<void> launch(TrainingPackTemplate template) async {
+  Future<void> launch(
+    v2.TrainingPackTemplateV2 template, {
+    int startIndex = 0,
+    List<String>? sessionTags,
+    String? source,
+    TrainingSessionEndCallback? onSessionEnd,
+  }) async {
     launched = template;
   }
 }
@@ -72,7 +84,7 @@ void main() {
       requiredAccuracy: 0,
       minHands: 0,
     );
-    const summary = LearningPathSummary(
+    final summary = LearningPathSummary(
       id: 'path',
       title: '',
       completedStages: 0,
@@ -84,7 +96,7 @@ void main() {
     );
     final cache = _FakeCache(summary);
     final library = _FakeLibrary({
-      'p1': TrainingPackTemplate(
+      'p1': v2.TrainingPackTemplateV2(
         id: 'p1',
         name: 'Pack',
         trainingType: TrainingType.pushFold,
@@ -107,15 +119,18 @@ void main() {
 
     final service = LearningPathLauncherService(
       cache: cache,
-      library: library,
-      launcher: launcher,
+      stageLauncher: LearningPathStageLauncher(
+        library: library,
+        launcher: launcher,
+        overlayLauncher: (_) async {},
+      ),
     );
     await service.launchNextStage('path', ctx);
     expect(launcher.launched?.id, 'p1');
   });
 
   testWidgets('shows snackbar when no stage available', (tester) async {
-    const summary = LearningPathSummary(
+    final summary = LearningPathSummary(
       id: 'path',
       title: '',
       completedStages: 1,
@@ -139,8 +154,11 @@ void main() {
 
     final service = LearningPathLauncherService(
       cache: cache,
-      library: library,
-      launcher: launcher,
+      stageLauncher: LearningPathStageLauncher(
+        library: library,
+        launcher: launcher,
+        overlayLauncher: (_) async {},
+      ),
     );
     await service.launchNextStage('path', ctx);
     await tester.pump();
@@ -148,4 +166,3 @@ void main() {
     expect(find.byType(SnackBar), findsOneWidget);
   });
 }
-

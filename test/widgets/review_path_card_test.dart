@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,7 +19,7 @@ class MockReminder extends Mock implements TagInsightReminderEngine {}
 
 class MockLauncher extends Mock implements TrainingSessionLauncher {}
 
-class FakeTemplate extends Fake implements TrainingPackTemplate {}
+class FakeTemplate extends Fake implements v2.TrainingPackTemplateV2 {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +54,7 @@ void main() {
     when(() => queue.queue).thenReturn(['p1']);
     when(() => queue.pop()).thenAnswer((_) async => 'p1');
 
-    final pack = TrainingPackTemplate(
+    final pack = v2.TrainingPackTemplateV2(
       id: 'p1',
       name: 'Pack',
       tags: ['icm'],
@@ -68,7 +67,7 @@ void main() {
 
     final reminder = MockReminder();
     when(() => reminder.loadLosses()).thenAnswer(
-      (_) async => [SkillLoss(tag: 'icm', drop: 0.6, trend: 'decline')),
+      (_) async => [SkillLoss(tag: 'icm', drop: 0.6, trend: 'decline')],
     );
 
     final launcher = MockLauncher();

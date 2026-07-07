@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/skill_gap_booster_service.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
@@ -18,7 +17,7 @@ class _FakeLibrary implements PackLibraryService {
   @override
   List<String> getAvailablePackIds() => [for (final p in packs) p.id];
   @override
-  List<TrainingPackSpot> getPack[String id] => const [];
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
   @override
   Future<List<v2.TrainingPackTemplateV2>> listStarters() async => packs;
   @override
@@ -28,7 +27,7 @@ class _FakeLibrary implements PackLibraryService {
   Future<v2.TrainingPackTemplateV2?> getById(String id) async =>
       packs.firstWhereOrNull((p) => p.id == id);
   @override
-  Future<v2.TrainingPackTemplateV2?> findByTag[String tag] async =>
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async =>
       packs.firstWhereOrNull((p) => p.tags.contains(tag));
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
@@ -81,4 +80,3 @@ void main() {
     expect(result.map((p) => p.id).toList(), ['p2']);
   });
 }
-

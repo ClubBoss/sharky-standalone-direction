@@ -1,10 +1,11 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/weekly_planner_booster_engine.dart';
 import 'package:poker_analyzer/models/learning_path_template_v2.dart';
 import 'package:poker_analyzer/models/learning_path_stage_model.dart';
 import 'package:poker_analyzer/models/theory_pack_model.dart';
 import 'package:poker_analyzer/models/stage_type.dart';
+import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
 import 'package:poker_analyzer/services/pack_library_service.dart';
 import 'package:poker_analyzer/services/theory_pack_library_service.dart';
 
@@ -18,6 +19,8 @@ class _FakeTheoryLibrary implements TheoryPackLibraryService {
   @override
   Future<void> loadAll() async {}
   @override
+  Future<void> loadDefaultPacks() async {}
+  @override
   Future<void> reload() async {}
 }
 
@@ -25,11 +28,22 @@ class _FakePackLibrary implements PackLibraryService {
   final Map<String, List<String>> byTag;
   _FakePackLibrary(this.byTag);
   @override
-  Future<TrainingPackTemplate?> recommendedStarter() async => null;
+  void addOrUpdate(v2.TrainingPackTemplateV2 template) {}
   @override
-  Future<TrainingPackTemplate?> getById(String id) async => null;
+  int count() => byTag.length;
   @override
-  Future<TrainingPackTemplate?> findByTag[String tag] async => null;
+  List<String> getAvailablePackIds() => const <String>[];
+  @override
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
+  @override
+  Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
+      const <v2.TrainingPackTemplateV2>[];
+  @override
+  Future<v2.TrainingPackTemplateV2?> recommendedStarter() async => null;
+  @override
+  Future<v2.TrainingPackTemplateV2?> getById(String id) async => null;
+  @override
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => null;
   @override
   Future<List<String>> findBoosterCandidates(String tag) async =>
       byTag[tag] ?? [];
@@ -92,4 +106,3 @@ void main() {
     });
   });
 }
-

@@ -1,10 +1,10 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/screens/training_session_summary_screen.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
-    as v2; // fix: disambiguate import
+import 'package:poker_analyzer/models/training_pack_template.dart'
+    as root_template;
+import 'package:poker_analyzer/models/v2/training_pack_template.dart' as v2;
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/training_session.dart';
@@ -28,10 +28,10 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('summary shows accuracy and deltas', (tester) async {
-    final template = v2.TrainingPackTemplateV2(
+    await _setLargeSurface(tester);
+    final template = v2.TrainingPackTemplate(
       id: 'tpl',
       name: 'Test',
-      trainingType: TrainingType.pushFold,
       spots: [
         TrainingPackSpot(id: 's1', hand: v2models.HandData()),
         TrainingPackSpot(id: 's2', hand: v2models.HandData()),
@@ -39,7 +39,7 @@ void main() {
         TrainingPackSpot(id: 's4', hand: v2models.HandData()),
       ],
       meta: {'evCovered': 2, 'icmCovered': 3},
-      created: DateTime.now(),
+      createdAt: DateTime.now(),
     );
 
     final session = TrainingSession(
@@ -110,23 +110,21 @@ void main() {
   });
 
   testWidgets('skill gains section shows deltas', (tester) async {
+    await _setLargeSurface(tester);
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: TrainingSessionSummaryScreen(
+      _summaryApp(
+        TrainingSessionSummaryScreen(
           session: TrainingSession(
             id: 'id',
             templateId: 't',
             completedAt: null,
             results: {},
           ),
-          template: v2.TrainingPackTemplateV2(
+          template: v2.TrainingPackTemplate(
             id: 't',
             name: '',
-            trainingType: TrainingType.pushFold,
             spots: [],
-            created: DateTime(0),
+            createdAt: DateTime(0),
           ),
           preEvPct: 0,
           preIcmPct: 0,
@@ -143,23 +141,21 @@ void main() {
   });
 
   testWidgets('streak bonus text is displayed', (tester) async {
+    await _setLargeSurface(tester);
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: TrainingSessionSummaryScreen(
+      _summaryApp(
+        TrainingSessionSummaryScreen(
           session: TrainingSession(
             id: 'id2',
             templateId: 't',
             completedAt: null,
             results: {},
           ),
-          template: v2.TrainingPackTemplateV2(
+          template: v2.TrainingPackTemplate(
             id: 't',
             name: '',
-            trainingType: TrainingType.pushFold,
             spots: [],
-            created: DateTime(0),
+            createdAt: DateTime(0),
           ),
           preEvPct: 0,
           preIcmPct: 0,
@@ -175,6 +171,57 @@ void main() {
   });
 }
 
+Future<void> _setLargeSurface(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
+Widget _summaryApp(Widget home) {
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<AdaptiveTrainingService>(
+        create: (_) => _FakeAdaptiveTrainingService(),
+      ),
+      ChangeNotifierProvider<MistakeReviewPackService>(
+        create: (_) => _FakeMistakeReviewPackService(),
+      ),
+      ChangeNotifierProvider<WeakSpotRecommendationService>(
+        create: (_) => _FakeWeakSpotRecommendationService(),
+      ),
+      ChangeNotifierProvider<DailyTipService>(
+        create: (_) => _FakeDailyTipService(),
+      ),
+      ChangeNotifierProvider<TrainingSessionService>(
+        create: (_) => _DummyTrainingSessionService(),
+      ),
+      ChangeNotifierProvider<NextStepEngine>(
+        create: (_) => _FakeNextStepEngine(),
+      ),
+      ChangeNotifierProvider<SavedHandManagerService>(
+        create: (_) =>
+            SavedHandManagerService(storage: SavedHandStorageService()),
+      ),
+      ChangeNotifierProvider<PlayerStyleService>(
+        create: (context) =>
+            PlayerStyleService(hands: context.read<SavedHandManagerService>()),
+      ),
+      ChangeNotifierProvider<ProgressForecastService>(
+        create: (context) => ProgressForecastService(
+          hands: context.read<SavedHandManagerService>(),
+          style: context.read<PlayerStyleService>(),
+        ),
+      ),
+    ],
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: home,
+    ),
+  );
+}
+
 class _DummyTrainingSessionService extends TrainingSessionService {}
 
 class _FakeMistakeReviewPackService extends ChangeNotifier
@@ -182,7 +229,7 @@ class _FakeMistakeReviewPackService extends ChangeNotifier
   @override
   bool hasMistakes() => false;
   @override
-  Future<v2.TrainingPackTemplateV2?> buildPack(BuildContext context) async =>
+  Future<v2.TrainingPackTemplate?> buildPack(BuildContext context) async =>
       null;
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -195,8 +242,7 @@ class _FakeWeakSpotRecommendationService extends ChangeNotifier
   @override
   List<WeakSpotRecommendation> get recommendations => [];
   @override
-  Future<v2.TrainingPackTemplateV2?> buildPack([HeroPosition? pos]) async =>
-      null;
+  Future<v2.TrainingPackTemplate?> buildPack([HeroPosition? pos]) async => null;
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
@@ -204,22 +250,21 @@ class _FakeWeakSpotRecommendationService extends ChangeNotifier
 class _FakeAdaptiveTrainingService extends ChangeNotifier
     implements AdaptiveTrainingService {
   @override
-  final ValueNotifier<List<v2.TrainingPackTemplateV2>> recommendedNotifier =
-      ValueNotifier(<v2.TrainingPackTemplateV2>[]);
+  final ValueNotifier<List<root_template.TrainingPackTemplate>>
+  recommendedNotifier = ValueNotifier(<root_template.TrainingPackTemplate>[]);
   @override
-  List<v2.TrainingPackTemplateV2> get recommended => [];
+  List<root_template.TrainingPackTemplate> get recommended => [];
   @override
   TrainingPackStat? statFor(String id) => null;
   @override
   Future<void> refresh() async {}
   @override
-  Future<v2.TrainingPackTemplateV2> buildAdaptivePack() async =>
-      v2.TrainingPackTemplateV2(
+  Future<v2.TrainingPackTemplate> buildAdaptivePack() async =>
+      v2.TrainingPackTemplate(
         id: '',
         name: '',
-        trainingType: TrainingType.pushFold,
         spots: [],
-        created: DateTime.now(),
+        createdAt: DateTime.now(),
       );
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

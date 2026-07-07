@@ -1,12 +1,10 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/training_pack_search_service.dart';
 import 'package:poker_analyzer/services/training_pack_search_index_builder.dart';
 import 'package:poker_analyzer/models/v2/pack_ux_metadata.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
-    as v2; // fix: disambiguate import
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/core/training/library/training_pack_library_v2.dart';
 import 'package:poker_analyzer/models/game_type.dart';
@@ -17,7 +15,7 @@ class _FakeBuilder extends TrainingPackSearchIndexBuilder {
   int buildCount = 0;
 
   @override
-  void build(List<v2.TrainingPackTemplateV2> packs] {
+  void build(List<v2.TrainingPackTemplateV2> packs) {
     buildCount++;
     lastBuilt = packs;
   }
@@ -99,7 +97,7 @@ void main() {
   test('delegates query and rebuilds on library change', () {
     final builder = _FakeBuilder();
     final controller = StreamController<void>.broadcast(sync: true);
-    final library = _FakeLibrary([_pack('p1')));
+    final library = _FakeLibrary([_pack('p1')]);
     final service = TrainingPackSearchService(
       library: library,
       indexBuilder: builder,
@@ -134,4 +132,3 @@ void main() {
     controller.close();
   });
 }
-

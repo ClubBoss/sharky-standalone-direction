@@ -1,10 +1,10 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/scheduled_training_launcher.dart';
 import 'package:poker_analyzer/services/scheduled_training_queue_service.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
+import 'package:poker_analyzer/services/training_session_outcome.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
@@ -21,7 +21,7 @@ class _FakeLibrary implements PackLibraryService {
   @override
   List<String> getAvailablePackIds() => packs.keys.toList();
   @override
-  List<TrainingPackSpot> getPack[String id] => const [];
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
   @override
   Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
       packs.values.toList();
@@ -30,7 +30,7 @@ class _FakeLibrary implements PackLibraryService {
   @override
   Future<v2.TrainingPackTemplateV2?> getById(String id) async => packs[id];
   @override
-  Future<v2.TrainingPackTemplateV2?> findByTag[String tag] async => null;
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => null;
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
@@ -44,6 +44,7 @@ class _FakeLauncher extends TrainingSessionLauncher {
     int startIndex = 0,
     List<String>? sessionTags,
     String? source,
+    TrainingSessionEndCallback? onSessionEnd,
   }) async {
     launched = template;
   }
@@ -92,4 +93,3 @@ void main() {
     expect(queue.queue.isEmpty, true);
   });
 }
-

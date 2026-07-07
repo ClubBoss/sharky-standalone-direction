@@ -1,8 +1,6 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/v2/pack_ux_metadata.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
-    as v2; // fix: disambiguate import
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/services/training_pack_search_index_builder.dart';
 
@@ -58,7 +56,7 @@ void main() {
     );
 
     final builder = TrainingPackSearchIndexBuilder();
-    builder.build([p1, p2, p3, p4]];
+    builder.build([p1, p2, p3, p4]);
 
     final res = builder.query(
       level: TrainingPackLevel.intermediate,
@@ -71,4 +69,3 @@ void main() {
     expect(res, [p3]);
   });
 }
-

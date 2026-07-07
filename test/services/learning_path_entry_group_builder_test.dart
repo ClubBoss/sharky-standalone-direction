@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/learning_path_entry_group_builder.dart';
 import 'package:poker_analyzer/services/skill_node_decay_review_injector.dart';
@@ -25,29 +24,38 @@ class _FakeTheoryLinker extends InlineTheoryLinkerService {
   Future<List<TheoryMiniLessonNode>> extractRelevantLessons(
     List<String> tags,
   ) async {
-    return [TheoryMiniLessonNode(id: 't1', title: 'Lesson', content: ''));
+    return [TheoryMiniLessonNode(id: 't1', title: 'Lesson', content: '')];
   }
 }
 
 class _FakePackLibraryService implements PackLibraryService {
-  final TrainingPackTemplate pack;
+  final v2.TrainingPackTemplateV2 pack;
 
   _FakePackLibraryService(this.pack);
 
   @override
-  Future<TrainingPackTemplate?> getById(String id) async => pack;
+  void addOrUpdate(v2.TrainingPackTemplateV2 template) {}
 
   @override
-  List<TrainingPackSpot> getPack[String id] => [];
+  int count() => 1;
+
+  @override
+  Future<v2.TrainingPackTemplateV2?> getById(String id) async => pack;
+
+  @override
+  List<TrainingPackSpot> getPack(String id) => [];
 
   @override
   List<String> getAvailablePackIds() => [];
 
   @override
-  Future<TrainingPackTemplate?> recommendedStarter() async => null;
+  Future<List<v2.TrainingPackTemplateV2>> listStarters() async => [pack];
 
   @override
-  Future<TrainingPackTemplate?> findByTag[String tag] async => null;
+  Future<v2.TrainingPackTemplateV2?> recommendedStarter() async => null;
+
+  @override
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => null;
 
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
@@ -61,7 +69,7 @@ void main() {
       category: 'cat',
       trainingPackId: 'pack',
     );
-    const pack = TrainingPackTemplate(
+    final pack = v2.TrainingPackTemplateV2(
       id: 'pack',
       name: 'Practice',
       trainingType: TrainingType.pushFold,
@@ -73,7 +81,7 @@ void main() {
       packLibrary: _FakePackLibraryService(pack),
     );
 
-    final groups = await builder.build(node];
+    final groups = await builder.build(node);
 
     expect(groups.length, 3);
     expect(groups[0].title, 'Review');
@@ -82,4 +90,3 @@ void main() {
     expect(groups[2].entries.first, pack);
   });
 }
-

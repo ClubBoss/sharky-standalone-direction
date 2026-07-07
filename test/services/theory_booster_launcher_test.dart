@@ -1,10 +1,8 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/theory_booster_launcher.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
-import 'package:poker_analyzer/services/session_log_service.dart';
-import 'package:poker_analyzer/services/training_session_service.dart';
+import 'package:poker_analyzer/services/training_session_outcome.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2;
 import 'package:poker_analyzer/models/game_type.dart';
@@ -12,11 +10,11 @@ import 'package:poker_analyzer/core/training/library/training_pack_library_v2.da
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/models/v2/pack_ux_metadata.dart';
 import 'package:collection/collection.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeMasteryService extends TagMasteryService {
   final Map<String, double> _map;
-  _FakeMasteryService(this._map)
-    : super(logs: SessionLogService(sessions: TrainingSessionService()));
+  _FakeMasteryService(this._map) : super(logs: TestSessionLogService());
 
   @override
   Future<Map<String, double>> computeMastery({bool force = false}) async =>
@@ -32,6 +30,7 @@ class _FakeLauncher extends TrainingSessionLauncher {
     int startIndex = 0,
     List<String>? sessionTags,
     String? source,
+    TrainingSessionEndCallback? onSessionEnd,
   }) async {
     launched = template;
   }

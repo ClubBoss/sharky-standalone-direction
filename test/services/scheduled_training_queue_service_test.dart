@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/scheduled_training_queue_service.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
@@ -30,7 +29,7 @@ class _FakeLibrary implements PackLibraryService {
   Future<v2.TrainingPackTemplateV2?> getById(String id) async => byTag.values
       .firstWhere((p) => p.id == id, orElse: () => byTag.values.first);
   @override
-  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => byTag(tag);
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => byTag[tag];
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
@@ -59,6 +58,7 @@ void main() {
   test('autoSchedule queues recommended packs', () async {
     final queue = ScheduledTrainingQueueService();
     await queue.load();
+    await _clearQueue(queue);
     final library = _FakeLibrary({'a': _tpl('pa', 'a'), 'c': _tpl('pc', 'c')});
     await queue.autoSchedule(
       losses: [SkillLoss(tag: 'a', drop: 0.2, trend: '')],
@@ -72,6 +72,7 @@ void main() {
   test('autoSchedule avoids duplicates', () async {
     final queue = ScheduledTrainingQueueService();
     await queue.load();
+    await _clearQueue(queue);
     final library = _FakeLibrary({'a': _tpl('pa', 'a')});
     await queue.add('pa');
     await queue.autoSchedule(
@@ -82,4 +83,10 @@ void main() {
     );
     expect(queue.queue, ['pa']);
   });
+}
+
+Future<void> _clearQueue(ScheduledTrainingQueueService queue) async {
+  while (queue.queue.isNotEmpty) {
+    await queue.pop();
+  }
 }

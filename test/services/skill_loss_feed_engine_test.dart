@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/skill_loss_feed_engine.dart';
 import 'package:poker_analyzer/services/skill_loss_detector.dart';
@@ -10,6 +9,7 @@ import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/models/game_type.dart';
 import 'package:poker_analyzer/models/tag_goal_progress.dart';
 import 'package:poker_analyzer/services/tag_review_history_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakeGoals implements TagGoalTrackerService {
   final Map<String, DateTime?> map;
@@ -46,7 +46,7 @@ class _FakeLibrary implements PackLibraryService {
       byTag.values.map((p) => p.id).toSet().toList();
 
   @override
-  List<TrainingPackSpot> getPack[String id] => const <TrainingPackSpot>[];
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
 
   @override
   Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
@@ -58,7 +58,7 @@ class _FakeLibrary implements PackLibraryService {
   Future<v2.TrainingPackTemplateV2?> getById(String id) async => byTag.values
       .firstWhere((p) => p.id == id, orElse: () => byTag.values.first);
   @override
-  Future<v2.TrainingPackTemplateV2?> findByTag[String tag] async => byTag[tag];
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => byTag[tag];
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
@@ -89,6 +89,10 @@ v2.TrainingPackTemplateV2 _tpl(String id, String tag) {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
 
   test('buildFeed ranks losses by urgency', () async {
     final goals = _FakeGoals({
@@ -130,4 +134,3 @@ void main() {
     expect(result.first.tag, 'b');
   });
 }
-

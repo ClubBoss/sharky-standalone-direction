@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/auto_recovery_trigger_service.dart';
 import 'package:poker_analyzer/services/scheduled_training_queue_service.dart';
@@ -57,7 +56,7 @@ class _FakeLibrary implements PackLibraryService {
       byTag.values.map((p) => p.id).toSet().toList();
 
   @override
-  List<TrainingPackSpot> getPack[String id] => const <TrainingPackSpot>[];
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
 
   @override
   Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
@@ -69,7 +68,7 @@ class _FakeLibrary implements PackLibraryService {
   Future<v2.TrainingPackTemplateV2?> getById(String id) async =>
       byTag.values.firstWhereOrNull((p) => p.id == id);
   @override
-  Future<v2.TrainingPackTemplateV2?> findByTag[String tag] async => byTag[tag];
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async => byTag[tag];
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
@@ -105,6 +104,7 @@ void main() {
     final library = _FakeLibrary({'icm': _tpl('a', 'icm')});
     final queue = ScheduledTrainingQueueService();
     await queue.load();
+    await _clearQueue(queue);
     final service = AutoRecoveryTriggerService(
       reminder: reminder,
       queue: queue,
@@ -125,6 +125,7 @@ void main() {
     final library = _FakeLibrary({'cbet': _tpl('b', 'cbet')});
     final queue = ScheduledTrainingQueueService();
     await queue.load();
+    await _clearQueue(queue);
     final service = AutoRecoveryTriggerService(
       reminder: reminder,
       queue: queue,
@@ -136,3 +137,8 @@ void main() {
   });
 }
 
+Future<void> _clearQueue(ScheduledTrainingQueueService queue) async {
+  while (queue.queue.isNotEmpty) {
+    await queue.pop();
+  }
+}

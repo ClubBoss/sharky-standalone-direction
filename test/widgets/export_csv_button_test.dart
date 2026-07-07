@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,13 +17,14 @@ class _FakePathProvider extends PathProviderPlatform {
 class _FakeSharePlatform extends SharePlatform {
   bool shared = false;
   @override
-  Future<void> shareXFiles(
+  Future<ShareResult> shareXFiles(
     List<XFile> files, {
     String? text,
     String? subject,
-    ShareOptions? sharePositionOrigin,
+    Rect? sharePositionOrigin,
   }) async {
     shared = true;
+    return const ShareResult('', ShareResultStatus.success);
   }
 }
 
@@ -45,15 +45,13 @@ void main() {
       heroRange: ['AA'],
     );
     await tester.pumpWidget(
-      MaterialApp(
-        home: TrainingPackTemplateEditorScreen(template: tpl, templates: [tpl]),
-      ),
+      MaterialApp(home: TrainingPackTemplateEditorScreen(template: tpl)),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
     await tester.tap(find.byIcon(Icons.more_vert));
-    await tester.pumpAndSettle();
+    await tester.pump();
     await tester.tap(find.text('Export CSV'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(share.shared, true);
     await dir.delete(recursive: true);
   });

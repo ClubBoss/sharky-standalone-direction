@@ -1,4 +1,5 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +12,7 @@ import 'package:poker_analyzer/services/learning_path_stage_launcher.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
 import 'package:poker_analyzer/services/theory_pack_library_service.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
+import 'package:poker_analyzer/services/training_session_outcome.dart';
 import 'package:poker_analyzer/models/game_type.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/screens/theory_pack_reader_screen.dart';
@@ -18,26 +20,40 @@ import 'package:poker_analyzer/services/user_action_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakePackLibrary implements PackLibraryService {
-  final Map<String, TrainingPackTemplate> packs;
+  final Map<String, v2.TrainingPackTemplateV2> packs;
   _FakePackLibrary(this.packs);
   @override
-  Future<TrainingPackTemplate?> recommendedStarter() async => null;
+  void addOrUpdate(v2.TrainingPackTemplateV2 template) {}
   @override
-  Future<TrainingPackTemplate?> getById(String id) async => packs[id];
+  int count() => packs.length;
   @override
-  Future<TrainingPackTemplate?> findByTag[String tag] async =>
+  List<String> getAvailablePackIds() => packs.keys.toList();
+  @override
+  List<TrainingPackSpot> getPack(String id) => const <TrainingPackSpot>[];
+  @override
+  Future<List<v2.TrainingPackTemplateV2>> listStarters() async =>
+      packs.values.toList();
+  @override
+  Future<v2.TrainingPackTemplateV2?> recommendedStarter() async => null;
+  @override
+  Future<v2.TrainingPackTemplateV2?> getById(String id) async => packs[id];
+  @override
+  Future<v2.TrainingPackTemplateV2?> findByTag(String tag) async =>
       packs.values.firstWhereOrNull((p) => p.tags.contains(tag));
   @override
   Future<List<String>> findBoosterCandidates(String tag) async => [];
 }
 
 class _FakeLauncher extends TrainingSessionLauncher {
-  TrainingPackTemplate? launched;
+  v2.TrainingPackTemplateV2? launched;
   _FakeLauncher() : super();
   @override
   Future<void> launch(
-    TrainingPackTemplate template, {
+    v2.TrainingPackTemplateV2 template, {
     int startIndex = 0,
+    List<String>? sessionTags,
+    String? source,
+    TrainingSessionEndCallback? onSessionEnd,
   }) async {
     launched = template;
   }
@@ -53,16 +69,18 @@ class _FakeTheoryLibrary implements TheoryPackLibraryService {
   @override
   Future<void> loadAll() async {}
   @override
+  Future<void> loadDefaultPacks() async {}
+  @override
   Future<void> reload() async {}
 }
 
-TrainingPackTemplate _tpl(String id) {
-  return TrainingPackTemplate(
+v2.TrainingPackTemplateV2 _tpl(String id) {
+  return v2.TrainingPackTemplateV2(
     id: id,
     name: id,
     trainingType: TrainingType.pushFold,
     gameType: GameType.tournament,
-    spots: [TrainingPackSpot(id: 's')),
+    spots: [TrainingPackSpot(id: 's')],
     spotCount: 1,
     created: DateTime.now(),
     positions: [],
@@ -131,8 +149,9 @@ void main() {
         home: Scaffold(body: Container(key: key)),
       ),
     );
-    await service.launch(key.currentContext!, stage);
-    await tester.pumpAndSettle();
+    unawaited(service.launch(key.currentContext!, stage));
+    await tester.pump();
+    await tester.pump();
     expect(find.byType(TheoryPackReaderScreen), findsOneWidget);
   });
 
@@ -159,9 +178,9 @@ void main() {
         home: Scaffold(body: Container(key: key)),
       ),
     );
-    await service.launch(key.currentContext!, stage);
-    await tester.pumpAndSettle();
+    unawaited(service.launch(key.currentContext!, stage));
+    await tester.pump();
+    await tester.pump();
     expect(find.byType(TheoryPackReaderScreen), findsOneWidget);
   });
 }
-
