@@ -2,10 +2,9 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `4af55086f0302ffb6fa90a73333fe2892853cc25` (Wave 4
-implementation HEAD before closure docs on
-`codex/w1-w6-repair-wave4-structured-context-actionability-v1`;
-W1-W6 grouped repair program Waves 1-4 are closed on branch; repository hygiene,
+Verified product HEAD: `970a1276cb4dcd2092ba7bd98b0076958a0f51f6` (Wave 4
+source integration HEAD on `main`; W1-W6 grouped repair program Waves 1-4 are
+closed and integrated; repository hygiene,
 dead-system decommission, and repository-truth stabilization/integration are
 also closed).
 Verified active route artifact:
@@ -40,8 +39,8 @@ and time-to-decision are not available and must not be inferred. The
 `W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate` closed with
 `w1_w6_final_gate_repair_program_ready`; its grouped repair program Waves 1-4
 (beginner truth, feedback completeness, authority drift, structured table
-context/mobile actionability) are closed on branch. W7+ repair expansion
-remains closed.
+context/mobile actionability) are closed and integrated into `main`. W7+
+repair expansion remains closed.
 
 ## Phase 7 Content Depth Gate
 

@@ -2,13 +2,11 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `4af55086f0302ffb6fa90a73333fe2892853cc25` (Wave 4
-implementation HEAD before closure docs on
-`codex/w1-w6-repair-wave4-structured-context-actionability-v1`; repository
-hygiene, dead-system decommission, and repository-truth
-stabilization/integration are closed).
-Verified active task: W1-W6 Repair Wave 4 is closed on branch and awaits owner
-integration into `main`.
+Verified product HEAD: `970a1276cb4dcd2092ba7bd98b0076958a0f51f6` (Wave 4
+source integration HEAD on `main`; repository hygiene, dead-system
+decommission, and repository-truth stabilization/integration are closed).
+Verified active task: W1-W6 Repair Wave 4 is integrated; no Wave 5 work is
+active.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
@@ -23,15 +21,19 @@ Current active worktree:
 `/Users/elmarsalimzade/Sharky_1.0`
 
 Current active branch:
-`codex/w1-w6-repair-wave4-structured-context-actionability-v1`
+`main`
 
 ## Current Integration Evidence
 
 - Wave 4 base HEAD: `1105620f91cc183bda90bead10a539f5e8a5b6b6`.
+- Wave 4 source integration HEAD:
+  `970a1276cb4dcd2092ba7bd98b0076958a0f51f6`.
 - Structured context commit: `058ccec9` passed focused W5 parser/source/render
   validation.
 - Compact actionability commit: `4af55086` passed W4 compact portrait and
   safe-area actionability validation.
+- Closure commit: `970a1276` recorded the Wave 4 closure artifact and pre-
+  integration capsule state.
 - Focused identity, Tier0 admission, feedback completeness, terminology, W3/W5
   manifest/index parity, `fast_loop_world1_v1.sh`, `release_gate_world1.sh`,
   standalone `flutter analyze`, diff checks, and `graphify hook-check` passed.
