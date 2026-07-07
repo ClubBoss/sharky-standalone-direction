@@ -111,8 +111,11 @@ is admitted):
 4. **Completion ownership** — completion is written to and restored from the
    canonical Act0 progress store, not a parallel/legacy persistence path.
 5. **Repair-route reachability** — any claimed repair/recheck actually routes
-   back to its exact target through a proven canonical seam (this is the axis
-   `W1W6-DLR-002` still fails).
+   back to its exact target through a proven canonical seam. The old
+   `W1W6-DLR-002` finding is now corrected as
+   `MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`: it failed for the optional
+   session-drill receipt/queue owner it inspected, but it is not a canonical
+   Act0 W6 blocker.
 6. **No score/closure evidence from optional/debug/legacy flows** — optional
    sessions built on a misscoped premise (e.g. `w1.s11`) do not count as
    closure or score evidence for the canonical route.
@@ -182,11 +185,15 @@ exact target drill through any existing runtime path. Verdict:
   converting the session/drill-owned W6 queue item into a fabricated Act0 task
   id was explicitly rejected as unsafe.
 
-This is `OPEN_CONFIRMED` (`W1W6-DLR-002` below): the W6 range-bucket repair
-signal can be captured, classified, and queued, but the learner cannot
-currently be routed back into the exact repaired drill through any proven,
-safe, existing seam. Axis J ("learner later receives proof of recovery") is
-not satisfied for this family.
+This was valid for the session-drill owner it inspected, but invalid as a
+canonical Act0 W6 blocker. The follow-up canonical admission gate
+(`w6_repair_recheck_canonical_admission_gate_v1.md`) found that canonical Act0
+W6 uses task-centric repair and retention replay, not
+`SessionDrillRecheckLaunchQueueItemV1`, and found no broken link in the
+canonical error -> repair -> aged recheck -> `recheck_completed` ->
+owned-candidate chain. `W1W6-DLR-002` is therefore corrected to
+`MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`; it must not cap W6 score and does
+not admit a canonical W6 product repair.
 
 ### 2.4 Same-signal / coverage-schema audit
 
@@ -267,7 +274,7 @@ reconciliation are narrower and already individually tracked:
 | Outs (9/8/4 canonical counts) | yes (W5.s11 bounded repair) | yes | yes | yes | yes | — | none — closed |
 | Range (plain definition) | yes (W6) | yes (repaired) | yes | yes | yes | — | none — closed |
 | Hand ranking / best-five-card rule / kicker / showdown resolution | ~~consumed (W1 `showdown_winner_choice_v1` kind)~~ **taught+assessed in canonical W1** (`hand_rankings_table`, `showdown_winning`) | **yes** (`_handRankingIntroRunner`, `_showdownIntroRunner`) | yes (`_bestFiveShowdownRunner`, `_showdownKickerRunner`, `_boardPlaysRunner`, `_tiePotRunner`) | yes (recognition + compare drills) | yes (`ranking_recap`, `world_one_checkpoint` proveIt) — taught **before** assessed | yes (W2 showdown reuses W1 foundation) | **corrected — canonical contract closed; `W1W6-DLR-001` MISSCOPED** (see `canonical_act0_w1_showdown_learning_truth_v1.md`) |
-| Repair-recheck target reachability for session-drill-owned families (W6 range-bucket) | signal captured | n/a | n/a | n/a | n/a | **no safe route back to the exact repaired drill** | **open — repair-continuity gap, `W1W6-DLR-002`** |
+| Repair-recheck target reachability for session-drill-owned families (W6 range-bucket) | signal captured | n/a | n/a | n/a | n/a | no safe session-drill target route in the optional owner inspected by the old audit | **corrected — noncanonical/session-drill owner only, `W1W6-DLR-002` MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER** |
 
 No new instance of the original "term used before taught" defect class was
 found in the reconciled evidence beyond what the scanner already enforces.
@@ -489,22 +496,21 @@ blocker (see Section 6 admission rules).
    board/position contexts.
 9. Feedback quality: 0 violations post-Wave-2 (`w6.s03`, 2 files, was the only
    W6 slice needing repair — W6 already had near-complete feedback).
-10. Repair continuity: **the weakest world on this axis**. W6 board-fit
-    strong/missed and width wider/narrower are two of the four admitted
-    same-signal repair-receipt families, and telemetry/error-taxonomy/repair-
-    family-id derivation is proven (Wave 5). But the architecture check in
-    Section 2.3 found that a captured, classified, queued W6 range-bucket
-    repair signal has **no safe existing route back to its exact target
-    drill** — the learner cannot currently be proven to receive recovery
-    proof for this family.
-11. Confirmed gaps: `W1W6-DLR-002` (repair-recheck launch contract missing),
-    P1, open.
+10. Repair continuity: the old session-drill architecture check found no safe
+    target-drill launch route for the optional session-drill owner it
+    inspected. The canonical admission gate found that this is not the Act0 W6
+    repair owner: canonical W6 uses task-centric repair and retention replay,
+    and no broken link was found in the canonical error -> repair -> aged
+    recheck -> `recheck_completed` -> owned-candidate chain.
+11. Confirmed gaps from `W1W6-DLR-002`: none on the canonical route.
+    `W1W6-DLR-002` is corrected to
+    `MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`; remaining P2/P3 issues stay
+    pending canonical-only revalidation and are not promoted here.
 12. Already-closed findings: LT-004 (W6.s03 slice), P1-06 (range definition).
-13. Confidence score: **6.5/10**. Content teaching and assessment validity are
-    in good shape; the score is capped by a real, evidence-backed repair-
-    continuity failure at the terminal gate of the free route — exactly where
-    a repeated-error learner most needs a working recheck loop before any
-    W7-W12 expansion.
+13. Confidence score: **frozen pending canonical-only W1-W6 re-audit and Human
+    QA**. No new W6 score is assigned in this correction. The old DLR-002
+    canonical score cap is removed because its evidence came from a
+    noncanonical session-drill owner.
 
 ## 5. Cross-world seam audit
 
@@ -539,10 +545,9 @@ vocabulary handoff, emotional safety) and the reconciled evidence above.
   No unbridged jump found.
 - **W5 -> W6**: Range is the one concept W6 needed grounded before use, and
   it was (Section 2.2). Board-texture vocabulary from W5 is the literal input
-  to W6's board-fit buckets. The seam's remaining weakness is not conceptual
-  ordering — it is the repair-continuity gap inside W6 itself (Section 2.3),
-  which matters most exactly at this seam because W6 is the deliberate
-  terminal gate before W7-W10 (Wave 5.2 terminal-clamp evidence).
+  to W6's board-fit buckets. The prior repair-continuity concern in Section
+  2.3 is preserved as optional session-drill history, not a confirmed
+  canonical W6 seam defect.
 
 No new "concept consumed before taught" seam defect was found beyond what is
 already tracked in Sections 2 and 3.
@@ -552,15 +557,18 @@ already tracked in Sections 2 and 3.
 See `docs/plan/W1_W6_LEARNING_CLOSURE_LEDGER_v1.md` for the exact
 implementation-ready table. Summary:
 
-> **Corrected by `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`:**
-> `W1W6-DLR-001` is withdrawn as `MISSCOPED_NO_CANONICAL_ASSESSMENT` and
-> removed from the active P1 count. Active P1 is now **1**. No replacement
-> canonical finding is warranted.
+> **Corrected by the canonical Act0 route audits:** `W1W6-DLR-001` is
+> withdrawn as `MISSCOPED_NO_CANONICAL_ASSESSMENT`, and `W1W6-DLR-002` is
+> withdrawn as `MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`. Both are removed
+> from the active P1 count. Active P1 is now **0**. No replacement canonical
+> finding is warranted by either correction.
 
 - P0: 0
-- P1: ~~2 admitted~~ **1 admitted** (`W1W6-DLR-002` W6 repair-recheck launch
-  contract gap). `W1W6-DLR-001` (W1 showdown/hand-ranking/kicker "source gap")
-  withdrawn — `MISSCOPED_NO_CANONICAL_ASSESSMENT`.
+- P1: ~~2 admitted~~ **0 admitted**. `W1W6-DLR-001` (W1 showdown/hand-ranking/
+  kicker "source gap") withdrawn —
+  `MISSCOPED_NO_CANONICAL_ASSESSMENT`; `W1W6-DLR-002` (W6 session-drill
+  repair-recheck launch contract gap) withdrawn —
+  `MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`.
 - P2: 3 admitted (`W1W6-DLR-003` Learn/Home hierarchy visual proof;
   `W1W6-DLR-004` same-signal repair-receipt breadth; `W1W6-DLR-005` residual
   prompt/option template-repetition scan)
@@ -609,10 +617,9 @@ alone, and must not be simulated:
    reassuring rather than confusing on first encounter.
 6. Whether W5's now-structured board-card context actually redirects visual
    attention to the right cue, versus still being read as label text.
-7. Whether a learner who hits the W6 repair-recheck dead end (`W1W6-DLR-002`)
-   perceives it as "nothing happened" (silent trust failure) or does not
-   notice at all — this is exactly the kind of gap that needs a live session,
-   not more code reading.
+7. Whether canonical W6's task-centric repair and retention replay are clear
+   to a novice after a real error; the old session-drill dead-end concern is
+   historical and must not be used as a canonical W6 score cap.
 8. Whether repeated exposure to the still-uninventoried template phrasing
    (`W1W6-DLR-005`) actually trains pattern-matching in a real user, versus
    being a theoretical risk only auditors notice.
@@ -626,9 +633,10 @@ in the reconciled audits.
 
 ## 9. Validation
 
-- docs-only change: confirmed (`git status`/`git diff` touch only
-  `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md` and
-  `docs/plan/W1_W6_LEARNING_CLOSURE_LEDGER_v1.md`).
+- docs-only correction: confirmed (`git status`/`git diff` touch only
+  `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`,
+  `docs/plan/W1_W6_LEARNING_CLOSURE_LEDGER_v1.md`, and
+  `docs/_reviews/w6_repair_recheck_ledger_correction_v1.md`).
 - no product/content/test modification: confirmed.
 - no Modern Table change: confirmed.
 - no authority-lane change: confirmed (test_shims/Tier B/Tier C/global-suite/
@@ -643,24 +651,26 @@ in the reconciled audits.
 
 `w1_w6_learning_truth_repair_ledger_ready`
 
-> **Corrected by the canonical Act0 route audit
-> (`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`, verdict
-> `canonical_act0_w1_showdown_learning_contract_closed`):** only **one** P1
-> survives (`W1W6-DLR-002`). `W1W6-DLR-001` is withdrawn as
-> `MISSCOPED_NO_CANONICAL_ASSESSMENT`, and the W1 score is now
-> `W1_SCORE_MAY_IMPROVE_AFTER_HUMAN_QA`.
+> **Corrected by the canonical Act0 route audits
+> (`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md` and
+> `docs/_reviews/w6_repair_recheck_canonical_admission_gate_v1.md`):** no P1
+> survives. `W1W6-DLR-001` is withdrawn as
+> `MISSCOPED_NO_CANONICAL_ASSESSMENT`; `W1W6-DLR-002` is withdrawn as
+> `MISSCOPED_NONCANONICAL_SESSION_DRILL_OWNER`. W1 may improve after Human QA,
+> and W6 is frozen pending canonical-only W1-W6 re-audit and Human QA.
 
 The five-wave repair program plus the follow-on prerequisite-chain batch
 closed the large majority of the originally identified learner-truth defects,
 including the exact defect class named in the mission brief (unexplained
 position/table-role labels consumed before being taught). ~~Two P1s survive
-reconciliation — a genuine missing W1 source family for hand ranking/
-showdown/kicker, and an architecturally blocked W6 repair-recheck path~~
-**One P1 survives reconciliation — an architecturally blocked W6
-repair-recheck path (`W1W6-DLR-002`); the alleged W1 showdown/hand-ranking
-source gap was misscoped against a non-canonical pipeline and is withdrawn**
-— plus three bounded P2s and one bounded P3. None of these admitted items
-require broad rewrite; each has a minimum-repair path in the closure ledger.
-Human QA should run after the surviving P1 item closes, not before, consistent
-with every prior closed wave's own disclaimer that technical proof does not
-constitute learner-outcome proof.
+reconciliation — a genuine missing W1 source family for hand ranking/showdown/
+kicker, and an architecturally blocked W6 repair-recheck path~~ **No active
+P1 survives reconciliation.** The alleged W1 showdown/hand-ranking source gap
+and the W6 repair-recheck path both came from noncanonical owners when applied
+as canonical Act0 blockers. Three bounded P2s and one bounded P3 remain
+pending canonical-only revalidation; they are not automatically promoted to
+confirmed canonical defects. Human QA should run after the canonical ownership
+map, canonical-only re-audit, closure/proof-of-nonissue for learner-facing P2
+findings, and any confirmed bounded canonical repairs, consistent with every
+prior closed wave's own disclaimer that technical proof does not constitute
+learner-outcome proof.
