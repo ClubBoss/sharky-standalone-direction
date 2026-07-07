@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +6,7 @@ import 'package:poker_analyzer/services/decay_tag_retention_tracker_service.dart
 import 'package:poker_analyzer/services/recall_success_logger_service.dart';
 import 'package:poker_analyzer/services/inbox_booster_tuner_service.dart';
 import 'package:poker_analyzer/models/recall_success_entry.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeRetention extends DecayTagRetentionTrackerService {
   final Map<String, double> scores;
@@ -17,9 +17,9 @@ class _FakeRetention extends DecayTagRetentionTrackerService {
   }
 }
 
-class _FakeLogger extends RecallSuccessLoggerService {
+class _FakeLogger extends TestRecallSuccessLoggerService {
   final Map<String, List<RecallSuccessEntry>> logs;
-  _FakeLogger(this.logs) : super._();
+  _FakeLogger(this.logs);
   @override
   Future<List<RecallSuccessEntry>> getSuccesses({String? tag}) async {
     if (tag == null) {
@@ -52,7 +52,7 @@ void main() {
     final scheduler = SmartRecallBoosterScheduler(
       retention: _FakeRetention({'a': 70, 'b': 65, 'c': 30}),
       logger: _FakeLogger({
-        'a': [RecallSuccessEntry(tag: 'a', timestamp: DateTime.now())),
+        'a': [RecallSuccessEntry(tag: 'a', timestamp: DateTime.now())],
       }),
       tuner: _FakeTuner({'a': 1.0, 'b': 1.0, 'c': 1.0}),
     );

@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/widgets/theory_recap_dialog.dart';
@@ -14,6 +13,7 @@ import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import 'support/service_test_fakes.dart';
 
 class _FakeDetector implements RecapOpportunityDetector {
   final bool value;
@@ -58,9 +58,9 @@ class _FakeSuppression extends TheoryRecapSuppressionEngine {
   }) async => value;
 }
 
-class _FakeDismissal extends SmartTheoryRecapDismissalMemory {
+class _FakeDismissal extends TestSmartTheoryRecapDismissalMemory {
   final bool value;
-  _FakeDismissal(this.value) : super._();
+  _FakeDismissal(this.value);
   @override
   Future<bool> shouldThrottle(String key) async => value;
 }

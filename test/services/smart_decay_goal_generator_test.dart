@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 
 import 'package:poker_analyzer/services/smart_decay_goal_generator.dart';
@@ -8,6 +7,7 @@ import 'package:poker_analyzer/services/review_streak_evaluator_service.dart';
 import 'package:poker_analyzer/models/goal_recommendation.dart';
 import 'package:poker_analyzer/models/booster_tag_history.dart';
 import 'package:poker_analyzer/models/recall_success_entry.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeRetention extends DecayTagRetentionTrackerService {
   final Map<String, double> scores;
@@ -17,9 +17,9 @@ class _FakeRetention extends DecayTagRetentionTrackerService {
       scores;
 }
 
-class _FakeLogger extends RecallSuccessLoggerService {
+class _FakeLogger extends TestRecallSuccessLoggerService {
   final List<RecallSuccessEntry> entries;
-  _FakeLogger(this.entries) : super._();
+  _FakeLogger(this.entries);
   @override
   Future<List<RecallSuccessEntry>> getSuccesses({String? tag}) async {
     if (tag == null) return entries;

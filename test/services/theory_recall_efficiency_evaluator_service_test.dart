@@ -1,14 +1,14 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/recall_success_entry.dart';
 import 'package:poker_analyzer/services/recall_boost_interaction_logger.dart';
 import 'package:poker_analyzer/services/recall_success_logger_service.dart';
 import 'package:poker_analyzer/services/theory_recall_efficiency_evaluator_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeSuccessLogger extends RecallSuccessLoggerService {
+class _FakeSuccessLogger extends TestRecallSuccessLoggerService {
   final List<RecallSuccessEntry> entries;
-  _FakeSuccessLogger(this.entries) : super._();
+  _FakeSuccessLogger(this.entries);
 
   @override
   Future<List<RecallSuccessEntry>> getSuccesses({String? tag}) async {

@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/theory_goal_engine.dart';
 import 'package:poker_analyzer/models/theory_goal.dart';
@@ -13,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_cluster_summary.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/theory_lesson_cluster.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeRecommender extends TheoryGoalRecommender {
   final List<TheoryGoal> goals;
@@ -39,9 +39,9 @@ class _StubClusterer extends TheoryLessonTagClusterer {
   Future<List<TheoryLessonCluster>> clusterLessons() async => clusters;
 }
 
-class _StubLibrary extends MiniLessonLibraryService {
+class _StubLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
-  _StubLibrary(this.items) : super._();
+  _StubLibrary(this.items);
 
   @override
   List<TheoryMiniLessonNode> get all => items;

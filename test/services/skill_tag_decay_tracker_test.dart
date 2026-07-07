@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/session_log.dart';
 import 'package:poker_analyzer/models/tag_xp_history_entry.dart';
@@ -6,10 +5,11 @@ import 'package:poker_analyzer/services/skill_tag_decay_tracker.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/services/tag_mastery_history_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLogService extends SessionLogService {
+class _FakeLogService extends TestSessionLogService {
   final List<SessionLog> entries;
-  _FakeLogService(this.entries) : super(sessions: TrainingSessionService());
+  _FakeLogService(this.entries);
   @override
   Future<void> load() async {}
   @override

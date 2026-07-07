@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,8 +6,9 @@ import 'package:poker_analyzer/services/inline_theory_linker_cache.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/user_action_logger.dart';
 import 'package:poker_analyzer/widgets/common/inline_theory_badge.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> lessons;
   _FakeLibrary(this.lessons);
 
@@ -22,8 +22,9 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      lessons.firstWhere((l) => l.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => lessons
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((l) => l?.id == id, orElse: () => null);
 
   @override
   List<TheoryMiniLessonNode> findByTags(List<String> tags) {
@@ -39,11 +40,11 @@ class _FakeLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-  findByTags(tags.toList());
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 
   @override
-  List<String> linkedPacksFor[String lessonId] => [];
+  List<String> linkedPacksFor(String lessonId) => [];
 }
 
 void main() {

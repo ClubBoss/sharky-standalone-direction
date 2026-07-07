@@ -1,14 +1,15 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/training_result.dart';
 import 'package:poker_analyzer/services/goal_suggestion_service.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
+import 'package:poker_analyzer/services/smart_recommender_engine.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/models/session_log.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLogService extends SessionLogService {
-  _FakeLogService() : super(sessions: TrainingSessionService());
+class _FakeLogService extends TestSessionLogService {
+  _FakeLogService();
   @override
   Future<void> load() async {}
   @override

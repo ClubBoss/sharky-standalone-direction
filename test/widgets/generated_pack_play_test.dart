@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/screens/v2/training_pack_template_list_screen.dart';
@@ -27,11 +25,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♦')),
-        [CardModel(rank: 'Q', suit: '♠'), CardModel(rank: 'J', suit: '♣')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♦')],
+        [CardModel(rank: 'Q', suit: '♠'), CardModel(rank: 'J', suit: '♣')],
       ],
       boardCards: [],
-      actions: [ActionEntry(0, 0, 'push')),
+      actions: [ActionEntry(0, 0, 'push')],
       heroIndex: 0,
       numberOfPlayers: 2,
       playerTypes: [PlayerType.unknown, PlayerType.unknown],
@@ -43,7 +41,9 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider<TrainingSpotStorageService>.value[value: service,],
+          ChangeNotifierProvider<TrainingSpotStorageService>.value(
+            value: service,
+          ),
           ChangeNotifierProvider(create: (_) => TrainingSessionService()),
         ],
         child: MaterialApp(home: TrainingPackTemplateListScreen()),

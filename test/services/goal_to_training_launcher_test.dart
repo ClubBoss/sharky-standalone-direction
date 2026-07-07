@@ -1,12 +1,12 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/xp_guided_goal.dart';
 import 'package:poker_analyzer/services/goal_to_training_launcher.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final Map<String, TheoryMiniLessonNode> lessons;
   int loadCount = 0;
   _FakeLibrary(List<TheoryMiniLessonNode> items)
@@ -27,10 +27,10 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [];
 }
 
 class _FakeLauncher extends TrainingSessionLauncher {
@@ -62,7 +62,7 @@ void main() {
       onComplete: () => complete++,
     );
     final library = _FakeLibrary([lesson]);
-    const launcher = _FakeLauncher();
+    final launcher = _FakeLauncher();
     final service = GoalToTrainingLauncher(
       library: library,
       launcher: launcher,
@@ -76,7 +76,7 @@ void main() {
 
   test('launchFromGoal does nothing when lesson missing', () async {
     final library = _FakeLibrary([]);
-    const launcher = _FakeLauncher();
+    final launcher = _FakeLauncher();
     var complete = 0;
     final goal = XPGuidedGoal(
       id: 'x',

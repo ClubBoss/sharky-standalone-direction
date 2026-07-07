@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/recap_opportunity_detector.dart';
 import 'package:poker_analyzer/services/tag_retention_tracker.dart';
@@ -13,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FakeUsageTracker implements AppUsageTracker {
   Duration idle;
   FakeUsageTracker(this.idle);
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
   @override
   Future<void> dispose() async {}
   @override

@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -22,7 +20,7 @@ class _FakeEngine extends SmartRecapSuggestionEngine {
   @override
   Stream<TheoryMiniLessonNode> get nextRecap => ctrl.stream;
   @override
-  Future<void> start({Duration interval = Duration(hours: 1)}) async {}
+  Future<void> start({Duration interval = const Duration(hours: 1)}) async {}
 }
 
 class _FakeDetector extends RecapOpportunityDetector {

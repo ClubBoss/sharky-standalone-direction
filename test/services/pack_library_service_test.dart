@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/pack_library_service.dart';
 import 'package:poker_analyzer/generated/pack_library.g.dart';
@@ -8,7 +7,7 @@ void main() {
   tearDown(() => packLibrary.clear());
 
   test('getPack returns empty list for unknown id', () {
-    final result = PackLibraryService.instance.getPack['missing'];
+    final result = PackLibraryService.instance.getPack('missing');
     expect(result, isEmpty);
   });
 
@@ -16,7 +15,7 @@ void main() {
     final spot = TrainingPackSpot(id: 's1');
     packLibrary['sample'] = [spot];
     final service = PackLibraryService.instance;
-    final spots = service.getPack['sample'];
+    final spots = service.getPack('sample');
     expect(spots, hasLength(1));
     expect(spots.first.id, 's1');
     expect(service.getAvailablePackIds(), contains('sample'));

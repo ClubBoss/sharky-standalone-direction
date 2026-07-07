@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -11,8 +10,9 @@ import 'package:poker_analyzer/services/smart_theory_recap_dismissal_memory.dart
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/services/recap_history_tracker.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   // fix: type adjust interface
   final List<TheoryMiniLessonNode> items; // fix: type adjust interface
   _FakeLibrary(this.items); // fix: type adjust interface
@@ -33,14 +33,14 @@ class _FakeLibrary implements MiniLessonLibraryService {
     orElse: () => null,
   ); // fix: type adjust cast
   @override
-  List<String> linkedPacksFor[String lessonId] => const <String>[]; // fix: type adjust generics
+  List<String> linkedPacksFor(String lessonId) => const <String>[]; // fix: type adjust generics
   @override
   Future<bool> isLessonCompleted(String lessonId) async => false; // fix: type adjust callback
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] =>
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) =>
       const <TheoryMiniLessonNode>[]; // fix: type adjust generics
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
       const <TheoryMiniLessonNode>[]; // fix: type adjust generics
   @override
   TheoryMiniLessonNode? findLessonByTag(String tag) => getById(tag); // fix: type adjust interface
@@ -69,7 +69,7 @@ class _FakeSuppression extends TheoryRecapSuppressionEngine {
   }) async => value;
 }
 
-class _FakeDismissal implements SmartTheoryRecapDismissalMemory {
+class _FakeDismissal extends TestSmartTheoryRecapDismissalMemory {
   // fix: type adjust interface
   final bool value; // fix: type adjust interface
   _FakeDismissal(this.value); // fix: type adjust interface

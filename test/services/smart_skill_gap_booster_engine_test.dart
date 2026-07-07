@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -6,6 +5,7 @@ import 'package:poker_analyzer/services/smart_skill_gap_booster_engine.dart';
 import 'package:poker_analyzer/services/skill_gap_detector_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_progress_tracker.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeDetector extends SkillGapDetectorService {
   final List<String> tags;
@@ -14,7 +14,7 @@ class _FakeDetector extends SkillGapDetectorService {
   Future<List<String>> getMissingTags({double threshold = 0.1}) async => tags;
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> lessons;
   _FakeLibrary(this.lessons);
   @override
@@ -24,12 +24,13 @@ class _FakeLibrary implements MiniLessonLibraryService {
   @override
   Future<void> reload() async {}
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      lessons.firstWhere((l) => l.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => lessons
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((l) => l?.id == id, orElse: () => null);
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [];
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [
     for (final t in tags) ...lessons.where((l) => l.tags.contains(t)),
   ];
 }
@@ -58,7 +59,7 @@ void main() {
       progress: MiniLessonProgressTracker.instance,
     );
 
-    final result = await engine.recommend[max: 2];
+    final result = await engine.recommend(max: 2);
     expect(result.map((e) => e.id).toList(), ['l3']);
   });
 
@@ -76,7 +77,7 @@ void main() {
       progress: MiniLessonProgressTracker.instance,
     );
 
-    final result = await engine.recommend[max: 2];
+    final result = await engine.recommend(max: 2);
     expect(result.map((e) => e.id).toList(), ['l2', 'l3']);
   });
 }

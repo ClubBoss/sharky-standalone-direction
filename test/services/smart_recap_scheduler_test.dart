@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -13,6 +11,7 @@ import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/tag_mastery_history_service.dart';
 import 'package:poker_analyzer/models/recap_tag_performance.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeDecay extends SkillTagDecayTracker {
   final List<String> tags;
@@ -62,7 +61,7 @@ class _FakeLinker extends TheoryBoostRecapLinker {
   Future<TheoryMiniLessonNode?> fetchLesson(String tag) async => lesson;
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final TheoryMiniLessonNode lesson;
   _FakeLibrary(this.lesson);
   @override
@@ -74,9 +73,9 @@ class _FakeLibrary implements MiniLessonLibraryService {
   @override
   TheoryMiniLessonNode? getById(String id) => lesson.id == id ? lesson : null;
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [lesson];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [lesson];
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [lesson];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [lesson];
 }
 
 void main() {

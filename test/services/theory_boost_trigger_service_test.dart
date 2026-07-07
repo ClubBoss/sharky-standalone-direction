@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -8,13 +7,18 @@ import 'package:poker_analyzer/services/recap_completion_tracker.dart';
 import 'package:poker_analyzer/services/recap_effectiveness_analyzer.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeTracker extends RecapCompletionTracker {
+class _FakeTracker implements RecapCompletionTracker {
   final Map<String, int> freq;
   _FakeTracker(this.freq);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+
   @override
   Future<Map<String, int>> tagFrequency({
-    Duration window = Duration(days: 7),
+    Duration window = const Duration(days: 7),
   }) async => freq;
 }
 
@@ -25,18 +29,18 @@ class _FakeAnalyzer extends RecapEffectivenessAnalyzer {
   bool isUnderperforming(
     String tag, {
     int minCompletions = 3,
-    Duration minAvgDuration = Duration(seconds: 5),
+    Duration minAvgDuration = const Duration(seconds: 5),
     double minRepeatRate = 0.25,
   }) => under;
 }
 
-class _FakeLibrary extends MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> lessons;
   _FakeLibrary(this.lessons);
   @override
   Future<void> loadAll() async {}
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => lessons;
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => lessons;
 }
 
 void main() {

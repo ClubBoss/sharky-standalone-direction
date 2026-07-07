@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/session_log.dart';
 import 'package:poker_analyzer/services/learning_path_stats_service.dart';
@@ -7,10 +6,11 @@ import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/services/learning_path_registry_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLogService extends SessionLogService {
+class _FakeLogService extends TestSessionLogService {
   final List<SessionLog> entries;
-  _FakeLogService(this.entries) : super(sessions: TrainingSessionService());
+  _FakeLogService(this.entries);
   @override
   Future<void> load() async {}
   @override
@@ -45,18 +45,18 @@ void main() {
     )!;
     final svc = LearningPathStatsService(progress: progress);
 
-    var stats = svc.computeStats[template];
+    var stats = svc.computeStats(template);
     expect(stats.completedStages, 0);
     expect(stats.lockedStageIds, containsAll(['ua2', 'ua3']));
 
     await progress.markStageCompleted('ua1', 100);
-    stats = svc.computeStats[template];
+    stats = svc.computeStats(template);
     expect(stats.completedStages, 1);
     expect(stats.lockedStageIds, contains('ua3'));
     expect(stats.lockedStageIds.contains('ua2'), isFalse);
 
     await progress.markStageCompleted('ua2', 100);
-    stats = svc.computeStats[template];
+    stats = svc.computeStats(template);
     expect(stats.completedStages, 2);
     expect(stats.lockedStageIds, isEmpty);
   });

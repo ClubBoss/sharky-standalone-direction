@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/session_log.dart';
@@ -9,10 +7,11 @@ import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/services/learning_path_registry_service.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLogService extends SessionLogService {
+class _FakeLogService extends TestSessionLogService {
   List<SessionLog> entries;
-  _FakeLogService(this.entries) : super(sessions: TrainingSessionService());
+  _FakeLogService(this.entries);
   @override
   Future<void> load() async {}
   @override

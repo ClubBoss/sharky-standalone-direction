@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,23 +7,25 @@ import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_progress_tracker.dart';
 import 'package:poker_analyzer/services/theory_lesson_review_queue.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
   @override
   List<TheoryMiniLessonNode> get all => items;
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      items.firstWhere((e) => e.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => items
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((e) => e?.id == id, orElse: () => null);
   @override
   Future<void> loadAll() async {}
   @override
   Future<void> reload() async {}
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [];
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [];
 }
 
 class _FakeReview extends TheoryLessonReviewQueue {
@@ -32,7 +33,7 @@ class _FakeReview extends TheoryLessonReviewQueue {
   @override
   Future<List<TheoryMiniLessonNode>> getNextLessonsToReview({
     int limit = 5,
-    Set<String> focusTags = {},
+    Set<String> focusTags = const {},
   }) async {
     return [];
   }
@@ -46,7 +47,7 @@ void main() {
   });
 
   testWidgets('hides when no data', (tester) async {
-    const lesson = TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '');
+    final lesson = TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '');
     final lib = _FakeLibrary([lesson]);
     await tester.pumpWidget(
       MaterialApp(
@@ -64,8 +65,8 @@ void main() {
   });
 
   testWidgets('shows cluster progress', (tester) async {
-    const l1 = TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '');
-    const l2 = TheoryMiniLessonNode(id: 'l2', title: 'L2', content: '');
+    final l1 = TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '');
+    final l2 = TheoryMiniLessonNode(id: 'l2', title: 'L2', content: '');
     final cluster = TheoryLessonCluster(lessons: [l1, l2], tags: {});
     final lib = _FakeLibrary([l1, l2]);
     await MiniLessonProgressTracker.instance.markCompleted('l1');

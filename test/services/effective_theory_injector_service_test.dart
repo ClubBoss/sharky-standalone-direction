@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/theory_lesson_node.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -6,8 +5,9 @@ import 'package:poker_analyzer/services/decay_tag_retention_tracker_service.dart
 import 'package:poker_analyzer/services/effective_theory_injector_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/theory_lesson_effectiveness_analyzer_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
   @override
@@ -25,13 +25,13 @@ class _FakeLibrary implements MiniLessonLibraryService {
   @override
   Future<void> reload() async {}
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] =>
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) =>
       items.where((e) => e.tags.any(tags.contains)).toList();
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
   @override
-  List<String> linkedPacksFor[String lessonId] => [];
+  List<String> linkedPacksFor(String lessonId) => [];
 }
 
 class _FakeAnalyzer extends TheoryLessonEffectivenessAnalyzerService {
@@ -53,7 +53,7 @@ class _FakeRetention extends DecayTagRetentionTrackerService {
     DateTime? now,
   }) async {
     final list = List<MapEntry<String, double>>.from(tags);
-    list.sort((a, b] => b.value.compareTo(a.value));
+    list.sort((a, b) => b.value.compareTo(a.value));
     if (list.length > limit) {
       return list.sublist(0, limit);
     }
@@ -98,7 +98,7 @@ void main() {
   test('getTopTheoryBoosters returns map of tags to lessons', () async {
     final library = _FakeLibrary([lesson1]);
     final analyzer = _FakeAnalyzer({'l1': 4.0});
-    const retention = _FakeRetention([
+    final retention = _FakeRetention([
       MapEntry('icm', 0.9),
       MapEntry('math', 0.8),
     ]);

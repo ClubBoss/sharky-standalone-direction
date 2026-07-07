@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/learning_path_block.dart';
 import 'package:poker_analyzer/services/theory_and_booster_flow_composer.dart';
@@ -71,10 +70,10 @@ void main() {
   });
 
   test('theory first then boosters', () async {
-    const lesson = TheoryMiniLessonNode(id: 't1', title: 't', content: 'c');
+    final lesson = TheoryMiniLessonNode(id: 't1', title: 't', content: 'c');
     final composer = TheoryAndBoosterFlowComposer(
       theoryEngine: _FakeTheory(lesson),
-      boosterOrchestrator: _FakeOrch([_booster('b1'), _booster('b2'))),
+      boosterOrchestrator: _FakeOrch([_booster('b1'), _booster('b2')]),
       assembler: InjectionBlockAssembler(),
     );
     final blocks = await composer.buildStageFlow(TrainingStageNode(id: 's1'));

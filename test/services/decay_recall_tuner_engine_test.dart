@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/booster_tag_history.dart';
 import 'package:poker_analyzer/models/recall_success_entry.dart';
@@ -7,10 +6,11 @@ import 'package:poker_analyzer/services/decay_recall_tuner_engine.dart';
 import 'package:poker_analyzer/services/decay_tag_retention_tracker_service.dart';
 import 'package:poker_analyzer/services/recall_success_logger_service.dart';
 import 'package:poker_analyzer/services/review_streak_evaluator_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLogger extends RecallSuccessLoggerService {
+class _FakeLogger extends TestRecallSuccessLoggerService {
   final List<RecallSuccessEntry> list;
-  _FakeLogger(this.list) : super._();
+  _FakeLogger(this.list);
   @override
   Future<List<RecallSuccessEntry>> getSuccesses({String? tag}) async {
     if (tag == null) return list;

@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/session_log.dart';
 import 'package:poker_analyzer/services/learning_path_gatekeeper_service.dart';
@@ -11,10 +9,11 @@ import 'package:poker_analyzer/services/learning_path_registry_service.dart';
 import 'package:poker_analyzer/models/learning_track_progress_model.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/service_test_fakes.dart';
 
-class _FakeLogService extends SessionLogService {
+class _FakeLogService extends TestSessionLogService {
   final List<SessionLog> entries;
-  _FakeLogService(this.entries) : super(sessions: TrainingSessionService());
+  _FakeLogService(this.entries);
   @override
   Future<void> load() async {}
   @override
@@ -65,7 +64,7 @@ void main() {
       progress: progress,
       gatekeeper: gatekeeper,
     );
-    final model = await svc.build('sample'];
+    final model = await svc.build('sample');
     expect(model.statusFor('s1')?.status, StageStatus.completed);
     expect(model.statusFor('s2')?.status, StageStatus.unlocked);
   });
@@ -95,9 +94,9 @@ void main() {
       progress: progress,
       gatekeeper: gatekeeper,
     );
-    await svc.build('sample'];
+    await svc.build('sample');
     await svc.advanceToNextStage('s1');
-    final model = await svc.build('sample'];
+    final model = await svc.build('sample');
     expect(model.statusFor('s1')?.status, StageStatus.completed);
     expect(gatekeeper.isStageUnlocked('s2'), isTrue);
   });

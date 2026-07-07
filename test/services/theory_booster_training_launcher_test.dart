@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/theory_booster_training_launcher.dart';
@@ -8,6 +7,7 @@ import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/user_action_logger.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/theory_pack_model.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeLauncher extends TheoryTrainingLauncher {
   TheoryPackModel? launched;
@@ -18,7 +18,7 @@ class _FakeLauncher extends TheoryTrainingLauncher {
   }
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final Map<String, List<TheoryMiniLessonNode>> lessons;
   int loadCount = 0;
   _FakeLibrary(this.lessons);
@@ -27,8 +27,9 @@ class _FakeLibrary implements MiniLessonLibraryService {
   List<TheoryMiniLessonNode> get all => [for (final l in lessons.values) ...l];
 
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      all.firstWhere((e) => e.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => all
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((e) => e?.id == id, orElse: () => null);
 
   @override
   Future<void> loadAll() async {
@@ -48,8 +49,8 @@ class _FakeLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-  findByTags(tags.toList());
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 void main() {
@@ -80,7 +81,7 @@ void main() {
     });
     await TheoryBoosterQueueService.instance.enqueue('a');
     await TheoryBoosterQueueService.instance.enqueue('b');
-    const launcher = _FakeLauncher();
+    final launcher = _FakeLauncher();
     final service = TheoryBoosterTrainingLauncher(
       queue: TheoryBoosterQueueService.instance,
       library: library,

@@ -1,18 +1,16 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/auto_theory_review_engine.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:poker_analyzer/services/theory_booster_reinjection_policy.dart';
 import 'package:poker_analyzer/services/theory_pack_library_service.dart';
 import 'package:poker_analyzer/services/smart_booster_summary_engine.dart';
+import 'package:poker_analyzer/models/booster_summary.dart';
 import 'package:poker_analyzer/models/theory_pack_model.dart';
-import 'package:poker_analyzer/services/session_log_service.dart';
-import 'package:poker_analyzer/services/training_session_service.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeMasteryService extends TagMasteryService {
   final Map<String, double> _map;
-  _FakeMasteryService(this._map)
-    : super(logs: SessionLogService(sessions: TrainingSessionService()));
+  _FakeMasteryService(this._map) : super(logs: TestSessionLogService());
 
   @override
   Future<Map<String, double>> computeMastery({bool force = false}) async =>
@@ -30,7 +28,7 @@ class _FakeSummary extends SmartBoosterSummaryEngine {
   final Map<String, double> impact;
   _FakeSummary(this.impact);
   @override
-  Future<BoosterSummary> summarize[String boosterId] async => BoosterSummary(
+  Future<BoosterSummary> summarize(String boosterId) async => BoosterSummary(
     id: boosterId,
     avgDeltaEV: impact[boosterId] ?? 0.0,
     totalSpots: 0,
@@ -47,6 +45,8 @@ class _FakeLibrary implements TheoryPackLibraryService {
   TheoryPackModel? getById(String id) => packs[id];
   @override
   Future<void> loadAll() async {}
+  @override
+  Future<void> loadDefaultPacks() async {}
   @override
   Future<void> reload() async {}
 }
@@ -66,7 +66,7 @@ void main() {
     });
     final mastery = _FakeMasteryService({'icm': 0.3, 'cbet': 0.8});
     final policy = _FakePolicy(true);
-    const summary = _FakeSummary({'b1': 0.2, 'b2': 0.1});
+    final summary = _FakeSummary({'b1': 0.2, 'b2': 0.1});
 
     final engine = AutoTheoryReviewEngine(
       library: library,

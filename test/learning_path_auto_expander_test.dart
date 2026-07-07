@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/learning_path_node.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -11,6 +10,7 @@ import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/learning_path_auto_expander.dart';
 import 'package:poker_analyzer/services/learning_path_node_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/service_test_fakes.dart';
 
 class _FakeOrchestrator extends LearningPathGraphOrchestrator {
   final List<LearningPathNode> nodes;
@@ -42,14 +42,15 @@ class _FakeProgress extends TrainingPathProgressServiceV2 {
   List<String> unlockedStageIds() => [];
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
   @override
   List<TheoryMiniLessonNode> get all => items;
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      items.firstWhere((e) => e.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => items
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((e) => e?.id == id, orElse: () => null);
   @override
   Future<void> loadAll() async {}
   @override

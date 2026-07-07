@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +6,7 @@ import 'package:poker_analyzer/services/recap_completion_tracker.dart';
 import 'package:poker_analyzer/services/theory_boost_trigger_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeTrigger extends TheoryBoostTriggerService {
   final bool value;
@@ -15,13 +15,13 @@ class _FakeTrigger extends TheoryBoostTriggerService {
   Future<bool> shouldTriggerBoost(String tag) async => value;
 }
 
-class _FakeLibrary extends MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final TheoryMiniLessonNode lesson;
   _FakeLibrary(this.lesson);
   @override
   Future<void> loadAll() async {}
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [lesson];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [lesson];
 }
 
 void main() {

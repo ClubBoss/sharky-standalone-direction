@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/theory_cluster_summary.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -55,11 +54,11 @@ void main() {
       ),
     };
 
-    const tracker = _FakeTracker({cluster: 0.3});
+    final tracker = _FakeTracker({cluster: 0.3});
     final mastery = _FakeMasteryService({'cbet': 0.4});
 
     final rec = TheoryGoalRecommender(progress: tracker, mastery: mastery);
-    final goals = await rec.recommend[clusters: [cluster], lessons: lessons];
+    final goals = await rec.recommend(clusters: [cluster], lessons: lessons);
 
     expect(goals.length, 2);
     expect(goals.first.tagOrCluster, 'preflop');

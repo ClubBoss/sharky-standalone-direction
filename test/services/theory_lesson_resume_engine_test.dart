@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
@@ -7,8 +6,9 @@ import 'package:poker_analyzer/services/theory_lesson_trail_tracker.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_progress_tracker.dart';
 import 'package:poker_analyzer/services/theory_lesson_tag_clusterer.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
 
@@ -43,7 +43,7 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<bool> isLessonCompleted(String lessonId) async => false; // fix: type adjust default completion
 
   @override
-  List<String> linkedPacksFor[String lessonId] => const []; // fix: type adjust no linked packs
+  List<String> linkedPacksFor(String lessonId) => const []; // fix: type adjust no linked packs
 
   @override
   Future<void> loadAll() async {}
@@ -66,8 +66,8 @@ class _FakeLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]]; // fix: type adjust set support
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList()); // fix: type adjust set support
 }
 
 void main() {
@@ -121,7 +121,7 @@ void main() {
   });
 
   test('returns null when all completed', () async {
-    final lessons = [TheoryMiniLessonNode(id: 'l1', title: 'A', content: ''));
+    final lessons = [TheoryMiniLessonNode(id: 'l1', title: 'A', content: '')];
     final tracker = TheoryLessonTrailTracker.instance;
     await tracker.recordVisit('l1');
     await MiniLessonProgressTracker.instance.markCompleted('l1');

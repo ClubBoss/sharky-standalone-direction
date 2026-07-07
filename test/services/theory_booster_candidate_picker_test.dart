@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -7,6 +6,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:poker_analyzer/services/theory_booster_candidate_picker.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakePathProvider extends PathProviderPlatform {
   final String path;
@@ -15,7 +15,7 @@ class _FakePathProvider extends PathProviderPlatform {
   Future<String?> getApplicationDocumentsPath() async => path;
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> lessons;
   _FakeLibrary(this.lessons);
 
@@ -29,8 +29,9 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      lessons.firstWhere((l) => l.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => lessons
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((l) => l?.id == id, orElse: () => null);
 
   @override
   List<TheoryMiniLessonNode> findByTags(List<String> tags) {
@@ -44,8 +45,8 @@ class _FakeLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 void main() {

@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/learning_path_node.dart';
 import 'package:poker_analyzer/services/graph_path_template_parser.dart';
@@ -8,6 +7,7 @@ import 'package:poker_analyzer/services/training_path_progress_service_v2.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
 import 'package:poker_analyzer/models/session_log.dart';
+import 'support/service_test_fakes.dart';
 
 class _FakeOrchestrator extends LearningPathGraphOrchestrator {
   final List<LearningPathNode> _nodes;
@@ -16,8 +16,8 @@ class _FakeOrchestrator extends LearningPathGraphOrchestrator {
   Future<List<LearningPathNode>> loadGraph() async => _nodes;
 }
 
-class _FakeLogService extends SessionLogService {
-  _FakeLogService() : super(sessions: TrainingSessionService());
+class _FakeLogService extends TestSessionLogService {
+  _FakeLogService();
   @override
   Future<void> load() async {}
   @override

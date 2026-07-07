@@ -1,14 +1,16 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/mistake_insight.dart';
 import 'package:poker_analyzer/models/mistake_tag.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/booster_lesson_status.dart';
 import 'package:poker_analyzer/services/goal_smart_suggestion_engine.dart';
+import 'package:poker_analyzer/services/booster_path_history_service.dart';
 import 'package:poker_analyzer/services/booster_lesson_status_service.dart';
+import 'package:poker_analyzer/services/inbox_booster_tracker_service.dart';
 import 'package:poker_analyzer/services/inbox_booster_tuner_service.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/mistake_tag_insights_service.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeInsights extends MistakeTagInsightsService {
   final List<MistakeInsight> list;
@@ -19,14 +21,15 @@ class _FakeInsights extends MistakeTagInsightsService {
   }) async => list;
 }
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
   @override
   List<TheoryMiniLessonNode> get all => items;
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      items.firstWhere((e) => e.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) => items
+      .cast<TheoryMiniLessonNode?>()
+      .firstWhere((e) => e?.id == id, orElse: () => null);
   @override
   Future<void> loadAll() async {}
   @override
@@ -41,8 +44,8 @@ class _FakeLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 class _FakeStatus extends BoosterLessonStatusService {

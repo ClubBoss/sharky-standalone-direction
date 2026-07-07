@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/player_profile.dart';
@@ -8,10 +7,11 @@ import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/tag_mastery_service.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
 import 'package:poker_analyzer/services/training_session_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _StubLibrary extends MiniLessonLibraryService {
+class _StubLibrary extends TestMiniLessonLibraryService {
   final List<TheoryMiniLessonNode> items;
-  _StubLibrary(this.items) : super._();
+  _StubLibrary(this.items);
 
   @override
   List<TheoryMiniLessonNode> get all => items;

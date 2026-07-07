@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -6,8 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:poker_analyzer/services/theory_reinforcement_queue_service.dart';
+import '../support/service_test_fakes.dart';
 
-class _FakeLibrary implements MiniLessonLibraryService {
+class _FakeLibrary extends TestMiniLessonLibraryService {
   final Map<String, TheoryMiniLessonNode> items;
   _FakeLibrary(this.items);
 
@@ -24,10 +24,10 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [];
 }
 
 void main() {

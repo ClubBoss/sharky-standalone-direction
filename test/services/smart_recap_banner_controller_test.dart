@@ -1,5 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide TrainingSessionService; // fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +10,7 @@ import 'package:poker_analyzer/services/smart_theory_recap_dismissal_memory.dart
 import 'package:poker_analyzer/services/recap_fatigue_evaluator.dart';
 import 'package:poker_analyzer/services/recap_history_tracker.dart';
 import 'package:poker_analyzer/services/theory_booster_suggestion_engine.dart';
+import '../support/service_test_fakes.dart';
 
 class _FakeRecapEngine extends SmartTheoryRecapEngine {
   final TheoryMiniLessonNode? lesson;
@@ -37,9 +36,9 @@ class _FakeFatigue extends RecapFatigueEvaluator {
   Future<bool> isFatigued(String lessonId) async => value;
 }
 
-class _FakeDismissal extends SmartTheoryRecapDismissalMemory {
+class _FakeDismissal extends TestSmartTheoryRecapDismissalMemory {
   final bool value;
-  _FakeDismissal(this.value) : super._();
+  _FakeDismissal(this.value);
   @override
   Future<bool> shouldThrottle(String key) async => value;
 }
