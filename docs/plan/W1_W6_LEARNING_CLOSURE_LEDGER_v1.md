@@ -4,11 +4,29 @@ Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`
 
 Status: implementation-ready ledger. No repair implemented in this pass.
 
+> **Correction (canonical Act0 route audit,
+> `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`):**
+> `W1W6-DLR-001` is **`MISSCOPED_NO_CANONICAL_ASSESSMENT`** and is **removed
+> from the active P1 count**. It was derived from the non-canonical Flow-B /
+> legacy JSON `showdown_winner_choice_v1` drill kind (W2-owned; found only in
+> `lib/archive/legacy_runners/...`, `lib/services/drill_contract_v1.dart`,
+> `lib/services/world2_showdown_truth_validator_v1.dart`,
+> `lib/audit_hub_v1/...`), not from the canonical learner route. The canonical
+> W1 route (`AppRoot -> Act0ShellPreviewScreenV1 -> _pokerFromZeroLessons`)
+> owns dedicated `hand_rankings_table` and `showdown_winning` lessons whose
+> teaching (`learn`/theory) task is the gating first task and provably precedes
+> every drill and prove-it assessment. There is no canonical assessed-before-
+> taught event, so the finding's premise does not exist on the reachable route.
+> The optional `w1.s11` Flow-B session is **not** counted as closure evidence.
+> The DLR-001 row and Wave A below are preserved for history and struck through,
+> not deleted. No replacement canonical finding is warranted (canonical
+> contract closed). Active P1 count is now **1** (`W1W6-DLR-002` only).
+
 ## Ledger
 
 | ID | World/seam | Severity | Defect class | Learner impact | Evidence | Current owner | Minimum repair | Dependencies | Validation | Estimated scope |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `W1W6-DLR-001` | W1 (`showdown_winner_choice_v1` rows) | P1 | Hidden prerequisite (assessed before taught) | A learner can be scored on showdown/hand-ranking/best-5/kicker outcomes inside W1 without W1 ever teaching hand ranking, showdown resolution, the best-five-card rule, or kicker. | `docs/_reviews/w1_w6_prerequisite_chain_repair_batch_v1.md` Section 5, "Source-Blocked Items": no W1-owned hand-ranking/showdown-resolution/best-5-of-7/kicker task exists; W2's showdown source cannot be imported into W1 without an ownership overclaim. | Content authoring (W1 source owner) | Author one small, bounded W1 source family (session or drill slice) that teaches hand ranking, showdown resolution, best-5-of-7, and kicker before the first `showdown_winner_choice_v1` assessed row, using the same beginner-term-guard pattern already proven in Wave 1. Do not import W2 source; do not rewrite W1 broadly. | `content/_meta/term_introduction_contract_v1.json` pattern (reuse, don't invent); existing W1.s01-adjacent session slot | New W1 fixture passes `content_schema_l2_l3_validator_v1.dart` as `learner_playable_route_ready`; a focused test proves the new teaching row precedes every existing `showdown_winner_choice_v1` row in session order. | One bounded content wave (single session/drill slice + one validator/test pass), same size class as the Wave-5.1 W5 `basic_outs_awareness` repair. |
+| ~~`W1W6-DLR-001`~~ (MISSCOPED_NO_CANONICAL_ASSESSMENT — historical; not in active count) | W1 (`showdown_winner_choice_v1` rows — **W2-owned Flow-B/legacy JSON kind, not canonical W1**) | ~~P1~~ withdrawn | Hidden prerequisite (assessed before taught) — **premise absent on canonical route; corrected by `canonical_act0_w1_showdown_learning_truth_v1.md`** | A learner can be scored on showdown/hand-ranking/best-5/kicker outcomes inside W1 without W1 ever teaching hand ranking, showdown resolution, the best-five-card rule, or kicker. | `docs/_reviews/w1_w6_prerequisite_chain_repair_batch_v1.md` Section 5, "Source-Blocked Items": no W1-owned hand-ranking/showdown-resolution/best-5-of-7/kicker task exists; W2's showdown source cannot be imported into W1 without an ownership overclaim. | Content authoring (W1 source owner) | Author one small, bounded W1 source family (session or drill slice) that teaches hand ranking, showdown resolution, best-5-of-7, and kicker before the first `showdown_winner_choice_v1` assessed row, using the same beginner-term-guard pattern already proven in Wave 1. Do not import W2 source; do not rewrite W1 broadly. | `content/_meta/term_introduction_contract_v1.json` pattern (reuse, don't invent); existing W1.s01-adjacent session slot | New W1 fixture passes `content_schema_l2_l3_validator_v1.dart` as `learner_playable_route_ready`; a focused test proves the new teaching row precedes every existing `showdown_winner_choice_v1` row in session order. | One bounded content wave (single session/drill slice + one validator/test pass), same size class as the Wave-5.1 W5 `basic_outs_awareness` repair. |
 | `W1W6-DLR-002` | W6 (range-bucket repair family) / W5→W6 seam | P1 | Repair-continuity gap (no recovery proof reachable) | A captured, classified, queued W6 range-bucket repair signal has no safe existing route back to its exact target drill; a repeated-error learner at the route's terminal gate (before W7-W10) cannot be proven to receive recovery. | `docs/_reviews/w6_cross_family_route_contract_prerequisite_audit_v1.md`: verdict `unsafe_missing_contract_stop`; no canonical route/launcher/terminal payload/surfaced runner accepts a target-drill id; naive `initialDrillId` would corrupt progress/completion/telemetry semantics. | Act0 canonical launch / session-drill runner owner | Implement the two contracts the audit already scoped as minimal-safe: (1) a validated `SessionDrillLaunchTargetV1`-class payload carrying `sessionId` + `targetDrillId` + a named recheck purpose, failing closed on invalid ids without progress/telemetry mutation; (2) a distinct targeted-recheck completion policy in the surfaced runner (ordering, completion, persistence, telemetry) separate from normal session completion. Visible Act0 consumer wiring stays a later, separately scoped decision. | `SessionDrillRecheckLaunchQueueItemV1` (already exists); `CanonicalLauncherV1`/`CanonicalTerminalSessionDrillSurfacedRunnerV1` (existing owners to extend, not replace) | Focused contract tests proving: invalid target id fails closed with no progress/telemetry mutation; valid targeted recheck completes without emitting a full-session `session_drills_complete_v1`; existing normal-session completion path is unchanged (regression lock). | One dedicated cross-family route-contract wave, exactly as recommended in the source audit's "Required next wave" section — bounded, does not touch UI, Modern Table, or W7+. |
 | `W1W6-DLR-003` | Learn/Home hierarchy (Act0 shell) | P2 | Beginner cognitive load / action-hierarchy ambiguity (unconfirmed) | Possible competing `Now`/`Current lesson`/`Current step`/progress/mission-CTA emphasis could make the primary action ambiguous on compact mobile; not proven from source, not disproven either. | `docs/_reviews/w1_w6_final_repair_ledger_v1.md` `W1W6-LT-011`; `docs/_reviews/surface_role_cta_coherence_audit_v1.md` downgrades to "needs visual evidence," confirms one structural primary CTA exists in `act0_learn_path_shell_v1.dart` but could not confirm or deny the emphasis-competition claim without a capture. | Act0 Learn/Home shell owner | Do not redesign. Add one compact-portrait widget/screenshot proof that the mission-card CTA visually dominates the `Now`/`Current lesson`/`Current step`/progress labels; if the proof fails, the minimum repair is copy/order/emphasis adjustment only (no layout rebuild). | None outside the existing Act0 Learn/Home shell files | One widget test (or deterministic screenshot lane per the original grouped-program Wave-4 allowance) asserting mission CTA is the single highest-emphasis element at 360x640. | Small: one proof pass, plus a bounded copy/emphasis fix only if the proof fails. |
 | `W1W6-DLR-004` | W1-W3 rows + non-admitted W4/W5/W6 families | P2 | Repair-continuity breadth (same-signal receipts too narrow) | Repeated learner misses outside the four admitted same-signal families (W4 denial, W5 dry texture, W6 board-fit strong/missed, W6 width wider/narrower) silently fall back to normal route repetition instead of a durable, provable repair receipt. | `docs/_reviews/w1_w6_final_learner_truth_audit_v1.md` "Repair lifecycle findings"; confirmed still-narrow in Wave 5 closure (`docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md` Section 15: telemetry proof closed, receipt breadth unchanged). | Session-drill repair-receipt owner | Extend receipt admission to the next-highest-EV family only (candidate: W1 starting-hand discipline, given its size and repair-lifecycle maturity per Section 4 evidence), reusing the existing adapter/persistence/consumer/queue seam. Do not attempt full W1-W6 coverage in one pass. | Existing `session_drill_repair_receipt_adapter_v1.dart` / persistence / consumer / queue seam | Focused repair-lifecycle test proving the new family's miss -> receipt -> persistence -> consumer -> queue -> retained-recheck-result chain, mirroring the four already-proven families. | One bounded family-extension wave, same size class as the original Stage 1B family admissions. |
@@ -17,8 +35,12 @@ Status: implementation-ready ledger. No repair implemented in this pass.
 
 ## Severity summary
 
+Revised after the canonical Act0 route audit
+(`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`):
+
 - P0: 0
-- P1: 2 (`W1W6-DLR-001`, `W1W6-DLR-002`)
+- P1: **1** (`W1W6-DLR-002` only). `W1W6-DLR-001` withdrawn as
+  `MISSCOPED_NO_CANONICAL_ASSESSMENT` (was 2).
 - P2: 3 (`W1W6-DLR-003`, `W1W6-DLR-004`, `W1W6-DLR-005`)
 - P3: 1 (`W1W6-DLR-006`)
 - P4: 0
@@ -29,10 +51,16 @@ Ordered by prerequisite dependency and learner EV, per the consolidation
 requirement (no unrelated UI/architecture work; smallest change that restores
 the learning contract).
 
-1. **Wave A — W1 Showdown/Hand-Ranking Source Closure** (`W1W6-DLR-001`).
-   Highest EV: closes the one remaining hidden-prerequisite defect in the
+1. ~~**Wave A — W1 Showdown/Hand-Ranking Source Closure** (`W1W6-DLR-001`).~~
+   **WITHDRAWN — do not execute.** The canonical Act0 route already teaches
+   hand ranking and showdown before assessing them
+   (`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`); this wave
+   would have authored source against the non-canonical Flow-B pipeline. The
+   optional `w1.s11` session built under the original DLR-001 premise is not
+   canonical closure evidence and must not be integrated. (Historical text:
+   "Highest EV: closes the one remaining hidden-prerequisite defect in the
    world every learner starts from, and unblocks Human QA planning that the
-   prerequisite-chain audit explicitly gated on this item.
+   prerequisite-chain audit explicitly gated on this item.")
 2. **Wave B — W6 Repair-Recheck Route Contract** (`W1W6-DLR-002`).
    Second-highest EV: closes the repair-continuity gap at the route's
    terminal gate before any W7-W12 expansion is considered, and is already
@@ -48,22 +76,28 @@ the learning contract).
    architecture/contract fix and Wave D is a content-family admission —
    mixing them risks re-litigating Wave B's scope.
 5. **Wave E — Prompt/Option Anti-Leak Scan** (`W1W6-DLR-005`).
-   Run after Waves A-D so the scan is not confounded by the new W1 content
-   from Wave A.
+   Run after Waves B-D. (No longer gated on the withdrawn Wave A.) The
+   canonical-route audit noted a few generic/templated `feedbackTitle` strings
+   in the W1 showdown/hand-ranking runners; fold that cosmetic residue into
+   this scan rather than opening a dedicated wave.
 6. **Wave F — `concept_family_id` Schema Backfill** (`W1W6-DLR-006`, optional).
    Only bundle into a wave that already has validator/schema access open for
    another reason; do not open a dedicated wave for this alone.
 
-Recommend running Waves A and B first and independently (each is a self-
-contained P1 closure), then C-E in one combined small-wave pass, with F
-opportunistic.
+Recommend running Wave B first (the one surviving self-contained P1 closure),
+then C-E in one combined small-wave pass, with F opportunistic. Wave A is
+withdrawn (see above).
 
 ## Human QA sequencing
 
-Human QA should run after Waves A and B close (matching every prior closed
-wave's own disclaimer that technical proof does not equal learner-outcome
-proof), and should explicitly probe the nine items listed in Section 8 of
-`docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`.
+Human QA should run after Wave B closes (matching every prior closed wave's own
+disclaimer that technical proof does not equal learner-outcome proof), and
+should explicitly probe the nine items listed in Section 8 of
+`docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`. Per the canonical
+Act0 route audit, W1 Human QA should also confirm first-time comprehension /
+pacing of the `hand_rankings_table` and `showdown_winning` lessons, since the
+W1 score is now `W1_SCORE_MAY_IMPROVE_AFTER_HUMAN_QA` (the prior 7.5 cap
+rationale — assessed-before-taught — is invalidated).
 
 ## Final verdict
 

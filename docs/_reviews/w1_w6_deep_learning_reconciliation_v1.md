@@ -74,6 +74,52 @@ prior artifacts already carried Graphify query trails for the same route.
 
 No Tier C, historical Modern Table, or archive/donor source was read.
 
+## 1.5 Required cross-cutting audit dimension: Canonical Route Ownership & Learner Reachability
+
+> Added by the canonical Act0 route audit
+> (`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`) after
+> `W1W6-DLR-001` was found to have been scoped against a non-canonical
+> (Flow-B / legacy JSON) pipeline rather than the reachable learner route.
+> This dimension is now a **required** framework check for every future
+> W1-W12 audit, alongside the concept/prerequisite/feedback/transfer/repair
+> dimensions already used above.
+
+Every finding — especially any "assessed before taught," coverage, closure, or
+score claim — must first be pinned to the canonical learner route before it is
+admitted. The canonical route for the active product is:
+
+`AppRoot -> Act0ShellPreviewScreenV1 -> Home/Learn -> Act0 lessons/tasks -> Act0 completion/progress`
+
+Non-canonical flows that must **never** supply closure/score evidence:
+Flow A campaign spine (DEBUG_SUPPORT, debug-only) and Flow B JSON "Session
+Drills" (LEGACY_BLOCKED, e.g. the `showdown_winner_choice_v1` drill kind).
+
+Required checks under this dimension (all must pass before a finding or a score
+is admitted):
+
+1. **Canonical route owner** — the seam under audit is on the reachable Act0
+   route (state/lesson/task/runner/progress in `lib/ui_v2/act0_shell/...`),
+   not a debug spine, legacy runner, JSON drill contract, or audit-tooling
+   inventory.
+2. **Teaching and assessment in the same required flow** — the concept is
+   taught and assessed within the same canonical, learner-reachable lesson/
+   task chain, not split across a canonical assessment and a non-canonical (or
+   absent) teaching source.
+3. **Progression-required reachability** — order is enforced by the runtime
+   progression model (lesson-lock + first-incomplete-task gating), so the
+   learner cannot reach the assessment before the teaching task.
+4. **Completion ownership** — completion is written to and restored from the
+   canonical Act0 progress store, not a parallel/legacy persistence path.
+5. **Repair-route reachability** — any claimed repair/recheck actually routes
+   back to its exact target through a proven canonical seam (this is the axis
+   `W1W6-DLR-002` still fails).
+6. **No score/closure evidence from optional/debug/legacy flows** — optional
+   sessions built on a misscoped premise (e.g. `w1.s11`) do not count as
+   closure or score evidence for the canonical route.
+7. **No parallel-owner drift** — a concept must have a single canonical owner;
+   a finding must not assume a non-canonical owner's artifact is the canonical
+   one (the exact error that produced `W1W6-DLR-001`).
+
 ## 2. Reconciliation of prior findings
 
 ### 2.1 `W1W6-LT-00x` ledger (from `w1_w6_final_repair_ledger_v1.md`)
@@ -107,7 +153,7 @@ Tier-A prerequisite-chain gap and recommended a repair batch.
 
 | Finding | Disposition | Evidence |
 | --- | --- | --- |
-| P1-01/P1-02: W1 never teaches hand ranking, showdown resolution, best-5-of-7, or kicker before those concepts are used (a `showdown_winner_choice_v1` kind exists in the active W1-W6 decision-row inventory) | `OPEN_CONFIRMED` (`W1W6-DLR-001` below) | `w1_w6_prerequisite_chain_repair_batch_v1.md` explicitly source-blocks this: "W1 does not currently own a source task family for hand ranking, showdown resolution, best-5-of-7, or kicker" and refuses to import W2's showdown source into W1 as an ownership overclaim. Recommended follow-up wave (`W1 Showdown Basics Source/Authorship Scope Decision v1`) was never executed in this repo. |
+| P1-01/P1-02: W1 never teaches hand ranking, showdown resolution, best-5-of-7, or kicker before those concepts are used (a `showdown_winner_choice_v1` kind exists in the active W1-W6 decision-row inventory) | ~~`OPEN_CONFIRMED` (`W1W6-DLR-001`)~~ → **`MISSCOPED_NO_CANONICAL_ASSESSMENT`** (corrected by `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`; removed from active P1 count) | **Correction:** the cited `showdown_winner_choice_v1` kind is a W2-owned Flow-B / legacy JSON drill artifact (found only in `lib/archive/legacy_runners/...`, `lib/services/drill_contract_v1.dart`, `lib/services/world2_showdown_truth_validator_v1.dart`, `lib/audit_hub_v1/...`), not a canonical W1 assessment. The canonical W1 Act0 route (`_pokerFromZeroLessons`) owns dedicated `hand_rankings_table` + `showdown_winning` lessons whose teaching (`learn`) task is the gating first task and provably precedes every drill and prove-it assessment. No canonical assessed-before-taught event exists. (Historical text preserved: `w1_w6_prerequisite_chain_repair_batch_v1.md` source-blocked a W1-owned source family and refused to import W2 source; the follow-up wave built the optional `w1.s11` Flow-B session, which is **not** canonical closure evidence and is not integrated.) |
 | P1-03 IP/OOP before W3 position-sensitive decisions | `CLOSED_PROVEN` | Repaired in W3 canonical generated fixture feedback; validator passed. |
 | P1-04 equity/protection before W4 purpose/action decisions | `CLOSED_PROVEN` | Repaired in W4 generated fixture feedback; validator passed. |
 | P1-05a draw definition before W5 draw-heavy texture labels | `CLOSED_PROVEN` | Repaired in W5 generated fixture feedback. |
@@ -220,15 +266,24 @@ reconciliation are narrower and already individually tracked:
 | Draw (flop/turn/river draw concept) | yes (W5) | yes (repaired) | yes | yes | yes | — | none — closed |
 | Outs (9/8/4 canonical counts) | yes (W5.s11 bounded repair) | yes | yes | yes | yes | — | none — closed |
 | Range (plain definition) | yes (W6) | yes (repaired) | yes | yes | yes | — | none — closed |
-| Hand ranking / best-five-card rule / kicker / showdown resolution | consumed (W1 `showdown_winner_choice_v1` kind; W2 showdown rows) | **no W1-owned source** | no | no | assessed without being taught in W1 | n/a | **open — hidden prerequisite, `W1W6-DLR-001`** |
+| Hand ranking / best-five-card rule / kicker / showdown resolution | ~~consumed (W1 `showdown_winner_choice_v1` kind)~~ **taught+assessed in canonical W1** (`hand_rankings_table`, `showdown_winning`) | **yes** (`_handRankingIntroRunner`, `_showdownIntroRunner`) | yes (`_bestFiveShowdownRunner`, `_showdownKickerRunner`, `_boardPlaysRunner`, `_tiePotRunner`) | yes (recognition + compare drills) | yes (`ranking_recap`, `world_one_checkpoint` proveIt) — taught **before** assessed | yes (W2 showdown reuses W1 foundation) | **corrected — canonical contract closed; `W1W6-DLR-001` MISSCOPED** (see `canonical_act0_w1_showdown_learning_truth_v1.md`) |
 | Repair-recheck target reachability for session-drill-owned families (W6 range-bucket) | signal captured | n/a | n/a | n/a | n/a | **no safe route back to the exact repaired drill** | **open — repair-continuity gap, `W1W6-DLR-002`** |
 
 No new instance of the original "term used before taught" defect class was
 found in the reconciled evidence beyond what the scanner already enforces.
-The remaining prerequisite gap (showdown/hand-ranking/kicker) is a different
+~~The remaining prerequisite gap (showdown/hand-ranking/kicker) is a different
 root cause — a genuinely missing W1-owned source family, not an ordering bug
 in an existing one — so it is tracked as its own finding rather than folded
-into the beginner-term-guard family.
+into the beginner-term-guard family.~~
+
+**Correction (canonical Act0 route audit):** there is **no** missing W1-owned
+source family for showdown/hand-ranking/kicker. The canonical W1 route owns
+the `hand_rankings_table` and `showdown_winning` lessons, which teach the
+ranking ladder, best-five-of-seven, showdown resolution, kicker, board plays,
+and split pot, and gate every assessment behind their teaching task. The
+earlier "missing source" conclusion came from reading the non-canonical
+Flow-B / legacy JSON inventory. `W1W6-DLR-001` is `MISSCOPED_NO_CANONICAL_ASSESSMENT`;
+see `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`.
 
 ## 4. World-by-world audit
 
@@ -243,9 +298,13 @@ blocker (see Section 6 admission rules).
 3. Concepts introduced: Hero/Villain, seats (BTN/CO/SB/BB), blinds, preflop/
    postflop, board, pot, sizing, range (contract-owned, W1.s01), starting-hand
    discipline, bet-size labels, card/board orientation.
-4. Concepts consumed: hand ranking, showdown resolution, best-5-of-7, kicker
-   (via `showdown_winner_choice_v1` decision rows) — **consumed without a
-   W1-owned teaching source** (open finding).
+4. Concepts consumed: hand ranking, showdown resolution, best-5-of-7, kicker.
+   ~~Consumed without a W1-owned teaching source (open finding).~~
+   **Corrected:** taught and assessed by the canonical W1 lessons
+   `hand_rankings_table` and `showdown_winning` (teaching task first, then
+   drills, then prove-it). The "consumed without a W1 source" reading was
+   scoped to the non-canonical Flow-B JSON `showdown_winner_choice_v1` kind.
+   See `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`.
 5. Evidence of teaching: `w1.s01/session.md` explicit vocabulary block before
    any assessed row (Wave 1); 9 authored lessons, 70 active tasks, 9
    theory-only tasks.
@@ -263,17 +322,23 @@ blocker (see Section 6 admission rules).
 10. Repair continuity: strong for first-value signals (action/no-bet, board
     cards, hero cards, table read, price-read carry); telemetry now includes
     `time_to_decision_ms`, `error_type`, `repair_family_id` (Wave 5).
-11. Confirmed gaps: hand-ranking/showdown/best-5/kicker source gap
-    (`W1W6-DLR-001`, P1, open).
+11. Confirmed gaps: ~~hand-ranking/showdown/best-5/kicker source gap
+    (`W1W6-DLR-001`, P1, open).~~ **None on this axis** — the alleged source
+    gap was `MISSCOPED_NO_CANONICAL_ASSESSMENT` (canonical W1 teaches before it
+    assesses). The only surviving W1-adjacent open items are the bounded
+    same-signal receipt breadth (`W1W6-DLR-004`, P2) and the template residue
+    (`W1W6-DLR-005`, P2), both unchanged.
 12. Already-closed findings: LT-001, LT-002, LT-003, LT-004 (W1 slice),
     LT-014 (W1.s01 slice), P2-01/P2-02 pot/defend clarity.
-13. Confidence score: **7.5/10**. The route is technically dense and the
-    beginner-vocabulary defect class that originally motivated this whole
-    audit thread is closed here first and most thoroughly. The score is
-    capped below the prior technical-certification number (`8.5`) because a
-    real beginner is assessed on showdown/hand-ranking outcomes before W1
-    teaches them — this is exactly the class of hidden-prerequisite defect
-    the mission asks to hunt for, and it survives in W1 itself.
+13. Confidence score: ~~**7.5/10** ... capped ... because a real beginner is
+    assessed on showdown/hand-ranking outcomes before W1 teaches them.~~
+    **Corrected to `W1_SCORE_MAY_IMPROVE_AFTER_HUMAN_QA`.** The 7.5 cap
+    rationale (assessed-before-taught) is invalidated: on the canonical route
+    the teaching provably precedes the assessment. No new source-only number is
+    assigned here and 9/10 is not assigned from source alone; only Human QA can
+    certify a higher W1 score. The beginner-vocabulary defect class that
+    originally motivated this thread remains closed here first and most
+    thoroughly. See `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`.
 
 ### W2 — Hand Discipline
 
@@ -448,11 +513,13 @@ Read against `MASTER_PLAN_v3.0.md`'s Transition Readiness Governance
 vocabulary handoff, emotional safety) and the reconciled evidence above.
 
 - **W1 -> W2**: Vocabulary handoff is explicit and contract-owned (the
-  beginner-term contract records "later reuse" for W1.s02/W2). The open W1
-  showdown/hand-ranking gap does not create a W2-side seam problem (W2 owns
-  its own showdown source) but it does mean a learner can reach W2 having
-  been assessed, not taught, on showdown mechanics inside W1 itself — this is
-  an intra-world gap surfaced at the seam, not a W1->W2 bridge failure.
+  beginner-term contract records "later reuse" for W1.s02/W2). ~~The open W1
+  showdown/hand-ranking gap ... a learner can reach W2 having been assessed,
+  not taught, on showdown mechanics inside W1 itself.~~ **Corrected:** there is
+  no such intra-world gap — canonical W1 teaches showdown/hand-ranking (in
+  `hand_rankings_table` and `showdown_winning`) before assessing it, so a
+  learner reaches W2 having been taught these mechanics. `W1W6-DLR-001` is
+  `MISSCOPED_NO_CANONICAL_ASSESSMENT`.
 - **W2 -> W3**: Position vocabulary (UTG/HJ/CO/BTN/SB/BB) is reused, not
   reintroduced, consistent with the beginner-term contract's ownership.
   IP/OOP is the one concept W3 needed grounded before use, and it was
@@ -485,9 +552,15 @@ already tracked in Sections 2 and 3.
 See `docs/plan/W1_W6_LEARNING_CLOSURE_LEDGER_v1.md` for the exact
 implementation-ready table. Summary:
 
+> **Corrected by `docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`:**
+> `W1W6-DLR-001` is withdrawn as `MISSCOPED_NO_CANONICAL_ASSESSMENT` and
+> removed from the active P1 count. Active P1 is now **1**. No replacement
+> canonical finding is warranted.
+
 - P0: 0
-- P1: 2 admitted (`W1W6-DLR-001` W1 showdown/hand-ranking/kicker source gap;
-  `W1W6-DLR-002` W6 repair-recheck launch contract gap)
+- P1: ~~2 admitted~~ **1 admitted** (`W1W6-DLR-002` W6 repair-recheck launch
+  contract gap). `W1W6-DLR-001` (W1 showdown/hand-ranking/kicker "source gap")
+  withdrawn — `MISSCOPED_NO_CANONICAL_ASSESSMENT`.
 - P2: 3 admitted (`W1W6-DLR-003` Learn/Home hierarchy visual proof;
   `W1W6-DLR-004` same-signal repair-receipt breadth; `W1W6-DLR-005` residual
   prompt/option template-repetition scan)
@@ -570,14 +643,24 @@ in the reconciled audits.
 
 `w1_w6_learning_truth_repair_ledger_ready`
 
+> **Corrected by the canonical Act0 route audit
+> (`docs/_reviews/canonical_act0_w1_showdown_learning_truth_v1.md`, verdict
+> `canonical_act0_w1_showdown_learning_contract_closed`):** only **one** P1
+> survives (`W1W6-DLR-002`). `W1W6-DLR-001` is withdrawn as
+> `MISSCOPED_NO_CANONICAL_ASSESSMENT`, and the W1 score is now
+> `W1_SCORE_MAY_IMPROVE_AFTER_HUMAN_QA`.
+
 The five-wave repair program plus the follow-on prerequisite-chain batch
 closed the large majority of the originally identified learner-truth defects,
 including the exact defect class named in the mission brief (unexplained
-position/table-role labels consumed before being taught). Two P1s survive
+position/table-role labels consumed before being taught). ~~Two P1s survive
 reconciliation — a genuine missing W1 source family for hand ranking/
-showdown/kicker, and an architecturally blocked W6 repair-recheck path — plus
-three bounded P2s and one bounded P3. None of these six admitted items require
-broad rewrite; each has a minimum-repair path in the closure ledger. Human QA
-should run after the P1 items close, not before, consistent with every prior
-closed wave's own disclaimer that technical proof does not constitute
-learner-outcome proof.
+showdown/kicker, and an architecturally blocked W6 repair-recheck path~~
+**One P1 survives reconciliation — an architecturally blocked W6
+repair-recheck path (`W1W6-DLR-002`); the alleged W1 showdown/hand-ranking
+source gap was misscoped against a non-canonical pipeline and is withdrawn**
+— plus three bounded P2s and one bounded P3. None of these admitted items
+require broad rewrite; each has a minimum-repair path in the closure ledger.
+Human QA should run after the surviving P1 item closes, not before, consistent
+with every prior closed wave's own disclaimer that technical proof does not
+constitute learner-outcome proof.
