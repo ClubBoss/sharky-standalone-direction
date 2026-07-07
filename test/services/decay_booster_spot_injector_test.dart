@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:collection/collection.dart';
@@ -12,6 +11,7 @@ import 'package:poker_analyzer/services/decay_booster_spot_injector.dart';
 import 'package:poker_analyzer/services/booster_queue_service.dart';
 import 'package:poker_analyzer/services/theory_tag_decay_tracker.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
+import 'package:poker_analyzer/models/game_type.dart';
 
 class _FakeDecay extends TheoryTagDecayTracker {
   final Map<String, double> scores;
