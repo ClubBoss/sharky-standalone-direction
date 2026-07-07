@@ -3,6 +3,19 @@
 These commands implement the post-shim authority split from
 `docs/_reviews/post_shim_global_suite_remeasurement_v1.md`.
 
+The frozen post-shim artifact separates observed measurement truth from
+executable authority truth. The accepted raw suite observed `304` Tier C
+non-green files, but the executable Tier C quarantine set is `307`: the observed
+`304` plus three already confirmed Tier C residuals that were not reached after
+the raw suite stopped at the timeout family:
+
+- `test/services/skill_gap_booster_service_test.dart`
+- `test/widgets/export_csv_button_test.dart`
+- `test/widgets/review_path_card_test.dart`
+
+Tier C remains non-blocking. Do not report the executable `307` count as an
+observed non-green measurement count.
+
 ## Commands
 
 | Lane | Command | Exit policy |

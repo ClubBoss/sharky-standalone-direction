@@ -99,6 +99,35 @@ error events. The final unfinished no-progress file is counted separately as
 `1` timeout/unfinished event because it did not produce a completed `testDone`
 record.
 
+## Observed Inventory vs Executable Authority
+
+The accepted run inventory above is a measured non-green inventory, not the full
+executable lane membership. It must remain frozen as observed-run truth:
+
+- observed unique non-green files: `421`
+- observed Tier B non-green files: `117`
+- observed Tier C non-green files: `304`
+- observed Tier A, Tier D, and unresolved non-green files: `0`
+
+Three confirmed Tier C residual tests were not reached as non-green files in the
+accepted raw suite because the suite stopped at the known timeout family. They
+are authoritative executable Tier C members, but they must not be presented as
+measured non-green files from this run:
+
+- `test/services/skill_gap_booster_service_test.dart`
+- `test/widgets/export_csv_button_test.dart`
+- `test/widgets/review_path_card_test.dart`
+
+Executable lane membership is therefore:
+
+- executable Tier B manifest count: `117`
+- executable Tier C manifest count: `307`
+- executable Tier D manifest count: `0`
+
+Executable-lane counts and measured non-green counts are intentionally distinct.
+The executable Tier C count includes the `304` observed Tier C non-green files
+plus the `3` known not-reached Tier C residuals above.
+
 ## Split Residual Family Distribution
 
 | Primary family | Authority tier | Unique files | Failure events | Error events | Timeout/unfinished | Disposition |
@@ -134,18 +163,19 @@ record.
 
 ## Executable Lane Manifest
 
-| Lane | Exact selector | Expected count in accepted non-green inventory | Blocking rule |
-| --- | --- | --- | --- |
-| Tier A | Exact file list in inventory where Authority tier == `Tier A` | 0 | Blocks PR and release. |
-| Tier B | Exact file list in inventory where Authority tier == `Tier B` | 117 | Blocks checkpoint/touched or release-selected lane only. |
-| Tier C | Exact file list in inventory where Authority tier == `Tier C` | 304 | Non-blocking quarantine/report by default. |
-| Tier D | Exact file list in inventory where Authority tier == `Tier D` | 0 | Excluded by default after replacement proof. |
-| UNRESOLVED_OWNER | Exact file list in inventory where Authority tier == `UNRESOLVED_OWNER` | 0 | Non-blocking until explicit owner decision unless active evidence appears. |
+| Lane | Exact selector | Observed non-green count | Executable manifest count | Blocking rule |
+| --- | --- | ---: | ---: | --- |
+| Tier A | Focused active/release gates, not promoted from this global-suite inventory in Phase 0 | 0 | focused gates | Blocks PR and release. |
+| Tier B | Exact file list in observed inventory where Authority tier == `Tier B` | 117 | 117 | Blocks checkpoint/touched or release-selected lane only. |
+| Tier C | Exact observed Tier C inventory plus the three known not-reached Tier C residuals | 304 | 307 | Non-blocking quarantine/report by default. |
+| Tier D | Exact file list in observed inventory where Authority tier == `Tier D` | 0 | 0 | Excluded by default after replacement proof. |
+| UNRESOLVED_OWNER | Exact file list in observed inventory where Authority tier == `UNRESOLVED_OWNER` | 0 | 0 | Non-blocking until explicit owner decision unless active evidence appears. |
 
 Tier A currently has no non-green files in this global-suite inventory because
 Phase 0 kept active release authority in focused gates rather than promoting
 full-suite discovery rows. Tier B, Tier C, Tier D, and unresolved lane selectors
-are executable from the inventory table below without reading failure messages.
+are derived from the inventory table below without reading failure messages.
+Tier C additionally includes the three known not-reached residuals listed above.
 
 ## Exact Non-Green Inventory
 
