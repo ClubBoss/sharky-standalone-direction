@@ -1,6 +1,7 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 @TestOn('vm')
 import 'dart:convert';
+import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
+import 'package:poker_analyzer/models/v2/pack_ux_metadata.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template.dart';
 
