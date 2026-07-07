@@ -1,7 +1,8 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:io';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/utils/temp_cleanup.dart';
+
+import 'support/test_fakes.dart';
 
 void main() {
   test('cleanupOldTempDirs removes only old directories', () async {

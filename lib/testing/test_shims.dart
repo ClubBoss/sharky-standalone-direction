@@ -1,7 +1,6 @@
 // ignore_for_file: unused_field, unused_element, unused_local_variable, deprecated_member_use_from_same_package
 
 import 'dart:async';
-import 'dart:io';
 
 class ShareOptions {}
 
@@ -83,17 +82,7 @@ class HandData {
   const HandData({this.id = '', this.street = ''});
 }
 
-Map<String, Object?> parseYamlToMap(String src) => const <String, Object?>{};
-
 bool isAutoReplayKind(Object? _) => false;
-
-extension ShimLastModifiedDir on Directory {
-  Future<void> setLastModified(DateTime _) async {}
-}
-
-extension ShimLastModifiedFile on File {
-  Future<void> setLastModified(DateTime _) async {}
-}
 
 class MixedDrillHistoryService {
   List<MixedDrillStat> get stats => const [];

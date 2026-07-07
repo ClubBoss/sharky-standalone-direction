@@ -1,6 +1,7 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 @TestOn('vm')
 import 'package:test/test.dart';
+
+import '../support/test_fakes.dart';
 // Замените на ваш YAML-парсер спотов в v2 (без UI)
 import 'package:poker_analyzer/models/v2/training_pack_template.dart';
 import 'package:poker_analyzer/utils/yaml_utils.dart'; // если у вас так называется
