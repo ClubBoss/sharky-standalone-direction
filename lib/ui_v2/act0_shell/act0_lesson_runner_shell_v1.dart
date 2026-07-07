@@ -1105,13 +1105,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     );
   }
 
-  void _maybeEmitUserChoiceTelemetry(Act0RunnerOptionV1 option) {
+  void _maybeEmitUserChoiceTelemetry(
+    Act0RunnerOptionV1 option, {
+    required int? timeToDecisionMs,
+  }) {
     final key =
         '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|$_stableTaskTelemetryId|${widget.runner.phase.name}|${option.id}';
     if (_userChoiceTelemetryKey == key) {
       return;
     }
     _userChoiceTelemetryKey = key;
+    final projection = _decisionTelemetryProjectionV1(option);
     final decisionTimeBucket = _decisionTimeBucketV1(
       _decisionTelemetryStopwatch.isRunning
           ? _decisionTelemetryStopwatch.elapsed
@@ -1128,6 +1132,25 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
           'choiceId': option.id,
+          'chosen_action': option.id,
+          if (projection.expectedAction != null)
+            'expected_action': projection.expectedAction,
+          'correct': option.isCorrect,
+          'result_classification': projection.resultClassification,
+          'error_type': projection.errorType,
+          if (projection.repairFamilyId != null)
+            'repair_family_id': projection.repairFamilyId,
+          'route_source_owner': 'act0_runner',
+          'drill_kind': projection.drillKind,
+          'attempt_id': projection.attemptId,
+          if (timeToDecisionMs != null)
+            'time_to_decision_ms': timeToDecisionMs < 0 ? 0 : timeToDecisionMs,
+          if (projection.boardCardIds.isNotEmpty)
+            'board_card_ids': projection.boardCardIds,
+          if (projection.streetLabel.isNotEmpty)
+            'street_v1': projection.streetLabel,
+          'acceptable_action_ids': projection.acceptableActionIds,
+          'option_quality': option.quality.name,
           'decisionTimeBucket': decisionTimeBucket,
           'attemptOrdinal': 1,
         },
@@ -1139,12 +1162,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     required Act0RunnerOptionV1 option,
     required int? timeToDecisionMs,
   }) {
-    final correctOption = widget.runner.options
-        .cast<Act0RunnerOptionV1?>()
-        .firstWhere(
-          (candidate) => candidate?.isCorrect == true,
-          orElse: () => null,
-        );
+    final projection = _decisionTelemetryProjectionV1(option);
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'decision_made',
@@ -1163,12 +1181,34 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'concept_family_id': widget.selectedTaskFamily!.name,
           },
           'choiceId': option.id,
+          'chosen_action': option.id,
           'selected_action': option.id,
-          if (correctOption != null) 'correct_action': correctOption.id,
+          if (projection.expectedAction != null) ...{
+            'expected_action': projection.expectedAction,
+            'correct_action': projection.expectedAction,
+          },
+          'acceptable_action_ids': projection.acceptableActionIds,
+          'drill_kind': projection.drillKind,
+          'correct': option.isCorrect,
           'is_correct': option.isCorrect,
-          'result': option.isCorrect ? 'correct' : 'incorrect',
-          'errorType': option.isCorrect ? 'none' : 'unknown',
-          'error_type': option.isCorrect ? 'none' : 'unknown',
+          'result': projection.resultClassification,
+          'result_classification': projection.resultClassification,
+          'errorType': projection.errorType,
+          'error_type': projection.errorType,
+          if (projection.repairFamilyId != null)
+            'repairFamilyId': projection.repairFamilyId,
+          if (projection.repairFamilyId != null)
+            'repair_family_id': projection.repairFamilyId,
+          if (projection.repairTargetTaskId != null)
+            'repairTargetTaskId': projection.repairTargetTaskId,
+          if (projection.repairTargetTaskId != null)
+            'repair_target_task_id': projection.repairTargetTaskId,
+          if (projection.boardCardIds.isNotEmpty)
+            'board_card_ids': projection.boardCardIds,
+          if (projection.streetLabel.isNotEmpty)
+            'street_v1': projection.streetLabel,
+          'route_source_owner': 'act0_runner',
+          'attempt_id': projection.attemptId,
           'time_to_decision_ms': timeToDecisionMs,
           'source_surface': 'act0_runner',
           'attemptOrdinal': 1,
@@ -1253,7 +1293,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         ? _decisionTelemetryStopwatch.elapsedMilliseconds
         : null;
     final decisionTimeBucket = _completedDecisionTimeBucket();
-    _maybeEmitUserChoiceTelemetry(option);
+    _maybeEmitUserChoiceTelemetry(option, timeToDecisionMs: timeToDecisionMs);
     _emitCanonicalDecisionMadeTelemetryV1(
       option: option,
       timeToDecisionMs: timeToDecisionMs,
@@ -1272,6 +1312,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             proof: feedbackSignalProof,
             quality: option.quality,
           );
+    final projection = _decisionTelemetryProjectionV1(option);
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'task_result',
@@ -1282,8 +1323,28 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
           'choiceId': option.id,
-          'result': option.isCorrect ? 'correct' : 'incorrect',
-          'errorType': option.isCorrect ? 'none' : 'unknown',
+          'chosen_action': option.id,
+          if (projection.expectedAction != null)
+            'expected_action': projection.expectedAction,
+          'correct': option.isCorrect,
+          'result': projection.resultClassification,
+          'result_classification': projection.resultClassification,
+          'errorType': projection.errorType,
+          'error_type': projection.errorType,
+          if (projection.repairFamilyId != null)
+            'repairFamilyId': projection.repairFamilyId,
+          if (projection.repairFamilyId != null)
+            'repair_family_id': projection.repairFamilyId,
+          if (projection.repairTargetTaskId != null)
+            'repairTargetTaskId': projection.repairTargetTaskId,
+          if (projection.repairTargetTaskId != null)
+            'repair_target_task_id': projection.repairTargetTaskId,
+          if (projection.boardCardIds.isNotEmpty)
+            'board_card_ids': projection.boardCardIds,
+          if (projection.streetLabel.isNotEmpty)
+            'street_v1': projection.streetLabel,
+          'drill_kind': projection.drillKind,
+          'attempt_id': projection.attemptId,
           if (feedbackSignalProof != null)
             'feedbackSignal': feedbackSignalProof.signalId,
           if (feedbackSignalProof != null)
@@ -1303,6 +1364,72 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       option,
       Act0CompletedDecisionKindV1.actionList,
       decisionTimeBucket: decisionTimeBucket,
+    );
+  }
+
+  ({
+    String? expectedAction,
+    List<String> acceptableActionIds,
+    String resultClassification,
+    String errorType,
+    String? repairFamilyId,
+    String? repairTargetTaskId,
+    String drillKind,
+    String attemptId,
+    List<String> boardCardIds,
+    String streetLabel,
+  })
+  _decisionTelemetryProjectionV1(Act0RunnerOptionV1 option) {
+    final expectedOption = widget.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere(
+          (candidate) => candidate?.isCorrect ?? false,
+          orElse: () => null,
+        );
+    final acceptableActionIds = widget.runner.options
+        .where(
+          (candidate) =>
+              candidate.isCorrect ||
+              candidate.quality == Act0FeedbackQualityV1.suboptimal,
+        )
+        .map((candidate) => candidate.id)
+        .toList(growable: false);
+    final receipt = act0FirstValueSkillReceiptForRunnerV1(
+      runner: widget.runner,
+      option: option,
+      taskFamily: widget.selectedTaskFamily,
+    );
+    final resultClassification = switch (option.quality) {
+      Act0FeedbackQualityV1.correct => 'correct',
+      Act0FeedbackQualityV1.wrong => 'incorrect',
+      Act0FeedbackQualityV1.suboptimal => 'suboptimal',
+    };
+    final errorType = option.isCorrect
+        ? 'none'
+        : receipt == null
+        ? 'unknown'
+        : option.quality == Act0FeedbackQualityV1.suboptimal
+        ? 'thin_${receipt.skillAtomId}'
+        : 'missed_${receipt.skillAtomId}';
+    final repairFamilyId = option.isCorrect || receipt == null
+        ? null
+        : '${receipt.skillAtomId}:${receipt.sourceSignalId}';
+    return (
+      expectedAction: expectedOption?.id,
+      acceptableActionIds: acceptableActionIds,
+      resultClassification: resultClassification,
+      errorType: errorType,
+      repairFamilyId: repairFamilyId,
+      repairTargetTaskId: option.isCorrect ? null : receipt?.nextRepId,
+      drillKind: widget.selectedTaskFamily?.name ?? 'unknown',
+      attemptId:
+          'v1|${widget.selectedWorldId?.trim() ?? ''}|'
+          '$_stableLessonTelemetryId|$_stableTaskTelemetryId|${option.id}|1',
+      boardCardIds: widget.runner.table.boardCards
+          .map((card) => card.label)
+          .where((label) => label.trim().isNotEmpty)
+          .toList(growable: false),
+      streetLabel: widget.runner.table.streetLabel.trim(),
     );
   }
 

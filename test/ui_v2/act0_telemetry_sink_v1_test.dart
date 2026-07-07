@@ -327,6 +327,71 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  ({Act0LessonCardV1 lesson, Act0LessonTaskV1 task}) taskByIdV1({
+    required String worldId,
+    required String taskId,
+  }) {
+    final world = Act0ShellStateV1.sample.worldById(worldId);
+    for (final lesson in world.lessons) {
+      for (final task in lesson.taskList) {
+        if (task.taskId == taskId) {
+          return (lesson: lesson, task: task);
+        }
+      }
+    }
+    fail('Missing $worldId task $taskId');
+  }
+
+  Future<void> pumpTelemetryTaskV1({
+    required WidgetTester tester,
+    required String worldId,
+    required String taskId,
+    required Act0TelemetrySinkV1 sink,
+  }) async {
+    final resolved = taskByIdV1(worldId: worldId, taskId: taskId);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: resolved.task.runner.copyWith(
+              phase: Act0LessonPhaseV1.drill,
+              teachingSteps: const <Act0TeachingStepV1>[],
+            ),
+            selectedWorldId: worldId,
+            selectedLessonId: resolved.lesson.lessonId,
+            selectedTaskId: resolved.task.taskId,
+            selectedTaskFamily: resolved.task.resolvedTaskFamily,
+            telemetrySink: sink,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> chooseOptionByQualityV1(
+    WidgetTester tester,
+    Act0FeedbackQualityV1 quality,
+  ) async {
+    final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+    expect(runnerFinder, findsOneWidget);
+    final runnerWidget = tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+    final option = runnerWidget.runner.options.firstWhere(
+      (candidate) => candidate.quality == quality,
+      orElse: () => runnerWidget.runner.options.firstWhere(
+        (candidate) => candidate.quality != Act0FeedbackQualityV1.correct,
+      ),
+    );
+    final optionFinder = find.byKey(Key('act0_shell_option_${option.id}'));
+    await tester.ensureVisible(optionFinder);
+    await tester.pumpAndSettle();
+    await tester.tap(optionFinder);
+    await tester.pumpAndSettle();
+  }
+
   void expectNoForbiddenTelemetryFieldsV1(List<Act0TelemetryEventV1> events) {
     for (final event in events) {
       expect(event.fields.containsKey('userId'), isFalse);
@@ -408,6 +473,17 @@ void main() {
       expect(userChoice['lessonId'], 'fold_check_call_raise');
       expect(userChoice['taskId'], 'actions_raise_drill');
       expect(userChoice['choiceId'], 'raise');
+      expect(userChoice['chosen_action'], 'raise');
+      expect(userChoice['expected_action'], 'raise');
+      expect(userChoice['correct'], isTrue);
+      expect(userChoice['result_classification'], 'correct');
+      expect(userChoice['error_type'], 'none');
+      expect(userChoice['route_source_owner'], 'act0_runner');
+      expect(userChoice['drill_kind'], 'decision');
+      expect(userChoice['attempt_id'], isA<String>());
+      expect(userChoice['time_to_decision_ms'], isA<int>());
+      expect(userChoice['acceptable_action_ids'], <String>['call', 'raise']);
+      expect(userChoice['option_quality'], 'correct');
       expect(
         userChoice['decisionTimeBucket'],
         isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
@@ -419,6 +495,18 @@ void main() {
         'lessonId',
         'taskId',
         'choiceId',
+        'chosen_action',
+        'expected_action',
+        'correct',
+        'result_classification',
+        'error_type',
+        'route_source_owner',
+        'drill_kind',
+        'attempt_id',
+        'time_to_decision_ms',
+        'street_v1',
+        'acceptable_action_ids',
+        'option_quality',
         'decisionTimeBucket',
         'attemptOrdinal',
       });
@@ -531,7 +619,7 @@ void main() {
         .lessons
         .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
         .taskList
-        .firstWhere((candidate) => candidate.taskId == 'actions_raise_drill');
+        .firstWhere((candidate) => candidate.taskId == 'actions_legal_context');
     final sink = Act0InMemoryTelemetrySinkV1();
 
     await tester.pumpWidget(
@@ -556,27 +644,168 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('act0_shell_option_call')));
+    await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
     await tester.pumpAndSettle();
 
     final userChoice = sink.events.firstWhere(
       (event) => event.name == 'user_choice',
     );
-    expect(userChoice.fields['choiceId'], 'call');
+    expect(userChoice.fields['choiceId'], 'fold');
+    expect(userChoice.fields['chosen_action'], 'fold');
+    expect(userChoice.fields['expected_action'], 'check');
+    expect(userChoice.fields['correct'], isFalse);
+    expect(userChoice.fields['result_classification'], 'incorrect');
+    expect(userChoice.fields['error_type'], 'missed_action_read');
+    expect(userChoice.fields['repair_family_id'], 'action_read:no_bet_yet');
+    expect(userChoice.fields['route_source_owner'], 'act0_runner');
+    expect(userChoice.fields['drill_kind'], 'decision');
+    expect(userChoice.fields['attempt_id'], isA<String>());
+    expect(userChoice.fields['time_to_decision_ms'], isA<int>());
     expect(
       userChoice.fields['decisionTimeBucket'],
       isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
     );
 
+    final canonicalDecision = sink.events.firstWhere(
+      (event) => event.name == 'decision_made',
+    );
+    expect(canonicalDecision.fields['selected_action'], 'fold');
+    expect(canonicalDecision.fields['expected_action'], 'check');
+    expect(canonicalDecision.fields['correct_action'], 'check');
+    expect(canonicalDecision.fields['correct'], isFalse);
+    expect(canonicalDecision.fields['is_correct'], isFalse);
+    expect(canonicalDecision.fields['result'], 'incorrect');
+    expect(canonicalDecision.fields['result_classification'], 'incorrect');
+    expect(canonicalDecision.fields['error_type'], 'missed_action_read');
+    expect(
+      canonicalDecision.fields['repair_family_id'],
+      'action_read:no_bet_yet',
+    );
+    expect(
+      canonicalDecision.fields['repair_target_task_id'],
+      'repeat_action_read',
+    );
+    expect(
+      canonicalDecision.fields['attempt_id'],
+      userChoice.fields['attempt_id'],
+    );
+    expect(canonicalDecision.fields['time_to_decision_ms'], isA<int>());
+
     final result = sink.events.firstWhere(
       (event) => event.name == 'task_result',
     );
-    expect(result.fields['choiceId'], 'call');
+    expect(result.fields['choiceId'], 'fold');
     expect(result.fields['result'], 'incorrect');
-    expect(result.fields['errorType'], 'unknown');
+    expect(result.fields['errorType'], 'missed_action_read');
+    expect(result.fields['error_type'], 'missed_action_read');
+    expect(result.fields['repairFamilyId'], 'action_read:no_bet_yet');
+    expect(result.fields['repair_family_id'], 'action_read:no_bet_yet');
 
     expectNoForbiddenTelemetryFieldsV1(sink.events);
   });
+
+  testWidgets(
+    'W5 structured board context is attributed to decision telemetry',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await pumpTelemetryTaskV1(
+        tester: tester,
+        worldId: 'world_5',
+        taskId: 'board_texture_basics_w5_dry_board',
+        sink: sink,
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_option_wet')));
+      await tester.pumpAndSettle();
+
+      final userChoice = sink.events.firstWhere(
+        (event) => event.name == 'user_choice',
+      );
+      expect(userChoice.fields['worldId'], 'world_5');
+      expect(userChoice.fields['taskId'], 'board_texture_basics_w5_dry_board');
+      expect(userChoice.fields['board_card_ids'], <String>['Kc', '7d', '2s']);
+      expect(userChoice.fields['street_v1'], 'Flop');
+
+      final canonicalDecision = sink.events.firstWhere(
+        (event) => event.name == 'decision_made',
+      );
+      expect(canonicalDecision.fields['board_card_ids'], <String>[
+        'Kc',
+        '7d',
+        '2s',
+      ]);
+      expect(canonicalDecision.fields['street_v1'], 'Flop');
+
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
+  testWidgets(
+    'representative W1 W3 W4 W5 W6 paths emit attributed decision telemetry',
+    (tester) async {
+      final cases = <({String worldId, String taskId})>[
+        (worldId: 'world_1', taskId: 'actions_legal_context'),
+        (worldId: 'world_3', taskId: 'button_advantage_button_open'),
+        (worldId: 'world_4', taskId: 'w4_good_price_call'),
+        (worldId: 'world_5', taskId: 'board_texture_basics_w5_dry_board'),
+        (worldId: 'world_6', taskId: 'w6_missed_dry_board'),
+      ];
+
+      for (final path in cases) {
+        final sink = Act0InMemoryTelemetrySinkV1();
+        await pumpTelemetryTaskV1(
+          tester: tester,
+          worldId: path.worldId,
+          taskId: path.taskId,
+          sink: sink,
+        );
+        await chooseOptionByQualityV1(tester, Act0FeedbackQualityV1.wrong);
+
+        final userChoices = sink.events
+            .where((event) => event.name == 'user_choice')
+            .toList(growable: false);
+        expect(userChoices, hasLength(1), reason: path.taskId);
+        final userChoice = userChoices.single.fields;
+        expect(userChoice['worldId'], path.worldId, reason: path.taskId);
+        expect(userChoice['taskId'], path.taskId, reason: path.taskId);
+        expect(userChoice['chosen_action'], isA<String>(), reason: path.taskId);
+        expect(
+          userChoice['expected_action'],
+          isA<String>(),
+          reason: path.taskId,
+        );
+        expect(userChoice['correct'], isFalse, reason: path.taskId);
+        expect(
+          userChoice['result_classification'],
+          isIn(<String>['incorrect', 'suboptimal']),
+          reason: path.taskId,
+        );
+        expect(userChoice['error_type'], isA<String>(), reason: path.taskId);
+        expect(userChoice['error_type'], isNot('unknown'), reason: path.taskId);
+        expect(
+          userChoice['repair_family_id'],
+          isA<String>(),
+          reason: path.taskId,
+        );
+        expect(userChoice['attempt_id'], isA<String>(), reason: path.taskId);
+        expect(
+          userChoice['time_to_decision_ms'],
+          isA<int>(),
+          reason: path.taskId,
+        );
+
+        final canonicalDecisions = sink.events
+            .where((event) => event.name == 'decision_made')
+            .toList(growable: false);
+        expect(canonicalDecisions, hasLength(1), reason: path.taskId);
+        expect(
+          canonicalDecisions.single.fields['attempt_id'],
+          userChoice['attempt_id'],
+          reason: path.taskId,
+        );
+      }
+    },
+  );
 
   testWidgets(
     'Act0 runner emits one safe feedback_viewed event from the real feedback path',
