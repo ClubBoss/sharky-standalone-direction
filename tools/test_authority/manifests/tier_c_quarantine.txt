@@ -302,3 +302,6 @@ test/yaml_pack_auto_tag_engine_test.dart
 test/yaml_pack_auto_tagger_test.dart
 test/yaml_pack_importer_service_test.dart
 test/yaml_pack_rating_engine_test.dart
+test/services/skill_gap_booster_service_test.dart
+test/widgets/export_csv_button_test.dart
+test/widgets/review_path_card_test.dart
