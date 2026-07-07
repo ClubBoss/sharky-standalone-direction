@@ -1,0 +1,21 @@
+{
+  "world_id": "W0",
+  "artifact_dir": "assets/audit_hub_v1/world_screenshot_evidence_v1/world0",
+  "entries": [
+    {
+      "session_id": "w0.s01",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world0/w0.s01.png",
+      "bytes": 46594
+    },
+    {
+      "session_id": "w0.s05",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world0/w0.s05.png",
+      "bytes": 46643
+    },
+    {
+      "session_id": "w0.s10",
+      "path": "assets/audit_hub_v1/world_screenshot_evidence_v1/world0/w0.s10.png",
+      "bytes": 46533
+    }
+  ]
+}
