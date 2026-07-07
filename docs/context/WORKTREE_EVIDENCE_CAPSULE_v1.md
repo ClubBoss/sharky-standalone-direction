@@ -2,7 +2,7 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `1d7a76215ac008eb3066c5030e514c5fa80029c7` (frozen Wave 4 HEAD on `origin/main`;
+Verified product HEAD: `9eae56ef2e3a0d37f59eddf4158240dcf381ecac` (frozen Wave 4 base HEAD on `origin/main`;
 repository hygiene, dead-system decommission, and repository-truth
 stabilization/integration are closed).
 Verified active task: none active; parked at the frozen HEAD above.

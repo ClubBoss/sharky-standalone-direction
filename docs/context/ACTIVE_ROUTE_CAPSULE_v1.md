@@ -9,8 +9,8 @@ dead-system decommission wave
 (`docs/_reviews/repository_reduction_dead_system_decommission_v1.md`), and
 repository truth stabilization
 (`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`) are
-also closed and integrated into `main`. The frozen Wave 4 HEAD is
-`1d7a76215ac008eb3066c5030e514c5fa80029c7` on `origin/main`.
+also closed and integrated into `main`. The frozen Wave 4 base HEAD is
+`9eae56ef2e3a0d37f59eddf4158240dcf381ecac` on `origin/main`.
 Current active task: none active; the route is parked at the frozen HEAD
 above awaiting the next admitted task. W7+ expansion and visual, mascot, and
 motion work remain deferred while this route is active.

@@ -2,7 +2,7 @@
 
 Status: ACTIVE learning/repair capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `1d7a76215ac008eb3066c5030e514c5fa80029c7` (frozen Wave 4 HEAD on `origin/main`;
+Verified product HEAD: `9eae56ef2e3a0d37f59eddf4158240dcf381ecac` (frozen Wave 4 base HEAD on `origin/main`;
 W1-W6 grouped repair program Waves 1-3 remain closed; repository hygiene,
 dead-system decommission, and repository-truth stabilization/integration are
 also closed).
