@@ -45,6 +45,53 @@ Revised after the canonical Act0 route audit
 - P3: 1 (`W1W6-DLR-006`)
 - P4: 0
 
+## Canonical route ownership closure gate
+
+No W1-W6 world can receive score, closure, readiness, Human QA readiness, or
+progression-admission credit until its canonical learner chain is proven:
+
+`App launch -> Home/Learn entry -> required lesson/task -> teaching -> guided practice -> independent assessment -> feedback -> repair -> targeted recheck -> completion -> next task/lesson/world`
+
+The proof packet for each world must identify the canonical owners for route
+entry, content source, progression, completion, telemetry, repair, targeted
+recheck, payoff, and next-step routing. Optional, debug-support,
+legacy-blocked, dormant, archived, and parallel flows can be noted as context,
+but they do not count toward canonical W1-W6 score or closure unless proved
+required by the normal learner route.
+
+`W1W6-DLR-001` is the controlling precedent: Flow-B JSON Session Drills and
+optional `w1.s11` coverage do not improve canonical W1 because the normal route
+is Act0 Home/Learn. The historical P1 was misscoped, not fixed by Flow-B
+content.
+
+Every remaining closure packet must scan these defect classes:
+
+1. parallel route owners;
+2. content exists but is not progression-required;
+3. teaching in one flow and assessment in another;
+4. completion written outside canonical progress;
+5. telemetry emitted by a noncanonical owner;
+6. repair receipts without reachable canonical recheck;
+7. score claims based on optional/debug/legacy surfaces;
+8. canonical UI using a different content owner than the audited source;
+9. duplicate or competing progression owners;
+10. learner-reachable but nonrequired side paths mistaken for curriculum.
+
+W1-W6 closure sequence:
+
+1. canonical route-ownership map for W1-W6;
+2. canonical-only deep-learning re-audit;
+3. bounded repair of confirmed canonical gaps;
+4. closure or proof-of-nonissue for learner-facing P2 findings;
+5. reconcile title, job, and identity drift affecting learning;
+6. evidence-backed re-score for each world;
+7. fixed-build novice Human QA;
+8. final bounded repair if QA finds material gaps;
+9. hard close only when every W1-W6 world is individually at least 9/10.
+
+No average can compensate for a world below 9/10. P3 tooling remains optional
+unless it affects learner quality, canonical proof, or audit repeatability.
+
 ## Consolidated repair waves (implementation order)
 
 Ordered by prerequisite dependency and learner EV, per the consolidation

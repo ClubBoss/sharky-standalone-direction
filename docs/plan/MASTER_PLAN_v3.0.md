@@ -252,6 +252,74 @@ Calibration note (2026-05-14):
   the route stabilized, because the active product is greener than the file
   boundaries are clean.
 
+## Canonical Route Ownership Closure Gate
+
+No world score, closure, readiness, Human QA readiness, or progression
+admission claim may improve until the full canonical learner chain is proven
+for that world:
+
+`App launch -> Home/Learn entry -> required lesson/task -> teaching -> guided practice -> independent assessment -> feedback -> repair -> targeted recheck -> completion -> next task/lesson/world`
+
+For every world audit or repair wave, the evidence packet must identify and
+reconcile the canonical owners for route entry, content source, progression,
+completion, telemetry, repair, targeted recheck, payoff, and next-step routing.
+Evidence from optional, debug-support, legacy-blocked, dormant, archived, or
+parallel flows is useful only as context. It cannot contribute to canonical
+scores, closure, Human QA readiness, W1-W12 progression admission, or release
+readiness unless that flow is proved to be required by the normal learner route.
+
+The following evidence types are insufficient by themselves:
+
+1. source existence;
+2. manifest inclusion;
+3. authored assets;
+4. non-primary learner reachability;
+5. debug/support reachability;
+6. tests that exercise a noncanonical owner;
+7. completion persistence outside canonical progress;
+8. telemetry from a noncanonical owner.
+
+Every closure packet must explicitly check these systemic defect classes:
+
+1. parallel route owners;
+2. content exists but is not progression-required;
+3. teaching in one flow and assessment in another;
+4. completion written outside canonical progress;
+5. telemetry emitted by a noncanonical owner;
+6. repair receipts without reachable canonical recheck;
+7. score claims based on optional/debug/legacy surfaces;
+8. canonical UI using a different content owner than the audited source;
+9. duplicate or competing progression owners;
+10. learner-reachable but nonrequired side paths mistaken for curriculum.
+
+The W1 parallel-pipeline correction is the precedent: JSON Session Drills can
+contain valid content, but the normal route is `AppRoot -> Act0 shell ->
+Home/Learn -> Act0 lessons/tasks -> Act0 progress`. The prior W1 showdown P1
+was misscoped because it used noncanonical Flow-B evidence; optional `w1.s11`
+coverage cannot raise canonical W1 score or close a canonical route finding.
+
+W1-W6 closure must now proceed in this order:
+
+1. canonical route-ownership map for each W1-W6 world;
+2. canonical-only deep-learning re-audit;
+3. bounded repair of confirmed canonical gaps;
+4. closure or proof-of-nonissue for learner-facing P2 findings;
+5. reconcile title, job, and identity drift that affects learning;
+6. evidence-backed re-score for each world;
+7. fixed-build novice Human QA;
+8. final bounded repair if QA finds material gaps;
+9. hard close only when every W1-W6 world is individually at least 9/10.
+
+No W1-W6 average may compensate for an under-9/10 world. P3 tooling remains
+optional unless it affects learner quality, canonical proof, or audit
+repeatability.
+
+W7-W12 admission must start with the same canonical route-ownership proof
+before any deep content audit or implementation expansion: prove learner
+entry, required reachability, progression ownership, completion ownership,
+telemetry ownership, repair/recheck ownership, payoff, and next-world routing;
+exclude optional/debug/legacy evidence; then assess content depth.
+
 ## Route To 100 Theses
 
 The path from "good product" to "best-in-class product" is no longer about
