@@ -1,0 +1,90 @@
+name: Test Authority Lanes
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Lane to run"
+        required: true
+        default: "tier-a"
+        type: choice
+        options:
+          - tier-a
+          - tier-b
+          - tier-c
+          - tier-d
+          - all-diagnostic
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-authority-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  tier-a:
+    name: Tier A active/release
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-a' || inputs.lane == 'all-diagnostic')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.0'
+          cache: true
+      - run: flutter pub get
+      - run: ./tools/test_authority_validate_v1.sh
+      - run: ./tools/test_authority_tier_a_v1.sh
+
+  tier-b:
+    name: Tier B maintained support
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-b' || inputs.lane == 'all-diagnostic')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.0'
+          cache: true
+      - run: flutter pub get
+      - run: ./tools/test_authority_validate_v1.sh
+      - run: ./tools/test_authority_tier_b_v1.sh
+
+  tier-c:
+    name: Tier C quarantine
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-c' || inputs.lane == 'all-diagnostic')) }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.0'
+          cache: true
+      - run: flutter pub get
+      - run: ./tools/test_authority_validate_v1.sh
+      - run: ./tools/test_authority_tier_c_v1.sh
+
+  tier-d:
+    name: Tier D retired
+    if: ${{ github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-d' || inputs.lane == 'all-diagnostic') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.0'
+          cache: true
+      - run: flutter pub get
+      - run: ./tools/test_authority_validate_v1.sh
+      - run: ./tools/test_authority_tier_d_v1.sh
