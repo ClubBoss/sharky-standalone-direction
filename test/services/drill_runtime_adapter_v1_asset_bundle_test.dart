@@ -49,6 +49,53 @@ void main() {
     File('content/_meta/world_drills_manifest_v1.json').readAsStringSync(),
   );
 
+  Map<String, dynamic> _sourceSessionsManifest() => _decodeManifest(
+    File('content/_meta/world_sessions_manifest_v1.json').readAsStringSync(),
+  );
+
+  List<Map<String, dynamic>> _sessionEntriesForWorlds(
+    Map<String, dynamic> manifest,
+    Set<int> worlds,
+  ) {
+    final worldEntries = (manifest['worlds'] as List<dynamic>)
+        .cast<Map<dynamic, dynamic>>();
+    return worldEntries
+        .where((world) => worlds.contains(world['world'] as int))
+        .expand((world) => (world['sessions'] as List<dynamic>))
+        .cast<Map<dynamic, dynamic>>()
+        .map(
+          (session) =>
+              session.map((key, value) => MapEntry(key.toString(), value)),
+        )
+        .toList(growable: false);
+  }
+
+  List<String> _activeDrillIdsFromIndex(String sessionPath) {
+    final normalizedPath = sessionPath.endsWith('/')
+        ? sessionPath
+        : '$sessionPath/';
+    final index = File('${normalizedPath}drills/index.md').readAsLinesSync();
+    return index
+        .map((line) => RegExp(r'^- ([a-z0-9_]+):').firstMatch(line.trim()))
+        .whereType<RegExpMatch>()
+        .map((match) => match.group(1)!)
+        .toList(growable: false);
+  }
+
+  Map<String, List<String>> _activeDrillIdsBySessionForWorlds(Set<int> worlds) {
+    final sessions = _sessionEntriesForWorlds(
+      _sourceSessionsManifest(),
+      worlds,
+    );
+    final out = <String, List<String>>{};
+    for (final session in sessions) {
+      final id = session['id']! as String;
+      final path = session['path']! as String;
+      out[id] = _activeDrillIdsFromIndex(path);
+    }
+    return out;
+  }
+
   Map<String, dynamic>? _optionalRuntimeBundleManifest() {
     const candidates = <String>[
       'build/flutter_assets/content/_meta/world_drills_manifest_v1.json',
@@ -551,6 +598,81 @@ void main() {
   );
 
   test(
+    'active W1-W6 drill indexes stay in source, test bundle, and runtime bundle parity',
+    () async {
+      final sourceManifest = _sourceDrillManifest();
+      final bundledManifest = await _bundledDrillManifest();
+      final runtimeBundleManifest = _optionalRuntimeBundleManifest();
+      final expectedDrillsBySession = _activeDrillIdsBySessionForWorlds({
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+      });
+
+      for (var world = 1; world <= 6; world++) {
+        final sourceSessions = _sessionEntriesForWorld(sourceManifest, world);
+        final bundledSessions = _sessionEntriesForWorld(bundledManifest, world);
+        final runtimeSessions = runtimeBundleManifest == null
+            ? null
+            : _sessionEntriesForWorld(runtimeBundleManifest, world);
+        final worldSessionIds = expectedDrillsBySession.keys
+            .where((sessionId) => sessionId.startsWith('w$world.'))
+            .toList(growable: false);
+
+        for (final sessionId in worldSessionIds) {
+          final expected = [...expectedDrillsBySession[sessionId]!]..sort();
+          expect(
+            _drillIdsForSession(sourceSessions, sessionId),
+            equals(expected),
+            reason:
+                'Source manifest drift from active index remains for $sessionId',
+          );
+          expect(
+            _drillIdsForSession(bundledSessions, sessionId),
+            equals(expected),
+            reason:
+                'Test bundle manifest drift from active index remains for $sessionId',
+          );
+          if (runtimeSessions != null) {
+            expect(
+              _drillIdsForSession(runtimeSessions, sessionId),
+              equals(expected),
+              reason:
+                  'Runtime bundle manifest drift from active index remains for $sessionId',
+            );
+          }
+        }
+      }
+    },
+  );
+
+  test(
+    'representative W1 W3 W5 W6 adapter paths load active index order deterministically',
+    () async {
+      final adapter = const DrillRuntimeAdapterV1();
+      const sessionIds = <String>['w1.s10', 'w3.s10', 'w5.s01', 'w6.s01'];
+
+      for (final sessionId in sessionIds) {
+        final sessionPath = adapter.debugSessionPathForIdV1(sessionId);
+        final expected = _activeDrillIdsFromIndex(sessionPath);
+        final actual = (await adapter.loadSessionDrills(
+          sessionId,
+        )).map((item) => item.drillId).toList(growable: false);
+
+        expect(
+          actual,
+          equals(expected),
+          reason:
+              'Adapter did not load active drill index order for $sessionId',
+        );
+      }
+    },
+  );
+
+  test(
     'repaired world3 and world5 manifest truth stays in parity across source, test bundle, and runtime bundle',
     () async {
       final manifestRaw = await rootBundle.loadString('AssetManifest.json');
@@ -563,8 +685,11 @@ void main() {
       const expectedWorld5DrillsBySession = <String, List<String>>{
         'w5.s01': <String>[
           'classify_texture_intro_dry_raise_v1',
+          'classify_texture_intro_dry_call_control_v1',
           'classify_texture_intro_wet_call_v1',
+          'classify_texture_intro_wet_fold_pressure_v1',
           'classify_texture_intro_paired_fold_v1',
+          'classify_texture_intro_paired_call_control_v1',
         ],
         'w5.s02': <String>[
           'classify_dry_discipline_high_card_raise_v1',
@@ -623,7 +748,12 @@ void main() {
         'w3.s07': <String>['chain_preflop_open_fold_position_v1'],
         'w3.s08': <String>['chain_preflop_continue_fold_discipline_v1'],
         'w3.s09': <String>['chain_preflop_same_hand_different_action_v1'],
-        'w3.s10': <String>['chain_preflop_final_checkpoint_v1'],
+        'w3.s10': <String>[
+          'chain_preflop_final_checkpoint_v1',
+          'choose_raise_btn_clean_transfer_v1',
+          'choose_call_btn_facing_open_transfer_v1',
+          'choose_fold_bb_weak_facing_open_transfer_v1',
+        ],
       };
 
       const forbiddenLegacyIds = <String>{
@@ -637,6 +767,10 @@ void main() {
         'tap_flop_checkpoint',
         'tap_hole_right_checkpoint',
         'tap_river_checkpoint',
+        'choose_call_preflop_checkpoint_v1',
+        'choose_raise_mixed_context_checkpoint_v1',
+        'choose_fold_final_preflop_checkpoint_v1',
+        'choose_raise_late_position_leverage_v1',
       };
 
       Future<void> expectParityForFamily(

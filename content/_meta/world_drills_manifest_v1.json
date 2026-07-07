@@ -354,18 +354,14 @@
     {
       "world": 1,
       "sessions": [
-    {
-      "id": "w1.s01",
-      "path": "content/worlds/world1/v1/sessions/w1.s01/",
-      "drills": [
         {
-          "id": "chain_world1_first_bridge_v1",
-          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.chain_world1_first_bridge_v1.json"
-        },
-        {
-          "id": "choose_call",
-          "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_call.json"
-        },
+          "id": "w1.s01",
+          "path": "content/worlds/world1/v1/sessions/w1.s01/",
+          "drills": [
+            {
+              "id": "choose_call",
+              "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_call.json"
+            },
             {
               "id": "choose_fold",
               "path": "content/worlds/world1/v1/sessions/w1.s01/drills/d.choose_fold.json"
@@ -409,8 +405,8 @@
           "path": "content/worlds/world1/v1/sessions/w1.s02/",
           "drills": [
             {
-              "id": "chain_world1_blind_button_intro_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s02/drills/d.chain_world1_blind_button_intro_v1.json"
+              "id": "choose_big_blind_continue_defend_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s02/drills/d.choose_big_blind_continue_defend_v1.json"
             },
             {
               "id": "choose_button_open_clean_v1",
@@ -419,10 +415,6 @@
             {
               "id": "choose_small_blind_release_caution_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s02/drills/d.choose_small_blind_release_caution_v1.json"
-            },
-            {
-              "id": "choose_big_blind_continue_defend_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s02/drills/d.choose_big_blind_continue_defend_v1.json"
             }
           ]
         },
@@ -431,16 +423,12 @@
           "path": "content/worlds/world1/v1/sessions/w1.s03/",
           "drills": [
             {
-              "id": "chain_world1_action_order_checkpoint_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s03/drills/d.chain_world1_action_order_checkpoint_v1.json"
+              "id": "choose_call_when_pressure_reaches_you_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s03/drills/d.choose_call_when_pressure_reaches_you_v1.json"
             },
             {
               "id": "choose_first_in_raise_after_folds_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s03/drills/d.choose_first_in_raise_after_folds_v1.json"
-            },
-            {
-              "id": "choose_call_when_pressure_reaches_you_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s03/drills/d.choose_call_when_pressure_reaches_you_v1.json"
             },
             {
               "id": "choose_fold_when_multiway_pressure_stacks_v1",
@@ -453,8 +441,8 @@
           "path": "content/worlds/world1/v1/sessions/w1.s04/",
           "drills": [
             {
-              "id": "chain_world1_position_stability_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s04/drills/d.chain_world1_position_stability_v1.json"
+              "id": "choose_big_blind_call_repeat_stability_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s04/drills/d.choose_big_blind_call_repeat_stability_v1.json"
             },
             {
               "id": "choose_button_open_repeat_stability_v1",
@@ -463,10 +451,6 @@
             {
               "id": "choose_small_blind_fold_repeat_stability_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s04/drills/d.choose_small_blind_fold_repeat_stability_v1.json"
-            },
-            {
-              "id": "choose_big_blind_call_repeat_stability_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s04/drills/d.choose_big_blind_call_repeat_stability_v1.json"
             }
           ]
         },
@@ -475,8 +459,8 @@
           "path": "content/worlds/world1/v1/sessions/w1.s05/",
           "drills": [
             {
-              "id": "chain_world1_start_quality_reinforcement_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s05/drills/d.chain_world1_start_quality_reinforcement_v1.json"
+              "id": "choose_button_call_playable_pressure_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s05/drills/d.choose_button_call_playable_pressure_v1.json"
             },
             {
               "id": "choose_cutoff_raise_clean_start_v1",
@@ -485,10 +469,6 @@
             {
               "id": "choose_small_blind_fold_weak_start_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s05/drills/d.choose_small_blind_fold_weak_start_v1.json"
-            },
-            {
-              "id": "choose_button_call_playable_pressure_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s05/drills/d.choose_button_call_playable_pressure_v1.json"
             }
           ]
         },
@@ -497,20 +477,16 @@
           "path": "content/worlds/world1/v1/sessions/w1.s06/",
           "drills": [
             {
-              "id": "choose_raise_clean_first_in_checkpoint_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s06/drills/d.choose_raise_clean_first_in_checkpoint_v1.json"
-            },
-            {
-              "id": "chain_world1_mixed_checkpoint_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s06/drills/d.chain_world1_mixed_checkpoint_v1.json"
-            },
-            {
               "id": "choose_call_facing_open_checkpoint_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s06/drills/d.choose_call_facing_open_checkpoint_v1.json"
             },
             {
               "id": "choose_fold_oop_pressure_checkpoint_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s06/drills/d.choose_fold_oop_pressure_checkpoint_v1.json"
+            },
+            {
+              "id": "choose_raise_clean_first_in_checkpoint_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s06/drills/d.choose_raise_clean_first_in_checkpoint_v1.json"
             }
           ]
         },
@@ -519,8 +495,8 @@
           "path": "content/worlds/world1/v1/sessions/w1.s07/",
           "drills": [
             {
-              "id": "chain_world1_in_position_focus_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s07/drills/d.chain_world1_in_position_focus_v1.json"
+              "id": "choose_button_fold_in_position_discipline_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s07/drills/d.choose_button_fold_in_position_discipline_v1.json"
             },
             {
               "id": "choose_button_raise_in_position_focus_v1",
@@ -529,10 +505,6 @@
             {
               "id": "choose_cutoff_call_in_position_pressure_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s07/drills/d.choose_cutoff_call_in_position_pressure_v1.json"
-            },
-            {
-              "id": "choose_button_fold_in_position_discipline_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s07/drills/d.choose_button_fold_in_position_discipline_v1.json"
             }
           ]
         },
@@ -541,16 +513,12 @@
           "path": "content/worlds/world1/v1/sessions/w1.s08/",
           "drills": [
             {
-              "id": "chain_world1_oop_focus_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s08/drills/d.chain_world1_oop_focus_v1.json"
+              "id": "choose_big_blind_call_oop_defend_focus_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s08/drills/d.choose_big_blind_call_oop_defend_focus_v1.json"
             },
             {
               "id": "choose_small_blind_fold_oop_focus_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s08/drills/d.choose_small_blind_fold_oop_focus_v1.json"
-            },
-            {
-              "id": "choose_big_blind_call_oop_defend_focus_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s08/drills/d.choose_big_blind_call_oop_defend_focus_v1.json"
             },
             {
               "id": "choose_small_blind_raise_oop_clean_start_v1",
@@ -563,20 +531,16 @@
           "path": "content/worlds/world1/v1/sessions/w1.s09/",
           "drills": [
             {
-              "id": "chain_world1_first_in_vs_pressure_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s09/drills/d.chain_world1_first_in_vs_pressure_v1.json"
-            },
-            {
-              "id": "choose_raise_when_action_folds_to_you_focus_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s09/drills/d.choose_raise_when_action_folds_to_you_focus_v1.json"
-            },
-            {
               "id": "choose_call_when_open_reaches_you_focus_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s09/drills/d.choose_call_when_open_reaches_you_focus_v1.json"
             },
             {
               "id": "choose_fold_when_pressure_and_position_fail_focus_v1",
               "path": "content/worlds/world1/v1/sessions/w1.s09/drills/d.choose_fold_when_pressure_and_position_fail_focus_v1.json"
+            },
+            {
+              "id": "choose_raise_when_action_folds_to_you_focus_v1",
+              "path": "content/worlds/world1/v1/sessions/w1.s09/drills/d.choose_raise_when_action_folds_to_you_focus_v1.json"
             }
           ]
         },
@@ -584,10 +548,6 @@
           "id": "w1.s10",
           "path": "content/worlds/world1/v1/sessions/w1.s10/",
           "drills": [
-            {
-              "id": "chain_world1_final_checkpoint_v1",
-              "path": "content/worlds/world1/v1/sessions/w1.s10/drills/d.chain_world1_final_checkpoint_v1.json"
-            },
             {
               "id": "choose_call_focus",
               "path": "content/worlds/world1/v1/sessions/w1.s10/drills/d.choose_call_focus.json"
@@ -853,10 +813,6 @@
           "path": "content/worlds/world3/v1/sessions/w3.s03/",
           "drills": [
             {
-              "id": "choose_call_preflop_checkpoint_v1",
-              "path": "content/worlds/world3/v1/sessions/w3.s03/drills/d.choose_call_preflop_checkpoint_v1.json"
-            },
-            {
               "id": "chain_preflop_checkpoint_v1",
               "path": "content/worlds/world3/v1/sessions/w3.s03/drills/d.chain_preflop_checkpoint_v1.json"
             }
@@ -886,10 +842,6 @@
           "id": "w3.s06",
           "path": "content/worlds/world3/v1/sessions/w3.s06/",
           "drills": [
-            {
-              "id": "choose_raise_mixed_context_checkpoint_v1",
-              "path": "content/worlds/world3/v1/sessions/w3.s06/drills/d.choose_raise_mixed_context_checkpoint_v1.json"
-            },
             {
               "id": "chain_preflop_mixed_context_checkpoint_v1",
               "path": "content/worlds/world3/v1/sessions/w3.s06/drills/d.chain_preflop_mixed_context_checkpoint_v1.json"
@@ -982,10 +934,6 @@
           "id": "w3.s14",
           "path": "content/worlds/world3/v1/sessions/w3.s14/",
           "drills": [
-            {
-              "id": "choose_raise_late_position_leverage_v1",
-              "path": "content/worlds/world3/v1/sessions/w3.s14/drills/d.choose_raise_late_position_leverage_v1.json"
-            },
             {
               "id": "chain_position_sensitive_open_fold_v1",
               "path": "content/worlds/world3/v1/sessions/w3.s14/drills/d.chain_position_sensitive_open_fold_v1.json"
@@ -1105,18 +1053,14 @@
             }
           ]
         },
-    {
-      "id": "w4.s03",
-      "path": "content/worlds/world4/v1/sessions/w4.s03/",
-      "drills": [
         {
-          "id": "chain_world4_purpose_checkpoint_v1",
-          "path": "content/worlds/world4/v1/sessions/w4.s03/drills/d.chain_world4_purpose_checkpoint_v1.json"
-        },
-        {
-          "id": "choose_call_trap",
-          "path": "content/worlds/world4/v1/sessions/w4.s03/drills/d.choose_call_trap.json"
-        },
+          "id": "w4.s03",
+          "path": "content/worlds/world4/v1/sessions/w4.s03/",
+          "drills": [
+            {
+              "id": "choose_call_trap",
+              "path": "content/worlds/world4/v1/sessions/w4.s03/drills/d.choose_call_trap.json"
+            },
             {
               "id": "choose_fold_release",
               "path": "content/worlds/world4/v1/sessions/w4.s03/drills/d.choose_fold_release.json"
@@ -1271,18 +1215,14 @@
             }
           ]
         },
-    {
-      "id": "w4.s06",
-      "path": "content/worlds/world4/v1/sessions/w4.s06/",
-      "drills": [
         {
-          "id": "chain_world4_denial_checkpoint_v1",
-          "path": "content/worlds/world4/v1/sessions/w4.s06/drills/d.chain_world4_denial_checkpoint_v1.json"
-        },
-        {
-          "id": "choose_call_repeat",
-          "path": "content/worlds/world4/v1/sessions/w4.s06/drills/d.choose_call_repeat.json"
-        },
+          "id": "w4.s06",
+          "path": "content/worlds/world4/v1/sessions/w4.s06/",
+          "drills": [
+            {
+              "id": "choose_call_repeat",
+              "path": "content/worlds/world4/v1/sessions/w4.s06/drills/d.choose_call_repeat.json"
+            },
             {
               "id": "choose_fold_repeat",
               "path": "content/worlds/world4/v1/sessions/w4.s06/drills/d.choose_fold_repeat.json"
@@ -1491,18 +1431,14 @@
             }
           ]
         },
-    {
-      "id": "w4.s10",
-      "path": "content/worlds/world4/v1/sessions/w4.s10/",
-      "drills": [
         {
-          "id": "chain_world4_denial_capstone_v1",
-          "path": "content/worlds/world4/v1/sessions/w4.s10/drills/d.chain_world4_denial_capstone_v1.json"
-        },
-        {
-          "id": "choose_call_focus",
-          "path": "content/worlds/world4/v1/sessions/w4.s10/drills/d.choose_call_focus.json"
-        },
+          "id": "w4.s10",
+          "path": "content/worlds/world4/v1/sessions/w4.s10/",
+          "drills": [
+            {
+              "id": "choose_call_focus",
+              "path": "content/worlds/world4/v1/sessions/w4.s10/drills/d.choose_call_focus.json"
+            },
             {
               "id": "choose_fold_focus",
               "path": "content/worlds/world4/v1/sessions/w4.s10/drills/d.choose_fold_focus.json"
@@ -1559,20 +1495,20 @@
           "path": "content/worlds/world5/v1/sessions/w5.s01/",
           "drills": [
             {
-              "id": "classify_texture_intro_dry_raise_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_dry_raise_v1.json"
-            },
-            {
               "id": "classify_texture_intro_dry_call_control_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_dry_call_control_v1.json"
             },
             {
-              "id": "classify_texture_intro_paired_fold_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_paired_fold_v1.json"
+              "id": "classify_texture_intro_dry_raise_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_dry_raise_v1.json"
             },
             {
               "id": "classify_texture_intro_paired_call_control_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_paired_call_control_v1.json"
+            },
+            {
+              "id": "classify_texture_intro_paired_fold_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s01/drills/d.classify_texture_intro_paired_fold_v1.json"
             },
             {
               "id": "classify_texture_intro_wet_call_v1",
@@ -1589,10 +1525,6 @@
           "path": "content/worlds/world5/v1/sessions/w5.s02/",
           "drills": [
             {
-              "id": "chain_world5_dry_discipline_recap_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s02/drills/d.chain_world5_dry_discipline_recap_v1.json"
-            },
-            {
               "id": "classify_dry_discipline_high_card_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s02/drills/d.classify_dry_discipline_high_card_raise_v1.json"
             },
@@ -1606,18 +1538,14 @@
             }
           ]
         },
-    {
-      "id": "w5.s03",
-      "path": "content/worlds/world5/v1/sessions/w5.s03/",
-      "drills": [
         {
-          "id": "chain_world5_texture_intro_checkpoint_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s03/drills/d.chain_world5_texture_intro_checkpoint_v1.json"
-        },
-        {
-          "id": "classify_wet_protection_connected_call_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s03/drills/d.classify_wet_protection_connected_call_v1.json"
-        },
+          "id": "w5.s03",
+          "path": "content/worlds/world5/v1/sessions/w5.s03/",
+          "drills": [
+            {
+              "id": "classify_wet_protection_connected_call_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s03/drills/d.classify_wet_protection_connected_call_v1.json"
+            },
             {
               "id": "classify_wet_protection_connected_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s03/drills/d.classify_wet_protection_connected_raise_v1.json"
@@ -1633,10 +1561,6 @@
           "path": "content/worlds/world5/v1/sessions/w5.s04/",
           "drills": [
             {
-              "id": "chain_world5_turn_shift_recap_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s04/drills/d.chain_world5_turn_shift_recap_v1.json"
-            },
-            {
               "id": "classify_turn_shift_connected_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s04/drills/d.classify_turn_shift_connected_raise_v1.json"
             },
@@ -1650,18 +1574,14 @@
             }
           ]
         },
-    {
-      "id": "w5.s05",
-      "path": "content/worlds/world5/v1/sessions/w5.s05/",
-      "drills": [
         {
-          "id": "chain_world5_turn_river_checkpoint_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s05/drills/d.chain_world5_turn_river_checkpoint_v1.json"
-        },
-        {
-          "id": "classify_river_closure_connected_call_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s05/drills/d.classify_river_closure_connected_call_v1.json"
-        },
+          "id": "w5.s05",
+          "path": "content/worlds/world5/v1/sessions/w5.s05/",
+          "drills": [
+            {
+              "id": "classify_river_closure_connected_call_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s05/drills/d.classify_river_closure_connected_call_v1.json"
+            },
             {
               "id": "classify_river_closure_dry_fold_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s05/drills/d.classify_river_closure_dry_fold_v1.json"
@@ -1677,10 +1597,6 @@
           "path": "content/worlds/world5/v1/sessions/w5.s06/",
           "drills": [
             {
-              "id": "chain_world5_in_position_recap_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s06/drills/d.chain_world5_in_position_recap_v1.json"
-            },
-            {
               "id": "classify_in_position_connected_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s06/drills/d.classify_in_position_connected_raise_v1.json"
             },
@@ -1694,18 +1610,14 @@
             }
           ]
         },
-    {
-      "id": "w5.s07",
-      "path": "content/worlds/world5/v1/sessions/w5.s07/",
-      "drills": [
         {
-          "id": "chain_world5_position_texture_checkpoint_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s07/drills/d.chain_world5_position_texture_checkpoint_v1.json"
-        },
-        {
-          "id": "classify_oop_connected_call_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s07/drills/d.classify_oop_connected_call_v1.json"
-        },
+          "id": "w5.s07",
+          "path": "content/worlds/world5/v1/sessions/w5.s07/",
+          "drills": [
+            {
+              "id": "classify_oop_connected_call_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s07/drills/d.classify_oop_connected_call_v1.json"
+            },
             {
               "id": "classify_oop_dry_call_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s07/drills/d.classify_oop_dry_call_v1.json"
@@ -1739,10 +1651,6 @@
           "path": "content/worlds/world5/v1/sessions/w5.s09/",
           "drills": [
             {
-              "id": "chain_world5_blocker_context_recap_v1",
-              "path": "content/worlds/world5/v1/sessions/w5.s09/drills/d.chain_world5_blocker_context_recap_v1.json"
-            },
-            {
               "id": "classify_blocker_context_connected_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s09/drills/d.classify_blocker_context_connected_raise_v1.json"
             },
@@ -1756,18 +1664,14 @@
             }
           ]
         },
-    {
-      "id": "w5.s10",
-      "path": "content/worlds/world5/v1/sessions/w5.s10/",
-      "drills": [
         {
-          "id": "chain_world5_capstone_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.chain_world5_capstone_v1.json"
-        },
-        {
-          "id": "classify_texture_synthesis_connected_call_v1",
-          "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.classify_texture_synthesis_connected_call_v1.json"
-        },
+          "id": "w5.s10",
+          "path": "content/worlds/world5/v1/sessions/w5.s10/",
+          "drills": [
+            {
+              "id": "classify_texture_synthesis_connected_call_v1",
+              "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.classify_texture_synthesis_connected_call_v1.json"
+            },
             {
               "id": "classify_texture_synthesis_dry_raise_v1",
               "path": "content/worlds/world5/v1/sessions/w5.s10/drills/d.classify_texture_synthesis_dry_raise_v1.json"
@@ -1800,16 +1704,16 @@
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.choose_raise_range.json"
             },
             {
-              "id": "classify_missed_overcards_no_draw",
-              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold.json"
+              "id": "classify_medium_second_pair_fit",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_medium_call_control.json"
             },
             {
               "id": "classify_missed_low_cards_no_draw",
               "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold_recheck.json"
             },
             {
-              "id": "classify_medium_second_pair_fit",
-              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_medium_call_control.json"
+              "id": "classify_missed_overcards_no_draw",
+              "path": "content/worlds/world6/v1/sessions/w6.s01/drills/d.classify_missed_fold.json"
             },
             {
               "id": "classify_strong_clean_fit",
@@ -1850,20 +1754,24 @@
           "path": "content/worlds/world6/v1/sessions/w6.s02/",
           "drills": [
             {
-              "id": "classify_continue_range_narrower",
-              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.choose_call_realize.json"
+              "id": "classify_big_blind_continue_narrower",
+              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.find_bb.json"
             },
             {
               "id": "classify_button_open_less_constrained",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.choose_raise_blocker.json"
             },
             {
-              "id": "classify_big_blind_continue_narrower",
-              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.find_bb.json"
-            },
-            {
               "id": "classify_button_range_wider",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.find_btn_realize.json"
+            },
+            {
+              "id": "classify_continue_range_narrower",
+              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.choose_call_realize.json"
+            },
+            {
+              "id": "classify_late_position_more_hands",
+              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_turn.json"
             },
             {
               "id": "classify_utg_range_stronger_average",
@@ -1876,10 +1784,6 @@
             {
               "id": "tap_river_trap",
               "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_river_trap.json"
-            },
-            {
-              "id": "classify_late_position_more_hands",
-              "path": "content/worlds/world6/v1/sessions/w6.s02/drills/d.tap_turn.json"
             }
           ]
         },
@@ -1887,10 +1791,6 @@
           "id": "w6.s03",
           "path": "content/worlds/world6/v1/sessions/w6.s03/",
           "drills": [
-            {
-              "id": "chain_world6_flop_advantage_recap_v1",
-              "path": "content/worlds/world6/v1/sessions/w6.s03/drills/d.chain_world6_flop_advantage_recap_v1.json"
-            },
             {
               "id": "chain_flop_turn_pressure",
               "path": "content/worlds/world6/v1/sessions/w6.s03/drills/d.chain_flop_turn_pressure.json"
@@ -1975,10 +1875,6 @@
           "id": "w6.s05",
           "path": "content/worlds/world6/v1/sessions/w6.s05/",
           "drills": [
-            {
-              "id": "chain_world6_river_polarization_recap_v1",
-              "path": "content/worlds/world6/v1/sessions/w6.s05/drills/d.chain_world6_river_polarization_recap_v1.json"
-            },
             {
               "id": "choose_fold_merged",
               "path": "content/worlds/world6/v1/sessions/w6.s05/drills/d.choose_fold_merged.json"
@@ -2094,10 +1990,6 @@
           "path": "content/worlds/world6/v1/sessions/w6.s08/",
           "drills": [
             {
-              "id": "chain_world6_blocker_modifier_recap_v1",
-              "path": "content/worlds/world6/v1/sessions/w6.s08/drills/d.chain_world6_blocker_modifier_recap_v1.json"
-            },
-            {
               "id": "choose_call_blocker_mod",
               "path": "content/worlds/world6/v1/sessions/w6.s08/drills/d.choose_call_blocker_mod.json"
             },
@@ -2173,10 +2065,6 @@
           "id": "w6.s10",
           "path": "content/worlds/world6/v1/sessions/w6.s10/",
           "drills": [
-            {
-              "id": "chain_world6_range_synthesis_recap_v1",
-              "path": "content/worlds/world6/v1/sessions/w6.s10/drills/d.chain_world6_range_synthesis_recap_v1.json"
-            },
             {
               "id": "choose_call_synthesis",
               "path": "content/worlds/world6/v1/sessions/w6.s10/drills/d.choose_call_synthesis.json"

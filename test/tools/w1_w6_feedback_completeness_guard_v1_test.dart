@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test(
-    'production W1-W6 feedback guard scans 455 active decision rows',
+    'production W1-W6 feedback guard scans 374 active decision rows',
     () async {
       final result = await Process.run('dart', <String>[
         'run',
@@ -18,7 +18,7 @@ void main() {
       expect(result.exitCode, 0, reason: result.stderr.toString());
       final report =
           jsonDecode(result.stdout.toString()) as Map<String, dynamic>;
-      expect(report['active_decision_rows_scanned'], 455);
+      expect(report['active_decision_rows_scanned'], 374);
       expect(report['missing_correct_incorrect_count'], 0);
       expect(report['missing_acceptable_feedback_count'], 0);
       expect(report['missing_why_count'], 0);
