@@ -12,25 +12,6 @@ enum TrainingPackLevel { l1, l2, l3 }
 
 enum HeroPosition { utg, mp, co, btn, sb, bb }
 
-extension HeroPositionLabel on HeroPosition {
-  String get label {
-    switch (this) {
-      case HeroPosition.utg:
-        return 'UTG';
-      case HeroPosition.mp:
-        return 'MP';
-      case HeroPosition.co:
-        return 'CO';
-      case HeroPosition.btn:
-        return 'BTN';
-      case HeroPosition.sb:
-        return 'SB';
-      case HeroPosition.bb:
-        return 'BB';
-    }
-  }
-}
-
 @Deprecated(
   'Use TrainingPackTemplateV2 directly from package:poker_analyzer/models/v2/training_pack_template_v2.dart',
 )
@@ -69,8 +50,6 @@ class HandData {
 
   const HandData({this.id = '', this.street = ''});
 }
-
-bool isAutoReplayKind(Object? _) => false;
 
 class TrainingSessionService {
   Future<void> startSession(TrainingPackTemplateV2 tpl) async {
