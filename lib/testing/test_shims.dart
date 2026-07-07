@@ -56,18 +56,6 @@ class TrainingPackTemplateV2 {
   bool hasPlayableContent() => true;
 }
 
-class MixedDrillStat {
-  final List<String> tags;
-  final double accuracy;
-  final String street;
-
-  const MixedDrillStat({
-    this.tags = const [],
-    this.accuracy = 0.0,
-    this.street = '',
-  });
-}
-
 class TagGoalProgress {
   final String tag;
   final double progress;
@@ -84,59 +72,12 @@ class HandData {
 
 bool isAutoReplayKind(Object? _) => false;
 
-class MixedDrillHistoryService {
-  List<MixedDrillStat> get stats => const [];
-}
-
 class TrainingSessionService {
   Future<void> startSession(TrainingPackTemplateV2 tpl) async {
     _ignore(tpl);
   }
 }
 
-class TrainingPackService {
-  static Future<TrainingPackTemplateV2?> createRepeatForIncorrect(Object? _) =>
-      Future.value(const TrainingPackTemplateV2(name: 'Repeat Incorrect'));
-
-  static Future<TrainingPackTemplateV2?> createRepeatForCorrected(Object? _) =>
-      Future.value(const TrainingPackTemplateV2(name: 'Repeat Corrected'));
-
-  static Future<TrainingPackTemplateV2?> createSingleRandomMistakeDrill(
-    Object? _,
-  ) => Future.value(const TrainingPackTemplateV2(name: 'Random Mistake'));
-
-  static Future<TrainingPackTemplateV2?> createDrillFromCorrectedHands(
-    Object? _,
-  ) => Future.value(const TrainingPackTemplateV2(name: 'Corrected Drill'));
-
-  static Future<TrainingPackTemplateV2?> createDrillFromWeakestCategory(
-    Object? _,
-  ) => Future.value(const TrainingPackTemplateV2(name: 'Weakest Category'));
-
-  static Future<TrainingPackTemplateV2?> createTopMistakeDrill(Object? _) =>
-      Future.value(const TrainingPackTemplateV2(name: 'Top Mistakes'));
-}
-
-class RecentTrainingPackSection {
-  RecentTrainingPackSection({
-    required List<TrainingPackTemplateV2> templates,
-    Object? progress,
-    void Function()? onClear,
-    void Function(TrainingPackTemplateV2 tpl)? onPlay,
-  }) {
-    _ignore(templates, progress, onClear, onPlay);
-  }
-}
-
-class FilterSummaryBar {
-  FilterSummaryBar({
-    required String summary,
-    required void Function() onReset,
-    required void Function() onChange,
-  }) {
-    _ignore(summary, onReset, onChange);
-  }
-}
 
 class AppColors {
   static const int accent = 0;
@@ -172,4 +113,4 @@ class AppLocalizations {
   String get cancel => 'Cancel';
 }
 
-void _ignore([Object? a, Object? b, Object? c, Object? d]) {}
+void _ignore([Object? a]) {}

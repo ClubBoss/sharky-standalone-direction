@@ -1,10 +1,8 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 import 'package:poker_analyzer/screens/reward_gallery_screen.dart';
-import 'package:poker_analyzer/testing/test_shims.dart';
 
 class _FakeSharePlatform extends SharePlatform {
   bool shared = false;
@@ -12,19 +10,20 @@ class _FakeSharePlatform extends SharePlatform {
   Future<void> share(
     String? text, {
     String? subject,
-    ShareOptions? sharePositionOrigin,
+    Rect? sharePositionOrigin,
   }) async {
     shared = true;
   }
 
   @override
-  Future<void> shareXFiles(
+  Future<ShareResult> shareXFiles(
     List<XFile> files, {
     String? text,
     String? subject,
-    ShareOptions? sharePositionOrigin,
+    Rect? sharePositionOrigin,
   }) async {
     shared = true;
+    return ShareResult('', ShareResultStatus.success);
   }
 }
 
