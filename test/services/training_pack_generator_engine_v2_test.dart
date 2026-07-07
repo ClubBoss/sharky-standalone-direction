@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/models/training_pack_template_set.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
@@ -7,6 +6,7 @@ import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/models/constraint_set.dart';
 import 'package:poker_analyzer/models/line_pattern.dart';
 import 'package:poker_analyzer/services/training_pack_generator_engine_v2.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 void main() {
   test('generate combines board and line expansions', () {

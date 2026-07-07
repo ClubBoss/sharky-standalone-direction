@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/training_pack_library_generator.dart';
 import 'package:poker_analyzer/models/training_pack_template_set_group.dart';
@@ -6,6 +5,7 @@ import 'package:poker_analyzer/models/training_pack_template_set.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/hero_position.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 TrainingPackTemplateSet _validSet() {
   final spot = TrainingPackSpot(

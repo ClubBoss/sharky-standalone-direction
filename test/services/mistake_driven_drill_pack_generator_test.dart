@@ -1,4 +1,4 @@
-import 'package:poker_analyzer/testing/test_shims.dart' hide HandData; // fix: hide shim
+ // fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/mistake_driven_drill_pack_generator.dart';
 import 'package:poker_analyzer/services/mistake_history_query_service.dart';

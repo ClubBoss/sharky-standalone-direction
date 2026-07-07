@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -15,6 +14,7 @@ import 'package:poker_analyzer/models/game_type.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/services/yaml_pack_exporter.dart';
 import '../helpers/skill_tree_test_doubles.dart';
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart';
 
 class _FakeDecayTracker implements SkillDecayTracker {
   final List<String> tags;

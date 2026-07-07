@@ -1,9 +1,4 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide
-        TrainingPackTemplate,
-        TrainingPackTemplateV2,
-        HandData,
-        TrainingSessionService; // fix: hide shim
+ // fix: hide shim
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +16,7 @@ import 'package:poker_analyzer/widgets/goal_reengagement_banner.dart';
 import 'package:provider/provider.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'dart:typed_data';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 class _FakeBundle extends CachingAssetBundle {
   final Map<String, String> data;

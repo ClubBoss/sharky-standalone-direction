@@ -1,8 +1,4 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide
-        TrainingPackTemplate,
-        TrainingPackTemplateV2,
-        HandData; // fix: hide shim
+ // fix: hide shim
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

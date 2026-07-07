@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'dart:io';
 
 import 'package:poker_analyzer/services/deduplication_policy_engine.dart';
@@ -10,6 +9,7 @@ import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 TrainingPackTemplate _pack(String id, List<TrainingPackSpot> spots) =>
     TrainingPackTemplate(

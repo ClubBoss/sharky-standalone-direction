@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/models/constraint_set.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
@@ -6,6 +5,7 @@ import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/services/constraint_resolver_engine_v2.dart';
 import 'package:poker_analyzer/services/inline_theory_linker.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 void main() {
   final engine = ConstraintResolverEngine();

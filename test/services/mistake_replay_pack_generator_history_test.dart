@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/mistake_replay_pack_generator.dart';
 import 'package:poker_analyzer/models/play_result.dart';

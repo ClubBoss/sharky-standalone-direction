@@ -1,10 +1,4 @@
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide
-        TrainingSessionService,
-        TrainingType,
-        HandData,
-        TrainingPackTemplate,
-        TrainingPackTemplateV2; // fix: shadowed type name
+ // fix: shadowed type name
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/widgets/training_pack_history_list_widget.dart';
@@ -18,6 +12,7 @@ import 'package:poker_analyzer/models/v2/hand_data.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:poker_analyzer/services/training_session_launcher.dart';
+import 'package:poker_analyzer/services/training_session_service.dart';
 
 class MockLauncher extends Mock implements TrainingSessionLauncher {}
 

@@ -1,4 +1,4 @@
-import 'package:poker_analyzer/testing/test_shims.dart' hide HandData; // fix: hide shim
+ // fix: hide shim
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/remedial_analyzer.dart';
 import 'package:poker_analyzer/models/training_spot_attempt.dart';

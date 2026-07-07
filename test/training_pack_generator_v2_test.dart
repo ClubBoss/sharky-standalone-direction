@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/training_pack_generator_v2.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
@@ -6,6 +5,7 @@ import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/services/weakness_cluster_engine_v2.dart';
 import 'package:poker_analyzer/repositories/training_pack_repository.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 class _FakeRepo extends TrainingPackRepository {
   final Map<String, List<TrainingPackSpot>> map;

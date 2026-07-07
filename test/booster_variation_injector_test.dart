@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/booster_variation_injector.dart';
 import 'package:poker_analyzer/services/booster_cluster_engine.dart';
@@ -8,6 +7,7 @@ import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 TrainingPackSpot _spot(String id, String cards, HeroPosition pos) {
   final hand = HandData.fromSimpleInput(cards, pos, 10);

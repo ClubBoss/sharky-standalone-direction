@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/theory_recall_evaluator.dart';
@@ -10,6 +9,7 @@ import 'package:poker_analyzer/models/v2/training_type.dart';
 import 'package:poker_analyzer/models/game_type.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
 import 'package:collection/collection.dart';
+import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 
 class _FakeMiniLibrary implements MiniLessonLibraryService {
   final List<TheoryMiniLessonNode> lessons;

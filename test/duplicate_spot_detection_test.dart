@@ -1,9 +1,9 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/services/spot_duplicate_finder.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 HandData _hand(String pos, String hero, String board) {
   final b = <String>[];

@@ -1,9 +1,9 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/spot_line_graph_engine.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/v2/hero_position.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 void main() {
   test('build converts hand actions into a single line', () {
