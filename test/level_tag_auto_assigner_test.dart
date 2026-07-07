@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/level_tag_auto_assigner.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
