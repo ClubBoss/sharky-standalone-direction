@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 @TestOn('vm')
 import 'package:test/test.dart';
 import 'package:poker_analyzer/utils/math_utils.dart'; // любая pure-функция

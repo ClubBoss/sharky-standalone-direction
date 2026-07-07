@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/theory_pack_model.dart';
 import 'package:poker_analyzer/services/theory_booster_pack_linker.dart';

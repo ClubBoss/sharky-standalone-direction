@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/training_pack_index_service.dart';
 import 'package:poker_analyzer/generated/pack_library.g.dart';

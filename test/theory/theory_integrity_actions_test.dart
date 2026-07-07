@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 import 'package:poker_analyzer/recall/theory_map.dart';

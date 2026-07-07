@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/cluster_review_booster_builder.dart';
 import 'package:poker_analyzer/models/weak_cluster_info.dart';

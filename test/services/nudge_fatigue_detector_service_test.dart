@@ -1,4 +1,3 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/pinned_learning_item.dart';
 import 'package:poker_analyzer/services/nudge_fatigue_detector_service.dart';
