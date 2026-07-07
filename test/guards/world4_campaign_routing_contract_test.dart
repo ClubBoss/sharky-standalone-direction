@@ -61,37 +61,102 @@ void main() {
     });
 
     await tester.pumpWidget(const AppRoot());
-    final mapFallback = find.byKey(const Key('map_render_fallback_v1'));
-    final world4Entry = find.byKey(const Key('world_campaign_open_4'));
-    final nextPackCta = find.byKey(const Key('world_campaign_next_pack_cta'));
-    await _pumpUntilAny(tester, <Finder>[
-      world4Entry,
-      nextPackCta,
-      mapFallback,
-    ]);
-    expect(
-      world4Entry.evaluate().isNotEmpty ||
-          nextPackCta.evaluate().isNotEmpty ||
-          mapFallback.evaluate().isNotEmpty,
-      isTrue,
+    final home = find.byKey(const Key('act0_shell_home_screen'));
+    final learn = find.byKey(const Key('act0_shell_learn_screen'));
+    final bottomNav = find.byKey(const Key('act0_shell_bottom_nav'));
+    final learnTab = find.descendant(
+      of: bottomNav,
+      matching: find.text('Learn'),
     );
+    await _pumpUntilAny(tester, <Finder>[home, bottomNav]);
 
-    if (nextPackCta.evaluate().isNotEmpty) {
-      final ctaRect = tester.getRect(nextPackCta);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(ctaRect.top >= 0, isTrue);
-      expect(ctaRect.bottom <= logicalHeight, isTrue);
-      final ctaWidget = tester.widget<ElevatedButton>(nextPackCta);
-      expect(ctaWidget.onPressed != null, isTrue);
-    } else if (world4Entry.evaluate().isNotEmpty) {
-      final entryRect = tester.getRect(world4Entry);
-      final logicalHeight =
-          tester.view.physicalSize.height / tester.view.devicePixelRatio;
-      expect(entryRect.top >= 0, isTrue);
-      expect(entryRect.bottom <= logicalHeight, isTrue);
-    }
+    expect(home, findsOneWidget);
+    expect(bottomNav, findsOneWidget);
+    expect(learnTab, findsOneWidget);
 
+    final logicalHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    final navRect = tester.getRect(bottomNav);
+    expect(navRect.top, greaterThanOrEqualTo(0));
+    expect(navRect.bottom, lessThanOrEqualTo(logicalHeight));
+
+    await tester.tap(learnTab);
+    await tester.pumpAndSettle();
+    expect(learn, findsOneWidget);
+
+    final missionCard = find.byKey(
+      const Key('act0_shell_current_mission_card'),
+    );
+    final missionCta = find.byKey(const Key('act0_shell_current_mission_cta'));
+    await _pumpUntilAny(tester, <Finder>[missionCard, missionCta]);
+    expect(missionCard, findsOneWidget);
+    expect(missionCta, findsOneWidget);
+
+    await tester.ensureVisible(missionCta);
+    await tester.pumpAndSettle();
+    final ctaRect = tester.getRect(missionCta);
+    expect(ctaRect.top, greaterThanOrEqualTo(0));
+    expect(ctaRect.bottom, lessThanOrEqualTo(logicalHeight));
+    final ctaWidget = tester.widget<FilledButton>(missionCta);
+    expect(ctaWidget.onPressed, isNotNull);
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('world4 compact action path clears bottom safe-area chin', (
+    tester,
+  ) async {
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetViewPadding();
+    });
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.viewPadding = const FakeViewPadding(bottom: 34);
+
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'onboardingCompleted': true,
+      'intake_completed_v1': true,
+      'spine_campaign_active_pack_id_v1': '',
+      'spine_campaign_next_hand_index_v1': 0,
+      'spine_campaign_completed_packs_v1':
+          'world1_act0_table_literacy,world1_act0_action_literacy,world1_act0_street_flow,world1_spine_campaign_v1,world1_spine_followup_v1_b2,world2_spine_followup_v1_b2,world3_spine_followup_v1_b2',
+      'spine_calibration_completed_v1': true,
+      'spine_calibration_band_v1': 2,
+      'world2_calibration_completed_v1': true,
+      'world3_calibration_completed_v1': true,
+      'world4_calibration_completed_v1': false,
+    });
+
+    await tester.pumpWidget(const AppRoot());
+    final bottomNav = find.byKey(const Key('act0_shell_bottom_nav'));
+    final learnTab = find.descendant(
+      of: bottomNav,
+      matching: find.text('Learn'),
+    );
+    await _pumpUntilAny(tester, <Finder>[bottomNav, learnTab]);
+    expect(learnTab, findsOneWidget);
+
+    await tester.tap(learnTab);
+    await tester.pumpAndSettle();
+
+    final missionCta = find.byKey(const Key('act0_shell_current_mission_cta'));
+    await _pumpUntilAny(tester, <Finder>[missionCta]);
+    expect(missionCta, findsOneWidget);
+    await tester.ensureVisible(missionCta);
+    await tester.pumpAndSettle();
+
+    final logicalHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    final safeBottom =
+        logicalHeight -
+        tester.view.viewPadding.bottom / tester.view.devicePixelRatio;
+    final ctaRect = tester.getRect(missionCta);
+    expect(ctaRect.top, greaterThanOrEqualTo(0));
+    expect(ctaRect.bottom, lessThanOrEqualTo(safeBottom));
+    final ctaWidget = tester.widget<FilledButton>(missionCta);
+    expect(ctaWidget.onPressed, isNotNull);
     expect(tester.takeException(), isNull);
   });
 
