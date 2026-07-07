@@ -4,6 +4,13 @@
   "prompt": "The turn shift adds wet pressure and several new draw paths. Choose the response that fits this drill.",
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "wet",
+  "street_v1": "turn",
+  "board_cards_v1": [
+    "Kh",
+    "Qh",
+    "9s",
+    "Jh"
+  ],
   "expected_action": "call",
   "acceptable_actions": [
     "fold"

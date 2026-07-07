@@ -4,6 +4,13 @@
   "prompt": "The turn shift makes the board more connected and your pressure cue cleaner. Choose the response that fits this drill.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "connected",
+  "street_v1": "turn",
+  "board_cards_v1": [
+    "Js",
+    "Td",
+    "9c",
+    "8h"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

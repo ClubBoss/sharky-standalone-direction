@@ -4,6 +4,14 @@
   "prompt": "The board completes strong wet-board pressure and the draw story is now clean. Choose the best action.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "wet",
+  "street_v1": "river",
+  "board_cards_v1": [
+    "Kh",
+    "Qh",
+    "9s",
+    "Jh",
+    "Th"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

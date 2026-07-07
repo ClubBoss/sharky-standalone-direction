@@ -4,6 +4,13 @@
   "prompt": "The turn texture shift pairs the board and weakens your clean improvement path. Choose the response that fits this drill.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "paired",
+  "street_v1": "turn",
+  "board_cards_v1": [
+    "Ks",
+    "Kd",
+    "4c",
+    "9h"
+  ],
   "expected_action": "fold",
   "acceptable_actions": [
     "call"

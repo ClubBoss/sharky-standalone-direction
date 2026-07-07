@@ -4,6 +4,14 @@
   "prompt": "The board stays connected and some draw paths complete while others still miss. Choose the best action.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "connected",
+  "street_v1": "river",
+  "board_cards_v1": [
+    "Js",
+    "Td",
+    "9c",
+    "8h",
+    "7s"
+  ],
   "expected_action": "call",
   "acceptable_actions": [
     "fold"

@@ -4,6 +4,12 @@
   "prompt": "The board still looks dry, but your hand has poor improvement and little clean pressure. Choose the best action.",
   "intent_v1": "texture_high_card",
   "board_texture_v1": "dry",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "As",
+    "7d",
+    "2c"
+  ],
   "expected_action": "fold",
   "acceptable_actions": [
     "call"

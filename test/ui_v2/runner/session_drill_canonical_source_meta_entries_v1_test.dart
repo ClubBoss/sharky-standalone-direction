@@ -204,6 +204,8 @@ void main() {
                     'The turn keeps this connected. Classify the board texture.',
                 expected: DrillExpectedV1(actionId: 'connected'),
                 errorClass: 'board_texture_mismatch',
+                streetV1: 'turn',
+                boardCardsV1: <String>['Js', 'Td', '9c', '8h'],
                 boardTextureV1: 'connected',
               ),
             ),

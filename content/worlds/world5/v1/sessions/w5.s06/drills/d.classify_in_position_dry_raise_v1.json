@@ -4,6 +4,12 @@
   "prompt": "In position, the board stays dry and your pressure path is clean. Choose the best action.",
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "dry",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "As",
+    "7d",
+    "2c"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

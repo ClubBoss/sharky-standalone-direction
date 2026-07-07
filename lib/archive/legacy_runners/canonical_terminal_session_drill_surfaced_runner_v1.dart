@@ -5608,7 +5608,8 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
                           _isWorld2InitiativeScenarioPilotV1,
                       showWorld2OutsScenarioMeta: _isWorld2OutsScenarioPilotV1,
                       showWorld2TextureScenarioMeta:
-                          _isWorld2TextureScenarioPilotV1,
+                          _isWorld2TextureScenarioPilotV1 ||
+                          _isWorld5BoardTextureScenarioV1(current.spec),
                       showBetSizingRecapCard: _showBetSizingRecapCardV1,
                       showWorld2ShowdownRecapCard:
                           _showWorld2ShowdownRecapCardV1,

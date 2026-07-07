@@ -4,6 +4,12 @@
   "prompt": "This is a high-card board with limited draw pressure. Choose the best action.",
   "intent_v1": "texture_high_card",
   "board_texture_v1": "high_card",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Ac",
+    "Jd",
+    "5s"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

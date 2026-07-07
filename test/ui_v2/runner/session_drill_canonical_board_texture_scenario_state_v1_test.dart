@@ -32,7 +32,7 @@ void main() {
   );
 
   test(
-    'canonical board-texture scenario state derives world5 fallback truth once',
+    'canonical board-texture scenario state fails closed without authored table context',
     () {
       final state = resolveSessionDrillCanonicalBoardTextureScenarioStateV1(
         sessionId: 'w5.s04',
@@ -46,11 +46,7 @@ void main() {
         ),
       );
 
-      expect(state, isNotNull);
-      expect(state!.streetV1, 'turn');
-      expect(state.boardCardsV1, <String>['Js', 'Td', '9c', '8h']);
-      expect(state.boardTextureV1, 'connected');
-      expect(state.expectedActionIdV1, 'connected');
+      expect(state, isNull);
     },
   );
 }

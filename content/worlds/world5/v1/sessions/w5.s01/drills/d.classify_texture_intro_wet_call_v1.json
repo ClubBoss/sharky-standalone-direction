@@ -4,8 +4,16 @@
   "prompt": "Read the board first: this wet texture is the main cue and several improvements are live. Choose the response that fits this drill.",
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "wet",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Kh",
+    "Qh",
+    "9s"
+  ],
   "expected_action": "call",
-  "acceptable_actions": ["fold"],
+  "acceptable_actions": [
+    "fold"
+  ],
   "why_v1": "Wet boards carry more draw pressure. Here calling controls the response, but wet texture does not automatically mean call.",
   "error_class": "expected_action_mismatch",
   "feedback_correct_v1": "Correct. In this simplified drill, wet texture with live draws supports call first.",

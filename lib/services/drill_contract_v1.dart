@@ -602,7 +602,7 @@ class DrillSpecV1 {
     if (kind != DrillKindV1.boardTextureClassifier ||
         street == null ||
         boardCards == null ||
-        boardCards.length != 3 ||
+        boardCards.length != _visibleBoardCardCountForStreetV1(street) ||
         boardTexture == null ||
         boardTexture.isEmpty) {
       return null;
@@ -1007,6 +1007,18 @@ List<String>? _parseOptionalBoardCardsV1(Object? raw) {
   }
   if (values.isEmpty) return null;
   return List<String>.unmodifiable(values);
+}
+
+int _visibleBoardCardCountForStreetV1(String street) {
+  switch (street.trim().toLowerCase()) {
+    case 'flop':
+      return 3;
+    case 'turn':
+      return 4;
+    case 'river':
+      return 5;
+  }
+  return -1;
 }
 
 List<String>? _parseOptionalHoleCardsV1(Object? raw) {

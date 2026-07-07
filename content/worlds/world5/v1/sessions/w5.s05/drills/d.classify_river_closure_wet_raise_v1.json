@@ -4,6 +4,14 @@
   "prompt": "The final river card completes heavy pressure on a wet texture. Choose the response that fits this drill.",
   "intent_v1": "texture_wet_vs_dry",
   "board_texture_v1": "wet",
+  "street_v1": "river",
+  "board_cards_v1": [
+    "Kh",
+    "Qh",
+    "9s",
+    "Jh",
+    "Th"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

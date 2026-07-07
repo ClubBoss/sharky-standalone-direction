@@ -4,6 +4,12 @@
   "prompt": "In position, the board is connected and your improvement pressure is strong. Choose the best action.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "connected",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Js",
+    "Td",
+    "9c"
+  ],
   "expected_action": "raise",
   "acceptable_actions": [
     "call"

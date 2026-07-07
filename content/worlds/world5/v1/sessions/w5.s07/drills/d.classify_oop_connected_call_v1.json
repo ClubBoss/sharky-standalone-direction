@@ -4,6 +4,12 @@
   "prompt": "Out of position on a connected board, several draws stay live but raising would overstate your edge. Choose the best action.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "connected",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Js",
+    "Td",
+    "9c"
+  ],
   "expected_action": "call",
   "acceptable_actions": [
     "fold"

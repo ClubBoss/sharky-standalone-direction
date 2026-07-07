@@ -4,6 +4,12 @@
   "prompt": "This board is wet, pressure is rising, and your improvement paths are weak. Choose the best action.",
   "intent_v1": "texture_connectivity",
   "board_texture_v1": "wet",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Kh",
+    "Qh",
+    "9s"
+  ],
   "expected_action": "fold",
   "acceptable_actions": [
     "call"

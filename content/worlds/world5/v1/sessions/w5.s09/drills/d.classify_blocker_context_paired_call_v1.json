@@ -4,6 +4,12 @@
   "prompt": "The board is paired and blocker context reduces clean pressure rather than creating it. Choose the best action.",
   "intent_v1": "texture_pairing",
   "board_texture_v1": "paired",
+  "street_v1": "flop",
+  "board_cards_v1": [
+    "Ks",
+    "Kd",
+    "4c"
+  ],
   "expected_action": "call",
   "acceptable_actions": [
     "fold"
