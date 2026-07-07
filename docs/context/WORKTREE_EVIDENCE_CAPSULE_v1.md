@@ -2,10 +2,13 @@
 
 Status: ACTIVE worktree/evidence capsule.
 Freshness date: 2026-07-07.
-Verified product HEAD: `9eae56ef2e3a0d37f59eddf4158240dcf381ecac` (frozen Wave 4 base HEAD on `origin/main`;
-repository hygiene, dead-system decommission, and repository-truth
+Verified product HEAD: `4af55086f0302ffb6fa90a73333fe2892853cc25` (Wave 4
+implementation HEAD before closure docs on
+`codex/w1-w6-repair-wave4-structured-context-actionability-v1`; repository
+hygiene, dead-system decommission, and repository-truth
 stabilization/integration are closed).
-Verified active task: none active; parked at the frozen HEAD above.
+Verified active task: W1-W6 Repair Wave 4 is closed on branch and awaits owner
+integration into `main`.
 Refresh trigger: every isolated worktree sequence, branch switch, commit, or
 validation policy change.
 
@@ -20,25 +23,23 @@ Current active worktree:
 `/Users/elmarsalimzade/Sharky_1.0`
 
 Current active branch:
-`main`
+`codex/w1-w6-repair-wave4-structured-context-actionability-v1`
 
 ## Current Integration Evidence
 
-- Pre-integration `origin/main`:
-  `17d3d3a68da72ba09fb9cee6e0a2166f4c3c00c1`.
-- Source branch: `codex/stage-1b-wave-d-minimum-same-signal-repair-v1` at
-  `e467090960d41e2f128655c417f56ff33fe19d70`.
-- Ancestry: source is 15 commits ahead and zero behind `origin/main`; the
-  integration used `git merge --ff-only` with no merge commit.
-- Focused Stage 1B suite: `84/84` passed on source and integrated `main`.
-- Checkpoint lint and `flutter analyze`: passed.
-- Checkpoint selected tests: `+559 -164` on both integrated `main` and detached
-  pre-integration `origin/main`; this is a baseline-identical stale-checkpoint
-  limitation, not an observed Stage 1B regression. The checkpoint stopped
-  before its full-suite phase.
-- Final diff, graph, analyzer, clean-state, and push proofs are recorded in
-  `docs/_reviews/stage_1b_integration_and_capsule_refresh_v1.md` and the
-  post-push report.
+- Wave 4 base HEAD: `1105620f91cc183bda90bead10a539f5e8a5b6b6`.
+- Structured context commit: `058ccec9` passed focused W5 parser/source/render
+  validation.
+- Compact actionability commit: `4af55086` passed W4 compact portrait and
+  safe-area actionability validation.
+- Focused identity, Tier0 admission, feedback completeness, terminology, W3/W5
+  manifest/index parity, `fast_loop_world1_v1.sh`, `release_gate_world1.sh`,
+  standalone `flutter analyze`, diff checks, and `graphify hook-check` passed.
+- `checkpoint_world1_v1.sh` reached full-suite after checkpoint Tier0/release
+  sections passed; full-suite surfaced known unrelated global debt and was
+  stopped after repeated non-Wave-4 failures.
+- Final closure proof is recorded in
+  `docs/_reviews/w1_w6_repair_wave4_structured_context_actionability_v1.md`.
 
 ## HEAD Freshness Rule
 

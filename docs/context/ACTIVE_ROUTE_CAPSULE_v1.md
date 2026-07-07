@@ -3,19 +3,22 @@
 Status: ACTIVE route capsule for compact Sharky agent context.
 Freshness date: 2026-07-07.
 Verified branch state: the W1-W6 Final Learner-Truth Audit and its grouped
-repair program Waves 1-3 are closed; repository hygiene
+repair program Waves 1-4 are closed on the Wave 4 integration branch;
+repository hygiene
 (`docs/_reviews/repository_hygiene_context_cost_reduction_v1.md`), the
 dead-system decommission wave
 (`docs/_reviews/repository_reduction_dead_system_decommission_v1.md`), and
 repository truth stabilization
 (`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`) are
-also closed and integrated into `main`. The frozen Wave 4 base HEAD is
-`9eae56ef2e3a0d37f59eddf4158240dcf381ecac` on `origin/main`.
-Current active task: none active; the route is parked at the frozen HEAD
-above awaiting the next admitted task. W7+ expansion and visual, mascot, and
-motion work remain deferred while this route is active.
+also closed and integrated into `main`. The Wave 4 branch base was
+`1105620f91cc183bda90bead10a539f5e8a5b6b6`; the current Wave 4
+implementation HEAD before closure docs is
+`4af55086f0302ffb6fa90a73333fe2892853cc25`.
+Current active task: Wave 4 is closed on the branch and awaits owner
+integration into `main`. W7+ expansion and visual, mascot, and motion work
+remain deferred while this route is active.
 Verified active route artifact:
-`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`.
+`docs/_reviews/w1_w6_repair_wave4_structured_context_actionability_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
@@ -32,13 +35,15 @@ program are closed:
   (`docs/_reviews/w1_w6_repair_wave2_feedback_completeness_v1.md`).
 - Wave 3 - active authority drift (W3.s10 / W5 index): CLOSED
   (`docs/_reviews/w1_w6_repair_wave3_authority_drift_v1.md`).
+- Wave 4 - prompt/table structured context + mobile actionability: CLOSED on
+  branch
+  (`docs/_reviews/w1_w6_repair_wave4_structured_context_actionability_v1.md`).
 
 Repository hygiene, dead-system decommission, and repository-truth
-stabilization are all closed and integrated. Next route:
-`W1-W6 Repair Wave 4 — Prompt/Table Structured Context + Mobile
-Actionability` per the grouped repair program. Wave 4 is not opened by this
-refresh. No W7+ route expansion, visual direction, asset replacement,
-mascot, motion, telemetry, Modern Table, or monetization work is activated.
+stabilization are all closed and integrated. Next owner action: integrate the
+Wave 4 branch into `main` if accepted. No W7+ route expansion, visual
+direction, asset replacement, mascot, motion, telemetry, Modern Table, or
+monetization work is activated.
 
 ## Prior Visual and Phase Closure Record
 
