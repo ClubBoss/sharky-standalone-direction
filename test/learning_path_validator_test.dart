@@ -1,18 +1,5 @@
 // ignore_for_file: unused_import
 @Tags(['flutter'])
-import 'package:poker_analyzer/testing/test_shims.dart'
-    hide
-        ActionEntry,
-        HandData,
-        HeroPosition,
-        TrainingType,
-        GameType,
-        TrainingPackTemplateV2,
-        InjectedPathModule,
-        AdaptivePlan,
-        AdaptivePlanExecutor,
-        FormatMeta,
-        SkillTagCluster;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/learning_branch_node.dart';
 import 'package:poker_analyzer/services/path_map_engine.dart';

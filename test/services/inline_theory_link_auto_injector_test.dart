@@ -1,5 +1,5 @@
-import 'package:poker_analyzer/testing/test_shims.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/models/hand_data.dart';
 import 'package:poker_analyzer/models/inline_theory_entry.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
