@@ -821,8 +821,8 @@ import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w11_board_texture_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w12_review_decision_hidden_runtime_session_owner_v1.dart';
@@ -877,8 +877,9 @@ void main() {
   dynamic activeTaskSpecFor({required int world, required int taskIndex}) {
     final specs = switch (world) {
       7 => const Act0W7VisibleAceHiddenRuntimeSessionOwnerV1().taskSpecs,
-      8 => const Act0W8DrawsHiddenRuntimeSessionOwnerV1().taskSpecs,
-      9 => const Act0W9PriceHiddenRuntimeSessionOwnerV1().taskSpecs,
+      8 => const Act0W8StackDepthHiddenRuntimeSessionOwnerV1().taskSpecs,
+      9 => const Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1()
+          .taskSpecs,
       10 => const Act0W10BetPurposeHiddenRuntimeSessionOwnerV1().taskSpecs,
       11 => const Act0W11BoardTextureHiddenRuntimeSessionOwnerV1().taskSpecs,
       12 => const Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1().taskSpecs,
@@ -893,8 +894,8 @@ void main() {
   String humanRepairFocusLabelForConceptFamily(String conceptFamilyId) {
     const knownLabels = <String, String>{
       'w7_combo_density_visible_card_removal': 'Visible cards',
-      'w8_draw_improvement_potential': 'Draws that improve',
-      'w9_price_intuition_call_price': 'Price to call',
+      'w8_stack_depth_risk_control': 'Stack depth risk',
+      'w9_tournament_pressure_risk_premium': 'Tournament pressure',
       'w10_bet_purpose_value_bluff': 'Bet purpose',
       'w11_board_texture_danger_awareness': 'Board texture',
       'w12_review_decision_intuition': 'Review clue',

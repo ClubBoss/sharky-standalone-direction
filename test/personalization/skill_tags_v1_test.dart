@@ -19,10 +19,15 @@ void main() {
     });
 
     test('late-band worlds return chapter tags', () {
+      expect(skillTagsForPackIdV1('world8_spine_campaign_v1'), const <String>[
+        'Stack depth',
+        'All-in risk',
+        'Commitment',
+      ]);
       expect(skillTagsForPackIdV1('world9_spine_campaign_v1'), const <String>[
-        'Consistency',
-        'Position labels',
-        'Seat recall',
+        'Tournament pressure',
+        'Survival',
+        'Risk premium',
       ]);
     });
 

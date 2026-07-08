@@ -23,6 +23,12 @@ List<String> skillTagsForPackIdV1(String packId) {
   if (world <= 6) {
     return const <String>['Position labels', 'Late seats', 'Consistency'];
   }
+  if (world == 8) {
+    return const <String>['Stack depth', 'All-in risk', 'Commitment'];
+  }
+  if (world == 9) {
+    return const <String>['Tournament pressure', 'Survival', 'Risk premium'];
+  }
   return const <String>['Consistency', 'Position labels', 'Seat recall'];
 }
 

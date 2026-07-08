@@ -428,7 +428,7 @@ List<MicroTaskStep> _w7VisibleRangeFollowupB2V1() => <MicroTaskStep>[
   ),
 ];
 
-MicroTaskStep _w8DrawImprovementStepV1({
+MicroTaskStep _w8StackDepthRiskStepV1({
   required String prompt,
   required String hint,
   required String contextText,
@@ -450,452 +450,385 @@ MicroTaskStep _w8DrawImprovementStepV1({
   );
 }
 
-List<MicroTaskStep> _w8DrawImprovementCampaignPackV1() => <MicroTaskStep>[
-  _w8DrawImprovementStepV1(
-    prompt: 'Two hearts make a flush draw. Tap Button after reading the clue.',
-    hint: 'A future card of the suit can improve the hand.',
-    expectedSeatId: 'btn',
-    boardCards: <String>['Ah', '7h', '2c'],
+List<MicroTaskStep> _w8StackDepthRiskCampaignPackV1() => <MicroTaskStep>[
+  _w8StackDepthRiskStepV1(
+    prompt: 'Short stack, less room. Tap Button after reading the risk.',
+    hint: 'Fewer chips behind means all-in pressure can arrive faster.',
+    boardCards: <String>['Ah', '7d', '2c'],
     contextText:
-        'W8 reconnects W5 outs and draws to W7: after visible cards narrow ranges, draws show how a future card can improve a hand.',
-    tradeoffText: 'Name the flush draw path, or treat the hand as made now.',
-    consequenceText: 'Draw read: +8 chips. Made-hand mistake: -6 chips.',
-    insightText:
-        'A flush draw is not made yet; a future card of the suit can improve it.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: '5-6-7-8 is open-ended. Tap Cutoff after naming the draw.',
-    hint: 'Open-ended means either end can complete the straight.',
-    expectedSeatId: 'co',
-    boardCards: <String>['5s', '6d', '7c'],
-    contextText:
-        'An open-ended straight draw has clear improvement cards on both sides.',
-    tradeoffText:
-        'Use the open-ended clue, or look for only one exact future card.',
-    consequenceText: 'Two-side draw read: +8 chips. One-card tunnel: -6 chips.',
-    insightText:
-        'Open-ended straight draws can improve from either end of the sequence.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'One inside card completes the straight. Tap Big Blind.',
-    hint: 'A one-gap straight draw has a narrower improvement path.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['5s', '6d', '8c'],
-    contextText:
-        'This introduces the gutshot idea without making the route depend on jargon.',
-    tradeoffText: 'Compare the narrow draw, or call every draw equally strong.',
-    consequenceText: 'Narrow-path read: +8 chips. Equal-draw leak: -6 chips.',
-    insightText:
-        'A one-gap draw can still improve, but it has fewer clear future-card paths than an open-ended draw.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Flush draw vs no clear draw. Tap Hijack after choosing the path.',
-    hint: 'The flush draw has more visible improvement potential.',
-    expectedSeatId: 'hj',
-    boardCards: <String>['Kh', '9h', '3c'],
-    contextText:
-        'Transfer W8: compare a visible draw with a hand that has no clear draw.',
-    tradeoffText:
-        'Choose the hand with visible improvement, or guess from current strength only.',
+        'W8 starts stack depth and risk: the amount behind changes how much room a decision has before all-in pressure.',
+    tradeoffText: 'Read stack depth first, or treat every stack as equal risk.',
     consequenceText:
-        'Improvement path found: +8 chips. Static guess: -6 chips.',
+        'Stack-depth read: +8 chips. Equal-stack mistake: -6 chips.',
     insightText:
-        'Draws matter because future cards can improve them; they do not reveal the next card.',
+        'A short stack has less room behind, so risk can tighten quickly.',
   ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Final W8 check: draws can improve later. Tap Small Blind.',
-    hint: 'Read the draw first, then stay claim-safe.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Qh', 'Jh', '4s'],
-    contextText:
-        'W8 stays beginner-safe: draw means possible improvement, not certainty.',
-    tradeoffText:
-        'Explain the future-card path, or overclaim the hand is decided.',
-    consequenceText: 'Claim-safe close: +8 chips. Overclaim punish: -6 chips.',
-    insightText:
-        'Flush draw, open-ended draw, and one-gap draw are improvement clues, not final answers.',
-  ),
-];
-
-List<MicroTaskStep> _w8DrawImprovementFollowupB0V1() => <MicroTaskStep>[
-  _w8DrawImprovementStepV1(
-    prompt: 'Hearts on board create a flush draw. Tap Button.',
-    hint: 'A future card of that suit can improve the hand.',
-    boardCards: <String>['Jh', '8h', '2s'],
-    contextText: 'B0 repairs the first miss: draw is not the same as made.',
-    tradeoffText:
-        'Keep the flush draw as future-card potential, or mark it complete now.',
-    consequenceText: 'Repair held: +8 chips. Made-now leak: -6 chips.',
-    insightText:
-        'The flush draw can improve later; it is not complete on this street.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: '4-5-6-7 is open-ended. Tap Cutoff.',
-    hint: 'Cards on either end can complete the straight.',
-    expectedSeatId: 'co',
-    boardCards: <String>['4s', '5d', '6c'],
-    contextText: 'B0 repeats the open-ended straight draw in a new shape.',
-    tradeoffText:
-        'Use both ends of the sequence, or search for one exact card only.',
-    consequenceText: 'Open-ended repair: +8 chips. One-card tunnel: -6 chips.',
-    insightText:
-        'Open-ended draws have more clear improvement paths than one-gap draws.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Inside-card straight draw. Tap Big Blind after comparing it.',
-    hint: 'This draw can improve, but through a narrower path.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['6s', '7d', '9c'],
-    contextText: 'B0 compares narrow and open-ended draw shapes.',
-    tradeoffText:
-        'Notice the narrower future-card path, or treat all draws the same.',
-    consequenceText: 'Shape compared: +8 chips. Same-draw mistake: -6 chips.',
-    insightText:
-        'A one-gap draw still has improvement potential, just fewer clear paths.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Flush draw beats no clear draw for improvement. Tap Hijack.',
-    hint: 'A visible draw gives cleaner future-card paths.',
-    expectedSeatId: 'hj',
-    boardCards: <String>['Th', '6h', '2d'],
-    contextText: 'B0 closes with draw vs no-draw transfer.',
-    tradeoffText:
-        'Choose visible improvement potential, or ignore the draw clue.',
-    consequenceText: 'Transfer repair: +8 chips. Ignored clue: -6 chips.',
-    insightText:
-        'The draw gives visible ways to improve without promising the next card.',
-  ),
-];
-
-List<MicroTaskStep> _w8DrawImprovementFollowupB1V1() => <MicroTaskStep>[
-  _w8DrawImprovementStepV1(
-    prompt: 'Spades create a flush draw. Tap Button after the safe read.',
-    hint: 'A future card of the suit can help complete a flush.',
-    boardCards: <String>['As', '9s', '4d'],
-    contextText: 'B1 changes suit and board while keeping the same draw idea.',
-    tradeoffText:
-        'Read the flush draw, or call the current hand static forever.',
-    consequenceText: 'Suit-path read: +8 chips. Static-hand leak: -6 chips.',
-    insightText:
-        'A flush draw is an improvement path from future cards of the suit.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: '8-9-T-J is open-ended. Tap Small Blind.',
-    hint: 'Either side of the straight shape can matter.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['8c', '9d', 'Ts'],
-    contextText: 'B1 adds a higher open-ended straight draw example.',
-    tradeoffText: 'Use the two-sided path, or over-focus on one future card.',
-    consequenceText: 'Two-sided read: +8 chips. Tunnel miss: -6 chips.',
-    insightText:
-        'Open-ended draws can improve from either side; that is why the shape matters.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'One-gap draw compared with open-ended. Tap Cutoff.',
-    hint: 'The open-ended draw has more clear improvement cards.',
-    expectedSeatId: 'co',
-    boardCards: <String>['7s', '8d', 'Tc'],
-    contextText:
-        'B1 makes the comparison explicit without requiring equity math.',
-    tradeoffText: 'Compare improvement paths, or use raw hand strength only.',
-    consequenceText: 'Path comparison: +8 chips. Raw-strength drift: -6 chips.',
-    insightText:
-        'Draw quality starts with how many clear future-card paths can improve the hand.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Draw vs no clear draw transfer. Tap Big Blind.',
-    hint: 'Visible improvement paths make the draw easier to continue with.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Qh', '8h', '3s'],
-    contextText: 'B1 closes with a transfer across board texture.',
-    tradeoffText: 'Carry the draw-improvement clue, or restart from guessing.',
-    consequenceText: 'Transfer read: +8 chips. Guess reset: -6 chips.',
-    insightText:
-        'Future cards can improve a visible draw; no clear draw has fewer visible paths.',
-  ),
-];
-
-List<MicroTaskStep> _w8DrawImprovementFollowupB2V1() => <MicroTaskStep>[
-  _w8DrawImprovementStepV1(
-    prompt:
-        'Two draws appear together. Tap Button after naming the safer idea.',
-    hint: 'Multiple draw paths can give more ways to improve.',
-    boardCards: <String>['Jh', 'Th', '9s'],
-    contextText:
-        'B2 adds scenario richness: a hand can have more than one improvement path.',
-    tradeoffText: 'Combine visible draw paths, or treat the spot as made now.',
-    consequenceText: 'Combined draw read: +8 chips. Made-hand jump: -6 chips.',
-    insightText:
-        'Flush draw plus straight shape can add future-card improvement paths.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Open-ended draw with no flush draw. Tap Cutoff.',
-    hint: 'A straight draw can matter even without the suit draw.',
-    expectedSeatId: 'co',
-    boardCards: <String>['6c', '7d', '8s'],
-    contextText: 'B2 separates straight improvement from flush improvement.',
-    tradeoffText:
-        'Name the open-ended path, or require every draw to be a flush draw.',
-    consequenceText: 'Straight path read: +8 chips. Flush-only leak: -6 chips.',
-    insightText:
-        'Open-ended straight draws can improve through future cards at either end.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt: 'Flush draw with no straight draw. Tap Small Blind.',
-    hint: 'The suited future-card path is still enough to matter.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Ah', '6h', '2c'],
-    contextText: 'B2 separates flush improvement from straight improvement.',
-    tradeoffText:
-        'Use the suit path, or miss the draw because no straight is present.',
-    consequenceText: 'Flush path read: +8 chips. Missed-draw leak: -6 chips.',
-    insightText:
-        'A flush draw can improve from a future card of the suit even without a straight draw.',
-  ),
-  _w8DrawImprovementStepV1(
-    prompt:
-        'Final W8 transfer: draw means possible improvement. Tap Big Blind.',
-    hint: 'Possible improvement is useful, but it is not certainty.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Ks', 'Qs', '4d'],
-    contextText: 'B2 closes W8 as a route bridge after visible-card work.',
-    tradeoffText:
-        'Use draw improvement potential, or claim the future card is known.',
-    consequenceText: 'Safe close: +8 chips. Certainty claim: -6 chips.',
-    insightText:
-        'Flush draw and open-ended draw clues show possible improvement, not a final result.',
-  ),
-];
-
-MicroTaskStep _w9CallPriceStepV1({
-  required String prompt,
-  required String hint,
-  required String contextText,
-  required String tradeoffText,
-  required String consequenceText,
-  required String insightText,
-  String expectedSeatId = 'btn',
-  List<String>? boardCards,
-}) {
-  return MicroTaskStep(
-    prompt: prompt,
-    hint: hint,
-    expectedSeatIds: <String>[expectedSeatId],
-    boardCards: boardCards,
-    contextText: contextText,
-    tradeoffText: tradeoffText,
-    consequenceText: consequenceText,
-    insightText: insightText,
-  );
-}
-
-List<MicroTaskStep> _w9CallPriceCampaignPackV1() => <MicroTaskStep>[
-  _w9CallPriceStepV1(
-    prompt: 'Big pot, small call. Tap Button after reading the price.',
-    hint: 'A small call compared with the pot is a cheaper price.',
-    expectedSeatId: 'btn',
-    boardCards: <String>['Ah', '9d', '4c'],
-    contextText:
-        'W9 follows W8: after spotting a draw, ask whether the call price is worth paying for the pot reward; the same price check matters when no clear draw is visible.',
-    tradeoffText: 'Compare price to pot reward, or call without checking risk.',
-    consequenceText: 'Price read: +8 chips. Risk-blind call: -6 chips.',
-    insightText:
-        'Pot odds start simple: the price of a call is cheap or expensive compared with the pot.',
-  ),
-  _w9CallPriceStepV1(
-    prompt: 'Small pot, large call. Tap Cutoff after naming the risk.',
-    hint: 'A large call into a small pot is an expensive price.',
+  _w8StackDepthRiskStepV1(
+    prompt: 'Deep stack, more future room. Tap Cutoff.',
+    hint: 'More chips behind can leave more future betting decisions.',
     expectedSeatId: 'co',
     boardCards: <String>['Ks', '8d', '3c'],
     contextText:
-        'The same pot-price idea can warn you when the risk is too large.',
-    tradeoffText:
-        'Notice the expensive call, or chase reward without price discipline.',
-    consequenceText: 'Risk checked: +8 chips. Price leak: -6 chips.',
+        'A deeper stack does not remove risk; it changes how much room remains.',
+    tradeoffText: 'Account for chips behind, or judge only the current bet.',
+    consequenceText: 'Room counted: +8 chips. Current-bet tunnel: -6 chips.',
     insightText:
-        'An expensive call asks for more reward because the risk is larger.',
+        'Deeper stacks can create more future risk because more chips remain behind.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Same hand, different pot. Tap Big Blind after comparing prices.',
-    hint: 'The pot size changes whether a call price feels cheap or expensive.',
+  _w8StackDepthRiskStepV1(
+    prompt: 'Pot is large relative to stack. Tap Big Blind.',
+    hint: 'Large pot plus shallow stack can create commitment pressure.',
     expectedSeatId: 'bb',
     boardCards: <String>['Qh', '7s', '2d'],
     contextText:
-        'W9 is comparison practice: price only makes sense next to the pot.',
-    tradeoffText: 'Compare both spots, or judge the call amount alone.',
-    consequenceText:
-        'Comparison read: +8 chips. Isolated-price miss: -6 chips.',
+        'W8 compares the pot with the stack behind before choosing a risk line.',
+    tradeoffText:
+        'Compare stack to pot, or ignore how quickly chips can be committed.',
+    consequenceText: 'Commitment read: +8 chips. Risk miss: -6 chips.',
     insightText:
-        'A call can be better in a bigger pot because the reward is larger.',
+        'When the pot is large relative to the stack, later decisions can become all-in faster.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Cheap call or fold? Tap Hijack after weighing risk and reward.',
-    hint: 'Cheap price can support a call, but it does not promise a win.',
+  _w8StackDepthRiskStepV1(
+    prompt: 'Same hand, different stack depth. Tap Hijack.',
+    hint: 'The shallower stack reaches all-in pressure faster.',
+    expectedSeatId: 'hj',
+    boardCards: <String>['Jh', '9d', '4s'],
+    contextText:
+        'Transfer W8: the hand can look similar while stack-depth risk changes.',
+    tradeoffText:
+        'Use the stack signal, or copy the same action across both stacks.',
+    consequenceText: 'Risk transfer: +8 chips. Copy-paste leak: -6 chips.',
+    insightText:
+        'Stack depth changes risk even when the visible cards look familiar.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Final W8 check: risk before all-in. Tap Small Blind.',
+    hint: 'Read chips behind before deciding how much risk remains.',
+    expectedSeatId: 'sb',
+    boardCards: <String>['Td', '6c', '2h'],
+    contextText:
+        'W8 stays claim-safe: stack depth shapes risk, not the final result.',
+    tradeoffText: 'Name the stack-depth risk, or assume the action is forced.',
+    consequenceText:
+        'Claim-safe close: +8 chips. Forced-action leak: -6 chips.',
+    insightText:
+        'Stack depth helps control risk because it shows how close the spot is to all-in pressure.',
+  ),
+];
+
+List<MicroTaskStep> _w8StackDepthRiskFollowupB0V1() => <MicroTaskStep>[
+  _w8StackDepthRiskStepV1(
+    prompt: 'Shallow stack warning. Tap Button.',
+    hint: 'All-in pressure can arrive with fewer chips behind.',
+    contextText: 'B0 repairs the first miss: shallow means less risk room.',
+    tradeoffText: 'Respect the shallow stack, or treat it like a deep stack.',
+    consequenceText: 'Repair held: +8 chips. Stack-size leak: -6 chips.',
+    insightText: 'Short stacks can make risk tighter before the next decision.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Deep stack leaves room. Tap Cutoff.',
+    hint: 'More chips behind can create later decisions.',
+    expectedSeatId: 'co',
+    contextText: 'B0 repeats deep-stack room in a new spot.',
+    tradeoffText: 'Count chips behind, or stop at the first bet only.',
+    consequenceText: 'Room counted: +8 chips. One-street tunnel: -6 chips.',
+    insightText: 'Deep stacks keep more future risk in play.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Stack-to-pot pressure. Tap Big Blind.',
+    hint: 'Compare what is behind with what is already in the pot.',
+    expectedSeatId: 'bb',
+    contextText: 'B0 reinforces commitment pressure.',
+    tradeoffText: 'Compare stack to pot, or miss the commitment signal.',
+    consequenceText: 'Pressure read: +8 chips. Commitment miss: -6 chips.',
+    insightText: 'Pot size and stack behind combine into the risk read.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Transfer W8 risk. Tap Hijack.',
+    hint: 'Same cards can carry different stack-depth risk.',
+    expectedSeatId: 'hj',
+    contextText: 'B0 closes with stack-depth transfer.',
+    tradeoffText: 'Transfer the risk signal, or copy the same line by habit.',
+    consequenceText: 'Transfer held: +8 chips. Habit line: -6 chips.',
+    insightText: 'Stack depth changes the risk profile of a familiar spot.',
+  ),
+];
+
+List<MicroTaskStep> _w8StackDepthRiskFollowupB1V1() => <MicroTaskStep>[
+  _w8StackDepthRiskStepV1(
+    prompt: 'Medium stack, moderate room. Tap Button.',
+    hint: 'Not shallow, not deep: still count chips behind.',
+    contextText: 'B1 adds middle-stack judgment.',
+    tradeoffText: 'Keep the stack read, or force every stack into one label.',
+    consequenceText: 'Middle read: +8 chips. Forced label: -6 chips.',
+    insightText: 'Stack depth can sit between clear shallow and clear deep.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'All-in threshold is close. Tap Small Blind.',
+    hint: 'Fewer chips behind lowers the threshold.',
+    expectedSeatId: 'sb',
+    contextText: 'B1 makes all-in threshold explicit.',
+    tradeoffText: 'Respect the threshold, or ignore how close risk is.',
+    consequenceText: 'Threshold read: +8 chips. Risk drift: -6 chips.',
+    insightText: 'A lower all-in threshold asks for cleaner risk control.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Deep stack, no automatic safety. Tap Cutoff.',
+    hint: 'More room can still mean more future risk.',
+    expectedSeatId: 'co',
+    contextText: 'B1 prevents deep-stack autopilot.',
+    tradeoffText: 'Use deeper-stack room, or assume deeper always means safe.',
+    consequenceText: 'Risk balanced: +8 chips. Autopilot leak: -6 chips.',
+    insightText: 'More room is useful, but it does not remove risk.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Final B1 transfer: stack first. Tap Big Blind.',
+    hint: 'Read the stack before picking the risk line.',
+    expectedSeatId: 'bb',
+    contextText: 'B1 closes with risk-control transfer.',
+    tradeoffText: 'Transfer stack-depth control, or decide from cards alone.',
+    consequenceText: 'Control held: +8 chips. Cards-only miss: -6 chips.',
+    insightText: 'Stack depth is part of the decision, not background noise.',
+  ),
+];
+
+List<MicroTaskStep> _w8StackDepthRiskFollowupB2V1() => <MicroTaskStep>[
+  _w8StackDepthRiskStepV1(
+    prompt: 'Two stack sizes, one risk choice. Tap Button.',
+    hint: 'The shallower stack needs tighter all-in awareness.',
+    contextText: 'B2 combines shallow and deeper stack comparison.',
+    tradeoffText: 'Compare the stacks, or treat both risk lines the same.',
+    consequenceText: 'Comparison read: +8 chips. Same-risk leak: -6 chips.',
+    insightText: 'Different stack depths create different risk pressure.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Pot pressure grows. Tap Cutoff.',
+    hint: 'A bigger pot relative to stack raises commitment pressure.',
+    expectedSeatId: 'co',
+    contextText: 'B2 separates pot pressure from raw card strength.',
+    tradeoffText: 'Use the pot-to-stack clue, or ignore commitment risk.',
+    consequenceText: 'Commitment read: +8 chips. Pressure miss: -6 chips.',
+    insightText: 'The pot and stack behind jointly shape all-in pressure.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Deeper stack keeps options. Tap Small Blind.',
+    hint: 'More chips behind can preserve more choices.',
+    expectedSeatId: 'sb',
+    contextText: 'B2 balances the shallow-stack warning.',
+    tradeoffText: 'Keep options in view, or force the spot too soon.',
+    consequenceText: 'Options read: +8 chips. Forced-line leak: -6 chips.',
+    insightText: 'Deeper stacks can keep more decision paths open.',
+  ),
+  _w8StackDepthRiskStepV1(
+    prompt: 'Final W8 transfer: stack depth controls risk. Tap Big Blind.',
+    hint: 'Stack, pot, and all-in pressure belong together.',
+    expectedSeatId: 'bb',
+    contextText: 'B2 closes W8 before tournament pressure.',
+    tradeoffText: 'Use the risk-control frame, or claim one forced answer.',
+    consequenceText: 'Safe close: +8 chips. Forced-answer leak: -6 chips.',
+    insightText:
+        'Stack depth controls how much risk remains before all-in pressure.',
+  ),
+];
+
+MicroTaskStep _w9TournamentPressureStepV1({
+  required String prompt,
+  required String hint,
+  required String contextText,
+  required String tradeoffText,
+  required String consequenceText,
+  required String insightText,
+  String expectedSeatId = 'btn',
+  List<String>? boardCards,
+}) {
+  return MicroTaskStep(
+    prompt: prompt,
+    hint: hint,
+    expectedSeatIds: <String>[expectedSeatId],
+    boardCards: boardCards,
+    contextText: contextText,
+    tradeoffText: tradeoffText,
+    consequenceText: consequenceText,
+    insightText: insightText,
+  );
+}
+
+List<MicroTaskStep> _w9TournamentPressureCampaignPackV1() => <MicroTaskStep>[
+  _w9TournamentPressureStepV1(
+    prompt: 'Near bubble, survival pressure rises. Tap Button.',
+    hint: 'Tournament pressure can make chip risk tighter.',
+    boardCards: <String>['Ah', '9d', '4c'],
+    contextText:
+        'W9 starts tournament pressure: survival, bubble, and payout context can change how risky a chip decision feels.',
+    tradeoffText:
+        'Read tournament pressure, or treat it like the same chip spot every time.',
+    consequenceText: 'Pressure read: +8 chips. Context miss: -6 chips.',
+    insightText:
+        'Tournament pressure shapes risk because survival can carry extra value.',
+  ),
+  _w9TournamentPressureStepV1(
+    prompt: 'Medium stack under pressure. Tap Cutoff.',
+    hint: 'Risk premium means extra care before risking chips.',
+    expectedSeatId: 'co',
+    boardCards: <String>['Ks', '8d', '3c'],
+    contextText:
+        'A medium stack may need more caution when tournament pressure is high.',
+    tradeoffText: 'Account for risk premium, or take the same risk blindly.',
+    consequenceText: 'Premium respected: +8 chips. Pressure leak: -6 chips.',
+    insightText:
+        'Risk premium raises the bar before putting tournament life or leverage at risk.',
+  ),
+  _w9TournamentPressureStepV1(
+    prompt: 'Short stack can ladder by surviving. Tap Big Blind.',
+    hint: 'Survival pressure can matter more near payout jumps.',
+    expectedSeatId: 'bb',
+    boardCards: <String>['Qh', '7s', '2d'],
+    contextText: 'W9 compares chip risk with payout-ladder survival pressure.',
+    tradeoffText: 'Weigh survival, or ignore the tournament ladder.',
+    consequenceText: 'Ladder read: +8 chips. Survival miss: -6 chips.',
+    insightText:
+        'A payout ladder can make survival more valuable than in a cash-game frame.',
+  ),
+  _w9TournamentPressureStepV1(
+    prompt: 'Same hand, different tournament pressure. Tap Hijack.',
+    hint: 'Higher pressure can require more caution.',
     expectedSeatId: 'hj',
     boardCards: <String>['Jh', 'Th', '5c'],
     contextText:
-        'Keep W9 claim-safe: pot price informs call or fold, not the exact result.',
-    tradeoffText: 'Use risk and reward, or pretend odds predict the result.',
-    consequenceText: 'Claim-safe call read: +8 chips. Result claim: -6 chips.',
+        'Transfer W9: identical cards can carry different pressure in different tournament states.',
+    tradeoffText: 'Use the pressure context, or copy the same line by habit.',
+    consequenceText: 'Transfer read: +8 chips. Habit line: -6 chips.',
     insightText:
-        'Odds guide the call/fold decision by comparing risk to pot reward.',
+        'Tournament pressure changes incentives without predicting the result.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Final W9 check: price before call. Tap Small Blind.',
-    hint: 'Compare pot, call price, risk, and reward before choosing.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Final W9 check: pressure before risk. Tap Small Blind.',
+    hint: 'Bubble, survival, and stack position shape the risk bar.',
     expectedSeatId: 'sb',
     boardCards: <String>['9s', '8d', '4h'],
     contextText:
-        'W9 closes as a route bridge from draw potential to call-price discipline.',
-    tradeoffText: 'Check the price first, or click call/fold by habit.',
-    consequenceText: 'Discipline close: +8 chips. Habit click: -6 chips.',
+        'W9 closes as tournament-pressure discipline before player adjustment.',
+    tradeoffText: 'Name the pressure first, or act as if context is absent.',
+    consequenceText: 'Discipline close: +8 chips. Context-free leak: -6 chips.',
     insightText:
-        'The safer read is simple: pot reward and call price shape risk before action.',
+        'Tournament pressure guides risk by combining survival, payout context, and chip position.',
   ),
 ];
 
-List<MicroTaskStep> _w9CallPriceFollowupB0V1() => <MicroTaskStep>[
-  _w9CallPriceStepV1(
-    prompt: 'Large pot, tiny call. Tap Button after the cheap-price read.',
-    hint: 'Cheap price means less risk for the pot reward.',
-    boardCards: <String>['Ad', 'Td', '3s'],
-    contextText:
-        'B0 repairs the easy miss: call price is relative to pot size.',
-    tradeoffText:
-        'Compare the price to the pot, or treat every call amount the same.',
-    consequenceText:
-        'Relative-price read: +8 chips. Same-price leak: -6 chips.',
-    insightText: 'A small call can be attractive when the pot reward is large.',
+List<MicroTaskStep> _w9TournamentPressureFollowupB0V1() => <MicroTaskStep>[
+  _w9TournamentPressureStepV1(
+    prompt: 'Bubble pressure warning. Tap Button.',
+    hint: 'Survival pressure can tighten risky actions.',
+    contextText: 'B0 repairs the first miss: bubble context matters.',
+    tradeoffText: 'Respect survival pressure, or ignore tournament context.',
+    consequenceText: 'Repair held: +8 chips. Bubble miss: -6 chips.',
+    insightText: 'Near the bubble, survival can raise the risk bar.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Small pot, big call. Tap Cutoff after the expensive-price read.',
-    hint: 'More risk needs more reward.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Risk premium check. Tap Cutoff.',
+    hint: 'Extra tournament risk asks for extra care.',
     expectedSeatId: 'co',
-    boardCards: <String>['Kh', '6d', '2c'],
-    contextText: 'B0 repeats the expensive-call side of the comparison.',
-    tradeoffText:
-        'Respect the larger risk, or chase with weak price discipline.',
-    consequenceText: 'Risk respected: +8 chips. Chase leak: -6 chips.',
-    insightText:
-        'An expensive call is not forbidden, but it needs enough pot reward.',
+    contextText: 'B0 repeats risk-premium discipline.',
+    tradeoffText: 'Use the premium, or take risk as if pressure is absent.',
+    consequenceText: 'Premium read: +8 chips. Pressure leak: -6 chips.',
+    insightText: 'Risk premium is a caution signal, not a forced action.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Call or fold after price check. Tap Big Blind.',
-    hint: 'Price helps decide whether the risk is worth continuing.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Payout ladder pressure. Tap Big Blind.',
+    hint: 'Survival can gain value near payout jumps.',
     expectedSeatId: 'bb',
-    boardCards: <String>['Qs', 'Jd', '4c'],
-    contextText: 'B0 keeps the action tied to pot and price.',
-    tradeoffText:
-        'Use the price to choose call/fold, or decide from hand hope alone.',
-    consequenceText: 'Action priced: +8 chips. Hope call: -6 chips.',
-    insightText:
-        'Call/fold discipline starts by comparing the call price to the pot.',
+    contextText: 'B0 reinforces ladder pressure.',
+    tradeoffText: 'Weigh survival, or ignore the payout context.',
+    consequenceText: 'Ladder read: +8 chips. Context miss: -6 chips.',
+    insightText: 'The ladder can make survival more valuable.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Transfer W9: bigger pot improves the same call price. Tap Hijack.',
-    hint: 'The same risk can look better with more reward.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Transfer W9 pressure. Tap Hijack.',
+    hint: 'Higher pressure can need more caution.',
     expectedSeatId: 'hj',
-    boardCards: <String>['8h', '7h', '2s'],
-    contextText: 'B0 closes with direct risk/reward transfer.',
-    tradeoffText:
-        'Transfer the price idea, or restart from guessing each spot.',
-    consequenceText: 'Transfer held: +8 chips. Guess reset: -6 chips.',
-    insightText:
-        'The same call price can be more attractive when the pot reward is bigger.',
+    contextText: 'B0 closes with tournament-pressure transfer.',
+    tradeoffText: 'Transfer the pressure signal, or copy the same line.',
+    consequenceText: 'Transfer held: +8 chips. Copy leak: -6 chips.',
+    insightText: 'Tournament context can change the right risk threshold.',
   ),
 ];
 
-List<MicroTaskStep> _w9CallPriceFollowupB1V1() => <MicroTaskStep>[
-  _w9CallPriceStepV1(
-    prompt: 'Medium pot, medium call. Tap Button after checking the price.',
-    hint: 'Some prices are not clearly cheap or clearly expensive.',
-    boardCards: <String>['Ac', '8s', '5d'],
-    contextText: 'B1 adds middle-price judgment without heavy math.',
-    tradeoffText:
-        'Keep comparing pot and call price, or force a simple label too fast.',
-    consequenceText: 'Balanced price read: +8 chips. Forced label: -6 chips.',
+List<MicroTaskStep> _w9TournamentPressureFollowupB1V1() => <MicroTaskStep>[
+  _w9TournamentPressureStepV1(
+    prompt: 'Lower pressure, more room. Tap Button.',
+    hint: 'Less tournament pressure can lower the risk premium.',
+    contextText: 'B1 adds lower-pressure comparison.',
+    tradeoffText: 'Compare pressure levels, or over-tighten every decision.',
+    consequenceText: 'Pressure compared: +8 chips. One-label leak: -6 chips.',
     insightText:
-        'Pot odds can be a spectrum: price, risk, and reward still guide the decision.',
+        'Pressure can be higher or lower depending on tournament state.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Cheap call with weak reward. Tap Small Blind.',
-    hint: 'Cheap price helps, but reward still matters.',
+  _w9TournamentPressureStepV1(
+    prompt: 'High pressure does not force all-in. Tap Small Blind.',
+    hint: 'Pressure changes caution, not every action.',
     expectedSeatId: 'sb',
-    boardCards: <String>['Kd', '9c', '2h'],
-    contextText: 'B1 prevents cheap-price autopilot.',
-    tradeoffText: 'Check reward too, or call only because the price is small.',
-    consequenceText: 'Reward checked: +8 chips. Cheap-only leak: -6 chips.',
+    contextText: 'B1 prevents pressure autopilot.',
+    tradeoffText: 'Use caution, or treat pressure as an automatic shove.',
+    consequenceText: 'Caution read: +8 chips. Autopilot leak: -6 chips.',
     insightText:
-        'A cheap call can still be wrong if the reward side is not good enough.',
+        'Tournament pressure guides risk; it does not force one action.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Expensive call with big reward. Tap Cutoff.',
-    hint: 'Big pot reward can make more risk worth considering.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Chip position matters. Tap Cutoff.',
+    hint: 'Stack position is part of tournament pressure.',
     expectedSeatId: 'co',
-    boardCards: <String>['Qd', 'Td', '6s'],
-    contextText: 'B1 keeps expensive calls from being auto-folds.',
-    tradeoffText:
-        'Compare risk to reward, or fold every larger price automatically.',
-    consequenceText: 'Risk/reward read: +8 chips. Auto-fold leak: -6 chips.',
-    insightText:
-        'An expensive call needs more reward, but price alone does not decide.',
+    contextText: 'B1 connects pressure to chip position.',
+    tradeoffText: 'Use chip position, or ignore who is at risk.',
+    consequenceText: 'Position read: +8 chips. Context miss: -6 chips.',
+    insightText: 'The same pressure can hit stacks differently.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Final B1 transfer: pot and price together. Tap Big Blind.',
-    hint: 'The call price only makes sense next to the pot.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Final B1 transfer: survival context. Tap Big Blind.',
+    hint: 'Survival pressure belongs in the risk read.',
     expectedSeatId: 'bb',
-    boardCards: <String>['Jh', '8s', '3d'],
-    contextText: 'B1 closes with a beginner-safe pot odds summary.',
-    tradeoffText: 'Use pot plus price, or judge the call without context.',
-    consequenceText: 'Context read: +8 chips. Context-free call: -6 chips.',
-    insightText: 'Pot, call, price, risk, and reward are the core W9 words.',
+    contextText: 'B1 closes with survival-pressure transfer.',
+    tradeoffText: 'Transfer survival context, or use a cash-game frame.',
+    consequenceText: 'Transfer read: +8 chips. Context drift: -6 chips.',
+    insightText: 'Tournament pressure is a context signal for risk decisions.',
   ),
 ];
 
-List<MicroTaskStep> _w9CallPriceFollowupB2V1() => <MicroTaskStep>[
-  _w9CallPriceStepV1(
-    prompt: 'Draw from W8, price from W9. Tap Button after combining them.',
-    hint: 'A draw can improve, but the call price still matters.',
-    boardCards: <String>['Jh', 'Th', '4c'],
-    contextText: 'B2 connects W8 draw potential to W9 pot-price discipline.',
-    tradeoffText: 'Use draw plus price, or call every draw regardless of risk.',
-    consequenceText: 'Combined read: +8 chips. Any-draw call: -6 chips.',
-    insightText:
-        'A draw gives possible reward, while the pot and call price define risk.',
+List<MicroTaskStep> _w9TournamentPressureFollowupB2V1() => <MicroTaskStep>[
+  _w9TournamentPressureStepV1(
+    prompt: 'Bubble plus medium stack. Tap Button.',
+    hint: 'Risk premium can rise when survival matters.',
+    contextText: 'B2 combines bubble and stack-position pressure.',
+    tradeoffText: 'Combine the signals, or read only the cards.',
+    consequenceText: 'Combined read: +8 chips. Cards-only miss: -6 chips.',
+    insightText: 'Bubble pressure and stack position work together.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'No clear draw, expensive call. Tap Cutoff after the fold warning.',
-    hint: 'High risk and weak reward can point toward fold.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Ladder jump changes caution. Tap Cutoff.',
+    hint: 'Payout context can raise the caution level.',
     expectedSeatId: 'co',
-    boardCards: <String>['Ks', '8d', '2c'],
-    contextText: 'B2 adds a fold-friendly price spot without overclaiming.',
-    tradeoffText: 'Let price warn you, or continue with no clear reward.',
-    consequenceText: 'Fold warning read: +8 chips. Price ignore: -6 chips.',
-    insightText:
-        'Fold can be disciplined when the call price is high and reward is thin.',
+    contextText: 'B2 separates payout pressure from raw chip count.',
+    tradeoffText: 'Use the ladder, or ignore survival value.',
+    consequenceText: 'Ladder read: +8 chips. Survival miss: -6 chips.',
+    insightText: 'Payout context can change the risk threshold.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Clear draw, cheap call. Tap Small Blind after the call support.',
-    hint: 'Cheap price plus possible reward can support continuing.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Lower pressure spot. Tap Small Blind.',
+    hint: 'Less pressure can reduce the risk premium.',
     expectedSeatId: 'sb',
-    boardCards: <String>['Ah', '9h', '3s'],
-    contextText: 'B2 contrasts a better call-price spot.',
-    tradeoffText: 'Use price plus reward, or ignore the cheap path.',
-    consequenceText: 'Call support read: +8 chips. Missed price: -6 chips.',
-    insightText:
-        'A cheap call with visible reward can be easier to justify than a costly call.',
+    contextText: 'B2 balances the high-pressure warning.',
+    tradeoffText: 'Adjust pressure down, or over-tighten every decision.',
+    consequenceText: 'Adjustment read: +8 chips. Over-tight leak: -6 chips.',
+    insightText: 'Not every tournament spot carries the same pressure.',
   ),
-  _w9CallPriceStepV1(
-    prompt: 'Final W9 transfer: price shapes call or fold. Tap Big Blind.',
-    hint: 'No exact math needed: compare risk and reward first.',
+  _w9TournamentPressureStepV1(
+    prompt: 'Final W9 transfer: pressure shapes risk. Tap Big Blind.',
+    hint: 'Tournament, survival, and pressure belong together.',
     expectedSeatId: 'bb',
-    boardCards: <String>['Qs', '7s', '5d'],
-    contextText: 'B2 closes W9 before bet-purpose work.',
-    tradeoffText:
-        'Use risk/reward discipline, or claim the result from price alone.',
-    consequenceText: 'Safe close: +8 chips. Result claim: -6 chips.',
+    contextText: 'B2 closes W9 before player-adjustment work.',
+    tradeoffText: 'Use the pressure frame, or claim one forced answer.',
+    consequenceText: 'Safe close: +8 chips. Forced-answer leak: -6 chips.',
     insightText:
-        'Pot odds guide call/fold choices; they do not predict the outcome.',
+        'Tournament pressure shapes risk without guaranteeing the outcome.',
   ),
 ];
 
@@ -4498,21 +4431,21 @@ kCampaignPacksV1 = _normalizeCampaignPacksMapV1(<String, World1MicroTaskPack>{
 
   'world7_spine_followup_v1_b2': _w7VisibleRangeFollowupB2V1(),
 
-  'world8_spine_campaign_v1': _w8DrawImprovementCampaignPackV1(),
+  'world8_spine_campaign_v1': _w8StackDepthRiskCampaignPackV1(),
 
-  'world8_spine_followup_v1_b0': _w8DrawImprovementFollowupB0V1(),
+  'world8_spine_followup_v1_b0': _w8StackDepthRiskFollowupB0V1(),
 
-  'world8_spine_followup_v1_b1': _w8DrawImprovementFollowupB1V1(),
+  'world8_spine_followup_v1_b1': _w8StackDepthRiskFollowupB1V1(),
 
-  'world8_spine_followup_v1_b2': _w8DrawImprovementFollowupB2V1(),
+  'world8_spine_followup_v1_b2': _w8StackDepthRiskFollowupB2V1(),
 
-  'world9_spine_campaign_v1': _w9CallPriceCampaignPackV1(),
+  'world9_spine_campaign_v1': _w9TournamentPressureCampaignPackV1(),
 
-  'world9_spine_followup_v1_b0': _w9CallPriceFollowupB0V1(),
+  'world9_spine_followup_v1_b0': _w9TournamentPressureFollowupB0V1(),
 
-  'world9_spine_followup_v1_b1': _w9CallPriceFollowupB1V1(),
+  'world9_spine_followup_v1_b1': _w9TournamentPressureFollowupB1V1(),
 
-  'world9_spine_followup_v1_b2': _w9CallPriceFollowupB2V1(),
+  'world9_spine_followup_v1_b2': _w9TournamentPressureFollowupB2V1(),
 
   'world10_spine_campaign_v1': _w10BetPurposeCampaignPackV1(),
 

@@ -7,21 +7,21 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_transfer_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_evidence_harness_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_evidence_harness_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_evidence_harness_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 
 void main() {
   group('W9 internal world source template', () {
-    const owner = Act0W9PriceHiddenRuntimeSessionOwnerV1();
-    const harness = Act0W9PriceHiddenEvidenceHarnessV1();
+    const owner = Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1();
+    const harness = Act0W9TournamentPressureHiddenEvidenceHarnessV1();
 
     test('contains a coherent four-task hidden learning arc', () {
       expect(owner.taskSpecs, hasLength(4));
       expect(owner.taskSpecs.map((task) => task.taskId), <String>[
-        'cheap_call_price_recognition_intro',
-        'expensive_call_price_recognition_intro',
-        'call_price_comparison_lite',
-        'better_call_price_transfer_check',
+        'bubble_survival_pressure_intro',
+        'risk_premium_medium_stack_intro',
+        'short_stack_ladder_pressure_lite',
+        'pressure_transfer_check',
       ]);
 
       final purposes = owner.taskSpecs
@@ -30,8 +30,8 @@ void main() {
       expect(purposes, hasLength(4));
       for (final task in owner.taskSpecs) {
         expect(task.worldId, 'world_9');
-        expect(task.lessonId, 'pot_odds_price_intuition_lite');
-        expect(task.conceptFamilyId, 'w9_price_intuition_call_price');
+        expect(task.lessonId, 'tournament_pressure_lite');
+        expect(task.conceptFamilyId, 'w9_tournament_pressure_risk_premium');
         expect(task.practiceCtaAllowed, isFalse);
         expect(
           task.mapperNoTargetReason,
@@ -54,7 +54,7 @@ void main() {
       expect(
         owner.supports(
           worldId: 'world_9',
-          lessonId: 'pot_odds_price_intuition_lite',
+          lessonId: 'tournament_pressure_lite',
           taskId: 'unowned_w9_task',
         ),
         isFalse,
@@ -62,7 +62,7 @@ void main() {
       expect(
         owner.supports(
           worldId: 'world_8',
-          lessonId: 'pot_odds_price_intuition_lite',
+          lessonId: 'tournament_pressure_lite',
           taskId: owner.taskSpecs.first.taskId,
         ),
         isFalse,
@@ -98,7 +98,7 @@ void main() {
       _expectConsumableEvidence(
         history: history,
         taskSpecs: owner.taskSpecs,
-        conceptFamilyId: 'w9_price_intuition_call_price',
+        conceptFamilyId: 'w9_tournament_pressure_risk_premium',
       );
     });
 
@@ -107,8 +107,8 @@ void main() {
         () => harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_9',
-          lessonId: 'pot_odds_price_intuition_lite',
-          taskId: 'call_price_comparison_lite',
+          lessonId: 'tournament_pressure_lite',
+          taskId: 'short_stack_ladder_pressure_lite',
           selectedChoiceId: 'unknown_choice',
           attemptKey: 'unknown_choice_attempt',
           decisionTimeBucket: 'under_3s',
@@ -121,10 +121,10 @@ void main() {
         harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_9',
-          lessonId: 'pot_odds_price_intuition_lite',
-          taskId: 'call_price_comparison_lite',
-          selectedChoiceId: 'larger_call_is_better_price',
-          attemptKey: 'price_miss',
+          lessonId: 'tournament_pressure_lite',
+          taskId: 'short_stack_ladder_pressure_lite',
+          selectedChoiceId: 'ladder_pressure_ignores_survival',
+          attemptKey: 'pressure_miss',
           decisionTimeBucket: 'under_3s',
         ),
       ).nextRepairCandidate;

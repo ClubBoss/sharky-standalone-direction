@@ -60,8 +60,8 @@ void main() {
       );
       for (final owner in <String>[
         'act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart',
-        'act0_w8_draws_hidden_runtime_session_owner_v1.dart',
-        'act0_w9_price_hidden_runtime_session_owner_v1.dart',
+        'act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart',
+        'act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart',
         'act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart',
         'act0_w11_board_texture_hidden_runtime_session_owner_v1.dart',
         'act0_w12_review_decision_hidden_runtime_session_owner_v1.dart',
@@ -105,15 +105,12 @@ void main() {
         ),
       );
 
-      // Every raw concept-family id observed leaking into evidence in the
-      // pre-human visual UX audit (docs/_reviews/
-      // full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1.md, GR-01/
-      // GR-02) must resolve to a curated human label, and W8's label must
-      // read as draw/improvement content, not price/pot content.
+      // Every raw concept-family id observed in active route evidence must
+      // resolve to a curated human label.
       const knownConceptFamilyLabels = <String, String>{
         'w7_combo_density_visible_card_removal': 'Visible cards',
-        'w8_draw_improvement_potential': 'Draws that improve',
-        'w9_price_intuition_call_price': 'Price to call',
+        'w8_stack_depth_risk_control': 'Stack depth risk',
+        'w9_tournament_pressure_risk_premium': 'Tournament pressure',
         'w10_bet_purpose_value_bluff': 'Bet purpose',
         'w11_board_texture_danger_awareness': 'Board texture',
         'w12_review_decision_intuition': 'Review clue',
@@ -127,41 +124,38 @@ void main() {
         );
       }
       expect(
-        knownConceptFamilyLabels['w8_draw_improvement_potential'],
-        isNot(contains('Pot')),
+        knownConceptFamilyLabels['w8_stack_depth_risk_control'],
+        isNot(contains('Draw')),
       );
       expect(
-        knownConceptFamilyLabels['w8_draw_improvement_potential'],
+        knownConceptFamilyLabels['w8_stack_depth_risk_control'],
         isNot(contains('to call')),
       );
     },
   );
 
-  test(
-    'active W7-W12 copy-detail canvas matches the compact table canvas',
-    () {
-      final capture = File(
-        'tools/act0_real_text_surface_capture_v1.dart',
-      ).readAsStringSync();
-      final activeSection = _activeRouteSection(capture);
+  test('active W7-W12 copy-detail canvas matches the compact table canvas', () {
+    final capture = File(
+      'tools/act0_real_text_surface_capture_v1.dart',
+    ).readAsStringSync();
+    final activeSection = _activeRouteSection(capture);
 
-      // Regression guard for product_surface_visual_evidence_repair_v1:
-      // copyDetailSize was previously Size(760, 1200), a canvas with a
-      // different aspect ratio than the compact phone viewport the shell is
-      // designed for. That mismatch made the table render tiny/centered
-      // with a large dead dark gap below it in every copy-detail capture.
-      // copyDetailSize must stay pinned to compactSize so the same clean
-      // composition proven by the table captures applies here too.
-      expect(
-        activeSection,
-        contains('const copyDetailSize = compactSize;'),
-        reason:
-            'copy_detail captures must reuse the compact phone canvas, not '
-            'an oversized/disproportionate one.',
-      );
-      expect(activeSection, isNot(contains('Size(760, 1200)')));
-    },
-  );
+    // Regression guard for product_surface_visual_evidence_repair_v1:
+    // copyDetailSize was previously Size(760, 1200), a canvas with a
+    // different aspect ratio than the compact phone viewport the shell is
+    // designed for. That mismatch made the table render tiny/centered
+    // with a large dead dark gap below it in every copy-detail capture.
+    // copyDetailSize must stay pinned to compactSize so the same clean
+    // composition proven by the table captures applies here too.
+    expect(
+      activeSection,
+      contains('const copyDetailSize = compactSize;'),
+      reason:
+          'copy_detail captures must reuse the compact phone canvas, not '
+          'an oversized/disproportionate one.',
+    );
+    expect(activeSection, isNot(contains('Size(760, 1200)')));
+  });
 
   test(
     'active W7-W12 capture writes text-repair overlays like every other lane',

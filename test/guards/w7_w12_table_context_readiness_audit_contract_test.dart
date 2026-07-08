@@ -5,8 +5,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runt
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w11_board_texture_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w12_review_decision_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 
 void main() {
   test('W7-W12 active route specs have visible table context', () {
@@ -106,8 +106,8 @@ void main() {
 
 List<dynamic> _activeRouteSpecsV1() => <dynamic>[
   ...const Act0W7VisibleAceHiddenRuntimeSessionOwnerV1().taskSpecs,
-  ...const Act0W8DrawsHiddenRuntimeSessionOwnerV1().taskSpecs,
-  ...const Act0W9PriceHiddenRuntimeSessionOwnerV1().taskSpecs,
+  ...const Act0W8StackDepthHiddenRuntimeSessionOwnerV1().taskSpecs,
+  ...const Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1().taskSpecs,
   ...const Act0W10BetPurposeHiddenRuntimeSessionOwnerV1().taskSpecs,
   ...const Act0W11BoardTextureHiddenRuntimeSessionOwnerV1().taskSpecs,
   ...const Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1().taskSpecs,

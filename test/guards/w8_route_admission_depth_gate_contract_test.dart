@@ -104,7 +104,7 @@ void main() {
     }
   });
 
-  test('W8 route packs teach draw improvement with safe beginner copy', () {
+  test('W8 route packs teach stack-depth risk with safe beginner copy', () {
     for (final packId in w8RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
       expect(pack, isNotNull, reason: packId);
@@ -132,17 +132,18 @@ void main() {
         pack.first.insightText ?? '',
       ].join(' ').toLowerCase();
 
-      expect(copy, contains('draw'), reason: packId);
-      expect(copy, contains('improve'), reason: packId);
-      expect(copy, contains('future card'), reason: packId);
-      expect(copy, contains('flush draw'), reason: packId);
-      expect(copy, contains('open-ended'), reason: packId);
+      expect(copy, contains('stack'), reason: packId);
+      expect(copy, contains('risk'), reason: packId);
+      expect(copy, contains('all-in'), reason: packId);
       if (packId == 'world8_spine_campaign_v1') {
-        expect(firstStepCopy, contains('w5'), reason: packId);
-        expect(firstStepCopy, contains('outs'), reason: packId);
-        expect(firstStepCopy, contains('draw'), reason: packId);
-        expect(firstStepCopy, contains('improve'), reason: packId);
+        expect(firstStepCopy, contains('stack depth'), reason: packId);
+        expect(firstStepCopy, contains('risk'), reason: packId);
+        expect(firstStepCopy, contains('all-in pressure'), reason: packId);
       }
+      expect(copy, isNot(contains('draw')), reason: packId);
+      expect(copy, isNot(contains('flush draw')), reason: packId);
+      expect(copy, isNot(contains('open-ended')), reason: packId);
+      expect(copy, isNot(contains('future card')), reason: packId);
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('range thinking lite')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);

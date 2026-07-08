@@ -106,7 +106,7 @@ void main() {
     }
   });
 
-  test('W9 route packs teach pot price with safe beginner copy', () {
+  test('W9 route packs teach tournament pressure with safe beginner copy', () {
     for (final packId in w9RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
       expect(pack, isNotNull, reason: packId);
@@ -134,23 +134,19 @@ void main() {
         pack.first.insightText ?? '',
       ].join(' ').toLowerCase();
 
-      expect(copy, contains('pot'), reason: packId);
-      expect(copy, contains('call'), reason: packId);
-      expect(copy, contains('price'), reason: packId);
-      expect(copy, contains('fold'), reason: packId);
+      expect(copy, contains('tournament'), reason: packId);
+      expect(copy, contains('pressure'), reason: packId);
+      expect(copy, contains('survival'), reason: packId);
       expect(copy, contains('risk'), reason: packId);
-      expect(copy, contains('reward'), reason: packId);
       if (packId == 'world9_spine_campaign_v1') {
-        expect(
-          firstStepCopy,
-          contains('after spotting a draw'),
-          reason: packId,
-        );
-        expect(firstStepCopy, contains('call price'), reason: packId);
-        expect(firstStepCopy, contains('worth paying'), reason: packId);
-        expect(firstStepCopy, contains('same price check'), reason: packId);
-        expect(firstStepCopy, contains('no clear draw'), reason: packId);
+        expect(firstStepCopy, contains('tournament pressure'), reason: packId);
+        expect(firstStepCopy, contains('survival'), reason: packId);
+        expect(firstStepCopy, contains('bubble'), reason: packId);
       }
+      expect(copy, isNot(contains('call price')), reason: packId);
+      expect(copy, isNot(contains('pot odds')), reason: packId);
+      expect(copy, isNot(contains('cheap call')), reason: packId);
+      expect(copy, isNot(contains('expensive call')), reason: packId);
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('bet purpose')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);

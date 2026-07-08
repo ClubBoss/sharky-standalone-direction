@@ -8,47 +8,47 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_action_transfer_jo
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_transfer_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_evidence_harness_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_evidence_harness_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_evidence_harness_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 
 void main() {
   group('W9 hidden evidence consumption', () {
-    const owner = Act0W9PriceHiddenRuntimeSessionOwnerV1();
+    const owner = Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1();
 
     test('projection stack reads hidden W9 concept family evidence', () {
       final history = owner.appendChoiceEvidence(
         history: const Act0LearningEvidenceHistoryV1(),
-        selectedChoiceId: 'cheap_call_large_price',
+        selectedChoiceId: 'bubble_pressure_removes_risk',
         attemptKey: 'w9_hidden_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
 
       _expectActiveMissProjection(
         history: history,
-        conceptFamilyId: 'w9_price_intuition_call_price',
-        repairFocusId: 'w9_cheap_call_price_recognition',
-        skillAtomId: 'w9_call_price_size_read',
-        errorType: 'missed_cheap_call_price',
+        conceptFamilyId: 'w9_tournament_pressure_risk_premium',
+        repairFocusId: 'w9_tournament_pressure_bubble_survival',
+        skillAtomId: 'w9_tournament_pressure_bubble_read',
+        errorType: 'missed_bubble_survival_pressure',
       );
     });
 
     test('later correct hidden W9 evidence is proof-compatible non-causal', () {
       var history = owner.appendChoiceEvidence(
         history: const Act0LearningEvidenceHistoryV1(),
-        selectedChoiceId: 'cheap_call_large_price',
+        selectedChoiceId: 'bubble_pressure_removes_risk',
         attemptKey: 'w9_hidden_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
       history = owner.appendChoiceEvidence(
         history: history,
-        selectedChoiceId: 'cheap_call_small_price',
+        selectedChoiceId: 'bubble_pressure_tightens_risk',
         attemptKey: 'w9_hidden_correct_2',
         decisionTimeBucket: 'under_3s',
       );
 
       _expectLaterCorrectNonCausal(
         history: history,
-        conceptFamilyId: 'w9_price_intuition_call_price',
+        conceptFamilyId: 'w9_tournament_pressure_risk_premium',
       );
     });
   });
@@ -98,23 +98,23 @@ void main() {
   });
 
   group('W9/W10 hidden internal harnesses', () {
-    const w9Harness = Act0W9PriceHiddenEvidenceHarnessV1();
+    const w9Harness = Act0W9TournamentPressureHiddenEvidenceHarnessV1();
     const w10Harness = Act0W10BetPurposeHiddenEvidenceHarnessV1();
 
     test('invoke one supported task end to end', () {
       final w9History = w9Harness.submitChoice(
         history: const Act0LearningEvidenceHistoryV1(),
         worldId: 'world_9',
-        lessonId: 'pot_odds_price_intuition_lite',
-        taskId: 'cheap_call_price_recognition_intro',
-        selectedChoiceId: 'cheap_call_large_price',
+        lessonId: 'tournament_pressure_lite',
+        taskId: 'bubble_survival_pressure_intro',
+        selectedChoiceId: 'bubble_pressure_removes_risk',
         attemptKey: 'w9_harness_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
       expect(w9History.records.single.worldId, 'world_9');
       expect(
         w9History.records.single.conceptFamilyId,
-        'w9_price_intuition_call_price',
+        'w9_tournament_pressure_risk_premium',
       );
       expect(
         w9History.records.single.runKind,
@@ -146,9 +146,9 @@ void main() {
         () => w9Harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_9',
-          lessonId: 'pot_odds_price_intuition_lite',
+          lessonId: 'tournament_pressure_lite',
           taskId: 'other_w9_task',
-          selectedChoiceId: 'cheap_call_small_price',
+          selectedChoiceId: 'bubble_pressure_tightens_risk',
           attemptKey: 'bad_w9_task',
           decisionTimeBucket: 'under_3s',
         ),
@@ -172,8 +172,8 @@ void main() {
 
     test('hidden evidence sources stay route and claim safe', () {
       final sourceFiles = <String>[
-        'lib/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart',
-        'lib/ui_v2/act0_shell/act0_w9_price_hidden_evidence_harness_v1.dart',
+        'lib/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart',
+        'lib/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_evidence_harness_v1.dart',
         'lib/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart',
         'lib/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_evidence_harness_v1.dart',
       ];

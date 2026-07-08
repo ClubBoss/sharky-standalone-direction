@@ -1,12 +1,12 @@
 import 'act0_learning_evidence_contract_v1.dart';
-import 'act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 
-class Act0W9PriceHiddenEvidenceHarnessV1 {
-  const Act0W9PriceHiddenEvidenceHarnessV1({
-    this.owner = const Act0W9PriceHiddenRuntimeSessionOwnerV1(),
+class Act0W9TournamentPressureHiddenEvidenceHarnessV1 {
+  const Act0W9TournamentPressureHiddenEvidenceHarnessV1({
+    this.owner = const Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1(),
   });
 
-  final Act0W9PriceHiddenRuntimeSessionOwnerV1 owner;
+  final Act0W9TournamentPressureHiddenRuntimeSessionOwnerV1 owner;
 
   Object? get practiceLaunchRequest => null;
 

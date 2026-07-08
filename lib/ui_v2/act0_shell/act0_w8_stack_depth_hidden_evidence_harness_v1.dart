@@ -1,12 +1,12 @@
 import 'act0_learning_evidence_contract_v1.dart';
-import 'act0_w8_draws_hidden_runtime_session_owner_v1.dart';
+import 'act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart';
 
-class Act0W8DrawsHiddenEvidenceHarnessV1 {
-  const Act0W8DrawsHiddenEvidenceHarnessV1({
-    this.owner = const Act0W8DrawsHiddenRuntimeSessionOwnerV1(),
+class Act0W8StackDepthHiddenEvidenceHarnessV1 {
+  const Act0W8StackDepthHiddenEvidenceHarnessV1({
+    this.owner = const Act0W8StackDepthHiddenRuntimeSessionOwnerV1(),
   });
 
-  final Act0W8DrawsHiddenRuntimeSessionOwnerV1 owner;
+  final Act0W8StackDepthHiddenRuntimeSessionOwnerV1 owner;
 
   Object? get practiceLaunchRequest => null;
 

@@ -6,8 +6,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runt
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w11_board_texture_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w12_review_decision_hidden_runtime_session_owner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_runtime_session_owner_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_price_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w9_tournament_pressure_hidden_runtime_session_owner_v1.dart';
 
 const _admittedW1W6FixturePaths = <String>[
   'test/fixtures/content_factory_mvp/w1_world_coverage_pilot_v1.json',
@@ -142,8 +142,8 @@ void main() {
   test('W7-W12 route owner specs keep answer and explanation integrity', () {
     final specs = <dynamic>[
       ...act0W7VisibleAceHiddenTaskSpecsV1,
-      ...act0W8DrawsHiddenTaskSpecsV1,
-      ...act0W9PriceHiddenTaskSpecsV1,
+      ...act0W8StackDepthHiddenTaskSpecsV1,
+      ...act0W9TournamentPressureHiddenTaskSpecsV1,
       ...act0W10BetPurposeHiddenTaskSpecsV1,
       ...act0W11BoardTextureHiddenTaskSpecsV1,
       ...act0W12ReviewDecisionHiddenTaskSpecsV1,
@@ -185,19 +185,25 @@ void main() {
     }
   });
 
-  test('W9 price tasks stay classification-only, not hidden pot-odds math', () {
-    for (final spec in act0W9PriceHiddenTaskSpecsV1) {
-      final copy = <String>[
-        spec.boardContext,
-        spec.learnerPrompt,
-        spec.feedbackReason,
-      ].join(' ').toLowerCase();
-      expect(copy, anyOf(contains('pot'), contains('price')));
-      expect(copy, isNot(contains('%')));
-      expect(copy, isNot(contains('odds threshold')));
-      expect(copy, isNot(contains('equity needed')));
-    }
-  });
+  test(
+    'W9 tournament-pressure tasks stay classification-only, not hidden math',
+    () {
+      for (final spec in act0W9TournamentPressureHiddenTaskSpecsV1) {
+        final copy = <String>[
+          spec.boardContext,
+          spec.learnerPrompt,
+          spec.feedbackReason,
+        ].join(' ').toLowerCase();
+        expect(copy, contains('tournament'));
+        expect(copy, contains('pressure'));
+        expect(copy, isNot(contains('%')));
+        expect(copy, isNot(contains('odds threshold')));
+        expect(copy, isNot(contains('equity needed')));
+        expect(copy, isNot(contains('call price')));
+        expect(copy, isNot(contains('pot odds')));
+      }
+    },
+  );
 
   test('W10 value and bluff tasks name target logic without solver claims', () {
     final copy = act0W10BetPurposeHiddenTaskSpecsV1

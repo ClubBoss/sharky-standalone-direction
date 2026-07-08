@@ -5,21 +5,21 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_transfer_projection_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_evidence_harness_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_draws_hidden_runtime_session_owner_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_stack_depth_hidden_evidence_harness_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w8_stack_depth_hidden_runtime_session_owner_v1.dart';
 
 void main() {
   group('W8 internal world source template', () {
-    const owner = Act0W8DrawsHiddenRuntimeSessionOwnerV1();
-    const harness = Act0W8DrawsHiddenEvidenceHarnessV1();
+    const owner = Act0W8StackDepthHiddenRuntimeSessionOwnerV1();
+    const harness = Act0W8StackDepthHiddenEvidenceHarnessV1();
 
     test('contains a coherent four-task hidden learning arc', () {
       expect(owner.taskSpecs, hasLength(4));
       expect(owner.taskSpecs.map((task) => task.taskId), <String>[
-        'flush_draw_recognition_intro',
-        'open_ended_straight_draw_intro',
-        'gutshot_vs_open_ended_comparison_lite',
-        'draw_improvement_potential_transfer_check',
+        'short_stack_all_in_pressure_intro',
+        'deep_stack_postflop_room_intro',
+        'stack_to_pot_commitment_lite',
+        'all_in_threshold_transfer_check',
       ]);
 
       final purposes = owner.taskSpecs
@@ -28,8 +28,8 @@ void main() {
       expect(purposes, hasLength(4));
       for (final task in owner.taskSpecs) {
         expect(task.worldId, 'world_8');
-        expect(task.lessonId, 'draws_equity_intuition_lite');
-        expect(task.conceptFamilyId, 'w8_draw_improvement_potential');
+        expect(task.lessonId, 'stack_depth_risk_control_lite');
+        expect(task.conceptFamilyId, 'w8_stack_depth_risk_control');
         expect(task.practiceCtaAllowed, isFalse);
         expect(
           task.mapperNoTargetReason,
@@ -52,7 +52,7 @@ void main() {
       expect(
         owner.supports(
           worldId: 'world_8',
-          lessonId: 'draws_equity_intuition_lite',
+          lessonId: 'stack_depth_risk_control_lite',
           taskId: 'unowned_w8_task',
         ),
         isFalse,
@@ -60,7 +60,7 @@ void main() {
       expect(
         owner.supports(
           worldId: 'world_7',
-          lessonId: 'draws_equity_intuition_lite',
+          lessonId: 'stack_depth_risk_control_lite',
           taskId: owner.taskSpecs.first.taskId,
         ),
         isFalse,
@@ -137,8 +137,8 @@ void main() {
         () => harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_8',
-          lessonId: 'draws_equity_intuition_lite',
-          taskId: 'open_ended_straight_draw_intro',
+          lessonId: 'stack_depth_risk_control_lite',
+          taskId: 'deep_stack_postflop_room_intro',
           selectedChoiceId: 'unknown_choice',
           attemptKey: 'unknown_choice_attempt',
           decisionTimeBucket: 'under_3s',
@@ -151,10 +151,10 @@ void main() {
         harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_8',
-          lessonId: 'draws_equity_intuition_lite',
-          taskId: 'open_ended_straight_draw_intro',
-          selectedChoiceId: 'straight_draw_only_one_card',
-          attemptKey: 'straight_miss',
+          lessonId: 'stack_depth_risk_control_lite',
+          taskId: 'deep_stack_postflop_room_intro',
+          selectedChoiceId: 'deep_stack_less_room',
+          attemptKey: 'stack_depth_miss',
           decisionTimeBucket: 'under_3s',
         ),
       ).nextRepairCandidate;
@@ -182,7 +182,7 @@ void main() {
       ).toLowerCase();
       for (final forbidden in <String>[
         'gto',
-        'solver',
+        'draw',
         'optimal',
         'perfect',
         'mastered',
@@ -196,7 +196,7 @@ void main() {
         'lite',
         'combo density',
         'card removal',
-        'gutshot',
+        'solver',
         'thin value',
         'fold pressure',
         'suited texture pressure',
