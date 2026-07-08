@@ -19414,6 +19414,17 @@ final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
   question: 'What is the most useful quick tag?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'maniac',
+      label: 'Overbluffing maniac',
+      isCorrect: false,
+      preferredLabel: 'Tight-folding profile (nit)',
+      betterAnswerLabel: 'Tight-folding profile (nit)',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Opposite profile.',
+      feedbackReason:
+          'A maniac over-aggresses. Here the evidence is repeated folds and low contest frequency; if the same player were raising and barreling often, the aggressive tag would become stronger.',
+    ),
+    Act0RunnerOptionV1(
       id: 'nit',
       label: 'Tight-folding profile (nit)',
       isCorrect: true,
@@ -19424,26 +19435,15 @@ final _w10NitTagRunner = _w10PlayerTypeIntroRunner.copyWith(
           'Frequent folds and low aggression map to a tight profile. That supports selective steal pressure.',
     ),
     Act0RunnerOptionV1(
-      id: 'maniac',
-      label: 'Overbluffing maniac',
-      isCorrect: false,
-      preferredLabel: 'Tight-folding profile (nit)',
-      betterAnswerLabel: 'Tight-folding profile (nit)',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Opposite profile.',
-      feedbackReason:
-          'A maniac over-aggresses. Here the evidence is repeated folds and low contest frequency.',
-    ),
-    Act0RunnerOptionV1(
       id: 'unknown',
-      label: 'No read yet, ignore it',
+      label: 'Wait for one more orbit before adjusting',
       isCorrect: false,
       preferredLabel: 'Tight-folding profile (nit)',
       betterAnswerLabel: 'Tight-folding profile (nit)',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable caution.',
       feedbackReason:
-          'Avoid overfitting tiny samples, but repeated folds are enough to begin a light exploit adjustment.',
+          'Avoid overfitting tiny samples, but repeated folds are enough to begin a light exploit adjustment. If this were only one folded orbit, waiting would be stronger.',
     ),
   ],
 );
@@ -19453,8 +19453,30 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
   lessonId: 'w10_loose_passive_tag',
   caption: 'Villain calls often preflop and postflop but rarely raises.',
   hint: 'Calling wide without raises signals a common profile.',
-  question: 'What quick tag fits best?',
+  question: 'Which profile matches the repeated calling pattern?',
   options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'tight_aggressive',
+      label: 'Tight-aggressive reg',
+      isCorrect: false,
+      preferredLabel: 'Loose-passive caller',
+      betterAnswerLabel: 'Loose-passive caller',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Not this one.',
+      feedbackReason:
+          'Tight-aggressive profiles fold more and raise more. This pattern is call-heavy and passive; if raises appeared with tight selection, the aggressive tag would fit better.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'random',
+      label: 'Possible sample noise, keep the tag light',
+      isCorrect: false,
+      preferredLabel: 'Loose-passive caller',
+      betterAnswerLabel: 'Loose-passive caller',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Could happen short term.',
+      feedbackReason:
+          'Short samples can mislead, but repeated call-heavy behavior is actionable enough for mild value-heavy adjustment. If calls were isolated, keeping the tag light would be better.',
+    ),
     Act0RunnerOptionV1(
       id: 'loose_passive',
       label: 'Loose-passive caller',
@@ -19465,28 +19487,6 @@ final _w10LoosePassiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
       feedbackReason:
           'Frequent calls with low raise rate is the classic loose-passive tendency.',
     ),
-    Act0RunnerOptionV1(
-      id: 'tight_aggressive',
-      label: 'Tight-aggressive reg',
-      isCorrect: false,
-      preferredLabel: 'Loose-passive caller',
-      betterAnswerLabel: 'Loose-passive caller',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Not this one.',
-      feedbackReason:
-          'Tight-aggressive profiles fold more and raise more. This pattern is call-heavy and passive.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'random',
-      label: 'Just random variance',
-      isCorrect: false,
-      preferredLabel: 'Loose-passive caller',
-      betterAnswerLabel: 'Loose-passive caller',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Could happen short term.',
-      feedbackReason:
-          'Short samples can mislead, but repeated call-heavy behavior is actionable enough for mild value-heavy adjustment.',
-    ),
   ],
 );
 
@@ -19495,7 +19495,7 @@ final _w10OveraggressiveTagRunner = _w10PlayerTypeIntroRunner.copyWith(
   lessonId: 'w10_overaggressive_tag',
   caption: 'Villain double-barrels missed boards and raises often.',
   hint: 'Frequent pressure with weak showdowns points to one useful tag.',
-  question: 'What quick tag fits best?',
+  question: 'Which tag fits repeated pressure with weak showdowns?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'overaggressive',
@@ -19572,6 +19572,17 @@ final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
   question: 'What is the clean first exploit?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'bluff_more_streets',
+      label: 'Add more turn pressure first',
+      isCorrect: false,
+      preferredLabel: 'Open slightly wider in late position',
+      betterAnswerLabel: 'Open slightly wider in late position',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too much change.',
+      feedbackReason:
+          'That is a broad multi-lever shift. Start with a simpler preflop widen exploit first; extra barrels become better only after postflop folds also show up.',
+    ),
+    Act0RunnerOptionV1(
       id: 'open_wider',
       label: 'Open slightly wider in late position',
       isCorrect: true,
@@ -19582,26 +19593,15 @@ final _w10VsNitOpenWiderRunner = _w10OneLeverIntroRunner.copyWith(
           'Against overfolders, wider late opens capture blinds more often with low resistance.',
     ),
     Act0RunnerOptionV1(
-      id: 'bluff_more_streets',
-      label: 'Triple-barrel every bluff spot',
-      isCorrect: false,
-      preferredLabel: 'Open slightly wider in late position',
-      betterAnswerLabel: 'Open slightly wider in late position',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too much change.',
-      feedbackReason:
-          'That is a broad multi-lever shift. Start with a simpler preflop widen exploit first.',
-    ),
-    Act0RunnerOptionV1(
       id: 'no_change',
-      label: 'Keep baseline and ignore read',
+      label: 'Keep baseline until blinds show it again',
       isCorrect: false,
       preferredLabel: 'Open slightly wider in late position',
       betterAnswerLabel: 'Open slightly wider in late position',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe but misses value.',
       feedbackReason:
-          'Baseline is okay when uncertain, but repeated overfolding supports a measured widen adjustment.',
+          'Baseline is okay when uncertain, but repeated overfolding supports a measured widen adjustment. If the blinds defend again, baseline becomes stronger.',
     ),
   ],
 );
@@ -19613,16 +19613,6 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
   hint: 'Call-heavy opponents pay off thin value more often.',
   question: 'What is the cleaner exploit lever?',
   options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'value_heavier',
-      label: 'Value-bet heavier, bluff less often',
-      isCorrect: true,
-      preferredLabel: 'Value-bet heavier, bluff less often',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason:
-          'Overcallers pay value and resist bluffs. Shift the mix toward value first.',
-    ),
     Act0RunnerOptionV1(
       id: 'bluff_heavier',
       label: 'Bluff more anyway',
@@ -19644,6 +19634,16 @@ final _w10VsCallerValueHeavierRunner = _w10OneLeverIntroRunner.copyWith(
       feedbackTitle: 'Too coarse.',
       feedbackReason:
           'You want a value-heavy mix, not a one-size all-in strategy. Keep your line flexible and disciplined.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'value_heavier',
+      label: 'Value-bet heavier, bluff less often',
+      isCorrect: true,
+      preferredLabel: 'Value-bet heavier, bluff less often',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Spot on.',
+      feedbackReason:
+          'Overcallers pay value and resist bluffs. Shift the mix toward value first.',
     ),
   ],
 );
@@ -19717,16 +19717,6 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'lean_value',
-      label: 'Lean value, bluff less',
-      isCorrect: true,
-      preferredLabel: 'Lean value, bluff less',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp live adjustment.',
-      feedbackReason:
-          'That is the real-table transfer. If BB calls too wide, top pair gets paid by weaker hands more often, so value rises and bluff frequency should shrink.',
-    ),
-    Act0RunnerOptionV1(
       id: 'bluff_more',
       label: 'Bluff more versus passive BB',
       isCorrect: false,
@@ -19736,6 +19726,16 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
       feedbackTitle: 'Wrong mix shift.',
       feedbackReason:
           'Passive callers do not fold enough to make extra bluffs clean. The better first lever is value heavier, bluff lighter.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'lean_value',
+      label: 'Lean value, bluff less',
+      isCorrect: true,
+      preferredLabel: 'Lean value, bluff less',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Sharp live adjustment.',
+      feedbackReason:
+          'That is the real-table transfer. If BB calls too wide, top pair gets paid by weaker hands more often, so value rises and bluff frequency should shrink.',
     ),
     Act0RunnerOptionV1(
       id: 'force_big_pot',
@@ -19798,6 +19798,28 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   question: 'What is the cleaner exploit response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'fold_everything',
+      label: 'Fold the weakest bluff-catchers first',
+      isCorrect: false,
+      preferredLabel: 'Bluff-catch a bit wider with blockers',
+      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too passive.',
+      feedbackReason:
+          'Versus overbluffers, over-folding gives away too much EV. You need selective bluff-catch defense; tighter folding becomes better against value-heavy lines.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'hero_call_any',
+      label: 'Call more rivers without checking blockers',
+      isCorrect: false,
+      preferredLabel: 'Bluff-catch a bit wider with blockers',
+      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Too extreme.',
+      feedbackReason:
+          'You should widen selectively, not call blindly. Guardrails keep exploit from becoming a punt; broader calls need blockers and a cleaner bluff-heavy read.',
+    ),
+    Act0RunnerOptionV1(
       id: 'bluffcatch_more',
       label: 'Bluff-catch a bit wider with blockers',
       isCorrect: true,
@@ -19807,28 +19829,6 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       feedbackReason:
           'Against overbluffs, selective wider bluff-catching is profitable when your line blocks value combos.',
     ),
-    Act0RunnerOptionV1(
-      id: 'fold_everything',
-      label: 'Fold everything to avoid variance',
-      isCorrect: false,
-      preferredLabel: 'Bluff-catch a bit wider with blockers',
-      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too passive.',
-      feedbackReason:
-          'Versus overbluffers, over-folding gives away too much EV. You need selective bluff-catch defense.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'hero_call_any',
-      label: 'Hero-call every river',
-      isCorrect: false,
-      preferredLabel: 'Bluff-catch a bit wider with blockers',
-      betterAnswerLabel: 'Bluff-catch a bit wider with blockers',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Too extreme.',
-      feedbackReason:
-          'You should widen selectively, not call blindly. Guardrails keep exploit from becoming a punt.',
-    ),
   ],
 );
 
@@ -19837,7 +19837,7 @@ final _w10UnderbluffFoldMoreRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   lessonId: 'w10_underbluff_fold_more',
   caption: 'Villain reaches river with strong value and few bluffs.',
   hint: 'Underbluffing changes bluff-catch requirements.',
-  question: 'What is the sharper adjustment?',
+  question: 'How should low bluff frequency change your river calls?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_more',
@@ -19882,16 +19882,6 @@ final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   question: 'What is the cleaner exploit posture?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'small_probe',
-      label: 'Make only a small adjustment and keep watching',
-      isCorrect: true,
-      preferredLabel: 'Make only a small adjustment and keep watching',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
-      feedbackReason:
-          'Two hands can justify attention, not a full strategy swing. Small exploit probes plus more evidence keep your line disciplined.',
-    ),
-    Act0RunnerOptionV1(
       id: 'full_counter',
       label: 'Commit to a full counter-strategy immediately',
       isCorrect: false,
@@ -19901,6 +19891,16 @@ final _w10GuardrailSampleSizeRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       feedbackTitle: 'Too reactive.',
       feedbackReason:
           'Guardrails exist to stop overreaction on thin samples. Extreme counters create noise faster than value.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'small_probe',
+      label: 'Make only a small adjustment and keep watching',
+      isCorrect: true,
+      preferredLabel: 'Make only a small adjustment and keep watching',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Strong choice.',
+      feedbackReason:
+          'Two hands can justify attention, not a full strategy swing. Small exploit probes plus more evidence keep your line disciplined.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore_everything',
@@ -19935,6 +19935,28 @@ final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   question: 'What is the cleaner first step?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'all_changes',
+      label: 'Pair the blind steal with thinner river value',
+      isCorrect: false,
+      preferredLabel: 'Choose one primary tendency and act on it',
+      betterAnswerLabel: 'Choose one primary tendency and act on it',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too chaotic.',
+      feedbackReason:
+          'Pairing two levers hides whether your exploit is working. Start with one controllable lever; the second adjustment is stronger after the first read holds.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'ignore_read',
+      label: 'Wait for one more round before tagging',
+      isCorrect: false,
+      preferredLabel: 'Choose one primary tendency and act on it',
+      betterAnswerLabel: 'Choose one primary tendency and act on it',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Safe default.',
+      feedbackReason:
+          'Waiting can be reasonable with a thin sample, but reliable repeated reads deserve small targeted adjustment now.',
+    ),
+    Act0RunnerOptionV1(
       id: 'primary_tag',
       label: 'Choose one primary tendency and act on it',
       isCorrect: true,
@@ -19943,28 +19965,6 @@ final _w10CheckpointTagLineRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
           'Prioritizing one tendency keeps the exploit coherent and measurable before layering more changes.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'all_changes',
-      label: 'Change preflop and postflop everything now',
-      isCorrect: false,
-      preferredLabel: 'Choose one primary tendency and act on it',
-      betterAnswerLabel: 'Choose one primary tendency and act on it',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too chaotic.',
-      feedbackReason:
-          'Full rewrites hide whether your exploit is working. Start with one controllable lever.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'ignore_read',
-      label: 'Ignore reads and stay static',
-      isCorrect: false,
-      preferredLabel: 'Choose one primary tendency and act on it',
-      betterAnswerLabel: 'Choose one primary tendency and act on it',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Safe default.',
-      feedbackReason:
-          'Static play is safer than chaos, but reliable reads deserve small targeted adjustment.',
     ),
   ],
 );
@@ -20019,16 +20019,6 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
   question: 'What is the best guardrail action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'small_adjust',
-      label: 'Make a small adjustment and gather more evidence',
-      isCorrect: true,
-      preferredLabel: 'Make a small adjustment and gather more evidence',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Excellent spot.',
-      feedbackReason:
-          'Guardrails mean respecting uncertainty. Small exploit moves plus more data beats extreme reactions.',
-    ),
-    Act0RunnerOptionV1(
       id: 'hard_counter',
       label: 'Hard-counter every future street now',
       isCorrect: false,
@@ -20040,6 +20030,16 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
           'One hand is rarely enough for a full counter-strategy. Overreaction creates new leaks.',
     ),
     Act0RunnerOptionV1(
+      id: 'small_adjust',
+      label: 'Make a small adjustment and gather more evidence',
+      isCorrect: true,
+      preferredLabel: 'Make a small adjustment and gather more evidence',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Excellent spot.',
+      feedbackReason:
+          'Guardrails mean respecting uncertainty. Small exploit moves plus more data beats extreme reactions.',
+    ),
+    Act0RunnerOptionV1(
       id: 'no_adjust',
       label: 'Ignore all reads forever',
       isCorrect: false,
@@ -20048,7 +20048,7 @@ final _w10CheckpointGuardrailLineRunner = _w10ExploitGuardrailsIntroRunner.copyW
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too rigid.',
       feedbackReason:
-          'You should avoid overreaction, but never adjusting also misses exploit value.',
+          'You should avoid overreaction, but never adjusting also misses exploit value. Baseline is best only if the table cue stops repeating.',
     ),
   ],
 );
@@ -20089,25 +20089,25 @@ final _world10PlayerAdjustmentCheckpointRunner = _w10ExploitGuardrailsIntroRunne
     ),
     Act0RunnerOptionV1(
       id: 'intuition_only',
-      label: 'Pure intuition with no structure',
+      label: 'Use table feel without a written loop',
       isCorrect: false,
       preferredLabel: 'Structured exploit before transfer',
       betterAnswerLabel: 'Structured exploit before transfer',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
-          'Intuition helps, but without structure your adjustments become inconsistent and hard to trust.',
+          'Intuition helps, but without structure your adjustments become inconsistent and hard to trust. Table feel becomes useful after it is tied to one repeatable cue.',
     ),
     Act0RunnerOptionV1(
       id: 'baseline_only',
-      label: 'Never adjust, stay baseline forever',
+      label: 'Stay baseline until another table cue confirms it',
       isCorrect: false,
       preferredLabel: 'Structured exploit before transfer',
       betterAnswerLabel: 'Structured exploit before transfer',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Safe but capped.',
       feedbackReason:
-          'Baseline protects you, but learning to exploit safely is the point of this world before real-play transfer.',
+          'Baseline protects you, but learning to exploit safely is the point of this world before real-play transfer. Staying baseline is stronger when no tendency is reliable.',
     ),
   ],
 );
@@ -20126,18 +20126,8 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
       'Real-table exploit transfer works when one repeated tendency turns into one small tracked adjustment.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'widen_late_steals_small',
-      label: 'Widen late steals a bit',
-      isCorrect: true,
-      preferredLabel: 'Widen late steals a bit',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'That is the clean transfer: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.',
-    ),
-    Act0RunnerOptionV1(
       id: 'rewrite_everything',
-      label: 'Rewrite everything now',
+      label: 'Widen steals and add more barrels too',
       isCorrect: false,
       preferredLabel: 'Widen late steals a bit',
       betterAnswerLabel: 'Widen late steals a bit',
@@ -20156,6 +20146,16 @@ final _w10TableAdjustmentNoticeRunner = _w10CheckpointLeverLineRunner.copyWith(
       feedbackTitle: 'Safe fallback.',
       feedbackReason:
           'Baseline feels safe because it avoids overreaction. But repeated overfolding is enough evidence for one small exploit shift. The cleaner read is measured adjustment, not permanent passivity.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'widen_late_steals_small',
+      label: 'Widen late steals a bit',
+      isCorrect: true,
+      preferredLabel: 'Widen late steals a bit',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Clean execution.',
+      feedbackReason:
+          'That is the clean transfer: repeated blind overfolding supports one small late-position widen, not a full strategy rewrite.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -20197,16 +20197,6 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
   question: 'What is the cleaner session objective?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'one_focus',
-      label: 'One measurable focus for the whole session',
-      isCorrect: true,
-      preferredLabel: 'One measurable focus for the whole session',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Stack risk: correct.',
-      feedbackReason:
-          'A single measurable focus transfers training into real play with less mental overload.',
-    ),
-    Act0RunnerOptionV1(
       id: 'many_focuses',
       label: 'Track six improvements at once',
       isCorrect: false,
@@ -20216,6 +20206,16 @@ final _w11PlanFocusChoiceRunner = _w11SessionPlanIntroRunner.copyWith(
       feedbackTitle: 'Too much load.',
       feedbackReason:
           'Too many goals blur feedback and weaken transfer. One target gives cleaner repetition.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'one_focus',
+      label: 'One measurable focus for the whole session',
+      isCorrect: true,
+      preferredLabel: 'One measurable focus for the whole session',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Stack risk: correct.',
+      feedbackReason:
+          'A single measurable focus transfers training into real play with less mental overload.',
     ),
     Act0RunnerOptionV1(
       id: 'no_plan',
@@ -20236,18 +20236,8 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
   lessonId: 'w11_plan_avoid_overload',
   caption: 'Your prior session had scattered notes and no clear pattern.',
   hint: 'Reduce cognitive load first.',
-  question: 'What is the sharper adjustment?',
+  question: 'How should this session goal be narrowed?',
   options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'narrow_goal',
-      label: 'Narrow to one transfer goal next session',
-      isCorrect: true,
-      preferredLabel: 'Narrow to one transfer goal next session',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'One goal clears the noise.',
-      feedbackReason:
-          'Transfer improves when you narrow scope and collect cleaner evidence on one behavior.',
-    ),
     Act0RunnerOptionV1(
       id: 'more_complexity',
       label: 'Add more tracking categories',
@@ -20270,6 +20260,16 @@ final _w11PlanAvoidOverloadRunner = _w11SessionPlanIntroRunner.copyWith(
       feedbackReason:
           'Removing goals avoids overload but also weakens deliberate transfer. Keep one simple target.',
     ),
+    Act0RunnerOptionV1(
+      id: 'narrow_goal',
+      label: 'Narrow to one transfer goal next session',
+      isCorrect: true,
+      preferredLabel: 'Narrow to one transfer goal next session',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'One goal clears the noise.',
+      feedbackReason:
+          'Transfer improves when you narrow scope and collect cleaner evidence on one behavior.',
+    ),
   ],
 );
 
@@ -20280,13 +20280,13 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       'Real table. You have one hour before a tired evening session starts and the first orbit will move fast.',
   hint:
       'Pick one focus you can notice as a trigger during the session and review after the session ends.',
-  question: 'What is the cleaner session plan here?',
+  question: 'What should Hero choose before sitting in?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'one_focus_loop',
-      label: 'Pick one focus for the session',
+      label: 'Track only the blind-defense leak today',
       isCorrect: true,
-      preferredLabel: 'Pick one focus for the session',
+      preferredLabel: 'Track only the blind-defense leak today',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean transfer plan.',
       feedbackReason:
@@ -20296,8 +20296,8 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       id: 'many_focuses_now',
       label: 'Track every leak from the start',
       isCorrect: false,
-      preferredLabel: 'Pick one focus for the session',
-      betterAnswerLabel: 'Pick one focus for the session',
+      preferredLabel: 'Track only the blind-defense leak today',
+      betterAnswerLabel: 'Track only the blind-defense leak today',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too noisy.',
       feedbackReason:
@@ -20307,8 +20307,8 @@ final _w11PlanTableFocusTransferRunner = _w11SessionPlanIntroRunner.copyWith(
       id: 'no_focus_until_review',
       label: 'Play first and decide later',
       isCorrect: false,
-      preferredLabel: 'Pick one focus for the session',
-      betterAnswerLabel: 'Pick one focus for the session',
+      preferredLabel: 'Track only the blind-defense leak today',
+      betterAnswerLabel: 'Track only the blind-defense leak today',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Too loose a loop.',
       feedbackReason:
@@ -20364,6 +20364,17 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
   question: 'What is the cleaner transfer action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'threebarrel_all',
+      label: 'Add turn barrels against the blinds too',
+      isCorrect: false,
+      preferredLabel: 'Widen late steals slightly',
+      betterAnswerLabel: 'Widen late steals slightly',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too broad.',
+      feedbackReason:
+          'The trigger is preflop overfolding. Use a matching preflop lever first, not a full postflop rewrite.',
+    ),
+    Act0RunnerOptionV1(
       id: 'widen_late_steal',
       label: 'Widen late steals slightly',
       isCorrect: true,
@@ -20374,19 +20385,8 @@ final _w11TriggerOverfoldBlindsRunner = _w11TriggerReadIntroRunner.copyWith(
           'This is a direct trigger-to-lever transfer with clear evidence and low complexity.',
     ),
     Act0RunnerOptionV1(
-      id: 'threebarrel_all',
-      label: 'Shift to heavy multi-street bluff plan',
-      isCorrect: false,
-      preferredLabel: 'Widen late steals slightly',
-      betterAnswerLabel: 'Widen late steals slightly',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too broad.',
-      feedbackReason:
-          'The trigger is preflop overfolding. Use a matching preflop lever first, not a full postflop rewrite.',
-    ),
-    Act0RunnerOptionV1(
       id: 'ignore_trigger',
-      label: 'Ignore the trigger and keep static',
+      label: 'Wait one more orbit before using the trigger',
       isCorrect: false,
       preferredLabel: 'Widen late steals slightly',
       betterAnswerLabel: 'Widen late steals slightly',
@@ -20406,18 +20406,8 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
   question: 'What is the sharper one-lever response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'value_heavier',
-      label: 'Bet value heavier and trim bluffs',
-      isCorrect: true,
-      preferredLabel: 'Bet value heavier and trim bluffs',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Callers want value.',
-      feedbackReason:
-          'Against overcalls, value-heavy transfer lines outperform bluff-heavy defaults.',
-    ),
-    Act0RunnerOptionV1(
       id: 'bluff_more',
-      label: 'Bluff more since they look weak',
+      label: 'Probe with more bluffs first',
       isCorrect: false,
       preferredLabel: 'Bet value heavier and trim bluffs',
       betterAnswerLabel: 'Bet value heavier and trim bluffs',
@@ -20428,7 +20418,7 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'no_change',
-      label: 'Never adjust in-session',
+      label: 'Save the adjustment for review only',
       isCorrect: false,
       preferredLabel: 'Bet value heavier and trim bluffs',
       betterAnswerLabel: 'Bet value heavier and trim bluffs',
@@ -20436,6 +20426,16 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
       feedbackTitle: 'Too rigid.',
       feedbackReason:
           'Rigid baseline avoids errors but gives up clear transfer edges from repeated triggers.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'value_heavier',
+      label: 'Bet value heavier and trim bluffs',
+      isCorrect: true,
+      preferredLabel: 'Bet value heavier and trim bluffs',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Callers want value.',
+      feedbackReason:
+          'Against overcalls, value-heavy transfer lines outperform bluff-heavy defaults.',
     ),
   ],
 );
@@ -20527,16 +20527,6 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'fold_turn',
-      label: 'Fold the turn',
-      isCorrect: true,
-      preferredLabel: 'Fold the turn',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong contrast read.',
-      feedbackReason:
-          'Top pair still looks decent, which makes calling tempting. But the price is now bad, the action shows pressure, and deep stacks keep costly future risk alive.',
-    ),
-    Act0RunnerOptionV1(
       id: 'call_top_pair',
       label: 'Call the top pair',
       isCorrect: false,
@@ -20546,6 +20536,16 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       feedbackTitle: 'Tempting hand-label trap.',
       feedbackReason:
           'Top pair is why this feels close, but real play is not only hand naming. Price, action trail, and deeper future risk now lean against the continue.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'fold_turn',
+      label: 'Fold the turn',
+      isCorrect: true,
+      preferredLabel: 'Fold the turn',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Strong contrast read.',
+      feedbackReason:
+          'Top pair still looks decent, which makes calling tempting. But the price is now bad, the action shows pressure, and deep stacks keep costly future risk alive.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_turn',
@@ -20614,16 +20614,6 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
   question: 'What is the clean first review action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'pick_priority',
-      label: 'Select one repeated leak as priority',
-      isCorrect: true,
-      preferredLabel: 'Select one repeated leak as priority',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pick the repeat leak.',
-      feedbackReason:
-          'Choosing one repeated leak gives the highest transfer value for the next focused session.',
-    ),
-    Act0RunnerOptionV1(
       id: 'fix_everything',
       label: 'Fix all leaks at once tomorrow',
       isCorrect: false,
@@ -20644,6 +20634,16 @@ final _w11ReviewPickLeakRunner = _w11ReviewLoopIntroRunner.copyWith(
       feedbackTitle: 'Volume helps.',
       feedbackReason:
           'Volume without structured review slows improvement. One focused repair keeps the loop productive.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'pick_priority',
+      label: 'Select one repeated leak as priority',
+      isCorrect: true,
+      preferredLabel: 'Select one repeated leak as priority',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Pick the repeat leak.',
+      feedbackReason:
+          'Choosing one repeated leak gives the highest transfer value for the next focused session.',
     ),
   ],
 );
@@ -20709,16 +20709,6 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   question: 'What is the clean transfer plan?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'simple_focus',
-      label: 'Set one low-friction focus target',
-      isCorrect: true,
-      preferredLabel: 'Set one low-friction focus target',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Low-energy plan first.',
-      feedbackReason:
-          'Low-energy sessions still transfer well when focus is clear, small, and measurable.',
-    ),
-    Act0RunnerOptionV1(
       id: 'complex_plan',
       label: 'Set a complex multi-phase improvement plan',
       isCorrect: false,
@@ -20728,6 +20718,16 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       feedbackTitle: 'Too heavy.',
       feedbackReason:
           'Complex plans collapse under fatigue. Transfer needs practical execution, not idealized complexity.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'simple_focus',
+      label: 'Set one low-friction focus target',
+      isCorrect: true,
+      preferredLabel: 'Set one low-friction focus target',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Low-energy plan first.',
+      feedbackReason:
+          'Low-energy sessions still transfer well when focus is clear, small, and measurable.',
     ),
     Act0RunnerOptionV1(
       id: 'no_objective',
@@ -20751,18 +20751,8 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   question: 'Which transfer action is best?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'one_trigger_action',
-      label: 'Activate one trigger-action lever now',
-      isCorrect: true,
-      preferredLabel: 'Activate one trigger-action lever now',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'One trigger, one lever.',
-      feedbackReason:
-          'Single trigger-action execution keeps transfer disciplined and observable in real play.',
-    ),
-    Act0RunnerOptionV1(
       id: 'all_trigger_actions',
-      label: 'Apply all exploit levers immediately',
+      label: 'Use both trigger and review changes now',
       isCorrect: false,
       preferredLabel: 'Activate one trigger-action lever now',
       betterAnswerLabel: 'Activate one trigger-action lever now',
@@ -20773,7 +20763,7 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'ignore_triggers',
-      label: 'Ignore triggers and wait for review only',
+      label: 'Log the trigger and wait for review',
       isCorrect: false,
       preferredLabel: 'Activate one trigger-action lever now',
       betterAnswerLabel: 'Activate one trigger-action lever now',
@@ -20781,6 +20771,16 @@ final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       feedbackTitle: 'Review matters.',
       feedbackReason:
           'Review is important, but in-session trigger execution is the transfer mechanism itself.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'one_trigger_action',
+      label: 'Activate one trigger-action lever now',
+      isCorrect: true,
+      preferredLabel: 'Activate one trigger-action lever now',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'One trigger, one lever.',
+      feedbackReason:
+          'Single trigger-action execution keeps transfer disciplined and observable in real play.',
     ),
   ],
 );
@@ -20849,16 +20849,6 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'call_in_position',
-      label: 'Call in position and keep the range wide',
-      isCorrect: true,
-      preferredLabel: 'Call in position and keep the range wide',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Integrated read.',
-      feedbackReason:
-          'Position, top pair, and a still-manageable stack depth support a continue, but the bigger price and two-tone board argue for control rather than immediate escalation.',
-    ),
-    Act0RunnerOptionV1(
       id: 'raise_for_protection',
       label: 'Raise now for protection',
       isCorrect: false,
@@ -20868,6 +20858,16 @@ final _w11CheckpointMixedTableLineRunner = _w11ReviewLoopIntroRunner.copyWith(
       feedbackTitle: 'Tempting pressure line.',
       feedbackReason:
           'Protection is the tempting idea, but the full table read is more mixed: position helps, stack depth still leaves risk, and the board is not dry enough to force a bigger pot now.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call_in_position',
+      label: 'Call in position and keep the range wide',
+      isCorrect: true,
+      preferredLabel: 'Call in position and keep the range wide',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Integrated read.',
+      feedbackReason:
+          'Position, top pair, and a still-manageable stack depth support a continue, but the bigger price and two-tone board argue for control rather than immediate escalation.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_to_pressure',
@@ -20917,18 +20917,8 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
   ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'repeatable_loop',
-      label: 'A repeatable daily transfer loop',
-      isCorrect: true,
-      preferredLabel: 'A repeatable daily transfer loop',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Sharp read.',
-      feedbackReason:
-          'That is the intended endpoint: practical, repeatable transfer from learning into daily table decisions.',
-    ),
-    Act0RunnerOptionV1(
       id: 'one_time_mastery',
-      label: 'One big session to master everything',
+      label: 'One large review block after the session',
       isCorrect: false,
       preferredLabel: 'A repeatable daily transfer loop',
       betterAnswerLabel: 'A repeatable daily transfer loop',
@@ -20939,7 +20929,7 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'content_only',
-      label: 'More content without loop execution',
+      label: 'Study another concept before looping it',
       isCorrect: false,
       preferredLabel: 'A repeatable daily transfer loop',
       betterAnswerLabel: 'A repeatable daily transfer loop',
@@ -20947,6 +20937,16 @@ final _world11RealPlayCheckpointRunner = _w11ReviewLoopIntroRunner.copyWith(
       feedbackTitle: 'Partial progress.',
       feedbackReason:
           'Content helps, but transfer happens only when lessons are converted into repeated session behavior and review.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'repeatable_loop',
+      label: 'A repeatable daily transfer loop',
+      isCorrect: true,
+      preferredLabel: 'A repeatable daily transfer loop',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Sharp read.',
+      feedbackReason:
+          'That is the intended endpoint: practical, repeatable transfer from learning into daily table decisions.',
     ),
   ],
 );
@@ -20978,13 +20978,13 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
   caption:
       'You folded a marginal bluff-catcher and villain later showed a bluff.',
   hint: 'Do not auto-label by reveal result only.',
-  question: 'What is the sharper review reaction?',
+  question: 'How should Hero grade this losing fold?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'process_review',
-      label: 'Review the decision process before judging result',
+      label: 'Check the cues before judging the result',
       isCorrect: true,
-      preferredLabel: 'Review the decision process before judging result',
+      preferredLabel: 'Check the cues before judging the result',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Process beats reveal.',
       feedbackReason:
@@ -20992,10 +20992,10 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'instant_regret',
-      label: 'Assume fold was always wrong',
+      label: 'Mark the fold suspicious because it lost',
       isCorrect: false,
-      preferredLabel: 'Review the decision process before judging result',
-      betterAnswerLabel: 'Review the decision process before judging result',
+      preferredLabel: 'Check the cues before judging the result',
+      betterAnswerLabel: 'Check the cues before judging the result',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Outcome trap.',
       feedbackReason:
@@ -21003,10 +21003,10 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'ignore_hand',
-      label: 'Ignore the hand completely',
+      label: 'Move on after a quick note only',
       isCorrect: false,
-      preferredLabel: 'Review the decision process before judging result',
-      betterAnswerLabel: 'Review the decision process before judging result',
+      preferredLabel: 'Check the cues before judging the result',
+      betterAnswerLabel: 'Check the cues before judging the result',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Avoids tilt.',
       feedbackReason:
@@ -21023,16 +21023,6 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
   question: 'What is the best mindset response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'flag_leak',
-      label: 'Flag the loose call as a possible leak',
-      isCorrect: true,
-      preferredLabel: 'Flag the loose call as a possible leak',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Win can hide a leak.',
-      feedbackReason:
-          'Good results can mask weak process. Flagging the decision keeps your learning honest.',
-    ),
-    Act0RunnerOptionV1(
       id: 'celebrate_only',
       label: 'Result was good so process is good',
       isCorrect: false,
@@ -21042,6 +21032,16 @@ final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
       feedbackTitle: 'Result bias.',
       feedbackReason:
           'Outcome can be lucky. Process discipline means auditing suspicious calls even after wins.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'flag_leak',
+      label: 'Flag the loose call as a possible leak',
+      isCorrect: true,
+      preferredLabel: 'Flag the loose call as a possible leak',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Win can hide a leak.',
+      feedbackReason:
+          'Good results can mask weak process. Flagging the decision keeps your learning honest.',
     ),
     Act0RunnerOptionV1(
       id: 'self_blame',
@@ -21097,18 +21097,8 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
   question: 'What is the cleaner immediate action?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'reset_protocol',
-      label: 'Run short reset protocol before next major spot',
-      isCorrect: true,
-      preferredLabel: 'Run short reset protocol before next major spot',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Reset before next hand.',
-      feedbackReason:
-          'A fast reset protects your next decisions from emotional carryover.',
-    ),
-    Act0RunnerOptionV1(
       id: 'revenge_hand',
-      label: 'Force action to win chips back now',
+      label: 'Take the next thin edge to regain chips',
       isCorrect: false,
       preferredLabel: 'Run short reset protocol before next major spot',
       betterAnswerLabel: 'Run short reset protocol before next major spot',
@@ -21119,7 +21109,7 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'quit_immediately',
-      label: 'Auto-quit session every time',
+      label: 'End the orbit before deciding to continue',
       isCorrect: false,
       preferredLabel: 'Run short reset protocol before next major spot',
       betterAnswerLabel: 'Run short reset protocol before next major spot',
@@ -21127,6 +21117,16 @@ final _w12AfterBadBeatResetRunner = _w12TiltResetIntroRunner.copyWith(
       feedbackTitle: 'Sometimes valid.',
       feedbackReason:
           'Ending session can help if control is gone, but the first step is a brief reset and re-check.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'reset_protocol',
+      label: 'Run short reset protocol before next major spot',
+      isCorrect: true,
+      preferredLabel: 'Run short reset protocol before next major spot',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Reset before next hand.',
+      feedbackReason:
+          'A fast reset protects your next decisions from emotional carryover.',
     ),
   ],
 );
@@ -21150,7 +21150,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'self_attack',
-      label: 'Mentally attack yourself for several orbits',
+      label: 'Replay the mistake for the next few hands',
       isCorrect: false,
       preferredLabel: 'Log leak briefly and reset to current hand',
       betterAnswerLabel: 'Log leak briefly and reset to current hand',
@@ -21161,7 +21161,7 @@ final _w12AfterMistakeResetRunner = _w12TiltResetIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'deny_mistake',
-      label: 'Pretend mistake did not happen',
+      label: 'Skip the note and rely on memory',
       isCorrect: false,
       preferredLabel: 'Log leak briefly and reset to current hand',
       betterAnswerLabel: 'Log leak briefly and reset to current hand',
@@ -21212,6 +21212,17 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   question: 'What is the stronger mindset line?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'prove_point',
+      label: 'Widen the next close spot to answer back',
+      isCorrect: false,
+      preferredLabel: 'Stick to process and planned exploit line',
+      betterAnswerLabel: 'Stick to process and planned exploit line',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Ego trap.',
+      feedbackReason:
+          'Point-proving lines usually detach from EV and increase variance mistakes.',
+    ),
+    Act0RunnerOptionV1(
       id: 'stick_process',
       label: 'Stick to process and planned exploit line',
       isCorrect: true,
@@ -21220,17 +21231,6 @@ final _w12AssertiveNotEgoRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       feedbackTitle: 'Process ignores table talk.',
       feedbackReason:
           'Process-led confidence ignores ego hooks and preserves decision quality.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'prove_point',
-      label: 'Take marginal spot to prove a point',
-      isCorrect: false,
-      preferredLabel: 'Stick to process and planned exploit line',
-      betterAnswerLabel: 'Stick to process and planned exploit line',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Ego trap.',
-      feedbackReason:
-          'Point-proving lines usually detach from EV and increase variance mistakes.',
     ),
     Act0RunnerOptionV1(
       id: 'play_scared',
@@ -21254,6 +21254,28 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
   question: 'What is the best pressure adjustment?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'autopilot',
+      label: 'Keep normal pace through large pots',
+      isCorrect: false,
+      preferredLabel: 'Pause briefly on high-EV decision nodes',
+      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Leak risk.',
+      feedbackReason:
+          'Normal pace is fine in routine spots, but fatigue often degrades decision quality in the largest pots.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'tank_every_spot',
+      label: 'Slow medium pots as much as major ones',
+      isCorrect: false,
+      preferredLabel: 'Pause briefly on high-EV decision nodes',
+      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Overcorrection.',
+      feedbackReason:
+          'Over-slowing routine spots burns energy. Discipline should be targeted to meaningful nodes.',
+    ),
+    Act0RunnerOptionV1(
       id: 'critical_pause',
       label: 'Pause briefly on high-EV decision nodes',
       isCorrect: true,
@@ -21262,28 +21284,6 @@ final _w12DisciplineUnderPressureRunner = _w12ConfidenceDisciplineIntroRunner.co
       feedbackTitle: 'Pause on big nodes.',
       feedbackReason:
           'Small targeted pauses preserve discipline where it matters most without killing flow.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'autopilot',
-      label: 'Stay on autopilot to keep pace',
-      isCorrect: false,
-      preferredLabel: 'Pause briefly on high-EV decision nodes',
-      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Leak risk.',
-      feedbackReason:
-          'Autopilot under fatigue often degrades decision quality in the largest pots.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'tank_every_spot',
-      label: 'Tank every hand for max control',
-      isCorrect: false,
-      preferredLabel: 'Pause briefly on high-EV decision nodes',
-      betterAnswerLabel: 'Pause briefly on high-EV decision nodes',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Overcorrection.',
-      feedbackReason:
-          'Overthinking every hand burns energy. Discipline should be targeted to meaningful nodes.',
     ),
   ],
 );
@@ -21334,7 +21334,7 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
     ),
     Act0RunnerOptionV1(
       id: 'jam_back',
-      label: 'Jam for control',
+      label: 'Raise large to end the decision now',
       isCorrect: false,
       preferredLabel: 'Fold the river',
       betterAnswerLabel: 'Fold the river',
@@ -21381,16 +21381,6 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'call_once',
-      label: 'Call once and keep the pot controlled',
-      isCorrect: true,
-      preferredLabel: 'Call once and keep the pot controlled',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Stable line.',
-      feedbackReason:
-          'Price is kind, board is dry, and top pair in position can continue calmly. The table talk is noise, not a reason to force a bigger pot.',
-    ),
-    Act0RunnerOptionV1(
       id: 'raise_to_take_control',
       label: 'Raise now to take control back',
       isCorrect: false,
@@ -21400,6 +21390,16 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
       feedbackTitle: 'Revenge leak.',
       feedbackReason:
           'Taking control sounds assertive, but here it is emotional, not evidence-based. The clean action comes from hand, board, price, and position, not from wanting the last word.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call_once',
+      label: 'Call once and keep the pot controlled',
+      isCorrect: true,
+      preferredLabel: 'Call once and keep the pot controlled',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Stable line.',
+      feedbackReason:
+          'Price is kind, board is dry, and top pair in position can continue calmly. The table talk is noise, not a reason to force a bigger pot.',
     ),
     Act0RunnerOptionV1(
       id: 'snap_fold_noise',
@@ -21444,16 +21444,6 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
   question: 'What is the best immediate checkpoint reaction?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'process_first',
-      label: 'Audit process first, then outcome',
-      isCorrect: true,
-      preferredLabel: 'Audit process first, then outcome',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process held steady.',
-      feedbackReason:
-          'That sequence keeps you grounded through variance and supports long-term growth.',
-    ),
-    Act0RunnerOptionV1(
       id: 'outcome_only',
       label: 'Outcome proves decision quality',
       isCorrect: false,
@@ -21473,7 +21463,17 @@ final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copy
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Protective instinct.',
       feedbackReason:
-          'Avoiding review feels protective because it lowers frustration in the moment. But the cleaner bridge is short process review first, so emotion does not hide the actual lesson.',
+          'Avoiding review feels protective because it lowers frustration in the moment. But the cleaner bridge is short cue review first, so emotion does not hide the actual lesson.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'process_first',
+      label: 'Audit process first, then outcome',
+      isCorrect: true,
+      preferredLabel: 'Audit process first, then outcome',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Process held steady.',
+      feedbackReason:
+          'That sequence keeps you grounded through variance and supports long-term growth.',
     ),
   ],
 );
@@ -21497,25 +21497,25 @@ final _w12CheckpointResetLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWi
     ),
     Act0RunnerOptionV1(
       id: 'revenge_mode',
-      label: 'Force action to recover immediately',
+      label: 'Take the next close spot to recover momentum',
       isCorrect: false,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       betterAnswerLabel: 'Run brief reset and re-anchor to plan',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Tilt escalation.',
       feedbackReason:
-          'Revenge mode usually worsens errors. Controlled reset is the bridge habit.',
+          'Recovering momentum sounds useful, but tilt turns that into loose action. Controlled reset is the bridge habit; taking a close edge is better after the reset.',
     ),
     Act0RunnerOptionV1(
       id: 'deny_tilt',
-      label: 'Ignore emotion and continue unchanged',
+      label: 'Keep playing and check emotions later',
       isCorrect: false,
       preferredLabel: 'Run brief reset and re-anchor to plan',
       betterAnswerLabel: 'Run brief reset and re-anchor to plan',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Common response.',
       feedbackReason:
-          'Ignoring signals can work briefly, but explicit reset better preserves quality under pressure.',
+          'Continuing can work briefly, but explicit reset better preserves quality under pressure. Delaying the emotion check is safer only when decisions are low stakes.',
     ),
   ],
 );
@@ -21528,16 +21528,6 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
   question: 'Which line is strongest?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'evidence_line',
-      label: 'Take only evidence-backed lines',
-      isCorrect: true,
-      preferredLabel: 'Take only evidence-backed lines',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Evidence beats respect.',
-      feedbackReason:
-          'Evidence-first discipline is the stable bridge into deeper strategic worlds.',
-    ),
-    Act0RunnerOptionV1(
       id: 'ego_line',
       label: 'Take thin line to win respect',
       isCorrect: false,
@@ -21547,6 +21537,16 @@ final _w12CheckpointDisciplineLineRunner = _w12ConfidenceDisciplineIntroRunner.c
       feedbackTitle: 'Ego leak.',
       feedbackReason:
           'Respect-seeking lines detach from quality logic and create avoidable variance.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'evidence_line',
+      label: 'Take only evidence-backed lines',
+      isCorrect: true,
+      preferredLabel: 'Take only evidence-backed lines',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Evidence beats respect.',
+      feedbackReason:
+          'Evidence-first discipline is the stable bridge into deeper strategic worlds.',
     ),
     Act0RunnerOptionV1(
       id: 'fear_line',
@@ -21586,16 +21586,6 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'call_clean',
-      label: 'Call with the same loop',
-      isCorrect: true,
-      preferredLabel: 'Call with the same loop',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong reset.',
-      feedbackReason:
-          'Position, top pair, kind price, and shorter stack depth support a calm continue. The prior mistake matters only if it changes your process, not if it changes this table read.',
-    ),
-    Act0RunnerOptionV1(
       id: 'raise_to_recover',
       label: 'Raise to recover confidence',
       isCorrect: false,
@@ -21616,6 +21606,16 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
       feedbackTitle: 'Too reactive.',
       feedbackReason:
           'Fear after a mistake is still emotion steering the next hand. The cleaner bridge is keep the same seat-hand-board-price-stack loop and follow what this spot says.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'call_clean',
+      label: 'Call with the same loop',
+      isCorrect: true,
+      preferredLabel: 'Call with the same loop',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Strong reset.',
+      feedbackReason:
+          'Position, top pair, kind price, and shorter stack depth support a calm continue. The prior mistake matters only if it changes your process, not if it changes this table read.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
@@ -21640,7 +21640,7 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       'Lesson learned: process, reset, and discipline stabilize your game.',
   hint:
       'Next you carry this mindset into deeper postflop decision trees and pressure spots.',
-  question: 'What does mindset bridge add before deeper strategy worlds?',
+  question: 'What does this final mindset checkpoint add?',
   feedbackTitle: 'Mindset checkpoint.',
   feedbackReason:
       'You now have emotional, process, and discipline guardrails that keep strategic learning stable under variance and pressure.',
@@ -21660,9 +21660,9 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'stable_bridge',
-      label: 'A stable bridge into deeper strategy',
+      label: 'A repeatable process-reset-discipline loop',
       isCorrect: true,
-      preferredLabel: 'A stable bridge into deeper strategy',
+      preferredLabel: 'A repeatable process-reset-discipline loop',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Solid understanding.',
       feedbackReason:
@@ -21672,8 +21672,8 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       id: 'optional_soft',
       label: 'Optional soft skill with little EV impact',
       isCorrect: false,
-      preferredLabel: 'A stable bridge into deeper strategy',
-      betterAnswerLabel: 'A stable bridge into deeper strategy',
+      preferredLabel: 'A repeatable process-reset-discipline loop',
+      betterAnswerLabel: 'A repeatable process-reset-discipline loop',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Underestimation.',
       feedbackReason:
@@ -21683,8 +21683,8 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
       id: 'done_forever',
       label: 'One-time fix, no daily upkeep needed',
       isCorrect: false,
-      preferredLabel: 'A stable bridge into deeper strategy',
-      betterAnswerLabel: 'A stable bridge into deeper strategy',
+      preferredLabel: 'A repeatable process-reset-discipline loop',
+      betterAnswerLabel: 'A repeatable process-reset-discipline loop',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Partly true start.',
       feedbackReason:
