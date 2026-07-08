@@ -122,9 +122,7 @@ void main() {
     );
   });
 
-  testWidgets('completed fix shows repairCompleted proof role', (
-    tester,
-  ) async {
+  testWidgets('completed fix shows repairCompleted proof role', (tester) async {
     final outcomes = _repairOutcomes();
     final fixProof = _bankedFixProof(outcomes);
 
@@ -142,9 +140,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_world1_completion_payoff')),
-        matching: find.byKey(
-          const Key('act0_proof_icon_v1_repairCompleted'),
-        ),
+        matching: find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
       ),
       findsOneWidget,
     );
@@ -184,9 +180,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_world1_completion_payoff')),
-        matching: find.byKey(
-          const Key('act0_proof_icon_v1_repairCompleted'),
-        ),
+        matching: find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
       ),
       findsNothing,
     );
@@ -210,9 +204,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_shell_world1_completion_payoff')),
-        matching: find.byKey(
-          const Key('act0_proof_icon_v1_repairCompleted'),
-        ),
+        matching: find.byKey(const Key('act0_proof_icon_v1_repairCompleted')),
       ),
       findsNothing,
     );
@@ -229,42 +221,48 @@ void main() {
     );
   });
 
-  testWidgets('next-world preview uses the summary route data, not a fixed value', (
-    tester,
-  ) async {
-    const summary = Act0BlockCompletionSummaryV1(
-      lessonTitle: 'Showdown winning',
-      xpEarned: 24,
-      errorCount: 0,
-      taskCount: 4,
-      correctCount: 4,
-      startLevel: 1,
-      endLevel: 2,
-      startXp: 188,
-      endXp: 12,
-      xpTarget: 200,
-      milestoneTier: Act0ProgressMilestoneTierV1.world,
-      worldNumber: 1,
-      worldTitle: 'Poker from Zero',
-      nextWorldNumber: 2,
-      nextWorldTitle: 'A Different Next World',
-      perfectClearCount: 12,
-      completedClearCount: 12,
-    );
-    await tester.pumpWidget(_host(summary));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'next-world preview uses the summary route data, not a fixed value',
+    (tester) async {
+      const summary = Act0BlockCompletionSummaryV1(
+        lessonTitle: 'Showdown winning',
+        xpEarned: 24,
+        errorCount: 0,
+        taskCount: 4,
+        correctCount: 4,
+        startLevel: 1,
+        endLevel: 2,
+        startXp: 188,
+        endXp: 12,
+        xpTarget: 200,
+        milestoneTier: Act0ProgressMilestoneTierV1.world,
+        worldNumber: 1,
+        worldTitle: 'Poker from Zero',
+        nextWorldNumber: 2,
+        nextWorldTitle: 'A Different Next World',
+        perfectClearCount: 12,
+        completedClearCount: 12,
+      );
+      await tester.pumpWidget(_host(summary));
+      await tester.pumpAndSettle();
 
-    expect(find.text('Next: A Different Next World'), findsOneWidget);
-    expect(find.text('Next: Hand Discipline'), findsNothing);
-  });
+      expect(find.text('Next: A Different Next World'), findsOneWidget);
+      expect(find.text('Next: Hand Discipline'), findsNothing);
+    },
+  );
 
   testWidgets('primary CTA routes to the valid next destination', (
     tester,
   ) async {
     var continued = 0;
-    await tester.pumpWidget(_host(_worldOneCompleteSummary, onContinue: () {
-      continued += 1;
-    }));
+    await tester.pumpWidget(
+      _host(
+        _worldOneCompleteSummary,
+        onContinue: () {
+          continued += 1;
+        },
+      ),
+    );
     await tester.pumpAndSettle();
 
     await tester.ensureVisible(
@@ -278,37 +276,38 @@ void main() {
     expect(continued, 1);
   });
 
-  testWidgets('reopening completion is idempotent and writes no duplicate proof', (
-    tester,
-  ) async {
-    final outcomes = _repairOutcomes();
-    final fixProof = _bankedFixProof(outcomes);
-    final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
-      outcomes,
-      fixProofProjection: fixProof,
-    );
-    final beforeLines = List<String>.from(consumer.sessionReceipt!.lines);
+  testWidgets(
+    'reopening completion is idempotent and writes no duplicate proof',
+    (tester) async {
+      final outcomes = _repairOutcomes();
+      final fixProof = _bankedFixProof(outcomes);
+      final consumer = Act0RepairOutcomeConsumerV1.fromProjection(
+        outcomes,
+        fixProofProjection: fixProof,
+      );
+      final beforeLines = List<String>.from(consumer.sessionReceipt!.lines);
 
-    await tester.pumpWidget(
-      _host(_worldOneCompleteSummary, repairOutcomeConsumer: consumer),
-    );
-    await tester.pumpAndSettle();
-    final worldOneProofLine = find.descendant(
-      of: find.byKey(const Key('act0_shell_world1_completion_payoff')),
-      matching: find.text('1 repair completed'),
-    );
-    expect(worldOneProofLine, findsOneWidget);
+      await tester.pumpWidget(
+        _host(_worldOneCompleteSummary, repairOutcomeConsumer: consumer),
+      );
+      await tester.pumpAndSettle();
+      final worldOneProofLine = find.descendant(
+        of: find.byKey(const Key('act0_shell_world1_completion_payoff')),
+        matching: find.text('1 repair completed'),
+      );
+      expect(worldOneProofLine, findsOneWidget);
 
-    // Simulate reopening the same completion state.
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpWidget(
-      _host(_worldOneCompleteSummary, repairOutcomeConsumer: consumer),
-    );
-    await tester.pumpAndSettle();
+      // Simulate reopening the same completion state.
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        _host(_worldOneCompleteSummary, repairOutcomeConsumer: consumer),
+      );
+      await tester.pumpAndSettle();
 
-    expect(worldOneProofLine, findsOneWidget);
-    expect(consumer.sessionReceipt!.lines, beforeLines);
-  });
+      expect(worldOneProofLine, findsOneWidget);
+      expect(consumer.sessionReceipt!.lines, beforeLines);
+    },
+  );
 
   testWidgets('no XP, level, mastery, or percentage language appears', (
     tester,
@@ -373,60 +372,54 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-    'completion for a world outside the covered payoff range is unaffected',
-    (tester) async {
-      // World 8 is beyond the accepted W1 / W2-6 payoff coverage; it must
-      // fall back to the ordinary milestone panel with no payoff card.
-      const otherWorldSummary = Act0BlockCompletionSummaryV1(
-        lessonTitle: 'Hand ranges',
-        xpEarned: 24,
-        errorCount: 0,
-        taskCount: 4,
-        correctCount: 4,
-        startLevel: 2,
-        endLevel: 3,
-        startXp: 188,
-        endXp: 12,
-        xpTarget: 200,
-        milestoneTier: Act0ProgressMilestoneTierV1.world,
-        worldNumber: 8,
-        worldTitle: 'Advanced Reads',
-        nextWorldNumber: 9,
-        nextWorldTitle: 'Range Construction',
-        perfectClearCount: 12,
-        completedClearCount: 12,
-      );
+  testWidgets('World 8 completion uses the ordinary W2-W12 payoff card', (
+    tester,
+  ) async {
+    // World 8 is now inside the accepted W2-W12 payoff coverage. World 1
+    // still keeps its dedicated payoff card, while W8 uses the ordinary
+    // world-completion payoff card.
+    const otherWorldSummary = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'Hand ranges',
+      xpEarned: 24,
+      errorCount: 0,
+      taskCount: 4,
+      correctCount: 4,
+      startLevel: 2,
+      endLevel: 3,
+      startXp: 188,
+      endXp: 12,
+      xpTarget: 200,
+      milestoneTier: Act0ProgressMilestoneTierV1.world,
+      worldNumber: 8,
+      worldTitle: 'Advanced Reads',
+      nextWorldNumber: 9,
+      nextWorldTitle: 'Range Construction',
+      perfectClearCount: 12,
+      completedClearCount: 12,
+    );
 
-      expect(otherWorldSummary.hasWorldOneCompletionPayoff, isFalse);
-      expect(otherWorldSummary.hasWorldCompletionPayoff, isFalse);
+    expect(otherWorldSummary.hasWorldOneCompletionPayoff, isFalse);
+    expect(otherWorldSummary.hasWorldCompletionPayoff, isTrue);
 
-      await tester.pumpWidget(_host(otherWorldSummary));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(_host(otherWorldSummary));
+    await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('act0_shell_world1_completion_payoff')),
-        findsNothing,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_world_completion_payoff')),
-        findsNothing,
-      );
-      expect(
-        find.byKey(const Key('act0_proof_icon_v1_milestone')),
-        findsNothing,
-      );
-      expect(
-        tester
-            .widget<Text>(
-              find.byKey(const Key('act0_shell_block_summary_title')),
-            )
-            .data,
-        'World 8 complete',
-      );
-      expect(find.text('Open next world'), findsOneWidget);
-    },
-  );
+    expect(
+      find.byKey(const Key('act0_shell_world1_completion_payoff')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_world_completion_payoff')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
+          .data,
+      'World 8 complete',
+    );
+    expect(find.text('Open next world'), findsOneWidget);
+  });
 
   testWidgets('no blank CTA or template token appears', (tester) async {
     await tester.pumpWidget(_host(_worldOneCompleteSummary));
@@ -525,46 +518,47 @@ Act0FixProofProjectionV1 _bankedFixProof(
 }) {
   Act0LearningTransferMeasurementV1? transferMeasurement;
   if (reinforced) {
-    transferMeasurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_1',
-            createdOrder: 1,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_legal_context',
-            choiceId: 'fold',
-            expectedChoiceId: 'check',
-            isCorrect: false,
-            errorType: 'missed_action_read',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'incorrect',
-            sessionId: 'session_1',
+    transferMeasurement =
+        Act0LearningTransferMeasurementV1.fromLearningEvidence(
+          Act0LearningEvidenceHistoryV1(
+            records: <Act0LearningEvidenceRecordV1>[
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_1',
+                createdOrder: 1,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_legal_context',
+                choiceId: 'fold',
+                expectedChoiceId: 'check',
+                isCorrect: false,
+                errorType: 'missed_action_read',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'incorrect',
+                sessionId: 'session_1',
+              ),
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_2',
+                createdOrder: 5,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_check_drill',
+                choiceId: 'check',
+                expectedChoiceId: 'check',
+                isCorrect: true,
+                errorType: 'none',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'correct',
+                sessionId: 'session_3',
+              ),
+            ],
           ),
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_2',
-            createdOrder: 5,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_check_drill',
-            choiceId: 'check',
-            expectedChoiceId: 'check',
-            isCorrect: true,
-            errorType: 'none',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'correct',
-            sessionId: 'session_3',
-          ),
-        ],
-      ),
-    );
+        );
   }
   return Act0FixProofProjectionV1.fromSources(
     repairOutcomeProjection: outcomes,

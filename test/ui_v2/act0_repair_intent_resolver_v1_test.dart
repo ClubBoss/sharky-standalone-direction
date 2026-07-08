@@ -249,50 +249,44 @@ void main() {
     expect(find.textContaining('completed'), findsNothing);
   });
 
-  testWidgets('Practice queue repair answer records correct outcome only', (
-    tester,
-  ) async {
-    await _pumpResolverHost(
-      tester,
-      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
-      taskId: 'actions_legal_context',
-    );
-    await _answerOption(tester, 'fold');
+  testWidgets(
+    'Practice queue repair answer records correct outcome and clears intent',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
 
-    final activeIntentBefore = _openRepairIntentPayload(
-      tester,
-      'actions_legal_context',
-    );
-    await _openPractice(tester);
-    await tester.tap(find.text('Practice this'));
-    await tester.pumpAndSettle();
-    await _advanceTeachingToDrill(tester);
-    await _answerCorrectly(tester);
+      await _openPractice(tester);
+      await tester.tap(find.text('Practice this'));
+      await tester.pumpAndSettle();
+      await _advanceTeachingToDrill(tester);
+      await _answerCorrectly(tester);
 
-    final outcomes = _repairOutcomePayload(tester);
-    expect(outcomes, hasLength(1));
-    expect(outcomes.single['sourceTaskId'], 'actions_legal_context');
-    expect(outcomes.single['repairTaskId'], 'actions_check_drill');
-    expect(outcomes.single['targetWorldId'], 'world_1');
-    expect(outcomes.single['targetLessonId'], 'fold_check_call_raise');
-    expect(outcomes.single['targetTaskId'], 'actions_check_drill');
-    expect(outcomes.single['selectedChoiceId'], 'check');
-    expect(outcomes.single['correctChoiceId'], 'check');
-    expect(outcomes.single['isCorrect'], isTrue);
-    expect(outcomes.single['outcomeState'], 'repair_correct_v1');
-    expect(find.text('Fix attempt'), findsOneWidget);
-    expect(
-      find.text('Nice repair. Same spot, cleaner decision.'),
-      findsOneWidget,
-    );
-    expect(
-      _openRepairIntentPayload(tester, 'actions_legal_context'),
-      activeIntentBefore,
-    );
-    expect(find.textContaining('cleared'), findsNothing);
-    expect(find.textContaining('resolved'), findsNothing);
-    expect(find.textContaining('completed'), findsNothing);
-  });
+      final outcomes = _repairOutcomePayload(tester);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single['sourceTaskId'], 'actions_legal_context');
+      expect(outcomes.single['repairTaskId'], 'actions_check_drill');
+      expect(outcomes.single['targetWorldId'], 'world_1');
+      expect(outcomes.single['targetLessonId'], 'fold_check_call_raise');
+      expect(outcomes.single['targetTaskId'], 'actions_check_drill');
+      expect(outcomes.single['selectedChoiceId'], 'check');
+      expect(outcomes.single['correctChoiceId'], 'check');
+      expect(outcomes.single['isCorrect'], isTrue);
+      expect(outcomes.single['outcomeState'], 'repair_correct_v1');
+      expect(find.text('Fix attempt'), findsOneWidget);
+      expect(
+        find.text('Nice repair. Same spot, cleaner decision.'),
+        findsOneWidget,
+      );
+      expect(_openRepairIntentPayload(tester, 'actions_legal_context'), isNull);
+      expect(find.textContaining('cleared'), findsNothing);
+      expect(find.textContaining('resolved'), findsNothing);
+      expect(find.textContaining('completed'), findsNothing);
+    },
+  );
 
   testWidgets('Practice queue repair answer records needs rep outcome only', (
     tester,

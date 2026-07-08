@@ -22,11 +22,11 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
     expect(
-      find.byKey(const Key('act0_shell_home_daily_goal_card')),
+      find.byKey(const Key('act0_shell_home_daily_plan_card')),
       findsOneWidget,
     );
     expect(
-      find.byKey(const Key('act0_shell_home_footer_sharky_line')),
+      find.byKey(const Key('act0_shell_home_mission_sharky_line')),
       findsOneWidget,
     );
     expect(find.byKey(const Key('intake_runner')), findsNothing);

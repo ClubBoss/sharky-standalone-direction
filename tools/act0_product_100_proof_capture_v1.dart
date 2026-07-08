@@ -1,7 +1,30 @@
 import 'dart:convert';
 import 'dart:io';
 
-const _outputDirPathV1 = 'output/device_audit/act0_product_100';
+const _outputDirPathV1 = 'output/screen_review/current/act0_product_100_proof';
+
+const _viewportsV1 = <String>[
+  'compact_phone',
+  'tall_phone',
+  'large_phone',
+  'tablet',
+];
+
+const _surfacesV1 = <String>[
+  'placement',
+  'welcome',
+  'home',
+  'learn',
+  'learn_detail',
+  'play',
+  'correct_feedback',
+  'wrong_feedback',
+  'practice_repair',
+  'completion_payoff',
+  'summary',
+  'review_profile',
+  'w12_terminal',
+];
 
 void main(List<String> args) async {
   if (args.contains('--help') || args.contains('-h')) {
@@ -48,21 +71,9 @@ void main(List<String> args) async {
     );
   }
 
-  const viewports = <String>['compact_phone', 'large_phone', 'tablet'];
-  const surfaces = <String>[
-    'placement',
-    'home',
-    'learn',
-    'learn_detail',
-    'play',
-    'review',
-    'profile',
-    'table',
-    'result',
-  ];
   final entries = <Map<String, Object?>>[];
-  for (final viewport in viewports) {
-    for (final surface in surfaces) {
+  for (final viewport in _viewportsV1) {
+    for (final surface in _surfacesV1) {
       final file = File(
         '${outputDir.path}${Platform.pathSeparator}$viewport.$surface.png',
       );
@@ -85,7 +96,7 @@ void main(List<String> args) async {
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': viewports, 'surfaces': surfaces, 'entries': entries})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries})}\n',
   );
 }
 
@@ -113,6 +124,7 @@ void main() {
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
   const viewports = <String, Size>{
     'compact_phone': Size(375, 812),
+    'tall_phone': Size(390, 844),
     'large_phone': Size(430, 932),
     'tablet': Size(834, 1194),
   };
@@ -125,6 +137,7 @@ void main() {
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
     Act0LessonPhaseV1 phase = Act0LessonPhaseV1.theory,
     bool showPlacementOnStart = false,
+    Act0ControlledDemoCaptureSurfaceV1? debugSurface,
   }) {
     return MaterialApp(
       locale: const Locale('en'),
@@ -139,6 +152,15 @@ void main() {
         initialTab: tab,
         initialPhase: phase,
         showPlacementOnStart: showPlacementOnStart,
+        debugHarnessEntry: debugSurface == null
+            ? null
+            : Act0ShellDebugHarnessEntryV1(
+                mode: Act0ControlledDemoCaptureModeV1.directState,
+                surface: debugSurface,
+                worldId: 'world_12',
+                lessonId: 'tilt_reset_protocol',
+                taskId: 'w12_after_mistake_reset',
+              ),
       ),
     );
   }
@@ -154,59 +176,48 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> openBottomTabByIndexV1(WidgetTester tester, int index) async {
+  Future<void> tapVisibleTargetV1(
+    WidgetTester tester,
+    Finder target,
+    String targetDescription,
+  ) async {
+    if (target.evaluate().isEmpty) {
+      throw StateError('Missing visible target for ' + targetDescription);
+    }
+    await tester.ensureVisible(target);
+    await tester.pumpAndSettle();
+    final center = tester.getCenter(target);
+    final rootSize = Size(
+      tester.view.physicalSize.width / tester.view.devicePixelRatio,
+      tester.view.physicalSize.height / tester.view.devicePixelRatio,
+    );
+    if (center.dx < 0 ||
+        center.dy < 0 ||
+        center.dx > rootSize.width ||
+        center.dy > rootSize.height) {
+      throw StateError(
+        'Target center outside viewport for ' +
+            targetDescription +
+            ': ' +
+            center.toString() +
+            ' outside ' +
+            rootSize.toString(),
+      );
+    }
+    await tester.tap(target, warnIfMissed: false);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> openBottomTabByLabelV1(
+    WidgetTester tester,
+    String label,
+  ) async {
     final nav = find.byKey(const Key('act0_shell_bottom_nav'));
     if (nav.evaluate().isEmpty) {
-      throw StateError('Missing bottom nav.');
+      throw StateError('Missing visible target for bottom nav');
     }
-    final rect = tester.getRect(nav);
-    final itemWidth = rect.width / 5;
-    final target = Offset(
-      rect.left + (itemWidth * index) + (itemWidth / 2),
-      rect.top + (rect.height / 2),
-    );
-    await tester.tapAt(target);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> startPlacementIfNeeded(WidgetTester tester) async {
-    final introCta = find.byKey(const Key('act0_shell_placement_intro_cta'));
-    if (introCta.evaluate().isNotEmpty) {
-      await tester.tap(introCta);
-      await tester.pumpAndSettle();
-    }
-  }
-
-  Future<void> answerPlacementQuestion(
-    WidgetTester tester,
-    String optionId,
-  ) async {
-    await startPlacementIfNeeded(tester);
-    await tester.tap(find.byKey(Key('act0_shell_placement_option_' + optionId)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_placement_next_cta')));
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> advanceTeachingToDrill(WidgetTester tester) async {
-    for (var i = 0; i < 8; i++) {
-      if (find.byKey(const Key('act0_shell_action_panel')).evaluate().isNotEmpty ||
-          find.byKey(const Key('act0_shell_option_raise')).evaluate().isNotEmpty ||
-          find.byKey(const Key('act0_shell_option_check')).evaluate().isNotEmpty ||
-          find.byKey(const Key('act0_shell_option_call')).evaluate().isNotEmpty ||
-          find.byKey(const Key('act0_shell_option_fold')).evaluate().isNotEmpty ||
-          find.byKey(const Key('act0_shell_seat_tap_prompt')).evaluate().isNotEmpty) {
-        return;
-      }
-      final cta = find.byKey(const Key('act0_shell_continue_cta'));
-      if (cta.evaluate().isEmpty) {
-        throw StateError('Teaching steps did not reveal a drill surface.');
-      }
-      await tester.pump(const Duration(milliseconds: 900));
-      await tester.tap(cta);
-      await tester.pumpAndSettle();
-    }
-    throw StateError('Teaching steps did not reveal a drill surface.');
+    final target = find.descendant(of: nav, matching: find.text(label)).first;
+    await tapVisibleTargetV1(tester, target, 'bottom nav ' + label);
   }
 
   Finder findLessonCardsV1() {
@@ -222,42 +233,16 @@ void main() {
     }
     final lessonCards = findLessonCardsV1();
     if (lessonCards.evaluate().isEmpty) {
-      throw StateError('Missing learn lesson cards.');
+      throw StateError('Missing visible target for learn lesson card');
     }
-    await tester.ensureVisible(lessonCards.first);
-    await tester.tap(lessonCards.first);
-    await tester.pump();
+    await tapVisibleTargetV1(tester, lessonCards.first, 'learn lesson card');
     await tester.pump(const Duration(milliseconds: 900));
     await tester.pumpAndSettle();
     if (find.byKey(const Key('act0_shell_selected_lesson_panel')).evaluate().isEmpty) {
-      throw StateError('Learn detail panel did not open.');
+      throw StateError(
+        'Learn detail panel did not open after tapping learn lesson card.',
+      );
     }
-  }
-
-  Future<void> openPracticeRunV1(WidgetTester tester) async {
-    final featuredCta = find.byKey(const Key('act0_shell_play_featured_cta'));
-    if (featuredCta.evaluate().isNotEmpty) {
-      await tester.ensureVisible(featuredCta);
-      await tester.tap(featuredCta);
-      await tester.pumpAndSettle();
-      return;
-    }
-
-    const fallbackKeys = <Key>[
-      Key('act0_shell_practice_group_daily'),
-      Key('act0_shell_practice_group_continue'),
-      Key('act0_shell_practice_group_weak_spots'),
-    ];
-    for (final key in fallbackKeys) {
-      final finder = find.byKey(key);
-      if (finder.evaluate().isNotEmpty) {
-        await tester.ensureVisible(finder);
-        await tester.tap(finder);
-        await tester.pumpAndSettle();
-        return;
-      }
-    }
-    throw StateError('Missing practice launch entry.');
   }
 
   Future<void> captureBoundary(
@@ -288,6 +273,7 @@ void main() {
     _BuildFlowV1 buildFlow,
     bool showPlacementOnStart,
     Act0ShellTabV1 initialTab,
+    Act0ControlledDemoCaptureSurfaceV1? debugSurface,
   ) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -300,11 +286,16 @@ void main() {
         child: host(
           tab: initialTab,
           showPlacementOnStart: showPlacementOnStart,
+          debugSurface: debugSurface,
         ),
       ),
       size,
     );
-    await buildFlow();
+    try {
+      await buildFlow();
+    } on StateError catch (error) {
+      throw StateError(surfaceName + ' surface failed: ' + error.message);
+    }
     await captureBoundary(
       tester,
       boundaryKey,
@@ -328,8 +319,20 @@ void main() {
         size,
         'placement',
         () async {},
-        true,
+        false,
         Act0ShellTabV1.home,
+        Act0ControlledDemoCaptureSurfaceV1.placement,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'welcome',
+        () async {},
+        false,
+        Act0ShellTabV1.home,
+        Act0ControlledDemoCaptureSurfaceV1.welcome,
       );
 
       await captureSurface(
@@ -340,6 +343,7 @@ void main() {
         () async {},
         false,
         Act0ShellTabV1.home,
+        Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
       );
 
       await captureSurface(
@@ -350,6 +354,7 @@ void main() {
         () async {},
         false,
         Act0ShellTabV1.learn,
+        Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn,
       );
 
       await captureSurface(
@@ -362,6 +367,7 @@ void main() {
         },
         false,
         Act0ShellTabV1.learn,
+        null,
       );
 
       await captureSurface(
@@ -370,71 +376,89 @@ void main() {
         size,
         'play',
         () async {
-          await openBottomTabByIndexV1(tester, 2);
+          await openBottomTabByLabelV1(tester, 'Practice');
         },
         false,
         Act0ShellTabV1.home,
+        null,
       );
 
       await captureSurface(
         tester,
         viewportName,
         size,
-        'review',
+        'correct_feedback',
         () async {},
         false,
-        Act0ShellTabV1.review,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
       );
 
       await captureSurface(
         tester,
         viewportName,
         size,
-        'profile',
+        'wrong_feedback',
+        () async {},
+        false,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'practice_repair',
+        () async {},
+        false,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'completion_payoff',
+        () async {},
+        false,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.worldCompletion,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'summary',
+        () async {},
+        false,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.sessionSummary,
+      );
+
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'review_profile',
         () async {},
         false,
         Act0ShellTabV1.profile,
+        Act0ControlledDemoCaptureSurfaceV1.profileEvidence,
       );
 
-      await captureSurface(tester, viewportName, size, 'table', () async {
-        await openBottomTabByIndexV1(tester, 2);
-        await openPracticeRunV1(tester);
-        await advanceTeachingToDrill(tester);
-      }, false, Act0ShellTabV1.home);
-
-      await captureSurface(tester, viewportName, size, 'result', () async {
-        await openBottomTabByIndexV1(tester, 2);
-        await openPracticeRunV1(tester);
-        await advanceTeachingToDrill(tester);
-
-        const optionKeys = <Key>[
-          Key('act0_shell_option_check'),
-          Key('act0_shell_option_fold'),
-          Key('act0_shell_option_call'),
-          Key('act0_shell_option_raise'),
-        ];
-        var tapped = false;
-        for (final optionKey in optionKeys) {
-          final finder = find.byKey(optionKey);
-          if (finder.evaluate().isNotEmpty) {
-            await tester.tap(finder);
-            await tester.pumpAndSettle();
-            tapped = true;
-            break;
-          }
-        }
-        if (!tapped) {
-          final seatTap = find.byKey(const Key('act0_shell_seat_tap_btn'));
-          if (seatTap.evaluate().isNotEmpty) {
-            await tester.tap(seatTap);
-            await tester.pumpAndSettle();
-            tapped = true;
-          }
-        }
-        if (!tapped) {
-          throw StateError('No visible runner option to produce feedback.');
-        }
-      }, false, Act0ShellTabV1.home);
+      await captureSurface(
+        tester,
+        viewportName,
+        size,
+        'w12_terminal',
+        () async {},
+        false,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      );
     }
   });
 }

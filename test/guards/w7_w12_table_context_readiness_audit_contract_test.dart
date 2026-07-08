@@ -24,12 +24,25 @@ void main() {
       expect(spec.learningPurpose.trim(), isNotEmpty, reason: context);
       expect(spec.learnerPrompt.trim(), isNotEmpty, reason: context);
       expect(spec.choiceIds, contains(spec.expectedChoiceId), reason: context);
-      expect(spec.practiceCtaAllowed, isFalse, reason: context);
+      final structurallyAdmitted = <String>{
+        'world_10',
+        'world_11',
+        'world_12',
+      }.contains(spec.worldId);
       expect(
-        spec.mapperNoTargetReason,
-        contains('route_locked_no_safe_practice_target_v1'),
+        spec.practiceCtaAllowed,
+        structurallyAdmitted ? isTrue : isFalse,
         reason: context,
       );
+      if (structurallyAdmitted) {
+        expect(spec.mapperNoTargetReason, isEmpty, reason: context);
+      } else {
+        expect(
+          spec.mapperNoTargetReason,
+          contains('route_locked_no_safe_practice_target_v1'),
+          reason: context,
+        );
+      }
 
       for (final choiceId in spec.choiceIds) {
         expect(

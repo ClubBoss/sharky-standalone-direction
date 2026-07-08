@@ -18,18 +18,18 @@ void main() {
     test('contains a coherent four-task hidden learning arc', () {
       expect(owner.taskSpecs, hasLength(4));
       expect(owner.taskSpecs.map((task) => task.taskId), <String>[
-        'dry_board_texture_recognition_intro',
-        'connected_board_texture_recognition_intro',
-        'suited_texture_pressure_lite',
-        'one_pair_board_danger_transfer_check',
+        'w11_session_plan_hidden',
+        'w11_table_trigger_hidden',
+        'w11_review_loop_hidden',
+        'w11_real_play_loop_hidden',
       ]);
 
       _expectWorldTemplate(
         taskSpecs: owner.taskSpecs,
         worldId: 'world_11',
-        lessonId: 'board_texture_danger_awareness_lite',
-        conceptFamilyId: 'w11_board_texture_danger_awareness',
-        mapperNoTargetReason: 'w11_route_locked_no_safe_practice_target_v1',
+        conceptFamilyId: 'w11_real_play_transfer',
+        practiceCtaAllowed: true,
+        mapperNoTargetReason: '',
       );
     });
 
@@ -42,25 +42,33 @@ void main() {
       );
     });
 
-    test('each task writes correct and incorrect consumable evidence', () {
-      final history = _appendAllTaskEvidence(harness, owner.taskSpecs);
+    test('canonical task writes correct and incorrect consumable evidence', () {
+      final history = _appendCanonicalTaskEvidence(harness, owner.taskSpec);
       _expectConsumableEvidence(
         history: history,
-        taskSpecs: owner.taskSpecs,
-        conceptFamilyId: 'w11_board_texture_danger_awareness',
+        taskSpecs: <dynamic>[owner.taskSpec],
+        conceptFamilyId: 'w11_real_play_transfer',
       );
     });
 
-    test('rejects unknown choices and exposes no Practice launch request', () {
-      _expectRejectsUnknownChoiceAndNoPractice(
-        harness: harness,
-        worldId: 'world_11',
-        lessonId: 'board_texture_danger_awareness_lite',
-        taskId: 'connected_board_texture_recognition_intro',
-        wrongChoiceId: 'dry_board_safer_texture',
-        attemptKey: 'texture_miss',
-      );
-    });
+    test(
+      'rejects unknown choices and maps admitted Practice launch request',
+      () {
+        _expectRejectsUnknownChoiceAndMapsPractice(
+          harness: harness,
+          worldId: 'world_11',
+          lessonId: owner.taskSpec.lessonId,
+          taskId: owner.taskSpec.taskId,
+          wrongChoiceId:
+              owner.taskSpec.choiceIds.firstWhere(
+                    (dynamic choiceId) =>
+                        choiceId != owner.taskSpec.expectedChoiceId,
+                  )
+                  as String,
+          attemptKey: 'w11_hidden_miss',
+        );
+      },
+    );
 
     test('learning arc copy is beginner readable and claim safe', () {
       _expectCopySafe(owner.taskSpecs);
@@ -74,18 +82,18 @@ void main() {
     test('contains a coherent four-task hidden learning arc', () {
       expect(owner.taskSpecs, hasLength(4));
       expect(owner.taskSpecs.map((task) => task.taskId), <String>[
-        'main_clue_identification_intro',
-        'turn_card_change_recognition_intro',
-        'safe_beginner_explanation_choice_lite',
-        'combined_decision_read_transfer_check',
+        'w12_tilt_reset_hidden',
+        'w12_process_quality_hidden',
+        'w12_confidence_discipline_hidden',
+        'w12_mindset_bridge_loop_hidden',
       ]);
 
       _expectWorldTemplate(
         taskSpecs: owner.taskSpecs,
         worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        conceptFamilyId: 'w12_review_decision_intuition',
-        mapperNoTargetReason: 'w12_route_locked_no_safe_practice_target_v1',
+        conceptFamilyId: 'w12_mindset_bridge',
+        practiceCtaAllowed: true,
+        mapperNoTargetReason: '',
       );
     });
 
@@ -98,25 +106,33 @@ void main() {
       );
     });
 
-    test('each task writes correct and incorrect consumable evidence', () {
-      final history = _appendAllTaskEvidence(harness, owner.taskSpecs);
+    test('canonical task writes correct and incorrect consumable evidence', () {
+      final history = _appendCanonicalTaskEvidence(harness, owner.taskSpec);
       _expectConsumableEvidence(
         history: history,
-        taskSpecs: owner.taskSpecs,
-        conceptFamilyId: 'w12_review_decision_intuition',
+        taskSpecs: <dynamic>[owner.taskSpec],
+        conceptFamilyId: 'w12_mindset_bridge',
       );
     });
 
-    test('rejects unknown choices and exposes no Practice launch request', () {
-      _expectRejectsUnknownChoiceAndNoPractice(
-        harness: harness,
-        worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        taskId: 'main_clue_identification_intro',
-        wrongChoiceId: 'bet_purpose_clue',
-        attemptKey: 'review_miss',
-      );
-    });
+    test(
+      'rejects unknown choices and maps admitted Practice launch request',
+      () {
+        _expectRejectsUnknownChoiceAndMapsPractice(
+          harness: harness,
+          worldId: 'world_12',
+          lessonId: owner.taskSpec.lessonId,
+          taskId: owner.taskSpec.taskId,
+          wrongChoiceId:
+              owner.taskSpec.choiceIds.firstWhere(
+                    (dynamic choiceId) =>
+                        choiceId != owner.taskSpec.expectedChoiceId,
+                  )
+                  as String,
+          attemptKey: 'w12_hidden_miss',
+        );
+      },
+    );
 
     test('learning arc copy is beginner readable and claim safe', () {
       _expectCopySafe(owner.taskSpecs);
@@ -127,8 +143,8 @@ void main() {
 void _expectWorldTemplate({
   required List<dynamic> taskSpecs,
   required String worldId,
-  required String lessonId,
   required String conceptFamilyId,
+  required bool practiceCtaAllowed,
   required String mapperNoTargetReason,
 }) {
   final purposes = taskSpecs
@@ -137,9 +153,9 @@ void _expectWorldTemplate({
   expect(purposes, hasLength(4));
   for (final dynamic task in taskSpecs) {
     expect(task.worldId, worldId);
-    expect(task.lessonId, lessonId);
+    expect((task.lessonId as String).trim(), isNotEmpty);
     expect(task.conceptFamilyId, conceptFamilyId);
-    expect(task.practiceCtaAllowed, isFalse);
+    expect(task.practiceCtaAllowed, practiceCtaAllowed);
     expect(task.mapperNoTargetReason, mapperNoTargetReason);
   }
 }
@@ -178,34 +194,32 @@ void _expectSupportGate({
   );
 }
 
-Act0LearningEvidenceHistoryV1 _appendAllTaskEvidence(
+Act0LearningEvidenceHistoryV1 _appendCanonicalTaskEvidence(
   dynamic harness,
-  List<dynamic> taskSpecs,
+  dynamic task,
 ) {
   var history = const Act0LearningEvidenceHistoryV1();
-  for (final dynamic task in taskSpecs) {
-    final wrongChoice = task.choiceIds.firstWhere(
-      (dynamic choiceId) => choiceId != task.expectedChoiceId,
-    );
-    history = harness.submitChoice(
-      history: history,
-      worldId: task.worldId,
-      lessonId: task.lessonId,
-      taskId: task.taskId,
-      selectedChoiceId: wrongChoice,
-      attemptKey: '${task.taskId}_miss',
-      decisionTimeBucket: '3_to_10s',
-    );
-    history = harness.submitChoice(
-      history: history,
-      worldId: task.worldId,
-      lessonId: task.lessonId,
-      taskId: task.taskId,
-      selectedChoiceId: task.expectedChoiceId,
-      attemptKey: '${task.taskId}_correct',
-      decisionTimeBucket: 'under_3s',
-    );
-  }
+  final wrongChoice = task.choiceIds.firstWhere(
+    (dynamic choiceId) => choiceId != task.expectedChoiceId,
+  );
+  history = harness.submitChoice(
+    history: history,
+    worldId: task.worldId,
+    lessonId: task.lessonId,
+    taskId: task.taskId,
+    selectedChoiceId: wrongChoice,
+    attemptKey: '${task.taskId}_miss',
+    decisionTimeBucket: '3_to_10s',
+  );
+  history = harness.submitChoice(
+    history: history,
+    worldId: task.worldId,
+    lessonId: task.lessonId,
+    taskId: task.taskId,
+    selectedChoiceId: task.expectedChoiceId,
+    attemptKey: '${task.taskId}_correct',
+    decisionTimeBucket: 'under_3s',
+  );
   return history;
 }
 
@@ -246,7 +260,7 @@ void _expectConsumableEvidence({
   );
 }
 
-void _expectRejectsUnknownChoiceAndNoPractice({
+void _expectRejectsUnknownChoiceAndMapsPractice({
   required dynamic harness,
   required String worldId,
   required String lessonId,
@@ -280,8 +294,8 @@ void _expectRejectsUnknownChoiceAndNoPractice({
     ),
   ).nextRepairCandidate;
   final mapped = mapAct0ConceptCandidateToPracticeLaunchRequestV1(candidate);
-  expect(mapped.isMapped, isFalse);
-  expect(mapped.request, isNull);
+  expect(mapped.isMapped, isTrue);
+  expect(mapped.request, isNotNull);
 }
 
 void _expectCopySafe(List<dynamic> taskSpecs) {
