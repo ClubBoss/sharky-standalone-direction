@@ -357,7 +357,7 @@ Pattern risks for Claude to judge:
 
 Passed validation for this artifact wave:
 
-- targeted source/task count checks: W7 `22`, W8 `26`, W9 `23`, terminology `10`, repair mappings `11`, Claude questions `13`;
+- targeted source/task count checks: W7 `22`, W8 `26`, W9 `23`, terminology `11`, repair mappings `11`, Claude questions `13`;
 - `flutter test test/ui_v2/act0_w7_w9_same_signal_repair_recheck_v1_test.dart test/ui_v2/act0_w2_w6_completion_payoff_v1_test.dart test/guards/w8_w9_canonical_identity_ownership_reconciliation_contract_test.dart test/guards/w7_w10_route_status_alignment_contract_test.dart`: passed, `110` tests;
 - `flutter analyze`: passed, no issues found;
 - `git diff --check`: passed;
