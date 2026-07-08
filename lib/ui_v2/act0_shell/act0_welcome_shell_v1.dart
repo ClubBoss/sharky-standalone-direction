@@ -228,10 +228,12 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final horizontalPadding = constraints.maxWidth < 380 ? 20.0 : 24.0;
+          final tabletLayout = constraints.maxWidth >= 700;
           final contentMaxWidth = math.min(
-            math.max(0.0, constraints.maxWidth - 48),
-            400.0,
+            math.max(0.0, constraints.maxWidth - (tabletLayout ? 96 : 48)),
+            tabletLayout ? 760.0 : 400.0,
           );
+          final tabletContentMinHeight = centerContent ? 500.0 : 460.0;
           final smallPhone = constraints.maxHeight < 700;
           final bottomPadding = math.max(
             Act0ShellTokensV1.gapLg,
@@ -252,6 +254,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                   detail: blocks.join(' '),
                   mood: mood,
                   visual: visual,
+                  tabletLayout: tabletLayout,
                 );
           return SingleChildScrollView(
             child: ConstrainedBox(
@@ -275,14 +278,29 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                           replayMode: replayMode,
                           onClose: onClose,
                         ),
-                        Spacer(flex: centerContent ? 65 : 45),
+                        Spacer(
+                          flex: tabletLayout
+                              ? (centerContent ? 20 : 20)
+                              : (centerContent ? 65 : 45),
+                        ),
                         Center(
                           child: SizedBox(
                             width: contentMaxWidth,
-                            child: content,
+                            child: tabletLayout
+                                ? ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minHeight: tabletContentMinHeight,
+                                    ),
+                                    child: content,
+                                  )
+                                : content,
                           ),
                         ),
-                        Spacer(flex: centerContent ? 20 : 55),
+                        Spacer(
+                          flex: tabletLayout
+                              ? (centerContent ? 8 : 8)
+                              : (centerContent ? 20 : 55),
+                        ),
                         if (ctaBridgeLine != null &&
                             ctaBridgeLine!.trim().isNotEmpty) ...[
                           Text(
@@ -330,6 +348,7 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
     required this.detail,
     required this.mood,
     required this.visual,
+    required this.tabletLayout,
   });
 
   final String title;
@@ -338,9 +357,37 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
   final String detail;
   final Act0SharkyMoodV1 mood;
   final Widget? visual;
+  final bool tabletLayout;
 
   @override
   Widget build(BuildContext context) {
+    final guideCard = Act0SharkyGuideCardV1(
+      eyebrow: eyebrow,
+      line: line,
+      detail: detail,
+      mood: mood,
+      compact: true,
+      growthStage: Act0SharkyGrowthStageV1.foundation,
+    );
+    final body = tabletLayout && visual != null
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(flex: 9, child: visual!),
+              const SizedBox(width: Act0ShellTokensV1.gapMd),
+              Expanded(flex: 7, child: guideCard),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (visual != null) ...[
+                visual!,
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
+              guideCard,
+            ],
+          );
     return Container(
       key: const Key('act0_shell_welcome_beat_frame'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -349,22 +396,14 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
         borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
       ),
       child: Column(
+        mainAxisAlignment: tabletLayout
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: Act0ShellTokensV1.sectionTitle),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
-          if (visual != null) ...[
-            visual!,
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-          ],
-          Act0SharkyGuideCardV1(
-            eyebrow: eyebrow,
-            line: line,
-            detail: detail,
-            mood: mood,
-            compact: true,
-            growthStage: Act0SharkyGrowthStageV1.foundation,
-          ),
+          body,
         ],
       ),
     );

@@ -922,6 +922,7 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   practice,
   profile,
   worldCompletion,
+  w12Terminal,
   sessionSummary,
   runnerFirstCorrectFeedback,
   firstWeekHome,
@@ -2295,6 +2296,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugProfileSurface();
       case Act0ControlledDemoCaptureSurfaceV1.worldCompletion:
         _applyDebugWorldCompletionSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.w12Terminal:
+        _applyDebugW12TerminalSurface();
       case Act0ControlledDemoCaptureSurfaceV1.sessionSummary:
         _applyDebugSessionSummarySurface();
       case Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback:
@@ -2809,6 +2812,56 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'schemaVersion': 1,
       'worldId': 'world_1',
       'world_id': 'world_1',
+      'completedClearCount': 12,
+      'completed_clear_count': 12,
+      'perfectClearCount': 12,
+      'perfect_clear_count': 12,
+      'source_surface': 'act0_completion',
+    });
+  }
+
+  void _applyDebugW12TerminalSurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+    _blockCompletionSummary = const Act0BlockCompletionSummaryV1(
+      lessonTitle: 'Mindset Bridge',
+      xpEarned: 24,
+      errorCount: 0,
+      taskCount: 4,
+      correctCount: 4,
+      startLevel: 11,
+      endLevel: 12,
+      startXp: 176,
+      endXp: 0,
+      xpTarget: 200,
+      sharkyLine:
+          'Volume I terminal review brings the route together without opening a future world.',
+      skillGains: <Act0SkillGainV1>[
+        Act0SkillGainV1(
+          label: 'Process discipline',
+          gain: 7,
+          source: 'Mindset Bridge',
+        ),
+        Act0SkillGainV1(
+          label: 'Reset quality',
+          gain: 5,
+          source: 'Mindset Bridge',
+        ),
+      ],
+      milestoneTier: Act0ProgressMilestoneTierV1.world,
+      worldNumber: 12,
+      worldTitle: 'Mindset Bridge',
+      nextWorldTitle: 'Volume I terminal review',
+      perfectClearCount: 12,
+      completedClearCount: 12,
+      futureRecheckCount: 0,
+      futureProveCount: 0,
+    );
+    _recordTelemetryEventV1('world_complete', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': 'world_12',
+      'world_id': 'world_12',
       'completedClearCount': 12,
       'completed_clear_count': 12,
       'perfectClearCount': 12,

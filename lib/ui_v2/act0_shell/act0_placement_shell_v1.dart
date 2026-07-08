@@ -370,6 +370,11 @@ class Act0PlacementShellV1 extends StatelessWidget {
                                 ),
                               ),
                       ),
+                      if (showIntro &&
+                          MediaQuery.sizeOf(context).shortestSide >= 700) ...[
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        _PlacementTabletFillV1(localeIsRu: localeIsRu),
+                      ],
                     ],
                   ),
                 ),
@@ -970,6 +975,68 @@ class _PlacementIntroViewV1 extends StatelessWidget {
                 ru: 'Быстрый переход',
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlacementTabletFillV1 extends StatelessWidget {
+  const _PlacementTabletFillV1({required this.localeIsRu});
+
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    final copy = ({required String en, required String ru}) =>
+        localeIsRu ? ru : en;
+    return Container(
+      key: const Key('act0_shell_placement_tablet_fill'),
+      constraints: const BoxConstraints(minHeight: 288),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.66),
+        borderColor: Act0ShellTokensV1.info.withValues(alpha: 0.16),
+        glow: false,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 190),
+              child: _PlacementLaunchSupportCardV1(
+                tone: Act0ShellTokensV1.info,
+                title: copy(en: 'What happens next', ru: 'Что дальше'),
+                body: copy(
+                  en: 'Sharky uses these answers only to choose the first useful hand and the safest pace.',
+                  ru: 'Шарки использует ответы только для первой полезной раздачи и безопасного темпа.',
+                ),
+                chips: <String>[
+                  copy(en: 'First hand', ru: 'Первая раздача'),
+                  copy(en: 'Safe pace', ru: 'Безопасный темп'),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Expanded(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 190),
+              child: _PlacementLaunchSupportCardV1(
+                tone: Act0ShellTokensV1.gold,
+                title: copy(en: 'No score', ru: 'Без оценки'),
+                body: copy(
+                  en: 'The check stays short: read the table, pick what feels closest, then start.',
+                  ru: 'Проверка короткая: прочитай стол, выбери ближайший вариант и начни.',
+                ),
+                chips: <String>[
+                  copy(en: 'No exam', ru: 'Без экзамена'),
+                  copy(en: 'No pressure', ru: 'Без давления'),
+                ],
+              ),
+            ),
           ),
         ],
       ),

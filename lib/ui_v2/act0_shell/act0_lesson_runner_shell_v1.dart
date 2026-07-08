@@ -2300,10 +2300,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final coupleTableToDock =
         viewportPressureReason != _compactAnswerListNoPressureReasonV1 &&
         _viewportFamilyUsesAnswerListCompositionV1(viewportFamily);
+    final hasRepairContext =
+        widget.selectedTaskFamily == Act0TaskFamilyV1.repair ||
+        (widget.repairReasonLine?.trim().isNotEmpty ?? false) ||
+        (widget.repairResultReceiptLine?.trim().isNotEmpty ?? false) ||
+        (widget.repairOutcomeProofLine?.trim().isNotEmpty ?? false) ||
+        widget.repairSessionSummaryLines.any((line) => line.trim().isNotEmpty);
+    final repairFillMode = isDrill && hasRepairContext;
     final taskCycleEnvelope = _resolveRunnerTaskCycleViewportEnvelopeV1(
       context,
       viewportFamily: viewportFamily,
       pressureReason: viewportPressureReason,
+      repairFillMode: repairFillMode,
     );
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
@@ -2720,12 +2728,14 @@ class _RunnerTaskCycleViewportEnvelopeV1 {
     required this.usesFixedLowerSlot,
     required this.targetLowerSlotHeight,
     required this.minLowerSlotHeight,
+    required this.maxLowerSlotShare,
   });
 
   final String familyName;
   final bool usesFixedLowerSlot;
   final double targetLowerSlotHeight;
   final double minLowerSlotHeight;
+  final double maxLowerSlotShare;
 
   double lowerSlotHeightFor(double availableHeight) {
     if (!usesFixedLowerSlot) {
@@ -2733,7 +2743,7 @@ class _RunnerTaskCycleViewportEnvelopeV1 {
     }
     final maxLowerSlotHeight = math.max(
       minLowerSlotHeight,
-      availableHeight * _runnerEnvelopeMaxLowerSlotShareV1,
+      availableHeight * maxLowerSlotShare,
     );
     return targetLowerSlotHeight.clamp(minLowerSlotHeight, maxLowerSlotHeight);
   }
@@ -2743,6 +2753,7 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
   BuildContext context, {
   required _RunnerViewportFamilyV1 viewportFamily,
   required String pressureReason,
+  required bool repairFillMode,
 }) {
   final usesFixedAnswerListEnvelope =
       pressureReason != _compactAnswerListNoPressureReasonV1 &&
@@ -2754,15 +2765,47 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
         : MediaQuery.paddingOf(context).vertical;
     final usableHeight = media.height - safePadding;
     final targetLowerSlotHeight =
-        (usableHeight * _runnerEnvelopeTargetLowerSlotShareV1).clamp(
-          _runnerEnvelopeMinLowerSlotHeightV1,
-          _runnerEnvelopeTargetLowerSlotHeightV1,
-        );
+        (usableHeight *
+                (repairFillMode
+                    ? _runnerRepairEnvelopeTargetLowerSlotShareV1
+                    : _runnerEnvelopeTargetLowerSlotShareV1))
+            .clamp(
+              repairFillMode
+                  ? _runnerRepairEnvelopeMinLowerSlotHeightV1
+                  : _runnerEnvelopeMinLowerSlotHeightV1,
+              repairFillMode
+                  ? _runnerRepairEnvelopeTargetLowerSlotHeightV1
+                  : _runnerEnvelopeTargetLowerSlotHeightV1,
+            );
     return _RunnerTaskCycleViewportEnvelopeV1(
-      familyName: viewportFamily.name,
+      familyName: repairFillMode ? 'repairFill' : viewportFamily.name,
       usesFixedLowerSlot: true,
       targetLowerSlotHeight: targetLowerSlotHeight,
-      minLowerSlotHeight: _runnerEnvelopeMinLowerSlotHeightV1,
+      minLowerSlotHeight: repairFillMode
+          ? _runnerRepairEnvelopeMinLowerSlotHeightV1
+          : _runnerEnvelopeMinLowerSlotHeightV1,
+      maxLowerSlotShare: repairFillMode
+          ? _runnerRepairEnvelopeMaxLowerSlotShareV1
+          : _runnerEnvelopeMaxLowerSlotShareV1,
+    );
+  }
+  if (repairFillMode) {
+    final media = MediaQuery.sizeOf(context);
+    final safePadding = MediaQuery.viewPaddingOf(context).vertical > 0
+        ? MediaQuery.viewPaddingOf(context).vertical
+        : MediaQuery.paddingOf(context).vertical;
+    final usableHeight = media.height - safePadding;
+    final targetLowerSlotHeight =
+        (usableHeight * _runnerRepairEnvelopeTargetLowerSlotShareV1).clamp(
+          _runnerRepairEnvelopeMinLowerSlotHeightV1,
+          _runnerRepairEnvelopeTargetLowerSlotHeightV1,
+        );
+    return _RunnerTaskCycleViewportEnvelopeV1(
+      familyName: 'repairFill',
+      usesFixedLowerSlot: true,
+      targetLowerSlotHeight: targetLowerSlotHeight,
+      minLowerSlotHeight: _runnerRepairEnvelopeMinLowerSlotHeightV1,
+      maxLowerSlotShare: _runnerRepairEnvelopeMaxLowerSlotShareV1,
     );
   }
   return _RunnerTaskCycleViewportEnvelopeV1(
@@ -2770,6 +2813,7 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
     usesFixedLowerSlot: false,
     targetLowerSlotHeight: 0,
     minLowerSlotHeight: 0,
+    maxLowerSlotShare: 0,
   );
 }
 
@@ -8267,6 +8311,10 @@ const double _runnerEnvelopeMinLowerSlotHeightV1 = 220;
 const double _runnerEnvelopeTargetLowerSlotHeightV1 = 284;
 const double _runnerEnvelopeTargetLowerSlotShareV1 = 0.329;
 const double _runnerEnvelopeMaxLowerSlotShareV1 = 0.36;
+const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
+const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
+const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
+const double _runnerRepairEnvelopeMaxLowerSlotShareV1 = 0.46;
 
 String _compactAnswerListPressureReasonV1(
   BuildContext context, {

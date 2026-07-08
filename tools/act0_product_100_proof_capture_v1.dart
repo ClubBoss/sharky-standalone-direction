@@ -91,13 +91,67 @@ void main(List<String> args) async {
       });
     }
   }
+  final terminalByteComparison = compareTerminalProofBytesV1(outputDir);
 
   final manifestFile = File(
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries, 'terminal_play_byte_comparison': terminalByteComparison})}\n',
   );
+}
+
+Map<String, Object?> compareTerminalProofBytesV1(Directory outputDir) {
+  final results = <Map<String, Object?>>[];
+  for (final viewport in _viewportsV1) {
+    final playFile = File(
+      '${outputDir.path}${Platform.pathSeparator}$viewport.play.png',
+    );
+    final terminalFile = File(
+      '${outputDir.path}${Platform.pathSeparator}$viewport.w12_terminal.png',
+    );
+    if (!playFile.existsSync() || !terminalFile.existsSync()) {
+      throw StateError('Missing play/w12_terminal byte comparison inputs.');
+    }
+    final playBytes = playFile.readAsBytesSync();
+    final terminalBytes = terminalFile.readAsBytesSync();
+    final byteIdentical = _sameBytesV1(playBytes, terminalBytes);
+    if (byteIdentical) {
+      throw StateError(
+        'w12_terminal proof is byte-identical to play for `$viewport`.',
+      );
+    }
+    results.add(<String, Object?>{
+      'viewport': viewport,
+      'play_path': playFile.path.replaceAll(
+        '${Directory.current.path}${Platform.pathSeparator}',
+        '',
+      ),
+      'terminal_path': terminalFile.path.replaceAll(
+        '${Directory.current.path}${Platform.pathSeparator}',
+        '',
+      ),
+      'byte_identical': false,
+      'play_bytes': playBytes.length,
+      'terminal_bytes': terminalBytes.length,
+    });
+  }
+  return <String, Object?>{
+    'all_terminal_images_differ_from_play': true,
+    'comparisons': results,
+  };
+}
+
+bool _sameBytesV1(List<int> left, List<int> right) {
+  if (left.length != right.length) {
+    return false;
+  }
+  for (var index = 0; index < left.length; index += 1) {
+    if (left[index] != right[index]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 String _flutterTestSource(String outputDirPath) {
@@ -263,6 +317,16 @@ void main() {
     }
     final file = File('\${outputDir.path}/' + fileName);
     file.writeAsBytesSync(Uint8List.view(byteData.buffer));
+  }
+
+  Future<void> validateTerminalSemanticEvidenceV1(
+    WidgetTester tester,
+  ) async {
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Volume I terminal review'), findsWidgets);
+    expect(find.textContaining('future world'), findsWidgets);
+    expect(find.textContaining('World 13'), findsNothing);
+    expect(find.textContaining('W13'), findsNothing);
   }
 
   Future<void> captureSurface(
@@ -454,10 +518,12 @@ void main() {
         viewportName,
         size,
         'w12_terminal',
-        () async {},
+        () async {
+          await validateTerminalSemanticEvidenceV1(tester);
+        },
         false,
         Act0ShellTabV1.play,
-        Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+        Act0ControlledDemoCaptureSurfaceV1.w12Terminal,
       );
     }
   });
