@@ -63,6 +63,37 @@ void main() {
     }
   });
 
+  test('Act0 product proof manifest marks masked lane as layout only', () {
+    final source = File(
+      'tools/act0_product_100_proof_capture_v1.dart',
+    ).readAsStringSync();
+
+    expect(source, contains("'lane_type': 'layout_contract'"));
+    expect(source, contains("'is_real_text': false"));
+    expect(source, contains("'allowed_claims': _layoutAllowedClaimsV1"));
+    expect(source, contains("'disallowed_claims': _maskedDisallowedClaimsV1"));
+    expect(source, contains("'surface_identity': surface"));
+    expect(source, contains("'semantic_assertions':"));
+    expect(source, contains("'debug_surface':"));
+  });
+
+  test('Act0 product proof play captures live decision table', () {
+    final source = File(
+      'tools/act0_product_100_proof_capture_v1.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('validatePlaySemanticEvidenceV1'));
+    expect(source, contains('comparePlayHomeProofBytesV1'));
+    expect(source, contains('Act0ControlledDemoCaptureSurfaceV1.runnerDrill'));
+    expect(source, contains('act0_shell_runner_prompt_panel_compact_'));
+    expect(source, contains('act0_shell_runner_action_dock'));
+    expect(source, contains('act0_shell_table'));
+    expect(
+      source,
+      isNot(contains("await openBottomTabByLabelV1(tester, 'Practice');")),
+    );
+  });
+
   test(
     'Act0 product proof capture exposes actionable missing-target errors',
     () {

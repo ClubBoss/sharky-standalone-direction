@@ -9,8 +9,8 @@ protocol and claim-safety guidance only; it does not duplicate route truth.
 ## Current State
 
 - Human QA has not been executed.
-- W1-W6 are frozen until Human QA, regression failure, or concrete new evidence.
-- W1-W6 have technical source/fixture/validator support, not learner-outcome proof.
+- W1-W12 are frozen until Human QA, regression failure, or concrete new evidence.
+- W1-W12 have technical source/fixture/validator support, not learner-outcome proof.
 - Do not claim 9.0, launch readiness, beginner mastery, or durable learning before Human QA.
 - Participant requirements can be deferred until a Human QA execution wave is explicitly admitted.
 - Human QA is the final external gate after static proof, motion, E2E, final
@@ -27,7 +27,7 @@ protocol and claim-safety guidance only; it does not duplicate route truth.
 
 ## Purpose
 
-Human QA should test the W1-W6 learner outcome chain. It should not be used to discover obvious missing definitions that source/fixture/validator work should already catch.
+Human QA should test the current W1-W12 learner outcome chain. It should not be used to discover obvious missing definitions that source/fixture/validator work should already catch.
 
 Human QA should answer:
 
@@ -42,7 +42,7 @@ Human QA should answer:
 
 - Novice session.
 - Short comprehension questions.
-- Decision tasks from W1-W6 technical candidate families.
+- Decision tasks from current W1-W12 technical candidate families.
 - Confusion log.
 - Time-to-decision capture.
 - Error type capture.
@@ -75,7 +75,7 @@ Human QA should answer:
 - No synthetic participant claims.
 - No public launch claims.
 - No 9.0 or learning-effect claims before real evidence.
-- No W7-W12 opening as part of W1-W6 Human QA.
+- No W13+ opening as part of W1-W12 Human QA.
 - No monetization activation from Human QA planning alone.
 
 ## Output Expectations

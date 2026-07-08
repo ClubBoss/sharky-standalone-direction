@@ -17,6 +17,7 @@ SURFACE_GROUPS = {
     "core": (
         ("home", "Home"),
         ("learn", "Learn"),
+        ("learn_detail", "Learn detail"),
         ("practice", "Practice"),
         ("review", "Review"),
         ("profile", "Profile"),
@@ -24,6 +25,7 @@ SURFACE_GROUPS = {
     "core_fast": (
         ("home", "Home"),
         ("learn", "Learn"),
+        ("learn_detail", "Learn detail"),
         ("practice", "Practice"),
         ("review", "Review"),
         ("profile", "Profile"),
@@ -118,7 +120,7 @@ SURFACE_GROUPS = {
     ),
 }
 DEFAULT_GROUP = "core"
-DEVICE = "compact"
+DEFAULT_DEVICE = "compact"
 TARGET_SCREEN_WIDTH = 760
 PADDING = 44
 GAP = 38
@@ -139,7 +141,8 @@ def main(argv: list[str]) -> int:
 
     root = Path(__file__).resolve().parents[1]
     group = argv[2] if len(argv) >= 3 and argv[2] else DEFAULT_GROUP
-    if group not in SURFACE_GROUPS:
+    surface_group = _surface_group_key(group)
+    if surface_group not in SURFACE_GROUPS:
         print(f"Unsupported screen review group: {group}", file=sys.stderr)
         return 64
 
@@ -153,9 +156,11 @@ def main(argv: list[str]) -> int:
         print(f"Missing capture output directory: {output_dir}", file=sys.stderr)
         return 1
 
-    entries = _load_entries(output_dir, SURFACE_GROUPS[group])
+    manifest = _load_manifest(output_dir)
+    device = _device_from_manifest(manifest)
+    entries = _load_entries(output_dir, SURFACE_GROUPS[surface_group], device)
     if not entries:
-        print("No compact Act0 screenshots found to package.", file=sys.stderr)
+        print(f"No {device} Act0 screenshots found to package.", file=sys.stderr)
         return 1
 
     contact_sheet = output_dir / "contact_sheet.png"
@@ -163,8 +168,8 @@ def main(argv: list[str]) -> int:
     readme = output_dir / "README.txt"
     index = output_dir / "screen_review_index.json"
 
-    _write_contact_sheet(entries, contact_sheet)
-    metadata = _metadata(root, entries, contact_sheet, zip_path, group)
+    _write_contact_sheet(entries, contact_sheet, device)
+    metadata = _metadata(root, entries, contact_sheet, zip_path, group, manifest, device)
     readme.write_text(_readme_text(metadata), encoding="utf-8")
     index.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     full_scroll_metadata = output_dir / "full_scroll_meta.json"
@@ -190,13 +195,32 @@ def main(argv: list[str]) -> int:
 def _load_entries(
     output_dir: Path,
     surfaces: tuple[tuple[str, str], ...],
+    device: str,
 ) -> list[tuple[str, str, Path]]:
     entries: list[tuple[str, str, Path]] = []
     for surface, label in surfaces:
-        path = output_dir / f"{DEVICE}.{surface}.png"
+        path = output_dir / f"{device}.{surface}.png"
         if path.exists() and path.stat().st_size > 0:
             entries.append((surface, label, path))
     return entries
+
+
+def _surface_group_key(group: str) -> str:
+    if group.endswith("_tablet_fast"):
+        return group.replace("_tablet_fast", "_fast")
+    return group
+
+
+def _load_manifest(output_dir: Path) -> dict[str, object]:
+    path = output_dir / "manifest.json"
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _device_from_manifest(manifest: dict[str, object]) -> str:
+    value = manifest.get("device")
+    return value if isinstance(value, str) and value else DEFAULT_DEVICE
 
 
 def _font(size: int, *, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
@@ -211,7 +235,11 @@ def _font(size: int, *, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFon
     return ImageFont.load_default()
 
 
-def _write_contact_sheet(entries: list[tuple[str, str, Path]], output: Path) -> None:
+def _write_contact_sheet(
+    entries: list[tuple[str, str, Path]],
+    output: Path,
+    device: str,
+) -> None:
     label_font = _font(36, bold=True)
     meta_font = _font(24)
     scaled: list[tuple[str, str, Image.Image]] = []
@@ -241,7 +269,7 @@ def _write_contact_sheet(entries: list[tuple[str, str, Path]], output: Path) -> 
             fill=PANEL,
         )
         draw.text((x, y), label, font=label_font, fill=TEXT)
-        draw.text((x + 160, y + 8), f"compact.{surface}.png", font=meta_font, fill=MUTED)
+        draw.text((x + 160, y + 8), f"{device}.{surface}.png", font=meta_font, fill=MUTED)
         sheet.paste(image, (x, y + LABEL_HEIGHT))
 
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -254,16 +282,28 @@ def _metadata(
     contact_sheet: Path,
     zip_path: Path,
     group: str,
+    manifest: dict[str, object],
+    device: str,
 ) -> dict[str, object]:
     metadata = {
         "packet": f"screen_review_{group}",
         "group": group,
+        "device": device,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "git_commit": _git(root, "rev-parse", "HEAD"),
         "git_status": "clean" if _git(root, "status", "--short") == "" else "dirty",
+        "manifest_git_commit": manifest.get("git_commit"),
+        "manifest_git_status": manifest.get("git_status"),
+        "matches_current_head": manifest.get("git_commit") == _git(root, "rev-parse", "HEAD"),
         "source_command": _source_command(group),
         "package_command": f"./tools/package_screen_review_v1.sh current {group}",
         "scenario_family": _scenario_family(group),
+        "lane_type": manifest.get("lane_type", "real_text_product_proof"),
+        "render_kind": manifest.get("render_kind", "flutter_widget_test_real_text"),
+        "is_real_text": manifest.get("is_real_text", True),
+        "allowed_claims": manifest.get("allowed_claims", []),
+        "unsupported_claims": manifest.get("unsupported_claims", []),
+        "duplicate_hash_policy": manifest.get("duplicate_hash_policy", {}),
         "content_reflects_latest_post_idealization_copy": group
         in ("route_w7_w12_fast", "active_route_w7_w12_fast"),
         "surfaces": [surface for surface, _, _ in entries],
@@ -306,6 +346,9 @@ def _audit_policy_metadata(group: str) -> dict[str, object]:
 
 
 def _source_command(group: str) -> str:
+    if group.endswith("_tablet_fast"):
+        base = group.replace("_tablet_fast", "")
+        return f"./tools/screen_review_fast_v1.sh {base} tablet"
     if group == "core_fast":
         return "./tools/screen_review_fast_v1.sh core compact"
     if group == "runner_fast":
@@ -326,6 +369,8 @@ def _source_command(group: str) -> str:
 
 
 def _scenario_family(group: str) -> str:
+    if group.endswith("_tablet_fast"):
+        group = group.replace("_tablet_fast", "_fast")
     if group == "route_w7_w12_fast":
         return "late_route_w7_w12_visual_coverage"
     if group == "active_route_w7_w12_fast":

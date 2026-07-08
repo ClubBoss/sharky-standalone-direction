@@ -1,10 +1,32 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
+
 const _outputRootPathV1 = 'output/screen_review/current';
 const _schemaV1 = 'screen_review_fast_v1';
 const _routeVisualAuditValidityV1 = 'legacy_reference_not_for_audit';
 const _routeAllowedUseV1 = 'route_state_smoke_evidence_only';
+
+const _realTextAllowedClaimsV1 = <String>[
+  'copy',
+  'content_clarity',
+  'tone',
+  'readability',
+  'feedback_quality',
+  'payoff_quality',
+  'product_readiness_evidence',
+  'surface_identity',
+];
+
+const _realTextUnsupportedClaimsBaseV1 = <String>[
+  'human_qa_approval',
+  'public_readiness',
+  'launch_readiness',
+  '10_10_claim',
+  'durable_learning_effect',
+  'beginner_mastery',
+];
 
 class _CaptureSurfaceV1 {
   const _CaptureSurfaceV1(
@@ -50,6 +72,7 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
   'core': <_CaptureSurfaceV1>[
     _CaptureSurfaceV1('home', 'firstWeekHome'),
     _CaptureSurfaceV1('learn', 'firstWeekLearn'),
+    _CaptureSurfaceV1('learn_detail', 'firstWeekLearn'),
     _CaptureSurfaceV1('practice', 'practice'),
     _CaptureSurfaceV1('review', 'firstWeekReview'),
     _CaptureSurfaceV1('profile', 'firstWeekProfile'),
@@ -273,13 +296,16 @@ void main(List<String> args) async {
     exit(0);
   }
 
-  if (args.length != 2 || args[1] != 'compact') {
+  if (args.length != 2 || !_supportedDevicesV1.contains(args[1])) {
     _printUsageV1();
     exit(64);
   }
 
   final group = args[0];
   final device = args[1];
+  final packetName = device == 'compact'
+      ? '${group}_fast'
+      : '${group}_${device}_fast';
   final captureSurfaces = _captureGroupsV1[group];
   final routeCaptureSurfaces = group == 'route_w7_w12'
       ? _routeW7W12CaptureSurfacesV1
@@ -293,11 +319,11 @@ void main(List<String> args) async {
     _printUsageV1();
     exit(64);
   }
-  final outputDir = Directory('$_outputRootPathV1/${group}_fast');
+  final outputDir = Directory('$_outputRootPathV1/$packetName');
   final stagingRoot = Directory('output/screen_review/.staging')
     ..createSync(recursive: true);
   final stagingDir = Directory(
-    '${stagingRoot.path}/${group}_fast.${DateTime.now().toUtc().toIso8601String().replaceAll(':', '').replaceAll('.', '_')}.$pid',
+    '${stagingRoot.path}/$packetName.${DateTime.now().toUtc().toIso8601String().replaceAll(':', '').replaceAll('.', '_')}.$pid',
   )..createSync(recursive: true);
 
   final tempDir = Directory(
@@ -369,6 +395,13 @@ void main(List<String> args) async {
       : routeCaptureSurfaces != null
       ? routeCaptureSurfaces.map((capture) => capture.name).toList()
       : activeRouteCaptureSurfaces!.map((capture) => capture.name).toList();
+  final currentGitCommit = _gitOutputV1(<String>['rev-parse', 'HEAD']);
+  final currentGitStatus = _evidenceGitStatusV1();
+  final sourceBySurface = _sourceBySurfaceV1(
+    captureSurfaces: captureSurfaces,
+    routeCaptureSurfaces: routeCaptureSurfaces,
+    activeRouteCaptureSurfaces: activeRouteCaptureSurfaces,
+  );
   final entries = <Map<String, Object?>>[];
   for (final surface in surfaces) {
     final file = File(
@@ -382,12 +415,32 @@ void main(List<String> args) async {
       exit(1);
     }
     entries.add(<String, Object?>{
+      'lane_type': 'real_text_product_proof',
+      'render_kind': 'flutter_widget_test_real_text',
+      'is_real_text': true,
       'device': device,
+      'viewport': device,
       'surface': surface,
-      'path': 'output/screen_review/current/${group}_fast/$device.$surface.png',
+      'surface_identity': surface,
+      'path': 'output/screen_review/current/$packetName/$device.$surface.png',
       'bytes': file.lengthSync(),
+      'sha256': sha256.convert(file.readAsBytesSync()).toString(),
+      'git_commit': currentGitCommit,
+      'git_status': currentGitStatus,
+      'matches_current_head': true,
+      'allowed_claims': _realTextAllowedClaimsV1,
+      'unsupported_claims': _unsupportedViewportClaimsV1(device),
+      'semantic_assertions': _semanticAssertionsForSurfaceV1(surface),
+      'debug_surface': sourceBySurface[surface],
+      'source_route': group == 'active_route_w7_w12'
+          ? 'Act0LessonRunnerShellV1.active_runtime_route'
+          : 'Act0ShellPreviewScreenV1.controlled_demo',
+      'capture_source_policy': group == 'active_route_w7_w12'
+          ? 'active_act0_runtime_test_only_wrapper'
+          : 'active_surface_allowlisted',
     });
   }
+  final duplicateHashPolicy = duplicateHashPolicyV1(entries);
 
   final manifestFile = File(
     '${stagingDir.path}${Platform.pathSeparator}manifest.json',
@@ -403,7 +456,7 @@ void main(List<String> args) async {
       ? 'final_pre_human_visual_ux_audit'
       : 'final_visual_audit_candidate';
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': '${group}_fast', 'device': device, 'render_kind': 'flutter_widget_test_real_text', 'scenario_family': group == 'route_w7_w12'
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': packetName, 'device': device, 'lane_type': 'real_text_product_proof', 'render_kind': 'flutter_widget_test_real_text', 'is_real_text': true, 'git_commit': currentGitCommit, 'git_status': currentGitStatus, 'matches_current_head': true, 'allowed_claims': _realTextAllowedClaimsV1, 'unsupported_claims': _unsupportedViewportClaimsV1(device), 'duplicate_hash_policy': duplicateHashPolicy, 'scenario_family': group == 'route_w7_w12'
         ? 'late_route_w7_w12_visual_coverage'
         : group == 'active_route_w7_w12'
         ? 'active_runtime_late_route_w7_w12_visual_coverage'
@@ -411,7 +464,7 @@ void main(List<String> args) async {
         ? _routeVisualAuditValidityV1
         : group == 'active_route_w7_w12'
         ? 'active_act0_runtime_test_only_wrapper'
-        : 'active_surface_allowlisted', 'legacy_archive_runner_used': group == 'route_w7_w12', 'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null, 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted.'})}\n',
+        : 'active_surface_allowlisted', 'legacy_archive_runner_used': group == 'route_w7_w12', 'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null, 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted. Real-text claims are valid only for the listed device/viewports and current HEAD.'})}\n',
   );
 
   if (group == 'full_scroll') {
@@ -441,6 +494,129 @@ void main(List<String> args) async {
   }
 
   stdout.writeln(outputDir.path);
+}
+
+const _supportedDevicesV1 = <String>{'compact', 'tablet'};
+
+String _gitOutputV1(List<String> args) {
+  final result = Process.runSync(
+    'git',
+    args,
+    workingDirectory: Directory.current.path,
+  );
+  if (result.exitCode != 0) {
+    throw StateError('git ${args.join(' ')} failed: ${result.stderr}');
+  }
+  return (result.stdout as String).trim();
+}
+
+String _evidenceGitStatusV1() {
+  final raw = _gitOutputV1(<String>['status', '--short']);
+  final meaningfulLines = raw
+      .split('\n')
+      .map((line) => line.trimRight())
+      .where((line) => line.isNotEmpty)
+      .where((line) => !line.startsWith('?? output/screen_review/'))
+      .where((line) => line != '?? output/screen_review/')
+      .toList(growable: false);
+  if (meaningfulLines.isEmpty) {
+    return 'clean_or_output_only';
+  }
+  return 'dirty';
+}
+
+List<String> _unsupportedViewportClaimsV1(String device) {
+  return <String>[
+    ..._realTextUnsupportedClaimsBaseV1,
+    if (device == 'compact') 'tablet_real_text_claims',
+    if (device == 'tablet') 'compact_phone_real_text_claims',
+    'tall_phone_real_text_claims',
+    'large_phone_real_text_claims',
+  ];
+}
+
+List<String> _semanticAssertionsForSurfaceV1(String surface) {
+  if (surface.contains('terminal') || surface.contains('no_w13')) {
+    return <String>['terminal_or_no_w13_copy_visible', 'real_text_rendered'];
+  }
+  if (surface.contains('decision') ||
+      surface.contains('task') ||
+      surface.contains('table')) {
+    return <String>['decision_or_table_surface_visible', 'real_text_rendered'];
+  }
+  if (surface.contains('feedback') || surface.contains('repair')) {
+    return <String>['feedback_or_repair_copy_visible', 'real_text_rendered'];
+  }
+  return <String>['surface_copy_visible', 'real_text_rendered'];
+}
+
+Map<String, String> _sourceBySurfaceV1({
+  required List<_CaptureSurfaceV1>? captureSurfaces,
+  required List<_RouteCaptureSurfaceV1>? routeCaptureSurfaces,
+  required List<_ActiveRouteCaptureSurfaceV1>? activeRouteCaptureSurfaces,
+}) {
+  if (captureSurfaces != null) {
+    return <String, String>{
+      for (final capture in captureSurfaces)
+        capture.name:
+            'Act0ControlledDemoCaptureSurfaceV1.${capture.debugSurface}',
+    };
+  }
+  if (activeRouteCaptureSurfaces != null) {
+    return <String, String>{
+      for (final capture in activeRouteCaptureSurfaces)
+        capture.name: 'Act0LessonRunnerShellV1.${capture.captureKind}',
+    };
+  }
+  return <String, String>{
+    for (final capture
+        in routeCaptureSurfaces ?? const <_RouteCaptureSurfaceV1>[])
+      capture.name: 'legacy_route_pack.${capture.packId}',
+  };
+}
+
+Map<String, Object?> duplicateHashPolicyV1(List<Map<String, Object?>> entries) {
+  const intentionalSameStateAllowlist = <String, String>{
+    'repair_focus|session_repair':
+        'Both labels intentionally render the same wrong-outcome repair proof state until a future product-specific session-repair fixture is admitted.',
+  };
+  final byViewport = <String, Map<String, List<String>>>{};
+  for (final entry in entries) {
+    final viewport = entry['viewport'] as String;
+    final surface = entry['surface'] as String;
+    final hash = entry['sha256'] as String;
+    byViewport.putIfAbsent(viewport, () => <String, List<String>>{});
+    byViewport[viewport]!.putIfAbsent(hash, () => <String>[]).add(surface);
+  }
+  final duplicates = <Map<String, Object?>>[];
+  for (final viewportEntry in byViewport.entries) {
+    for (final hashEntry in viewportEntry.value.entries) {
+      if (hashEntry.value.length <= 1) {
+        continue;
+      }
+      final surfaces = [...hashEntry.value]..sort();
+      final key = surfaces.join('|');
+      final reason = intentionalSameStateAllowlist[key];
+      if (reason == null) {
+        throw StateError(
+          'Unlisted duplicate screenshot hashes in real-text lane: '
+          '${viewportEntry.key} $key',
+        );
+      }
+      duplicates.add(<String, Object?>{
+        'viewport': viewportEntry.key,
+        'sha256': hashEntry.key,
+        'surfaces': surfaces,
+        'allowlist_key': key,
+        'reason': reason,
+      });
+    }
+  }
+  return <String, Object?>{
+    'policy': 'disallow_unlisted_duplicates',
+    'intentional_same_state_allowlist': intentionalSameStateAllowlist,
+    'duplicates': duplicates,
+  };
 }
 
 String _flutterTestSource(
@@ -485,7 +661,11 @@ void main() {
   const captureGroup = '$group';
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
   final fullScrollEntries = <Map<String, Object?>>[];
-  const compactSize = Size(375, 812);
+  const viewportSizes = <String, Size>{
+    'compact': Size(375, 812),
+    'tablet': Size(834, 1194),
+  };
+  final viewportSize = viewportSizes['$device']!;
 
   Widget host(Act0ControlledDemoCaptureSurfaceV1 surface) {
     final realTextButtonStyle = ButtonStyle(
@@ -587,7 +767,7 @@ void main() {
     WidgetTester tester,
     Act0ControlledDemoCaptureSurfaceV1 surface,
   ) async {
-    tester.view.physicalSize = compactSize;
+    tester.view.physicalSize = viewportSize;
     tester.view.devicePixelRatio = 1.0;
     await tester.pumpWidget(host(surface));
     await tester.pump();
@@ -617,6 +797,32 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
+  }
+
+  Finder findLessonCardsV1() {
+    return find.byWidgetPredicate((widget) {
+      final key = widget.key;
+      return key != null && key.toString().contains('act0_shell_lesson_');
+    });
+  }
+
+  Future<void> openLearnDetailIfNeededV1(WidgetTester tester) async {
+    if (find.byKey(const Key('act0_shell_selected_lesson_panel')).evaluate().isNotEmpty) {
+      return;
+    }
+    final lessonCards = findLessonCardsV1();
+    if (lessonCards.evaluate().isEmpty) {
+      throw StateError('Missing visible target for learn lesson card');
+    }
+    await tester.ensureVisible(lessonCards.first);
+    await tester.tap(lessonCards.first, warnIfMissed: false);
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pumpAndSettle();
+    if (find.byKey(const Key('act0_shell_selected_lesson_panel')).evaluate().isEmpty) {
+      throw StateError(
+        'Learn detail panel did not open after tapping learn lesson card.',
+      );
+    }
   }
 
   Future<Map<String, Object?>> movePrimaryScrollableToViewport(
@@ -731,6 +937,9 @@ void main() {
     await tester.pump();
     await pumpCompact(tester, surface);
     await advanceWelcomeCaptureState(tester, fileName);
+    if (fileName.contains('learn_detail')) {
+      await openLearnDetailIfNeededV1(tester);
+    }
     final scrollMetadata = await movePrimaryScrollableToViewport(
       tester,
       scrollViewport,
@@ -835,8 +1044,12 @@ void main() {
   const captureGroup = '$group';
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
   final activeRouteEntries = <Map<String, Object?>>[];
-  const compactSize = Size(375, 812);
-  const copyDetailSize = compactSize;
+  const viewportSizes = <String, Size>{
+    'compact': Size(375, 812),
+    'tablet': Size(834, 1194),
+  };
+  final viewportSize = viewportSizes['$device']!;
+  final copyDetailSize = viewportSize;
 
   _TerminalTaskSpecV1 _terminalTaskSpec(int taskIndex) {
     final pack = kCampaignPacksV1['volume_i_terminal_review_v1']!;
@@ -1271,7 +1484,7 @@ void main() {
     required int captureOrder,
   }) async {
     final task = activeTaskSpecFor(world: world, taskIndex: taskIndex);
-    final size = captureKind == 'copy_detail' ? copyDetailSize : compactSize;
+    final size = captureKind == 'copy_detail' ? copyDetailSize : viewportSize;
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     await tester.pumpWidget(host(task: task, captureKind: captureKind));
@@ -1675,6 +1888,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12> compact',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tablet>',
   );
 }

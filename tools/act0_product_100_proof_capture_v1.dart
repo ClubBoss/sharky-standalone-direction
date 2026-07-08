@@ -1,7 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
+
 const _outputDirPathV1 = 'output/screen_review/current/act0_product_100_proof';
+
+const _layoutAllowedClaimsV1 = <String>[
+  'layout',
+  'geometry',
+  'safe_area',
+  'cta_placement',
+  'spacing',
+  'surface_identity',
+];
+
+const _maskedDisallowedClaimsV1 = <String>[
+  'copy',
+  'content',
+  'tone',
+  'product_readiness',
+  'premium_readiness',
+  'learning_depth',
+  'payoff_quality',
+  'repair_personalization',
+];
 
 const _viewportsV1 = <String>[
   'compact_phone',
@@ -81,24 +103,77 @@ void main(List<String> args) async {
         throw StateError('Missing screenshot artifact `${file.path}`.');
       }
       entries.add(<String, Object?>{
+        'lane_type': 'layout_contract',
+        'render_kind': 'nonliteral_preview_contract',
+        'is_real_text': false,
         'viewport': viewport,
         'surface': surface,
+        'surface_identity': surface,
         'path': file.path.replaceAll(
           '${Directory.current.path}${Platform.pathSeparator}',
           '',
         ),
         'bytes': file.lengthSync(),
+        'sha256': sha256.convert(file.readAsBytesSync()).toString(),
+        'allowed_claims': _layoutAllowedClaimsV1,
+        'disallowed_claims': _maskedDisallowedClaimsV1,
+        'semantic_assertions': _semanticAssertionsForSurfaceV1(surface),
+        'debug_surface': _debugSurfaceForSurfaceV1(surface),
+        'source_route': 'Act0ShellPreviewScreenV1.controlled_demo',
+        'capture_source_policy': 'masked_layout_contract_only',
       });
     }
   }
   final terminalByteComparison = compareTerminalProofBytesV1(outputDir);
+  final playHomeByteComparison = comparePlayHomeProofBytesV1(outputDir);
+  final duplicateHashPolicy = duplicateHashPolicyV1(entries);
 
   final manifestFile = File(
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'preview_contract', 'render_kind': 'nonliteral_preview_contract', 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries, 'terminal_play_byte_comparison': terminalByteComparison})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'layout_contract', 'render_kind': 'nonliteral_preview_contract', 'is_real_text': false, 'allowed_claims': _layoutAllowedClaimsV1, 'disallowed_claims': _maskedDisallowedClaimsV1, 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries, 'terminal_play_byte_comparison': terminalByteComparison, 'play_home_byte_comparison': playHomeByteComparison, 'duplicate_hash_policy': duplicateHashPolicy, 'note': 'Masked layout-contract evidence only. Do not cite for copy, content, tone, product readiness, premium readiness, payoff quality, repair personalization, or learning-depth claims.'})}\n',
   );
+}
+
+List<String> _semanticAssertionsForSurfaceV1(String surface) {
+  return switch (surface) {
+    'play' => <String>[
+      'runner_screen_present',
+      'decision_prompt_present',
+      'action_controls_present',
+      'table_context_present',
+    ],
+    'w12_terminal' => <String>[
+      'volume_i_terminal_review_present',
+      'future_world_copy_present',
+      'world13_absent',
+      'w13_absent',
+    ],
+    _ => <String>['surface_renders_non_empty'],
+  };
+}
+
+String _debugSurfaceForSurfaceV1(String surface) {
+  return switch (surface) {
+    'placement' => 'Act0ControlledDemoCaptureSurfaceV1.placement',
+    'welcome' => 'Act0ControlledDemoCaptureSurfaceV1.welcome',
+    'home' => 'Act0ControlledDemoCaptureSurfaceV1.firstWeekHome',
+    'learn' => 'Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn',
+    'learn_detail' => 'Act0ShellPreviewScreenV1.learn_detail_interaction',
+    'play' => 'Act0ControlledDemoCaptureSurfaceV1.runnerDrill',
+    'correct_feedback' =>
+      'Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback',
+    'wrong_feedback' =>
+      'Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback',
+    'practice_repair' =>
+      'Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget',
+    'completion_payoff' => 'Act0ControlledDemoCaptureSurfaceV1.worldCompletion',
+    'summary' => 'Act0ControlledDemoCaptureSurfaceV1.sessionSummary',
+    'review_profile' => 'Act0ControlledDemoCaptureSurfaceV1.profileEvidence',
+    'w12_terminal' => 'Act0ControlledDemoCaptureSurfaceV1.w12Terminal',
+    _ => 'unknown',
+  };
 }
 
 Map<String, Object?> compareTerminalProofBytesV1(Directory outputDir) {
@@ -139,6 +214,80 @@ Map<String, Object?> compareTerminalProofBytesV1(Directory outputDir) {
   return <String, Object?>{
     'all_terminal_images_differ_from_play': true,
     'comparisons': results,
+  };
+}
+
+Map<String, Object?> comparePlayHomeProofBytesV1(Directory outputDir) {
+  final results = <Map<String, Object?>>[];
+  for (final viewport in _viewportsV1) {
+    final playFile = File(
+      '${outputDir.path}${Platform.pathSeparator}$viewport.play.png',
+    );
+    final homeFile = File(
+      '${outputDir.path}${Platform.pathSeparator}$viewport.home.png',
+    );
+    if (!playFile.existsSync() || !homeFile.existsSync()) {
+      throw StateError('Missing play/home byte comparison inputs.');
+    }
+    final playBytes = playFile.readAsBytesSync();
+    final homeBytes = homeFile.readAsBytesSync();
+    final byteIdentical = _sameBytesV1(playBytes, homeBytes);
+    if (byteIdentical) {
+      throw StateError('play proof is byte-identical to home for `$viewport`.');
+    }
+    results.add(<String, Object?>{
+      'viewport': viewport,
+      'play_path': playFile.path.replaceAll(
+        '${Directory.current.path}${Platform.pathSeparator}',
+        '',
+      ),
+      'home_path': homeFile.path.replaceAll(
+        '${Directory.current.path}${Platform.pathSeparator}',
+        '',
+      ),
+      'byte_identical': false,
+      'play_bytes': playBytes.length,
+      'home_bytes': homeBytes.length,
+    });
+  }
+  return <String, Object?>{
+    'all_play_images_differ_from_home': true,
+    'comparisons': results,
+  };
+}
+
+Map<String, Object?> duplicateHashPolicyV1(List<Map<String, Object?>> entries) {
+  final byViewport = <String, Map<String, List<String>>>{};
+  for (final entry in entries) {
+    final viewport = entry['viewport'] as String;
+    final surface = entry['surface'] as String;
+    final hash = entry['sha256'] as String;
+    byViewport.putIfAbsent(viewport, () => <String, List<String>>{});
+    byViewport[viewport]!.putIfAbsent(hash, () => <String>[]).add(surface);
+  }
+  final duplicates = <Map<String, Object?>>[];
+  for (final viewportEntry in byViewport.entries) {
+    for (final hashEntry in viewportEntry.value.entries) {
+      if (hashEntry.value.length <= 1) {
+        continue;
+      }
+      duplicates.add(<String, Object?>{
+        'viewport': viewportEntry.key,
+        'sha256': hashEntry.key,
+        'surfaces': hashEntry.value,
+      });
+    }
+  }
+  if (duplicates.isNotEmpty) {
+    throw StateError(
+      'Unlisted duplicate screenshot hashes in layout-contract lane: '
+      '$duplicates',
+    );
+  }
+  return <String, Object?>{
+    'policy': 'disallow_unlisted_duplicates',
+    'intentional_same_state_allowlist': <String>[],
+    'duplicates': duplicates,
   };
 }
 
@@ -192,6 +341,9 @@ void main() {
     Act0LessonPhaseV1 phase = Act0LessonPhaseV1.theory,
     bool showPlacementOnStart = false,
     Act0ControlledDemoCaptureSurfaceV1? debugSurface,
+    String? worldId,
+    String? lessonId,
+    String? taskId,
   }) {
     return MaterialApp(
       locale: const Locale('en'),
@@ -211,9 +363,9 @@ void main() {
             : Act0ShellDebugHarnessEntryV1(
                 mode: Act0ControlledDemoCaptureModeV1.directState,
                 surface: debugSurface,
-                worldId: 'world_12',
-                lessonId: 'tilt_reset_protocol',
-                taskId: 'w12_after_mistake_reset',
+                worldId: worldId,
+                lessonId: lessonId,
+                taskId: taskId,
               ),
       ),
     );
@@ -329,6 +481,29 @@ void main() {
     expect(find.textContaining('W13'), findsNothing);
   }
 
+  Future<void> validatePlaySemanticEvidenceV1(
+    WidgetTester tester,
+  ) async {
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((widget) {
+        final key = widget.key;
+        return key != null &&
+            key.toString().contains(
+              'act0_shell_runner_prompt_panel_compact_',
+            );
+      }),
+      findsWidgets,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_runner_action_dock')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_bottom_nav')), findsNothing);
+  }
+
   Future<void> captureSurface(
     WidgetTester tester,
     String viewportName,
@@ -338,6 +513,11 @@ void main() {
     bool showPlacementOnStart,
     Act0ShellTabV1 initialTab,
     Act0ControlledDemoCaptureSurfaceV1? debugSurface,
+    {
+    String? worldId,
+    String? lessonId,
+    String? taskId,
+  }
   ) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -351,6 +531,9 @@ void main() {
           tab: initialTab,
           showPlacementOnStart: showPlacementOnStart,
           debugSurface: debugSurface,
+          worldId: worldId,
+          lessonId: lessonId,
+          taskId: taskId,
         ),
       ),
       size,
@@ -440,11 +623,14 @@ void main() {
         size,
         'play',
         () async {
-          await openBottomTabByLabelV1(tester, 'Practice');
+          await validatePlaySemanticEvidenceV1(tester);
         },
         false,
-        Act0ShellTabV1.home,
-        null,
+        Act0ShellTabV1.play,
+        Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+        worldId: 'world_1',
+        lessonId: 'what_poker_is',
+        taskId: 'what_poker_is_theory',
       );
 
       await captureSurface(
