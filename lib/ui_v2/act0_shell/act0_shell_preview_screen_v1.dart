@@ -78,6 +78,77 @@ act0FirstValueSameSignalRepMappingV1({
     );
   }
 
+  if (nextRepId == 'repeat_board_read' &&
+      skillAtomId == 'board_read' &&
+      sourceSignalId == 'board_cards') {
+    switch (sourceTask) {
+      case 'visible_king_combo_reduction_intro':
+        return target(
+          'world_7',
+          'range_thinking_lite_combo_density',
+          'paired_board_texture_lite_intro',
+        );
+      case 'paired_board_texture_lite_intro':
+        return target(
+          'world_7',
+          'range_thinking_lite_combo_density',
+          'visible_card_combo_density_transfer_check',
+        );
+      case 'visible_card_combo_density_transfer_check':
+        return target(
+          'world_7',
+          'range_thinking_lite_combo_density',
+          'visible_king_combo_reduction_intro',
+        );
+    }
+  }
+
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'stack_depth') {
+    switch (sourceTask) {
+      case 'short_stack_all_in_pressure_intro':
+        return target('world_8', 'spr_and_commitment', 'w7_low_spr_commit');
+      case 'deep_stack_postflop_room_intro':
+        return target('world_8', 'spr_and_commitment', 'w7_high_spr_room');
+      case 'stack_to_pot_commitment_lite':
+        return target('world_8', 'spr_and_commitment', 'w7_spr4_middle');
+      case 'all_in_threshold_transfer_check':
+        return target('world_8', 'same_hand_different_depth', 'w7_20bb_wider');
+    }
+  }
+
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'tournament_pressure') {
+    switch (sourceTask) {
+      case 'bubble_survival_pressure_intro':
+        return target(
+          'world_9',
+          'survival_pressure_basics',
+          'w9_short_stack_survival',
+        );
+      case 'risk_premium_medium_stack_intro':
+        return target(
+          'world_9',
+          'bubble_risk_premium',
+          'w9_medium_stack_tighten',
+        );
+      case 'short_stack_ladder_pressure_lite':
+        return target(
+          'world_9',
+          'bubble_risk_premium',
+          'w9_bubble_short_stack',
+        );
+      case 'pressure_transfer_check':
+        return target(
+          'world_9',
+          'tournament_pressure_checkpoint',
+          'w9_checkpoint_table_notice',
+        );
+    }
+  }
+
   if (nextRepId == 'repeat_starting_hand_read' &&
       skillAtomId == 'starting_hand_read' &&
       sourceSignalId == 'hero_cards') {
@@ -4863,6 +4934,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       record: repairSourceRecord,
                                     );
                                     if (repaired) {
+                                      _clearMatchedOpenRepairIntentV1(
+                                        sourceTaskId: repairSourceTaskId,
+                                        completedTaskId:
+                                            playSelectedTask.taskId,
+                                      );
+                                      _clearOpenRepairIntentsForCompletedTaskV1(
+                                        completedTaskId:
+                                            playSelectedTask.taskId,
+                                      );
                                       _completeCurrentTask(playSelectedTask);
                                       if (_activeRepairSourceTaskId != null &&
                                           _activeRepairSourceTaskId !=
@@ -7177,6 +7257,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = request.repairTaskId;
     _activeRepairSourceTaskId = request.sourceTaskId;
     _activePracticeRepairQueueRequestV1 = request;
+    _emitRepairStartedTelemetryV1(
+      sourceTaskId: request.sourceTaskId,
+      repairTaskId: request.repairTaskId,
+    );
   }
 
   void _startMistakeRepair(
@@ -8659,6 +8743,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sequence: _repairOutcomeSequenceV1,
       sessionId: _sessionIdentityStateV1.currentActiveSessionId,
     );
+    _emitRepairCompletedTelemetryV1(
+      sourceTaskId: request.sourceTaskId,
+      repairTaskId: request.repairTaskId,
+      repaired: option.isCorrect,
+    );
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
@@ -8685,7 +8774,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastSessionDate: _todayDateString(),
       lastSessionWorldId: request.targetWorldId.trim(),
     );
+    if (option.isCorrect) {
+      _clearMatchedOpenRepairIntentV1(
+        sourceTaskId: request.sourceTaskId,
+        completedTaskId: request.repairTaskId,
+      );
+      _clearOpenRepairIntentsForCompletedTaskV1(
+        completedTaskId: request.repairTaskId,
+      );
+    }
     _pruneMultiRepairQueueWithResolutionV1();
+    _syncOpenRepairIntentIndexFromQueueV1();
     _persistProgress();
   }
 
@@ -8785,6 +8884,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           reasonCode: intent.reasonCode,
           mappingType: completedExactReplay ? 'exact' : intent.mappingType,
         ),
+      );
+    }
+  }
+
+  void _clearOpenRepairIntentsForCompletedTaskV1({
+    required String completedTaskId,
+  }) {
+    final normalizedCompletedTaskId = completedTaskId.trim();
+    if (normalizedCompletedTaskId.isEmpty) {
+      return;
+    }
+    final matchingSourceTaskIds = <String>[
+      for (final intent in _openRepairIntentBySourceTaskId.values)
+        if (intent.targetTaskId == normalizedCompletedTaskId ||
+            (intent.mappingType == 'exact' &&
+                intent.sourceTaskId == normalizedCompletedTaskId))
+          intent.sourceTaskId,
+    ];
+    for (final sourceTaskId in matchingSourceTaskIds) {
+      _clearMatchedOpenRepairIntentV1(
+        sourceTaskId: sourceTaskId,
+        completedTaskId: normalizedCompletedTaskId,
       );
     }
   }
@@ -10334,6 +10455,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
+    _clearOpenRepairIntentsForCompletedTaskV1(completedTaskId: _selectedTaskId);
     _skippedTaskIds.remove(_selectedTaskId);
     _visibleSkippedTaskIds.remove(_selectedTaskId);
     _completedTaskIds.add(_selectedTaskId);
