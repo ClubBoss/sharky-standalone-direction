@@ -96,7 +96,7 @@ void main() {
   testWidgets(
     'sizing confirmation resolves its preset option before emitting a completed-decision contract',
     (tester) async {
-      final task = _task('world_5', 'small_half_pot', 'w4_half_pot_bet');
+      final task = _task('world_4', 'small_half_pot', 'w4_half_pot_bet');
       Act0CompletedDecisionV1? completed;
       var selectedPresetId = task.runner.options.first.id;
 
