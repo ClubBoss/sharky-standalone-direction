@@ -90,6 +90,33 @@ const _worldCases = <_WorldCase>[
     learningLabel:
         'You learned how survival pressure and risk premium change decisions.',
   ),
+  _WorldCase(
+    worldNumber: 10,
+    worldTitle: 'Player Adjustment',
+    nextWorldNumber: 11,
+    nextWorldTitle: 'Real Play Transfer',
+    learningLabel:
+        'You learned how to tag player tendencies, adjust one lever, and '
+        'keep adjustment guardrails.',
+  ),
+  _WorldCase(
+    worldNumber: 11,
+    worldTitle: 'Real Play Transfer',
+    nextWorldNumber: 12,
+    nextWorldTitle: 'Mindset Bridge',
+    learningLabel:
+        'You learned how to plan a session, use table triggers, and close '
+        'the review loop.',
+  ),
+  _WorldCase(
+    worldNumber: 12,
+    worldTitle: 'Mindset Bridge',
+    nextWorldNumber: 0,
+    nextWorldTitle: 'Volume I terminal review',
+    learningLabel:
+        'You learned how to judge process, reset tilt, and keep discipline '
+        'before deeper strategy.',
+  ),
 ];
 
 void main() {
@@ -525,11 +552,11 @@ void main() {
     }
   });
 
-  testWidgets('World 10+ remains outside ordinary completion payoff', (
+  testWidgets('World 13 remains outside ordinary completion payoff', (
     tester,
   ) async {
     const summary = Act0BlockCompletionSummaryV1(
-      lessonTitle: 'A lesson in world 10',
+      lessonTitle: 'A lesson in world 13',
       xpEarned: 24,
       errorCount: 0,
       taskCount: 4,
@@ -540,9 +567,9 @@ void main() {
       endXp: 12,
       xpTarget: 200,
       milestoneTier: Act0ProgressMilestoneTierV1.world,
-      worldNumber: 10,
-      worldTitle: 'Player Adjustment',
-      nextWorldNumber: 11,
+      worldNumber: 13,
+      worldTitle: 'Future Locked World',
+      nextWorldNumber: 14,
       nextWorldTitle: 'Future World',
       perfectClearCount: 12,
       completedClearCount: 12,

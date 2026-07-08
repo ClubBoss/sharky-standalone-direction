@@ -33,7 +33,7 @@ class Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_12',
-      lessonId: 'review_decision_intuition_lite',
+      lessonId: 'tilt_reset_protocol',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -74,7 +74,7 @@ class Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_12',
-      lessonId: 'review_decision_intuition_lite',
+      lessonId: 'tilt_reset_protocol',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -171,45 +171,44 @@ class Act0W12ReviewDecisionHiddenTaskSpecV1 {
 const Act0W12ReviewDecisionHiddenTaskSpecV1
 act0W12ReviewDecisionHiddenTaskSpecV1 = Act0W12ReviewDecisionHiddenTaskSpecV1(
   worldId: 'world_12',
-  lessonId: 'review_decision_intuition_lite',
-  taskId: 'main_clue_identification_intro',
-  sourceTaskId: 'main_clue_identification_intro',
-  conceptFamilyId: 'w12_review_decision_intuition',
-  repairFocusId: 'w12_main_clue_identification',
-  skillAtomId: 'w12_spot_clue_read',
-  errorType: 'missed_main_clue_identification',
-  drillKind: 'review_clue_choice_v1',
-  boardContext: 'Review spot with one clear board-texture clue',
-  learningPurpose: 'Identify the main clue before choosing an explanation.',
-  expectedChoiceId: 'board_texture_clue',
+  lessonId: 'tilt_reset_protocol',
+  taskId: 'w12_tilt_reset_hidden',
+  sourceTaskId: 'w12_tilt_reset_hidden',
+  conceptFamilyId: 'w12_mindset_bridge',
+  repairFocusId: 'w12_tilt_reset_protocol',
+  skillAtomId: 'w12_tilt_reset_read',
+  errorType: 'missed_tilt_reset',
+  drillKind: 'mindset_bridge_choice_v1',
+  boardContext: 'Emotional spike after a painful result',
+  learningPurpose: 'Use a short reset before the next major decision.',
+  expectedChoiceId: 'run_short_reset',
   choiceIds: <String>[
-    'board_texture_clue',
-    'bet_purpose_clue',
-    'price_clue',
-    'result_already_known',
+    'run_short_reset',
+    'revenge_next_hand',
+    'deny_emotion',
+    'quit_every_time',
   ],
   learnerPrompt:
-      'In this review spot, the board is connected and suited. What is '
-      'the main clue to start with?',
+      'You feel tilt after a painful result. What is the clean W12 bridge '
+      'action before the next major spot?',
   choiceLabels: <String, String>{
-    'board_texture_clue': 'Start with the board texture clue.',
-    'bet_purpose_clue': 'Start with bet purpose only.',
-    'price_clue': 'Start with call price only.',
-    'result_already_known': 'The result is already known.',
+    'run_short_reset': 'Run a short reset and re-anchor.',
+    'revenge_next_hand': 'Force action in the next hand.',
+    'deny_emotion': 'Pretend the emotion is not there.',
+    'quit_every_time': 'Auto-quit every time.',
   },
   feedbackReason:
-      'The connected and suited board is the main first clue. It helps '
-      'frame the decision without deciding the result.',
+      'Mindset Bridge protects decision quality with a short reset before '
+      'emotion leaks into the next hand.',
   incorrectFeedback: <String, String>{
-    'bet_purpose_clue':
-        'Bet purpose can matter, but this spot first points at texture.',
-    'price_clue': 'Price can matter, but the clear clue here is board texture.',
-    'result_already_known':
-        'A review clue explains the spot; it does not make the result '
-        'known.',
+    'revenge_next_hand': 'Revenge action is tilt, not discipline.',
+    'deny_emotion': 'Naming the emotion helps you control it.',
+    'quit_every_time':
+        'Leaving can be valid if control is gone, but the first bridge habit '
+        'is a quick reset and re-check.',
   },
-  practiceCtaAllowed: false,
-  mapperNoTargetReason: 'w12_route_locked_no_safe_practice_target_v1',
+  practiceCtaAllowed: true,
+  mapperNoTargetReason: '',
 );
 
 const List<Act0W12ReviewDecisionHiddenTaskSpecV1>
@@ -218,133 +217,119 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
       act0W12ReviewDecisionHiddenTaskSpecV1,
       Act0W12ReviewDecisionHiddenTaskSpecV1(
         worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        taskId: 'turn_card_change_recognition_intro',
-        sourceTaskId: 'turn_card_change_recognition_intro',
-        conceptFamilyId: 'w12_review_decision_intuition',
-        repairFocusId: 'w12_turn_card_change_recognition',
-        skillAtomId: 'w12_turn_change_read',
-        errorType: 'missed_turn_card_change',
-        drillKind: 'review_turn_change_choice_v1',
-        boardContext: 'Turn card completes a visible draw path',
-        learningPurpose:
-            'Identify what changed when a new card altered the texture.',
-        expectedChoiceId: 'turn_added_draw_pressure',
+        lessonId: 'decision_over_outcome',
+        taskId: 'w12_process_quality_hidden',
+        sourceTaskId: 'w12_process_quality_hidden',
+        conceptFamilyId: 'w12_mindset_bridge',
+        repairFocusId: 'w12_process_over_outcome',
+        skillAtomId: 'w12_process_quality_read',
+        errorType: 'missed_process_quality',
+        drillKind: 'mindset_process_choice_v1',
+        boardContext: 'Good decision loses one result',
+        learningPurpose: 'Judge decision quality before reacting to outcome.',
+        expectedChoiceId: 'judge_process_first',
         choiceIds: <String>[
-          'turn_changed_nothing',
-          'turn_added_draw_pressure',
-          'turn_set_final_result',
-          'preflop_action_only_matters',
+          'outcome_proves_quality',
+          'judge_process_first',
+          'ignore_learning',
+          'self_attack',
         ],
         learnerPrompt:
-            'The turn card adds a third suited card. What changed in the '
-            'spot?',
+            'A good process loses this time. What should you judge first?',
         choiceLabels: <String, String>{
-          'turn_added_draw_pressure': 'The turn added more flush pressure.',
-          'turn_changed_nothing': 'The turn changed nothing.',
-          'turn_set_final_result': 'The turn set the final result.',
-          'preflop_action_only_matters': 'Only the preflop action matters.',
+          'judge_process_first': 'Judge the process first.',
+          'outcome_proves_quality': 'Outcome proves decision quality.',
+          'ignore_learning': 'Ignore the hand completely.',
+          'self_attack': 'Attack your confidence.',
         },
         feedbackReason:
-            'A new suited card can change the texture by adding flush '
-            'pressure. It is a clue, not a final answer.',
+            'Stable mindset separates process quality from one noisy outcome.',
         incorrectFeedback: <String, String>{
-          'turn_changed_nothing':
-              'A new suited card can materially change the board texture.',
-          'turn_set_final_result':
-              'The new card changes the clue, not the known result.',
-          'preflop_action_only_matters':
-              'Earlier action matters, but the new card also changes the read.',
+          'outcome_proves_quality':
+              'One result can lie; process is the first check.',
+          'ignore_learning': 'Short process review is better than avoidance.',
+          'self_attack': 'The goal is clear review, not confidence collapse.',
         },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w12_route_locked_no_safe_practice_target_v1',
+        practiceCtaAllowed: true,
+        mapperNoTargetReason: '',
       ),
       Act0W12ReviewDecisionHiddenTaskSpecV1(
         worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        taskId: 'safe_beginner_explanation_choice_lite',
-        sourceTaskId: 'safe_beginner_explanation_choice_lite',
-        conceptFamilyId: 'w12_review_decision_intuition',
-        repairFocusId: 'w12_safe_beginner_explanation_choice',
-        skillAtomId: 'w12_explanation_choice_read',
-        errorType: 'missed_safe_beginner_explanation',
-        drillKind: 'review_explanation_choice_v1',
-        boardContext: 'Spot with action and texture clues',
-        learningPurpose:
-            'Choose a simple explanation that uses visible clues without '
-            'overclaiming.',
-        expectedChoiceId: 'simple_clues_explain_caution',
+        lessonId: 'confidence_and_discipline',
+        taskId: 'w12_confidence_discipline_hidden',
+        sourceTaskId: 'w12_confidence_discipline_hidden',
+        conceptFamilyId: 'w12_mindset_bridge',
+        repairFocusId: 'w12_confidence_without_ego',
+        skillAtomId: 'w12_discipline_read',
+        errorType: 'missed_discipline',
+        drillKind: 'mindset_discipline_choice_v1',
+        boardContext: 'Table talk tempts an ego call',
+        learningPurpose: 'Keep confidence disciplined instead of entitled.',
+        expectedChoiceId: 'process_over_ego',
         choiceIds: <String>[
-          'one_clue_solves_everything',
-          'ignore_board_and_action',
-          'simple_clues_explain_caution',
-          'answer_is_known_before_choice',
+          'prove_point',
+          'play_scared',
+          'process_over_ego',
+          'force_control',
         ],
         learnerPrompt:
-            'A connected board and a strong bet both appear. Which explanation '
-            'is safest?',
+            'Villain needles you into a marginal spot. What keeps confidence '
+            'disciplined?',
         choiceLabels: <String, String>{
-          'simple_clues_explain_caution':
-              'The visible clues explain why caution is reasonable.',
-          'one_clue_solves_everything': 'One clue solves the whole spot.',
-          'ignore_board_and_action': 'Ignore the board and the action.',
-          'answer_is_known_before_choice': 'The answer is known before choice.',
+          'process_over_ego': 'Stay with process over ego.',
+          'prove_point': 'Take the spot to prove a point.',
+          'play_scared': 'Play scared to avoid conflict.',
+          'force_control': 'Force control with a dramatic action.',
         },
         feedbackReason:
-            'A safe explanation combines visible clues and stays modest about '
-            'what they prove.',
+            'Confidence stays useful only when discipline and evidence still '
+            'drive the action.',
         incorrectFeedback: <String, String>{
-          'one_clue_solves_everything':
-              'One clue rarely explains every part of a spot.',
-          'ignore_board_and_action':
-              'Board and action clues are both useful in a review.',
-          'answer_is_known_before_choice':
-              'A review explanation should not claim the answer is known.',
+          'prove_point': 'Point-proving is ego, not confidence.',
+          'play_scared': 'Fear can avoid risk but also leaks value.',
+          'force_control': 'Control must come from evidence, not emotion.',
         },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w12_route_locked_no_safe_practice_target_v1',
+        practiceCtaAllowed: true,
+        mapperNoTargetReason: '',
       ),
       Act0W12ReviewDecisionHiddenTaskSpecV1(
         worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        taskId: 'combined_decision_read_transfer_check',
-        sourceTaskId: 'combined_decision_read_transfer_check',
-        conceptFamilyId: 'w12_review_decision_intuition',
-        repairFocusId: 'w12_combined_decision_read_transfer',
-        skillAtomId: 'w12_combined_read_transfer',
-        errorType: 'missed_combined_decision_read_transfer',
-        drillKind: 'review_transfer_choice_v1',
-        boardContext: 'Texture, draw, price, and purpose clues together',
+        lessonId: 'mindset_bridge_checkpoint',
+        taskId: 'w12_mindset_bridge_loop_hidden',
+        sourceTaskId: 'w12_mindset_bridge_loop_hidden',
+        conceptFamilyId: 'w12_mindset_bridge',
+        repairFocusId: 'w12_mindset_bridge_loop',
+        skillAtomId: 'w12_mindset_bridge_read',
+        errorType: 'missed_mindset_bridge_loop',
+        drillKind: 'mindset_bridge_checkpoint_choice_v1',
+        boardContext: 'Process, reset, discipline loop',
         learningPurpose:
-            'Transfer the review habit by combining several simple clues.',
-        expectedChoiceId: 'combine_texture_draw_price_purpose',
+            'Combine the W12 bridge habits before terminal review.',
+        expectedChoiceId: 'process_reset_discipline',
         choiceIds: <String>[
-          'use_only_last_card',
-          'ignore_bet_purpose',
-          'call_price_predicts_result',
-          'combine_texture_draw_price_purpose',
+          'result_reset_ego',
+          'skip_reset',
+          'future_world_unlock',
+          'process_reset_discipline',
         ],
         learnerPrompt:
-            'A spot has board texture, draw pressure, call price, and bet '
-            'purpose clues. What is the safest review read?',
+            'What is the W12 bridge before Volume I terminal review?',
         choiceLabels: <String, String>{
-          'combine_texture_draw_price_purpose':
-              'Combine the simple clues into one cautious read.',
-          'use_only_last_card': 'Use only the last card.',
-          'ignore_bet_purpose': 'Ignore the bet purpose.',
-          'call_price_predicts_result': 'Call price predicts the result.',
+          'process_reset_discipline': 'Process, reset, and discipline.',
+          'result_reset_ego': 'Result, reset, and ego.',
+          'skip_reset': 'Skip reset and push through.',
+          'future_world_unlock': 'Unlock a future world now.',
         },
         feedbackReason:
-            'A good review read combines the visible clues without claiming '
-            'that any single clue decides the spot.',
+            'W12 closes by stabilizing process, reset, and discipline before '
+            'the terminal recap.',
         incorrectFeedback: <String, String>{
-          'use_only_last_card':
-              'The last card matters, but it is not the only clue.',
-          'ignore_bet_purpose': 'Bet purpose can help explain the action.',
-          'call_price_predicts_result':
-              'Call price gives cost context; it does not predict the result.',
+          'result_reset_ego': 'Outcome and ego are the traps W12 controls.',
+          'skip_reset': 'Reset is one of the bridge habits.',
+          'future_world_unlock':
+              'W12 routes to terminal review, not a future world.',
         },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w12_route_locked_no_safe_practice_target_v1',
+        practiceCtaAllowed: true,
+        mapperNoTargetReason: '',
       ),
     ];

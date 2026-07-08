@@ -98,26 +98,14 @@ void main() {
         );
       }
 
-      const w11Owner = Act0W11BoardTextureHiddenRuntimeSessionOwnerV1();
-      expect(w11Owner.practiceLaunchRequest, isNull);
       for (final spec in act0W11BoardTextureHiddenTaskSpecsV1) {
-        expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId);
-        expect(
-          spec.mapperNoTargetReason,
-          contains('no_safe_practice_target'),
-          reason: spec.taskId,
-        );
+        expect(spec.practiceCtaAllowed, isTrue, reason: spec.taskId);
+        expect(spec.mapperNoTargetReason, isEmpty, reason: spec.taskId);
       }
 
-      const w12Owner = Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1();
-      expect(w12Owner.practiceLaunchRequest, isNull);
       for (final spec in act0W12ReviewDecisionHiddenTaskSpecsV1) {
-        expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId);
-        expect(
-          spec.mapperNoTargetReason,
-          contains('no_safe_practice_target'),
-          reason: spec.taskId,
-        );
+        expect(spec.practiceCtaAllowed, isTrue, reason: spec.taskId);
+        expect(spec.mapperNoTargetReason, isEmpty, reason: spec.taskId);
       }
     },
   );

@@ -96,48 +96,72 @@ void main() {
     expect(w6Report.transferSurfaceCounts, hasLength(greaterThanOrEqualTo(4)));
   });
 
-  test(
-    'W7-W12 Practice mapper remains explicitly deferred without targets',
-    () {
-      final specs = <dynamic>[
-        ...act0W7VisibleAceHiddenTaskSpecsV1,
-        ...act0W8StackDepthHiddenTaskSpecsV1,
-        ...act0W9TournamentPressureHiddenTaskSpecsV1,
-        ...act0W10BetPurposeHiddenTaskSpecsV1,
-        ...act0W11BoardTextureHiddenTaskSpecsV1,
-        ...act0W12ReviewDecisionHiddenTaskSpecsV1,
-      ];
+  test('W7-W9 Practice mapper remains explicitly deferred without targets', () {
+    final specs = <dynamic>[
+      ...act0W7VisibleAceHiddenTaskSpecsV1,
+      ...act0W8StackDepthHiddenTaskSpecsV1,
+      ...act0W9TournamentPressureHiddenTaskSpecsV1,
+    ];
 
-      for (final dynamic spec in specs) {
-        expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId as String);
-        expect(
-          spec.mapperNoTargetReason as String,
-          contains('no_safe_practice_target'),
-          reason: spec.taskId as String,
-        );
+    for (final dynamic spec in specs) {
+      expect(spec.practiceCtaAllowed, isFalse, reason: spec.taskId as String);
+      expect(
+        spec.mapperNoTargetReason as String,
+        contains('no_safe_practice_target'),
+        reason: spec.taskId as String,
+      );
 
-        final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
-          Act0ConceptFamilyRepairCandidateV1(
-            conceptFamilyId: spec.conceptFamilyId as String,
-            repairFocusId: spec.repairFocusId as String,
-            skillAtomId: spec.skillAtomId as String,
-            errorType: spec.errorType as String,
-            incorrectCount: 1,
-            correctCount: 0,
-            latestIncorrectOrder: 1,
-            selectionReasonCode: 'targeted_same_signal_transfer_repairs_v1',
-          ),
-        );
+      final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
+        Act0ConceptFamilyRepairCandidateV1(
+          conceptFamilyId: spec.conceptFamilyId as String,
+          repairFocusId: spec.repairFocusId as String,
+          skillAtomId: spec.skillAtomId as String,
+          errorType: spec.errorType as String,
+          incorrectCount: 1,
+          correctCount: 0,
+          latestIncorrectOrder: 1,
+          selectionReasonCode: 'targeted_same_signal_transfer_repairs_v1',
+        ),
+      );
 
-        expect(result.isMapped, isFalse, reason: spec.taskId as String);
-        expect(
-          result.reasonCode,
-          act0ConceptCandidatePracticeNoTargetUnknownConceptV1,
-          reason: spec.taskId as String,
-        );
-      }
-    },
-  );
+      expect(result.isMapped, isFalse, reason: spec.taskId as String);
+      expect(
+        result.reasonCode,
+        act0ConceptCandidatePracticeNoTargetUnknownConceptV1,
+        reason: spec.taskId as String,
+      );
+    }
+  });
+
+  test('W10-W12 Practice mapper has launchable canonical targets', () {
+    final specs = <dynamic>[
+      act0W10BetPurposeHiddenTaskSpecV1,
+      act0W11BoardTextureHiddenTaskSpecV1,
+      act0W12ReviewDecisionHiddenTaskSpecV1,
+    ];
+
+    for (final dynamic spec in specs) {
+      expect(spec.practiceCtaAllowed, isTrue, reason: spec.taskId as String);
+      expect(spec.mapperNoTargetReason as String, isEmpty);
+
+      final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
+        Act0ConceptFamilyRepairCandidateV1(
+          conceptFamilyId: spec.conceptFamilyId as String,
+          repairFocusId: spec.repairFocusId as String,
+          skillAtomId: spec.skillAtomId as String,
+          errorType: spec.errorType as String,
+          incorrectCount: 1,
+          correctCount: 0,
+          latestIncorrectOrder: 1,
+          selectionReasonCode: 'targeted_same_signal_transfer_repairs_v1',
+        ),
+      );
+
+      expect(result.isMapped, isTrue, reason: spec.taskId as String);
+      expect(result.request!.targetTaskId, isNot(spec.taskId));
+      expect(result.request!.isLaunchable, isTrue);
+    }
+  });
 
   test('W11 and W12 registry parity is explicit while W13 remains blocked', () {
     expect(

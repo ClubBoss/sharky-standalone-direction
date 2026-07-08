@@ -12,46 +12,81 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
-  test('W7-W9 same-signal mapper chooses launchable non-source targets', () {
-    final w7 = act0FirstValueSameSignalRepMappingV1(
-      nextRepId: 'repeat_board_read',
-      skillAtomId: 'board_read',
-      sourceSignalId: 'board_cards',
-      sourceTaskId: 'visible_king_combo_reduction_intro',
-      receiptOutcome: 'repair_started',
-    );
-    final w8 = act0FirstValueSameSignalRepMappingV1(
-      nextRepId: 'repeat_table_read',
-      skillAtomId: 'table_read',
-      sourceSignalId: 'stack_depth',
-      sourceTaskId: 'short_stack_all_in_pressure_intro',
-      receiptOutcome: 'repair_started',
-    );
-    final w9 = act0FirstValueSameSignalRepMappingV1(
-      nextRepId: 'repeat_table_read',
-      skillAtomId: 'table_read',
-      sourceSignalId: 'tournament_pressure',
-      sourceTaskId: 'bubble_survival_pressure_intro',
-      receiptOutcome: 'repair_started',
-    );
+  test('W7-W12 same-signal mapper chooses launchable non-source targets', () {
+    for (final route in const <_SameSignalRouteCaseV1>[
+      _SameSignalRouteCaseV1(
+        worldId: 'world_7',
+        nextRepId: 'repeat_board_read',
+        skillAtomId: 'board_read',
+        sourceSignalId: 'board_cards',
+        sourceTaskId: 'visible_king_combo_reduction_intro',
+        targetLessonId: 'range_thinking_lite_combo_density',
+        targetTaskId: 'paired_board_texture_lite_intro',
+      ),
+      _SameSignalRouteCaseV1(
+        worldId: 'world_8',
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'stack_depth',
+        sourceTaskId: 'short_stack_all_in_pressure_intro',
+        targetLessonId: 'spr_and_commitment',
+        targetTaskId: 'w7_low_spr_commit',
+      ),
+      _SameSignalRouteCaseV1(
+        worldId: 'world_9',
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'tournament_pressure',
+        sourceTaskId: 'bubble_survival_pressure_intro',
+        targetLessonId: 'survival_pressure_basics',
+        targetTaskId: 'w9_short_stack_survival',
+      ),
+      _SameSignalRouteCaseV1(
+        worldId: 'world_10',
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'player_tendency',
+        sourceTaskId: 'w10_nit_tag',
+        targetLessonId: 'player_type_basics',
+        targetTaskId: 'w10_loose_passive_tag',
+      ),
+      _SameSignalRouteCaseV1(
+        worldId: 'world_11',
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'session_plan',
+        sourceTaskId: 'w11_plan_focus_choice',
+        targetLessonId: 'session_plan_basics',
+        targetTaskId: 'w11_plan_avoid_overload',
+      ),
+      _SameSignalRouteCaseV1(
+        worldId: 'world_12',
+        nextRepId: 'repeat_table_read',
+        skillAtomId: 'table_read',
+        sourceSignalId: 'tilt_reset',
+        sourceTaskId: 'w12_after_bad_beat_reset',
+        targetLessonId: 'tilt_reset_protocol',
+        targetTaskId: 'w12_after_mistake_reset',
+      ),
+    ]) {
+      final mapped = act0FirstValueSameSignalRepMappingV1(
+        nextRepId: route.nextRepId,
+        skillAtomId: route.skillAtomId,
+        sourceSignalId: route.sourceSignalId,
+        sourceTaskId: route.sourceTaskId,
+        receiptOutcome: 'repair_started',
+      );
 
-    expect(w7?.worldId, 'world_7');
-    expect(w7?.lessonId, 'range_thinking_lite_combo_density');
-    expect(w7?.taskId, 'paired_board_texture_lite_intro');
-    expect(w7?.taskId, isNot('visible_king_combo_reduction_intro'));
-    expect(w7?.mappingType, 'repair');
-
-    expect(w8?.worldId, 'world_8');
-    expect(w8?.lessonId, 'spr_and_commitment');
-    expect(w8?.taskId, 'w7_low_spr_commit');
-    expect(w8?.taskId, isNot('short_stack_all_in_pressure_intro'));
-    expect(w8?.mappingType, 'repair');
-
-    expect(w9?.worldId, 'world_9');
-    expect(w9?.lessonId, 'survival_pressure_basics');
-    expect(w9?.taskId, 'w9_short_stack_survival');
-    expect(w9?.taskId, isNot('bubble_survival_pressure_intro'));
-    expect(w9?.mappingType, 'repair');
+      expect(mapped?.worldId, route.worldId, reason: route.sourceTaskId);
+      expect(
+        mapped?.lessonId,
+        route.targetLessonId,
+        reason: route.sourceTaskId,
+      );
+      expect(mapped?.taskId, route.targetTaskId, reason: route.sourceTaskId);
+      expect(mapped?.taskId, isNot(route.sourceTaskId));
+      expect(mapped?.mappingType, 'repair', reason: route.sourceTaskId);
+    }
   });
 
   testWidgets(
@@ -143,6 +178,26 @@ void main() {
       );
     },
   );
+}
+
+class _SameSignalRouteCaseV1 {
+  const _SameSignalRouteCaseV1({
+    required this.worldId,
+    required this.nextRepId,
+    required this.skillAtomId,
+    required this.sourceSignalId,
+    required this.sourceTaskId,
+    required this.targetLessonId,
+    required this.targetTaskId,
+  });
+
+  final String worldId;
+  final String nextRepId;
+  final String skillAtomId;
+  final String sourceSignalId;
+  final String sourceTaskId;
+  final String targetLessonId;
+  final String targetTaskId;
 }
 
 Future<void> _pumpHost(

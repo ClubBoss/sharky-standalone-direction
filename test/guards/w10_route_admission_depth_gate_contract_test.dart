@@ -89,7 +89,7 @@ void main() {
     expect(nextPack, 'world11_spine_campaign_v1');
   });
 
-  test('W10 route packs teach value versus stronger-hands-fold purpose', () {
+  test('W10 route packs teach player adjustment with one-lever guardrails', () {
     for (final packId in w10RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
       expect(pack, isNotNull, reason: packId);
@@ -117,25 +117,15 @@ void main() {
         pack.first.insightText ?? '',
       ].join(' ').toLowerCase();
 
-      expect(copy, contains('bet purpose'), reason: packId);
-      expect(copy, contains('value'), reason: packId);
-      expect(copy, contains('worse hands'), reason: packId);
-      expect(copy, contains('stronger hands'), reason: packId);
-      expect(copy, contains('fold'), reason: packId);
+      expect(copy, contains('player'), reason: packId);
+      expect(copy, contains('tendency'), reason: packId);
+      expect(copy, contains('adjustment'), reason: packId);
+      expect(copy, contains('one lever'), reason: packId);
+      expect(copy, contains('guardrail'), reason: packId);
       if (packId == 'world10_spine_campaign_v1') {
-        expect(firstStepCopy, contains('w4'), reason: packId);
-        expect(
-          firstStepCopy,
-          contains('bets and prices exist'),
-          reason: packId,
-        );
-        expect(firstStepCopy, contains('w9'), reason: packId);
-        expect(firstStepCopy, contains('call price'), reason: packId);
-        expect(
-          firstStepCopy,
-          contains('what the bet is trying to accomplish'),
-          reason: packId,
-        );
+        expect(firstStepCopy, contains('player read'), reason: packId);
+        expect(firstStepCopy, contains('one adjustment'), reason: packId);
+        expect(firstStepCopy, contains('tendency'), reason: packId);
       }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('thin value')), reason: packId);
@@ -147,6 +137,7 @@ void main() {
       expect(copy, isNot(contains('public')), reason: packId);
       expect(copy, isNot(contains('playable')), reason: packId);
       expect(copy, isNot(contains('every bet does both')), reason: packId);
+      expect(copy, isNot(contains('bet purpose')), reason: packId);
     }
   });
 }

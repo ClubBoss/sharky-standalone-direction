@@ -117,7 +117,7 @@ void main() {
 
     expect(copy, contains('volume i'));
     expect(copy, contains('review is complete'));
-    expect(copy, contains('w13 is not open'));
+    expect(copy, contains('no future world is open'));
     expect(copy, contains('keep-sharp'));
     expect(copy, contains('review'));
     expect(copy, contains('intentional'));
@@ -138,14 +138,14 @@ void main() {
     expect(copy, isNot(contains('learning effect')));
   });
 
-  test('W12 route packs are review/payoff packs with concrete cue repair', () {
+  test('W12 route packs are terminal mindset bridge packs', () {
     final sourceTaskIds = act0W12ReviewDecisionHiddenTaskSpecsV1
         .map((spec) => spec.taskId)
         .toSet();
-    expect(sourceTaskIds, contains('main_clue_identification_intro'));
-    expect(sourceTaskIds, contains('turn_card_change_recognition_intro'));
-    expect(sourceTaskIds, contains('safe_beginner_explanation_choice_lite'));
-    expect(sourceTaskIds, contains('combined_decision_read_transfer_check'));
+    expect(sourceTaskIds, contains('w12_tilt_reset_hidden'));
+    expect(sourceTaskIds, contains('w12_process_quality_hidden'));
+    expect(sourceTaskIds, contains('w12_confidence_discipline_hidden'));
+    expect(sourceTaskIds, contains('w12_mindset_bridge_loop_hidden'));
 
     for (final packId in w12RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
@@ -174,22 +174,13 @@ void main() {
         pack.first.insightText ?? '',
       ].join(' ').toLowerCase();
 
-      expect(copy, contains('review'), reason: packId);
-      expect(copy, contains('checkpoint'), reason: packId);
-      expect(copy, contains('visible cards'), reason: packId);
-      expect(copy, contains('range'), reason: packId);
-      expect(copy, contains('draw'), reason: packId);
-      expect(copy, contains('call price'), reason: packId);
-      expect(copy, contains('bet purpose'), reason: packId);
-      expect(copy, contains('texture'), reason: packId);
-      expect(copy, contains('explanation'), reason: packId);
-      expect(copy, contains('missed cue'), reason: packId);
+      expect(copy, contains('process'), reason: packId);
+      expect(copy, contains('reset'), reason: packId);
+      expect(copy, contains('discipline'), reason: packId);
       expect(copy, contains('volume i'), reason: packId);
       if (packId == 'world12_spine_campaign_v1') {
-        expect(firstStepCopy, contains('earlier clues come together'));
-        expect(firstStepCopy, contains('explain the decision'));
-        expect(copy, contains('payoff is the process'), reason: packId);
-        expect(copy, contains('into an explanation'), reason: packId);
+        expect(firstStepCopy, contains('process first'));
+        expect(copy, contains('terminal'), reason: packId);
       }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
@@ -208,7 +199,7 @@ void main() {
     }
   });
 
-  test('W12 admission keeps W13 absent and Practice absent', () {
+  test('W12 admission keeps W13 absent and Practice admitted', () {
     expect(
       kCampaignPackIdsV1.where((id) => id.startsWith('world12_')).toSet(),
       w12RouteEntryPacks,
@@ -218,11 +209,9 @@ void main() {
       isEmpty,
     );
 
-    const owner = Act0W12ReviewDecisionHiddenRuntimeSessionOwnerV1();
-    expect(owner.practiceLaunchRequest, isNull);
     for (final spec in act0W12ReviewDecisionHiddenTaskSpecsV1) {
-      expect(spec.practiceCtaAllowed, isFalse);
-      expect(spec.mapperNoTargetReason, contains('no_safe_practice_target'));
+      expect(spec.practiceCtaAllowed, isTrue, reason: spec.taskId);
+      expect(spec.mapperNoTargetReason, isEmpty, reason: spec.taskId);
     }
   });
 }

@@ -33,7 +33,7 @@ class Act0W11BoardTextureHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_11',
-      lessonId: 'board_texture_danger_awareness_lite',
+      lessonId: 'session_plan_basics',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -74,7 +74,7 @@ class Act0W11BoardTextureHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_11',
-      lessonId: 'board_texture_danger_awareness_lite',
+      lessonId: 'session_plan_basics',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -171,47 +171,44 @@ class Act0W11BoardTextureHiddenTaskSpecV1 {
 const Act0W11BoardTextureHiddenTaskSpecV1
 act0W11BoardTextureHiddenTaskSpecV1 = Act0W11BoardTextureHiddenTaskSpecV1(
   worldId: 'world_11',
-  lessonId: 'board_texture_danger_awareness_lite',
-  taskId: 'dry_board_texture_recognition_intro',
-  sourceTaskId: 'dry_board_texture_recognition_intro',
-  conceptFamilyId: 'w11_board_texture_danger_awareness',
-  repairFocusId: 'w11_dry_board_texture_recognition',
-  skillAtomId: 'w11_board_texture_read',
-  errorType: 'missed_dry_board_texture',
-  drillKind: 'board_texture_choice_v1',
-  boardContext: 'Unpaired rainbow board with wide gaps',
-  learningPurpose:
-      'Recognize a board with fewer obvious draws and fewer connections.',
-  expectedChoiceId: 'dry_board_fewer_clear_connections',
+  lessonId: 'session_plan_basics',
+  taskId: 'w11_session_plan_hidden',
+  sourceTaskId: 'w11_session_plan_hidden',
+  conceptFamilyId: 'w11_real_play_transfer',
+  repairFocusId: 'w11_one_focus_session_plan',
+  skillAtomId: 'w11_session_plan_read',
+  errorType: 'missed_session_plan',
+  drillKind: 'real_play_transfer_choice_v1',
+  boardContext: 'Short session with noisy tables',
+  learningPurpose: 'Create one executable session focus before real play.',
+  expectedChoiceId: 'one_focus_session_plan',
   choiceIds: <String>[
-    'dry_board_fewer_clear_connections',
-    'connected_board_more_dangerous',
-    'suited_board_flush_pressure',
-    'board_result_known',
+    'one_focus_session_plan',
+    'six_goals_at_once',
+    'no_plan_react_only',
+    'review_without_focus',
   ],
   learnerPrompt:
-      'The board is rainbow and the ranks are far apart. What is the safest '
-      'texture read?',
+      'You have one hour at a noisy table. What is the clean W11 transfer '
+      'setup?',
   choiceLabels: <String, String>{
-    'dry_board_fewer_clear_connections':
-        'It is a drier board with fewer clear connections.',
-    'connected_board_more_dangerous':
-        'It is highly connected and more dangerous.',
-    'suited_board_flush_pressure': 'It has clear flush pressure.',
-    'board_result_known': 'The board makes the result known.',
+    'one_focus_session_plan': 'Set one measurable focus.',
+    'six_goals_at_once': 'Track six goals at once.',
+    'no_plan_react_only': 'Use no plan and just react.',
+    'review_without_focus': 'Wait until review to choose a focus.',
   },
   feedbackReason:
-      'A dry board has fewer obvious straight or flush paths. That makes the '
-      'texture less coordinated, not decided.',
+      'Real-play transfer starts with one focus that can be noticed live and '
+      'reviewed after the session.',
   incorrectFeedback: <String, String>{
-    'connected_board_more_dangerous':
-        'Far-apart ranks usually create fewer straight connections.',
-    'suited_board_flush_pressure':
-        'A rainbow board does not show a clear flush-pressure pattern.',
-    'board_result_known': 'Board texture is a clue, not a known result.',
+    'six_goals_at_once': 'Too many goals blur transfer and make review noisy.',
+    'no_plan_react_only':
+        'Reactive play can work, but deliberate transfer needs one target.',
+    'review_without_focus':
+        'Review is stronger when the session starts with a focus to check.',
   },
-  practiceCtaAllowed: false,
-  mapperNoTargetReason: 'w11_route_locked_no_safe_practice_target_v1',
+  practiceCtaAllowed: true,
+  mapperNoTargetReason: '',
 );
 
 const List<Act0W11BoardTextureHiddenTaskSpecV1>
@@ -219,134 +216,117 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
   act0W11BoardTextureHiddenTaskSpecV1,
   Act0W11BoardTextureHiddenTaskSpecV1(
     worldId: 'world_11',
-    lessonId: 'board_texture_danger_awareness_lite',
-    taskId: 'connected_board_texture_recognition_intro',
-    sourceTaskId: 'connected_board_texture_recognition_intro',
-    conceptFamilyId: 'w11_board_texture_danger_awareness',
-    repairFocusId: 'w11_connected_board_texture_recognition',
-    skillAtomId: 'w11_board_connection_read',
-    errorType: 'missed_connected_board_texture',
-    drillKind: 'board_texture_choice_v1',
-    boardContext: 'Middle connected ranks',
-    learningPurpose:
-        'Recognize that connected ranks can create more straight paths.',
-    expectedChoiceId: 'connected_cards_create_more_paths',
+    lessonId: 'table_trigger_reads',
+    taskId: 'w11_table_trigger_hidden',
+    sourceTaskId: 'w11_table_trigger_hidden',
+    conceptFamilyId: 'w11_real_play_transfer',
+    repairFocusId: 'w11_table_trigger_read',
+    skillAtomId: 'w11_trigger_transfer_read',
+    errorType: 'missed_table_trigger',
+    drillKind: 'real_play_transfer_choice_v1',
+    boardContext: 'Repeated blind overfold trigger',
+    learningPurpose: 'Use one live trigger to apply a prepared adjustment.',
+    expectedChoiceId: 'activate_one_trigger',
     choiceIds: <String>[
-      'dry_board_safer_texture',
-      'connected_cards_create_more_paths',
-      'suit_pattern_only_matters',
-      'rank_connection_never_matters',
+      'apply_all_triggers',
+      'activate_one_trigger',
+      'ignore_live_trigger',
+      'wait_for_results_only',
     ],
-    learnerPrompt:
-        'The board cards sit close together in rank. What is the safest '
-        'texture read?',
+    learnerPrompt: 'A repeated live trigger appears. What is the clean action?',
     choiceLabels: <String, String>{
-      'connected_cards_create_more_paths':
-          'Connected ranks can create more straight paths.',
-      'dry_board_safer_texture': 'The board is dry and disconnected.',
-      'suit_pattern_only_matters': 'Only the suits matter.',
-      'rank_connection_never_matters': 'Rank connection never matters.',
+      'activate_one_trigger': 'Activate one trigger-action lever.',
+      'apply_all_triggers': 'Apply every possible trigger at once.',
+      'ignore_live_trigger': 'Ignore the live trigger.',
+      'wait_for_results_only': 'Wait for results before acting.',
     },
     feedbackReason:
-        'Connected ranks can interact with more hands because straight paths '
-        'are easier to imagine.',
+        'Transfer works when one repeated trigger activates one prepared lever.',
     incorrectFeedback: <String, String>{
-      'dry_board_safer_texture':
-          'Close ranks are more connected than far-apart ranks.',
-      'suit_pattern_only_matters':
-          'Suits matter, but rank connection is also a board clue.',
-      'rank_connection_never_matters':
-          'Ranks matter when they create straight paths.',
+      'apply_all_triggers': 'Many simultaneous levers create noisy execution.',
+      'ignore_live_trigger': 'A repeated trigger is the live transfer cue.',
+      'wait_for_results_only':
+          'The W11 loop acts from a prepared trigger, then reviews.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w11_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
   Act0W11BoardTextureHiddenTaskSpecV1(
     worldId: 'world_11',
-    lessonId: 'board_texture_danger_awareness_lite',
-    taskId: 'suited_texture_pressure_lite',
-    sourceTaskId: 'suited_texture_pressure_lite',
-    conceptFamilyId: 'w11_board_texture_danger_awareness',
-    repairFocusId: 'w11_suited_texture_pressure_lite',
-    skillAtomId: 'w11_suit_texture_read',
-    errorType: 'missed_suited_texture_pressure',
-    drillKind: 'board_texture_suit_choice_v1',
-    boardContext: 'Two or three cards sharing a suit',
-    learningPurpose:
-        'Recognize when suited board cards create flush-draw or flush pressure.',
-    expectedChoiceId: 'suited_cards_add_flush_pressure',
+    lessonId: 'post_session_review_loop',
+    taskId: 'w11_review_loop_hidden',
+    sourceTaskId: 'w11_review_loop_hidden',
+    conceptFamilyId: 'w11_real_play_transfer',
+    repairFocusId: 'w11_post_session_review_loop',
+    skillAtomId: 'w11_review_loop_read',
+    errorType: 'missed_review_loop',
+    drillKind: 'real_play_review_choice_v1',
+    boardContext: 'Session ends with two repeated mistakes',
+    learningPurpose: 'Close real play with one actionable review target.',
+    expectedChoiceId: 'one_leak_one_fix',
     choiceIds: <String>[
-      'rainbow_board_more_flush_pressure',
-      'suits_do_not_matter',
-      'suited_cards_add_flush_pressure',
-      'flush_result_already_known',
+      'write_long_notes_only',
+      'skip_review',
+      'one_leak_one_fix',
+      'fix_everything_tomorrow',
     ],
     learnerPrompt:
-        'Two or more board cards share a suit. What is the safest texture '
-        'read?',
+        'The session is over and two mistakes repeated. What closes the W11 '
+        'loop?',
     choiceLabels: <String, String>{
-      'suited_cards_add_flush_pressure': 'Shared suits can add flush pressure.',
-      'rainbow_board_more_flush_pressure':
-          'A rainbow board has more flush pressure.',
-      'suits_do_not_matter': 'Suits do not matter for texture.',
-      'flush_result_already_known': 'The flush result is already known.',
+      'one_leak_one_fix': 'Choose one leak and one fix for tomorrow.',
+      'write_long_notes_only': 'Write long notes with no action.',
+      'skip_review': 'Skip review and rely on memory.',
+      'fix_everything_tomorrow': 'Fix everything tomorrow.',
     },
     feedbackReason:
-        'Shared suits can add flush pressure. The clue is pressure, not a '
-        'known final hand.',
+        'A clean review loop outputs one repair target for the next session.',
     incorrectFeedback: <String, String>{
-      'rainbow_board_more_flush_pressure':
-          'Rainbow boards usually show less immediate flush pressure.',
-      'suits_do_not_matter': 'Suits can be an important texture clue.',
-      'flush_result_already_known':
-          'A suited texture can create pressure without deciding the result.',
+      'write_long_notes_only':
+          'Notes help only when they produce a next-session action.',
+      'skip_review': 'Memory fades; the loop needs a short closeout.',
+      'fix_everything_tomorrow':
+          'Fixing everything at once usually weakens execution.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w11_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
   Act0W11BoardTextureHiddenTaskSpecV1(
     worldId: 'world_11',
-    lessonId: 'board_texture_danger_awareness_lite',
-    taskId: 'one_pair_board_danger_transfer_check',
-    sourceTaskId: 'one_pair_board_danger_transfer_check',
-    conceptFamilyId: 'w11_board_texture_danger_awareness',
-    repairFocusId: 'w11_one_pair_board_danger_transfer',
-    skillAtomId: 'w11_texture_transfer_check',
-    errorType: 'missed_one_pair_board_danger_transfer',
-    drillKind: 'board_texture_transfer_choice_v1',
-    boardContext: 'One pair on dry board vs coordinated board',
-    learningPurpose:
-        'Transfer texture awareness to a one-pair danger comparison.',
-    expectedChoiceId: 'coordinated_board_more_danger_for_one_pair',
+    lessonId: 'real_play_transfer_checkpoint',
+    taskId: 'w11_real_play_loop_hidden',
+    sourceTaskId: 'w11_real_play_loop_hidden',
+    conceptFamilyId: 'w11_real_play_transfer',
+    repairFocusId: 'w11_real_play_transfer_loop',
+    skillAtomId: 'w11_transfer_loop_read',
+    errorType: 'missed_transfer_loop',
+    drillKind: 'real_play_transfer_checkpoint_choice_v1',
+    boardContext: 'Plan, trigger, review, repeat',
+    learningPurpose: 'Combine the W11 real-play transfer loop.',
+    expectedChoiceId: 'plan_trigger_review_repeat',
     choiceIds: <String>[
-      'dry_board_more_danger_for_one_pair',
-      'one_pair_always_safe',
-      'texture_predicts_result',
-      'coordinated_board_more_danger_for_one_pair',
+      'play_without_plan',
+      'only_review_results',
+      'copy_random_line',
+      'plan_trigger_review_repeat',
     ],
     learnerPrompt:
-        'You have one pair. One board is dry; another is connected and suited. '
-        'Which board deserves more caution?',
+        'What is the full W11 loop that transfers app work into real play?',
     choiceLabels: <String, String>{
-      'coordinated_board_more_danger_for_one_pair':
-          'The connected and suited board deserves more caution.',
-      'dry_board_more_danger_for_one_pair':
-          'The dry board deserves more caution.',
-      'one_pair_always_safe': 'One pair is always safe.',
-      'texture_predicts_result': 'Texture predicts the result.',
+      'plan_trigger_review_repeat': 'Plan, trigger, review, then repeat.',
+      'play_without_plan': 'Play without a plan.',
+      'only_review_results': 'Only review whether you won.',
+      'copy_random_line': 'Copy a random line from memory.',
     },
     feedbackReason:
-        'A coordinated board can connect with more hands. One pair may still '
-        'be useful, but the texture asks for more caution.',
+        'W11 is the transfer loop: one session plan, one live trigger, one '
+        'review output.',
     incorrectFeedback: <String, String>{
-      'dry_board_more_danger_for_one_pair':
-          'Dry boards usually show fewer immediate connection clues.',
-      'one_pair_always_safe':
-          'One pair can face pressure on coordinated boards.',
-      'texture_predicts_result':
-          'Texture is a caution signal, not a result prediction.',
+      'play_without_plan': 'Transfer starts before the session with one focus.',
+      'only_review_results': 'Results are noisy; review the actionable leak.',
+      'copy_random_line': 'The line must come from the planned trigger.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w11_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
 ];

@@ -33,7 +33,7 @@ class Act0W10BetPurposeHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_10',
-      lessonId: 'value_bluff_intuition_lite',
+      lessonId: 'player_type_basics',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -74,7 +74,7 @@ class Act0W10BetPurposeHiddenRuntimeSessionOwnerV1 {
   }) {
     final spec = _taskSpecFor(
       worldId: 'world_10',
-      lessonId: 'value_bluff_intuition_lite',
+      lessonId: 'player_type_basics',
       taskId: taskId ?? taskSpec.taskId,
     );
     if (spec == null) {
@@ -171,47 +171,48 @@ class Act0W10BetPurposeHiddenTaskSpecV1 {
 const Act0W10BetPurposeHiddenTaskSpecV1
 act0W10BetPurposeHiddenTaskSpecV1 = Act0W10BetPurposeHiddenTaskSpecV1(
   worldId: 'world_10',
-  lessonId: 'value_bluff_intuition_lite',
-  taskId: 'clear_value_bet_recognition_intro',
-  sourceTaskId: 'clear_value_bet_recognition_intro',
-  conceptFamilyId: 'w10_bet_purpose_value_bluff',
-  repairFocusId: 'w10_clear_value_bet_recognition',
-  skillAtomId: 'w10_bet_purpose_value_read',
-  errorType: 'missed_clear_value_bet',
-  drillKind: 'bet_purpose_choice_v1',
-  boardContext: 'Strong made hand against weaker calls',
+  lessonId: 'player_type_basics',
+  taskId: 'w10_player_tendency_tag_hidden',
+  sourceTaskId: 'w10_player_tendency_tag_hidden',
+  conceptFamilyId: 'w10_player_adjustment',
+  repairFocusId: 'w10_player_tendency_tag',
+  skillAtomId: 'w10_player_tendency_read',
+  errorType: 'missed_player_tendency',
+  drillKind: 'player_adjustment_choice_v1',
+  boardContext: 'Repeated tight folds and low aggression',
   learningPurpose:
-      'Recognize a bet whose main purpose is getting called by worse hands.',
-  expectedChoiceId: 'bet_for_value_called_by_worse',
+      'Tag one player tendency before choosing an exploit adjustment.',
+  expectedChoiceId: 'tight_folding_profile',
   choiceIds: <String>[
-    'bet_for_value_called_by_worse',
-    'bet_to_make_better_fold',
-    'bet_has_no_purpose',
-    'bet_result_known',
+    'tight_folding_profile',
+    'loose_passive_caller',
+    'overaggressive_bluffer',
+    'no_read_ignore_forever',
   ],
   learnerPrompt:
-      'You have a strong made hand and expect worse hands to call. What is '
-      'the safest bet-purpose read?',
+      'Villain keeps folding blinds and rarely fights back. What is the '
+      'safest first player-adjustment tag?',
   choiceLabels: <String, String>{
-    'bet_for_value_called_by_worse':
-        'The bet is mainly for worse hands to call.',
-    'bet_to_make_better_fold': 'The bet is mainly to make better hands fold.',
-    'bet_has_no_purpose': 'The bet has no purpose.',
-    'bet_result_known': 'The result is already known.',
+    'tight_folding_profile': 'Tight-folding profile.',
+    'loose_passive_caller': 'Loose-passive caller.',
+    'overaggressive_bluffer': 'Over-aggressive bluffer.',
+    'no_read_ignore_forever': 'No read, ignore every future signal.',
   },
   feedbackReason:
-      'A value bet is mainly about getting called by worse hands. It does not '
-      'prove the result in advance.',
+      'Repeated folds and low resistance support a tight-folding tag before '
+      'you choose one exploit lever.',
   incorrectFeedback: <String, String>{
-    'bet_to_make_better_fold':
-        'With a strong hand and worse calls available, the main purpose is '
-        'value.',
-    'bet_has_no_purpose': 'A bet can have a clear value purpose.',
-    'bet_result_known':
-        'The purpose of the bet does not make the result known.',
+    'loose_passive_caller':
+        'Loose-passive means call-heavy and low aggression, not repeated '
+        'folding.',
+    'overaggressive_bluffer':
+        'Over-aggressive players apply pressure; this player is avoiding it.',
+    'no_read_ignore_forever':
+        'Small samples need care, but repeated folds are still a usable light '
+        'tag.',
   },
-  practiceCtaAllowed: false,
-  mapperNoTargetReason: 'w10_route_locked_no_safe_practice_target_v1',
+  practiceCtaAllowed: true,
+  mapperNoTargetReason: '',
 );
 
 const List<Act0W10BetPurposeHiddenTaskSpecV1>
@@ -219,137 +220,133 @@ act0W10BetPurposeHiddenTaskSpecsV1 = <Act0W10BetPurposeHiddenTaskSpecV1>[
   act0W10BetPurposeHiddenTaskSpecV1,
   Act0W10BetPurposeHiddenTaskSpecV1(
     worldId: 'world_10',
-    lessonId: 'value_bluff_intuition_lite',
-    taskId: 'clear_bluff_intention_recognition_intro',
-    sourceTaskId: 'clear_bluff_intention_recognition_intro',
-    conceptFamilyId: 'w10_bet_purpose_value_bluff',
-    repairFocusId: 'w10_clear_bluff_intention_recognition',
-    skillAtomId: 'w10_bet_purpose_bluff_read',
-    errorType: 'missed_clear_bluff_intention',
-    drillKind: 'bet_purpose_choice_v1',
-    boardContext: 'Weak hand trying to make stronger hands fold',
-    learningPurpose:
-        'Recognize a bet whose main purpose is making stronger hands fold.',
-    expectedChoiceId: 'bet_to_make_stronger_hands_fold',
+    lessonId: 'adjust_one_lever',
+    taskId: 'w10_adjustment_lever_hidden',
+    sourceTaskId: 'w10_adjustment_lever_hidden',
+    conceptFamilyId: 'w10_player_adjustment',
+    repairFocusId: 'w10_one_lever_adjustment',
+    skillAtomId: 'w10_adjustment_lever_read',
+    errorType: 'missed_adjustment_lever',
+    drillKind: 'player_adjustment_choice_v1',
+    boardContext: 'Blinds fold too often to late steals',
+    learningPurpose: 'Choose one bounded adjustment from a player read.',
+    expectedChoiceId: 'open_wider_vs_overfolders',
     choiceIds: <String>[
-      'bet_for_worse_to_call',
-      'bet_to_make_stronger_hands_fold',
-      'bet_already_won',
-      'bet_shows_exact_hand',
+      'triple_barrel_every_spot',
+      'open_wider_vs_overfolders',
+      'change_every_strategy_part',
+      'ignore_repeated_folds',
     ],
     learnerPrompt:
-        'You have little showdown strength and are betting to pressure '
-        'stronger hands. What is the safest purpose read?',
+        'Both blinds keep overfolding. What is the clean first exploit lever?',
     choiceLabels: <String, String>{
-      'bet_to_make_stronger_hands_fold':
-          'The bet is mainly to make stronger hands fold.',
-      'bet_for_worse_to_call': 'The bet is mainly for worse hands to call.',
-      'bet_already_won': 'The hand is already won.',
-      'bet_shows_exact_hand': 'The bet reveals the exact hand.',
+      'open_wider_vs_overfolders': 'Open slightly wider in late position.',
+      'triple_barrel_every_spot': 'Triple-barrel every future spot.',
+      'change_every_strategy_part': 'Change every strategy part now.',
+      'ignore_repeated_folds': 'Ignore the repeated folds.',
     },
     feedbackReason:
-        'A bluff-purpose bet is mainly about pressuring stronger hands to '
-        'fold. It still does not guarantee that stronger hands fold.',
+        'Overfolding blinds support one measured late-position widen, not a '
+        'full strategy rewrite.',
     incorrectFeedback: <String, String>{
-      'bet_for_worse_to_call':
-          'With little showdown strength, worse calls are not the main value '
-          'story.',
-      'bet_already_won':
-          'A pressure bet is not the same as already winning the hand.',
-      'bet_shows_exact_hand': 'A bet purpose does not reveal the exact cards.',
+      'triple_barrel_every_spot':
+          'The read is preflop overfolding, so a postflop pressure plan is too '
+          'broad.',
+      'change_every_strategy_part':
+          'One-lever changes are easier to track and less noisy.',
+      'ignore_repeated_folds':
+          'Baseline is safe, but repeated overfolds deserve a small targeted '
+          'adjustment.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w10_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
   Act0W10BetPurposeHiddenTaskSpecV1(
     worldId: 'world_10',
-    lessonId: 'value_bluff_intuition_lite',
-    taskId: 'thin_value_caution_lite',
-    sourceTaskId: 'thin_value_caution_lite',
-    conceptFamilyId: 'w10_bet_purpose_value_bluff',
-    repairFocusId: 'w10_thin_value_caution_lite',
-    skillAtomId: 'w10_bet_purpose_caution',
-    errorType: 'missed_thin_value_caution',
-    drillKind: 'bet_purpose_caution_choice_v1',
-    boardContext: 'Medium hand with unclear worse calls',
-    learningPurpose:
-        'Recognize when a value bet is close because worse calls are unclear.',
-    expectedChoiceId: 'worse_calls_are_unclear',
+    lessonId: 'exploit_guardrails',
+    taskId: 'w10_sample_guardrail_hidden',
+    sourceTaskId: 'w10_sample_guardrail_hidden',
+    conceptFamilyId: 'w10_player_adjustment',
+    repairFocusId: 'w10_sample_size_guardrail',
+    skillAtomId: 'w10_guardrail_read',
+    errorType: 'missed_sample_guardrail',
+    drillKind: 'player_adjustment_guardrail_choice_v1',
+    boardContext: 'Two odd hands without a long pattern',
+    learningPurpose: 'Avoid over-adjusting from thin player-read evidence.',
+    expectedChoiceId: 'small_adjust_keep_watching',
     choiceIds: <String>[
-      'many_worse_hands_clearly_call',
-      'bet_must_be_bluff',
-      'worse_calls_are_unclear',
-      'purpose_does_not_matter',
+      'full_counter_now',
+      'never_adjust_again',
+      'small_adjust_keep_watching',
+      'copy_every_exploit',
     ],
     learnerPrompt:
-        'You have a medium hand, and it is unclear how many worse hands call. '
-        'What is the safest purpose read?',
+        'You saw two unusual hands from villain but no long pattern yet. What '
+        'keeps the exploit disciplined?',
     choiceLabels: <String, String>{
-      'worse_calls_are_unclear':
-          'The value case is close because worse calls are unclear.',
-      'many_worse_hands_clearly_call': 'Many worse hands clearly call.',
-      'bet_must_be_bluff': 'The bet must only try to make stronger hands fold.',
-      'purpose_does_not_matter': 'The bet purpose does not matter.',
+      'small_adjust_keep_watching':
+          'Make a small adjustment and keep watching.',
+      'full_counter_now': 'Commit to a full counter-strategy now.',
+      'never_adjust_again': 'Never adjust from player reads.',
+      'copy_every_exploit': 'Apply every exploit at once.',
     },
     feedbackReason:
-        'A close value spot means worse calls are not obvious. The safest read '
-        'is caution, not a forced value or pressure label.',
+        'Guardrails turn thin evidence into a small watchful adjustment, not a '
+        'hard counter.',
     incorrectFeedback: <String, String>{
-      'many_worse_hands_clearly_call':
-          'If worse calls are unclear, the value case is close.',
-      'bet_must_be_bluff':
-          'Unclear value does not automatically make the bet pure pressure.',
-      'purpose_does_not_matter':
-          'Purpose matters because it explains what the bet is trying to do.',
+      'full_counter_now':
+          'A full counter from two hands creates more noise than edge.',
+      'never_adjust_again':
+          'Guardrails do not mean ignoring reads; they mean adjusting carefully.',
+      'copy_every_exploit':
+          'Stacking all exploits hides which read is actually working.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w10_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
   Act0W10BetPurposeHiddenTaskSpecV1(
     worldId: 'world_10',
-    lessonId: 'value_bluff_intuition_lite',
-    taskId: 'bet_purpose_transfer_check',
-    sourceTaskId: 'bet_purpose_transfer_check',
-    conceptFamilyId: 'w10_bet_purpose_value_bluff',
-    repairFocusId: 'w10_bet_purpose_transfer_check',
-    skillAtomId: 'w10_bet_purpose_transfer',
-    errorType: 'missed_bet_purpose_transfer',
-    drillKind: 'bet_purpose_transfer_choice_v1',
-    boardContext:
-        'Compare the beginner-taught value purpose with pressure to make '
-        'stronger hands fold',
+    lessonId: 'player_adjustment_checkpoint',
+    taskId: 'w10_player_adjustment_transfer_hidden',
+    sourceTaskId: 'w10_player_adjustment_transfer_hidden',
+    conceptFamilyId: 'w10_player_adjustment',
+    repairFocusId: 'w10_player_adjustment_transfer',
+    skillAtomId: 'w10_player_adjustment_transfer',
+    errorType: 'missed_player_adjustment_transfer',
+    drillKind: 'player_adjustment_transfer_choice_v1',
+    boardContext: 'Real-table repeated blind overfold pattern',
     learningPurpose:
-        'Transfer the taught value-versus-pressure purpose read across spots.',
-    expectedChoiceId: 'main_purpose_value_or_fold_pressure',
+        'Transfer a player read into one tracked table adjustment.',
+    expectedChoiceId: 'tag_one_lever_guardrail',
     choiceIds: <String>[
-      'bet_size_predicts_result',
-      'all_bets_have_same_purpose',
-      'answer_already_known',
-      'main_purpose_value_or_fold_pressure',
+      'rewrite_entire_strategy',
+      'ignore_all_tendencies',
+      'copy_random_counter',
+      'tag_one_lever_guardrail',
     ],
     learnerPrompt:
-        'In a new betting spot, what is the safest first question among the '
-        'beginner purposes taught here?',
+        'At a real table, you notice one repeated player tendency. What is the '
+        'safe W10 transfer loop?',
     choiceLabels: <String, String>{
-      'main_purpose_value_or_fold_pressure':
-          'Ask whether the taught main purpose is value or making stronger '
-          'hands fold.',
-      'bet_size_predicts_result': 'The bet size predicts the result.',
-      'all_bets_have_same_purpose': 'All bets have the same purpose.',
-      'answer_already_known': 'The answer is already known.',
+      'tag_one_lever_guardrail':
+          'Tag one tendency, pick one lever, keep guardrails.',
+      'rewrite_entire_strategy': 'Rewrite the entire strategy immediately.',
+      'ignore_all_tendencies': 'Ignore all tendencies forever.',
+      'copy_random_counter': 'Copy a random counter-strategy.',
     },
     feedbackReason:
-        'Among the beginner purposes taught here, ask whether the bet mainly '
-        'wants worse calls or stronger folds.',
+        'W10 closes by turning one tendency into one measured adjustment with '
+        'guardrails.',
     incorrectFeedback: <String, String>{
-      'bet_size_predicts_result':
-          'Bet size can inform a read, but it does not predict the result.',
-      'all_bets_have_same_purpose':
-          'Different bets can have different purposes.',
-      'answer_already_known':
-          'A purpose read is a decision signal, not a known answer.',
+      'rewrite_entire_strategy':
+          'A full rewrite makes it hard to know which read helped.',
+      'ignore_all_tendencies':
+          'Reliable repeated tendencies are part of the adjustment plan.',
+      'copy_random_counter':
+          'The counter must fit the actual tendency and remain small enough to '
+          'track.',
     },
-    practiceCtaAllowed: false,
-    mapperNoTargetReason: 'w10_route_locked_no_safe_practice_target_v1',
+    practiceCtaAllowed: true,
+    mapperNoTargetReason: '',
   ),
 ];

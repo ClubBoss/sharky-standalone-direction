@@ -149,6 +149,87 @@ act0FirstValueSameSignalRepMappingV1({
     }
   }
 
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'player_tendency') {
+    switch (sourceTask) {
+      case 'w10_nit_tag':
+        return target(
+          'world_10',
+          'player_type_basics',
+          'w10_loose_passive_tag',
+        );
+      case 'w10_loose_passive_tag':
+        return target(
+          'world_10',
+          'player_type_basics',
+          'w10_overaggressive_tag',
+        );
+      case 'w10_vs_nit_open_wider':
+        return target(
+          'world_10',
+          'adjust_one_lever',
+          'w10_vs_caller_value_heavier',
+        );
+      case 'w10_guardrail_sample_size':
+        return target(
+          'world_10',
+          'player_adjustment_checkpoint',
+          'w10_checkpoint_guardrail_line',
+        );
+    }
+  }
+
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'session_plan') {
+    switch (sourceTask) {
+      case 'w11_plan_focus_choice':
+        return target(
+          'world_11',
+          'session_plan_basics',
+          'w11_plan_avoid_overload',
+        );
+      case 'w11_trigger_overfold_blinds':
+        return target(
+          'world_11',
+          'table_trigger_reads',
+          'w11_trigger_overcall_flop',
+        );
+      case 'w11_review_pick_leak':
+        return target(
+          'world_11',
+          'post_session_review_loop',
+          'w11_review_define_fix',
+        );
+    }
+  }
+
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'tilt_reset') {
+    switch (sourceTask) {
+      case 'w12_after_bad_beat_reset':
+        return target(
+          'world_12',
+          'tilt_reset_protocol',
+          'w12_after_mistake_reset',
+        );
+      case 'w12_good_fold_bad_result':
+        return target(
+          'world_12',
+          'decision_over_outcome',
+          'w12_bad_call_good_result',
+        );
+      case 'w12_assertive_not_ego':
+        return target(
+          'world_12',
+          'confidence_and_discipline',
+          'w12_discipline_under_pressure',
+        );
+    }
+  }
+
   if (nextRepId == 'repeat_starting_hand_read' &&
       skillAtomId == 'starting_hand_read' &&
       sourceSignalId == 'hero_cards') {

@@ -441,14 +441,15 @@ class Act0BlockCompletionSummaryV1 {
   String get worldOneCompletionProofFallbackLabel =>
       'Repair proof banks the next time you fix one.';
 
-  /// True only for an ordinary World 2-9 completion with valid, sequential
-  /// next-world route truth. World 1 keeps its own dedicated gate/copy above;
-  /// World 10+ payoff and the special W4->W5 band transition remain deferred.
+  /// True only for an ordinary World 2-12 completion with valid route truth.
+  /// World 1 keeps its own dedicated gate/copy above. World 12 is terminal and
+  /// previews Volume I review instead of opening a future world; the special
+  /// W4->W5 band transition remains separate.
   bool get hasWorldCompletionPayoff =>
       isWorldComplete &&
       worldNumber >= 2 &&
-      worldNumber <= 9 &&
-      nextWorldNumber == worldNumber + 1 &&
+      worldNumber <= 12 &&
+      (nextWorldNumber == worldNumber + 1 || worldNumber == 12) &&
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
 
@@ -747,6 +748,30 @@ const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
         previewLine:
             'World 10 starts with a simple question: which player tendency '
             'changes the plan?',
+      ),
+      10: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to tag player tendencies, adjust one lever, and '
+            'keep adjustment guardrails.',
+        previewLine:
+            'World 11 starts with a simple question: how does one clear plan '
+            'transfer to real play?',
+      ),
+      11: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to plan a session, use table triggers, and close '
+            'the review loop.',
+        previewLine:
+            'World 12 starts with a simple question: how do you keep process '
+            'steady when outcomes get noisy?',
+      ),
+      12: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how to judge process, reset tilt, and keep discipline '
+            'before deeper strategy.',
+        previewLine:
+            'Volume I terminal review brings the route together without '
+            'opening a future world.',
       ),
     };
 

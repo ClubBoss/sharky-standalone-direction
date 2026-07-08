@@ -59,17 +59,17 @@ void main() {
     test('projection stack reads hidden W10 concept family evidence', () {
       final history = owner.appendChoiceEvidence(
         history: const Act0LearningEvidenceHistoryV1(),
-        selectedChoiceId: 'bet_to_make_better_fold',
+        selectedChoiceId: 'loose_passive_caller',
         attemptKey: 'w10_hidden_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
 
       _expectActiveMissProjection(
         history: history,
-        conceptFamilyId: 'w10_bet_purpose_value_bluff',
-        repairFocusId: 'w10_clear_value_bet_recognition',
-        skillAtomId: 'w10_bet_purpose_value_read',
-        errorType: 'missed_clear_value_bet',
+        conceptFamilyId: 'w10_player_adjustment',
+        repairFocusId: 'w10_player_tendency_tag',
+        skillAtomId: 'w10_player_tendency_read',
+        errorType: 'missed_player_tendency',
       );
     });
 
@@ -78,20 +78,20 @@ void main() {
       () {
         var history = owner.appendChoiceEvidence(
           history: const Act0LearningEvidenceHistoryV1(),
-          selectedChoiceId: 'bet_to_make_better_fold',
+          selectedChoiceId: 'loose_passive_caller',
           attemptKey: 'w10_hidden_miss_1',
           decisionTimeBucket: '3_to_10s',
         );
         history = owner.appendChoiceEvidence(
           history: history,
-          selectedChoiceId: 'bet_for_value_called_by_worse',
+          selectedChoiceId: 'tight_folding_profile',
           attemptKey: 'w10_hidden_correct_2',
           decisionTimeBucket: 'under_3s',
         );
 
         _expectLaterCorrectNonCausal(
           history: history,
-          conceptFamilyId: 'w10_bet_purpose_value_bluff',
+          conceptFamilyId: 'w10_player_adjustment',
         );
       },
     );
@@ -124,16 +124,16 @@ void main() {
       final w10History = w10Harness.submitChoice(
         history: const Act0LearningEvidenceHistoryV1(),
         worldId: 'world_10',
-        lessonId: 'value_bluff_intuition_lite',
-        taskId: 'clear_value_bet_recognition_intro',
-        selectedChoiceId: 'bet_to_make_better_fold',
+        lessonId: 'player_type_basics',
+        taskId: 'w10_player_tendency_tag_hidden',
+        selectedChoiceId: 'loose_passive_caller',
         attemptKey: 'w10_harness_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
       expect(w10History.records.single.worldId, 'world_10');
       expect(
         w10History.records.single.conceptFamilyId,
-        'w10_bet_purpose_value_bluff',
+        'w10_player_adjustment',
       );
       expect(
         w10History.records.single.runKind,
@@ -158,9 +158,9 @@ void main() {
         () => w10Harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_9',
-          lessonId: 'value_bluff_intuition_lite',
-          taskId: 'clear_value_bet_recognition_intro',
-          selectedChoiceId: 'bet_for_value_called_by_worse',
+          lessonId: 'player_type_basics',
+          taskId: 'w10_player_tendency_tag_hidden',
+          selectedChoiceId: 'tight_folding_profile',
           attemptKey: 'bad_w10_world',
           decisionTimeBucket: 'under_3s',
         ),
@@ -228,8 +228,15 @@ void _expectActiveMissProjection({
   final mapperResult = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
     candidate,
   );
-  expect(mapperResult.isMapped, isFalse);
-  expect(mapperResult.request, isNull);
+  final expectsMappedTarget = conceptFamilyId == 'w10_player_adjustment';
+  expect(mapperResult.isMapped, expectsMappedTarget);
+  if (expectsMappedTarget) {
+    expect(mapperResult.request, isNotNull);
+    expect(mapperResult.request!.isLaunchable, isTrue);
+    expect(mapperResult.request!.targetTaskId.trim(), isNotEmpty);
+  } else {
+    expect(mapperResult.request, isNull);
+  }
 }
 
 void _expectLaterCorrectNonCausal({

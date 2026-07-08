@@ -92,17 +92,14 @@ void main() {
     expect(nextPack, 'world12_spine_campaign_v1');
   });
 
-  test('W11 route packs teach source-owned texture and danger transfer', () {
+  test('W11 route packs teach real-play transfer and session planning', () {
     final sourceTaskIds = act0W11BoardTextureHiddenTaskSpecsV1
         .map((spec) => spec.taskId)
         .toSet();
-    expect(sourceTaskIds, contains('dry_board_texture_recognition_intro'));
-    expect(
-      sourceTaskIds,
-      contains('connected_board_texture_recognition_intro'),
-    );
-    expect(sourceTaskIds, contains('suited_texture_pressure_lite'));
-    expect(sourceTaskIds, contains('one_pair_board_danger_transfer_check'));
+    expect(sourceTaskIds, contains('w11_session_plan_hidden'));
+    expect(sourceTaskIds, contains('w11_table_trigger_hidden'));
+    expect(sourceTaskIds, contains('w11_review_loop_hidden'));
+    expect(sourceTaskIds, contains('w11_real_play_loop_hidden'));
 
     for (final packId in w11RouteEntryPacks) {
       final pack = kCampaignPacksV1[packId];
@@ -123,16 +120,14 @@ void main() {
           .join(' ')
           .toLowerCase();
 
-      expect(copy, contains('texture'), reason: packId);
-      expect(copy, contains('danger'), reason: packId);
-      expect(copy, contains('dry board'), reason: packId);
-      expect(copy, contains('connected'), reason: packId);
-      expect(copy, contains('suited'), reason: packId);
-      expect(copy, contains('one pair'), reason: packId);
+      expect(copy, contains('session'), reason: packId);
+      expect(copy, contains('plan'), reason: packId);
+      expect(copy, contains('table trigger'), reason: packId);
+      expect(copy, contains('review'), reason: packId);
       if (packId == 'world11_spine_campaign_v1') {
-        expect(copy, contains('specific'), reason: packId);
-        expect(copy, contains('path'), reason: packId);
-        expect(copy, contains('improve'), reason: packId);
+        expect(copy, contains('one focus'), reason: packId);
+        expect(copy, contains('one trigger'), reason: packId);
+        expect(copy, contains('one leak'), reason: packId);
       }
       expect(copy, isNot(contains('seat label')), reason: packId);
       expect(copy, isNot(contains('solver')), reason: packId);
@@ -150,7 +145,7 @@ void main() {
     }
   });
 
-  test('W11 and W12 admissions keep W13 absent and Practice absent', () {
+  test('W11 and W12 admissions keep W13 absent and Practice admitted', () {
     expect(
       kCampaignPackIdsV1.where((id) => id.startsWith('world12_')).toSet(),
       const <String>{
@@ -169,11 +164,9 @@ void main() {
       w11RouteEntryPacks,
     );
 
-    const owner = Act0W11BoardTextureHiddenRuntimeSessionOwnerV1();
-    expect(owner.practiceLaunchRequest, isNull);
     for (final spec in act0W11BoardTextureHiddenTaskSpecsV1) {
-      expect(spec.practiceCtaAllowed, isFalse);
-      expect(spec.mapperNoTargetReason, contains('no_safe_practice_target'));
+      expect(spec.practiceCtaAllowed, isTrue, reason: spec.taskId);
+      expect(spec.mapperNoTargetReason, isEmpty, reason: spec.taskId);
     }
   });
 }

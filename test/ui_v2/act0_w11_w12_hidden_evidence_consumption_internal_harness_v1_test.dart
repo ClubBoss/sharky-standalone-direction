@@ -18,17 +18,17 @@ void main() {
     test('projection stack reads hidden W11 concept family evidence', () {
       final history = owner.appendChoiceEvidence(
         history: const Act0LearningEvidenceHistoryV1(),
-        selectedChoiceId: 'connected_board_more_dangerous',
+        selectedChoiceId: 'six_goals_at_once',
         attemptKey: 'w11_hidden_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
 
       _expectActiveMissProjection(
         history: history,
-        conceptFamilyId: 'w11_board_texture_danger_awareness',
-        repairFocusId: 'w11_dry_board_texture_recognition',
-        skillAtomId: 'w11_board_texture_read',
-        errorType: 'missed_dry_board_texture',
+        conceptFamilyId: 'w11_real_play_transfer',
+        repairFocusId: 'w11_one_focus_session_plan',
+        skillAtomId: 'w11_session_plan_read',
+        errorType: 'missed_session_plan',
       );
     });
 
@@ -37,20 +37,20 @@ void main() {
       () {
         var history = owner.appendChoiceEvidence(
           history: const Act0LearningEvidenceHistoryV1(),
-          selectedChoiceId: 'connected_board_more_dangerous',
+          selectedChoiceId: 'six_goals_at_once',
           attemptKey: 'w11_hidden_miss_1',
           decisionTimeBucket: '3_to_10s',
         );
         history = owner.appendChoiceEvidence(
           history: history,
-          selectedChoiceId: 'dry_board_fewer_clear_connections',
+          selectedChoiceId: 'one_focus_session_plan',
           attemptKey: 'w11_hidden_correct_2',
           decisionTimeBucket: 'under_3s',
         );
 
         _expectLaterCorrectNonCausal(
           history: history,
-          conceptFamilyId: 'w11_board_texture_danger_awareness',
+          conceptFamilyId: 'w11_real_play_transfer',
         );
       },
     );
@@ -62,17 +62,17 @@ void main() {
     test('projection stack reads hidden W12 concept family evidence', () {
       final history = owner.appendChoiceEvidence(
         history: const Act0LearningEvidenceHistoryV1(),
-        selectedChoiceId: 'bet_purpose_clue',
+        selectedChoiceId: 'revenge_next_hand',
         attemptKey: 'w12_hidden_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
 
       _expectActiveMissProjection(
         history: history,
-        conceptFamilyId: 'w12_review_decision_intuition',
-        repairFocusId: 'w12_main_clue_identification',
-        skillAtomId: 'w12_spot_clue_read',
-        errorType: 'missed_main_clue_identification',
+        conceptFamilyId: 'w12_mindset_bridge',
+        repairFocusId: 'w12_tilt_reset_protocol',
+        skillAtomId: 'w12_tilt_reset_read',
+        errorType: 'missed_tilt_reset',
       );
     });
 
@@ -81,20 +81,20 @@ void main() {
       () {
         var history = owner.appendChoiceEvidence(
           history: const Act0LearningEvidenceHistoryV1(),
-          selectedChoiceId: 'bet_purpose_clue',
+          selectedChoiceId: 'revenge_next_hand',
           attemptKey: 'w12_hidden_miss_1',
           decisionTimeBucket: '3_to_10s',
         );
         history = owner.appendChoiceEvidence(
           history: history,
-          selectedChoiceId: 'board_texture_clue',
+          selectedChoiceId: 'run_short_reset',
           attemptKey: 'w12_hidden_correct_2',
           decisionTimeBucket: 'under_3s',
         );
 
         _expectLaterCorrectNonCausal(
           history: history,
-          conceptFamilyId: 'w12_review_decision_intuition',
+          conceptFamilyId: 'w12_mindset_bridge',
         );
       },
     );
@@ -108,16 +108,16 @@ void main() {
       final w11History = w11Harness.submitChoice(
         history: const Act0LearningEvidenceHistoryV1(),
         worldId: 'world_11',
-        lessonId: 'board_texture_danger_awareness_lite',
-        taskId: 'dry_board_texture_recognition_intro',
-        selectedChoiceId: 'connected_board_more_dangerous',
+        lessonId: 'session_plan_basics',
+        taskId: 'w11_session_plan_hidden',
+        selectedChoiceId: 'six_goals_at_once',
         attemptKey: 'w11_harness_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
       expect(w11History.records.single.worldId, 'world_11');
       expect(
         w11History.records.single.conceptFamilyId,
-        'w11_board_texture_danger_awareness',
+        'w11_real_play_transfer',
       );
       expect(
         w11History.records.single.runKind,
@@ -127,17 +127,14 @@ void main() {
       final w12History = w12Harness.submitChoice(
         history: const Act0LearningEvidenceHistoryV1(),
         worldId: 'world_12',
-        lessonId: 'review_decision_intuition_lite',
-        taskId: 'main_clue_identification_intro',
-        selectedChoiceId: 'bet_purpose_clue',
+        lessonId: 'tilt_reset_protocol',
+        taskId: 'w12_tilt_reset_hidden',
+        selectedChoiceId: 'revenge_next_hand',
         attemptKey: 'w12_harness_miss_1',
         decisionTimeBucket: '3_to_10s',
       );
       expect(w12History.records.single.worldId, 'world_12');
-      expect(
-        w12History.records.single.conceptFamilyId,
-        'w12_review_decision_intuition',
-      );
+      expect(w12History.records.single.conceptFamilyId, 'w12_mindset_bridge');
       expect(
         w12History.records.single.runKind,
         'w12_hidden_runtime_session_owner_v1',
@@ -149,9 +146,9 @@ void main() {
         () => w11Harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_11',
-          lessonId: 'board_texture_danger_awareness_lite',
+          lessonId: 'session_plan_basics',
           taskId: 'other_w11_task',
-          selectedChoiceId: 'dry_board_fewer_clear_connections',
+          selectedChoiceId: 'one_focus_session_plan',
           attemptKey: 'bad_w11_task',
           decisionTimeBucket: 'under_3s',
         ),
@@ -161,9 +158,9 @@ void main() {
         () => w12Harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_11',
-          lessonId: 'review_decision_intuition_lite',
-          taskId: 'main_clue_identification_intro',
-          selectedChoiceId: 'board_texture_clue',
+          lessonId: 'tilt_reset_protocol',
+          taskId: 'w12_tilt_reset_hidden',
+          selectedChoiceId: 'run_short_reset',
           attemptKey: 'bad_w12_world',
           decisionTimeBucket: 'under_3s',
         ),
@@ -231,8 +228,18 @@ void _expectActiveMissProjection({
   final mapperResult = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
     candidate,
   );
-  expect(mapperResult.isMapped, isFalse);
-  expect(mapperResult.request, isNull);
+  final expectsMappedTarget = const <String>{
+    'w11_real_play_transfer',
+    'w12_mindset_bridge',
+  }.contains(conceptFamilyId);
+  expect(mapperResult.isMapped, expectsMappedTarget);
+  if (expectsMappedTarget) {
+    expect(mapperResult.request, isNotNull);
+    expect(mapperResult.request!.isLaunchable, isTrue);
+    expect(mapperResult.request!.targetTaskId.trim(), isNotEmpty);
+  } else {
+    expect(mapperResult.request, isNull);
+  }
 }
 
 void _expectLaterCorrectNonCausal({

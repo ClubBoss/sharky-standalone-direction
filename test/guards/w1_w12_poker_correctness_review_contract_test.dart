@@ -162,10 +162,16 @@ void main() {
       expect(spec.learnerPrompt as String, isNotEmpty, reason: taskId);
       expect(spec.feedbackReason as String, isNotEmpty, reason: taskId);
       expect(spec.boardContext as String, isNotEmpty, reason: taskId);
-      expect(spec.practiceCtaAllowed, isFalse, reason: taskId);
+      final worldId = spec.worldId as String;
+      final isStructurallyAdmitted = {
+        'world_10',
+        'world_11',
+        'world_12',
+      }.contains(worldId);
+      expect(spec.practiceCtaAllowed, isStructurallyAdmitted, reason: taskId);
       expect(
         spec.mapperNoTargetReason as String,
-        contains('no_safe_practice_target'),
+        isStructurallyAdmitted ? isEmpty : contains('no_safe_practice_target'),
         reason: taskId,
       );
       for (final wrongChoiceId in choiceIds.where(
@@ -205,22 +211,26 @@ void main() {
     },
   );
 
-  test('W10 value and bluff tasks name target logic without solver claims', () {
-    final copy = act0W10BetPurposeHiddenTaskSpecsV1
-        .map(
-          (spec) => <String>[
-            spec.boardContext,
-            spec.learnerPrompt,
-            spec.feedbackReason,
-          ].join(' '),
-        )
-        .join(' ')
-        .toLowerCase();
+  test(
+    'W10 player-adjustment tasks name target logic without solver claims',
+    () {
+      final copy = act0W10BetPurposeHiddenTaskSpecsV1
+          .map(
+            (spec) => <String>[
+              spec.boardContext,
+              spec.learnerPrompt,
+              spec.feedbackReason,
+            ].join(' '),
+          )
+          .join(' ')
+          .toLowerCase();
 
-    expect(copy, contains('worse hands'));
-    expect(copy, contains('stronger hands'));
-    expect(copy, isNot(contains('solver')));
-    expect(copy, isNot(contains('gto')));
-    expect(copy, isNot(contains('optimal')));
-  });
+      expect(copy, contains('player'));
+      expect(copy, contains('adjustment'));
+      expect(copy, contains('guardrail'));
+      expect(copy, isNot(contains('solver')));
+      expect(copy, isNot(contains('gto')));
+      expect(copy, isNot(contains('optimal')));
+    },
+  );
 }

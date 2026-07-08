@@ -124,14 +124,8 @@ void main() {
     );
   });
 
-  test('mapper still returns no target for W8-W12 route-locked targets', () {
-    for (final worldId in const <String>[
-      'world_8',
-      'world_9',
-      'world_10',
-      'world_11',
-      'world_12',
-    ]) {
+  test('mapper still returns no target for W8-W9 route-locked targets', () {
+    for (final worldId in const <String>['world_8', 'world_9']) {
       final result = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
         const Act0ConceptFamilyRepairCandidateV1(
           conceptFamilyId: 'no_bet_yet',

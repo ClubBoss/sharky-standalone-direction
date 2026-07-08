@@ -77,6 +77,39 @@ act0DefaultConceptCandidatePracticeTargetsV1 =
         targetLessonId: 'fold_check_call_raise',
         targetTaskId: 'actions_check_drill',
       ),
+      Act0ConceptCandidatePracticeTargetSpecV1(
+        mappingId: 'w10_player_tendency_to_loose_passive_tag_v1',
+        conceptFamilyId: 'w10_player_adjustment',
+        repairFocusId: 'w10_player_tendency_tag',
+        skillAtomId: 'w10_player_tendency_read',
+        errorType: 'missed_player_tendency',
+        sourceTaskId: 'w10_player_tendency_tag_hidden',
+        targetWorldId: 'world_10',
+        targetLessonId: 'player_type_basics',
+        targetTaskId: 'w10_loose_passive_tag',
+      ),
+      Act0ConceptCandidatePracticeTargetSpecV1(
+        mappingId: 'w11_session_plan_to_avoid_overload_v1',
+        conceptFamilyId: 'w11_real_play_transfer',
+        repairFocusId: 'w11_one_focus_session_plan',
+        skillAtomId: 'w11_session_plan_read',
+        errorType: 'missed_session_plan',
+        sourceTaskId: 'w11_session_plan_hidden',
+        targetWorldId: 'world_11',
+        targetLessonId: 'session_plan_basics',
+        targetTaskId: 'w11_plan_avoid_overload',
+      ),
+      Act0ConceptCandidatePracticeTargetSpecV1(
+        mappingId: 'w12_tilt_reset_to_after_mistake_reset_v1',
+        conceptFamilyId: 'w12_mindset_bridge',
+        repairFocusId: 'w12_tilt_reset_protocol',
+        skillAtomId: 'w12_tilt_reset_read',
+        errorType: 'missed_tilt_reset',
+        sourceTaskId: 'w12_tilt_reset_hidden',
+        targetWorldId: 'world_12',
+        targetLessonId: 'tilt_reset_protocol',
+        targetTaskId: 'w12_after_mistake_reset',
+      ),
     ];
 
 Act0ConceptCandidatePracticeMapResultV1
@@ -148,6 +181,9 @@ bool _isAllowedWorld(String worldId) {
     'world_4',
     'world_5',
     'world_6',
+    'world_10',
+    'world_11',
+    'world_12',
   }.contains(worldId.trim());
 }
 

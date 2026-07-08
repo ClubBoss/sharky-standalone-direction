@@ -856,215 +856,76 @@ MicroTaskStep _w10BetPurposeStepV1({
 
 List<MicroTaskStep> _w10BetPurposeCampaignPackV1() => <MicroTaskStep>[
   _w10BetPurposeStepV1(
-    prompt: 'Strong hand, worse hands can call. Tap Button.',
-    hint: 'Value means the bet purpose is getting called by worse hands.',
+    prompt: 'Player read first: tight blinds keep folding. Tap Button.',
+    hint: 'W10 starts with one player tendency before one adjustment.',
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', 'Kd', '4c'],
     contextText:
-        'W4 showed that bets and prices exist; W9 asked about call price; W10 asks what the bet is trying to accomplish now.',
+        'W10 Player Adjustment asks which player tendency changes the plan after the baseline strategy is known.',
     tradeoffText:
-        'Name the value purpose, or confuse it with making stronger hands fold.',
-    consequenceText: 'Value read: +8 chips. Purpose mix-up: -6 chips.',
-    insightText:
-        'A value bet is mainly for worse hands to call; it does not promise the result.',
+        'Tag the player tendency, or make a random adjustment with no read.',
+    consequenceText: 'Tendency tag: +8 chips. Random adjustment: -6 chips.',
+    insightText: 'A reliable player read supports one measured exploit lever.',
   ),
   _w10BetPurposeStepV1(
-    prompt: 'Weak hand, stronger hands might fold. Tap Cutoff.',
-    hint: 'This bet purpose is about making stronger hands fold.',
+    prompt: 'One-lever adjustment: blinds overfold. Tap Cutoff.',
+    hint: 'A tight-folding profile supports a small late-position widen.',
     expectedSeatId: 'co',
     boardCards: <String>['Qs', '9d', '3c'],
     contextText:
-        'The contrast is simple: value wants worse calls; this purpose wants stronger folds.',
+        'Player Adjustment changes one lever at a time so the exploit stays trackable.',
     tradeoffText:
-        'Read the stronger-hands-fold purpose, or call every bet value.',
-    consequenceText: 'Purpose contrast: +8 chips. Value-only leak: -6 chips.',
+        'Open a little wider from late position, or rewrite the whole plan.',
+    consequenceText: 'Measured exploit: +8 chips. Over-adjustment: -6 chips.',
     insightText:
-        'A pressure bet can target stronger hands folding, but it does not promise a fold.',
+        'One lever gives feedback; many simultaneous changes create noise.',
   ),
   _w10BetPurposeStepV1(
-    prompt: 'Worse calls or stronger folds? Tap Big Blind after comparing.',
-    hint: 'Bet purpose starts with who you want to continue or fold.',
+    prompt: 'Guardrail check: only two odd hands so far. Tap Big Blind.',
+    hint: 'Sample size controls how far the player adjustment can go.',
     expectedSeatId: 'bb',
     boardCards: <String>['Jh', '8h', '2s'],
     contextText:
-        'W10 comparison practice keeps value separate from stronger-hands-fold purpose.',
-    tradeoffText: 'Compare both purposes, or label the bet from size alone.',
-    consequenceText: 'Comparison read: +8 chips. Size-only miss: -6 chips.',
+        'A player read can be useful before it is perfect, but thin evidence keeps the exploit small.',
+    tradeoffText:
+        'Make a small adjustment and keep watching, or hard-counter too soon.',
+    consequenceText: 'Guardrail held: +8 chips. Overreaction: -6 chips.',
     insightText:
-        'The same bet size can have different purpose depending on worse hands and stronger hands.',
+        'Player Adjustment is not guessing; it is measured response to repeated behavior.',
   ),
   _w10BetPurposeStepV1(
-    prompt: 'Bet purpose before click. Tap Hijack.',
-    hint: 'Ask whether the bet wants worse calls or stronger folds.',
+    prompt: 'Transfer check: tag, lever, guardrail. Tap Hijack.',
+    hint: 'The W10 loop is tendency tag -> one lever -> guardrail.',
     expectedSeatId: 'hj',
     boardCards: <String>['Td', '7c', '2h'],
     contextText:
-        'This is beginner-safe W10: purpose before action, no advanced labels needed.',
-    tradeoffText: 'Name the purpose, or bet without knowing the target.',
-    consequenceText: 'Target named: +8 chips. Blind bet: -6 chips.',
+        'This is the player-adjustment bridge into real-play transfer.',
+    tradeoffText:
+        'Run the structured loop, or let intuition change too many actions.',
+    consequenceText: 'Structured exploit: +8 chips. Chaotic read: -6 chips.',
     insightText:
-        'Bet purpose is a target: worse hands calling or stronger hands folding.',
+        'W10 closes when one player tendency creates one disciplined adjustment.',
   ),
   _w10BetPurposeStepV1(
-    prompt:
-        'Final W10 check: value is not stronger-hands-fold. Tap Small Blind.',
-    hint: 'Keep the two purposes separate.',
+    prompt: 'Final W10 check: player read before exploit. Tap Small Blind.',
+    hint: 'Keep the exploit tied to one observed tendency.',
     expectedSeatId: 'sb',
     boardCards: <String>['As', 'Qc', '5d'],
-    contextText: 'W10 closes by separating value from pressure.',
+    contextText: 'W10 closes on Player Adjustment, not a betting taxonomy.',
     tradeoffText:
-        'Keep purpose clear, or blend the two jobs without checking targets.',
-    consequenceText: 'Clear close: +8 chips. Blended-purpose leak: -6 chips.',
+        'Keep the adjustment tied to the read, or drift into unsupported changes.',
+    consequenceText: 'Adjustment loop: +8 chips. Unsupported drift: -6 chips.',
     insightText:
-        'Value targets worse hands calling; pressure targets stronger hands folding.',
+        'Player Adjustment means tag one tendency, choose one lever, and keep guardrails.',
   ),
 ];
 
-List<MicroTaskStep> _w10BetPurposeFollowupB0V1() => <MicroTaskStep>[
-  _w10BetPurposeStepV1(
-    prompt: 'Top pair, worse hands can call. Tap Button.',
-    hint: 'Value purpose: worse hands continue.',
-    boardCards: <String>['Kh', '9s', '4d'],
-    contextText: 'B0 repairs the value side with a concrete made-hand spot.',
-    tradeoffText:
-        'Choose worse-hands-call value, or say the bet is only to make folds.',
-    consequenceText: 'Value repair: +8 chips. Fold-only leak: -6 chips.',
-    insightText: 'When worse hands can call, the bet purpose can be value.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Missed hand, stronger hands may fold. Tap Cutoff.',
-    hint: 'Pressure purpose: stronger hands folding.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Qd', '8c', '3s'],
-    contextText: 'B0 repairs the stronger-hands-fold side.',
-    tradeoffText:
-        'Name the pressure purpose, or call it value without worse calls.',
-    consequenceText: 'Pressure repair: +8 chips. Value label leak: -6 chips.',
-    insightText:
-        'A bet can target stronger hands folding when worse calls are not the story.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Strong hand but no worse calls. Tap Big Blind.',
-    hint: 'Value needs worse hands that can call.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Ah', 'As', '7c'],
-    contextText: 'B0 prevents automatic value labels.',
-    tradeoffText:
-        'Check whether worse hands call, or name value from strength alone.',
-    consequenceText: 'Target checked: +8 chips. Strength-only label: -6 chips.',
-    insightText:
-        'Hand strength helps, but value purpose needs worse hands to call.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Transfer W10: ask who continues. Tap Hijack.',
-    hint: 'Worse calls and stronger folds are different targets.',
-    expectedSeatId: 'hj',
-    boardCards: <String>['Jc', '9c', '2d'],
-    contextText: 'B0 closes with target-recognition transfer.',
-    tradeoffText: 'Transfer the target question, or restart from bet size.',
-    consequenceText: 'Transfer held: +8 chips. Size reset: -6 chips.',
-    insightText: 'Purpose starts with the target, not with a promised result.',
-  ),
-];
-
-List<MicroTaskStep> _w10BetPurposeFollowupB1V1() => <MicroTaskStep>[
-  _w10BetPurposeStepV1(
-    prompt: 'Medium hand, worse hands can still call. Tap Button.',
-    hint: 'Value can be simple: worse calls are available.',
-    boardCards: <String>['Qh', '7d', '3c'],
-    contextText:
-        'B1 adds a less obvious value example without thin-value jargon.',
-    tradeoffText:
-        'Look for worse calls, or assume only very strong hands can value bet.',
-    consequenceText: 'Worse-call read: +8 chips. Too-narrow value: -6 chips.',
-    insightText:
-        'Value purpose means worse hands can call, even when the hand is not the nuts.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Weak hand, fold target is stronger hands. Tap Small Blind.',
-    hint: 'The purpose is not value if worse calls are not the plan.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Ks', 'Ts', '4h'],
-    contextText: 'B1 repeats the stronger-hands-fold side in new wording.',
-    tradeoffText: 'Name the fold target, or mislabel pressure as value.',
-    consequenceText: 'Fold target read: +8 chips. Mislabel leak: -6 chips.',
-    insightText:
-        'Trying to make stronger hands fold is a different purpose from value.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Same bet size, different purpose. Tap Cutoff.',
-    hint: 'Size alone does not tell you value or stronger-hands-fold purpose.',
-    expectedSeatId: 'co',
-    boardCards: <String>['9h', '8d', '2c'],
-    contextText: 'B1 compares purpose without changing to advanced strategy.',
-    tradeoffText: 'Use target hands, or infer purpose from size only.',
-    consequenceText: 'Target comparison: +8 chips. Size-only trap: -6 chips.',
-    insightText:
-        'Bet purpose depends on worse hands calling or stronger hands folding.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Final B1 transfer: purpose before result. Tap Big Blind.',
-    hint: 'Purpose guides the bet; it does not lock what happens.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Ad', '6s', '2h'],
-    contextText: 'B1 keeps claim safety explicit.',
-    tradeoffText: 'Read the purpose, or claim the bet proves the result.',
-    consequenceText: 'Claim-safe read: +8 chips. Result claim: -6 chips.',
-    insightText:
-        'A value or stronger-hands-fold purpose is a plan, not a locked result.',
-  ),
-];
-
-List<MicroTaskStep> _w10BetPurposeFollowupB2V1() => <MicroTaskStep>[
-  _w10BetPurposeStepV1(
-    prompt: 'W9 price was good; W10 asks why bet. Tap Button.',
-    hint: 'Call price and bet purpose are different questions.',
-    boardCards: <String>['Ah', 'Jd', '5c'],
-    contextText: 'B2 connects W9 price discipline to W10 purpose discipline.',
-    tradeoffText:
-        'Ask the bet-purpose question, or reuse call-price logic only.',
-    consequenceText: 'Purpose bridge: +8 chips. Old-question leak: -6 chips.',
-    insightText:
-        'W9 asks about call price; W10 asks whether worse hands call or stronger hands fold.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Value spot: worse hands can call. Tap Cutoff.',
-    hint: 'Value is about worse hands continuing.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Kd', 'Qc', '6h'],
-    contextText: 'B2 repeats the value target in compact form.',
-    tradeoffText:
-        'Choose worse-hands-call purpose, or chase stronger folds by mistake.',
-    consequenceText: 'Value target: +8 chips. Wrong target: -6 chips.',
-    insightText:
-        'A value bet wants worse hands to call, not stronger hands to fold.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt: 'Pressure spot: stronger hands can fold. Tap Small Blind.',
-    hint: 'This purpose targets stronger hands folding.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Qh', '9s', '4d'],
-    contextText: 'B2 repeats the pressure target in compact form.',
-    tradeoffText:
-        'Choose stronger-hands-fold purpose, or call it value by habit.',
-    consequenceText: 'Pressure target: +8 chips. Habit label: -6 chips.',
-    insightText:
-        'A stronger-hands-fold purpose is different from worse hands calling.',
-  ),
-  _w10BetPurposeStepV1(
-    prompt:
-        'Final W10 transfer: name the target before betting. Tap Big Blind.',
-    hint: 'Worse calls or stronger folds: pick one safe purpose.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Ts', '7c', '3d'],
-    contextText: 'B2 closes W10 before W11 remains locked.',
-    tradeoffText: 'Name the target, or make an unfocused bet.',
-    consequenceText: 'Safe close: +8 chips. Unfocused bet: -6 chips.',
-    insightText:
-        'Bet purpose is beginner-safe when the target is clear and claims stay bounded.',
-  ),
-];
-
+List<MicroTaskStep> _w10BetPurposeFollowupB0V1() =>
+    _w10BetPurposeCampaignPackV1();
+List<MicroTaskStep> _w10BetPurposeFollowupB1V1() =>
+    _w10BetPurposeCampaignPackV1();
+List<MicroTaskStep> _w10BetPurposeFollowupB2V1() =>
+    _w10BetPurposeCampaignPackV1();
 MicroTaskStep _w11BoardTextureStepV1({
   required String prompt,
   required String hint,
@@ -1089,199 +950,64 @@ MicroTaskStep _w11BoardTextureStepV1({
 
 List<MicroTaskStep> _w11BoardTextureCampaignPackV1() => <MicroTaskStep>[
   _w11BoardTextureStepV1(
-    prompt: 'Dry board texture has fewer clear links. Tap Button.',
-    hint:
-        'A dry board has fewer specific straight or flush paths that can improve.',
+    prompt: 'Session plan first: choose one focus. Tap Button.',
+    hint: 'Real Play Transfer starts before the first hand.',
     expectedSeatId: 'btn',
     boardCards: <String>['Ah', '7d', '2c'],
     contextText:
-        'W11 starts after bet purpose by reading board texture danger as specific paths, not fear of every board.',
+        'W11 turns app lessons into a real session loop: one plan, one trigger, one review output.',
     tradeoffText:
-        'Name the dry board texture, or treat every flop as equally dangerous.',
-    consequenceText: 'Dry board read: +8 chips. Same-texture leak: -6 chips.',
+        'Pick one session focus, or overload the session with too many goals.',
+    consequenceText: 'One-focus plan: +8 chips. Overload: -6 chips.',
     insightText:
-        'A dry board has fewer obvious straight or flush paths; that lowers texture danger without deciding the hand.',
+        'A simple plan gives live play one thing to notice and review.',
   ),
   _w11BoardTextureStepV1(
-    prompt: 'Connected board texture creates more paths. Tap Cutoff.',
-    hint: 'Close ranks can create more straight paths.',
+    prompt: 'Live trigger appears: blinds overfold. Tap Cutoff.',
+    hint: 'Use one prepared trigger-action pair.',
     expectedSeatId: 'co',
     boardCards: <String>['9h', '8d', '7c'],
-    contextText: 'W11 separates connected board danger from a calm dry board.',
+    contextText:
+        'Real Play Transfer applies a prepared cue when a repeated table trigger appears.',
     tradeoffText:
-        'Use the connected ranks, or ignore how more hands can interact.',
-    consequenceText: 'Connected read: +8 chips. Missed danger: -6 chips.',
-    insightText:
-        'A connected board can be more dangerous because more hands can find specific draw or made-hand paths.',
+        'Activate one trigger, or apply every possible adjustment at once.',
+    consequenceText: 'Trigger transfer: +8 chips. Multi-lever noise: -6 chips.',
+    insightText: 'One trigger-action pair is easier to execute and review.',
   ),
   _w11BoardTextureStepV1(
-    prompt: 'Suited board texture adds flush pressure. Tap Big Blind.',
-    hint: 'Shared suits can add danger without proving a flush.',
+    prompt: 'After session: choose one leak and one fix. Tap Big Blind.',
+    hint: 'The review loop turns play into tomorrow action.',
     expectedSeatId: 'bb',
     boardCards: <String>['Kh', 'Th', '4s'],
-    contextText: 'W11 adds suit texture as another beginner-safe clue.',
-    tradeoffText: 'Read the suited danger clue, or ignore suits completely.',
-    consequenceText: 'Suit clue read: +8 chips. Suit miss: -6 chips.',
+    contextText:
+        'W11 closes the real-play loop by selecting one repeated leak and one concrete next-session fix.',
+    tradeoffText:
+        'Create one repair target, or write long notes with no next action.',
+    consequenceText: 'Review loop: +8 chips. Fuzzy review: -6 chips.',
     insightText:
-        'A suited board can add flush pressure because a future card can improve flush paths; it is a danger signal, not a certain result.',
+        'Transfer compounds when each session outputs one action for the next session.',
   ),
   _w11BoardTextureStepV1(
-    prompt:
-        'One pair faces more danger on connected suited boards. Tap Hijack.',
-    hint: 'One pair is less comfortable when texture creates many paths.',
+    prompt: 'W11 check: plan, trigger, review. Tap Hijack.',
+    hint: 'The transfer loop repeats across real sessions.',
     expectedSeatId: 'hj',
     boardCards: <String>['Jc', 'Tc', '8d'],
-    contextText: 'W11 closes the first pack with one pair transfer.',
+    contextText:
+        'Real Play Transfer is the practical loop that carries prior worlds into live decisions.',
     tradeoffText:
-        'Transfer texture danger to one pair, or trust one pair without checking texture.',
-    consequenceText: 'Transfer read: +8 chips. Texture-check leak: -6 chips.',
+        'Run the loop, or treat live play as disconnected from training.',
+    consequenceText: 'Transfer loop: +8 chips. Disconnected play: -6 chips.',
     insightText:
-        'One pair can still matter, but connected and suited texture asks for more caution.',
+        'W11 is admitted by the real-play loop, not by a board-texture route.',
   ),
 ];
 
-List<MicroTaskStep> _w11BoardTextureFollowupB0V1() => <MicroTaskStep>[
-  _w11BoardTextureStepV1(
-    prompt: 'Dry board texture repeat: fewer connections. Tap Button.',
-    hint: 'Far-apart ranks make fewer straight paths.',
-    boardCards: <String>['Kc', '8d', '3s'],
-    contextText: 'B0 repairs the dry board idea in a new spot.',
-    tradeoffText:
-        'Keep the dry board read, or overstate danger on every board.',
-    consequenceText: 'Dry repair: +8 chips. Over-danger leak: -6 chips.',
-    insightText:
-        'Dry board texture means fewer immediate connection clues, not a known winner.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Connected ranks raise board texture danger. Tap Cutoff.',
-    hint: 'Ranks sitting near each other can create more paths.',
-    expectedSeatId: 'co',
-    boardCards: <String>['8s', '7h', '6d'],
-    contextText: 'B0 repairs connected board recognition.',
-    tradeoffText: 'Use rank connection, or read only card height.',
-    consequenceText: 'Connection repair: +8 chips. Height-only miss: -6 chips.',
-    insightText:
-        'Connected board texture can interact with more hands than a dry board.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Two clubs on board create suited danger. Tap Small Blind.',
-    hint: 'Shared suits can add flush-pressure danger.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Qc', '9c', '2h'],
-    contextText: 'B0 repairs suited board texture.',
-    tradeoffText: 'Read suited pressure, or ignore suits completely.',
-    consequenceText: 'Suit repair: +8 chips. Suit-blind leak: -6 chips.',
-    insightText:
-        'Suited texture adds danger because future cards can complete or pressure flush paths.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'One pair transfer: dry board is calmer. Tap Big Blind.',
-    hint: 'Compare dry board danger with connected suited danger.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['As', '7c', '2d'],
-    contextText: 'B0 closes by comparing one pair across texture.',
-    tradeoffText:
-        'Compare texture danger, or treat one pair the same everywhere.',
-    consequenceText: 'Transfer repair: +8 chips. Texture-blind leak: -6 chips.',
-    insightText:
-        'One pair on a dry board usually faces fewer immediate danger clues than on a connected suited board.',
-  ),
-];
-
-List<MicroTaskStep> _w11BoardTextureFollowupB1V1() => <MicroTaskStep>[
-  _w11BoardTextureStepV1(
-    prompt: 'Dry board, low texture danger. Tap Button.',
-    hint: 'Dry board texture has fewer obvious draw paths.',
-    boardCards: <String>['Qh', '6d', '2c'],
-    contextText: 'B1 repeats dry board recognition with different ranks.',
-    tradeoffText: 'Notice fewer paths, or invent danger from no clear clue.',
-    consequenceText: 'Fewer paths: +8 chips. Invented danger: -6 chips.',
-    insightText:
-        'Dry board texture is a calmer clue, but it still does not predict the result.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Connected board, higher texture danger. Tap Hijack.',
-    hint: 'Close ranks can create straight paths.',
-    expectedSeatId: 'hj',
-    boardCards: <String>['Ts', '9d', '8c'],
-    contextText: 'B1 repeats connected texture with a new board.',
-    tradeoffText: 'Read the connected danger, or treat the board as dry.',
-    consequenceText: 'Danger read: +8 chips. Dry-label leak: -6 chips.',
-    insightText:
-        'Connected texture can give more hands ways to continue or improve.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Suited connected board: stack the danger clues. Tap Cutoff.',
-    hint: 'Connection plus suits can both matter.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Jh', 'Th', '9s'],
-    contextText: 'B1 adds scenario richness without advanced labels.',
-    tradeoffText: 'Stack the texture clues, or read only one card at a time.',
-    consequenceText: 'Clues stacked: +8 chips. One-card miss: -6 chips.',
-    insightText:
-        'A board can be dangerous for more than one reason: connected ranks and suited pressure.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'One pair needs caution on dangerous texture. Tap Big Blind.',
-    hint: 'One pair needs a texture check on connected suited boards.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Qd', 'Jd', '9c'],
-    contextText: 'B1 closes with one pair caution transfer.',
-    tradeoffText:
-        'Carry caution forward, or ignore board texture after pairing.',
-    consequenceText: 'Caution transfer: +8 chips. Pair-only leak: -6 chips.',
-    insightText:
-        'One pair can be useful, but dangerous texture should slow automatic confidence.',
-  ),
-];
-
-List<MicroTaskStep> _w11BoardTextureFollowupB2V1() => <MicroTaskStep>[
-  _w11BoardTextureStepV1(
-    prompt: 'Final dry board transfer: calmer texture. Tap Button.',
-    hint: 'Dry board means fewer obvious danger paths.',
-    boardCards: <String>['Ad', '8c', '3h'],
-    contextText: 'B2 starts the final transfer loop with dry board texture.',
-    tradeoffText: 'Use the calmer clue, or mark all boards as dangerous.',
-    consequenceText: 'Calm read: +8 chips. All-danger leak: -6 chips.',
-    insightText:
-        'A dry board is calmer because fewer obvious straight or flush paths appear.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Final connected transfer: danger rises. Tap Small Blind.',
-    hint: 'Connected ranks create more ways for hands to interact.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['7s', '6c', '5d'],
-    contextText: 'B2 repeats connected texture before the close.',
-    tradeoffText: 'Read the connected danger, or miss the rank pattern.',
-    consequenceText: 'Pattern read: +8 chips. Pattern miss: -6 chips.',
-    insightText:
-        'Connected board texture can raise danger by opening more straight-path stories.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Final suited transfer: shared suits add danger. Tap Cutoff.',
-    hint: 'Suited board texture adds flush pressure.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Ks', '9s', '4d'],
-    contextText: 'B2 repeats suited texture in claim-safe language.',
-    tradeoffText: 'Use suited danger, or claim the flush result is decided.',
-    consequenceText: 'Suit read: +8 chips. Result claim: -6 chips.',
-    insightText:
-        'Suited board texture adds danger; it does not prove a final hand.',
-  ),
-  _w11BoardTextureStepV1(
-    prompt: 'Final W11: one pair plus texture danger. Tap Big Blind.',
-    hint:
-        'Compare dry board with connected suited board before trusting one pair.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Jc', 'Tc', '8c'],
-    contextText: 'B2 closes W11 and keeps the next world locked.',
-    tradeoffText: 'Transfer texture danger to one pair, or overtrust one pair.',
-    consequenceText: 'Safe close: +8 chips. Overclaim leak: -6 chips.',
-    insightText:
-        'One pair deserves more caution when board texture is connected and suited.',
-  ),
-];
-
+List<MicroTaskStep> _w11BoardTextureFollowupB0V1() =>
+    _w11BoardTextureCampaignPackV1();
+List<MicroTaskStep> _w11BoardTextureFollowupB1V1() =>
+    _w11BoardTextureCampaignPackV1();
+List<MicroTaskStep> _w11BoardTextureFollowupB2V1() =>
+    _w11BoardTextureCampaignPackV1();
 MicroTaskStep _w12ReviewPayoffStepV1({
   required String prompt,
   required String hint,
@@ -1306,228 +1032,71 @@ MicroTaskStep _w12ReviewPayoffStepV1({
 
 List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
   _w12ReviewPayoffStepV1(
-    prompt: 'Review checkpoint: pick the main clue. Tap Button.',
-    hint: 'Start with visible cards, range, and texture before the action.',
+    prompt: 'Process first after a noisy result. Tap Button.',
+    hint: 'Mindset Bridge judges the decision before the outcome.',
     expectedSeatId: 'btn',
     boardCards: <String>['Qh', 'Jh', '8c'],
     contextText:
-        'W12 is where earlier clues come together: visible cards, ranges, draws, price, bet purpose, and texture all help explain the decision.',
+        'W12 Mindset Bridge keeps process quality separate from one short-term result.',
     tradeoffText:
-        'Name the missed cue, or jump to an answer without connecting the clues.',
-    consequenceText: 'Review checkpoint: +8 chips. Missed cue: -6 chips.',
+        'Audit the decision process, or let the result grade everything.',
+    consequenceText: 'Process anchor: +8 chips. Outcome trap: -6 chips.',
     insightText:
-        'Visible cards can change range stories; texture and draw clues shape the explanation.',
+        'A stable player reviews process before emotion rewrites the lesson.',
   ),
   _w12ReviewPayoffStepV1(
-    prompt: 'Review checkpoint: price and draw together. Tap Cutoff.',
-    hint: 'Call price matters more when a draw can improve later.',
+    prompt: 'Tilt signs appear after a bad beat. Tap Cutoff.',
+    hint: 'Reset before the next major spot.',
     expectedSeatId: 'co',
     boardCards: <String>['Ah', 'Th', '4s'],
     contextText:
-        'The checkpoint asks whether the missed cue was draw quality, call price, or texture danger.',
-    tradeoffText:
-        'Connect draw plus call price, or treat the review as one loose guess.',
-    consequenceText: 'Clues connected: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'A safe explanation can say the draw has paths and the call price controls the cost.',
+        'The bridge habit is a short reset: name the emotion, breathe, and re-anchor to the plan.',
+    tradeoffText: 'Reset and re-anchor, or chase the lost chips immediately.',
+    consequenceText: 'Reset held: +8 chips. Tilt carryover: -6 chips.',
+    insightText: 'Reset protects the next decision from the last outcome.',
   ),
   _w12ReviewPayoffStepV1(
-    prompt: 'Review checkpoint: bet purpose before result. Tap Big Blind.',
-    hint: 'Ask whether worse hands call or stronger hands fold.',
+    prompt: 'Confidence without ego. Tap Big Blind.',
+    hint: 'Strong mindset stays assertive and evidence-led.',
     expectedSeatId: 'bb',
     boardCards: <String>['Kd', '9c', '3s'],
     contextText:
-        'W12 uses bet purpose as a Volume I review clue beside visible cards, range, draw, call price, and texture.',
+        'W12 keeps confidence from turning into entitlement or point-proving lines.',
     tradeoffText:
-        'Explain the bet purpose, or let the result replace the decision reason.',
-    consequenceText: 'Purpose review: +8 chips. Missed cue: -6 chips.',
+        'Follow evidence with calm confidence, or force a line to prove a point.',
+    consequenceText: 'Disciplined confidence: +8 chips. Ego line: -6 chips.',
     insightText:
-        'Bet purpose helps explain the decision without claiming the result was known.',
+        'Confidence is valuable only while discipline still controls the action.',
   ),
   _w12ReviewPayoffStepV1(
-    prompt: 'Review payoff: combine the clue stack. Tap Hijack.',
-    hint:
-        'Use visible cards, range, draw, call price, bet purpose, and texture.',
+    prompt: 'Mindset bridge close: process, reset, discipline. Tap Hijack.',
+    hint: 'W12 routes to terminal review without opening a future world.',
     expectedSeatId: 'hj',
     boardCards: <String>['Jc', 'Tc', '8d'],
     contextText:
-        'The Volume I payoff is the process: connect visible cards, ranges, draws, call price, bet purpose, board texture, and missed-cue patterns into an explanation without making a readiness claim.',
+        'The W12 teaching identity is Mindset Bridge. The terminal review remains the post-completion recap destination.',
     tradeoffText:
-        'Connect the missed cue types, or call one clue the whole explanation.',
-    consequenceText: 'Review payoff: +8 chips. Missed cue: -6 chips.',
+        'Carry process/reset/discipline to terminal review, or treat recap as a new world unlock.',
+    consequenceText:
+        'Terminal-safe bridge: +8 chips. Future-world drift: -6 chips.',
     insightText:
-        'A good explanation combines simple clues and stays modest about what they prove.',
+        'W12 closes Volume I habits and hands off to terminal review, not a future world.',
   ),
 ];
 
-List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() => <MicroTaskStep>[
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint repair: visible cards shift range. Tap Button.',
-    hint: 'Visible cards remove some hands and change the range story.',
-    boardCards: <String>['As', 'Qs', '6d'],
-    contextText:
-        'B0 repairs the Volume I missed cue by reviewing visible cards, range, texture, draw, call price, bet purpose, and explanation.',
-    tradeoffText: 'Read the range shift, or review from hand strength only.',
-    consequenceText: 'Range review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Visible cards can narrow range stories before price or bet purpose is judged.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint repair: draw plus call price. Tap Small Blind.',
-    hint: 'A draw clue is stronger when the call price is manageable.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['9h', '8h', '2c'],
-    contextText:
-        'B0 keeps the Volume I review concrete: missed cue can be draw, call price, or texture.',
-    tradeoffText: 'Pair draw with call price, or review the draw without cost.',
-    consequenceText: 'Price repair: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Draw improvement and call price explain why a continue-or-fold decision changes.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint repair: texture changes confidence. Tap Cutoff.',
-    hint: 'Connected suited texture can make one pair less comfortable.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Qd', 'Jd', '9c'],
-    contextText:
-        'B0 reviews Volume I texture danger beside visible cards, range, draw, call price, and bet purpose.',
-    tradeoffText:
-        'Use texture in the explanation, or ignore a concrete missed cue.',
-    consequenceText: 'Texture repair: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Texture can make an explanation more cautious without proving a final result.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt:
-        'Checkpoint repair: bet purpose completes the review. Tap Big Blind.',
-    hint: 'Add why the bet exists after reading the board clues.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Kh', '7s', '3c'],
-    contextText:
-        'B0 Volume I payoff connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
-    tradeoffText:
-        'Name the bet purpose, or leave the review explanation unfinished.',
-    consequenceText: 'Purpose repair: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'The review checkpoint is useful when the reason names the concrete cue that was missed.',
-  ),
-];
-
-List<MicroTaskStep> _w12ReviewPayoffFollowupB1V1() => <MicroTaskStep>[
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint variation: choose the safest explanation. Tap Button.',
-    hint: 'Use several clues, not one result story.',
-    boardCards: <String>['Ts', '9s', '6h'],
-    contextText:
-        'B1 reviews Volume I visible cards, range, draw, call price, bet purpose, texture, and explanation in a new board.',
-    tradeoffText:
-        'Build the explanation from clues, or skip the missed cue review.',
-    consequenceText: 'Explanation review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'A safe explanation can combine texture danger with draw and price clues.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint variation: turn card changed the review. Tap Hijack.',
-    hint: 'A new card can change draw and texture pressure.',
-    expectedSeatId: 'hj',
-    boardCards: <String>['Ah', 'Jh', '4c', 'Th'],
-    contextText:
-        'B1 repairs the missed cue by naming the turn-card change before call price or bet purpose.',
-    tradeoffText:
-        'Update the review after the turn card, or reuse the old explanation.',
-    consequenceText: 'Turn review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'The same visible cards and range story can change when draw or texture pressure changes.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint variation: price controls the continue. Tap Cutoff.',
-    hint: 'Call price is a concrete clue, not a result prediction.',
-    expectedSeatId: 'co',
-    boardCards: <String>['Kc', 'Qc', '5d'],
-    contextText:
-        'B1 reviews call price beside draw, texture, visible cards, range, bet purpose, and explanation.',
-    tradeoffText: 'Use the price clue, or review only the look of the hand.',
-    consequenceText: 'Price review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Call price helps explain risk and reward while staying modest about outcome.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Checkpoint payoff: name the missed cue. Tap Big Blind.',
-    hint: 'The missed cue can be range, draw, price, purpose, or texture.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Jd', 'Td', '8s'],
-    contextText:
-        'B1 closes with a Volume I review checkpoint that connects visible cards, range, draw, call price, bet purpose, texture, and explanation.',
-    tradeoffText:
-        'Name the missed cue clearly, or finish with a vague review line.',
-    consequenceText: 'Concrete repair: +8 chips. Vague cue: -6 chips.',
-    insightText:
-        'The payoff is concrete when the explanation says which cue changed the decision.',
-  ),
-];
-
-List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() => <MicroTaskStep>[
-  _w12ReviewPayoffStepV1(
-    prompt: 'Final checkpoint: visible cards and range first. Tap Button.',
-    hint: 'Start the review with what cards make possible.',
-    boardCards: <String>['Ac', 'Kc', '7d'],
-    contextText:
-        'B2 starts the final Volume I review checkpoint with visible cards, range, draw, call price, bet purpose, texture, and explanation.',
-    tradeoffText:
-        'Anchor the range clue, or begin the explanation from the result.',
-    consequenceText: 'Range anchor: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Visible cards and range changes are the first checkpoint before later clues.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Final checkpoint: draw and texture together. Tap Small Blind.',
-    hint: 'Draw pressure and texture danger can point the same way.',
-    expectedSeatId: 'sb',
-    boardCards: <String>['Qh', 'Jh', '9s'],
-    contextText:
-        'B2 reviews a Volume I missed cue stack: draw, texture, visible cards, range, call price, bet purpose, and explanation.',
-    tradeoffText:
-        'Connect draw with texture, or split the review into isolated guesses.',
-    consequenceText: 'Stack review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Draw and texture clues can both ask for caution without making the result known.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Final checkpoint: call price and bet purpose. Tap Cutoff.',
-    hint: 'Price asks about cost; purpose asks why the bet exists.',
-    expectedSeatId: 'co',
-    boardCards: <String>['9c', '6s', '2d'],
-    contextText:
-        'B2 separates call price from bet purpose while keeping Volume I visible cards, range, draw, texture, and explanation in view.',
-    tradeoffText:
-        'Use both decision clues, or let one missed cue erase the review.',
-    consequenceText: 'Decision review: +8 chips. Missed cue: -6 chips.',
-    insightText:
-        'Call price and bet purpose answer different parts of the explanation.',
-  ),
-  _w12ReviewPayoffStepV1(
-    prompt: 'Final W12 payoff: connect the Volume I clues. Tap Big Blind.',
-    hint:
-        'Review visible cards, range, draw, call price, bet purpose, texture, and explanation.',
-    expectedSeatId: 'bb',
-    boardCards: <String>['Ks', 'Qs', 'Ts'],
-    contextText:
-        'The final checkpoint is a learner-safe Volume I review payoff, not an outcome claim.',
-    tradeoffText:
-        'Name the missed cue and connect the clues, or overclaim the review answer.',
-    consequenceText: 'Review payoff: +8 chips. Overclaim: -6 chips.',
-    insightText:
-        'The checkpoint shows practice connecting clues; it does not promise later results.',
-  ),
-];
-
+List<MicroTaskStep> _w12ReviewPayoffFollowupB0V1() =>
+    _w12ReviewPayoffCampaignPackV1();
+List<MicroTaskStep> _w12ReviewPayoffFollowupB1V1() =>
+    _w12ReviewPayoffCampaignPackV1();
+List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() =>
+    _w12ReviewPayoffCampaignPackV1();
 List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
   MicroTaskStep(
     prompt: 'Volume I review is complete. Start the keep-sharp review.',
     hint: 'The route is at a terminal review state.',
     expectedSeatIds: <String>['btn'],
     contextText:
-        'Volume I review is complete; this keep-sharp review is intentional, and W13 is not open in this route.',
+        'Volume I review is complete; this keep-sharp review is intentional, and no future world is open in this route.',
     tradeoffText:
         'Use this as a keep-sharp review, or mistake it for a new world.',
     consequenceText:
@@ -1540,7 +1109,7 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
     hint: 'Review visible cards, range, draw, price, purpose, and texture.',
     expectedSeatIds: <String>['co'],
     contextText:
-        'This terminal pack keeps Volume I clues warm without opening W13.',
+        'This terminal pack keeps Volume I clues warm without opening a future world.',
     tradeoffText:
         'Review the clue stack, or treat the terminal state as a proof claim.',
     consequenceText: 'Review state clear: +8 chips. Proof overclaim: -6 chips.',
@@ -1560,10 +1129,10 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
   ),
   MicroTaskStep(
     prompt: 'Terminal check: Volume I stays in review. Tap Small Blind.',
-    hint: 'Stop at review; do not expect W13 in this route.',
+    hint: 'Stop at review; do not expect a future world in this route.',
     expectedSeatIds: <String>['sb'],
     contextText:
-        'Volume I review is complete, W13 is not open, and later worlds remain blocked in this route.',
+        'Volume I review is complete, no future world is open, and later worlds remain blocked in this route.',
     tradeoffText:
         'Stay in review mode, or expect an unavailable route to open.',
     consequenceText: 'Terminal close: +8 chips. Route overreach: -6 chips.',
