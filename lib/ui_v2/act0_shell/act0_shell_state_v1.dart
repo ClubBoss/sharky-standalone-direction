@@ -1441,7 +1441,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_theory',
         title: 'Meet the table',
         phase: Act0LessonPhaseV1.theory,
-        runner: _firstTableGuideMeetTableRunner,
+        runner: _firstTableGuideMeetTableRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideMeetTableRunner.options,
+            correctOptionId: 'bottom',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
         summary:
@@ -1460,7 +1466,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_table_read_transfer',
         title: 'Read the table',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstTableGuideReadTableRunner,
+        runner: _firstTableGuideReadTableRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideReadTableRunner.options,
+            correctOptionId: 'two_three_six',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -1471,7 +1483,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_table_read_recheck',
         title: 'Table read recheck',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstTableGuideReadTableRecheckRunner,
+        runner: _firstTableGuideReadTableRecheckRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideReadTableRecheckRunner.options,
+            correctOptionId: 'two_three_four',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -1482,7 +1500,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'first_table_guide_one_clear_choice',
         title: 'Read the preflop setup',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstTableGuideActionRunner,
+        runner: _firstTableGuideActionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideActionRunner.options,
+            correctOptionId: 'hero_btn_preflop_setup',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -1492,7 +1516,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'first_table_guide_route_roles',
         title: 'Where to go next',
         phase: Act0LessonPhaseV1.review,
-        runner: _firstTableGuideRouteRunner,
+        runner: _firstTableGuideRouteRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstTableGuideRouteRunner.options,
+            correctOptionId: 'review',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -1527,7 +1557,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_win_ways',
         title: 'How pots are won',
         phase: Act0LessonPhaseV1.drill,
-        runner: _winWaysRunner,
+        runner: _winWaysRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _winWaysRunner.options,
+            correctOptionId: 'everyone_folds',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'See the two basic ways a hand ends: folds or showdown.',
@@ -1536,7 +1572,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_showdown_win',
         title: 'Win at showdown',
         phase: Act0LessonPhaseV1.drill,
-        runner: _showdownBestHandRunner,
+        runner: _showdownBestHandRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _showdownBestHandRunner.options,
+            correctOptionId: 'best_hand',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Pick which hand wins once the cards are all face up.',
@@ -1545,7 +1587,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_all_in_meaning',
         title: 'All-in meaning',
         phase: Act0LessonPhaseV1.drill,
-        runner: _allInMeaningRunner,
+        runner: _allInMeaningRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _allInMeaningRunner.options,
+            correctOptionId: 'all_remaining_committed',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
@@ -1555,7 +1603,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_matched_chips_transfer',
         title: 'Matched chips',
         phase: Act0LessonPhaseV1.drill,
-        runner: _matchedChipsTransferRunner,
+        runner: _matchedChipsTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _matchedChipsTransferRunner.options,
+            correctOptionId: 'matched_amount_only',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -1577,7 +1631,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'what_poker_is_review',
         title: 'Poker recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _tableRecapRunner,
+        runner: _tableRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _tableRecapRunner.options,
+            correctOptionId: 'everyone_folds',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 3,
         stepKind: Act0LessonStepKindV1.proveIt,
         summary:
@@ -1609,7 +1669,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_rank_drill',
         title: 'Higher card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _cardsRanksRunner,
+        runner: _cardsRanksRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _cardsRanksRunner.options,
+            correctOptionId: 'ace',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1626,7 +1692,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_private_board',
         title: 'Private vs board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _privateBoardRunner,
+        runner: _privateBoardRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _privateBoardRunner.options,
+            correctOptionId: 'board',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1651,7 +1723,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'cards_ranks_suits_recap',
         title: 'Cards recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _cardsRecapRunner,
+        runner: _cardsRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _cardsRecapRunner.options,
+            correctOptionId: 'five',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.proveIt,
         summary:
@@ -1675,7 +1753,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_preflop',
         title: 'Preflop',
         phase: Act0LessonPhaseV1.theory,
-        runner: _firstHandRunner,
+        runner: _firstHandRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _firstHandRunner.options,
+            correctOptionId: 'two',
+            correctIndex: 0,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -1709,7 +1793,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_river',
         title: 'River card',
         phase: Act0LessonPhaseV1.drill,
-        runner: _riverBoardRunner,
+        runner: _riverBoardRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _riverBoardRunner.options,
+            correctOptionId: 'five',
+            correctIndex: 0,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1717,7 +1807,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_showdown',
         title: 'Showdown read',
         phase: Act0LessonPhaseV1.review,
-        runner: _showdownBestHandRunner,
+        runner: _showdownBestHandRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _showdownBestHandRunner.options,
+            correctOptionId: 'best_hand',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -1725,7 +1821,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'your_first_hand_action_trail',
         title: 'Action history',
         phase: Act0LessonPhaseV1.drill,
-        runner: _actionTrailRunner,
+        runner: _actionTrailRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _actionTrailRunner.options,
+            correctOptionId: 'bb_check',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1755,7 +1857,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_theory',
         title: 'Action words',
         phase: Act0LessonPhaseV1.theory,
-        runner: _actionWordsRunner,
+        runner: _actionWordsRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _actionWordsRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 0,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
         summary: 'Lock in the four core verbs first: fold, check, call, raise.',
@@ -1797,7 +1905,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_call_drill',
         title: 'Call a price',
         phase: Act0LessonPhaseV1.drill,
-        runner: _callActionRunner,
+        runner: _callActionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _callActionRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary: 'Read when matching the bet is the cheapest correct continue.',
@@ -1820,7 +1934,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_review',
         title: 'Action recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _actionRecapRunner,
+        runner: _actionRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _actionRecapRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 0,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
         summary: 'Prove you can name the right action without prompts.',
@@ -1868,7 +1988,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_last_actor',
         title: 'Last preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _lastPreflopActorRunner,
+        runner: _lastPreflopActorRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _lastPreflopActorRunner.options,
+            correctOptionId: 'bb',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1884,7 +2010,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_button_moves',
         title: 'Button moves',
         phase: Act0LessonPhaseV1.drill,
-        runner: _buttonMovesRunner,
+        runner: _buttonMovesRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _buttonMovesRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1892,7 +2024,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _blindsOrderRecapRunner,
+        runner: _blindsOrderRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _blindsOrderRecapRunner.options,
+            correctOptionId: 'bb',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -1914,7 +2052,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_theory',
         title: 'Six seats',
         phase: Act0LessonPhaseV1.theory,
-        runner: _positionsRunner,
+        runner: _positionsRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _positionsRunner.options,
+            correctOptionId: 'bottom',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -1930,7 +2074,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_utg',
         title: 'Tap UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _utgSeatRunner,
+        runner: _utgSeatRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _utgSeatRunner.options,
+            correctOptionId: 'utg',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1946,7 +2096,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_late_seat',
         title: 'Late seat meaning',
         phase: Act0LessonPhaseV1.drill,
-        runner: _latePositionRunner,
+        runner: _latePositionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _latePositionRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -1962,7 +2118,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_review',
         title: 'Position recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _positionsRecapRunner,
+        runner: _positionsRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _positionsRecapRunner.options,
+            correctOptionId: 'bottom',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -1992,7 +2154,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_pair_drill',
         title: 'Find the pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _handRankingsRunner,
+        runner: _handRankingsRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _handRankingsRunner.options,
+            correctOptionId: 'pair',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2008,7 +2176,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_trips_drill',
         title: 'Trips or set',
         phase: Act0LessonPhaseV1.drill,
-        runner: _tripsRankRunner,
+        runner: _tripsRankRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _tripsRankRunner.options,
+            correctOptionId: 'trips',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2024,7 +2198,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_flush_drill',
         title: 'Flush beats straight',
         phase: Act0LessonPhaseV1.drill,
-        runner: _flushRankRunner,
+        runner: _flushRankRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _flushRankRunner.options,
+            correctOptionId: 'flush',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2040,7 +2220,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_quads_drill',
         title: 'Four of a kind',
         phase: Act0LessonPhaseV1.drill,
-        runner: _quadsRankRunner,
+        runner: _quadsRankRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _quadsRankRunner.options,
+            correctOptionId: 'quads',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2056,7 +2242,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_full_house_vs_flush_drill',
         title: 'Full house beats flush',
         phase: Act0LessonPhaseV1.drill,
-        runner: _fullHouseVsFlushRunner,
+        runner: _fullHouseVsFlushRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _fullHouseVsFlushRunner.options,
+            correctOptionId: 'hero_full_house',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -2074,7 +2266,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'hand_rankings_royal_vs_flush_drill',
         title: 'Royal flush wins',
         phase: Act0LessonPhaseV1.drill,
-        runner: _royalFlushVsFlushRunner,
+        runner: _royalFlushVsFlushRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _royalFlushVsFlushRunner.options,
+            correctOptionId: 'hero_royal_flush',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -2113,7 +2311,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_theory',
         title: 'Two ways to win',
         phase: Act0LessonPhaseV1.theory,
-        runner: _showdownIntroRunner,
+        runner: _showdownIntroRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _showdownIntroRunner.options,
+            correctOptionId: 'win_now',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -2121,7 +2325,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_foldout_drill',
         title: 'Everyone folds',
         phase: Act0LessonPhaseV1.drill,
-        runner: _showdownRunner,
+        runner: _showdownRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _showdownRunner.options,
+            correctOptionId: 'win_now',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2129,7 +2339,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_best_hand_drill',
         title: 'Best hand at showdown',
         phase: Act0LessonPhaseV1.drill,
-        runner: _showdownBestHandRunner,
+        runner: _showdownBestHandRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _showdownBestHandRunner.options,
+            correctOptionId: 'best_hand',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -2147,7 +2363,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_board_plays_drill',
         title: 'Board plays',
         phase: Act0LessonPhaseV1.drill,
-        runner: _boardPlaysRunner,
+        runner: _boardPlaysRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _boardPlaysRunner.options,
+            correctOptionId: 'tie',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -2156,7 +2378,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'showdown_tie_drill',
         title: 'Tie the pot',
         phase: Act0LessonPhaseV1.drill,
-        runner: _tiePotRunner,
+        runner: _tiePotRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _tiePotRunner.options,
+            correctOptionId: 'split',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.compare,
@@ -2198,6 +2426,30 @@ List<Act0LessonTaskV1> _retitledTasksV1(
         lockedSummary: task.lockedSummary,
       ),
   ];
+}
+
+List<Act0RunnerOptionV1> _act0AuthoredCorrectOptionAtV1(
+  List<Act0RunnerOptionV1> options, {
+  required String correctOptionId,
+  required int correctIndex,
+}) {
+  final currentIndex = options.indexWhere(
+    (option) => option.id == correctOptionId && option.isCorrect,
+  );
+  if (currentIndex == -1) {
+    throw StateError('Missing correct option $correctOptionId.');
+  }
+  if (correctIndex < 0 || correctIndex >= options.length) {
+    throw RangeError.range(correctIndex, 0, options.length - 1, 'correctIndex');
+  }
+  if (currentIndex == correctIndex) {
+    return options;
+  }
+
+  final reordered = List<Act0RunnerOptionV1>.of(options);
+  final correctOption = reordered.removeAt(currentIndex);
+  reordered.insert(correctIndex, correctOption);
+  return List<Act0RunnerOptionV1>.unmodifiable(reordered);
 }
 
 Act0LessonCardV1 _lessonFromTasksV1({
@@ -2455,7 +2707,13 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_late_position',
         title: 'Late seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _latePositionRunner,
+        runner: _latePositionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _latePositionRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2772,7 +3030,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_intro',
         title: 'Context first',
         phase: Act0LessonPhaseV1.theory,
-        runner: _world3SameHandIntroRunner,
+        runner: _world3SameHandIntroRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3SameHandIntroRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.learn,
       ),
@@ -2788,7 +3052,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_call',
         title: 'Call frame',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3CutoffCallRunner,
+        runner: _world3CutoffCallRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3CutoffCallRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2796,7 +3066,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_same_hand_recap',
         title: 'Frame recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world3SameHandRecapRunner,
+        runner: _world3SameHandRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3SameHandRecapRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -2826,7 +3102,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_dominated_fold',
         title: 'Fold trouble',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3DominatedFoldRunner,
+        runner: _world3DominatedFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3DominatedFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2834,7 +3116,13 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         taskId: 'w3_strong_continue',
         title: 'Strong continue',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world2StrongContinueRunner,
+        runner: _world2StrongContinueRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world2StrongContinueRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2929,7 +3217,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_strong',
         title: 'Strong hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1StrongBucketRunner,
+        runner: _w1StrongBucketRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w1StrongBucketRunner.options,
+            correctOptionId: 'strong',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2937,7 +3231,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_medium',
         title: 'Medium hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1MediumBucketRunner,
+        runner: _w1MediumBucketRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w1MediumBucketRunner.options,
+            correctOptionId: 'medium',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2945,7 +3245,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_trash',
         title: 'Trash hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3TrashBucketRunner,
+        runner: _world3TrashBucketRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3TrashBucketRunner.options,
+            correctOptionId: 'trash',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2953,7 +3259,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_borderline',
         title: 'Borderline strong',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w2BorderlineBucketRunner,
+        runner: _w2BorderlineBucketRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w2BorderlineBucketRunner.options,
+            correctOptionId: 'medium',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2986,7 +3298,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'early_fold',
         title: 'Early weak hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3EarlyFoldRunner,
+        runner: _world3EarlyFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3EarlyFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3002,7 +3320,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'discipline_stack_protect',
         title: 'Protect stack',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3DominatedFoldRunner,
+        runner: _world3DominatedFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3DominatedFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3036,7 +3360,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'weak_ace_kicker_compare',
         title: 'A7 vs KQ spot',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world2KqoContrastRunner,
+        runner: _world2KqoContrastRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world2KqoContrastRunner.options,
+            correctOptionId: 'less_dominated',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3069,7 +3399,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'medium_open',
         title: 'Medium hand opens',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1MediumOpenRunner,
+        runner: _w1MediumOpenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w1MediumOpenRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3085,7 +3421,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'medium_call_or_fold',
         title: 'Medium facing open',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3PlayableCallRunner,
+        runner: _world3PlayableCallRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3PlayableCallRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3093,7 +3435,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'continue_recap',
         title: 'Continue recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world3FacingOpenRecapRunner,
+        runner: _world3FacingOpenRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3FacingOpenRecapRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -3181,7 +3529,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'checkpoint_fold',
         title: 'Disciplined fold',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3DominatedFoldRunner,
+        runner: _world3DominatedFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3DominatedFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3206,7 +3560,13 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'checkpoint_review',
         title: 'Discipline recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w1DisciplineCheckpointRunner,
+        runner: _w1DisciplineCheckpointRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w1DisciplineCheckpointRunner.options,
+            correctOptionId: 'seat_context',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -3239,7 +3599,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_positions_utg',
         title: 'Find UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdUtgRunner,
+        runner: _w3SeatIdUtgRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SeatIdUtgRunner.options,
+            correctOptionId: 'utg',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3247,7 +3613,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_hj_co_contrast',
         title: 'HJ or CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdHjRunner,
+        runner: _w3SeatIdHjRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SeatIdHjRunner.options,
+            correctOptionId: 'hj',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3271,7 +3643,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_sb_recognition',
         title: 'Find SB',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdSbRunner,
+        runner: _w3SeatIdSbRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SeatIdSbRunner.options,
+            correctOptionId: 'sb',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3279,7 +3657,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_bb_recognition',
         title: 'Find BB',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdBbRunner,
+        runner: _w3SeatIdBbRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SeatIdBbRunner.options,
+            correctOptionId: 'bb',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3295,7 +3679,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_position_repair_seat_id_utg',
         title: 'Repair UTG seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatIdUtgRepairRunner,
+        runner: _w3SeatIdUtgRepairRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SeatIdUtgRepairRunner.options,
+            correctOptionId: 'utg',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 4,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -3303,7 +3693,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_six_seats_positions_review',
         title: 'Six-seat recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _w3SixSeatsRecapRunner,
+        runner: _w3SixSeatsRecapRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3SixSeatsRecapRunner.options,
+            correctOptionId: 'six_seats',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.review,
       ),
@@ -3352,7 +3748,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'button_vs_cutoff',
         title: 'BTN vs CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3LateSeatContrastRunner,
+        runner: _w3LateSeatContrastRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3LateSeatContrastRunner.options,
+            correctOptionId: 'btn',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3388,7 +3790,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'early_pressure_choice',
         title: 'Early pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3EarlySeatPressureRunner,
+        runner: _w3EarlySeatPressureRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3EarlySeatPressureRunner.options,
+            correctOptionId: 'more_players_behind',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3396,7 +3804,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_repair_utg_players_behind',
         title: 'Repair UTG pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3UtgPlayersBehindRepairRunner,
+        runner: _w3UtgPlayersBehindRepairRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3UtgPlayersBehindRepairRunner.options,
+            correctOptionId: 'five_players_behind',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 6,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -3430,7 +3844,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'same_hand_late_open',
         title: 'Late seat open',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner,
+        runner: _world3LateOpenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3LateOpenRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3469,7 +3889,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_btn_open',
         title: 'BTN: open strong hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3ButtonOpenQtsRunner,
+        runner: _world3ButtonOpenQtsRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3ButtonOpenQtsRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3477,7 +3903,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_late_open',
         title: 'Late: open or limp?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner,
+        runner: _world3LateOpenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3LateOpenRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3493,7 +3925,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_apply_hj_fold',
         title: 'HJ: discipline hold',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3HijDisciplineRunner,
+        runner: _world3HijDisciplineRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3HijDisciplineRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -3526,7 +3964,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_late_open',
         title: 'Late: open or limp?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3LateOpenRunner,
+        runner: _world3LateOpenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3LateOpenRunner.options,
+            correctOptionId: 'raise',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3534,7 +3978,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_early_fold',
         title: 'Early: same hand folds',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world3CheckpointEarlyFoldRunner,
+        runner: _world3CheckpointEarlyFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world3CheckpointEarlyFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3550,7 +4000,13 @@ final _positionThinkingLessons = <Act0LessonCardV1>[
         taskId: 'position_checkpoint_table_notice',
         title: 'Real-table seat read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3TablePositionNoticeRunner,
+        runner: _w3TablePositionNoticeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w3TablePositionNoticeRunner.options,
+            correctOptionId: 'players_behind',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -3679,7 +4135,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_purpose',
         title: 'Value reason',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValuePurposeRunner,
+        runner: _world4ValuePurposeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4ValuePurposeRunner.options,
+            correctOptionId: 'value',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3687,7 +4149,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bluff_purpose',
         title: 'Bluff reason',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BluffPurposeRunner,
+        runner: _world4BluffPurposeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4BluffPurposeRunner.options,
+            correctOptionId: 'bluff',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3733,7 +4201,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_value_missed',
         title: 'Do not hide value',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValueCheckMissRunner,
+        runner: _world4ValueCheckMissRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4ValueCheckMissRunner.options,
+            correctOptionId: 'check',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3779,7 +4253,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bad_bluff',
         title: 'Bad pressure',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BadBluffRunner,
+        runner: _world4BadBluffRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4BadBluffRunner.options,
+            correctOptionId: 'check',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3825,7 +4305,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_protection_check',
         title: 'Free card risk',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ProtectionCheckRunner,
+        runner: _world4ProtectionCheckRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4ProtectionCheckRunner.options,
+            correctOptionId: 'free_card',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3871,7 +4357,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_bad_price_fold',
         title: 'Fold high price',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BadPriceFoldRunner,
+        runner: _world4BadPriceFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4BadPriceFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3879,7 +4371,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_cheap_price_marginal_call',
         title: 'Cheap call with middle pair',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4CheapPriceMarginalCallRunner,
+        runner: _world4CheapPriceMarginalCallRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4CheapPriceMarginalCallRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3887,7 +4385,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_big_price_marginal_fold',
         title: 'Big price, thinner hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BigPriceMarginalFoldRunner,
+        runner: _world4BigPriceMarginalFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4BigPriceMarginalFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3925,7 +4429,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_small_bet',
         title: 'One-third bet',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4SmallBetRunner,
+        runner: _world4SmallBetRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4SmallBetRunner.options,
+            correctOptionId: 'two',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.sizing,
@@ -3982,7 +4492,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_checkpoint_value',
         title: 'Value or bluff',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4ValuePurposeRunner,
+        runner: _world4ValuePurposeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4ValuePurposeRunner.options,
+            correctOptionId: 'value',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3990,7 +4506,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_checkpoint_price',
         title: 'Call or fold',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4BadPriceFoldRunner,
+        runner: _world4BadPriceFoldRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4BadPriceFoldRunner.options,
+            correctOptionId: 'fold',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3998,7 +4520,13 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         taskId: 'w4_checkpoint_table_price',
         title: 'Real-table price read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world4PriceTableTransferRunner,
+        runner: _world4PriceTableTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world4PriceTableTransferRunner.options,
+            correctOptionId: 'call',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4052,7 +4580,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_wet_board',
         title: 'Wet board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5WetBoardRunner,
+        runner: _world5WetBoardRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5WetBoardRunner.options,
+            correctOptionId: 'wet',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4127,7 +4661,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_flush_draw_recheck_transfer',
         title: 'Flush draw or made flush',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5FlushDrawRecheckTransferRunner,
+        runner: _world5FlushDrawRecheckTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5FlushDrawRecheckTransferRunner.options,
+            correctOptionId: 'flush_draw_only',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4146,7 +4686,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_flush_draw_find',
         title: 'Find flush draw',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5FlushDrawRunner,
+        runner: _world5FlushDrawRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5FlushDrawRunner.options,
+            correctOptionId: 'flush_draw',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4154,7 +4700,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_no_flush_draw',
         title: 'No flush draw',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5NoFlushDrawRunner,
+        runner: _world5NoFlushDrawRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5NoFlushDrawRunner.options,
+            correctOptionId: 'no',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4206,7 +4758,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_gap_board',
         title: 'Gap board',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5GapBoardRunner,
+        runner: _world5GapBoardRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5GapBoardRunner.options,
+            correctOptionId: 'no',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4239,7 +4797,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_table_outs_flush_transfer',
         title: 'Live heart outs',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5TableOutsFlushTransferRunner,
+        runner: _world5TableOutsFlushTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5TableOutsFlushTransferRunner.options,
+            correctOptionId: 'heart_outs',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4248,7 +4812,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_clean_vs_risky_out_transfer',
         title: 'Safer out or risky out',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5CleanVsRiskyOutTransferRunner,
+        runner: _world5CleanVsRiskyOutTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5CleanVsRiskyOutTransferRunner.options,
+            correctOptionId: 'five_clubs_cleaner',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4257,7 +4827,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_table_outs_straight_transfer',
         title: 'Live straight outs',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5TableOutsStraightTransferRunner,
+        runner: _world5TableOutsStraightTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5TableOutsStraightTransferRunner.options,
+            correctOptionId: 'four_or_nine',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4276,7 +4852,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_flush_out',
         title: 'Flush out',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5FlushOutRunner,
+        runner: _world5FlushOutRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5FlushOutRunner.options,
+            correctOptionId: 'heart',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4309,7 +4891,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_turn_texture_shift_transfer',
         title: 'Turn changes the texture',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5TurnTextureShiftTransferRunner,
+        runner: _world5TurnTextureShiftTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5TurnTextureShiftTransferRunner.options,
+            correctOptionId: 'board_got_wetter',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4318,7 +4906,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_river_draw_story_transfer',
         title: 'River keeps the draw story honest',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5RiverDrawStoryTransferRunner,
+        runner: _world5RiverDrawStoryTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5RiverDrawStoryTransferRunner.options,
+            correctOptionId: 'draw_missed_story',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4337,7 +4931,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_turn_hits',
         title: 'Turn hits',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5TurnHitsRunner,
+        runner: _world5TurnHitsRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5TurnHitsRunner.options,
+            correctOptionId: 'draw_hit',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4345,7 +4945,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_river_misses',
         title: 'River misses',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5RiverMissesRunner,
+        runner: _world5RiverMissesRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5RiverMissesRunner.options,
+            correctOptionId: 'draw_missed',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4353,7 +4959,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_street_repair',
         title: 'Repair the turn read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _world5StreetRepairRunner,
+        runner: _world5StreetRepairRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5StreetRepairRunner.options,
+            correctOptionId: 'repair_story',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         taskFamily: Act0TaskFamilyV1.repair,
@@ -4362,7 +4974,13 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
         taskId: 'w5_board_checkpoint',
         title: 'Board checkpoint',
         phase: Act0LessonPhaseV1.review,
-        runner: _world5BoardCheckpointRunner,
+        runner: _world5BoardCheckpointRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world5BoardCheckpointRunner.options,
+            correctOptionId: 'texture_draw_outs',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 15,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -4411,7 +5029,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_table_bucket_notice',
         title: 'First live read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6TableBucketNoticeRunner,
+        runner: _w6TableBucketNoticeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6TableBucketNoticeRunner.options,
+            correctOptionId: 'bucket_first',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4465,7 +5089,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_turn_shift_bucket',
         title: 'Turn changes bucket',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6TurnShiftBucketRunner,
+        runner: _w6TurnShiftBucketRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6TurnShiftBucketRunner.options,
+            correctOptionId: 'slide_missed',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4503,7 +5133,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_value_range_action',
         title: 'Value bets',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6ValueRangeActionRunner,
+        runner: _w6ValueRangeActionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6ValueRangeActionRunner.options,
+            correctOptionId: 'bet',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4511,7 +5147,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_bluff_candidate',
         title: 'Bluff candidate',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6BluffCandidateRunner,
+        runner: _w6BluffCandidateRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6BluffCandidateRunner.options,
+            correctOptionId: 'bluff',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4519,7 +5161,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_missed_hand_action',
         title: 'Missed hand direction',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6MissedHandActionRunner,
+        runner: _w6MissedHandActionRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6MissedHandActionRunner.options,
+            correctOptionId: 'check_fold',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4527,7 +5175,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_table_value_line_transfer',
         title: 'Live-table value line',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6TableValueLineTransferRunner,
+        runner: _w6TableValueLineTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6TableValueLineTransferRunner.options,
+            correctOptionId: 'bet_value',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4536,7 +5190,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_turn_pressure_shift_transfer',
         title: 'Turn pressure shift',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6TurnPressureShiftTransferRunner,
+        runner: _w6TurnPressureShiftTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6TurnPressureShiftTransferRunner.options,
+            correctOptionId: 'check_more',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4545,7 +5205,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_wet_board_repair',
         title: 'Repair wet-board read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6WetBoardRepairRunner,
+        runner: _w6WetBoardRepairRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6WetBoardRepairRunner.options,
+            correctOptionId: 'respect_wetter_board',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.fixMistakes,
         taskFamily: Act0TaskFamilyV1.repair,
@@ -4584,7 +5250,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_ak_combos',
         title: 'AK combo count',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6AkComboRunner,
+        runner: _w6AkComboRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6AkComboRunner.options,
+            correctOptionId: 'sixteen',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.counting,
@@ -4602,7 +5274,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_combo_weight_compare',
         title: 'Which family appears more?',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6ComboWeightCompareRunner,
+        runner: _w6ComboWeightCompareRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6ComboWeightCompareRunner.options,
+            correctOptionId: 'ak_more',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.counting,
@@ -4657,7 +5335,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_combos',
         title: 'Count the family',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6AkComboRunner,
+        runner: _w6AkComboRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6AkComboRunner.options,
+            correctOptionId: 'sixteen',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4665,7 +5349,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_suited_offsuit_weight_compare',
         title: 'Suited or offsuit weight',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6SuitedOffsuitWeightCompareRunner,
+        runner: _w6SuitedOffsuitWeightCompareRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6SuitedOffsuitWeightCompareRunner.options,
+            correctOptionId: 'ak_offsuit',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4673,7 +5363,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_pair_vs_suited_weight_compare',
         title: 'Pair or suited family',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6PairVsSuitedWeightCompareRunner,
+        runner: _w6PairVsSuitedWeightCompareRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6PairVsSuitedWeightCompareRunner.options,
+            correctOptionId: 'pair_nines',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4681,7 +5377,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_checkpoint_table_combo_weight',
         title: 'Live-table combo weight',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6CheckpointTableComboWeightRunner,
+        runner: _w6CheckpointTableComboWeightRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6CheckpointTableComboWeightRunner.options,
+            correctOptionId: 'ak_offsuit',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4690,7 +5392,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_pressure',
         title: 'Bluff candidate',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6BluffCandidateRunner,
+        runner: _w6BluffCandidateRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6BluffCandidateRunner.options,
+            correctOptionId: 'bluff',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4714,7 +5422,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'w6_checkpoint_table_best_five',
         title: 'Live-table best five',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w6CheckpointTableBestFiveRunner,
+        runner: _w6CheckpointTableBestFiveRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w6CheckpointTableBestFiveRunner.options,
+            correctOptionId: 'split',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -4723,7 +5437,13 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
         taskId: 'range_checkpoint_review',
         title: 'Range recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world6RangeCheckpointRunner,
+        runner: _world6RangeCheckpointRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world6RangeCheckpointRunner.options,
+            correctOptionId: 'range_plus_stack_depth',
+            correctIndex: 0,
+          ),
+        ),
         rewardXp: 16,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
@@ -4872,7 +5592,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_effective_stack_30bb',
         title: '200 vs 30',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7EffectiveStackThirtyRunner,
+        runner: _w7EffectiveStackThirtyRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7EffectiveStackThirtyRunner.options,
+            correctOptionId: '30',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4880,7 +5606,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_effective_stack_100bb',
         title: '100 vs 100',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7EffectiveStackEvenRunner,
+        runner: _w7EffectiveStackEvenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7EffectiveStackEvenRunner.options,
+            correctOptionId: '100',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4935,7 +5667,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_100bb_tighter',
         title: '100 BB decision',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7HundredBbTighterRunner,
+        runner: _w7HundredBbTighterRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7HundredBbTighterRunner.options,
+            correctOptionId: 'more_risk',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -4952,7 +5690,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_ajs_btn_25bb_transfer',
         title: 'A-J suited at 25 BB',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7AjsButtonTwentyFiveBbRunner,
+        runner: _w7AjsButtonTwentyFiveBbRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7AjsButtonTwentyFiveBbRunner.options,
+            correctOptionId: 'cleaner_shallow',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5000,7 +5744,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_low_spr_commit',
         title: 'SPR 2',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7LowSprCommitRunner,
+        runner: _w7LowSprCommitRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7LowSprCommitRunner.options,
+            correctOptionId: 'commit',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5008,7 +5758,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_high_spr_room',
         title: 'SPR 8',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7HighSprRoomRunner,
+        runner: _w7HighSprRoomRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7HighSprRoomRunner.options,
+            correctOptionId: 'room',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5016,7 +5772,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_spr4_middle',
         title: 'SPR 4',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7SprFourRunner,
+        runner: _w7SprFourRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7SprFourRunner.options,
+            correctOptionId: 'middle_spr',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5035,7 +5797,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_top_pair_spr2_transfer',
         title: 'Top pair at SPR 2',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7TopPairSprTwoRunner,
+        runner: _w7TopPairSprTwoRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7TopPairSprTwoRunner.options,
+            correctOptionId: 'faster_commitment',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5044,7 +5812,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_top_pair_spr8_transfer',
         title: 'Top pair at SPR 8',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7TopPairSprEightRunner,
+        runner: _w7TopPairSprEightRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7TopPairSprEightRunner.options,
+            correctOptionId: 'room_and_risk',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5083,7 +5857,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_6max_wider',
         title: '6-max opens wider',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7SixMaxWiderRunner,
+        runner: _w7SixMaxWiderRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7SixMaxWiderRunner.options,
+            correctOptionId: '6max',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5099,7 +5879,13 @@ final _stackDepthRiskLessons = <Act0LessonCardV1>[
         taskId: 'w7_format_table_notice',
         title: 'Count players behind',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w7FormatTableNoticeRunner,
+        runner: _w7FormatTableNoticeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w7FormatTableNoticeRunner.options,
+            correctOptionId: 'tighten_early',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5149,7 +5935,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_cash_vs_tournament',
         title: 'Cash vs tournament',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9CashVsTournamentRunner,
+        runner: _w9CashVsTournamentRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9CashVsTournamentRunner.options,
+            correctOptionId: 'survival',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5157,7 +5949,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_short_stack_survival',
         title: 'Short stack survival',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9ShortStackSurvivalRunner,
+        runner: _w9ShortStackSurvivalRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9ShortStackSurvivalRunner.options,
+            correctOptionId: 'take_spot',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5165,7 +5963,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_survival_stack_tradeoff',
         title: 'Life vs reload',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9SurvivalTradeoffRunner,
+        runner: _w9SurvivalTradeoffRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9SurvivalTradeoffRunner.options,
+            correctOptionId: 'tournament_table',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5212,7 +6016,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_m_ratio_green_zone',
         title: 'Green zone patience',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9MZoneGreenRunner,
+        runner: _w9MZoneGreenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9MZoneGreenRunner.options,
+            correctOptionId: 'patience',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5229,7 +6039,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_m_ratio_table_window_transfer',
         title: 'Yellow-zone table read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9MTableWindowTransferRunner,
+        runner: _w9MTableWindowTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9MTableWindowTransferRunner.options,
+            correctOptionId: 'prepare_now',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5268,7 +6084,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_medium_stack_tighten',
         title: 'Medium stack discipline',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9MediumStackTightenRunner,
+        runner: _w9MediumStackTightenRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9MediumStackTightenRunner.options,
+            correctOptionId: 'tighten_calls',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5293,7 +6115,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_bubble_table_risk_transfer',
         title: 'Bubble risk at a real table',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9BubbleTableRiskTransferRunner,
+        runner: _w9BubbleTableRiskTransferRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9BubbleTableRiskTransferRunner.options,
+            correctOptionId: 'tighten_stackoff',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 12,
         stepKind: Act0LessonStepKindV1.proveIt,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5341,7 +6169,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_checkpoint_zone_line',
         title: 'Urgency by zone',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9CheckpointZoneLineRunner,
+        runner: _w9CheckpointZoneLineRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9CheckpointZoneLineRunner.options,
+            correctOptionId: 'red_zone',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5349,7 +6183,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_checkpoint_bubble_line',
         title: 'Bubble risk premium line',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9CheckpointBubbleLineRunner,
+        runner: _w9CheckpointBubbleLineRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9CheckpointBubbleLineRunner.options,
+            correctOptionId: 'tighten_defense',
+            correctIndex: 1,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -5357,7 +6197,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_checkpoint_table_notice',
         title: 'Real-table pressure read',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w9TablePressureNoticeRunner,
+        runner: _w9TablePressureNoticeRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _w9TablePressureNoticeRunner.options,
+            correctOptionId: 'medium_stack_pressure',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
@@ -5366,7 +6212,13 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
         taskId: 'w9_checkpoint_review',
         title: 'Tournament pressure recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _world9TournamentCheckpointRunner,
+        runner: _world9TournamentCheckpointRunner.copyWith(
+          options: _act0AuthoredCorrectOptionAtV1(
+            _world9TournamentCheckpointRunner.options,
+            correctOptionId: 'pressure_then_adjust',
+            correctIndex: 2,
+          ),
+        ),
         rewardXp: 17,
         stepKind: Act0LessonStepKindV1.proveIt,
       ),
