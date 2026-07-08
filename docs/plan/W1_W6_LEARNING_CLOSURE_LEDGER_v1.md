@@ -2,7 +2,8 @@
 
 Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`
 
-Status: implementation-ready ledger. No repair implemented in this pass.
+Status: Wave 1 implemented pending canonical-only re-score and fixed-build
+Human QA. Do not assign final 9/10 closure from this implementation alone.
 
 Latest consolidated admission program:
 `docs/_reviews/w1_w6_consolidated_repair_admission_program_v1.md`.
@@ -23,6 +24,13 @@ implementation admission. The canonical sequence is now:
 
 No legacy/session-drill repair evidence counts toward W1-W6 canonical scoring.
 No final 9/10 score is assigned until fixed-build Human QA.
+
+Wave 1 implementation record:
+`docs/_reviews/w1_w6_wave1_canonical_correctness_trust_v1.md`.
+This implements CAP-001, CAP-002, and same-source CAP-008 only. Wave 2 prompt
+leakage, W3 six-seat coverage, W2 bucket differentiation, Wave 3 repair/recheck
+coverage, and any Wave 4 transfer/mastery depth remain pending canonical-only
+proof before re-score.
 
 > **Canonical route corrections:**
 >

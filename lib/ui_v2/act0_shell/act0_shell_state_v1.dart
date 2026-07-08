@@ -3140,7 +3140,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'apply_hj_decision',
         title: 'HJ, medium hand',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1DisciplineApplyEarlyFoldRunner,
+        runner: _w1DisciplineApplyHjMediumRunner,
         rewardXp: 9,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
@@ -8324,7 +8324,7 @@ final _buttonSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Win can hide a leak.',
+      feedbackTitle: 'BTN seat found.',
       feedbackReason: 'BTN is the dealer button and acts last postflop.',
     ),
     Act0RunnerOptionV1(
@@ -8367,7 +8367,7 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'UTG',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Reset before next hand.',
+      feedbackTitle: 'UTG seat found.',
       feedbackReason:
           'UTG acts first preflop, so opening range should stay tighter.',
     ),
@@ -8446,7 +8446,7 @@ final _latePositionRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Log it, then reset.',
+      feedbackTitle: 'Late seat found.',
       feedbackReason: 'BTN is late and often acts last after the flop.',
     ),
     Act0RunnerOptionV1(
@@ -8488,7 +8488,7 @@ final _handRankingsRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Pair',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process ignores table talk.',
+      feedbackTitle: 'Pair found.',
       feedbackReason: 'Hero has a pair with the board.',
     ),
     Act0RunnerOptionV1(
@@ -12973,6 +12973,87 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   ],
 );
 
+final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
+  lessonId: 'w1_apply_hj_medium',
+  lessonTitle: 'Discipline at the table',
+  lessonSubtitle: 'Hand Discipline',
+  caption: 'HJ. Pot unopened. Hero holds K♦ Q♣.',
+  hint: 'Medium hand, middle seat, unopened pot. Open with a clear reason.',
+  question: 'What is the clean action?',
+  feedbackTitle: 'HJ open is clean.',
+  feedbackReason:
+      'KQo is a medium hand, and HJ can open it when the pot is unopened.',
+  table: _act0ReassignHeroSeatV1(
+    _world3ButtonOpenRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'd'),
+        Act0CardStateV1(rank: 'Q', suit: 'c'),
+      ],
+      centerLabel: 'HJ, medium hand',
+      activeSeatId: 'hj',
+      highlightedSeatIds: const <String>['hj'],
+      highlightedCardIds: const <String>['hero_0', 'hero_1'],
+    ),
+    heroSeatId: 'hj',
+    activeSeatId: 'hj',
+  ),
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too tight for this hand.',
+      feedbackReason:
+          'KQo is not trash. From HJ in an unopened pot, it can open instead of auto-folding.',
+      repairFocusSeatIds: <String>['hj'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['HJ', 'KQo', 'Medium hand'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'call',
+      label: 'Call',
+      amountLabel: '1 BB',
+      isCorrect: false,
+      preferredLabel: 'Raise',
+      betterAnswerLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Limping loses pressure.',
+      feedbackReason:
+          'Calling the blind enters passively. The cleaner first-in action is open-raise or fold, and KQo is strong enough to open here.',
+      repairFocusSeatIds: <String>['hj', 'sb', 'bb'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['Unopened pot', 'Open, not limp'],
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      amountLabel: '2.5 BB',
+      isCorrect: true,
+      preferredLabel: 'Raise',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'HJ open is clean.',
+      feedbackReason:
+          'KQo is a medium hand with enough strength to open first in from HJ.',
+      repairFocusSeatIds: <String>['hj'],
+      repairFocusCardIds: <String>['hero_0', 'hero_1'],
+      repairFocusLabels: <String>['HJ open', 'KQo'],
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Medium hand, middle seat.',
+      body:
+          'KQo is not the same as early trash. In HJ with an unopened pot, the clean decision is to open rather than limp.',
+      focusSeatIds: <String>['hj'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['KQo', 'HJ', 'Open'],
+    ),
+  ],
+);
+
 final _world3CheckpointIntroRunner = _world3SameHandIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w3_checkpoint_intro',
@@ -13126,7 +13207,7 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
   lessonTitle: 'Why bets happen',
-  lessonSubtitle: 'Board Awareness',
+  lessonSubtitle: 'Bet Purpose / Price',
   beatIndex: 1,
   beatCount: 4,
   caption: 'A bet should have a reason before it has a size.',
@@ -13597,7 +13678,7 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_price_intro',
   lessonTitle: 'Call price',
-  lessonSubtitle: 'Board Awareness',
+  lessonSubtitle: 'Bet Purpose / Price',
   caption: 'When someone bets, they set your price to continue.',
   hint:
       'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
@@ -14251,7 +14332,7 @@ final _world4CheckpointRunner = _world4CheckpointIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Purpose and price',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Discipline: fold early trash.',
+      feedbackTitle: 'Purpose and price connected.',
       feedbackReason:
           'A bet tells a purpose, creates a size, and gives the caller a price. Next, board texture tells you which bet purpose fits.',
     ),
@@ -14280,7 +14361,7 @@ final _world5TextureIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w5_texture_intro',
   lessonTitle: 'Dry or wet board',
-  lessonSubtitle: 'Range Thinking',
+  lessonSubtitle: 'Board Awareness',
   caption: 'Board texture asks how much the next cards can change.',
   hint: 'Dry boards change less. Wet boards create more threats.',
   question: 'What does board texture describe?',
@@ -14972,7 +15053,7 @@ final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'No',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Discipline: open strong late.',
+      feedbackTitle: 'Gap board identified.',
       feedbackReason:
           'The ranks are too far apart for an obvious straight path.',
     ),
@@ -15760,7 +15841,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_wet_board_repair',
   lessonTitle: 'Range meets board',
-  lessonSubtitle: 'Visible Cards Change Ranges',
+  lessonSubtitle: 'Range Thinking',
   caption:
       'Turn card connected the board, but hero still treats one pair like the flop stayed dry.',
   hint: 'Repair the board read before forcing the same old action.',
@@ -15823,7 +15904,7 @@ final _w6RangeIntroRunner = _world5TextureIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w6_range_intro',
   lessonTitle: 'Range buckets',
-  lessonSubtitle: 'Visible Cards Change Ranges',
+  lessonSubtitle: 'Range Thinking',
   caption: 'A range is the group of hands that fit a situation.',
   hint: 'Value, bluff candidate, and missed are the three range buckets.',
   question: 'What are range buckets?',
