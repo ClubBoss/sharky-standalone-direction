@@ -88,8 +88,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 10,
     nextWorldTitle: 'Player Adjustment',
     learningLabel:
-        'You learned how survival pressure, ladder pressure, and risk '
-        'premium change decisions.',
+        'You learned how survival pressure and risk premium change decisions.',
   ),
 ];
 

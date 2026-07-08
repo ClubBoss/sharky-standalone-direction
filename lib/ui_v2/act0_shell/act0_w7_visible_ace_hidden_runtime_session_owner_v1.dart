@@ -196,8 +196,10 @@ const Act0W7VisibleAceHiddenTaskSpecV1 act0W7VisibleAceHiddenTaskSpecV1 =
             'There are fewer ace-containing combinations left.',
         'ace_combos_unchanged':
             'The visible ace does not change the number of ace combinations.',
-        'ace_combos_guaranteed': 'The opponent must have an ace.',
-        'ace_combos_impossible': 'The opponent can never have an ace.',
+        'ace_combos_guaranteed':
+            'Ace hands become more important, so count them first.',
+        'ace_combos_impossible':
+            'Ace hands are less common, so ignore them for now.',
       },
       feedbackReason:
           'One ace is already visible, so fewer ace-containing combinations '
@@ -208,11 +210,11 @@ const Act0W7VisibleAceHiddenTaskSpecV1 act0W7VisibleAceHiddenTaskSpecV1 =
             'Visible cards are unavailable to private hands, so the number of '
             'possible ace-containing hands changes.',
         'ace_combos_guaranteed':
-            'A visible ace reduces possible ace-containing hands; it does not '
-            'prove the opponent has one.',
+            'Counting ace hands first can be useful, but the key change is '
+            'that one visible ace removes private-card combinations.',
         'ace_combos_impossible':
-            'One visible ace reduces ace-containing hands, but some '
-            'ace-containing hands can still exist.',
+            'One visible ace reduces ace-containing hands, but some remain '
+            'possible. Do not drop the whole rank from the range.',
       },
       practiceCtaAllowed: false,
       mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
@@ -248,8 +250,10 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
               'There are fewer king-containing combinations left.',
           'king_combos_unchanged':
               'The visible king does not change king combinations.',
-          'king_combos_certain': 'The opponent must have a king.',
-          'king_combos_impossible': 'The opponent can never have a king.',
+          'king_combos_certain':
+              'King hands become the first range family to count.',
+          'king_combos_impossible':
+              'King hands are reduced enough to ignore the rank.',
         },
         feedbackReason:
             'The visible king cannot also be in a private hand, so fewer '
@@ -259,11 +263,11 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
               'Visible cards are removed from private hands, so the count '
               'of king-containing hands changes.',
           'king_combos_certain':
-              'A visible king reduces possible king hands; it does not prove '
-              'the opponent has one.',
+              'Starting with king hands can be reasonable, but the visible '
+              'king changes the count instead of proving the family.',
           'king_combos_impossible':
               'One visible king reduces king hands, but some king-containing '
-              'hands can still exist.',
+              'hands can still exist. Reduced does not mean irrelevant.',
         },
         practiceCtaAllowed: false,
         mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
@@ -295,22 +299,25 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
           'seven_combos_reduced_trips_still_possible':
               'There are fewer seven-containing hands, but trips can still '
               'exist.',
-          'all_strong_hands_removed': 'All strong hands are removed.',
+          'all_strong_hands_removed':
+              'Most strong hands are harder to make on paired boards.',
           'pair_does_not_change_combos':
               'The paired board does not change hand counts.',
-          'opponent_always_has_trips': 'The opponent always has trips.',
+          'opponent_always_has_trips':
+              'Trips matter most, so assume that family first.',
         },
         feedbackReason:
             'The two visible sevens reduce seven-containing private hands, '
             'but they do not remove every strong hand or prove one exact hand.',
         incorrectFeedback: <String, String>{
           'all_strong_hands_removed':
-              'Visible cards reduce some combinations; they do not remove '
-              'every strong hand.',
+              'Some strong hands are harder to make, but visible cards do not '
+              'remove every strong hand.',
           'pair_does_not_change_combos':
               'Paired visible cards change which combinations remain.',
           'opponent_always_has_trips':
-              'A paired board changes counts; it does not prove trips.',
+              'Trips are important, but a paired board changes counts instead '
+              'of proving one exact hand.',
         },
         practiceCtaAllowed: false,
         mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
@@ -325,9 +332,9 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
         skillAtomId: 'w7_combo_density_transfer_check',
         errorType: 'missed_visible_card_combo_density_transfer',
         drillKind: 'combo_density_transfer_choice_v1',
-        boardContext: 'A72 rainbow vs K84 rainbow',
+        boardContext: 'A72 rainbow vs K84 rainbow vs 772 rainbow',
         learningPurpose:
-            'Transfer the visible-card reduction idea across ranks.',
+            'Transfer visible-card reduction across ranks and paired boards.',
         expectedChoiceId: 'visible_rank_reduces_matching_rank_combos',
         choiceIds: <String>[
           'visible_rank_increases_matching_rank_combos',
@@ -336,28 +343,34 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
           'visible_rank_reduces_matching_rank_combos',
         ],
         learnerPrompt:
-            'Across A72 rainbow and K84 rainbow, what shared idea should you '
-            'use when a high card is visible?',
+            'Across A72 rainbow, K84 rainbow, and 772 rainbow, what shared '
+            'idea should you use when a rank is already visible?',
         choiceLabels: <String, String>{
           'visible_rank_reduces_matching_rank_combos':
-              'The visible rank reduces matching-rank combinations.',
+              'The visible rank reduces matching-rank combinations without '
+              'showing one exact hand.',
           'visible_rank_increases_matching_rank_combos':
               'The visible rank creates more matching-rank combinations.',
-          'only_board_low_cards_matter': 'Only low board cards matter.',
+          'only_board_low_cards_matter':
+              'Paired boards matter, but high cards do not.',
           'visible_cards_show_exact_hand':
-              "Visible cards show the opponent's exact hand.",
+              'Visible cards identify the strongest exact hand first.',
         },
         feedbackReason:
             'A visible card of a rank is unavailable to private hands, so '
-            'matching-rank combinations become fewer across boards.',
+            'matching-rank combinations become fewer across boards. On 772, '
+            'the sevens are reduced too, but that still does not prove one '
+            'exact hand.',
         incorrectFeedback: <String, String>{
           'visible_rank_increases_matching_rank_combos':
               'Visible cards are already used, so they reduce matching-rank '
               'private hand combinations.',
           'only_board_low_cards_matter':
-              'High visible cards also change available combinations.',
+              'Paired boards matter, but high visible cards also change '
+              'available combinations.',
           'visible_cards_show_exact_hand':
-              'Visible cards change counts; they do not reveal one exact hand.',
+              'Visible cards change counts; they do not identify the exact '
+              'hand first.',
         },
         practiceCtaAllowed: false,
         mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',

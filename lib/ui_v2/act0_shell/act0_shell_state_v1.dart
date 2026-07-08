@@ -16108,6 +16108,17 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
   question: 'What carries this read into World 8?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
+      id: 'range_plus_pot_size',
+      label: 'Range plus pot size',
+      isCorrect: false,
+      preferredLabel: 'Range plus stack depth',
+      betterAnswerLabel: 'Range plus stack depth',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Useful, not the bridge.',
+      feedbackReason:
+          'Pot size matters, but this bridge is about carrying range reads into stack-depth risk. Depth changes how much pressure those ranges can absorb.',
+    ),
+    Act0RunnerOptionV1(
       id: 'range_plus_stack_depth',
       label: 'Range plus stack depth',
       isCorrect: true,
@@ -16119,25 +16130,14 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'range_only',
-      label: 'Range only',
-      isCorrect: false,
-      preferredLabel: 'Range plus stack depth',
-      betterAnswerLabel: 'Range plus stack depth',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable start.',
-      feedbackReason:
-          'Range reading is a real step, but depth changes how much pressure each range can absorb.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'guess_line',
-      label: 'Guess the line',
+      label: 'Range plus board texture only',
       isCorrect: false,
       preferredLabel: 'Range plus stack depth',
       betterAnswerLabel: 'Range plus stack depth',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost got it.',
+      feedbackTitle: 'Still missing depth.',
       feedbackReason:
-          'Clean planning comes from range + texture + stack depth, not guessing.',
+          'Board texture helps you sort the range, but World 8 adds stack depth. The next layer is how much risk remains behind.',
     ),
   ],
   feedbackTitle: 'Range takeaway.',
@@ -16913,7 +16913,8 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_ak_combos',
   caption: 'A-K can be suited or offsuit.',
-  hint: 'Four aces can pair with four kings.',
+  hint:
+      'Four aces can pair with four kings. A blocker is a visible or known card that removes possible private-card combinations.',
   question: 'How many combos does A-K have before blockers?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -16924,7 +16925,7 @@ final _w6AkComboRunner = _w6ComboCountsIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Nice count.',
       feedbackReason:
-          'A-K has 16 combos before blockers: 4 suited and 12 offsuit combinations.',
+          'A-K has 16 combos before blockers: 4 suited and 12 offsuit combinations. Blockers would remove visible or known cards from those private-card combinations.',
     ),
     Act0RunnerOptionV1(
       id: 'twelve',
@@ -18497,16 +18498,6 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
   ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'range_plus_depth',
-      label: 'Range plus stack risk',
-      isCorrect: true,
-      preferredLabel: 'Range plus stack risk',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Solid understanding.',
-      feedbackReason:
-          'Good planning now needs both parts: what range is present and how much risk that depth creates. Tournament pressure is the next step.',
-    ),
-    Act0RunnerOptionV1(
       id: 'range_only',
       label: 'Range only',
       isCorrect: false,
@@ -18518,15 +18509,25 @@ final _world7StackCheckpointRunner = _w7FormatPressureIntroRunner.copyWith(
           'Range is still the base, but stack depth changes commitment, room, and future risk. Tournament pressure builds on both.',
     ),
     Act0RunnerOptionV1(
+      id: 'range_plus_depth',
+      label: 'Range plus stack risk',
+      isCorrect: true,
+      preferredLabel: 'Range plus stack risk',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Solid understanding.',
+      feedbackReason:
+          'Good planning now needs both parts: what range is present and how much risk that depth creates. Tournament pressure is the next step.',
+    ),
+    Act0RunnerOptionV1(
       id: 'chips_only',
-      label: 'Chip count only',
+      label: 'Range plus raw chip count',
       isCorrect: false,
       preferredLabel: 'Range plus stack risk',
       betterAnswerLabel: 'Range plus stack risk',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Good direction.',
+      feedbackTitle: 'Count is not enough.',
       feedbackReason:
-          'Raw chip count alone is too thin. Effective stack, SPR, and format explain the real pressure better than chips by themselves.',
+          'Raw chips plus range still misses the real stack-risk layer. Effective stack, SPR, and format explain how much pressure the range can handle.',
     ),
   ],
 );
@@ -19294,16 +19295,6 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
   ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
-      id: 'pressure_then_adjust',
-      label: 'Map pressure first, then adjust by player',
-      isCorrect: true,
-      preferredLabel: 'Map pressure first, then adjust by player',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pressure comes first.',
-      feedbackReason:
-          'That sequence is the bridge to World 10: pressure context first, player-specific exploit second.',
-    ),
-    Act0RunnerOptionV1(
       id: 'player_only',
       label: 'Adjust only by player type',
       isCorrect: false,
@@ -19315,15 +19306,25 @@ final _world9TournamentCheckpointRunner = _w9BubblePressureIntroRunner.copyWith(
           'Player reads matter, but tournament pressure changes incentives first. Good exploits combine both layers.',
     ),
     Act0RunnerOptionV1(
+      id: 'pressure_then_adjust',
+      label: 'Map pressure first, then adjust by player',
+      isCorrect: true,
+      preferredLabel: 'Map pressure first, then adjust by player',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Pressure comes first.',
+      feedbackReason:
+          'That sequence is the bridge to World 10: pressure context first, player-specific exploit second.',
+    ),
+    Act0RunnerOptionV1(
       id: 'cards_only',
-      label: 'Use only hole cards and ignore pressure',
+      label: 'Map pressure, then copy every player read',
       isCorrect: false,
       preferredLabel: 'Map pressure first, then adjust by player',
       betterAnswerLabel: 'Map pressure first, then adjust by player',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost got it.',
+      feedbackTitle: 'Order is right, adjustment is too broad.',
       feedbackReason:
-          'Raw hand strength is not enough in tournament phases. Pressure context changes both your range and theirs.',
+          'Pressure comes first, but player reads still need a specific tendency. Do not copy every exploit before checking who is overfolding, overcalling, or avoiding risk.',
     ),
   ],
 );

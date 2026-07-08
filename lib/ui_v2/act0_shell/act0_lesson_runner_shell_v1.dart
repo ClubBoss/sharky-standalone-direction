@@ -742,8 +742,8 @@ const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
       ),
       9: _WorldCompletionMetaV1(
         learningLabel:
-            'You learned how survival pressure, ladder pressure, and risk '
-            'premium change decisions.',
+            'You learned how survival pressure and risk premium change '
+            'decisions.',
         previewLine:
             'World 10 starts with a simple question: which player tendency '
             'changes the plan?',
