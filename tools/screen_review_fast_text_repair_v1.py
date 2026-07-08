@@ -17,13 +17,13 @@ PIXEL_RATIO = 2
 def main(argv: list[str]) -> int:
     if len(argv) != 3:
         print(
-            "Usage: tools/screen_review_fast_text_repair_v1.py <output_dir> compact",
+            "Usage: tools/screen_review_fast_text_repair_v1.py <output_dir> <compact|tablet>",
             file=sys.stderr,
         )
         return 64
     output_dir = Path(argv[1]).expanduser().resolve()
     device = argv[2]
-    if device != "compact":
+    if device not in {"compact", "tablet"}:
         print(f"Unsupported device for fast text repair: {device}", file=sys.stderr)
         return 64
     if not output_dir.exists():

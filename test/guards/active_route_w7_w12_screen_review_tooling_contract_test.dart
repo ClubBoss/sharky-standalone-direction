@@ -134,28 +134,30 @@ void main() {
     },
   );
 
-  test('active W7-W12 copy-detail canvas matches the compact table canvas', () {
-    final capture = File(
-      'tools/act0_real_text_surface_capture_v1.dart',
-    ).readAsStringSync();
-    final activeSection = _activeRouteSection(capture);
+  test(
+    'active W7-W12 copy-detail canvas matches the packet viewport canvas',
+    () {
+      final capture = File(
+        'tools/act0_real_text_surface_capture_v1.dart',
+      ).readAsStringSync();
+      final activeSection = _activeRouteSection(capture);
 
-    // Regression guard for product_surface_visual_evidence_repair_v1:
-    // copyDetailSize was previously Size(760, 1200), a canvas with a
-    // different aspect ratio than the compact phone viewport the shell is
-    // designed for. That mismatch made the table render tiny/centered
-    // with a large dead dark gap below it in every copy-detail capture.
-    // copyDetailSize must stay pinned to compactSize so the same clean
-    // composition proven by the table captures applies here too.
-    expect(
-      activeSection,
-      contains('const copyDetailSize = compactSize;'),
-      reason:
-          'copy_detail captures must reuse the compact phone canvas, not '
-          'an oversized/disproportionate one.',
-    );
-    expect(activeSection, isNot(contains('Size(760, 1200)')));
-  });
+      // Regression guard for product_surface_visual_evidence_repair_v1:
+      // copyDetailSize was previously Size(760, 1200), a canvas with a
+      // different aspect ratio than the packet viewport. That mismatch made the
+      // table render tiny/centered with a large dead dark gap below it in every
+      // copy-detail capture. Copy-detail must stay pinned to the same viewport
+      // selected for the table capture, including tablet evidence packets.
+      expect(
+        activeSection,
+        contains('final copyDetailSize = viewportSize;'),
+        reason:
+            'copy_detail captures must reuse the packet viewport canvas, not '
+            'an oversized/disproportionate one.',
+      );
+      expect(activeSection, isNot(contains('Size(760, 1200)')));
+    },
+  );
 
   test(
     'active W7-W12 capture writes text-repair overlays like every other lane',
