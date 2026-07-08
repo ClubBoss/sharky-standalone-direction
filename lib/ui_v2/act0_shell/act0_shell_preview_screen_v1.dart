@@ -63,10 +63,135 @@ act0FirstValueSameSignalRepMappingV1({
 }) {
   final isRepair =
       receiptOutcome == 'repair_started' || receiptOutcome == 'needs_rep';
+  final sourceTask = sourceTaskId.trim();
+
+  ({String worldId, String lessonId, String taskId, String mappingType}) target(
+    String worldId,
+    String lessonId,
+    String taskId,
+  ) {
+    return (
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+      mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+
+  if (nextRepId == 'repeat_starting_hand_read' &&
+      skillAtomId == 'starting_hand_read' &&
+      sourceSignalId == 'hero_cards') {
+    switch (sourceTask) {
+      case 'hand_discipline_buckets_premium':
+        return target(
+          'world_2',
+          'hand_discipline_buckets',
+          'hand_discipline_buckets_strong',
+        );
+      case 'hand_discipline_buckets_strong':
+        return target(
+          'world_2',
+          'hand_discipline_buckets',
+          'hand_discipline_buckets_medium',
+        );
+      case 'hand_discipline_buckets_medium':
+      case 'hand_discipline_buckets_trash':
+        return target(
+          'world_2',
+          'hand_discipline_buckets',
+          'hand_discipline_buckets_borderline',
+        );
+      case 'hand_discipline_buckets_borderline':
+        return target(
+          'world_2',
+          'hand_discipline_buckets',
+          'hand_discipline_buckets_medium',
+        );
+    }
+  }
+
+  if (nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'hero_cards_board_pot') {
+    switch (sourceTask) {
+      case 'w4_value_purpose':
+        return target('world_4', 'why_bets_happen', 'w4_bluff_purpose');
+      case 'w4_bluff_purpose':
+        return target('world_4', 'why_bets_happen', 'w4_value_purpose');
+      case 'w6_value_dry_board':
+        return target('world_6', 'range_bucket_basics', 'w6_missed_dry_board');
+      case 'w6_missed_dry_board':
+      case 'w6_table_bucket_notice':
+        return target('world_6', 'range_bucket_basics', 'w6_value_dry_board');
+      case 'w6_wrong_board':
+        return target('world_6', 'range_pressure_lines', 'w6_wet_board_repair');
+      case 'w6_value_wet_board':
+      case 'w6_turn_shift_bucket':
+        return target('world_6', 'range_board_fit', 'w6_wrong_board');
+    }
+  }
+
+  if (nextRepId == 'repeat_board_read' &&
+      skillAtomId == 'board_read' &&
+      sourceSignalId == 'board_cards') {
+    switch (sourceTask) {
+      case 'w4_protection_bet':
+        return target(
+          'world_4',
+          'protection_and_denial',
+          'w4_protection_check',
+        );
+      case 'w4_protection_check':
+        return target('world_4', 'protection_and_denial', 'w4_protection_bet');
+      case 'w5_dry_board':
+        return target('world_5', 'board_texture_basics', 'w5_wet_board');
+      case 'w5_wet_board':
+        return target('world_5', 'board_texture_basics', 'w5_dry_board');
+      case 'w5_disconnected_board':
+        return target('world_5', 'connected_boards', 'w5_connected_board');
+      case 'w5_connected_board':
+        return target('world_5', 'connected_boards', 'w5_disconnected_board');
+    }
+  }
+
+  if (nextRepId == 'repeat_price_read' &&
+      skillAtomId == 'price_read' &&
+      sourceSignalId == 'pot_to_call') {
+    switch (sourceTask) {
+      case 'w4_good_price_call':
+      case 'w4_cheap_price_marginal_call':
+        return target('world_4', 'call_price', 'w4_bad_price_fold');
+      case 'w4_bad_price_fold':
+      case 'w4_big_price_marginal_fold':
+        return target('world_4', 'call_price', 'w4_good_price_call');
+    }
+  }
+
+  if (nextRepId == 'repeat_action_read' &&
+      skillAtomId == 'action_read' &&
+      sourceSignalId == 'no_bet_yet') {
+    switch (sourceTask) {
+      case 'w6_value_range_action':
+        return target('world_6', 'range_pressure_lines', 'w6_bluff_candidate');
+      case 'w6_bluff_candidate':
+        return target(
+          'world_6',
+          'range_pressure_lines',
+          'w6_missed_hand_action',
+        );
+      case 'w6_missed_hand_action':
+        return target(
+          'world_6',
+          'range_pressure_lines',
+          'w6_value_range_action',
+        );
+    }
+  }
+
   if (nextRepId == 'repeat_action_read' &&
       skillAtomId == 'action_read' &&
       sourceSignalId == 'no_bet_yet' &&
-      sourceTaskId.trim() != 'actions_check_drill') {
+      sourceTask != 'actions_check_drill') {
     return (
       worldId: 'world_1',
       lessonId: 'fold_check_call_raise',
@@ -77,7 +202,7 @@ act0FirstValueSameSignalRepMappingV1({
   if (nextRepId == 'repeat_board_read' &&
       skillAtomId == 'board_read' &&
       sourceSignalId == 'board_cards') {
-    if (sourceTaskId.trim() == 'your_first_hand_flop') {
+    if (sourceTask == 'your_first_hand_flop') {
       return (
         worldId: 'world_1',
         lessonId: 'your_first_hand',
@@ -85,8 +210,8 @@ act0FirstValueSameSignalRepMappingV1({
         mappingType: isRepair ? 'repair' : 'reinforcement',
       );
     }
-    if (sourceTaskId.trim() != 'cards_ranks_suits_board_count' &&
-        sourceTaskId.trim() != 'your_first_hand_turn') {
+    if (sourceTask != 'cards_ranks_suits_board_count' &&
+        sourceTask != 'your_first_hand_turn') {
       return (
         worldId: 'world_1',
         lessonId: 'cards_ranks_suits',
@@ -98,7 +223,7 @@ act0FirstValueSameSignalRepMappingV1({
   if (nextRepId == 'repeat_price_read' &&
       skillAtomId == 'price_read' &&
       sourceSignalId == 'pot_to_call' &&
-      sourceTaskId.trim() != 'actions_call_drill') {
+      sourceTask != 'actions_call_drill') {
     return (
       worldId: 'world_1',
       lessonId: 'fold_check_call_raise',
@@ -109,7 +234,7 @@ act0FirstValueSameSignalRepMappingV1({
   if (nextRepId == 'repeat_starting_hand_read' &&
       skillAtomId == 'starting_hand_read' &&
       sourceSignalId == 'hero_cards' &&
-      sourceTaskId.trim() != 'your_first_hand_private_cards_recheck') {
+      sourceTask != 'your_first_hand_private_cards_recheck') {
     return (
       worldId: 'world_1',
       lessonId: 'your_first_hand',
@@ -120,7 +245,7 @@ act0FirstValueSameSignalRepMappingV1({
   if (nextRepId == 'repeat_table_read' &&
       skillAtomId == 'table_read' &&
       sourceSignalId == 'hero_cards_board_pot' &&
-      sourceTaskId.trim() != 'what_poker_is_table_read_recheck') {
+      sourceTask != 'what_poker_is_table_read_recheck') {
     return (
       worldId: 'world_1',
       lessonId: 'what_poker_is',
@@ -131,8 +256,7 @@ act0FirstValueSameSignalRepMappingV1({
   if (nextRepId == 'repeat_table_position_read' &&
       skillAtomId == 'table_position_read' &&
       sourceSignalId == 'hero_button' &&
-      sourceTaskId.trim() !=
-          'position_checkpoint_position_checkpoint_table_notice') {
+      sourceTask != 'position_checkpoint_position_checkpoint_table_notice') {
     return (
       worldId: 'world_3',
       lessonId: 'position_checkpoint',

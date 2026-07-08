@@ -2,7 +2,7 @@
 
 Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`
 
-Status: Waves 1-2 implemented pending canonical-only re-score and fixed-build
+Status: Waves 1-3 implemented pending canonical-only re-score and fixed-build
 Human QA. Do not assign final 9/10 closure from these implementation waves
 alone.
 
@@ -33,8 +33,13 @@ This implements CAP-001, CAP-002, and same-source CAP-008 only.
 Wave 2 implementation record:
 `docs/_reviews/w1_w6_wave2_canonical_assessment_validity_v1.md`.
 This implements CAP-003, CAP-004, and confirmed CAP-005 assessment-validity
-repairs only. Wave 3 repair/recheck coverage and any Wave 4 transfer/mastery
-depth remain pending canonical-only proof before re-score.
+repairs only.
+
+Wave 3 implementation record:
+`docs/_reviews/w1_w6_wave3_canonical_repair_recheck_coverage_v1.md`.
+This implements CAP-006 for admitted canonical W2/W4/W5/W6 same-world repair
+and recheck coverage only. Wave 4 transfer/mastery depth remains pending
+canonical-only re-score and Human QA; no final score is assigned here.
 
 > **Canonical route corrections:**
 >
@@ -151,24 +156,30 @@ the learning contract).
    optional/session-drill infrastructure, not the canonical Act0 repair owner.
    No W6 product repair is admitted from DLR-002, and no W6 score cap remains
    from that noncanonical evidence.
-3. **Canonical W1-W6 ownership map.** Prove route, content, progression,
+3. **Wave 3 — Canonical repair/recheck coverage** (`W1W6-CAP-006`).
+   **IMPLEMENTED PENDING RE-SCORE AND HUMAN QA.** Canonical Act0 now maps
+   admitted W2 bucket, W4 purpose/price/protection, W5 texture/connectedness,
+   and W6 range-bucket/pressure misses to same-world launchable repair targets
+   while preserving exact replay fallback and source-task attribution. This
+   does not assign a new score and does not admit Wave 4 transfer/mastery depth.
+4. **Canonical W1-W6 ownership map.** Prove route, content, progression,
    completion, telemetry, repair, targeted recheck, payoff, and next-step
    owners for each world before any remaining closure claim.
-4. **Canonical-only deep learning re-audit.** Re-read the remaining P2/P3
+5. **Canonical-only deep learning re-audit.** Re-read the remaining P2/P3
    items only against the normal Act0 Home/Learn route. Do not automatically
    promote `W1W6-DLR-003`, `W1W6-DLR-004`, or `W1W6-DLR-005` to confirmed
    canonical defects.
-5. **Learner-facing P2 closure/proof pass** (`W1W6-DLR-003` through
+6. **Learner-facing P2 closure/proof pass** (`W1W6-DLR-003` through
    `W1W6-DLR-005`). Close as nonissues where canonical proof is sufficient;
    repair only confirmed canonical learner-facing gaps.
-6. **Bounded repairs for confirmed canonical gaps.** Scope each repair only
+7. **Bounded repairs for confirmed canonical gaps.** Scope each repair only
    after the canonical-only re-audit proves the gap is learner-facing and
    required.
-7. **Per-world re-score.** Assign evidence-backed scores individually; no
+8. **Per-world re-score.** Assign evidence-backed scores individually; no
    average-score compensation can offset a world below 9/10.
-8. **Fixed-build novice Human QA.** Run only after the canonical-only audit,
+9. **Fixed-build novice Human QA.** Run only after the canonical-only audit,
    P2 proof pass, and any confirmed bounded repairs.
-9. **Final bounded repair and hard close.** Close W1-W6 only when every world
+10. **Final bounded repair and hard close.** Close W1-W6 only when every world
    individually reaches at least 9/10.
 
 W6 score is frozen pending canonical-only W1-W6 re-audit and Human QA. No new
