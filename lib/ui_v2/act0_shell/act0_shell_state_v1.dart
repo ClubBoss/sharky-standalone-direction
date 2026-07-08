@@ -4752,11 +4752,11 @@ final _rangeThinkingFoundationLessons = <Act0LessonCardV1>[
   _rangeThinkingLiteLessons[0],
   _rangeThinkingLiteLessons[1],
   _rangeThinkingLiteLessons[2],
+  _rangeThinkingLiteLessons[3],
+  _rangeThinkingLiteLessons[4],
 ];
 
 final _visibleCardRangeContinuationLessons = <Act0LessonCardV1>[
-  _rangeThinkingLiteLessons[3],
-  _rangeThinkingLiteLessons[4],
   _w7VisibleCardComboDensityLesson,
 ];
 
