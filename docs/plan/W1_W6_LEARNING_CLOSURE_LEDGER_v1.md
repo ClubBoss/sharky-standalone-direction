@@ -2,8 +2,9 @@
 
 Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`
 
-Status: Wave 1 implemented pending canonical-only re-score and fixed-build
-Human QA. Do not assign final 9/10 closure from this implementation alone.
+Status: Waves 1-2 implemented pending canonical-only re-score and fixed-build
+Human QA. Do not assign final 9/10 closure from these implementation waves
+alone.
 
 Latest consolidated admission program:
 `docs/_reviews/w1_w6_consolidated_repair_admission_program_v1.md`.
@@ -27,10 +28,13 @@ No final 9/10 score is assigned until fixed-build Human QA.
 
 Wave 1 implementation record:
 `docs/_reviews/w1_w6_wave1_canonical_correctness_trust_v1.md`.
-This implements CAP-001, CAP-002, and same-source CAP-008 only. Wave 2 prompt
-leakage, W3 six-seat coverage, W2 bucket differentiation, Wave 3 repair/recheck
-coverage, and any Wave 4 transfer/mastery depth remain pending canonical-only
-proof before re-score.
+This implements CAP-001, CAP-002, and same-source CAP-008 only.
+
+Wave 2 implementation record:
+`docs/_reviews/w1_w6_wave2_canonical_assessment_validity_v1.md`.
+This implements CAP-003, CAP-004, and confirmed CAP-005 assessment-validity
+repairs only. Wave 3 repair/recheck coverage and any Wave 4 transfer/mastery
+depth remain pending canonical-only proof before re-score.
 
 > **Canonical route corrections:**
 >

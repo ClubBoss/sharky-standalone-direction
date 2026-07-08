@@ -2953,7 +2953,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
         taskId: 'hand_discipline_buckets_borderline',
         title: 'Borderline strong',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w1StrongBucketRunner,
+        runner: _w2BorderlineBucketRunner,
         rewardXp: 7,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -3215,45 +3215,97 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
 ];
 
 final _positionThinkingLessons = <Act0LessonCardV1>[
-  _lessonFromTasksV1(
+  Act0LessonCardV1(
     lessonId: 'position_six_seats',
     title: 'The 6 positions',
     subtitle: 'Recognize UTG, HJ, CO, BTN, SB, and BB.',
+    state: Act0LessonStateV1.locked,
     phaseLabel: 'Seats',
+    primaryCtaLabel: 'Locked',
+    isSelectable: false,
+    isLocked: true,
     rewardXp: 30,
-    sourceTasks: _pokerFromZeroLessons[5].taskList,
-    extraDrills: <Act0LessonTaskV1>[
+    runner: _w3SixSeatsIntroRunner,
+    tasks: <Act0LessonTaskV1>[
       Act0LessonTaskV1(
-        taskId: 'seat_order_decision',
-        title: 'Who acts earlier?',
+        taskId: 'position_six_seats_positions_theory',
+        title: 'Six seat labels',
+        phase: Act0LessonPhaseV1.theory,
+        runner: _w3SixSeatsIntroRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.learn,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_positions_utg',
+        title: 'Find UTG',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3SeatOrderDecisionRunner,
-        rewardXp: 8,
+        runner: _w3SeatIdUtgRunner,
+        rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
-        taskId: 'position_repair_early_late_order',
-        title: 'Repair early vs late',
+        taskId: 'position_six_seats_hj_co_contrast',
+        title: 'HJ or CO',
         phase: Act0LessonPhaseV1.drill,
-        runner: _w3EarlyLateOrderRepairRunner,
+        runner: _w3SeatIdHjRunner,
         rewardXp: 6,
-        stepKind: Act0LessonStepKindV1.fixMistakes,
+        stepKind: Act0LessonStepKindV1.practice,
       ),
       Act0LessonTaskV1(
-        taskId: 'position_repair_seat_id_btn',
+        taskId: 'position_six_seats_positions_cutoff',
+        title: 'Find CO',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdCoRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_positions_button',
+        title: 'Find BTN',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdBtnRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_sb_recognition',
+        title: 'Find SB',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdSbRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_bb_recognition',
+        title: 'Find BB',
+        phase: Act0LessonPhaseV1.drill,
+        runner: _w3SeatIdBbRunner,
+        rewardXp: 5,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_position_repair_seat_id_btn',
         title: 'Repair BTN seat',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3SeatIdBtnRepairRunner,
-        rewardXp: 6,
+        rewardXp: 4,
         stepKind: Act0LessonStepKindV1.fixMistakes,
       ),
       Act0LessonTaskV1(
-        taskId: 'position_repair_seat_id_utg',
+        taskId: 'position_six_seats_position_repair_seat_id_utg',
         title: 'Repair UTG seat',
         phase: Act0LessonPhaseV1.drill,
         runner: _w3SeatIdUtgRepairRunner,
-        rewardXp: 6,
+        rewardXp: 4,
         stepKind: Act0LessonStepKindV1.fixMistakes,
+      ),
+      Act0LessonTaskV1(
+        taskId: 'position_six_seats_positions_review',
+        title: 'Six-seat recap',
+        phase: Act0LessonPhaseV1.review,
+        runner: _w3SixSeatsRecapRunner,
+        rewardXp: 10,
+        stepKind: Act0LessonStepKindV1.review,
       ),
     ],
   ),
@@ -8432,6 +8484,209 @@ final _w3SeatIdUtgRepairRunner = _utgSeatRunner.copyWith(
   ],
 );
 
+Act0RunnerStateV1 _w3SeatRecognitionRunnerV1({
+  required String lessonId,
+  required String caption,
+  required String hint,
+  required String question,
+  required String correctSeatId,
+  required String correctLabel,
+  required String distractorSeatId,
+  required String distractorLabel,
+  required String feedbackTitle,
+  required String feedbackReason,
+  List<String>? highlightedSeatIds,
+  List<String> focusLabels = const <String>[],
+}) {
+  final highlighted = highlightedSeatIds ?? <String>[correctSeatId];
+  return _meetTableRunner.copyWith(
+    lessonId: lessonId,
+    lessonTitle: 'The 6 positions',
+    lessonSubtitle: 'Position Thinking',
+    caption: caption,
+    hint: hint,
+    question: question,
+    options: <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: correctSeatId,
+        label: correctLabel,
+        seatId: correctSeatId,
+        isCorrect: true,
+        preferredLabel: correctLabel,
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: feedbackTitle,
+        feedbackReason: feedbackReason,
+      ),
+      Act0RunnerOptionV1(
+        id: distractorSeatId,
+        label: distractorLabel,
+        seatId: distractorSeatId,
+        isCorrect: false,
+        preferredLabel: correctLabel,
+        betterAnswerLabel: correctLabel,
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Check the seat label.',
+        feedbackReason:
+            '$distractorLabel is close, but this drill is asking for $correctLabel.',
+      ),
+    ],
+    table: _meetTableRunner.table.copyWith(
+      selectableSeatIds: <String>[correctSeatId, distractorSeatId],
+      highlightedSeatIds: highlighted,
+      activeSeatId: correctSeatId,
+    ),
+    teachingSteps: <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: '$correctLabel recognition.',
+        body: feedbackReason,
+        focusSeatIds: highlighted,
+        focusLabels: focusLabels.isEmpty ? <String>[correctLabel] : focusLabels,
+      ),
+    ],
+  );
+}
+
+final _w3SixSeatsIntroRunner = _positionsRunner.copyWith(
+  phase: Act0LessonPhaseV1.theory,
+  lessonId: 'w3_six_seats_intro',
+  lessonTitle: 'The 6 positions',
+  lessonSubtitle: 'Position Thinking',
+  caption: 'Six-max tables use UTG, HJ, CO, BTN, SB, and BB.',
+  hint:
+      'Use the table labels first. Button and blinds are only part of the map.',
+  question: 'What does this lesson train?',
+  options: const <Act0RunnerOptionV1>[],
+  feedbackTitle: 'Six-seat map.',
+  feedbackReason: 'Recognize every seat label before using position to decide.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'All six seats matter.',
+      body:
+          'UTG, HJ, CO, BTN, SB, and BB each point to a different place in the order.',
+      focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
+    ),
+  ],
+);
+
+final _w3SeatIdUtgRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_utg',
+  caption: 'Find the first non-blind seat before the flop.',
+  hint: 'Start at the seat after the blinds, then read the label.',
+  question: 'Tap UTG.',
+  correctSeatId: 'utg',
+  correctLabel: 'UTG',
+  distractorSeatId: 'hj',
+  distractorLabel: 'HJ',
+  feedbackTitle: 'UTG recognized.',
+  feedbackReason: 'UTG is the first non-blind seat to act before the flop.',
+  focusLabels: <String>['First preflop'],
+);
+
+final _w3SeatIdHjRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_hj',
+  caption: 'Two middle seats are highlighted between UTG and BTN.',
+  hint: 'Choose the one directly after UTG.',
+  question: 'Tap HJ.',
+  correctSeatId: 'hj',
+  correctLabel: 'HJ',
+  distractorSeatId: 'co',
+  distractorLabel: 'CO',
+  feedbackTitle: 'HJ recognized.',
+  feedbackReason: 'HJ sits after UTG and before CO.',
+  highlightedSeatIds: <String>['hj', 'co'],
+  focusLabels: <String>['After UTG', 'Before CO'],
+);
+
+final _w3SeatIdCoRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_co',
+  caption: 'Find the seat directly before the Button.',
+  hint: 'Do not use the blind markers; read the seat before BTN.',
+  question: 'Tap CO.',
+  correctSeatId: 'co',
+  correctLabel: 'CO',
+  distractorSeatId: 'hj',
+  distractorLabel: 'HJ',
+  feedbackTitle: 'CO recognized.',
+  feedbackReason: 'CO is the cutoff, one seat before the Button.',
+  highlightedSeatIds: <String>['hj', 'co', 'btn'],
+  focusLabels: <String>['Before BTN'],
+);
+
+final _w3SeatIdBtnRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_btn',
+  caption: 'Find the dealer-button seat.',
+  hint: 'The Button anchors late position.',
+  question: 'Tap BTN.',
+  correctSeatId: 'btn',
+  correctLabel: 'BTN',
+  distractorSeatId: 'co',
+  distractorLabel: 'CO',
+  feedbackTitle: 'BTN recognized.',
+  feedbackReason: 'BTN is the dealer-button seat and late-position anchor.',
+  focusLabels: <String>['Dealer button'],
+);
+
+final _w3SeatIdSbRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_sb',
+  caption: 'Find the smaller blind next to the Button.',
+  hint: 'One blind posts half the big blind.',
+  question: 'Tap SB.',
+  correctSeatId: 'sb',
+  correctLabel: 'SB',
+  distractorSeatId: 'bb',
+  distractorLabel: 'BB',
+  feedbackTitle: 'SB recognized.',
+  feedbackReason: 'SB is the small blind, posted before the big blind.',
+  highlightedSeatIds: <String>['btn', 'sb', 'bb'],
+  focusLabels: <String>['Small blind'],
+);
+
+final _w3SeatIdBbRunner = _w3SeatRecognitionRunnerV1(
+  lessonId: 'w3_seat_id_bb',
+  caption: 'Find the full blind seat.',
+  hint: 'The big blind is the larger forced blind.',
+  question: 'Tap BB.',
+  correctSeatId: 'bb',
+  correctLabel: 'BB',
+  distractorSeatId: 'sb',
+  distractorLabel: 'SB',
+  feedbackTitle: 'BB recognized.',
+  feedbackReason: 'BB is the big blind, the full forced blind before the hand.',
+  highlightedSeatIds: <String>['sb', 'bb'],
+  focusLabels: <String>['Big blind'],
+);
+
+final _w3SixSeatsRecapRunner = _w3SixSeatsIntroRunner.copyWith(
+  phase: Act0LessonPhaseV1.review,
+  lessonId: 'w3_six_seats_recap',
+  caption: 'Lesson learned: every 6-max seat has a name.',
+  hint: 'Read all six labels before using position.',
+  question: 'Which list names the six seats?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'six_seats',
+      label: 'UTG, HJ, CO, BTN, SB, BB',
+      isCorrect: true,
+      preferredLabel: 'UTG, HJ, CO, BTN, SB, BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Six-seat map complete.',
+      feedbackReason:
+          'Those are the six seat labels used by this table before position decisions.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'only_blinds',
+      label: 'BTN, SB, BB only',
+      isCorrect: false,
+      preferredLabel: 'UTG, HJ, CO, BTN, SB, BB',
+      betterAnswerLabel: 'UTG, HJ, CO, BTN, SB, BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too narrow.',
+      feedbackReason:
+          'Button and blinds matter, but W3 needs all six seat names.',
+    ),
+  ],
+);
+
 final _latePositionRunner = _meetTableRunner.copyWith(
   lessonId: 'late_position',
   lessonTitle: 'The 6 positions',
@@ -8554,8 +8809,8 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
 final _flushRankRunner = _readBoardRunner.copyWith(
   lessonId: 'flush_rank',
   lessonTitle: 'Hand rankings, on the table',
-  caption: 'A flush uses five cards of one suit.',
-  hint: 'Flush beats straight in Holdem.',
+  caption: 'Hero and CO both show completed five-card hands.',
+  hint: 'Compare the suit pattern and the rank sequence before choosing.',
   question: 'Which hand ranks higher?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -8590,7 +8845,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
       'board_1',
       'board_2',
     ],
-    centerLabel: 'Hero flush beats CO straight',
+    centerLabel: 'Two completed hands',
     seats: _readBoardRunner.table.seats
         .map(
           (seat) => seat.seatId == 'btn'
@@ -10907,8 +11162,8 @@ final _world3BucketsIntroRunner = _whatYouCanDoRunner.copyWith(
 
 final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w3_premium_bucket',
-  caption: 'AA is a premium preflop hand.',
-  hint: 'Premium hands usually want to build the pot.',
+  caption: 'Hero holds A♠ A♥ before the flop.',
+  hint: 'Start from the two-card strength before choosing the bucket.',
   question: 'Which bucket is AA?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -10937,7 +11192,7 @@ final _world3PremiumBucketRunner = _world3BucketsIntroRunner.copyWith(
       Act0CardStateV1(rank: 'A', suit: 's'),
       Act0CardStateV1(rank: 'A', suit: 'h'),
     ],
-    centerLabel: 'Premium bucket',
+    centerLabel: 'Pocket aces',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -10982,7 +11237,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
         Act0CardStateV1(rank: 'J', suit: 's'),
         Act0CardStateV1(rank: '8', suit: 'd'),
       ],
-      centerLabel: 'Trash bucket',
+      centerLabel: 'J8o early',
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
         Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
@@ -12694,8 +12949,8 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w1_strong_bucket',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'JJ is a strong preflop hand.',
-  hint: 'Strong hands play well but are not the absolute top bucket.',
+  caption: 'Hero holds J♥ J♠ before the flop.',
+  hint: 'It is below the absolute top but does not need a perfect seat.',
   question: 'Which bucket is JJ?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -12736,7 +12991,7 @@ final _w1StrongBucketRunner = _world3BucketsIntroRunner.copyWith(
       Act0CardStateV1(rank: 'J', suit: 'h'),
       Act0CardStateV1(rank: 'J', suit: 's'),
     ],
-    centerLabel: 'Strong bucket',
+    centerLabel: 'Pocket jacks',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -12754,8 +13009,8 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w1_medium_bucket',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'KQo is a medium preflop hand.',
-  hint: 'Medium hands play best in good positions with the right frame.',
+  caption: 'Hero holds K♦ Q♣ before the flop.',
+  hint: 'Two high unpaired cards can play, but seat and frame matter.',
   question: 'Which bucket is KQo?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -12796,7 +13051,7 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
       Act0CardStateV1(rank: 'K', suit: 'd'),
       Act0CardStateV1(rank: 'Q', suit: 'c'),
     ],
-    centerLabel: 'Medium bucket',
+    centerLabel: 'KQo preflop',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -12805,6 +13060,66 @@ final _w1MediumBucketRunner = _world3BucketsIntroRunner.copyWith(
       body: 'KQo is playable but not strong enough to play from anywhere.',
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['KQo', 'Medium'],
+    ),
+  ],
+);
+
+final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
+  lessonId: 'w2_borderline_bucket_qjs',
+  lessonTitle: 'Hand buckets',
+  lessonSubtitle: 'Hand Discipline',
+  caption: 'Hero holds Q♥ J♠ before the flop.',
+  hint: 'Connected high cards can play, but they need position and frame.',
+  question: 'Which bucket is QJs before context helps?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'medium',
+      label: 'Medium',
+      isCorrect: true,
+      preferredLabel: 'Medium',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Conditional bucket found.',
+      feedbackReason:
+          'QJs sits in the medium border zone. It can continue in good context, but it is not a self-starting strong hand.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'strong',
+      label: 'Strong',
+      isCorrect: false,
+      preferredLabel: 'Medium',
+      betterAnswerLabel: 'Medium',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'A bit too high.',
+      feedbackReason:
+          'Strong hands need less help from position and action frame. QJs still wants context before chips go in.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'trash',
+      label: 'Trash',
+      isCorrect: false,
+      preferredLabel: 'Medium',
+      betterAnswerLabel: 'Medium',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Too low.',
+      feedbackReason:
+          'QJs has connected high-card value. It is conditional, not trash.',
+    ),
+  ],
+  table: _whatYouCanDoRunner.table.copyWith(
+    heroCards: const <Act0CardStateV1>[
+      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+      Act0CardStateV1(rank: 'J', suit: 's'),
+    ],
+    centerLabel: 'QJs preflop',
+    highlightedCardIds: const <String>['hero_0', 'hero_1'],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Borderline needs context.',
+      body:
+          'QJs can be useful, but it is not the same as a pocket pair that wants to continue almost anywhere.',
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['QJs', 'Context matters'],
     ),
   ],
 );
@@ -13241,8 +13556,9 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
 final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_value_purpose',
-  caption: 'Hero has top pair. Worse hands can call.',
-  hint: 'This bet is not just noise. It wants calls from weaker hands.',
+  caption: 'Hero has top pair on A-7-2 after BB checks.',
+  hint:
+      'Read Hero hand strength and the likely response before naming purpose.',
   question: 'What is the main purpose?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -13287,8 +13603,8 @@ final _world4ValuePurposeRunner = _world4PurposeIntroRunner.copyWith(
 final _world4BluffPurposeRunner = _world4PurposeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w4_bluff_purpose',
-  caption: 'Hero missed. The bet tries to win by folds.',
-  hint: 'A bluff needs fold pressure, not a made hand.',
+  caption: 'Hero missed on A-7-2 after BB checks.',
+  hint: 'Read whether a bet can tell a credible story before naming purpose.',
   question: 'What is the main purpose?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -13630,8 +13946,8 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
 
 final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   lessonId: 'w4_protection_check',
-  caption: 'Hero checks. Villain gets a free next card.',
-  hint: 'This is the risk protection bets are trying to avoid.',
+  caption: 'Hero checks behind on a draw-heavy board.',
+  hint: 'Ask what the opponent receives by not facing a bet.',
   question: 'What did checking allow?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -14418,7 +14734,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
 final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
   lessonId: 'w5_wet_board',
   caption: 'T-9-8 with two hearts can change quickly.',
-  hint: 'Connected ranks and suit pressure make this wet.',
+  hint: 'Notice the connected ranks and two hearts before choosing texture.',
   question: 'What texture is this?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
