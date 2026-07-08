@@ -4,6 +4,26 @@ Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`
 
 Status: implementation-ready ledger. No repair implemented in this pass.
 
+Latest consolidated admission program:
+`docs/_reviews/w1_w6_consolidated_repair_admission_program_v1.md`.
+
+That program supersedes the older placeholder repair-wave ordering below for
+implementation admission. The canonical sequence is now:
+
+1. Wave 1 - correctness and trust: incongruent correct-answer feedback titles,
+   W2 `apply_hj_decision` binding, and optionally same-owner subtitle copy
+   corrections.
+2. Wave 2 - assessment validity: prompt-leakage cleanup, W3 six-seat coverage,
+   and W2 bucket differentiation.
+3. Wave 3 - repair/recheck coverage: canonical W2/W4/W5/W6 same-world
+   repairFocus/same-signal targets with first-value telemetry and
+   `recheck_completed` proof.
+4. Wave 4 - transfer/mastery depth only if post-Waves-1-3 source re-score still
+   caps a world below 9/10.
+
+No legacy/session-drill repair evidence counts toward W1-W6 canonical scoring.
+No final 9/10 score is assigned until fixed-build Human QA.
+
 > **Canonical route corrections:**
 >
 > `W1W6-DLR-001` is **`MISSCOPED_NO_CANONICAL_ASSESSMENT`** and is **removed
