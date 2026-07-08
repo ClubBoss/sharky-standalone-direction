@@ -441,13 +441,13 @@ class Act0BlockCompletionSummaryV1 {
   String get worldOneCompletionProofFallbackLabel =>
       'Repair proof banks the next time you fix one.';
 
-  /// True only for an ordinary World 2-6 completion with valid, sequential
+  /// True only for an ordinary World 2-9 completion with valid, sequential
   /// next-world route truth. World 1 keeps its own dedicated gate/copy above;
-  /// World 7+ payoff and the special W4->W5 band transition remain deferred.
+  /// World 10+ payoff and the special W4->W5 band transition remain deferred.
   bool get hasWorldCompletionPayoff =>
       isWorldComplete &&
       worldNumber >= 2 &&
-      worldNumber <= 6 &&
+      worldNumber <= 9 &&
       nextWorldNumber == worldNumber + 1 &&
       nextWorldTitle != null &&
       nextWorldTitle!.trim().isNotEmpty;
@@ -723,6 +723,30 @@ const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
         previewLine:
             'World 7 starts with a simple question: what do the visible '
             'cards rule out?',
+      ),
+      7: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how visible cards remove combinations and narrow '
+            'ranges.',
+        previewLine:
+            'World 8 starts with a simple question: how much risk can the '
+            'stack still create?',
+      ),
+      8: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how effective stack depth changes commitment and '
+            'risk.',
+        previewLine:
+            'World 9 starts with a simple question: when does tournament '
+            'pressure change the risk bar?',
+      ),
+      9: _WorldCompletionMetaV1(
+        learningLabel:
+            'You learned how survival pressure, ladder pressure, and risk '
+            'premium change decisions.',
+        previewLine:
+            'World 10 starts with a simple question: which player tendency '
+            'changes the plan?',
       ),
     };
 

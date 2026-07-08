@@ -65,6 +65,32 @@ const _worldCases = <_WorldCase>[
         'You learned how to group hands into ranges and compare who is '
         'ahead.',
   ),
+  _WorldCase(
+    worldNumber: 7,
+    worldTitle: 'Visible Cards Change Ranges',
+    nextWorldNumber: 8,
+    nextWorldTitle: 'Stack Depth And Risk',
+    learningLabel:
+        'You learned how visible cards remove combinations and narrow '
+        'ranges.',
+  ),
+  _WorldCase(
+    worldNumber: 8,
+    worldTitle: 'Stack Depth And Risk',
+    nextWorldNumber: 9,
+    nextWorldTitle: 'Tournament Pressure',
+    learningLabel:
+        'You learned how effective stack depth changes commitment and risk.',
+  ),
+  _WorldCase(
+    worldNumber: 9,
+    worldTitle: 'Tournament Pressure',
+    nextWorldNumber: 10,
+    nextWorldTitle: 'Player Adjustment',
+    learningLabel:
+        'You learned how survival pressure, ladder pressure, and risk '
+        'premium change decisions.',
+  ),
 ];
 
 void main() {
@@ -96,39 +122,33 @@ void main() {
         );
       });
 
-      testWidgets(
-        'completed world shows correct identity, milestone role, and '
-        'learning takeaway',
-        (tester) async {
-          await tester.pumpWidget(_host(_summaryFor(worldCase)));
-          await tester.pumpAndSettle();
+      testWidgets('completed world shows correct identity, milestone role, and '
+          'learning takeaway', (tester) async {
+        await tester.pumpWidget(_host(_summaryFor(worldCase)));
+        await tester.pumpAndSettle();
 
-          expect(
-            find.byKey(const Key('act0_shell_world_completion_payoff')),
-            findsOneWidget,
-          );
-          expect(
-            tester
-                .widget<Text>(
-                  find.byKey(const Key('act0_shell_block_summary_title')),
-                )
-                .data,
-            'World ${worldCase.worldNumber} complete',
-          );
-          expect(
-            find.descendant(
-              of: find.byKey(const Key('act0_shell_world_completion_payoff')),
-              matching: find.byKey(const Key('act0_proof_icon_v1_milestone')),
-            ),
-            findsOneWidget,
-          );
-          expect(find.text(worldCase.learningLabel), findsOneWidget);
-          expect(
-            find.text('Next: ${worldCase.nextWorldTitle}'),
-            findsOneWidget,
-          );
-        },
-      );
+        expect(
+          find.byKey(const Key('act0_shell_world_completion_payoff')),
+          findsOneWidget,
+        );
+        expect(
+          tester
+              .widget<Text>(
+                find.byKey(const Key('act0_shell_block_summary_title')),
+              )
+              .data,
+          'World ${worldCase.worldNumber} complete',
+        );
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_world_completion_payoff')),
+            matching: find.byKey(const Key('act0_proof_icon_v1_milestone')),
+          ),
+          findsOneWidget,
+        );
+        expect(find.text(worldCase.learningLabel), findsOneWidget);
+        expect(find.text('Next: ${worldCase.nextWorldTitle}'), findsOneWidget);
+      });
 
       testWidgets('no-proof completion shows the safe fallback', (
         tester,
@@ -208,9 +228,7 @@ void main() {
         );
       });
 
-      testWidgets('activity-only fallback earns no proof icon', (
-        tester,
-      ) async {
+      testWidgets('activity-only fallback earns no proof icon', (tester) async {
         final outcomes = _repairOutcomes();
 
         await tester.pumpWidget(
@@ -263,10 +281,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Next: A Different Next World'), findsOneWidget);
-        expect(
-          find.text('Next: ${worldCase.nextWorldTitle}'),
-          findsNothing,
-        );
+        expect(find.text('Next: ${worldCase.nextWorldTitle}'), findsNothing);
       });
 
       testWidgets('primary CTA routes to the valid next destination', (
@@ -366,13 +381,13 @@ void main() {
         final text = tester
             .widgetList<Text>(
               find.descendant(
-                of: find.byKey(
-                  const Key('act0_shell_world_completion_payoff'),
-                ),
+                of: find.byKey(const Key('act0_shell_world_completion_payoff')),
                 matching: find.byType(Text),
               ),
             )
-            .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
+            .map(
+              (widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '',
+            )
             .join(' ')
             .toLowerCase();
 
@@ -385,6 +400,38 @@ void main() {
           'rank',
           'rarity',
           'coins',
+        ]) {
+          expect(text, isNot(contains(forbidden)));
+        }
+      });
+
+      testWidgets('no retired W8 or W9 identity copy appears', (tester) async {
+        await tester.pumpWidget(_host(_summaryFor(worldCase)));
+        await tester.pumpAndSettle();
+
+        final text = tester
+            .widgetList<Text>(
+              find.descendant(
+                of: find.byKey(const Key('act0_shell_world_completion_payoff')),
+                matching: find.byType(Text),
+              ),
+            )
+            .map(
+              (widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '',
+            )
+            .join(' ')
+            .toLowerCase();
+
+        for (final forbidden in <String>[
+          'full range mastery',
+          'solver',
+          'draw improvement',
+          'flush draw',
+          'pot odds',
+          'price-to-call',
+          'complete tournament mastery',
+          'spr mastery',
+          'stack-off strategy',
         ]) {
           expect(text, isNot(contains(forbidden)));
         }
@@ -479,11 +526,11 @@ void main() {
     }
   });
 
-  testWidgets('World 7 is not yet covered by any completion payoff', (
+  testWidgets('World 10+ remains outside ordinary completion payoff', (
     tester,
   ) async {
     const summary = Act0BlockCompletionSummaryV1(
-      lessonTitle: 'A lesson in world 7',
+      lessonTitle: 'A lesson in world 10',
       xpEarned: 24,
       errorCount: 0,
       taskCount: 4,
@@ -494,10 +541,10 @@ void main() {
       endXp: 12,
       xpTarget: 200,
       milestoneTier: Act0ProgressMilestoneTierV1.world,
-      worldNumber: 7,
-      worldTitle: 'Visible Cards Change Ranges',
-      nextWorldNumber: 8,
-      nextWorldTitle: 'Advanced Reads',
+      worldNumber: 10,
+      worldTitle: 'Player Adjustment',
+      nextWorldNumber: 11,
+      nextWorldTitle: 'Future World',
       perfectClearCount: 12,
       completedClearCount: 12,
     );
@@ -512,10 +559,7 @@ void main() {
       find.byKey(const Key('act0_shell_world_completion_payoff')),
       findsNothing,
     );
-    expect(
-      find.byKey(const Key('act0_proof_icon_v1_milestone')),
-      findsNothing,
-    );
+    expect(find.byKey(const Key('act0_proof_icon_v1_milestone')), findsNothing);
   });
 }
 
@@ -589,46 +633,47 @@ Act0FixProofProjectionV1 _bankedFixProof(
 }) {
   Act0LearningTransferMeasurementV1? transferMeasurement;
   if (reinforced) {
-    transferMeasurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_1',
-            createdOrder: 1,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_legal_context',
-            choiceId: 'fold',
-            expectedChoiceId: 'check',
-            isCorrect: false,
-            errorType: 'missed_action_read',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'incorrect',
-            sessionId: 'session_1',
+    transferMeasurement =
+        Act0LearningTransferMeasurementV1.fromLearningEvidence(
+          Act0LearningEvidenceHistoryV1(
+            records: <Act0LearningEvidenceRecordV1>[
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_1',
+                createdOrder: 1,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_legal_context',
+                choiceId: 'fold',
+                expectedChoiceId: 'check',
+                isCorrect: false,
+                errorType: 'missed_action_read',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'incorrect',
+                sessionId: 'session_1',
+              ),
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_2',
+                createdOrder: 5,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_check_drill',
+                choiceId: 'check',
+                expectedChoiceId: 'check',
+                isCorrect: true,
+                errorType: 'none',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'correct',
+                sessionId: 'session_3',
+              ),
+            ],
           ),
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_2',
-            createdOrder: 5,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_check_drill',
-            choiceId: 'check',
-            expectedChoiceId: 'check',
-            isCorrect: true,
-            errorType: 'none',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'correct',
-            sessionId: 'session_3',
-          ),
-        ],
-      ),
-    );
+        );
   }
   return Act0FixProofProjectionV1.fromSources(
     repairOutcomeProjection: outcomes,

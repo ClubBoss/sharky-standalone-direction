@@ -1121,11 +1121,26 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final worldComplete = worldSink.events.firstWhere(
-      (event) => event.name == 'world_complete',
-    );
+    final worldCompleteEvents = worldSink.events
+        .where((event) => event.name == 'world_complete')
+        .toList(growable: false);
+    expect(worldCompleteEvents, hasLength(1));
+    final worldComplete = worldCompleteEvents.single;
     expect(worldComplete.fields['world_id'], 'world_1');
     expect(worldComplete.fields['source_surface'], 'act0_completion');
+
+    await tester.ensureVisible(
+      find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      worldSink.events.where((event) => event.name == 'world_complete'),
+      hasLength(1),
+    );
 
     expectNoForbiddenTelemetryFieldsV1(day2Sink.events);
     expectNoForbiddenTelemetryFieldsV1(worldSink.events);
