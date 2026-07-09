@@ -5933,26 +5933,51 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
     }
     return KeyedSubtree(
       key: const Key('act0_shell_feedback_signal_proof'),
-      child: Row(
-        children: [
-          Icon(Icons.visibility_rounded, color: tone, size: compact ? 12 : 13),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(
-              line,
-              key: const Key('act0_shell_feedback_signal_proof_label'),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
+      child: Container(
+        key: const Key('act0_shell_wave1_feedback_signal_bridge'),
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 7 : 8,
+          vertical: compact ? 5 : 6,
+        ),
+        decoration: BoxDecoration(
+          color: tone.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
+          border: Border.all(color: tone.withValues(alpha: 0.22)),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.visibility_rounded,
+              color: tone,
+              size: compact ? 12 : 13,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              'Clue from table',
               style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontSize: compact ? 10.5 : 11.0,
-                fontWeight: FontWeight.w800,
-                height: 1.05,
+                color: tone,
+                fontSize: compact ? 8.4 : 9.0,
+                fontWeight: FontWeight.w900,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                line,
+                key: const Key('act0_shell_feedback_signal_proof_label'),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontSize: compact ? 10.5 : 11.0,
+                  fontWeight: FontWeight.w800,
+                  height: 1.05,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -8734,53 +8759,21 @@ class _CenterPotV1 extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 6,
-            runSpacing: 4,
+          Column(
+            key: const Key('act0_shell_wave1_status_cluster'),
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (shouldShowFocusBadge)
-                _CenterInfoPillV1(
-                  key: const Key('act0_shell_center_focus_badge'),
+              if (shouldShowFocusBadge) ...[
+                _CenterSignalAnchorV1(
                   label: act0RuntimeLocalizedCenterLabelV1(
                     context,
                     resolvedCenterLabel,
                   ),
-                  tone: Act0ShellTokensV1.primary,
-                  icon: Icons.visibility_rounded,
                   compact: refined,
                 ),
-              if (refined)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 2,
-                    vertical: 1,
-                  ),
-                  child: Text(
-                    streetLabel,
-                    key: const Key('act0_shell_center_street_badge'),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
-                      fontSize: 8.1,
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w900,
-                      shadows: <Shadow>[
-                        Shadow(
-                          color: Act0ShellTokensV1.gold.withValues(alpha: 0.4),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              else
-                _CenterInfoPillV1(
-                  key: const Key('act0_shell_center_street_badge'),
-                  label: streetLabel,
-                  tone: Act0ShellTokensV1.gold,
-                  icon: Icons.layers_rounded,
-                  compact: refined,
-                ),
+                const SizedBox(height: 4),
+              ],
+              _CenterStreetStatusV1(label: streetLabel, compact: refined),
             ],
           ),
           if (table.boardCards.isNotEmpty) ...[
@@ -8811,8 +8804,9 @@ class _CenterPotV1 extends StatelessWidget {
             spacing: 5,
             runSpacing: 3,
             children: [
-              _CenterInfoPillV1(
-                key: const Key('act0_shell_center_pot_stat'),
+              _CenterPriorityStatV1(
+                key: const Key('act0_shell_wave1_pot_priority_stat'),
+                legacyKey: const Key('act0_shell_center_pot_stat'),
                 label: act0RuntimeLocalizedPotLabelV1(
                   context,
                   potLabelOverride ?? table.potLabel,
@@ -8820,12 +8814,12 @@ class _CenterPotV1 extends StatelessWidget {
                 tone: Act0ShellTokensV1.text,
                 icon: Icons.casino_rounded,
                 compact: refined,
-                filled: true,
                 pulse: table.actionTrail.isNotEmpty,
               ),
               if (resolvedToCallLabel.isNotEmpty)
-                _CenterInfoPillV1(
-                  key: const Key('act0_shell_center_to_call_stat'),
+                _CenterPriorityStatV1(
+                  key: const Key('act0_shell_wave1_price_priority_stat'),
+                  legacyKey: const Key('act0_shell_center_to_call_stat'),
                   label: act0RuntimeLocalizedToCallLabelV1(
                     context,
                     resolvedToCallLabel,
@@ -8854,90 +8848,173 @@ class _CenterPotV1 extends StatelessWidget {
   }
 }
 
-class _CenterInfoPillV1 extends StatelessWidget {
-  const _CenterInfoPillV1({
-    super.key,
-    required this.label,
-    required this.tone,
-    required this.icon,
-    this.compact = false,
-    this.filled = false,
-    this.pulse = false,
-  });
+class _CenterSignalAnchorV1 extends StatelessWidget {
+  const _CenterSignalAnchorV1({required this.label, required this.compact});
 
   final String label;
-  final Color tone;
-  final IconData icon;
   final bool compact;
-  final bool filled;
-  final bool pulse;
 
   @override
   Widget build(BuildContext context) {
-    final pill = Container(
+    return Container(
+      key: const Key('act0_shell_wave1_table_signal_anchor'),
+      width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 7 : 9,
-        vertical: compact ? 3.5 : 4.5,
+        horizontal: compact ? 8 : 10,
+        vertical: compact ? 5 : 6,
       ),
       decoration: BoxDecoration(
-        color: filled
-            ? tone.withValues(alpha: 0.10)
-            : Colors.black.withValues(alpha: compact ? 0.24 : 0.34),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        color: Act0ShellTokensV1.primary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
         border: Border.all(
-          color: filled
-              ? tone.withValues(alpha: 0.20)
-              : Colors.white.withValues(alpha: 0.06),
+          color: Act0ShellTokensV1.primary.withValues(alpha: 0.36),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: compact ? 11 : 12, color: tone),
-          const SizedBox(width: 5),
+          Icon(
+            Icons.visibility_rounded,
+            color: Act0ShellTokensV1.primary,
+            size: compact ? 13 : 14,
+          ),
+          const SizedBox(width: 6),
           Flexible(
-            child: Text(
-              label,
-              maxLines: 2,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: filled ? tone : Act0ShellTokensV1.text,
-                fontSize: compact ? 8.6 : 9.2,
-                letterSpacing: compact ? 0.1 : 0.3,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Table clue',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.primary,
+                    fontSize: compact ? 7.8 : 8.4,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 1),
+                Text(
+                  label,
+                  key: const Key('act0_shell_center_focus_badge'),
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontSize: compact ? 9.2 : 10.2,
+                    fontWeight: FontWeight.w900,
+                    height: 1.05,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _CenterStreetStatusV1 extends StatelessWidget {
+  const _CenterStreetStatusV1({required this.label, required this.compact});
+
+  final String label;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_center_street_badge'),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 7 : 9,
+        vertical: compact ? 3 : 4,
+      ),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.28),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.layers_rounded,
+            color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
+            size: compact ? 10 : 11,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
+              fontSize: compact ? 8.1 : 8.8,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CenterPriorityStatV1 extends StatelessWidget {
+  const _CenterPriorityStatV1({
+    super.key,
+    required this.legacyKey,
+    required this.label,
+    required this.tone,
+    required this.icon,
+    required this.compact,
+    this.pulse = false,
+  });
+
+  final Key legacyKey;
+  final String label;
+  final Color tone;
+  final IconData icon;
+  final bool compact;
+  final bool pulse;
+
+  @override
+  Widget build(BuildContext context) {
+    final stat = Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 8 : 10,
+        vertical: compact ? 4.5 : 5.5,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.13),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(color: tone.withValues(alpha: 0.28)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: compact ? 12 : 13, color: tone),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontSize: compact ? 9.2 : 10.0,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+    final keyedStat = KeyedSubtree(key: legacyKey, child: stat);
     if (!pulse) {
-      return pill;
+      return keyedStat;
     }
     return TweenAnimationBuilder<double>(
-      key: Key('act0_shell_center_pot_pulse_$label'),
-      tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 760),
+      tween: Tween<double>(begin: 0.97, end: 1.0),
+      duration: const Duration(milliseconds: 600),
       curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        final settle = (1 - value).clamp(0.0, 1.0);
-        return Transform.scale(
-          scale: 1 + (0.055 * settle),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Act0ShellTokensV1.gold.withValues(
-                    alpha: 0.14 * settle,
-                  ),
-                  blurRadius: 12 * settle,
-                ),
-              ],
-            ),
-            child: child,
-          ),
-        );
-      },
-      child: pill,
+      builder: (context, value, child) =>
+          Transform.scale(scale: value, child: child),
+      child: keyedStat,
     );
   }
 }
@@ -9368,12 +9445,19 @@ class _SeatNodeV1 extends StatelessWidget {
                               : null,
                         ),
                         child: hero
-                            ? Text(
-                                'Y',
-                                style: Act0ShellTokensV1.label.copyWith(
-                                  color: Act0ShellTokensV1.onPrimary,
-                                  fontSize: refined ? 8.5 : 9,
-                                  letterSpacing: 0,
+                            ? FittedBox(
+                                key: const Key(
+                                  'act0_shell_wave1_hero_you_badge',
+                                ),
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'You',
+                                  style: Act0ShellTokensV1.label.copyWith(
+                                    color: Act0ShellTokensV1.onPrimary,
+                                    fontSize: refined ? 7.4 : 7.8,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 0,
+                                  ),
                                 ),
                               )
                             : Icon(
@@ -11367,10 +11451,11 @@ class _MarkerDotV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     if (marker == _SeatMarkerKindV1.dealer) {
       return Container(
-        width: 16,
+        key: const Key('act0_shell_wave1_dealer_marker'),
+        width: 24,
         height: 16,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
           gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -11387,10 +11472,10 @@ class _MarkerDotV1 extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: const Text(
-          'D',
+          'BTN',
           style: TextStyle(
             color: Color(0xFF1E293B),
-            fontSize: 9,
+            fontSize: 7.2,
             fontWeight: FontWeight.w900,
             height: 1.0,
           ),
@@ -11405,7 +11490,7 @@ class _MarkerDotV1 extends StatelessWidget {
         ? 'Ход'
         : 'Act';
     final (color, label, isCircle) = switch (marker) {
-      _SeatMarkerKindV1.dealer => (Colors.white, 'D', true),
+      _SeatMarkerKindV1.dealer => (Colors.white, 'BTN', false),
       _SeatMarkerKindV1.smallBlind => (
         Act0ShellTokensV1.runnerTagBlue,
         'SB',
@@ -11421,6 +11506,11 @@ class _MarkerDotV1 extends StatelessWidget {
     };
 
     return Container(
+      key:
+          marker == _SeatMarkerKindV1.smallBlind ||
+              marker == _SeatMarkerKindV1.bigBlind
+          ? Key('act0_shell_wave1_blind_marker_${marker.name}')
+          : null,
       width: isCircle ? 16 : null,
       height: isCircle ? 16 : null,
       padding: isCircle
