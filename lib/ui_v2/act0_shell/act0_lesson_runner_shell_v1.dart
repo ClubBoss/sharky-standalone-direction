@@ -2373,11 +2373,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         (widget.repairOutcomeProofLine?.trim().isNotEmpty ?? false) ||
         widget.repairSessionSummaryLines.any((line) => line.trim().isNotEmpty);
     final repairFillMode = isDrill && hasRepairContext;
+    final usesShortSafeCompactAnswerListEnvelope =
+        _usesShortSafeCompactAnswerListEnvelopeV1(
+          context,
+          options: runner.options,
+        );
     final taskCycleEnvelope = _resolveRunnerTaskCycleViewportEnvelopeV1(
       context,
       viewportFamily: viewportFamily,
       pressureReason: viewportPressureReason,
       repairFillMode: repairFillMode,
+      shortSafeAnswerList: usesShortSafeCompactAnswerListEnvelope,
     );
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
@@ -2821,6 +2827,7 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
   required _RunnerViewportFamilyV1 viewportFamily,
   required String pressureReason,
   required bool repairFillMode,
+  required bool shortSafeAnswerList,
 }) {
   final usesFixedAnswerListEnvelope =
       pressureReason != _compactAnswerListNoPressureReasonV1 &&
@@ -2847,13 +2854,19 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
     return _RunnerTaskCycleViewportEnvelopeV1(
       familyName: repairFillMode ? 'repairFill' : viewportFamily.name,
       usesFixedLowerSlot: true,
-      targetLowerSlotHeight: targetLowerSlotHeight,
+      targetLowerSlotHeight: !repairFillMode && shortSafeAnswerList
+          ? _runnerShortAnswerEnvelopeTargetLowerSlotHeightV1
+          : targetLowerSlotHeight,
       minLowerSlotHeight: repairFillMode
           ? _runnerRepairEnvelopeMinLowerSlotHeightV1
-          : _runnerEnvelopeWave1bMinLowerSlotHeightV1,
+          : (shortSafeAnswerList
+                ? _runnerShortAnswerEnvelopeMinLowerSlotHeightV1
+                : _runnerEnvelopeWave1bMinLowerSlotHeightV1),
       maxLowerSlotShare: repairFillMode
           ? _runnerRepairEnvelopeMaxLowerSlotShareV1
-          : _runnerEnvelopeWave1bMaxLowerSlotShareV1,
+          : (shortSafeAnswerList
+                ? _runnerShortAnswerEnvelopeMaxLowerSlotShareV1
+                : _runnerEnvelopeWave1bMaxLowerSlotShareV1),
     );
   }
   if (repairFillMode) {
@@ -8720,6 +8733,9 @@ const double _runnerEnvelopeWave1bMinLowerSlotHeightV1 = 365;
 const double _runnerEnvelopeWave1bTargetLowerSlotHeightV1 = 405;
 const double _runnerEnvelopeWave1bTargetLowerSlotShareV1 = 0.50;
 const double _runnerEnvelopeWave1bMaxLowerSlotShareV1 = 0.54;
+const double _runnerShortAnswerEnvelopeMinLowerSlotHeightV1 = 300;
+const double _runnerShortAnswerEnvelopeTargetLowerSlotHeightV1 = 320;
+const double _runnerShortAnswerEnvelopeMaxLowerSlotShareV1 = 0.47;
 const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
 const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
@@ -8760,6 +8776,22 @@ String _compactAnswerListPressureReasonV1(
     return _compactAnswerListTableDockPressureReasonV1;
   }
   return _compactAnswerListNoPressureReasonV1;
+}
+
+bool _usesShortSafeCompactAnswerListEnvelopeV1(
+  BuildContext context, {
+  required List<Act0RunnerOptionV1> options,
+}) {
+  if (options.length != 4) {
+    return false;
+  }
+  return options.every((option) {
+    final label = act0RuntimeLocalizedOptionLabelV1(
+      context,
+      option.label,
+    ).trim();
+    return option.amountLabel.trim().isEmpty && label.length <= 36;
+  });
 }
 
 bool _answerListProfileNeedsProtectedTableV1(
