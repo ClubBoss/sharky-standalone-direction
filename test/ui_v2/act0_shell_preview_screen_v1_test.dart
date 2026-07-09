@@ -78,6 +78,12 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
+    expect(
+      find.text(
+        'Read the legal actions first so the first real hand is not a guess.',
+      ),
+      findsOneWidget,
+    );
 
     await tester.tap(
       find.descendant(
@@ -90,6 +96,13 @@ void main() {
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_current_mission_card')),
+      findsOneWidget,
+    );
+    expect(find.text('Learn route'), findsOneWidget);
+    expect(
+      find.text(
+        'This lesson teaches one table read: what each legal action means before you choose.',
+      ),
       findsOneWidget,
     );
   });

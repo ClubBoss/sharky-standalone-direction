@@ -1029,109 +1029,109 @@ class _FoundationProofCardV1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Row(
-            children: [
-              Container(
-                width: 34,
-                height: 34,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: _learnV6Cyan.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusMd,
-                  ),
-                  border: Border.all(
-                    color: _learnV6Cyan.withValues(alpha: 0.24),
-                  ),
-                ),
-                child: const Icon(
-                  Icons.account_tree_rounded,
-                  size: 18,
-                  color: _learnV6Cyan,
-                ),
-              ),
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'Foundation map',
-                        ru: 'Базовый путь',
-                      ),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: _learnV6Cyan,
-                        letterSpacing: 0.2,
-                      ),
+            Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: _learnV6Cyan.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusMd,
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'Worlds 1-4 support this lesson.',
-                        ru: 'Миры 1-4 строят первые чтения стола.',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontWeight: FontWeight.w900,
-                        height: 1.12,
-                      ),
+                    border: Border.all(
+                      color: _learnV6Cyan.withValues(alpha: 0.24),
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Wrap(
-            spacing: 7,
-            runSpacing: 7,
-            children: [
-              for (final world in foundationWorlds)
-                _FoundationWorldChipV1(world: world),
-            ],
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  _learnCopyV1(
-                    context,
-                    en: 'Current lesson stays first.',
-                    ru: 'Четыре мира. Одна база.',
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    letterSpacing: 0.1,
+                  child: const Icon(
+                    Icons.account_tree_rounded,
+                    size: 18,
+                    color: _learnV6Cyan,
                   ),
                 ),
-              ),
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Flexible(
-                child: Text(
-                  _learnCopyV1(
-                    context,
-                    en: 'One clear table read at a time.',
-                    ru: 'Начни Том I: одно ясное чтение стола за раз.',
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  textAlign: TextAlign.right,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    letterSpacing: 0.0,
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _learnCopyV1(
+                          context,
+                          en: 'Foundation map',
+                          ru: 'Базовый путь',
+                        ),
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: _learnV6Cyan,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        _learnCopyV1(
+                          context,
+                          en: 'Worlds 1-4 support this lesson.',
+                          ru: 'Миры 1-4 строят первые чтения стола.',
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontWeight: FontWeight.w900,
+                          height: 1.12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Wrap(
+              spacing: 7,
+              runSpacing: 7,
+              children: [
+                for (final world in foundationWorlds)
+                  _FoundationWorldChipV1(world: world),
+              ],
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _learnCopyV1(
+                      context,
+                      en: 'Current lesson stays first.',
+                      ru: 'Четыре мира. Одна база.',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      letterSpacing: 0.1,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Flexible(
+                  child: Text(
+                    _learnCopyV1(
+                      context,
+                      en: 'One clear table read at a time.',
+                      ru: 'Начни Том I: одно ясное чтение стола за раз.',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    textAlign: TextAlign.right,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      letterSpacing: 0.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -3650,8 +3650,10 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         child: Text(
                           _learnCopyV1(
                             context,
-                            en: detailMode ? 'Lesson focus' : 'Now',
-                            ru: detailMode ? 'Фокус урока' : 'Сейчас',
+                            en: detailMode ? 'Lesson read' : 'Learn route',
+                            ru: detailMode
+                                ? 'Чтение урока'
+                                : 'Маршрут обучения',
                           ),
                           style: Act0ShellTokensV1.label.copyWith(
                             color: _learnV6Cyan,
@@ -3661,16 +3663,25 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        _learnCopyV1(
-                          context,
-                          en: detailMode ? 'Lesson detail' : 'Current lesson',
-                          ru: detailMode ? 'Детали урока' : 'Текущий урок',
-                        ),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          letterSpacing: 0,
-                          fontSize: 10.0,
+                      Flexible(
+                        child: Text(
+                          _learnCopyV1(
+                            context,
+                            en: detailMode
+                                ? 'What this teaches'
+                                : 'Current table read',
+                            ru: detailMode
+                                ? 'Что это учит'
+                                : 'Текущее чтение стола',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.textMuted,
+                            letterSpacing: 0,
+                            fontSize: 10.0,
+                          ),
                         ),
                       ),
                     ],
@@ -3730,35 +3741,33 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                       ),
                     ),
                     child: KeyedSubtree(
-                      key: const Key(
-                        'act0_shell_current_mission_step_band',
-                      ),
+                      key: const Key('act0_shell_current_mission_step_band'),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                        Text(
-                          _learnCopyV1(
-                            context,
-                            en: 'Current step · $stepIndex of $totalSteps',
-                            ru: 'Текущий шаг · $stepIndex из $totalSteps',
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Current step · $stepIndex of $totalSteps',
+                              ru: 'Текущий шаг · $stepIndex из $totalSteps',
+                            ),
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: _learnV6Cyan,
+                              letterSpacing: 0,
+                              fontSize: 9.4,
+                            ),
                           ),
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: _learnV6Cyan,
-                            letterSpacing: 0,
-                            fontSize: 9.4,
+                          const SizedBox(height: 3),
+                          Text(
+                            taskTitle,
+                            style: Act0ShellTokensV1.body.copyWith(
+                              color: Act0ShellTokensV1.text,
+                              fontWeight: FontWeight.w800,
+                              height: 1.12,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          taskTitle,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontWeight: FontWeight.w800,
-                            height: 1.12,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
                         ],
                       ),
                     ),
@@ -5712,6 +5721,13 @@ String _currentMissionSupportCopyV1({
       ru: 'Узнай, что идет в банк, а что остается у игрока.',
     );
   }
+  if (lesson.lessonId == 'fold_check_call_raise') {
+    return _learnCopyV1(
+      context,
+      en: 'This lesson teaches one table read: what each legal action means before you choose.',
+      ru: 'Этот урок учит одному чтению стола: что значит каждое доступное действие перед выбором.',
+    );
+  }
   return _selectedLessonGuidanceV1(
     context: context,
     lesson: lesson,
@@ -5734,6 +5750,14 @@ String _selectedLessonGuidanceV1({
       nextTaskSummary.isEmpty || nextTaskSummary == nextTaskTitle
       ? null
       : nextTaskSummary;
+
+  if (lesson.lessonId == 'fold_check_call_raise') {
+    return _learnCopyV1(
+      context,
+      en: 'Lesson read: legal actions first, then choose without guessing.',
+      ru: 'Чтение урока: сначала доступные действия, потом выбор без угадывания.',
+    );
+  }
 
   if (lesson.state == Act0LessonStateV1.current) {
     return safeSummary == null

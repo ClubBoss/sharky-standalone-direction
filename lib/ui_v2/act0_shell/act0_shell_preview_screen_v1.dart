@@ -6029,11 +6029,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? _copyV1(en: 'Start here', ru: 'Начни здесь')
           : _copyV1(en: 'Next', ru: 'Дальше'),
       title: _localizedLessonTitleV1(selectedLesson),
-      subtitle: _localizedLessonSubtitleV1(selectedLesson),
+      subtitle: _copyV1(
+        en: 'Read the legal actions first so the first real hand is not a guess.',
+        ru: 'Сначала прочитай доступные действия, чтобы первая реальная раздача не была угадайкой.',
+      ),
       ctaLabel: _copyV1(en: 'Continue', ru: 'Продолжить'),
       hint: _copyV1(
-        en: 'Continue this lesson now.',
-        ru: 'Продолжи этот урок сейчас.',
+        en: 'Read the legal actions first so the first real hand is not a guess.',
+        ru: 'Сначала прочитай доступные действия, чтобы первая реальная раздача не была угадайкой.',
       ),
       outcome: nextLesson == null
           ? _copyV1(
