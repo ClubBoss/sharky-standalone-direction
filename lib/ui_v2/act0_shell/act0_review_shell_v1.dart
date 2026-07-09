@@ -711,17 +711,221 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
         child: content,
       );
     }
+    return const _ReviewEmptyLearningEnginePreviewV1();
+  }
+}
+
+class _ReviewEmptyLearningEnginePreviewV1 extends StatelessWidget {
+  const _ReviewEmptyLearningEnginePreviewV1();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_review_empty_value_preview'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.62),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            Act0ShellTokensV1.info.withValues(alpha: 0.09),
+            Act0ShellTokensV1.surface2.withValues(alpha: 0.76),
+          ],
+        ),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
         border: Border.all(
-          color: Act0ShellTokensV1.info.withValues(alpha: 0.20),
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.24),
         ),
       ),
-      child: content,
+      child: Column(
+        key: const Key('act0_shell_review_empty_learning_engine_preview'),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'HOW REVIEW WORKS',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+              fontSize: 11,
+              letterSpacing: 1.1,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            'One real lesson miss becomes one focused return path.',
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 7),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: const [
+              _ReviewEmptyLoopTagV1(label: 'focused rep'),
+              _ReviewEmptyLoopTagV1(label: 'proof note'),
+            ],
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          const _ReviewEmptyLoopStepV1(
+            icon: Icons.visibility_off_rounded,
+            label: 'MISS',
+            detail: 'Review saves the exact clue after a real lesson miss.',
+            tone: Color(0xFF90A4C7),
+          ),
+          const _ReviewEmptyLoopConnectorV1(),
+          const _ReviewEmptyLoopStepV1(
+            icon: Icons.build_circle_outlined,
+            label: 'REPAIR',
+            detail: 'A short rep puts that same clue back in focus.',
+            tone: Act0ShellTokensV1.gold,
+          ),
+          const _ReviewEmptyLoopConnectorV1(),
+          const _ReviewEmptyLoopStepV1(
+            icon: Icons.verified_outlined,
+            label: 'PROOF',
+            detail: 'A proof note appears only after a real follow-up read.',
+            tone: Act0VisualCanonV1.greenTable,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Container(
+            key: const Key('act0_shell_review_empty_sharky_coach_panel'),
+            padding: const EdgeInsets.fromLTRB(9, 8, 11, 8),
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.surface3.withValues(alpha: 0.54),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+              border: Border.all(
+                color: Act0ShellTokensV1.info.withValues(alpha: 0.16),
+              ),
+            ),
+            child: Row(
+              children: [
+                const Act0SharkyPresenceMascotV1(
+                  mood: Act0SharkyMoodV1.thinking,
+                  tone: Act0ShellTokensV1.info,
+                  size: 42,
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Expanded(
+                  child: Text(
+                    'After a lesson, Sharky brings back the exact cue you missed.',
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      height: 1.18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewEmptyLoopTagV1 extends StatelessWidget {
+  const _ReviewEmptyLoopTagV1({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface3.withValues(alpha: 0.50),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.18),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          label,
+          style: Act0ShellTokensV1.muted.copyWith(
+            color: Act0ShellTokensV1.textMuted,
+            fontSize: 10.5,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ReviewEmptyLoopStepV1 extends StatelessWidget {
+  const _ReviewEmptyLoopStepV1({
+    required this.icon,
+    required this.label,
+    required this.detail,
+    required this.tone,
+  });
+
+  final IconData icon;
+  final String label;
+  final String detail;
+  final Color tone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: tone.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            border: Border.all(color: tone.withValues(alpha: 0.28)),
+          ),
+          child: Icon(icon, size: 17, color: tone),
+        ),
+        const SizedBox(width: Act0ShellTokensV1.gapSm),
+        SizedBox(
+          width: 54,
+          child: Text(
+            label,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: tone,
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.8,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            detail,
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontSize: 11.2,
+              height: 1.12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewEmptyLoopConnectorV1 extends StatelessWidget {
+  const _ReviewEmptyLoopConnectorV1();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 8,
+      margin: const EdgeInsets.only(left: 17),
+      color: Act0ShellTokensV1.info.withValues(alpha: 0.28),
     );
   }
 }
