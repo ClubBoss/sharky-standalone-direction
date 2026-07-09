@@ -1126,12 +1126,14 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
         'Volume I can be reviewed here; no next-world promise is made.',
   ),
   MicroTaskStep(
-    prompt:
-        'Volume I is complete. Later worlds stay locked. Keep sharpening in Review.',
-    hint: 'Review stays open. Tap Small Blind to keep this clue sharp.',
+    prompt: 'Volume I complete',
+    hint:
+        'Review stays open. Tap Small Blind to keep this clue sharp.',
     expectedSeatIds: <String>['sb'],
-    contextText: 'Volume I is complete. Review stays open for real misses.',
-    tradeoffText: 'Later worlds remain locked.',
+    contextText:
+        'You can now slow down and read the table before choosing.',
+    tradeoffText:
+        'Review stays open. Later worlds stay locked for now.',
     consequenceText: 'Review close: +8 chips. Unlock assumption: -6 chips.',
     insightText: 'Keep the Volume I clues sharp in Review.',
   ),

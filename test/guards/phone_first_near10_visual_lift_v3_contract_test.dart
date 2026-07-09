@@ -11,12 +11,12 @@ void main() {
     expect(
       source,
       contains(
-        'Volume I is complete. Later worlds stay locked. Keep sharpening in Review.',
+        'Review stays open. Later worlds stay locked for now.',
       ),
     );
     expect(
       source,
-      contains('Volume I is complete. Review stays open for real misses.'),
+      contains('You can now slow down and read the table before choosing.'),
     );
     expect(
       source,

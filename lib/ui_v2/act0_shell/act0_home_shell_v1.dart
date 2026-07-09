@@ -752,16 +752,20 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
     return KeyedSubtree(
       key: const Key('act0_shell_home_daily_plan_card'),
       child: Container(
-        key: const Key('act0_shell_home_focus_checklist'),
-        padding: const EdgeInsets.fromLTRB(14, 13, 14, 14),
-        decoration: Act0ShellTokensV1.surfaceDecoration(
-          color: Act0ShellTokensV1.surface.withOpacity(0.72),
-          borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.16),
-          glow: false,
+        key: const Key('act0_shell_home_quiet_sequence_surface'),
+        padding: const EdgeInsets.fromLTRB(2, 14, 2, 4),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
+            ),
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: KeyedSubtree(
+          key: const Key('act0_shell_home_focus_checklist'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Row(
               children: [
                 Expanded(
@@ -771,26 +775,24 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                     style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 16),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.surface2.withOpacity(0.74),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPill,
-                    ),
-                    border: Border.all(color: Act0ShellTokensV1.border),
-                  ),
-                  child: Text(
-                    localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                    style: Act0ShellTokensV1.label.copyWith(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 13,
                       color: Act0ShellTokensV1.textDim,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
                     ),
-                  ),
+                    const SizedBox(width: 4),
+                    Text(
+                      localeIsRu ? 'Следующая раздача' : 'Next useful hand',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.textDim,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -836,7 +838,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
               ),
               if (i + 1 < rows.length) const SizedBox(height: 10),
             ],
-          ],
+              ],
+            ),
         ),
       ),
     );

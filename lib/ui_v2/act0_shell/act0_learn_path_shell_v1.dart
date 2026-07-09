@@ -1015,30 +1015,20 @@ class _FoundationProofCardV1 extends StatelessWidget {
     }
     return Container(
       key: const Key('act0_shell_foundation_proof'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      padding: const EdgeInsets.fromLTRB(2, 13, 2, 11),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: _learnV6Cyan.withValues(alpha: 0.22)),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            _learnV6Cyan.withValues(alpha: 0.10),
-            _learnV6Blue.withValues(alpha: 0.06),
-            _learnV6Deep,
-          ],
-        ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: _learnV6Cyan.withValues(alpha: 0.07),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+        border: Border(
+          top: BorderSide(color: _learnV6Cyan.withValues(alpha: 0.14)),
+          bottom: BorderSide(
+            color: Act0ShellTokensV1.border.withValues(alpha: 0.52),
           ),
-        ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: KeyedSubtree(
+        key: const Key('act0_shell_foundation_quiet_support'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             children: [
               Container(
@@ -1142,7 +1132,8 @@ class _FoundationProofCardV1 extends StatelessWidget {
               ),
             ],
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -3728,33 +3719,23 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                   Container(
                     key: const Key('act0_shell_current_mission_step_card'),
                     width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: <Color>[
-                          _learnV6Blue.withValues(alpha: 0.16),
-                          _learnV6Navy.withValues(alpha: 0.72),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusMd,
-                      ),
-                      border: Border.all(
-                        color: _learnV6Cyan.withValues(alpha: 0.16),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: _learnV6Blue.withValues(alpha: 0.08),
-                          blurRadius: 14,
-                          offset: const Offset(0, 3),
+                      color: _learnV6Navy.withValues(alpha: 0.42),
+                      border: Border(
+                        left: BorderSide(
+                          color: _learnV6Cyan.withValues(alpha: 0.72),
+                          width: 3,
                         ),
-                      ],
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                    child: KeyedSubtree(
+                      key: const Key(
+                        'act0_shell_current_mission_step_band',
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                         Text(
                           _learnCopyV1(
                             context,
@@ -3778,7 +3759,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),

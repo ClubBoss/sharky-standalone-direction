@@ -1090,9 +1090,11 @@ void main() {
       ],
       learnerPrompt: step.prompt,
       choiceLabels: <String, String>{
-	        expected: expected == 'btn'
-	            ? 'Start the keep-sharp review.'
-	            : 'Stay in Volume I review.',
+        expected: taskIndex == 3
+            ? 'Volume I complete'
+            : expected == 'btn'
+            ? 'Start the keep-sharp review.'
+            : 'Stay in Volume I review.',
         'expect_w13': 'Expect W13 to open now.',
         'expect_new_world': 'Treat this as a new world.',
         'skip_review': 'Skip the review state.',

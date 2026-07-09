@@ -5034,6 +5034,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isWrong
         ? const Key('act0_shell_feedback_missed_cue_state')
         : const Key('act0_shell_feedback_proof_state');
+    final companionRoleLabel = isRepairFocusState || isSuboptimal
+        ? 'Repair coach'
+        : isWrong
+        ? 'Missed cue'
+        : 'Proof confirmed';
     return _ProofMotionRevealV1(
       key: const Key('act0_shell_feedback_card_motion_reveal'),
       child: KeyedSubtree(
@@ -5114,18 +5119,23 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         const SizedBox(height: 1),
                       ],
                       if (reactionLine.isNotEmpty)
-                        Text(
-                          reactionLine,
+                        KeyedSubtree(
+                          key: const Key(
+                            'act0_shell_feedback_companion_role',
+                          ),
+                          child: Text(
+                            '$companionRoleLabel · $reactionLine',
                             key: const Key(
                               'act0_shell_sharky_outcome_reaction',
                             ),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.muted.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                            fontSize: refined ? 10.0 : 10.5,
-                            height: 1.06,
-                            fontWeight: FontWeight.w700,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: Act0ShellTokensV1.muted.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                              fontSize: refined ? 10.0 : 10.5,
+                              height: 1.06,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                     ],
@@ -6229,15 +6239,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               Act0ShellTokensV1.radiusOverlay,
             ),
             border: Border.all(color: Act0ShellTokensV1.border),
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Act0ShellTokensV1.shadowSoft,
-                blurRadius: 22,
-                offset: Offset(0, 12),
-              ),
-            ],
           ),
           child: Column(
+            key: const Key('act0_shell_session_summary_victory_lap'),
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -6285,8 +6289,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         Act0ShellTokensV1.radiusPanel,
                       ),
                       border: Border.all(
-                        color: celebrateTone.withValues(alpha: 0.44),
-                        width: 1.2,
+                        color: celebrateTone.withValues(alpha: 0.28),
                       ),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
@@ -6371,7 +6374,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                       summary.milestoneTitle,
                           key: const Key('act0_shell_block_summary_title'),
                           style: Act0ShellTokensV1.screenTitle.copyWith(
-                              fontSize: payoffHero == null ? 28 : 32,
+                              fontSize: payoffHero == null ? 30 : 34,
                               height: 1.0,
                             ),
                           ),
@@ -12132,6 +12135,13 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
           ? null
           : Key('act0_shell_poker_action_button_${actionVisual.id}'),
       child: Material(
+        key: actionVisual == null
+            ? null
+            : Key(
+                'act0_shell_poker_action_tactile_surface_${option.id}',
+              ),
+        elevation: actionVisual == null ? 0 : (selected ? 5 : 2),
+        shadowColor: markerTone.withValues(alpha: selected ? 0.34 : 0.18),
         color: selected
             ? tone.withValues(alpha: 0.16)
             : actionVisual == null
