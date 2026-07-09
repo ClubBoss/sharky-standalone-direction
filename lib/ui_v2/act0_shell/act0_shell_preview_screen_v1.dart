@@ -6557,11 +6557,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _copyV1(en: 'Practice the $clue', ru: 'Закрепи подсказку $clue'),
       subtitle: isExactReplay
           ? _copyV1(
-              en: 'Train the exact spot again.',
+              en: 'Current useful rep: train the exact table clue again.',
               ru: 'Повтори именно этот спот ещё раз.',
             )
           : _copyV1(
-              en: 'One same-clue rep will help lock this in.',
+              en: 'Current useful rep: one same-clue hand before daily reps.',
               ru: 'Один повтор с той же подсказкой поможет закрепить её.',
             ),
       reasonLabel: _practiceRepairReturnReasonLineV1(receipt.missedSignalLabel),
@@ -6580,7 +6580,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Закрепление ремонта',
       ),
       screenSubtitle: _copyV1(
-        en: 'Practice reinforces the next useful hand. Review still owns deeper patterns.',
+        en: 'Current useful rep first. Locked inventory stays secondary until the route opens it.',
         ru: 'Практика закрепляет следующую полезную руку. Глубокие паттерны остаются в Разборе.',
       ),
     );

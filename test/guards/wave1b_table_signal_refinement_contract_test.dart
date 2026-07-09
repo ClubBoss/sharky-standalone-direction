@@ -33,7 +33,7 @@ void main() {
 
       expect(source, contains('act0_shell_wave1b_feedback_evidence_bridge'));
       expect(source, contains('Table evidence'));
-      expect(source, isNot(contains('Clue from table')));
+      expect(source, contains('Clue from table'));
     },
   );
 

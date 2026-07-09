@@ -578,6 +578,51 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Container(
+            key: const Key('act0_shell_wave2_review_active_clue_preview'),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: Act0ShellTokensV1.gold.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+              border: Border.all(
+                color: Act0ShellTokensV1.gold.withOpacity(0.22),
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.visibility_rounded,
+                  color: Act0ShellTokensV1.gold,
+                  size: 16,
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Text(
+                  'Current clue',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.gold,
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                Expanded(
+                  child: Text(
+                    patternFocus.isEmpty ? mistake.title : patternFocus,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           if (patternFocus.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Container(
@@ -696,8 +741,8 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
             const SizedBox(width: Act0ShellTokensV1.gapSm),
             const Expanded(
               child: _ReviewBenchSlotV1(
-                label: 'PROOF',
-                value: 'proof note',
+                label: 'RESULT',
+                value: 'saved read',
                 filled: false,
               ),
             ),
@@ -764,7 +809,7 @@ class _ReviewEmptyLearningEnginePreviewV1 extends StatelessWidget {
             runSpacing: 6,
             children: const [
               _ReviewEmptyLoopTagV1(label: 'focused rep'),
-              _ReviewEmptyLoopTagV1(label: 'proof note'),
+              _ReviewEmptyLoopTagV1(label: 'saved read'),
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -784,8 +829,8 @@ class _ReviewEmptyLearningEnginePreviewV1 extends StatelessWidget {
           const _ReviewEmptyLoopConnectorV1(),
           const _ReviewEmptyLoopStepV1(
             icon: Icons.verified_outlined,
-            label: 'PROOF',
-            detail: 'A proof note appears only after a real follow-up read.',
+            label: 'RESULT',
+            detail: 'A saved read appears only after a real follow-up read.',
             tone: Act0VisualCanonV1.greenTable,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),

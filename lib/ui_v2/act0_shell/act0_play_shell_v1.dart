@@ -318,6 +318,13 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
         ),
         const SizedBox(height: 12),
+        if (recommendedRepairGroup) ...[
+          _PracticeCurrentRepValueV1(
+            title: 'Current useful rep',
+            body: widget.screenSubtitle,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+        ],
         if (hasPrimaryRepairQueue) ...[
           _PracticeRepairQueueSectionV1(
             consumer: widget.repairQueueConsumer,
@@ -460,6 +467,64 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       'showdown' => 3,
       _ => 20 + _topicSortIndex(group),
     };
+  }
+}
+
+class _PracticeCurrentRepValueV1 extends StatelessWidget {
+  const _PracticeCurrentRepValueV1({required this.title, required this.body});
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_wave2_practice_current_rep_value'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.visibility_rounded,
+            color: Act0ShellTokensV1.gold,
+            size: 18,
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.gold,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  body,
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    height: 1.12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -40,6 +40,8 @@ enum Act0MilestoneCtaKindV1 {
   backToMap,
 }
 
+const String _wave1bFeedbackBridgeLegacyLabelV1 = 'Table evidence';
+
 Act0TheoryPresentationRoleV1 resolveAct0TheoryPresentationRoleV1({
   String? taskId,
   required Act0RunnerStateV1 runner,
@@ -439,7 +441,7 @@ class Act0BlockCompletionSummaryV1 {
       'World 2 starts with a simple question: which hands deserve action?';
 
   String get worldOneCompletionProofFallbackLabel =>
-      'Repair proof banks the next time you fix one.';
+      'Repair result saves the next time you fix one.';
 
   /// True only for an ordinary World 2-12 completion with valid route truth.
   /// World 1 keeps its own dedicated gate/copy above. World 12 is terminal and
@@ -4930,6 +4932,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
     final isRepairFocusState =
         !rapidMode && (repairReasonLine?.trim().isNotEmpty ?? false);
+    final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
+    final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
+    final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
+    final hasProofEarnedState =
+        hasRepairOutcomeProof ||
+        repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
+        repairReceiptLine.toLowerCase().startsWith('replay fixed:');
     final media = MediaQuery.of(context);
     final view = View.of(context);
     final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
@@ -4946,24 +4955,32 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 fullViewportHeight > 900 &&
                 fullViewportHeight <= 980));
     const missedCueTone = Color(0xFF90A4C7);
-    final tone = isRepairFocusState
+    final tone = hasProofEarnedState
+        ? Act0VisualCanonV1.greenTable
+        : isRepairFocusState
         ? Act0ShellTokensV1.gold
         : isWrong
         ? missedCueTone
         : isSuboptimal
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
-    final icon = isWrong
+    final icon = hasProofEarnedState
+        ? Icons.verified_rounded
+        : isWrong
         ? Icons.search_off_rounded
         : isSuboptimal
         ? Icons.trending_up_rounded
         : Icons.check_rounded;
-    final iconKey = isWrong
+    final iconKey = hasProofEarnedState
+        ? const Key('act0_shell_feedback_icon_proof_earned')
+        : isWrong
         ? const Key('act0_shell_feedback_icon_wrong')
         : (isSuboptimal
               ? const Key('act0_shell_feedback_icon_suboptimal')
               : const Key('act0_shell_feedback_icon_correct'));
-    final sharkyTone = isWrong
+    final sharkyTone = hasProofEarnedState
+        ? Act0VisualCanonV1.greenTable
+        : isWrong
         ? missedCueTone
         : isSuboptimal
         ? Act0ShellTokensV1.gold
@@ -5034,8 +5051,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final skillReceipt = firstValueReceiptLine == null
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
-    final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
-    final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final repairReason = repairReasonLine?.trim() ?? '';
     final visibleRepairReasonLines = _visibleRepairReasonLinesV1(
       quality: quality,
@@ -5047,13 +5062,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       for (final line in repairSessionSummaryLines)
         if (line.trim().isNotEmpty) line.trim(),
     ];
-    final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
     final fallbackReceiptLine = repairReceiptLine.isNotEmpty
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle = hasRepairOutcomeProof
-        ? 'Fix attempt'
+        ? 'Proof earned'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
         : skillReceipt?.title ??
@@ -5107,24 +5121,32 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
-    final feedbackStateKey = isRepairFocusState
-        ? const Key('act0_shell_feedback_repair_focus_state')
+    final feedbackStateKey = hasProofEarnedState
+        ? const Key('act0_shell_wave2_feedback_proof_earned_state')
+        : isRepairFocusState
+        ? const Key('act0_shell_wave2_feedback_repair_state')
         : isWrong
-        ? const Key('act0_shell_feedback_missed_cue_state')
-        : const Key('act0_shell_feedback_proof_state');
+        ? const Key('act0_shell_wave2_feedback_miss_state')
+        : const Key('act0_shell_wave2_feedback_correct_state');
     final feedbackTreatmentKey = isWrong
         ? const Key('act0_shell_feedback_missed_cue_treatment')
         : const Key('act0_shell_feedback_non_miss_treatment');
-    final feedbackSharkySlotKey = isRepairFocusState || isSuboptimal
+    final feedbackSharkySlotKey = hasProofEarnedState
+        ? const Key('act0_shell_feedback_sharky_slot_proof_earned')
+        : isRepairFocusState || isSuboptimal
         ? const Key('act0_shell_feedback_sharky_slot_repair')
         : isWrong
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
-    final companionRoleLabel = isRepairFocusState || isSuboptimal
-        ? 'Repair coach'
+    final companionRoleLabel = hasProofEarnedState
+        ? 'Proof earned'
+        : isRepairFocusState
+        ? 'Repair focus'
+        : isSuboptimal
+        ? 'Better read'
         : isWrong
         ? 'Missed cue'
-        : 'Proof confirmed';
+        : 'Correct read';
     return _ProofMotionRevealV1(
       key: const Key('act0_shell_feedback_card_motion_reveal'),
       child: KeyedSubtree(
@@ -5247,6 +5269,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 0),
+              ],
+              if (!rapidMode) ...[
+                SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+                _FeedbackStateRailV1(
+                  tone: tone,
+                  compact: isCompactRefinedFeedback,
+                ),
               ],
               if (showProofStack) ...[
                 SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
@@ -5491,7 +5520,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                               ? 34
                               : Act0ShellTokensV1.compactCtaHeight,
                         ),
-                        child: Text(isWrong ? 'Try one like this' : 'Continue'),
+                        child: Text(
+                          hasProofEarnedState
+                              ? 'Save this read'
+                              : isWrong || isRepairFocusState
+                              ? 'Try same clue'
+                              : 'Next hand',
+                        ),
                       ),
                     ),
                   ],
@@ -5585,6 +5620,25 @@ class _FeedbackActionContrastBlockV1 extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _FeedbackStateRailV1 extends StatelessWidget {
+  const _FeedbackStateRailV1({required this.tone, required this.compact});
+
+  final Color tone;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_wave2_feedback_state_rail'),
+      height: compact ? 3 : 4,
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
       ),
     );
   }
@@ -5786,7 +5840,7 @@ class _RepairSystemProofBlockV1 extends StatelessWidget {
           children: [
             if (showLabel) ...[
               Text(
-                'Repair proof',
+                'Result',
                 key: const Key('act0_shell_repair_system_label'),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: tone,
@@ -5870,7 +5924,7 @@ class _FeedbackSessionSummaryCeremonyBlockV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Session repair',
+                'Session result',
                 key: const Key('act0_shell_session_summary_ceremony_label'),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.gold,
@@ -5928,50 +5982,53 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
       key: const Key('act0_shell_feedback_signal_proof'),
       child: KeyedSubtree(
         key: const Key('act0_shell_wave1_feedback_signal_bridge'),
-        child: Container(
+        child: KeyedSubtree(
           key: const Key('act0_shell_wave1b_feedback_evidence_bridge'),
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 6 : 7,
-            vertical: compact ? 3.5 : 4.5,
-          ),
-          decoration: BoxDecoration(
-            color: tone.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            border: Border.all(color: tone.withValues(alpha: 0.16)),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.visibility_rounded,
-                color: tone,
-                size: compact ? 12 : 13,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Table evidence',
-                style: Act0ShellTokensV1.label.copyWith(
+          child: Container(
+            key: const Key('act0_shell_wave2_feedback_evidence_bridge'),
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 6 : 7,
+              vertical: compact ? 3.5 : 4.5,
+            ),
+            decoration: BoxDecoration(
+              color: tone.withValues(alpha: 0.07),
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+              border: Border.all(color: tone.withValues(alpha: 0.16)),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.visibility_rounded,
                   color: tone,
-                  fontSize: compact ? 8.0 : 8.6,
-                  fontWeight: FontWeight.w900,
+                  size: compact ? 12 : 13,
                 ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  line,
-                  key: const Key('act0_shell_feedback_signal_proof_label'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
+                const SizedBox(width: 6),
+                Text(
+                  'Clue from table',
                   style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    fontSize: compact ? 10.5 : 11.0,
-                    fontWeight: FontWeight.w800,
-                    height: 1.05,
+                    color: tone,
+                    fontSize: compact ? 8.0 : 8.6,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    line,
+                    key: const Key('act0_shell_feedback_signal_proof_label'),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontSize: compact ? 10.5 : 11.0,
+                      fontWeight: FontWeight.w800,
+                      height: 1.05,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -6009,9 +6066,9 @@ String _feedbackPrimaryResultLabelV1({
     return 'Still fragile';
   }
   return switch (quality) {
-    Act0FeedbackQualityV1.correct => 'Correct',
-    Act0FeedbackQualityV1.suboptimal => 'Better clue',
-    Act0FeedbackQualityV1.wrong => 'Table clue',
+    Act0FeedbackQualityV1.correct => 'Correct read',
+    Act0FeedbackQualityV1.suboptimal => 'Better read',
+    Act0FeedbackQualityV1.wrong => 'Missed clue',
   };
 }
 

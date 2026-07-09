@@ -142,9 +142,9 @@ void main() {
       expect(find.text('MISS'), findsOneWidget);
       expect(find.text('No-bet-yet clue'), findsOneWidget);
       expect(find.text('REPAIR'), findsOneWidget);
-      expect(find.text('PROOF'), findsOneWidget);
+      expect(find.text('RESULT'), findsOneWidget);
       expect(find.text('focused rep'), findsOneWidget);
-      expect(find.text('proof note'), findsOneWidget);
+      expect(find.text('saved read'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_review_bench_footer_content')),
         findsOneWidget,
@@ -631,9 +631,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('REPAIR'), findsOneWidget);
-    expect(find.text('PROOF'), findsOneWidget);
+    expect(find.text('RESULT'), findsOneWidget);
     expect(find.text('focused rep'), findsOneWidget);
-    expect(find.text('proof note'), findsOneWidget);
+    expect(find.text('saved read'), findsOneWidget);
     expect(find.text('Open Learn'), findsOneWidget);
     await tester.tap(find.text('Open Learn'));
     expect(openedLearn, isTrue);
