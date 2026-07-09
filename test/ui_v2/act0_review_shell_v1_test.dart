@@ -13,6 +13,7 @@ void main() {
     List<Act0ReviewMistakeHistoryItemV1> historyItems =
         const <Act0ReviewMistakeHistoryItemV1>[],
     ValueChanged<Act0MistakeCardV1>? onFixMistake,
+    VoidCallback? onOpenLearn,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -23,6 +24,7 @@ void main() {
           onFixMistake: onFixMistake ?? (_) {},
           onReplayFixedMistake: (_) {},
           mistakeHistoryItems: historyItems,
+          onOpenLearn: onOpenLearn,
         ),
       ),
     );
@@ -599,6 +601,7 @@ void main() {
   testWidgets('Review shows an honest empty state without fake past spots', (
     tester,
   ) async {
+    var openedLearn = false;
     await tester.pumpWidget(
       reviewHost(
         const Act0ReviewStateV1(
@@ -610,6 +613,9 @@ void main() {
           chosenLabel: 'Bet',
           betterLabel: 'Check',
         ),
+        onOpenLearn: () {
+          openedLearn = true;
+        },
       ),
     );
     await tester.pumpAndSettle();
@@ -628,6 +634,9 @@ void main() {
     expect(find.text('PROOF'), findsOneWidget);
     expect(find.text('focused rep'), findsOneWidget);
     expect(find.text('proof note'), findsOneWidget);
+    expect(find.text('Open Learn'), findsOneWidget);
+    await tester.tap(find.text('Open Learn'));
+    expect(openedLearn, isTrue);
     expect(
       find.text(
         'Nothing else is due. Misses land here the moment they happen.',
@@ -651,7 +660,10 @@ void main() {
       find.byKey(const Key('act0_shell_review_fix_next_cta')),
       findsNothing,
     );
-    expect(find.byType(FilledButton), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_review_empty_open_learn_cta')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Review renders persisted mistake history as read-only notes', (

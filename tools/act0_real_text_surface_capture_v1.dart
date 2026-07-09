@@ -74,6 +74,7 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
     _CaptureSurfaceV1('learn', 'firstWeekLearn'),
     _CaptureSurfaceV1('learn_detail', 'firstWeekLearn'),
     _CaptureSurfaceV1('practice', 'practice'),
+    _CaptureSurfaceV1('review_empty', 'reviewEmpty'),
     _CaptureSurfaceV1('review', 'firstWeekReview'),
     _CaptureSurfaceV1('profile', 'firstWeekProfile'),
   ],
@@ -518,6 +519,12 @@ String _evidenceGitStatusV1() {
       .where((line) => line.isNotEmpty)
       .where((line) => !line.startsWith('?? output/screen_review/'))
       .where((line) => line != '?? output/screen_review/')
+      .where((line) => !line.startsWith('?? output/design_review/'))
+      .where((line) => line != '?? output/design_review/')
+      .where(
+        (line) =>
+            !line.endsWith('macos/Flutter/GeneratedPluginRegistrant.swift'),
+      )
       .toList(growable: false);
   if (meaningfulLines.isEmpty) {
     return 'clean_or_output_only';
@@ -579,6 +586,14 @@ Map<String, Object?> duplicateHashPolicyV1(List<Map<String, Object?>> entries) {
   const intentionalSameStateAllowlist = <String, String>{
     'repair_focus|session_repair':
         'Both labels intentionally render the same wrong-outcome repair proof state until a future product-specific session-repair fixture is admitted.',
+    'review.scroll_01_top|review.scroll_02_mid|review.scroll_03_bottom':
+        'The current Review bench fits inside one viewport, so deterministic top, middle, and bottom scroll requests resolve to the same fixed-height image.',
+    'home.scroll_02_mid|home.scroll_03_bottom':
+        'The tablet Home surface has one bounded maximum scroll offset, so middle and bottom requests clamp to the same final image.',
+    'practice.scroll_01_top|practice.scroll_02_mid|practice.scroll_03_bottom':
+        'The current tablet Practice hub fits inside one viewport, so all deterministic scroll requests resolve to the same image.',
+    'session_summary.scroll_02_mid|session_summary.scroll_03_bottom':
+        'The wider tablet Session Summary reaches one bounded maximum scroll offset, so middle and bottom requests clamp to the same final image.',
   };
   final byViewport = <String, Map<String, List<String>>>{};
   for (final entry in entries) {

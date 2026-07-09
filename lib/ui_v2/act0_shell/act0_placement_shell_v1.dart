@@ -1497,7 +1497,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
           FilledButton(
             key: const Key('act0_shell_placement_start_recommended'),
             onPressed: onStartRecommended,
-            style: Act0ShellTokensV1.primaryButtonStyle(),
+            style: Act0ShellTokensV1.premiumActionButtonStyle(),
             child: Text(
               _placementAtomV1(
                 context,
@@ -1573,7 +1573,7 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
             FilledButton(
               key: buttonKey,
               onPressed: onPressed,
-              style: Act0ShellTokensV1.primaryButtonStyle(),
+              style: Act0ShellTokensV1.premiumActionButtonStyle(),
               child: Text(buttonLabel),
             ),
           ],

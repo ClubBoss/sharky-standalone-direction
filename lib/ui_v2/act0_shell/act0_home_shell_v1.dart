@@ -186,7 +186,7 @@ class Act0HomeShellV1 extends StatelessWidget {
       children: [
         Act0ShellTokensV1.centeredContent(
           context,
-          tabletMaxWidth: 720,
+          tabletMaxWidth: 860,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -926,6 +926,7 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   sessionSummary,
   runnerFirstCorrectFeedback,
   firstWeekHome,
+  reviewEmpty,
   firstWeekReview,
   firstWeekLearn,
   firstWeekProfile,
@@ -1000,6 +1001,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _learningEvidenceRunOrdinalV1 = 0;
   Act0SessionIdentityStateV1 _sessionIdentityStateV1 =
       const Act0SessionIdentityStateV1();
+  bool _debugReviewEmptyV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -2304,6 +2306,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugFirstCorrectFeedbackSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.firstWeekHome:
         _applyDebugFirstWeekHomeSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.reviewEmpty:
+        _applyDebugReviewEmptySurface();
       case Act0ControlledDemoCaptureSurfaceV1.firstWeekReview:
         _applyDebugReviewSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn:
@@ -2358,6 +2362,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairSourceTaskId = null;
     _activePracticeRepairQueueRequestV1 = null;
     _activeRepairResultReceiptLine = null;
+    _debugReviewEmptyV1 = false;
     _activeRepairSessionSummaryLines = const <String>[];
     _practiceCompletionTitle = null;
     _practiceCompletionBody = null;
@@ -2769,6 +2774,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       repairActionLabel: _repairActionLabel(task),
       attempts: 1,
     );
+  }
+
+  void _applyDebugReviewEmptySurface() {
+    _resetDebugSurfaceChrome();
+    _tab = Act0ShellTabV1.review;
+    _debugReviewEmptyV1 = true;
+    _mistakeRecords.clear();
+    _resolvedMistakeTaskIds.clear();
+    _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
+    _reviewResolutionReceiptHistoryV1 =
+        const Act0ReviewResolutionReceiptHistoryV1();
   }
 
   void _applyDebugWorldCompletionSurface() {
@@ -5271,6 +5287,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             pushSessionDrillRecheckLaunchV1(context, item),
                           );
                         },
+                        onOpenLearn: () => setState(() {
+                          _tab = Act0ShellTabV1.learn;
+                        }),
                       ),
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
                         profile: profileState,
@@ -9680,7 +9699,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0ReviewStateV1 _reviewState(Act0ReviewStateV1 base) {
-    final open = _openMistakes().isEmpty
+    final open = _debugReviewEmptyV1
+        ? const <Act0MistakeCardV1>[]
+        : _openMistakes().isEmpty
         ? base.mistakes
               .where(
                 (mistake) =>
@@ -9689,7 +9710,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               )
               .toList()
         : _openMistakes();
-    final fixed = _fixedMistakes().isEmpty
+    final fixed = _debugReviewEmptyV1
+        ? const <Act0MistakeCardV1>[]
+        : _fixedMistakes().isEmpty
         ? base.fixedMistakes
         : _fixedMistakes();
     final state = widget.state ?? Act0ShellStateV1.sample;
@@ -9705,7 +9728,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       selectedWorld: selectedWorld,
       selectedLesson: selectedLesson,
     );
-    final strongSpots = _strongCategories().isEmpty
+    final strongSpots = _debugReviewEmptyV1
+        ? const <String>[]
+        : _strongCategories().isEmpty
         ? base.strongSpots
         : _strongCategories();
     return Act0ReviewStateV1(

@@ -38,6 +38,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
         const <SessionDrillRecheckLaunchQueueItemV1>[],
     this.onStartSessionDrillRecheck,
     this.mistakeHistoryItems = const <Act0ReviewMistakeHistoryItemV1>[],
+    this.onOpenLearn,
   });
 
   final Act0ReviewStateV1 review;
@@ -50,6 +51,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final ValueChanged<SessionDrillRecheckLaunchQueueItemV1>?
   onStartSessionDrillRecheck;
   final List<Act0ReviewMistakeHistoryItemV1> mistakeHistoryItems;
+  final VoidCallback? onOpenLearn;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +166,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
           ...header,
           Act0ShellTokensV1.centeredContent(
             context,
-            tabletMaxWidth: 720,
+            tabletMaxWidth: 860,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -193,7 +195,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     final benchBody = <Widget>[
       ...queueCard,
       if (activeMistake == null && queueCard.isEmpty && !hasPassiveNotes)
-        const _ReviewEmptyRepairCardV1()
+        _ReviewEmptyRepairCardV1(onOpenLearn: onOpenLearn)
       else if (activeMistake != null)
         _ReviewRepairCoachCardV1(
           mistake: activeMistake,
@@ -206,7 +208,10 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final fixedLayout = constraints.maxHeight >= 620;
+        final fixedLayout =
+            constraints.maxHeight >= 620 &&
+            constraints.maxWidth < 700 &&
+            activeMistake != null;
         const topPadding = Act0ShellTokensV1.gapLg;
         final bottomPadding = fixedLayout
             ? Act0ShellTokensV1.gapLg
@@ -215,7 +220,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
             constraints.maxHeight - topPadding - bottomPadding;
         final centeredBench = Act0ShellTokensV1.centeredContent(
           context,
-          tabletMaxWidth: 720,
+          tabletMaxWidth: 860,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [...header, ...benchBody],
@@ -239,7 +244,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
                       const Spacer(),
                       Act0ShellTokensV1.centeredContent(
                         context,
-                        tabletMaxWidth: 720,
+                        tabletMaxWidth: 860,
                         child: const _ReviewBenchFooterV1(),
                       ),
                     ],
@@ -253,7 +258,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
                     Act0ShellTokensV1.centeredContent(
                       context,
-                      tabletMaxWidth: 720,
+                      tabletMaxWidth: 860,
                       child: const _ReviewBenchFooterV1(),
                     ),
                   ],
@@ -440,7 +445,9 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
 }
 
 class _ReviewEmptyRepairCardV1 extends StatelessWidget {
-  const _ReviewEmptyRepairCardV1();
+  const _ReviewEmptyRepairCardV1({this.onOpenLearn});
+
+  final VoidCallback? onOpenLearn;
 
   @override
   Widget build(BuildContext context) {
@@ -493,6 +500,15 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
                     letterSpacing: 0,
                   ),
                 ),
+                if (onOpenLearn != null) ...[
+                  const SizedBox(height: Act0ShellTokensV1.gapMd),
+                  FilledButton(
+                    key: const Key('act0_shell_review_empty_open_learn_cta'),
+                    onPressed: onOpenLearn,
+                    style: Act0ShellTokensV1.premiumActionButtonStyle(),
+                    child: const Text('Open Learn'),
+                  ),
+                ],
               ],
             ),
           ),

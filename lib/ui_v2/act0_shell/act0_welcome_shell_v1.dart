@@ -323,7 +323,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                           child: FilledButton(
                             key: const Key('act0_shell_welcome_primary_cta'),
                             onPressed: onNext,
-                            style: Act0ShellTokensV1.primaryButtonStyle(),
+                            style: Act0ShellTokensV1.premiumActionButtonStyle(),
                             child: Text(ctaLabel),
                           ),
                         ),

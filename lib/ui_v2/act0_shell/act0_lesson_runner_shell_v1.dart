@@ -5332,7 +5332,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     child: FilledButton(
                       key: const Key('act0_shell_feedback_continue_cta'),
                       onPressed: onContinue,
-                      style: Act0ShellTokensV1.primaryButtonStyle(
+                      style: Act0ShellTokensV1.premiumActionButtonStyle(
                         height: isCompactRefinedFeedback
                             ? 34
                             : Act0ShellTokensV1.compactCtaHeight,
@@ -6083,6 +6083,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         summary.isWorldComplete && summary.unlockedLabel != null;
     final showHabitReward =
         !summary.isWorldComplete || summary.growthLabel.isEmpty;
+    final tabletLayout = MediaQuery.sizeOf(context).shortestSide >= 700;
     Widget nextActionCard() {
       return _ProofMotionRevealV1(
         key: const Key('act0_shell_block_summary_next_motion_reveal'),
@@ -6159,7 +6160,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         ),
         child: Container(
           key: const Key('act0_shell_block_summary_card'),
-          constraints: const BoxConstraints(maxWidth: 388),
+          constraints: BoxConstraints(maxWidth: tabletLayout ? 720 : 388),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
           decoration: BoxDecoration(
             color: Act0ShellTokensV1.surface,
@@ -6643,7 +6644,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               FilledButton(
                 key: const Key('act0_shell_block_summary_continue_cta'),
                 onPressed: _callbackForCta(summary.primaryCtaKind),
-                style: Act0ShellTokensV1.primaryButtonStyle(),
+                style: Act0ShellTokensV1.premiumActionButtonStyle(),
                 child: Text(summary.primaryCtaLabel),
               ),
               if (summary.secondaryCtaLabel != null) ...[
@@ -7277,11 +7278,18 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
           ],
           if (showPracticeCta) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            OutlinedButton(
+            TextButton(
               key: const Key('act0_shell_session_summary_practice_cta'),
               onPressed: () =>
                   onLaunchPracticeRepairQueueTarget!(practiceLaunchRequest!),
-              style: Act0ShellTokensV1.quietButtonStyle(),
+              style: TextButton.styleFrom(
+                foregroundColor: Act0ShellTokensV1.info,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Act0ShellTokensV1.gapXs,
+                  vertical: Act0ShellTokensV1.gapSm,
+                ),
+              ),
               child: const Text('Practice this next'),
             ),
           ],

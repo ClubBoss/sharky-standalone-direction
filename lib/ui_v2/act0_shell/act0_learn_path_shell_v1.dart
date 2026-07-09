@@ -3773,7 +3773,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                     child: FilledButton(
                       key: const Key('act0_shell_current_mission_cta'),
                       onPressed: onStart,
-                      style: Act0ShellTokensV1.primaryButtonStyle(
+                      style: Act0ShellTokensV1.premiumActionButtonStyle(
                         height: Act0VisualMetricsV1.primaryCtaHeight,
                       ),
                       child: Text(

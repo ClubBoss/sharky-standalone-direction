@@ -35,9 +35,7 @@ void main() {
       'act0_shell_block_summary_evidence_card',
       'act0_shell_block_summary_earned_moment',
     ]) {
-      final lowerCard = tester.widget<Container>(
-        find.byKey(Key(lowerCardKey)),
-      );
+      final lowerCard = tester.widget<Container>(find.byKey(Key(lowerCardKey)));
       final lowerDecoration = lowerCard.decoration as BoxDecoration;
       expect(
         lowerDecoration.border,
@@ -47,50 +45,51 @@ void main() {
     }
   });
 
-  testWidgets('Practice this next uses the shared quiet secondary token, not gold', (
-    tester,
-  ) async {
-    await _pumpGoldSummary(tester);
+  testWidgets(
+    'Practice this next is an inline action without a second border',
+    (tester) async {
+      await _pumpGoldSummary(tester);
 
-    final button = tester.widget<OutlinedButton>(
-      find.byKey(const Key('act0_shell_session_summary_practice_cta')),
-    );
-    final resolvedBackground = button.style!.backgroundColor!.resolve(
-      <WidgetState>{},
-    );
-    final resolvedSide = button.style!.side!.resolve(<WidgetState>{});
-    final resolvedForeground = button.style!.foregroundColor!.resolve(
-      <WidgetState>{},
-    );
+      final button = tester.widget<TextButton>(
+        find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+      );
+      final resolvedForeground = button.style!.foregroundColor!.resolve(
+        <WidgetState>{},
+      );
 
-    expect(resolvedBackground, isNot(Act0ShellTokensV1.gold));
-    expect(resolvedBackground == null || resolvedBackground.a == 0, isTrue);
-    expect(resolvedSide!.color, const Color(0x47FFFFFF));
-    expect(resolvedForeground, Act0ShellTokensV1.text);
+      expect(resolvedForeground, Act0ShellTokensV1.info);
+      expect(
+        find.ancestor(
+          of: find.text('Practice this next'),
+          matching: find.byType(OutlinedButton),
+        ),
+        findsNothing,
+      );
+      expect(find.text('Practice this next'), findsOneWidget);
+    },
+  );
 
-    expect(find.text('Practice this next'), findsOneWidget);
-  });
+  testWidgets(
+    'Session Summary proof and Sharky ceremony still render with gold hero',
+    (tester) async {
+      await _pumpGoldSummary(tester);
 
-  testWidgets('Session Summary proof and Sharky ceremony still render with gold hero', (
-    tester,
-  ) async {
-    await _pumpGoldSummary(tester);
-
-    expect(
-      find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
-      findsOneWidget,
-    );
-    expect(find.text('First read banked.'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_session_summary_payoff_sharky')),
-      findsOneWidget,
-    );
-    expect(find.text('Collected proof'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_block_summary_continue_cta')),
-      findsOneWidget,
-    );
-  });
+      expect(
+        find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
+        findsOneWidget,
+      );
+      expect(find.text('First read banked.'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_session_summary_payoff_sharky')),
+        findsOneWidget,
+      );
+      expect(find.text('Collected proof'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+        findsOneWidget,
+      );
+    },
+  );
 }
 
 Future<void> _pumpGoldSummary(WidgetTester tester) async {
@@ -128,7 +127,8 @@ Future<void> _pumpGoldSummary(WidgetTester tester) async {
               sourceTaskId: 'actions_legal_context',
               repairTaskId: 'actions_check_drill',
               repairFocusKey: 'actions_legal_context|no_bet_yet',
-              queueItemId: 'practice_repair_queue_v1|concept_candidate|no_bet_yet',
+              queueItemId:
+                  'practice_repair_queue_v1|concept_candidate|no_bet_yet',
             ),
             currentSessionOnly: true,
           ),
