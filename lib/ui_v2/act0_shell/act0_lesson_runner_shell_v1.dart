@@ -506,6 +506,32 @@ class Act0BlockCompletionSummaryV1 {
   String get bandTransitionProofFallbackLabel =>
       worldOneCompletionProofFallbackLabel;
 
+  /// True only for the World 12 Volume I terminal completion. Checked with
+  /// higher priority than [hasWorldCompletionPayoff] at the render site so
+  /// World 12 renders this distinct closure card instead of the ordinary
+  /// World 2-11 card. Reuses the same honest, already-accepted next-step and
+  /// preview copy from [_worldCompletionMetaByNumberV1] (`Volume I review`,
+  /// no fake W13 activation); only the identity headline differs so the
+  /// moment reads as a closure rather than another ordinary world
+  /// completion. Intentionally worldNumber == 12 only; not a general
+  /// terminal framework.
+  bool get hasTerminalCompletionPayoff =>
+      isWorldComplete &&
+      worldNumber == 12 &&
+      nextWorldTitle != null &&
+      nextWorldTitle!.trim().isNotEmpty;
+
+  String get terminalCompletionIdentityLabel => 'Volume I complete.';
+
+  String get terminalCompletionLearningLabel => worldCompletionLearningLabel;
+
+  String get terminalCompletionNextLabel => worldCompletionNextLabel;
+
+  String get terminalCompletionPreviewLine => worldCompletionPreviewLine;
+
+  String get terminalCompletionProofFallbackLabel =>
+      worldCompletionProofFallbackLabel;
+
   bool get shouldReviewFirst =>
       deepLeakCount > 0 && qualifiesForNextLesson && hasSafeReviewTarget;
 
@@ -6646,6 +6672,13 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             tone: celebrateTone,
                             receipt: visibleRepairOutcomeReceipt,
                           ),
+                        ] else if (summary.hasTerminalCompletionPayoff) ...[
+                          const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          _TerminalCompletionPayoffV1(
+                            summary: summary,
+                            tone: celebrateTone,
+                            receipt: visibleRepairOutcomeReceipt,
+                          ),
                         ] else if (summary.hasWorldCompletionPayoff) ...[
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                           _WorldCompletionPayoffV1(
@@ -7050,6 +7083,43 @@ class _BandTransitionPayoffV1 extends StatelessWidget {
       nextLabel: summary.bandTransitionNextLabel,
       previewLine: summary.bandTransitionPreviewLine,
       proofFallbackLabel: summary.bandTransitionProofFallbackLabel,
+      receipt: receipt,
+      emphasizeMilestone: true,
+    );
+  }
+}
+
+/// The one World 12 Volume I terminal closure milestone. Strictly gated to
+/// `worldNumber == 12` (see
+/// [Act0BlockCompletionSummaryV1.hasTerminalCompletionPayoff]) and checked
+/// with higher priority than [_WorldCompletionPayoffV1] at the render site,
+/// so World 12 never also renders the ordinary card. Reuses the exact
+/// shared [_WorldMilestoneCardV1] hierarchy and the emphasized milestone
+/// seal already used by [_BandTransitionPayoffV1], with terminal-specific
+/// identity copy and the same honest, already-accepted `Volume I review`
+/// next-step/preview text. Not a general multi-terminal framework: no other
+/// world number reaches this widget, and no W13+ route is implied.
+class _TerminalCompletionPayoffV1 extends StatelessWidget {
+  const _TerminalCompletionPayoffV1({
+    required this.summary,
+    required this.tone,
+    this.receipt,
+  });
+
+  final Act0BlockCompletionSummaryV1 summary;
+  final Color tone;
+  final Act0RepairOutcomeSessionReceiptV1? receipt;
+
+  @override
+  Widget build(BuildContext context) {
+    return _WorldMilestoneCardV1(
+      keyPrefix: 'act0_shell_terminal_completion',
+      tone: tone,
+      payoffLabel: summary.terminalCompletionIdentityLabel,
+      learningLabel: summary.terminalCompletionLearningLabel,
+      nextLabel: summary.terminalCompletionNextLabel,
+      previewLine: summary.terminalCompletionPreviewLine,
+      proofFallbackLabel: summary.terminalCompletionProofFallbackLabel,
       receipt: receipt,
       emphasizeMilestone: true,
     );

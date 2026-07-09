@@ -30,7 +30,10 @@ class _WorldCase {
 // (`_act0PreviewWorlds`), not invented. World 4 is intentionally absent here:
 // it now receives the stronger, dedicated W4->W5 band-transition milestone
 // instead of this ordinary card (see
-// test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart).
+// test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart). World 12 is
+// intentionally absent here too: it now receives the dedicated Volume I
+// terminal-closure milestone instead of this ordinary card (see
+// test/ui_v2/act0_w12_terminal_payoff_v1_test.dart).
 const _worldCases = <_WorldCase>[
   _WorldCase(
     worldNumber: 2,
@@ -107,15 +110,6 @@ const _worldCases = <_WorldCase>[
     learningLabel:
         'You learned how to plan a session, use table triggers, and close '
         'the review loop.',
-  ),
-  _WorldCase(
-    worldNumber: 12,
-    worldTitle: 'Mindset Bridge',
-    nextWorldNumber: 0,
-    nextWorldTitle: 'Volume I terminal review',
-    learningLabel:
-        'You learned how to judge process, reset tilt, and keep discipline '
-        'before deeper strategy.',
   ),
 ];
 
@@ -509,6 +503,38 @@ void main() {
       );
       expect(
         find.byKey(const Key('act0_shell_band_transition_completion_payoff')),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'World 12 no longer uses the ordinary card; it is now owned by the '
+    'dedicated Volume I terminal-closure milestone',
+    (tester) async {
+      const world12Case = _WorldCase(
+        worldNumber: 12,
+        worldTitle: 'Mindset Bridge',
+        nextWorldNumber: 0,
+        nextWorldTitle: 'Volume I review',
+        learningLabel:
+            'You learned how to judge process, reset tilt, and keep '
+            'discipline before deeper strategy.',
+      );
+
+      await tester.pumpWidget(_host(_summaryFor(world12Case)));
+      await tester.pumpAndSettle();
+
+      // World 12 now renders the dedicated terminal-closure card, not the
+      // ordinary World 2-11 card. See
+      // test/ui_v2/act0_w12_terminal_payoff_v1_test.dart for the full
+      // terminal-closure contract.
+      expect(
+        find.byKey(const Key('act0_shell_world_completion_payoff')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_terminal_completion_payoff')),
         findsOneWidget,
       );
     },
