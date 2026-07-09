@@ -158,6 +158,7 @@ void main() {
       expect(find.text('Active repair'), findsNothing);
       expect(find.text('One miss to fix.'), findsNothing);
       expect(find.text('MISS TO REPAIR'), findsOneWidget);
+      expect(find.text('nobody has bet yet'), findsOneWidget);
       expect(find.text('Active repair note'), findsNothing);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(find.text('1 fix waiting'), findsNothing);

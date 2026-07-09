@@ -48,7 +48,7 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_primary_result_label')),
       findsOneWidget,
     );
-    expect(find.text('Table clue'), findsOneWidget);
+    expect(find.text('Clue from table'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_verdict_pill')),
       findsNothing,
@@ -168,7 +168,7 @@ void main() {
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
       findsOneWidget,
     );
-    expect(find.text('Try one like this'), findsOneWidget);
+    expect(find.text('Try same clue'), findsOneWidget);
 
     final actionTop = tester
         .getTopLeft(
@@ -217,7 +217,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Repair fixed'), findsOneWidget);
+    expect(find.text('Repair landed'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_feedback_primary_result_block')),
       findsOneWidget,
@@ -255,7 +255,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_repair_closure_strip')),
       findsOneWidget,
     );
-    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session result'), findsOneWidget);
     expect(find.text('Session proof'), findsNothing);
     expect(
       find.text('Today you repaired the no-bet-yet clue.'),
@@ -313,7 +313,7 @@ void main() {
     expect(find.byType(AnimatedSlide), findsWidgets);
     expect(find.byType(AnimatedOpacity), findsWidgets);
     expect(find.byType(AnimatedScale), findsWidgets);
-    expect(find.text('Fix attempt'), findsOneWidget);
+    expect(find.text('Repair landed'), findsOneWidget);
     expect(find.text('Nice — you chose the better action.'), findsOneWidget);
     expect(find.textContaining('fixed'), findsNothing);
     expect(find.textContaining('cleared'), findsNothing);
@@ -347,7 +347,7 @@ void main() {
       find.byKey(const Key('act0_shell_repair_outcome_proof')),
       findsNothing,
     );
-    expect(find.text('Fix attempt'), findsNothing);
+    expect(find.text('Repair landed'), findsNothing);
   });
 
   testWidgets('wrong repair feedback shows visible repair reason', (
@@ -450,7 +450,7 @@ void main() {
       find.byKey(const Key('act0_shell_session_summary_proof_block')),
       findsOneWidget,
     );
-    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session result'), findsOneWidget);
     expect(find.text('Session proof'), findsNothing);
     expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
     expect(
@@ -487,7 +487,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Session result'), findsOneWidget);
     expect(find.text('Session proof'), findsNothing);
     expect(
       find.text('Replay fixed: you handled that spot correctly.'),

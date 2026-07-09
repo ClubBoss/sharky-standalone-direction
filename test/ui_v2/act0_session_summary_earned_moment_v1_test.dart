@@ -372,7 +372,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Proof banked'), findsWidgets);
+      expect(find.text('Session result'), findsWidgets);
       expect(
         tester
             .widget<Text>(
@@ -898,7 +898,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_earned_moment')),
       findsOneWidget,
     );
-    expect(find.text('Collected proof'), findsOneWidget);
+    expect(find.text('Collected read'), findsOneWidget);
     expect(find.text('One clear win Sharky can prove.'), findsOneWidget);
     expect(find.text('Earned moment'), findsNothing);
     expect(find.text('First correct read'), findsOneWidget);
@@ -940,7 +940,7 @@ void main() {
     expect(find.text('Lesson complete'), findsNothing);
     expect(find.text('Clean mini-drill'), findsNothing);
     expect(find.text('First evidence signal'), findsNothing);
-    expect(find.text('Collected proof'), findsNothing);
+    expect(find.text('Collected read'), findsNothing);
     expect(find.text('One clear win Sharky can prove.'), findsNothing);
   });
 
@@ -1006,7 +1006,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_xp_total')),
       findsOneWidget,
     );
-    expect(find.text('Local proof saved'), findsOneWidget);
+    expect(find.text('Local read saved'), findsOneWidget);
     expect(find.text('Level 2'), findsNothing);
   });
 

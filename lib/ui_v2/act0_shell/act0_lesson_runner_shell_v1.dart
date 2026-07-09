@@ -105,7 +105,7 @@ class Act0RunnerCompletionSummaryV1 {
 
   bool get leveledUp => endLevel > startLevel;
 
-  String get toastRewardLabel => leveledUp ? 'Proof banked' : 'Clean rep';
+  String get toastRewardLabel => leveledUp ? 'Read banked' : 'Clean rep';
 
   String get growthLabel => _formatSkillGrowthLabelV1(skillGains);
 }
@@ -4938,7 +4938,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final hasProofEarnedState =
         hasRepairOutcomeProof ||
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
-        repairReceiptLine.toLowerCase().startsWith('replay fixed:');
+        repairReceiptLine.toLowerCase().startsWith('replay fixed:') ||
+        repairReceiptLine.toLowerCase().startsWith('fix landed:');
     final media = MediaQuery.of(context);
     final view = View.of(context);
     final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
@@ -5067,7 +5068,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle = hasRepairOutcomeProof
-        ? 'Proof earned'
+        ? 'Repair landed'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
         : skillReceipt?.title ??
@@ -5139,7 +5140,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
     final companionRoleLabel = hasProofEarnedState
-        ? 'Proof earned'
+        ? 'Repair landed'
         : isRepairFocusState
         ? 'Repair focus'
         : isSuboptimal
@@ -6055,10 +6056,13 @@ String _feedbackPrimaryResultLabelV1({
 }) {
   final receipt = repairReceiptLine?.trim().toLowerCase() ?? '';
   if (receipt.startsWith('repair fixed:')) {
-    return 'Repair fixed';
+    return 'Repair landed';
   }
   if (receipt.startsWith('replay fixed:')) {
-    return 'Replay fixed';
+    return 'Repair landed';
+  }
+  if (receipt.startsWith('fix landed:')) {
+    return 'Repair landed';
   }
   if (receipt.startsWith('still missed:') ||
       receipt.startsWith('repair missed:') ||
@@ -6509,7 +6513,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                   Text(
                                     payoffHero == null
                                         ? summary.masteryLabel
-                                        : 'Proof banked',
+                                        : 'Session result',
                                     style: Act0ShellTokensV1.label.copyWith(
                                       color: celebrateTone,
                                       letterSpacing: 0.5,
@@ -7333,7 +7337,7 @@ class _SessionSummaryPayoffHeroV1 {
       return null;
     }
     return _SessionSummaryPayoffHeroV1(
-      kicker: 'Session proof',
+      kicker: 'Session result',
       headline: hasCorrectRead && hasGoodFix
           ? 'You turned one miss into a fix.'
           : hasCorrectRead
@@ -7398,7 +7402,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                   const SizedBox(width: Act0ShellTokensV1.gapSm),
                   Expanded(
                     child: Text(
-                      'Local proof saved',
+                      'Local read saved',
                       key: const Key('act0_shell_block_summary_xp_total'),
                       maxLines: 1,
                       overflow: TextOverflow.fade,
@@ -7669,7 +7673,7 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Collected proof',
+                  'Collected read',
                   key: const Key('act0_shell_block_summary_earned_label'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
@@ -7933,7 +7937,7 @@ class _CompletionToastV1 extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Proof banked',
+                          'Read banked',
                           key: const Key(
                             'act0_shell_completion_toast_reward_label',
                           ),

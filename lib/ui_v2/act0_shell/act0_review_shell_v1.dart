@@ -528,6 +528,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
         ? mistake.reason
         : mistake.repairActionLabel;
     final patternFocus = _reviewPatternFocusLabelV1(mistake);
+    final currentClue = _reviewCurrentClueLabelV1(mistake);
     return Container(
       key: const Key('act0_shell_review_repair_coach_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -609,7 +610,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Expanded(
                   child: Text(
-                    patternFocus.isEmpty ? mistake.title : patternFocus,
+                    currentClue,
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                     softWrap: false,
@@ -1138,13 +1139,29 @@ String _reviewPatternFocusLabelV1(Act0MistakeCardV1 mistake) {
   // ...". Swap those specific titles for a phrase that reads naturally in
   // that sentence without renaming the lesson node itself.
   const naturalPhraseOverrides = <String, String>{
-    'legal actions': 'the actions you can choose',
+    'legal actions': 'nobody has bet yet',
   };
   final override = naturalPhraseOverrides[normalized];
   if (override != null) {
     return override;
   }
   return title;
+}
+
+String _reviewCurrentClueLabelV1(Act0MistakeCardV1 mistake) {
+  final joined =
+      '${mistake.title} ${mistake.reason} ${mistake.repairActionLabel}'
+          .toLowerCase();
+  if (joined.contains('no bet') ||
+      joined.contains('nobody had bet') ||
+      joined.contains('nobody has bet')) {
+    return 'nobody has bet yet';
+  }
+  final patternFocus = _reviewPatternFocusLabelV1(mistake).trim();
+  if (patternFocus.isNotEmpty) {
+    return patternFocus;
+  }
+  return mistake.title.trim().isEmpty ? 'this table clue' : mistake.title;
 }
 
 class _MistakeHistoryListV1 extends StatelessWidget {
