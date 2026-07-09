@@ -2388,6 +2388,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
     final hintCompact = compactAnswerListDecision && decisionHint != null;
+    final shouldDeemphasizeTableForWrongFeedback =
+        isReview &&
+        runner.reviewQuality == Act0FeedbackQualityV1.wrong &&
+        !widget.rapidReviewMode;
     Widget buildRunnerActionDock() {
       return _RunnerActionDockV1(
         pageX: pageX,
@@ -2618,34 +2622,41 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 SizedBox(height: compactTableStageTopInset),
               if (coupleTableToDock && maxTableHeight == null) const Spacer(),
               Center(
-                child: _RunnerTableStageV1(
-                  table: table,
-                  highlightedCardIds: mergedHighlightIds,
-                  interactiveCalloutLabel: interactiveCallout,
-                  onBoardCardTap: _onBoardTappedForShowdown,
-                  onChooseSeat: _handleChooseSeat,
-                  visualVariant: widget.tableVisualVariant,
-                  showFocusBadge: !_showBottomLearningRail,
-                  showRepairCallout: !_isReview,
-                  playbackActiveSeatId: playbackActiveSeatId,
-                  animateBetMotion: trailPlaybackEnabled,
-                  betOverride: betOverride,
-                  centerLabelOverride: centerStatDisplay.centerCueLabel,
-                  potLabelOverride:
-                      playbackPotLabel ?? centerStatDisplay.potLabel,
-                  toCallLabelOverride: centerStatDisplay.toCallLabel,
-                  streetLabelOverride: playbackStreetLabel,
-                  completionSummary: showCompletionToast
-                      ? widget.completionSummary
-                      : null,
-                  selectedSeatId: selectedSeatId,
-                  selectedSeatFeedbackState: selectedSeatFeedbackState,
-                  compactBottomDockClearance: compactBottomDockClearance,
-                  interactionMode: interactionMode,
-                  framingProfile: framingProfile,
-                  viewportFamily: viewportFamily,
-                  lateRouteSignal: lateRouteTableSignal,
-                  maxTableHeight: maxTableHeight,
+                child: Opacity(
+                  key: Key(
+                    'act0_shell_feedback_table_context_receded_'
+                    '$shouldDeemphasizeTableForWrongFeedback',
+                  ),
+                  opacity: shouldDeemphasizeTableForWrongFeedback ? 0.68 : 1,
+                  child: _RunnerTableStageV1(
+                    table: table,
+                    highlightedCardIds: mergedHighlightIds,
+                    interactiveCalloutLabel: interactiveCallout,
+                    onBoardCardTap: _onBoardTappedForShowdown,
+                    onChooseSeat: _handleChooseSeat,
+                    visualVariant: widget.tableVisualVariant,
+                    showFocusBadge: !_showBottomLearningRail,
+                    showRepairCallout: !_isReview,
+                    playbackActiveSeatId: playbackActiveSeatId,
+                    animateBetMotion: trailPlaybackEnabled,
+                    betOverride: betOverride,
+                    centerLabelOverride: centerStatDisplay.centerCueLabel,
+                    potLabelOverride:
+                        playbackPotLabel ?? centerStatDisplay.potLabel,
+                    toCallLabelOverride: centerStatDisplay.toCallLabel,
+                    streetLabelOverride: playbackStreetLabel,
+                    completionSummary: showCompletionToast
+                        ? widget.completionSummary
+                        : null,
+                    selectedSeatId: selectedSeatId,
+                    selectedSeatFeedbackState: selectedSeatFeedbackState,
+                    compactBottomDockClearance: compactBottomDockClearance,
+                    interactionMode: interactionMode,
+                    framingProfile: framingProfile,
+                    viewportFamily: viewportFamily,
+                    lateRouteSignal: lateRouteTableSignal,
+                    maxTableHeight: maxTableHeight,
+                  ),
                 ),
               ),
               if (interactiveCallout.isNotEmpty) ...[
