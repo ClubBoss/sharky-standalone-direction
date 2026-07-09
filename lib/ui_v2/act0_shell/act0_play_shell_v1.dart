@@ -301,6 +301,9 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             _topicPreviewSortIndex(a).compareTo(_topicPreviewSortIndex(b)),
       );
     final hasLockedTopicGroups = topicGroups.any((group) => !group.isEnabled);
+    final allTopicGroupsLocked =
+        topicShelfGroups.isNotEmpty &&
+        topicShelfGroups.every((group) => !group.isEnabled);
     final hasPrimaryRepairQueue = widget.repairQueueConsumer.items.any(
       _canLaunchPracticeQueueTargetV1,
     );
@@ -385,7 +388,9 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           ],
           if (topicShelfGroups.isNotEmpty) ...[
             _SkillPacksPreviewV1(
-              groups: topicShelfGroups.take(4).toList(growable: false),
+              groups: topicShelfGroups
+                  .take(allTopicGroupsLocked ? 2 : 4)
+                  .toList(growable: false),
               showLockedSummary: hasLockedTopicGroups,
               onStartGroup: widget.onStartGroup,
             ),

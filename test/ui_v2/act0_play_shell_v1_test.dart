@@ -726,15 +726,19 @@ void main() {
       );
       expect(
         find.byKey(const Key('act0_shell_practice_group_positions')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_practice_group_showdown')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_practice_group_rankings')),
         findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_play_locked_packs_summary')),
+        findsOneWidget,
       );
 
       expect(find.text('Later'), findsNothing);
