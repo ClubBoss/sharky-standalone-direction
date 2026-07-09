@@ -1330,6 +1330,7 @@ void main() {
 
   Widget host({
     required dynamic task,
+    required int world,
     required String captureKind,
   }) {
     final runner = runnerFromTaskSpec(task, captureKind: captureKind);
@@ -1359,6 +1360,7 @@ void main() {
           body: SafeArea(
             child: Act0LessonRunnerShellV1(
               runner: runner,
+              worldNumber: world,
               selectedWorldId: task.worldId as String,
               selectedLessonId: task.lessonId as String,
               selectedTaskId: task.taskId as String,
@@ -1504,7 +1506,9 @@ void main() {
     final size = captureKind == 'copy_detail' ? copyDetailSize : viewportSize;
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
-    await tester.pumpWidget(host(task: task, captureKind: captureKind));
+    await tester.pumpWidget(
+      host(task: task, world: world, captureKind: captureKind),
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 900));
     writeTextRepairOverlays(tester, fileName);

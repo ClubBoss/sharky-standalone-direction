@@ -32,6 +32,39 @@ enum Act0TheoryPresentationRoleV1 {
   denseSynthesis,
 }
 
+/// A small, source-owned late-route cue shown only on the shared table stage.
+/// It gives W11/W12 a distinct learning posture without changing a task,
+/// answer, progression state, or completion route.
+class Act0LateRouteTableSignalV1 {
+  const Act0LateRouteTableSignalV1({
+    required this.label,
+    required this.detail,
+    required this.icon,
+  });
+
+  final String label;
+  final String detail;
+  final IconData icon;
+}
+
+Act0LateRouteTableSignalV1? act0LateRouteTableSignalForWorldNumberV1(
+  int worldNumber,
+) {
+  return switch (worldNumber) {
+    11 => const Act0LateRouteTableSignalV1(
+      label: 'W11 · Transfer',
+      detail: 'Name the cue. Choose one action.',
+      icon: Icons.alt_route_rounded,
+    ),
+    12 => const Act0LateRouteTableSignalV1(
+      label: 'W12 · Reset',
+      detail: 'Drop last hand. Read spot.',
+      icon: Icons.restart_alt_rounded,
+    ),
+    _ => null,
+  };
+}
+
 enum Act0MilestoneCtaKindV1 {
   continueForward,
   replayForPerfect,
@@ -942,6 +975,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   const Act0LessonRunnerShellV1({
     super.key,
     required this.runner,
+    this.worldNumber = 0,
     this.selectedWorldId,
     this.selectedLessonId,
     this.selectedTaskId,
@@ -972,6 +1006,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   });
 
   final Act0RunnerStateV1 runner;
+  final int worldNumber;
   final String? selectedWorldId;
   final String? selectedLessonId;
   final String? selectedTaskId;
@@ -2219,6 +2254,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       taskFamily: widget.selectedTaskFamily,
       hasSeatTargets: hasSeatTargets,
     );
+    final lateRouteTableSignal = act0LateRouteTableSignalForWorldNumberV1(
+      widget.worldNumber,
+    );
     final taskRailLabel = bottomContext.taskLabel;
     final theoryCoachLine = act0RuntimeTheoryCoachLineV1(
       context,
@@ -2600,6 +2638,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   interactionMode: interactionMode,
                   framingProfile: framingProfile,
                   viewportFamily: viewportFamily,
+                  lateRouteSignal: lateRouteTableSignal,
                   maxTableHeight: maxTableHeight,
                 ),
               ),
@@ -3948,6 +3987,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     required this.interactionMode,
     required this.framingProfile,
     required this.viewportFamily,
+    this.lateRouteSignal,
     this.maxTableHeight,
   });
 
@@ -3973,6 +4013,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final _RunnerInteractionModeV1 interactionMode;
   final Act0RunnerFramingProfileV1 framingProfile;
   final _RunnerViewportFamilyV1 viewportFamily;
+  final Act0LateRouteTableSignalV1? lateRouteSignal;
   final double? maxTableHeight;
 
   @override
@@ -4000,6 +4041,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
       interactionMode: interactionMode,
       framingProfile: framingProfile,
       viewportFamily: viewportFamily,
+      lateRouteSignal: lateRouteSignal,
       maxTableHeight: maxTableHeight,
     );
   }
@@ -8188,6 +8230,7 @@ class _Act0TableV1 extends StatelessWidget {
     required this.interactionMode,
     required this.framingProfile,
     required this.viewportFamily,
+    this.lateRouteSignal,
     this.maxTableHeight,
   });
 
@@ -8213,6 +8256,7 @@ class _Act0TableV1 extends StatelessWidget {
   final _RunnerInteractionModeV1 interactionMode;
   final Act0RunnerFramingProfileV1 framingProfile;
   final _RunnerViewportFamilyV1 viewportFamily;
+  final Act0LateRouteTableSignalV1? lateRouteSignal;
   final double? maxTableHeight;
 
   @override
@@ -8404,18 +8448,22 @@ class _Act0TableV1 extends StatelessWidget {
                       streetLabelOverride: streetLabelOverride,
                     ),
                   ),
-                  if (showRepairCallout &&
-                      (table.focusCalloutLabel.isNotEmpty ||
-                          interactiveCalloutLabel.isNotEmpty))
+                  if (lateRouteSignal != null ||
+                      (showRepairCallout &&
+                          (table.focusCalloutLabel.isNotEmpty ||
+                              interactiveCalloutLabel.isNotEmpty)))
                     Positioned(
                       key: const Key('act0_shell_table_repair_callout'),
                       left: width * 0.20,
                       right: width * 0.20,
                       top: height * 0.23,
                       child: _TableRepairCalloutV1(
-                        label: table.focusCalloutLabel.isNotEmpty
-                            ? table.focusCalloutLabel
-                            : interactiveCalloutLabel,
+                        label: lateRouteSignal == null
+                            ? (table.focusCalloutLabel.isNotEmpty
+                                  ? table.focusCalloutLabel
+                                  : interactiveCalloutLabel)
+                            : lateRouteSignal!.detail,
+                        lateRouteSignal: lateRouteSignal,
                       ),
                     ),
                   if (completionSummary != null)
@@ -8517,43 +8565,88 @@ class _Act0TableV1 extends StatelessWidget {
 }
 
 class _TableRepairCalloutV1 extends StatelessWidget {
-  const _TableRepairCalloutV1({required this.label});
+  const _TableRepairCalloutV1({required this.label, this.lateRouteSignal});
 
   final String label;
+  final Act0LateRouteTableSignalV1? lateRouteSignal;
 
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: Act0ShellTokensV1.onFeltPanelDecoration(
-          radius: Act0ShellTokensV1.radiusPill,
+        decoration: BoxDecoration(
+          color: Act0TableFeltCanonV1.onFeltPanelFill,
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+          border: Border.all(
+            color: lateRouteSignal == null
+                ? Act0TableFeltCanonV1.onFeltPanelBorder
+                : Act0ShellTokensV1.gold.withValues(alpha: 0.48),
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.flag_rounded,
+            Icon(
+              lateRouteSignal?.icon ?? Icons.flag_rounded,
               key: Key('act0_shell_table_repair_callout_icon'),
               size: 13,
-              color: Act0TableFeltCanonV1.innerHairline,
+              color: lateRouteSignal == null
+                  ? Act0TableFeltCanonV1.innerHairline
+                  : Act0ShellTokensV1.gold,
             ),
             const SizedBox(width: 6),
             Flexible(
-              child: Text(
-                label,
-                key: const Key('act0_shell_table_repair_callout_text'),
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                overflow: TextOverflow.fade,
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.text,
-                  fontSize: 9.4,
-                  letterSpacing: 0,
-                  height: 1.08,
-                ),
-              ),
+              child: lateRouteSignal == null
+                  ? Text(
+                      label,
+                      key: const Key('act0_shell_table_repair_callout_text'),
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: 9.4,
+                        letterSpacing: 0,
+                        height: 1.08,
+                      ),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          lateRouteSignal!.label,
+                          key: const Key('act0_shell_late_route_table_signal'),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.gold,
+                            fontSize: 9.2,
+                            height: 1.05,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.2,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        Text(
+                          label,
+                          key: const Key(
+                            'act0_shell_table_repair_callout_text',
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontSize: 9,
+                            letterSpacing: 0,
+                            height: 1.08,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),

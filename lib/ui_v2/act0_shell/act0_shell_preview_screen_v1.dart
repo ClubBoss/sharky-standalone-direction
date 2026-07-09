@@ -4803,6 +4803,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               )
                             : Act0LessonRunnerShellV1(
                                 runner: activePlayRunner!,
+                                worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,
                                 selectedTaskId: playSelectedTask?.taskId,
