@@ -1480,7 +1480,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Skills practiced',
+              en: 'Proof in practice',
               ru: 'Навыки в практике',
             ),
             style: Act0ShellTokensV1.label.copyWith(
@@ -1491,7 +1491,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Recent proof from this route.',
+              en: 'What this route has put into practice.',
               ru: 'Недавнее подтверждение из этого маршрута.',
             ),
             style: Act0ShellTokensV1.muted,
@@ -1510,7 +1510,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '${_profileCopyV1(context, en: 'Practiced', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
+                '${_profileCopyV1(context, en: 'Recent proof', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.gold,
                   letterSpacing: 0,
@@ -2921,13 +2921,34 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   Text(
                     stat.locked
                         ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
-                        : _profileCopyV1(
+                        : gain == null
+                        ? _profileCopyV1(
                             context,
                             en: 'Practiced',
+                            ru: 'Практика',
+                          )
+                        : _profileCopyV1(
+                            context,
+                            en: 'Recent route proof',
                             ru: 'Практика',
                           ),
                     style: Act0ShellTokensV1.label.copyWith(color: tone),
                   ),
+                  if (gain?.source.trim().isNotEmpty == true) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      _profileCopyV1(
+                        context,
+                        en: 'From ${gain!.source.trim()}',
+                        ru: 'Практика',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -2945,7 +2966,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  _profileCopyV1(context, en: 'Practiced', ru: 'Практика'),
+                  _profileCopyV1(context, en: 'Route proof', ru: 'Практика'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.gold,
                   ),

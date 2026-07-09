@@ -97,10 +97,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Skills practiced'), findsOneWidget);
-    expect(find.textContaining('Practiced: Table sense'), findsOneWidget);
+    expect(find.text('Proof in practice'), findsOneWidget);
+    expect(find.textContaining('Recent proof: Table sense'), findsOneWidget);
     expect(find.text('Table sense'), findsWidgets);
-    expect(find.text('Practiced'), findsWidgets);
+    expect(find.text('Recent route proof'), findsWidgets);
+    expect(find.text('From Action words'), findsOneWidget);
     final skillText = tester
         .widgetList<Text>(
           find.descendant(
