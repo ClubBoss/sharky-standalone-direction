@@ -242,7 +242,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       centeredBench,
-                      const Spacer(),
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
                       Act0ShellTokensV1.centeredContent(
                         context,
                         tabletMaxWidth: 860,
@@ -731,7 +731,12 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
                 filled: mistake != null,
               ),
             ),
-            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              key: Key('act0_shell_review_repair_path_arrow_1'),
+              color: Act0ShellTokensV1.textMuted,
+              size: 15,
+            ),
             const Expanded(
               child: _ReviewBenchSlotV1(
                 label: 'REPAIR',
@@ -739,7 +744,12 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
                 filled: false,
               ),
             ),
-            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            const Icon(
+              Icons.arrow_forward_rounded,
+              key: Key('act0_shell_review_repair_path_arrow_2'),
+              color: Act0ShellTokensV1.textMuted,
+              size: 15,
+            ),
             const Expanded(
               child: _ReviewBenchSlotV1(
                 label: 'RESULT',
@@ -989,20 +999,8 @@ class _ReviewBenchSlotV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 60),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-      decoration: BoxDecoration(
-        color: filled
-            ? Act0ShellTokensV1.surface2.withOpacity(0.72)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: filled
-              ? Act0ShellTokensV1.primary.withOpacity(0.35)
-              : Act0ShellTokensV1.text.withOpacity(0.14),
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1011,7 +1009,7 @@ class _ReviewBenchSlotV1 extends StatelessWidget {
             label,
             style: Act0ShellTokensV1.label.copyWith(
               color: filled
-                  ? Act0ShellTokensV1.text
+                  ? Act0ShellTokensV1.primary
                   : Act0ShellTokensV1.text.withOpacity(0.55),
               fontSize: 11,
               letterSpacing: 0.8,
@@ -1025,7 +1023,7 @@ class _ReviewBenchSlotV1 extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.muted.copyWith(
               color: filled
-                  ? Act0ShellTokensV1.textMuted
+                  ? Act0ShellTokensV1.text
                   : Act0ShellTokensV1.text.withOpacity(0.48),
               fontSize: 12,
               height: 1.12,
