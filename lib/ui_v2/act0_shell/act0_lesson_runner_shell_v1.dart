@@ -4497,6 +4497,9 @@ class _SeatTapPromptV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFirstTableOrientation = question.trim().toLowerCase().contains(
+      'hero seat',
+    );
     return Container(
       key: const Key('act0_shell_seat_tap_prompt'),
       constraints: const BoxConstraints(minHeight: 124),
@@ -4525,6 +4528,27 @@ class _SeatTapPromptV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (isFirstTableOrientation)
+                  Row(
+                    key: const Key('act0_shell_first_table_orientation'),
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'First table read',
+                          key: const Key('act0_shell_seat_tap_task_label'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.info,
+                            letterSpacing: 0,
+                            fontSize: 10.4,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
                 Text(
                   taskLabel,
                   key: const Key('act0_shell_seat_tap_task_label'),
@@ -4551,7 +4575,9 @@ class _SeatTapPromptV1 extends StatelessWidget {
                   ),
                 const SizedBox(height: 5),
                 Text(
-                  helperLine,
+                  isFirstTableOrientation
+                      ? 'Find your seat first - then we will choose actions.'
+                      : helperLine,
                   key: const Key('act0_shell_seat_tap_prompt_text'),
                   maxLines: 2,
                   style: Act0ShellTokensV1.muted.copyWith(
@@ -4829,6 +4855,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final isWrong = quality == Act0FeedbackQualityV1.wrong;
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
+    final isRepairFocusState =
+        !rapidMode && (repairReasonLine?.trim().isNotEmpty ?? false);
     final media = MediaQuery.of(context);
     final view = View.of(context);
     final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
@@ -4844,7 +4872,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             (!refined &&
                 fullViewportHeight > 900 &&
                 fullViewportHeight <= 980));
-    final tone = isWrong || isSuboptimal
+    final tone = isRepairFocusState
+        ? Act0ShellTokensV1.gold
+        : isWrong
+        ? Act0ShellTokensV1.info
+        : isSuboptimal
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
     final icon = isWrong || isSuboptimal
@@ -4997,8 +5029,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
+    final feedbackStateKey = isRepairFocusState
+        ? const Key('act0_shell_feedback_repair_focus_state')
+        : isWrong
+        ? const Key('act0_shell_feedback_missed_cue_state')
+        : const Key('act0_shell_feedback_proof_state');
     return _ProofMotionRevealV1(
       key: const Key('act0_shell_feedback_card_motion_reveal'),
+      child: KeyedSubtree(
+        key: feedbackStateKey,
       child: Container(
         key: const Key('act0_shell_feedback_card'),
         padding: EdgeInsets.all(
@@ -5016,7 +5055,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
           border: Border.all(
             color: tone.withValues(
-              alpha: isCompactRefinedFeedback ? 0.24 : (refined ? 0.32 : 0.40),
+                alpha: isCompactRefinedFeedback
+                    ? 0.24
+                    : (refined ? 0.32 : 0.40),
             ),
           ),
           boxShadow: <BoxShadow>[
@@ -5075,7 +5116,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       if (reactionLine.isNotEmpty)
                         Text(
                           reactionLine,
-                          key: const Key('act0_shell_sharky_outcome_reaction'),
+                            key: const Key(
+                              'act0_shell_sharky_outcome_reaction',
+                            ),
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           style: Act0ShellTokensV1.muted.copyWith(
@@ -5134,11 +5177,13 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       resolvedReason,
                       key: const Key('act0_shell_feedback_reason'),
                       maxLines:
-                          isCompactRefinedFeedback && !preserveFullCompactReason
+                            isCompactRefinedFeedback &&
+                                !preserveFullCompactReason
                           ? 2
                           : null,
                       overflow:
-                          isCompactRefinedFeedback && !preserveFullCompactReason
+                            isCompactRefinedFeedback &&
+                                !preserveFullCompactReason
                           ? TextOverflow.fade
                           : null,
                       style: Act0ShellTokensV1.body.copyWith(
@@ -5264,7 +5309,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                 : null,
                             style: Act0ShellTokensV1.body.copyWith(
                               color: Act0ShellTokensV1.text,
-                              fontSize: isCompactRefinedFeedback ? 13.0 : 15.0,
+                                fontSize: isCompactRefinedFeedback
+                                    ? 13.0
+                                    : 15.0,
                               height: 1.12,
                               fontWeight: FontWeight.w900,
                             ),
@@ -5276,7 +5323,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                             receiptNextLine,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: Act0ShellTokensV1.textMuted,
-                              fontSize: isCompactRefinedFeedback ? 10.0 : 10.5,
+                                fontSize: isCompactRefinedFeedback
+                                    ? 10.0
+                                    : 10.5,
                             ),
                           ),
                         ],
@@ -5286,7 +5335,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 ),
               ),
             ],
-            if (!rapidMode && visibleRepairSessionSummaryLines.isNotEmpty) ...[
+              if (!rapidMode &&
+                  visibleRepairSessionSummaryLines.isNotEmpty) ...[
               const SizedBox(height: 8),
               const _FeedbackVerdictDividerV1(),
               const SizedBox(height: 8),
@@ -5295,7 +5345,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 tone: Act0ShellTokensV1.gold,
                 showLabel: false,
                 child: _FeedbackProofKeyWrapperV1(
-                  proofKey: const Key('act0_shell_session_summary_proof_block'),
+                    proofKey: const Key(
+                      'act0_shell_session_summary_proof_block',
+                    ),
                   child: _FeedbackSessionSummaryCeremonyBlockV1(
                     lines: visibleRepairSessionSummaryLines,
                   ),
@@ -5345,6 +5397,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             ],
           ],
         ),
+      ),
       ),
     );
   }
@@ -5449,8 +5502,16 @@ class _FeedbackVisibleRepairReasonBlockV1 extends StatelessWidget {
     if (lines.isEmpty) {
       return const SizedBox.shrink();
     }
-    return KeyedSubtree(
+    return Container(
       key: const Key('act0_shell_visible_repair_reason'),
+      padding: EdgeInsets.all(compact ? 8 : 10),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.24),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -6212,13 +6273,28 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         : const Key('act0_shell_session_summary_hero_payoff'),
                     padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                     decoration: BoxDecoration(
-                      color: celebrateTone.withValues(alpha: 0.12),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[
+                          celebrateTone.withValues(alpha: 0.22),
+                          Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(
                         Act0ShellTokensV1.radiusPanel,
                       ),
                       border: Border.all(
-                        color: celebrateTone.withValues(alpha: 0.28),
+                        color: celebrateTone.withValues(alpha: 0.44),
+                        width: 1.2,
                       ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: celebrateTone.withValues(alpha: 0.12),
+                          blurRadius: 22,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -6281,14 +6357,23 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
+                        KeyedSubtree(
+                          key: payoffHero == null
+                              ? null
+                              : const Key(
+                                  'act0_shell_session_summary_hero_metric',
+                                ),
+                          child: Text(
                           summary.hasWorldOneCompletionPayoff ||
                                   summary.hasWorldCompletionPayoff
                               ? summary.milestoneTitle
-                              : payoffHero?.headline ?? summary.milestoneTitle,
+                                : payoffHero?.headline ??
+                                      summary.milestoneTitle,
                           key: const Key('act0_shell_block_summary_title'),
                           style: Act0ShellTokensV1.screenTitle.copyWith(
-                            fontSize: 28,
+                              fontSize: payoffHero == null ? 28 : 32,
+                              height: 1.0,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -12042,9 +12127,26 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
         ? tone
         : (actionVisual?.tone ?? Act0ShellTokensV1.info);
     final marker = String.fromCharCode(65 + optionIndex);
-    return Material(
-      color: selected ? tone.withValues(alpha: 0.12) : Colors.transparent,
+    return KeyedSubtree(
+      key: actionVisual == null
+          ? null
+          : Key('act0_shell_poker_action_button_${actionVisual.id}'),
+      child: Material(
+        color: selected
+            ? tone.withValues(alpha: 0.16)
+            : actionVisual == null
+            ? Colors.transparent
+            : Act0ShellTokensV1.surface3.withValues(alpha: 0.76),
+        shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18),
+          side: BorderSide(
+            color: selected
+                ? tone.withValues(alpha: 0.52)
+                : actionVisual == null
+                ? Colors.transparent
+                : markerTone.withValues(alpha: 0.22),
+          ),
+        ),
       child: InkWell(
         key: Key('act0_shell_option_${option.id}'),
         onTap: () => onChoose(option),
@@ -12122,7 +12224,9 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
                         style: Act0ShellTokensV1.body.copyWith(
                           color: tone,
                           fontSize: compact ? 12.6 : 13.2,
-                          fontWeight: FontWeight.w700,
+                            fontWeight: actionVisual == null
+                                ? FontWeight.w700
+                                : FontWeight.w900,
                           height: compact ? 1.08 : 1.14,
                         ),
                       ),
@@ -12148,6 +12252,7 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -12252,6 +12357,11 @@ class _ActionPromptPanelV1 extends StatelessWidget {
     final showCompactContextLine =
         compactContextLine.isNotEmpty &&
         compactContextLine != 'Start with what is visible.';
+    final normalizedQuestion = question.trim().toLowerCase();
+    final normalizedTaskLabel = taskLabel.trim().toLowerCase();
+    final isFirstTableOrientation =
+        normalizedQuestion.contains('hero seat') ||
+        normalizedTaskLabel.contains('correct seat');
     Widget buildPromptHeader({bool integrated = false}) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -12271,6 +12381,37 @@ class _ActionPromptPanelV1 extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (isFirstTableOrientation) ...[
+                  Row(
+                    key: const Key('act0_shell_first_table_orientation'),
+                    children: [
+                      const Icon(
+                        Icons.table_restaurant_rounded,
+                        size: 14,
+                        color: Act0ShellTokensV1.info,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'First table read',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.info,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Find your seat first - then we will choose actions.',
+                    style: Act0ShellTokensV1.muted.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      fontSize: 10.6,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                ],
                 if (!effectiveCompactDecision) ...[
                   Align(
                     alignment: Alignment.centerLeft,
@@ -12547,6 +12688,9 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
       key: const Key('act0_shell_theory_recall_cta'),
       onPressed: onPressed,
       style: TextButton.styleFrom(
+        backgroundColor: Act0ShellTokensV1.info.withValues(alpha: 0.10),
+        side: BorderSide(color: Act0ShellTokensV1.info.withValues(alpha: 0.24)),
+        shape: const StadiumBorder(),
         padding: EdgeInsets.symmetric(
           horizontal: effectiveCompact ? 6 : 0,
           vertical: effectiveCompact ? 1 : 2,
@@ -12568,10 +12712,14 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
         ),
       ),
     );
+    final coachingChip = KeyedSubtree(
+      key: const Key('act0_shell_hint_coaching_chip'),
+      child: button,
+    );
     if (centered) {
-      return Align(alignment: Alignment.center, child: button);
+      return Align(alignment: Alignment.center, child: coachingChip);
     }
-    return Align(alignment: Alignment.centerLeft, child: button);
+    return Align(alignment: Alignment.centerLeft, child: coachingChip);
   }
 }
 

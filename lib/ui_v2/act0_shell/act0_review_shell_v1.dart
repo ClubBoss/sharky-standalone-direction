@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -454,64 +455,55 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_empty_repair_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.64),
-        borderColor: Act0ShellTokensV1.primary.withOpacity(0.20),
-        glow: false,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            Act0ShellTokensV1.info.withValues(alpha: 0.13),
+            Act0ShellTokensV1.surface2.withValues(alpha: 0.92),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.28),
+        ),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-            ),
-            child: const Icon(
-              Icons.check_circle_rounded,
-              color: Act0VisualCanonV1.greenTable,
-              size: 19,
+          const Act0SharkyPresenceBubbleV1(
+            line: 'Review is ready',
+            detail:
+                'Finish a lesson - every miss can become one clean repair rep.',
+            mood: Act0SharkyMoodV1.thinking,
+            tone: Act0ShellTokensV1.info,
+            mascotSize: 58,
+            bubblePadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Text(
+            'Misses from lessons will appear here after you try a spot.',
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: 3),
+          Text(
+            'Start on Learn, then come back here for the exact clue.',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              letterSpacing: 0,
             ),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Review is ready',
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  'Misses from lessons will appear here after you try a spot.',
-                  style: Act0ShellTokensV1.muted,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  'Start on Learn, then come back here for the exact clue.',
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    letterSpacing: 0,
-                  ),
-                ),
-                if (onOpenLearn != null) ...[
-                  const SizedBox(height: Act0ShellTokensV1.gapMd),
-                  FilledButton(
-                    key: const Key('act0_shell_review_empty_open_learn_cta'),
-                    onPressed: onOpenLearn,
-                    style: Act0ShellTokensV1.premiumActionButtonStyle(),
-                    child: const Text('Open Learn'),
-                  ),
-                ],
-              ],
+          if (onOpenLearn != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            FilledButton.icon(
+              key: const Key('act0_shell_review_empty_open_learn_cta'),
+              onPressed: onOpenLearn,
+              style: Act0ShellTokensV1.premiumActionButtonStyle(),
+              icon: const Icon(Icons.play_arrow_rounded, size: 19),
+              label: const Text('Open Learn'),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -667,19 +659,20 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final missText = mistake == null
-        ? 'future miss'
+        ? 'exact clue'
         : _reviewMissSlotLabelV1(mistake!);
-    return Column(
-      key: const Key('act0_shell_review_how_it_works_strip'),
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'HOW REVIEW WORKS',
           style: Act0ShellTokensV1.label.copyWith(
-            color: Act0ShellTokensV1.text.withOpacity(0.50),
+            color: mistake == null
+                ? Act0ShellTokensV1.info
+                : Act0ShellTokensV1.text.withOpacity(0.50),
             fontSize: 11,
             letterSpacing: 1.3,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w900,
           ),
         ),
         const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -711,6 +704,24 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
           ],
         ),
       ],
+    );
+    if (mistake != null) {
+      return KeyedSubtree(
+        key: const Key('act0_shell_review_how_it_works_strip'),
+        child: content,
+      );
+    }
+    return Container(
+      key: const Key('act0_shell_review_empty_value_preview'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.62),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+        border: Border.all(
+          color: Act0ShellTokensV1.info.withValues(alpha: 0.20),
+        ),
+      ),
+      child: content,
     );
   }
 }

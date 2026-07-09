@@ -741,6 +741,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         currentMissionLesson: currentMissionLesson,
                         currentMissionTask: currentMissionTask,
                         currentMissionStepIndex: currentMissionStepIndex,
+                        detailMode: detailLessonId != null,
                         onStartMission: currentMissionLesson.isSelectable
                             ? () => widget.onStartTask(
                                 currentMissionLesson.lessonId,
@@ -886,6 +887,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
     required this.currentMissionLesson,
     required this.currentMissionTask,
     required this.currentMissionStepIndex,
+    required this.detailMode,
     required this.onStartMission,
     required this.lessons,
     required this.journeyLessonIndexes,
@@ -917,6 +919,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
   final Act0LessonCardV1 currentMissionLesson;
   final Act0LessonTaskV1 currentMissionTask;
   final int currentMissionStepIndex;
+  final bool detailMode;
   final VoidCallback? onStartMission;
   final List<Act0LessonCardV1> lessons;
   final List<int> journeyLessonIndexes;
@@ -960,11 +963,14 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           stepIndex: currentMissionStepIndex,
           totalSteps: currentMissionLesson.taskList.length,
           accent: Act0ShellTokensV1.primary,
+          detailMode: detailMode,
           onStart: onStartMission,
         ),
         const SizedBox(height: 12),
-        _FoundationProofCardV1(worlds: worlds),
-        const SizedBox(height: 14),
+        if (!detailMode) ...[
+          _FoundationProofCardV1(worlds: worlds),
+          const SizedBox(height: 14),
+        ],
         _JourneyPreviewV5(
           lessons: lessons,
           journeyLessonIndexes: journeyLessonIndexes,
@@ -3554,6 +3560,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
     required this.stepIndex,
     required this.totalSteps,
     required this.accent,
+    required this.detailMode,
     required this.onStart,
   });
 
@@ -3562,6 +3569,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
   final int stepIndex;
   final int totalSteps;
   final Color accent;
+  final bool detailMode;
   final VoidCallback? onStart;
 
   @override
@@ -3580,7 +3588,9 @@ class _CurrentMissionCardV1 extends StatelessWidget {
           visualVariant: visualVariant,
         );
         return Container(
-          key: const Key('act0_shell_current_mission_card'),
+          key: detailMode
+              ? const Key('act0_shell_lesson_detail_hero')
+              : const Key('act0_shell_current_mission_card'),
           width: double.infinity,
           padding: EdgeInsets.fromLTRB(
             compact ? 15 : 18,
@@ -3590,8 +3600,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
           ),
           decoration: _learnV6PrimarySurfaceDecoration(
             radius: Act0ShellTokensV1.radiusXl,
-            borderAlpha: 0.48,
-            glowAlpha: 0.24,
+            borderAlpha: detailMode ? 0.72 : 0.48,
+            glowAlpha: detailMode ? 0.34 : 0.24,
           ),
           child: Stack(
             children: [
@@ -3647,7 +3657,11 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           ],
                         ),
                         child: Text(
-                          _learnCopyV1(context, en: 'Now', ru: 'Сейчас'),
+                          _learnCopyV1(
+                            context,
+                            en: detailMode ? 'Lesson focus' : 'Now',
+                            ru: detailMode ? 'Фокус урока' : 'Сейчас',
+                          ),
                           style: Act0ShellTokensV1.label.copyWith(
                             color: _learnV6Cyan,
                             fontSize: 9.2,
@@ -3659,8 +3673,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                       Text(
                         _learnCopyV1(
                           context,
-                          en: 'Current lesson',
-                          ru: 'Текущий урок',
+                          en: detailMode ? 'Lesson detail' : 'Current lesson',
+                          ru: detailMode ? 'Детали урока' : 'Текущий урок',
                         ),
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.textMuted,
