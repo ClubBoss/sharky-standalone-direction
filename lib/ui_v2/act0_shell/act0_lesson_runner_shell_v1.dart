@@ -2768,14 +2768,14 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
         (usableHeight *
                 (repairFillMode
                     ? _runnerRepairEnvelopeTargetLowerSlotShareV1
-                    : _runnerEnvelopeTargetLowerSlotShareV1))
+                    : _runnerEnvelopeWave1bTargetLowerSlotShareV1))
             .clamp(
               repairFillMode
                   ? _runnerRepairEnvelopeMinLowerSlotHeightV1
-                  : _runnerEnvelopeMinLowerSlotHeightV1,
+                  : _runnerEnvelopeWave1bMinLowerSlotHeightV1,
               repairFillMode
                   ? _runnerRepairEnvelopeTargetLowerSlotHeightV1
-                  : _runnerEnvelopeTargetLowerSlotHeightV1,
+                  : _runnerEnvelopeWave1bTargetLowerSlotHeightV1,
             );
     return _RunnerTaskCycleViewportEnvelopeV1(
       familyName: repairFillMode ? 'repairFill' : viewportFamily.name,
@@ -2783,10 +2783,10 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
       targetLowerSlotHeight: targetLowerSlotHeight,
       minLowerSlotHeight: repairFillMode
           ? _runnerRepairEnvelopeMinLowerSlotHeightV1
-          : _runnerEnvelopeMinLowerSlotHeightV1,
+          : _runnerEnvelopeWave1bMinLowerSlotHeightV1,
       maxLowerSlotShare: repairFillMode
           ? _runnerRepairEnvelopeMaxLowerSlotShareV1
-          : _runnerEnvelopeMaxLowerSlotShareV1,
+          : _runnerEnvelopeWave1bMaxLowerSlotShareV1,
     );
   }
   if (repairFillMode) {
@@ -4502,8 +4502,8 @@ class _SeatTapPromptV1 extends StatelessWidget {
     );
     return Container(
       key: const Key('act0_shell_seat_tap_prompt'),
-      constraints: const BoxConstraints(minHeight: 124),
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
+      constraints: const BoxConstraints(minHeight: 104),
+      padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
       decoration: isFirstTableOrientation
           ? BoxDecoration(
               gradient: LinearGradient(
@@ -4575,55 +4575,47 @@ class _SeatTapPromptV1 extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            'Step 1 · Locate your seat',
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.text,
-                              fontSize: 11.5,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0,
+                      Container(
+                        key: const Key(
+                          'act0_shell_wave1b_actionability_anchor',
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Act0ShellTokensV1.primary.withValues(
+                            alpha: 0.12,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            Act0ShellTokensV1.radiusPill,
+                          ),
+                          border: Border.all(
+                            color: Act0ShellTokensV1.primary.withValues(
+                              alpha: 0.26,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                for (var i = 0; i < 3; i++) ...[
-                                  Expanded(
-                                    child: Container(
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            (i == 0
-                                                    ? Act0ShellTokensV1.info
-                                                    : Act0ShellTokensV1
-                                                          .surface3)
-                                                .withValues(
-                                                  alpha: i == 0 ? 0.95 : 0.55,
-                                                ),
-                                        borderRadius: BorderRadius.circular(99),
-                                      ),
-                                    ),
-                                  ),
-                                  if (i < 2) const SizedBox(width: 3),
-                                ],
-                              ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.touch_app_rounded,
+                              size: 12,
+                              color: Act0ShellTokensV1.primary,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'Read the table from your seat before any action.',
-                        maxLines: 2,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.muted.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w700,
-                          height: 1.08,
+                            const SizedBox(width: 5),
+                            Text(
+                              'Tap your hero seat',
+                              key: const Key('act0_shell_wave1b_answer_peek'),
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: Act0ShellTokensV1.text,
+                                fontSize: 10.0,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -4656,14 +4648,15 @@ class _SeatTapPromptV1 extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text(
                   isFirstTableOrientation
-                      ? 'Find your seat first - then we will choose actions.'
+                      ? 'Use the table markers, then tap.'
                       : helperLine,
                   key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 2,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
                   style: Act0ShellTokensV1.muted.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 12.2,
-                    height: 1.12,
+                    fontSize: isFirstTableOrientation ? 10.6 : 12.2,
+                    height: 1.08,
                   ),
                 ),
                 if (onRecall != null && recallLabel != null) ...[
@@ -5933,50 +5926,53 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
     }
     return KeyedSubtree(
       key: const Key('act0_shell_feedback_signal_proof'),
-      child: Container(
+      child: KeyedSubtree(
         key: const Key('act0_shell_wave1_feedback_signal_bridge'),
-        padding: EdgeInsets.symmetric(
-          horizontal: compact ? 7 : 8,
-          vertical: compact ? 5 : 6,
-        ),
-        decoration: BoxDecoration(
-          color: tone.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
-          border: Border.all(color: tone.withValues(alpha: 0.22)),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.visibility_rounded,
-              color: tone,
-              size: compact ? 12 : 13,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Clue from table',
-              style: Act0ShellTokensV1.label.copyWith(
+        child: Container(
+          key: const Key('act0_shell_wave1b_feedback_evidence_bridge'),
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 6 : 7,
+            vertical: compact ? 3.5 : 4.5,
+          ),
+          decoration: BoxDecoration(
+            color: tone.withValues(alpha: 0.07),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            border: Border.all(color: tone.withValues(alpha: 0.16)),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.visibility_rounded,
                 color: tone,
-                fontSize: compact ? 8.4 : 9.0,
-                fontWeight: FontWeight.w900,
+                size: compact ? 12 : 13,
               ),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                line,
-                key: const Key('act0_shell_feedback_signal_proof_label'),
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
+              const SizedBox(width: 6),
+              Text(
+                'Table evidence',
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                  fontSize: compact ? 10.5 : 11.0,
-                  fontWeight: FontWeight.w800,
-                  height: 1.05,
+                  color: tone,
+                  fontSize: compact ? 8.0 : 8.6,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  line,
+                  key: const Key('act0_shell_feedback_signal_proof_label'),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontSize: compact ? 10.5 : 11.0,
+                    fontWeight: FontWeight.w800,
+                    height: 1.05,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -8527,10 +8523,10 @@ const double _compactAnswerListPhoneMaxShortestSideV1 = 600;
 const double _compactAnswerListUsableHeightBudgetV1 = 900;
 const double _compactAnswerListStageFillAspectV1 = 0.66;
 const double _runnerProgressRowHeightV1 = 34;
-const double _runnerEnvelopeMinLowerSlotHeightV1 = 220;
-const double _runnerEnvelopeTargetLowerSlotHeightV1 = 284;
-const double _runnerEnvelopeTargetLowerSlotShareV1 = 0.329;
-const double _runnerEnvelopeMaxLowerSlotShareV1 = 0.36;
+const double _runnerEnvelopeWave1bMinLowerSlotHeightV1 = 365;
+const double _runnerEnvelopeWave1bTargetLowerSlotHeightV1 = 405;
+const double _runnerEnvelopeWave1bTargetLowerSlotShareV1 = 0.50;
+const double _runnerEnvelopeWave1bMaxLowerSlotShareV1 = 0.54;
 const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
 const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
@@ -8763,17 +8759,25 @@ class _CenterPotV1 extends StatelessWidget {
             key: const Key('act0_shell_wave1_status_cluster'),
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (shouldShowFocusBadge) ...[
-                _CenterSignalAnchorV1(
-                  label: act0RuntimeLocalizedCenterLabelV1(
-                    context,
-                    resolvedCenterLabel,
-                  ),
-                  compact: refined,
-                ),
-                const SizedBox(height: 4),
-              ],
-              _CenterStreetStatusV1(label: streetLabel, compact: refined),
+              Wrap(
+                key: const Key('act0_shell_wave1b_status_lane'),
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 5,
+                runSpacing: 3,
+                children: [
+                  if (shouldShowFocusBadge) ...[
+                    _CenterSignalAnchorV1(
+                      label: act0RuntimeLocalizedCenterLabelV1(
+                        context,
+                        resolvedCenterLabel,
+                      ),
+                      compact: refined,
+                    ),
+                  ],
+                  _CenterStreetStatusV1(label: streetLabel, compact: refined),
+                ],
+              ),
             ],
           ),
           if (table.boardCards.isNotEmpty) ...[
@@ -8856,59 +8860,62 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return KeyedSubtree(
       key: const Key('act0_shell_wave1_table_signal_anchor'),
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 8 : 10,
-        vertical: compact ? 5 : 6,
-      ),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
-        border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.36),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.visibility_rounded,
-            color: Act0ShellTokensV1.primary,
-            size: compact ? 13 : 14,
+      child: Tooltip(
+        message: 'Table clue',
+        child: Container(
+          key: const Key('act0_shell_wave1b_table_signal_chip'),
+          padding: EdgeInsets.symmetric(
+            horizontal: compact ? 7 : 9,
+            vertical: compact ? 3.5 : 4.5,
           ),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Table clue',
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.primary,
-                    fontSize: compact ? 7.8 : 8.4,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Text(
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.primary.withValues(alpha: 0.11),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            border: Border.all(
+              color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
+                blurRadius: compact ? 5 : 7,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.visibility_rounded,
+                color: Act0ShellTokensV1.primary,
+                size: compact ? 11 : 12,
+              ),
+              const SizedBox(width: 5),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: compact ? 86 : 118),
+                child: Text(
                   label,
-                  key: const Key('act0_shell_center_focus_badge'),
-                  maxLines: 2,
+                  key: const Key('act0_shell_wave1b_table_signal_text'),
+                  maxLines: 1,
                   overflow: TextOverflow.fade,
+                  softWrap: false,
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.text,
-                    fontSize: compact ? 9.2 : 10.2,
+                    fontSize: compact ? 8.8 : 9.6,
                     fontWeight: FontWeight.w900,
-                    height: 1.05,
+                    height: 1.0,
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                key: const Key('act0_shell_center_focus_badge'),
+                width: 0,
+                height: 0,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -8925,14 +8932,14 @@ class _CenterStreetStatusV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_center_street_badge'),
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 7 : 9,
+        horizontal: compact ? 6 : 8,
         vertical: compact ? 3 : 4,
       ),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.gold.withValues(alpha: 0.10),
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
         border: Border.all(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.28),
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
         ),
       ),
       child: Row(
@@ -8940,15 +8947,15 @@ class _CenterStreetStatusV1 extends StatelessWidget {
         children: [
           Icon(
             Icons.layers_rounded,
-            color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
-            size: compact ? 10 : 11,
+            color: Act0ShellTokensV1.gold.withValues(alpha: 0.92),
+            size: compact ? 9 : 10,
           ),
           const SizedBox(width: 4),
           Text(
             label,
             style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.gold.withValues(alpha: 0.96),
-              fontSize: compact ? 8.1 : 8.8,
+              color: Act0ShellTokensV1.gold.withValues(alpha: 0.94),
+              fontSize: compact ? 7.8 : 8.5,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -8984,20 +8991,20 @@ class _CenterPriorityStatV1 extends StatelessWidget {
         vertical: compact ? 4.5 : 5.5,
       ),
       decoration: BoxDecoration(
-        color: tone.withValues(alpha: 0.13),
+        color: tone.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: tone.withValues(alpha: 0.28)),
+        border: Border.all(color: tone.withValues(alpha: 0.24)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: compact ? 12 : 13, color: tone),
+          Icon(icon, size: compact ? 11 : 12, color: tone),
           const SizedBox(width: 5),
           Text(
             label,
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.text,
-              fontSize: compact ? 9.2 : 10.0,
+              fontSize: compact ? 8.8 : 9.8,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -9445,18 +9452,23 @@ class _SeatNodeV1 extends StatelessWidget {
                               : null,
                         ),
                         child: hero
-                            ? FittedBox(
+                            ? KeyedSubtree(
                                 key: const Key(
                                   'act0_shell_wave1_hero_you_badge',
                                 ),
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'You',
-                                  style: Act0ShellTokensV1.label.copyWith(
-                                    color: Act0ShellTokensV1.onPrimary,
-                                    fontSize: refined ? 7.4 : 7.8,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 0,
+                                child: FittedBox(
+                                  key: const Key(
+                                    'act0_shell_wave1b_hero_badge',
+                                  ),
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'You',
+                                    style: Act0ShellTokensV1.label.copyWith(
+                                      color: Act0ShellTokensV1.onPrimary,
+                                      fontSize: refined ? 7.2 : 7.6,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 0,
+                                    ),
                                   ),
                                 ),
                               )
@@ -11450,34 +11462,37 @@ class _MarkerDotV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (marker == _SeatMarkerKindV1.dealer) {
-      return Container(
+      return KeyedSubtree(
         key: const Key('act0_shell_wave1_dealer_marker'),
-        width: 24,
-        height: 16,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[Colors.white, Color(0xFFE2E8F0)],
-          ),
-          border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 4,
-              offset: Offset(0, 2),
+        child: Container(
+          key: const Key('act0_shell_wave1b_button_marker'),
+          width: 24,
+          height: 15,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: <Color>[Color(0xFFF8FAFC), Color(0xFFDCE7F2)],
             ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: const Text(
-          'BTN',
-          style: TextStyle(
-            color: Color(0xFF1E293B),
-            fontSize: 7.2,
-            fontWeight: FontWeight.w900,
-            height: 1.0,
+            border: Border.all(color: const Color(0xFFB7C4D3), width: 1),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 3,
+                offset: Offset(0, 1.4),
+              ),
+            ],
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'BTN',
+            style: TextStyle(
+              color: Color(0xFF1E293B),
+              fontSize: 7.0,
+              fontWeight: FontWeight.w900,
+              height: 1.0,
+            ),
           ),
         ),
       );
@@ -12579,51 +12594,83 @@ class _ActionPromptPanelV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isFirstTableOrientation) ...[
-                  Column(
-                    key: const Key('act0_shell_first_table_read_milestone'),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        key: const Key('act0_shell_first_table_orientation'),
-                        children: [
-                          const Icon(
-                            Icons.table_restaurant_rounded,
-                            size: 14,
-                            color: Act0ShellTokensV1.info,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'First table read',
+                  if (effectiveCompactDecision)
+                    Row(
+                      key: const Key('act0_shell_first_table_read_milestone'),
+                      children: [
+                        const Icon(
+                          Icons.table_restaurant_rounded,
+                          size: 13,
+                          color: Act0ShellTokensV1.info,
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            'First table read · Locate your seat',
+                            key: const Key(
+                              'act0_shell_first_table_orientation',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
                             style: Act0ShellTokensV1.label.copyWith(
                               color: Act0ShellTokensV1.info,
+                              fontSize: 10.0,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Step 1 · Locate your seat',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 0,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Read the table from your seat before any action.',
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      fontSize: 10.6,
-                      fontWeight: FontWeight.w700,
+                      ],
+                    )
+                  else ...[
+                    Column(
+                      key: const Key('act0_shell_first_table_read_milestone'),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          key: const Key('act0_shell_first_table_orientation'),
+                          children: [
+                            const Icon(
+                              Icons.table_restaurant_rounded,
+                              size: 14,
+                              color: Act0ShellTokensV1.info,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'First table read',
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: Act0ShellTokensV1.info,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Step 1 · Locate your seat',
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: Act0ShellTokensV1.text,
+                            fontSize: 10.8,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 6),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Read the table from your seat before any action.',
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w700,
+                        height: 1.05,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 4),
                 ],
                 if (!effectiveCompactDecision) ...[
                   Align(
@@ -12789,7 +12836,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
             key: const Key('act0_shell_runner_decision_rhythm_surface'),
             child: Container(
               key: const Key('act0_shell_compact_decision_surface'),
-              padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
+              padding: const EdgeInsets.fromLTRB(8, 5, 8, 6),
               decoration: BoxDecoration(
                 color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
                 borderRadius: BorderRadius.circular(18),
@@ -12814,7 +12861,13 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                     trailingContext!,
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
                   ],
-                  child,
+                  KeyedSubtree(
+                    key: const Key('act0_shell_wave1b_actionability_anchor'),
+                    child: KeyedSubtree(
+                      key: const Key('act0_shell_wave1b_answer_peek'),
+                      child: child,
+                    ),
+                  ),
                 ],
               ),
             ),

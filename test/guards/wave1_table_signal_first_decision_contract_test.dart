@@ -32,7 +32,7 @@ void main() {
     ).readAsStringSync();
 
     expect(source, contains('act0_shell_wave1_feedback_signal_bridge'));
-    expect(source, contains('Clue from table'));
+    expect(source, contains('Table evidence'));
   });
 
   test('wave1 visual pack builder names the required evidence output', () {
