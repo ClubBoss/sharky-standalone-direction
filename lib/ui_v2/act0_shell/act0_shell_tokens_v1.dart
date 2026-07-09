@@ -421,7 +421,29 @@ class Act0ShellTokensV1 {
   static ButtonStyle premiumActionButtonStyle({
     double height = primaryCtaHeight,
   }) {
-    return primaryButtonStyle(height: height);
+    return ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return actionCyan.withValues(alpha: 0.34);
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return Act0TableFeltCanonV1.feltCenter;
+        }
+        return actionCyan;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return primaryDark.withValues(alpha: 0.52);
+        }
+        return primaryDark;
+      }),
+      minimumSize: WidgetStatePropertyAll<Size>(Size(double.infinity, height)),
+      shape: WidgetStatePropertyAll<OutlinedBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(ctaRadius)),
+      ),
+      textStyle: const WidgetStatePropertyAll<TextStyle>(cta),
+      elevation: const WidgetStatePropertyAll<double>(0),
+    );
   }
 
   static ButtonStyle quietButtonStyle({double height = compactCtaHeight}) {

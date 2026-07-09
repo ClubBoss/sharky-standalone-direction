@@ -144,7 +144,7 @@ act0RuntimeGenericLabelAtomByEnglishV1 = <String, String>{
   'A stable bridge into deeper strategy':
       'runtime_phrase_stable_bridge_deeper_strategy',
   'A-K appears more often': 'runtime_phrase_ak_appears_more_often',
-  'Activate one trigger-action lever now':
+  'Use one prepared live cue now':
       'runtime_phrase_activate_one_trigger_lever_now',
   'Apply selective open pressure':
       'runtime_phrase_apply_selective_open_pressure',

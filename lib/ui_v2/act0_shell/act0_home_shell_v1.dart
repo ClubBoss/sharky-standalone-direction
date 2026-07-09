@@ -362,12 +362,13 @@ class Act0HomeShellV1 extends StatelessWidget {
             title: act0LocalizedSurfaceAtomV1(
               context,
               'home_checklist_no_old_spots_title',
-              fallback: 'No old spots due',
+              fallback: 'Review stays ready',
             ),
             detail: act0LocalizedSurfaceAtomV1(
               context,
               'home_checklist_no_old_spots_detail',
-              fallback: 'Nothing to review right now.',
+              fallback:
+                  'Misses from lessons appear here when there is a real clue to fix.',
             ),
             icon: Icons.check_circle_outline_rounded,
             accentColor: Act0VisualCanonV1.greenTable,

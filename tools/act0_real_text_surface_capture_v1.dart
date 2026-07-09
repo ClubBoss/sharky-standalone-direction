@@ -221,12 +221,12 @@ const _routeW7W12CaptureSurfacesV1 = <_RouteCaptureSurfaceV1>[
   _RouteCaptureSurfaceV1(
     'volume_i_terminal_review',
     'volume_i_terminal_review_v1',
-    'Volume I Terminal Review',
+    'Volume I review',
   ),
   _RouteCaptureSurfaceV1(
     'no_w13_terminal_state',
     'volume_i_terminal_review_v1',
-    'Volume I Terminal Review',
+    'Volume I review',
     startHandIndex: 3,
   ),
 ];
@@ -1075,9 +1075,9 @@ void main() {
       ],
       learnerPrompt: step.prompt,
       choiceLabels: <String, String>{
-        expected: expected == 'btn'
-            ? 'Start the keep-sharp review.'
-            : 'Stay in terminal review.',
+	        expected: expected == 'btn'
+	            ? 'Start the keep-sharp review.'
+	            : 'Stay in Volume I review.',
         'expect_w13': 'Expect W13 to open now.',
         'expect_new_world': 'Treat this as a new world.',
         'skip_review': 'Skip the review state.',
@@ -1143,10 +1143,10 @@ void main() {
         isCorrect: correct,
         preferredLabel: labels[task.expectedChoiceId] ?? task.expectedChoiceId,
         quality: correct ? Act0FeedbackQualityV1.correct : Act0FeedbackQualityV1.wrong,
-        feedbackTitle: correct ? 'Good route read.' : 'Use the route clue.',
-        feedbackReason: correct
-            ? task.feedbackReason as String
-            : 'This choice misses the visible route clue: \${task.learningPurpose}.',
+	        feedbackTitle: correct ? 'Good route read.' : 'Use the route clue.',
+	        feedbackReason: correct
+	            ? task.feedbackReason as String
+	            : 'Look for the table clue first: \${task.learningPurpose}.',
         repairFocusLabels: <String>[
           humanRepairFocusLabelForConceptFamily(task.conceptFamilyId as String),
           task.boardContext as String,
@@ -1156,13 +1156,13 @@ void main() {
   }
 
   String worldTitleForTask(dynamic task) {
-    final worldId = task.worldId as String;
-    if (worldId.contains('terminal')) {
-      return 'Volume I Terminal Review';
-    }
-    final number = worldId.replaceAll('world_', '');
-    return 'W\$number Active Route';
-  }
+	    final worldId = task.worldId as String;
+	    if (worldId.contains('terminal')) {
+	      return 'Volume I review';
+	    }
+	    final number = worldId.replaceAll('world_', '');
+	    return 'World \$number practice';
+	  }
 
   List<Act0CardStateV1> boardCardsForWorld(String worldId, String taskId) {
     if (worldId == 'world_7') {

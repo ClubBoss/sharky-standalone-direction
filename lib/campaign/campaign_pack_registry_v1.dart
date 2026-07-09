@@ -1070,17 +1070,17 @@ List<MicroTaskStep> _w12ReviewPayoffCampaignPackV1() => <MicroTaskStep>[
   ),
   _w12ReviewPayoffStepV1(
     prompt: 'Mindset bridge close: process, reset, discipline. Tap Hijack.',
-    hint: 'W12 routes to terminal review without opening a future world.',
+    hint: 'W12 closes into Volume I review without opening a new world.',
     expectedSeatId: 'hj',
     boardCards: <String>['Jc', 'Tc', '8d'],
     contextText:
-        'The W12 teaching identity is Mindset Bridge. The terminal review remains the post-completion recap destination.',
+        'The W12 teaching identity is Mindset Bridge. Volume I review remains the post-completion recap destination.',
     tradeoffText:
-        'Carry process/reset/discipline to terminal review, or treat recap as a new world unlock.',
+        'Carry process/reset/discipline to Volume I review, or treat recap as a new world unlock.',
     consequenceText:
         'Terminal-safe bridge: +8 chips. Future-world drift: -6 chips.',
     insightText:
-        'W12 closes Volume I habits and hands off to terminal review, not a future world.',
+        'W12 closes Volume I habits and hands off to review, not a future world.',
   ),
 ];
 
@@ -1093,16 +1093,14 @@ List<MicroTaskStep> _w12ReviewPayoffFollowupB2V1() =>
 List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
   MicroTaskStep(
     prompt: 'Volume I review is complete. Start the keep-sharp review.',
-    hint: 'The route is at a terminal review state.',
+    hint: 'Stay in review and keep the Volume I clues sharp.',
     expectedSeatIds: <String>['btn'],
     contextText:
-        'Volume I review is complete; this keep-sharp review is intentional, and no future world is open in this route.',
+        'Volume I review is complete. This keep-sharp review is intentional. Later worlds stay locked for now.',
     tradeoffText:
         'Use this as a keep-sharp review, or mistake it for a new world.',
-    consequenceText:
-        'Terminal review held: +8 chips. Route-confusion: -6 chips.',
-    insightText:
-        'The next visible activity is review and keep-sharp work, not a W6 regression.',
+    consequenceText: 'Review state held: +8 chips. New-world drift: -6 chips.',
+    insightText: 'The next visible activity is review and keep-sharp work.',
   ),
   MicroTaskStep(
     prompt: 'Keep-sharp review: connect the clue stack. Tap Cutoff.',
@@ -1114,7 +1112,7 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
         'Review the clue stack, or treat the terminal state as a proof claim.',
     consequenceText: 'Review state clear: +8 chips. Proof overclaim: -6 chips.',
     insightText:
-        'Terminal review repeats earlier clues without making a proof claim.',
+        'This review repeats earlier clues without making a proof claim.',
   ),
   MicroTaskStep(
     prompt: 'Keep-sharp review: name the missed cue. Tap Big Blind.',
@@ -1128,16 +1126,16 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
         'Volume I can be reviewed here; no next-world promise is made.',
   ),
   MicroTaskStep(
-    prompt: 'Terminal check: Volume I stays in review. Tap Small Blind.',
-    hint: 'Stop at review; do not expect a future world in this route.',
+    prompt: 'Volume I close: stay in review. Tap Small Blind.',
+    hint: 'Later worlds stay locked for now.',
     expectedSeatIds: <String>['sb'],
     contextText:
-        'Volume I review is complete, no future world is open, and later worlds remain blocked in this route.',
+        'Volume I review is complete. Later worlds stay locked for now. Stay in review and keep the Volume I clues sharp.',
     tradeoffText:
-        'Stay in review mode, or expect an unavailable route to open.',
-    consequenceText: 'Terminal close: +8 chips. Route overreach: -6 chips.',
+        'Stay in review mode, or expect an unavailable world to open.',
+    consequenceText: 'Review close: +8 chips. Unlock assumption: -6 chips.',
     insightText:
-        'Use the review loop to keep clues sharp while later worlds stay blocked.',
+        'Use the review loop to keep clues sharp while later worlds stay locked.',
   ),
 ];
 

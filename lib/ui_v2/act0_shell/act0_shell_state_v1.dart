@@ -21598,41 +21598,41 @@ final _w11CheckpointPlanLineRunner = _w11ReviewLoopIntroRunner.copyWith(
 final _w11CheckpointTriggerLineRunner = _w11ReviewLoopIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_checkpoint_trigger_line',
-  caption: 'You detect repeated blind overfold and river underbluff patterns.',
-  hint: 'Pick one trigger-action pair first.',
+  caption: 'You notice repeated blind overfold and river underbluff patterns.',
+  hint: 'Pick one prepared live cue first.',
   question: 'Which transfer action is best?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'all_trigger_actions',
       label: 'Use both trigger and review changes now',
       isCorrect: false,
-      preferredLabel: 'Activate one trigger-action lever now',
-      betterAnswerLabel: 'Activate one trigger-action lever now',
+      preferredLabel: 'Use one prepared live cue now',
+      betterAnswerLabel: 'Use one prepared live cue now',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too broad.',
       feedbackReason:
-          'Multi-lever changes create noise and execution errors. Start with one trigger-action pair.',
+          'Multiple changes create noise and execution errors. Start with one live cue.',
     ),
     Act0RunnerOptionV1(
       id: 'ignore_triggers',
       label: 'Log the trigger and wait for review',
       isCorrect: false,
-      preferredLabel: 'Activate one trigger-action lever now',
-      betterAnswerLabel: 'Activate one trigger-action lever now',
+      preferredLabel: 'Use one prepared live cue now',
+      betterAnswerLabel: 'Use one prepared live cue now',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Review matters.',
       feedbackReason:
-          'Review is important, but in-session trigger execution is the transfer mechanism itself.',
+          'Review is important, but the prepared cue has to guide the live decision.',
     ),
     Act0RunnerOptionV1(
       id: 'one_trigger_action',
-      label: 'Activate one trigger-action lever now',
+      label: 'Use one prepared live cue now',
       isCorrect: true,
-      preferredLabel: 'Activate one trigger-action lever now',
+      preferredLabel: 'Use one prepared live cue now',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'One trigger, one lever.',
+      feedbackTitle: 'One cue, one action.',
       feedbackReason:
-          'Single trigger-action execution keeps transfer disciplined and observable in real play.',
+          'A single prepared cue keeps transfer disciplined and observable in real play.',
     ),
   ],
 );

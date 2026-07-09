@@ -770,8 +770,8 @@ const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
             'You learned how to judge process, reset tilt, and keep discipline '
             'before deeper strategy.',
         previewLine:
-            'Volume I terminal review brings the route together without '
-            'opening a future world.',
+            'Volume I review brings the route together while later worlds '
+            'stay locked.',
       ),
     };
 

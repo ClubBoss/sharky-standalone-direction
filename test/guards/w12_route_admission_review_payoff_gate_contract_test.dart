@@ -117,11 +117,13 @@ void main() {
 
     expect(copy, contains('volume i'));
     expect(copy, contains('review is complete'));
-    expect(copy, contains('no future world is open'));
+    expect(copy, contains('later worlds stay locked for now'));
     expect(copy, contains('keep-sharp'));
     expect(copy, contains('review'));
     expect(copy, contains('intentional'));
     expect(copy, contains('later worlds'));
+    expect(copy, isNot(contains('no future world is open')));
+    expect(copy, isNot(contains('blocked in this route')));
     expect(copy, isNot(contains('tap button for a keep-sharp review')));
     expect(copy, isNot(contains('seat label')));
     expect(copy, isNot(contains('practice cta')));

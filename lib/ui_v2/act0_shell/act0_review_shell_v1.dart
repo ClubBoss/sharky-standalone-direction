@@ -418,7 +418,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            'This opens the exact practice drill again, not an Act0 task repair.',
+            'This reopens the same drill so you can try the clue again.',
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontWeight: FontWeight.w800,
@@ -428,7 +428,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           FilledButton(
             key: const Key('act0_shell_review_recheck_cta'),
             onPressed: () => onStart(item),
-            style: Act0ShellTokensV1.primaryButtonStyle(
+            style: Act0ShellTokensV1.premiumActionButtonStyle(
               height: Act0ShellTokensV1.compactCtaHeight,
             ),
             child: const Text('Practice this spot again'),
@@ -453,6 +453,7 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
         glow: false,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 32,
@@ -469,12 +470,30 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
           ),
           const SizedBox(width: Act0ShellTokensV1.gapMd),
           Expanded(
-            child: Text(
-              'Nothing to fix right now.',
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.text,
-                fontWeight: FontWeight.w800,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Review is ready',
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Misses from lessons will appear here after you try a spot.',
+                  style: Act0ShellTokensV1.muted,
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Start on Learn, then come back here for the exact clue.',
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -532,7 +551,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'PRACTICE THIS CLUE NEXT',
+                  'MISS TO REPAIR',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontSize: 11,
@@ -575,7 +594,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   ),
                   const SizedBox(height: Act0ShellTokensV1.gapXs),
                   Text(
-                    'You are working on $patternFocus.',
+                    'Miss: $patternFocus. Repair: spot it before choosing.',
                     key: const Key('act0_shell_review_pattern_focus_line'),
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
@@ -612,7 +631,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             FilledButton(
               key: const Key('act0_shell_review_practice_cta'),
               onPressed: () => onFixMistake!(mistake),
-              style: Act0ShellTokensV1.primaryButtonStyle(
+              style: Act0ShellTokensV1.premiumActionButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
               child: const Text('Practice this spot'),
@@ -632,7 +651,7 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final missText = mistake == null
-        ? 'miss lands here'
+        ? 'future miss'
         : _reviewMissSlotLabelV1(mistake!);
     return Column(
       key: const Key('act0_shell_review_how_it_works_strip'),
@@ -661,7 +680,7 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
             const Expanded(
               child: _ReviewBenchSlotV1(
                 label: 'REPAIR',
-                value: 'one clean rep',
+                value: 'focused rep',
                 filled: false,
               ),
             ),
@@ -669,7 +688,7 @@ class _ReviewHowItWorksStripV1 extends StatelessWidget {
             const Expanded(
               child: _ReviewBenchSlotV1(
                 label: 'PROOF',
-                value: 'banked read',
+                value: 'proof note',
                 filled: false,
               ),
             ),

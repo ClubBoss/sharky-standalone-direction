@@ -2836,7 +2836,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       endXp: 0,
       xpTarget: 200,
       sharkyLine:
-          'Volume I terminal review brings the route together without opening a future world.',
+          'Volume I review brings the route together while later worlds stay locked.',
       skillGains: <Act0SkillGainV1>[
         Act0SkillGainV1(
           label: 'Process discipline',
@@ -2852,7 +2852,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       milestoneTier: Act0ProgressMilestoneTierV1.world,
       worldNumber: 12,
       worldTitle: 'Mindset Bridge',
-      nextWorldTitle: 'Volume I terminal review',
+      nextWorldTitle: 'Volume I review',
       perfectClearCount: 12,
       completedClearCount: 12,
       futureRecheckCount: 0,

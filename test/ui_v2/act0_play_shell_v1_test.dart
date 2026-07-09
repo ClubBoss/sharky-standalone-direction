@@ -182,11 +182,11 @@ void main() {
     );
     expect(
       cta.style?.backgroundColor?.resolve(<WidgetState>{}),
-      Act0ShellTokensV1.actionBlue,
+      Act0ShellTokensV1.actionCyan,
     );
     expect(
       cta.style?.foregroundColor?.resolve(<WidgetState>{}),
-      Act0ShellTokensV1.text,
+      Act0ShellTokensV1.primaryDark,
     );
 
     await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
@@ -603,9 +603,9 @@ void main() {
 
     final empty = find.byKey(const Key('act0_shell_play_repair_empty'));
     expect(empty, findsOneWidget);
-    expect(find.text('No saved miss yet'), findsOneWidget);
+    expect(find.text('Repair unlocks from real misses'), findsOneWidget);
     expect(
-      find.text('First-week goal: understand the spot, not rush the map.'),
+      find.text('Miss a lesson spot and Practice brings back the same clue.'),
       findsOneWidget,
     );
     expect(
@@ -752,9 +752,14 @@ void main() {
         find.text('More practice areas open with the route'),
         findsNothing,
       );
-      expect(find.text('More drills coming later'), findsOneWidget);
       expect(
-        find.text('Future drill areas stay secondary for beta.'),
+        find.text('More practice opens through the route'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Locked topics stay below today\'s rep. Finish route steps to open more.',
+        ),
         findsOneWidget,
       );
       expect(find.textContaining('drill gym'), findsNothing);

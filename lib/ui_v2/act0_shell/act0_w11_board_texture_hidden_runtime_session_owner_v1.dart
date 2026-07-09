@@ -224,8 +224,8 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
     skillAtomId: 'w11_trigger_transfer_read',
     errorType: 'missed_table_trigger',
     drillKind: 'real_play_transfer_choice_v1',
-    boardContext: 'Repeated blind overfold trigger',
-    learningPurpose: 'Use one live trigger to apply a prepared adjustment.',
+    boardContext: 'Repeated blind overfold cue',
+    learningPurpose: 'Use one live cue to apply a prepared adjustment.',
     expectedChoiceId: 'activate_one_trigger',
     choiceIds: <String>[
       'apply_all_triggers',
@@ -235,18 +235,18 @@ act0W11BoardTextureHiddenTaskSpecsV1 = <Act0W11BoardTextureHiddenTaskSpecV1>[
     ],
     learnerPrompt: 'A repeated live trigger appears. What is the clean action?',
     choiceLabels: <String, String>{
-      'activate_one_trigger': 'Activate one trigger-action lever.',
-      'apply_all_triggers': 'Apply every possible trigger at once.',
-      'ignore_live_trigger': 'Ignore the live trigger.',
+      'activate_one_trigger': 'Use one prepared live cue.',
+      'apply_all_triggers': 'Apply every possible cue at once.',
+      'ignore_live_trigger': 'Ignore the live cue.',
       'wait_for_results_only': 'Wait for results before acting.',
     },
     feedbackReason:
-        'Transfer works when one repeated trigger activates one prepared lever.',
+        'Transfer works when one repeated cue activates one prepared action.',
     incorrectFeedback: <String, String>{
-      'apply_all_triggers': 'Many simultaneous levers create noisy execution.',
-      'ignore_live_trigger': 'A repeated trigger is the live transfer cue.',
+      'apply_all_triggers': 'Many simultaneous cues create noisy execution.',
+      'ignore_live_trigger': 'A repeated cue is the live transfer signal.',
       'wait_for_results_only':
-          'The W11 loop acts from a prepared trigger, then reviews.',
+          'The W11 loop acts from a prepared cue, then reviews.',
     },
     practiceCtaAllowed: true,
     mapperNoTargetReason: '',

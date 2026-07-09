@@ -304,7 +304,7 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
         drillKind: 'mindset_bridge_checkpoint_choice_v1',
         boardContext: 'Process, reset, discipline loop',
         learningPurpose:
-            'Combine the W12 bridge habits before terminal review.',
+            'Combine the W12 bridge habits before Volume I review.',
         expectedChoiceId: 'process_reset_discipline',
         choiceIds: <String>[
           'result_reset_ego',
@@ -312,8 +312,7 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
           'future_world_unlock',
           'process_reset_discipline',
         ],
-        learnerPrompt:
-            'What is the W12 bridge before Volume I terminal review?',
+        learnerPrompt: 'What is the W12 bridge before Volume I review?',
         choiceLabels: <String, String>{
           'process_reset_discipline': 'Process, reset, and discipline.',
           'result_reset_ego': 'Result, reset, and ego.',
@@ -327,7 +326,7 @@ act0W12ReviewDecisionHiddenTaskSpecsV1 =
           'result_reset_ego': 'Outcome and ego are the traps W12 controls.',
           'skip_reset': 'Reset is one of the bridge habits.',
           'future_world_unlock':
-              'W12 routes to terminal review, not a future world.',
+              'W12 routes to Volume I review, not a future world.',
         },
         practiceCtaAllowed: true,
         mapperNoTargetReason: '',

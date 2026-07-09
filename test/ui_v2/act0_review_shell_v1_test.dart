@@ -141,8 +141,8 @@ void main() {
       expect(find.text('No-bet-yet clue'), findsOneWidget);
       expect(find.text('REPAIR'), findsOneWidget);
       expect(find.text('PROOF'), findsOneWidget);
-      expect(find.text('one clean rep'), findsOneWidget);
-      expect(find.text('banked read'), findsOneWidget);
+      expect(find.text('focused rep'), findsOneWidget);
+      expect(find.text('proof note'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_review_bench_footer_content')),
         findsOneWidget,
@@ -155,7 +155,7 @@ void main() {
       );
       expect(find.text('Active repair'), findsNothing);
       expect(find.text('One miss to fix.'), findsNothing);
-      expect(find.text('PRACTICE THIS CLUE NEXT'), findsOneWidget);
+      expect(find.text('MISS TO REPAIR'), findsOneWidget);
       expect(find.text('Active repair note'), findsNothing);
       expect(find.text('Your active repair is waiting on Home.'), findsNothing);
       expect(find.text('1 fix waiting'), findsNothing);
@@ -164,7 +164,10 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Pattern to practice'), findsOneWidget);
-      expect(find.text('You are working on No bet yet.'), findsOneWidget);
+      expect(
+        find.text('Miss: No bet yet. Repair: spot it before choosing.'),
+        findsOneWidget,
+      );
       expect(
         find.text('Next rep: spot the clue before choosing.'),
         findsOneWidget,
@@ -218,7 +221,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tappedMistake, activeMistake);
-    expect(find.text('PRACTICE THIS CLUE NEXT'), findsOneWidget);
+    expect(find.text('MISS TO REPAIR'), findsOneWidget);
     expect(find.text('Pattern to practice'), findsOneWidget);
     expect(
       find.text('Keep this read warm with one quick rep.'),
@@ -487,8 +490,8 @@ void main() {
         ),
         findsNothing,
       );
-      expect(find.text('one clean rep'), findsNothing);
-      expect(find.text('banked read'), findsNothing);
+      expect(find.text('focused rep'), findsNothing);
+      expect(find.text('proof note'), findsNothing);
       expect(find.textContaining('showing up 2 times'), findsNothing);
       expect(find.textContaining('next spot gets easier'), findsNothing);
       expect(find.textContaining('leak'), findsNothing);
@@ -513,7 +516,16 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Nothing to fix right now.'), findsOneWidget);
+    expect(find.text('Review is ready'), findsOneWidget);
+    expect(
+      find.text('Misses from lessons will appear here after you try a spot.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Start on Learn, then come back here for the exact clue.'),
+      findsOneWidget,
+    );
+    expect(find.text('Nothing to fix right now.'), findsNothing);
     expect(find.text('No misses saved yet'), findsNothing);
     expect(find.text('Pattern to practice'), findsNothing);
     expect(
@@ -543,7 +555,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('1 miss to fix'), findsOneWidget);
-    expect(find.text('PRACTICE THIS CLUE NEXT'), findsOneWidget);
+    expect(find.text('MISS TO REPAIR'), findsOneWidget);
     expect(find.text('Active repair note'), findsNothing);
     expect(find.text('Worth replaying'), findsOneWidget);
     expect(find.textContaining('Recovered'), findsNothing);
@@ -604,7 +616,8 @@ void main() {
 
     expect(find.text('Review'), findsOneWidget);
     expect(find.text('1 miss to fix'), findsNothing);
-    expect(find.text('Nothing to fix right now.'), findsOneWidget);
+    expect(find.text('Review is ready'), findsOneWidget);
+    expect(find.text('Nothing to fix right now.'), findsNothing);
     expect(find.text('HOW REVIEW WORKS'), findsOneWidget);
     expect(find.text('MISS'), findsOneWidget);
     expect(
@@ -613,8 +626,8 @@ void main() {
     );
     expect(find.text('REPAIR'), findsOneWidget);
     expect(find.text('PROOF'), findsOneWidget);
-    expect(find.text('one clean rep'), findsOneWidget);
-    expect(find.text('banked read'), findsOneWidget);
+    expect(find.text('focused rep'), findsOneWidget);
+    expect(find.text('proof note'), findsOneWidget);
     expect(
       find.text(
         'Nothing else is due. Misses land here the moment they happen.',
@@ -780,7 +793,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('PRACTICE THIS CLUE NEXT'), findsOneWidget);
+    expect(find.text('MISS TO REPAIR'), findsOneWidget);
     expect(find.text('Active repair note'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_review_mistake_history_list')),

@@ -475,8 +475,8 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpAndSettle();
-    expect(find.textContaining('Volume I terminal review'), findsWidgets);
-    expect(find.textContaining('future world'), findsWidgets);
+	    expect(find.textContaining('Volume I review'), findsWidgets);
+	    expect(find.textContaining('later worlds stay locked'), findsWidgets);
     expect(find.textContaining('World 13'), findsNothing);
     expect(find.textContaining('W13'), findsNothing);
   }

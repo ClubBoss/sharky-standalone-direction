@@ -954,8 +954,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 9),
-        _FoundationProofCardV1(worlds: worlds),
-        const SizedBox(height: 14),
         _CurrentMissionCardV1(
           lesson: currentMissionLesson,
           task: currentMissionTask,
@@ -964,6 +962,8 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           accent: Act0ShellTokensV1.primary,
           onStart: onStartMission,
         ),
+        const SizedBox(height: 12),
+        _FoundationProofCardV1(worlds: worlds),
         const SizedBox(height: 14),
         _JourneyPreviewV5(
           lessons: lessons,
@@ -1062,7 +1062,7 @@ class _FoundationProofCardV1 extends StatelessWidget {
                     Text(
                       _learnCopyV1(
                         context,
-                        en: 'Foundation path',
+                        en: 'Foundation map',
                         ru: 'Базовый путь',
                       ),
                       style: Act0ShellTokensV1.label.copyWith(
@@ -1074,7 +1074,7 @@ class _FoundationProofCardV1 extends StatelessWidget {
                     Text(
                       _learnCopyV1(
                         context,
-                        en: 'World 1-4 build your first table reads.',
+                        en: 'Worlds 1-4 support this lesson.',
                         ru: 'Миры 1-4 строят первые чтения стола.',
                       ),
                       maxLines: 2,
@@ -1106,7 +1106,7 @@ class _FoundationProofCardV1 extends StatelessWidget {
                 child: Text(
                   _learnCopyV1(
                     context,
-                    en: 'Four worlds. One foundation.',
+                    en: 'Current lesson stays first.',
                     ru: 'Четыре мира. Одна база.',
                   ),
                   maxLines: 1,
@@ -1122,7 +1122,7 @@ class _FoundationProofCardV1 extends StatelessWidget {
                 child: Text(
                   _learnCopyV1(
                     context,
-                    en: 'Start Volume I: one clear table read at a time.',
+                    en: 'One clear table read at a time.',
                     ru: 'Начни Том I: одно ясное чтение стола за раз.',
                   ),
                   maxLines: 1,

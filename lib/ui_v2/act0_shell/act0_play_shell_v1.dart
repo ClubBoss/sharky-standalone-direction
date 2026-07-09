@@ -1117,7 +1117,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_repair_empty_title',
-                    fallback: 'No saved miss yet',
+                    fallback: 'Repair unlocks from real misses',
                   ),
                   style: Act0ShellTokensV1.body,
                 ),
@@ -1127,7 +1127,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                     context,
                     'play_repair_empty_body',
                     fallback:
-                        'First-week goal: understand the spot, not rush the map.',
+                        'Miss a lesson spot and Practice brings back the same clue.',
                   ),
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
@@ -1812,7 +1812,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_title',
-                    fallback: 'More drills coming later',
+                    fallback: 'More practice opens through the route',
                   ),
                   style: Act0ShellTokensV1.body.copyWith(
                     fontWeight: FontWeight.w800,
@@ -1823,7 +1823,8 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                   _playCopyV1(
                     context,
                     'play_locked_packs_summary_body',
-                    fallback: 'Future drill areas stay secondary for beta.',
+                    fallback:
+                        'Locked topics stay below today\'s rep. Finish route steps to open more.',
                   ),
                   style: Act0ShellTokensV1.muted,
                 ),

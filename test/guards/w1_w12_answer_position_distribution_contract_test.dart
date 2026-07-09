@@ -13,7 +13,7 @@ void main() {
     expect(rows, hasLength(291));
     expect(
       _contentFingerprint(rows),
-      '3d3f37d75763099ecd1c0d00275864979f83edbf8295145adf3b2e5ec5889138',
+      'd57fd20fd62a3527be549e4c69d8a10aaf1788026c7dccf597b461373a0fd49d',
     );
     expect(_positionSnapshot(_assessedRows()), _positionSnapshot(rows));
     expect(rows.map((row) => row.worldId).toSet(), <String>{
