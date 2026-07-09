@@ -666,6 +666,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   ),
               ],
             ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            _HomeProofMomentumLineV1(
+              progressLabel: cleanProgress,
+              localeIsRu: localeIsRu,
+            ),
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             Container(
               key: const Key('act0_shell_home_v6_primary_cta'),
@@ -683,6 +688,66 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+class _HomeProofMomentumLineV1 extends StatelessWidget {
+  const _HomeProofMomentumLineV1({
+    required this.progressLabel,
+    required this.localeIsRu,
+  });
+
+  final String? progressLabel;
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    final completedLessons = _completedLessonCountV1(progressLabel);
+    final hasCompletedLessons =
+        completedLessons != null && completedLessons > 0;
+    final line = hasCompletedLessons
+        ? localeIsRu
+              ? 'Подтверждено: $completedLessons урока. Следующее доказательство начинается с одного чистого чтения.'
+              : 'Route proof: $completedLessons lessons complete. Next proof starts with one clean read.'
+        : localeIsRu
+        ? 'Твой маршрут готов. Первое доказательство начинается с одного чистого чтения.'
+        : 'Your route is ready. Next proof starts with one clean read.';
+    return Row(
+      key: const Key('act0_shell_home_proof_momentum_line'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          hasCompletedLessons
+              ? Icons.verified_outlined
+              : Icons.play_circle_outline_rounded,
+          size: 15,
+          color: hasCompletedLessons
+              ? Act0VisualCanonV1.greenTable
+              : Act0ShellTokensV1.actionCyan,
+        ),
+        const SizedBox(width: 7),
+        Expanded(
+          child: Text(
+            line,
+            key: const Key('act0_shell_home_proof_momentum_text'),
+            maxLines: 2,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0VisualCanonV1.textSecondary.withOpacity(0.9),
+              height: 1.22,
+              letterSpacing: 0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+int? _completedLessonCountV1(String? progressLabel) {
+  final match = RegExp(
+    r'^(\d+)\s+of\s+\d+\s+lessons\s+complete$',
+  ).firstMatch(progressLabel?.trim() ?? '');
+  return match == null ? null : int.tryParse(match.group(1)!);
 }
 
 class _HomeMetaPillV1 extends StatelessWidget {

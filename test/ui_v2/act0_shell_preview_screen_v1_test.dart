@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -105,5 +106,51 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('Home turns confirmed route progress into an honest momentum cue', (
+    tester,
+  ) async {
+    await pumpCompact(tester, host());
+
+    expect(
+      find.byKey(const Key('act0_shell_home_proof_momentum_line')),
+      findsOneWidget,
+    );
+    final momentum = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_proof_momentum_text')),
+    );
+    expect(
+      momentum.data,
+      'Route proof: 4 lessons complete. Next proof starts with one clean read.',
+    );
+    expect(find.textContaining('mastery'), findsNothing);
+    expect(find.textContaining('streak'), findsNothing);
+  });
+
+  testWidgets('Home does not invent proof when progress is unavailable', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0HomeShellV1(
+            state: Act0ShellStateV1.sample,
+            showChecklist: false,
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final momentum = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_home_proof_momentum_text')),
+    );
+    expect(
+      momentum.data,
+      'Your route is ready. Next proof starts with one clean read.',
+    );
+    expect(find.textContaining('lessons complete'), findsNothing);
   });
 }
