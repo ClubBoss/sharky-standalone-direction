@@ -6351,7 +6351,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'What next',
+                payoffHero == null ? 'What next' : 'Next hand',
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.info,
                   letterSpacing: 0.35,
@@ -6359,7 +6359,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                summary.suggestedNextAction,
+                payoffHero != null &&
+                        summary.primaryCtaKind ==
+                            Act0MilestoneCtaKindV1.replayForPerfect
+                    ? 'Replay the saved read once.'
+                    : summary.suggestedNextAction,
                 key: const Key('act0_shell_block_summary_suggested_next'),
                 maxLines: 4,
                 overflow: TextOverflow.fade,
@@ -6398,6 +6402,21 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ],
             ],
           ),
+        ),
+      );
+    }
+
+    Widget primaryCtaButton() {
+      return FilledButton(
+        key: const Key('act0_shell_block_summary_continue_cta'),
+        onPressed: _callbackForCta(summary.primaryCtaKind),
+        style: Act0ShellTokensV1.premiumActionButtonStyle(),
+        child: Text(
+          payoffHero != null &&
+                  summary.primaryCtaKind ==
+                      Act0MilestoneCtaKindV1.replayForPerfect
+              ? 'Replay the saved read'
+              : summary.primaryCtaLabel,
         ),
       );
     }
@@ -6513,7 +6532,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                   Text(
                                     payoffHero == null
                                         ? summary.masteryLabel
-                                        : 'Session result',
+                                        : payoffHero.kicker,
                                     style: Act0ShellTokensV1.label.copyWith(
                                       color: celebrateTone,
                                       letterSpacing: 0.5,
@@ -6718,6 +6737,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ],
               nextActionCard(),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
+              primaryCtaButton(),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
               if (showHabitReward) ...[
                 Container(
                   key: const Key('act0_shell_block_summary_habit_reward'),
@@ -6909,13 +6930,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: Act0ShellTokensV1.gapLg),
-              FilledButton(
-                key: const Key('act0_shell_block_summary_continue_cta'),
-                onPressed: _callbackForCta(summary.primaryCtaKind),
-                style: Act0ShellTokensV1.premiumActionButtonStyle(),
-                child: Text(summary.primaryCtaLabel),
-              ),
               if (summary.secondaryCtaLabel != null) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 OutlinedButton(
@@ -7337,17 +7351,17 @@ class _SessionSummaryPayoffHeroV1 {
       return null;
     }
     return _SessionSummaryPayoffHeroV1(
-      kicker: 'Session result',
+      kicker: 'Saved read',
       headline: hasCorrectRead && hasGoodFix
-          ? 'You turned one miss into a fix.'
+          ? 'One clean table read is saved.'
           : hasCorrectRead
-          ? 'First read banked.'
-          : 'Fix landed.',
+          ? 'One clean table read is saved.'
+          : 'Repair landed.',
       detail: hasCorrectRead && hasGoodFix
-          ? 'First read banked. Fix landed.'
+          ? 'Keep this clue: read the table before acting.'
           : hasCorrectRead
-          ? 'One clean read is saved from this session.'
-          : 'You turned one miss into a fix.',
+          ? 'Keep this clue for the next hand.'
+          : 'Keep this repair for the next hand.',
     );
   }
 }

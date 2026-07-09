@@ -372,26 +372,31 @@ void main() {
         ),
       );
 
-      expect(find.text('Session result'), findsWidgets);
+      expect(find.text('Saved read'), findsWidgets);
       expect(
         tester
             .widget<Text>(
               find.byKey(const Key('act0_shell_block_summary_title')),
             )
             .data,
-        'You turned one miss into a fix.',
+        'One clean table read is saved.',
       );
-      expect(find.text('First read banked. Fix landed.'), findsOneWidget);
       expect(find.text('Almost there - replay to unlock'), findsNothing);
-      expect(find.text('Replay before next lesson'), findsOneWidget);
       expect(find.text("Fixes you've banked"), findsOneWidget);
       expect(find.text('Good fixes: 1'), findsOneWidget);
+      expect(find.text('One clean table read is saved.'), findsOneWidget);
       expect(
-        find.text('You finished with one clear table-reading lesson.'),
+        find.text('Keep this clue: read the table before acting.'),
         findsOneWidget,
       );
+      expect(find.text('Next hand'), findsOneWidget);
+      expect(find.text('Replay the saved read once.'), findsOneWidget);
+      expect(find.text('Replay the saved read'), findsOneWidget);
 
       final next = find.byKey(const Key('act0_shell_block_summary_next_label'));
+      final cta = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
       final habit = find.byKey(
         const Key('act0_shell_block_summary_habit_reward'),
       );
@@ -399,8 +404,11 @@ void main() {
         const Key('act0_shell_session_repair_outcome_receipt'),
       );
       expect(next, findsOneWidget);
+      expect(cta, findsOneWidget);
       expect(habit, findsOneWidget);
       expect(receipt, findsOneWidget);
+      expect(tester.getTopLeft(next).dy, lessThan(tester.getTopLeft(cta).dy));
+      expect(tester.getTopLeft(cta).dy, lessThan(tester.getTopLeft(habit).dy));
       expect(tester.getTopLeft(next).dy, lessThan(tester.getTopLeft(habit).dy));
       expect(
         tester.getTopLeft(next).dy,
@@ -427,12 +435,9 @@ void main() {
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,
-      'First read banked.',
+      'One clean table read is saved.',
     );
-    expect(
-      find.text('One clean read is saved from this session.'),
-      findsOneWidget,
-    );
+    expect(find.text('Keep this clue for the next hand.'), findsOneWidget);
     expect(find.text('Session closed with proof'), findsNothing);
     expect(find.text('Good fix banked.'), findsNothing);
   });
@@ -448,7 +453,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Fix landed.'), findsOneWidget);
+    expect(find.text('Repair landed.'), findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_block_summary_payoff_motion_reveal')),
       findsOneWidget,
@@ -463,13 +468,9 @@ void main() {
       tester
           .widget<Text>(find.byKey(const Key('act0_shell_block_summary_title')))
           .data,
-      'Fix landed.',
+      'Repair landed.',
     );
-    expect(find.text('You turned one miss into a fix.'), findsOneWidget);
-    expect(
-      find.text('You finished with one clear table-reading lesson.'),
-      findsOneWidget,
-    );
+    expect(find.text('Keep this repair for the next hand.'), findsOneWidget);
     expect(find.text('Almost there - replay to unlock'), findsNothing);
   });
 

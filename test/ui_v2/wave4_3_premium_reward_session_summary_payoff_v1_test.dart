@@ -18,9 +18,12 @@ void main() {
       find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
       findsOneWidget,
     );
-    expect(find.text('Proof banked'), findsWidgets);
-    expect(find.text('You turned one miss into a fix.'), findsOneWidget);
-    expect(find.text('First read banked. Fix landed.'), findsOneWidget);
+    expect(find.text('Saved read'), findsWidgets);
+    expect(find.text('One clean table read is saved.'), findsOneWidget);
+    expect(
+      find.text('Keep this clue: read the table before acting.'),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const Key('act0_shell_session_summary_payoff_sharky')),
       findsOneWidget,
@@ -52,7 +55,7 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_earned_moment_mark')),
       findsOneWidget,
     );
-    expect(find.text('Collected proof'), findsOneWidget);
+    expect(find.text('Collected read'), findsOneWidget);
     expect(find.text('One clear win Sharky can prove.'), findsOneWidget);
 
     final blockText = tester
