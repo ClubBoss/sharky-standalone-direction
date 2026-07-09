@@ -8443,27 +8443,25 @@ class _Act0TableV1 extends StatelessWidget {
                       visualVariant: visualVariant,
                       showFocusBadge: showFocusBadge,
                       centerLabelOverride: centerLabelOverride,
+                      lateRouteSignal: lateRouteSignal,
                       potLabelOverride: potLabelOverride,
                       toCallLabelOverride: toCallLabelOverride,
                       streetLabelOverride: streetLabelOverride,
                     ),
                   ),
-                  if (lateRouteSignal != null ||
-                      (showRepairCallout &&
-                          (table.focusCalloutLabel.isNotEmpty ||
-                              interactiveCalloutLabel.isNotEmpty)))
+                  if (lateRouteSignal == null &&
+                      showRepairCallout &&
+                      (table.focusCalloutLabel.isNotEmpty ||
+                          interactiveCalloutLabel.isNotEmpty))
                     Positioned(
                       key: const Key('act0_shell_table_repair_callout'),
                       left: width * 0.20,
                       right: width * 0.20,
                       top: height * 0.23,
                       child: _TableRepairCalloutV1(
-                        label: lateRouteSignal == null
-                            ? (table.focusCalloutLabel.isNotEmpty
-                                  ? table.focusCalloutLabel
-                                  : interactiveCalloutLabel)
-                            : lateRouteSignal!.detail,
-                        lateRouteSignal: lateRouteSignal,
+                        label: table.focusCalloutLabel.isNotEmpty
+                            ? table.focusCalloutLabel
+                            : interactiveCalloutLabel,
                       ),
                     ),
                   if (completionSummary != null)
@@ -8565,88 +8563,43 @@ class _Act0TableV1 extends StatelessWidget {
 }
 
 class _TableRepairCalloutV1 extends StatelessWidget {
-  const _TableRepairCalloutV1({required this.label, this.lateRouteSignal});
+  const _TableRepairCalloutV1({required this.label});
 
   final String label;
-  final Act0LateRouteTableSignalV1? lateRouteSignal;
 
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: Act0TableFeltCanonV1.onFeltPanelFill,
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-          border: Border.all(
-            color: lateRouteSignal == null
-                ? Act0TableFeltCanonV1.onFeltPanelBorder
-                : Act0ShellTokensV1.gold.withValues(alpha: 0.48),
-          ),
+        decoration: Act0ShellTokensV1.onFeltPanelDecoration(
+          radius: Act0ShellTokensV1.radiusPill,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              lateRouteSignal?.icon ?? Icons.flag_rounded,
+            const Icon(
+              Icons.flag_rounded,
               key: Key('act0_shell_table_repair_callout_icon'),
               size: 13,
-              color: lateRouteSignal == null
-                  ? Act0TableFeltCanonV1.innerHairline
-                  : Act0ShellTokensV1.gold,
+              color: Act0TableFeltCanonV1.innerHairline,
             ),
             const SizedBox(width: 6),
             Flexible(
-              child: lateRouteSignal == null
-                  ? Text(
-                      label,
-                      key: const Key('act0_shell_table_repair_callout_text'),
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontSize: 9.4,
-                        letterSpacing: 0,
-                        height: 1.08,
-                      ),
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          lateRouteSignal!.label,
-                          key: const Key('act0_shell_late_route_table_signal'),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.gold,
-                            fontSize: 9.2,
-                            height: 1.05,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.2,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                        Text(
-                          label,
-                          key: const Key(
-                            'act0_shell_table_repair_callout_text',
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontSize: 9,
-                            letterSpacing: 0,
-                            height: 1.08,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                      ],
-                    ),
+              child: Text(
+                label,
+                key: const Key('act0_shell_table_repair_callout_text'),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.text,
+                  fontSize: 9.4,
+                  letterSpacing: 0,
+                  height: 1.08,
+                ),
+              ),
             ),
           ],
         ),
@@ -8952,6 +8905,7 @@ class _CenterPotV1 extends StatelessWidget {
     required this.visualVariant,
     this.showFocusBadge = true,
     this.centerLabelOverride,
+    this.lateRouteSignal,
     this.potLabelOverride,
     this.toCallLabelOverride,
     this.streetLabelOverride,
@@ -8963,6 +8917,7 @@ class _CenterPotV1 extends StatelessWidget {
   final Act0ShellTableVisualVariantV1 visualVariant;
   final bool showFocusBadge;
   final String? centerLabelOverride;
+  final Act0LateRouteTableSignalV1? lateRouteSignal;
   final String? potLabelOverride;
   final String? toCallLabelOverride;
   final String? streetLabelOverride;
@@ -9006,7 +8961,9 @@ class _CenterPotV1 extends StatelessWidget {
                 spacing: 5,
                 runSpacing: 3,
                 children: [
-                  if (shouldShowFocusBadge) ...[
+                  if (lateRouteSignal != null) ...[
+                    _LateRouteCenterSignalV1(signal: lateRouteSignal!),
+                  ] else if (shouldShowFocusBadge) ...[
                     _CenterSignalAnchorV1(
                       label: act0RuntimeLocalizedCenterLabelV1(
                         context,
@@ -9089,6 +9046,47 @@ class _CenterPotV1 extends StatelessWidget {
         : centerCard;
 
     return Center(child: resolvedCenterCard);
+  }
+}
+
+class _LateRouteCenterSignalV1 extends StatelessWidget {
+  const _LateRouteCenterSignalV1({required this.signal});
+
+  final Act0LateRouteTableSignalV1 signal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_late_route_table_signal'),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.gold.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        border: Border.all(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.34),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(signal.icon, size: 11, color: Act0ShellTokensV1.gold),
+          const SizedBox(width: 4),
+          Text(
+            signal.label,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.gold,
+              fontSize: 8.5,
+              height: 1,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0,
+              fontFamily: 'Roboto',
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
