@@ -2953,7 +2953,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       endXp: 100,
       xpTarget: 200,
       nextLessonTitle: 'Blinds and action order',
-      sharkyLine: 'Good proof. Keep the table clue in view.',
+      sharkyLine: 'Good read. Keep the table clue in view.',
       perfectClearCount: 1,
       completedClearCount: 2,
     );

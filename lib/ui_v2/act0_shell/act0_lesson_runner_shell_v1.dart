@@ -6553,7 +6553,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: Act0ShellTokensV1.gapSm),
                         Text(
-                          payoffHero?.kicker ?? 'What finished',
+                          payoffHero == null
+                              ? 'What finished'
+                              : 'Session complete',
                           style: Act0ShellTokensV1.label.copyWith(
                             color: celebrateTone,
                             letterSpacing: 0.35,
@@ -6574,8 +6576,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                       summary.milestoneTitle,
                             key: const Key('act0_shell_block_summary_title'),
                             style: Act0ShellTokensV1.screenTitle.copyWith(
-                              fontSize: payoffHero == null ? 30 : 34,
-                              height: 1.0,
+                              fontSize: payoffHero == null ? 30 : 32,
+                              height: 1.05,
                             ),
                           ),
                         ),
