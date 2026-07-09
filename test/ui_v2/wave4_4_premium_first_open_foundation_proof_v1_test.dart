@@ -49,7 +49,7 @@ void main() {
     expect(find.textContaining('purchase'), findsNothing);
   });
 
-  testWidgets('Learn shows W1-W4 Foundation proof without W5-W36 claims', (
+  testWidgets('Learn keeps Worlds as the map and centers the current mission', (
     tester,
   ) async {
     final state = Act0ShellStateV1.sample;
@@ -90,24 +90,22 @@ void main() {
       ),
     );
 
+    expect(find.byKey(const Key('act0_shell_foundation_proof')), findsNothing);
+    expect(find.text('Foundation map'), findsNothing);
     expect(
-      find.byKey(const Key('act0_shell_foundation_proof')),
+      find.byKey(const Key('act0_shell_levels_menu_button')),
       findsOneWidget,
     );
-    expect(find.text('Foundation path'), findsOneWidget);
     expect(
-      find.text('World 1-4 build your first table reads.'),
+      find.byKey(const Key('act0_shell_current_mission_card')),
       findsOneWidget,
     );
-    expect(find.text('Four worlds. One foundation.'), findsOneWidget);
-    expect(find.text('W1 · Table Basics'), findsOneWidget);
-    expect(find.text('W2 · Hand Discipline'), findsOneWidget);
-    expect(find.text('W3 · Position Thinking'), findsOneWidget);
-    expect(find.text('W4 \u00B7 Bet Purpose / Price'), findsOneWidget);
     expect(
-      find.text('Start Volume I: one clear table read at a time.'),
+      find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
     );
+    expect(find.text('Up next'), findsOneWidget);
+    expect(find.text('All lessons'), findsOneWidget);
     expect(find.textContaining('36-world'), findsNothing);
     expect(find.textContaining('36 worlds'), findsNothing);
     expect(find.textContaining('World 5'), findsNothing);

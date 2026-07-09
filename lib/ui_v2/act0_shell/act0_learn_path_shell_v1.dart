@@ -731,7 +731,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         world: selectedWorld,
                         moduleTitle: widget.moduleTitle,
                         moduleProgressLabel: widget.moduleProgressLabel,
-                        worlds: widget.worlds,
                         lessonCount: widget.lessons.length,
                         progressFraction: progressFraction,
                         onOpenWorldMenu: widget.onOpenWorldMenu,
@@ -879,7 +878,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
     required this.world,
     required this.moduleTitle,
     required this.moduleProgressLabel,
-    required this.worlds,
     required this.lessonCount,
     required this.progressFraction,
     required this.onOpenWorldMenu,
@@ -911,7 +909,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
   final Act0WorldCardV1 world;
   final String moduleTitle;
   final String moduleProgressLabel;
-  final List<Act0WorldCardV1> worlds;
   final int lessonCount;
   final double progressFraction;
   final VoidCallback onOpenWorldMenu;
@@ -967,10 +964,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           onStart: onStartMission,
         ),
         const SizedBox(height: 12),
-        if (!detailMode) ...[
-          _FoundationProofCardV1(worlds: worlds),
-          const SizedBox(height: 14),
-        ],
         _JourneyPreviewV5(
           lessons: lessons,
           journeyLessonIndexes: journeyLessonIndexes,
@@ -996,208 +989,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
       ],
     );
   }
-}
-
-class _FoundationProofCardV1 extends StatelessWidget {
-  const _FoundationProofCardV1({required this.worlds});
-
-  final List<Act0WorldCardV1> worlds;
-
-  @override
-  Widget build(BuildContext context) {
-    final foundationWorlds =
-        worlds
-            .where((world) => world.worldNumber >= 1 && world.worldNumber <= 4)
-            .toList()
-          ..sort((a, b) => a.worldNumber.compareTo(b.worldNumber));
-    if (foundationWorlds.length < 4) {
-      return const SizedBox.shrink();
-    }
-    return Container(
-      key: const Key('act0_shell_foundation_proof'),
-      padding: const EdgeInsets.fromLTRB(2, 13, 2, 11),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: _learnV6Cyan.withValues(alpha: 0.14)),
-          bottom: BorderSide(
-            color: Act0ShellTokensV1.border.withValues(alpha: 0.52),
-          ),
-        ),
-      ),
-      child: KeyedSubtree(
-        key: const Key('act0_shell_foundation_quiet_support'),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: _learnV6Cyan.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusMd,
-                    ),
-                    border: Border.all(
-                      color: _learnV6Cyan.withValues(alpha: 0.24),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.account_tree_rounded,
-                    size: 18,
-                    color: _learnV6Cyan,
-                  ),
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _learnCopyV1(
-                          context,
-                          en: 'Foundation map',
-                          ru: 'Базовый путь',
-                        ),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: _learnV6Cyan,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        _learnCopyV1(
-                          context,
-                          en: 'Worlds 1-4 support this lesson.',
-                          ru: 'Миры 1-4 строят первые чтения стола.',
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontWeight: FontWeight.w900,
-                          height: 1.12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Wrap(
-              spacing: 7,
-              runSpacing: 7,
-              children: [
-                for (final world in foundationWorlds)
-                  _FoundationWorldChipV1(world: world),
-              ],
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _learnCopyV1(
-                      context,
-                      en: 'Current lesson stays first.',
-                      ru: 'Четыре мира. Одна база.',
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.text,
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                Flexible(
-                  child: Text(
-                    _learnCopyV1(
-                      context,
-                      en: 'One clear table read at a time.',
-                      ru: 'Начни Том I: одно ясное чтение стола за раз.',
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    textAlign: TextAlign.right,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      letterSpacing: 0.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FoundationWorldChipV1 extends StatelessWidget {
-  const _FoundationWorldChipV1({required this.world});
-
-  final Act0WorldCardV1 world;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = _foundationWorldLabelV1(world);
-    final active = world.status == Act0WorldStateV1.current;
-    final completed = world.status == Act0WorldStateV1.completed;
-    final tone = completed
-        ? _learnV6Green
-        : active
-        ? _learnV6Cyan
-        : Act0ShellTokensV1.textMuted;
-    return Container(
-      key: Key('act0_shell_foundation_world_${world.worldNumber}'),
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
-      decoration: BoxDecoration(
-        color: tone.withValues(alpha: active || completed ? 0.12 : 0.055),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: tone.withValues(alpha: 0.18)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            completed
-                ? Icons.check_rounded
-                : active
-                ? Icons.play_arrow_rounded
-                : Icons.lock_rounded,
-            size: 13,
-            color: tone,
-          ),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: tone,
-              fontSize: 10.3,
-              letterSpacing: 0.0,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-String _foundationWorldLabelV1(Act0WorldCardV1 world) {
-  final title = switch (world.worldNumber) {
-    1 => 'Table Basics',
-    2 => 'Hand Discipline',
-    3 => 'Position Thinking',
-    4 => 'Bet Purpose / Price',
-    _ => world.title,
-  };
-  return 'W${world.worldNumber} · $title';
 }
 
 class _WorldContextStripV5 extends StatelessWidget {
@@ -1512,8 +1303,8 @@ class _JourneyPreviewV5 extends StatelessWidget {
               child: Text(
                 _learnCopyV1(
                   context,
-                  en: showFullPath ? 'Full journey' : 'Journey preview',
-                  ru: showFullPath ? 'Весь путь' : 'Путь впереди',
+                  en: showFullPath ? 'All lessons' : 'Up next',
+                  ru: showFullPath ? 'Все уроки' : 'Дальше',
                 ),
                 key: const Key('act0_shell_journey_path_header'),
                 style: Act0ShellTokensV1.sectionTitle.copyWith(
@@ -1539,8 +1330,8 @@ class _JourneyPreviewV5 extends StatelessWidget {
               child: Text(
                 _learnCopyV1(
                   context,
-                  en: showFullPath ? 'Preview' : 'View path',
-                  ru: showFullPath ? 'Кратко' : 'Весь путь',
+                  en: showFullPath ? 'Show less' : 'All lessons',
+                  ru: showFullPath ? 'Свернуть' : 'Все уроки',
                 ),
               ),
             ),

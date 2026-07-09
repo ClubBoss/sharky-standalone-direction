@@ -13396,7 +13396,7 @@ void main() {
   );
 
   testWidgets(
-    'Learn v5 premium depth stays mission-first and keeps View path manual',
+    'Learn v5 premium depth stays mission-first and keeps lesson browsing manual',
     (tester) async {
       await pumpCompact(tester, host(tab: Act0ShellTabV1.learn));
 
@@ -13503,7 +13503,7 @@ void main() {
   });
 
   testWidgets(
-    'Learn v6 full path enters collapsed and expands only after manual row tap',
+    'Learn v6 all-lessons view enters collapsed and expands only after manual row tap',
     (tester) async {
       await pumpCompact(tester, host(tab: Act0ShellTabV1.learn));
 
@@ -13522,7 +13522,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Full journey'), findsOneWidget);
+      expect(find.text('All lessons'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_lesson_What poker is')),
         findsOneWidget,
@@ -13559,7 +13559,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Journey preview'), findsOneWidget);
+      expect(find.text('Up next'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_lesson_What poker is')),
         findsNothing,
