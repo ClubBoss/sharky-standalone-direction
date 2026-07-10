@@ -6134,9 +6134,9 @@ class _FeedbackSignalProofRowV1 extends StatelessWidget {
                   child: Text(
                     line,
                     key: const Key('act0_shell_feedback_signal_proof_label'),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
+                    maxLines: 2,
+                    overflow: TextOverflow.visible,
+                    softWrap: true,
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.textMuted,
                       fontSize: compact ? 10.5 : 11.0,

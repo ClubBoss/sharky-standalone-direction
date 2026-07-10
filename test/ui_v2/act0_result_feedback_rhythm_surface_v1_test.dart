@@ -61,6 +61,85 @@ void main() {
     expect(find.textContaining('Signal:'), findsNothing);
   });
 
+  testWidgets(
+    'long feedback clue wraps without fading and keeps the CTA reachable',
+    (tester) async {
+      await pumpCompactRunner(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Correct.',
+              reason: 'You used the visible table clue.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Good read.',
+              sharkyMood: Act0SharkyMoodV1.happy,
+              selectedLabel: 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'no_bet_yet',
+                label: 'No bet yet',
+                proofLine: 'Signal: No bet yet',
+              ),
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+
+      final clue = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_feedback_signal_proof_label')),
+      );
+      expect(clue.data, 'Nobody had bet yet - that was the clue.');
+      expect(clue.maxLines, 2);
+      expect(clue.softWrap, isTrue);
+      expect(clue.overflow, TextOverflow.visible);
+      expect(
+        tester
+            .getBottomLeft(
+              find.byKey(const Key('act0_shell_feedback_continue_cta')),
+            )
+            .dy,
+        lessThanOrEqualTo(812),
+      );
+    },
+  );
+
+  testWidgets('short feedback clue remains a single compact line', (
+    tester,
+  ) async {
+    await pumpCompactRunner(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Correct.',
+            reason: 'You used the visible table clue.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Good read.',
+            sharkyMood: Act0SharkyMoodV1.happy,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            signalProof: const Act0FeedbackSignalProofV1(
+              signalId: 'position',
+              label: 'Position',
+              proofLine: 'Button.',
+            ),
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final clueFinder = find.byKey(
+      const Key('act0_shell_feedback_signal_proof_label'),
+    );
+    expect(find.text('Button.'), findsOneWidget);
+    expect(tester.getSize(clueFinder).height, lessThan(18));
+  });
+
   testWidgets('correct feedback shows skill proof before proof reward', (
     tester,
   ) async {
