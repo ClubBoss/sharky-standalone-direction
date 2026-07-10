@@ -2,10 +2,9 @@
 
 ## Terminal verdict
 
-The source contract and focused canonical runner/telemetry regressions pass.
-Production admission is withheld because the required full live-route visual
-capture/contact-sheet packet is not yet available; no synthetic images were
-substituted.
+Sequence Convergence is **CLOSED**. The source contract, canonical runner and
+telemetry regressions, and real live-route raster packet pass without a
+synthetic learner state.
 
 ## Contract
 
@@ -42,18 +41,18 @@ analysis pass after `d9c5ddcd`. Source-derived traces are local-only under
 
 `test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart` mounts the
 real `Act0ShellPreviewScreenV1` at 375x812 and writes local-only rasters plus
-contact sheets. It proves the production theory state at `321.408 x 558` with
-one runner root and no overflow. It also exposes a blocking practice defect:
-the canonical shell capture for decision/correct/wrong currently measures the
-same `321.408 x 558` table rather than the admitted stable-practice
-`264.960 x 460` geometry. Existing repair/result capture states are real
-production surfaces for `actions_legal_context`; they are not claimed as the
-new Action sequence's same-task repair/recheck states. Completion and next
-step are therefore not raster-admitted.
+contact sheets. It proves theory at `321.408 x 558`, and Action decision,
+correct feedback, and wrong feedback at `264.960 x 460` with stablePractice
+selected and no overflow. From a real Action wrong-feedback state it drives
+the actual feedback and option controls through same-task repair, repair
+success, same-task recheck, recheck success, shell completion, and next
+rendered state. `actions_legal_context` repair captures are excluded from this
+sequence proof.
 
 ## Residual risk and rollback
 
-The blocking gate is restoration of real-shell stable-practice geometry before
-the capture lane can drive and admit the remaining sequence states. Rollback
-is removal of the bounded sequence contract and runner-control bridge commits.
-Human QA and public learning-effect claims are not made.
+Residual debt is limited to visible-content occupancy measurement for the
+compact repair/recheck panels; the raster shows no clipping and reachable
+controls, so it is non-blocking. Rollback is removal of the bounded sequence
+contract and runner-control bridge commits. Human QA and public learning-effect
+claims are not made. Next active layer: **Rule-based AI Personalization v1**.
