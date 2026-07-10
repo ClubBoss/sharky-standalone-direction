@@ -2740,6 +2740,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
+    if (widget.tablePresentation == Act0TaskTablePresentationV1.spatialTheory &&
+        isTheory) {
+      return _TaskOwnedSpatialTheoryPresentationV1(
+        runner: runner,
+        table: table,
+        prompt: prompt,
+        support: hint,
+        onBack: widget.onBack,
+        onContinue: widget.onContinueTheory,
+      );
+    }
+
     final runnerScreen = Column(
       key: const Key('act0_shell_runner_screen'),
       children: [
@@ -2819,6 +2831,131 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       ],
     );
     return runnerScreen;
+  }
+}
+
+/// The task-owned corrected-T1 theory presentation deliberately keeps the
+/// production table at one viewport-derived geometry for every theory beat.
+/// Copy is constrained inside the panel; it never changes table geometry.
+class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
+  const _TaskOwnedSpatialTheoryPresentationV1({
+    required this.runner,
+    required this.table,
+    required this.prompt,
+    required this.support,
+    required this.onBack,
+    required this.onContinue,
+  });
+
+  final Act0RunnerStateV1 runner;
+  final Act0TableStateV1 table;
+  final String prompt;
+  final String support;
+  final VoidCallback onBack;
+  final VoidCallback onContinue;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const panelAllowance = 242.0;
+          const tableToPanelGap = 12.0;
+          final tableHeight = math.max(
+            0.0,
+            math.min(
+              600.0,
+              constraints.maxHeight - panelAllowance - tableToPanelGap,
+            ),
+          );
+          final tableWidth = math.min(
+            constraints.maxWidth - 24,
+            tableHeight * 0.576,
+          );
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  key: const Key('act0_task_owned_theory_table_bounds'),
+                  width: tableWidth,
+                  height: tableHeight,
+                  child: Act0TableSceneV1(
+                    table: table,
+                    config: const Act0TablePresentationConfigV1(
+                      maxTableHeight: 600,
+                      showFocusBadge: true,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: tableToPanelGap),
+                Container(
+                  key: const Key('act0_task_owned_theory_panel'),
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.surface2,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.primary.withValues(alpha: 0.28),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'READ THE TABLE',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.primary,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        prompt,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.screenTitle.copyWith(
+                          fontSize: 20,
+                        ),
+                      ),
+                      if (support.trim().isNotEmpty) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          support,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: Act0ShellTokensV1.body,
+                        ),
+                      ],
+                      const SizedBox(height: 18),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: onBack,
+                            child: const Text('Back'),
+                          ),
+                          const Spacer(),
+                          FilledButton(
+                            key: const Key('act0_shell_continue_cta'),
+                            onPressed: onContinue,
+                            child: Text(runner.primaryCtaLabel),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
