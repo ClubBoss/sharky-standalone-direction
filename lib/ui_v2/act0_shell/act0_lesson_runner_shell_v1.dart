@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -4012,6 +4013,135 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
   }
 }
 
+/// Reusable production-quality full table scene.
+///
+/// The public constructor intentionally exposes only semantic table state and a
+/// data-only presentation config. The runner uses [_fromRunner] to retain its
+/// private interaction, overlay, and viewport policy without making those
+/// policies part of this scene's external contract.
+class Act0TableSceneV1 extends StatelessWidget {
+  const Act0TableSceneV1({
+    super.key,
+    required this.table,
+    this.config = const Act0TablePresentationConfigV1(),
+    this.onBoardCardTap,
+  }) : _runnerInput = null;
+
+  Act0TableSceneV1._fromRunner({required _Act0TableSceneRunnerInput input})
+    : table = input.table,
+      config = null,
+      onBoardCardTap = null,
+      _runnerInput = input;
+
+  final Act0TableStateV1 table;
+  final Act0TablePresentationConfigV1? config;
+  final ValueChanged<Act0TableStateV1>? onBoardCardTap;
+  final _Act0TableSceneRunnerInput? _runnerInput;
+
+  @override
+  Widget build(BuildContext context) {
+    final input = _runnerInput;
+    if (input != null) {
+      return _Act0TableV1(
+        table: input.table,
+        highlightedCardIds: input.highlightedCardIds,
+        interactiveCalloutLabel: input.interactiveCalloutLabel,
+        onBoardCardTap: input.onBoardCardTap,
+        onChooseSeat: input.onChooseSeat,
+        visualVariant: input.visualVariant,
+        showFocusBadge: input.showFocusBadge,
+        showRepairCallout: input.showRepairCallout,
+        playbackActiveSeatId: input.playbackActiveSeatId,
+        animateBetMotion: input.animateBetMotion,
+        betOverride: input.betOverride,
+        centerLabelOverride: input.centerLabelOverride,
+        potLabelOverride: input.potLabelOverride,
+        toCallLabelOverride: input.toCallLabelOverride,
+        streetLabelOverride: input.streetLabelOverride,
+        completionSummary: input.completionSummary,
+        selectedSeatId: input.selectedSeatId,
+        selectedSeatFeedbackState: input.selectedSeatFeedbackState,
+        compactBottomDockClearance: input.compactBottomDockClearance,
+        interactionMode: input.interactionMode,
+        framingProfile: input.framingProfile,
+        viewportFamily: input.viewportFamily,
+        lateRouteSignal: input.lateRouteSignal,
+        maxTableHeight: input.maxTableHeight,
+      );
+    }
+    final resolved = config!;
+    return _Act0TableV1(
+      table: table,
+      highlightedCardIds: resolved.highlightedCardIds,
+      interactiveCalloutLabel: '',
+      onBoardCardTap: (table) => onBoardCardTap?.call(table),
+      visualVariant: resolved.useRefinedVisualVariant
+          ? Act0ShellTableVisualVariantV1.refinedDev2
+          : Act0ShellTableVisualVariantV1.classic,
+      showFocusBadge: resolved.showFocusBadge,
+      showRepairCallout: resolved.showRepairCallout,
+      compactBottomDockClearance: resolved.compactBottomDockClearance,
+      interactionMode: _RunnerInteractionModeV1.answerListDecision,
+      framingProfile: Act0RunnerFramingProfileV1.neutral,
+      viewportFamily: _RunnerViewportFamilyV1.neutral,
+      maxTableHeight: resolved.maxTableHeight,
+    );
+  }
+}
+
+class _Act0TableSceneRunnerInput {
+  const _Act0TableSceneRunnerInput({
+    required this.table,
+    required this.highlightedCardIds,
+    required this.interactiveCalloutLabel,
+    required this.onBoardCardTap,
+    required this.onChooseSeat,
+    required this.visualVariant,
+    required this.showFocusBadge,
+    required this.showRepairCallout,
+    required this.playbackActiveSeatId,
+    required this.animateBetMotion,
+    required this.betOverride,
+    required this.centerLabelOverride,
+    required this.potLabelOverride,
+    required this.toCallLabelOverride,
+    required this.streetLabelOverride,
+    required this.completionSummary,
+    required this.selectedSeatId,
+    required this.selectedSeatFeedbackState,
+    required this.compactBottomDockClearance,
+    required this.interactionMode,
+    required this.framingProfile,
+    required this.viewportFamily,
+    required this.lateRouteSignal,
+    required this.maxTableHeight,
+  });
+  final Act0TableStateV1 table;
+  final List<String> highlightedCardIds;
+  final String interactiveCalloutLabel;
+  final ValueChanged<Act0TableStateV1> onBoardCardTap;
+  final ValueChanged<String>? onChooseSeat;
+  final Act0ShellTableVisualVariantV1 visualVariant;
+  final bool showFocusBadge;
+  final bool showRepairCallout;
+  final String? playbackActiveSeatId;
+  final bool animateBetMotion;
+  final Act0SeatBetStateV1? betOverride;
+  final String? centerLabelOverride;
+  final String? potLabelOverride;
+  final String? toCallLabelOverride;
+  final String? streetLabelOverride;
+  final Act0RunnerCompletionSummaryV1? completionSummary;
+  final String? selectedSeatId;
+  final _SeatSelectionFeedbackStateV1 selectedSeatFeedbackState;
+  final bool compactBottomDockClearance;
+  final _RunnerInteractionModeV1 interactionMode;
+  final Act0RunnerFramingProfileV1 framingProfile;
+  final _RunnerViewportFamilyV1 viewportFamily;
+  final Act0LateRouteTableSignalV1? lateRouteSignal;
+  final double? maxTableHeight;
+}
+
 class _RunnerTableStageV1 extends StatelessWidget {
   const _RunnerTableStageV1({
     required this.table,
@@ -4067,31 +4197,33 @@ class _RunnerTableStageV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _Act0TableV1(
-      table: table,
-      highlightedCardIds: highlightedCardIds,
-      interactiveCalloutLabel: interactiveCalloutLabel,
-      onBoardCardTap: onBoardCardTap,
-      onChooseSeat: onChooseSeat,
-      visualVariant: visualVariant,
-      showFocusBadge: showFocusBadge,
-      showRepairCallout: showRepairCallout,
-      playbackActiveSeatId: playbackActiveSeatId,
-      animateBetMotion: animateBetMotion,
-      betOverride: betOverride,
-      centerLabelOverride: centerLabelOverride,
-      potLabelOverride: potLabelOverride,
-      toCallLabelOverride: toCallLabelOverride,
-      streetLabelOverride: streetLabelOverride,
-      completionSummary: completionSummary,
-      selectedSeatId: selectedSeatId,
-      selectedSeatFeedbackState: selectedSeatFeedbackState,
-      compactBottomDockClearance: compactBottomDockClearance,
-      interactionMode: interactionMode,
-      framingProfile: framingProfile,
-      viewportFamily: viewportFamily,
-      lateRouteSignal: lateRouteSignal,
-      maxTableHeight: maxTableHeight,
+    return Act0TableSceneV1._fromRunner(
+      input: _Act0TableSceneRunnerInput(
+        table: table,
+        highlightedCardIds: highlightedCardIds,
+        interactiveCalloutLabel: interactiveCalloutLabel,
+        onBoardCardTap: onBoardCardTap,
+        onChooseSeat: onChooseSeat,
+        visualVariant: visualVariant,
+        showFocusBadge: showFocusBadge,
+        showRepairCallout: showRepairCallout,
+        playbackActiveSeatId: playbackActiveSeatId,
+        animateBetMotion: animateBetMotion,
+        betOverride: betOverride,
+        centerLabelOverride: centerLabelOverride,
+        potLabelOverride: potLabelOverride,
+        toCallLabelOverride: toCallLabelOverride,
+        streetLabelOverride: streetLabelOverride,
+        completionSummary: completionSummary,
+        selectedSeatId: selectedSeatId,
+        selectedSeatFeedbackState: selectedSeatFeedbackState,
+        compactBottomDockClearance: compactBottomDockClearance,
+        interactionMode: interactionMode,
+        framingProfile: framingProfile,
+        viewportFamily: viewportFamily,
+        lateRouteSignal: lateRouteSignal,
+        maxTableHeight: maxTableHeight,
+      ),
     );
   }
 }
