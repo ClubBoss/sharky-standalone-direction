@@ -9975,6 +9975,7 @@ class _SeatNodeV1 extends StatelessWidget {
                               seat: seat,
                               hero: hero,
                               refined: refined,
+                              identityPolicy: identityPolicy,
                             ),
                             maxLines: 2,
                             style: Act0ShellTokensV1.label.copyWith(

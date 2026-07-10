@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_phrase_registry_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
 
 String act0RuntimeTaskRailLabelV1(
   BuildContext context, {
@@ -734,9 +735,25 @@ String act0RuntimeLocalizedSeatPrimaryLabelV1(
   required Act0SeatStateV1 seat,
   required bool hero,
   required bool refined,
+  Act0TableIdentityPolicyV1 identityPolicy =
+      Act0TableIdentityPolicyV1.currentProduction,
 }) {
   if (!hero) {
     return seat.seatLabel;
+  }
+  final learner = act0LocalizedSurfaceAtomV1(
+    context,
+    'table_word_you',
+    fallback: 'You',
+  );
+  if (identityPolicy == Act0TableIdentityPolicyV1.learnerOnly) {
+    return learner;
+  }
+  if (identityPolicy == Act0TableIdentityPolicyV1.learnerPosition ||
+      identityPolicy ==
+          Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder) {
+    final position = seat.seatLabel.trim();
+    return position.isEmpty ? learner : '$learner · $position';
   }
   final heroLabel = act0LocalizedSurfaceAtomV1(
     context,
