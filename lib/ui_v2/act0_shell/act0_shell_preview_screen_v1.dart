@@ -41,6 +41,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -1060,6 +1061,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   static const int _agedRecheckSequenceThresholdV1 = 6;
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
+  Act0ActionSequenceStageV1? _activeActionSequenceStageV1;
   String? _activeRepairSourceTaskId;
   Act0PracticeRepairQueueLaunchRequestV1? _activePracticeRepairQueueRequestV1;
   Act0RepairOutcomeProjectionV1 _repairOutcomeProjectionV1 =
@@ -5066,6 +5068,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _teachingStepIndex = 0;
                                     return;
                                   }
+                                  if (_advanceActionSequenceReviewV1(
+                                    selectedTask: playSelectedTask,
+                                    runner: playRunner!,
+                                  )) {
+                                    return;
+                                  }
                                   if (_activeRepairTaskId ==
                                       playSelectedTask.taskId) {
                                     final repaired =
@@ -8574,6 +8582,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedWorldId = selectedWorld.worldId;
     _selectedLessonId = lesson.lessonId;
     _selectedTaskId = task.taskId;
+    final actionSequence = act0ActionLearningSequenceForTaskV1(task.taskId);
+    _activeActionSequenceStageV1 = actionSequence == null
+        ? null
+        : actionSequence.stageForTask(task.taskId);
     _emitLessonStartedTelemetryV1(
       lessonId: lesson.lessonId,
       taskId: task.taskId,
@@ -10638,6 +10650,93 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _completedLessonIds.add(lesson.lessonId);
     }
     _persistProgress();
+  }
+
+  /// Keeps Action-sequence recovery inside the existing canonical preview
+  /// owner. The task runner remains unchanged; this only chooses the next
+  /// truthful sequence state after its feedback has been seen.
+  bool _advanceActionSequenceReviewV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerStateV1 runner,
+  }) {
+    final sequence = act0ActionLearningSequenceForTaskV1(selectedTask.taskId);
+    if (sequence == null || selectedTask.taskId != sequence.practiceTaskId) {
+      return false;
+    }
+    final correct = runner.selectedOption?.isCorrect ?? false;
+    final stage =
+        _activeActionSequenceStageV1 ?? Act0ActionSequenceStageV1.decision;
+    if (stage == Act0ActionSequenceStageV1.decision && !correct) {
+      final repairTaskId = sequence.repairTargetForErrorType(
+        sequence.repairErrorType,
+      );
+      if (repairTaskId == null) {
+        return false;
+      }
+      _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.repair;
+      _recordTelemetryEventV1('action_sequence_repair_entry', <String, Object?>{
+        'schemaVersion': 1,
+        'sequenceId': sequence.sequenceId,
+        'tableContextKey': sequence.tableContextKey,
+        'sourceTaskId': selectedTask.taskId,
+        'errorType': sequence.repairErrorType,
+        'repairTaskId': repairTaskId,
+      });
+      _selectedOptionId = null;
+      _phase = Act0LessonPhaseV1.drill;
+      _teachingStepIndex = 0;
+      return true;
+    }
+    if (stage == Act0ActionSequenceStageV1.repair) {
+      if (!correct) {
+        _selectedOptionId = null;
+        _phase = Act0LessonPhaseV1.drill;
+        _teachingStepIndex = 0;
+        return true;
+      }
+      _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.recheck;
+      _recordTelemetryEventV1(
+        'action_sequence_recheck_entry',
+        <String, Object?>{
+          'schemaVersion': 1,
+          'sequenceId': sequence.sequenceId,
+          'tableContextKey': sequence.tableContextKey,
+          'repairTaskId': sequence.repairTaskId,
+          'recheckTaskId': sequence.recheckTaskId,
+        },
+      );
+      _selectedOptionId = null;
+      _phase = Act0LessonPhaseV1.drill;
+      _teachingStepIndex = 0;
+      return true;
+    }
+    if (stage == Act0ActionSequenceStageV1.recheck) {
+      if (!correct) {
+        _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.repair;
+        _selectedOptionId = null;
+        _phase = Act0LessonPhaseV1.drill;
+        _teachingStepIndex = 0;
+        return true;
+      }
+      _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.complete;
+      _recordTelemetryEventV1('action_sequence_completed', <String, Object?>{
+        'schemaVersion': 1,
+        'sequenceId': sequence.sequenceId,
+        'tableContextKey': sequence.tableContextKey,
+        'completionTaskId': selectedTask.taskId,
+      });
+      return false;
+    }
+    if (stage == Act0ActionSequenceStageV1.decision && correct) {
+      _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.complete;
+      _recordTelemetryEventV1('action_sequence_completed', <String, Object?>{
+        'schemaVersion': 1,
+        'sequenceId': sequence.sequenceId,
+        'tableContextKey': sequence.tableContextKey,
+        'completionTaskId': selectedTask.taskId,
+      });
+    }
+    return false;
   }
 
   bool _advanceTeachingStep(Act0RunnerStateV1 runner) {

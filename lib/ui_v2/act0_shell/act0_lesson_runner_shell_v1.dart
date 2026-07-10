@@ -20,6 +20,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
 
@@ -1188,6 +1189,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     return widget.runner.lessonId;
   }
 
+  String? get _actionSequenceTelemetryId => widget.selectedTaskId == null
+      ? null
+      : act0ActionLearningSequenceForTaskV1(widget.selectedTaskId!)?.sequenceId;
+
   void _maybeEmitTaskShownTelemetry() {
     if (!_taskTelemetryVisible) {
       return;
@@ -1211,6 +1216,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'worldId': widget.selectedWorldId!.trim(),
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
+          if (_actionSequenceTelemetryId != null)
+            'sequenceId': _actionSequenceTelemetryId,
           if (widget.selectedTaskFamily != null)
             'taskFamily': widget.selectedTaskFamily!.name,
           'phase': widget.runner.phase.name,
@@ -1246,6 +1253,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'worldId': widget.selectedWorldId!.trim(),
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
+          if (_actionSequenceTelemetryId != null)
+            'sequenceId': _actionSequenceTelemetryId,
           'choiceId': option.id,
           'chosen_action': option.id,
           if (projection.expectedAction != null)
@@ -1291,6 +1300,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'lesson_id': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
           'task_id': _stableTaskTelemetryId,
+          if (_actionSequenceTelemetryId != null)
+            'sequenceId': _actionSequenceTelemetryId,
           if (widget.selectedTaskFamily != null) ...{
             'taskFamily': widget.selectedTaskFamily!.name,
             'concept_family_id': widget.selectedTaskFamily!.name,
@@ -1386,6 +1397,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'worldId': widget.selectedWorldId!.trim(),
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
+          if (_actionSequenceTelemetryId != null)
+            'sequenceId': _actionSequenceTelemetryId,
           if (selectedOption != null)
             'result': selectedOption.isCorrect ? 'correct' : 'incorrect',
           if (feedbackSignalProof != null)
@@ -1437,6 +1450,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'worldId': widget.selectedWorldId!.trim(),
           'lessonId': _stableLessonTelemetryId,
           'taskId': _stableTaskTelemetryId,
+          if (_actionSequenceTelemetryId != null)
+            'sequenceId': _actionSequenceTelemetryId,
           'choiceId': option.id,
           'chosen_action': option.id,
           if (projection.expectedAction != null)
@@ -2740,6 +2755,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
+    final actionSequence = widget.selectedTaskId == null
+        ? null
+        : act0ActionLearningSequenceForTaskV1(widget.selectedTaskId!);
+    final usesActionSequenceGeometry =
+        actionSequence?.geometryPolicyId == 'w1_action_sequence_compact_v1' &&
+        widget.tablePresentation != Act0TaskTablePresentationV1.legacy;
     if (widget.tablePresentation == Act0TaskTablePresentationV1.spatialTheory &&
         isTheory) {
       return _TaskOwnedSpatialTheoryPresentationV1(
@@ -2749,6 +2770,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         support: hint,
         onBack: widget.onBack,
         onContinue: widget.onContinueTheory,
+        tableMaxHeight: usesActionSequenceGeometry ? 520 : 600,
       );
     }
     if (widget.tablePresentation ==
@@ -2761,6 +2783,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         onBack: widget.onBack,
         onChooseOption: _handleChooseOptionTelemetry,
         onContinueReview: widget.onContinueReview,
+        tableHeight: usesActionSequenceGeometry ? 520 : 460,
+        lowerPanelHeight: usesActionSequenceGeometry ? 264 : 282,
+        compactFeedback: usesActionSequenceGeometry,
       );
     }
 
@@ -2857,6 +2882,7 @@ class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
     required this.support,
     required this.onBack,
     required this.onContinue,
+    this.tableMaxHeight = 600,
   });
 
   final Act0RunnerStateV1 runner;
@@ -2865,6 +2891,7 @@ class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
   final String support;
   final VoidCallback onBack;
   final VoidCallback onContinue;
+  final double tableMaxHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -2876,7 +2903,7 @@ class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
           final tableHeight = math.max(
             0.0,
             math.min(
-              600.0,
+              tableMaxHeight,
               constraints.maxHeight - panelAllowance - tableToPanelGap,
             ),
           );
@@ -2895,8 +2922,8 @@ class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
                   height: tableHeight,
                   child: Act0TableSceneV1(
                     table: table,
-                    config: const Act0TablePresentationConfigV1(
-                      maxTableHeight: 600,
+                    config: Act0TablePresentationConfigV1(
+                      maxTableHeight: tableMaxHeight,
                       showFocusBadge: true,
                     ),
                   ),
@@ -2983,6 +3010,9 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onBack,
     required this.onChooseOption,
     required this.onContinueReview,
+    this.tableHeight = 460,
+    this.lowerPanelHeight = 282,
+    this.compactFeedback = false,
   });
 
   final Act0RunnerStateV1 runner;
@@ -2992,20 +3022,25 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
+  final double tableHeight;
+  final double lowerPanelHeight;
+  final bool compactFeedback;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          const lowerPanelHeight = 282.0;
-          final tableHeight = math.max(
+          final resolvedTableHeight = math.max(
             0.0,
-            math.min(460.0, constraints.maxHeight - lowerPanelHeight - 20),
+            math.min(
+              tableHeight,
+              constraints.maxHeight - lowerPanelHeight - 20,
+            ),
           );
           final tableWidth = math.min(
             constraints.maxWidth - 24,
-            tableHeight * 0.576,
+            resolvedTableHeight * 0.576,
           );
           return Padding(
             padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
@@ -3013,12 +3048,12 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
               children: [
                 SizedBox(
                   key: const Key('act0_task_owned_practice_table_bounds'),
-                  height: tableHeight,
+                  height: resolvedTableHeight,
                   width: tableWidth,
                   child: Act0TableSceneV1(
                     table: table,
-                    config: const Act0TablePresentationConfigV1(
-                      maxTableHeight: 460,
+                    config: Act0TablePresentationConfigV1(
+                      maxTableHeight: tableHeight,
                       showFocusBadge: true,
                     ),
                   ),
@@ -3055,7 +3090,8 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: Act0ShellTokensV1.body,
                               ),
-                              const Spacer(),
+                              if (compactFeedback) const SizedBox(height: 16),
+                              if (!compactFeedback) const Spacer(),
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: FilledButton(
