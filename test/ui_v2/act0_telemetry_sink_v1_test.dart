@@ -1199,6 +1199,65 @@ void main() {
     expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
   });
 
+  testWidgets(
+    'Action sequence surfaces a traceable deterministic recommendation',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            telemetrySink: sink,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+              worldId: 'world_1',
+              lessonId: 'fold_check_call_raise',
+              taskId: 'actions_check_drill',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await answerVisiblePromptWronglyV1(tester);
+      expect(
+        find.byKey(const Key('act0_action_recommendation_surface')),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Repair it now'), findsOneWidget);
+
+      final generated = sink.events.lastWhere(
+        (event) => event.name == 'recommendation_generated',
+      );
+      expect(generated.fields['sequence_id'], 'w1_action_words_check_v1');
+      expect(generated.fields['error_type'], 'missed_action_read');
+      expect(generated.fields['recommendation_reason'], 'recentError');
+      expect(generated.fields['source_attempt_key'], isA<String>());
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      await answerVisiblePromptCorrectlyV1(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      await answerVisiblePromptCorrectlyV1(tester);
+
+      expect(find.textContaining('corrected the no-bet read'), findsOneWidget);
+      expect(
+        sink.events.where((event) => event.name == 'recommendation_accepted'),
+        isNotEmpty,
+      );
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
   testWidgets('Act0 prove flow emits safe prove_completed telemetry', (
     tester,
   ) async {
