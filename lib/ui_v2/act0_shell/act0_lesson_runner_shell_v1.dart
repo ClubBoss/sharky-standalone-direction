@@ -4587,8 +4587,11 @@ class _RunnerProgressV1 extends StatelessWidget {
         ),
         const SizedBox(width: Act0ShellTokensV1.gapMd),
         Text(
-          '${runner.beatIndex}/${runner.beatCount}',
-          style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w900),
+          'Step ${runner.beatIndex}/${runner.beatCount}',
+          style: Act0ShellTokensV1.body.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+          ),
         ),
       ],
     );
