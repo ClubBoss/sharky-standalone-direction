@@ -4125,25 +4125,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playRunner = isPlayRunner
         ? normalizeAct0DrillSeatHighlightPolicyV1(
             normalizeAct0SeatTapRunnerV1(
-              _repairRunnerForTask(playSelectedTask!).copyWith(
-                lessonId: selectedLesson.lessonId,
-                lessonTitle: _localizedLessonTitleV1(selectedLesson),
-                lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
-                beatIndex:
-                    _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
-                beatCount: selectedLesson.taskList.length,
-                phase: _phase,
-                selectedOptionId: _selectedOptionId,
-                sizingConfig: _activeSizingConfigV1(
-                  selectedLesson,
-                  playSelectedTask,
+              _actionSequenceRunnerForStageV1(
+                _repairRunnerForTask(playSelectedTask!).copyWith(
+                  lessonId: selectedLesson.lessonId,
+                  lessonTitle: _localizedLessonTitleV1(selectedLesson),
+                  lessonSubtitle: _localizedLessonSubtitleV1(selectedLesson),
+                  beatIndex:
+                      _taskIndex(selectedLesson, playSelectedTask.taskId) + 1,
+                  beatCount: selectedLesson.taskList.length,
+                  phase: _phase,
+                  selectedOptionId: _selectedOptionId,
+                  sizingConfig: _activeSizingConfigV1(
+                    selectedLesson,
+                    playSelectedTask,
+                  ),
+                  selectedPresetId: _activeSelectedPresetIdV1(playSelectedTask),
+                  teachingStepIndex: _teachingStepIndex,
+                  nextLessonId: _nextLessonId(
+                    selectedWorld.lessons,
+                    selectedLesson.lessonId,
+                  ),
                 ),
-                selectedPresetId: _activeSelectedPresetIdV1(playSelectedTask),
-                teachingStepIndex: _teachingStepIndex,
-                nextLessonId: _nextLessonId(
-                  selectedWorld.lessons,
-                  selectedLesson.lessonId,
-                ),
+                taskId: playSelectedTask.taskId,
               ),
             ),
           )
@@ -10742,6 +10745,33 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       });
     }
     return false;
+  }
+
+  Act0RunnerStateV1 _actionSequenceRunnerForStageV1(
+    Act0RunnerStateV1 runner, {
+    required String taskId,
+  }) {
+    final sequence = act0ActionLearningSequenceForTaskV1(taskId);
+    if (sequence == null || taskId != sequence.practiceTaskId) {
+      return runner;
+    }
+    return switch (_activeActionSequenceStageV1) {
+      Act0ActionSequenceStageV1.repair => runner.copyWith(
+        caption: 'Repair the no-bet read.',
+        hint: 'No bet is in front of you. Checking keeps the hand free.',
+        question: 'No bet yet. Which action costs nothing?',
+        teachingSteps: const <Act0TeachingStepV1>[],
+        teachingStepIndex: 0,
+      ),
+      Act0ActionSequenceStageV1.recheck => runner.copyWith(
+        caption: 'Recheck the same clue.',
+        hint: 'Read the price first: no bet means checking is available.',
+        question: 'Read it again: with no bet, which action is free?',
+        teachingSteps: const <Act0TeachingStepV1>[],
+        teachingStepIndex: 0,
+      ),
+      _ => runner,
+    };
   }
 
   bool _advanceTeachingStep(Act0RunnerStateV1 runner) {
