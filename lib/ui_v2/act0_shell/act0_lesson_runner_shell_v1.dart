@@ -21,6 +21,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
 
@@ -1005,6 +1007,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.relaxTheoryAdvanceLock = false,
     this.showLearningRailFocusLabels = false,
     this.rapidReviewMode = false,
+    this.actionRecommendation,
     this.telemetrySink,
   });
 
@@ -1037,6 +1040,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final bool relaxTheoryAdvanceLock;
   final bool showLearningRailFocusLabels;
   final bool rapidReviewMode;
+  final Act0ActionRecommendationV1? actionRecommendation;
   final Act0TelemetrySinkV1? telemetrySink;
 
   @override
@@ -2590,6 +2594,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
                     onContinue: widget.onContinueReview,
                   ),
+                  if (widget.actionRecommendation case final recommendation?)
+                    Act0ActionRecommendationSurfaceV1(
+                      recommendation: recommendation,
+                    ),
                 ],
               )
             : const SizedBox.shrink(),
@@ -2783,6 +2791,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           onBack: widget.onBack,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
+          actionRecommendation: widget.actionRecommendation,
           tableHeight: 460,
           lowerPanelHeight: 282,
           compactFeedback: false,
@@ -3011,6 +3020,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onBack,
     required this.onChooseOption,
     required this.onContinueReview,
+    this.actionRecommendation,
     this.tableHeight = 460,
     this.lowerPanelHeight = 282,
     this.compactFeedback = false,
@@ -3023,6 +3033,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
+  final Act0ActionRecommendationV1? actionRecommendation;
   final double tableHeight;
   final double lowerPanelHeight;
   final bool compactFeedback;
@@ -3086,8 +3097,14 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                runner.reviewReason,
-                                maxLines: 4,
+                                actionRecommendation?.explanation ??
+                                    runner.reviewReason,
+                                key: actionRecommendation == null
+                                    ? null
+                                    : const Key(
+                                        'act0_action_recommendation_surface',
+                                      ),
+                                maxLines: actionRecommendation == null ? 4 : 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Act0ShellTokensV1.body,
                               ),

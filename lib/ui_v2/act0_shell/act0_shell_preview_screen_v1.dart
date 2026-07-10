@@ -42,6 +42,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -1062,6 +1063,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   Act0ActionSequenceStageV1? _activeActionSequenceStageV1;
+  Act0ActionSequenceLearnerStateV1 _actionPersonalizationStateV1 =
+      Act0ActionSequencePersonalizationPolicyV1.initialState();
   String? _activeRepairSourceTaskId;
   Act0PracticeRepairQueueLaunchRequestV1? _activePracticeRepairQueueRequestV1;
   Act0RepairOutcomeProjectionV1 _repairOutcomeProjectionV1 =
@@ -4991,6 +4994,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   setState(() {
                                     _latestCompletedDecisionV1 = decision;
                                     _appendLearningEvidenceV1(decision);
+                                    _deriveActionPersonalizationV1(decision);
                                   });
                                   _persistProgress();
                                 },
@@ -5041,7 +5045,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                 }),
                                 rapidReviewMode: _rapidPracticeLoop,
+                                actionRecommendation:
+                                    _actionRecommendationForActiveSequenceV1(),
                                 onContinueReview: () => setState(() {
+                                  _recordActionRecommendationAcceptedV1();
                                   if (_placementDiagnosticActive) {
                                     final spot = _placementDiagnosticSpotsV1
                                         .elementAt(_placementDiagnosticIndex);
@@ -10660,6 +10667,67 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _persistProgress();
   }
 
+  Act0ActionRecommendationV1? _actionRecommendationForActiveSequenceV1() {
+    if (_selectedTaskId != act0ActionLearningSequenceV1.practiceTaskId ||
+        _selectedOptionId == null) {
+      return null;
+    }
+    return Act0ActionSequencePersonalizationPolicyV1.evaluate(
+      _actionPersonalizationStateV1,
+    );
+  }
+
+  void _deriveActionPersonalizationV1(Act0CompletedDecisionV1 decision) {
+    final stage = _activeActionSequenceStageV1;
+    if (stage == null ||
+        decision.taskId != act0ActionLearningSequenceV1.practiceTaskId) {
+      return;
+    }
+    _actionPersonalizationStateV1 =
+        Act0ActionSequencePersonalizationPolicyV1.deriveState(
+          current: _actionPersonalizationStateV1,
+          decision: decision,
+          stage: stage,
+        );
+    final recommendation = Act0ActionSequencePersonalizationPolicyV1.evaluate(
+      _actionPersonalizationStateV1,
+    );
+    final fields = <String, Object?>{
+      'schemaVersion': 1,
+      'sequence_id': _actionPersonalizationStateV1.sequenceId,
+      'source_attempt_key': decision.attemptKey,
+      'source_user_choice': decision.selectedId,
+      'correct': decision.isCorrect,
+      'error_type': decision.isCorrect
+          ? 'none'
+          : act0ActionLearningSequenceV1.repairErrorType,
+      'time_to_decision_bucket': decision.decisionTimeBucket,
+      'sequence_stage': stage.name,
+      'recommendation_id': recommendation.id,
+      'recommendation_reason': recommendation.reason.name,
+      'recommendation_target': recommendation.target.name,
+      'source_evidence_summary': recommendation.sourceEvidenceSummary,
+    };
+    _recordTelemetryEventV1('recommendation_generated', fields);
+    _recordTelemetryEventV1('recommendation_shown', fields);
+  }
+
+  void _recordActionRecommendationAcceptedV1() {
+    final recommendation = _actionRecommendationForActiveSequenceV1();
+    final latest = _actionPersonalizationStateV1.latestOutcome;
+    if (recommendation == null || latest == null) {
+      return;
+    }
+    _recordTelemetryEventV1('recommendation_accepted', <String, Object?>{
+      'schemaVersion': 1,
+      'sequence_id': _actionPersonalizationStateV1.sequenceId,
+      'source_attempt_key': latest.attemptKey,
+      'recommendation_id': recommendation.id,
+      'recommendation_reason': recommendation.reason.name,
+      'recommendation_target': recommendation.target.name,
+    });
+  }
+
   /// Keeps Action-sequence recovery inside the existing canonical preview
   /// owner. The task runner remains unchanged; this only chooses the next
   /// truthful sequence state after its feedback has been seen.
@@ -10954,6 +11022,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final nextTask = _nextTask(selectedLesson, _selectedTaskId);
     if (nextTask != null) {
       _selectedTaskId = nextTask.taskId;
+      final actionSequence = act0ActionLearningSequenceForTaskV1(
+        nextTask.taskId,
+      );
+      _activeActionSequenceStageV1 = actionSequence == null
+          ? null
+          : actionSequence.stageForTask(nextTask.taskId);
       _phase = nextTask.phase;
       _tab = Act0ShellTabV1.play;
       _showPlayHub = false;
