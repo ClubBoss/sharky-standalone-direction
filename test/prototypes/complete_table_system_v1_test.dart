@@ -21,6 +21,7 @@ const _fullTableWidth = 344.0;
 enum _TheoryGeometry { t1, t2_88, t2_90, t2_92 }
 enum _PanelClass { compactTheory, standardTheory }
 enum _TaskState { decision, correct, wrong, repairFocus, repairDetail, peek, restored, repairResult, recheck }
+enum _Identity { production, position, dealerOrder, nonPosition }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +58,11 @@ void main() {
     await capture('theory_standard_content_sized', const _TheoryScreen(geometry: _TheoryGeometry.t2_90, panelClass: _PanelClass.standardTheory, beat: 'Hero cards'));
     await capture('theory_current_fixed_slot_control', const _FixedSlotControl());
     await capture('theory_internal_bounds_overlay', const _TheoryScreen(geometry: _TheoryGeometry.t2_90, panelClass: _PanelClass.standardTheory, beat: 'Hero cards', showBounds: true));
+    await capture('t1_target_identity', const _TheoryScreen(geometry: _TheoryGeometry.t1, panelClass: _PanelClass.standardTheory, beat: 'Hero cards', identity: _Identity.position));
+    await capture('t2_92_target_identity', const _TheoryScreen(geometry: _TheoryGeometry.t2_92, panelClass: _PanelClass.standardTheory, beat: 'Hero cards', identity: _Identity.position));
+    await capture('position_identity', const _TheoryScreen(geometry: _TheoryGeometry.t1, panelClass: _PanelClass.standardTheory, beat: 'Hero cards', identity: _Identity.position));
+    await capture('dealer_order_identity', const _TheoryScreen(geometry: _TheoryGeometry.t1, panelClass: _PanelClass.standardTheory, beat: 'Recap', identity: _Identity.dealerOrder));
+    await capture('non_position_identity', const _TheoryScreen(geometry: _TheoryGeometry.t1, panelClass: _PanelClass.standardTheory, beat: 'Pot', identity: _Identity.nonPosition));
 
     await capture('boundary_theory_final', const _TheoryScreen(geometry: _TheoryGeometry.t2_90, panelClass: _PanelClass.standardTheory, beat: 'Recap'));
     await capture('boundary_task_full', const _TaskScreen(state: _TaskState.decision, label: 'Play this hand'));
@@ -94,6 +100,8 @@ void main() {
     File('${out.path}/readability_assessment.md').writeAsStringSync('# Readability assessment\n\nAll four theory candidates use the exact Act0TableSceneV1 production scene and retain cards, board, pot, seats, and labels. T1 is visibly larger; T2 88/90/92 are differentiated only by deliberate fixed scale. The current public scene still renders `BTN Hero` plus a dealer disc, so this prototype cannot certify the requested learner-facing `You · BTN` identity.\n');
     File('${out.path}/transition_state_diagram.md').writeAsStringSync('spatialTheory --theoryToPractice--> taskLoop\n  taskLoop: decision -> feedback -> repair -> peek -> result -> recheck\n  information: terminal/milestone/summary\n');
     _contactSheet(out, <String>['theory_t1_full', 'theory_t2_88', 'theory_t2_90', 'theory_t2_92'], 'theory_comparison_contact_sheet.png');
+    _contactSheet(out, <String>['t1_target_identity', 't2_92_target_identity'], 'final_t1_vs_t2_contact_sheet.png');
+    _contactSheet(out, <String>['position_identity', 'dealer_order_identity', 'non_position_identity'], 'identity_contact_sheet.png');
     _contactSheet(out, <String>['theory_winner_hero', 'boundary_first_decision', 'correct_compact', 'wrong_standard', 'repair_focus_standard', 'view_table_peek', 'recheck_standard'], 'complete_sequence_contact_sheet.png');
     _contactSheet(out, <String>['stress_four_options', 'stress_w9', 'stress_position', 'stress_hero_cards', 'stress_dealer_order', 'stress_localized_theory'], 'stress_contact_sheet.png');
   });
@@ -170,15 +178,16 @@ void _assertTaskLock(List<Map<String, Object?>> rows) {
 }
 
 class _TheoryScreen extends StatelessWidget {
-  const _TheoryScreen({required this.geometry, required this.panelClass, required this.beat, this.showBounds = false});
+  const _TheoryScreen({required this.geometry, required this.panelClass, required this.beat, this.showBounds = false, this.identity = _Identity.production});
   final _TheoryGeometry geometry;
   final _PanelClass panelClass;
   final String beat;
   final bool showBounds;
+  final _Identity identity;
   @override Widget build(BuildContext context) {
     final width = switch (geometry) {_TheoryGeometry.t1 => _fullTableWidth, _TheoryGeometry.t2_88 => _fullTableWidth * .88, _TheoryGeometry.t2_90 => _fullTableWidth * .90, _TheoryGeometry.t2_92 => _fullTableWidth * .92};
     final body = switch (beat) {'Hero cards' => 'Your two cards are yours alone. Read them before you look at the board.', 'Board' => 'The board is shared. Every player can use these cards to build a hand.', 'Pot' => 'The pot shows what is already in the middle before you choose.', _ => 'Hero cards, board, and pot form one table read. Find each before acting.'};
-    return Stack(children: [const _Chrome(progress: '1/6'), Positioned(top: geometry == _TheoryGeometry.t1 ? 48 : 42, left: (375 - width) / 2, child: _ExactTable(width: width)), Positioned(left: 12, right: 12, bottom: 10, child: _TheoryPanel(panelClass: panelClass, title: 'Start with your ${beat.toLowerCase()}', body: body, showBounds: showBounds))]);
+    return Stack(children: [const _Chrome(progress: '1/6'), Positioned(top: geometry == _TheoryGeometry.t1 ? 48 : 42, left: (375 - width) / 2, child: _ExactTable(width: width, identity: identity)), Positioned(left: 12, right: 12, bottom: 10, child: _TheoryPanel(panelClass: panelClass, title: 'Start with your ${beat.toLowerCase()}', body: body, showBounds: showBounds))]);
   }
 }
 
@@ -198,7 +207,23 @@ class _InformationScreen extends StatelessWidget { const _InformationScreen({req
 
 class _Chrome extends StatelessWidget { const _Chrome({required this.progress}); final String progress; @override Widget build(BuildContext context) => Positioned(left: 16, right: 16, top: 10, child: Row(children: [const Icon(Icons.arrow_back, color: Colors.white, size: 22), const SizedBox(width: 12), const Expanded(child: LinearProgressIndicator(value: .25)), const SizedBox(width: 12), Text(progress, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800))])); }
 
-class _ExactTable extends StatelessWidget { const _ExactTable({required this.width}); final double width; @override Widget build(BuildContext context) => SizedBox(key: const Key('cts_table'), width: width, child: Act0TableSceneV1(table: _hand, config: const Act0TablePresentationConfigV1(maxTableHeight: 1000, showFocusBadge: true, identityPolicy: Act0TableIdentityPolicyV1.learnerPosition))); }
+class _ExactTable extends StatelessWidget {
+  const _ExactTable({required this.width, this.identity = _Identity.production});
+  final double width;
+  final _Identity identity;
+  @override Widget build(BuildContext context) => SizedBox(key: const Key('cts_table'), width: width, child: AspectRatio(aspectRatio: .576, child: Stack(clipBehavior: Clip.none, children: [Positioned.fill(child: Act0TableSceneV1(table: _hand, config: const Act0TablePresentationConfigV1(maxTableHeight: 1000, showFocusBadge: true))), if (identity != _Identity.production) _IdentityOverlay(identity: identity, width: width)])));
+}
+
+class _IdentityOverlay extends StatelessWidget {
+  const _IdentityOverlay({required this.identity, required this.width});
+  final _Identity identity;
+  final double width;
+  @override Widget build(BuildContext context) {
+    final position = identity == _Identity.position || identity == _Identity.dealerOrder;
+    return Stack(children: [Positioned(left: width * .33, bottom: 24, child: Container(width: 132, height: 46, alignment: Alignment.center, decoration: BoxDecoration(color: const Color(0xFF08111F), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFFFC857))), child: Text(position ? 'You · BTN' : 'You', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)))), if (identity != _Identity.dealerOrder) Positioned(right: 20, bottom: 33, child: Container(width: 38, height: 26, color: const Color(0xFF146B56))), if (identity == _Identity.dealerOrder) Positioned(right: 17, bottom: 31, child: Container(padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)), child: const Text('BTN', style: TextStyle(color: Color(0xFF08111F), fontSize: 10, fontWeight: FontWeight.w800))))]);
+	}
+
+}
 
 class _TheoryPanel extends StatelessWidget { const _TheoryPanel({required this.panelClass, required this.title, required this.body, required this.showBounds}); final _PanelClass panelClass; final String title; final String body; final bool showBounds; @override Widget build(BuildContext context) => Container(key: const Key('cts_panel'), padding: const EdgeInsets.fromLTRB(16, 12, 16, 12), decoration: _panelDecoration.copyWith(border: showBounds ? Border.all(color: Colors.yellow, width: 2) : null), child: Column(key: const Key('cts_content'), mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [const Text('READ THE TABLE · 1 OF 3', style: _eyebrow), const SizedBox(height: 4), Text(title, maxLines: 2, overflow: TextOverflow.ellipsis, style: _title), const SizedBox(height: 6), Container(key: const Key('cts_text'), decoration: showBounds ? BoxDecoration(border: Border.all(color: Colors.pinkAccent)) : null, child: Text(body, maxLines: panelClass == _PanelClass.compactTheory ? 2 : 4, overflow: TextOverflow.ellipsis, style: _body)), const SizedBox(height: 18), _Footer(showBounds: showBounds)]) ); }
 
