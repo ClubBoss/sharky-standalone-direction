@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -37,6 +38,7 @@ void main() {
           home: RepaintBoundary(
             key: _boundaryKey,
             child: Act0ShellPreviewScreenV1(
+              key: ValueKey<String>('action_sequence_capture_$name'),
               state: Act0ShellStateV1.sample,
               showPlacementOnStart: false,
               debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
@@ -57,8 +59,18 @@ void main() {
           .byKey(const Key('act0_shell_runner_screen'))
           .evaluate()
           .length;
+      final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+      final runner = runnerFinder.evaluate().isEmpty
+          ? null
+          : tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
       final table = find.byKey(const Key('act0_shell_table'));
       final rect = table.evaluate().isEmpty ? null : tester.getRect(table);
+      final stableBounds = find.byKey(
+        const Key('act0_task_owned_practice_table_bounds'),
+      );
+      final stableRect = stableBounds.evaluate().isEmpty
+          ? null
+          : tester.getRect(stableBounds);
       rows.add(<String, Object?>{
         'name': name,
         'phase': phase,
@@ -67,6 +79,19 @@ void main() {
         'sequenceId': 'w1_action_words_check_v1',
         'tableContextRelation': 'related_read',
         'runnerRootCount': runnerRoots,
+        'runnerPhase': runner?.runner.phase.name,
+        'runnerSelectedTaskId': runner?.selectedTaskId,
+        'runnerTeachingStepIndex': runner?.runner.teachingStepIndex,
+        'runnerTeachingStepCount': runner?.runner.teachingSteps.length,
+        'stablePracticeSelected': stableRect != null,
+        'stablePracticeBounds': stableRect == null
+            ? null
+            : <String, double>{
+                'left': stableRect.left,
+                'top': stableRect.top,
+                'width': stableRect.width,
+                'height': stableRect.height,
+              },
         'table': rect == null
             ? null
             : <String, double>{

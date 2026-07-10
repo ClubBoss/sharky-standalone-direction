@@ -2463,7 +2463,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _applyDebugHomeSurface();
       return;
     }
-    _startTaskByIds(world, lesson.lessonId, targetTaskId);
+    _startTaskByIds(
+      world,
+      lesson.lessonId,
+      targetTaskId,
+      allowDrillBypass: phase != Act0LessonPhaseV1.theory,
+    );
     _returnToPlayHubOnBack = false;
     _phase = phase;
     final task = _taskById(lesson, targetTaskId);
