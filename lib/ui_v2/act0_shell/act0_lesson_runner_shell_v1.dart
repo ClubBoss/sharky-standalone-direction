@@ -2763,29 +2763,36 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         widget.tablePresentation != Act0TaskTablePresentationV1.legacy;
     if (widget.tablePresentation == Act0TaskTablePresentationV1.spatialTheory &&
         isTheory) {
-      return _TaskOwnedSpatialTheoryPresentationV1(
-        runner: runner,
-        table: table,
-        prompt: prompt,
-        support: hint,
-        onBack: widget.onBack,
-        onContinue: widget.onContinueTheory,
-        tableMaxHeight: usesActionSequenceGeometry ? 520 : 600,
+      return KeyedSubtree(
+        key: const Key('act0_shell_runner_screen'),
+        child: _TaskOwnedSpatialTheoryPresentationV1(
+          runner: runner,
+          table: table,
+          prompt: prompt,
+          support: hint,
+          onBack: widget.onBack,
+          onContinue: widget.onContinueTheory,
+          tableMaxHeight: usesActionSequenceGeometry ? 520 : 600,
+        ),
       );
     }
     if (widget.tablePresentation ==
-        Act0TaskTablePresentationV1.stablePractice) {
-      return _TaskOwnedStablePracticePresentationV1(
-        runner: runner,
-        table: table,
-        isReview: isReview,
-        question: question,
-        onBack: widget.onBack,
-        onChooseOption: _handleChooseOptionTelemetry,
-        onContinueReview: widget.onContinueReview,
-        tableHeight: usesActionSequenceGeometry ? 520 : 460,
-        lowerPanelHeight: usesActionSequenceGeometry ? 264 : 282,
-        compactFeedback: usesActionSequenceGeometry,
+            Act0TaskTablePresentationV1.stablePractice &&
+        ((isDrill && !isTeaching) || isReview)) {
+      return KeyedSubtree(
+        key: const Key('act0_shell_runner_screen'),
+        child: _TaskOwnedStablePracticePresentationV1(
+          runner: runner,
+          table: table,
+          isReview: isReview,
+          question: question,
+          onBack: widget.onBack,
+          onChooseOption: _handleChooseOptionTelemetry,
+          onContinueReview: widget.onContinueReview,
+          tableHeight: usesActionSequenceGeometry ? 520 : 460,
+          lowerPanelHeight: usesActionSequenceGeometry ? 264 : 282,
+          compactFeedback: usesActionSequenceGeometry,
+        ),
       );
     }
 
@@ -3094,9 +3101,15 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                               if (!compactFeedback) const Spacer(),
                               Align(
                                 alignment: Alignment.centerRight,
-                                child: FilledButton(
-                                  onPressed: onContinueReview,
-                                  child: const Text('Continue'),
+                                child: KeyedSubtree(
+                                  key: const Key('act0_shell_continue_cta'),
+                                  child: FilledButton(
+                                    key: const Key(
+                                      'act0_shell_feedback_continue_cta',
+                                    ),
+                                    onPressed: onContinueReview,
+                                    child: const Text('Continue'),
+                                  ),
                                 ),
                               ),
                             ],
@@ -3117,6 +3130,9 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                   child: SizedBox(
                                     width: double.infinity,
                                     child: OutlinedButton(
+                                      key: Key(
+                                        'act0_shell_option_${option.id}',
+                                      ),
                                       onPressed: () => onChooseOption(option),
                                       child: Text(
                                         option.label,

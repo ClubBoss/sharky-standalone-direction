@@ -86,7 +86,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Act0LessonRunnerShellV1(
-          runner: task.runner,
+          runner: task.runner.copyWith(phase: Act0LessonPhaseV1.review),
           tablePresentation: task.tablePresentation,
           onBack: () {},
           onContinueTheory: () {},
