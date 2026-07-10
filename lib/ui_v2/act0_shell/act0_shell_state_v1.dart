@@ -400,6 +400,7 @@ class Act0LessonTaskV1 {
     required this.rewardXp,
     this.stepKind = Act0LessonStepKindV1.practice,
     this.taskFamily,
+    this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.summary,
     this.lockedSummary,
   });
@@ -411,12 +412,16 @@ class Act0LessonTaskV1 {
   final int rewardXp;
   final Act0LessonStepKindV1 stepKind;
   final Act0TaskFamilyV1? taskFamily;
+  final Act0TaskTablePresentationV1 tablePresentation;
   final String? summary;
   final String? lockedSummary;
 
   Act0TaskFamilyV1 get resolvedTaskFamily =>
       taskFamily ?? act0InferTaskFamilyV1(phase: phase, stepKind: stepKind);
 }
+
+/// Source-owned table presentation behavior for one canonical task.
+enum Act0TaskTablePresentationV1 { legacy, spatialTheory, stablePractice }
 
 enum Act0HintPolicyV1 { always, theoryOnly, hidden }
 
@@ -1880,6 +1885,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
+        tablePresentation: Act0TaskTablePresentationV1.spatialTheory,
         summary: 'Lock in the four core verbs first: fold, check, call, raise.',
       ),
       Act0LessonTaskV1(
@@ -1901,6 +1907,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _checkActionRunner,
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
+        tablePresentation: Act0TaskTablePresentationV1.stablePractice,
         summary: 'Recognize the one moment checking is free and correct.',
         lockedSummary: 'Clear Action words first, then unlock the no-bet read.',
       ),
