@@ -1,0 +1,185 @@
+// Local-only evidence generator. It mounts the real production preview shell
+// and uses its existing direct-state capture entry only for real source-owned
+// W1 states; no substitute route or widget is introduced.
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:image/image.dart' as image;
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+const _root = 'output/evidence/action_sequence_convergence_v1';
+const _viewport = Size(375, 812);
+const _boundaryKey = Key('action_sequence_raster_boundary');
+
+void main() {
+  testWidgets('captures canonical W1 Action production states', (tester) async {
+    tester.view.physicalSize = _viewport;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final out = Directory(_root)..createSync(recursive: true);
+    final rows = <Map<String, Object?>>[];
+
+    Future<void> capture({
+      required String name,
+      required Act0ControlledDemoCaptureSurfaceV1 surface,
+      String taskId = 'actions_check_drill',
+      String phase = 'selected',
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RepaintBoundary(
+            key: _boundaryKey,
+            child: Act0ShellPreviewScreenV1(
+              state: Act0ShellStateV1.sample,
+              showPlacementOnStart: false,
+              debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+                mode: Act0ControlledDemoCaptureModeV1.directState,
+                surface: surface,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: taskId,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final bytes = await _png(tester);
+      File('${out.path}/$name.png').writeAsBytesSync(bytes);
+      final runnerRoots = find
+          .byKey(const Key('act0_shell_runner_screen'))
+          .evaluate()
+          .length;
+      final table = find.byKey(const Key('act0_shell_table'));
+      final rect = table.evaluate().isEmpty ? null : tester.getRect(table);
+      rows.add(<String, Object?>{
+        'name': name,
+        'phase': phase,
+        'taskId': taskId,
+        'owner': 'Act0ShellPreviewScreenV1',
+        'sequenceId': 'w1_action_words_check_v1',
+        'tableContextRelation': 'related_read',
+        'runnerRootCount': runnerRoots,
+        'table': rect == null
+            ? null
+            : <String, double>{
+                'left': rect.left,
+                'top': rect.top,
+                'width': rect.width,
+                'height': rect.height,
+              },
+        'overflow': tester.takeException()?.toString(),
+      });
+      expect(tester.takeException(), isNull);
+    }
+
+    await capture(
+      name: 'theory',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+      taskId: 'actions_theory',
+      phase: 'theory',
+    );
+    await capture(
+      name: 'decision',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      phase: 'decision',
+    );
+    await capture(
+      name: 'correct_feedback',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
+      phase: 'correct_feedback',
+    );
+    await capture(
+      name: 'wrong_feedback',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+      phase: 'wrong_feedback',
+    );
+    await capture(
+      name: 'targeted_repair',
+      surface: Act0ControlledDemoCaptureSurfaceV1.repairFocus,
+      taskId: 'actions_legal_context',
+      phase: 'existing_repair_surface',
+    );
+    await capture(
+      name: 'repair_success',
+      surface: Act0ControlledDemoCaptureSurfaceV1.repairResult,
+      taskId: 'actions_legal_context',
+      phase: 'existing_repair_result_surface',
+    );
+
+    File('${out.path}/raster_geometry_metrics.json').writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+            'viewport': <String, int>{'width': 375, 'height': 812},
+            'states': rows,
+          }) +
+          '\n',
+    );
+    File('${out.path}/raster_state_inventory.md').writeAsStringSync(
+      '''# Canonical Action raster inventory
+
+The harness mounts `Act0ShellPreviewScreenV1` and selects only existing
+production capture states. Theory, decision, correct feedback, wrong feedback,
+and the pre-existing repair/result surfaces were rasterized. The existing
+capture seam does not select the new Action sequence's internal repair/recheck,
+completion, or next-step state specifically; those states remain uncaptured
+rather than synthesized. The repair captures are source-owned production
+repair surfaces but use `actions_legal_context`, not a false claim that they
+are the new sequence's same-task state.
+''',
+    );
+    _sheet(out, <String>[
+      'theory',
+      'decision',
+      'correct_feedback',
+      'wrong_feedback',
+    ], 'canonical_sequence_contact_sheet.png');
+    _sheet(out, <String>[
+      'wrong_feedback',
+      'targeted_repair',
+      'repair_success',
+    ], 'wrong_repair_recheck_contact_sheet.png');
+    _sheet(out, <String>[
+      'correct_feedback',
+      'repair_success',
+    ], 'correct_completion_contact_sheet.png');
+    _sheet(out, <String>[
+      'theory',
+      'decision',
+      'wrong_feedback',
+    ], 'runner_control_contact_sheet.png');
+  });
+}
+
+Future<Uint8List> _png(WidgetTester tester) async {
+  final boundary = tester.renderObject<RenderRepaintBoundary>(
+    find.byKey(_boundaryKey),
+  );
+  final data = await tester.runAsync(
+    () async => (await boundary.toImage(
+      pixelRatio: 1,
+    )).toByteData(format: ui.ImageByteFormat.png),
+  );
+  if (data == null) throw StateError('PNG capture failed');
+  return Uint8List.view(data.buffer);
+}
+
+void _sheet(Directory out, List<String> names, String fileName) {
+  final images = names
+      .map(
+        (name) =>
+            image.decodePng(File('${out.path}/$name.png').readAsBytesSync())!,
+      )
+      .toList();
+  final canvas = image.Image(width: 375 * images.length, height: 812);
+  for (var index = 0; index < images.length; index++) {
+    image.compositeImage(canvas, images[index], dstX: 375 * index);
+  }
+  File('${out.path}/$fileName').writeAsBytesSync(image.encodePng(canvas));
+}

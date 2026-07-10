@@ -2755,12 +2755,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
-    final actionSequence = widget.selectedTaskId == null
-        ? null
-        : act0ActionLearningSequenceForTaskV1(widget.selectedTaskId!);
-    final usesActionSequenceGeometry =
-        actionSequence?.geometryPolicyId == 'w1_action_sequence_compact_v1' &&
-        widget.tablePresentation != Act0TaskTablePresentationV1.legacy;
     if (widget.tablePresentation == Act0TaskTablePresentationV1.spatialTheory &&
         isTheory) {
       return KeyedSubtree(
@@ -2772,7 +2766,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           support: hint,
           onBack: widget.onBack,
           onContinue: widget.onContinueTheory,
-          tableMaxHeight: usesActionSequenceGeometry ? 520 : 600,
+          tableMaxHeight: 600,
         ),
       );
     }
@@ -2789,9 +2783,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           onBack: widget.onBack,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
-          tableHeight: usesActionSequenceGeometry ? 520 : 460,
-          lowerPanelHeight: usesActionSequenceGeometry ? 264 : 282,
-          compactFeedback: usesActionSequenceGeometry,
+          tableHeight: 460,
+          lowerPanelHeight: 282,
+          compactFeedback: false,
         ),
       );
     }
