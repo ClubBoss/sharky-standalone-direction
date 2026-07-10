@@ -75,4 +75,31 @@ void main() {
     expect(panel.top - table.bottom, 12);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('stable practice uses one fixed table slot', (tester) async {
+    final task = Act0ShellStateV1.sample
+        .lessonById('fold_check_call_raise')
+        .taskList
+        .firstWhere((candidate) => candidate.taskId == 'actions_check_drill');
+    await tester.binding.setSurfaceSize(const Size(375, 812));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0LessonRunnerShellV1(
+          runner: task.runner,
+          tablePresentation: task.tablePresentation,
+          onBack: () {},
+          onContinueTheory: () {},
+          onChooseOption: (_) {},
+          onContinueReview: () {},
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const Key('act0_task_owned_practice_table_bounds')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
 }

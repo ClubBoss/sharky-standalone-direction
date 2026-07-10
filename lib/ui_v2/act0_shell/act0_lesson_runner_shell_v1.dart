@@ -2751,6 +2751,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         onContinue: widget.onContinueTheory,
       );
     }
+    if (widget.tablePresentation ==
+        Act0TaskTablePresentationV1.stablePractice) {
+      return _TaskOwnedStablePracticePresentationV1(
+        runner: runner,
+        table: table,
+        isReview: isReview,
+        question: question,
+        onBack: widget.onBack,
+        onChooseOption: _handleChooseOptionTelemetry,
+        onContinueReview: widget.onContinueReview,
+      );
+    }
 
     final runnerScreen = Column(
       key: const Key('act0_shell_runner_screen'),
@@ -2948,6 +2960,146 @@ class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
                         ],
                       ),
                     ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Keeps the task-owned practice table in one slot while only the lower
+/// decision/feedback panel changes. No reachable state is allowed to resize or
+/// translate the table.
+class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
+  const _TaskOwnedStablePracticePresentationV1({
+    required this.runner,
+    required this.table,
+    required this.isReview,
+    required this.question,
+    required this.onBack,
+    required this.onChooseOption,
+    required this.onContinueReview,
+  });
+
+  final Act0RunnerStateV1 runner;
+  final Act0TableStateV1 table;
+  final bool isReview;
+  final String question;
+  final VoidCallback onBack;
+  final ValueChanged<Act0RunnerOptionV1> onChooseOption;
+  final VoidCallback onContinueReview;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const lowerPanelHeight = 282.0;
+          final tableHeight = math.max(
+            0.0,
+            math.min(460.0, constraints.maxHeight - lowerPanelHeight - 20),
+          );
+          final tableWidth = math.min(
+            constraints.maxWidth - 24,
+            tableHeight * 0.576,
+          );
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+            child: Column(
+              children: [
+                SizedBox(
+                  key: const Key('act0_task_owned_practice_table_bounds'),
+                  height: tableHeight,
+                  width: tableWidth,
+                  child: Act0TableSceneV1(
+                    table: table,
+                    config: const Act0TablePresentationConfigV1(
+                      maxTableHeight: 460,
+                      showFocusBadge: true,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: Container(
+                    key: const Key('act0_task_owned_practice_panel'),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Act0ShellTokensV1.surface2,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Act0ShellTokensV1.primary.withValues(
+                          alpha: 0.28,
+                        ),
+                      ),
+                    ),
+                    child: isReview
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                runner.reviewTitle,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Act0ShellTokensV1.sectionTitle,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                runner.reviewReason,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                                style: Act0ShellTokensV1.body,
+                              ),
+                              const Spacer(),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: FilledButton(
+                                  onPressed: onContinueReview,
+                                  child: const Text('Continue'),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Act0ShellTokensV1.sectionTitle,
+                              ),
+                              const SizedBox(height: 8),
+                              for (final option in runner.options)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 6),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      onPressed: () => onChooseOption(option),
+                                      child: Text(
+                                        option.label,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              const Spacer(),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: TextButton(
+                                  onPressed: onBack,
+                                  child: const Text('Back'),
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
               ],
