@@ -981,6 +981,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedLessonId,
     this.selectedTaskId,
     this.selectedTaskFamily,
+    this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.theoryRecallStep,
     required this.onBack,
     required this.onContinueTheory,
@@ -1012,6 +1013,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedLessonId;
   final String? selectedTaskId;
   final Act0TaskFamilyV1? selectedTaskFamily;
+  final Act0TaskTablePresentationV1 tablePresentation;
   final Act0TeachingStepV1? theoryRecallStep;
   final VoidCallback onBack;
   final VoidCallback onContinueTheory;

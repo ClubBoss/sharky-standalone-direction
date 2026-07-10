@@ -4809,6 +4809,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 selectedTaskId: playSelectedTask?.taskId,
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
+                                tablePresentation:
+                                    playSelectedTask?.tablePresentation ??
+                                    Act0TaskTablePresentationV1.legacy,
                                 telemetrySink: _sessionAwareTelemetrySinkV1(),
                                 theoryRecallStep: theoryRecallStep,
                                 framingProfile: runnerFramingProfile,
