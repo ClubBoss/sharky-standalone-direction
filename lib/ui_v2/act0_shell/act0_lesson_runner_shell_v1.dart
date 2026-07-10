@@ -8403,6 +8403,11 @@ class _Act0TableV1 extends StatelessWidget {
               selectedSeatId: resolvedSelectedSeatId,
               selectionFeedbackState: selectedSeatFeedbackState,
             );
+            final hasRepairCallout =
+                lateRouteSignal == null &&
+                showRepairCallout &&
+                (table.focusCalloutLabel.isNotEmpty ||
+                    interactiveCalloutLabel.isNotEmpty);
             return Container(
               padding: const EdgeInsets.all(10),
               decoration: Act0ShellTokensV1.tableRimDecoration(),
@@ -8485,27 +8490,31 @@ class _Act0TableV1 extends StatelessWidget {
                     ),
                   ),
                   Center(
-                    child: _CenterPotV1(
-                      table: table,
-                      highlightedCardIds: highlightedCardIds,
-                      onBoardCardTap: () => onBoardCardTap(table),
-                      visualVariant: visualVariant,
-                      showFocusBadge: showFocusBadge,
-                      centerLabelOverride: centerLabelOverride,
-                      lateRouteSignal: lateRouteSignal,
-                      potLabelOverride: potLabelOverride,
-                      toCallLabelOverride: toCallLabelOverride,
-                      streetLabelOverride: streetLabelOverride,
+                    child: Transform.translate(
+                      // The callout owns the upper-center teaching lane; keep
+                      // the context/street stack in its reserved middle lane.
+                      offset: Offset(0, hasRepairCallout ? height * 0.075 : 0),
+                      child: _CenterPotV1(
+                        table: table,
+                        highlightedCardIds: highlightedCardIds,
+                        onBoardCardTap: () => onBoardCardTap(table),
+                        visualVariant: visualVariant,
+                        showFocusBadge: showFocusBadge,
+                        centerLabelOverride: centerLabelOverride,
+                        lateRouteSignal: lateRouteSignal,
+                        potLabelOverride: potLabelOverride,
+                        toCallLabelOverride: toCallLabelOverride,
+                        streetLabelOverride: streetLabelOverride,
+                      ),
                     ),
                   ),
-                  if (lateRouteSignal == null &&
-                      showRepairCallout &&
-                      (table.focusCalloutLabel.isNotEmpty ||
-                          interactiveCalloutLabel.isNotEmpty))
+                  if (hasRepairCallout)
                     Positioned(
                       key: const Key('act0_shell_table_repair_callout'),
                       left: width * 0.20,
                       right: width * 0.20,
+                      // Reserve the upper-center lane for the teaching callout;
+                      // the center context/street stack owns the middle lane.
                       top: height * 0.23,
                       child: _TableRepairCalloutV1(
                         label: table.focusCalloutLabel.isNotEmpty

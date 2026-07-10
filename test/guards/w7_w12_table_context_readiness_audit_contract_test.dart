@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'dart:io';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart';
@@ -114,6 +115,32 @@ void main() {
     ]) {
       expect(source, isNot(contains(forbidden)), reason: forbidden);
     }
+  });
+
+  test('table repair callout reserves the upper-center lane', () {
+    final source = File(
+      'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
+    ).readAsStringSync();
+    final tableStart = source.indexOf('class _Act0TableV1');
+    final calloutStart = source.indexOf(
+      "key: const Key('act0_shell_table_repair_callout')",
+      tableStart,
+    );
+
+    expect(tableStart, greaterThanOrEqualTo(0));
+    expect(calloutStart, greaterThan(tableStart));
+    expect(
+      source.substring(calloutStart, calloutStart + 700),
+      contains('top: height * 0.23'),
+      reason:
+          'Teaching callouts occupy the upper-center lane; the center context/street stack owns the middle lane.',
+    );
+    expect(
+      source.substring(tableStart, calloutStart),
+      contains('hasRepairCallout ? height * 0.075 : 0'),
+      reason:
+          'The center context/street stack shifts only when a callout reserves the upper-center lane.',
+    );
   });
 }
 
