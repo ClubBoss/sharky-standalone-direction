@@ -686,6 +686,17 @@ class Act0SharkyCueV1 {
   );
 }
 
+/// Source-owned instructional fact about the learner's table identity.
+///
+/// `legacy` is intentionally the default until a step is explicitly migrated;
+/// it preserves current production table rendering.
+enum Act0TableIdentityTeachingSemanticsV1 {
+  legacy,
+  learnerOnly,
+  position,
+  dealerOrder,
+}
+
 class Act0TeachingStepV1 {
   const Act0TeachingStepV1({
     required this.title,
@@ -694,6 +705,8 @@ class Act0TeachingStepV1 {
     this.focusSeatIds = const <String>[],
     this.focusCardIds = const <String>[],
     this.focusLabels = const <String>[],
+    this.identityTeachingSemantics =
+        Act0TableIdentityTeachingSemanticsV1.legacy,
     this.ctaLabel = 'Next',
   });
 
@@ -703,6 +716,7 @@ class Act0TeachingStepV1 {
   final List<String> focusSeatIds;
   final List<String> focusCardIds;
   final List<String> focusLabels;
+  final Act0TableIdentityTeachingSemanticsV1 identityTeachingSemantics;
   final String ctaLabel;
 }
 
@@ -7548,6 +7562,8 @@ const _meetTableRunner = Act0RunnerStateV1(
           'BTN is your button seat. SB and BB are the blind seats. UTG, HJ, and CO are the other positions.',
       focusSeatIds: <String>['btn', 'hj', 'sb', 'bb'],
       focusLabels: <String>['Hero', 'Opponents'],
+      identityTeachingSemantics:
+          Act0TableIdentityTeachingSemanticsV1.position,
     ),
     Act0TeachingStepV1(
       title: 'The goal is the pot.',
