@@ -2373,6 +2373,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         (widget.repairOutcomeProofLine?.trim().isNotEmpty ?? false) ||
         widget.repairSessionSummaryLines.any((line) => line.trim().isNotEmpty);
     final repairFillMode = isDrill && hasRepairContext;
+    final isRepairFocusFeedback =
+        isReview &&
+        !widget.rapidReviewMode &&
+        (widget.repairReasonLine?.trim().isNotEmpty ?? false);
+    final usesCompactRepairFeedbackDock =
+        isReview &&
+        !widget.rapidReviewMode &&
+        (runner.reviewQuality == Act0FeedbackQualityV1.wrong ||
+            isRepairFocusFeedback);
     final usesShortSafeCompactAnswerListEnvelope =
         _usesShortSafeCompactAnswerListEnvelopeV1(
           context,
@@ -2384,14 +2393,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       pressureReason: viewportPressureReason,
       repairFillMode: repairFillMode,
       shortSafeAnswerList: usesShortSafeCompactAnswerListEnvelope,
+      compactRepairFeedbackDock: usesCompactRepairFeedbackDock,
     );
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
     final hintCompact = compactAnswerListDecision && decisionHint != null;
-    final shouldDeemphasizeTableForWrongFeedback =
-        isReview &&
-        runner.reviewQuality == Act0FeedbackQualityV1.wrong &&
-        !widget.rapidReviewMode;
+    final shouldDeemphasizeTableForRepairLearning =
+        usesCompactRepairFeedbackDock;
     Widget buildRunnerActionDock() {
       return _RunnerActionDockV1(
         pageX: pageX,
@@ -2625,9 +2633,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 child: Opacity(
                   key: Key(
                     'act0_shell_feedback_table_context_receded_'
-                    '$shouldDeemphasizeTableForWrongFeedback',
+                    '$shouldDeemphasizeTableForRepairLearning',
                   ),
-                  opacity: shouldDeemphasizeTableForWrongFeedback ? 0.68 : 1,
+                  opacity: shouldDeemphasizeTableForRepairLearning ? 0.68 : 1,
                   child: _RunnerTableStageV1(
                     table: table,
                     highlightedCardIds: mergedHighlightIds,
@@ -2839,6 +2847,7 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
   required String pressureReason,
   required bool repairFillMode,
   required bool shortSafeAnswerList,
+  required bool compactRepairFeedbackDock,
 }) {
   final usesFixedAnswerListEnvelope =
       pressureReason != _compactAnswerListNoPressureReasonV1 &&
@@ -2849,31 +2858,37 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
         ? MediaQuery.viewPaddingOf(context).vertical
         : MediaQuery.paddingOf(context).vertical;
     final usableHeight = media.height - safePadding;
-    final targetLowerSlotHeight =
-        (usableHeight *
-                (repairFillMode
-                    ? _runnerRepairEnvelopeTargetLowerSlotShareV1
-                    : _runnerEnvelopeWave1bTargetLowerSlotShareV1))
-            .clamp(
-              repairFillMode
-                  ? _runnerRepairEnvelopeMinLowerSlotHeightV1
-                  : _runnerEnvelopeWave1bMinLowerSlotHeightV1,
-              repairFillMode
-                  ? _runnerRepairEnvelopeTargetLowerSlotHeightV1
-                  : _runnerEnvelopeWave1bTargetLowerSlotHeightV1,
-            );
+    final targetLowerSlotHeight = compactRepairFeedbackDock
+        ? _runnerRepairFeedbackDockTargetLowerSlotHeightV1
+        : (usableHeight *
+                  (repairFillMode
+                      ? _runnerRepairEnvelopeTargetLowerSlotShareV1
+                      : _runnerEnvelopeWave1bTargetLowerSlotShareV1))
+              .clamp(
+                repairFillMode
+                    ? _runnerRepairEnvelopeMinLowerSlotHeightV1
+                    : _runnerEnvelopeWave1bMinLowerSlotHeightV1,
+                repairFillMode
+                    ? _runnerRepairEnvelopeTargetLowerSlotHeightV1
+                    : _runnerEnvelopeWave1bTargetLowerSlotHeightV1,
+              );
     return _RunnerTaskCycleViewportEnvelopeV1(
       familyName: repairFillMode ? 'repairFill' : viewportFamily.name,
       usesFixedLowerSlot: true,
-      targetLowerSlotHeight: !repairFillMode && shortSafeAnswerList
+      targetLowerSlotHeight:
+          !compactRepairFeedbackDock && !repairFillMode && shortSafeAnswerList
           ? _runnerShortAnswerEnvelopeTargetLowerSlotHeightV1
           : targetLowerSlotHeight,
-      minLowerSlotHeight: repairFillMode
+      minLowerSlotHeight: compactRepairFeedbackDock
+          ? _runnerRepairFeedbackDockMinLowerSlotHeightV1
+          : repairFillMode
           ? _runnerRepairEnvelopeMinLowerSlotHeightV1
           : (shortSafeAnswerList
                 ? _runnerShortAnswerEnvelopeMinLowerSlotHeightV1
                 : _runnerEnvelopeWave1bMinLowerSlotHeightV1),
-      maxLowerSlotShare: repairFillMode
+      maxLowerSlotShare: compactRepairFeedbackDock
+          ? _runnerRepairFeedbackDockMaxLowerSlotShareV1
+          : repairFillMode
           ? _runnerRepairEnvelopeMaxLowerSlotShareV1
           : (shortSafeAnswerList
                 ? _runnerShortAnswerEnvelopeMaxLowerSlotShareV1
@@ -2887,16 +2902,26 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
         : MediaQuery.paddingOf(context).vertical;
     final usableHeight = media.height - safePadding;
     final targetLowerSlotHeight =
-        (usableHeight * _runnerRepairEnvelopeTargetLowerSlotShareV1).clamp(
-          _runnerRepairEnvelopeMinLowerSlotHeightV1,
-          _runnerRepairEnvelopeTargetLowerSlotHeightV1,
-        );
+        (usableHeight *
+                (compactRepairFeedbackDock
+                    ? _runnerRepairFeedbackDockTargetLowerSlotShareV1
+                    : _runnerRepairEnvelopeTargetLowerSlotShareV1))
+            .clamp(
+              _runnerRepairEnvelopeMinLowerSlotHeightV1,
+              _runnerRepairEnvelopeTargetLowerSlotHeightV1,
+            );
     return _RunnerTaskCycleViewportEnvelopeV1(
       familyName: 'repairFill',
       usesFixedLowerSlot: true,
-      targetLowerSlotHeight: targetLowerSlotHeight,
-      minLowerSlotHeight: _runnerRepairEnvelopeMinLowerSlotHeightV1,
-      maxLowerSlotShare: _runnerRepairEnvelopeMaxLowerSlotShareV1,
+      targetLowerSlotHeight: compactRepairFeedbackDock
+          ? _runnerRepairFeedbackDockTargetLowerSlotHeightV1
+          : targetLowerSlotHeight,
+      minLowerSlotHeight: compactRepairFeedbackDock
+          ? _runnerRepairFeedbackDockMinLowerSlotHeightV1
+          : _runnerRepairEnvelopeMinLowerSlotHeightV1,
+      maxLowerSlotShare: compactRepairFeedbackDock
+          ? _runnerRepairFeedbackDockMaxLowerSlotShareV1
+          : _runnerRepairEnvelopeMaxLowerSlotShareV1,
     );
   }
   return _RunnerTaskCycleViewportEnvelopeV1(
@@ -8751,6 +8776,10 @@ const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
 const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
 const double _runnerRepairEnvelopeMaxLowerSlotShareV1 = 0.46;
+const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 280;
+const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 320;
+const double _runnerRepairFeedbackDockTargetLowerSlotShareV1 = 0.40;
+const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.44;
 
 String _compactAnswerListPressureReasonV1(
   BuildContext context, {
