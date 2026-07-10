@@ -139,6 +139,50 @@ void main() {
       phase: 'existing_repair_result_surface',
     );
 
+    Future<void> saveMounted(String name) async {
+      File('${out.path}/$name.png').writeAsBytesSync(await _png(tester));
+    }
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RepaintBoundary(
+          key: _boundaryKey,
+          child: Act0ShellPreviewScreenV1(
+            key: const ValueKey<String>('action_sequence_live_wrong_route'),
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface:
+                  Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+              worldId: 'world_1',
+              lessonId: 'fold_check_call_raise',
+              taskId: 'actions_check_drill',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await saveMounted('wrong_feedback');
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await saveMounted('targeted_repair');
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await saveMounted('repair_success');
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await saveMounted('targeted_recheck');
+    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tester.pumpAndSettle();
+    await saveMounted('recheck_success');
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    await saveMounted('completion');
+    await tester.pumpAndSettle();
+    await saveMounted('next_step');
+
     File('${out.path}/raster_geometry_metrics.json').writeAsStringSync(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
             'viewport': <String, int>{'width': 375, 'height': 812},
@@ -149,14 +193,13 @@ void main() {
     File('${out.path}/raster_state_inventory.md').writeAsStringSync(
       '''# Canonical Action raster inventory
 
-The harness mounts `Act0ShellPreviewScreenV1` and selects only existing
-production capture states. Theory, decision, correct feedback, wrong feedback,
-and the pre-existing repair/result surfaces were rasterized. The existing
-capture seam does not select the new Action sequence's internal repair/recheck,
-completion, or next-step state specifically; those states remain uncaptured
-rather than synthesized. The repair captures are source-owned production
-repair surfaces but use `actions_legal_context`, not a false claim that they
-are the new sequence's same-task state.
+The harness mounts `Act0ShellPreviewScreenV1`. Theory, decision, and initial
+feedback use existing production capture entries. From the real Action wrong
+feedback state it taps the actual feedback and option controls through
+same-task repair, repair success, same-task recheck, recheck success,
+completion, and the next rendered state. The legacy `actions_legal_context`
+repair captures are retained only as unrelated existing evidence and are not
+used in the Action sequence contact sheets.
 ''',
     );
     _sheet(out, <String>[
@@ -169,10 +212,14 @@ are the new sequence's same-task state.
       'wrong_feedback',
       'targeted_repair',
       'repair_success',
+      'targeted_recheck',
+      'recheck_success',
     ], 'wrong_repair_recheck_contact_sheet.png');
     _sheet(out, <String>[
       'correct_feedback',
-      'repair_success',
+      'recheck_success',
+      'completion',
+      'next_step',
     ], 'correct_completion_contact_sheet.png');
     _sheet(out, <String>[
       'theory',
