@@ -2201,6 +2201,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final identityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
+      teachingStep?.identityTeachingSemantics ??
+          Act0TableIdentityTeachingSemanticsV1.legacy,
+    );
     final streetReplay = act0StreetReplayFromTableV1(table);
     final interactionMode = _resolveRunnerInteractionModeV1(
       isDrill: isDrill,
@@ -2664,6 +2668,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     framingProfile: framingProfile,
                     viewportFamily: viewportFamily,
                     lateRouteSignal: lateRouteTableSignal,
+                    identityPolicy: identityPolicy,
                     maxTableHeight: maxTableHeight,
                   ),
                 ),
@@ -4066,6 +4071,7 @@ class Act0TableSceneV1 extends StatelessWidget {
         framingProfile: input.framingProfile,
         viewportFamily: input.viewportFamily,
         lateRouteSignal: input.lateRouteSignal,
+        identityPolicy: input.identityPolicy,
         maxTableHeight: input.maxTableHeight,
       );
     }
@@ -4081,6 +4087,7 @@ class Act0TableSceneV1 extends StatelessWidget {
       showFocusBadge: resolved.showFocusBadge,
       showRepairCallout: resolved.showRepairCallout,
       compactBottomDockClearance: resolved.compactBottomDockClearance,
+      identityPolicy: resolved.identityPolicy,
       interactionMode: _RunnerInteractionModeV1.answerListDecision,
       framingProfile: Act0RunnerFramingProfileV1.neutral,
       viewportFamily: _RunnerViewportFamilyV1.neutral,
@@ -4114,6 +4121,7 @@ class _Act0TableSceneRunnerInput {
     required this.framingProfile,
     required this.viewportFamily,
     required this.lateRouteSignal,
+    required this.identityPolicy,
     required this.maxTableHeight,
   });
   final Act0TableStateV1 table;
@@ -4139,6 +4147,7 @@ class _Act0TableSceneRunnerInput {
   final Act0RunnerFramingProfileV1 framingProfile;
   final _RunnerViewportFamilyV1 viewportFamily;
   final Act0LateRouteTableSignalV1? lateRouteSignal;
+  final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
 }
 
@@ -4167,6 +4176,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     required this.framingProfile,
     required this.viewportFamily,
     this.lateRouteSignal,
+    this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
   });
 
@@ -4193,6 +4203,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0RunnerFramingProfileV1 framingProfile;
   final _RunnerViewportFamilyV1 viewportFamily;
   final Act0LateRouteTableSignalV1? lateRouteSignal;
+  final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
 
   @override
@@ -4222,6 +4233,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
         framingProfile: framingProfile,
         viewportFamily: viewportFamily,
         lateRouteSignal: lateRouteSignal,
+        identityPolicy: identityPolicy,
         maxTableHeight: maxTableHeight,
       ),
     );
@@ -8415,6 +8427,7 @@ class _Act0TableV1 extends StatelessWidget {
     required this.framingProfile,
     required this.viewportFamily,
     this.lateRouteSignal,
+    this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
   });
 
@@ -8441,6 +8454,7 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0RunnerFramingProfileV1 framingProfile;
   final _RunnerViewportFamilyV1 viewportFamily;
   final Act0LateRouteTableSignalV1? lateRouteSignal;
+  final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
 
   @override
@@ -8730,6 +8744,7 @@ class _Act0TableV1 extends StatelessWidget {
                       tableHeight: height,
                       seatSlots: seatSlots,
                       visualVariant: visualVariant,
+                      identityPolicy: identityPolicy,
                     ),
                 ],
               ),
@@ -9595,6 +9610,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     required this.tableHeight,
     required this.seatSlots,
     required this.visualVariant,
+    this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
   });
 
   final int slot;
@@ -9612,6 +9628,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final double tableHeight;
   final List<Offset> seatSlots;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final Act0TableIdentityPolicyV1 identityPolicy;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -9641,6 +9658,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           visualState: visualState,
           decisionPriceOwnedByTable: decisionPriceOwnedByTable,
           visualVariant: visualVariant,
+          identityPolicy: identityPolicy,
           onTap: selectable && onChooseSeat != null
               ? () => onChooseSeat!(seat.seatId)
               : null,
@@ -9663,6 +9681,7 @@ class _SeatNodeV1 extends StatelessWidget {
     required this.visualState,
     required this.decisionPriceOwnedByTable,
     required this.visualVariant,
+    this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.onTap,
     this.compact = false,
   });
@@ -9677,6 +9696,7 @@ class _SeatNodeV1 extends StatelessWidget {
   final _SeatVisualStateV1 visualState;
   final bool decisionPriceOwnedByTable;
   final Act0ShellTableVisualVariantV1 visualVariant;
+  final Act0TableIdentityPolicyV1 identityPolicy;
   final VoidCallback? onTap;
   final bool compact;
 
