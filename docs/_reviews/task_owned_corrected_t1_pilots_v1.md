@@ -2,10 +2,11 @@
 
 ## Terminal verdict
 
-Implementation is present in the canonical Act0 runner and the bounded
-automated regression set passes. Production admission remains conditional on
-the required local visual-capture packet; this wave did not manufacture visual
-claims without those captures.
+The task-owned layouts are layout-admitted: the canonical Act0 runner, focused
+automated regression set, and required local visual packet all pass their
+bounded layout checks. Full identity-evidence admission remains blocked only
+because learner-only and dealer-order have no source-owned learner-reachable
+production state to capture; no fixture was substituted for that evidence.
 
 ## Commits and forwarding path
 
@@ -18,9 +19,13 @@ claims without those captures.
 
 `actions_theory` alone uses the full production table above a non-scrolling,
 content-sized theory panel (12px separation; title/body line caps are 2/4).
+The sole real theory beat has bounds `x=26.796, y=4, w=321.408, h=558`; the
+panel is 91.6% of the lower region, and its bottom blank band is 9px.
+
 `actions_check_drill` alone uses a table slot that is allocated before its
-decision or review panel, so those lower states do not resize or translate the
-table. Unannotated tasks retain the generic legacy runner path.
+decision or review panel. Decision, correct-feedback, and wrong-feedback all
+measure `x=55.020, y=4, w=264.960, h=460`: zero logical-pixel movement.
+Unannotated tasks retain the generic legacy runner path.
 
 ## Reachability and preservation
 
@@ -41,9 +46,15 @@ the one-dealer-disc rule.
 
 ## Evidence and admission
 
-Required local captures belong at
-`/Users/elmarsalimzade/Sharky_1.0/output/evidence/task_owned_corrected_t1_pilots_v1/`.
-They were not generated in this implementation pass, so no contact-sheet,
-occupancy, or raster-stability claim is made here. Do not promote this pilot
-to production admission until that packet proves the required theory beats and
-actual practice feedback states.
+Local-only evidence is at
+`/Users/elmarsalimzade/Sharky_1.0/output/evidence/task_owned_corrected_t1_pilots_v1/`:
+
+- `theory_contact_sheet.png` and `practice_contact_sheet.png`
+- `geometry_metrics.json` and `panel_occupancy.json`
+- `reachable_state_inventory.md` and `visual_admission_report.md`
+
+The task has one real theory beat, which is therefore truthfully first,
+longest, and final. Its current source contains three practice options; no
+four-option state, localized/long-copy state, or task-owned repair/recheck
+state was manufactured. Raw Flutter test screenshots are geometry evidence,
+not copy-readability evidence.
