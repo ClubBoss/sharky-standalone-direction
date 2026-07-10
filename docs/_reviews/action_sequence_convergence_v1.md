@@ -38,10 +38,22 @@ repair entry, recheck entry, and one sequence completion.
 analysis pass after `d9c5ddcd`. Source-derived traces are local-only under
 `output/evidence/action_sequence_convergence_v1/`.
 
+## Raster harness result
+
+`test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart` mounts the
+real `Act0ShellPreviewScreenV1` at 375x812 and writes local-only rasters plus
+contact sheets. It proves the production theory state at `321.408 x 558` with
+one runner root and no overflow. It also exposes a blocking practice defect:
+the canonical shell capture for decision/correct/wrong currently measures the
+same `321.408 x 558` table rather than the admitted stable-practice
+`264.960 x 460` geometry. Existing repair/result capture states are real
+production surfaces for `actions_legal_context`; they are not claimed as the
+new Action sequence's same-task repair/recheck states. Completion and next
+step are therefore not raster-admitted.
+
 ## Residual risk and rollback
 
-The remaining gate is visual evidence only: a real learner-route capture lane
-must rasterize sequence entry through next progression and measure visible
-feedback occupancy. Rollback is removal of the bounded sequence contract and
-runner-control bridge commits. Human QA and public learning-effect claims are
-not made.
+The blocking gate is restoration of real-shell stable-practice geometry before
+the capture lane can drive and admit the remaining sequence states. Rollback
+is removal of the bounded sequence contract and runner-control bridge commits.
+Human QA and public learning-effect claims are not made.
