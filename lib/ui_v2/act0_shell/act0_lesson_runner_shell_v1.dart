@@ -9711,6 +9711,7 @@ class _SeatNodeV1 extends StatelessWidget {
       hero: hero,
       refined: refined,
       decisionPriceOwnedByTable: decisionPriceOwnedByTable,
+      identityPolicy: identityPolicy,
     );
     final stackLabel = (seat.stackLabel ?? '').trim();
     final showsOpponentStack =
@@ -10228,9 +10229,14 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
   required bool hero,
   required bool refined,
   required bool decisionPriceOwnedByTable,
+  required Act0TableIdentityPolicyV1 identityPolicy,
 }) {
   final markers = <_SeatMarkerKindV1>[
-    if (seat.isDealerButton) _SeatMarkerKindV1.dealer,
+    if (seat.isDealerButton &&
+        (identityPolicy == Act0TableIdentityPolicyV1.currentProduction ||
+            identityPolicy ==
+                Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder))
+      _SeatMarkerKindV1.dealer,
     if (!refined && seat.isSmallBlind && !_seatHasBlindPostChipV1(seat))
       _SeatMarkerKindV1.smallBlind,
     if (!refined && seat.isBigBlind && !_seatHasBlindPostChipV1(seat))
