@@ -1228,7 +1228,7 @@ void main() {
         find.byKey(const Key('act0_action_recommendation_surface')),
         findsOneWidget,
       );
-      expect(find.textContaining('Repair it now'), findsOneWidget);
+      expect(find.textContaining('not stable yet'), findsOneWidget);
 
       final generated = sink.events.lastWhere(
         (event) => event.name == 'recommendation_generated',
@@ -1238,6 +1238,13 @@ void main() {
       expect(generated.fields['recommendation_reason'], 'recentError');
       expect(generated.fields['source_attempt_key'], isA<String>());
 
+      final payoff = sink.events.lastWhere(
+        (event) => event.name == 'action_payoff_generated',
+      );
+      expect(payoff.fields['payoff_type'], 'unresolvedSkill');
+      expect(payoff.fields['proof_source'], 'sequence_outcomes');
+      expect(payoff.fields['primary_action'], 'Repair now');
+
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
       );
@@ -1249,9 +1256,18 @@ void main() {
       await tester.pumpAndSettle();
       await answerVisiblePromptCorrectlyV1(tester);
 
-      expect(find.textContaining('corrected the no-bet read'), findsOneWidget);
+      expect(
+        find.textContaining('repaired it, and passed the recheck'),
+        findsOneWidget,
+      );
       expect(
         sink.events.where((event) => event.name == 'recommendation_accepted'),
+        isNotEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'action_payoff_primary_action_selected',
+        ),
         isNotEmpty,
       );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
