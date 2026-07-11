@@ -43,6 +43,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_rule_based_repair_personali
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -5047,6 +5048,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 rapidReviewMode: _rapidPracticeLoop,
                                 actionRecommendation:
                                     _actionRecommendationForActiveSequenceV1(),
+                                actionPayoff:
+                                    _actionPayoffForActiveSequenceV1(),
                                 onContinueReview: () => setState(() {
                                   _recordActionRecommendationAcceptedV1();
                                   if (_placementDiagnosticActive) {
@@ -10677,6 +10680,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  Act0ActionSessionPayoffV1? _actionPayoffForActiveSequenceV1() {
+    final recommendation = _actionRecommendationForActiveSequenceV1();
+    if (recommendation == null) {
+      return null;
+    }
+    return Act0ActionSessionPayoffPolicyV1.evaluate(
+      learnerState: _actionPersonalizationStateV1,
+      recommendation: recommendation,
+    );
+  }
+
   void _deriveActionPersonalizationV1(Act0CompletedDecisionV1 decision) {
     final stage = _activeActionSequenceStageV1;
     if (stage == null ||
@@ -10710,6 +10724,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     };
     _recordTelemetryEventV1('recommendation_generated', fields);
     _recordTelemetryEventV1('recommendation_shown', fields);
+    final payoff = Act0ActionSessionPayoffPolicyV1.evaluate(
+      learnerState: _actionPersonalizationStateV1,
+      recommendation: recommendation,
+    );
+    final payoffFields = <String, Object?>{
+      ...fields,
+      'payoff_type': payoff.type.name,
+      'proof_source': payoff.errorType == 'none'
+          ? 'initial_correct_decision'
+          : 'sequence_outcomes',
+      'primary_action': payoff.primaryActionLabel,
+    };
+    _recordTelemetryEventV1('action_payoff_generated', payoffFields);
+    _recordTelemetryEventV1('action_payoff_shown', payoffFields);
   }
 
   void _recordActionRecommendationAcceptedV1() {
@@ -10726,6 +10754,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'recommendation_reason': recommendation.reason.name,
       'recommendation_target': recommendation.target.name,
     });
+    final payoff = _actionPayoffForActiveSequenceV1();
+    if (payoff != null) {
+      _recordTelemetryEventV1(
+        'action_payoff_primary_action_selected',
+        <String, Object?>{
+          'schemaVersion': 1,
+          'sequence_id': payoff.sequenceId,
+          'source_attempt_key': latest.attemptKey,
+          'payoff_type': payoff.type.name,
+          'primary_action': payoff.primaryActionLabel,
+          'next_target': recommendation.target.name,
+          'recommendation_reason': recommendation.reason.name,
+        },
+      );
+    }
   }
 
   /// Keeps Action-sequence recovery inside the existing canonical preview

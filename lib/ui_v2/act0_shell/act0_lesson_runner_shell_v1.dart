@@ -23,6 +23,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
 
@@ -1008,6 +1009,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.showLearningRailFocusLabels = false,
     this.rapidReviewMode = false,
     this.actionRecommendation,
+    this.actionPayoff,
     this.telemetrySink,
   });
 
@@ -1041,6 +1043,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final bool showLearningRailFocusLabels;
   final bool rapidReviewMode;
   final Act0ActionRecommendationV1? actionRecommendation;
+  final Act0ActionSessionPayoffV1? actionPayoff;
   final Act0TelemetrySinkV1? telemetrySink;
 
   @override
@@ -2792,6 +2795,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
           actionRecommendation: widget.actionRecommendation,
+          actionPayoff: widget.actionPayoff,
           tableHeight: 460,
           lowerPanelHeight: 282,
           compactFeedback: false,
@@ -3021,6 +3025,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onChooseOption,
     required this.onContinueReview,
     this.actionRecommendation,
+    this.actionPayoff,
     this.tableHeight = 460,
     this.lowerPanelHeight = 282,
     this.compactFeedback = false,
@@ -3034,6 +3039,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
   final Act0ActionRecommendationV1? actionRecommendation;
+  final Act0ActionSessionPayoffV1? actionPayoff;
   final double tableHeight;
   final double lowerPanelHeight;
   final bool compactFeedback;
@@ -3090,21 +3096,33 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                runner.reviewTitle,
+                                actionPayoff?.type ==
+                                        Act0ActionPayoffTypeV1.recoveredSuccess
+                                    ? 'Repair proved'
+                                    : actionPayoff?.type ==
+                                          Act0ActionPayoffTypeV1.cleanSuccess
+                                    ? 'Action read confirmed'
+                                    : actionPayoff == null
+                                    ? runner.reviewTitle
+                                    : 'Action read needs repair',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Act0ShellTokensV1.sectionTitle,
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                actionRecommendation?.explanation ??
-                                    runner.reviewReason,
+                                actionPayoff == null
+                                    ? (actionRecommendation?.explanation ??
+                                          runner.reviewReason)
+                                    : '${actionPayoff!.proofStatement} ${actionPayoff!.meaningStatement}',
                                 key: actionRecommendation == null
                                     ? null
                                     : const Key(
                                         'act0_action_recommendation_surface',
                                       ),
-                                maxLines: actionRecommendation == null ? 4 : 2,
+                                maxLines: actionPayoff == null
+                                    ? (actionRecommendation == null ? 4 : 2)
+                                    : 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: Act0ShellTokensV1.body,
                               ),
@@ -3119,7 +3137,10 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                       'act0_shell_feedback_continue_cta',
                                     ),
                                     onPressed: onContinueReview,
-                                    child: const Text('Continue'),
+                                    child: Text(
+                                      actionPayoff?.primaryActionLabel ??
+                                          'Continue',
+                                    ),
                                   ),
                                 ),
                               ),
