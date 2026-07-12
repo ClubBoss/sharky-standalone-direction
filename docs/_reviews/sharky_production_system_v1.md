@@ -2,11 +2,14 @@
 
 Status: NOT ADMITTED — architecture-only delivery.
 
-1. Terminal verdict: Gate 0 C blocks product integration.
-2. Gate 0: no owner-approved production-ready canonical asset family exists.
+1. Terminal verdict: runtime integration remains blocked; Canonical Character
+   Package v1 now locks visual identity separately from production assets.
+2. Gate 0: an approved design-reference identity exists, but no production-ready
+   runtime asset family exists.
 3. Gate A: option A architecture is bounded; no runtime consumer is admitted.
-4. Canonical asset family: none approved. Existing PNG/SVG wiring is not an
-   approval record.
+4. Canonical visual authority: `docs/design/SHARKY_CHARACTER_BIBLE_v1.md` and
+   its approved non-runtime 3/4-front reference. Existing PNG/SVG wiring is
+   still not production approval.
 5. Asset provenance/status: undocumented existing PNGs; legacy SVG fallback;
    active three-register lock blocks their production admission.
 6. State contract: neutral guidance, teaching attention, supportive repair,
@@ -26,7 +29,8 @@ Status: NOT ADMITTED — architecture-only delivery.
 16. Evidence: local asset inventory and state traces only; no misleading
     production contact sheets.
 17. Validation: focused state test, analyzer, Graphify, and diff checks pass.
-18. Residual risk: current assets have no recorded provenance/approval.
+18. Residual risk: five production emotional assets, their transparent exports,
+   and their runtime mapping remain absent.
 19. Rollback: remove the standalone state contract; no runtime behavior exists.
 20. Production admission verdict: no.
 21. Human QA/public non-claims: no Human QA; no production-asset claim.
