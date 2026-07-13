@@ -154,6 +154,15 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> continueVisibleFeedbackV1(WidgetTester tester) async {
+    final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(cta, findsOneWidget);
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
+    await tester.tap(cta);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> startDailyPracticeFromHubV1(WidgetTester tester) async {
     final dailyTile = find.byKey(const Key('act0_shell_practice_group_daily'));
     if (dailyTile.evaluate().isNotEmpty) {
@@ -1256,10 +1265,10 @@ void main() {
       await tester.pumpAndSettle();
       await answerVisiblePromptCorrectlyV1(tester);
 
-      expect(
-        find.textContaining('repaired it, and passed the recheck'),
-        findsOneWidget,
+      final recoveredPayoff = sink.events.lastWhere(
+        (event) => event.name == 'action_payoff_generated',
       );
+      expect(recoveredPayoff.fields['payoff_type'], 'recoveredSuccess');
       expect(
         sink.events.where((event) => event.name == 'recommendation_accepted'),
         isNotEmpty,
@@ -1269,6 +1278,106 @@ void main() {
           (event) => event.name == 'action_payoff_primary_action_selected',
         ),
         isNotEmpty,
+      );
+      expectNoForbiddenTelemetryFieldsV1(sink.events);
+    },
+  );
+
+  testWidgets(
+    'canonical Learn entry completes the Action alpha loop with ordered safe telemetry',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await startActionsTheoryFromLearnV1(tester, telemetrySink: sink);
+      await advanceCurrentRunnerToDrillV1(tester);
+      await answerVisiblePromptCorrectlyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+      await advanceCurrentRunnerToDrillV1(tester);
+
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'task_shown' &&
+              event.fields['taskId'] == 'actions_check_drill',
+        ),
+        isNotEmpty,
+      );
+
+      await answerVisiblePromptWronglyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+      await answerVisiblePromptCorrectlyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+      await answerVisiblePromptCorrectlyV1(tester);
+      await continueVisibleFeedbackV1(tester);
+      await tester.pumpAndSettle();
+
+      final recoveredPayoff = sink.events.lastWhere(
+        (event) => event.name == 'action_payoff_generated',
+      );
+      expect(recoveredPayoff.fields['payoff_type'], 'recoveredSuccess');
+
+      final names = sink.events.map((event) => event.name).toList();
+      int positionOf(String name) => names.indexOf(name);
+      expect(positionOf('lesson_started'), greaterThanOrEqualTo(0));
+      expect(
+        positionOf('theory_completed'),
+        greaterThan(positionOf('lesson_started')),
+      );
+      expect(
+        positionOf('user_choice'),
+        greaterThan(positionOf('theory_completed')),
+      );
+      expect(
+        positionOf('feedback_viewed'),
+        greaterThan(positionOf('user_choice')),
+      );
+      expect(
+        positionOf('repair_started'),
+        greaterThan(positionOf('feedback_viewed')),
+      );
+      expect(
+        positionOf('repair_completed'),
+        greaterThan(positionOf('repair_started')),
+      );
+      expect(
+        positionOf('recheck_started'),
+        greaterThan(positionOf('repair_completed')),
+      );
+      expect(
+        positionOf('recheck_result'),
+        greaterThan(positionOf('recheck_started')),
+      );
+      expect(
+        positionOf('action_sequence_completed'),
+        greaterThan(positionOf('recheck_result')),
+      );
+
+      expect(
+        sink.events.where((event) => event.name == 'theory_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'repair_started'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        hasLength(1),
+      );
+      final recheck = sink.events.lastWhere(
+        (event) => event.name == 'recheck_result',
+      );
+      expect(recheck.fields['result'], 'correct');
+      expect(recheck.fields['sequence_id'], 'w1_action_words_check_v1');
+
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
+      expect(
+        sink.events.where((event) => event.name == 'session_exited'),
+        hasLength(1),
       );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },

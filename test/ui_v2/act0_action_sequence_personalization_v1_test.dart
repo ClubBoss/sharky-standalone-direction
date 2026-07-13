@@ -115,4 +115,34 @@ void main() {
       contains('conceptual_failure=false'),
     );
   });
+
+  test('unmapped task is a deterministic no-op safe fallback', () {
+    final initial = Act0ActionSequencePersonalizationPolicyV1.initialState();
+    final unmapped = Act0CompletedDecisionV1(
+      attemptKey: 'unmapped',
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_fold_drill',
+      sourceTaskId: 'actions_fold_drill',
+      decisionKind: Act0CompletedDecisionKindV1.actionList,
+      selectedId: 'call',
+      expectedId: 'fold',
+      isCorrect: false,
+      decisionTimeBucket: 'under_3s',
+      taskFamily: null,
+      resultKind: 'incorrect',
+    );
+
+    final derived = Act0ActionSequencePersonalizationPolicyV1.deriveState(
+      current: initial,
+      decision: unmapped,
+      stage: Act0ActionSequenceStageV1.decision,
+    );
+
+    expect(derived, same(initial));
+    expect(
+      Act0ActionSequencePersonalizationPolicyV1.evaluate(derived).reason,
+      Act0ActionRecommendationReasonV1.normalProgression,
+    );
+  });
 }

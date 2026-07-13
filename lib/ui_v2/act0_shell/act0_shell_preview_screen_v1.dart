@@ -1077,6 +1077,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   _Act0FirstValueReceiptCarryV1? _firstValueReceiptCarry;
   String _firstValueTodayShownTelemetryKey = '';
   final Set<String> _repairItemShownTelemetryKeys = <String>{};
+  final Set<String> _actionTheoryCompletedTelemetryKeysV1 = <String>{};
   List<SessionDrillRecheckLaunchQueueItemV1> _sessionDrillRecheckQueueItemsV1 =
       const <SessionDrillRecheckLaunchQueueItemV1>[];
 
@@ -1121,6 +1122,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return active;
     }
     if (name == 'session_complete' ||
+        name == 'session_exited' ||
         name == 'day2_return' ||
         name == 'world_complete') {
       return _sessionIdentityStateV1.currentOrLatestSession?.sessionId ?? '';
@@ -1198,6 +1200,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'source_surface': sourceSurface,
     });
     _persistProgress();
+  }
+
+  void _emitSessionExitedTelemetryV1({required String sourceSurface}) {
+    final result = _completeActiveSessionIdentityV1(
+      completionReason: sourceSurface,
+    );
+    if (!result.completedNow) {
+      return;
+    }
+    _recordTelemetryEventV1('session_exited', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': _selectedWorldId,
+      'world_id': _selectedWorldId,
+      if (_selectedLessonId.trim().isNotEmpty) ...{
+        'lessonId': _selectedLessonId,
+        'lesson_id': _selectedLessonId,
+      },
+      if (_selectedTaskId.trim().isNotEmpty) ...{
+        'taskId': _selectedTaskId,
+        'task_id': _selectedTaskId,
+      },
+      'source_surface': sourceSurface,
+    });
   }
 
   void _emitDay2ReturnTelemetryV1(Act0LastSessionLearnerStateV1 lastSession) {
@@ -1661,6 +1686,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       taskId: taskId,
       sourceSurface: 'act0_learn',
     );
+  }
+
+  void _emitActionTheoryCompletedTelemetryV1(Act0LessonTaskV1 task) {
+    final sequence = act0ActionLearningSequenceForTaskV1(task.taskId);
+    if (sequence == null || task.taskId != sequence.theoryTaskId) {
+      return;
+    }
+    final key =
+        '${_sessionIdentityStateV1.currentActiveSessionId}:$_selectedWorldId:$_selectedLessonId:${task.taskId}';
+    if (!_actionTheoryCompletedTelemetryKeysV1.add(key)) {
+      return;
+    }
+    _recordTelemetryEventV1('theory_completed', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': _selectedWorldId,
+      'world_id': _selectedWorldId,
+      'lessonId': _selectedLessonId,
+      'lesson_id': _selectedLessonId,
+      'taskId': task.taskId,
+      'task_id': task.taskId,
+      'sequence_id': sequence.sequenceId,
+      'sequence_stage': Act0ActionSequenceStageV1.theory.name,
+    });
   }
 
   void _emitFirstValueTodayShownTelemetryV1(
@@ -4892,6 +4940,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_returnToPlayHubOnBack) {
                                     _showPlayHub = true;
                                   } else {
+                                    _emitSessionExitedTelemetryV1(
+                                      sourceSurface: 'act0_runner_back',
+                                    );
                                     _tab = Act0ShellTabV1.learn;
                                   }
                                 }),
@@ -4922,6 +4973,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_advanceTeachingStep(playRunner!)) {
                                     return;
                                   }
+                                  _emitActionTheoryCompletedTelemetryV1(
+                                    playSelectedTask,
+                                  );
                                   _completeCurrentTask(playSelectedTask);
                                   if (_maybeStartLessonWrapUpRetry(
                                     selectedLesson,
@@ -10793,6 +10847,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         return false;
       }
       _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.repair;
+      _emitRepairStartedTelemetryV1(
+        sourceTaskId: selectedTask.taskId,
+        repairTaskId: repairTaskId,
+      );
       _recordTelemetryEventV1('action_sequence_repair_entry', <String, Object?>{
         'schemaVersion': 1,
         'sequenceId': sequence.sequenceId,
@@ -10807,13 +10865,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return true;
     }
     if (stage == Act0ActionSequenceStageV1.repair) {
+      _emitRepairCompletedTelemetryV1(
+        sourceTaskId: sequence.practiceTaskId,
+        repairTaskId: sequence.repairTaskId,
+        repaired: correct,
+      );
       if (!correct) {
+        _emitRepairStartedTelemetryV1(
+          sourceTaskId: sequence.practiceTaskId,
+          repairTaskId: sequence.repairTaskId,
+        );
         _selectedOptionId = null;
         _phase = Act0LessonPhaseV1.drill;
         _teachingStepIndex = 0;
         return true;
       }
       _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.recheck;
+      _recordTelemetryEventV1('recheck_started', <String, Object?>{
+        'schemaVersion': 1,
+        'sequence_id': sequence.sequenceId,
+        'source_task_id': sequence.practiceTaskId,
+        'repair_task_id': sequence.repairTaskId,
+        'recheck_task_id': sequence.recheckTaskId,
+        'table_context_key': sequence.tableContextKey,
+      });
       _recordTelemetryEventV1(
         'action_sequence_recheck_entry',
         <String, Object?>{
@@ -10830,8 +10905,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return true;
     }
     if (stage == Act0ActionSequenceStageV1.recheck) {
+      _recordTelemetryEventV1('recheck_result', <String, Object?>{
+        'schemaVersion': 1,
+        'sequence_id': sequence.sequenceId,
+        'source_task_id': sequence.practiceTaskId,
+        'recheck_task_id': sequence.recheckTaskId,
+        'table_context_key': sequence.tableContextKey,
+        'result': correct ? 'correct' : 'incorrect',
+      });
       if (!correct) {
         _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.repair;
+        _emitRepairStartedTelemetryV1(
+          sourceTaskId: sequence.practiceTaskId,
+          repairTaskId: sequence.repairTaskId,
+        );
         _selectedOptionId = null;
         _phase = Act0LessonPhaseV1.drill;
         _teachingStepIndex = 0;
@@ -10844,6 +10931,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'tableContextKey': sequence.tableContextKey,
         'completionTaskId': selectedTask.taskId,
       });
+      _emitRecheckCompletedTelemetryV1(
+        taskId: sequence.recheckTaskId,
+        completedCorrectly: true,
+        successfulRecheckCount: 1,
+      );
       return false;
     }
     if (stage == Act0ActionSequenceStageV1.decision && correct) {
