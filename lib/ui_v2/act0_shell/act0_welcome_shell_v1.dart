@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -494,23 +493,13 @@ class _WelcomeSharkyPresenterTileV1 extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.all(size * 0.08),
-      child: SvgPicture.asset(
-        _welcomePresenterAssetForMoodV1(mood),
+      child: Image.asset(
+        act0SharkyCompanionAssetForMoodV1(mood),
         key: Key('act0_shell_sharky_presence_mascot_${mood.name}'),
         fit: BoxFit.contain,
       ),
     );
   }
-}
-
-String _welcomePresenterAssetForMoodV1(Act0SharkyMoodV1 mood) {
-  return switch (mood) {
-    Act0SharkyMoodV1.thinking => 'assets/mascot/poker_shark_thinking.svg',
-    Act0SharkyMoodV1.celebrate => 'assets/mascot/poker_shark_celebrate.svg',
-    Act0SharkyMoodV1.happy ||
-    Act0SharkyMoodV1.neutral ||
-    Act0SharkyMoodV1.repair => 'assets/mascot/poker_shark_idle.svg',
-  };
 }
 
 class _WelcomeVisualPreviewCardV1 extends StatelessWidget {

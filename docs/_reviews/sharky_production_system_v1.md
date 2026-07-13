@@ -1,12 +1,14 @@
 # Sharky Production System v1
 
-Status: NOT ADMITTED — architecture-only delivery.
+Status: NOT ADMITTED — provisional neutral Alpha fallback only.
 
-1. Terminal verdict: runtime integration remains blocked; Canonical Character
-   Package v1 now locks visual identity separately from production assets.
+1. Terminal verdict: one provisional neutral Alpha fallback is integrated;
+   Canonical Character Package v1.1 remains a separate non-runtime design
+   reference and production admission remains blocked.
 2. Gate 0: an approved design-reference identity exists, but no production-ready
    runtime asset family exists.
-3. Gate A: option A architecture is bounded; no runtime consumer is admitted.
+3. Gate A: option A architecture is bounded; active Act0 consumers use one
+   neutral fallback, not a production state-art family.
 4. Canonical visual authority: `docs/design/SHARKY_CHARACTER_BIBLE_v1.md` and
    its approved non-runtime 3/4-front reference. Existing PNG/SVG wiring is
    still not production approval.
@@ -16,8 +18,9 @@ Status: NOT ADMITTED — architecture-only delivery.
    recovered acknowledgement, and earned completion.
 7. State derivation: typed welcome/teaching context plus admitted payoff and
    recommendation contracts; no copy or task-name parsing.
-8. Integrated surfaces: none, by Gate 0 C.
-9. Missing/deferred: all production asset mappings and visual integration.
+8. Integrated surfaces: active Act0 direct consumers use one neutral fallback.
+9. Missing/deferred: five matched production state assets, their mappings, and
+   visual integration beyond the provisional fallback.
 10. Repair behavior: architecture resolves supportive repair.
 11. Recovered behavior: architecture resolves recovered acknowledgement.
 12. Completion behavior: only a clean earned sequence completion resolves
@@ -30,7 +33,7 @@ Status: NOT ADMITTED — architecture-only delivery.
     production contact sheets.
 17. Validation: focused state test, analyzer, Graphify, and diff checks pass.
 18. Residual risk: five production emotional assets, their transparent exports,
-   and their runtime mapping remain absent.
+   and their state-specific runtime mappings remain absent.
 19. Rollback: remove the standalone state contract; no runtime behavior exists.
 20. Production admission verdict: no.
 21. Human QA/public non-claims: no Human QA; no production-asset claim.

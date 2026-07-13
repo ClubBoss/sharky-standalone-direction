@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-/// Maps the bounded Sharky Companion Visual State onto the existing,
-/// already-approved [Act0SharkyMoodV1] asset/tone family. No new Sharky
-/// asset is introduced — every state reuses one of the five existing mood
-/// variants.
+/// Maps the bounded Sharky Companion Visual State onto the existing
+/// [Act0SharkyMoodV1] tone family. Visual production admission remains
+/// separate from these typed semantics.
 Act0SharkyMoodV1 act0SharkyMoodForCompanionStateV1(
   Act0SharkyCompanionStateV1 state,
 ) {
@@ -25,9 +23,7 @@ Act0SharkyMoodV1 act0SharkyMoodForCompanionStateV1(
 /// Only `improve` and `milestone` earn the extra accent ring — a stronger
 /// evidence echo for improve, the strongest contained treatment for a real
 /// completion boundary. Every other state renders the plain frame.
-bool act0SharkyCompanionStateHasAccentRingV1(
-  Act0SharkyCompanionStateV1 state,
-) {
+bool act0SharkyCompanionStateHasAccentRingV1(Act0SharkyCompanionStateV1 state) {
   return state == Act0SharkyCompanionStateV1.improve ||
       state == Act0SharkyCompanionStateV1.milestone;
 }
@@ -44,14 +40,13 @@ Color act0SharkyToneForMoodV1(Act0SharkyMoodV1 mood) {
 
 const String act0SharkyLogoMarkAssetV1 = 'assets/brand/logo.svg';
 
+const String _act0SharkyNeutralFallbackAssetV1 =
+    'assets/images/mascot/sharky_neutral_fallback_v1.png';
+
 String act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1 mood) {
-  return switch (mood) {
-    Act0SharkyMoodV1.neutral => 'assets/images/mascot/sharky_neutral.png',
-    Act0SharkyMoodV1.happy => 'assets/images/mascot/sharky_happy.png',
-    Act0SharkyMoodV1.thinking => 'assets/images/mascot/sharky_thinking.png',
-    Act0SharkyMoodV1.repair => 'assets/images/mascot/sharky_repair.png',
-    Act0SharkyMoodV1.celebrate => 'assets/images/mascot/sharky_celebrate.png',
-  };
+  // Provisional single neutral Alpha fallback: production state art is not
+  // admitted. Future approved state assets replace these mappings only.
+  return _act0SharkyNeutralFallbackAssetV1;
 }
 
 class Act0SharkyGuideCardV1 extends StatelessWidget {
@@ -709,12 +704,7 @@ class _SharkyMascotAssetFallbackV1 extends StatelessWidget {
         border: Border.all(color: tone.withValues(alpha: 0.34)),
       ),
       clipBehavior: Clip.antiAlias,
-      child: SvgPicture.asset(
-        _mascotVectorFallbackForMood(mood),
-        fit: BoxFit.cover,
-        placeholderBuilder: (context) =>
-            _SharkyMascotLetterFallbackV1(tone: tone, size: size),
-      ),
+      child: _SharkyMascotLetterFallbackV1(tone: tone, size: size),
     );
   }
 }
@@ -771,14 +761,4 @@ class _GuideBadgeV1 extends StatelessWidget {
       ),
     );
   }
-}
-
-String _mascotVectorFallbackForMood(Act0SharkyMoodV1 mood) {
-  return switch (mood) {
-    Act0SharkyMoodV1.thinking => 'assets/mascot/poker_shark_thinking.svg',
-    Act0SharkyMoodV1.celebrate => 'assets/mascot/poker_shark_celebrate.svg',
-    Act0SharkyMoodV1.neutral ||
-    Act0SharkyMoodV1.happy ||
-    Act0SharkyMoodV1.repair => 'assets/mascot/poker_shark_idle.svg',
-  };
 }
