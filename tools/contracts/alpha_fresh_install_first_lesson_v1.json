@@ -1,0 +1,65 @@
+{
+  "schema": "alpha_journey_contract_v2",
+  "journey_kind": "fresh_install",
+  "journey_id": "alpha_fresh_install_first_lesson_v1",
+  "contract_version": 1,
+  "base_route": "Act0ShellPreviewScreenV1 -> placement -> Welcome -> Home -> Learn -> First Table Guide",
+  "owners": {
+    "route": "Act0ShellPreviewScreenV1",
+    "progression": "Act0ShellPreviewScreenV1._progressWorld",
+    "lesson_state": "Act0ShellPreviewScreenV1._progressLesson",
+    "persistence": "act0_shell_progress_v1"
+  },
+  "precondition": {
+    "kind": "fresh_install",
+    "requires_clean_progress": true,
+    "allows_dev_or_debug_shortcut": false
+  },
+  "canonical_ids": {
+    "world_id": "world_1",
+    "lesson_id": "what_poker_is",
+    "first_task_id": "what_poker_is_theory",
+    "lesson_title": "First Table Guide"
+  },
+  "expected_path": {
+    "completed_lesson_count_before": 0,
+    "current_lesson_id_before": "what_poker_is",
+    "action_lesson_id": "fold_check_call_raise",
+    "action_lesson_state_before": "locked",
+    "first_lesson_completion_advances_to": "what_poker_is_content",
+    "safe_exit_result": "Learn route visible with progression truth intact"
+  },
+  "required_telemetry_order": [],
+  "single_emission_events": [],
+  "viewport_matrix": {
+    "compact": [375, 812],
+    "tall_phone": [390, 844],
+    "large_phone": [430, 932]
+  },
+  "visible_checkpoints": [
+    "canonical launch",
+    "placement",
+    "Welcome quick check",
+    "Learn at 0 of 9",
+    "First Table Guide current",
+    "Action lesson locked",
+    "first lesson completion",
+    "next lesson truth"
+  ],
+  "frozen_geometry": {
+    "owner": "Act0ShellPreviewScreenV1",
+    "policy_id": "fresh_install_progression_v1",
+    "modern_table_boundary": "No changed path under lib/ui_v2/table or a legacy Modern Table owner in the tested commit."
+  },
+  "allowed_variation": [
+    "placement choice labels",
+    "time_to_decision value or bucket",
+    "visual pixels outside geometry assertions"
+  ],
+  "invalidating_changes": [
+    "fresh learner starts with Action unlocked",
+    "first current lesson identity changes without product authority",
+    "Dev/debug shortcut used as learner-entry evidence",
+    "first-lesson completion does not advance ordered progression"
+  ]
+}

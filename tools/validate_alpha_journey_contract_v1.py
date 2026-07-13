@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed validator and local evidence manifest builder for Alpha QA v1."""
+"""Fail-closed validator and local evidence manifest builder for Alpha QA."""
 
 from __future__ import annotations
 
@@ -13,10 +13,12 @@ from pathlib import Path
 
 REQUIRED_CONTRACT_KEYS = {
     "schema",
+    "journey_kind",
     "journey_id",
     "contract_version",
     "base_route",
     "owners",
+    "precondition",
     "canonical_ids",
     "expected_path",
     "required_telemetry_order",
@@ -39,21 +41,73 @@ def load_json(path: Path) -> dict:
     return value
 
 
-def validate_contract(contract_path: Path, expected_version: int) -> dict:
+def validate_action_fixture(contract_path: Path, contract: dict) -> None:
+    precondition = contract["precondition"]
+    fixture_path = Path(precondition.get("fixture_path", ""))
+    if not fixture_path.is_file():
+        raise SystemExit("P1 Action contract precondition fixture is missing")
+    fixture = load_json(fixture_path)
+    if fixture.get("schema") != "act0_progression_fixture_v1":
+        raise SystemExit("P1 unsupported Action progression fixture schema")
+    if fixture.get("fixture_id") != precondition.get("fixture_id"):
+        raise SystemExit("P1 Action precondition fixture ID drift")
+    lessons = fixture.get("completed_lesson_ids")
+    if not isinstance(lessons, list) or lessons != [
+        "what_poker_is",
+        "what_poker_is_content",
+        "cards_ranks_suits",
+        "your_first_hand",
+    ]:
+        raise SystemExit("P1 Action fixture must represent the exact four completed prerequisites")
+    target = fixture.get("target")
+    if not isinstance(target, dict) or target.get("lesson_id") != "fold_check_call_raise" or target.get("task_id") != "actions_theory":
+        raise SystemExit("P1 Action fixture must start before Action theory")
+    constraints = fixture.get("constraints")
+    if not isinstance(constraints, dict) or constraints.get("all_prerequisite_tasks_completed") is not True or constraints.get("allows_dev_or_debug_shortcut") is not False or constraints.get("allows_intermediate_action_state") is not False:
+        raise SystemExit("P1 Action fixture shortcut guard is missing")
+
+
+def validate_contract(contract_path: Path, expected_version: int, expected_kind: str | None = None) -> dict:
     contract = load_json(contract_path)
     missing = sorted(REQUIRED_CONTRACT_KEYS - contract.keys())
     if missing:
         raise SystemExit(f"P1 contract missing keys: {', '.join(missing)}")
-    if contract["schema"] != "alpha_journey_contract_v1":
+    if contract["schema"] != "alpha_journey_contract_v2":
         raise SystemExit("P1 unsupported Alpha journey contract schema")
-    if contract["journey_id"] != "alpha_action_repair_recovery_v1":
-        raise SystemExit("P1 unexpected Alpha journey ID")
+    kind = contract["journey_kind"]
+    if kind not in {"fresh_install", "action_capability"}:
+        raise SystemExit("P1 unsupported Alpha journey kind")
+    if expected_kind is not None and kind != expected_kind:
+        raise SystemExit(f"P1 expected {expected_kind} journey, got {kind}")
     if contract["contract_version"] != expected_version:
         raise SystemExit(
             "P1 stale journey-contract version: "
             f"expected {expected_version}, got {contract['contract_version']}"
         )
+    precondition = contract["precondition"]
+    if not isinstance(precondition, dict) or precondition.get("allows_dev_or_debug_shortcut") is not False:
+        raise SystemExit("P1 journey must reject Dev/debug shortcuts")
     ids = contract["canonical_ids"]
+    if kind == "fresh_install":
+        expected = {
+            "world_id": "world_1",
+            "lesson_id": "what_poker_is",
+            "first_task_id": "what_poker_is_theory",
+        }
+        for key, value in expected.items():
+            if ids.get(key) != value:
+                raise SystemExit(f"P1 fresh contract {key} must be {value!r}")
+        path = contract["expected_path"]
+        if path.get("completed_lesson_count_before") != 0 or path.get("action_lesson_state_before") != "locked" or path.get("first_lesson_completion_advances_to") != "what_poker_is_content":
+            raise SystemExit("P1 fresh-install progression truth drift")
+        print(f"PASS fresh-install contract {contract['journey_id']} v{expected_version}")
+        return contract
+
+    if contract["journey_id"] != "alpha_action_repair_recovery_unlocked_v2":
+        raise SystemExit("P1 unexpected Action capability journey ID")
+    if precondition.get("kind") != "persisted_progression_fixture" or precondition.get("allows_intermediate_action_state") is not False:
+        raise SystemExit("P1 Action capability precondition is invalid")
+    validate_action_fixture(contract_path, contract)
     expected = {
         "world_id": "world_1",
         "lesson_id": "fold_check_call_raise",
@@ -69,7 +123,7 @@ def validate_contract(contract_path: Path, expected_version: int) -> dict:
         raise SystemExit("P1 contract error type drift")
     if contract["expected_path"].get("payoff") != "recoveredSuccess":
         raise SystemExit("P1 contract payoff drift")
-    print(f"PASS contract {contract['journey_id']} v{expected_version}")
+    print(f"PASS Action capability contract {contract['journey_id']} v{expected_version}")
     return contract
 
 
@@ -89,7 +143,7 @@ def validate_black_box_source(replay_source: Path) -> None:
         source = replay_source.read_text()
     except OSError as error:
         raise SystemExit(f"P1 cannot inspect black-box replay source: {error}") from error
-    title = "canonical Learn entry completes the Action alpha loop with ordered safe telemetry"
+    title = "unlocked Action capability journey completes the alpha loop with ordered safe telemetry"
     marker = f"testWidgets(\n    '{title}'"
     start = source.find(marker)
     end = source.find("testWidgets(", start + len(marker))
@@ -101,6 +155,7 @@ def validate_black_box_source(replay_source: Path) -> None:
         "Act0ControlledDemoCaptureModeV1.directState",
         "initialTab: Act0ShellTabV1.play",
         "initialPhase:",
+        "debugHarnessEntry:",
     )
     found = [token for token in forbidden if token in body]
     if found:
@@ -109,6 +164,7 @@ def validate_black_box_source(replay_source: Path) -> None:
         )
     required = (
         "startActionsTheoryFromLearnV1",
+        "seedActionCapabilityPreconditionV1",
         "answerVisiblePromptWronglyV1",
         "answerVisiblePromptCorrectlyV1",
         "act0_shell_runner_back",
@@ -117,7 +173,7 @@ def validate_black_box_source(replay_source: Path) -> None:
     missing = [token for token in required if token not in body]
     if missing:
         raise SystemExit("P1 canonical visible-control proof drift: " + ", ".join(missing))
-    print("PASS canonical source proof: visible Learn entry, repair/recheck controls, safe Learn exit")
+    print("PASS Action source proof: validated progression precondition, visible controls, repair/recheck, safe Learn exit")
 
 
 def validate_trace(trace_path: Path, contract: dict, replay_source: Path) -> dict:
@@ -129,13 +185,16 @@ def validate_trace(trace_path: Path, contract: dict, replay_source: Path) -> dic
     if trace.get("contract_version") != contract["contract_version"]:
         raise SystemExit("P1 trace contract version drift")
     if trace.get("black_box_test_name") != (
-        "canonical Learn entry completes the Action alpha loop with ordered safe telemetry"
+        "unlocked Action capability journey completes the alpha loop with ordered safe telemetry"
     ):
-        raise SystemExit("P1 trace does not identify the canonical black-box replay")
+        raise SystemExit("P1 trace does not identify the Action capability replay")
     if trace.get("debug_harness_used") is not False:
         raise SystemExit("P0 black-box trace used a direct-state harness")
-    if trace.get("entry_mode") != "canonical_learn_visible_controls":
-        raise SystemExit("P0 black-box trace did not start from canonical Learn controls")
+    if trace.get("entry_mode") != "unlocked_action_visible_controls":
+        raise SystemExit("P0 black-box trace did not use unlocked visible Action controls")
+    starting_progression = trace.get("starting_progression")
+    if not isinstance(starting_progression, dict) or starting_progression.get("kind") != "persisted_progression_fixture" or starting_progression.get("fixture_id") != contract["precondition"]["fixture_id"] or starting_progression.get("obtained_by") != "completed prerequisite learner history":
+        raise SystemExit("P1 Action trace precondition provenance is absent")
     if trace.get("cta_reachability") != "ensureVisible_before_each_visible_control_tap":
         raise SystemExit("P1 CTA reachability proof is absent")
     events = trace.get("events")
@@ -247,7 +306,7 @@ def validate_trace(trace_path: Path, contract: dict, replay_source: Path) -> dic
     ):
         raise SystemExit("P1 same-signal sequence continuity failed")
     validate_black_box_source(replay_source)
-    print("PASS canonical black-box trace: ordered, bound repair/recheck, session-scoped, same-signal, recovered")
+    print("PASS Action capability trace: ordered, bound repair/recheck, session-scoped, same-signal, recovered")
     return trace
 
 
@@ -260,7 +319,7 @@ def validate_evidence(bundle: Path, contract: dict) -> None:
         "raster_state_inventory.md",
     )
     for device in contract["viewport_matrix"]:
-        directory = bundle / "05_phone_evidence" / device
+        directory = bundle / "07_computer_use_action" / device
         missing = [name for name in required_names if not (directory / name).is_file()]
         if missing:
             raise SystemExit(f"P1 {device} evidence incomplete: {', '.join(missing)}")
@@ -287,18 +346,18 @@ def build_manifest(bundle: Path, contract: dict, trace: dict, base_sha: str) -> 
     report = bundle / "01_report" / "admission_report.md"
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(
-        "# Alpha Journey QA Factory v1 admission\n\n"
-        "- Verdict: `alpha_journey_qa_factory_v1_admitted_not_pushed` pending repository publication.\n"
+        "# Alpha Journey QA Factory admission\n\n"
+        "- Verdict: `alpha_journey_qa_factory_progression_truth_admitted_not_pushed` pending repository publication.\n"
         f"- Base HEAD: `{base_sha}`\n"
         f"- Journey: `{contract['journey_id']}` v{contract['contract_version']}\n"
-        "- Black-box mode: canonical Learn visible controls; source guard rejects direct-state setup in the replay body.\n"
+        "- Black-box mode: visible Action controls after an explicit production-equivalent persisted progression precondition; source guard rejects direct-state setup in the replay body.\n"
         "- Telemetry: ordered single-emission lifecycle, one session-scoped continuity chain, bound same-task repair/recheck, same-signal sequence, and recovered payoff.\n"
         "- Viewports: compact, tall_phone, large_phone; raster geometry metrics contain no overflow.\n"
         "- Modern Table: frozen by the commit-path boundary; Action table geometry is checked by the raster lane.\n"
         "- Integrity: manifest hashes every bundle file except itself; archive SHA-256 is a sibling `.zip.sha256` file.\n"
         "- P0: 0; P1: 0 at bundle creation.\n"
     )
-    manifest_path = bundle / "09_manifest" / "manifest.json"
+    manifest_path = bundle / "10_manifest" / "manifest.json"
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     files = []
     for path in sorted(bundle.rglob("*")):
@@ -322,15 +381,18 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract", required=True, type=Path)
     parser.add_argument("--expected-version", type=int, default=1)
+    parser.add_argument("--expected-kind", choices=("fresh_install", "action_capability"))
     parser.add_argument("--trace", type=Path)
     parser.add_argument("--bundle", type=Path)
     parser.add_argument("--base-sha")
     parser.add_argument("--replay-source", type=Path)
     parser.add_argument("--write-manifest", action="store_true")
     args = parser.parse_args()
-    contract = validate_contract(args.contract, args.expected_version)
+    contract = validate_contract(args.contract, args.expected_version, args.expected_kind)
     if args.trace is None:
         return
+    if contract["journey_kind"] != "action_capability":
+        raise SystemExit("P1 only Action capability contracts may carry a repair/recheck trace")
     if args.bundle is None or not args.base_sha:
         raise SystemExit("--trace requires --bundle and --base-sha")
     if args.replay_source is None:

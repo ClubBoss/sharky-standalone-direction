@@ -17,6 +17,8 @@ class _ThrowingTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 }
 
 const _alphaQaTracePathV1 = String.fromEnvironment('ALPHA_QA_TRACE_PATH');
+const _actionPreconditionFixturePathV1 =
+    'tools/contracts/alpha_action_capability_prerequisite_progression_v1.json';
 
 void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
   if (_alphaQaTracePathV1.isEmpty) return;
@@ -25,14 +27,20 @@ void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
   file.writeAsStringSync(
     const JsonEncoder.withIndent('  ').convert(<String, Object?>{
           'schema': 'alpha_journey_qa_trace_v1',
-          'journey_id': 'alpha_action_repair_recovery_v1',
-          'contract_version': 1,
+          'journey_id': 'alpha_action_repair_recovery_unlocked_v2',
+          'contract_version': 2,
           'black_box_test_name':
-              'canonical Learn entry completes the Action alpha loop with ordered safe telemetry',
+              'unlocked Action capability journey completes the alpha loop with ordered safe telemetry',
           'execution_mode': 'deterministic_widget_replay',
-          'entry_mode': 'canonical_learn_visible_controls',
+          'entry_mode': 'unlocked_action_visible_controls',
           'cta_reachability': 'ensureVisible_before_each_visible_control_tap',
           'debug_harness_used': false,
+          'starting_progression': <String, Object?>{
+            'kind': 'persisted_progression_fixture',
+            'fixture_id':
+                'alpha_action_capability_prerequisite_progression_v1',
+            'obtained_by': 'completed prerequisite learner history',
+          },
           'events': events
               .map(
                 (event) => <String, Object?>{
@@ -63,6 +71,55 @@ void main() {
         telemetrySink: telemetrySink,
       ),
     );
+  }
+
+  Future<void> seedActionCapabilityPreconditionV1() async {
+    final decoded = jsonDecode(
+      File(_actionPreconditionFixturePathV1).readAsStringSync(),
+    ) as Map<String, dynamic>;
+    expect(decoded['schema'], 'act0_progression_fixture_v1');
+    expect(
+      decoded['fixture_id'],
+      'alpha_action_capability_prerequisite_progression_v1',
+    );
+    final completedLessonIds =
+        (decoded['completed_lesson_ids'] as List<dynamic>)
+            .map((value) => value.toString())
+            .toList(growable: false);
+    final state = Act0ShellStateV1.sample;
+    final world = state.worldById(decoded['world_id'] as String);
+    final completedTaskIds = <String>[
+      for (final lessonId in completedLessonIds)
+        ...world
+            .lessons
+            .firstWhere((lesson) => lesson.lessonId == lessonId)
+            .taskList
+            .map((task) => task.taskId),
+    ];
+    final target = decoded['target'] as Map<String, dynamic>;
+    final targetLessonId = target['lesson_id'] as String;
+    final targetTaskId = target['task_id'] as String;
+    expect(
+      world.lessons
+          .firstWhere((lesson) => lesson.lessonId == targetLessonId)
+          .taskList
+          .any((task) => task.taskId == targetTaskId),
+      isTrue,
+    );
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      'act0_shell_progress_v1': jsonEncode(<String, Object>{
+        'schemaVersion': 16,
+        'completedTaskIds': completedTaskIds,
+        'skippedTaskIds': <String>[],
+        'completedLessonIds': completedLessonIds,
+        'selectedWorldId': world.worldId,
+        'selectedLessonId': targetLessonId,
+        'selectedTaskId': targetTaskId,
+        'earnedXp': 0,
+      }),
+    });
   }
 
   Future<void> openBottomTabV1(WidgetTester tester, String label) async {
@@ -212,6 +269,7 @@ void main() {
     WidgetTester tester, {
     Act0TelemetrySinkV1? telemetrySink,
   }) async {
+    await seedActionCapabilityPreconditionV1();
     await tester.pumpWidget(previewHost(telemetrySink: telemetrySink));
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Learn');
@@ -1315,7 +1373,7 @@ void main() {
   );
 
   testWidgets(
-    'canonical Learn entry completes the Action alpha loop with ordered safe telemetry',
+    'unlocked Action capability journey completes the alpha loop with ordered safe telemetry',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
       await tester.binding.setSurfaceSize(const Size(430, 932));

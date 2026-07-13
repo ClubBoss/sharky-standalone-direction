@@ -1,14 +1,23 @@
 {
-  "schema": "alpha_journey_contract_v1",
-  "journey_id": "alpha_action_repair_recovery_v1",
-  "contract_version": 1,
-  "base_route": "Act0ShellPreviewScreenV1 -> Learn -> Fold, check, call, raise",
+  "schema": "alpha_journey_contract_v2",
+  "journey_kind": "action_capability",
+  "journey_id": "alpha_action_repair_recovery_unlocked_v2",
+  "contract_version": 2,
+  "base_route": "Act0ShellPreviewScreenV1 -> valid persisted progression precondition -> Learn -> Fold, check, call, raise",
   "owners": {
     "route": "Act0ShellPreviewScreenV1",
     "runner": "Act0LessonRunnerShellV1",
     "personalization": "Act0ActionSequencePersonalizationPolicyV1",
     "payoff": "Act0ActionSessionPayoffPolicyV1",
     "telemetry": "Act0TelemetrySinkV1"
+  },
+  "precondition": {
+    "kind": "persisted_progression_fixture",
+    "fixture_id": "alpha_action_capability_prerequisite_progression_v1",
+    "fixture_path": "tools/contracts/alpha_action_capability_prerequisite_progression_v1.json",
+    "requires_visible_progression_equivalence": true,
+    "allows_dev_or_debug_shortcut": false,
+    "allows_intermediate_action_state": false
   },
   "canonical_ids": {
     "world_id": "world_1",
@@ -53,7 +62,7 @@
     "large_phone": [430, 932]
   },
   "visible_checkpoints": [
-    "Learn entry",
+    "Learn with Action unlocked by precondition",
     "Action words theory",
     "Check when no bet decision",
     "personalized wrong feedback",
@@ -74,7 +83,9 @@
     "non-required telemetry events"
   ],
   "invalidating_changes": [
-    "canonical route, task, concept, error type, repair mapping, recheck mapping, payoff, required telemetry order, viewport matrix, or frozen geometry policy changes",
+    "action journey described as fresh-install direct reachability",
+    "precondition fixture bypasses prerequisite learner history",
+    "canonical task, concept, error type, repair mapping, recheck mapping, payoff, required telemetry order, viewport matrix, or frozen geometry policy changes",
     "any direct-state harness used as black-box trace evidence",
     "missing or duplicated single-emission telemetry"
   ]

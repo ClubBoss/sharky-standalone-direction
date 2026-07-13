@@ -1,0 +1,23 @@
+{
+  "schema": "act0_progression_fixture_v1",
+  "fixture_id": "alpha_action_capability_prerequisite_progression_v1",
+  "fixture_version": 1,
+  "source": "production_equivalent_persisted_progression",
+  "world_id": "world_1",
+  "completed_lesson_ids": [
+    "what_poker_is",
+    "what_poker_is_content",
+    "cards_ranks_suits",
+    "your_first_hand"
+  ],
+  "target": {
+    "lesson_id": "fold_check_call_raise",
+    "task_id": "actions_theory"
+  },
+  "constraints": {
+    "all_prerequisite_tasks_completed": true,
+    "starts_before_action_lesson_entry": true,
+    "allows_dev_or_debug_shortcut": false,
+    "allows_intermediate_action_state": false
+  }
+}
