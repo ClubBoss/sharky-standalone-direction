@@ -4,6 +4,13 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+void expectRectClose(Rect actual, Rect expected) {
+  expect(actual.left, closeTo(expected.left, 0.05));
+  expect(actual.top, closeTo(expected.top, 0.05));
+  expect(actual.right, closeTo(expected.right, 0.05));
+  expect(actual.bottom, closeTo(expected.bottom, 0.05));
+}
+
 void main() {
   test(
     'only the two source-owned Action tasks opt into table presentation',
@@ -77,7 +84,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('stable practice uses one fixed table slot', (tester) async {
+  testWidgets('refined stable practice routes through shared allocation', (
+    tester,
+  ) async {
     final task = Act0ShellStateV1.sample
         .lessonById('fold_check_call_raise')
         .taskList
@@ -99,6 +108,10 @@ void main() {
 
     expect(
       find.byKey(const Key('act0_task_owned_practice_table_bounds')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
@@ -146,7 +159,13 @@ void main() {
       final dockBefore = tester.getRect(
         find.byKey(const Key('act0_shell_runner_action_dock')),
       );
-      expect(dockBefore.bottom, lessThan(812 - 20));
+      expectRectClose(tableBefore, const Rect.fromLTRB(8, 46, 367, 669.3));
+      expect(dockBefore.top, tableBefore.bottom);
+      expect(dockBefore.bottom, 812);
+      expect(
+        find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
       await tester.pumpAndSettle();
@@ -158,4 +177,58 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('shared active runner allocation keeps the table exact', (
+    tester,
+  ) async {
+    const samples = <(String, Act0ControlledDemoCaptureSurfaceV1)>[
+      ('decision', Act0ControlledDemoCaptureSurfaceV1.runnerDrill),
+      (
+        'correct',
+        Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
+      ),
+      ('wrong', Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback),
+      ('repair', Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget),
+      ('repairResult', Act0ControlledDemoCaptureSurfaceV1.repairResult),
+    ];
+    const viewports = <(String, Size)>[
+      ('compact', Size(375, 812)),
+      ('tall', Size(390, 844)),
+      ('large', Size(430, 932)),
+    ];
+    const expectedTables = <Rect>[
+      Rect.fromLTRB(8, 46, 367, 669.3),
+      Rect.fromLTRB(8, 46, 382, 695.3),
+      Rect.fromLTRB(28, 46, 402, 695.3),
+    ];
+    for (final viewport in viewports) {
+      await tester.binding.setSurfaceSize(viewport.$2);
+      for (final sample in samples) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Act0ShellPreviewScreenV1(
+              key: ValueKey<String>('${viewport.$1}_${sample.$1}'),
+              state: Act0ShellStateV1.sample,
+              showPlacementOnStart: false,
+              debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+                mode: Act0ControlledDemoCaptureModeV1.directState,
+                surface: sample.$2,
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+        final lowerSurface = tester.getRect(
+          find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
+        );
+        final expectedTable = expectedTables[viewports.indexOf(viewport)];
+        expectRectClose(table, expectedTable);
+        expect(lowerSurface.top, table.bottom);
+        expect(lowerSurface.bottom, viewport.$2.height);
+        expect(tester.takeException(), isNull);
+      }
+    }
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+  });
 }

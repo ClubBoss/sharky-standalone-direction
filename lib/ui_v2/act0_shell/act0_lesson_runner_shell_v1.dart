@@ -2392,9 +2392,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       context,
       viewportFamily: viewportFamily,
     );
+    final usesSharedActiveRunnerAllocation =
+        isRefinedDev2 &&
+        table.density == Act0TableDensityV1.compactLesson &&
+        !Act0ShellTokensV1.isTabletWidth(context);
     final coupleTableToDock =
-        viewportPressureReason != _compactAnswerListNoPressureReasonV1 &&
-        _viewportFamilyUsesAnswerListCompositionV1(viewportFamily);
+        usesSharedActiveRunnerAllocation ||
+        (viewportPressureReason != _compactAnswerListNoPressureReasonV1 &&
+            _viewportFamilyUsesAnswerListCompositionV1(viewportFamily));
     final hasRepairContext =
         widget.selectedTaskFamily == Act0TaskFamilyV1.repair ||
         (widget.repairReasonLine?.trim().isNotEmpty ?? false) ||
@@ -2442,11 +2447,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         onSelectPreset: widget.onSelectSizingPreset,
         integratedLowerSurface: _showBottomLearningRail,
         compactAnswerListDecision: compactAnswerListDecision,
-        scrollContentInEnvelope: taskCycleEnvelope.usesFixedLowerSlot,
+        scrollContentInEnvelope:
+            taskCycleEnvelope.usesFixedLowerSlot ||
+            (usesSharedActiveRunnerAllocation && !_showBottomLearningRail),
+        centerBoundedLowerSurface:
+            usesSharedActiveRunnerAllocation && _showBottomLearningRail,
         protectFixedSlotBottom:
             taskCycleEnvelope.usesFixedLowerSlot && isReview,
         child: _showBottomLearningRail
             ? _LearningRailV1(
+                maxHeight: usesSharedActiveRunnerAllocation
+                    ? _sharedActiveRunnerLearningRailMaxHeightV1
+                    : _learningRailMaxHeightV1,
                 taskLabel: taskRailLabel,
                 prompt: prompt,
                 supportSegments: learningRailSupportSegments,
@@ -2783,7 +2795,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     }
     if (widget.tablePresentation ==
             Act0TaskTablePresentationV1.stablePractice &&
-        ((isDrill && !isTeaching) || isReview)) {
+        ((isDrill && !isTeaching) || isReview) &&
+        !usesSharedActiveRunnerAllocation) {
       return KeyedSubtree(
         key: const Key('act0_shell_runner_screen'),
         child: _TaskOwnedStablePracticePresentationV1(
@@ -2840,7 +2853,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           const SizedBox.shrink(
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
-        if (taskCycleEnvelope.usesFixedLowerSlot)
+        if (taskCycleEnvelope.usesFixedLowerSlot &&
+            !usesSharedActiveRunnerAllocation)
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -2870,6 +2884,47 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       height: lowerSlotHeight,
                       child: Align(
                         alignment: Alignment.topCenter,
+                        child: buildRunnerActionDock(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          )
+        else if (usesSharedActiveRunnerAllocation)
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final tableHeight = _sharedActiveRunnerTableHeightV1(
+                  context,
+                  availableWidth: math.max(
+                    0,
+                    constraints.maxWidth - (pageX * 2),
+                  ),
+                  compactBottomDockClearance: compactBottomDockClearance,
+                );
+                final stageHeight =
+                    _runnerUpperStageChromeHeightV1(
+                      showTopInstructionCard: showTopInstructionCard,
+                      isRefinedDev2: isRefinedDev2,
+                      compactTableStageTopInset: compactTableStageTopInset,
+                    ) +
+                    tableHeight;
+                if (stageHeight >= constraints.maxHeight) {
+                  return buildRunnerStage(maxTableHeight: tableHeight);
+                }
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: stageHeight,
+                      child: buildRunnerStage(maxTableHeight: tableHeight),
+                    ),
+                    Expanded(
+                      child: KeyedSubtree(
+                        key: const Key(
+                          'act0_shell_shared_runner_lower_surface',
+                        ),
                         child: buildRunnerActionDock(),
                       ),
                     ),
@@ -3452,6 +3507,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
     this.compactAnswerListDecision = false,
     this.scrollContentInEnvelope = false,
     this.protectFixedSlotBottom = false,
+    this.centerBoundedLowerSurface = false,
   });
 
   final Widget child;
@@ -3464,6 +3520,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
   final bool compactAnswerListDecision;
   final bool scrollContentInEnvelope;
   final bool protectFixedSlotBottom;
+  final bool centerBoundedLowerSurface;
 
   @override
   Widget build(BuildContext context) {
@@ -3501,6 +3558,21 @@ class _RunnerActionDockV1 extends StatelessWidget {
             child: dockBody,
           )
         : dockBody;
+    final integratedDockBody = centerBoundedLowerSurface
+        ? LayoutBuilder(
+            builder: (context, constraints) {
+              return Center(
+                child: SizedBox(
+                  height: math.min(
+                    constraints.maxHeight,
+                    _learningRailMaxHeightV1,
+                  ),
+                  child: effectiveDockBody,
+                ),
+              );
+            },
+          )
+        : effectiveDockBody;
     final visualDock = Container(
       key: const Key('act0_shell_runner_action_dock'),
       width: double.infinity,
@@ -3530,7 +3602,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
                     ],
                   ),
                 ),
-                child: effectiveDockBody,
+                child: integratedDockBody,
               ),
             )
           : SafeArea(
@@ -3942,6 +4014,9 @@ class Act0SharkyMascotV1 extends StatelessWidget {
   }
 }
 
+const double _learningRailMaxHeightV1 = 144;
+const double _sharedActiveRunnerLearningRailMaxHeightV1 = 135;
+
 class _LearningRailV1 extends StatelessWidget {
   const _LearningRailV1({
     required this.taskLabel,
@@ -3955,6 +4030,7 @@ class _LearningRailV1 extends StatelessWidget {
     required this.onAdvance,
     required this.sharkyLine,
     required this.sharkyMood,
+    this.maxHeight = _learningRailMaxHeightV1,
     this.emphasizePrompt = false,
   });
 
@@ -3969,6 +4045,7 @@ class _LearningRailV1 extends StatelessWidget {
   final VoidCallback onAdvance;
   final String sharkyLine;
   final Act0SharkyMoodV1 sharkyMood;
+  final double maxHeight;
   final bool emphasizePrompt;
 
   @override
@@ -3994,10 +4071,13 @@ class _LearningRailV1 extends StatelessWidget {
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 102, maxHeight: 144),
+            constraints: BoxConstraints(
+              minHeight: math.min(102, maxHeight),
+              maxHeight: maxHeight,
+            ),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final compactRail = constraints.maxHeight <= 144;
+                final compactRail = constraints.maxHeight <= maxHeight;
                 final compactLaneMaxWidth = compactRail
                     ? 286.0
                     : double.infinity;
@@ -9227,6 +9307,24 @@ double _compactDockTableScaleV1(
   return compactAnswerListComposition
       ? compactAnswerListSafeAreaTableScale
       : compactSafeAreaTableScale;
+}
+
+double _sharedActiveRunnerTableHeightV1(
+  BuildContext context, {
+  required double availableWidth,
+  required bool compactBottomDockClearance,
+}) {
+  final tableMaxWidth =
+      (Act0ShellTokensV1.runnerTableMaxWidth + 48) *
+      _compactDockTableScaleV1(
+        context,
+        refined: true,
+        isTablet: false,
+        compactBottomDockClearance: compactBottomDockClearance,
+        density: Act0TableDensityV1.compactLesson,
+        compactAnswerListComposition: false,
+      );
+  return math.min(availableWidth, tableMaxWidth) / 0.576;
 }
 
 bool _usesCompactAnswerListCompositionV1(
