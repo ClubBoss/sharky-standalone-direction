@@ -2868,7 +2868,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     ),
                     SizedBox(
                       height: lowerSlotHeight,
-                      child: buildRunnerActionDock(),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: buildRunnerActionDock(),
+                      ),
                     ),
                   ],
                 );

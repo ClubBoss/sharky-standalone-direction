@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
@@ -102,4 +103,59 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'Day 2 repair keeps the table locked above a content-sized active panel',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(375, 812));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface:
+                  Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        'actions_check_drill',
+      );
+      expect(
+        find.byKey(const Key('act0_shell_runner_envelope_repairFill')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_task_owned_practice_table_bounds')),
+        findsNothing,
+      );
+      final tableBefore = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      final dockBefore = tester.getRect(
+        find.byKey(const Key('act0_shell_runner_action_dock')),
+      );
+      expect(dockBefore.bottom, lessThan(812 - 20));
+
+      await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+      await tester.pumpAndSettle();
+
+      final tableAfter = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      expect(tableAfter, tableBefore);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
