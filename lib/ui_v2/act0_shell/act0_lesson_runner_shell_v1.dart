@@ -5761,6 +5761,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
+    final isExactReplayRepair =
+        repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ??
+        false;
     final feedbackStateKey = hasProofEarnedState
         ? const Key('act0_shell_wave2_feedback_proof_earned_state')
         : isRepairFocusState
@@ -6164,7 +6167,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           hasProofEarnedState
                               ? 'Save this read'
                               : isWrong || isRepairFocusState
-                              ? 'Try same clue'
+                              ? isExactReplayRepair
+                                    ? 'Try this spot again'
+                                    : 'Try same clue'
                               : 'Next hand',
                         ),
                       ),

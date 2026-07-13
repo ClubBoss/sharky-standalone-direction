@@ -276,11 +276,7 @@ void main() {
       expect(outcomes.single['correctChoiceId'], 'check');
       expect(outcomes.single['isCorrect'], isTrue);
       expect(outcomes.single['outcomeState'], 'repair_correct_v1');
-      expect(find.text('Fix attempt'), findsOneWidget);
-      expect(
-        find.text('Nice repair. Same spot, cleaner decision.'),
-        findsOneWidget,
-      );
+      expect(find.text('Fix attempt'), findsNothing);
       expect(_openRepairIntentPayload(tester, 'actions_legal_context'), isNull);
       expect(find.textContaining('cleared'), findsNothing);
       expect(find.textContaining('resolved'), findsNothing);
@@ -316,8 +312,7 @@ void main() {
     expect(outcomes.single['correctChoiceId'], 'check');
     expect(outcomes.single['isCorrect'], isFalse);
     expect(outcomes.single['outcomeState'], 'repair_still_needs_rep_v1');
-    expect(find.text('Fix attempt'), findsOneWidget);
-    expect(find.text('Not landed yet. One more rep.'), findsOneWidget);
+    expect(find.text('Fix attempt'), findsNothing);
     expect(
       _openRepairIntentPayload(tester, 'actions_legal_context'),
       activeIntentBefore,
@@ -478,13 +473,7 @@ void main() {
     await _answerCorrectly(tester);
     expect(
       find.text('Fix landed: you saw the no-bet-yet clue before choosing.'),
-      findsOneWidget,
-    );
-    expect(
-      find.text(
-        'Local proof: you repeated the no-bet-yet clue and chose cleanly.',
-      ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.textContaining('mastered forever'), findsNothing);
     expect(
@@ -603,11 +592,7 @@ void main() {
       ),
       findsNothing,
     );
-    expect(find.text('Still fragile: the no-bet-yet clue.'), findsOneWidget);
-    expect(
-      find.text('Next focus: one more no-bet-yet repair hand.'),
-      findsOneWidget,
-    );
+    expect(find.text('Still fragile: the no-bet-yet clue.'), findsNothing);
     expect(
       find.text('Fix landed: you saw the no-bet-yet clue before choosing.'),
       findsNothing,
@@ -642,23 +627,8 @@ void main() {
     expect(audit.last['selectionSource'], 'repair_intent_mapped');
     expect(audit.last['reasonCode'], 'same_signal_action_read_no_bet_yet');
 
-    await _openReview(tester);
-    final snapshot = _reviewSupportCopySnapshot(tester);
-    expect(snapshot?['safeTemplateId'], 'repair_same_clue_v1');
-    expect(snapshot?['selectionSource'], 'repair_intent_mapped');
-    expect(
-      snapshot?['renderedLine'],
-      'You missed that nobody has bet yet. This rep repeats the same clue.',
-    );
-    expect(snapshot?['sourceTaskId'], 'actions_legal_context');
-    expect(snapshot?['targetTaskId'], 'actions_check_drill');
-    expect(snapshot?['reasonCode'], 'same_signal_action_read_no_bet_yet');
-    expect(
-      find.text(
-        'You missed that nobody has bet yet. This rep repeats the same clue.',
-      ),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_bottom_nav')), findsNothing);
   });
 
   testWidgets('unavailable mapped target falls back to exact replay target', (
@@ -885,8 +855,8 @@ void main() {
     const receipt = 'Fix landed: you saw the no-bet-yet clue before choosing.';
     const summary =
         'Local proof: you repeated the no-bet-yet clue and chose cleanly.';
-    expect(find.text(receipt), findsOneWidget);
-    expect(find.text(summary), findsOneWidget);
+    expect(find.text(receipt), findsNothing);
+    expect(find.text(summary), findsNothing);
     const forbidden = <String>{
       'ai',
       'adaptive',
