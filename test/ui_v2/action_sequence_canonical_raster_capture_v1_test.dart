@@ -143,6 +143,15 @@ void main() {
       File('${out.path}/$name.png').writeAsBytesSync(await _png(tester));
     }
 
+    Future<void> tapVisible(Finder target) async {
+      await tester.ensureVisible(target);
+      await tester.pumpAndSettle();
+      final rect = tester.getRect(target);
+      expect(rect.top, greaterThanOrEqualTo(0));
+      expect(rect.bottom, lessThanOrEqualTo(_viewport.height));
+      await tester.tap(target);
+    }
+
     await tester.pumpWidget(
       MaterialApp(
         home: RepaintBoundary(
@@ -165,19 +174,19 @@ void main() {
     );
     await tester.pumpAndSettle();
     await saveMounted('wrong_feedback');
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
     await saveMounted('targeted_repair');
-    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tapVisible(find.byKey(const Key('act0_shell_option_check')));
     await tester.pumpAndSettle();
     await saveMounted('repair_success');
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
     await saveMounted('targeted_recheck');
-    await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+    await tapVisible(find.byKey(const Key('act0_shell_option_check')));
     await tester.pumpAndSettle();
     await saveMounted('recheck_success');
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tapVisible(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
     await saveMounted('completion');
     await tester.pumpAndSettle();
