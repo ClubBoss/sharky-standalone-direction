@@ -1,7 +1,7 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-07.
+Freshness date: 2026-07-13.
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped
 repair program Waves 1-5, and the W1-W6 runtime integrity gate are closed and
 integrated into `main`;
@@ -11,19 +11,33 @@ dead-system decommission wave
 (`docs/_reviews/repository_reduction_dead_system_decommission_v1.md`), and
 repository truth stabilization
 (`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`) are
-also closed and integrated into `main`. The current Wave 5 telemetry/repair
-integration HEAD is `38c7de59303a93206b28829e899874124e270e07`; any later
-same-wave capsule commit is documentation-only.
-Current active task: none active; Wave 5 telemetry/repair proof and the
-runtime integrity gate are integrated, and the route is parked for the next
-admitted owner task. Global Baseline Debt recovery is not started in this
-capsule refresh. W7+ expansion and visual, mascot, and motion work remain
-deferred while this route is active.
+also closed and integrated into `main`. The accepted visual/runtime foundation
+is published at `dd6edced3c1a1e68cfbdbe618b3962010051e112`.
+Current active task: **Complete canonical Alpha Learning Loop v1**. The active
+W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
+`Act0LessonRunnerShellV1` for theory/decision/feedback,
+`Act0ActionSequencePersonalizationPolicyV1` for deterministic rules,
+`Act0ActionSessionPayoffPolicyV1` for payoff, and `Act0TelemetrySinkV1` for
+bounded local telemetry. Its same-signal contract is
+`w1_action_words_check_v1` / `missed_action_read`.
+The visual/runtime foundation and Modern Table are locked (Maintenance Mode).
+Allowed work is deterministic personalization, same-signal repair/recheck,
+payoff, bounded learning-loop telemetry, and canonical route proof. Visual
+polish, Premium Motion, tablet optimization, unrelated legacy-route repair,
+broad refactors, and new dependencies remain deferred.
 Verified active route artifact:
 `docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
 ## Current Active Phase
+
+**AI Personalization Layer v1 — ACTIVE.** The required Alpha gate is canonical
+entry → theory → decision → personalized feedback → repair → recheck → payoff
+→ completion. Telemetry is limited to the learning loop: user choice,
+correctness, error type, time to decision, feedback, repair, recheck, payoff,
+and session completion. Premium Motion was previously planned but is
+superseded by this owner-approved priority and deferred until Alpha admission.
+The missing legacy route-import test remains unrelated debt.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
@@ -67,7 +81,7 @@ production bugs), tightened the Welcome handoff content-to-CTA gap, and
 re-verified the prior `full_pre_human_visual_ux_audit_v2_10_10_gap_register_v1`
 ledger against fresh live evidence (most items already fixed by intervening
 commits; one item disproved as a scroll-jump capture artifact). Phase 8 -
-Motion is ACTIVE. `Motion Direction System v1` then defined the semantic
+Motion was previously active. `Motion Direction System v1` then defined the semantic
 motion system (principles, categories, bounded duration/easing tokens,
 composition/priority rules, a reduced-motion contract reusing the existing
 `MediaQuery.disableAnimations` seam already proven in `_ProofMotionRevealV1`)
@@ -171,7 +185,7 @@ Correctness Review v1` is now closed with selected solver-light candidates.
 `Solver-Light Selected Checks v1` is also closed with a consolidated repair
 ledger. `Targeted Content Repairs v1` is closed with explicit deferrals.
 `Phase 7 Closure Audit v1` closed Content & Correctness with no unresolved
-Phase 7 blocker. Phase 8 - Motion is active. `Motion Direction System v1`
+Phase 7 blocker. Phase 8 - Motion was previously active. `Motion Direction System v1`
 closed with the semantic motion system defined (see
 `docs/_reviews/motion_direction_system_v1.md`) and no motion-phase
 implementation performed. The premium milestone slice is now closed.
@@ -227,10 +241,11 @@ visual evidence.
 5. Sharky Companion - CLOSED
 6. Advanced Learning Presentation - CLOSED
 7. Content & Correctness - CLOSED
-8. Motion - ACTIVE
-9. E2E Product Integrity
-10. Final 10/10 Audit
-11. Human QA
+8. Motion - DEFERRED until after Alpha learning-loop admission
+9. AI Personalization Layer v1 - ACTIVE
+10. E2E Product Integrity
+11. Final 10/10 Audit
+12. Human QA
 
 ## Current Forbidden Scope
 
@@ -241,7 +256,7 @@ visual evidence.
 - calendar-week proof reporting
 - broad outcome-history dashboard
 - achievement icons before their dedicated Phase 4 stage
-- motion implementation beyond what `docs/_reviews/motion_direction_system_v1.md`
+- Premium Motion implementation beyond what `docs/_reviews/motion_direction_system_v1.md`
   explicitly authorized: the `Premium Transitions / Replay Motion v1` slice
   (World completion, W4->W5 band-transition milestone) is now CLOSED/landed;
   navigation crossfade and Street Replay entrance motion remain explicit

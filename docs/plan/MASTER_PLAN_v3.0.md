@@ -131,13 +131,25 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 - Store/Public Readiness is delayed until Waves 3.10-3.15 complete, fresh
   day2_return / first_week / full_scroll packets exist, and a fresh TOP1
   challenger pass confirms the quality bar.
-- The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
-- Do not route next work into broad drill engines, W5-W36 content authoring,
-  AI/chat, GTO/solver claims, public paywall, Modern Table redesign,
-  telemetry/model work, full RU localization, hand-history databases, broad
-  analytics, or old-main feature restoration unless a later excellence wave
-  admits a precise prerequisite or concrete P0/P1 evidence reopens that
-  bottleneck.
+- Owner-approved active stage: **AI Personalization Layer v1**. This supersedes
+  the previously planned Premium Motion next-wave priority. The active sequence
+  is: (1) deterministic rule-based personalization vertical slice, (2) Learning
+  Effect / Training Flow, (3) minimal live End-to-End Alpha scenario, (4)
+  bounded learning-loop telemetry closure, and (5) Alpha admission evidence.
+- This stage is deterministic and rule-based only: no ML, no remote AI
+  dependency, and reuse of existing Act0 contracts is required. Modern Table is
+  in Maintenance Mode; visual redesign is out of scope. Phone acceptance covers
+  compact, tall, and large; tablet is deferred and non-blocking.
+- Premium Motion remains previously planned future work, deferred until after
+  Alpha learning-loop admission. Do not route active work into broad drill
+  engines, W5-W36 content authoring, AI/chat, GTO/solver claims, public
+  paywall, Modern Table redesign, full RU localization, hand-history databases,
+  broad analytics, or old-main feature restoration.
+- Bounded telemetry is authorized only for the active learning loop:
+  user choice, correctness, error type, time to decision, feedback, repair,
+  recheck, payoff, and session completion. This does not authorize dashboards,
+  experimentation platforms, ML telemetry, unrelated route instrumentation, or
+  repository-wide telemetry refactors.
 
 ## Product 100
 
@@ -547,7 +559,8 @@ Wave 3.9.2 adds implementation control for this route:
 - Store/Public Readiness remains delayed until the matrix rows for Waves
   3.10-3.15 are closed or explicitly blocked.
 
-Current next-wave order:
+Previously planned excellence order (deferred until after Alpha learning-loop
+admission):
 
 1. `Wave 3.0.1 - Public Premium TOP1 v1 Endgame Lock`
 2. `Wave 3.1 - Street Replay / How We Got Here v1`
@@ -595,9 +608,12 @@ Immediate execution rule:
    `docs/_reviews/wave3_9_2_top1_10_out_of_10_backcast_matrix_v1.md` for
    implementation-control proof: target 10/10 block, gap, visible effect, DoD,
    evidence, and anti-theater guard.
-4. The next implementation candidate is Wave 3.10 - Premium Motion Moments v1.
+4. The active implementation stage is AI Personalization Layer v1, as defined
+   in Current post-merge status. Premium Motion Moments v1 is deferred until
+   Alpha learning-loop admission.
 5. Do not reopen `Learn`, `Placement`, `Profile`, `Welcome`, Practice breadth,
-   Modern Table, telemetry/model work, or monetization for cosmetic drift.
+   Modern Table, or monetization for cosmetic drift. Only bounded
+   learning-loop telemetry is admitted during the active stage.
 6. If validation does not move the selected TOP1 row, make the hypothesis
    dormant instead of expanding scope.
 7. Guard waves may pass by proving no P0/P1 blockers; excellence waves must
