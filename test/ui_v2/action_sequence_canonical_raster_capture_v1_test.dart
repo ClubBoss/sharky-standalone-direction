@@ -14,8 +14,15 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-const _root = 'output/evidence/action_sequence_convergence_v1';
-const _viewport = Size(375, 812);
+const _device = String.fromEnvironment(
+  'ACTION_EVIDENCE_DEVICE',
+  defaultValue: 'compact',
+);
+const _root = 'output/evidence/action_sequence_convergence_v1_$_device';
+final _viewport = Size(
+  int.fromEnvironment('ACTION_EVIDENCE_WIDTH', defaultValue: 375).toDouble(),
+  int.fromEnvironment('ACTION_EVIDENCE_HEIGHT', defaultValue: 812).toDouble(),
+);
 const _boundaryKey = Key('action_sequence_raster_boundary');
 
 void main() {
@@ -258,7 +265,10 @@ void _sheet(Directory out, List<String> names, String fileName) {
             image.decodePng(File('${out.path}/$name.png').readAsBytesSync())!,
       )
       .toList();
-  final canvas = image.Image(width: 375 * images.length, height: 812);
+  final canvas = image.Image(
+    width: images.first.width * images.length,
+    height: images.first.height,
+  );
   for (var index = 0; index < images.length; index++) {
     image.compositeImage(canvas, images[index], dstX: 375 * index);
   }
