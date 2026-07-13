@@ -23,7 +23,7 @@ fi
 
 rm -rf "$bundle" "$zip_path" "${zip_path}.sha256"
 mkdir -p "$bundle"/{01_report,02_owner_map,03_fresh_install_contract,04_action_capability_contract,05_progression_proof,06_computer_use_fresh,07_computer_use_action,08_telemetry,09_validation,10_manifest}
-readonly log="$bundle/08_validation/command.log"
+readonly log="$bundle/09_validation/command.log"
 
 run_stage() {
   local stage="$1"
