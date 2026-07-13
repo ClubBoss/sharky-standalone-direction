@@ -69,3 +69,32 @@ clean-main evidence, and whether it blocks the current wave. Do not write
 - No other baseline failures are admitted by this ledger yet.
 - Future reproductions should record the exact remote commit and full command
   before asking for a baseline classification.
+
+## Personalization Breadth Wave 1 differential — 2026-07-14
+
+| Field | Evidence |
+| --- | --- |
+| Clean base | `origin/main` at `49d6e71331f694ef8c0595dc0cf74c8e77190a83` in detached worktree `/tmp/sharky-wave1-base-49d6e713`. |
+| Candidate | `fd563be70a087acd1c4c34c4f9219184b8cbf593` (`ec657f2f` + `fd563be7`). |
+| Identical command | `flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart -r expanded` with no retries. |
+| Runtime | Flutter `3.35.7`, Dart `3.9.2` in both worktrees. |
+| Result | All nine candidate failures also fail on clean base. Base has 15 failures total; six additional baseline layout failures do not reproduce on candidate. |
+| Scope decision | The nine candidate failures are unrelated pre-existing telemetry-fixture debt for Personalization Breadth Wave 1. They do not authorize treating the full suite as green. |
+
+| Candidate failure | Base primary signature | Candidate primary signature | Classification |
+| --- | --- | --- | --- |
+| `Act0 runner emits safe task telemetry without changing answer route` | missing `act0_shell_option_raise` | same | `pre_existing` |
+| `Act0 runner emits canonical decision_made payload aliases` | missing `act0_shell_option_raise` | same | `pre_existing` |
+| `Act0 runner emits safe incorrect result telemetry` | missing `act0_shell_option_fold` | same | `pre_existing` |
+| `W5 structured board context is attributed to decision telemetry` | missing `act0_shell_option_wet` | same | `pre_existing` |
+| `representative W1 W3 W4 W5 W6 paths emit attributed decision telemetry` | `Bad state: No element` in `chooseOptionByQualityV1` | same | `pre_existing` |
+| `Act0 runner emits one safe feedback_viewed event from the real feedback path` | missing `act0_shell_continue_cta` | same | `pre_existing` |
+| `Act0 repair flow emits safe repair_started and repair_completed telemetry` | offscreen feedback CTA, then missing review screen | same primary failure; CTA remains offscreen | `pre_existing` |
+| `Act0 feedback telemetry stays non-blocking when sink throws` | missing `act0_shell_continue_cta` | same | `pre_existing` |
+| `Action sequence surfaces a traceable deterministic recommendation` | missing `not stable yet` text | same | `pre_existing` |
+
+The changed runner owner is shared by these fixtures, but the current-wave
+hunks are limited to exact W3 position classification/seat telemetry and
+`isReview` compact-layout handling. The option-control failures occur before
+selection in W1/W5 drill setup, and the base reproduces each primary failure.
+No current-wave hunk is a causal owner for these failures.
