@@ -44,6 +44,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -78,6 +79,17 @@ act0FirstValueSameSignalRepMappingV1({
       lessonId: lessonId,
       taskId: taskId,
       mappingType: isRepair ? 'repair' : 'reinforcement',
+    );
+  }
+
+  if (sourceTask == Act0PositionPersonalizationV1.sourceTaskId &&
+      nextRepId == 'repeat_table_position_read' &&
+      skillAtomId == 'table_position_read' &&
+      sourceSignalId == 'hero_button') {
+    return target(
+      Act0PositionPersonalizationV1.worldId,
+      Act0PositionPersonalizationV1.lessonId,
+      Act0PositionPersonalizationV1.repairTaskId,
     );
   }
 
@@ -8864,6 +8876,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         sourceTaskId: repairSourceTaskId,
         completedTaskId: selectedTask.taskId,
       );
+      if (Act0PositionPersonalizationV1.isCanonicalSourceTask(
+        selectedTask.taskId,
+      )) {
+        const positionCase = Act0PositionPersonalizationCaseV1();
+        _recordTelemetryEventV1(
+          'position_personalization_payoff',
+          positionCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: positionCase.cleanPayoffOutcome,
+          ),
+        );
+      }
       _refreshRetentionMemoryStatusesV1();
       _persistProgress();
       return;
@@ -8910,6 +8934,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       option: option,
     );
     final openIntent = _openRepairIntentBySourceTaskId[repairSourceTaskId];
+    final positionCase = openIntent == null
+        ? null
+        : Act0PositionPersonalizationV1.fromRepairIntent(openIntent);
+    if (positionCase != null && _activeRepairTaskId == selectedTask.taskId) {
+      _recordTelemetryEventV1(
+        'position_personalization_recheck',
+        positionCase.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: positionCase.failedRecheckOutcome,
+        ),
+      );
+    }
     _recordLastSessionLearnerStateV1(
       repairFocusId: openIntent?.missedSignalId ?? '',
       proofResult: act0LastSessionProofNotYetV1,
@@ -8992,6 +9028,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       repairTaskId: request.repairTaskId,
       repaired: option.isCorrect,
     );
+    final positionIntent =
+        _openRepairIntentBySourceTaskId[request.sourceTaskId];
+    final positionCase = positionIntent == null
+        ? null
+        : Act0PositionPersonalizationV1.fromRepairIntent(positionIntent);
+    if (positionCase != null) {
+      _recordTelemetryEventV1(
+        'position_personalization_recheck',
+        positionCase.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: option.isCorrect
+              ? positionCase.successfulPayoffOutcome
+              : positionCase.failedRecheckOutcome,
+        ),
+      );
+    }
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
@@ -9085,6 +9137,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!stored) {
       return;
     }
+    final positionCase = Act0PositionPersonalizationV1.fromRepairIntent(intent);
+    if (positionCase != null) {
+      _recordTelemetryEventV1(
+        'position_personalization_classified',
+        <String, Object?>{
+          ...positionCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: 'repair_required',
+          ),
+          'user_choice': intent.choiceId,
+          'correctness': false,
+        },
+      );
+    }
     _appendRepairIntentAuditEntryV1(
       _Act0RepairIntentAuditEntryV1(
         transition: 'intent_created',
@@ -9109,6 +9175,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         intent.mappingType == 'exact' && completedTaskId == intent.sourceTaskId;
     final completedMappedTarget = completedTaskId == intent.targetTaskId;
     if (completedExactReplay || completedMappedTarget) {
+      final positionCase = Act0PositionPersonalizationV1.fromRepairIntent(
+        intent,
+      );
+      if (positionCase != null && completedMappedTarget) {
+        _recordTelemetryEventV1(
+          'position_personalization_recheck',
+          positionCase.telemetryFields(
+            attemptPhase: 'recheck',
+            finalLearningOutcome: positionCase.successfulPayoffOutcome,
+          ),
+        );
+        _recordTelemetryEventV1(
+          'position_personalization_payoff',
+          positionCase.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: positionCase.successfulPayoffOutcome,
+          ),
+        );
+      }
       _openRepairIntentBySourceTaskId.remove(sourceTaskId);
       _multiRepairQueueV1 = Act0MultiRepairQueueV1(
         entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(

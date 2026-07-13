@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 typedef Act0RepairIntentTargetMapperV1 =
@@ -165,10 +166,27 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
 
   final result = _resultForQualityV1(selectedOption.quality);
   final receiptOutcome = _receiptOutcomeIdV1(receipt.outcome);
+  final canonicalPositionSource =
+      sourceTaskId == act0PositionPersonalizationSourceTaskIdV1;
+  final skillAtomId = canonicalPositionSource
+      ? act0PositionPersonalizationSkillIdV1
+      : receipt.skillAtomId;
+  final skillLabel = canonicalPositionSource
+      ? 'Table position read'
+      : receipt.skillLabel;
+  final sourceSignalId = canonicalPositionSource
+      ? act0PositionPersonalizationSignalIdV1
+      : receipt.sourceSignalId;
+  final sourceSignalLabel = canonicalPositionSource
+      ? 'Button'
+      : receipt.sourceSignalLabel;
+  final nextRepId = canonicalPositionSource
+      ? 'repeat_table_position_read'
+      : receipt.nextRepId;
   final mappedTarget = mapSameSignalRep?.call(
-    nextRepId: receipt.nextRepId,
-    skillAtomId: receipt.skillAtomId,
-    sourceSignalId: receipt.sourceSignalId,
+    nextRepId: nextRepId,
+    skillAtomId: skillAtomId,
+    sourceSignalId: sourceSignalId,
     sourceTaskId: sourceTaskId,
     receiptOutcome: receiptOutcome,
   );
@@ -178,8 +196,8 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
   final targetTaskId = mappedTarget?.taskId ?? sourceTaskId;
   final mappingType = mappedTarget?.mappingType ?? 'exact';
   final reasonCode = mappedTarget == null
-      ? 'exact_replay_${receipt.skillAtomId}_${receipt.sourceSignalId}'
-      : 'same_signal_${receipt.skillAtomId}_${receipt.sourceSignalId}';
+      ? 'exact_replay_${skillAtomId}_$sourceSignalId'
+      : 'same_signal_${skillAtomId}_$sourceSignalId';
 
   return Act0RepairIntentV1(
     sourceWorldId: sourceWorldId,
@@ -187,14 +205,15 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     sourceTaskId: sourceTaskId,
     choiceId: selectedOption.id,
     result: result,
-    errorType: _errorTypeForResultV1(
+    errorType: act0CanonicalErrorTypeForDecisionV1(
       result: result,
-      skillAtomId: receipt.skillAtomId,
+      skillAtomId: skillAtomId,
+      sourceTaskId: sourceTaskId,
     ),
-    missedSignalId: receipt.sourceSignalId,
-    missedSignalLabel: receipt.sourceSignalLabel,
-    skillAtomId: receipt.skillAtomId,
-    skillLabel: receipt.skillLabel,
+    missedSignalId: sourceSignalId,
+    missedSignalLabel: sourceSignalLabel,
+    skillAtomId: skillAtomId,
+    skillLabel: skillLabel,
     targetWorldId: targetWorldId,
     targetLessonId: targetLessonId,
     targetTaskId: targetTaskId,
@@ -208,17 +227,6 @@ String _resultForQualityV1(Act0FeedbackQualityV1 quality) {
     Act0FeedbackQualityV1.correct => 'correct',
     Act0FeedbackQualityV1.wrong => 'incorrect',
     Act0FeedbackQualityV1.suboptimal => 'suboptimal',
-  };
-}
-
-String _errorTypeForResultV1({
-  required String result,
-  required String skillAtomId,
-}) {
-  return switch (result) {
-    'incorrect' => 'missed_$skillAtomId',
-    'suboptimal' => 'thin_$skillAtomId',
-    _ => 'none',
   };
 }
 

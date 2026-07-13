@@ -24,6 +24,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
 
@@ -1545,9 +1546,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         ? 'none'
         : receipt == null
         ? 'unknown'
-        : option.quality == Act0FeedbackQualityV1.suboptimal
-        ? 'thin_${receipt.skillAtomId}'
-        : 'missed_${receipt.skillAtomId}';
+        : act0CanonicalErrorTypeForDecisionV1(
+            result: option.quality == Act0FeedbackQualityV1.suboptimal
+                ? 'suboptimal'
+                : 'incorrect',
+            skillAtomId: receipt.skillAtomId,
+            sourceTaskId: _stableTaskTelemetryId,
+          );
     final repairFamilyId = option.isCorrect || receipt == null
         ? null
         : '${receipt.skillAtomId}:${receipt.sourceSignalId}';
@@ -1575,6 +1580,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       (candidate) => candidate?.seatId == seatId,
       orElse: () => null,
     );
+    if (option != null) {
+      final timeToDecisionMs = _decisionTelemetryStopwatch.isRunning
+          ? _decisionTelemetryStopwatch.elapsedMilliseconds
+          : null;
+      _maybeEmitUserChoiceTelemetry(option, timeToDecisionMs: timeToDecisionMs);
+      _emitCanonicalDecisionMadeTelemetryV1(
+        option: option,
+        timeToDecisionMs: timeToDecisionMs,
+      );
+    }
     widget.onChooseSeat?.call(seatId);
     if (option != null) {
       _emitCompletedDecision(option, Act0CompletedDecisionKindV1.seat);
@@ -1630,9 +1645,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     };
     final errorType = receipt == null || option.isCorrect
         ? (option.isCorrect ? 'none' : null)
-        : option.quality == Act0FeedbackQualityV1.suboptimal
-        ? 'thin_${receipt.skillAtomId}'
-        : 'missed_${receipt.skillAtomId}';
+        : act0CanonicalErrorTypeForDecisionV1(
+            result: option.quality == Act0FeedbackQualityV1.suboptimal
+                ? 'suboptimal'
+                : 'incorrect',
+            skillAtomId: receipt.skillAtomId,
+            sourceTaskId: _stableTaskTelemetryId,
+          );
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
         attemptKey:
