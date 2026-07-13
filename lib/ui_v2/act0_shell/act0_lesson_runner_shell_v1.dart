@@ -2710,6 +2710,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     lateRouteSignal: lateRouteTableSignal,
                     identityPolicy: identityPolicy,
                     maxTableHeight: maxTableHeight,
+                    lockSharedActiveTableGeometry:
+                        usesSharedActiveRunnerAllocation,
                   ),
                 ),
               ),
@@ -4531,6 +4533,7 @@ class Act0TableSceneV1 extends StatelessWidget {
         lateRouteSignal: input.lateRouteSignal,
         identityPolicy: input.identityPolicy,
         maxTableHeight: input.maxTableHeight,
+        lockSharedActiveTableGeometry: input.lockSharedActiveTableGeometry,
       );
     }
     final resolved = config!;
@@ -4581,6 +4584,7 @@ class _Act0TableSceneRunnerInput {
     required this.lateRouteSignal,
     required this.identityPolicy,
     required this.maxTableHeight,
+    required this.lockSharedActiveTableGeometry,
   });
   final Act0TableStateV1 table;
   final List<String> highlightedCardIds;
@@ -4607,6 +4611,7 @@ class _Act0TableSceneRunnerInput {
   final Act0LateRouteTableSignalV1? lateRouteSignal;
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
+  final bool lockSharedActiveTableGeometry;
 }
 
 class _RunnerTableStageV1 extends StatelessWidget {
@@ -4636,6 +4641,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     this.lateRouteSignal,
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
+    this.lockSharedActiveTableGeometry = false,
   });
 
   final Act0TableStateV1 table;
@@ -4663,6 +4669,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0LateRouteTableSignalV1? lateRouteSignal;
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
+  final bool lockSharedActiveTableGeometry;
 
   @override
   Widget build(BuildContext context) {
@@ -4693,6 +4700,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
         lateRouteSignal: lateRouteSignal,
         identityPolicy: identityPolicy,
         maxTableHeight: maxTableHeight,
+        lockSharedActiveTableGeometry: lockSharedActiveTableGeometry,
       ),
     );
   }
@@ -8892,6 +8900,7 @@ class _Act0TableV1 extends StatelessWidget {
     this.lateRouteSignal,
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
+    this.lockSharedActiveTableGeometry = false,
   });
 
   final Act0TableStateV1 table;
@@ -8919,6 +8928,7 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0LateRouteTableSignalV1? lateRouteSignal;
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
+  final bool lockSharedActiveTableGeometry;
 
   @override
   Widget build(BuildContext context) {
@@ -8940,6 +8950,7 @@ class _Act0TableV1 extends StatelessWidget {
       };
     }
     final usesCompactAnswerListComposition =
+        !lockSharedActiveTableGeometry &&
         _usesCompactAnswerListCompositionV1(
           context,
           refined: refined,
@@ -9021,6 +9032,7 @@ class _Act0TableV1 extends StatelessWidget {
                 (table.focusCalloutLabel.isNotEmpty ||
                     interactiveCalloutLabel.isNotEmpty);
             return Container(
+              key: const Key('act0_shell_table_scene'),
               padding: const EdgeInsets.all(10),
               decoration: Act0ShellTokensV1.tableRimDecoration(),
               child: Stack(
@@ -9028,6 +9040,7 @@ class _Act0TableV1 extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: Container(
+                      key: const Key('act0_shell_table_felt'),
                       decoration: Act0ShellTokensV1.feltDecoration(),
                     ),
                   ),

@@ -202,7 +202,8 @@ void main() {
       Rect.fromLTRB(28, 46, 402, 695.3),
     ];
     for (final viewport in viewports) {
-      await tester.binding.setSurfaceSize(viewport.$2);
+      tester.view.physicalSize = viewport.$2;
+      tester.view.devicePixelRatio = 1;
       for (final sample in samples) {
         await tester.pumpWidget(
           MaterialApp(
@@ -219,16 +220,33 @@ void main() {
         );
         await tester.pumpAndSettle();
         final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+        final tableScene = tester.getRect(
+          find.byKey(const Key('act0_shell_table_scene')),
+        );
+        final felt = tester.getRect(
+          find.byKey(const Key('act0_shell_table_felt')),
+        );
         final lowerSurface = tester.getRect(
           find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
         );
         final expectedTable = expectedTables[viewports.indexOf(viewport)];
         expectRectClose(table, expectedTable);
+        expectRectClose(tableScene, table);
+        expectRectClose(
+          felt,
+          Rect.fromLTRB(
+            table.left + 11.5,
+            table.top + 11.5,
+            table.right - 11.5,
+            table.bottom - 11.5,
+          ),
+        );
         expect(lowerSurface.top, table.bottom);
         expect(lowerSurface.bottom, viewport.$2.height);
         expect(tester.takeException(), isNull);
       }
     }
-    addTearDown(() => tester.binding.setSurfaceSize(null));
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
   });
 }
