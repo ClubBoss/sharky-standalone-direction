@@ -13,7 +13,17 @@ repository truth stabilization
 (`docs/_reviews/repository_truth_stabilization_and_integration_v1.md`) are
 also closed and integrated into `main`. The accepted visual/runtime foundation
 is published at `dd6edced3c1a1e68cfbdbe618b3962010051e112`.
-Current active task: **Complete canonical Alpha Learning Loop v1**. The active
+**Alpha Learning Loop v1 — ADMITTED AND PUBLISHED** at
+`13dbb97304ad677c3c8ec166e37916d0db071328`. The admitted canonical capability
+is Learn entry → theory → deterministic decision evaluation → personalized
+wrong feedback → same-signal repair → recheck → recovered payoff → safe exit.
+It includes bounded lifecycle telemetry and compact/tall/large real-text
+evidence. P0/P1 = 0. Modern Table is untouched and remains locked; tablet is
+deferred and non-blocking. The missing legacy route-import test remains
+unrelated debt. Local evidence is under
+`output/review_bundles/alpha_learning_loop_v1_13dbb973/` and is not an SSOT.
+
+Current active task: **End-to-End Alpha capability expansion**. The active
 W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
 `Act0LessonRunnerShellV1` for theory/decision/feedback,
 `Act0ActionSequencePersonalizationPolicyV1` for deterministic rules,
@@ -31,13 +41,12 @@ Refresh trigger: every committed route, phase, immediate-task, or forbidden-scop
 
 ## Current Active Phase
 
-**AI Personalization Layer v1 — ACTIVE.** The required Alpha gate is canonical
-entry → theory → decision → personalized feedback → repair → recheck → payoff
-→ completion. Telemetry is limited to the learning loop: user choice,
-correctness, error type, time to decision, feedback, repair, recheck, payoff,
-and session completion. Premium Motion was previously planned but is
-superseded by this owner-approved priority and deferred until Alpha admission.
-The missing legacy route-import test remains unrelated debt.
+**AI Personalization Layer v1 — ACTIVE.** Alpha Learning Loop v1 is admitted;
+the next work remains bounded End-to-End Alpha capability expansion. Telemetry
+stays limited to the learning loop: user choice, correctness, error type, time
+to decision, feedback, repair, recheck, payoff, and session completion/exit.
+Premium Motion remains deferred. The missing legacy route-import test remains
+unrelated debt.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

@@ -129,6 +129,83 @@ Checkpoint run (every 3-4 PRs / before merge):
 
 If a command cannot run due to missing dependencies, note the issue in the PR description.
 
+## Agentic Capability Factory v1
+
+Use one complete product capability as the default unit of work, not a chain of
+unrelated micro-prompts. A bounded capability mission may include internal
+gates, small coherent commits, tests, QA, evidence, and final publication.
+Continue through bounded details without seeking approval after every minor
+step. Stop only for an SSOT conflict, a genuine product decision, expansion
+beyond the admitted stage, an unpreservable shared contract, or proof that the
+goal is not safely achievable.
+
+### Default Macro Workflow
+
+1. Goal and explicit admission criteria.
+2. SSOT and owner map.
+3. Bounded vertical implementation.
+4. Deterministic tests.
+5. Computer-use black-box E2E QA when supported.
+6. Independent fresh-context review when it is genuinely independent.
+7. Real-text evidence and telemetry proof.
+8. Bounded repair loop.
+9. Admission decision.
+10. Publish and freeze.
+
+The required feedback engine is implementation → deterministic tests →
+runtime/product evidence → telemetry trace → SSOT comparison → bounded fix.
+Repeat only inside the declared repair domain until the explicit gate passes.
+Self-review is useful but never replaces tests, real-text screenshots, exact
+runtime measurements, telemetry, route proof, or product-owner criteria.
+Every mission declares success criteria, scope, maximum repair domain, terminal
+verdicts, and stop conditions; no open-ended “improve until 10/10” loops.
+
+### Computer-Use and Evidence
+
+For user-facing capabilities, prefer a final black-box computer-use pass when
+the environment supports it. Operate the actual app as a learner and check
+entry, navigation, decisions, feedback, scrolling, CTA reachability, repair,
+recheck, payoff, exit/resume, and obvious edge cases. It complements—not
+replaces—deterministic tests. Prioritize compact, tall, and large phones;
+tablet is optional unless the Master Plan explicitly activates it.
+
+### Fresh Context, Threads, and Replay
+
+Each major Codex thread begins with a compact capsule: repository root, branch
+and HEAD, active goal/stage, accepted or frozen contracts, exact owners, known
+debt, allowed/forbidden scope, required validation/evidence, terminal verdict,
+and push policy. Use minimum sufficient context rather than replaying project
+history.
+
+Fresh threads may independently review code, telemetry, content/copy,
+computer-use QA, evidence packaging, or final admission. Parallel work is only
+for truly independent tasks. One thread owns one mutable layer at a time; do
+not parallelize overlapping shared owners, state machines, layout allocation,
+or adjacent unfrozen interfaces.
+
+Record/replay of the stable canonical Alpha journey (Home/Learn → theory →
+decision → wrong feedback → repair → recheck → payoff → completion/exit) is
+the next operational-tooling candidate. A future skill must replay the real
+route, verify visible outcomes, avoid direct state mutation, and be versioned
+to a route contract. Do not implement it unless separately authorized.
+Scheduled PR, debt, and security automation remain deferred until repository
+or team activity justifies them.
+
+### Model and Documentation Efficiency
+
+Use High reasoning only for SSOT, architecture, shared-owner redesign, major
+vertical integration, and high-risk admission; Medium for bounded
+implementation/owner tracing/focused repair; Low or Minimal for deterministic
+packaging, formatting, simple tests, and publication. Avoid broad reads,
+repeated evidence matrices before final gates, unnecessary tablet work,
+speculative refactors, dependencies without direct EV, duplicate documents,
+tests-for-tests, and reports that do not change a decision.
+
+Update documentation only when it is SSOT, records an admission/decision,
+prevents a known regression, enables the next agent, improves repeatable QA,
+or reduces context waste. Local evidence stays under `output/` and is not
+committed unless an existing repository rule explicitly requires it.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
