@@ -204,7 +204,10 @@ void main() {
 
     File('${out.path}/raster_geometry_metrics.json').writeAsStringSync(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-            'viewport': <String, int>{'width': 375, 'height': 812},
+            'viewport': <String, int>{
+              'width': _viewport.width.toInt(),
+              'height': _viewport.height.toInt(),
+            },
             'states': rows,
           }) +
           '\n',
