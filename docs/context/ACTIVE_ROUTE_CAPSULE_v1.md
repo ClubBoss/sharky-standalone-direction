@@ -25,6 +25,8 @@ and Action locked. Active route truth is split into
 production-equivalent completion of the first four W1 lessons. Modern Table is
 untouched and remains locked; tablet is deferred and non-blocking. The missing
 legacy route-import test remains unrelated debt.
+Complete real-GUI Action qualification remains pending; deterministic Action
+capability evidence must not be presented as that learner-route result.
 
 Current active task: **Canonical Journey Truth & Progression Integrity v1**.
 The active
