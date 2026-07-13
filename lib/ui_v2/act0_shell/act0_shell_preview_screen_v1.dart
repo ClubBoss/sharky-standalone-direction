@@ -5095,7 +5095,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_activeRepairTaskId ==
                                       playSelectedTask.taskId) {
                                     final repaired =
-                                        playRunner!.selectedOption?.isCorrect ??
+                                        playRunner.selectedOption?.isCorrect ??
                                         false;
                                     final repairSourceTaskId =
                                         _activeRepairSourceTaskId ??
@@ -5196,7 +5196,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
                                     final singleCleanRep =
-                                        playRunner!.selectedOption?.isCorrect ??
+                                        playRunner.selectedOption?.isCorrect ??
                                         false;
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
@@ -5212,7 +5212,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_activeLessonWrapUpTaskId ==
                                       playSelectedTask.taskId) {
                                     final wrappedCorrect =
-                                        playRunner!.selectedOption?.isCorrect ??
+                                        playRunner.selectedOption?.isCorrect ??
                                         false;
                                     if (wrappedCorrect) {
                                       _completeCurrentTask(playSelectedTask);
@@ -5245,7 +5245,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                   if (_shouldRetryInsideLesson(
                                     playSelectedTask,
-                                    playRunner!,
+                                    playRunner,
                                   )) {
                                     _placementHandoffActive = false;
                                     _startInsideLessonRetry(
