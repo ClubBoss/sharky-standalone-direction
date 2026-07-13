@@ -10,7 +10,7 @@ assets, a rig, motion, or a 3D mesh.
 
 ## 2. Authority hierarchy
 
-`sharky_canonical_3q_front_authority_v1.png` is the sole visual authority.
+`sharky_canonical_3q_front_authority_v1_1.png` is the sole visual authority.
 SIDE, BACK, and 3/4 BACK are subordinate reconstruction references only. If
 they conflict, the canonical 3/4 FRONT wins.
 
@@ -34,11 +34,11 @@ Eyes are warm, observant blue/cyan; warm highlights are lighting reflections,
 not heterochromia. Keep a modest asymmetric closed-mouth smile: no open-mouth
 default, smugness, or random face/eye drift between states.
 
-## 6. Crest and dorsal rules
+## 6. Crown and dorsal rules
 
-One small soft asymmetric front crest (“messy tuft”), one main swept-back
-dorsal fin, and one teal dorsal tip. Never add a second crest, horn-like crest,
-or second dorsal fin.
+Keep a smooth uninterrupted no-crest crown, one main swept-back dorsal fin,
+and one teal dorsal tip. Never introduce a crest, tuft, bump, horn, second
+dorsal, or hair-like head feature.
 
 ## 7. Gill-mark placement and visibility
 
@@ -90,23 +90,28 @@ All states must remain one identical character.
 ## 15. Mobile-size readability rules
 
 Validate recognizability at 48px, 72px, 120px, and hero size; protect the
-crest, eye family, cream plane, and three-gill-mark identity without clipping.
+smooth no-crest crown, eye family, cream plane, and three-gill-mark identity
+without clipping.
 
 ## 16. Forbidden drift
 
 No generic preschool blue, dolphin/seal anatomy, aggressive realism, humanoid
-parts, lower fins, mirrored gills, oversized teal, extra crest/dorsal, random
-body/tail drift, or promotion of reconstruction references to authority.
+parts, lower fins, mirrored gills, oversized teal, crest, tuft, bump, horn,
+second dorsal, hair-like head feature, random body/tail drift, or promotion of
+reconstruction references to authority.
 
 ## 17. Reconstruction-reference status
 
 SIDE, BACK, and 3/4 BACK are accepted as owner-approved AI-assisted
 reconstruction references, not runtime assets or exact multi-angle geometry.
+Any crest visible in them is a deprecated reconstruction inconsistency and
+never overrides the no-crest canonical 3/4 FRONT.
 
 ## 18. Future professional 3D reconstruction contract
 
 Build a professional sculpt, topology, rig, reproducible material system, and
-animation-ready source model from this Bible with the 3/4 FRONT as authority.
+animation-ready source model from this Bible with the smooth no-crest 3/4 FRONT
+as authority.
 
 ## 19. Runtime export contract
 

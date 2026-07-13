@@ -22,6 +22,27 @@ void main() {
           .toList(growable: false);
       expect(authority, hasLength(1));
       expect(authority.single['authorityRank'], 1);
+      expect(
+        authority.single['logicalId'],
+        'sharky_canonical_3q_front_authority_v1_1',
+      );
+      expect(
+        authority.single['filename'],
+        'sharky_canonical_3q_front_authority_v1_1.png',
+      );
+      expect(authority.single['version'], 'v1.1');
+      expect(authority.single['pixelDimensions'], <String, int>{
+        'width': 1254,
+        'height': 1254,
+      });
+      expect(authority.single['colorMode'], 'RGBA');
+      expect(authority.single['hasAlpha'], isTrue);
+      expect(authority.single['byteSize'], 2582381);
+      expect(
+        authority.single['sha256'],
+        'b8cd60fa5165f95111425ec451b943ca62a821b714e846ebf15f33c69e452db1',
+      );
+      expect(authority.single['runtimeEligibility'], isFalse);
 
       for (final entry in files) {
         final path = entry['relativePath'] as String;
@@ -39,7 +60,11 @@ void main() {
       expect(bible.existsSync(), isTrue);
       expect(
         bible.readAsStringSync(),
-        contains('sharky_canonical_3q_front_authority_v1.png'),
+        contains('sharky_canonical_3q_front_authority_v1_1.png'),
+      );
+      expect(
+        bible.readAsStringSync(),
+        contains('smooth uninterrupted no-crest crown'),
       );
     },
   );
