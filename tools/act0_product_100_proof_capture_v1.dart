@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 
-const _outputDirPathV1 = 'output/screen_review/current/act0_product_100_proof';
+const _outputDirPathV1 =
+    'output/screen_review/current/act0_layout_masked_proof';
 
 const _layoutAllowedClaimsV1 = <String>[
   'layout',
@@ -39,8 +40,7 @@ const _surfacesV1 = <String>[
   'learn',
   'learn_detail',
   'play',
-  'correct_feedback',
-  'wrong_feedback',
+  'feedback',
   'practice_repair',
   'completion_payoff',
   'summary',
@@ -48,7 +48,7 @@ const _surfacesV1 = <String>[
   'w12_terminal',
 ];
 
-void main(List<String> args) async {
+Future<void> main(List<String> args) async {
   if (args.contains('--help') || args.contains('-h')) {
     _printUsageV1();
     exit(0);
@@ -68,15 +68,14 @@ void main(List<String> args) async {
   );
   testFile.writeAsStringSync(_flutterTestSource(outputDir.path));
 
-  final result = await Process.start(
-    'flutter',
-    <String>['test', testFile.path],
-    workingDirectory: Directory.current.path,
-    runInShell: true,
-  );
-  stdout.addStream(result.stdout);
-  stderr.addStream(result.stderr);
+  final result = await Process.start('flutter', <String>[
+    'test',
+    testFile.path,
+  ], workingDirectory: Directory.current.path);
+  final stdoutDone = stdout.addStream(result.stdout);
+  final stderrDone = stderr.addStream(result.stderr);
   final exitCode = await result.exitCode;
+  await Future.wait(<Future<void>>[stdoutDone, stderrDone]);
 
   try {
     tempDir.deleteSync(recursive: true);
@@ -104,8 +103,11 @@ void main(List<String> args) async {
       }
       entries.add(<String, Object?>{
         'lane_type': 'layout_contract',
+        'evidence_type': 'layout_masked',
         'render_kind': 'nonliteral_preview_contract',
         'is_real_text': false,
+        'supports_product_copy_review': false,
+        'supports_alpha_admission': false,
         'viewport': viewport,
         'surface': surface,
         'surface_identity': surface,
@@ -132,7 +134,7 @@ void main(List<String> args) async {
     '${outputDir.path}${Platform.pathSeparator}manifest.json',
   );
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'layout_contract', 'render_kind': 'nonliteral_preview_contract', 'is_real_text': false, 'allowed_claims': _layoutAllowedClaimsV1, 'disallowed_claims': _maskedDisallowedClaimsV1, 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries, 'terminal_play_byte_comparison': terminalByteComparison, 'play_home_byte_comparison': playHomeByteComparison, 'duplicate_hash_policy': duplicateHashPolicy, 'note': 'Masked layout-contract evidence only. Do not cite for copy, content, tone, product readiness, premium readiness, payoff quality, repair personalization, or learning-depth claims.'})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'artifact_dir': outputDir.path.replaceAll('${Directory.current.path}${Platform.pathSeparator}', ''), 'lane_type': 'layout_contract', 'evidence_type': 'layout_masked', 'render_kind': 'nonliteral_preview_contract', 'is_real_text': false, 'supports_product_copy_review': false, 'supports_alpha_admission': false, 'allowed_claims': _layoutAllowedClaimsV1, 'disallowed_claims': _maskedDisallowedClaimsV1, 'viewports': _viewportsV1, 'surfaces': _surfacesV1, 'entries': entries, 'terminal_play_byte_comparison': terminalByteComparison, 'play_home_byte_comparison': playHomeByteComparison, 'duplicate_hash_policy': duplicateHashPolicy, 'note': 'Masked layout-contract evidence only. It supports geometry, clipping, overlap, safe-area, responsive recomposition, physical CTA visibility, and state/layout distinctness. It cannot authorize Alpha admission or product-copy review.'})}\n',
   );
 }
 
@@ -162,10 +164,7 @@ String _debugSurfaceForSurfaceV1(String surface) {
     'learn' => 'Act0ControlledDemoCaptureSurfaceV1.firstWeekLearn',
     'learn_detail' => 'Act0ShellPreviewScreenV1.learn_detail_interaction',
     'play' => 'Act0ControlledDemoCaptureSurfaceV1.runnerDrill',
-    'correct_feedback' =>
-      'Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback',
-    'wrong_feedback' =>
-      'Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback',
+    'feedback' => 'Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback',
     'practice_repair' =>
       'Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget',
     'completion_payoff' => 'Act0ControlledDemoCaptureSurfaceV1.worldCompletion',
@@ -637,18 +636,7 @@ void main() {
         tester,
         viewportName,
         size,
-        'correct_feedback',
-        () async {},
-        false,
-        Act0ShellTabV1.play,
-        Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
-      );
-
-      await captureSurface(
-        tester,
-        viewportName,
-        size,
-        'wrong_feedback',
+        'feedback',
         () async {},
         false,
         Act0ShellTabV1.play,

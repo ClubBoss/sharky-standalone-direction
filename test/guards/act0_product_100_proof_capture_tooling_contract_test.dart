@@ -10,10 +10,7 @@ void main() {
 
     expect(
       source,
-      contains(
-        "const _outputDirPathV1 = "
-        "'output/screen_review/current/act0_product_100_proof';",
-      ),
+      contains("'output/screen_review/current/act0_layout_masked_proof';"),
     );
     for (final viewport in <String>[
       'compact_phone',
@@ -39,29 +36,31 @@ void main() {
     expect(source, isNot(contains('itemWidth = rect.width / 5')));
   });
 
-  test('Act0 product proof capture records the certification surface set', () {
-    final source = File(
-      'tools/act0_product_100_proof_capture_v1.dart',
-    ).readAsStringSync();
+  test(
+    'Act0 layout-masked capture records the canonical journey surface set',
+    () {
+      final source = File(
+        'tools/act0_product_100_proof_capture_v1.dart',
+      ).readAsStringSync();
 
-    for (final surface in <String>[
-      'placement',
-      'welcome',
-      'home',
-      'learn',
-      'learn_detail',
-      'play',
-      'correct_feedback',
-      'wrong_feedback',
-      'practice_repair',
-      'completion_payoff',
-      'summary',
-      'review_profile',
-      'w12_terminal',
-    ]) {
-      expect(source, contains("'$surface'"), reason: surface);
-    }
-  });
+      for (final surface in <String>[
+        'placement',
+        'welcome',
+        'home',
+        'learn',
+        'learn_detail',
+        'play',
+        'feedback',
+        'practice_repair',
+        'completion_payoff',
+        'summary',
+        'review_profile',
+        'w12_terminal',
+      ]) {
+        expect(source, contains("'$surface'"), reason: surface);
+      }
+    },
+  );
 
   test('Act0 product proof manifest marks masked lane as layout only', () {
     final source = File(
@@ -69,7 +68,10 @@ void main() {
     ).readAsStringSync();
 
     expect(source, contains("'lane_type': 'layout_contract'"));
+    expect(source, contains("'evidence_type': 'layout_masked'"));
     expect(source, contains("'is_real_text': false"));
+    expect(source, contains("'supports_product_copy_review': false"));
+    expect(source, contains("'supports_alpha_admission': false"));
     expect(source, contains("'allowed_claims': _layoutAllowedClaimsV1"));
     expect(source, contains("'disallowed_claims': _maskedDisallowedClaimsV1"));
     expect(source, contains("'surface_identity': surface"));

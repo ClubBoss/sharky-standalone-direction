@@ -3,31 +3,44 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('real-text capture supports compact and tablet evidence lanes', () {
-    final shell = File('tools/screen_review_fast_v1.sh').readAsStringSync();
-    final capture = File(
-      'tools/act0_real_text_surface_capture_v1.dart',
-    ).readAsStringSync();
-    final packager = File(
-      'tools/package_screen_review_v1.py',
-    ).readAsStringSync();
+  test(
+    'real-text capture supports the four canonical viewport evidence lanes',
+    () {
+      final shell = File('tools/screen_review_fast_v1.sh').readAsStringSync();
+      final capture = File(
+        'tools/act0_real_text_surface_capture_v1.dart',
+      ).readAsStringSync();
+      final packager = File(
+        'tools/package_screen_review_v1.py',
+      ).readAsStringSync();
+      final textRepair = File(
+        'tools/screen_review_fast_text_repair_v1.py',
+      ).readAsStringSync();
 
-    expect(
-      shell,
-      contains(
-        '<core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tablet>',
-      ),
-    );
-    expect(capture, contains("'tablet': Size(834, 1194)"));
-    expect(capture, contains("final packetName = device == 'compact'"));
-    expect(
-      capture,
-      contains("_CaptureSurfaceV1('learn_detail', 'firstWeekLearn')"),
-    );
-    expect(capture, contains("fileName.contains('learn_detail')"));
-    expect(packager, contains('device = _device_from_manifest'));
-    expect(packager, contains('("learn_detail", "Learn detail")'));
-  });
+      expect(
+        shell,
+        contains(
+          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
+        ),
+      );
+      expect(capture, contains("'tall_phone': Size(390, 844)"));
+      expect(capture, contains("'large_phone': Size(430, 932)"));
+      expect(capture, contains("'tablet': Size(834, 1194)"));
+      expect(capture, contains("'alpha_journey': <_CaptureSurfaceV1>["));
+      expect(capture, contains("final packetName = device == 'compact'"));
+      expect(
+        capture,
+        contains("_CaptureSurfaceV1('learn_detail', 'firstWeekLearn')"),
+      );
+      expect(capture, contains("fileName.contains('learn_detail')"));
+      expect(packager, contains('device = _device_from_manifest'));
+      expect(packager, contains('("learn_detail", "Learn detail")'));
+      expect(
+        textRepair,
+        contains('{"compact", "tall_phone", "large_phone", "tablet"}'),
+      );
+    },
+  );
 
   test(
     'real-text manifests expose current-head and allowed-claims metadata',
@@ -41,7 +54,10 @@ void main() {
 
       for (final required in <String>[
         "'lane_type': 'real_text_product_proof'",
+        "'evidence_type': 'product_real_text'",
         "'is_real_text': true",
+        "'supports_product_copy_review': true",
+        "'supports_alpha_admission': false",
         "'git_commit': currentGitCommit",
         "'git_status': currentGitStatus",
         "'matches_current_head': true",

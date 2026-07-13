@@ -14,6 +14,20 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 SURFACE_GROUPS = {
+    "alpha_journey_fast": (
+        ("placement", "Entry / placement"),
+        ("welcome", "Welcome"),
+        ("home", "Personalized next action"),
+        ("learn", "Learn"),
+        ("learn_detail", "Theory / teaching detail"),
+        ("play", "Live unanswered decision"),
+        ("feedback", "Feedback"),
+        ("practice_repair", "Targeted repair / recheck"),
+        ("completion_payoff", "Completion payoff"),
+        ("summary", "Session summary"),
+        ("review_profile", "Return / profile"),
+        ("w12_terminal", "W12 terminal"),
+    ),
     "core": (
         ("home", "Home"),
         ("learn", "Learn"),
@@ -206,8 +220,10 @@ def _load_entries(
 
 
 def _surface_group_key(group: str) -> str:
-    if group.endswith("_tablet_fast"):
-        return group.replace("_tablet_fast", "_fast")
+    for device in ("tablet", "tall_phone", "large_phone"):
+        suffix = f"_{device}_fast"
+        if group.endswith(suffix):
+            return group.replace(suffix, "_fast")
     return group
 
 
@@ -346,9 +362,11 @@ def _audit_policy_metadata(group: str) -> dict[str, object]:
 
 
 def _source_command(group: str) -> str:
-    if group.endswith("_tablet_fast"):
-        base = group.replace("_tablet_fast", "")
-        return f"./tools/screen_review_fast_v1.sh {base} tablet"
+    for device in ("tablet", "tall_phone", "large_phone"):
+        suffix = f"_{device}_fast"
+        if group.endswith(suffix):
+            base = group.replace(suffix, "")
+            return f"./tools/screen_review_fast_v1.sh {base} {device}"
     if group == "core_fast":
         return "./tools/screen_review_fast_v1.sh core compact"
     if group == "runner_fast":
@@ -369,8 +387,7 @@ def _source_command(group: str) -> str:
 
 
 def _scenario_family(group: str) -> str:
-    if group.endswith("_tablet_fast"):
-        group = group.replace("_tablet_fast", "_fast")
+    group = _surface_group_key(group)
     if group == "route_w7_w12_fast":
         return "late_route_w7_w12_visual_coverage"
     if group == "active_route_w7_w12_fast":

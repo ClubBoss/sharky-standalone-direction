@@ -1,4 +1,4 @@
-# Alpha Journey Certification Enablement and Surface Proof v1
+# Alpha Journey Certification Enablement and Layout Evidence v1
 
 Date: 2026-07-08
 Branch: `codex/alpha-journey-certification-enablement-v1`
@@ -7,7 +7,7 @@ Integrated audit main: `dcde6a256e7dc498e1b2f8d412308aab3b140a4d`
 
 ## 1. Objective
 
-Repair the accepted alpha journey evidence-tooling blocker, reconcile stale validation authority, rerun the multi-viewport Act0 surface proof, and decide whether Alpha Blocks D and E can close under machine evidence.
+Repair the accepted alpha journey layout-evidence tooling blocker, reconcile stale validation authority, and rerun the multi-viewport Act0 layout matrix. This artifact records machine geometry evidence only; it does not provide real-text product proof or Alpha admission evidence.
 
 Terminal verdict: `alpha_blocks_d_e_machine_closure_accepted_with_nonblocking_residue`
 
@@ -108,7 +108,7 @@ Manifest result: 4 viewports, 13 surfaces, 52 non-empty PNG entries.
 
 ## 8. Compact findings
 
-Compact phone evidence completed for all 13 surfaces. The original Learn-detail blocker is closed on compact: the repaired harness opens the detail panel deterministically through the visible lesson-card finder. No compact P0/P1/P2/P3 product, visual activation, safe-area, or CTA-reachability blocker was observed.
+Compact phone evidence completed for all 13 surfaces. The original Learn-detail blocker is closed on compact: the repaired harness opens the detail panel deterministically through the visible lesson-card finder. No compact geometry, safe-area, or physical-CTA blocker was observed. Copy, readability, and product-quality conclusions require real-text evidence.
 
 ## 9. Tall-phone findings
 
@@ -128,14 +128,14 @@ Tablet evidence completed for all 13 surfaces. Wider layouts render as full-root
 |---|---|
 | Safe area | Passed in machine visual review across all four viewports. |
 | Viewport fill | Passed; no blank or unmounted root captures. |
-| Clipping/overflow | No P0-P2 clipping observed in the product-proof matrix. |
+| Clipping/overflow | No P0-P2 clipping observed in the layout-masked matrix. |
 | CTA reachability | Passed; primary CTAs and bottom navigation are visible/reachable. |
 | Feedback visibility | Correct and wrong feedback surfaces rendered across all viewports. |
 | Continue/action reachability | Passed in captured feedback, payoff, and terminal surfaces. |
-| One clear next action | Passed at machine level; Human QA still owns felt clarity. |
-| Text readability | No machine-blocking unreadable surface; density remains nonblocking residue. |
+| One clear next action | Not evaluated by masked evidence; requires real-text and Human QA review. |
+| Text readability | Not evaluated by masked evidence; requires real-text review. |
 | Duplicate progress/status | No machine-blocking duplication observed. |
-| Table/context readability | No active-route table blocker observed in this matrix or focused W7-W12 tests. |
+| Table/context readability | Layout presence only in this matrix; readable text requires real-text review. |
 | Navigation continuity | Passed through generated harness and focused Home/Learn/Practice tests. |
 
 ## 13. Journey continuity proof
@@ -144,7 +144,7 @@ The repaired matrix covers first-open placement, welcome, Home, Learn, Learn det
 
 ## 14. Repair/recheck visual proof
 
-The product-proof matrix includes `practice_repair`, `correct_feedback`, and `wrong_feedback` for all four viewports. The repair validation cone passed with 164 tests, including lifecycle, queue resolution, review resolution, repair outcome projection/consumer, fix proof, and W7-W12 same-signal repair mapping.
+The layout-masked matrix includes repair and feedback layout states for all four viewports. It proves state/layout presence only; repair wording and learner comprehension require real-text evidence. The repair validation cone passed with 164 tests, including lifecycle, queue resolution, review resolution, repair outcome projection/consumer, fix proof, and W7-W12 same-signal repair mapping.
 
 ## 15. Completion/Review/Profile proof
 
@@ -231,7 +231,7 @@ No product repair wave is recommended from this mission.
 
 No visual repair wave is recommended from this mission.
 
-The exact next stage is Human QA / alpha candidate review using the preserved local evidence and the current focused green validation set.
+The exact next stage is real-text evidence closure, then Human QA / alpha candidate review using complete local evidence and focused green validation.
 
 ## 23. Exact next stage
 
@@ -243,7 +243,7 @@ Inputs:
 
 - Current `main` after this branch is integrated.
 - Closure artifact in this file.
-- Local contact sheet and PNG evidence under `output/screen_review/current/act0_product_100_proof`.
+- Local layout-masked contact sheet and PNG evidence under the current `act0_layout_masked_proof` lane; this lane cannot authorize Alpha admission.
 - Existing first-week, day-2, and active-route local evidence under `output/screen_review/current/`.
 
 ## 24. Explicit non-claims

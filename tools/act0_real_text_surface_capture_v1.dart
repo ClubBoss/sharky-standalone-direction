@@ -69,6 +69,20 @@ class _ActiveRouteCaptureSurfaceV1 {
 }
 
 const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
+  'alpha_journey': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('placement', 'placement'),
+    _CaptureSurfaceV1('welcome', 'welcome'),
+    _CaptureSurfaceV1('home', 'firstWeekHome'),
+    _CaptureSurfaceV1('learn', 'firstWeekLearn'),
+    _CaptureSurfaceV1('learn_detail', 'firstWeekLearn'),
+    _CaptureSurfaceV1('play', 'runnerDrill'),
+    _CaptureSurfaceV1('feedback', 'runnerFirstWrongFeedback'),
+    _CaptureSurfaceV1('practice_repair', 'day2PracticeRepairTarget'),
+    _CaptureSurfaceV1('completion_payoff', 'worldCompletion'),
+    _CaptureSurfaceV1('summary', 'sessionSummary'),
+    _CaptureSurfaceV1('review_profile', 'profileEvidence'),
+    _CaptureSurfaceV1('w12_terminal', 'w12Terminal'),
+  ],
   'core': <_CaptureSurfaceV1>[
     _CaptureSurfaceV1('home', 'firstWeekHome'),
     _CaptureSurfaceV1('learn', 'firstWeekLearn'),
@@ -417,8 +431,11 @@ void main(List<String> args) async {
     }
     entries.add(<String, Object?>{
       'lane_type': 'real_text_product_proof',
+      'evidence_type': 'product_real_text',
       'render_kind': 'flutter_widget_test_real_text',
       'is_real_text': true,
+      'supports_product_copy_review': true,
+      'supports_alpha_admission': false,
       'device': device,
       'viewport': device,
       'surface': surface,
@@ -457,7 +474,7 @@ void main(List<String> args) async {
       ? 'final_pre_human_visual_ux_audit'
       : 'final_visual_audit_candidate';
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': packetName, 'device': device, 'lane_type': 'real_text_product_proof', 'render_kind': 'flutter_widget_test_real_text', 'is_real_text': true, 'git_commit': currentGitCommit, 'git_status': currentGitStatus, 'matches_current_head': true, 'allowed_claims': _realTextAllowedClaimsV1, 'unsupported_claims': _unsupportedViewportClaimsV1(device), 'duplicate_hash_policy': duplicateHashPolicy, 'scenario_family': group == 'route_w7_w12'
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': packetName, 'device': device, 'lane_type': 'real_text_product_proof', 'evidence_type': 'product_real_text', 'render_kind': 'flutter_widget_test_real_text', 'is_real_text': true, 'supports_product_copy_review': true, 'supports_alpha_admission': false, 'git_commit': currentGitCommit, 'git_status': currentGitStatus, 'matches_current_head': true, 'allowed_claims': _realTextAllowedClaimsV1, 'unsupported_claims': _unsupportedViewportClaimsV1(device), 'duplicate_hash_policy': duplicateHashPolicy, 'scenario_family': group == 'route_w7_w12'
         ? 'late_route_w7_w12_visual_coverage'
         : group == 'active_route_w7_w12'
         ? 'active_runtime_late_route_w7_w12_visual_coverage'
@@ -497,7 +514,12 @@ void main(List<String> args) async {
   stdout.writeln(outputDir.path);
 }
 
-const _supportedDevicesV1 = <String>{'compact', 'tablet'};
+const _supportedDevicesV1 = <String>{
+  'compact',
+  'tall_phone',
+  'large_phone',
+  'tablet',
+};
 
 String _gitOutputV1(List<String> args) {
   final result = Process.runSync(
@@ -535,10 +557,8 @@ String _evidenceGitStatusV1() {
 List<String> _unsupportedViewportClaimsV1(String device) {
   return <String>[
     ..._realTextUnsupportedClaimsBaseV1,
-    if (device == 'compact') 'tablet_real_text_claims',
-    if (device == 'tablet') 'compact_phone_real_text_claims',
-    'tall_phone_real_text_claims',
-    'large_phone_real_text_claims',
+    for (final viewport in _supportedDevicesV1)
+      if (viewport != device) '${viewport}_real_text_claims',
   ];
 }
 
@@ -678,6 +698,8 @@ void main() {
   final fullScrollEntries = <Map<String, Object?>>[];
   const viewportSizes = <String, Size>{
     'compact': Size(375, 812),
+    'tall_phone': Size(390, 844),
+    'large_phone': Size(430, 932),
     'tablet': Size(834, 1194),
   };
   final viewportSize = viewportSizes['$device']!;
@@ -1909,6 +1931,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tablet>',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
   );
 }
