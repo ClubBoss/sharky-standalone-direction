@@ -18,7 +18,10 @@ const _device = String.fromEnvironment(
   'ACTION_EVIDENCE_DEVICE',
   defaultValue: 'compact',
 );
-const _root = 'output/evidence/action_sequence_convergence_v1_$_device';
+const _root = String.fromEnvironment(
+  'ACTION_EVIDENCE_OUTPUT',
+  defaultValue: 'output/evidence/action_sequence_convergence_v1_$_device',
+);
 final _viewport = Size(
   int.fromEnvironment('ACTION_EVIDENCE_WIDTH', defaultValue: 375).toDouble(),
   int.fromEnvironment('ACTION_EVIDENCE_HEIGHT', defaultValue: 812).toDouble(),

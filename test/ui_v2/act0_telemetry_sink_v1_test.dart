@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +14,32 @@ class _ThrowingTelemetrySinkV1 implements Act0TelemetrySinkV1 {
   void record(Act0TelemetryEventV1 event) {
     throw StateError('telemetry disabled');
   }
+}
+
+const _alphaQaTracePathV1 = String.fromEnvironment('ALPHA_QA_TRACE_PATH');
+
+void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
+  if (_alphaQaTracePathV1.isEmpty) return;
+  final file = File(_alphaQaTracePathV1);
+  file.parent.createSync(recursive: true);
+  file.writeAsStringSync(
+    const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+          'schema': 'alpha_journey_qa_trace_v1',
+          'execution_mode': 'deterministic_widget_replay',
+          'entry_mode': 'canonical_learn_visible_controls',
+          'cta_reachability': 'ensureVisible_before_each_visible_control_tap',
+          'debug_harness_used': false,
+          'events': events
+              .map(
+                (event) => <String, Object?>{
+                  'name': event.name,
+                  'fields': event.fields,
+                },
+              )
+              .toList(growable: false),
+        }) +
+        '\n',
+  );
 }
 
 void main() {
@@ -1380,6 +1407,7 @@ void main() {
         hasLength(1),
       );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
+      _writeAlphaQaTraceV1(sink.events);
     },
   );
 

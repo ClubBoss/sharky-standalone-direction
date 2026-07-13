@@ -1,0 +1,81 @@
+{
+  "schema": "alpha_journey_contract_v1",
+  "journey_id": "alpha_action_repair_recovery_v1",
+  "contract_version": 1,
+  "base_route": "Act0ShellPreviewScreenV1 -> Learn -> Fold, check, call, raise",
+  "owners": {
+    "route": "Act0ShellPreviewScreenV1",
+    "runner": "Act0LessonRunnerShellV1",
+    "personalization": "Act0ActionSequencePersonalizationPolicyV1",
+    "payoff": "Act0ActionSessionPayoffPolicyV1",
+    "telemetry": "Act0TelemetrySinkV1"
+  },
+  "canonical_ids": {
+    "world_id": "world_1",
+    "lesson_id": "fold_check_call_raise",
+    "theory_task_id": "actions_theory",
+    "decision_task_id": "actions_check_drill",
+    "sequence_id": "w1_action_words_check_v1",
+    "concept_id": "action_words_no_bet_read",
+    "table_context_key": "w1_action_words_no_bet_read_v1",
+    "geometry_policy_id": "w1_action_sequence_compact_v1"
+  },
+  "expected_path": {
+    "wrong_choice_id": "fold",
+    "correct_choice_id": "check",
+    "error_type": "missed_action_read",
+    "repair_task_id": "actions_check_drill",
+    "recheck_task_id": "actions_check_drill",
+    "payoff": "recoveredSuccess",
+    "exit_result": "Learn route visible with one session_exited event"
+  },
+  "required_telemetry_order": [
+    "lesson_started",
+    "theory_completed",
+    "user_choice",
+    "feedback_viewed",
+    "repair_started",
+    "repair_completed",
+    "recheck_started",
+    "recheck_result",
+    "action_sequence_completed",
+    "session_exited"
+  ],
+  "single_emission_events": [
+    "theory_completed",
+    "repair_started",
+    "repair_completed",
+    "session_exited"
+  ],
+  "viewport_matrix": {
+    "compact": [375, 812],
+    "tall_phone": [390, 844],
+    "large_phone": [430, 932]
+  },
+  "visible_checkpoints": [
+    "Learn entry",
+    "Action words theory",
+    "Check when no bet decision",
+    "personalized wrong feedback",
+    "off-screen CTA reached through ensureVisible",
+    "same-task repair",
+    "same-task recheck",
+    "recovered payoff",
+    "safe exit to Learn"
+  ],
+  "frozen_geometry": {
+    "owner": "test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart",
+    "policy_id": "w1_action_sequence_compact_v1",
+    "modern_table_boundary": "No changed path under lib/ui_v2/table or a legacy Modern Table owner in the tested commit."
+  },
+  "allowed_variation": [
+    "time_to_decision value or bucket",
+    "visual pixels outside geometry assertions",
+    "non-required telemetry events"
+  ],
+  "invalidating_changes": [
+    "canonical route, task, concept, error type, repair mapping, recheck mapping, payoff, required telemetry order, viewport matrix, or frozen geometry policy changes",
+    "any direct-state harness used as black-box trace evidence",
+    "missing or duplicated single-emission telemetry"
+  ]
+}
