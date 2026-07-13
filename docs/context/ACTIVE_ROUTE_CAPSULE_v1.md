@@ -14,16 +14,20 @@ repository truth stabilization
 also closed and integrated into `main`. The accepted visual/runtime foundation
 is published at `dd6edced3c1a1e68cfbdbe618b3962010051e112`.
 **Alpha Learning Loop v1 — ADMITTED AND PUBLISHED** at
-`13dbb97304ad677c3c8ec166e37916d0db071328`. The admitted canonical capability
-is Learn entry → theory → deterministic decision evaluation → personalized
-wrong feedback → same-signal repair → recheck → recovered payoff → safe exit.
-It includes bounded lifecycle telemetry and compact/tall/large real-text
-evidence. P0/P1 = 0. Modern Table is untouched and remains locked; tablet is
-deferred and non-blocking. The missing legacy route-import test remains
-unrelated debt. Local evidence is under
-`output/review_bundles/alpha_learning_loop_v1_13dbb973/` and is not an SSOT.
+`13dbb97304ad677c3c8ec166e37916d0db071328`. The Action capability remains
+valid: theory → deterministic decision evaluation → personalized wrong
+feedback → same-signal repair → recheck → recovered payoff → safe exit. Real
+Simulator Computer Use later proved the prior direct fresh Learn-to-Action
+claim false: fresh learners reach Learn at `0/9` with First Table Guide current
+and Action locked. Active route truth is split into
+`alpha_fresh_install_first_lesson_v1` and
+`alpha_action_repair_recovery_unlocked_v2`; the latter requires validated,
+production-equivalent completion of the first four W1 lessons. Modern Table is
+untouched and remains locked; tablet is deferred and non-blocking. The missing
+legacy route-import test remains unrelated debt.
 
-Current active task: **End-to-End Alpha capability expansion**. The active
+Current active task: **Canonical Journey Truth & Progression Integrity v1**.
+The active
 W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
 `Act0LessonRunnerShellV1` for theory/decision/feedback,
 `Act0ActionSequencePersonalizationPolicyV1` for deterministic rules,
