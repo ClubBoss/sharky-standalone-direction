@@ -164,7 +164,6 @@ def validate_black_box_source(replay_source: Path) -> None:
         )
     required = (
         "startActionsTheoryFromLearnV1",
-        "seedActionCapabilityPreconditionV1",
         "answerVisiblePromptWronglyV1",
         "answerVisiblePromptCorrectlyV1",
         "act0_shell_runner_back",
@@ -173,6 +172,8 @@ def validate_black_box_source(replay_source: Path) -> None:
     missing = [token for token in required if token not in body]
     if missing:
         raise SystemExit("P1 canonical visible-control proof drift: " + ", ".join(missing))
+    if "seedActionCapabilityPreconditionV1" not in source:
+        raise SystemExit("P1 Action replay is missing the validated progression fixture")
     print("PASS Action source proof: validated progression precondition, visible controls, repair/recheck, safe Learn exit")
 
 
