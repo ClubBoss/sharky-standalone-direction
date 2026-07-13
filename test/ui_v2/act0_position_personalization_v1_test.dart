@@ -174,7 +174,7 @@ Future<void> _pumpPositionTask(
   WidgetTester tester,
   Act0InMemoryTelemetrySinkV1 sink,
 ) async {
-  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -226,6 +226,7 @@ Future<void> _continueFeedback(WidgetTester tester) async {
   for (var i = 0; i < 4; i++) {
     final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
     if (cta.evaluate().isEmpty) return;
+    expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
     await tester.tap(cta);
     await tester.pumpAndSettle();
   }

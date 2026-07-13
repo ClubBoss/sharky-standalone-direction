@@ -2782,12 +2782,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             ],
           );
           if (coupleTableToDock) {
+            final paddedStage = Padding(
+              padding: runnerStagePadding,
+              child: runnerStageColumn,
+            );
+            if (isReview) {
+              return SingleChildScrollView(
+                key: const Key('act0_shell_runner_scroll'),
+                primary: false,
+                physics: const ClampingScrollPhysics(),
+                child: paddedStage,
+              );
+            }
             return KeyedSubtree(
               key: const Key('act0_shell_runner_scroll'),
-              child: Padding(
-                padding: runnerStagePadding,
-                child: runnerStageColumn,
-              ),
+              child: paddedStage,
             );
           }
           return SingleChildScrollView(
@@ -2917,13 +2926,30 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final tableHeight = _sharedActiveRunnerTableHeightV1(
+                final tableHeightFromWidth = _sharedActiveRunnerTableHeightV1(
                   context,
                   availableWidth: math.max(
                     0,
                     constraints.maxWidth - (pageX * 2),
                   ),
                   compactBottomDockClearance: compactBottomDockClearance,
+                );
+                final compactReviewDockReserve = isReview
+                    ? _runnerRepairFeedbackDockTargetLowerSlotHeightV1 +
+                          Act0ShellTokensV1.gapLg
+                    : 0.0;
+                final tableHeight = math.min(
+                  tableHeightFromWidth,
+                  math.max(
+                    0.0,
+                    constraints.maxHeight -
+                        _runnerUpperStageChromeHeightV1(
+                          showTopInstructionCard: showTopInstructionCard,
+                          isRefinedDev2: isRefinedDev2,
+                          compactTableStageTopInset: compactTableStageTopInset,
+                        ) -
+                        compactReviewDockReserve,
+                  ),
                 );
                 final stageHeight =
                     _runnerUpperStageChromeHeightV1(

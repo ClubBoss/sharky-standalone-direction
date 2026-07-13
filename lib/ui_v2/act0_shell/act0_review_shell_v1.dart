@@ -241,7 +241,13 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     key: const Key('act0_shell_review_screen'),
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      centeredBench,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          primary: false,
+                          physics: const ClampingScrollPhysics(),
+                          child: centeredBench,
+                        ),
+                      ),
                       const SizedBox(height: Act0ShellTokensV1.gapMd),
                       Act0ShellTokensV1.centeredContent(
                         context,
