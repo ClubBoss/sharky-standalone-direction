@@ -25,11 +25,15 @@ Successful output is local only:
 ```text
 output/review_bundles/alpha_journey_qa_factory_v1_<SHORT_SHA>/
 output/review_bundles/alpha_journey_qa_factory_v1_<SHORT_SHA>.zip
+output/review_bundles/alpha_journey_qa_factory_v1_<SHORT_SHA>.zip.sha256
 ```
 
 The command fails closed for tracked edits, staged output, stale contract
 versions, a direct-state black-box trace, missing/misordered/duplicate required
-telemetry, incomplete compact/tall/large evidence, overflow, or missing
-recovered payoff. Update the versioned contract first whenever a frozen route
-ID, sequence, telemetry order, viewport, or geometry policy legitimately
-changes; then update the replay and evidence owners in the same admitted wave.
+telemetry, broken session-scoped or sequence continuity, unbound repair/recheck
+mapping, incomplete compact/tall/large evidence, overflow, or missing recovered
+payoff. Its manifest hashes all bundle files except itself; the archive hash is
+stored beside the ZIP so creating it cannot invalidate the bundle. Update the
+versioned contract first whenever a frozen route ID, sequence, telemetry order,
+viewport, or geometry policy legitimately changes; then update the replay and
+evidence owners in the same admitted wave.

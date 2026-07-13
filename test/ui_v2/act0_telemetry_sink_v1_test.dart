@@ -25,6 +25,10 @@ void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
   file.writeAsStringSync(
     const JsonEncoder.withIndent('  ').convert(<String, Object?>{
           'schema': 'alpha_journey_qa_trace_v1',
+          'journey_id': 'alpha_action_repair_recovery_v1',
+          'contract_version': 1,
+          'black_box_test_name':
+              'canonical Learn entry completes the Action alpha loop with ordered safe telemetry',
           'execution_mode': 'deterministic_widget_replay',
           'entry_mode': 'canonical_learn_visible_controls',
           'cta_reachability': 'ensureVisible_before_each_visible_control_tap',

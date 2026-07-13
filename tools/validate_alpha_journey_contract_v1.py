@@ -73,10 +73,65 @@ def validate_contract(contract_path: Path, expected_version: int) -> dict:
     return contract
 
 
-def validate_trace(trace_path: Path, contract: dict) -> dict:
+def field_value(event: dict, snake_name: str, camel_name: str | None = None):
+    fields = event.get("fields", {})
+    if not isinstance(fields, dict):
+        return None
+    return fields.get(snake_name, fields.get(camel_name) if camel_name else None)
+
+
+def event_index(events: list[dict], event: dict) -> int:
+    return next(index for index, candidate in enumerate(events) if candidate is event)
+
+
+def validate_black_box_source(replay_source: Path) -> None:
+    try:
+        source = replay_source.read_text()
+    except OSError as error:
+        raise SystemExit(f"P1 cannot inspect black-box replay source: {error}") from error
+    title = "canonical Learn entry completes the Action alpha loop with ordered safe telemetry"
+    marker = f"testWidgets(\n    '{title}'"
+    start = source.find(marker)
+    end = source.find("testWidgets(", start + len(marker))
+    if start == -1 or end == -1:
+        raise SystemExit("P1 canonical black-box test boundary is not discoverable")
+    body = source[start:end]
+    forbidden = (
+        "debugHarnessEntry",
+        "Act0ControlledDemoCaptureModeV1.directState",
+        "initialTab: Act0ShellTabV1.play",
+        "initialPhase:",
+    )
+    found = [token for token in forbidden if token in body]
+    if found:
+        raise SystemExit(
+            "P0 canonical black-box replay contains direct-state setup: " + ", ".join(found)
+        )
+    required = (
+        "startActionsTheoryFromLearnV1",
+        "answerVisiblePromptWronglyV1",
+        "answerVisiblePromptCorrectlyV1",
+        "act0_shell_runner_back",
+        "act0_shell_learn_screen",
+    )
+    missing = [token for token in required if token not in body]
+    if missing:
+        raise SystemExit("P1 canonical visible-control proof drift: " + ", ".join(missing))
+    print("PASS canonical source proof: visible Learn entry, repair/recheck controls, safe Learn exit")
+
+
+def validate_trace(trace_path: Path, contract: dict, replay_source: Path) -> dict:
     trace = load_json(trace_path)
     if trace.get("schema") != "alpha_journey_qa_trace_v1":
         raise SystemExit("P1 trace schema drift")
+    if trace.get("journey_id") != contract["journey_id"]:
+        raise SystemExit("P1 trace journey ID drift")
+    if trace.get("contract_version") != contract["contract_version"]:
+        raise SystemExit("P1 trace contract version drift")
+    if trace.get("black_box_test_name") != (
+        "canonical Learn entry completes the Action alpha loop with ordered safe telemetry"
+    ):
+        raise SystemExit("P1 trace does not identify the canonical black-box replay")
     if trace.get("debug_harness_used") is not False:
         raise SystemExit("P0 black-box trace used a direct-state harness")
     if trace.get("entry_mode") != "canonical_learn_visible_controls":
@@ -101,38 +156,98 @@ def validate_trace(trace_path: Path, contract: dict) -> dict:
             raise SystemExit(f"P1 {name} must be emitted once, got {counts[name]}")
 
     decision_events = [event for event in events if event.get("name") == "decision_made"]
-    if not any(
-        event.get("fields", {}).get("selected_action") == contract["expected_path"]["wrong_choice_id"]
-        and event.get("fields", {}).get("is_correct") is False
-        and event.get("fields", {}).get("error_type") == contract["expected_path"]["error_type"]
-        and isinstance(event.get("fields", {}).get("time_to_decision_ms"), int)
-        for event in decision_events
-    ):
+    decision_task = contract["canonical_ids"]["decision_task_id"]
+    wrong_events = [
+        event for event in decision_events
+        if field_value(event, "task_id", "taskId") == decision_task
+        and field_value(event, "selected_action") == contract["expected_path"]["wrong_choice_id"]
+        and field_value(event, "is_correct") is False
+        and field_value(event, "error_type", "errorType") == contract["expected_path"]["error_type"]
+        and isinstance(field_value(event, "time_to_decision_ms"), int)
+    ]
+    if not wrong_events:
         raise SystemExit("P1 wrong decision classification or time-to-decision proof is absent")
-    if not any(
-        event.get("fields", {}).get("is_correct") is True
-        and event.get("fields", {}).get("error_type") == "none"
-        for event in decision_events
+    repair_started = [event for event in events if event.get("name") == "repair_started"]
+    repair_completed = [event for event in events if event.get("name") == "repair_completed"]
+    recheck_started = [event for event in events if event.get("name") == "recheck_started"]
+    recheck_results = [event for event in events if event.get("name") == "recheck_result"]
+    if len(repair_started) != 1 or len(repair_completed) != 1 or len(recheck_started) != 1 or len(recheck_results) != 1:
+        raise SystemExit("P1 repair/recheck lifecycle must have exactly one bound path")
+    repair_task = contract["expected_path"]["repair_task_id"]
+    recheck_task = contract["expected_path"]["recheck_task_id"]
+    repair_start = repair_started[0]
+    repair_done = repair_completed[0]
+    recheck_start = recheck_started[0]
+    recheck_done = recheck_results[0]
+    if (
+        field_value(repair_start, "source_task_id", "sourceTaskId") != decision_task
+        or field_value(repair_start, "repair_task_id", "repairTaskId") != repair_task
+        or field_value(repair_done, "source_task_id", "sourceTaskId") != decision_task
+        or field_value(repair_done, "repair_task_id", "repairTaskId") != repair_task
+        or field_value(repair_done, "result") != "correct"
+        or field_value(recheck_start, "source_task_id", "sourceTaskId") != decision_task
+        or field_value(recheck_start, "repair_task_id", "repairTaskId") != repair_task
+        or field_value(recheck_start, "recheck_task_id", "recheckTaskId") != recheck_task
+        or field_value(recheck_done, "source_task_id", "sourceTaskId") != decision_task
+        or field_value(recheck_done, "recheck_task_id", "recheckTaskId") != recheck_task
+        or field_value(recheck_done, "result") != "correct"
     ):
-        raise SystemExit("P1 corrected decision proof is absent")
+        raise SystemExit("P1 repair/recheck task mapping or result drift")
 
-    session_ids = {
-        event.get("fields", {}).get("session_id")
-        for event in events
-        if event.get("name") in required and event.get("fields", {}).get("session_id")
+    wrong_index = event_index(events, wrong_events[0])
+    repair_start_index = event_index(events, repair_start)
+    repair_done_index = event_index(events, repair_done)
+    recheck_start_index = event_index(events, recheck_start)
+    recheck_done_index = event_index(events, recheck_done)
+    if not wrong_index < repair_start_index < repair_done_index < recheck_start_index < recheck_done_index:
+        raise SystemExit("P1 wrong-to-repair-to-recheck path is misordered")
+    corrected_repair = [
+        event for event in decision_events
+        if repair_start_index < event_index(events, event) < repair_done_index
+        and field_value(event, "task_id", "taskId") == repair_task
+        and field_value(event, "selected_action") == contract["expected_path"]["correct_choice_id"]
+        and field_value(event, "is_correct") is True
+        and field_value(event, "error_type", "errorType") == "none"
+    ]
+    corrected_recheck = [
+        event for event in decision_events
+        if recheck_start_index < event_index(events, event) < recheck_done_index
+        and field_value(event, "task_id", "taskId") == recheck_task
+        and field_value(event, "selected_action") == contract["expected_path"]["correct_choice_id"]
+        and field_value(event, "is_correct") is True
+        and field_value(event, "error_type", "errorType") == "none"
+    ]
+    if not corrected_repair or not corrected_recheck:
+        raise SystemExit("P1 corrected repair or corrected recheck decision proof is absent")
+
+    session_scoped_names = {
+        "theory_completed", "repair_started", "repair_completed", "recheck_started",
+        "recheck_result", "action_sequence_completed", "session_exited",
     }
-    if len(session_ids) != 1:
-        raise SystemExit("P1 required telemetry is not continuous within one session")
+    session_scoped_events = [event for event in events if event.get("name") in session_scoped_names]
+    session_ids = {field_value(event, "session_id", "sessionId") for event in session_scoped_events}
+    if not session_scoped_events or None in session_ids or len(session_ids) != 1:
+        raise SystemExit("P1 session-scoped lifecycle telemetry is not continuous within one session")
     payoff_events = [event for event in events if event.get("name") == "action_payoff_generated"]
-    if not any(event.get("fields", {}).get("payoff_type") == "recoveredSuccess" for event in payoff_events):
+    if not any(
+        field_value(event, "payoff_type") == contract["expected_path"]["payoff"]
+        and event_index(events, event) > recheck_start_index
+        for event in payoff_events
+    ):
         raise SystemExit("P1 recovered payoff is absent from trace")
-    sequence_events = [event for event in events if event.get("fields", {}).get("sequence_id")]
+    signal_names = {"decision_made", "action_payoff_generated", "recheck_started", "recheck_result", "action_sequence_completed"}
+    sequence_events = [
+        event for event in events
+        if event.get("name") in signal_names
+        and (field_value(event, "sequence_id", "sequenceId") is not None)
+    ]
     if not sequence_events or any(
-        event["fields"].get("sequence_id") != contract["canonical_ids"]["sequence_id"]
+        field_value(event, "sequence_id", "sequenceId") != contract["canonical_ids"]["sequence_id"]
         for event in sequence_events
     ):
         raise SystemExit("P1 same-signal sequence continuity failed")
-    print("PASS canonical black-box trace: ordered, single-emission, same-session, recovered")
+    validate_black_box_source(replay_source)
+    print("PASS canonical black-box trace: ordered, bound repair/recheck, session-scoped, same-signal, recovered")
     return trace
 
 
@@ -169,9 +284,25 @@ def sha256(path: Path) -> str:
 
 
 def build_manifest(bundle: Path, contract: dict, trace: dict, base_sha: str) -> None:
+    report = bundle / "01_report" / "admission_report.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(
+        "# Alpha Journey QA Factory v1 admission\n\n"
+        "- Verdict: `alpha_journey_qa_factory_v1_admitted_not_pushed` pending repository publication.\n"
+        f"- Base HEAD: `{base_sha}`\n"
+        f"- Journey: `{contract['journey_id']}` v{contract['contract_version']}\n"
+        "- Black-box mode: canonical Learn visible controls; source guard rejects direct-state setup in the replay body.\n"
+        "- Telemetry: ordered single-emission lifecycle, one session-scoped continuity chain, bound same-task repair/recheck, same-signal sequence, and recovered payoff.\n"
+        "- Viewports: compact, tall_phone, large_phone; raster geometry metrics contain no overflow.\n"
+        "- Modern Table: frozen by the commit-path boundary; Action table geometry is checked by the raster lane.\n"
+        "- Integrity: manifest hashes every bundle file except itself; archive SHA-256 is a sibling `.zip.sha256` file.\n"
+        "- P0: 0; P1: 0 at bundle creation.\n"
+    )
+    manifest_path = bundle / "09_manifest" / "manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
     files = []
     for path in sorted(bundle.rglob("*")):
-        if path.is_file():
+        if path.is_file() and path != manifest_path:
             files.append({"path": str(path.relative_to(bundle)), "sha256": sha256(path), "bytes": path.stat().st_size})
     manifest = {
         "schema": "alpha_journey_qa_manifest_v1",
@@ -184,22 +315,7 @@ def build_manifest(bundle: Path, contract: dict, trace: dict, base_sha: str) -> 
         "required_telemetry_order": contract["required_telemetry_order"],
         "files": files,
     }
-    manifest_path = bundle / "09_manifest" / "manifest.json"
-    manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
-    report = bundle / "01_report" / "admission_report.md"
-    report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(
-        "# Alpha Journey QA Factory v1 admission\n\n"
-        "- Verdict: `alpha_journey_qa_factory_v1_admitted_not_pushed` pending repository publication.\n"
-        f"- Base HEAD: `{base_sha}`\n"
-        f"- Journey: `{contract['journey_id']}` v{contract['contract_version']}\n"
-        "- Black-box mode: deterministic widget replay from the canonical Learn controls; no direct-state harness.\n"
-        "- Telemetry: required sequence ordered; required lifecycle events emitted once; recovered payoff present.\n"
-        "- Viewports: compact, tall_phone, large_phone; raster geometry metrics contain no overflow.\n"
-        "- Modern Table: frozen by the commit-path boundary; Action table geometry is checked by the raster lane.\n"
-        "- P0: 0; P1: 0 at bundle creation.\n"
-    )
 
 
 def main() -> None:
@@ -209,16 +325,21 @@ def main() -> None:
     parser.add_argument("--trace", type=Path)
     parser.add_argument("--bundle", type=Path)
     parser.add_argument("--base-sha")
+    parser.add_argument("--replay-source", type=Path)
+    parser.add_argument("--write-manifest", action="store_true")
     args = parser.parse_args()
     contract = validate_contract(args.contract, args.expected_version)
     if args.trace is None:
         return
     if args.bundle is None or not args.base_sha:
         raise SystemExit("--trace requires --bundle and --base-sha")
-    trace = validate_trace(args.trace, contract)
+    if args.replay_source is None:
+        raise SystemExit("--trace requires --replay-source")
+    trace = validate_trace(args.trace, contract, args.replay_source)
     validate_evidence(args.bundle, contract)
-    build_manifest(args.bundle, contract, trace, args.base_sha)
-    print("PASS local admission report and manifest")
+    if args.write_manifest:
+        build_manifest(args.bundle, contract, trace, args.base_sha)
+        print("PASS local admission report and manifest")
 
 
 if __name__ == "__main__":

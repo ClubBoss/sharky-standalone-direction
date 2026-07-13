@@ -19,7 +19,7 @@ if git diff --cached --name-only | rg -q '^output/'; then
   exit 21
 fi
 
-rm -rf "$bundle" "$zip_path"
+rm -rf "$bundle" "$zip_path" "${zip_path}.sha256"
 mkdir -p "$bundle"/{01_report,02_capsule,03_journey_contract,04_black_box_trace,05_phone_evidence,06_contact_sheets,07_telemetry,08_validation,09_manifest}
 readonly log="$bundle/08_validation/command.log"
 
@@ -100,10 +100,21 @@ run_stage 'trace and evidence admission' python3 tools/validate_alpha_journey_co
   --expected-version 1 \
   --trace "$bundle/07_telemetry/canonical_learn_wrong_repair_recheck_trace.json" \
   --bundle "$bundle" \
-  --base-sha "$base_sha"
+  --base-sha "$base_sha" \
+  --replay-source test/ui_v2/act0_telemetry_sink_v1_test.dart
+
+printf '\n== evidence manifest ==\n' >> "$log"
+python3 tools/validate_alpha_journey_contract_v1.py \
+  --contract "$contract" \
+  --expected-version 1 \
+  --trace "$bundle/07_telemetry/canonical_learn_wrong_repair_recheck_trace.json" \
+  --bundle "$bundle" \
+  --base-sha "$base_sha" \
+  --replay-source test/ui_v2/act0_telemetry_sink_v1_test.dart \
+  --write-manifest >/dev/null
 
 (cd "$(dirname "$bundle")" && zip -qry "$(basename "$zip_path")" "$(basename "$bundle")")
-shasum -a 256 "$zip_path" > "$bundle/09_manifest/zip.sha256"
+shasum -a 256 "$zip_path" > "${zip_path}.sha256"
 
 if git diff --cached --name-only | rg -q '^output/'; then
   echo 'P0 output artifacts were staged during QA.' >&2
