@@ -7194,6 +7194,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _startFirstValueDailyRepLaunchV1(firstValueCarry)) {
       return;
     }
+    if (_placementHandoffActive) {
+      _startPlacementDiagnostic(
+        _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+      );
+      return;
+    }
     _placementHandoffActive = false;
     final lesson = _lessonById(selectedWorld.lessons, _selectedLessonId);
     _startRecommendation(
@@ -8056,11 +8062,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _placementIntroVisible = false;
     _showPlayHub = false;
     _returnToPlayHubOnBack = false;
-    _phase = task.phase;
+    _phase = Act0LessonPhaseV1.drill;
     _selectedOptionId = null;
     // Placement diagnostic is assessment-only. Skip lesson teaching copy here;
     // the same task still teaches normally when launched from the learning path.
-    _teachingStepIndex = 0;
+    _teachingStepIndex = task.runner.teachingSteps.length;
     _resetLessonRunMetrics();
   }
 

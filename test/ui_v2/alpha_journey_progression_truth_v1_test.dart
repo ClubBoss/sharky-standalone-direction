@@ -141,6 +141,32 @@ void main() {
   );
 
   testWidgets(
+    'Home Continue opens the placement quick table check exactly once after fresh onboarding',
+    (tester) async {
+      await pumpHost(tester, host(showPlacementOnStart: true));
+      await completeFreshBeginnerOnboarding(tester);
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(find.text('First Table Guide'), findsWidgets);
+
+      final continueCta = find.byKey(const Key('act0_shell_main_cta'));
+      expect(continueCta, findsOneWidget);
+      await tester.tap(continueCta);
+      await tester.tap(continueCta);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.runner.lessonTitle, 'Quick table check');
+      expect(runner.runner.beatIndex, 1);
+      expect(runner.runner.phase, Act0LessonPhaseV1.drill);
+      expect(runner.runner.question, 'What does this table show?');
+    },
+  );
+
+  testWidgets(
     'completed First Table Guide advances ordered progression without unlocking Action early',
     (tester) async {
       final state = Act0ShellStateV1.sample;
