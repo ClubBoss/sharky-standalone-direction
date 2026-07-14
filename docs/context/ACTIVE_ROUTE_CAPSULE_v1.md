@@ -28,7 +28,21 @@ legacy route-import test remains unrelated debt.
 Complete real-GUI Action qualification remains pending; deterministic Action
 capability evidence must not be presented as that learner-route result.
 
-Current active task: **Canonical Journey Truth & Progression Integrity v1**.
+Current active task: **Learning Run Boundary + Session Payoff v1 — ADMITTED**
+at `ff032893` / `8cb4c790`. The owner-approved Learning Run is the only
+run-level lifecycle: it begins on the first canonical Action or BTN position
+choice during a continuous Learn visit, survives lesson completion and return
+to Learn, and closes only on explicit Learn-to-Home navigation. It is local to
+the active shell, is not persisted, and is discarded on app restart. Eligible
+runs require two meaningful normalized outcomes; the bounded payoff distinguishes
+clean reads, repaired same-signal rechecks, and unresolved evidence without
+claiming long-term mastery. Runner Back returns to Learn without closing it;
+the Home tab closes it once, either showing the bounded payoff or safely
+skipping it for insufficient evidence. The scope remains only
+`missed_action_read` and `missed_table_position_read`; no Modern Table, profile,
+cross-day state, dashboard, or AI/adaptive work is admitted.
+
+The active
 The active
 W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
 `Act0LessonRunnerShellV1` for theory/decision/feedback,
