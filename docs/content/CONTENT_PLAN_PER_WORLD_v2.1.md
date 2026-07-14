@@ -1,5 +1,13 @@
 DOCUMENT 3 — CONTENT PLAN PER WORLD v2.1 (MVP-first, Worlds 0–9)
 
+> **Status: HISTORICAL MVP PLANNING REFERENCE — NOT CURRENT WORLD-IDENTITY AUTHORITY.**
+> Its World 0–9 numbering predates the current route. Do not use these headers
+> to identify a current world's learner meaning or content home. Use
+> `docs/plan/MASTER_PLAN_v3.0.md` and
+> `docs/plan/CONCEPT_TO_WORLD_COVERAGE_MATRIX_v1.md` for current canon.
+> This file remains useful only for its historical MVP production patterns and
+> early-world bridge notes.
+
 Файл: docs/content/CONTENT_PLAN_PER_WORLD_v2.1.md
 Назначение: “что именно делаем по мирам” (без разночтений).
 

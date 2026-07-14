@@ -32,7 +32,9 @@ Use these documents first for content decisions:
 6. `docs/plan/COVERAGE_LOCK_PROTOCOL_v1.md`
    Minimal no-loss protocol for future content waves.
 7. `docs/content/CONTENT_PLAN_PER_WORLD_v2.1.md`
-   Authoring home per world and early-world bridge notes.
+   Historical MVP production reference for early-world bridge notes only; its
+   World 0–9 numbering is not current authority. Use the Master Plan and
+   coverage matrix above for current world identity and topic homes.
 8. `docs/content/CONTENT_EXCELLENCE_CANON_v1.md`
    Quality bar for content that should feel great, not merely present.
 9. `docs/plan/CONTENT_AUTHORING_CONTRACT_CONTENT_GRAMMAR_v1.md`
