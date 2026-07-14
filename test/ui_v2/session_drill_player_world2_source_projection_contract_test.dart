@@ -295,7 +295,7 @@ void main() {
 
       await openAndAssert(
         sessionId: 'w2.s14',
-        boardLabels: const <String>['J♥', 'T♥', '4♥'],
+        boardLabels: const <String>['J♥', 'T♥', '4♣'],
         expectedVisibleBoardCount: 3,
         expectedPrompt:
             'Step 1: On this flop, which action matches the more pressure-building texture?',

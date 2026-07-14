@@ -1230,7 +1230,7 @@ void main() {
       var scenario = table.scenarioSpec!;
       expect(scenario.decisionNodeV1.street, Street.flop);
       expect(scenario.decisionNodeV1.solutionBestAction, 'raise');
-      expect(table.debugBoardCardLabels, <String>['Jh', 'Th', '4h']);
+      expect(table.debugBoardCardLabels, <String>['Jh', 'Th', '4c']);
 
       await tester.tap(
         find.byKey(
@@ -1268,7 +1268,7 @@ void main() {
       scenario = table.scenarioSpec!;
       expect(scenario.decisionNodeV1.legalActions, <String>['fold', 'call']);
       expect(scenario.decisionNodeV1.solutionBestAction, 'fold');
-      expect(table.debugBoardCardLabels, <String>['Jh', 'Th', '4h']);
+      expect(table.debugBoardCardLabels, <String>['Jh', 'Th', '4c']);
 
       await tester.tap(
         find.byKey(const Key('session_drill_player_hand_chain_action_call_v1')),

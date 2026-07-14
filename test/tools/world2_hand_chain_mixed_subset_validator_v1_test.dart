@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -5,6 +6,58 @@ import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/world2_hand_chain_mixed_subset_validator_v1.dart';
 
 void main() {
+  test('w2.s14 preserves two-tone board truth and draw-price contracts', () {
+    final source = File(
+      'content/worlds/world2/v1/sessions/w2.s14/drills/d.chain_texture_outs_fold_v1.json',
+    );
+    final payload =
+        jsonDecode(source.readAsStringSync()) as Map<String, dynamic>;
+    final steps = (payload['steps'] as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+
+    expect(payload['id'], 'chain_texture_outs_fold_v1');
+    expect(payload['kind'], 'hand_chain_v1');
+    expect(payload['chain_id'], 'w2_s14_texture_outs_fold_v1');
+    expect(steps, hasLength(3));
+
+    for (final stepIndex in <int>[0, 2]) {
+      final step = steps[stepIndex];
+      final board = (step['board_cards_v1'] as List<dynamic>).cast<String>();
+      final suits = board
+          .map((card) => card.substring(card.length - 1))
+          .toSet();
+      expect(board, <String>['Jh', 'Th', '4c']);
+      expect(suits, <String>{'h', 'c'});
+      expect(suits.length, 2);
+      expect(board.toSet(), hasLength(3));
+      expect(step['board_texture_v1'], 'coordinated_two_tone');
+    }
+
+    final outsStep = steps[1];
+    expect(
+      (outsStep['board_cards_v1'] as List<dynamic>).cast<String>(),
+      <String>['Jh', 'Th', '4c'],
+      reason: 'The chain keeps one two-tone flop through its gutshot step.',
+    );
+    expect((outsStep['board_cards_v1'] as List<dynamic>).toSet(), hasLength(3));
+    expect(outsStep['hero_hole_cards_v1'], <String>['Qd', '8d']);
+    expect(outsStep['expected_action'], '4');
+    expect(
+      outsStep['feedback_correct_v1'],
+      'Correct. Only the four nines complete this gutshot.',
+    );
+    expect(
+      outsStep['feedback_incorrect_v1'],
+      'Incorrect. This is only a gutshot, so there are 4 clean outs.',
+    );
+    expect(steps[0]['expected_action'], 'raise');
+    expect(steps[2]['expected_action'], 'fold');
+    expect(
+      steps[2]['feedback_incorrect_v1'],
+      'Incorrect. This draw is too thin for a bigger price, so calling is too loose.',
+    );
+  });
+
   test('queue, registry, and mixed hand_chain pilot stay aligned', () {
     final queue = File(
       'docs/plan/world2_truth_family_queue_v1.md',
