@@ -19,26 +19,38 @@ Act0LearningRunOutcomeV1 _outcome({
   bool? recheck,
 }) => Act0LearningRunOutcomeV1(
   outcomeId: id,
-  lessonId: skill == 'table_position_read'
-      ? 'position_six_seats'
-      : 'fold_check_call_raise',
-  taskId: skill == 'table_position_read'
-      ? 'position_six_seats_positions_button'
-      : 'actions_check_drill',
+  lessonId: switch (skill) {
+    'table_position_read' => 'position_six_seats',
+    'price_read' => 'call_price',
+    _ => 'fold_check_call_raise',
+  },
+  taskId: switch (skill) {
+    'table_position_read' => 'position_six_seats_positions_button',
+    'price_read' => 'w4_bad_price_fold',
+    _ => 'actions_check_drill',
+  },
   skillId: skill,
   firstAttemptCorrect: firstCorrect,
   errorType: firstCorrect
       ? 'none'
-      : skill == 'table_position_read'
-      ? 'missed_table_position_read'
-      : 'missed_action_read',
+      : switch (skill) {
+          'table_position_read' => 'missed_table_position_read',
+          'price_read' => 'missed_price_read',
+          _ => 'missed_action_read',
+        },
   repairAttempted: repaired,
   recheckResult: recheck,
   finalOutcome: outcome,
-  missedSignal: skill == 'table_position_read' ? 'hero_button' : 'no_bet_yet',
-  recommendationSignal: skill == 'table_position_read'
-      ? 'find_button_before_late_position'
-      : 'read_action_order',
+  missedSignal: switch (skill) {
+    'table_position_read' => 'hero_button',
+    'price_read' => 'pot_to_call',
+    _ => 'no_bet_yet',
+  },
+  recommendationSignal: switch (skill) {
+    'table_position_read' => 'find_button_before_late_position',
+    'price_read' => 'compare_pot_to_call',
+    _ => 'read_action_order',
+  },
   eventOrder: order,
 );
 
@@ -135,6 +147,157 @@ void main() {
     expect(payoff!.recovered!.skillId, 'action_read');
     expect(payoff.unresolved!.skillId, 'table_position_read');
     expect(payoff.nextPractice, 'Practice one more Button read next.');
+  });
+
+  test('three-skill payoff scenarios preserve evidence priority and source', () {
+    final recoveredPrice = _outcome(
+      id: 'price:1',
+      skill: 'price_read',
+      outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+      order: 3,
+      firstCorrect: false,
+      repaired: true,
+      recheck: true,
+    );
+    final unresolvedPrice = _outcome(
+      id: 'price:1',
+      skill: 'price_read',
+      outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+      order: 3,
+      firstCorrect: false,
+      repaired: true,
+      recheck: false,
+    );
+    final cleanAction = _outcome(
+      id: 'action:1',
+      skill: 'action_read',
+      outcome: Act0LearningRunFinalOutcomeV1.masteredFirstTry,
+      order: 1,
+    );
+    final cleanPosition = _outcome(
+      id: 'position:1',
+      skill: 'table_position_read',
+      outcome: Act0LearningRunFinalOutcomeV1.masteredFirstTry,
+      order: 2,
+    );
+
+    // A: two clean + recovered price; the price clue is the next local focus.
+    final scenarioA = Act0LearningRunPayoffPolicyV1.evaluate(
+      _run(<Act0LearningRunOutcomeV1>[
+        cleanAction,
+        cleanPosition,
+        recoveredPrice,
+      ]),
+    )!;
+    expect(scenarioA.strength!.skillId, 'action_read');
+    expect(scenarioA.recovered!.skillId, 'price_read');
+    expect(scenarioA.unresolved, isNull);
+    expect(
+      scenarioA.nextClue,
+      'Compare the pot with the amount you must call.',
+    );
+
+    // B: unresolved price controls focus over recovered action and clean position.
+    final scenarioB = Act0LearningRunPayoffPolicyV1.evaluate(
+      _run(<Act0LearningRunOutcomeV1>[
+        _outcome(
+          id: 'action:1',
+          skill: 'action_read',
+          outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+          firstCorrect: false,
+          repaired: true,
+          recheck: true,
+        ),
+        cleanPosition,
+        unresolvedPrice,
+      ]),
+    )!;
+    expect(scenarioB.unresolved!.skillId, 'price_read');
+    expect(
+      scenarioB.nextPractice,
+      'Practice one more pot-versus-call read next.',
+    );
+
+    // C: an unresolved Position stays ahead of a recovered price read.
+    final scenarioC = Act0LearningRunPayoffPolicyV1.evaluate(
+      _run(<Act0LearningRunOutcomeV1>[
+        _outcome(
+          id: 'position:1',
+          skill: 'table_position_read',
+          outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+          firstCorrect: false,
+          repaired: true,
+          recheck: false,
+        ),
+        recoveredPrice,
+      ]),
+    )!;
+    expect(scenarioC.unresolved!.skillId, 'table_position_read');
+    expect(scenarioC.recovered!.skillId, 'price_read');
+
+    // D: three clean reads make no repair claim or invented weakness.
+    final scenarioD = Act0LearningRunPayoffPolicyV1.evaluate(
+      _run(<Act0LearningRunOutcomeV1>[
+        cleanAction,
+        cleanPosition,
+        _outcome(
+          id: 'price:1',
+          skill: 'price_read',
+          outcome: Act0LearningRunFinalOutcomeV1.masteredFirstTry,
+          order: 3,
+        ),
+      ]),
+    )!;
+    expect(scenarioD.recovered, isNull);
+    expect(scenarioD.unresolved, isNull);
+
+    // E: a single meaningful price result is safely ineligible for a payoff.
+    final scenarioE = _run(<Act0LearningRunOutcomeV1>[recoveredPrice]);
+    expect(scenarioE.isPayoffEligible, isFalse);
+    expect(Act0LearningRunPayoffPolicyV1.evaluate(scenarioE), isNull);
+
+    // F: replay updates the one source outcome without a second payoff row.
+    final scenarioF = _run(<Act0LearningRunOutcomeV1>[
+      cleanAction,
+      _outcome(
+        id: 'price:1',
+        skill: 'price_read',
+        outcome: Act0LearningRunFinalOutcomeV1.incomplete,
+        order: 2,
+        firstCorrect: false,
+      ),
+    ]).record(recoveredPrice);
+    expect(
+      scenarioF.outcomes.where((item) => item.skillId == 'price_read'),
+      hasLength(1),
+    );
+    expect(
+      scenarioF.outcomes.last.finalOutcome,
+      Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+    );
+
+    // G: incomplete evidence cannot outrank an actual unresolved position.
+    final scenarioG = Act0LearningRunPayoffPolicyV1.evaluate(
+      _run(<Act0LearningRunOutcomeV1>[
+        cleanAction,
+        _outcome(
+          id: 'position:1',
+          skill: 'table_position_read',
+          outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+          firstCorrect: false,
+          repaired: true,
+          recheck: false,
+        ),
+        _outcome(
+          id: 'price:1',
+          skill: 'price_read',
+          outcome: Act0LearningRunFinalOutcomeV1.incomplete,
+          order: 2,
+          firstCorrect: false,
+        ),
+      ]),
+    )!;
+    expect(scenarioG.unresolved!.skillId, 'table_position_read');
   });
 
   test('duplicate/replay updates one canonical outcome without reordering', () {
