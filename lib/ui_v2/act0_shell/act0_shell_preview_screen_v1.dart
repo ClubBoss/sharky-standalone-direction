@@ -594,12 +594,14 @@ List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
   return switch (signalId) {
     'table_read' => <Act0RunnerOptionV1>[
       _placementCorrectOptionV1(
-        id: 'hand_board_pot',
-        label: isRu ? 'Рука Hero, борд и банк' : 'Hero hand, board, and pot',
+        id: 'two_three_six',
+        label: isRu
+            ? '2 личные · 3 общие · Банк 6 BB'
+            : '2 private · 3 board · Pot 6 BB',
         feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
         feedbackReason: isRu
-            ? 'Ты сначала нашёл руку, борд и банк.'
-            : 'You found the hand, board, and pot first.',
+            ? 'Верно: две личные карты, три общие карты и банк 6 BB.'
+            : 'Right: two private cards, three board cards, and a 6 BB pot.',
         repairFocusCardIds: const <String>[
           'hero_0',
           'hero_1',
@@ -610,14 +612,16 @@ List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
         repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
       ),
       _placementWrongOptionV1(
-        id: 'only_hero_cards',
-        label: isRu ? 'Только карты Hero' : 'Only Hero’s cards',
+        id: 'two_five_six',
+        label: isRu
+            ? '2 личные · 5 общих · Банк 6 BB'
+            : '2 private · 5 board · Pot 6 BB',
         preferredLabel: isRu
-            ? 'Рука Hero, борд и банк'
-            : 'Hero hand, board, and pot',
+            ? '2 личные · 3 общие · Банк 6 BB'
+            : '2 private · 3 board · Pot 6 BB',
         feedbackReason: isRu
-            ? 'Лучше начать с руки, борда и банка.'
-            : 'Better first read: hand, board, and pot.',
+            ? 'Сейчас на борде только три общие карты: это флоп.'
+            : 'Only three board cards are out: this is the flop.',
         repairFocusCardIds: const <String>[
           'hero_0',
           'hero_1',
@@ -628,14 +632,16 @@ List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
         repairFocusLabels: const <String>['Hero cards', 'Board cards', 'Pot'],
       ),
       _placementWrongOptionV1(
-        id: 'biggest_stack_first',
-        label: isRu ? 'Сначала самый большой стек' : 'The biggest stack first',
+        id: 'two_three_four',
+        label: isRu
+            ? '2 личные · 3 общие · Банк 4 BB'
+            : '2 private · 3 board · Pot 4 BB',
         preferredLabel: isRu
-            ? 'Рука Hero, борд и банк'
-            : 'Hero hand, board, and pot',
+            ? '2 личные · 3 общие · Банк 6 BB'
+            : '2 private · 3 board · Pot 6 BB',
         feedbackReason: isRu
-            ? 'Стеки важны позже. Сначала рука, борд и банк.'
-            : 'Stacks matter later. First read hand, board, and pot.',
+            ? 'Карт посчитано верно, но в центре лежит банк 6 BB.'
+            : 'The card counts are right, but the centre pot is 6 BB.',
         repairFocusCardIds: const <String>[
           'hero_0',
           'hero_1',
@@ -647,8 +653,8 @@ List<Act0RunnerOptionV1> _placementDiagnosticOptionsV1(
       ),
       _placementUnsureOptionV1(
         preferredLabel: isRu
-            ? 'Рука Hero, борд и банк'
-            : 'Hero hand, board, and pot',
+            ? '2 личные · 3 общие · Банк 6 BB'
+            : '2 private · 3 board · Pot 6 BB',
         isRu: isRu,
         repairFocusCardIds: const <String>[
           'hero_0',
@@ -749,7 +755,7 @@ String _placementDiagnosticQuestionV1(String signalId, {required bool isRu}) {
       isRu
           ? 'Перед Hero нет ставки. Какое действие бесплатно?'
           : 'No bet faces Hero. Which action is free?',
-    _ => isRu ? 'Что прочитать сначала?' : 'What should you read first?',
+    _ => isRu ? 'Что показывает этот стол?' : 'What does this table show?',
   };
 }
 
@@ -763,7 +769,10 @@ String _placementDiagnosticHintV1(String signalId, {required bool isRu}) {
       isRu
           ? 'Без ставки Hero может передать ход.'
           : 'No bet means Hero can pass the action.',
-    _ => isRu ? 'Начни с того, что видно.' : 'Start with what is visible.',
+    _ =>
+      isRu
+          ? 'Сначала посчитай личные карты, общие карты и банк.'
+          : 'Count private cards, board cards, then the pot.',
   };
 }
 
@@ -777,8 +786,8 @@ String _placementDiagnosticCaptionV1(String signalId, {required bool isRu}) {
           : 'No bet faces Hero in this spot.',
     _ =>
       isRu
-          ? 'Один раз прочитай руку, борд и банк.'
-          : 'Read hand, board, and pot once.',
+          ? 'Один раз посчитай личные карты, общие карты и банк.'
+          : 'Count private cards, board cards, and pot once.',
   };
 }
 
@@ -802,8 +811,8 @@ Act0RunnerStateV1 placementQuickCheckRunnerV1(
     options: _placementDiagnosticOptionsV1(signalId, isRu: isRu),
     feedbackTitle: isRu ? 'Хорошее чтение.' : 'Clean read.',
     feedbackReason: isRu
-        ? 'Ты сначала нашёл руку, борд и банк.'
-        : 'You found hand, board, and pot first.',
+        ? 'Ты точно прочитал личные карты, общие карты и банк.'
+        : 'You read the private cards, board cards, and pot exactly.',
     primaryCtaLabel: isRu ? 'Продолжить' : 'Continue',
     teachingSteps: const <Act0TeachingStepV1>[],
     teachingStepIndex: 0,

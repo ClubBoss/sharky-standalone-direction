@@ -2883,8 +2883,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           const SizedBox.shrink(
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
-        if (taskCycleEnvelope.usesFixedLowerSlot &&
-            !usesSharedActiveRunnerAllocation)
+        if (taskCycleEnvelope.usesFixedLowerSlot)
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
