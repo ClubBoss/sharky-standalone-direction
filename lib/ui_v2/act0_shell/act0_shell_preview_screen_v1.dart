@@ -16,6 +16,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -1016,6 +1017,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _learningEvidenceRunOrdinalV1 = 0;
   Act0SessionIdentityStateV1 _sessionIdentityStateV1 =
       const Act0SessionIdentityStateV1();
+  Act0LearningRunStateV1? _learningRunV1;
+  Act0LearningRunPayoffV1? _pendingLearningRunPayoffV1;
+  bool _learningRunLearnVisitActiveV1 = false;
+  int _learningRunOrdinalV1 = 0;
+  int _learningRunEventOrderV1 = 0;
+  final Set<String> _learningRunOutcomeTelemetryKeysV1 = <String>{};
   bool _debugReviewEmptyV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
@@ -2244,6 +2251,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void initState() {
     super.initState();
     _tab = widget.initialTab;
+    _learningRunLearnVisitActiveV1 = widget.initialTab == Act0ShellTabV1.learn;
     _phase = widget.initialPhase;
     _showPlacement = widget.showPlacementOnStart;
     _showWelcome = false;
@@ -3660,6 +3668,264 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  void _recordLearningRunDecisionV1(Act0CompletedDecisionV1 decision) {
+    if (!_learningRunLearnVisitActiveV1) {
+      return;
+    }
+    if (decision.taskId == act0ActionLearningSequenceV1.practiceTaskId) {
+      final outcomes = _actionPersonalizationStateV1.outcomes;
+      if (outcomes.isEmpty) {
+        return;
+      }
+      final first = outcomes.first;
+      final sawFailedRecheck = outcomes.any(
+        (outcome) =>
+            outcome.stage == Act0ActionSequenceStageV1.recheck &&
+            !outcome.isCorrect,
+      );
+      final finalOutcome = first.isCorrect
+          ? Act0LearningRunFinalOutcomeV1.masteredFirstTry
+          : _actionPersonalizationStateV1.recheckSucceeded
+          ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
+          : sawFailedRecheck
+          ? Act0LearningRunFinalOutcomeV1.stillNeedsPractice
+          : Act0LearningRunFinalOutcomeV1.incomplete;
+      _recordLearningRunOutcomeV1(
+        Act0LearningRunOutcomeV1(
+          outcomeId: 'action:${first.attemptKey}',
+          lessonId: decision.lessonId,
+          taskId: decision.taskId,
+          skillId: 'action_read',
+          firstAttemptCorrect: first.isCorrect,
+          errorType: first.isCorrect ? 'none' : 'missed_action_read',
+          repairAttempted:
+              _actionPersonalizationStateV1.repairSucceeded ||
+              _actionPersonalizationStateV1.hasRepairFailure,
+          recheckResult: _actionPersonalizationStateV1.recheckSucceeded
+              ? true
+              : sawFailedRecheck
+              ? false
+              : null,
+          finalOutcome: finalOutcome,
+          missedSignal: 'no_bet_yet',
+          recommendationSignal: 'read_action_order',
+          eventOrder: _nextLearningRunEventOrderV1(),
+        ),
+        userChoice: decision.selectedId,
+        timeToDecision: decision.decisionTimeBucket,
+      );
+      return;
+    }
+    if (!Act0PositionPersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
+      return;
+    }
+    _recordLearningRunOutcomeV1(
+      Act0LearningRunOutcomeV1(
+        outcomeId: 'position:${decision.attemptKey}',
+        lessonId: decision.lessonId,
+        taskId: decision.taskId,
+        skillId: Act0PositionPersonalizationV1.skillId,
+        firstAttemptCorrect: decision.isCorrect,
+        errorType: decision.isCorrect
+            ? 'none'
+            : Act0PositionPersonalizationV1.errorType,
+        repairAttempted: false,
+        recheckResult: null,
+        finalOutcome: decision.isCorrect
+            ? Act0LearningRunFinalOutcomeV1.masteredFirstTry
+            : Act0LearningRunFinalOutcomeV1.incomplete,
+        missedSignal: Act0PositionPersonalizationV1.missedSignalId,
+        recommendationSignal: 'find_button_before_late_position',
+        eventOrder: _nextLearningRunEventOrderV1(),
+      ),
+      userChoice: decision.selectedId,
+      timeToDecision: decision.decisionTimeBucket,
+    );
+  }
+
+  void _recordLearningRunPositionRecheckV1({required bool recheckCorrect}) {
+    final run = _learningRunV1;
+    if (run == null) {
+      return;
+    }
+    Act0LearningRunOutcomeV1? source;
+    for (final outcome in run.outcomes.reversed) {
+      if (outcome.skillId == Act0PositionPersonalizationV1.skillId) {
+        source = outcome;
+        break;
+      }
+    }
+    if (source == null || source.firstAttemptCorrect) {
+      return;
+    }
+    _recordLearningRunOutcomeV1(
+      Act0LearningRunOutcomeV1(
+        outcomeId: source.outcomeId,
+        lessonId: source.lessonId,
+        taskId: source.taskId,
+        skillId: source.skillId,
+        firstAttemptCorrect: false,
+        errorType: Act0PositionPersonalizationV1.errorType,
+        repairAttempted: true,
+        recheckResult: recheckCorrect,
+        finalOutcome: recheckCorrect
+            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
+            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+        missedSignal: Act0PositionPersonalizationV1.missedSignalId,
+        recommendationSignal: 'find_button_before_late_position',
+        eventOrder: _nextLearningRunEventOrderV1(),
+      ),
+    );
+  }
+
+  int _nextLearningRunEventOrderV1() => ++_learningRunEventOrderV1;
+
+  void _recordLearningRunOutcomeV1(
+    Act0LearningRunOutcomeV1 outcome, {
+    String userChoice = '',
+    String timeToDecision = '',
+  }) {
+    var run = _learningRunV1;
+    if (run == null) {
+      run = Act0LearningRunStateV1(
+        runId: 'learning_run_v1|${++_learningRunOrdinalV1}',
+        startedAtMilliseconds: DateTime.now().millisecondsSinceEpoch,
+      );
+      _learningRunOutcomeTelemetryKeysV1.clear();
+      _recordTelemetryEventV1('learning_run_started', <String, Object?>{
+        'schemaVersion': 1,
+        'run_id': run.runId,
+        'source_surface': 'act0_learn',
+      });
+    }
+    final next = run.record(outcome);
+    _learningRunV1 = next;
+    final telemetryKey =
+        '${next.runId}|${outcome.outcomeId}|${outcome.finalOutcome.name}|${outcome.recheckResult}';
+    if (!_learningRunOutcomeTelemetryKeysV1.add(telemetryKey)) {
+      return;
+    }
+    final fields = <String, Object?>{
+      'schemaVersion': 1,
+      'run_id': next.runId,
+      'lesson_id': outcome.lessonId,
+      'task_id': outcome.taskId,
+      'skill_id': outcome.skillId,
+      'outcome_type': outcome.finalOutcome.name,
+      'error_type': outcome.errorType,
+      'repair_attempted': outcome.repairAttempted,
+      if (outcome.recheckResult != null)
+        'recheck_result': outcome.recheckResult,
+      'missed_signal': outcome.missedSignal,
+      'recommendation_signal': outcome.recommendationSignal,
+      'event_order': outcome.eventOrder,
+      'meaningful_outcome_count': next.meaningfulAttemptCount,
+      if (userChoice.isNotEmpty) 'user_choice': userChoice,
+      if (timeToDecision.isNotEmpty) 'time_to_decision_bucket': timeToDecision,
+    };
+    _recordTelemetryEventV1('learning_run_outcome_recorded', fields);
+    _recordTelemetryEventV1('session_skill_outcome', fields);
+  }
+
+  void _closeLearningRunForLearnExitV1() {
+    final active = _learningRunV1;
+    if (active == null) {
+      _learningRunLearnVisitActiveV1 = false;
+      return;
+    }
+    final closed = active.close(
+      reason: 'explicit_learn_to_home',
+      finalizedAtMilliseconds: DateTime.now().millisecondsSinceEpoch,
+    );
+    final payoff = Act0LearningRunPayoffPolicyV1.evaluate(closed);
+    _recordTelemetryEventV1('learning_run_closed', <String, Object?>{
+      'schemaVersion': 1,
+      'run_id': closed.runId,
+      'closure_reason': closed.closureReason,
+      'meaningful_outcome_count': closed.meaningfulAttemptCount,
+      'elapsed_run_ms':
+          closed.finalizedAtMilliseconds! - closed.startedAtMilliseconds,
+      'payoff_eligible': payoff != null,
+    });
+    if (payoff == null) {
+      _recordTelemetryEventV1(
+        'session_payoff_skipped_insufficient_evidence',
+        <String, Object?>{
+          'schemaVersion': 1,
+          'run_id': closed.runId,
+          'meaningful_outcome_count': closed.meaningfulAttemptCount,
+          'closure_reason': closed.closureReason,
+        },
+      );
+      _learningRunV1 = null;
+      _learningRunLearnVisitActiveV1 = false;
+      return;
+    }
+    _recordTelemetryEventV1('learning_run_payoff_eligible', <String, Object?>{
+      'schemaVersion': 1,
+      'run_id': closed.runId,
+      'meaningful_outcome_count': closed.meaningfulAttemptCount,
+    });
+    _recordTelemetryEventV1('session_payoff_generated', <String, Object?>{
+      'schemaVersion': 1,
+      'run_id': closed.runId,
+      'closure_reason': closed.closureReason,
+      'meaningful_outcome_count': closed.meaningfulAttemptCount,
+    });
+    final focus = payoff.unresolved ?? payoff.recovered ?? payoff.strength;
+    if (focus != null) {
+      _recordTelemetryEventV1('session_focus_selected', <String, Object?>{
+        'schemaVersion': 1,
+        'run_id': closed.runId,
+        'skill_id': focus.skillId,
+        'selected_focus': focus.recommendationSignal,
+      });
+      _recordTelemetryEventV1('next_practice_recommended', <String, Object?>{
+        'schemaVersion': 1,
+        'run_id': closed.runId,
+        'skill_id': focus.skillId,
+        'recommendation_source': focus.recommendationSignal,
+      });
+    }
+    _learningRunV1 = closed.markPayoffViewed();
+    _pendingLearningRunPayoffV1 = payoff;
+    _recordTelemetryEventV1('session_payoff_viewed', <String, Object?>{
+      'schemaVersion': 1,
+      'run_id': closed.runId,
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _pendingLearningRunPayoffV1 == null) {
+        return;
+      }
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Act0LearningRunPayoffSheetV1(
+          payoff: _pendingLearningRunPayoffV1!,
+          onComplete: () {
+            Navigator.of(context).pop();
+            setState(_completeLearningRunPayoffV1);
+          },
+        ),
+      );
+    });
+  }
+
+  void _completeLearningRunPayoffV1() {
+    final run = _learningRunV1;
+    if (run != null) {
+      _recordTelemetryEventV1('session_payoff_completed', <String, Object?>{
+        'schemaVersion': 1,
+        'run_id': run.runId,
+        'meaningful_outcome_count': run.meaningfulAttemptCount,
+      });
+    }
+    _learningRunV1 = null;
+    _pendingLearningRunPayoffV1 = null;
+    _learningRunLearnVisitActiveV1 = false;
+    _learningRunOutcomeTelemetryKeysV1.clear();
+  }
+
   Future<void> _invalidatePersistedProgressWrites() async {
     if (!_usesPersistedProgress) {
       return;
@@ -4458,6 +4724,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                         onOpenLearnContext: () => setState(() {
                           final lesson = _firstPlayableLesson(selectedWorld);
+                          _learningRunLearnVisitActiveV1 = true;
                           _tab = Act0ShellTabV1.learn;
                           _showPlayHub = true;
                           _returnToPlayHubOnBack = false;
@@ -5062,6 +5329,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _latestCompletedDecisionV1 = decision;
                                     _appendLearningEvidenceV1(decision);
                                     _deriveActionPersonalizationV1(decision);
+                                    _recordLearningRunDecisionV1(decision);
                                   });
                                   _persistProgress();
                                 },
@@ -5429,6 +5697,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               current: _tab,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
+                if (_tab == Act0ShellTabV1.learn &&
+                    tab == Act0ShellTabV1.home) {
+                  _closeLearningRunForLearnExitV1();
+                }
                 _tab = tab;
                 if (tab == Act0ShellTabV1.play) {
                   _showPlayHub = true;
@@ -5452,6 +5724,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _placementHandoffActive = false;
                 }
                 if (tab == Act0ShellTabV1.learn) {
+                  _learningRunLearnVisitActiveV1 = true;
                   final learnLesson = _firstPlayableLesson(selectedWorld);
                   _seedLearnRouteFocusV1(
                     lessonId: learnLesson.lessonId,
@@ -9034,6 +9307,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? null
         : Act0PositionPersonalizationV1.fromRepairIntent(positionIntent);
     if (positionCase != null) {
+      _recordLearningRunPositionRecheckV1(recheckCorrect: option.isCorrect);
       _recordTelemetryEventV1(
         'position_personalization_recheck',
         positionCase.telemetryFields(
