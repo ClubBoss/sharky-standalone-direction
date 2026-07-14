@@ -3838,6 +3838,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       finalizedAtMilliseconds: DateTime.now().millisecondsSinceEpoch,
     );
     final payoff = Act0LearningRunPayoffPolicyV1.evaluate(closed);
+    if (payoff != null) {
+      _recordTelemetryEventV1('learning_run_payoff_eligible', <String, Object?>{
+        'schemaVersion': 1,
+        'run_id': closed.runId,
+        'meaningful_outcome_count': closed.meaningfulAttemptCount,
+      });
+    }
     _recordTelemetryEventV1('learning_run_closed', <String, Object?>{
       'schemaVersion': 1,
       'run_id': closed.runId,
@@ -3861,11 +3868,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _learningRunLearnVisitActiveV1 = false;
       return;
     }
-    _recordTelemetryEventV1('learning_run_payoff_eligible', <String, Object?>{
-      'schemaVersion': 1,
-      'run_id': closed.runId,
-      'meaningful_outcome_count': closed.meaningfulAttemptCount,
-    });
     _recordTelemetryEventV1('session_payoff_generated', <String, Object?>{
       'schemaVersion': 1,
       'run_id': closed.runId,
