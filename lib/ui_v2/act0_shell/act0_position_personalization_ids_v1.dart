@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_ids_v1.dart';
+
 const String act0PositionPersonalizationSequenceIdV1 =
     'w3_btn_position_read_v1';
 const String act0PositionPersonalizationWorldIdV1 = 'world_3';
@@ -19,6 +21,11 @@ String act0CanonicalErrorTypeForDecisionV1({
   if (result == 'incorrect' &&
       sourceTaskId == act0PositionPersonalizationSourceTaskIdV1) {
     return act0PositionPersonalizationErrorTypeV1;
+  }
+  if (result == 'incorrect' &&
+      sourceTaskId == act0PricePersonalizationSourceTaskIdV1 &&
+      skillAtomId == act0PricePersonalizationSkillIdV1) {
+    return act0PricePersonalizationErrorTypeV1;
   }
   return switch (result) {
     'incorrect' => 'missed_$skillAtomId',

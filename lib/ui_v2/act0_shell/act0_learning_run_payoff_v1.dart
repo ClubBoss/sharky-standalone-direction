@@ -166,6 +166,21 @@ class Act0LearningRunPayoffV1 {
   final String nextPractice;
 }
 
+/// Family-owned descriptors let the run policy stay generic as deterministic
+/// personalization families are admitted. Unknown future skills retain a safe
+/// generic label and recommendation instead of receiving a false named claim.
+class Act0LearningRunSkillDescriptorV1 {
+  const Act0LearningRunSkillDescriptorV1({
+    required this.label,
+    required this.nextClue,
+    required this.nextPractice,
+  });
+
+  final String label;
+  final String nextClue;
+  final String nextPractice;
+}
+
 class Act0LearningRunPayoffPolicyV1 {
   static Act0LearningRunPayoffV1? evaluate(Act0LearningRunStateV1 run) {
     if (!run.isPayoffEligible) return null;
@@ -221,10 +236,7 @@ class Act0LearningRunPayoffPolicyV1 {
       };
 
   static String skillLabel(Act0LearningRunOutcomeV1 outcome) =>
-      switch (outcome.skillId) {
-        'table_position_read' => 'table position',
-        _ => 'the action',
-      };
+      _descriptorFor(outcome).label;
 
   static String outcomeLine(Act0LearningRunOutcomeV1 outcome) =>
       switch (outcome.finalOutcome) {
@@ -238,14 +250,40 @@ class Act0LearningRunPayoffPolicyV1 {
       };
 
   static String _clueFor(Act0LearningRunOutcomeV1 outcome) =>
-      outcome.skillId == 'table_position_read'
-      ? 'Find the Button before judging who acts late.'
-      : 'Check whether a bet is already in front of you.';
+      _descriptorFor(outcome).nextClue;
 
   static String _practiceFor(Act0LearningRunOutcomeV1 outcome) =>
-      outcome.skillId == 'table_position_read'
-      ? 'Practice one more Button read next.'
-      : 'Practice one more action-order read next.';
+      _descriptorFor(outcome).nextPractice;
+
+  static Act0LearningRunSkillDescriptorV1 _descriptorFor(
+    Act0LearningRunOutcomeV1 outcome,
+  ) => _skillDescriptors[outcome.skillId] ?? _genericDescriptor;
+
+  static const Map<String, Act0LearningRunSkillDescriptorV1> _skillDescriptors =
+      <String, Act0LearningRunSkillDescriptorV1>{
+        'action_read': Act0LearningRunSkillDescriptorV1(
+          label: 'the action',
+          nextClue: 'Check whether a bet is already in front of you.',
+          nextPractice: 'Practice one more action-order read next.',
+        ),
+        'table_position_read': Act0LearningRunSkillDescriptorV1(
+          label: 'table position',
+          nextClue: 'Find the Button before judging who acts late.',
+          nextPractice: 'Practice one more Button read next.',
+        ),
+        'price_read': Act0LearningRunSkillDescriptorV1(
+          label: 'the price',
+          nextClue: 'Compare the pot with the amount you must call.',
+          nextPractice: 'Practice one more pot-versus-call read next.',
+        ),
+      };
+
+  static const Act0LearningRunSkillDescriptorV1 _genericDescriptor =
+      Act0LearningRunSkillDescriptorV1(
+        label: 'this clue',
+        nextClue: 'Inspect the same table clue before choosing again.',
+        nextPractice: 'Practice the same clue once more next.',
+      );
 }
 
 class Act0LearningRunPayoffSheetV1 extends StatelessWidget {

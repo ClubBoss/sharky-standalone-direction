@@ -45,6 +45,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_session_identity_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -3717,6 +3718,31 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (!Act0PositionPersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
+      if (!Act0PricePersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
+        return;
+      }
+      _recordLearningRunOutcomeV1(
+        Act0LearningRunOutcomeV1(
+          outcomeId: 'price:${decision.attemptKey}',
+          lessonId: decision.lessonId,
+          taskId: decision.taskId,
+          skillId: Act0PricePersonalizationV1.skillId,
+          firstAttemptCorrect: decision.isCorrect,
+          errorType: decision.isCorrect
+              ? 'none'
+              : Act0PricePersonalizationV1.errorType,
+          repairAttempted: false,
+          recheckResult: null,
+          finalOutcome: decision.isCorrect
+              ? Act0LearningRunFinalOutcomeV1.masteredFirstTry
+              : Act0LearningRunFinalOutcomeV1.incomplete,
+          missedSignal: Act0PricePersonalizationV1.missedSignalId,
+          recommendationSignal: 'compare_pot_to_call',
+          eventOrder: _nextLearningRunEventOrderV1(),
+        ),
+        userChoice: decision.selectedId,
+        timeToDecision: decision.decisionTimeBucket,
+      );
       return;
     }
     _recordLearningRunOutcomeV1(
@@ -3773,6 +3799,41 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
         missedSignal: Act0PositionPersonalizationV1.missedSignalId,
         recommendationSignal: 'find_button_before_late_position',
+        eventOrder: _nextLearningRunEventOrderV1(),
+      ),
+    );
+  }
+
+  void _recordLearningRunPriceRecheckV1({required bool recheckCorrect}) {
+    final run = _learningRunV1;
+    if (run == null) {
+      return;
+    }
+    Act0LearningRunOutcomeV1? source;
+    for (final outcome in run.outcomes.reversed) {
+      if (outcome.skillId == Act0PricePersonalizationV1.skillId) {
+        source = outcome;
+        break;
+      }
+    }
+    if (source == null || source.firstAttemptCorrect) {
+      return;
+    }
+    _recordLearningRunOutcomeV1(
+      Act0LearningRunOutcomeV1(
+        outcomeId: source.outcomeId,
+        lessonId: source.lessonId,
+        taskId: source.taskId,
+        skillId: source.skillId,
+        firstAttemptCorrect: false,
+        errorType: Act0PricePersonalizationV1.errorType,
+        repairAttempted: true,
+        recheckResult: recheckCorrect,
+        finalOutcome: recheckCorrect
+            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
+            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+        missedSignal: Act0PricePersonalizationV1.missedSignalId,
+        recommendationSignal: 'compare_pot_to_call',
         eventOrder: _nextLearningRunEventOrderV1(),
       ),
     );
@@ -9163,6 +9224,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ),
         );
       }
+      if (Act0PricePersonalizationV1.isCanonicalSourceTask(
+        selectedTask.taskId,
+      )) {
+        const priceCase = Act0PricePersonalizationCaseV1();
+        _recordTelemetryEventV1(
+          'price_personalization_payoff',
+          priceCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: priceCase.cleanPayoffOutcome,
+          ),
+        );
+      }
       _refreshRetentionMemoryStatusesV1();
       _persistProgress();
       return;
@@ -9218,6 +9291,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         positionCase.telemetryFields(
           attemptPhase: 'recheck',
           finalLearningOutcome: positionCase.failedRecheckOutcome,
+        ),
+      );
+    }
+    final priceCase = openIntent == null
+        ? null
+        : Act0PricePersonalizationV1.fromRepairIntent(openIntent);
+    if (priceCase != null && _activeRepairTaskId == selectedTask.taskId) {
+      _recordTelemetryEventV1(
+        'price_personalization_recheck',
+        priceCase.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: priceCase.failedRecheckOutcome,
         ),
       );
     }
@@ -9317,6 +9402,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           finalLearningOutcome: option.isCorrect
               ? positionCase.successfulPayoffOutcome
               : positionCase.failedRecheckOutcome,
+        ),
+      );
+    }
+    final priceIntent = _openRepairIntentBySourceTaskId[request.sourceTaskId];
+    final priceCase = priceIntent == null
+        ? null
+        : Act0PricePersonalizationV1.fromRepairIntent(priceIntent);
+    if (priceCase != null) {
+      _recordLearningRunPriceRecheckV1(recheckCorrect: option.isCorrect);
+      _recordTelemetryEventV1(
+        'price_personalization_recheck',
+        priceCase.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: option.isCorrect
+              ? priceCase.successfulPayoffOutcome
+              : priceCase.failedRecheckOutcome,
         ),
       );
     }
@@ -9427,6 +9528,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         },
       );
     }
+    final priceCase = Act0PricePersonalizationV1.fromRepairIntent(intent);
+    if (priceCase != null) {
+      _recordTelemetryEventV1(
+        'price_personalization_classified',
+        <String, Object?>{
+          ...priceCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: 'repair_required',
+          ),
+          'user_choice': intent.choiceId,
+          'correctness': false,
+        },
+      );
+    }
     _appendRepairIntentAuditEntryV1(
       _Act0RepairIntentAuditEntryV1(
         transition: 'intent_created',
@@ -9467,6 +9582,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           positionCase.telemetryFields(
             attemptPhase: 'payoff',
             finalLearningOutcome: positionCase.successfulPayoffOutcome,
+          ),
+        );
+      }
+      final priceCase = Act0PricePersonalizationV1.fromRepairIntent(intent);
+      if (priceCase != null && completedMappedTarget) {
+        _recordTelemetryEventV1(
+          'price_personalization_recheck',
+          priceCase.telemetryFields(
+            attemptPhase: 'recheck',
+            finalLearningOutcome: priceCase.successfulPayoffOutcome,
+          ),
+        );
+        _recordTelemetryEventV1(
+          'price_personalization_payoff',
+          priceCase.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: priceCase.successfulPayoffOutcome,
           ),
         );
       }
