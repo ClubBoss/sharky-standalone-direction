@@ -11,23 +11,27 @@ void main() {
     String position = 'BTN',
   }) async {
     String? result;
-    await tester.pumpWidget(MaterialApp(
-      home: Builder(builder: (context) {
-        result = act0RuntimeLocalizedSeatPrimaryLabelV1(
-          context,
-          seat: Act0SeatStateV1(
-            seatId: 'hero',
-            seatLabel: position,
-            displayName: 'Hero',
-            isHero: true,
-          ),
-          hero: true,
-          refined: true,
-          identityPolicy: policy,
-        );
-        return const SizedBox();
-      }),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            result = act0RuntimeLocalizedSeatPrimaryLabelV1(
+              context,
+              seat: Act0SeatStateV1(
+                seatId: 'hero',
+                seatLabel: position,
+                displayName: 'Hero',
+                isHero: true,
+              ),
+              hero: true,
+              refined: true,
+              identityPolicy: policy,
+            );
+            return const SizedBox();
+          },
+        ),
+      ),
+    );
     return result!;
   }
 
@@ -39,16 +43,15 @@ void main() {
   });
 
   testWidgets('formats learner only without Hero or position', (tester) async {
-    expect(
-      await label(tester, Act0TableIdentityPolicyV1.learnerOnly),
-      'You',
-    );
+    expect(await label(tester, Act0TableIdentityPolicyV1.learnerOnly), 'You');
   });
 
-  testWidgets('formats canonical BTN and non-BTN positions', (tester) async {
+  testWidgets('formats canonical BTN and non-BTN primary positions', (
+    tester,
+  ) async {
     expect(
       await label(tester, Act0TableIdentityPolicyV1.learnerPosition),
-      'You · BTN',
+      'BTN',
     );
     expect(
       await label(
@@ -56,7 +59,7 @@ void main() {
         Act0TableIdentityPolicyV1.learnerPosition,
         position: 'BB',
       ),
-      'You · BB',
+      'BB',
     );
   });
 
@@ -76,7 +79,7 @@ void main() {
         tester,
         Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder,
       ),
-      'You · BTN',
+      'BTN',
     );
   });
 }

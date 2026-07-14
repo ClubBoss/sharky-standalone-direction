@@ -753,7 +753,7 @@ String act0RuntimeLocalizedSeatPrimaryLabelV1(
       identityPolicy ==
           Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder) {
     final position = seat.seatLabel.trim();
-    return position.isEmpty ? learner : '$learner · $position';
+    return position.isEmpty ? learner : position;
   }
   final heroLabel = act0LocalizedSurfaceAtomV1(
     context,

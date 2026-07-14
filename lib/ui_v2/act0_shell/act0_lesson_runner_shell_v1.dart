@@ -2244,7 +2244,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
-    final identityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
+    final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
     );
@@ -2415,6 +2415,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         isRefinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson &&
         !Act0ShellTokensV1.isTabletWidth(context);
+    // Compact seats already render a distinct learner badge. Keep the text
+    // label to the table position so the visible identity is "You" + "BTN".
+    final identityPolicy = usesSharedActiveRunnerAllocation
+        ? Act0TableIdentityPolicyV1.learnerPosition
+        : sourceIdentityPolicy;
     final coupleTableToDock =
         usesSharedActiveRunnerAllocation ||
         (viewportPressureReason != _compactAnswerListNoPressureReasonV1 &&
@@ -2447,6 +2452,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       repairFillMode: repairFillMode,
       shortSafeAnswerList: usesShortSafeCompactAnswerListEnvelope,
       compactRepairFeedbackDock: usesCompactRepairFeedbackDock,
+      interactionMode: interactionMode,
+      forceCompactStateAllocation:
+          usesSharedActiveRunnerAllocation && !_showBottomLearningRail,
     );
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
@@ -2466,6 +2474,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         onSelectPreset: widget.onSelectSizingPreset,
         integratedLowerSurface: _showBottomLearningRail,
         compactAnswerListDecision: compactAnswerListDecision,
+        fillCompactPromptToDock:
+            isDrill &&
+            !runner.options.any((option) => option.seatId != null) &&
+            !runner.sizingConfig.isEnabled &&
+            compactAnswerListDecision &&
+            taskCycleEnvelope.usesFixedLowerSlot,
         scrollContentInEnvelope:
             taskCycleEnvelope.usesFixedLowerSlot ||
             (usesSharedActiveRunnerAllocation && !_showBottomLearningRail),
@@ -2569,6 +2583,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           : null,
                       embedChildInSurface: bottomContext.isTrailHistory,
                       compactDecision: compactAnswerListDecision,
+                      fillAllocatedDock:
+                          compactAnswerListDecision &&
+                          taskCycleEnvelope.usesFixedLowerSlot,
                       question: question,
                       onBack: null,
                       recallLabel: decisionHint == null ? null : 'Need a hint?',
@@ -2911,10 +2928,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     ),
                     SizedBox(
                       height: lowerSlotHeight,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: buildRunnerActionDock(),
-                      ),
+                      child: buildRunnerActionDock(),
                     ),
                   ],
                 );
@@ -3333,7 +3347,39 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
   required bool repairFillMode,
   required bool shortSafeAnswerList,
   required bool compactRepairFeedbackDock,
+  required _RunnerInteractionModeV1 interactionMode,
+  required bool forceCompactStateAllocation,
 }) {
+  if (forceCompactStateAllocation) {
+    final isFeedback = interactionMode == _RunnerInteractionModeV1.feedback;
+    final isSeatTap =
+        interactionMode == _RunnerInteractionModeV1.tableTapDecision;
+    return _RunnerTaskCycleViewportEnvelopeV1(
+      familyName: 'compact_${interactionMode.name}',
+      usesFixedLowerSlot: true,
+      targetLowerSlotHeight: isFeedback
+          ? _runnerRepairFeedbackDockTargetLowerSlotHeightV1
+          : isSeatTap
+          ? _runnerCompactSeatTapTargetLowerSlotHeightV1
+          : (shortSafeAnswerList
+                ? _runnerShortAnswerEnvelopeTargetLowerSlotHeightV1
+                : _runnerEnvelopeWave1bTargetLowerSlotHeightV1),
+      minLowerSlotHeight: isFeedback
+          ? _runnerCompactFeedbackMinLowerSlotHeightV1
+          : isSeatTap
+          ? _runnerCompactSeatTapMinLowerSlotHeightV1
+          : (shortSafeAnswerList
+                ? _runnerShortAnswerEnvelopeMinLowerSlotHeightV1
+                : _runnerEnvelopeWave1bMinLowerSlotHeightV1),
+      maxLowerSlotShare: isFeedback
+          ? _runnerRepairFeedbackDockMaxLowerSlotShareV1
+          : isSeatTap
+          ? _runnerCompactSeatTapMaxLowerSlotShareV1
+          : (shortSafeAnswerList
+                ? _runnerShortAnswerEnvelopeMaxLowerSlotShareV1
+                : _runnerEnvelopeWave1bMaxLowerSlotShareV1),
+    );
+  }
   final usesFixedAnswerListEnvelope =
       pressureReason != _compactAnswerListNoPressureReasonV1 &&
       _viewportFamilyUsesAnswerListCompositionV1(viewportFamily);
@@ -3551,6 +3597,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
     this.onSelectPreset,
     this.integratedLowerSurface = false,
     this.compactAnswerListDecision = false,
+    this.fillCompactPromptToDock = false,
     this.scrollContentInEnvelope = false,
     this.protectFixedSlotBottom = false,
     this.centerBoundedLowerSurface = false,
@@ -3564,6 +3611,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
   final ValueChanged<Act0SizingPresetV1>? onSelectPreset;
   final bool integratedLowerSurface;
   final bool compactAnswerListDecision;
+  final bool fillCompactPromptToDock;
   final bool scrollContentInEnvelope;
   final bool protectFixedSlotBottom;
   final bool centerBoundedLowerSurface;
@@ -3578,7 +3626,9 @@ class _RunnerActionDockV1 extends StatelessWidget {
     final dockBody = _CompactAnswerListDecisionScopeV1(
       compact: compactAnswerListDecision,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: fillCompactPromptToDock
+            ? MainAxisSize.max
+            : MainAxisSize.min,
         children: [
           if (effectiveTaskRailLabel != null &&
               effectiveTaskRailLabel.isNotEmpty) ...[
@@ -3593,11 +3643,12 @@ class _RunnerActionDockV1 extends StatelessWidget {
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
-          child,
+          if (fillCompactPromptToDock) Expanded(child: child) else child,
         ],
       ),
     );
-    final effectiveDockBody = scrollContentInEnvelope
+    final effectiveDockBody =
+        scrollContentInEnvelope && !fillCompactPromptToDock
         ? SingleChildScrollView(
             primary: false,
             physics: const ClampingScrollPhysics(),
@@ -3666,18 +3717,17 @@ class _RunnerActionDockV1 extends StatelessWidget {
                             ? safeBottom + 12
                             : Act0ShellTokensV1.gapMd),
                 ),
-                child: protectFixedSlotBottom
+                child: fillCompactPromptToDock
+                    ? SizedBox.expand(child: effectiveDockBody)
+                    : protectFixedSlotBottom
                     ? Align(
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment.center,
                         child: effectiveDockBody,
                       )
                     : effectiveDockBody,
               ),
             ),
     );
-    if (compactAnswerListDecision && scrollContentInEnvelope) {
-      return Align(alignment: Alignment.topCenter, child: visualDock);
-    }
     return visualDock;
   }
 }
@@ -4147,128 +4197,134 @@ class _LearningRailV1 extends StatelessWidget {
                       Expanded(
                         child: Align(
                           alignment: Alignment.center,
-                          child: ConstrainedBox(
-                            key: const Key(
-                              'act0_shell_learning_rail_content_lane',
-                            ),
-                            constraints: BoxConstraints(
-                              maxWidth: compactLaneMaxWidth,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                if (showCompactHeader) ...[
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      if (showTaskLabel)
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Act0SharkyMascotV1(
-                                                mood: sharkyMood,
-                                                tone: Act0ShellTokensV1.info,
-                                                size: compactRail ? 16 : 16,
-                                              ),
-                                              SizedBox(
-                                                width: compactRail ? 6 : 6,
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  taskLabel!,
-                                                  key: const Key(
-                                                    'act0_shell_learning_rail_task_label',
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Act0ShellTokensV1.label
-                                                      .copyWith(
-                                                        color: Act0ShellTokensV1
-                                                            .info,
-                                                        letterSpacing: 0.16,
-                                                        fontSize: compactRail
-                                                            ? 10.2
-                                                            : 10.2,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                      ),
+                          child: SingleChildScrollView(
+                            primary: false,
+                            physics: const ClampingScrollPhysics(),
+                            child: ConstrainedBox(
+                              key: const Key(
+                                'act0_shell_learning_rail_content_lane',
+                              ),
+                              constraints: BoxConstraints(
+                                maxWidth: compactLaneMaxWidth,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (showCompactHeader) ...[
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (showTaskLabel)
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Act0SharkyMascotV1(
+                                                  mood: sharkyMood,
+                                                  tone: Act0ShellTokensV1.info,
+                                                  size: compactRail ? 16 : 16,
                                                 ),
-                                              ),
-                                            ],
+                                                SizedBox(
+                                                  width: compactRail ? 6 : 6,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    taskLabel!,
+                                                    key: const Key(
+                                                      'act0_shell_learning_rail_task_label',
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Act0ShellTokensV1
+                                                        .label
+                                                        .copyWith(
+                                                          color:
+                                                              Act0ShellTokensV1
+                                                                  .info,
+                                                          letterSpacing: 0.16,
+                                                          fontSize: compactRail
+                                                              ? 10.2
+                                                              : 10.2,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        else
+                                          const Spacer(),
+                                        if (showRailProgress)
+                                          Text(
+                                            progressLabel!,
+                                            key: const Key(
+                                              'act0_shell_learning_rail_progress',
+                                            ),
+                                            style: Act0ShellTokensV1.label
+                                                .copyWith(
+                                                  color:
+                                                      Act0ShellTokensV1.textDim,
+                                                  fontSize: compactRail
+                                                      ? 8.8
+                                                      : 10.0,
+                                                  letterSpacing: 0.12,
+                                                  fontWeight: FontWeight.w800,
+                                                ),
                                           ),
-                                        )
-                                      else
-                                        const Spacer(),
-                                      if (showRailProgress)
-                                        Text(
-                                          progressLabel!,
-                                          key: const Key(
-                                            'act0_shell_learning_rail_progress',
-                                          ),
-                                          style: Act0ShellTokensV1.label
-                                              .copyWith(
-                                                color:
-                                                    Act0ShellTokensV1.textDim,
-                                                fontSize: compactRail
-                                                    ? 8.8
-                                                    : 10.0,
-                                                letterSpacing: 0.12,
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                ],
-                                Text(
-                                  _formatInstructionCopyV1(
-                                    prompt,
-                                    allowSingleClauseSplit: true,
-                                  ),
-                                  key: const Key('act0_shell_runner_prompt'),
-                                  maxLines: promptMaxLines,
-                                  overflow: compactRail
-                                      ? TextOverflow.ellipsis
-                                      : null,
-                                  softWrap: true,
-                                  style: Act0ShellTokensV1.body.copyWith(
-                                    color: Act0ShellTokensV1.textMuted,
-                                    fontSize: promptFontSize,
-                                    height: compactRail ? 1.24 : 1.30,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                if (hasSupportLine) ...[
-                                  SizedBox(height: compactRail ? 2 : 6),
-                                  _LearningRailKeyIdeaV1(
-                                    supportSegments: supportSegments,
-                                    activeSegmentIndex:
-                                        activeSupportSegmentIndex,
-                                    compact: compactRail,
-                                    maxLines: supportMaxLines,
-                                  ),
-                                ] else if (showFallbackCoachLine) ...[
-                                  SizedBox(height: compactRail ? 4 : 6),
-                                  Text(
-                                    fallbackCoachLine,
-                                    key: const Key(
-                                      'act0_shell_learning_rail_support_line',
+                                      ],
                                     ),
-                                    maxLines: compactRail ? 3 : 2,
-                                    overflow: null,
+                                    const SizedBox(height: 6),
+                                  ],
+                                  Text(
+                                    _formatInstructionCopyV1(
+                                      prompt,
+                                      allowSingleClauseSplit: true,
+                                    ),
+                                    key: const Key('act0_shell_runner_prompt'),
+                                    maxLines: promptMaxLines,
+                                    overflow: compactRail
+                                        ? TextOverflow.ellipsis
+                                        : null,
                                     softWrap: true,
                                     style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.text,
-                                      fontSize: supportFontSize,
-                                      height: 1.35,
+                                      color: Act0ShellTokensV1.textMuted,
+                                      fontSize: promptFontSize,
+                                      height: compactRail ? 1.24 : 1.30,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
+                                  if (hasSupportLine) ...[
+                                    SizedBox(height: compactRail ? 2 : 6),
+                                    _LearningRailKeyIdeaV1(
+                                      supportSegments: supportSegments,
+                                      activeSegmentIndex:
+                                          activeSupportSegmentIndex,
+                                      compact: compactRail,
+                                      maxLines: supportMaxLines,
+                                    ),
+                                  ] else if (showFallbackCoachLine) ...[
+                                    SizedBox(height: compactRail ? 4 : 6),
+                                    Text(
+                                      fallbackCoachLine,
+                                      key: const Key(
+                                        'act0_shell_learning_rail_support_line',
+                                      ),
+                                      maxLines: compactRail ? 3 : 2,
+                                      overflow: null,
+                                      softWrap: true,
+                                      style: Act0ShellTokensV1.body.copyWith(
+                                        color: Act0ShellTokensV1.text,
+                                        fontSize: supportFontSize,
+                                        height: 1.35,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
                         ),
@@ -5305,16 +5361,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
           if (onBack != null) ...[
             _DockBackButtonV1(onPressed: onBack!),
             const SizedBox(width: Act0ShellTokensV1.gapSm),
-          ] else
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Icon(
-                Icons.touch_app_rounded,
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.92),
-                size: 18,
-              ),
-            ),
-          if (onBack == null) const SizedBox(width: 7),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -5382,7 +5429,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              'Tap your hero seat',
+                              'Tap your seat',
                               key: const Key('act0_shell_wave1b_answer_peek'),
                               style: Act0ShellTokensV1.label.copyWith(
                                 color: Act0ShellTokensV1.text,
@@ -5969,13 +6016,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Act0SharkyMascotV1(
-                    key: feedbackSharkySlotKey,
-                    mood: sharkyMood,
-                    tone: sharkyTone,
-                    size: isCompactRefinedFeedback ? 42 : (refined ? 46 : 50),
-                  ),
-                  const SizedBox(width: 8),
+                  if (!isCompactRefinedFeedback) ...[
+                    Act0SharkyMascotV1(
+                      key: feedbackSharkySlotKey,
+                      mood: sharkyMood,
+                      tone: sharkyTone,
+                      size: refined ? 46 : 50,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -6008,7 +6057,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           ),
                           const SizedBox(height: 1),
                         ],
-                        if (reactionLine.isNotEmpty)
+                        if (!isCompactRefinedFeedback &&
+                            reactionLine.isNotEmpty)
                           KeyedSubtree(
                             key: const Key(
                               'act0_shell_feedback_companion_role',
@@ -6048,7 +6098,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 0),
               ],
-              if (!rapidMode) ...[
+              if (!rapidMode && !isCompactRefinedFeedback) ...[
                 SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
                 _FeedbackStateRailV1(
                   tone: tone,
@@ -9477,6 +9527,10 @@ const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 280;
 const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 320;
 const double _runnerRepairFeedbackDockTargetLowerSlotShareV1 = 0.40;
 const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.44;
+const double _runnerCompactSeatTapMinLowerSlotHeightV1 = 220;
+const double _runnerCompactSeatTapTargetLowerSlotHeightV1 = 248;
+const double _runnerCompactSeatTapMaxLowerSlotShareV1 = 0.38;
+const double _runnerCompactFeedbackMinLowerSlotHeightV1 = 240;
 
 String _compactAnswerListPressureReasonV1(
   BuildContext context, {
@@ -13349,10 +13403,10 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
               ? Act0VisualCanonV1.greenTable
               : Act0ShellTokensV1.danger
         : Act0ShellTokensV1.text;
-    final markerTone = selected
-        ? tone
-        : (actionVisual?.tone ?? Act0ShellTokensV1.info);
-    final marker = String.fromCharCode(65 + optionIndex);
+    final markerTone = selected ? tone : Act0ShellTokensV1.info;
+    final marker = option.id == 'not_sure_yet'
+        ? '?'
+        : String.fromCharCode(65 + optionIndex);
     return KeyedSubtree(
       key: actionVisual == null
           ? null
@@ -13415,30 +13469,17 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
                               ),
                       ),
                     ),
-                    child: actionVisual == null
-                        ? Text(
-                            marker,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: selected
-                                  ? tone
-                                  : Act0ShellTokensV1.info.withValues(
-                                      alpha: 0.92,
-                                    ),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0,
-                            ),
-                          )
-                        : Icon(
-                            actionVisual.icon,
-                            key: Key(
-                              'act0_shell_poker_action_icon_${actionVisual.id}',
-                            ),
-                            size: compact ? 14 : 15,
-                            color: selected
-                                ? tone
-                                : markerTone.withValues(alpha: 0.96),
-                          ),
+                    child: Text(
+                      marker,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: selected
+                            ? tone
+                            : Act0ShellTokensV1.info.withValues(alpha: 0.92),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0,
+                      ),
+                    ),
                   ),
                   SizedBox(width: compact ? 8 : 10),
                   Expanded(
@@ -13552,6 +13593,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
     this.trailingContext,
     this.embedChildInSurface = false,
     this.compactDecision = false,
+    this.fillAllocatedDock = false,
     this.onBack,
     this.recallLabel,
     this.onRecall,
@@ -13565,6 +13607,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
   final Widget? trailingContext;
   final bool embedChildInSurface;
   final bool compactDecision;
+  final bool fillAllocatedDock;
   final VoidCallback? onBack;
   final String? recallLabel;
   final VoidCallback? onRecall;
@@ -13819,7 +13862,10 @@ class _ActionPromptPanelV1 extends StatelessWidget {
 
     return Column(
       key: const Key('act0_shell_action_prompt_panel'),
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize:
+          fillAllocatedDock && question.isNotEmpty && effectiveCompactDecision
+          ? MainAxisSize.max
+          : MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (question.isNotEmpty && embedChildInSurface) ...[
@@ -13851,46 +13897,10 @@ class _ActionPromptPanelV1 extends StatelessWidget {
             ),
           ),
         ] else if (question.isNotEmpty && effectiveCompactDecision) ...[
-          KeyedSubtree(
-            key: const Key('act0_shell_runner_decision_rhythm_surface'),
-            child: Container(
-              key: const Key('act0_shell_compact_decision_surface'),
-              padding: const EdgeInsets.fromLTRB(8, 5, 8, 6),
-              decoration: BoxDecoration(
-                color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: Act0ShellTokensV1.info.withValues(alpha: 0.20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.18),
-                    blurRadius: 14,
-                    offset: const Offset(0, 7),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  buildPromptHeader(),
-                  if (trailingContext != null) ...[
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    trailingContext!,
-                    const SizedBox(height: Act0ShellTokensV1.gapXs),
-                  ],
-                  KeyedSubtree(
-                    key: const Key('act0_shell_wave1b_actionability_anchor'),
-                    child: KeyedSubtree(
-                      key: const Key('act0_shell_wave1b_answer_peek'),
-                      child: child,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          if (fillAllocatedDock)
+            Expanded(child: _buildCompactDecisionSurface(buildPromptHeader))
+          else
+            _buildCompactDecisionSurface(buildPromptHeader),
         ] else if (question.isNotEmpty) ...[
           Container(
             padding: EdgeInsets.fromLTRB(
@@ -13930,6 +13940,63 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           child,
         ],
       ],
+    );
+  }
+
+  Widget _buildCompactDecisionContent(
+    Widget Function({bool integrated}) buildPromptHeader,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        buildPromptHeader(),
+        if (trailingContext != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          trailingContext!,
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+        ],
+        KeyedSubtree(
+          key: const Key('act0_shell_wave1b_actionability_anchor'),
+          child: KeyedSubtree(
+            key: const Key('act0_shell_wave1b_answer_peek'),
+            child: child,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompactDecisionSurface(
+    Widget Function({bool integrated}) buildPromptHeader,
+  ) {
+    return KeyedSubtree(
+      key: const Key('act0_shell_runner_decision_rhythm_surface'),
+      child: Container(
+        key: const Key('act0_shell_compact_decision_surface'),
+        padding: const EdgeInsets.fromLTRB(8, 5, 8, 6),
+        decoration: BoxDecoration(
+          color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: Act0ShellTokensV1.info.withValues(alpha: 0.20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.18),
+              blurRadius: 14,
+              offset: const Offset(0, 7),
+            ),
+          ],
+        ),
+        child: fillAllocatedDock
+            ? SingleChildScrollView(
+                primary: false,
+                physics: const ClampingScrollPhysics(),
+                child: _buildCompactDecisionContent(buildPromptHeader),
+              )
+            : _buildCompactDecisionContent(buildPromptHeader),
+      ),
     );
   }
 }
