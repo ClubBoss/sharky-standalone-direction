@@ -11011,6 +11011,9 @@ class _SeatNodeV1 extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Container(
+                  key: hero
+                      ? Key('act0_shell_hero_identity_${seat.seatId}')
+                      : null,
                   padding: EdgeInsets.symmetric(
                     horizontal: compact
                         ? (refined ? 5 : 7)

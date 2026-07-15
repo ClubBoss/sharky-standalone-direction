@@ -32,6 +32,22 @@ void main() {
       expect(dealer, findsNothing);
       await pump(tester, Act0TableIdentityPolicyV1.learnerPosition);
       expect(dealer, findsOneWidget);
+      final puckRect = tester.getRect(dealer);
+      final heroIdentityRect = tester.getRect(
+        find.byKey(const Key('act0_shell_hero_identity_hero')),
+      );
+      final tableRect = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      expect(puckRect.width, greaterThan(0));
+      expect(puckRect.height, greaterThan(0));
+      expect(tableRect.contains(puckRect.topLeft), isTrue);
+      expect(tableRect.contains(puckRect.bottomRight), isTrue);
+      expect(puckRect.overlaps(heroIdentityRect), isFalse);
+      expect(
+        find.byKey(const Key('act0_shell_wave1_hero_you_badge')),
+        findsOneWidget,
+      );
       await pump(
         tester,
         Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder,
