@@ -3906,9 +3906,10 @@ class _RunnerActionDockV1 extends StatelessWidget {
           )
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
-      _RunnerLowerStageProfileV1.compactFeedback => SizedBox.expand(
+      _RunnerLowerStageProfileV1.compactFeedback => Align(
         key: const Key('act0_shell_lower_stage_compact_feedback'),
-        child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
+        alignment: Alignment.topCenter,
+        child: integratedDockBody,
       ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
