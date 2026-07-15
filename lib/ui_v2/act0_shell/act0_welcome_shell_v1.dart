@@ -32,6 +32,7 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
   String? _selectedMicroWinOptionId;
+  Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
     context,
@@ -63,6 +64,20 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
 
   @override
   Widget build(BuildContext context) {
+    final microWinRunner = _microWinRunnerV1;
+    final accessibilityPrototypeStep =
+        act0ShouldActivateCompactAccessibilityPrototypeV1(
+          context,
+          question: microWinRunner.question,
+          options: microWinRunner.options,
+          tableCriticalLabels: <String>[
+            microWinRunner.table.potLabel,
+            microWinRunner.table.toCallLabel,
+          ],
+        )
+        ? _accessibilityPrototypeStep ??
+              Act0AccessibilityPrototypeStepV1.evidence
+        : null;
     return switch (_beat) {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
@@ -95,7 +110,11 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
       ),
       Act0WelcomeBeatV1.demoSpot => Act0LessonRunnerShellV1(
         key: const Key('act0_shell_welcome_demo_spot'),
-        runner: _microWinRunnerV1,
+        runner: microWinRunner,
+        accessibilityPrototypeStep: accessibilityPrototypeStep,
+        onAccessibilityPrototypeStepChanged: (next) {
+          setState(() => _accessibilityPrototypeStep = next);
+        },
         onBack: widget.replayMode && widget.onClose != null
             ? widget.onClose!
             : () => setState(() => _beat = Act0WelcomeBeatV1.intro),

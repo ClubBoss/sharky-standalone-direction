@@ -1014,6 +1014,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
 }
 
 class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
+  String? _accessibilityPrototypeTaskId;
+  Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
@@ -4565,6 +4567,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             isRu: _isRuLocaleV1,
           )
         : playRunner;
+    final accessibilityPrototypeStep =
+        activePlayRunner != null &&
+            act0ShouldActivateCompactAccessibilityPrototypeV1(
+              context,
+              question: activePlayRunner.question,
+              options: activePlayRunner.options,
+              tableCriticalLabels: <String>[
+                activePlayRunner.table.potLabel,
+                activePlayRunner.table.toCallLabel,
+              ],
+            )
+        ? _accessibilityPrototypeTaskId == playSelectedTask?.taskId
+              ? _accessibilityPrototypeStep ??
+                    Act0AccessibilityPrototypeStepV1.evidence
+              : Act0AccessibilityPrototypeStepV1.evidence
+        : null;
     final runnerFramingProfile = _runnerFramingProfileForTaskV1(
       task: playSelectedTask,
       runner: activePlayRunner,
@@ -5225,6 +5243,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 tablePresentation:
                                     playSelectedTask?.tablePresentation ??
                                     Act0TaskTablePresentationV1.legacy,
+                                accessibilityPrototypeStep:
+                                    accessibilityPrototypeStep,
+                                onAccessibilityPrototypeStepChanged: (next) {
+                                  setState(() {
+                                    _accessibilityPrototypeTaskId =
+                                        playSelectedTask.taskId;
+                                    _accessibilityPrototypeStep = next;
+                                  });
+                                },
                                 telemetrySink: _sessionAwareTelemetrySinkV1(),
                                 theoryRecallStep: theoryRecallStep,
                                 framingProfile: runnerFramingProfile,

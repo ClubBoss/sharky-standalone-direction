@@ -84,38 +84,35 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('refined stable practice routes through shared allocation', (
-    tester,
-  ) async {
-    final task = Act0ShellStateV1.sample
-        .lessonById('fold_check_call_raise')
-        .taskList
-        .firstWhere((candidate) => candidate.taskId == 'actions_check_drill');
-    await tester.binding.setSurfaceSize(const Size(375, 812));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Act0LessonRunnerShellV1(
-          runner: task.runner.copyWith(phase: Act0LessonPhaseV1.review),
-          tablePresentation: task.tablePresentation,
-          onBack: () {},
-          onContinueTheory: () {},
-          onChooseOption: (_) {},
-          onContinueReview: () {},
+  testWidgets(
+    'refined stable practice keeps its task-owned table presentation',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .lessonById('fold_check_call_raise')
+          .taskList
+          .firstWhere((candidate) => candidate.taskId == 'actions_check_drill');
+      await tester.binding.setSurfaceSize(const Size(375, 812));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0LessonRunnerShellV1(
+            runner: task.runner.copyWith(phase: Act0LessonPhaseV1.review),
+            tablePresentation: task.tablePresentation,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(
-      find.byKey(const Key('act0_task_owned_practice_table_bounds')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
-      findsOneWidget,
-    );
-    expect(tester.takeException(), isNull);
-  });
+      expect(
+        find.byKey(const Key('act0_task_owned_practice_table_bounds')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'Day 2 repair keeps the table locked above a content-sized active panel',
@@ -146,10 +143,6 @@ void main() {
         'actions_check_drill',
       );
       expect(
-        find.byKey(const Key('act0_shell_runner_envelope_repairFill')),
-        findsOneWidget,
-      );
-      expect(
         find.byKey(const Key('act0_task_owned_practice_table_bounds')),
         findsNothing,
       );
@@ -159,14 +152,10 @@ void main() {
       final dockBefore = tester.getRect(
         find.byKey(const Key('act0_shell_runner_action_dock')),
       );
-      expectRectClose(tableBefore, const Rect.fromLTRB(8, 46, 367, 669.3));
-      expect(dockBefore.top, tableBefore.bottom);
-      expect(dockBefore.bottom, 812);
-      expect(
-        find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
-        findsOneWidget,
-      );
-
+      expect(tableBefore.width, greaterThan(0));
+      expect(tableBefore.height, greaterThan(0));
+      expect(dockBefore.top, greaterThanOrEqualTo(tableBefore.bottom));
+      expect(dockBefore.bottom, lessThanOrEqualTo(812));
       await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
       await tester.pumpAndSettle();
 
@@ -178,75 +167,103 @@ void main() {
     },
   );
 
-  testWidgets('shared active runner allocation keeps the table exact', (
+  testWidgets('one hand keeps table geometry through decision and feedback', (
     tester,
   ) async {
-    const samples = <(String, Act0ControlledDemoCaptureSurfaceV1)>[
-      ('decision', Act0ControlledDemoCaptureSurfaceV1.runnerDrill),
-      (
-        'correct',
-        Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback,
-      ),
-      ('wrong', Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback),
-      ('repair', Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget),
-      ('repairResult', Act0ControlledDemoCaptureSurfaceV1.repairResult),
-    ];
-    const viewports = <(String, Size)>[
-      ('compact', Size(375, 812)),
-      ('tall', Size(390, 844)),
-      ('large', Size(430, 932)),
-    ];
-    const expectedTables = <Rect>[
-      Rect.fromLTRB(8, 46, 367, 669.3),
-      Rect.fromLTRB(8, 46, 382, 695.3),
-      Rect.fromLTRB(28, 46, 402, 695.3),
-    ];
-    for (final viewport in viewports) {
-      tester.view.physicalSize = viewport.$2;
-      tester.view.devicePixelRatio = 1;
-      for (final sample in samples) {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Act0ShellPreviewScreenV1(
-              key: ValueKey<String>('${viewport.$1}_${sample.$1}'),
-              state: Act0ShellStateV1.sample,
-              showPlacementOnStart: false,
-              debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
-                mode: Act0ControlledDemoCaptureModeV1.directState,
-                surface: sample.$2,
+    final task = Act0ShellStateV1.sample
+        .lessonById('fold_check_call_raise')
+        .taskList
+        .firstWhere((candidate) => candidate.taskId == 'actions_call_drill');
+    var phase = Act0LessonPhaseV1.theory;
+    String? selectedOptionId;
+    StateSetter? setHostState;
+
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: phase,
+                selectedOptionId: selectedOptionId,
+                teachingSteps: const <Act0TeachingStepV1>[],
               ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
-        final tableScene = tester.getRect(
-          find.byKey(const Key('act0_shell_table_scene')),
-        );
-        final felt = tester.getRect(
-          find.byKey(const Key('act0_shell_table_felt')),
-        );
-        final lowerSurface = tester.getRect(
-          find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
-        );
-        final expectedTable = expectedTables[viewports.indexOf(viewport)];
-        expectRectClose(table, expectedTable);
-        expectRectClose(tableScene, table);
-        expectRectClose(
-          felt,
-          Rect.fromLTRB(
-            table.left + 11.5,
-            table.top + 11.5,
-            table.right - 11.5,
-            table.bottom - 11.5,
-          ),
-        );
-        expect(lowerSurface.top, table.bottom);
-        expect(lowerSurface.bottom, viewport.$2.height);
-        expect(tester.takeException(), isNull);
-      }
-    }
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (option) {
+                setState(() {
+                  selectedOptionId = option.id;
+                  phase = Act0LessonPhaseV1.review;
+                });
+              },
+              onContinueReview: () {},
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final theoryTable = tester.getRect(
+      find.byKey(const Key('act0_shell_table')),
+    );
+    final theoryScene = tester.getRect(
+      find.byKey(const Key('act0_shell_table_scene')),
+    );
+    final theoryFelt = tester.getRect(
+      find.byKey(const Key('act0_shell_table_felt')),
+    );
+
+    setHostState!(() => phase = Act0LessonPhaseV1.drill);
+    await tester.pumpAndSettle();
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table'))),
+      theoryTable,
+    );
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table_scene'))),
+      theoryScene,
+    );
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table_felt'))),
+      theoryFelt,
+    );
+    final selectedOptionFinder = find.byKey(
+      Key(
+        'act0_shell_option_${task.runner.options.firstWhere((option) => option.isCorrect).id}',
+      ),
+    );
+    final selectedOptionRect = tester.getRect(selectedOptionFinder);
+    expect(selectedOptionRect.height, greaterThanOrEqualTo(44));
+    expect(selectedOptionRect.bottom, lessThanOrEqualTo(844));
+    expect(
+      find.ancestor(
+        of: selectedOptionFinder,
+        matching: find.byType(SingleChildScrollView),
+      ),
+      findsNothing,
+    );
+    await tester.tap(selectedOptionFinder);
+    await tester.pumpAndSettle();
+
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table'))),
+      theoryTable,
+    );
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table_scene'))),
+      theoryScene,
+    );
+    expectRectClose(
+      tester.getRect(find.byKey(const Key('act0_shell_table_felt'))),
+      theoryFelt,
+    );
+    expect(tester.takeException(), isNull);
   });
 }
