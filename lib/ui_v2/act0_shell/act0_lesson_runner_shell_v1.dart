@@ -2591,7 +2591,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 widget.lowerSurfacePrototypeState == null) ||
             isAccessibilityEvidence ||
             isAccessibilityDecision ||
-            lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback,
+            lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback ||
+            (isReview &&
+                lowerStageProfile ==
+                    _RunnerLowerStageProfileV1.expandedFeedback),
         centerBoundedLowerSurface:
             usesSharedActiveRunnerAllocation &&
             _showBottomLearningRail &&
@@ -2642,9 +2645,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         Act0TheoryPresentationRoleV1.actionPrep ||
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
-                fillsAvailableHeight:
-                    lowerStageUsesAvailableHeight &&
-                    lowerStageProfile == _RunnerLowerStageProfileV1.instruction,
+                // Keep the instruction and its continuation control together
+                // when the shared envelope has spare repair-room below them.
+                fillsAvailableHeight: false,
               )
             : isTeaching
             ? FilledButton(
@@ -3565,29 +3568,27 @@ _RunnerTaskCycleViewportEnvelopeV1 _resolveRunnerTaskCycleViewportEnvelopeV1(
   required bool forceCompactStateAllocation,
 }) {
   if (forceCompactStateAllocation) {
-    final isFeedback = interactionMode == _RunnerInteractionModeV1.feedback;
-    final isSeatTap =
-        interactionMode == _RunnerInteractionModeV1.tableTapDecision;
     return _RunnerTaskCycleViewportEnvelopeV1(
       familyName: 'compact_${interactionMode.name}',
       usesFixedLowerSlot: true,
-      targetLowerSlotHeight: isFeedback
+      targetLowerSlotHeight:
+          interactionMode == _RunnerInteractionModeV1.feedback
           ? _runnerRepairFeedbackDockTargetLowerSlotHeightV1
-          : isSeatTap
+          : interactionMode == _RunnerInteractionModeV1.tableTapDecision
           ? _runnerCompactSeatTapTargetLowerSlotHeightV1
           : (shortSafeAnswerList
                 ? _runnerShortAnswerEnvelopeTargetLowerSlotHeightV1
                 : _runnerEnvelopeWave1bTargetLowerSlotHeightV1),
-      minLowerSlotHeight: isFeedback
+      minLowerSlotHeight: interactionMode == _RunnerInteractionModeV1.feedback
           ? _runnerCompactFeedbackMinLowerSlotHeightV1
-          : isSeatTap
+          : interactionMode == _RunnerInteractionModeV1.tableTapDecision
           ? _runnerCompactSeatTapMinLowerSlotHeightV1
           : (shortSafeAnswerList
                 ? _runnerShortAnswerEnvelopeMinLowerSlotHeightV1
                 : _runnerEnvelopeWave1bMinLowerSlotHeightV1),
-      maxLowerSlotShare: isFeedback
+      maxLowerSlotShare: interactionMode == _RunnerInteractionModeV1.feedback
           ? _runnerRepairFeedbackDockMaxLowerSlotShareV1
-          : isSeatTap
+          : interactionMode == _RunnerInteractionModeV1.tableTapDecision
           ? _runnerCompactSeatTapMaxLowerSlotShareV1
           : (shortSafeAnswerList
                 ? _runnerShortAnswerEnvelopeMaxLowerSlotShareV1
@@ -3884,9 +3885,10 @@ class _RunnerActionDockV1 extends StatelessWidget {
     );
     final effectiveDockBody =
         scrollContentInEnvelope && !fillCompactPromptToDock
-        ? SingleChildScrollView(
-            primary: false,
-            physics: const ClampingScrollPhysics(),
+        ? _BoundedLowerStageScrollV1(
+            showActionFirst:
+                lowerStageProfile ==
+                _RunnerLowerStageProfileV1.expandedFeedback,
             child: dockBody,
           )
         : dockBody;
@@ -3906,10 +3908,17 @@ class _RunnerActionDockV1 extends StatelessWidget {
           )
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
-      _RunnerLowerStageProfileV1.compactFeedback => Align(
-        key: const Key('act0_shell_lower_stage_compact_feedback'),
-        alignment: Alignment.topCenter,
-        child: integratedDockBody,
+      _RunnerLowerStageProfileV1.compactFeedback => LayoutBuilder(
+        builder: (context, constraints) => constraints.hasBoundedHeight
+            ? SizedBox.expand(
+                key: const Key('act0_shell_lower_stage_compact_feedback'),
+                child: integratedDockBody,
+              )
+            : Align(
+                key: const Key('act0_shell_lower_stage_compact_feedback'),
+                alignment: Alignment.topCenter,
+                child: integratedDockBody,
+              ),
       ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
@@ -3939,7 +3948,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
               ),
       _RunnerLowerStageProfileV1.expandedFeedback => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_expanded_feedback'),
-        child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
+        child: integratedDockBody,
       ),
     };
     final visualDock = Container(
@@ -3988,6 +3997,29 @@ class _RunnerActionDockV1 extends StatelessWidget {
             ),
     );
     return visualDock;
+  }
+}
+
+/// Keeps an overflowing repair body discoverable with its primary CTA already
+/// inside the safe viewport. The body scrolls upward from that stable action.
+class _BoundedLowerStageScrollV1 extends StatelessWidget {
+  const _BoundedLowerStageScrollV1({
+    required this.child,
+    this.showActionFirst = false,
+  });
+
+  final Widget child;
+  final bool showActionFirst;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      key: const Key('act0_shell_lower_stage_scroll'),
+      primary: false,
+      reverse: showActionFirst,
+      physics: const ClampingScrollPhysics(),
+      child: child,
+    );
   }
 }
 

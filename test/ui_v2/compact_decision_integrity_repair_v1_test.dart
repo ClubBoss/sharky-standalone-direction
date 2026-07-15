@@ -557,6 +557,74 @@ void main() {
   );
 
   testWidgets(
+    'long First Table Guide repair keeps its CTA safe and body scrollable',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+          );
+
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+      tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPadding);
+      addTearDown(tester.view.resetViewPadding);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: Act0LessonPhaseV1.review,
+                selectedOptionId: 'hand_first_only',
+                teachingSteps: const <Act0TeachingStepV1>[],
+              ),
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              tablePresentation: task.tablePresentation,
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              repairReasonLine:
+                  'This rep repeats the same clue. Before choosing, name the table clue first.',
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final cta = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
+      expect(scrollable, findsOneWidget);
+      expect(cta.bottom, lessThanOrEqualTo(840));
+      expect(
+        tester
+            .state<ScrollableState>(
+              find.descendant(
+                of: scrollable,
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .position
+            .maxScrollExtent,
+        greaterThan(0),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'seat-tap teaching decision and feedback keep one table geometry and complete lower profiles',
     (tester) async {
       final task = Act0ShellStateV1.sample
