@@ -29,8 +29,16 @@ void main() {
       expect(capture, contains("'alpha_journey': <_CaptureSurfaceV1>["));
       expect(capture, contains("'presentation_closure'"));
       expect(capture, contains("'review_return'"));
+      expect(capture, contains("'review_full_shell_authority'"));
+      expect(
+        capture,
+        contains('Act0ControlledDemoCaptureSurfaceV1.firstWeekReview'),
+      );
       expect(capture, contains("'iphone17_class'"));
-      expect(capture, contains("final packetName = group == 'presentation_closure'"));
+      expect(
+        capture,
+        contains("final packetName = group == 'presentation_closure'"),
+      );
       expect(
         capture,
         contains("_CaptureSurfaceV1('learn_detail', 'firstWeekLearn')"),
@@ -65,6 +73,7 @@ void main() {
         "'supports_alpha_admission': false",
         "'git_commit': currentGitCommit",
         "'git_status': currentGitStatus",
+        "'git_status_classification': currentGitStatusClassification",
         "'matches_current_head': true",
         "'allowed_claims': _realTextAllowedClaimsV1",
         "'unsupported_claims': _unsupportedViewportClaimsV1(device)",

@@ -209,6 +209,7 @@ const _reviewReturnSurfacesV1 = <String>[
   'review_focused_rep',
   'review_feedback',
   'review_return_updated',
+  'review_full_shell_authority',
 ];
 
 const _routeW7W12CaptureSurfacesV1 = <_RouteCaptureSurfaceV1>[
@@ -448,6 +449,7 @@ void main(List<String> args) async {
                 .toList());
   final currentGitCommit = _gitOutputV1(<String>['rev-parse', 'HEAD']);
   final currentGitStatus = _evidenceGitStatusV1();
+  final currentGitStatusClassification = _evidenceGitStatusClassificationV1();
   final sourceBySurface = targetedSurfaces == null
       ? _sourceBySurfaceV1(
           captureSurfaces: captureSurfaces,
@@ -458,6 +460,8 @@ void main(List<String> args) async {
           for (final surface in targetedSurfaces)
             surface: group == 'presentation_closure'
                 ? 'Act0LessonRunnerShellV1.production_state_fixture'
+                : surface == 'review_full_shell_authority'
+                ? 'Act0ShellPreviewScreenV1.controlled_demo'
                 : 'Act0ReviewShellV1.production_callback_fixture',
         };
   final entries = <Map<String, Object?>>[];
@@ -507,6 +511,7 @@ void main(List<String> args) async {
       'sha256': sha256.convert(file.readAsBytesSync()).toString(),
       'git_commit': currentGitCommit,
       'git_status': currentGitStatus,
+      'git_status_classification': currentGitStatusClassification,
       'matches_current_head': true,
       'allowed_claims': _realTextAllowedClaimsV1,
       'unsupported_claims': _unsupportedViewportClaimsV1(device),
@@ -517,7 +522,9 @@ void main(List<String> args) async {
           : group == 'presentation_closure'
           ? 'Act0LessonRunnerShellV1.production_state_fixture'
           : group == 'review_return'
-          ? 'Act0ReviewShellV1.production_callback_fixture'
+          ? surface == 'review_full_shell_authority'
+                ? 'Act0ShellPreviewScreenV1.controlled_demo'
+                : 'Act0ReviewShellV1.production_callback_fixture'
           : 'Act0ShellPreviewScreenV1.controlled_demo',
       'capture_source_policy': group == 'active_route_w7_w12'
           ? 'active_act0_runtime_test_only_wrapper'
@@ -554,6 +561,7 @@ void main(List<String> args) async {
       'supports_alpha_admission': false,
       'git_commit': currentGitCommit,
       'git_status': currentGitStatus,
+      'git_status_classification': currentGitStatusClassification,
       'matches_current_head': true,
       'logical_viewport': device == 'iphone17_class' ? <String, int>{'width': 402, 'height': 874} : null,
       'safe_area_fixture': device == 'iphone17_class' ? <String, int>{'top': 59, 'bottom': 34} : null,
@@ -577,7 +585,11 @@ void main(List<String> args) async {
           ? 'active_act0_runtime_test_only_wrapper'
           : 'active_surface_allowlisted',
       'legacy_archive_runner_used': group == 'route_w7_w12',
-      'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null,
+      'active_surface': group == 'active_route_w7_w12'
+          ? 'Act0LessonRunnerShellV1'
+          : group == 'review_return'
+          ? 'mixed: Act0ReviewShellV1 fixture plus Act0ShellPreviewScreenV1 full-shell authority'
+          : null,
       'captured_at': DateTime.now().toUtc().toIso8601String(),
       'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0,
       'surfaces': surfaces,
@@ -654,6 +666,41 @@ String _evidenceGitStatusV1() {
     return 'clean_or_output_only';
   }
   return 'dirty';
+}
+
+Map<String, Object?> _evidenceGitStatusClassificationV1() {
+  final lines = _gitOutputV1(
+    <String>['status', '--short', '--ignored'],
+  ).split('\n').where((line) => line.trim().isNotEmpty).toList(growable: false);
+  final tracked = lines
+      .where((line) => !line.startsWith('?? ') && !line.startsWith('!! '))
+      .toList(growable: false);
+  final untracked = lines
+      .where((line) => line.startsWith('?? '))
+      .toList(growable: false);
+  final ignored = lines
+      .where((line) => line.startsWith('!! '))
+      .toList(growable: false);
+  final untrackedEvidence = untracked
+      .where((line) => line.startsWith('?? output/'))
+      .toList(growable: false);
+  final untrackedNonEvidence = untracked
+      .where((line) => !line.startsWith('?? output/'))
+      .toList(growable: false);
+  return <String, Object?>{
+    'tracked_product_dirty': tracked.any((line) => !line.contains('tools/')),
+    'tracked_tooling_dirty': tracked.any((line) => line.contains('tools/')),
+    'untracked_local_evidence_count': untrackedEvidence.length,
+    'untracked_non_evidence_count': untrackedNonEvidence.length,
+    'ignored_generated_output_count': ignored
+        .where((line) => line.contains('output/'))
+        .length,
+    'verdict': tracked.isEmpty
+        ? untrackedNonEvidence.isEmpty
+              ? 'tracked_clean_with_untracked_evidence_only'
+              : 'tracked_clean_with_untracked_evidence_and_non_evidence'
+        : 'tracked_drift_present',
+  };
 }
 
 List<String> _unsupportedViewportClaimsV1(String device) {
@@ -1376,6 +1423,10 @@ void main() {
       expect(find.byKey(const Key('act0_shell_fixed_mistake_actions_check_drill')), findsOneWidget);
       expect(find.byKey(const Key('act0_shell_review_practice_cta')), findsNothing);
     }
+    if (surface == 'review_full_shell_authority') {
+      expect(find.byKey(const Key('act0_shell_bottom_nav')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_review_practice_cta')), findsOneWidget);
+    }
   }
 
   Future<void> capture(String surface) async {
@@ -1386,6 +1437,12 @@ void main() {
       if (surface == 'accessibility_evidence') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
       if (surface == 'accessibility_answer') { accessibilityStep = Act0AccessibilityPrototypeStepV1.decision; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
     } else {
+      if (surface == 'review_full_shell_authority') {
+        await tester.pumpWidget(
+          shellHost(Act0ControlledDemoCaptureSurfaceV1.firstWeekReview),
+        );
+        await tester.pumpAndSettle();
+      } else {
       reviewStage = 'list';
       await tester.pumpWidget(reviewHost());
       await tester.pumpAndSettle();
@@ -1395,6 +1452,7 @@ void main() {
       }
       if (surface == 'review_feedback') { reviewStage = 'feedback'; await tester.pumpWidget(reviewHost()); }
       if (surface == 'review_return_updated') { reviewStage = 'updated'; await tester.pumpWidget(reviewHost()); }
+      }
     }
     await tester.pumpAndSettle();
     verifyMechanicalState(surface);
