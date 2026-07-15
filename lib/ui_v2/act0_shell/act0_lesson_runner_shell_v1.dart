@@ -4873,9 +4873,14 @@ class _LearningRailV1 extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Align(
+                        // The navigation footer is the next action for this
+                        // instruction. Anchor the teaching lane directly above
+                        // it so a short page remains one composed sequence,
+                        // while the fixed lower stage continues to preserve
+                        // the table allocation for every runner state.
                         alignment: fillsAvailableHeight
                             ? Alignment.topCenter
-                            : Alignment.center,
+                            : Alignment.bottomCenter,
                         child: Semantics(
                           label: 'Theory page $pageNumber of $pageCount',
                           child: ConstrainedBox(

@@ -411,6 +411,72 @@ void main() {
   );
 
   testWidgets(
+    'short table-read instruction composes its teaching copy with Continue without moving the table',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_recheck',
+          );
+
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(phase: Act0LessonPhaseV1.theory),
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Read the table first'), findsOneWidget);
+      expect(find.textContaining('Same scan, different spot.'), findsOneWidget);
+      expect(
+        find.ancestor(
+          of: find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+          matching: find.byType(SingleChildScrollView),
+        ),
+        findsNothing,
+      );
+
+      final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      final lowerStage = tester.getRect(
+        find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
+      );
+      final content = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+      );
+      final footer = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail_fixed_footer')),
+      );
+      final continueCta = tester.getRect(
+        find.byKey(const Key('act0_shell_continue_cta')),
+      );
+
+      expect(table.bottom, closeTo(lowerStage.top, 1));
+      expect(content.top, greaterThan(lowerStage.top + 24));
+      expect(footer.top - content.bottom, inInclusiveRange(0, 12));
+      expect(continueCta.bottom, lessThanOrEqualTo(874));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'tall compact decision panel owns its dock without stretching choices',
     (tester) async {
       final task = Act0ShellStateV1.sample
