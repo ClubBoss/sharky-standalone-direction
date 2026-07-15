@@ -483,6 +483,25 @@ void main(List<String> args) async {
       'viewport': device,
       'surface': surface,
       'surface_identity': surface,
+      'task_id': targetedSurfaces == null
+          ? null
+          : group == 'presentation_closure' &&
+                (surface == 'normal_four_option_table_read' ||
+                    surface == 'accessibility_evidence' ||
+                    surface == 'accessibility_answer')
+          ? 'what_poker_is_table_read_transfer'
+          : 'actions_check_drill',
+      'state_identity': targetedSurfaces == null
+          ? null
+          : '${group}_v1::$surface',
+      'presentation_mode': targetedSurfaces == null
+          ? null
+          : surface.startsWith('accessibility_')
+          ? surface.replaceFirst('accessibility_', '')
+          : surface,
+      'production_source_owner': targetedSurfaces == null
+          ? null
+          : sourceBySurface[surface],
       'path': 'output/screen_review/current/$packetName/$device.$surface.png',
       'bytes': file.lengthSync(),
       'sha256': sha256.convert(file.readAsBytesSync()).toString(),
