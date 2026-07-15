@@ -4512,7 +4512,10 @@ class _AccessibilityEvidencePrototypeV1 extends StatelessWidget {
     final dealer = table.seats.where((seat) => seat.isDealerButton).firstOrNull;
     final facts = <String>[
       if (hero != null) 'You · ${hero.seatLabel}',
-      if (dealer != null) 'BTN · ${dealer.seatLabel}',
+      // The learner identity already names BTN when Hero has the dealer
+      // button. Repeating it as "BTN · BTN" adds no table evidence.
+      if (dealer != null && dealer.seatId != hero?.seatId)
+        'BTN · ${dealer.seatLabel}',
       table.streetLabel,
       table.potLabel,
       table.toCallLabel,
@@ -11416,7 +11419,13 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
   required Act0TableIdentityPolicyV1 identityPolicy,
 }) {
   final markers = <_SeatMarkerKindV1>[
+    // In the compact learner-position composition, the Hero seat already
+    // carries both the distinct You badge and the BTN position. A separate
+    // dealer disc would repeat the same fact. Dealer order remains explicit
+    // for every other policy, including learnerPositionAndDealerOrder.
     if (seat.isDealerButton &&
+        !(hero &&
+            identityPolicy == Act0TableIdentityPolicyV1.learnerPosition) &&
         (identityPolicy == Act0TableIdentityPolicyV1.currentProduction ||
             identityPolicy == Act0TableIdentityPolicyV1.learnerPosition ||
             identityPolicy ==
@@ -11427,7 +11436,8 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
     if (!refined && seat.isBigBlind && !_seatHasBlindPostChipV1(seat))
       _SeatMarkerKindV1.bigBlind,
     if (seat.isLastAggressor && !active) _SeatMarkerKindV1.aggressor,
-    if (active && !hero) _SeatMarkerKindV1.act,
+    // Active seats retain the amber focus ring and the semantic To act
+    // sublabel. An additional Act badge repeats that same state.
   ];
   final stackLabel = (seat.stackLabel ?? '').trim();
 
