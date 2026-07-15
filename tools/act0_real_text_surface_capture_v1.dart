@@ -1310,6 +1310,55 @@ void main() {
     bounds[name] = values;
   }
 
+  List<Rect> optionRects(List<String> ids) => <Rect>[
+    for (final id in ids) tester.getRect(find.byKey(Key('act0_shell_option_\$id'))),
+  ];
+
+  void verifyMechanicalState(String surface) {
+    if (surface == 'normal_three_option_decision') {
+      final rows = optionRects(<String>['fold', 'check', 'call']);
+      expect(rows.map((row) => row.height).toSet().length, 1);
+      expect(rows.every((row) => row.height >= 44), isTrue);
+      final scrollable = find.ancestor(of: find.byKey(const Key('act0_shell_option_call')), matching: find.byType(Scrollable));
+      if (scrollable.evaluate().isNotEmpty) expect(tester.state<ScrollableState>(scrollable).position.maxScrollExtent, 0);
+    }
+    if (surface == 'normal_four_option_table_read') {
+      final rows = optionRects(<String>['two_three_six', 'two_five_six', 'two_three_four', 'not_sure_yet']);
+      expect(rows.map((row) => row.height).toSet().length, 1);
+      expect(rows.every((row) => row.height >= 44), isTrue);
+      expect(rows.last.bottom, lessThanOrEqualTo(viewport.height));
+      final scrollable = find.ancestor(of: find.byKey(const Key('act0_shell_option_not_sure_yet')), matching: find.byType(Scrollable));
+      if (scrollable.evaluate().isNotEmpty) expect(tester.state<ScrollableState>(scrollable).position.maxScrollExtent, 0);
+    }
+    if (surface == 'correct_feedback') {
+      final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      final card = tester.getRect(find.byKey(const Key('act0_shell_feedback_card')));
+      final cta = tester.getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+      expect(card.top - table.bottom, inInclusiveRange(0, 32));
+      expect(card.bottom - cta.bottom, inInclusiveRange(0, 24));
+    }
+    if (surface == 'accessibility_evidence') {
+      final card = tester.getRect(find.byKey(const Key('act0_shell_accessibility_evidence_surface')));
+      final cta = tester.getRect(find.byKey(const Key('act0_shell_accessibility_answer_cta')));
+      expect(card.bottom - cta.bottom, inInclusiveRange(8, 28));
+      expect(card.height, lessThan(viewport.height * 0.45));
+    }
+    if (surface == 'accessibility_answer') {
+      final rows = optionRects(<String>['two_three_six', 'two_five_six', 'two_three_four', 'not_sure_yet']);
+      final footer = tester.getRect(find.byKey(const Key('act0_shell_accessibility_decision_footer')));
+      expect(rows.map((row) => row.height).toSet().length, 1);
+      expect(rows.every((row) => row.height >= 44), isTrue);
+      expect(footer.bottom, lessThanOrEqualTo(viewport.height));
+    }
+    if (surface == 'review_list') expect(find.byKey(const Key('act0_shell_review_practice_cta')), findsOneWidget);
+    if (surface == 'review_focused_rep') expect(find.text('What action keeps playing for free?'), findsOneWidget);
+    if (surface == 'review_feedback') expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
+    if (surface == 'review_return_updated') {
+      expect(find.byKey(const Key('act0_shell_fixed_mistake_actions_check_drill')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_review_practice_cta')), findsNothing);
+    }
+  }
+
   Future<void> capture(String surface) async {
     if (captureGroup == 'presentation_closure') {
       if (surface == 'normal_three_option_decision') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerDrill));
@@ -1329,6 +1378,7 @@ void main() {
       if (surface == 'review_return_updated') { reviewStage = 'updated'; await tester.pumpWidget(reviewHost()); }
     }
     await tester.pumpAndSettle();
+    verifyMechanicalState(surface);
     writeBounds(surface);
     writeTextRepairOverlays(surface);
     final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const Key('act0_real_text_capture_boundary')));
