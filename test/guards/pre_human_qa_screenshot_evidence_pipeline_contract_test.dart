@@ -39,6 +39,13 @@ void main() {
         capture,
         contains("final packetName = group == 'presentation_closure'"),
       );
+      expect(capture, contains("'long_copy_repair_feedback'"));
+      expect(capture, contains("'what_poker_is_table_read_transfer'"));
+      expect(capture, contains("'hand_first_only'"));
+      expect(capture, contains("'act0_shell_lower_stage_scroll'"));
+      expect(capture, contains('capture must fail on framework layout errors'));
+      expect(capture, contains("'functional_integrity': 'PASS'"));
+      expect(capture, contains("'premium_visual_quality': 'UNASSESSED'"));
       expect(
         capture,
         contains("_CaptureSurfaceV1('learn_detail', 'firstWeekLearn')"),

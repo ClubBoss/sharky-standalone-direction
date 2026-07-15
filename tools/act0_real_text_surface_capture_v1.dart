@@ -200,6 +200,7 @@ const _presentationClosureSurfacesV1 = <String>[
   'normal_three_option_decision',
   'correct_feedback',
   'normal_four_option_table_read',
+  'long_copy_repair_feedback',
   'accessibility_evidence',
   'accessibility_answer',
 ];
@@ -831,6 +832,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
@@ -1237,6 +1239,12 @@ void main() {
 
   final actionTask = taskFor('actions_check_drill');
   final tableTask = taskFor('actions_call_drill');
+  final longCopyRepairTask = Act0ShellStateV1.sample
+      .worldById('world_1')
+      .lessons
+      .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+      .taskList
+      .firstWhere((task) => task.taskId == 'what_poker_is_table_read_transfer');
   final tableRunner = placementQuickCheckRunnerV1(
     tableTask.runner.copyWith(phase: Act0LessonPhaseV1.drill, teachingSteps: const <Act0TeachingStepV1>[]),
     signalId: 'table_read', checkIndex: 1, checkCount: 3,
@@ -1247,6 +1255,11 @@ void main() {
     feedbackTitle: 'Correct read',
     feedbackReason: 'No bet faces you, so checking keeps the hand going for free.',
     primaryCtaLabel: 'Next hand',
+  );
+  final longCopyRepairRunner = longCopyRepairTask.runner.copyWith(
+    phase: Act0LessonPhaseV1.review,
+    selectedOptionId: 'hand_first_only',
+    teachingSteps: const <Act0TeachingStepV1>[],
   );
   var accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence;
   var reviewStage = 'list';
@@ -1270,12 +1283,14 @@ void main() {
     final buttonText = ButtonStyle(textStyle: WidgetStateProperty.all(const TextStyle(fontFamily: 'Roboto')));
     return ThemeData(fontFamily: 'Roboto', filledButtonTheme: FilledButtonThemeData(style: buttonText), outlinedButtonTheme: OutlinedButtonThemeData(style: buttonText), textButtonTheme: TextButtonThemeData(style: buttonText));
   }
-  Widget runnerHost(Act0RunnerStateV1 runner, {bool accessibility = false}) => MaterialApp(
+  Widget runnerHost(Act0RunnerStateV1 runner, {bool accessibility = false, Act0LessonTaskV1? task}) => MaterialApp(
     theme: captureTheme(),
     home: MediaQuery(
       data: MediaQueryData(size: viewport, viewPadding: const EdgeInsets.only(top: 59, bottom: 34), textScaler: accessibility ? const TextScaler.linear(1.4) : const TextScaler.linear(1.0)),
       child: Scaffold(body: RepaintBoundary(key: const Key('act0_real_text_capture_boundary'), child: StatefulBuilder(builder: (context, setState) => Act0LessonRunnerShellV1(
-        runner: runner, selectedTaskFamily: accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily,
+        runner: runner, selectedTaskId: task?.taskId, selectedTaskFamily: task?.resolvedTaskFamily ?? (accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily),
+        tablePresentation: task?.tablePresentation ?? Act0TaskTablePresentationV1.legacy,
+        repairReasonLine: task == longCopyRepairTask ? 'This rep repeats the same clue. Before choosing, name the table clue first.' : null,
         tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
         accessibilityPrototypeStep: accessibility ? accessibilityStep : null,
         onAccessibilityPrototypeStepChanged: accessibility ? (next) => setState(() => accessibilityStep = next) : null,
@@ -1319,6 +1334,9 @@ void main() {
   );
 
   late WidgetTester tester;
+  Rect? tableRectForCycle;
+  final layoutErrors = <String>[];
+  dynamic originalFlutterError;
   String colorToHex(Color color) {
     final alpha = (color.a * 255).round().clamp(0, 255);
     final red = (color.r * 255).round().clamp(0, 255);
@@ -1363,6 +1381,7 @@ void main() {
     final values = <String, Object?>{};
     for (final entry in <String, Key>{
       'table': const Key('act0_shell_table'), 'question': const Key('act0_shell_action_question'),
+      'lower_stage': const Key('act0_shell_runner_action_dock'), 'lower_stage_scroll': const Key('act0_shell_lower_stage_scroll'),
       'feedback_card': const Key('act0_shell_feedback_card'), 'feedback_cta': const Key('act0_shell_feedback_continue_cta'),
       'evidence_card': const Key('act0_shell_accessibility_evidence_surface'), 'answer_cta': const Key('act0_shell_accessibility_answer_cta'),
       'view_table': const Key('act0_shell_accessibility_view_table_cta'),
@@ -1395,6 +1414,19 @@ void main() {
       expect(rows.last.bottom, lessThanOrEqualTo(viewport.height));
       final scrollable = find.ancestor(of: find.byKey(const Key('act0_shell_option_not_sure_yet')), matching: find.byType(Scrollable));
       if (scrollable.evaluate().isNotEmpty) expect(tester.state<ScrollableState>(scrollable).position.maxScrollExtent, 0);
+      tableRectForCycle = tester.getRect(find.byKey(const Key('act0_shell_table')));
+    }
+    if (surface == 'long_copy_repair_feedback') {
+      final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      final cta = tester.getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+      final lowerStage = tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock')));
+      final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
+      expect(table, tableRectForCycle);
+      expect(cta.bottom, lessThanOrEqualTo(viewport.height - 34));
+      expect(lowerStage.bottom, lessThanOrEqualTo(viewport.height));
+      expect(scrollable, findsOneWidget);
+      expect(tester.state<ScrollableState>(find.descendant(of: scrollable, matching: find.byType(Scrollable))).position.maxScrollExtent, greaterThan(0));
+      expect(find.text('Try same clue'), findsOneWidget);
     }
     if (surface == 'correct_feedback') {
       final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
@@ -1433,6 +1465,7 @@ void main() {
     if (captureGroup == 'presentation_closure') {
       if (surface == 'normal_three_option_decision') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerDrill));
       if (surface == 'correct_feedback') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback));
+      if (surface == 'long_copy_repair_feedback') await tester.pumpWidget(runnerHost(longCopyRepairRunner, task: longCopyRepairTask));
       if (surface == 'normal_four_option_table_read') await tester.pumpWidget(runnerHost(tableRunner));
       if (surface == 'accessibility_evidence') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
       if (surface == 'accessibility_answer') { accessibilityStep = Act0AccessibilityPrototypeStepV1.decision; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
@@ -1455,6 +1488,7 @@ void main() {
       }
     }
     await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: surface);
     verifyMechanicalState(surface);
     writeBounds(surface);
     writeTextRepairOverlays(surface);
@@ -1463,14 +1497,25 @@ void main() {
     File('\${outputDir.path}/$device.\$surface.png').writeAsBytesSync(Uint8List.view(data!.buffer));
   }
 
-  setUpAll(loadFont);
+  setUpAll(() async {
+    await loadFont();
+    originalFlutterError = FlutterError.onError;
+    FlutterError.onError = (details) {
+      originalFlutterError?.call(details);
+      final message = details.exceptionAsString();
+      if (message.contains('RenderFlex overflow') || message.contains('BoxConstraints forces an infinite') || message.contains('A RenderBox was not laid out')) {
+        layoutErrors.add(message);
+      }
+    };
+  });
   testWidgets('capture targeted real-text $group lane', (bindingTester) async {
     tester = bindingTester;
     tester.view.physicalSize = viewport; tester.view.devicePixelRatio = 1;
-    addTearDown(() { tester.view.resetPhysicalSize(); tester.view.resetDevicePixelRatio(); });
+    addTearDown(() { tester.view.resetPhysicalSize(); tester.view.resetDevicePixelRatio(); FlutterError.onError = originalFlutterError; });
 $captureCalls
+    expect(layoutErrors, isEmpty, reason: 'capture must fail on framework layout errors');
     File('\${outputDir.path}/bounds.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': 'targeted_pre_human_qa_bounds_v1', 'viewport': <String, num>{'width': 402, 'height': 874}, 'safe_area': <String, num>{'top': 59, 'bottom': 34}, 'screens': bounds}) + '\\n');
-    File('\${outputDir.path}/visual_ledger.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': 'targeted_pre_human_qa_visual_ledger_v1', 'lane': captureGroup, 'claim_boundary': 'mechanical visual review only; not Human QA approval', 'screens': <Object?>[for (final surface in bounds.keys) <String, Object?>{'screen': surface, 'mechanical': 'PASS', 'visual_review_notes': 'Real-text production widget capture.', 'unresolved_risk': 'Human visual review remains required.'}]}) + '\\n');
+    File('\${outputDir.path}/visual_ledger.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': 'targeted_pre_human_qa_visual_ledger_v1', 'lane': captureGroup, 'claim_boundary': 'mechanical visual review only; not Human QA approval', 'screens': <Object?>[for (final surface in bounds.keys) <String, Object?>{'screen': surface, 'functional_integrity': 'PASS', 'premium_visual_quality': 'UNASSESSED', 'verdict': 'FUNCTIONAL_PASS_PREMIUM_DEBT', 'visual_review_notes': 'Real-text production widget capture; premium review remains explicit.', 'unresolved_risk': 'Human visual review remains required.'}]}) + '\\n');
   });
 }
 ''';
