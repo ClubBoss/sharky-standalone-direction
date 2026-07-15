@@ -5577,6 +5577,7 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     feedbackReason: spec.feedbackReason,
     table: _w6ComboCountsIntroRunner.table.copyWith(
       centerLabel: spec.boardContext,
+      boardCards: _w7VisibleBoardCardsForSpecV1(spec),
     ),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
@@ -7181,6 +7182,29 @@ const _smallBlindPost = Act0SeatBetStateV1(
   label: 'SB',
   amountLabel: '0.5 BB',
 );
+
+List<Act0CardStateV1> _w7VisibleBoardCardsForSpecV1(
+  Act0W7VisibleAceHiddenTaskSpecV1 spec,
+) {
+  switch (spec.taskId) {
+    case 'visible_ace_combo_reduction_intro':
+      return _flopA72Cards;
+    case 'visible_king_combo_reduction_intro':
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '4', suit: 'd', tone: Act0CardToneV1.red),
+      ];
+    case 'paired_board_texture_lite_intro':
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '7', suit: 'c'),
+        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+      ];
+    default:
+      return _flopA72Cards;
+  }
+}
 
 const _bigBlindPost = Act0SeatBetStateV1(
   kind: Act0SeatBetKindV1.post,
@@ -14880,59 +14904,14 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     potLabel: 'Pot 8 BB',
     toCallLabel: 'To call 2 BB',
     centerLabel: 'Facing price',
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        bet: _btnBet2Bb,
-        holeCards: _heroQqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+    seats: _world4PriceSeatsV1('2 BB'),
     boardCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'T', suit: 'h'),
       Act0CardStateV1(rank: '8', suit: 'c'),
       Act0CardStateV1(rank: '3', suit: 'd'),
       Act0CardStateV1(rank: '2', suit: 's'),
     ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
-      Act0ActionTrailItemV1(label: 'BB acts'),
-    ],
+    actionTrail: _world4PriceActionTrailV1('2 BB'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -14942,6 +14921,30 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
     ),
   ],
 );
+
+List<Act0SeatStateV1> _world4PriceSeatsV1(String amountLabel) =>
+    <Act0SeatStateV1>[
+      for (final seat in _callActionRunner.table.seats)
+        seat.seatId == 'hj'
+            ? Act0SeatStateV1(
+                seatId: 'hj',
+                seatLabel: 'HJ',
+                displayName: 'Seat',
+                bet: Act0SeatBetStateV1(
+                  kind: Act0SeatBetKindV1.bet,
+                  label: 'HJ',
+                  amountLabel: amountLabel,
+                ),
+                holeCards: _unknownHoleCards,
+              )
+            : seat,
+    ];
+
+List<Act0ActionTrailItemV1> _world4PriceActionTrailV1(String amountLabel) =>
+    <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'HJ bets $amountLabel'),
+      const Act0ActionTrailItemV1(label: 'Hero acts'),
+    ];
 
 final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
@@ -14993,6 +14996,8 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
       'board_0',
       'board_1',
     ],
+    seats: _world4PriceSeatsV1('1 BB'),
+    actionTrail: _world4PriceActionTrailV1('1 BB'),
   ),
 );
 
@@ -15039,6 +15044,8 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
       Act0CardStateV1(rank: '4', suit: 'd'),
       Act0CardStateV1(rank: '2', suit: 's'),
     ],
+    seats: _world4PriceSeatsV1('7 BB'),
+    actionTrail: _world4PriceActionTrailV1('7 BB'),
   ),
 );
 
@@ -15099,6 +15106,8 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
       Act0CardStateV1(rank: '2', suit: 's'),
     ],
     highlightedCardIds: const <String>['hero_0', 'board_1'],
+    seats: _world4PriceSeatsV1('1 BB'),
+    actionTrail: _world4PriceActionTrailV1('1 BB'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -15167,6 +15176,8 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
       Act0CardStateV1(rank: '2', suit: 's'),
     ],
     highlightedCardIds: const <String>['hero_0', 'board_0'],
+    seats: _world4PriceSeatsV1('6 BB'),
+    actionTrail: _world4PriceActionTrailV1('6 BB'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(

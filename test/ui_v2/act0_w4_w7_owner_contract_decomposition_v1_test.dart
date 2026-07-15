@@ -58,6 +58,8 @@ void main() {
         'range_bucket_basics',
         'range_board_fit',
         'range_pressure_lines',
+        'range_combo_counts',
+        'range_thinking_checkpoint',
       ]);
 
       expect(world7.title, 'Visible Cards Change Ranges');
@@ -67,8 +69,6 @@ void main() {
       );
       expect(world7.unlockLabel, 'Finish Range Thinking to open this world.');
       expect(world7.lessons.map((lesson) => lesson.lessonId), <String>[
-        'range_combo_counts',
-        'range_thinking_checkpoint',
         'range_thinking_lite_combo_density',
       ]);
 
@@ -88,22 +88,24 @@ void main() {
       );
 
       expect(visibleLesson.title, 'Visible Cards Change Ranges');
+      final specTasks = visibleLesson.taskList.take(owner.taskSpecs.length);
       expect(
-        visibleLesson.taskList.map((task) => task.taskId),
+        specTasks.map((task) => task.taskId),
         owner.taskSpecs.map((spec) => spec.taskId),
       );
       expect(
-        visibleLesson.taskList.map((task) => task.runner.question),
+        specTasks.map((task) => task.runner.question),
         owner.taskSpecs.map((spec) => spec.learnerPrompt),
       );
       expect(
-        visibleLesson.taskList.map((task) => task.runner.feedbackReason),
+        specTasks.map((task) => task.runner.feedbackReason),
         owner.taskSpecs.map((spec) => spec.feedbackReason),
       );
       expect(
-        visibleLesson.taskList.last.resolvedTaskFamily,
-        Act0TaskFamilyV1.transfer,
+        visibleLesson.taskList.last.taskId,
+        'visible_card_combo_reduction_recap',
       );
+      expect(specTasks.last.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
     });
 
     test('keeps preflop bridge reachable before W4', () {
