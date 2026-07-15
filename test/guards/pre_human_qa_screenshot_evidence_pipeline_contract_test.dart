@@ -20,14 +20,17 @@ void main() {
       expect(
         shell,
         contains(
-          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
+          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12|presentation_closure|review_return> <compact|tall_phone|large_phone|tablet|iphone17_class>',
         ),
       );
       expect(capture, contains("'tall_phone': Size(390, 844)"));
       expect(capture, contains("'large_phone': Size(430, 932)"));
       expect(capture, contains("'tablet': Size(834, 1194)"));
       expect(capture, contains("'alpha_journey': <_CaptureSurfaceV1>["));
-      expect(capture, contains("final packetName = device == 'compact'"));
+      expect(capture, contains("'presentation_closure'"));
+      expect(capture, contains("'review_return'"));
+      expect(capture, contains("'iphone17_class'"));
+      expect(capture, contains("final packetName = group == 'presentation_closure'"));
       expect(
         capture,
         contains("_CaptureSurfaceV1('learn_detail', 'firstWeekLearn')"),
@@ -37,7 +40,9 @@ void main() {
       expect(packager, contains('("learn_detail", "Learn detail")'));
       expect(
         textRepair,
-        contains('{"compact", "tall_phone", "large_phone", "tablet"}'),
+        contains(
+          '{"compact", "tall_phone", "large_phone", "tablet", "iphone17_class"}',
+        ),
       );
     },
   );

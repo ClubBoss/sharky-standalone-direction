@@ -196,6 +196,21 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
   ],
 };
 
+const _presentationClosureSurfacesV1 = <String>[
+  'normal_three_option_decision',
+  'correct_feedback',
+  'normal_four_option_table_read',
+  'accessibility_evidence',
+  'accessibility_answer',
+];
+
+const _reviewReturnSurfacesV1 = <String>[
+  'review_list',
+  'review_focused_rep',
+  'review_feedback',
+  'review_return_updated',
+];
+
 const _routeW7W12CaptureSurfacesV1 = <_RouteCaptureSurfaceV1>[
   _RouteCaptureSurfaceV1(
     'w7_first_route_task',
@@ -318,7 +333,11 @@ void main(List<String> args) async {
 
   final group = args[0];
   final device = args[1];
-  final packetName = device == 'compact'
+  final packetName = group == 'presentation_closure'
+      ? 'presentation_closure_v1'
+      : group == 'review_return'
+      ? 'review_return_v1'
+      : device == 'compact'
       ? '${group}_fast'
       : '${group}_${device}_fast';
   final captureSurfaces = _captureGroupsV1[group];
@@ -328,9 +347,15 @@ void main(List<String> args) async {
   final activeRouteCaptureSurfaces = group == 'active_route_w7_w12'
       ? _activeRouteW7W12CaptureSurfacesV1
       : null;
+  final targetedSurfaces = group == 'presentation_closure'
+      ? _presentationClosureSurfacesV1
+      : group == 'review_return'
+      ? _reviewReturnSurfacesV1
+      : null;
   if (captureSurfaces == null &&
       routeCaptureSurfaces == null &&
-      activeRouteCaptureSurfaces == null) {
+      activeRouteCaptureSurfaces == null &&
+      targetedSurfaces == null) {
     _printUsageV1();
     exit(64);
   }
@@ -348,7 +373,14 @@ void main(List<String> args) async {
     '${tempDir.path}${Platform.pathSeparator}act0_real_text_surface_capture_test.dart',
   );
   testFile.writeAsStringSync(
-    routeCaptureSurfaces == null
+    targetedSurfaces != null
+        ? _targetedPreHumanQaFlutterTestSource(
+            stagingDir.path,
+            group,
+            device,
+            targetedSurfaces,
+          )
+        : routeCaptureSurfaces == null
         ? activeRouteCaptureSurfaces == null
               ? _flutterTestSource(
                   stagingDir.path,
@@ -405,18 +437,29 @@ void main(List<String> args) async {
     exit(exitCode);
   }
 
-  final surfaces = captureSurfaces != null
-      ? captureSurfaces.map((capture) => capture.name).toList()
-      : routeCaptureSurfaces != null
-      ? routeCaptureSurfaces.map((capture) => capture.name).toList()
-      : activeRouteCaptureSurfaces!.map((capture) => capture.name).toList();
+  final surfaces =
+      targetedSurfaces ??
+      (captureSurfaces != null
+          ? captureSurfaces.map((capture) => capture.name).toList()
+          : routeCaptureSurfaces != null
+          ? routeCaptureSurfaces.map((capture) => capture.name).toList()
+          : activeRouteCaptureSurfaces!
+                .map((capture) => capture.name)
+                .toList());
   final currentGitCommit = _gitOutputV1(<String>['rev-parse', 'HEAD']);
   final currentGitStatus = _evidenceGitStatusV1();
-  final sourceBySurface = _sourceBySurfaceV1(
-    captureSurfaces: captureSurfaces,
-    routeCaptureSurfaces: routeCaptureSurfaces,
-    activeRouteCaptureSurfaces: activeRouteCaptureSurfaces,
-  );
+  final sourceBySurface = targetedSurfaces == null
+      ? _sourceBySurfaceV1(
+          captureSurfaces: captureSurfaces,
+          routeCaptureSurfaces: routeCaptureSurfaces,
+          activeRouteCaptureSurfaces: activeRouteCaptureSurfaces,
+        )
+      : <String, String>{
+          for (final surface in targetedSurfaces)
+            surface: group == 'presentation_closure'
+                ? 'Act0LessonRunnerShellV1.production_state_fixture'
+                : 'Act0ReviewShellV1.production_callback_fixture',
+        };
   final entries = <Map<String, Object?>>[];
   for (final surface in surfaces) {
     final file = File(
@@ -452,6 +495,10 @@ void main(List<String> args) async {
       'debug_surface': sourceBySurface[surface],
       'source_route': group == 'active_route_w7_w12'
           ? 'Act0LessonRunnerShellV1.active_runtime_route'
+          : group == 'presentation_closure'
+          ? 'Act0LessonRunnerShellV1.production_state_fixture'
+          : group == 'review_return'
+          ? 'Act0ReviewShellV1.production_callback_fixture'
           : 'Act0ShellPreviewScreenV1.controlled_demo',
       'capture_source_policy': group == 'active_route_w7_w12'
           ? 'active_act0_runtime_test_only_wrapper'
@@ -474,15 +521,50 @@ void main(List<String> args) async {
       ? 'final_pre_human_visual_ux_audit'
       : 'final_visual_audit_candidate';
   manifestFile.writeAsStringSync(
-    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': _schemaV1, 'group': group, 'packet': packetName, 'device': device, 'lane_type': 'real_text_product_proof', 'evidence_type': 'product_real_text', 'render_kind': 'flutter_widget_test_real_text', 'is_real_text': true, 'supports_product_copy_review': true, 'supports_alpha_admission': false, 'git_commit': currentGitCommit, 'git_status': currentGitStatus, 'matches_current_head': true, 'allowed_claims': _realTextAllowedClaimsV1, 'unsupported_claims': _unsupportedViewportClaimsV1(device), 'duplicate_hash_policy': duplicateHashPolicy, 'scenario_family': group == 'route_w7_w12'
-        ? 'late_route_w7_w12_visual_coverage'
-        : group == 'active_route_w7_w12'
-        ? 'active_runtime_late_route_w7_w12_visual_coverage'
-        : 'act0_fast_screen_review', 'content_reflects_latest_post_idealization_copy': group == 'route_w7_w12' || group == 'active_route_w7_w12', 'visual_audit_validity': routeVisualAuditValidity, 'final_visual_audit_eligible': group != 'route_w7_w12', 'invalid_for_final_visual_ux_judgment': group == 'route_w7_w12' ? true : false, 'allowed_use': routeAllowedUse, 'capture_source_policy': group == 'route_w7_w12'
-        ? _routeVisualAuditValidityV1
-        : group == 'active_route_w7_w12'
-        ? 'active_act0_runtime_test_only_wrapper'
-        : 'active_surface_allowlisted', 'legacy_archive_runner_used': group == 'route_w7_w12', 'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null, 'captured_at': DateTime.now().toUtc().toIso8601String(), 'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0, 'surfaces': surfaces, 'entries': entries, 'note': 'Generated screenshots are local-only and uncommitted. Real-text claims are valid only for the listed device/viewports and current HEAD.'})}\n',
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+      'schema': _schemaV1,
+      'group': group,
+      'packet': packetName,
+      'device': device,
+      'lane_version': targetedSurfaces == null ? null : '${group}_v1',
+      'lane_type': 'real_text_product_proof',
+      'evidence_type': 'product_real_text',
+      'render_kind': 'flutter_widget_test_real_text',
+      'is_real_text': true,
+      'supports_product_copy_review': true,
+      'supports_alpha_admission': false,
+      'git_commit': currentGitCommit,
+      'git_status': currentGitStatus,
+      'matches_current_head': true,
+      'logical_viewport': device == 'iphone17_class' ? <String, int>{'width': 402, 'height': 874} : null,
+      'safe_area_fixture': device == 'iphone17_class' ? <String, int>{'top': 59, 'bottom': 34} : null,
+      'text_scaler': group == 'presentation_closure' ? <String, String>{'normal': 'linear(1.0)', 'accessibility': 'linear(1.4)'} : 'linear(1.0)',
+      'allowed_claims': _realTextAllowedClaimsV1,
+      'unsupported_claims': _unsupportedViewportClaimsV1(device),
+      'duplicate_hash_policy': duplicateHashPolicy,
+      'scenario_family': group == 'route_w7_w12'
+          ? 'late_route_w7_w12_visual_coverage'
+          : group == 'active_route_w7_w12'
+          ? 'active_runtime_late_route_w7_w12_visual_coverage'
+          : 'act0_fast_screen_review',
+      'content_reflects_latest_post_idealization_copy': group == 'route_w7_w12' || group == 'active_route_w7_w12',
+      'visual_audit_validity': routeVisualAuditValidity,
+      'final_visual_audit_eligible': group != 'route_w7_w12',
+      'invalid_for_final_visual_ux_judgment': group == 'route_w7_w12' ? true : false,
+      'allowed_use': routeAllowedUse,
+      'capture_source_policy': group == 'route_w7_w12'
+          ? _routeVisualAuditValidityV1
+          : group == 'active_route_w7_w12'
+          ? 'active_act0_runtime_test_only_wrapper'
+          : 'active_surface_allowlisted',
+      'legacy_archive_runner_used': group == 'route_w7_w12',
+      'active_surface': group == 'active_route_w7_w12' ? 'Act0LessonRunnerShellV1' : null,
+      'captured_at': DateTime.now().toUtc().toIso8601String(),
+      'runtime_seconds': stopwatch.elapsedMilliseconds / 1000.0,
+      'surfaces': surfaces,
+      'entries': entries,
+      'note': 'Generated screenshots are local-only and uncommitted. Real-text claims are valid only for the listed device/viewports and current HEAD.',
+    })}\n',
   );
 
   if (group == 'full_scroll') {
@@ -519,6 +601,7 @@ const _supportedDevicesV1 = <String>{
   'tall_phone',
   'large_phone',
   'tablet',
+  'iphone17_class',
 };
 
 String _gitOutputV1(List<String> args) {
@@ -1026,6 +1109,241 @@ $captureStatements
         }) + '\\n',
       );
     }
+  });
+}
+''';
+}
+
+String _targetedPreHumanQaFlutterTestSource(
+  String outputDirPath,
+  String group,
+  String device,
+  List<String> surfaces,
+) {
+  final escapedOutputDir = jsonEncode(outputDirPath);
+  final captureCalls = surfaces
+      .map((surface) => "    await capture('$surface');")
+      .join('\n');
+  return '''
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const outputDirPath = $escapedOutputDir;
+  const captureGroup = '$group';
+  final outputDir = Directory(outputDirPath)..createSync(recursive: true);
+  const viewport = Size(402, 874);
+  final bounds = <String, Object?>{};
+
+  Future<void> loadFont() async {
+    final file = File('/System/Library/Fonts/Supplemental/Arial.ttf');
+    if (!file.existsSync()) throw StateError('No local real-text font found for targeted capture.');
+    final bytes = await file.readAsBytes();
+    for (final family in <String>['Roboto', 'Ahem']) {
+      final loader = FontLoader(family)..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+      await loader.load();
+    }
+    final icon = File('build/unit_test_assets/fonts/MaterialIcons-Regular.otf');
+    if (icon.existsSync()) {
+      final loader = FontLoader('MaterialIcons')
+        ..addFont(
+          Future<ByteData>.value(ByteData.sublistView(await icon.readAsBytes())),
+        );
+      await loader.load();
+    }
+  }
+
+  Act0LessonTaskV1 taskFor(String id) => Act0ShellStateV1.sample
+      .worldById('world_1').lessons
+      .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+      .taskList.firstWhere((task) => task.taskId == id);
+
+  final actionTask = taskFor('actions_check_drill');
+  final tableTask = taskFor('actions_call_drill');
+  final tableRunner = placementQuickCheckRunnerV1(
+    tableTask.runner.copyWith(phase: Act0LessonPhaseV1.drill, teachingSteps: const <Act0TeachingStepV1>[]),
+    signalId: 'table_read', checkIndex: 1, checkCount: 3,
+  );
+  final actionFeedback = actionTask.runner.copyWith(
+    phase: Act0LessonPhaseV1.review,
+    selectedOptionId: 'check',
+    feedbackTitle: 'Correct read',
+    feedbackReason: 'No bet faces you, so checking keeps the hand going for free.',
+    primaryCtaLabel: 'Next hand',
+  );
+  var accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence;
+  var reviewStage = 'list';
+  const activeMistake = Act0MistakeCardV1(
+    taskId: 'actions_check_drill', lessonId: 'fold_check_call_raise',
+    title: 'No bet yet', weaknessLabel: 'Action read', selectedOptionId: 'fold',
+    selectedLabel: 'Fold', betterLabel: 'Check', attempts: 1,
+    reason: 'Nobody has bet, so checking keeps the action honest.',
+    repairActionLabel: 'Review why the table was telling you to check.',
+  );
+  const completedMistake = Act0MistakeCardV1(
+    taskId: 'actions_check_drill', lessonId: 'fold_check_call_raise',
+    title: 'No bet yet', weaknessLabel: 'Action read', selectedOptionId: 'check',
+    selectedLabel: 'Check', betterLabel: 'Check', attempts: 2,
+    reason: 'You caught the no-bet-yet clue before acting.',
+    resolved: true, severityLabel: 'Quick fix',
+    qualityLine: 'Focused rep complete.',
+  );
+
+  ThemeData captureTheme() {
+    final buttonText = ButtonStyle(textStyle: WidgetStateProperty.all(const TextStyle(fontFamily: 'Roboto')));
+    return ThemeData(fontFamily: 'Roboto', filledButtonTheme: FilledButtonThemeData(style: buttonText), outlinedButtonTheme: OutlinedButtonThemeData(style: buttonText), textButtonTheme: TextButtonThemeData(style: buttonText));
+  }
+  Widget runnerHost(Act0RunnerStateV1 runner, {bool accessibility = false}) => MaterialApp(
+    theme: captureTheme(),
+    home: MediaQuery(
+      data: MediaQueryData(size: viewport, viewPadding: const EdgeInsets.only(top: 59, bottom: 34), textScaler: accessibility ? const TextScaler.linear(1.4) : const TextScaler.linear(1.0)),
+      child: Scaffold(body: RepaintBoundary(key: const Key('act0_real_text_capture_boundary'), child: StatefulBuilder(builder: (context, setState) => Act0LessonRunnerShellV1(
+        runner: runner, selectedTaskFamily: accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily,
+        tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+        accessibilityPrototypeStep: accessibility ? accessibilityStep : null,
+        onAccessibilityPrototypeStepChanged: accessibility ? (next) => setState(() => accessibilityStep = next) : null,
+        onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {},
+      )))),
+    ),
+  );
+
+  Widget shellBody(Act0ControlledDemoCaptureSurfaceV1 surface) => Act0ShellPreviewScreenV1(
+          key: UniqueKey(),
+          showPlacementOnStart: false,
+          debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: surface,
+            worldId: 'world_1',
+            lessonId: 'fold_check_call_raise',
+            taskId: 'actions_check_drill',
+          ),
+        );
+  Widget shellHost(Act0ControlledDemoCaptureSurfaceV1 surface) => MaterialApp(
+    theme: captureTheme(),
+    home: MediaQuery(
+      data: const MediaQueryData(size: viewport, viewPadding: EdgeInsets.only(top: 59, bottom: 34)),
+      child: RepaintBoundary(
+        key: const Key('act0_real_text_capture_boundary'),
+        child: shellBody(surface),
+      ),
+    ),
+  );
+
+  Widget reviewHost() => MaterialApp(
+    theme: captureTheme(),
+    home: MediaQuery(
+      data: const MediaQueryData(size: viewport, viewPadding: EdgeInsets.only(top: 59, bottom: 34)),
+      child: Scaffold(body: RepaintBoundary(key: const Key('act0_real_text_capture_boundary'), child: StatefulBuilder(builder: (context, setState) {
+        if (reviewStage == 'focused') return shellBody(Act0ControlledDemoCaptureSurfaceV1.runnerDrill);
+        if (reviewStage == 'feedback') return shellBody(Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback);
+        return Act0ReviewShellV1(review: Act0ReviewStateV1(title: 'Review', subtitle: reviewStage == 'updated' ? 'That focused rep is complete.' : 'Repair the clue that slipped.', weaknessLabel: 'Action read', reason: '', stats: const <Act0ReviewStatV1>[], chosenLabel: 'Fold', betterLabel: 'Check', mistakes: reviewStage == 'updated' ? const <Act0MistakeCardV1>[] : const <Act0MistakeCardV1>[activeMistake], fixedMistakes: reviewStage == 'updated' ? const <Act0MistakeCardV1>[completedMistake] : const <Act0MistakeCardV1>[]), selected: null, onSelected: (_) {}, onFixMistake: (_) => setState(() => reviewStage = 'focused'), onReplayFixedMistake: (_) {});
+      }))),
+    ),
+  );
+
+  late WidgetTester tester;
+  String colorToHex(Color color) {
+    final alpha = (color.a * 255).round().clamp(0, 255);
+    final red = (color.r * 255).round().clamp(0, 255);
+    final green = (color.g * 255).round().clamp(0, 255);
+    final blue = (color.b * 255).round().clamp(0, 255);
+    return '#'
+        '\${alpha.toRadixString(16).padLeft(2, '0')}'
+        '\${red.toRadixString(16).padLeft(2, '0')}'
+        '\${green.toRadixString(16).padLeft(2, '0')}'
+        '\${blue.toRadixString(16).padLeft(2, '0')}';
+  }
+
+  void writeTextRepairOverlays(String fileName) {
+    final overlays = <Map<String, Object?>>[];
+    for (final element in find.byType(Text).evaluate()) {
+      final widget = element.widget;
+      if (widget is! Text) continue;
+      final text = widget.data ?? widget.textSpan?.toPlainText() ?? '';
+      if (text.trim().isEmpty) continue;
+      final inherited = DefaultTextStyle.of(element).style;
+      final explicit = widget.style;
+      if (inherited.fontFamily != null || explicit?.fontFamily != null) continue;
+      final box = element.renderObject;
+      if (box is! RenderBox || !box.hasSize) continue;
+      final origin = box.localToGlobal(Offset.zero);
+      overlays.add(<String, Object?>{
+        'text': text,
+        'left': origin.dx,
+        'top': origin.dy,
+        'width': box.size.width,
+        'height': box.size.height,
+        'fontSize': explicit?.fontSize ?? inherited.fontSize ?? 14,
+        'fontWeight': (explicit?.fontWeight ?? inherited.fontWeight ?? FontWeight.w400).value,
+        'color': colorToHex(explicit?.color ?? inherited.color ?? Colors.white),
+      });
+    }
+    File('\${outputDir.path}/$device.' + fileName + '.png.text_overlays.json')
+        .writeAsStringSync(jsonEncode(overlays));
+  }
+
+  void writeBounds(String name) {
+    final values = <String, Object?>{};
+    for (final entry in <String, Key>{
+      'table': const Key('act0_shell_table'), 'question': const Key('act0_shell_action_question'),
+      'feedback_card': const Key('act0_shell_feedback_card'), 'feedback_cta': const Key('act0_shell_feedback_continue_cta'),
+      'evidence_card': const Key('act0_shell_accessibility_evidence_surface'), 'answer_cta': const Key('act0_shell_accessibility_answer_cta'),
+      'view_table': const Key('act0_shell_accessibility_view_table_cta'),
+    }.entries) {
+      final finder = find.byKey(entry.value);
+      if (finder.evaluate().isNotEmpty) { final r = tester.getRect(finder); values[entry.key] = <String, double>{'left': r.left, 'top': r.top, 'right': r.right, 'bottom': r.bottom, 'width': r.width, 'height': r.height}; }
+    }
+    final options = find.byKey(const Key('act0_shell_option_fold')).evaluate().isNotEmpty
+      ? <String>['fold', 'check', 'call'] : <String>['two_three_six', 'two_five_six', 'two_three_four', 'not_sure_yet'];
+    values['options'] = <Object?>[for (final id in options) if (find.byKey(Key('act0_shell_option_\$id')).evaluate().isNotEmpty) (() { final r = tester.getRect(find.byKey(Key('act0_shell_option_\$id'))); return <String, double>{'left': r.left, 'top': r.top, 'right': r.right, 'bottom': r.bottom, 'height': r.height}; })()];
+    bounds[name] = values;
+  }
+
+  Future<void> capture(String surface) async {
+    if (captureGroup == 'presentation_closure') {
+      if (surface == 'normal_three_option_decision') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerDrill));
+      if (surface == 'correct_feedback') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback));
+      if (surface == 'normal_four_option_table_read') await tester.pumpWidget(runnerHost(tableRunner));
+      if (surface == 'accessibility_evidence') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
+      if (surface == 'accessibility_answer') { accessibilityStep = Act0AccessibilityPrototypeStepV1.decision; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
+    } else {
+      reviewStage = 'list';
+      await tester.pumpWidget(reviewHost());
+      await tester.pumpAndSettle();
+      if (surface != 'review_list') {
+        await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+        await tester.pumpAndSettle();
+      }
+      if (surface == 'review_feedback') { reviewStage = 'feedback'; await tester.pumpWidget(reviewHost()); }
+      if (surface == 'review_return_updated') { reviewStage = 'updated'; await tester.pumpWidget(reviewHost()); }
+    }
+    await tester.pumpAndSettle();
+    writeBounds(surface);
+    writeTextRepairOverlays(surface);
+    final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const Key('act0_real_text_capture_boundary')));
+    final data = await tester.runAsync(() async => (await boundary.toImage(pixelRatio: 2)).toByteData(format: ui.ImageByteFormat.png));
+    File('\${outputDir.path}/$device.\$surface.png').writeAsBytesSync(Uint8List.view(data!.buffer));
+  }
+
+  setUpAll(loadFont);
+  testWidgets('capture targeted real-text $group lane', (bindingTester) async {
+    tester = bindingTester;
+    tester.view.physicalSize = viewport; tester.view.devicePixelRatio = 1;
+    addTearDown(() { tester.view.resetPhysicalSize(); tester.view.resetDevicePixelRatio(); });
+$captureCalls
+    File('\${outputDir.path}/bounds.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': 'targeted_pre_human_qa_bounds_v1', 'viewport': <String, num>{'width': 402, 'height': 874}, 'safe_area': <String, num>{'top': 59, 'bottom': 34}, 'screens': bounds}) + '\\n');
+    File('\${outputDir.path}/visual_ledger.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': 'targeted_pre_human_qa_visual_ledger_v1', 'lane': captureGroup, 'claim_boundary': 'mechanical visual review only; not Human QA approval', 'screens': <Object?>[for (final surface in bounds.keys) <String, Object?>{'screen': surface, 'mechanical': 'PASS', 'visual_review_notes': 'Real-text production widget capture.', 'unresolved_risk': 'Human visual review remains required.'}]}) + '\\n');
   });
 }
 ''';

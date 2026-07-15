@@ -132,6 +132,19 @@ SURFACE_GROUPS = {
         ("volume_i_terminal_review_table", "Volume I terminal review table"),
         ("terminal_no_w13_copy_detail", "Terminal no-W13 copy detail"),
     ),
+    "presentation_closure_v1": (
+        ("normal_three_option_decision", "Normal three-option decision"),
+        ("correct_feedback", "Correct feedback"),
+        ("normal_four_option_table_read", "Normal four-option table read"),
+        ("accessibility_evidence", "Accessibility table evidence"),
+        ("accessibility_answer", "Accessibility answer"),
+    ),
+    "review_return_v1": (
+        ("review_list", "Review actionable item"),
+        ("review_focused_rep", "Review focused rep"),
+        ("review_feedback", "Review feedback"),
+        ("review_return_updated", "Review return updated"),
+    ),
 }
 DEFAULT_GROUP = "core"
 DEFAULT_DEVICE = "compact"
@@ -189,6 +202,8 @@ def main(argv: list[str]) -> int:
     full_scroll_metadata = output_dir / "full_scroll_meta.json"
     route_metadata = output_dir / "route_w7_w12_meta.json"
     active_route_metadata = output_dir / "active_route_w7_w12_meta.json"
+    bounds = output_dir / "bounds.json"
+    visual_ledger = output_dir / "visual_ledger.json"
     _write_zip(
         entries,
         contact_sheet,
@@ -198,6 +213,8 @@ def main(argv: list[str]) -> int:
         full_scroll_metadata if full_scroll_metadata.exists() else None,
         route_metadata if route_metadata.exists() else None,
         active_route_metadata if active_route_metadata.exists() else None,
+        bounds if bounds.exists() else None,
+        visual_ledger if visual_ledger.exists() else None,
         zip_path,
     )
 
@@ -220,7 +237,7 @@ def _load_entries(
 
 
 def _surface_group_key(group: str) -> str:
-    for device in ("tablet", "tall_phone", "large_phone"):
+    for device in ("tablet", "tall_phone", "large_phone", "iphone17_class"):
         suffix = f"_{device}_fast"
         if group.endswith(suffix):
             return group.replace(suffix, "_fast")
@@ -433,6 +450,8 @@ def _write_zip(
     full_scroll_metadata: Path | None,
     route_metadata: Path | None,
     active_route_metadata: Path | None,
+    bounds: Path | None,
+    visual_ledger: Path | None,
     zip_path: Path,
 ) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -446,6 +465,10 @@ def _write_zip(
             archive.write(route_metadata, route_metadata.name)
         if active_route_metadata is not None:
             archive.write(active_route_metadata, active_route_metadata.name)
+        if bounds is not None:
+            archive.write(bounds, bounds.name)
+        if visual_ledger is not None:
+            archive.write(visual_ledger, visual_ledger.name)
         archive.write(contact_sheet, contact_sheet.name)
         archive.write(readme, readme.name)
         archive.write(index, index.name)
