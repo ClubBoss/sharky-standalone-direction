@@ -300,7 +300,14 @@ void main() {
       expect(find.text('BTN Hero'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_marker_btn_dealer')),
-        findsNothing,
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_marker_btn_dealer')),
+          matching: find.text('BTN'),
+        ),
+        findsOneWidget,
       );
       expect(
         tester
@@ -1259,10 +1266,12 @@ void main() {
         isTrue,
       );
       expect(find.textContaining('You'), findsWidgets);
+      expect(find.text('You · BTN'), findsOneWidget);
+      expect(find.text('BTN · BTN'), findsNothing);
       expect(find.textContaining('Pot'), findsWidgets);
       expect(
         find.byKey(const Key('act0_shell_marker_btn_dealer')),
-        findsNothing,
+        findsOneWidget,
       );
       expect(find.text('Hero'), findsNothing);
       expect(tester.takeException(), isNull);

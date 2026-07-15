@@ -11419,13 +11419,7 @@ _SeatMarkerDisplayV1 _resolveSeatMarkerDisplayV1(
   required Act0TableIdentityPolicyV1 identityPolicy,
 }) {
   final markers = <_SeatMarkerKindV1>[
-    // In the compact learner-position composition, the Hero seat already
-    // carries both the distinct You badge and the BTN position. A separate
-    // dealer disc would repeat the same fact. Dealer order remains explicit
-    // for every other policy, including learnerPositionAndDealerOrder.
     if (seat.isDealerButton &&
-        !(hero &&
-            identityPolicy == Act0TableIdentityPolicyV1.learnerPosition) &&
         (identityPolicy == Act0TableIdentityPolicyV1.currentProduction ||
             identityPolicy == Act0TableIdentityPolicyV1.learnerPosition ||
             identityPolicy ==
