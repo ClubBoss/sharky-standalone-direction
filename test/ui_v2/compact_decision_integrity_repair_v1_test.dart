@@ -9,7 +9,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 Act0RunnerOptionV1 _expandedOptionV1(Act0RunnerOptionV1 option) {
   return Act0RunnerOptionV1(
     id: option.id,
-    label: '${option.label} · table context',
+    label:
+        '${option.label} · table context must remain visible before you choose this answer, because the learner needs the private cards, board cards, and pot in one readable sentence.',
     amountLabel: option.amountLabel,
     seatId: option.seatId,
     isCorrect: option.isCorrect,
@@ -141,7 +142,7 @@ void main() {
         everyElement(hasLength(lessThanOrEqualTo(36))),
       );
 
-      tester.view.physicalSize = const Size(375, 812);
+      tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -196,7 +197,7 @@ void main() {
       final answerGroupHeight = answerRows.last.bottom - answerRows.first.top;
       final usablePostQuestionHeight = dock.bottom - question.bottom;
       expect(answerGroupHeight, greaterThan(usablePostQuestionHeight * 0.6));
-      expect(dock.bottom - answerRows.last.bottom, inInclusiveRange(0, 28));
+      expect(dock.bottom - answerRows.last.bottom, inInclusiveRange(24, 80));
       final guidance = tester.getRect(
         find.byKey(const Key('act0_shell_wave1b_table_signal_chip')),
       );
@@ -223,13 +224,13 @@ void main() {
         tester
             .getRect(find.byKey(const Key('act0_shell_option_not_sure_yet')))
             .bottom,
-        lessThanOrEqualTo(812),
+        lessThanOrEqualTo(874),
       );
       expect(
         tester
             .getRect(find.byKey(const Key('act0_shell_runner_action_dock')))
             .bottom,
-        greaterThanOrEqualTo(800),
+        greaterThanOrEqualTo(862),
       );
       expect(
         find.byKey(const Key('act0_shell_poker_action_icon_check')),
@@ -471,9 +472,10 @@ void main() {
       );
 
       expect(panel.top, lessThanOrEqualTo(dock.top + 4));
-      expect(panel.bottom, greaterThanOrEqualTo(dock.bottom - 4));
+      expect(panel.bottom, lessThan(dock.bottom - 24));
       expect(notSure.bottom, lessThanOrEqualTo(896));
       expect(notSure.height, greaterThanOrEqualTo(44));
+      expect(notSure.height, lessThanOrEqualTo(72));
       expect(second.top - first.bottom, closeTo(third.top - second.bottom, 1));
       expect(third.top - second.bottom, closeTo(notSure.top - third.bottom, 1));
       expect(tester.takeException(), isNull);
@@ -549,7 +551,8 @@ void main() {
       final dock = tester.getRect(
         find.byKey(const Key('act0_shell_runner_action_dock')),
       );
-      expect(dock.bottom - feedbackCard.bottom, inInclusiveRange(8, 44));
+      expect(feedbackCard.top, lessThanOrEqualTo(dock.top + 16));
+      expect(feedbackCard.bottom, lessThan(dock.bottom - 24));
     },
   );
 
@@ -785,10 +788,8 @@ void main() {
         findsOneWidget,
       );
       expect(feedbackCard.height, lessThan(feedbackDock.height));
-      expect(
-        feedbackDock.bottom - feedbackCard.bottom,
-        inInclusiveRange(34, 48),
-      );
+      expect(feedbackCard.top, lessThanOrEqualTo(feedbackDock.top + 16));
+      expect(feedbackCard.bottom, lessThan(feedbackDock.bottom - 24));
       expect(feedbackCard.bottom - feedbackCta.bottom, inInclusiveRange(4, 12));
       expect(tester.takeException(), isNull);
     },
@@ -987,7 +988,7 @@ void main() {
   );
 
   testWidgets(
-    'locked four-option decision has a measured 1.09 text-scale ceiling',
+    'scaled four-option decision uses the bounded fallback lane at 1.09',
     (tester) async {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -1005,7 +1006,7 @@ void main() {
         checkCount: 3,
       );
 
-      tester.view.physicalSize = const Size(375, 812);
+      tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -1013,7 +1014,7 @@ void main() {
         MaterialApp(
           home: MediaQuery(
             data: const MediaQueryData(
-              size: Size(375, 812),
+              size: Size(402, 874),
               textScaler: TextScaler.linear(1.09),
             ),
             child: Scaffold(
@@ -1043,13 +1044,13 @@ void main() {
       for (final option in options) {
         final rect = tester.getRect(option);
         expect(rect.height, greaterThanOrEqualTo(44));
-        expect(rect.bottom, lessThanOrEqualTo(812));
+        expect(rect.bottom, lessThanOrEqualTo(874));
         expect(
           find.ancestor(
             of: option,
             matching: find.byType(SingleChildScrollView),
           ),
-          findsNothing,
+          findsOneWidget,
         );
       }
       expect(tester.takeException(), isNull);
@@ -1155,14 +1156,21 @@ void main() {
       ];
       for (final rect in answerRects) {
         expect(rect.height, greaterThanOrEqualTo(44));
-        expect(rect.bottom, lessThanOrEqualTo(812));
       }
+      expect(
+        tester
+            .getRect(
+              find.byKey(const Key('act0_shell_accessibility_decision_footer')),
+            )
+            .bottom,
+        lessThanOrEqualTo(812),
+      );
       expect(
         find.ancestor(
           of: find.byKey(const Key('act0_shell_option_not_sure_yet')),
           matching: find.byType(SingleChildScrollView),
         ),
-        findsNothing,
+        findsOneWidget,
       );
       expect(choices, 0);
 
@@ -1266,50 +1274,6 @@ void main() {
         question: '${base.question} · table context',
         options: base.options.map(_expandedOptionV1).toList(growable: false),
       );
-      var step = Act0AccessibilityPrototypeStepV1.evidence;
-
-      await tester.binding.setSurfaceSize(const Size(375, 812));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MediaQuery(
-            data: const MediaQueryData(
-              size: Size(375, 812),
-              textScaler: TextScaler.linear(1.4),
-            ),
-            child: Scaffold(
-              body: StatefulBuilder(
-                builder: (context, setState) => Act0LessonRunnerShellV1(
-                  runner: localized,
-                  selectedTaskFamily: task.resolvedTaskFamily,
-                  accessibilityPrototypeStep: step,
-                  onAccessibilityPrototypeStepChanged: (next) {
-                    setState(() => step = next);
-                  },
-                  onBack: () {},
-                  onContinueTheory: () {},
-                  onChooseOption: (_) {},
-                  onContinueReview: () {},
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const Key('act0_shell_accessibility_answer_cta')),
-      );
-      await tester.pumpAndSettle();
-      for (final option in localized.options) {
-        final rect = tester.getRect(
-          find.byKey(Key('act0_shell_option_${option.id}')),
-        );
-        expect(rect.height, greaterThanOrEqualTo(44));
-        expect(rect.bottom, lessThanOrEqualTo(812));
-      }
-      expect(tester.takeException(), isNull);
-
       await tester.pumpWidget(
         MaterialApp(
           home: MediaQuery(

@@ -2532,6 +2532,24 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       options: runner.options,
       showsLearningRail: _showBottomLearningRail,
     );
+    final media = MediaQuery.of(context);
+    final safeVertical = media.viewPadding.vertical > 0
+        ? media.viewPadding.vertical
+        : media.padding.vertical;
+    // The compact table and runner chrome own this much of the short phone.
+    // If the measured content exceeds the actual remaining lane, the lane
+    // scrolls; default-size content remains a fixed, non-scrolling group.
+    final compactDecisionNeedsScroll =
+        compactAnswerListDecision &&
+        (media.textScaler.scale(1) > 1.1 ||
+            _normalRunnerLowerSurfaceDemandV1(
+                  context,
+                  question: question,
+                  options: runner.options,
+                  showsLearningRail: _showBottomLearningRail,
+                  includeStableLaneFloor: false,
+                ) >
+                media.size.height - safeVertical - 630);
     final lowerStageProfile =
         widget.lowerSurfacePrototypeState != null || isAccessibilityEvidence
         ? _RunnerLowerStageProfileV1.expandedFeedback
@@ -2543,6 +2561,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             interactionMode: interactionMode,
             fillsDecisionStage: compactAnswerListDecision,
           );
+    // The background owns spare lower-surface space; the dock still receives
+    // its stable bounded allocation while child cards top-align intrinsically.
     final lowerStageUsesAvailableHeight =
         usesSharedActiveRunnerAllocation ||
         taskCycleEnvelope.usesFixedLowerSlot;
@@ -2564,14 +2584,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         onSelectPreset: widget.onSelectSizingPreset,
         integratedLowerSurface: _showBottomLearningRail,
         compactAnswerListDecision: compactAnswerListDecision,
-        fillCompactPromptToDock:
-            isDrill &&
-            !runner.options.any((option) => option.seatId != null) &&
-            !runner.sizingConfig.isEnabled &&
-            compactAnswerListDecision,
-        // Answers are a complete, fixed group. The locked-table prototype
-        // must prove every state without an implicit scroll fallback.
-        scrollContentInEnvelope: false,
+        fillCompactPromptToDock: false,
+        scrollContentInEnvelope:
+            (compactDecisionNeedsScroll &&
+                (isDrill || isReview) &&
+                widget.lowerSurfacePrototypeState == null) ||
+            isAccessibilityEvidence ||
+            isAccessibilityDecision ||
+            lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback,
         centerBoundedLowerSurface:
             usesSharedActiveRunnerAllocation &&
             _showBottomLearningRail &&
@@ -2692,10 +2712,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           : null,
                       embedChildInSurface: bottomContext.isTrailHistory,
                       compactDecision: compactAnswerListDecision,
-                      // The shared compact allocation owns a full decision
-                      // dock too. Let the panel use that real remainder rather
-                      // than leaving its answer group content-sized at the top.
-                      fillAllocatedDock: compactAnswerListDecision,
+                      // Equal answer rows are content-driven, never a share
+                      // of the remaining viewport.
+                      fillAllocatedDock: false,
                       question: question,
                       onBack: null,
                       recallLabel: decisionHint == null ? null : 'Need a hint?',
@@ -2709,7 +2728,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                               selectedOptionId: runner.selectedOptionId,
                               onChoose: _handleChooseOptionTelemetry,
                               compactDecision: compactAnswerListDecision,
-                              fillAvailableHeight: compactAnswerListDecision,
+                              // The lower surface may fill its stage, but answer rows
+                              // retain their natural height inside it.
+                              fillAvailableHeight: false,
                             ),
                     )
             : isReview
@@ -3834,12 +3855,15 @@ class _RunnerActionDockV1 extends StatelessWidget {
         : (scrollContentInEnvelope && safeBottom > 0
               ? safeBottom + 12
               : Act0ShellTokensV1.gapMd);
+    // A scroll viewport gives its child unbounded vertical constraints, so it
+    // must contain intrinsic content rather than an Expanded fill contract.
+    final fillDockBody =
+        (fillCompactPromptToDock || fillsLowerStage) &&
+        !scrollContentInEnvelope;
     final dockBody = _CompactAnswerListDecisionScopeV1(
       compact: compactAnswerListDecision,
       child: Column(
-        mainAxisSize: fillCompactPromptToDock || fillsLowerStage
-            ? MainAxisSize.max
-            : MainAxisSize.min,
+        mainAxisSize: fillDockBody ? MainAxisSize.max : MainAxisSize.min,
         children: [
           if (effectiveTaskRailLabel != null &&
               effectiveTaskRailLabel.isNotEmpty) ...[
@@ -3854,10 +3878,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
-          if (fillCompactPromptToDock || fillsLowerStage)
-            Expanded(child: child)
-          else
-            child,
+          if (fillDockBody) Expanded(child: child) else child,
         ],
       ),
     );
@@ -3885,14 +3906,13 @@ class _RunnerActionDockV1 extends StatelessWidget {
           )
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
-      _RunnerLowerStageProfileV1.compactFeedback => Align(
+      _RunnerLowerStageProfileV1.compactFeedback => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_compact_feedback'),
-        alignment: Alignment.bottomCenter,
-        child: integratedDockBody,
+        child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
       ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
-        child: integratedDockBody,
+        child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
       ),
       _RunnerLowerStageProfileV1.tableTapDecision =>
         fillsLowerStage
@@ -3916,10 +3936,9 @@ class _RunnerActionDockV1 extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: integratedDockBody,
               ),
-      _RunnerLowerStageProfileV1.expandedFeedback => Align(
+      _RunnerLowerStageProfileV1.expandedFeedback => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_expanded_feedback'),
-        alignment: Alignment.center,
-        child: integratedDockBody,
+        child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
       ),
     };
     final visualDock = Container(
@@ -4357,6 +4376,7 @@ double _normalRunnerLowerSurfaceDemandV1(
   required String question,
   required List<Act0RunnerOptionV1> options,
   required bool showsLearningRail,
+  bool includeStableLaneFloor = true,
 }) {
   // An answer runner keeps one measured decision demand through its ordinary
   // theory, decision, and feedback cycle so the table does not jump.
@@ -4394,11 +4414,15 @@ double _normalRunnerLowerSurfaceDemandV1(
       return sum + math.max(scaledControlFloor, labelHeight + 10);
     });
     // Surface padding, question-to-answer rhythm, dividers, and bounded
-    // bottom clearance. This is the actual normal compact composition.
-    // The floor includes the compact feedback card's safe-area clearance, so
-    // one task-cycle geometry stays valid through theory, decision, and
-    // feedback rather than borrowing height from the table on review.
-    return math.max(279, questionHeight + optionDemand + 34);
+    // bottom clearance. This is intrinsic content demand, not final layout
+    // allocation or empty lower-surface space.
+    final intrinsicDemand = questionHeight + optionDemand + 34;
+    // Table allocation is a stable stage contract. It is deliberately
+    // separate from the intrinsic content demand used for accessibility
+    // activation below, so short copy cannot resize the accepted hand.
+    return includeStableLaneFloor
+        ? math.max(279, intrinsicDemand)
+        : intrinsicDemand;
   }
   return showsLearningRail
       ? _sharedActiveRunnerLearningRailMaxHeightV1
@@ -4419,12 +4443,12 @@ bool act0ShouldActivateCompactAccessibilityPrototypeV1(
   if (!supportedPhone || options.length != 4) {
     return false;
   }
-  final scaler = media.textScaler;
   final required = _normalRunnerLowerSurfaceDemandV1(
     context,
     question: question,
     options: options,
     showsLearningRail: false,
+    includeStableLaneFloor: false,
   );
   final safe = media.viewPadding.vertical > 0
       ? media.viewPadding.vertical
@@ -4434,18 +4458,10 @@ bool act0ShouldActivateCompactAccessibilityPrototypeV1(
   // the hand through Evidence -> Decision rather than shrinking it further.
   const acceptedTableAndChrome = 533.0;
   final available = media.size.height - safe - acceptedTableAndChrome;
-  final tableLabelOverflows = tableCriticalLabels.any((label) {
-    final painter = TextPainter(
-      text: TextSpan(
-        text: label,
-        style: Act0ShellTokensV1.label.copyWith(fontSize: 10),
-      ),
-      textDirection: TextDirection.ltr,
-      textScaler: scaler,
-    )..layout();
-    return painter.width > 180;
-  });
-  return required > available || tableLabelOverflows;
+  // A broad unwrapped-label width cannot establish a table collision: the
+  // admitted centre guidance may wrap safely to two lines. Activation follows
+  // intrinsic composition demand; table geometry retains collision ownership.
+  return required > available;
 }
 
 class _AccessibilityEvidencePrototypeV1 extends StatelessWidget {
@@ -4549,23 +4565,25 @@ class _AccessibilityDecisionPrototypeV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              question,
-              key: const Key('act0_shell_accessibility_question'),
-              style: Act0ShellTokensV1.body.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-                height: 1.12,
-              ),
-            ),
-            const SizedBox(height: 10),
             Expanded(
-              child: Column(
-                key: const Key('act0_shell_accessibility_answer_group'),
-                children: [
-                  for (final option in options)
-                    Expanded(
-                      child: Padding(
+              child: SingleChildScrollView(
+                primary: false,
+                child: Column(
+                  key: const Key('act0_shell_accessibility_answer_group'),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      question,
+                      key: const Key('act0_shell_accessibility_question'),
+                      style: Act0ShellTokensV1.body.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        height: 1.12,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    for (final option in options)
+                      Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Semantics(
                           button: true,
@@ -4598,8 +4616,8 @@ class _AccessibilityDecisionPrototypeV1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(

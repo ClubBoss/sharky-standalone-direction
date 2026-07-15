@@ -103,18 +103,22 @@ void main() {
     },
   );
 
-  testWidgets('priced four-option decisions keep the existing lower slot', (
-    tester,
-  ) async {
-    await pumpCompactFlatFourOptionDecision(tester, priced: true);
+  testWidgets(
+    'priced four-option decisions keep intrinsic rows in the stable table stage',
+    (tester) async {
+      await pumpCompactFlatFourOptionDecision(tester, priced: true);
 
-    final tableRect = tester.getRect(find.byKey(const Key('act0_shell_table')));
-    final finalOptionRect = tester.getRect(
-      find.byKey(const Key('act0_shell_option_raise')),
-    );
+      final tableRect = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      final finalOptionRect = tester.getRect(
+        find.byKey(const Key('act0_shell_option_raise')),
+      );
 
-    expect(tableRect.height, lessThan(430));
-    expect(finalOptionRect.height, greaterThanOrEqualTo(44));
-    expect(finalOptionRect.bottom, lessThanOrEqualTo(812));
-  });
+      expect(tableRect.height, greaterThanOrEqualTo(430));
+      expect(finalOptionRect.height, greaterThanOrEqualTo(44));
+      expect(finalOptionRect.height, lessThanOrEqualTo(72));
+      expect(finalOptionRect.bottom, lessThanOrEqualTo(812));
+    },
+  );
 }
