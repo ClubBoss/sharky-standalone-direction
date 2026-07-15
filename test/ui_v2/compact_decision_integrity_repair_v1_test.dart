@@ -330,8 +330,10 @@ void main() {
         find.byKey(const Key('act0_shell_seat_tap_prompt_text')),
       );
       expect(prompt.top, lessThanOrEqualTo(lowerSurface.top + 16));
-      expect(prompt.bottom, greaterThanOrEqualTo(lowerSurface.bottom - 28));
-      expect(lowerSurface.bottom - helper.bottom, inInclusiveRange(8, 36));
+      expect(prompt.height, lessThan(lowerSurface.height - 48));
+      expect(prompt.bottom, lessThanOrEqualTo(lowerSurface.bottom - 48));
+      expect(helper.bottom, lessThanOrEqualTo(prompt.bottom - 8));
+      expect(tester.takeException(), isNull);
     },
   );
 

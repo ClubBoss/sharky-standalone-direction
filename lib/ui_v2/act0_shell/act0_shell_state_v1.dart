@@ -10601,12 +10601,12 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
   lessonTitle: 'What poker is',
   lessonSubtitle: 'Poker from Zero',
   caption:
-      'New spot. Hero has two cards, the flop has three, and the pot is 4 BB.',
-  hint: 'Read Hero cards, shared board, and pot before any action.',
+      'New spot. You have two cards, the flop has three, and the pot is 4 BB.',
+  hint: 'Read your cards, the shared board, and the pot before any action.',
   question: 'What is the clean table read here?',
   feedbackTitle: 'Same scan, new spot.',
   feedbackReason:
-      'You repeated the table scan: Hero cards, shared board, then pot.',
+      'You repeated the table scan: your cards, shared board, then pot.',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'two_three_four',
@@ -10616,7 +10616,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean table read.',
       feedbackReason:
-          'Same scan, new numbers: Hero has two private cards, the board has three shared cards, and the pot is 4 BB.',
+          'Same scan, new numbers: you have two private cards, the board has three shared cards, and the pot is 4 BB.',
       repairFocusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -10624,7 +10624,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
         'board_1',
         'board_2',
       ],
-      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+      repairFocusLabels: <String>['Your cards', 'Board cards', 'Pot 4 BB'],
     ),
     Act0RunnerOptionV1(
       id: 'five_board_cards',
@@ -10643,18 +10643,18 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
         'board_1',
         'board_2',
       ],
-      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+      repairFocusLabels: <String>['Your cards', 'Board cards', 'Pot 4 BB'],
     ),
     Act0RunnerOptionV1(
       id: 'hero_cards_only',
-      label: 'Only Hero cards matter',
+      label: 'Only your cards matter',
       isCorrect: false,
       preferredLabel: '2 private cards, 3 board cards, 4 BB in the pot',
       betterAnswerLabel: '2 private cards, 3 board cards, 4 BB in the pot',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Part of the read.',
       feedbackReason:
-          'Hero cards matter, but the clean table read also includes the shared board and the pot.',
+          'Your cards matter, but the clean table read also includes the shared board and the pot.',
       repairFocusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -10662,7 +10662,7 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
         'board_1',
         'board_2',
       ],
-      repairFocusLabels: <String>['Hero cards', 'Board cards', 'Pot 4 BB'],
+      repairFocusLabels: <String>['Your cards', 'Board cards', 'Pot 4 BB'],
     ),
   ],
   table: _readBoardRunner.table.copyWith(
@@ -10762,6 +10762,44 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 1,
   beatCount: 5,
+  caption: 'You are at the bottom seat in this first example.',
+  hint: 'Find You, then notice BTN, the dealer position for this hand.',
+  question: 'Which marker identifies you?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'top',
+      label: 'Top seat',
+      seatId: 'utg',
+      isCorrect: false,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Look for You.',
+      feedbackReason: 'The You badge marks your seat in this example.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bottom',
+      label: 'You badge',
+      seatId: 'btn',
+      isCorrect: true,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Your seat found!',
+      feedbackReason: 'The You badge marks your seat at the bottom.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'random',
+      label: 'Random seat',
+      seatId: 'hj',
+      isCorrect: false,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Nearly there.',
+      feedbackReason: 'Your seat is marked You, not by a random position.',
+    ),
+  ],
+  feedbackTitle: 'Sharp read.',
+  feedbackReason:
+      'You identifies your seat. BTN is the dealer position for this hand.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'One loop first.',
@@ -10772,9 +10810,10 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'Hero is you. SB = Small Blind. BB = Big Blind.\n\nSB posts 0.5 BB. BB posts 1 BB.',
+          'You marks your seat. BTN is the Button position for this hand; on another hand, You can be in a different position.\n\nSB = Small Blind. BB = Big Blind.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['Hero', 'Blinds', 'Table first'],
+      focusLabels: <String>['You', 'BTN', 'Blinds'],
+      identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
     ),
   ],
 );
@@ -10785,6 +10824,53 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 2,
   beatCount: 5,
+  caption: 'Your seat is marked You.',
+  hint: 'Start every hand by finding your cards and the You badge.',
+  question: 'Which seat has the You badge?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'top',
+      label: 'Top seat',
+      seatId: 'utg',
+      isCorrect: false,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Look for You.',
+      feedbackReason: 'The You badge marks your seat at the bottom.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'bottom',
+      label: 'You badge',
+      seatId: 'btn',
+      isCorrect: true,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Your seat found!',
+      feedbackReason: 'The You badge marks your seat at the bottom.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'random',
+      label: 'Random seat',
+      seatId: 'hj',
+      isCorrect: false,
+      preferredLabel: 'You badge',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Nearly there.',
+      feedbackReason: 'Your seat is marked You, not by a random position.',
+    ),
+  ],
+  feedbackTitle: 'Your seat found!',
+  feedbackReason: 'The You badge marks your seat at the bottom.',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'You means learner.',
+      body:
+          'The You badge marks your seat. BTN is a position, so You can be at a different position on another hand.',
+      focusSeatIds: <String>['btn'],
+      focusLabels: <String>['You', 'BTN'],
+      identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
+    ),
+  ],
 );
 
 final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
@@ -10793,6 +10879,53 @@ final _firstTableGuideReadTableRunner = _w1TableReadTransferRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 3,
   beatCount: 5,
+  caption:
+      'New table. You have two cards, the flop has three, and the pot is 6 BB.',
+  hint: 'Read your cards, the shared board, and the pot before any action.',
+  feedbackReason:
+      'Start with the same three checks every time: your cards, the shared board, and chips in the pot.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'two_three_six',
+      label: '2 private cards, 3 board cards, 6 BB in the pot',
+      isCorrect: true,
+      preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Excellent spot.',
+      feedbackReason:
+          'That is the clean first live read. Separate your cards, the shared board, and chips in the middle before choosing anything.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'five_board_now',
+      label: '5 board cards are already out',
+      isCorrect: false,
+      preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+      betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'On the right track.',
+      feedbackReason:
+          'The flop has only three shared cards. Five board cards appear only by the river.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'hand_first_only',
+      label: 'Only your hand matters first',
+      isCorrect: false,
+      preferredLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+      betterAnswerLabel: '2 private cards, 3 board cards, 6 BB in the pot',
+      quality: Act0FeedbackQualityV1.suboptimal,
+      feedbackTitle: 'Playable instinct.',
+      feedbackReason:
+          'Your cards matter, but a live table read also needs the shared board and pot before the decision starts.',
+    ),
+  ],
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Carry the first table scan.',
+      body:
+          'Real tables use the same simple scan.\n\nFind your two cards and the shared board.\n\nThen check how many chips are already in the pot.',
+      focusLabels: <String>['2 private', '3 board', 'Pot'],
+    ),
+  ],
 );
 
 final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
@@ -10801,64 +10934,61 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 4,
   beatCount: 5,
-  caption: 'Same scan, new spot: Hero is first in on the Button with KTs.',
-  hint: 'No board is out yet. Start with Hero, blinds, pot, and who acts next.',
+  caption: 'Same scan, new spot: You are first in on BTN with KTs.',
+  hint: 'No board is out yet. Start with You, blinds, pot, and who acts next.',
   question: 'What is the clean preflop setup here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_btn_preflop_setup',
-      label: 'Hero is BTN/button, blinds are posted, and no board is out yet',
+      label: 'You are BTN, blinds are posted, and no board is out yet',
       isCorrect: true,
-      preferredLabel:
-          'Hero is BTN/button, blinds are posted, and no board is out yet',
+      preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'That is the setup.',
       feedbackReason:
-          'That is the clean first read. Hero is on BTN/button, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
+          'That is the clean first read. You are BTN this hand, the blinds already seeded the pot, and no board is out yet because this spot is still preflop.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
-        'Hero on the Button',
+        'You at BTN',
         'Blinds posted',
         'No board yet',
       ],
     ),
     Act0RunnerOptionV1(
       id: 'co_still_acting',
-      label: 'CO/cutoff already folded, so Hero on BTN/button acts next',
+      label: 'CO/cutoff already folded, so You at BTN act next',
       isCorrect: false,
-      preferredLabel:
-          'Hero is BTN/button, blinds are posted, and no board is out yet',
+      preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
-          'Hero is BTN/button, blinds are posted, and no board is out yet',
+          'You are BTN, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close, but name the full setup.',
       feedbackReason:
-          'CO/cutoff already folded and action is on Hero now. The full clue also includes BTN/button, posted blinds, Hero has cards, and no board yet.',
+          'CO/cutoff already folded and action is on You now. The full clue also includes BTN, posted blinds, your cards, and no board yet.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
-        'Hero on the Button',
+        'You at BTN',
         'Blinds posted',
         'No board yet',
       ],
     ),
     Act0RunnerOptionV1(
       id: 'hero_has_no_cards',
-      label: 'Blinds are posted, but Hero on BTN/button has no cards',
+      label: 'Blinds are posted, but You at BTN have no cards',
       isCorrect: false,
-      preferredLabel:
-          'Hero is BTN/button, blinds are posted, and no board is out yet',
+      preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
-          'Hero is BTN/button, blinds are posted, and no board is out yet',
+          'You are BTN, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Use the visible cards too.',
       feedbackReason:
-          'The blinds are posted and no board is out, but Hero has K and T showing at BTN/button. The setup is preflop with Hero acting next.',
+          'The blinds are posted and no board is out, but You have K and T showing at BTN. The setup is preflop with You acting next.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
-        'Hero on the Button',
+        'You at BTN',
         'Blinds posted',
         'No board yet',
       ],
@@ -10869,15 +10999,15 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       'You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.',
   table: _whatYouCanDoRunner.table.copyWith(
     toCallLabel: '',
-    centerLabel: 'Hero acts next',
+    centerLabel: 'You act next',
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same scan, simpler job.',
       body:
-          'Preflop means no board yet. Read Hero, blinds, pot, and who acts next. Name the setup once.',
+          'Preflop means no board yet. Read You, blinds, pot, and who acts next. Name the setup once.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
-      focusLabels: <String>['Hero acts next', 'Blinds posted', 'No board yet'],
+      focusLabels: <String>['You act next', 'Blinds posted', 'No board yet'],
     ),
   ],
 );

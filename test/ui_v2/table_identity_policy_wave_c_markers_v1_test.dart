@@ -24,20 +24,20 @@ void main() {
   final dealer = find.byKey(const Key('act0_shell_marker_hero_dealer'));
 
   testWidgets(
-    'legacy preserves one dealer disc while typed policies control it',
+    'learner position keeps the dealer disc on BTN while learner-only hides it',
     (tester) async {
       await pump(tester, Act0TableIdentityPolicyV1.currentProduction);
       expect(dealer, findsOneWidget);
       await pump(tester, Act0TableIdentityPolicyV1.learnerOnly);
       expect(dealer, findsNothing);
       await pump(tester, Act0TableIdentityPolicyV1.learnerPosition);
-      expect(dealer, findsNothing);
+      expect(dealer, findsOneWidget);
       await pump(
         tester,
         Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder,
       );
       expect(dealer, findsOneWidget);
-    expect(find.text('BTN'), findsWidgets);
+      expect(find.text('BTN'), findsWidgets);
     },
   );
 }

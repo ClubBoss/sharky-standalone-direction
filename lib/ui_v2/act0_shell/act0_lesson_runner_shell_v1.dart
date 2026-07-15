@@ -2658,10 +2658,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       onRecall: widget.theoryRecallStep == null
                           ? null
                           : _openTheoryRecallSheet,
-                      fillsAvailableHeight:
-                          lowerStageUsesAvailableHeight &&
-                          lowerStageProfile ==
-                              _RunnerLowerStageProfileV1.tableTapDecision,
+                      fillsAvailableHeight: false,
                     )
                   : runner.sizingConfig.isEnabled
                   ? _ActionPromptPanelV1(
@@ -3826,7 +3823,6 @@ class _RunnerActionDockV1 extends StatelessWidget {
     final fillsLowerStage =
         fillLowerStage &&
         (lowerStageProfile == _RunnerLowerStageProfileV1.instruction ||
-            lowerStageProfile == _RunnerLowerStageProfileV1.tableTapDecision ||
             lowerStageProfile == _RunnerLowerStageProfileV1.decision);
     final double stageBottomPadding =
         lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback
@@ -4825,7 +4821,10 @@ class _LearningRailV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
-                      child: Center(
+                      child: Align(
+                        alignment: fillsAvailableHeight
+                            ? Alignment.topCenter
+                            : Alignment.center,
                         child: Semantics(
                           label: 'Theory page $pageNumber of $pageCount',
                           child: ConstrainedBox(
@@ -4834,10 +4833,6 @@ class _LearningRailV1 extends StatelessWidget {
                             ),
                             constraints: BoxConstraints(
                               maxWidth: compactLaneMaxWidth,
-                              maxHeight: math.max(
-                                0,
-                                constraints.maxHeight - footerHeight,
-                              ),
                             ),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -5845,7 +5840,7 @@ class _SeatTapPromptV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isFirstTableOrientation = question.trim().toLowerCase().contains(
-      'hero seat',
+      'you badge',
     );
     return Container(
       key: const Key('act0_shell_seat_tap_prompt'),
