@@ -2534,10 +2534,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         widget.debugHarnessEntry?.lessonId ?? 'what_poker_is';
     final targetTaskId =
         widget.debugHarnessEntry?.taskId ?? 'what_poker_is_theory';
-    final world =
-        state.worlds.any((candidate) => candidate.worldId == targetWorldId)
-        ? _worldById(state.worlds, targetWorldId)
-        : state.worldById(state.selectedWorldId);
+    if (!state.worlds.any((candidate) => candidate.worldId == targetWorldId)) {
+      _applyDebugHomeSurface();
+      return;
+    }
+    final world = _worldById(state.worlds, targetWorldId);
     if (!world.lessons.any((lesson) => lesson.lessonId == targetLessonId)) {
       _applyDebugHomeSurface();
       return;

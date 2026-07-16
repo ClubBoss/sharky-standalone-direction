@@ -37,6 +37,25 @@ const Set<String> _legacySurfaceRoutes = <String>{
   '/ui_v2/progress_map',
 };
 
+Act0ShellDebugHarnessEntryV1? _taskScopedCaptureEntryV1(
+  Uri uri, {
+  required Act0ControlledDemoCaptureSurfaceV1 surface,
+}) {
+  final worldId = (uri.queryParameters['world'] ?? '').trim();
+  final lessonId = (uri.queryParameters['lesson'] ?? '').trim();
+  final taskId = (uri.queryParameters['task'] ?? '').trim();
+  if (worldId.isEmpty || lessonId.isEmpty || taskId.isEmpty) {
+    return null;
+  }
+  return Act0ShellDebugHarnessEntryV1(
+    mode: Act0ControlledDemoCaptureModeV1.directState,
+    surface: surface,
+    worldId: worldId,
+    lessonId: lessonId,
+    taskId: taskId,
+  );
+}
+
 @visibleForTesting
 Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
   final rawCapture = (uri.queryParameters['act0_capture'] ?? '')
@@ -69,6 +88,16 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
       );
     case 'runner_drill':
+      final hasTaskSelector =
+          uri.queryParameters.containsKey('world') ||
+          uri.queryParameters.containsKey('lesson') ||
+          uri.queryParameters.containsKey('task');
+      if (hasTaskSelector) {
+        return _taskScopedCaptureEntryV1(
+          uri,
+          surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+        );
+      }
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
@@ -154,18 +183,9 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         surface: Act0ControlledDemoCaptureSurfaceV1.sessionSummary,
       );
     case 'runner':
-      final worldId = (uri.queryParameters['world'] ?? '').trim();
-      final lessonId = (uri.queryParameters['lesson'] ?? '').trim();
-      final taskId = (uri.queryParameters['task'] ?? '').trim();
-      if (worldId.isEmpty || lessonId.isEmpty || taskId.isEmpty) {
-        return null;
-      }
-      return Act0ShellDebugHarnessEntryV1(
-        mode: Act0ControlledDemoCaptureModeV1.directState,
+      return _taskScopedCaptureEntryV1(
+        uri,
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
-        worldId: worldId,
-        lessonId: lessonId,
-        taskId: taskId,
       );
     default:
       return null;
