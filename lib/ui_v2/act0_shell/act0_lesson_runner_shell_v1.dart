@@ -3937,9 +3937,17 @@ class _RunnerActionDockV1 extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: integratedDockBody,
               ),
-      _RunnerLowerStageProfileV1.expandedFeedback => SizedBox.expand(
-        key: const Key('act0_shell_lower_stage_expanded_feedback'),
-        child: integratedDockBody,
+      _RunnerLowerStageProfileV1.expandedFeedback => LayoutBuilder(
+        builder: (context, constraints) => constraints.hasBoundedHeight
+            ? SizedBox.expand(
+                key: const Key('act0_shell_lower_stage_expanded_feedback'),
+                child: integratedDockBody,
+              )
+            : Align(
+                key: const Key('act0_shell_lower_stage_expanded_feedback'),
+                alignment: Alignment.topCenter,
+                child: integratedDockBody,
+              ),
       ),
       _RunnerLowerStageProfileV1.accessibility => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_accessibility'),

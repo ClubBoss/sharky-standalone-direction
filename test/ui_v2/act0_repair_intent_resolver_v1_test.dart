@@ -562,7 +562,10 @@ void main() {
     expect((state?['last_session_date'] as String?)?.isNotEmpty, isTrue);
 
     final line = _homePersonalizedReturnReasonLine(tester);
-    expect(line, 'Resume your most recent table read.');
+    expect(
+      line,
+      'You handled this clue better on a later hand. Reinforce it once more.',
+    );
 
     await _pumpHomeWithPersonalizedReason(tester, line);
     expect(
