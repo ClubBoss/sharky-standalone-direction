@@ -103,7 +103,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Repair proof banks the next time you fix one.'),
+      find.text('Repair result saves the next time you fix one.'),
       findsOneWidget,
     );
     expect(
@@ -216,7 +216,7 @@ void main() {
       findsNothing,
     );
     expect(
-      find.text('Repair proof banks the next time you fix one.'),
+      find.text('Repair result saves the next time you fix one.'),
       findsOneWidget,
     );
   });
