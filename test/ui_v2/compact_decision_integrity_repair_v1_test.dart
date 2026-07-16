@@ -31,7 +31,7 @@ void main() {
   testWidgets(
     'active runner owners forward measured accessibility mode without replacing the canonical route',
     (tester) async {
-      tester.view.physicalSize = const Size(375, 812);
+      tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -111,9 +111,11 @@ void main() {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
-          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
           .taskList
-          .firstWhere((entry) => entry.taskId == 'actions_call_drill');
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+          );
       final runner = placementQuickCheckRunnerV1(
         task.runner.copyWith(
           phase: Act0LessonPhaseV1.drill,
@@ -136,6 +138,12 @@ void main() {
       expect(
         runner.options.where((option) => option.isCorrect).single.id,
         'two_three_six',
+      );
+      expect(runner.table.potLabel, 'Pot 6 BB');
+      expect(runner.table.toCallLabel, isEmpty);
+      expect(
+        runner.options.where((option) => option.isCorrect).single.label,
+        '2 private · 3 board · Pot 6 BB',
       );
       expect(
         runner.options.map((option) => option.label),
@@ -1127,9 +1135,11 @@ void main() {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
-          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
           .taskList
-          .firstWhere((entry) => entry.taskId == 'actions_call_drill');
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+          );
       final runner = placementQuickCheckRunnerV1(
         task.runner.copyWith(
           phase: Act0LessonPhaseV1.drill,
@@ -1192,15 +1202,17 @@ void main() {
   );
 
   testWidgets(
-    'large-text accessibility prototype activates before overflow and preserves the hand',
+    'large-text accessibility flow keeps direct table decision and feedback in one shell',
     (tester) async {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
           .lessons
-          .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
           .taskList
-          .firstWhere((entry) => entry.taskId == 'actions_call_drill');
-      final runner = placementQuickCheckRunnerV1(
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+          );
+      final directRunner = placementQuickCheckRunnerV1(
         task.runner.copyWith(
           phase: Act0LessonPhaseV1.drill,
           teachingSteps: const <Act0TeachingStepV1>[],
@@ -1209,11 +1221,12 @@ void main() {
         checkIndex: 1,
         checkCount: 3,
       );
+      var runner = directRunner;
       var step = Act0AccessibilityPrototypeStepV1.evidence;
       var choices = 0;
       final sink = Act0InMemoryTelemetrySinkV1();
 
-      tester.view.physicalSize = const Size(375, 812);
+      tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -1221,9 +1234,11 @@ void main() {
       Future<void> pump() async {
         await tester.pumpWidget(
           MaterialApp(
+            theme: ThemeData(fontFamily: 'Roboto'),
             home: MediaQuery(
               data: const MediaQueryData(
-                size: Size(375, 812),
+                size: Size(402, 874),
+                viewPadding: EdgeInsets.only(top: 59, bottom: 34),
                 textScaler: TextScaler.linear(1.4),
               ),
               child: Scaffold(
@@ -1240,7 +1255,16 @@ void main() {
                     },
                     onBack: () {},
                     onContinueTheory: () {},
-                    onChooseOption: (_) => choices++,
+                    onChooseOption: (option) => setState(() {
+                      choices++;
+                      runner = directRunner.copyWith(
+                        phase: Act0LessonPhaseV1.review,
+                        selectedOptionId: option.id,
+                        feedbackTitle: option.feedbackTitle,
+                        feedbackReason: option.feedbackReason,
+                        primaryCtaLabel: 'Next hand',
+                      );
+                    }),
                     onContinueReview: () {},
                   ),
                 ),
@@ -1255,34 +1279,50 @@ void main() {
       final evidenceTable = tester.getRect(
         find.byKey(const Key('act0_shell_table')),
       );
-      expect(
-        act0ShouldActivateCompactAccessibilityPrototypeV1(
-          tester.element(
-            find.byKey(const Key('act0_shell_accessibility_evidence_surface')),
-          ),
-          question: runner.question,
-          options: runner.options,
-        ),
-        isTrue,
+      final evidenceDock = tester.getRect(
+        find.byKey(const Key('act0_shell_runner_action_dock')),
       );
-      expect(find.textContaining('You'), findsWidgets);
-      expect(find.text('You · BTN'), findsOneWidget);
-      expect(find.text('BTN · BTN'), findsNothing);
-      expect(find.textContaining('Pot'), findsWidgets);
+      final decisionSurface = tester.getRect(
+        find.byKey(const Key('act0_shell_accessibility_shared_surface')),
+      );
+      expect(decisionSurface.top - evidenceDock.top, inInclusiveRange(0, 2));
+      expect(
+        evidenceDock.bottom - decisionSurface.bottom,
+        inInclusiveRange(0, 2),
+      );
+      expect(
+        decisionSurface.width,
+        greaterThanOrEqualTo(evidenceDock.width * 0.9),
+      );
       expect(
         find.byKey(const Key('act0_shell_marker_btn_dealer')),
         findsOneWidget,
       );
       expect(find.text('Hero'), findsNothing);
+      expect(find.byKey(const Key('act0_shell_runner_back')), findsOneWidget);
+      expect(find.text('Step 1/3'), findsOneWidget);
+      expect(directRunner.table.potLabel, 'Pot 6 BB');
+      expect(directRunner.table.toCallLabel, isEmpty);
+      expect(
+        directRunner.options.where((option) => option.isCorrect).single.label,
+        '2 private · 3 board · Pot 6 BB',
+      );
       expect(tester.takeException(), isNull);
 
-      await tester.tap(
-        find.byKey(const Key('act0_shell_accessibility_answer_cta')),
-      );
-      await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_shell_accessibility_question')),
         findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_accessibility_guidance')),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Count private cards, board cards, then the pot.'),
+        findsOneWidget,
+      );
+      final decisionModule = tester.getRect(
+        find.byKey(const Key('act0_shell_accessibility_decision_module')),
       );
       final optionIds = runner.options.map((option) => option.id).toList();
       expect(optionIds.last, 'not_sure_yet');
@@ -1290,42 +1330,112 @@ void main() {
         for (final id in optionIds)
           tester.getRect(find.byKey(Key('act0_shell_option_$id'))),
       ];
+      expect(answerRects.map((rect) => rect.height).toSet(), hasLength(1));
       for (final rect in answerRects) {
-        expect(rect.height, greaterThanOrEqualTo(44));
+        expect(rect.height, greaterThanOrEqualTo(48));
+        expect(rect.bottom, lessThanOrEqualTo(evidenceDock.bottom));
       }
       expect(
-        tester
-            .getRect(
-              find.byKey(const Key('act0_shell_accessibility_decision_footer')),
-            )
-            .bottom,
-        lessThanOrEqualTo(812),
+        (decisionModule.top -
+                evidenceDock.top -
+                (evidenceDock.bottom - decisionModule.bottom))
+            .abs(),
+        lessThanOrEqualTo(evidenceDock.height * 0.15),
+      );
+      expect(
+        tester.getRect(find.byKey(const Key('act0_shell_table'))),
+        evidenceTable,
+      );
+      expect(
+        tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock'))),
+        evidenceDock,
+      );
+      expect(find.byKey(const Key('act0_shell_runner_back')), findsOneWidget);
+      expect(find.text('Step 1/3'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_accessibility_view_table_cta')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_accessibility_answer_cta')),
+        findsNothing,
       );
       expect(
         find.ancestor(
           of: find.byKey(const Key('act0_shell_option_not_sure_yet')),
           matching: find.byType(SingleChildScrollView),
         ),
-        findsOneWidget,
+        findsNothing,
       );
       expect(choices, 0);
 
       await tester.tap(
-        find.byKey(const Key('act0_shell_accessibility_view_table_cta')),
+        find.byKey(const Key('act0_shell_option_two_three_six')),
       );
       await tester.pumpAndSettle();
+      expect(choices, 1);
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
+      final feedbackCard = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_card')),
+      );
+      final feedbackSurface = tester.getRect(
+        find.byKey(const Key('act0_shell_accessibility_shared_surface')),
+      );
+      final feedbackTopContent = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+      );
+      final feedbackExplanation = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_reason')),
+      );
+      final feedbackCta = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      expect(feedbackSurface.left, decisionSurface.left);
+      expect(feedbackSurface.right, decisionSurface.right);
+      expect(feedbackSurface.bottom, decisionSurface.bottom);
+      expect(
+        feedbackTopContent.top - feedbackSurface.top,
+        inInclusiveRange(0, feedbackSurface.height * 0.14),
+      );
+      expect(feedbackCta.top, greaterThan(feedbackExplanation.bottom));
+      expect(
+        feedbackCta.top - feedbackExplanation.bottom,
+        inInclusiveRange(
+          feedbackSurface.height * 0.12,
+          feedbackSurface.height * 0.55,
+        ),
+      );
+      expect(
+        feedbackSurface.bottom - feedbackCta.bottom,
+        inInclusiveRange(
+          feedbackSurface.height * 0.03,
+          feedbackSurface.height * 0.2,
+        ),
+      );
+      expect(
+        find.text(
+          'Right: two private cards, three board cards, and a 6 BB pot.',
+        ),
+        findsOneWidget,
+      );
+      expect(runner.lessonId, directRunner.lessonId);
+      expect(runner.table.potLabel, directRunner.table.potLabel);
+      expect(runner.table.toCallLabel, directRunner.table.toCallLabel);
       expect(
         tester.getRect(find.byKey(const Key('act0_shell_table'))),
         evidenceTable,
       );
-      expect(choices, 0);
+      expect(
+        tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock'))),
+        evidenceDock,
+      );
       expect(
         sink.events.where((event) => event.name == 'user_choice'),
-        isEmpty,
+        hasLength(1),
       );
       expect(
         sink.events.where((event) => event.name == 'accessibility_navigation'),
-        hasLength(2),
+        isEmpty,
       );
       expect(tester.takeException(), isNull);
     },

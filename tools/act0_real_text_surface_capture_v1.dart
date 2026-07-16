@@ -201,8 +201,9 @@ const _presentationClosureSurfacesV1 = <String>[
   'correct_feedback',
   'normal_four_option_table_read',
   'long_copy_repair_feedback',
-  'accessibility_evidence',
-  'accessibility_answer',
+  'direct_table_decision',
+  'accessibility_feedback_after_answer',
+  'genuine_price_task_guidance',
 ];
 
 const _reviewReturnSurfacesV1 = <String>[
@@ -492,9 +493,12 @@ void main(List<String> args) async {
           ? null
           : group == 'presentation_closure' &&
                 (surface == 'normal_four_option_table_read' ||
-                    surface == 'accessibility_evidence' ||
-                    surface == 'accessibility_answer')
+                    surface == 'direct_table_decision' ||
+                    surface == 'accessibility_feedback_after_answer')
           ? 'what_poker_is_table_read_transfer'
+          : group == 'presentation_closure' &&
+                surface == 'genuine_price_task_guidance'
+          ? 'actions_call_drill'
           : 'actions_check_drill',
       'state_identity': targetedSurfaces == null
           ? null
@@ -1205,6 +1209,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -1238,16 +1243,21 @@ void main() {
       .taskList.firstWhere((task) => task.taskId == id);
 
   final actionTask = taskFor('actions_check_drill');
-  final tableTask = taskFor('actions_call_drill');
-  final longCopyRepairTask = Act0ShellStateV1.sample
+  final priceTask = taskFor('actions_call_drill');
+  final tableTask = Act0ShellStateV1.sample
       .worldById('world_1')
       .lessons
       .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
       .taskList
       .firstWhere((task) => task.taskId == 'what_poker_is_table_read_transfer');
+  final longCopyRepairTask = tableTask;
   final tableRunner = placementQuickCheckRunnerV1(
     tableTask.runner.copyWith(phase: Act0LessonPhaseV1.drill, teachingSteps: const <Act0TeachingStepV1>[]),
     signalId: 'table_read', checkIndex: 1, checkCount: 3,
+  );
+  final priceRunner = priceTask.runner.copyWith(
+    phase: Act0LessonPhaseV1.drill,
+    teachingSteps: const <Act0TeachingStepV1>[],
   );
   final actionFeedback = actionTask.runner.copyWith(
     phase: Act0LessonPhaseV1.review,
@@ -1262,6 +1272,8 @@ void main() {
     teachingSteps: const <Act0TeachingStepV1>[],
   );
   var accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence;
+  var accessibilityRunner = tableRunner;
+  final accessibilitySink = Act0InMemoryTelemetrySinkV1();
   var reviewStage = 'list';
   const activeMistake = Act0MistakeCardV1(
     taskId: 'actions_check_drill', lessonId: 'fold_check_call_raise',
@@ -1288,13 +1300,14 @@ void main() {
     home: MediaQuery(
       data: MediaQueryData(size: viewport, viewPadding: const EdgeInsets.only(top: 59, bottom: 34), textScaler: accessibility ? const TextScaler.linear(1.4) : const TextScaler.linear(1.0)),
       child: Scaffold(body: RepaintBoundary(key: const Key('act0_real_text_capture_boundary'), child: StatefulBuilder(builder: (context, setState) => Act0LessonRunnerShellV1(
-        runner: runner, selectedTaskId: task?.taskId, selectedTaskFamily: task?.resolvedTaskFamily ?? (accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily),
+        runner: accessibility ? accessibilityRunner : runner, selectedTaskId: task?.taskId, selectedTaskFamily: task?.resolvedTaskFamily ?? (accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily),
         tablePresentation: task?.tablePresentation ?? Act0TaskTablePresentationV1.legacy,
         repairReasonLine: task == longCopyRepairTask ? 'This rep repeats the same clue. Before choosing, name the table clue first.' : null,
         tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
         accessibilityPrototypeStep: accessibility ? accessibilityStep : null,
         onAccessibilityPrototypeStepChanged: accessibility ? (next) => setState(() => accessibilityStep = next) : null,
-        onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {},
+        telemetrySink: accessibility ? accessibilitySink : null,
+        onBack: () {}, onContinueTheory: () {}, onChooseOption: accessibility ? (option) => setState(() => accessibilityRunner = tableRunner.copyWith(phase: Act0LessonPhaseV1.review, selectedOptionId: option.id, feedbackTitle: option.feedbackTitle, feedbackReason: option.feedbackReason, primaryCtaLabel: 'Next hand')) : (_) {}, onContinueReview: () {},
       )))),
     ),
   );
@@ -1335,6 +1348,9 @@ void main() {
 
   late WidgetTester tester;
   Rect? tableRectForCycle;
+  Rect? accessibilityTableRect;
+  Rect? accessibilityDockRect;
+  Rect? accessibilitySurfaceRect;
   final layoutErrors = <String>[];
   dynamic originalFlutterError;
   String colorToHex(Color color) {
@@ -1383,8 +1399,7 @@ void main() {
       'table': const Key('act0_shell_table'), 'question': const Key('act0_shell_action_question'),
       'lower_stage': const Key('act0_shell_runner_action_dock'), 'lower_stage_scroll': const Key('act0_shell_lower_stage_scroll'),
       'feedback_card': const Key('act0_shell_feedback_card'), 'feedback_cta': const Key('act0_shell_feedback_continue_cta'),
-      'evidence_card': const Key('act0_shell_accessibility_evidence_surface'), 'answer_cta': const Key('act0_shell_accessibility_answer_cta'),
-      'view_table': const Key('act0_shell_accessibility_view_table_cta'),
+      'answer_group': const Key('act0_shell_accessibility_answer_group'), 'shared_surface': const Key('act0_shell_accessibility_shared_surface'), 'header_back': const Key('act0_shell_runner_back'),
     }.entries) {
       final finder = find.byKey(entry.value);
       if (finder.evaluate().isNotEmpty) { final r = tester.getRect(finder); values[entry.key] = <String, double>{'left': r.left, 'top': r.top, 'right': r.right, 'bottom': r.bottom, 'width': r.width, 'height': r.height}; }
@@ -1435,18 +1450,50 @@ void main() {
       expect(card.top - table.bottom, inInclusiveRange(0, 32));
       expect(card.bottom - cta.bottom, inInclusiveRange(0, 24));
     }
-    if (surface == 'accessibility_evidence') {
-      final card = tester.getRect(find.byKey(const Key('act0_shell_accessibility_evidence_surface')));
-      final cta = tester.getRect(find.byKey(const Key('act0_shell_accessibility_answer_cta')));
-      expect(card.bottom - cta.bottom, inInclusiveRange(8, 28));
-      expect(card.height, lessThan(viewport.height * 0.45));
-    }
-    if (surface == 'accessibility_answer') {
+    if (surface == 'direct_table_decision') {
       final rows = optionRects(<String>['two_three_six', 'two_five_six', 'two_three_four', 'not_sure_yet']);
-      final footer = tester.getRect(find.byKey(const Key('act0_shell_accessibility_decision_footer')));
+      expect(tableRunner.table.potLabel, 'Pot 6 BB');
+      expect(tableRunner.table.toCallLabel, isEmpty);
+      expect(tableRunner.options.singleWhere((option) => option.isCorrect).label, '2 private · 3 board · Pot 6 BB');
+      accessibilityTableRect = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      accessibilityDockRect = tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock')));
+      accessibilitySurfaceRect = tester.getRect(find.byKey(const Key('act0_shell_accessibility_shared_surface')));
+      expect(accessibilitySurfaceRect!.top - accessibilityDockRect!.top, inInclusiveRange(0, 2));
+      expect(accessibilityDockRect!.bottom - accessibilitySurfaceRect!.bottom, inInclusiveRange(0, 2));
+      expect(accessibilitySurfaceRect!.width, greaterThanOrEqualTo(accessibilityDockRect!.width * 0.9));
+      expect(find.byKey(const Key('act0_shell_runner_back')), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
       expect(rows.map((row) => row.height).toSet().length, 1);
-      expect(rows.every((row) => row.height >= 44), isTrue);
-      expect(footer.bottom, lessThanOrEqualTo(viewport.height));
+      expect(rows.every((row) => row.height >= 48), isTrue);
+      expect(rows.every((row) => row.top >= accessibilityDockRect!.top && row.bottom <= accessibilityDockRect!.bottom), isTrue);
+      expect(find.byKey(const Key('act0_shell_accessibility_question')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_accessibility_answer_cta')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_accessibility_view_table_cta')), findsNothing);
+      expect(find.byKey(const Key('act0_shell_accessibility_decision_footer')), findsNothing);
+      expect(find.ancestor(of: find.byKey(const Key('act0_shell_option_not_sure_yet')), matching: find.byType(Scrollable)), findsNothing);
+    }
+    if (surface == 'accessibility_feedback_after_answer') {
+      final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+      final cta = tester.getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+      final surface = tester.getRect(find.byKey(const Key('act0_shell_accessibility_shared_surface')));
+      expect(table, accessibilityTableRect);
+      expect(surface.left, accessibilitySurfaceRect!.left);
+      expect(surface.right, accessibilitySurfaceRect!.right);
+      expect(surface.bottom, accessibilitySurfaceRect!.bottom);
+      expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
+      expect(find.text('Right: two private cards, three board cards, and a 6 BB pot.'), findsOneWidget);
+      expect(cta.bottom, lessThanOrEqualTo(viewport.height - 34));
+      expect(accessibilitySink.events.where((event) => event.name == 'user_choice'), hasLength(1));
+      expect(accessibilitySink.events.where((event) => event.name == 'accessibility_navigation'), isEmpty);
+    }
+    if (surface == 'genuine_price_task_guidance') {
+      final rows = optionRects(<String>['fold', 'call', 'raise']);
+      expect(find.byKey(const Key('act0_shell_accessibility_shared_surface')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_accessibility_guidance')), findsOneWidget);
+      expect(find.text('Call means match the bet.'), findsOneWidget);
+      expect(rows.map((row) => row.height).toSet().length, 1);
+      expect(rows.every((row) => row.height >= 48), isTrue);
+      expect(find.ancestor(of: find.byKey(const Key('act0_shell_option_call')), matching: find.byType(Scrollable)), findsNothing);
     }
     if (surface == 'review_list') expect(find.byKey(const Key('act0_shell_review_practice_cta')), findsOneWidget);
     if (surface == 'review_focused_rep') expect(find.text('What action keeps playing for free?'), findsOneWidget);
@@ -1467,8 +1514,9 @@ void main() {
       if (surface == 'correct_feedback') await tester.pumpWidget(shellHost(Act0ControlledDemoCaptureSurfaceV1.runnerFirstCorrectFeedback));
       if (surface == 'long_copy_repair_feedback') await tester.pumpWidget(runnerHost(longCopyRepairRunner, task: longCopyRepairTask));
       if (surface == 'normal_four_option_table_read') await tester.pumpWidget(runnerHost(tableRunner));
-      if (surface == 'accessibility_evidence') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
-      if (surface == 'accessibility_answer') { accessibilityStep = Act0AccessibilityPrototypeStepV1.decision; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
+      if (surface == 'direct_table_decision') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; accessibilityRunner = tableRunner; await tester.pumpWidget(runnerHost(tableRunner, accessibility: true)); }
+      if (surface == 'accessibility_feedback_after_answer') { await tester.tap(find.byKey(const Key('act0_shell_option_two_three_six'))); }
+      if (surface == 'genuine_price_task_guidance') { accessibilityStep = Act0AccessibilityPrototypeStepV1.evidence; accessibilityRunner = priceRunner; await tester.pumpWidget(runnerHost(priceRunner, accessibility: true, task: priceTask)); }
     } else {
       if (surface == 'review_full_shell_authority') {
         await tester.pumpWidget(
