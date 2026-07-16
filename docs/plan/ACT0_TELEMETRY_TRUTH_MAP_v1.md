@@ -51,6 +51,10 @@ Do not use it for:
 Current verdict:
 
 - Act0 has enough local state to define a learning-event map.
+- Canonical AppRoot enables the bounded local `Act0HnpTelemetrySinkV1` only in
+  non-release `--dart-define=HNP_TELEMETRY=true` sessions. It emits ordered
+  JSON rows to the local debug console, stores at most 256 rows in memory, and
+  has no file, network, account, or participant-identity path.
 - Act0 now has a small local proof seam for `task_shown` and `task_result`.
 - Existing telemetry code is fragmented and partly historical.
 - Broad runtime instrumentation remains unsafe until a privacy posture is
@@ -140,6 +144,15 @@ Telemetry ownership should follow product ownership:
 
 Do not let a vendor SDK, legacy analytics service, or dormant AI/persona system
 own Act0 learning-event meaning.
+
+## W8-W12 Hidden Owner Boundary
+
+The `act0_w8_*` through `act0_w12_*_hidden_runtime_session_owner_v1.dart`
+families are deterministic evidence/capture fixtures, despite their historical
+file names. They may construct learning-evidence records for focused tests and
+captures; they are not imported by `Act0ShellPreviewScreenV1` and cannot supply
+or override canonical learner-route state. Canonical W8-W12 runtime truth is
+the `Act0ShellStateV1` state consumed by the preview shell.
 
 ## Privacy And Data Constraints
 
