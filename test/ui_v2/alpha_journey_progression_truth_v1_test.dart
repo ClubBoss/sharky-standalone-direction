@@ -60,17 +60,16 @@ void main() {
     );
     await tester.tap(find.byKey(Key('act0_shell_option_${correct.id}')));
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const Key('act0_shell_feedback_continue_cta')),
-    );
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
     await tester.pumpAndSettle();
     await tester.tap(welcomeCta);
     await tester.pumpAndSettle();
   }
 
   Map<String, Object> validActionPrecondition() {
-    final fixture = jsonDecode(File(_fixturePath).readAsStringSync())
-        as Map<String, dynamic>;
+    final fixture =
+        jsonDecode(File(_fixturePath).readAsStringSync())
+            as Map<String, dynamic>;
     expect(fixture['schema'], 'act0_progression_fixture_v1');
     final lessonIds = (fixture['completed_lesson_ids'] as List<dynamic>)
         .map((value) => value.toString())
@@ -79,8 +78,7 @@ void main() {
     final world = state.worldById(fixture['world_id'] as String);
     final completedTaskIds = <String>[
       for (final lessonId in lessonIds)
-        ...world
-            .lessons
+        ...world.lessons
             .firstWhere((lesson) => lesson.lessonId == lessonId)
             .taskList
             .map((task) => task.taskId),
@@ -125,7 +123,9 @@ void main() {
         findsOneWidget,
       );
       final guideState = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_learn_lesson_state_text_what_poker_is')),
+        find.byKey(
+          const Key('act0_shell_learn_lesson_state_text_what_poker_is'),
+        ),
       );
       expect(guideState.data, 'Now');
 
@@ -163,6 +163,29 @@ void main() {
       expect(runner.runner.beatIndex, 1);
       expect(runner.runner.phase, Act0LessonPhaseV1.drill);
       expect(runner.runner.question, 'What does this table show?');
+      final semanticsHandle = tester.ensureSemantics();
+      final question = find.byKey(const Key('act0_shell_action_question'));
+      final options = <Finder>[
+        for (final option in runner.runner.options)
+          find.byKey(Key('act0_shell_option_${option.id}')),
+      ];
+      final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
+      expect(scrollable, findsOneWidget);
+      expect(question, findsOneWidget);
+      expect(options, hasLength(runner.runner.options.length));
+      expect(
+        tester.getRect(question).bottom,
+        lessThan(tester.getRect(options.first).top),
+      );
+      for (final option in options) {
+        expect(tester.getRect(option).height, greaterThanOrEqualTo(48));
+        expect(tester.getSemantics(option).label, isNotEmpty);
+      }
+      await tester.drag(scrollable, const Offset(0, -400));
+      await tester.pumpAndSettle();
+      expect(tester.getRect(options.last).bottom, lessThanOrEqualTo(932));
+      expect(tester.takeException(), isNull);
+      semanticsHandle.dispose();
     },
   );
 
@@ -203,48 +226,50 @@ void main() {
     },
   );
 
-  testWidgets('unmet Action precondition is normalized back to First Table Guide', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      'intake_completed_v1': true,
-      'act0_welcome_completed_v1': true,
-      _progressKey: jsonEncode(<String, Object>{
-        'schemaVersion': 16,
-        'completedTaskIds': <String>[],
-        'skippedTaskIds': <String>[],
-        'completedLessonIds': <String>[],
-        'selectedWorldId': 'world_1',
-        'selectedLessonId': 'fold_check_call_raise',
-        'selectedTaskId': 'actions_theory',
-        'earnedXp': 0,
-      }),
-    });
+  testWidgets(
+    'unmet Action precondition is normalized back to First Table Guide',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'intake_completed_v1': true,
+        'act0_welcome_completed_v1': true,
+        _progressKey: jsonEncode(<String, Object>{
+          'schemaVersion': 16,
+          'completedTaskIds': <String>[],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': 'fold_check_call_raise',
+          'selectedTaskId': 'actions_theory',
+          'earnedXp': 0,
+        }),
+      });
 
-    await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-    expect(find.text('First Table Guide'), findsWidgets);
-    expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
-  });
+      await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
+      expect(find.text('First Table Guide'), findsWidgets);
+      expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
+    },
+  );
 
-  testWidgets('valid Action progression fixture is deterministic and unlocks Action', (
-    tester,
-  ) async {
-    await seedValidActionPrecondition();
-    await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
-    expect(find.textContaining('4 of 9 lessons'), findsOneWidget);
-    final actionState = tester.widget<Text>(
-      find.byKey(
-        const Key('act0_shell_learn_lesson_state_text_fold_check_call_raise'),
-      ),
-    );
-    expect(actionState.data, 'Now');
+  testWidgets(
+    'valid Action progression fixture is deterministic and unlocks Action',
+    (tester) async {
+      await seedValidActionPrecondition();
+      await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
+      expect(find.textContaining('4 of 9 lessons'), findsOneWidget);
+      final actionState = tester.widget<Text>(
+        find.byKey(
+          const Key('act0_shell_learn_lesson_state_text_fold_check_call_raise'),
+        ),
+      );
+      expect(actionState.data, 'Now');
 
-    final firstSnapshot = validActionPrecondition();
-    final secondSnapshot = validActionPrecondition();
-    expect(firstSnapshot, secondSnapshot);
-    expect(
-      (firstSnapshot['completedTaskIds'] as List<String>).isNotEmpty,
-      isTrue,
-    );
-  });
+      final firstSnapshot = validActionPrecondition();
+      final secondSnapshot = validActionPrecondition();
+      expect(firstSnapshot, secondSnapshot);
+      expect(
+        (firstSnapshot['completedTaskIds'] as List<String>).isNotEmpty,
+        isTrue,
+      );
+    },
+  );
 }

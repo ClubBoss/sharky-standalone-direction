@@ -2518,7 +2518,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final safeVertical = media.viewPadding.vertical > 0
         ? media.viewPadding.vertical
         : media.padding.vertical;
-    // The compact table and runner chrome own this much of the short phone.
+    // The compact table, runner chrome, and stage padding own this much of the
+    // short phone.
     // If the measured content exceeds the actual remaining lane, the lane
     // scrolls; default-size content remains a fixed, non-scrolling group.
     final compactDecisionNeedsScroll =
@@ -2532,6 +2533,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   includeStableLaneFloor: false,
                 ) >
                 media.size.height - safeVertical - 630);
+    final lowerStageNeedsScroll =
+        compactDecisionNeedsScroll ||
+        (!compactAnswerListDecision &&
+            media.size.height >= 900 &&
+            (media.textScaler.scale(1) > 1.1 ||
+                normalLowerSurfaceDemand >
+                    media.size.height - safeVertical - 674));
     final lowerStageProfile = isAccessibilityFlow
         ? _RunnerLowerStageProfileV1.accessibility
         : widget.lowerSurfacePrototypeState != null
@@ -2607,7 +2615,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         compactAnswerListDecision: compactAnswerListDecision,
         fillCompactPromptToDock: false,
         scrollContentInEnvelope:
-            (compactDecisionNeedsScroll &&
+            (lowerStageNeedsScroll &&
                 (isDrill || isReview) &&
                 widget.lowerSurfacePrototypeState == null &&
                 !isAccessibilityFlow) ||

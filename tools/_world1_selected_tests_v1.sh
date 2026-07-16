@@ -11,6 +11,7 @@ WORLD1_SELECTED_TESTS_V1=(
   test/guards/campaign_pack_registry_invariants_test.dart
   test/guards/campaign_followup_pack_registry_invariants_test.dart
   test/ui_v2/act0_shell_state_v1_feedback_test.dart
+  test/ui_v2/alpha_journey_progression_truth_v1_test.dart
 )
 
 WORLD1_SELECTED_TESTS_STATE_V1=(
