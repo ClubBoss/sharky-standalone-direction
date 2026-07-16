@@ -1553,4 +1553,125 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'focused retry proof keeps its table, feedback action, and no-scroll contract',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_recheck',
+          );
+
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+      tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPadding);
+      addTearDown(tester.view.resetViewPadding);
+
+      Future<void> pump({required double textScale, required bool feedback}) {
+        final runner = task.runner.copyWith(
+          phase: feedback ? Act0LessonPhaseV1.review : Act0LessonPhaseV1.drill,
+          selectedOptionId: feedback ? 'two_three_four' : null,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        );
+        return tester.pumpWidget(
+          MaterialApp(
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: const Size(402, 874),
+                viewPadding: const EdgeInsets.only(top: 59, bottom: 34),
+                textScaler: TextScaler.linear(textScale),
+              ),
+              child: Scaffold(
+                body: Act0LessonRunnerShellV1(
+                  runner: runner,
+                  selectedTaskId: task.taskId,
+                  selectedTaskFamily: task.resolvedTaskFamily,
+                  tablePresentation: task.tablePresentation,
+                  tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+                  repairOutcomeProofLine:
+                      'Fix landed: you saw the hero cards board pot clue before choosing.',
+                  repairSessionSummaryLines: const <String>[
+                    'Local proof: you repeated the hero cards board pot clue and chose cleanly.',
+                  ],
+                  onBack: () {},
+                  onContinueTheory: () {},
+                  onChooseOption: (_) {},
+                  onContinueReview: () {},
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      await pump(textScale: 1, feedback: false);
+      await tester.pumpAndSettle();
+      final decisionTable = tester.getRect(
+        find.byKey(const Key('act0_shell_table')),
+      );
+      final decisionDock = tester.getRect(
+        find.byKey(const Key('act0_shell_runner_action_dock')),
+      );
+
+      await pump(textScale: 1, feedback: true);
+      await tester.pumpAndSettle();
+      final feedbackCta = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      expect(
+        tester.getRect(find.byKey(const Key('act0_shell_table'))),
+        decisionTable,
+      );
+      expect(
+        tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock'))),
+        decisionDock,
+      );
+      expect(feedbackCta.bottom, lessThanOrEqualTo(840));
+      final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
+      expect(scrollable, findsOneWidget);
+      expect(
+        tester
+            .state<ScrollableState>(
+              find.descendant(
+                of: scrollable,
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .position
+            .maxScrollExtent,
+        0,
+      );
+      expect(tester.takeException(), isNull);
+
+      await pump(textScale: 1.4, feedback: true);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
+            .bottom,
+        lessThanOrEqualTo(840),
+      );
+      expect(
+        tester
+            .state<ScrollableState>(
+              find.descendant(
+                of: scrollable,
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .position
+            .maxScrollExtent,
+        0,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

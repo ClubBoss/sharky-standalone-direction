@@ -6421,8 +6421,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   : fallbackReceiptLine
                         .substring(receiptSplitIndex + 2)
                         .trim());
+    final isFocusedCompactProofFeedback =
+        isCompactRefinedFeedback && hasProofEarnedState;
     final shouldShowReceiptProof =
         !rapidMode &&
+        !isFocusedCompactProofFeedback &&
         receiptTitle.isNotEmpty &&
         (!isWrong || hasRepairOutcomeProof);
     final receiptNextLine = skillReceipt == null
@@ -6863,6 +6866,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 ],
                 if (!rapidMode &&
+                    !isFocusedCompactProofFeedback &&
                     visibleRepairSessionSummaryLines.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   const _FeedbackVerdictDividerV1(),
