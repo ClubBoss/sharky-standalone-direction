@@ -3003,21 +3003,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
-    if (widget.tablePresentation == Act0TaskTablePresentationV1.spatialTheory &&
-        isTheory) {
-      return KeyedSubtree(
-        key: const Key('act0_shell_runner_screen'),
-        child: _TaskOwnedSpatialTheoryPresentationV1(
-          runner: runner,
-          table: table,
-          prompt: prompt,
-          support: hint,
-          onBack: widget.onBack,
-          onContinue: widget.onContinueTheory,
-          tableMaxHeight: 600,
-        ),
-      );
-    }
     if (widget.tablePresentation ==
             Act0TaskTablePresentationV1.stablePractice &&
         ((isDrill && !isTeaching) || isReview) &&
@@ -3180,133 +3165,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       ],
     );
     return runnerScreen;
-  }
-}
-
-/// The task-owned corrected-T1 theory presentation deliberately keeps the
-/// production table at one viewport-derived geometry for every theory beat.
-/// Copy is constrained inside the panel; it never changes table geometry.
-class _TaskOwnedSpatialTheoryPresentationV1 extends StatelessWidget {
-  const _TaskOwnedSpatialTheoryPresentationV1({
-    required this.runner,
-    required this.table,
-    required this.prompt,
-    required this.support,
-    required this.onBack,
-    required this.onContinue,
-    this.tableMaxHeight = 600,
-  });
-
-  final Act0RunnerStateV1 runner;
-  final Act0TableStateV1 table;
-  final String prompt;
-  final String support;
-  final VoidCallback onBack;
-  final VoidCallback onContinue;
-  final double tableMaxHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const panelAllowance = 242.0;
-          const tableToPanelGap = 12.0;
-          final tableHeight = math.max(
-            0.0,
-            math.min(
-              tableMaxHeight,
-              constraints.maxHeight - panelAllowance - tableToPanelGap,
-            ),
-          );
-          final tableWidth = math.min(
-            constraints.maxWidth - 24,
-            tableHeight * 0.576,
-          );
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  key: const Key('act0_task_owned_theory_table_bounds'),
-                  width: tableWidth,
-                  height: tableHeight,
-                  child: Act0TableSceneV1(
-                    table: table,
-                    config: Act0TablePresentationConfigV1(
-                      maxTableHeight: tableMaxHeight,
-                      showFocusBadge: true,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: tableToPanelGap),
-                Container(
-                  key: const Key('act0_task_owned_theory_panel'),
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                  decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.surface2,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Act0ShellTokensV1.primary.withValues(alpha: 0.28),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'READ THE TABLE',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.primary,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        prompt,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Act0ShellTokensV1.screenTitle.copyWith(
-                          fontSize: 20,
-                        ),
-                      ),
-                      if (support.trim().isNotEmpty) ...[
-                        const SizedBox(height: 6),
-                        Text(
-                          support,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                          style: Act0ShellTokensV1.body,
-                        ),
-                      ],
-                      const SizedBox(height: 18),
-                      Row(
-                        children: [
-                          TextButton(
-                            onPressed: onBack,
-                            child: const Text('Back'),
-                          ),
-                          const Spacer(),
-                          FilledButton(
-                            key: const Key('act0_shell_continue_cta'),
-                            onPressed: onContinue,
-                            child: Text(runner.primaryCtaLabel),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
   }
 }
 
@@ -4825,6 +4683,48 @@ class _LearningRailV1 extends StatelessWidget {
               final pageCount = math.max(1, supportSegments.length);
               final pageNumber =
                   activeSupportSegmentIndex.clamp(0, pageCount - 1) + 1;
+              final usesBoundedContentScroll =
+                  !fillsAvailableHeight &&
+                  MediaQuery.textScalerOf(context).scale(1) > 1.1;
+              final contentLane = Semantics(
+                label: 'Theory page $pageNumber of $pageCount',
+                child: ConstrainedBox(
+                  key: const Key('act0_shell_learning_rail_content_lane'),
+                  constraints: BoxConstraints(maxWidth: compactLaneMaxWidth),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        title,
+                        key: const Key('act0_shell_learning_rail_task_label'),
+                        maxLines: 2,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.info,
+                          letterSpacing: 0.16,
+                          fontSize: 10.2,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        _formatInstructionCopyV1(
+                          activePage,
+                          allowSingleClauseSplit: true,
+                        ),
+                        key: const Key('act0_shell_runner_prompt'),
+                        softWrap: true,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: compactRail ? 13.0 : 14.0,
+                          height: 1.24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
               return Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: compactRail ? 10 : 12,
@@ -4834,61 +4734,27 @@ class _LearningRailV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
-                      child: Align(
-                        // The navigation footer is the next action for this
-                        // instruction. Anchor the teaching lane directly above
-                        // it so a short page remains one composed sequence,
-                        // while the fixed lower stage continues to preserve
-                        // the table allocation for every runner state.
-                        alignment: fillsAvailableHeight
-                            ? Alignment.topCenter
-                            : Alignment.bottomCenter,
-                        child: Semantics(
-                          label: 'Theory page $pageNumber of $pageCount',
-                          child: ConstrainedBox(
-                            key: const Key(
-                              'act0_shell_learning_rail_content_lane',
+                      child: usesBoundedContentScroll
+                          ? SingleChildScrollView(
+                              key: const Key(
+                                'act0_shell_learning_rail_content_scroll',
+                              ),
+                              primary: false,
+                              physics: const ClampingScrollPhysics(),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: contentLane,
+                              ),
+                            )
+                          : Align(
+                              // The navigation footer is the next action for
+                              // this instruction. Short pages stay intrinsic
+                              // and compose directly above it.
+                              alignment: fillsAvailableHeight
+                                  ? Alignment.topCenter
+                                  : Alignment.bottomCenter,
+                              child: contentLane,
                             ),
-                            constraints: BoxConstraints(
-                              maxWidth: compactLaneMaxWidth,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  title,
-                                  key: const Key(
-                                    'act0_shell_learning_rail_task_label',
-                                  ),
-                                  maxLines: 2,
-                                  style: Act0ShellTokensV1.label.copyWith(
-                                    color: Act0ShellTokensV1.info,
-                                    letterSpacing: 0.16,
-                                    fontSize: 10.2,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  _formatInstructionCopyV1(
-                                    activePage,
-                                    allowSingleClauseSplit: true,
-                                  ),
-                                  key: const Key('act0_shell_runner_prompt'),
-                                  softWrap: true,
-                                  style: Act0ShellTokensV1.body.copyWith(
-                                    color: Act0ShellTokensV1.text,
-                                    fontSize: compactRail ? 13.0 : 14.0,
-                                    height: 1.24,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                     const SizedBox(height: 3),
                     SizedBox(

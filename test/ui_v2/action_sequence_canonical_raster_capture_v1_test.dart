@@ -22,6 +22,14 @@ const _root = String.fromEnvironment(
   'ACTION_EVIDENCE_OUTPUT',
   defaultValue: 'output/evidence/action_sequence_convergence_v1_$_device',
 );
+final _textScale =
+    double.tryParse(
+      const String.fromEnvironment(
+        'ACTION_EVIDENCE_TEXT_SCALE',
+        defaultValue: '1',
+      ),
+    ) ??
+    1;
 final _viewport = switch (_device) {
   'tall_phone' => const Size(390, 844),
   'large_phone' => const Size(430, 932),
@@ -46,6 +54,12 @@ void main() {
     }) async {
       await tester.pumpWidget(
         MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(_textScale)),
+            child: child!,
+          ),
           home: RepaintBoundary(
             key: _boundaryKey,
             child: Act0ShellPreviewScreenV1(
@@ -165,6 +179,12 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(_textScale)),
+          child: child!,
+        ),
         home: RepaintBoundary(
           key: _boundaryKey,
           child: Act0ShellPreviewScreenV1(
@@ -209,6 +229,7 @@ void main() {
               'width': _viewport.width.toInt(),
               'height': _viewport.height.toInt(),
             },
+            'textScale': _textScale,
             'states': rows,
           }) +
           '\n',

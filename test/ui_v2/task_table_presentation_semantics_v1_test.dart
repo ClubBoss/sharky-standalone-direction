@@ -51,7 +51,7 @@ void main() {
     expect(runner.tablePresentation, Act0TaskTablePresentationV1.spatialTheory);
   });
 
-  testWidgets('spatial theory keeps its full table above a content panel', (
+  testWidgets('spatial-theory semantics use the shared learning scene', (
     tester,
   ) async {
     final task = Act0ShellStateV1.sample
@@ -73,16 +73,127 @@ void main() {
       ),
     );
 
-    final table = tester.getRect(
-      find.byKey(const Key('act0_task_owned_theory_table_bounds')),
-    );
-    final panel = tester.getRect(
-      find.byKey(const Key('act0_task_owned_theory_panel')),
+    final table = tester.getRect(find.byKey(const Key('act0_shell_table')));
+    final dock = tester.getRect(
+      find.byKey(const Key('act0_shell_runner_action_dock')),
     );
     expect(table.width / table.height, closeTo(0.576, 0.01));
-    expect(panel.top - table.bottom, 12);
+    // The table's visual bounds include its 12px scene shadow; the teaching
+    // dock begins at the shared scene seam rather than overlapping content.
+    expect(dock.top - table.bottom, greaterThanOrEqualTo(-16));
+    expect(
+      find.byKey(const Key('act0_task_owned_theory_table_bounds')),
+      findsNothing,
+    );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'Action theory, decision, feedback, repair, and repair result share one learning scene across supported phones',
+    (tester) async {
+      const fixtures = <({Size size, double textScale})>[
+        (size: Size(375, 812), textScale: 1),
+        (size: Size(390, 844), textScale: 1),
+        (size: Size(430, 932), textScale: 1),
+        (size: Size(390, 844), textScale: 1.4),
+      ];
+      const surfaces = <Act0ControlledDemoCaptureSurfaceV1>[
+        Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+        Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+        Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+        Act0ControlledDemoCaptureSurfaceV1.repairFocus,
+        Act0ControlledDemoCaptureSurfaceV1.repairResult,
+      ];
+
+      for (final fixture in fixtures) {
+        await tester.binding.setSurfaceSize(fixture.size);
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        Rect? baselineTable;
+        double? baselineBoundary;
+        for (final surface in surfaces) {
+          await tester.pumpWidget(
+            MaterialApp(
+              home: MediaQuery(
+                data: MediaQueryData(
+                  size: fixture.size,
+                  textScaler: TextScaler.linear(fixture.textScale),
+                ),
+                child: Act0ShellPreviewScreenV1(
+                  state: Act0ShellStateV1.sample,
+                  showPlacementOnStart: false,
+                  debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+                    mode: Act0ControlledDemoCaptureModeV1.directState,
+                    surface: surface,
+                    worldId: 'world_1',
+                    lessonId: 'fold_check_call_raise',
+                    taskId:
+                        surface ==
+                            Act0ControlledDemoCaptureSurfaceV1.runnerTheory
+                        ? 'actions_theory'
+                        : 'actions_check_drill',
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final table = tester.getRect(
+            find.byKey(const Key('act0_shell_table')),
+          );
+          final dock = tester.getRect(
+            find.byKey(const Key('act0_shell_runner_action_dock')),
+          );
+          baselineTable ??= table;
+          baselineBoundary ??= dock.top;
+          expectRectClose(table, baselineTable!);
+          expect(dock.top, closeTo(baselineBoundary!, 0.05));
+          expect(dock.top, greaterThanOrEqualTo(table.bottom));
+          expect(dock.bottom, lessThanOrEqualTo(fixture.size.height));
+        }
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'large-text Action theory keeps its fixed continuation control reachable through one bounded content lane',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(
+              size: Size(390, 844),
+              textScaler: TextScaler.linear(1.4),
+            ),
+            child: Act0ShellPreviewScreenV1(
+              state: Act0ShellStateV1.sample,
+              showPlacementOnStart: false,
+              debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+                mode: Act0ControlledDemoCaptureModeV1.directState,
+                surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_theory',
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final scroll = find.byKey(
+        const Key('act0_shell_learning_rail_content_scroll'),
+      );
+      final cta = find.byKey(const Key('act0_shell_continue_cta'));
+      expect(scroll, findsOneWidget);
+      expect(cta, findsOneWidget);
+      expect(tester.getRect(cta).bottom, lessThanOrEqualTo(844));
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'refined stable practice keeps its task-owned table presentation',
