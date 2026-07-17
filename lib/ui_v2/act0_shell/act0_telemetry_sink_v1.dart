@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:async' show unawaited;
 
 import 'package:flutter/foundation.dart' show debugPrint;
+
+import 'act0_hnp_trace_file_store_v1.dart';
 
 class Act0TelemetryEventV1 {
   const Act0TelemetryEventV1({required this.name, required this.fields});
@@ -24,14 +27,22 @@ class Act0InMemoryTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 
 /// Local-only, bounded Human Novice Proof collector.
 ///
-/// It intentionally writes structured rows only to the debug console.  The
-/// app never transmits, persists, or identifies a participant; the person
-/// running a proof session enables it with `--dart-define=HNP_TELEMETRY=true`
-/// and captures the resulting `HNP_TRACE_V1` rows locally.
+/// It writes the authoritative complete JSONL export only to a local,
+/// HNP-session file. Debug-console rows remain diagnostic because platform log
+/// rendering may truncate large payloads.
 class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
-  Act0HnpTelemetrySinkV1({this.maxEvents = 256});
+  Act0HnpTelemetrySinkV1({
+    this.maxEvents = 256,
+    Act0HnpTraceFileStoreV1? fileStore,
+  }) : _fileStore = fileStore ?? createAct0HnpTraceFileStoreV1() {
+    _scheduleExport();
+  }
 
   final int maxEvents;
+  final Act0HnpTraceFileStoreV1? _fileStore;
+  Future<void> _pendingExport = Future<void>.value();
+  bool _exportFailureReported = false;
+  bool _exportPathReported = false;
 
   @override
   void record(Act0TelemetryEventV1 event) {
@@ -42,6 +53,7 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     debugPrint(
       'HNP_TRACE_V1 ${jsonEncode(<String, Object?>{'name': event.name, 'fields': event.fields})}',
     );
+    _scheduleExport();
   }
 
   String exportJson() => jsonEncode(<String, Object?>{
@@ -55,6 +67,43 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
         )
         .toList(growable: false),
   });
+
+  /// One complete event per physical line, in the collector's retained order.
+  String exportJsonl() {
+    final jsonl = events
+        .map(
+          (event) => jsonEncode(<String, Object?>{
+            'name': event.name,
+            'fields': event.fields,
+          }),
+        )
+        .join('\n');
+    return jsonl.isEmpty ? '' : '$jsonl\n';
+  }
+
+  /// Lets deterministic tests and proof tooling wait for the non-blocking
+  /// local export. Failures never affect collector or learner execution.
+  Future<void> flushExport() => _pendingExport;
+
+  void _scheduleExport() {
+    if (_fileStore == null) return;
+    _pendingExport = _pendingExport.then((_) async {
+      try {
+        await _fileStore.replace(exportJsonl());
+        if (!_exportPathReported) {
+          _exportPathReported = true;
+          final path = await _fileStore.getPath();
+          if (path != null) debugPrint('HNP_TRACE_EXPORT_V1 $path');
+        }
+      } catch (_) {
+        if (!_exportFailureReported) {
+          _exportFailureReported = true;
+          debugPrint('HNP_TRACE_V1 local export unavailable.');
+        }
+      }
+    });
+    unawaited(_pendingExport);
+  }
 }
 
 /// The one canonical-entry policy: HNP capture is debug-only and opt-in.

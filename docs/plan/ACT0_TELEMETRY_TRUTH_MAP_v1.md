@@ -52,10 +52,41 @@ Current verdict:
 
 - Act0 has enough local state to define a learning-event map.
 - Canonical AppRoot enables the bounded local `Act0HnpTelemetrySinkV1` only in
-  non-release `--dart-define=HNP_TELEMETRY=true` sessions. It emits ordered
-  JSON rows to the local debug console, stores at most 256 rows in memory, and
-  has no file, network, account, or participant-identity path.
+  non-release `--dart-define=HNP_TELEMETRY=true` sessions. It stores at most
+  256 rows in memory and rewrites one local, app-container JSONL file in that
+  retained order. Each row is one complete event; debug-console rows are
+  diagnostic only because platform log rendering may truncate them. A new HNP
+  collector replaces the prior file, and a file-write failure remains
+  non-blocking. There is no network, account, or participant-identity path.
 - Act0 now has a small local proof seam for `task_shown` and `task_result`.
+
+### HNP JSONL export contract (Wave 2E)
+
+- `AppRoot` supplies the HNP sink only for non-release builds with
+  `--dart-define=HNP_TELEMETRY=true`; default and release builds use the
+  in-memory/no-export path. The HNP sink creates or replaces
+  `act0_hnp_trace_v1.jsonl` in the platform application-support directory at
+  collector construction, then replaces it after each retained event. Export
+  failures are non-blocking and do not alter learner flow or the in-memory
+  collector.
+- The file is a local-only, ordered JSONL proof artifact: one complete JSON
+  object per physical line, with the same retained order as the bounded
+  collector (256 events). Console `HNP_TRACE_V1` output is diagnostic only;
+  platform log rendering is not evidence of payload completeness.
+- Placement uses the shared generic event vocabulary: `task_shown`,
+  `user_choice`, `decision_made`, `task_result`, `feedback_viewed`, and the
+  recommendation/payoff events. It deliberately has no placement-named
+  lifecycle and no placement repair/recheck chain; placement misses advance
+  forward into the recommendation/ordinary-learning transition.
+- `repair_started` and `repair_entered` are the canonical repair-open
+  semantics. `repair_item_shown` is narrower: it records exposure of a
+  pending repair item on the Review surface and is therefore neither required
+  nor expected for a repair launched directly from ordinary feedback. The
+  canonical lifecycle is repair open, item start/attempt, item completion,
+  repair completion/fix landed, then recheck start/result/completion.
+- Export contains only controlled event names, technical IDs, controlled
+  outcomes, and timing buckets; it has no network, account, participant
+  identity, or learner-facing prose payload path.
 - Existing telemetry code is fragmented and partly historical.
 - Broad runtime instrumentation remains unsafe until a privacy posture is
   attached to release policy.
