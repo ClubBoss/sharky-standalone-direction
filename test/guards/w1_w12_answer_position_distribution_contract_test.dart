@@ -6,15 +6,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/campaign/campaign_pack_registry_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+const _contractPath = 'tools/contracts/w1_w12_assessment_fingerprint_v1.json';
+
 void main() {
   test('W1-W12 assessed tasks use stable non-exploitable authored order', () {
     final rows = _assessedRows();
-
-    expect(rows, hasLength(291));
-    expect(
-      _contentFingerprint(rows),
-      'd57fd20fd62a3527be549e4c69d8a10aaf1788026c7dccf597b461373a0fd49d',
+    final contract = _fingerprintContract();
+    final actualFingerprint = _contentFingerprint(rows);
+    final status = _freshnessStatus(
+      expectedFingerprint: contract.fingerprint,
+      actualFingerprint: actualFingerprint,
+      expectedInputHashes: contract.inputHashes,
+      actualInputHashes: _inputHashes(contract.inputHashes.keys),
     );
+
+    expect(rows, hasLength(contract.rowCount));
+    expect(
+      actualFingerprint,
+      contract.fingerprint,
+      reason: '$status: run the bounded W1-W12 adjudication before pinning.',
+    );
+    expect(status, _FingerprintFreshnessStatus.currentAndValid);
     expect(_positionSnapshot(_assessedRows()), _positionSnapshot(rows));
     expect(rows.map((row) => row.worldId).toSet(), <String>{
       'world_1',
@@ -132,6 +144,49 @@ void main() {
       expect(source, isNot(contains('Random(')));
     },
   );
+
+  test('fingerprint freshness distinguishes source and generator drift', () {
+    const expected = 'expected';
+    const matchingInputs = <String, String>{'source.dart': 'same'};
+    const changedInputs = <String, String>{'source.dart': 'changed'};
+
+    expect(
+      _freshnessStatus(
+        expectedFingerprint: expected,
+        actualFingerprint: expected,
+        expectedInputHashes: matchingInputs,
+        actualInputHashes: matchingInputs,
+      ),
+      _FingerprintFreshnessStatus.currentAndValid,
+    );
+    expect(
+      _freshnessStatus(
+        expectedFingerprint: expected,
+        actualFingerprint: expected,
+        expectedInputHashes: matchingInputs,
+        actualInputHashes: changedInputs,
+      ),
+      _FingerprintFreshnessStatus.staleFingerprint,
+    );
+    expect(
+      _freshnessStatus(
+        expectedFingerprint: expected,
+        actualFingerprint: 'changed',
+        expectedInputHashes: matchingInputs,
+        actualInputHashes: changedInputs,
+      ),
+      _FingerprintFreshnessStatus.contentDifferenceRequiresAdjudication,
+    );
+    expect(
+      _freshnessStatus(
+        expectedFingerprint: expected,
+        actualFingerprint: 'changed',
+        expectedInputHashes: matchingInputs,
+        actualInputHashes: matchingInputs,
+      ),
+      _FingerprintFreshnessStatus.invalidFingerprint,
+    );
+  });
 }
 
 const _affectedWorldIds = <String>{
@@ -207,49 +262,51 @@ double _dominantShare(Map<int, int> distribution, int total) =>
 
 String _contentFingerprint(List<_AssessedRow> rows) {
   final payload = rows
-      .map((row) {
-        final task = row.task;
-        final options =
-            task.runner.options
-                .map(
-                  (option) => jsonEncode(<String, Object?>{
-                    'id': option.id,
-                    'label': option.label,
-                    'amountLabel': option.amountLabel,
-                    'seatId': option.seatId,
-                    'isCorrect': option.isCorrect,
-                    'preferredLabel': option.preferredLabel,
-                    'betterAnswerLabel': option.betterAnswerLabel,
-                    'quality': option.quality.name,
-                    'feedbackTitle': option.feedbackTitle,
-                    'feedbackReason': option.feedbackReason,
-                    'repairFocusSeatIds': option.repairFocusSeatIds,
-                    'repairFocusCardIds': option.repairFocusCardIds,
-                    'repairFocusLabels': option.repairFocusLabels,
-                  }),
-                )
-                .toList()
-              ..sort();
-        return jsonEncode(<String, Object?>{
-          'world': row.worldId,
-          'lesson': row.lessonId,
-          'task': task.taskId,
-          'phase': task.phase.name,
-          'stepKind': task.stepKind.name,
-          'family': task.resolvedTaskFamily.name,
-          'title': task.title,
-          'summary': task.summary,
-          'lockedSummary': task.lockedSummary,
-          'caption': task.runner.caption,
-          'hint': task.runner.hint,
-          'question': task.runner.question,
-          'feedbackTitle': task.runner.feedbackTitle,
-          'feedbackReason': task.runner.feedbackReason,
-          'options': options,
-        });
-      })
+      .map((row) => jsonEncode(_fingerprintPayload(row)))
       .join('\n');
   return sha256.convert(utf8.encode(payload)).toString();
+}
+
+Map<String, Object?> _fingerprintPayload(_AssessedRow row) {
+  final task = row.task;
+  final options =
+      task.runner.options
+          .map(
+            (option) => jsonEncode(<String, Object?>{
+              'id': option.id,
+              'label': option.label,
+              'amountLabel': option.amountLabel,
+              'seatId': option.seatId,
+              'isCorrect': option.isCorrect,
+              'preferredLabel': option.preferredLabel,
+              'betterAnswerLabel': option.betterAnswerLabel,
+              'quality': option.quality.name,
+              'feedbackTitle': option.feedbackTitle,
+              'feedbackReason': option.feedbackReason,
+              'repairFocusSeatIds': option.repairFocusSeatIds,
+              'repairFocusCardIds': option.repairFocusCardIds,
+              'repairFocusLabels': option.repairFocusLabels,
+            }),
+          )
+          .toList()
+        ..sort();
+  return <String, Object?>{
+    'world': row.worldId,
+    'lesson': row.lessonId,
+    'task': task.taskId,
+    'phase': task.phase.name,
+    'stepKind': task.stepKind.name,
+    'family': task.resolvedTaskFamily.name,
+    'title': task.title,
+    'summary': task.summary,
+    'lockedSummary': task.lockedSummary,
+    'caption': task.runner.caption,
+    'hint': task.runner.hint,
+    'question': task.runner.question,
+    'feedbackTitle': task.runner.feedbackTitle,
+    'feedbackReason': task.runner.feedbackReason,
+    'options': options,
+  };
 }
 
 List<String> _positionSnapshot(List<_AssessedRow> rows) {
@@ -260,6 +317,87 @@ List<String> _positionSnapshot(List<_AssessedRow> rows) {
             '${row.task.runner.options.indexWhere((option) => option.isCorrect)}',
       )
       .toList();
+}
+
+_FingerprintContract _fingerprintContract() {
+  final decoded =
+      jsonDecode(File(_contractPath).readAsStringSync())
+          as Map<String, Object?>;
+  final inputs = decoded['inputs']! as List<Object?>;
+  return _FingerprintContract(
+    baselineHead: decoded['baselineHead']! as String,
+    fingerprint: decoded['fingerprint']! as String,
+    rowCount: decoded['rowCount']! as int,
+    inputHashes: Map<String, String>.fromEntries(
+      inputs.map((input) {
+        final item = input! as Map<String, Object?>;
+        return MapEntry(item['path']! as String, item['sha256']! as String);
+      }),
+    ),
+  );
+}
+
+Map<String, String> _inputHashes(Iterable<String> paths) =>
+    Map<String, String>.fromEntries(
+      paths.map(
+        (path) => MapEntry(
+          path,
+          sha256.convert(File(path).readAsBytesSync()).toString(),
+        ),
+      ),
+    );
+
+_FingerprintFreshnessStatus _freshnessStatus({
+  required String expectedFingerprint,
+  required String actualFingerprint,
+  required Map<String, String> expectedInputHashes,
+  required Map<String, String> actualInputHashes,
+}) {
+  final inputsMatch =
+      expectedInputHashes.length == actualInputHashes.length &&
+      expectedInputHashes.entries.every(
+        (entry) => actualInputHashes[entry.key] == entry.value,
+      );
+  if (inputsMatch && actualFingerprint == expectedFingerprint) {
+    return _FingerprintFreshnessStatus.currentAndValid;
+  }
+  if (!inputsMatch && actualFingerprint == expectedFingerprint) {
+    return _FingerprintFreshnessStatus.staleFingerprint;
+  }
+  if (!inputsMatch) {
+    return _FingerprintFreshnessStatus.contentDifferenceRequiresAdjudication;
+  }
+  return _FingerprintFreshnessStatus.invalidFingerprint;
+}
+
+enum _FingerprintFreshnessStatus {
+  staleFingerprint('STALE_FINGERPRINT'),
+  invalidFingerprint('INVALID_FINGERPRINT'),
+  contentDifferenceRequiresAdjudication(
+    'CONTENT_DIFFERENCE_REQUIRES_ADJUDICATION',
+  ),
+  currentAndValid('CURRENT_AND_VALID');
+
+  const _FingerprintFreshnessStatus(this.label);
+
+  final String label;
+
+  @override
+  String toString() => label;
+}
+
+class _FingerprintContract {
+  const _FingerprintContract({
+    required this.baselineHead,
+    required this.fingerprint,
+    required this.rowCount,
+    required this.inputHashes,
+  });
+
+  final String baselineHead;
+  final String fingerprint;
+  final int rowCount;
+  final Map<String, String> inputHashes;
 }
 
 int _longestRun(List<int> indexes) {

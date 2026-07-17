@@ -1,8 +1,8 @@
 # Canonical Act0 Closure Packet v1
 
-Status: BLOCKED — current proof gap
+Status: CANDIDATE_READY_TO_FREEZE — bounded convergence gates closed
 
-Baseline: `b3923e6ab8acf99e4212e66f3f9a19982c818ffc` on `main`.
+Baseline: `d19ffad4a5bd9b5fb5a97efa1a5af3b1da19ac5a` on `main`.
 
 ## Scope and method
 
@@ -26,14 +26,14 @@ group is the KDZ duplicate group, not a new disposition.
 | ALI-SHARED-002 | P3 | World-plan topic drift | F04 / DG-CONTENT | `c9503dea`; CLOSED_FIXED |
 | ALI-SHARED-003 | P1 | Fourth compact option unreachable | F05 / DG-COMPACT | `fe57219e`, `2e86b4c`; CLOSED_FIXED |
 | ALI-NATIVE-SHARED-001 | P3 | Dormant preflop native list | F06 / DG-NONCANONICAL | No Act0 consumer; OUTSIDE_CURRENT_RELEASE_SCOPE |
-| W10W12-DCA-001 | P0 | All assessed answers at index zero | F07 / DG-CONTENT | grouped repair passes, but global current fingerprint guard fails; PROOF_GAP_CONFIRMED |
-| W10W12-DCA-002 | P1 | Repair targets inherited index-zero bias | F07 / DG-CONTENT | target matrix passes, but global proof baseline is stale; PROOF_GAP_CONFIRMED |
-| W10W12-DCA-003 | P1 | Extreme/absolute distractors | F07 / DG-CONTENT | grouped repair passes, but global proof baseline is stale; PROOF_GAP_CONFIRMED |
-| W10W12-DCA-004 | P2 | Three prompt/option concept echoes | F07 / DG-CONTENT | grouped repair passes, but global proof baseline is stale; PROOF_GAP_CONFIRMED |
+| W10W12-DCA-001 | P0 | All assessed answers at index zero | F07 / DG-CONTENT | current 291-row fingerprint and distribution guard; CLOSED_VERIFIED_PASS |
+| W10W12-DCA-002 | P1 | Repair targets inherited index-zero bias | F07 / DG-CONTENT | current 291-row fingerprint, target matrix, and row inventory; CLOSED_VERIFIED_PASS |
+| W10W12-DCA-003 | P1 | Extreme/absolute distractors | F07 / DG-CONTENT | current grouped content and fingerprint guard; CLOSED_VERIFIED_PASS |
+| W10W12-DCA-004 | P2 | Three prompt/option concept echoes | F07 / DG-CONTENT | source-ID crosswalk and current grouped-content guard; CLOSED_VERIFIED_PASS |
 | W10W12-DCA-005 | P2 | W12 guided/transfer ratio | F09 / DG-FUTURE | Future content-depth architecture; OUTSIDE_CURRENT_RELEASE_SCOPE |
 | W10W12-DCA-006 | P2 | W10/W11 context reuse | F09 / DG-FUTURE | Human-only felt-sameness uncertainty; OUTSIDE_CURRENT_RELEASE_SCOPE |
 | W10W12-DCA-007 | P2 | Missing change-condition feedback | F08 / DG-REPAIR | grouped closure §10 and current guard; CLOSED_FIXED for prioritized rows; broader felt nuance is Human-only |
-| W10W12-DCA-008 | P3 | Two scored duplicate prompt groups | F07 / DG-CONTENT | grouped repair passes, but global proof baseline is stale; PROOF_GAP_CONFIRMED |
+| W10W12-DCA-008 | P3 | Two scored duplicate prompt groups | F07 / DG-CONTENT | source-ID crosswalk and current grouped-content guard; CLOSED_VERIFIED_PASS |
 | W10W12-DCA-009 | P3 | Literal terminology naming drift | F18 / DG-VISUAL-POLISH | Nonblocking naming/copy residue; CLOSED_INTENTIONAL |
 | W10W12-DCA-010 | P4 | Tilt/table-feel credibility unprovable from source | F09 / DG-FUTURE | Human-only uncertainty; OUTSIDE_CURRENT_RELEASE_SCOPE |
 | CODEX-HARD-001 | P1 | Tablet welcome underfill | F10 / DG-DEVICE | final layout/proof guard and later full sweep; CLOSED_VERIFIED_PASS |
@@ -67,14 +67,11 @@ closure evidence for the high-risk dispositions.
 
 - **F07:** The exact DCA-004 tasks are `w11_plan_table_focus_transfer`,
   `w12_good_fold_bad_result`, and `w12_checkpoint_review`; DCA-008's two
-  pairs and DCA-007's prioritized rows are named in the grouped closure.
-  The grouped guards pass, but the current all-world answer-position guard
-  fails its immutable content fingerprint: expected
-  `d57fd20fd62a3527be549e4c69d8a10aaf1788026c7dccf597b461373a0fd49d`, actual
-  `ee91c4f9b43ed3893fb0d047631dd39122ac4711e0cedba8c917435fa8b6c3d9`.
-  `bbce4caf` changed assessed Act0 source after that fingerprint was pinned.
-  This is a proof gap, not evidence of a product regression; nevertheless it
-  prevents F07 from retaining terminal verification at this baseline.
+  pairs and DCA-007's prioritized rows are named in the grouped closure. The
+  current source is re-adjudicated at `d19ffad4`: 291 rows, fingerprint
+  `ee91c4f9b43ed3893fb0d047631dd39122ac4711e0cedba8c917435fa8b6c3d9`, and
+  one SHA-256-tracked input. The direct five-row W1 identity inventory and
+  freshness statuses are in `W1_W12_ASSESSMENT_FINGERPRINT_ADJUDICATION_v1.md`.
 - **F09:** W10-W12 are canonical Act0 content, but transfer ratio, context
   variety, and felt credibility are not a defect in the frozen release promise.
   They remain future/Human-only uncertainty, never a claim of completion.
@@ -88,14 +85,10 @@ closure evidence for the high-risk dispositions.
 - **F19:** historical condition was the one `session_summary.scroll_02_mid`
   capture crop. Current source/evidence review, not a broad absence claim,
   records it as capture artifact; the terminal route is separately guarded.
-- **F20/F21:** Current first-session identity testing is a direct regression
-  check, not historical screenshot inference. At `715d6c6a`,
-  `act0_first_session_identity_surface_v1_test.dart` fails
-  `short identity teaching stays below a stable table with its footer rail
-  anchored`: the learning-rail content begins 147 px below the shared lower
-  surface, exceeding the 24 px contract. The failure follows `bbce4caf`'s
-  identity-teaching source integration. This is confirmed product debt in the
-  learning-surface owner, separate from the stale assessment fingerprint.
+- **F20/F21:** `d19ffad4` restores the first-session rail to the 24 px shared
+  lower-surface contract through a first-session presentation classification.
+  Focused compact, large, 1.4x, LSCS, fast-loop, release-gate, analyzer, and
+  graph checks pass; this is direct geometry evidence, not screenshot inference.
 
 ## Closure Packet index
 
@@ -103,47 +96,32 @@ closure evidence for the high-risk dispositions.
 | --- | --- | --- | --- | --- |
 | onboarding / placement | `Act0ShellPreviewScreenV1`; fresh, answered, recommendation | placement route tests; `d6a0ef54`, `9511ae74` | compact CTA and placement layout proof; fresh-start route | CLOSED_FULLY_PROVEN |
 | first-session route | preview shell → runner; welcome, lesson, decision | canonical entry/route guards | compact and fresh-install first-lesson evidence | CLOSED_FULLY_PROVEN |
-| curriculum / content truth | `Act0ShellStateV1`; W1-W12 tasks | grouped/correctness guards pass; all-world fingerprint is stale | source IDs, payoff/terminal contracts | IMPLEMENTED_PROOF_INCOMPLETE |
+| curriculum / content truth | `Act0ShellStateV1`; W1-W12 tasks | current 291-row fingerprint, grouped/correctness guards | source IDs, payoff/terminal contracts | CLOSED_FULLY_PROVEN |
 | decision / feedback | `Act0LessonRunnerShellV1`; correct/wrong feedback | grouped content and runner state tests | reachable action controls, claim-safe copy | CLOSED_FULLY_PROVEN |
 | repair / recheck | runner + Review; repair open/result/recheck | `d9ac3ff3`, `5afd43ec`, `288c1e5e`, `70bf1aae` | CTA and negative-path replay evidence | CLOSED_FULLY_PROVEN |
 | Review / recovery | Review owner; empty, repair, handoff, recovery | authoritative recovery replay | Review transition and terminal copy proof | CLOSED_FULLY_PROVEN |
-| learning-surface presentation | shared runner learning scene; theory through recheck | first-session identity geometry test fails: 147 px versus 24 px limit | compact/nominal/large/1.4x geometry must be revalidated after repair | PRODUCT_DEBT_CONFIRMED |
+| learning-surface presentation | shared runner learning scene; theory through recheck | first-session identity and LSCS geometry tests pass | compact/nominal/large/1.4x geometry and CTA checks pass | CLOSED_FULLY_PROVEN |
 | compact / accessibility | shared lower surface; four-option, long content | compact guards and LSCS tests | safe-area, 1.4x, reachable controls | CLOSED_FULLY_PROVEN |
 | persistence / resume | Act0 progress owner; restore/recovery | `f3ab667c`, `8147990c` round-trip authority | interruption/resume transitions | CLOSED_FULLY_PROVEN |
 | telemetry / privacy | `Act0TelemetrySinkV1`; event lifecycle | `eef22eb8`, `fefb7c36`, 52-event JSONL proof | debug-only/local/no-network/release separation | CLOSED_FULLY_PROVEN |
 | release / build / tooling | release gate, manifests, capture contracts | seven current closure/tooling guards | source applicability, generated-drift preflight, default/debug separation | CLOSED_FULLY_PROVEN |
 | end-to-end completion | placement → recommendation → wrong → repair → recheck → payoff → Review/terminal | canonical route/replay and terminal guards | fresh start, negative paths, resume/recovery and W12/no-W13 proof | CLOSED_FULLY_PROVEN |
 
-Implementation Quality is High except for learning-surface presentation, which
-has confirmed product debt. Proof Coverage and Release Confidence are High
-except for curriculum/content truth, which are Medium until its fingerprint is re-adjudicated. This
-does not mean Human learning effect, future curriculum depth, tablet support,
-legacy maintenance, or AI Personalization is proven.
+Implementation Quality, Proof Coverage, and Release Confidence are High for
+the bounded canonical route. This does not mean Human learning effect, future
+curriculum depth, tablet support, legacy maintenance, or AI Personalization is
+proven.
 
 ## Freeze decision
 
-The packet does **not** satisfy the frozen-candidate prerequisite. The raw
-crosswalk, release/build packet, and end-to-end packet are complete, but the
-curriculum/content block is `IMPLEMENTED_PROOF_INCOMPLETE` and the
-learning-surface block is `PRODUCT_DEBT_CONFIRMED`. The bounded repair family
-is **First-Session Identity Surface Stability**: restore the shared lower
-surface geometry for identity teaching, then revalidate the LSCS device/text
-matrix. A separate W1-W12 assessment-fingerprint re-adjudication must follow.
-This mission does not modify product code or tests.
+The packet now satisfies the frozen-candidate prerequisite: the first-session
+identity repair is published at `d19ffad4` and the current 291-row assessment
+fingerprint is source-hash protected. This permits candidate freeze for the
+downstream gates; it does not execute Final Deep Independent Audit, Human
+Novice Proof, or AI Personalization.
 
-Final Deep Independent Audit and Human Novice Proof remain blocked. The next
-Top-1 is First-Session Identity Surface Stability, not the audit.
+## Historical next-goal disposition
 
-## Copyable next Goal
-
-```text
-GOAL: FIRST-SESSION IDENTITY SURFACE STABILITY
-
-Repair the `bbce4caf` first-session identity integration without changing its
-learner-facing teaching intent. Reproduce the 147 px learning-rail offset in
-`act0_first_session_identity_surface_v1_test.dart`, restore the shared lower
-surface contract (at most 24 px), and re-run the full LSCS geometry/CTA/device
-matrix plus the identity and compact-decision tests. Do not broaden into
-curriculum, telemetry, Modern Table, Human Novice Proof, or the separate
-assessment-fingerprint re-adjudication.
-```
+The prior First-Session Identity Surface Stability goal is complete at
+`d19ffad4`; its required fingerprint re-adjudication is recorded in
+`W1_W12_ASSESSMENT_FINGERPRINT_ADJUDICATION_v1.md`.

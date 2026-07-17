@@ -95,14 +95,15 @@ decision, feedback, repair, recheck, payoff, and session completion/exit.
 Premium Motion remains deferred. The missing legacy route-import test remains
 unrelated debt.
 
-**Closure Packet Completion v1 — BLOCKED_BY_PROOF_GAP.** The baseline-pinned
-index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. A current 291-row
-assessment-fingerprint guard fails after `bbce4caf` changed assessed source;
-the expected fingerprint is stale. The same commit also introduces a confirmed
-first-session identity learning-surface regression: a 147 px rail offset
-violates the 24 px shared lower-surface contract. Final Deep Independent Audit
-and Human Novice Proof remain blocked pending First-Session Identity Surface
-Stability, then bounded fingerprint re-adjudication.
+**Convergence baseline — CANDIDATE_READY_TO_FREEZE.** The baseline-pinned
+index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. `d19ffad4` repairs
+the first-session identity rail offset to the 24 px shared lower-surface
+contract without changing learning semantics. The current W1-W12 contract now
+pins 291 assessed rows to fingerprint `ee91c4f9…`, the exact Act0 state-input
+SHA-256, and a deterministic freshness status; its five changed W1 identity
+rows are recorded in `docs/plan/W1_W12_ASSESSMENT_FINGERPRINT_ADJUDICATION_v1.md`.
+This permits candidate freeze only. Final Deep Independent Audit, Human Novice
+Proof, and AI Personalization remain downstream and are not started here.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

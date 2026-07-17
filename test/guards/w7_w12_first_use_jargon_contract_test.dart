@@ -51,7 +51,7 @@ void main() {
         'reset',
         'discipline',
         'mindset bridge',
-        'terminal review',
+        'volume i review',
         'not a future world',
       ],
     };
