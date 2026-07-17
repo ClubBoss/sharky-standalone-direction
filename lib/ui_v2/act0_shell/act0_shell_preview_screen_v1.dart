@@ -1811,6 +1811,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
   int _placementDiagnosticScore = 0;
+  int? _placementDiagnosticRepairIndexV1;
+  String? _placementDiagnosticRepairSourceTaskIdV1;
   bool get _isRuLocaleV1 => false;
 
   String _copyV1({required String en, required String ru}) =>
@@ -5418,6 +5420,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       playSelectedTask,
                                       option,
                                     );
+                                  } else {
+                                    _recordPlacementDiagnosticMissForRepairV1(
+                                      selectedWorld: selectedWorld,
+                                      selectedLesson: selectedLesson,
+                                      selectedTask: playSelectedTask,
+                                      runner: activePlayRunner,
+                                      option: option,
+                                    );
                                   }
                                   _selectedOptionId = option.id;
                                   _selectedPresetId = null;
@@ -5481,6 +5491,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                           playSelectedTask,
                                           option,
                                         );
+                                      } else {
+                                        _recordPlacementDiagnosticMissForRepairV1(
+                                          selectedWorld: selectedWorld,
+                                          selectedLesson: selectedLesson,
+                                          selectedTask: playSelectedTask,
+                                          runner: activePlayRunner,
+                                          option: option,
+                                        );
                                       }
                                       _selectedOptionId = option.id;
                                       _selectedPresetId = null;
@@ -5498,6 +5516,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _actionPayoffForActiveSequenceV1(),
                                 onContinueReview: () => setState(() {
                                   _recordActionRecommendationAcceptedV1();
+                                  if (_placementDiagnosticActive &&
+                                      _startPlacementDiagnosticSameSignalRepairFromFeedbackV1(
+                                        selectedWorld: selectedWorld,
+                                        selectedTask: playSelectedTask,
+                                        runner: activePlayRunner,
+                                      )) {
+                                    return;
+                                  }
                                   if (_placementDiagnosticActive) {
                                     final spot = _placementDiagnosticSpotsV1
                                         .elementAt(_placementDiagnosticIndex);
@@ -8054,10 +8080,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_openRepairIntentTargetForSourceTaskV1(sourceTaskId) == null) {
       return false;
     }
-    final mistake = _openMistakes().cast<Act0MistakeCardV1?>().firstWhere(
-      (candidate) => candidate?.taskId == sourceTaskId,
-      orElse: () => null,
-    );
+    final Act0MistakeCardV1? mistake =
+        _mistakeRecords[sourceTaskId]?.toCard() ??
+        _openMistakes().cast<Act0MistakeCardV1?>().firstWhere(
+          (candidate) => candidate?.taskId == sourceTaskId,
+          orElse: () => null,
+        );
     if (mistake == null) {
       return false;
     }
@@ -8071,6 +8099,102 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeSameSignalFeedbackRepairV1 = true;
     return _activeRepairTaskId != null &&
         _activeRepairSourceTaskId == sourceTaskId;
+  }
+
+  void _recordPlacementDiagnosticMissForRepairV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonCardV1 selectedLesson,
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerStateV1 runner,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (option.isCorrect) {
+      return;
+    }
+    _storeOpenRepairIntentForMissV1(
+      sourceWorldId: selectedWorld.worldId,
+      sourceLessonId: selectedLesson.lessonId,
+      sourceTaskId: selectedTask.taskId,
+      runner: runner,
+      option: option,
+    );
+    final contextLabels = _repairContextLabels(runner, option);
+    _mistakeRecords.putIfAbsent(
+      selectedTask.taskId,
+      () => _Act0MistakeRecordV1(
+        taskId: selectedTask.taskId,
+        lessonId: selectedLesson.lessonId,
+        worldId: selectedWorld.worldId,
+        title: _localizedTaskTitleV1(selectedTask),
+        weaknessLabel: _categoryForLesson(selectedLesson.lessonId),
+        selectedOptionId: option.id,
+        selectedLabel: option.label,
+        betterLabel: option.betterAnswerLabel,
+        reason: _hardenMistakeReason(
+          rawReason: option.feedbackReason,
+          betterLabel: option.betterAnswerLabel,
+          contextLabels: contextLabels,
+        ),
+        contextLabels: contextLabels,
+        repairActionLabel: _repairActionLabel(selectedTask),
+        attempts: 1,
+      ),
+    );
+  }
+
+  bool _startPlacementDiagnosticSameSignalRepairFromFeedbackV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerStateV1 runner,
+  }) {
+    if (_activeRepairTaskId != null || _activeSameSignalRecheckTaskId != null) {
+      return false;
+    }
+    final intent = _openRepairIntentBySourceTaskId[selectedTask.taskId];
+    final record = _mistakeRecords[selectedTask.taskId];
+    if (intent == null || record == null) {
+      return false;
+    }
+    final worlds = _progressedWorlds(widget.state ?? Act0ShellStateV1.sample);
+    final targetWorld = _worldById(worlds, intent.targetWorldId);
+    final targetLesson = _lessonById(
+      targetWorld.lessons,
+      intent.targetLessonId,
+    );
+    _startTaskByIds(
+      targetWorld,
+      targetLesson.lessonId,
+      intent.targetTaskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+    );
+    if (_selectedTaskId != intent.targetTaskId) {
+      return false;
+    }
+    _placementDiagnosticRepairIndexV1 = _placementDiagnosticIndex;
+    _placementDiagnosticRepairSourceTaskIdV1 = selectedTask.taskId;
+    _placementDiagnosticActive = false;
+    _activeRepairTaskId = intent.targetTaskId;
+    _activeRepairSourceTaskId = selectedTask.taskId;
+    _activeSameSignalFeedbackRepairV1 = true;
+    _recordTelemetryEventV1('task_shown', <String, Object?>{
+      'schemaVersion': 1,
+      'worldId': targetWorld.worldId,
+      'lessonId': targetLesson.lessonId,
+      'taskId': intent.targetTaskId,
+      'phase': Act0LessonPhaseV1.drill.name,
+      'attemptOrdinal': 1,
+    });
+    _emitRepairStartedTelemetryV1(
+      sourceTaskId: selectedTask.taskId,
+      repairTaskId: intent.targetTaskId,
+    );
+    _emitRepairItemStartedTelemetryV1(
+      mistake: record.toCard(),
+      targetTaskId: intent.targetTaskId,
+      mappingType: 'mapped',
+    );
+    return true;
   }
 
   /// The mapped repair task is the correction rep. A correct correction is
@@ -8146,6 +8270,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _activeSameSignalRecheckTaskId = null;
     _activeSameSignalRecheckSourceTaskId = null;
+    final resumePlacementDiagnostic =
+        correct &&
+        _placementDiagnosticRepairIndexV1 != null &&
+        _placementDiagnosticRepairSourceTaskIdV1 == sourceTaskId;
+    _placementDiagnosticRepairIndexV1 = null;
+    _placementDiagnosticRepairSourceTaskIdV1 = null;
+    if (resumePlacementDiagnostic &&
+        _startNextPlacementDiagnostic(
+          _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
+        )) {
+      return true;
+    }
     _selectedOptionId = null;
     _phase = Act0LessonPhaseV1.theory;
     _teachingStepIndex = 0;
@@ -8215,6 +8351,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _placementDiagnosticIndex = 0;
     _placementDiagnosticCorrect = 0;
     _placementDiagnosticScore = 0;
+    _placementDiagnosticRepairIndexV1 = null;
+    _placementDiagnosticRepairSourceTaskIdV1 = null;
     _placementDiagnosticHitSignals.clear();
     _placementDiagnosticMissSignals.clear();
     _placementIntroVisible = false;

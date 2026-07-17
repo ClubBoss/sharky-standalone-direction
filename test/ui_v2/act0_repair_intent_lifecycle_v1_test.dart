@@ -297,6 +297,175 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'placement board-card miss repairs before its diagnostic recheck',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpPlacementDiagnosticHost(tester, telemetrySink: sink);
+
+      await _answerPlacementQuestion(tester, 'friends');
+      await _answerPlacementQuestion(tester, 'rules');
+      await tester.tap(
+        find.byKey(const Key('act0_shell_placement_start_diagnostic')),
+      );
+      await tester.pumpAndSettle();
+
+      await _answerPlacementCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Which cards can everyone use?'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_option_hero_private_cards')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Try same clue'), findsOneWidget);
+      expect(
+        _openRepairIntentPayload(tester, 'what_poker_is_table_read_transfer'),
+        isNotNull,
+      );
+      expect(
+        _openRepairIntentPayload(
+          tester,
+          'what_poker_is_table_read_transfer',
+        )?['targetTaskId'],
+        'cards_ranks_suits_board_count',
+      );
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        sink.events.where((event) => event.name == 'repair_entered'),
+        hasLength(1),
+      );
+      expect(_activeTaskId(tester), 'cards_ranks_suits_board_count');
+      expect(
+        sink.events.where((event) => event.name == 'repair_entered'),
+        hasLength(1),
+      );
+      expect(
+        sink.events
+            .where(
+              (event) =>
+                  event.name == 'task_shown' &&
+                  event.fields['taskId'] == 'cards_ranks_suits_board_count',
+            )
+            .length,
+        1,
+      );
+
+      await _answerPlacementCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(_activeTaskId(tester), 'what_poker_is_table_read_transfer');
+      expect(
+        sink.events.where((event) => event.name == 'recheck_started'),
+        hasLength(1),
+      );
+
+      await _answerPlacementCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('No bet faces Hero. Which action is free?'),
+        findsOneWidget,
+      );
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'recheck_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events
+            .where(
+              (event) =>
+                  event.name == 'user_choice' &&
+                  event.fields['taskId'] == 'what_poker_is_table_read_transfer',
+            )
+            .length,
+        3,
+      );
+    },
+  );
+}
+
+Future<void> _pumpPlacementDiagnosticHost(
+  WidgetTester tester, {
+  required Act0InMemoryTelemetrySinkV1 telemetrySink,
+}) async {
+  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Act0ShellPreviewScreenV1(
+        showPlacementOnStart: true,
+        telemetrySink: telemetrySink,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _answerPlacementQuestion(
+  WidgetTester tester,
+  String optionId,
+) async {
+  final intro = find.byKey(const Key('act0_shell_placement_intro_cta'));
+  if (intro.evaluate().isNotEmpty) {
+    await tester.tap(intro);
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(find.byKey(Key('act0_shell_placement_option_$optionId')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('act0_shell_placement_next_cta')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _answerPlacementCorrectly(WidgetTester tester) async {
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final option = runner.runner.options.firstWhere((option) => option.isCorrect);
+  if (runner.runner.sizingConfig.isEnabled) {
+    await tester.tap(find.byKey(Key('act0_shell_sizing_preset_${option.id}')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_sizing_confirm_cta')));
+    await tester.pumpAndSettle();
+    return;
+  }
+  final answerKey = option.seatId == null
+      ? Key('act0_shell_option_${option.id}')
+      : Key('act0_shell_seat_tap_${option.seatId}');
+  final answer = find.byKey(answerKey);
+  if (answer.evaluate().isEmpty) {
+    await _advanceTeachingToDrill(tester);
+    await _answerCorrectly(tester);
+    return;
+  }
+  await tester.tap(answer);
+  await tester.pumpAndSettle();
 }
 
 Future<void> _pumpLifecycleHost(
