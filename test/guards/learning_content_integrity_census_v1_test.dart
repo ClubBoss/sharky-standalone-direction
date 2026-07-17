@@ -30,6 +30,27 @@ void main() {
     final snapshot = <String, Object?>{
       'assessedRows': rows.length,
       'optionCounts': _countBy(rows, (row) => '${row.optionCount}'),
+      'optionCountsByWorld': _nestedCountBy(
+        rows,
+        outer: (row) => row.worldId,
+        inner: (row) => '${row.optionCount}',
+      ),
+      'optionCountsCheckpoints': _countBy(
+        rows.where((row) => row.isCheckpoint),
+        (row) => '${row.optionCount}',
+      ),
+      'optionCountsRepairTargets': _countBy(
+        rows.where((row) => row.isRepairTarget),
+        (row) => '${row.optionCount}',
+      ),
+      'optionCountsW1W6': _countBy(
+        rows.where((row) => row.worldNumber <= 6),
+        (row) => '${row.optionCount}',
+      ),
+      'optionCountsW7W12': _countBy(
+        rows.where((row) => row.worldNumber >= 7),
+        (row) => '${row.optionCount}',
+      ),
       'correctPositions': _countBy(rows, (row) => '${row.correctIndex}'),
       'longestCorrectPositionRun': _longestRun(
         rows.map((row) => row.correctIndex).toList(growable: false),
@@ -39,11 +60,20 @@ void main() {
         'exactReplayCovered': repair.where((row) => row.exactReplay).length,
         'sameSignalMapped': repair.where((row) => row.sameSignalMapped).length,
         'fallbackOnly': repair.where((row) => row.fallbackOnly).length,
+        'unmapped': repair.where((row) => !row.intentAvailable).length,
         'byWorld': _countBy(repair, (row) => row.worldId),
         'mappedByWorld': _countBy(
           repair.where((row) => row.sameSignalMapped),
           (row) => row.worldId,
         ),
+        'checkpointMapped': repair
+            .where((row) => row.isCheckpoint && row.sameSignalMapped)
+            .length,
+        'checkpointTotal': repair.where((row) => row.isCheckpoint).length,
+        'repairTargetMapped': repair
+            .where((row) => row.isRepairTarget && row.sameSignalMapped)
+            .length,
+        'repairTargetTotal': repair.where((row) => row.isRepairTarget).length,
       },
       'lateWorldAuthenticity': _countBy(late, (row) => row.category),
       'lateWorldTableRequired': late.where((row) => row.tableRequired).length,
@@ -75,6 +105,7 @@ void main() {
     expect(repairSnapshot['exactReplayCovered'], 291);
     expect(repairSnapshot['sameSignalMapped'], 257);
     expect(repairSnapshot['fallbackOnly'], 34);
+    expect(repairSnapshot['unmapped'], 0);
 
     final w7 = Act0ShellStateV1.sample.worldById('world_7');
     final w7Surface = w7.lessons
@@ -144,6 +175,8 @@ _RepairRow _repairRow(_Row row) {
   );
   return _RepairRow(
     row.worldId,
+    isCheckpoint: row.isCheckpoint,
+    isRepairTarget: row.isRepairTarget,
     exactReplay: true,
     sameSignalMapped: sameSignal,
   );
@@ -185,6 +218,22 @@ Map<String, int> _countBy<T>(Iterable<T> values, String Function(T) key) {
   );
 }
 
+Map<String, Map<String, int>> _nestedCountBy<T>(
+  Iterable<T> values, {
+  required String Function(T) outer,
+  required String Function(T) inner,
+}) {
+  final grouped = <String, List<T>>{};
+  for (final value in values) {
+    grouped.putIfAbsent(outer(value), () => <T>[]).add(value);
+  }
+  return Map<String, Map<String, int>>.fromEntries(
+    grouped.entries.map(
+      (entry) => MapEntry(entry.key, _countBy(entry.value, inner)),
+    ),
+  );
+}
+
 int _longestRun(List<int> values) {
   var longest = 0;
   var current = 0;
@@ -205,6 +254,19 @@ class _Row {
   int get optionCount => task.runner.options.length;
   int get correctIndex =>
       task.runner.options.indexWhere((option) => option.isCorrect);
+  int get worldNumber => int.parse(worldId.substring('world_'.length));
+  bool get isCheckpoint =>
+      lessonId.contains('checkpoint') || task.taskId.contains('checkpoint');
+  bool get isRepairTarget =>
+      task.stepKind == Act0LessonStepKindV1.fixMistakes ||
+      task.resolvedTaskFamily == Act0TaskFamilyV1.repair ||
+      task.taskId.contains('repair') ||
+      task.runner.options.any(
+        (option) =>
+            option.repairFocusSeatIds.isNotEmpty ||
+            option.repairFocusCardIds.isNotEmpty ||
+            option.repairFocusLabels.isNotEmpty,
+      );
   Iterable<Act0RunnerOptionV1> get incorrectOptions =>
       task.runner.options.where((option) => !option.isCorrect);
 }
@@ -212,13 +274,18 @@ class _Row {
 class _RepairRow {
   const _RepairRow(
     this.worldId, {
+    required this.isCheckpoint,
+    required this.isRepairTarget,
     required this.exactReplay,
     required this.sameSignalMapped,
   });
   final String worldId;
+  final bool isCheckpoint;
+  final bool isRepairTarget;
   final bool exactReplay;
   final bool sameSignalMapped;
   bool get fallbackOnly => !sameSignalMapped;
+  bool get intentAvailable => true;
 }
 
 class _LateWorldRow {
