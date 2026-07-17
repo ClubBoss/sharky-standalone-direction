@@ -110,6 +110,10 @@ void main() {
         'what_poker_is_table_read_recheck',
       );
       expect(started.fields['createdFrom'], 'mistake');
+      expect(started.fields['mappingType'], 'mapped');
+      expect(started.fields['status'], 'in_progress');
+      expect(started.fields['sessionId'], 'session_v1|1');
+      expect(started.fields['session_id'], started.fields['sessionId']);
       expect(
         completed.fields['sourceTaskId'],
         'what_poker_is_table_read_transfer',

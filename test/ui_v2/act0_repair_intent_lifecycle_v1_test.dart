@@ -247,6 +247,10 @@ void main() {
         sink.events.where((event) => event.name == 'repair_entered'),
         hasLength(1),
       );
+      expect(
+        sink.events.where((event) => event.name == 'repair_item_started'),
+        hasLength(1),
+      );
 
       await _answerCorrectly(tester);
       await tester.tap(
@@ -352,6 +356,10 @@ void main() {
       );
       expect(
         sink.events.where((event) => event.name == 'repair_entered'),
+        isEmpty,
+      );
+      expect(
+        sink.events.where((event) => event.name == 'repair_item_started'),
         isEmpty,
       );
       expect(

@@ -1095,6 +1095,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
   bool _activeSameSignalFeedbackRepairV1 = false;
+  String? _pendingFeedbackRepairSourceTaskIdV1;
+  String? _pendingFeedbackRepairTaskIdV1;
   String? _activeSameSignalRecheckTaskId;
   String? _activeSameSignalRecheckSourceTaskId;
   Act0ActionSequenceStageV1? _activeActionSequenceStageV1;
@@ -5610,6 +5612,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         _activeRepairSourceTaskId = null;
                                         _activeSameSignalFeedbackRepairV1 =
                                             false;
+                                        _pendingFeedbackRepairSourceTaskIdV1 =
+                                            null;
+                                        _pendingFeedbackRepairTaskIdV1 = null;
                                         _activeRepairResultReceiptLine = null;
                                         _activeRepairSessionSummaryLines =
                                             const <String>[];
@@ -5626,6 +5631,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
                                     _activeSameSignalFeedbackRepairV1 = false;
+                                    _pendingFeedbackRepairSourceTaskIdV1 = null;
+                                    _pendingFeedbackRepairTaskIdV1 = null;
                                     _activeRepairResultReceiptLine = null;
                                     _activeRepairSessionSummaryLines =
                                         const <String>[];
@@ -7994,6 +8001,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               repairTarget.lessonId == mistake.lessonId)
         ? 'exact'
         : 'mapped';
+    final isResumingActiveRepair =
+        !isRetentionReplay &&
+        _activeRepairSourceTaskId == sourceTaskId &&
+        _activeRepairTaskId == repairTaskId;
+    final isResumingFeedbackRepair =
+        !isRetentionReplay &&
+        _pendingFeedbackRepairSourceTaskIdV1 == sourceTaskId &&
+        _pendingFeedbackRepairTaskIdV1 == repairTaskId;
     final launchWorld = mistake.worldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
@@ -8039,18 +8054,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? 'repair'
           : 'practice_$practiceGroupId',
     );
-    _emitRepairStartedTelemetryV1(
-      sourceTaskId: sourceTaskId,
-      repairTaskId: repairTaskId,
-    );
-    _emitRepairItemStartedTelemetryV1(
-      mistake: mistake,
-      targetTaskId: repairTaskId,
-      mappingType: mappingType,
-    );
+    // The feedback CTA owns the first same-signal launch. Review may resume
+    // that still-active repair after Back, but it must not start the same
+    // lifecycle a second time.
+    if (!isResumingActiveRepair && !isResumingFeedbackRepair) {
+      _emitRepairStartedTelemetryV1(
+        sourceTaskId: sourceTaskId,
+        repairTaskId: repairTaskId,
+      );
+      _emitRepairItemStartedTelemetryV1(
+        mistake: mistake,
+        targetTaskId: repairTaskId,
+        mappingType: mappingType,
+      );
+    }
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
     _activeSameSignalFeedbackRepairV1 = false;
+    _pendingFeedbackRepairSourceTaskIdV1 = null;
+    _pendingFeedbackRepairTaskIdV1 = null;
     _activeRepairResultReceiptLine = null;
     _activeRepairSessionSummaryLines = const <String>[];
     _returnToPlayHubOnBack = returnToPlayHub;
@@ -8088,6 +8110,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (mistake == null) {
       return false;
     }
+    _pendingFeedbackRepairSourceTaskIdV1 = null;
+    _pendingFeedbackRepairTaskIdV1 = null;
     _startMistakeRepair(
       selectedWorld,
       mistake,
@@ -8096,6 +8120,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       allowDrillBypass: true,
     );
     _activeSameSignalFeedbackRepairV1 = true;
+    _pendingFeedbackRepairSourceTaskIdV1 = sourceTaskId;
+    _pendingFeedbackRepairTaskIdV1 = _activeRepairTaskId;
     return _activeRepairTaskId != null &&
         _activeRepairSourceTaskId == sourceTaskId;
   }
