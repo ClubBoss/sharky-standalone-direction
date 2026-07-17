@@ -103,6 +103,37 @@ Current confirmed product debt is CL-LRN-F01/F02/F03/F05/F06/F08/F11. F02
 remains open because no authority supplies a minimum W7 lesson count; this
 wave does not invent one.
 
+### Learning-content inventory notes
+
+- **Negative frames:** the canonical assessed-question scan found no remaining
+  `not`, `except`, `wrong`, `misses`, or `least` reverse-selection question.
+  The learner-visible “fix mistakes after a miss” route-role question is a
+  necessary navigation fact, not an inverted poker assessment. Retained
+  “before” phrasing is temporal sequencing, not negative framing.
+- **W1 UI-referential items:** the original direct You/Hero-label assessments
+  are replaced. The remaining W1 badge/marker language teaches table identity
+  or BTN as a table object; it is not scored as the answer-equivalent learner
+  identity claim. The two scored first-table identity tasks now require action
+  order and player-versus-position inference.
+- **W7 depth:** W7 has one learner-visible lesson containing four authored
+  assessed rows plus recap/review. The Master Plan admits its spine and task
+  concepts but specifies no minimum lesson count or structural threshold;
+  `W7_DEPTH_BLOCKED_BY_CONTENT_AUTHORITY` is therefore preserved.
+
+### Next Top-1 selection
+
+1. **Concept Error & Repair Integrity — selected.** It combines F03 with the
+   34 exact-replay-only F05 rows, directly affects recovery after an error,
+   has high AI-personalization prerequisite value, and can be deterministically
+   mapped without changing learner progression.
+2. **Late-World Decision Authenticity — waits.** F06 confirms an elevated
+   two-option share, but F07's asserted recall dominance is false; a broader
+   option redesign has lower immediate EV and higher content-compatibility
+   surface than repair completion.
+3. **Durable Retention & Transfer — waits.** F01/F08/F11 require time,
+   persistence, and transfer-policy architecture, so their compatibility and
+   state-model risk exceeds this next bounded repair family.
+
 Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
 Novice Proof, or AI Personalization work starts from this record. The selected
 Top-1 is **Learning Integrity Foundation v1**: in one bounded source-truth
