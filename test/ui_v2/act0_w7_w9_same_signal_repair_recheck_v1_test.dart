@@ -178,6 +178,97 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'canonical feedback CTA honors the board-read repair identity before recheck',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpHost(
+        tester,
+        state: _stateWithCanonicalSourceAndRouteTarget(
+          worldId: 'world_1',
+          sourceLessonId: 'what_poker_is',
+          sourceTaskId: 'what_poker_is_table_read_transfer',
+          sourceRunner: _sourceRunner(
+            lessonId: 'what_poker_is_table_read_transfer',
+            signalLabel: 'Board cards',
+          ),
+          targetLessonId: 'cards_ranks_suits',
+          targetTaskId: 'cards_ranks_suits_board_count',
+        ),
+        sink: sink,
+        worldId: 'world_1',
+        lessonId: 'what_poker_is',
+        taskId: 'what_poker_is_table_read_transfer',
+      );
+
+      await _advanceToAnswer(tester);
+      await _answerOption(tester, 'ignore_signal');
+      final original = sink.events.lastWhere(
+        (event) => event.name == 'decision_made',
+      );
+      expect(original.fields['repair_target_task_id'], 'repeat_board_read');
+      expect(find.text('Try same clue'), findsOneWidget);
+
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'cards_ranks_suits_board_count');
+      await _advanceToAnswer(tester);
+
+      expect(
+        sink.events.where((event) => event.name == 'repair_entered'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'task_shown' &&
+              event.fields['taskId'] == 'cards_ranks_suits_board_count',
+        ),
+        hasLength(1),
+      );
+
+      await _answerCorrectly(tester);
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'what_poker_is_table_read_transfer');
+      await _advanceToAnswer(tester);
+      await _answerCorrectly(tester);
+      await _continueFeedback(tester);
+
+      final names = sink.events.map((event) => event.name).toList();
+      expect(
+        names.indexOf('repair_entered'),
+        greaterThan(names.indexOf('feedback_viewed')),
+      );
+      expect(
+        names.indexOf('repair_completed'),
+        greaterThan(names.indexOf('repair_entered')),
+      );
+      expect(
+        names.indexOf('recheck_started'),
+        greaterThan(names.indexOf('repair_completed')),
+      );
+      expect(
+        names.indexOf('recheck_completed'),
+        greaterThan(names.indexOf('recheck_started')),
+      );
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'user_choice' &&
+              event.fields['taskId'] == 'what_poker_is_table_read_transfer',
+        ),
+        hasLength(2),
+      );
+      expect(
+        sink.events.where(
+          (event) =>
+              event.name == 'user_choice' &&
+              event.fields['taskId'] == 'cards_ranks_suits_board_count',
+        ),
+        hasLength(1),
+      );
+    },
+  );
 }
 
 class _SameSignalRouteCaseV1 {

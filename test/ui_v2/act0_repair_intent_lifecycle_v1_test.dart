@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -209,12 +210,100 @@ void main() {
 
     expect(_openRepairIntentPayload(tester, 'actions_check_drill'), isNull);
   });
+
+  testWidgets(
+    'feedback CTA runs the mapped repair before its source-task recheck',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpLifecycleHost(
+        tester,
+        state: _stateForFoldCheckCallRaiseTasks(const <String>[
+          'actions_legal_context',
+          'actions_check_drill',
+        ]),
+        taskId: 'actions_legal_context',
+        telemetrySink: sink,
+      );
+      await _advanceTeachingToDrill(tester);
+
+      await _answerOption(tester, 'fold');
+      expect(find.text('Try same clue'), findsOneWidget);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_activeTaskId(tester), 'actions_check_drill');
+      await _advanceTeachingToDrill(tester);
+      final repairShown = sink.events
+          .where(
+            (event) =>
+                event.name == 'task_shown' &&
+                event.fields['taskId'] == 'actions_check_drill',
+          )
+          .toList(growable: false);
+      expect(repairShown, hasLength(1));
+      expect(
+        sink.events.where((event) => event.name == 'repair_entered'),
+        hasLength(1),
+      );
+
+      await _answerCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_activeTaskId(tester), 'actions_legal_context');
+      expect(
+        sink.events.where((event) => event.name == 'recheck_started'),
+        hasLength(1),
+      );
+
+      await _advanceTeachingToDrill(tester);
+      await _answerCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        sink.events.where((event) => event.name == 'repair_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where((event) => event.name == 'recheck_completed'),
+        hasLength(1),
+      );
+      expect(
+        sink.events
+            .where(
+              (event) =>
+                  event.name == 'user_choice' &&
+                  event.fields['taskId'] == 'actions_legal_context',
+            )
+            .length,
+        2,
+      );
+      expect(
+        sink.events
+            .where(
+              (event) =>
+                  event.name == 'user_choice' &&
+                  event.fields['taskId'] == 'actions_check_drill',
+            )
+            .length,
+        1,
+      );
+    },
+  );
 }
 
 Future<void> _pumpLifecycleHost(
   WidgetTester tester, {
   required Act0ShellStateV1 state,
   required String taskId,
+  Act0InMemoryTelemetrySinkV1? telemetrySink,
 }) async {
   tester.view.physicalSize = const Size(1200, 1600);
   tester.view.devicePixelRatio = 1;
@@ -235,6 +324,7 @@ Future<void> _pumpLifecycleHost(
         initialPhase: Act0LessonPhaseV1.drill,
         showPlacementOnStart: false,
         state: state,
+        telemetrySink: telemetrySink,
         debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
           mode: Act0ControlledDemoCaptureModeV1.directState,
           surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,

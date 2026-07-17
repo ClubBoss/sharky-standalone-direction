@@ -1094,6 +1094,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   static const int _agedRecheckSequenceThresholdV1 = 6;
   String? _activePracticeGroupId;
   String? _activeRepairTaskId;
+  bool _activeSameSignalFeedbackRepairV1 = false;
+  String? _activeSameSignalRecheckTaskId;
+  String? _activeSameSignalRecheckSourceTaskId;
   Act0ActionSequenceStageV1? _activeActionSequenceStageV1;
   Act0ActionSequenceLearnerStateV1 _actionPersonalizationStateV1 =
       Act0ActionSequencePersonalizationPolicyV1.initialState();
@@ -1614,6 +1617,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'sourceTaskId': sourceTaskId,
       'repairTaskId': repairTaskId,
       'attemptOrdinal': 1,
+    });
+    _recordTelemetryEventV1('repair_entered', <String, Object?>{
+      'schemaVersion': 1,
+      'sourceTaskId': sourceTaskId,
+      'source_task_id': sourceTaskId,
+      'repairTaskId': repairTaskId,
+      'repair_task_id': repairTaskId,
+      'attemptOrdinal': 1,
+      'source_surface': 'act0_repair',
     });
     _recordTelemetryEventV1('repair_attempted', <String, Object?>{
       'schemaVersion': 1,
@@ -5526,6 +5538,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )) {
                                     return;
                                   }
+                                  if (_completeSameSignalRecheckV1(
+                                    selectedTask: playSelectedTask,
+                                    runner: playRunner,
+                                  )) {
+                                    return;
+                                  }
                                   if (_activeRepairTaskId ==
                                       playSelectedTask.taskId) {
                                     final repaired =
@@ -5558,12 +5576,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             playSelectedTask.taskId,
                                       );
                                       _completeCurrentTask(playSelectedTask);
-                                      if (_activeRepairSourceTaskId != null &&
-                                          _activeRepairSourceTaskId !=
-                                              playSelectedTask.taskId) {
-                                        _closeTaskWithoutRewardV1(
-                                          _activeRepairSourceTaskId!,
-                                        );
+                                      if (_activeSameSignalFeedbackRepairV1 &&
+                                          _startSameSignalRecheckV1(
+                                            selectedWorld: selectedWorld,
+                                            sourceTaskId: repairSourceTaskId,
+                                          )) {
+                                        _activeRepairTaskId = null;
+                                        _activeRepairSourceTaskId = null;
+                                        _activeSameSignalFeedbackRepairV1 =
+                                            false;
+                                        _activeRepairResultReceiptLine = null;
+                                        _activeRepairSessionSummaryLines =
+                                            const <String>[];
+                                        _selectedOptionId = null;
+                                        _phase = Act0LessonPhaseV1.drill;
+                                        _teachingStepIndex = 0;
+                                        _rapidPracticeLoop = false;
+                                        return;
                                       }
                                     }
                                     _tab = Act0ShellTabV1.review;
@@ -5571,6 +5600,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _returnToPlayHubOnBack = false;
                                     _activeRepairTaskId = null;
                                     _activeRepairSourceTaskId = null;
+                                    _activeSameSignalFeedbackRepairV1 = false;
                                     _activeRepairResultReceiptLine = null;
                                     _activeRepairSessionSummaryLines =
                                         const <String>[];
@@ -5675,6 +5705,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       selectedWorld,
                                       selectedLesson,
                                     );
+                                    return;
+                                  }
+                                  if (_startSameSignalRepairFromFeedbackV1(
+                                    selectedWorld: selectedWorld,
+                                    selectedTask: playSelectedTask,
+                                    runner: playRunner,
+                                  )) {
                                     return;
                                   }
                                   if (_shouldRetryInsideLesson(
@@ -7988,6 +8025,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
+    _activeSameSignalFeedbackRepairV1 = false;
     _activeRepairResultReceiptLine = null;
     _activeRepairSessionSummaryLines = const <String>[];
     _returnToPlayHubOnBack = returnToPlayHub;
@@ -7995,6 +8033,126 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _rapidPracticeLoop = rapidPracticeLoop;
     _practiceCompletionTitle = null;
     _practiceCompletionBody = null;
+  }
+
+  /// Consumes the repair intent created by the just-reviewed missed answer.
+  ///
+  /// This is intentionally owned by the feedback CTA path rather than the
+  /// Review/Practice entry points: the learner was promised the same clue at
+  /// this exact moment, so advancing the lesson queue would be untruthful.
+  bool _startSameSignalRepairFromFeedbackV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerStateV1 runner,
+  }) {
+    if ((runner.selectedOption?.isCorrect ?? true) ||
+        _activeRepairTaskId != null ||
+        _activeSameSignalRecheckTaskId != null) {
+      return false;
+    }
+    final sourceTaskId = selectedTask.taskId;
+    if (_openRepairIntentTargetForSourceTaskV1(sourceTaskId) == null) {
+      return false;
+    }
+    final mistake = _openMistakes().cast<Act0MistakeCardV1?>().firstWhere(
+      (candidate) => candidate?.taskId == sourceTaskId,
+      orElse: () => null,
+    );
+    if (mistake == null) {
+      return false;
+    }
+    _startMistakeRepair(
+      selectedWorld,
+      mistake,
+      returnToPlayHub: false,
+      skipTeaching: true,
+      allowDrillBypass: true,
+    );
+    _activeSameSignalFeedbackRepairV1 = true;
+    return _activeRepairTaskId != null &&
+        _activeRepairSourceTaskId == sourceTaskId;
+  }
+
+  /// The mapped repair task is the correction rep. A correct correction is
+  /// followed by one graded replay of the original task so repair and recheck
+  /// remain separately observable rather than silently completing together.
+  bool _startSameSignalRecheckV1({
+    required Act0WorldCardV1 selectedWorld,
+    required String sourceTaskId,
+  }) {
+    final record = _mistakeRecords[sourceTaskId];
+    if (record == null) {
+      return false;
+    }
+    final sourceWorld = record.worldId.trim().isEmpty
+        ? selectedWorld
+        : _worldById(
+            _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+            record.worldId,
+          );
+    final sourceLesson = _lessonById(sourceWorld.lessons, record.lessonId);
+    final sourceTask = _taskById(sourceLesson, sourceTaskId);
+    if (sourceTask.phase != Act0LessonPhaseV1.drill) {
+      return false;
+    }
+    _recordTelemetryEventV1('recheck_started', <String, Object?>{
+      'schemaVersion': 1,
+      'source_task_id': sourceTaskId,
+      'repair_task_id': _activeRepairTaskId,
+      'recheck_task_id': sourceTaskId,
+      'source_surface': 'act0_feedback_cta',
+    });
+    _startTaskByIds(
+      sourceWorld,
+      record.lessonId,
+      sourceTaskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      evidenceRunKind: 'recheck',
+      evidenceStartedBy: 'same_signal_feedback_cta',
+    );
+    if (_selectedTaskId != sourceTaskId) {
+      return false;
+    }
+    _activeSameSignalRecheckTaskId = sourceTaskId;
+    _activeSameSignalRecheckSourceTaskId = sourceTaskId;
+    return true;
+  }
+
+  bool _completeSameSignalRecheckV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerStateV1 runner,
+  }) {
+    if (_activeSameSignalRecheckTaskId != selectedTask.taskId) {
+      return false;
+    }
+    final sourceTaskId =
+        _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId;
+    final correct = runner.selectedOption?.isCorrect ?? false;
+    _recordTelemetryEventV1('recheck_result', <String, Object?>{
+      'schemaVersion': 1,
+      'source_task_id': sourceTaskId,
+      'recheck_task_id': selectedTask.taskId,
+      'result': correct ? 'correct' : 'incorrect',
+      'source_surface': 'act0_feedback_cta',
+    });
+    _emitRecheckCompletedTelemetryV1(
+      taskId: selectedTask.taskId,
+      completedCorrectly: correct,
+      successfulRecheckCount: correct ? 1 : 0,
+    );
+    if (correct) {
+      _completeCurrentTask(selectedTask);
+    }
+    _activeSameSignalRecheckTaskId = null;
+    _activeSameSignalRecheckSourceTaskId = null;
+    _selectedOptionId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _teachingStepIndex = 0;
+    _returnToPlayHubOnBack = false;
+    _showPlayHub = true;
+    _tab = Act0ShellTabV1.review;
+    return true;
   }
 
   _Act0RepairTargetV1? _repairIntentTargetForSourceV1({
