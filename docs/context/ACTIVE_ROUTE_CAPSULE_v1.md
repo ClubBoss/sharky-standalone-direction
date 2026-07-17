@@ -28,7 +28,7 @@ legacy route-import test remains unrelated debt.
 Complete real-GUI Action qualification remains pending; deterministic Action
 capability evidence must not be presented as that learner-route result.
 
-Current active task: **Learning Run Boundary + Session Payoff v1 — ADMITTED**
+Historical active task: **Learning Run Boundary + Session Payoff v1 — ADMITTED**
 at `ff032893` / `8cb4c790`. The owner-approved Learning Run is the only
 run-level lifecycle: it begins on the first canonical Action or BTN position
 choice during a continuous Learn visit, survives lesson completion and return
@@ -59,12 +59,42 @@ Verified active route artifact:
 `docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
+## Post-Wave-2E Reconciliation — 2026-07-18
+
+Verified published HEAD: `fefb7c3696f21b818cfc42b96fba563b6b687246`.
+
+**Wave 2E — CLOSED AND ADMITTED.** `fix(telemetry): export complete HNP trace
+JSONL` closed the baseline repair-item cardinality defect and added an opt-in,
+non-release HNP collector that replaces a local application-support JSONL file
+with ordered complete events. The owner live proof contains 52 valid JSONL
+events, generic placement lifecycle evidence, and one complete repair/recheck
+lifecycle. Placement uses generic task/choice/decision/result/feedback and
+recommendation events; placement-named events are not a contract. No network,
+account, or participant-identity path was added. A fresh analyze/graphify retry
+later stalled locally after prior green runs and no later Dart change; this is
+tooling evidence context, not product debt.
+
+**Current active task: Learning Surface Composition Stability v1 — ADMITTED.**
+Live owner evidence shows cross-state geometry instability in the canonical
+Act0 sequence (theory, decision, feedback, repair, recheck, and Repair landed):
+table anchoring and teaching-surface starts vary, lower density/dead bands vary,
+and mixed-step counters alter the apparent vertical contract. This expands the
+reported ordinary-learning lower-surface dead-band concern into a bounded
+presentation-stability defect. The wave owns only stable table anchoring,
+one teaching-surface boundary, intrinsic short content, bounded long-content
+overflow, CTA reachability, and compact/tall/large-phone plus supported
+Dynamic-Type contracts. It does not authorize visual redesign, Modern Table,
+motion, mascot, curriculum, telemetry expansion, AI/personalization expansion,
+or tablet work. Human Novice Proof waits for this deterministic contract.
+
 ## Current Active Phase
 
-**AI Personalization Layer v1 — ACTIVE.** Alpha Learning Loop v1 is admitted;
-the next work remains bounded End-to-End Alpha capability expansion. Telemetry
-stays limited to the learning loop: user choice, correctness, error type, time
-to decision, feedback, repair, recheck, payoff, and session completion/exit.
+**AI Personalization Layer v1 remains the strategic stage.** Its immediate
+implementation sequence is temporarily preempted by the admitted Learning
+Surface Composition Stability v1 P1 contract repair above. After that bounded
+repair closes, resume End-to-End Alpha capability expansion. Telemetry stays
+limited to the learning loop: user choice, correctness, error type, time to
+decision, feedback, repair, recheck, payoff, and session completion/exit.
 Premium Motion remains deferred. The missing legacy route-import test remains
 unrelated debt.
 
