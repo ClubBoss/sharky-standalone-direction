@@ -1,7 +1,8 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Freshness date: 2026-07-13.
+Freshness date: 2026-07-18 (Learning Content Integrity v1A working state;
+published HEAD recorded after its bounded commits).
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped
 repair program Waves 1-5, and the W1-W6 runtime integrity gate are closed and
 integrated into `main`;
@@ -109,6 +110,16 @@ error taxonomy, transfer, and first-table authenticity). See
 `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. Final Deep Independent Audit,
 Human Novice Proof, and AI Personalization remain downstream and are not
 started here.
+
+**Learning Content Integrity v1A.** The 291-row canonical census now records
+121 two-option, 165 three-option, and 5 four-option assessments. All rows can
+exactly replay; 257 have an explicit different same-signal target and 34 are
+exact-replay-only product debt. W7 learner-facing metadata leakage is fixed;
+its one-lesson depth remains blocked by absent minimum-depth authority. W1
+first-table tasks now require table-order/identity inference and W4 value copy
+uses a direct positive decision. The next Top-1 selection remains downstream;
+Human Novice Proof, Final Deep Independent Audit, and AI Personalization are
+still blocked.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

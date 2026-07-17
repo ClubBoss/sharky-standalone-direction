@@ -1,0 +1,235 @@
+import 'dart:convert';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+/// A deterministic, route-owned inventory. It deliberately distinguishes an
+/// exact replay (available for every assessed row) from a mapped same-signal
+/// target (available only when the canonical mapper returns another task).
+void main() {
+  test('canonical W1-W12 learning-content census remains adjudicated', () {
+    final rows = _assessedRows();
+    expect(rows, hasLength(291));
+
+    final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
+    final repair = repairRows.map(_repairRow).toList(growable: false);
+    final late = rows
+        .where(
+          (row) => const <String>{
+            'world_9',
+            'world_10',
+            'world_11',
+            'world_12',
+          }.contains(row.worldId),
+        )
+        .map(_lateWorldRow)
+        .toList(growable: false);
+
+    final snapshot = <String, Object?>{
+      'assessedRows': rows.length,
+      'optionCounts': _countBy(rows, (row) => '${row.optionCount}'),
+      'correctPositions': _countBy(rows, (row) => '${row.correctIndex}'),
+      'longestCorrectPositionRun': _longestRun(
+        rows.map((row) => row.correctIndex).toList(growable: false),
+      ),
+      'repair': <String, Object?>{
+        'incorrectCapable': repair.length,
+        'exactReplayCovered': repair.where((row) => row.exactReplay).length,
+        'sameSignalMapped': repair.where((row) => row.sameSignalMapped).length,
+        'fallbackOnly': repair.where((row) => row.fallbackOnly).length,
+        'byWorld': _countBy(repair, (row) => row.worldId),
+        'mappedByWorld': _countBy(
+          repair.where((row) => row.sameSignalMapped),
+          (row) => row.worldId,
+        ),
+      },
+      'lateWorldAuthenticity': _countBy(late, (row) => row.category),
+      'lateWorldTableRequired': late.where((row) => row.tableRequired).length,
+      'lateWorldActionConsequence': late
+          .where((row) => row.actionConsequence)
+          .length,
+      'lateWorldTerminologyOnly': late
+          .where((row) => row.terminologyOnly)
+          .length,
+    };
+    // Kept in test output so the companion adjudication can record the full
+    // machine-derived snapshot without maintaining a second source of truth.
+    // ignore: avoid_print
+    print(const JsonEncoder.withIndent('  ').convert(snapshot));
+
+    expect(snapshot['optionCounts'], <String, int>{'2': 121, '3': 165, '4': 5});
+    expect(snapshot['correctPositions'], <String, int>{
+      '0': 111,
+      '1': 116,
+      '2': 62,
+      '3': 2,
+    });
+    expect(snapshot['longestCorrectPositionRun'], 3);
+    expect(snapshot['lateWorldAuthenticity'], <String, int>{
+      'TABLE_ACTION_DECISION': 29,
+      'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
+    });
+    final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
+    expect(repairSnapshot['exactReplayCovered'], 291);
+    expect(repairSnapshot['sameSignalMapped'], 257);
+    expect(repairSnapshot['fallbackOnly'], 34);
+
+    final w7 = Act0ShellStateV1.sample.worldById('world_7');
+    final w7Surface = w7.lessons
+        .expand((lesson) => lesson.taskList)
+        .map(
+          (task) => <String>[
+            task.title,
+            task.runner.caption,
+            task.runner.hint,
+            task.runner.question,
+            task.runner.feedbackTitle,
+            task.runner.feedbackReason,
+            for (final step in task.runner.teachingSteps) step.title,
+            for (final step in task.runner.teachingSteps) step.body,
+            for (final step in task.runner.teachingSteps) ...step.focusLabels,
+          ].join(' '),
+        )
+        .join(' ')
+        .toLowerCase();
+    expect(w7Surface, isNot(contains('w7_combo_density_visible_card_removal')));
+
+    final firstTable = rows.singleWhere(
+      (row) => row.task.taskId == 'what_poker_is_theory',
+    );
+    expect(firstTable.task.runner.question, contains('have acted'));
+    expect(firstTable.task.runner.question, isNot(contains('hero seat')));
+
+    final value = rows.singleWhere(
+      (row) => row.task.taskId == 'w4_value_missed',
+    );
+    expect(value.task.runner.question, startsWith('What action best'));
+    expect(
+      value.task.runner.options.singleWhere((option) => option.isCorrect).id,
+      'bet_half',
+    );
+  });
+}
+
+List<_Row> _assessedRows() => <_Row>[
+  for (final world in Act0ShellStateV1.sample.worlds)
+    if (RegExp(r'^world_([1-9]|1[0-2])$').hasMatch(world.worldId))
+      for (final lesson in world.lessons)
+        for (final task in lesson.taskList)
+          if (task.runner.options.length >= 2 &&
+              task.runner.options.where((option) => option.isCorrect).length ==
+                  1)
+            _Row(world.worldId, lesson.lessonId, task),
+];
+
+_RepairRow _repairRow(_Row row) {
+  final intents = row.incorrectOptions
+      .map(
+        (option) => buildAct0RepairIntentV1(
+          sourceWorldId: row.worldId,
+          sourceLessonId: row.lessonId,
+          sourceTaskId: row.task.taskId,
+          runner: row.task.runner,
+          selectedOption: option,
+          mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        ),
+      )
+      .whereType<Act0RepairIntentV1>()
+      .toList(growable: false);
+  final sameSignal = intents.any(
+    (intent) =>
+        intent.mappingType != 'exact' && intent.targetTaskId != row.task.taskId,
+  );
+  return _RepairRow(
+    row.worldId,
+    exactReplay: true,
+    sameSignalMapped: sameSignal,
+  );
+}
+
+_LateWorldRow _lateWorldRow(_Row row) {
+  final copy = <String>[
+    row.task.title,
+    row.task.runner.caption,
+    row.task.runner.hint,
+    row.task.runner.question,
+    for (final option in row.task.runner.options) option.label,
+  ].join(' ').toLowerCase();
+  final action = RegExp(r'\b(fold|call|check|bet|raise|jam)\b').hasMatch(copy);
+  final table =
+      row.task.runner.table.boardCards.isNotEmpty ||
+      row.task.runner.table.heroCards.isNotEmpty ||
+      row.task.runner.table.actionTrail.isNotEmpty;
+  final category = action
+      ? 'TABLE_ACTION_DECISION'
+      : table
+      ? 'TABLE_CLUE_OR_RANGE_INFERENCE'
+      : 'CONCEPTUAL_OR_VERBAL_RECALL';
+  return _LateWorldRow(
+    category,
+    tableRequired: table,
+    actionConsequence: action,
+    terminologyOnly: !table && !action,
+  );
+}
+
+Map<String, int> _countBy<T>(Iterable<T> values, String Function(T) key) {
+  final result = <String, int>{};
+  for (final value in values) {
+    result.update(key(value), (count) => count + 1, ifAbsent: () => 1);
+  }
+  return Map<String, int>.fromEntries(
+    result.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+  );
+}
+
+int _longestRun(List<int> values) {
+  var longest = 0;
+  var current = 0;
+  int? previous;
+  for (final value in values) {
+    current = value == previous ? current + 1 : 1;
+    previous = value;
+    if (current > longest) longest = current;
+  }
+  return longest;
+}
+
+class _Row {
+  const _Row(this.worldId, this.lessonId, this.task);
+  final String worldId;
+  final String lessonId;
+  final Act0LessonTaskV1 task;
+  int get optionCount => task.runner.options.length;
+  int get correctIndex =>
+      task.runner.options.indexWhere((option) => option.isCorrect);
+  Iterable<Act0RunnerOptionV1> get incorrectOptions =>
+      task.runner.options.where((option) => !option.isCorrect);
+}
+
+class _RepairRow {
+  const _RepairRow(
+    this.worldId, {
+    required this.exactReplay,
+    required this.sameSignalMapped,
+  });
+  final String worldId;
+  final bool exactReplay;
+  final bool sameSignalMapped;
+  bool get fallbackOnly => !sameSignalMapped;
+}
+
+class _LateWorldRow {
+  const _LateWorldRow(
+    this.category, {
+    required this.tableRequired,
+    required this.actionConsequence,
+    required this.terminologyOnly,
+  });
+  final String category;
+  final bool tableRequired;
+  final bool actionConsequence;
+  final bool terminologyOnly;
+}

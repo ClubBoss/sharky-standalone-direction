@@ -42,13 +42,13 @@ silently converted to a closure; an opportunity is never counted as a defect.
 | CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/repair-memory projections; reproducible | Retention capability | PRODUCT_DEBT_CONFIRMED | `Act0LearningEvidenceRecordV1` has order/session but no event time; no due projection exists; same-session correct can clear active repair. `CURRENT_RELEASE_SCOPE`; repair family `durable retention and due recheck`. |
 | CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
 | CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | Receipt/error type owner; reproducible | AI personalization dependency | PRODUCT_DEBT_CONFIRMED | Current error types remain atom-based and cannot represent late-world misconceptions at needed granularity. `CURRENT_RELEASE_SCOPE`; `concept-specific error taxonomy`. |
-| CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | `learningPurpose` drives title/hint/feedback/theory title and `conceptFamilyId` is a focus label. Theory body is learner prompt. `CURRENT_RELEASE_SCOPE`; `W7 learner-surface authoring`. |
-| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Repair resolver; partly reproducible | Current route loop | CURRENT_SOURCE_VERIFICATION_REQUIRED | Existing matrix proves mapped families plus exact replay, but no current complete 291-row mapped/unmapped census exists. Required count: incorrect-capable, mapped, and W1-6/W7-12 percentages. `CURRENT_RELEASE_SCOPE`; `repair coverage census and completion`. |
-| CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | option inventory; `11715b50` | Assessed-row guard; reproducible | Current route curriculum | CURRENT_SOURCE_VERIFICATION_REQUIRED | 291-row fingerprint and option-count field exist, but no committed aggregate 2/3/4+ and checkpoint/repair distribution is recorded. `CURRENT_RELEASE_SCOPE`; `decision discrimination census`. |
-| CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; partly reproducible | Content-depth decision | PRODUCT_DEBT_CONFIRMED | Late route still contains conceptual/clue choices alongside actions; no current classification census proves decision dominance. `CURRENT_RELEASE_SCOPE`; `late-world decision-authenticity`. |
+| CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | CLOSED_FIXED | Learner-facing title, hint, feedback title, theory title, and focus labels now use intentional beginner copy. `learningPurpose` and `conceptFamilyId` remain internal authored metadata and the deterministic learner-surface guard rejects the leaked family id. |
+| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Repair resolver; reproducible | Current route loop | PRODUCT_DEBT_CONFIRMED | Complete canonical census: all 291 incorrect-capable rows have exact replay; 257 (88.3%) have a different same-signal target and 34 (11.7%) are exact-replay-only. W1-W6: 177/210 mapped (84.3%); W7-W12: 80/81 mapped (98.8%). Replay is not counted as same-signal repair. Next family: concept error and repair integrity. |
+| CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | option inventory; `11715b50` | Assessed-row guard; reproducible | Current route curriculum | PRODUCT_DEBT_CONFIRMED | Complete canonical census: 121/291 (41.6%) two-option, 165/291 (56.7%) three-option, and 5/291 (1.7%) four-option. Correct positions are 111/116/62/2 at indices 0/1/2/3; longest run is 3. Position balance alone does not establish discrimination. Next family: late-world decision authenticity. |
+| CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; reproducible | Content-depth decision | CLOSED_FALSE_POSITIVE | The canonical W9-W12 census finds 58 assessed rows: 29 table-action decisions and 29 table-clue/range inferences; all require visible table state and none classify as terminology-only recall. This does not prove broad curriculum quality, but it falsifies the asserted recall dominance. |
 | CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement; reproducible | Learning-claim integrity | PRODUCT_DEBT_CONFIRMED | Current algorithm sorts by `createdOrder`, compares first to last only, rejects duplicate order, has no time separation; early miss/success streak and late miss both retain these limitations. `CURRENT_RELEASE_SCOPE`; `transfer verdict policy`. |
-| CL-LRN-F09 | CONFIRMED_P3: inverted/negative prompts | W4 examples; `11715b50` | Content state owner; reproducible | Current curriculum | PRODUCT_DEBT_CONFIRMED | Canonical source retains `Which action misses value?` (`_world4ValueCheckMissRunner`) and analogous anti-action wording. `CURRENT_RELEASE_SCOPE`; `negative-frame rewrite`. |
-| CL-LRN-F10 | CONFIRMED_P3: W1 trivial/UI-referential items | hero badge question; `11715b50` | `_meetTableRunner`; reproducible | First-session learning | PRODUCT_DEBT_CONFIRMED | Current question asks which seat is hero while the explicitly visible hero/You marker reveals it; three choices improve guessing odds but not pedagogical discrimination. `CURRENT_RELEASE_SCOPE`; `first-table decision authenticity`. |
+| CL-LRN-F09 | CONFIRMED_P3: inverted/negative prompts | W4 examples; `11715b50` | Content state owner; reproducible | Current curriculum | CLOSED_FIXED | `w4_value_missed` now asks directly which action collects value from worse hands. It preserves the two-option decision, task id, correct option position, and repair identity while making `bet_half` the poker-correct positive answer. |
+| CL-LRN-F10 | CONFIRMED_P3: W1 trivial/UI-referential items | hero badge question; `11715b50` | `_meetTableRunner`; reproducible | First-session learning | CLOSED_FIXED | First-table assessments now require preflop-order reading and learner-identity-versus-seat-role inference; they no longer ask learners merely to repeat the visible You/Hero badge. Task ids and option positions remain compatible. |
 | CL-LRN-F11 | CONFIRMED_P3: one correct clears repeat-miss family | repair memory; `11715b50` | Repair-memory projection; reproducible | Retention/selection | PRODUCT_DEBT_CONFIRMED | `resolutionState` is cleared whenever latest record is correct despite preserved `incorrectCount`; future active selection excludes it. `CURRENT_RELEASE_SCOPE`; `durable retention and due recheck`. |
 | CL-LRN-F12 | CONFIRMED_P4: naming/alias hazards | alias runner names; `11715b50` | State authoring names | Maintenance risk | CLOSED_INTENTIONAL | Not learner-visible by itself; `POST_HUMAN_TECHNICAL_RISK` with owner-aligned extraction/renaming only when touching content. |
 | CL-LRN-F13 | HUMAN hypothesis: W8-W9 jargon ramp | static content; `11715b50` | W8-W9 content | Human evidence | CURRENT_SOURCE_VERIFICATION_REQUIRED | Source confirms terms but not novice tolerance, latency, or quitting; preserve as `HUMAN_QA_REQUIRED`. |
@@ -84,12 +84,24 @@ separation, and session payoff are supported. Its blanket candidate-freeze and
 
 ## Freeze decision and next work
 
-Counts: Antigravity = 2 fixed, 4 verified/intentional source closures, 3 Human
-requirements, 6 future/out-of-scope capabilities; Claude = 8 confirmed current
-debt, 2 current verification censes, 2 Human requirements, 4 future/risk or
-opportunity; Codex = 6 fixed, 1 verified pass, 2 accepted risks, 1 Human
-requirement. Current confirmed product debt is CL-LRN-F01/F02/F03/F04/F07/F08/
-F09/F10/F11 (F05/F06 remain required quantitative verification, not closure).
+Corrected Claude row-inventory counts are **9 confirmed product debts, 2
+quantitative censuses, 2 Human requirements, and 3 future/risk/opportunity
+rows**. The old `8 / 2 / 2 / 4` aggregate was a count typo. These are
+factual-disposition counts, not mutually exclusive scope classes.
+
+After Learning Content Integrity v1A, the factual Claude disposition is **7
+current product debts** (F01/F02/F03/F05/F06/F08/F11), **3 CLOSED_FIXED**
+(F04/F09/F10), **1 CLOSED_FALSE_POSITIVE** (F07), **2 Human
+requirements** (F13/F14), and **3 future/risk/opportunity**. The mutually
+exclusive scope classes remain: **7 current-release product-debt rows**
+(F01/F02/F03/F05/F06/F08/F11), **2 Human-only rows** (F13/F14), **1
+post-Human technical-risk row** (F12), **2 strategic-opportunity rows**
+(F15/F16), and **4 closed current-source rows** (F04/F07/F09/F10). Human
+uncertainty is not counted as factual source closure.
+
+Current confirmed product debt is CL-LRN-F01/F02/F03/F05/F06/F08/F11. F02
+remains open because no authority supplies a minimum W7 lesson count; this
+wave does not invent one.
 
 Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
 Novice Proof, or AI Personalization work starts from this record. The selected

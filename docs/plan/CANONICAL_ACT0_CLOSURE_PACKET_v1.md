@@ -10,6 +10,13 @@ Status: HISTORICAL_CANDIDATE_FREEZE_RECORD — superseded for original-package a
 
 Baseline: `d19ffad4a5bd9b5fb5a97efa1a5af3b1da19ac5a` on `main`.
 
+Learning Content Integrity v1A supersedes this packet's W1-W12 content
+fingerprint reference: the current 291-row fingerprint and row-change
+adjudication are in `W1_W12_ASSESSMENT_FINGERPRINT_ADJUDICATION_v1.md`; the
+original-audit dispositions and census outcomes are in
+`ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. This historical packet must not
+be read as closing the remaining repair-coverage or option-discrimination debt.
+
 ## Scope and method
 
 This packet proves only the canonical Act0 release route. It neither claims

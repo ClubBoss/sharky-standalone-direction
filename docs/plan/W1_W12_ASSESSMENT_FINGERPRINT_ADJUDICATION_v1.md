@@ -1,6 +1,7 @@
 # W1-W12 Assessment Fingerprint Adjudication v1
 
-Status: CURRENT_AND_VALID at `d19ffad4a5bd9b5fb5a97efa1a5af3b1da19ac5a`.
+Status: CURRENT_AND_VALID after Learning Content Integrity v1A (published-head
+field is updated only by the publication commit).
 
 ## Authority and method
 
@@ -32,6 +33,25 @@ data. Stage A (`d19ffad4`) changes the runner shell and its geometry test, not
 this input, so it is the immutable product baseline for this adjudication.
 
 ## Complete row result
+
+## Learning Content Integrity v1A adjudication
+
+The canonical extractor still returns 291 rows. The new source hash is
+`dc3a7aad3669ac5a8fba0f2801eb324e29a861f25ac1c9ca3efabaf6007fcd8d` and
+the content fingerprint is
+`433136896f6d9841e74f123a55ca2e4c8ea388412c824e7f661e1e7afe7a9803`.
+
+Changed learner-visible rows are limited to the W1 first-table identity
+assessments (`what_poker_is_theory`, `what_poker_is_find_hero`), W4 value
+assessment (`w4_value_missed`), and the four W7 visible-card rows. W1 changes
+replace badge matching with action-order and identity-versus-position reading;
+W4 replaces an inverted value question with the direct poker action; W7
+replaces authored metadata on learner surfaces with intentional copy. There is
+no task-id, option-count, correct-position, repair-focus, or route-transition
+change. W4's correct option changes from `check` to poker-correct `bet_half`;
+that is the admitted content correction, not accidental drift. The contract
+guard re-runs every row and the separate census records the option-position
+invariants.
 
 Both baselines extract 291 rows. 286 serialized row payloads are identical;
 five changed payloads are all in `world_1/what_poker_is`. Their old/new row
