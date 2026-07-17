@@ -1030,6 +1030,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.repairSessionSummaryLines = const <String>[],
+    this.feedbackForwardCtaLabel,
+    this.suppressFeedbackRepairFocus = false,
     this.framingProfile = Act0RunnerFramingProfileV1.neutral,
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
     this.relaxTheoryAdvanceLock = false,
@@ -1067,6 +1069,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final List<String> repairSessionSummaryLines;
+  final String? feedbackForwardCtaLabel;
+  final bool suppressFeedbackRepairFocus;
   final Act0RunnerFramingProfileV1 framingProfile;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
   final bool relaxTheoryAdvanceLock;
@@ -2593,6 +2597,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       repairResultReceiptLine: widget.repairResultReceiptLine,
       repairOutcomeProofLine: widget.repairOutcomeProofLine,
       repairSessionSummaryLines: widget.repairSessionSummaryLines,
+      forwardCtaLabel: widget.feedbackForwardCtaLabel,
+      suppressRepairFocus: widget.suppressFeedbackRepairFocus,
       onBack: null,
       rapidMode: widget.rapidReviewMode,
       streamlinedDirectDecisionFeedback: isAccessibilityFlow,
@@ -6240,6 +6246,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.repairSessionSummaryLines = const <String>[],
+    this.forwardCtaLabel,
+    this.suppressRepairFocus = false,
     this.onBack,
     this.rapidMode = false,
     this.streamlinedDirectDecisionFeedback = false,
@@ -6268,6 +6276,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final List<String> repairSessionSummaryLines;
+  final String? forwardCtaLabel;
+  final bool suppressRepairFocus;
   final VoidCallback? onBack;
   final bool rapidMode;
   final bool streamlinedDirectDecisionFeedback;
@@ -6279,7 +6289,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final isWrong = quality == Act0FeedbackQualityV1.wrong;
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
     final isRepairFocusState =
-        !rapidMode && (repairReasonLine?.trim().isNotEmpty ?? false);
+        !rapidMode &&
+        !suppressRepairFocus &&
+        (repairReasonLine?.trim().isNotEmpty ?? false);
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
     final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
@@ -6401,12 +6413,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReason = repairReasonLine?.trim() ?? '';
-    final visibleRepairReasonLines = _visibleRepairReasonLinesV1(
-      quality: quality,
-      signalProof: signalProof,
-      repairReasonLine: repairReason,
-      repairReceiptLine: repairReceiptLine,
-    );
+    final visibleRepairReasonLines = suppressRepairFocus
+        ? const <String>[]
+        : _visibleRepairReasonLinesV1(
+            quality: quality,
+            signalProof: signalProof,
+            repairReasonLine: repairReason,
+            repairReceiptLine: repairReceiptLine,
+          );
     final visibleRepairSessionSummaryLines = [
       for (final line in repairSessionSummaryLines)
         if (line.trim().isNotEmpty) line.trim(),
@@ -6492,13 +6506,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     : Act0ShellTokensV1.compactCtaHeight,
               ),
               child: Text(
-                hasProofEarnedState
-                    ? 'Save this read'
-                    : isWrong || isRepairFocusState
-                    ? isExactReplayRepair
-                          ? 'Try this spot again'
-                          : 'Try same clue'
-                    : 'Next hand',
+                forwardCtaLabel ??
+                    (hasProofEarnedState
+                        ? 'Save this read'
+                        : isWrong || isRepairFocusState
+                        ? isExactReplayRepair
+                              ? 'Try this spot again'
+                              : 'Try same clue'
+                        : 'Next hand'),
               ),
             ),
           ),

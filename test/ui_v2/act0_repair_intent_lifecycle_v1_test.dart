@@ -299,7 +299,7 @@ void main() {
   );
 
   testWidgets(
-    'placement board-card miss repairs before its diagnostic recheck',
+    'placement board-card miss preserves the repair intent and finishes the quick check',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
       await _pumpPlacementDiagnosticHost(tester, telemetrySink: sink);
@@ -312,6 +312,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await _answerPlacementCorrectly(tester);
+      expect(find.text('Correct read'), findsOneWidget);
+      expect(find.text('Next check'), findsOneWidget);
+      expect(find.text('Try same clue'), findsNothing);
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
       );
@@ -322,7 +325,10 @@ void main() {
         find.byKey(const Key('act0_shell_option_hero_private_cards')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Try same clue'), findsOneWidget);
+      expect(find.text('Missed clue'), findsOneWidget);
+      expect(find.text('Repair focus'), findsNothing);
+      expect(find.text('Try same clue'), findsNothing);
+      expect(find.text('Next check'), findsOneWidget);
       expect(
         _openRepairIntentPayload(tester, 'what_poker_is_table_read_transfer'),
         isNotNull,
@@ -341,53 +347,36 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        sink.events.where((event) => event.name == 'repair_entered'),
-        hasLength(1),
-      );
-      expect(_activeTaskId(tester), 'cards_ranks_suits_board_count');
-      expect(
-        sink.events.where((event) => event.name == 'repair_entered'),
-        hasLength(1),
-      );
-      expect(
-        sink.events
-            .where(
-              (event) =>
-                  event.name == 'task_shown' &&
-                  event.fields['taskId'] == 'cards_ranks_suits_board_count',
-            )
-            .length,
-        1,
-      );
-
-      await _answerPlacementCorrectly(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      );
-      await tester.pumpAndSettle();
-      expect(_activeTaskId(tester), 'what_poker_is_table_read_transfer');
-      expect(
-        sink.events.where((event) => event.name == 'recheck_started'),
-        hasLength(1),
-      );
-
-      await _answerPlacementCorrectly(tester);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      );
-      await tester.pumpAndSettle();
-      expect(
         find.text('No bet faces Hero. Which action is free?'),
         findsOneWidget,
       );
       expect(
-        sink.events.where((event) => event.name == 'repair_completed'),
-        hasLength(1),
+        sink.events.where((event) => event.name == 'repair_entered'),
+        isEmpty,
       );
       expect(
-        sink.events.where((event) => event.name == 'recheck_completed'),
-        hasLength(1),
+        sink.events.where((event) => event.name == 'recheck_started'),
+        isEmpty,
       );
+      expect(
+        find.text('Count private cards, board cards, and pot once.'),
+        findsNothing,
+      );
+
+      await _answerPlacementCorrectly(tester);
+      expect(find.text('Correct read'), findsOneWidget);
+      expect(find.text('See my start'), findsOneWidget);
+      expect(find.text('Try same clue'), findsNothing);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_placement_result')),
+        findsOneWidget,
+      );
+      expect(find.text('Rusty beginner'), findsOneWidget);
       expect(
         sink.events
             .where(
@@ -400,6 +389,47 @@ void main() {
       );
     },
   );
+
+  testWidgets('placement uncertainty uses the same forward receipt contract', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpPlacementDiagnosticHost(tester, telemetrySink: sink);
+
+    await _answerPlacementQuestion(tester, 'friends');
+    await _answerPlacementQuestion(tester, 'rules');
+    await tester.tap(
+      find.byKey(const Key('act0_shell_placement_start_diagnostic')),
+    );
+    await tester.pumpAndSettle();
+
+    await _answerPlacementCorrectly(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_shell_option_not_sure_yet')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Repair focus'), findsNothing);
+    expect(find.text('Try same clue'), findsNothing);
+    expect(find.text('Next check'), findsOneWidget);
+    final choice = sink.events.lastWhere(
+      (event) => event.name == 'user_choice',
+    );
+    expect(choice.fields['choiceId'], 'not_sure_yet');
+    expect(choice.fields['result_classification'], 'suboptimal');
+
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('No bet faces Hero. Which action is free?'),
+      findsOneWidget,
+    );
+    expect(
+      sink.events.where((event) => event.name == 'repair_entered'),
+      isEmpty,
+    );
+  });
 }
 
 Future<void> _pumpPlacementDiagnosticHost(
