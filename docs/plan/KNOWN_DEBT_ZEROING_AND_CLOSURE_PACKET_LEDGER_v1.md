@@ -43,9 +43,9 @@ than counting each auditor wording again.
 | KDZ-F04 | ALI-SHARED-002 / P3 | World-plan documentation off by one | Audit and active SSOT correction | Historical doc drift; `DG-CONTENT` | `c9503dea` | curriculum/content | CLOSED_FIXED | None |
 | KDZ-F05 | ALI-SHARED-003, compact audits / P1 | Fourth option, safe-area, and compact decision reachability | Active shell runner and focused compact guards | Superseded by shared lower-stage contract; `DG-COMPACT` | `fe57219e`, LSCS `2e86b4c`; supported-phone state tests | compact/accessibility | CLOSED_FIXED | None |
 | KDZ-F06 | ALI-NATIVE-SHARED-001 / P3 | Dormant `_preflopFrameworkLessons` list | No canonical-route consumer | Non-route maintenance; `DG-NONCANONICAL` | Revision 4 route inventory | route/release | CLOSED_NOT_APPLICABLE | Not current release scope |
-| KDZ-F07 | Pre-Human DCA-004/008 / P2/P3 | Wording-overlap and duplicate-prompt provenance concern | Later canonical content closure and source guards; no current runtime reproduction | Historical evidence gap; `DG-CONTENT` | W1-W12 closure ledgers and current route contracts | curriculum/content | CLOSED_VERIFIED_PASS | None |
-| KDZ-F08 | Pre-Human DCA-007 / P2 | Feedback condition contrast is partial | Current feedback/repair source and ordinary-learning contract | Same feedback family; `DG-REPAIR` | `d9ac3ff3`, `288c1e5e`, focused repair evidence | decision/feedback | CLOSED_FIXED | None |
-| KDZ-F09 | Pre-Human DCA-005/006 / P2 | W10-W12 transfer ratio and reused table context | W1-W12 closure scope; no active Act0 release regression | Future curriculum architecture; `DG-FUTURE` | Explicitly excluded from release slice | curriculum/content | CLOSED_NOT_APPLICABLE | W5+ / broader curriculum, outside release scope |
+| KDZ-F07 | Pre-Human DCA-001/004/008 / P0/P2/P3 | Assessment order, wording-overlap, and duplicate-prompt provenance | Grouped/correctness guards pass, but the current 291-row fingerprint guard fails after `bbce4caf` source changes | Historical content family; `DG-CONTENT` | `w10_w12_grouped_content_repair_and_closure_v1.md`; expected `d57fd20…`, actual `ee91c4…` | curriculum/content | PROOF_GAP_CONFIRMED | Re-adjudicate current 291-row source and refresh the guard only after proof |
+| KDZ-F08 | Pre-Human DCA-007 / P2 | Feedback condition contrast is partial | Grouped closure names the prioritized changed rows and contrast policy | Same feedback family; `DG-REPAIR` | grouped closure §10 and current grouped-repair guard | decision/feedback | CLOSED_FIXED | Broader felt nuance is Human-only, not a current defect |
+| KDZ-F09 | Pre-Human DCA-005/006/010 / P2/P4 | W10-W12 transfer ratio, context reuse, and felt credibility | Canonical W10-W12 route is in scope; these claims require future/Human evidence | Future/Human uncertainty; `DG-FUTURE` | Explicit release-scope boundary and Human-QA-only records | curriculum/content | CLOSED_NOT_APPLICABLE | Future content depth or Human evidence, outside current defect scope |
 | KDZ-F10 | Pre-Human tablet welcome / P1 | Tablet welcome layout concern | Phone-only acceptance policy; tablet optional | Unsupported device class; `DG-DEVICE` | Master Plan phone policy | compact/accessibility | CLOSED_NOT_APPLICABLE | Tablet remains non-blocking |
 | KDZ-F11 | Pre-Human practice repair density / P2 | Practice repair composition concern | Canonical repair surface and compact tests | Superseded shared lower stage; `DG-COMPACT` | `5afd43ec`, LSCS `2e86b4c` | repair/recheck | CLOSED_FIXED | None |
 | KDZ-F12 | Pre-Human play proof fidelity / P3 | Capture fidelity, not demonstrated product behavior | Evidence lane rather than learner route | Evidence-only; `DG-PROOF` | Canonical test/evidence manifest is current at baseline | proof/tooling | CLOSED_VERIFIED_PASS | Closure Packet refresh is separately selected below |
@@ -82,7 +82,7 @@ proof are present at this baseline.
 | --- | --- | --- | --- | --- | --- |
 | onboarding / placement | Implemented | deterministic and owner evidence | High | CLOSED_FULLY_PROVEN | None |
 | first-session route | Implemented | route contracts and focused tests | High | CLOSED_FULLY_PROVEN | None |
-| curriculum / content truth | Implemented | source, route, and closure ledgers | High | CLOSED_FULLY_PROVEN | None |
+| curriculum / content truth | Implemented | grouped/correctness guards pass; 291-row fingerprint stale | Medium | IMPLEMENTED_PROOF_INCOMPLETE | W1-W12 assessment-fingerprint re-adjudication |
 | decision / feedback | Implemented | focused state tests and owner evidence | High | CLOSED_FULLY_PROVEN | None |
 | repair / recheck | Implemented | lifecycle and Review replay evidence | High | CLOSED_FULLY_PROVEN | None |
 | Review / recovery | Implemented | recovery replay and state ownership | High | CLOSED_FULLY_PROVEN | None |
@@ -100,7 +100,7 @@ nor assert a learner-facing regression.
 
 | Rank | Family | Debt type | Evidence and EV | Why it waits or is selected |
 | --- | --- | --- | --- | --- |
-| 1 | Closure Packet Completion v1 | proof consolidation | Required before frozen-candidate and Final Deep Independent Audit; low owner risk and deterministic | SELECTED: it closes the only remaining release-scope proof gap without inventing a defect |
+| 1 | W1-W12 assessment-fingerprint re-adjudication | proof consolidation | Current global guard has expected `d57fd20…`, actual `ee91c4…` after `bbce4caf` | SELECTED: it is the explicit freeze blocker |
 | 2 | Human Novice Proof | external validation | High eventual learner value, but protocol itself requires a frozen candidate and completed packets | Wait: downstream gate; do not start it in this mission |
 | 3 | Legacy compatibility/import maintenance | noncanonical maintenance | Low current learner impact; active capsule marks it unrelated debt | Wait: outside the release scope and would dilute convergence |
 
@@ -155,11 +155,11 @@ Proof, or AI Personalization implementation.
 | KDZ-14 Closed telemetry findings | CLOSED_FIXED | KDZ-F25/F26 |
 | KDZ-15 Modern Table non-reopening | CLOSED_NOT_APPLICABLE | KDZ-F27 |
 | KDZ-16 Closure Packet matrix | CLOSED_VERIFIED_PASS | Matrix above |
-| KDZ-17 Product/proof separation | CLOSED_VERIFIED_PASS | Product debt zero; proof task selected |
+| KDZ-17 Product/proof separation | PROOF_GAP_CONFIRMED | Product debt unproven; fingerprint proof task selected |
 | KDZ-18 Top-3 comparison | CLOSED_VERIFIED_PASS | Comparison above |
-| KDZ-19 Next Top-1 selection | CLOSED_VERIFIED_PASS | Closure Packet Completion v1 |
+| KDZ-19 Next Top-1 selection | PROOF_GAP_CONFIRMED | W1-W12 assessment-fingerprint re-adjudication |
 | KDZ-20 Documentation consistency | CLOSED_VERIFIED_PASS | Active capsule and Master Plan updated with this ledger |
 | KDZ-21 Commit and push | CLOSED_VERIFIED_PASS | This ledger's publication commit |
 
-Final Deep Independent Audit remains blocked until the selected Closure Packet
-Completion v1 has terminally closed its two proof-consolidation rows.
+Final Deep Independent Audit remains blocked until the assessment-fingerprint
+re-adjudication closes the current curriculum/content proof gap.

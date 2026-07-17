@@ -95,6 +95,12 @@ decision, feedback, repair, recheck, payoff, and session completion/exit.
 Premium Motion remains deferred. The missing legacy route-import test remains
 unrelated debt.
 
+**Closure Packet Completion v1 — BLOCKED_BY_PROOF_GAP.** The baseline-pinned
+index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. A current 291-row
+assessment-fingerprint guard fails after `bbce4caf` changed assessed source;
+the expected fingerprint is stale. Final Deep Independent Audit and Human
+Novice Proof remain blocked pending bounded fingerprint re-adjudication.
+
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
 repair program in `docs/_reviews/w1_w6_grouped_repair_program_v1.md` and the
