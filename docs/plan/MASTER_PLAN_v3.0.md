@@ -154,14 +154,17 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   repair-item cardinality defect is closed, HNP debug-only local JSONL export
   is admitted, and owner live proof established generic placement telemetry plus
   the ordinary repair/recheck lifecycle. It creates no remaining telemetry debt.
-- The next active bounded wave is **Learning Surface Composition Stability v1**.
-  It is a P1 presentation-contract exception supported by live owner evidence:
-  theory, decision, feedback, repair, recheck, and repair-landed states shift
-  the table/teaching geometry and can create dead bands, density swings, or CTA
-  reachability risk. It must repair stable anchors and bounded overflow in the
-  Act0 learning surface only; it is not visual redesign, Modern Table work,
-  mascot/motion work, or a new product layer. Human Novice Proof remains a
-  later external gate after this deterministic contract is stable.
+- Learning Surface Composition Stability v1 is CLOSED and published at
+  `2e86b4c35d7cf45462c84b020d5b448ebf6b722c`. It unified the canonical
+  learning scene across theory, decision, feedback, repair, recheck, and
+  repair-landed states; stable anchors, bounded Dynamic Type, and CTA
+  reachability are closed. The corrected terminal verdict is
+  `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`.
+- The next bounded convergence wave is **Closure Packet Completion v1**. It is
+  proof consolidation only: create the baseline-pinned index for release/build
+  tooling and end-to-end completion without reopening closed product surfaces.
+  See `KNOWN_DEBT_ZEROING_AND_CLOSURE_PACKET_LEDGER_v1.md`. Final Deep
+  Independent Audit and Human Novice Proof remain later gates.
 
 ## Product 100
 

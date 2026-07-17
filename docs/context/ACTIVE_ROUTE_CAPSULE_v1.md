@@ -59,11 +59,11 @@ Verified active route artifact:
 `docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
 
-## Post-Wave-2E Reconciliation — 2026-07-18
+## Post-LSCS Known-Debt Reconciliation — 2026-07-18
 
-Verified published HEAD: `fefb7c3696f21b818cfc42b96fba563b6b687246`.
+Verified published HEAD: `2e86b4c35d7cf45462c84b020d5b448ebf6b722c`.
 
-**Wave 2E — CLOSED AND ADMITTED.** `fix(telemetry): export complete HNP trace
+**Wave 2E — CLOSED_FIXED.** `fix(telemetry): export complete HNP trace
 JSONL` closed the baseline repair-item cardinality defect and added an opt-in,
 non-release HNP collector that replaces a local application-support JSONL file
 with ordered complete events. The owner live proof contains 52 valid JSONL
@@ -74,25 +74,22 @@ account, or participant-identity path was added. A fresh analyze/graphify retry
 later stalled locally after prior green runs and no later Dart change; this is
 tooling evidence context, not product debt.
 
-**Current active task: Learning Surface Composition Stability v1 — ADMITTED.**
-Live owner evidence shows cross-state geometry instability in the canonical
-Act0 sequence (theory, decision, feedback, repair, recheck, and Repair landed):
-table anchoring and teaching-surface starts vary, lower density/dead bands vary,
-and mixed-step counters alter the apparent vertical contract. This expands the
-reported ordinary-learning lower-surface dead-band concern into a bounded
-presentation-stability defect. The wave owns only stable table anchoring,
-one teaching-surface boundary, intrinsic short content, bounded long-content
-overflow, CTA reachability, and compact/tall/large-phone plus supported
-Dynamic-Type contracts. It does not authorize visual redesign, Modern Table,
-motion, mascot, curriculum, telemetry expansion, AI/personalization expansion,
-or tablet work. Human Novice Proof waits for this deterministic contract.
+**Learning Surface Composition Stability v1 — CLOSED_FIXED.**
+`2e86b4c` removed the theory-only renderer and unifies the canonical learning
+scene across theory, decision, feedback, repair, recheck, and repair-landed
+states. It closes stable table anchoring, one teaching-surface boundary,
+bounded Dynamic-Type overflow, and reachable continuation controls across
+compact, nominal, large, and 1.4x text evidence. The corrected terminal verdict
+is `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`, not the stale Wave 2E
+label. The authoritative release-scope disposition ledger is
+`docs/plan/KNOWN_DEBT_ZEROING_AND_CLOSURE_PACKET_LEDGER_v1.md`.
 
 ## Current Active Phase
 
-**AI Personalization Layer v1 remains the strategic stage.** Its immediate
-implementation sequence is temporarily preempted by the admitted Learning
-Surface Composition Stability v1 P1 contract repair above. After that bounded
-repair closes, resume End-to-End Alpha capability expansion. Telemetry stays
+**AI Personalization Layer v1 remains the strategic stage.** Before its next
+capability wave, Closure Packet Completion v1 must consolidate the remaining
+release/build and end-to-end proof index. Final Deep Independent Audit, Human
+Novice Proof, and AI Personalization implementation remain downstream. Telemetry stays
 limited to the learning loop: user choice, correctness, error type, time to
 decision, feedback, repair, recheck, payoff, and session completion/exit.
 Premium Motion remains deferred. The missing legacy route-import test remains
