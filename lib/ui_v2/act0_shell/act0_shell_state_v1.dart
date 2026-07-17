@@ -4225,7 +4225,7 @@ final _betPurposePriceLessons = <Act0LessonCardV1>[
         runner: _world4ValueCheckMissRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _world4ValueCheckMissRunner.options,
-            correctOptionId: 'check',
+            correctOptionId: 'bet_half',
             correctIndex: 1,
           ),
         ),
@@ -5475,7 +5475,7 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
 final _w7VisibleCardComboDensityLesson = Act0LessonCardV1(
   lessonId: 'range_thinking_lite_combo_density',
   title: 'Visible Cards Change Ranges',
-  subtitle: act0W7VisibleAceHiddenTaskSpecsV1.first.learningPurpose,
+  subtitle: 'See how shown cards narrow the hands someone can still hold.',
   state: Act0LessonStateV1.locked,
   phaseLabel: 'Visible Cards Change Ranges',
   primaryCtaLabel: 'Locked',
@@ -5515,7 +5515,7 @@ List<Act0LessonTaskV1> _w7VisibleCardTasksFromSpecsV1() {
     tasks.add(
       Act0LessonTaskV1(
         taskId: spec.taskId,
-        title: spec.learningPurpose,
+        title: _w7LearnerTaskTitleV1(spec.taskId),
         phase: phase,
         runner: _w7VisibleCardRunnerFromSpecV1(spec, phase: phase),
         rewardXp: isTransfer ? 12 : 10,
@@ -5555,7 +5555,7 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     lessonSubtitle: 'Visible Cards Change Ranges',
     phase: phase,
     caption: spec.boardContext,
-    hint: spec.learningPurpose,
+    hint: _w7LearnerHintV1(spec.taskId),
     question: spec.learnerPrompt,
     options: <Act0RunnerOptionV1>[
       for (final choiceId in spec.choiceIds)
@@ -5567,13 +5567,13 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
           quality: choiceId == spec.expectedChoiceId
               ? Act0FeedbackQualityV1.correct
               : Act0FeedbackQualityV1.wrong,
-          feedbackTitle: spec.learningPurpose,
+          feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
           feedbackReason: choiceId == spec.expectedChoiceId
               ? spec.feedbackReason
               : spec.incorrectFeedback[choiceId]!,
         ),
     ],
-    feedbackTitle: spec.learningPurpose,
+    feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
     table: _w6ComboCountsIntroRunner.table.copyWith(
       centerLabel: spec.boardContext,
@@ -5581,13 +5581,42 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
-        title: spec.learningPurpose,
+        title: _w7LearnerTheoryTitleV1(spec.taskId),
         body: spec.learnerPrompt,
-        focusLabels: <String>[spec.boardContext, spec.conceptFamilyId],
+        focusLabels: <String>[spec.boardContext, 'What hands can still fit?'],
       ),
     ],
   );
 }
+
+String _w7LearnerTaskTitleV1(String taskId) => switch (taskId) {
+  'visible_ace_combo_reduction_intro' => 'One ace is already out',
+  'visible_king_combo_reduction_intro' => 'One king is already out',
+  'paired_board_texture_lite_intro' => 'Read the paired board',
+  'visible_card_combo_density_transfer_check' => 'Use the same table clue',
+  _ => 'Read the visible cards',
+};
+
+String _w7LearnerHintV1(String taskId) => switch (taskId) {
+  'paired_board_texture_lite_intro' =>
+    'Two sevens are already on the board. Start from what is still possible.',
+  'visible_card_combo_density_transfer_check' =>
+    'A shown rank cannot also be in a private hand.',
+  _ => 'A shown card cannot also be in a private hand.',
+};
+
+String _w7LearnerFeedbackTitleV1(String taskId) => switch (taskId) {
+  'paired_board_texture_lite_intro' => 'Paired-board read.',
+  'visible_card_combo_density_transfer_check' => 'Carry the clue forward.',
+  _ => 'Count what is still possible.',
+};
+
+String _w7LearnerTheoryTitleV1(String taskId) => switch (taskId) {
+  'paired_board_texture_lite_intro' => 'A pair on the board changes the count',
+  'visible_card_combo_density_transfer_check' =>
+    'The same clue works across boards',
+  _ => 'Shown cards change the possible hands',
+};
 
 final _stackDepthRiskLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
@@ -7470,44 +7499,45 @@ const _meetTableRunner = Act0RunnerStateV1(
   beatIndex: 1,
   beatCount: 8,
   phase: Act0LessonPhaseV1.theory,
-  caption: 'You are always the hero seat at the bottom.',
-  hint: 'Button, blinds, and your seat stay visible.',
-  question: 'Which seat is the hero seat?',
+  caption: 'Your cards are at the bottom. Follow the action around the table.',
+  hint:
+      'Before the flop, action moves from early seats toward BTN, then the blinds.',
+  question: 'UTG, HJ, and CO have acted before the flop. Which seat acts next?',
   options: <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'top',
-      label: 'Top seat',
+      label: 'UTG',
       seatId: 'utg',
       isCorrect: false,
-      preferredLabel: 'Bottom seat',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close call.',
-      feedbackReason: 'The hero marker is at the bottom seat in this lesson.',
+      feedbackReason: 'UTG acts before HJ, CO, and BTN in preflop order.',
     ),
     Act0RunnerOptionV1(
       id: 'bottom',
-      label: 'Bottom seat',
+      label: 'BTN (your seat)',
       seatId: 'btn',
       isCorrect: true,
-      preferredLabel: 'Bottom seat',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Hero seat found!',
-      feedbackReason: 'The hero marker shows your seat at the bottom.',
+      feedbackTitle: 'Action order found!',
+      feedbackReason: 'After UTG, HJ, and CO, BTN acts before SB and BB.',
     ),
     Act0RunnerOptionV1(
       id: 'random',
-      label: 'Random seat',
+      label: 'BB',
       seatId: 'hj',
       isCorrect: false,
-      preferredLabel: 'Bottom seat',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
-      feedbackReason: 'Your seat is marked by the hero badge, not random.',
+      feedbackReason: 'BB acts after BTN preflop, so it is not next here.',
     ),
   ],
   feedbackTitle: 'Sharp read.',
   feedbackReason:
-      'The hero marker shows your seat. The dealer button moves around the table.',
+      'The order around the table matters: BTN acts after CO and before the blinds preflop.',
   primaryCtaLabel: 'Continue',
   nextLessonId: 'what_you_can_do',
   returnTarget: 'learn',
@@ -7593,8 +7623,7 @@ const _meetTableRunner = Act0RunnerStateV1(
           'BTN is your button seat. SB and BB are the blind seats. UTG, HJ, and CO are the other positions.',
       focusSeatIds: <String>['btn', 'hj', 'sb', 'bb'],
       focusLabels: <String>['Hero', 'Opponents'],
-      identityTeachingSemantics:
-          Act0TableIdentityTeachingSemanticsV1.position,
+      identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
     ),
     Act0TeachingStepV1(
       title: 'The goal is the pot.',
@@ -10762,44 +10791,45 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 1,
   beatCount: 5,
-  caption: 'You are at the bottom seat in this first example.',
-  hint: 'Find You, then notice BTN, the dealer position for this hand.',
-  question: 'Which marker identifies you?',
+  caption: 'Your cards are at the bottom in this first example.',
+  hint: 'Read the seats in preflop order: early seats, BTN, then the blinds.',
+  question:
+      'UTG, HJ, and CO have acted. Which seat acts next before the blinds?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'top',
-      label: 'Top seat',
+      label: 'UTG',
       seatId: 'utg',
       isCorrect: false,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Look for You.',
-      feedbackReason: 'The You badge marks your seat in this example.',
+      feedbackTitle: 'Start with the order.',
+      feedbackReason: 'UTG acts before HJ, CO, and BTN preflop.',
     ),
     Act0RunnerOptionV1(
       id: 'bottom',
-      label: 'You badge',
+      label: 'BTN (your seat)',
       seatId: 'btn',
       isCorrect: true,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Your seat found!',
-      feedbackReason: 'The You badge marks your seat at the bottom.',
+      feedbackTitle: 'Preflop order found!',
+      feedbackReason: 'BTN acts after CO and before SB and BB in this spot.',
     ),
     Act0RunnerOptionV1(
       id: 'random',
-      label: 'Random seat',
+      label: 'BB',
       seatId: 'hj',
       isCorrect: false,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Nearly there.',
-      feedbackReason: 'Your seat is marked You, not by a random position.',
+      feedbackTitle: 'One seat later.',
+      feedbackReason: 'BB acts after BTN preflop, so it is not next here.',
     ),
   ],
   feedbackTitle: 'Sharp read.',
   feedbackReason:
-      'You identifies your seat. BTN is the dealer position for this hand.',
+      'You identifies the learner; BTN is the seat role that acts after CO here.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'One loop first.',
@@ -10824,43 +10854,46 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
   lessonSubtitle: 'Read one spot, answer once, and see why.',
   beatIndex: 2,
   beatCount: 5,
-  caption: 'Your seat is marked You.',
-  hint: 'Start every hand by finding your cards and the You badge.',
-  question: 'Which seat has the You badge?',
+  caption: 'You are on BTN in this spot; the seat role can change next hand.',
+  hint: 'You is the learner. BTN is this hand\'s position label.',
+  question: 'Which label could change next hand while the player is still you?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'top',
-      label: 'Top seat',
+      label: 'You',
       seatId: 'utg',
       isCorrect: false,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Look for You.',
-      feedbackReason: 'The You badge marks your seat at the bottom.',
+      feedbackTitle: 'You stays with the learner.',
+      feedbackReason: 'You identifies the player, not the changing seat role.',
     ),
     Act0RunnerOptionV1(
       id: 'bottom',
-      label: 'You badge',
+      label: 'BTN',
       seatId: 'btn',
       isCorrect: true,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Your seat found!',
-      feedbackReason: 'The You badge marks your seat at the bottom.',
+      feedbackTitle: 'Role separated from player.',
+      feedbackReason:
+          'BTN is a position. The same learner can have another position next hand.',
     ),
     Act0RunnerOptionV1(
       id: 'random',
-      label: 'Random seat',
+      label: 'Your private cards',
       seatId: 'hj',
       isCorrect: false,
-      preferredLabel: 'You badge',
+      preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Nearly there.',
-      feedbackReason: 'Your seat is marked You, not by a random position.',
+      feedbackTitle: 'Keep the two ideas apart.',
+      feedbackReason:
+          'Your cards remain yours; BTN is the changing table role.',
     ),
   ],
-  feedbackTitle: 'Your seat found!',
-  feedbackReason: 'The You badge marks your seat at the bottom.',
+  feedbackTitle: 'Player and position separated.',
+  feedbackReason:
+      'You is the learner identity; BTN is the current table position.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'You means learner.',
@@ -14751,30 +14784,31 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
 
 final _world4ValueCheckMissRunner = _world4ValueBetRunner.copyWith(
   lessonId: 'w4_value_missed',
-  caption: 'Hero has top pair. Checking gives up a value chance.',
+  caption: 'Hero has top pair and worse hands can still call a bet.',
   hint: 'When worse hands can call, betting is the lesson.',
-  question: 'Which action misses value?',
+  question: 'What action best collects value from worse hands here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check',
       label: 'Check',
-      isCorrect: true,
-      preferredLabel: 'Check',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Spot on.',
-      feedbackReason: 'Checking can miss value in this simple top-pair spot.',
+      isCorrect: false,
+      preferredLabel: 'Bet half-pot',
+      betterAnswerLabel: 'Bet half-pot',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Keep the value chance.',
+      feedbackReason:
+          'Checking leaves value on the table when worse hands can call.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_half',
       label: 'Bet half-pot',
       amountLabel: '3 BB',
-      isCorrect: false,
-      preferredLabel: 'Check',
-      betterAnswerLabel: 'Check',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Good direction.',
+      isCorrect: true,
+      preferredLabel: 'Bet half-pot',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Value collected.',
       feedbackReason:
-          'The question asks which action misses value; betting is the value action.',
+          'A half-pot bet lets worse hands call while you hold the stronger hand.',
     ),
   ],
 );

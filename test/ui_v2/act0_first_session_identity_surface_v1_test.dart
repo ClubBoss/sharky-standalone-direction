@@ -134,9 +134,16 @@ void main() {
       final end = source.indexOf('final _boardCountRunner', start);
       final firstSession = source.substring(start, end);
 
-      expect(firstSession, contains('Which marker identifies you?'));
-      expect(firstSession, contains('Which seat has the You badge?'));
+      expect(firstSession, contains('Which seat acts next before the blinds?'));
+      expect(
+        firstSession,
+        contains(
+          'Which label could change next hand while the player is still you?',
+        ),
+      );
       expect(firstSession, contains('You marks your seat. BTN is the Button'));
+      expect(firstSession, isNot(contains('Which marker identifies you?')));
+      expect(firstSession, isNot(contains('Which seat has the You badge?')));
       expect(firstSession, isNot(contains('seat marked Hero')));
       expect(firstSession, isNot(contains('Which seat is the hero seat?')));
     },
