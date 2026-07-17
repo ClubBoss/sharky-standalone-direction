@@ -1,6 +1,12 @@
 # Canonical Act0 Closure Packet v1
 
-Status: CANDIDATE_READY_TO_FREEZE — bounded convergence gates closed
+Status: HISTORICAL_CANDIDATE_FREEZE_RECORD — superseded for original-package adjudication
+
+> Superseded for original-three-agent freeze adjudication at `cf0b4c8b`:
+> `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md` directly reconciles the 41
+> original findings and identifies unresolved current learning debt. This packet
+> remains evidence for its named historical records; it is not authority to
+> erase claims absent from its 35-record source set.
 
 Baseline: `d19ffad4a5bd9b5fb5a97efa1a5af3b1da19ac5a` on `main`.
 

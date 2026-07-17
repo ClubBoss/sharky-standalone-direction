@@ -4,6 +4,16 @@ Status: ACTIVE convergence ledger
 
 Published baseline reconciled: `2e86b4c35d7cf45462c84b020d5b448ebf6b722c`
 
+## Supersession note — original-package reconciliation
+
+This ledger predates direct row-by-row reconciliation of the three original
+audit packages. Its historical source set is not a substitute for them. At
+`cf0b4c8b`, `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md` is the authority for
+the 41 original IDs and supersedes this ledger's zero-current-debt and
+candidate-freeze assertions where they conflict. The supported closures in this
+ledger remain supported; the unsupported broad learning/content closure does
+not.
+
 ## Purpose and authority
 
 This is the release-scope reconciliation ledger for the canonical Act0 route.

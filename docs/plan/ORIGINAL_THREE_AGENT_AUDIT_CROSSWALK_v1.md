@@ -1,0 +1,115 @@
+# Original Three-Agent Audit Crosswalk v1
+
+Status: ACTIVE source-truth reconciliation. Published baseline reviewed:
+`cf0b4c8b4abd9ac9a0265b58f0f8aa6b5185e4fa`.
+
+## Method and safety result
+
+This is a direct crosswalk, not a synthesis replacement. The complete original
+packages were inspected at `output/product_audit/current/`:
+`antigravity_visual_ux_v1` (15; frozen candidate `11715b50`),
+`claude_learning_content_v1` (16; frozen candidate `11715b50`), and
+`codex_source_truth_feasibility_v1` (10; frozen candidate `11715b50`).
+Their originating working heads were respectively `11715b50`, `b4068fa4`, and
+`b4068fa4`. `main`, `HEAD`, and `origin/main` were all the baseline above;
+tracked and staged diffs were empty. Existing untracked `output/`, `tmp/`,
+contract, and local-test evidence was observed and left untouched.
+
+Disposition is factual; scope is separate. “Current source verification” means
+the canonical `AppRoot -> _EntryGate -> Act0ShellPreviewScreenV1` route and its
+actual owners were examined at the published baseline. A Human claim is never
+silently converted to a closure; an opportunity is never counted as a defect.
+
+## Exact 41-row inventory
+
+| ID | Original classification / exact claim | Original evidence / audited head | Current owner and reproduction | Later evidence / scope | Factual disposition | Exact current evidence; uncertainty; repair family |
+| --- | --- | --- | --- | --- | --- | --- |
+| AG-VUX-F01 | CONFIRMED_P0: no first-60-second micro-aha | Journey audit; `11715b50` | Home/first W1 owner; not mechanically falsifiable | Human QA required | CURRENT_SOURCE_VERIFICATION_REQUIRED | No deterministic retention metric proves or disproves felt aha; `HUMAN_QA_REQUIRED`; first-session comprehension/payoff family if observed. |
+| AG-VUX-F02 | CONFIRMED_P1: table-motion alpha residue | Visual audit; `11715b50` | Act0 motion/render owners; no active regression | Motion is deferred | CLOSED_INTENTIONAL | Later milestone-motion work exists, but feedback transition polish is a `FUTURE_CAPABILITY`, not a current route defect. |
+| AG-VUX-F03 | HUMAN hypothesis: compact feedback text not scannable | Visual audit; `11715b50` | Runner/lower surface | Human QA required | CLOSED_VERIFIED_PASS | `2e86b4c` fixed reachable bounded scroll/1.4x mechanics; comprehension remains `HUMAN_QA_REQUIRED`. |
+| AG-VUX-F04 | CONFIRMED_P2: Sharky tone static across worlds | Copy/visual audit; `11715b50` | Act0 copy owners | Future mascot/copy capability | CLOSED_INTENTIONAL | Source has no tier-register system; this is `FUTURE_CAPABILITY`, not a freeze-blocking functional defect. |
+| AG-VUX-F05 | STRATEGIC: pattern-level Review coaching | Review audit; `11715b50` | Review/evidence projections | AI Personalization later | CLOSED_INTENTIONAL | Current Review is item/family based; `FUTURE_CAPABILITY` under AI Personalization. |
+| AG-VUX-F06 | CONFIRMED_P2: abrupt session closure | Journey audit; `11715b50` | Session payoff owner | Later payoff integration | CLOSED_FIXED | Learning Run payoff is landed; source/tests distinguish mastered/recovered/insufficient evidence and explicit Learn-to-Home close. |
+| AG-VUX-F07 | Competitive gap: no street replay context | Journey audit; `11715b50` | Multi-street content/runner | Not in Act0 release scope | CLOSED_INTENTIONAL | `OUTSIDE_CURRENT_RELEASE_SCOPE`; no false claim that the current single-spot route supplies it. |
+| AG-VUX-F08 | CONFIRMED_P3: Profile clutter risk | Profile audit; `11715b50` | Profile shell | Human/polish observation | CLOSED_VERIFIED_PASS | Current source has bounded proof/fixes presentation; felt clutter remains `HUMAN_QA_REQUIRED`, not a source defect. |
+| AG-VUX-F09 | HUMAN hypothesis: paywall/trial trust | Entry audit; `11715b50` | Monetization boundary | No paywall on canonical Act0 route | CLOSED_VERIFIED_PASS | Current route contains no premium-trial prompt before repair; future commerce remains `HUMAN_QA_REQUIRED`. |
+| AG-VUX-F10 | CONFIRMED_P3: localization hardcoding | Copy audit; `11715b50` | Act0 strings | Post-Human maintenance | CLOSED_INTENTIONAL | English-first source remains; `POST_HUMAN_TECHNICAL_RISK`, not a current English-route defect. |
+| AG-VUX-F11 | STRATEGIC: W1 completion graduation payoff | Journey audit; `11715b50` | World payoff owner | Later world-completion work | CLOSED_FIXED | Completion/milestone payoff owner and guards exist; no remaining missing-functional-payoff reproduction. |
+| AG-VUX-F12 | CONFIRMED_P4: mixed achievement visual language | Visual audit; `11715b50` | Presentation assets | Art-system capability | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; does not demonstrate a functional canonical-route fault. |
+| AG-VUX-F13 | CONFIRMED_P3: Welcome feels like World 0 | Map/onboarding audit; `11715b50` | Entry/Welcome owners | Later route/placement closure | CLOSED_FIXED | Current cold-start Act0 Home and placement-forward contracts separate Welcome/onboarding from world progression. |
+| AG-VUX-F14 | Competitive gap: premium value preview subtle | Commercial audit; `11715b50` | Monetization route | Not release scope | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no paid-depth contract is admitted by this freeze. |
+| AG-VUX-F15 | STRATEGIC: personalized Day-2 return reason | Retention audit; `11715b50` | Return/personalization owner | AI Personalization later | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no false Day-2 claim is made by the current shell. |
+| CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/repair-memory projections; reproducible | Retention capability | PRODUCT_DEBT_CONFIRMED | `Act0LearningEvidenceRecordV1` has order/session but no event time; no due projection exists; same-session correct can clear active repair. `CURRENT_RELEASE_SCOPE`; repair family `durable retention and due recheck`. |
+| CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
+| CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | Receipt/error type owner; reproducible | AI personalization dependency | PRODUCT_DEBT_CONFIRMED | Current error types remain atom-based and cannot represent late-world misconceptions at needed granularity. `CURRENT_RELEASE_SCOPE`; `concept-specific error taxonomy`. |
+| CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | `learningPurpose` drives title/hint/feedback/theory title and `conceptFamilyId` is a focus label. Theory body is learner prompt. `CURRENT_RELEASE_SCOPE`; `W7 learner-surface authoring`. |
+| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Repair resolver; partly reproducible | Current route loop | CURRENT_SOURCE_VERIFICATION_REQUIRED | Existing matrix proves mapped families plus exact replay, but no current complete 291-row mapped/unmapped census exists. Required count: incorrect-capable, mapped, and W1-6/W7-12 percentages. `CURRENT_RELEASE_SCOPE`; `repair coverage census and completion`. |
+| CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | option inventory; `11715b50` | Assessed-row guard; reproducible | Current route curriculum | CURRENT_SOURCE_VERIFICATION_REQUIRED | 291-row fingerprint and option-count field exist, but no committed aggregate 2/3/4+ and checkpoint/repair distribution is recorded. `CURRENT_RELEASE_SCOPE`; `decision discrimination census`. |
+| CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; partly reproducible | Content-depth decision | PRODUCT_DEBT_CONFIRMED | Late route still contains conceptual/clue choices alongside actions; no current classification census proves decision dominance. `CURRENT_RELEASE_SCOPE`; `late-world decision-authenticity`. |
+| CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement; reproducible | Learning-claim integrity | PRODUCT_DEBT_CONFIRMED | Current algorithm sorts by `createdOrder`, compares first to last only, rejects duplicate order, has no time separation; early miss/success streak and late miss both retain these limitations. `CURRENT_RELEASE_SCOPE`; `transfer verdict policy`. |
+| CL-LRN-F09 | CONFIRMED_P3: inverted/negative prompts | W4 examples; `11715b50` | Content state owner; reproducible | Current curriculum | PRODUCT_DEBT_CONFIRMED | Canonical source retains `Which action misses value?` (`_world4ValueCheckMissRunner`) and analogous anti-action wording. `CURRENT_RELEASE_SCOPE`; `negative-frame rewrite`. |
+| CL-LRN-F10 | CONFIRMED_P3: W1 trivial/UI-referential items | hero badge question; `11715b50` | `_meetTableRunner`; reproducible | First-session learning | PRODUCT_DEBT_CONFIRMED | Current question asks which seat is hero while the explicitly visible hero/You marker reveals it; three choices improve guessing odds but not pedagogical discrimination. `CURRENT_RELEASE_SCOPE`; `first-table decision authenticity`. |
+| CL-LRN-F11 | CONFIRMED_P3: one correct clears repeat-miss family | repair memory; `11715b50` | Repair-memory projection; reproducible | Retention/selection | PRODUCT_DEBT_CONFIRMED | `resolutionState` is cleared whenever latest record is correct despite preserved `incorrectCount`; future active selection excludes it. `CURRENT_RELEASE_SCOPE`; `durable retention and due recheck`. |
+| CL-LRN-F12 | CONFIRMED_P4: naming/alias hazards | alias runner names; `11715b50` | State authoring names | Maintenance risk | CLOSED_INTENTIONAL | Not learner-visible by itself; `POST_HUMAN_TECHNICAL_RISK` with owner-aligned extraction/renaming only when touching content. |
+| CL-LRN-F13 | HUMAN hypothesis: W8-W9 jargon ramp | static content; `11715b50` | W8-W9 content | Human evidence | CURRENT_SOURCE_VERIFICATION_REQUIRED | Source confirms terms but not novice tolerance, latency, or quitting; preserve as `HUMAN_QA_REQUIRED`. |
+| CL-LRN-F14 | HUMAN hypothesis: recap feels filler | static content; `11715b50` | Recap runners | Human evidence | CURRENT_SOURCE_VERIFICATION_REQUIRED | Source confirms recap reuse but not learner perception; preserve as `HUMAN_QA_REQUIRED`. |
+| CL-LRN-F15 | CONTENT opportunity: interleaved W2/W3 drills | audit recommendation | Curriculum plan | Opportunity | CLOSED_INTENTIONAL | `STRATEGIC_OPPORTUNITY`, not a present defect. |
+| CL-LRN-F16 | STRATEGIC: pour all content into evidence skeleton | audit recommendation | Curriculum/evidence owners | Opportunity | CLOSED_INTENTIONAL | `STRATEGIC_OPPORTUNITY`; F03/F05 are concrete prerequisite debt, not proof that the opportunity is implemented. |
+| CX-ST-F01 | CONFIRMED_P2: Quick Table overflow | failing 430x932 test; `11715b50` | Lower surface | `fe57219e`, `2e86b4c` | CLOSED_FIXED | Active selected test inclusion and bounded scroll/geometry contract remove the reproduced overflow. |
+| CX-ST-F02 | TECHNICAL_RISK: no HNP live sink | AppRoot did not compose sink | Telemetry composition | `2507b1b2`, `fefb7c36` | CLOSED_FIXED | `Act0HnpTelemetrySinkV1` with opt-in JSONL evidence exists; live owner proof is recorded. |
+| CX-ST-F03 | TECHNICAL_RISK: telemetry SSOT/cardinality divergence | source/map mismatch | Telemetry owner | `eef22eb8`, `fefb7c36` | CLOSED_FIXED | Canonical trace and repair-start cardinality closure reconcile active HNP telemetry; no active counterexample found. |
+| CX-ST-F04 | TECHNICAL_RISK: persistence stronger than discovered tests | legacy non-test file | Persistence owner | `f3ab667c`, `8147990c` | CLOSED_FIXED | Active discovered round-trip authority is promoted and protects schema-16 restore/write behavior. |
+| CX-ST-F05 | TECHNICAL_RISK: active route test omitted | selected gate excluded alpha journey | Test manifest | selected-tests update | CLOSED_FIXED | `tools/_world1_selected_tests_v1.sh` includes `alpha_journey_progression_truth_v1_test.dart`; prior overflow cannot hide behind the gate. |
+| CX-ST-F06 | TECHNICAL_RISK: W8-W12 route/fixture authority | hidden owners used by capture | State/capture owners | `8147990c` | CLOSED_FIXED | Current capture metadata distinguishes active route from fixture/capture and source proof labels authority; no fixture-only claim is retained. |
+| CX-ST-F07 | TECHNICAL_RISK: huge owner concentration | line counts | Preview/state/runner | Engineering risk | CLOSED_INTENTIONAL | `POST_HUMAN_TECHNICAL_RISK`; no safe broad refactor is justified in this freeze. |
+| CX-ST-F08 | HUMAN hypothesis: no full-shell accessibility proof | runner-focused coverage | Shell semantics | Human QA | CURRENT_SOURCE_VERIFICATION_REQUIRED | Runner 1.4x/tap-target coverage is not a VoiceOver full-shell journey; preserve as `HUMAN_QA_REQUIRED`. |
+| CX-ST-F09 | TECHNICAL_RISK: release identity/observability deferred | package IDs/release config | Release owners | Store release later | CLOSED_INTENTIONAL | `OUTSIDE_CURRENT_RELEASE_SCOPE`; not an Act0 freeze defect, but visible technical risk. |
+| CX-ST-F10 | TECHNICAL_RISK: split startup readiness | Entry/preference owners | Entry gate/bootstrap | Current cold-start tests | CLOSED_VERIFIED_PASS | Current canonical cold-start contracts prevent intake/placement flash; compatibility preference complexity remains `POST_HUMAN_TECHNICAL_RISK`. |
+
+## Duplicate groups and reconciliation corrections
+
+`DG-RETENTION` = CL-LRN-F01/F08/F11; `DG-W7-CONTENT` = F02/F04;
+`DG-LEARNING-DISCRIMINATION` = F06/F07/F09/F10; `DG-REPAIR-COVERAGE` = F03/F05;
+`DG-HUMAN` = AG-VUX-F01/F03/F08/F09, CL-LRN-F13/F14, CX-ST-F08; and
+`DG-TECHNICAL-RISK` = CL-LRN-F12, CX-ST-F07/F09/F10. Each retains its row.
+
+The prior KDZ and Closure Packet do not contain these original package IDs and
+therefore incorrectly represent their 41 claims as reconciled. They also merge
+learning-content claims into generic content/proof closure and declare zero
+current product debt without source verification of F01-F11. The prior closures
+for compact layout, live HNP sink, telemetry cardinality, persistence discovery,
+selected-test inclusion, W8-W12 authority labeling, placement/Welcome
+separation, and session payoff are supported. Its blanket candidate-freeze and
+``current-release active product defects: 0`` claim is not supported.
+
+## Freeze decision and next work
+
+Counts: Antigravity = 2 fixed, 4 verified/intentional source closures, 3 Human
+requirements, 6 future/out-of-scope capabilities; Claude = 8 confirmed current
+debt, 2 current verification censes, 2 Human requirements, 4 future/risk or
+opportunity; Codex = 6 fixed, 1 verified pass, 2 accepted risks, 1 Human
+requirement. Current confirmed product debt is CL-LRN-F01/F02/F03/F04/F07/F08/
+F09/F10/F11 (F05/F06 remain required quantitative verification, not closure).
+
+Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
+Novice Proof, or AI Personalization work starts from this record. The selected
+Top-1 is **Learning Integrity Foundation v1**: in one bounded source-truth
+wave, establish the F05/F06 inventories, repair W7 learner authoring/depth and
+first-table/inverted prompt authenticity, then separately admit a retention/
+transfer contract only if its data-model and claims can remain compatible. It
+waits Human QA because H13/H14 and visual felt-quality hypotheses require
+people, and it waits release/identity work because it is outside the canonical
+Act0 learner defect count.
+
+### Copyable next goal
+
+> GOAL: LEARNING INTEGRITY FOUNDATION V1. Starting from the published original
+> three-agent crosswalk, make no broad refactor and do not start Human QA, Final
+> Deep Audit, or AI Personalization. First produce deterministic complete
+> assessed-task inventories for same-signal repair coverage and 2/3/4+ option
+> distribution. Then fix only source-proven current Act0 learning debt selected
+> from W7 learner authoring/depth, W1/W4 decision authenticity, and generic
+> error/repair coverage. Treat spaced repetition and transfer policy as a
+> separately admitted compatibility contract, not an incidental change. Preserve
+> Human hypotheses and all untracked evidence; validate focused owners, selected
+> route gate, graphify, and diffs before proposing any follow-on work.

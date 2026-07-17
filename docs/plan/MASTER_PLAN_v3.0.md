@@ -160,11 +160,14 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   repair-landed states; stable anchors, bounded Dynamic Type, and CTA
   reachability are closed. The corrected terminal verdict is
   `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`.
-- The next bounded convergence wave is **Closure Packet Completion v1**. It is
-  proof consolidation only: create the baseline-pinned index for release/build
-  tooling and end-to-end completion without reopening closed product surfaces.
-  See `KNOWN_DEBT_ZEROING_AND_CLOSURE_PACKET_LEDGER_v1.md`. Final Deep
-  Independent Audit and Human Novice Proof remain later gates.
+- The next bounded convergence wave is **Learning Integrity Foundation v1**.
+  It must begin with a complete repair-coverage and option-count census, then
+  address only directly reproducible canonical Act0 learning debt; it must not
+  begin Human QA, Final Deep Independent Audit, or AI Personalization. See
+  `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. Closure Packet Completion is
+  historical proof consolidation, not authority to erase the original-package
+  learning findings. Final Deep Independent Audit and Human Novice Proof remain
+  later gates.
 
 ## Product 100
 

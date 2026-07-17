@@ -95,15 +95,20 @@ decision, feedback, repair, recheck, payoff, and session completion/exit.
 Premium Motion remains deferred. The missing legacy route-import test remains
 unrelated debt.
 
-**Convergence baseline — CANDIDATE_READY_TO_FREEZE.** The baseline-pinned
+**Convergence baseline — RECONCILIATION REOPENED FOR LEARNING DEBT.** The baseline-pinned
 index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. `d19ffad4` repairs
 the first-session identity rail offset to the 24 px shared lower-surface
 contract without changing learning semantics. The current W1-W12 contract now
 pins 291 assessed rows to fingerprint `ee91c4f9…`, the exact Act0 state-input
 SHA-256, and a deterministic freshness status; its five changed W1 identity
 rows are recorded in `docs/plan/W1_W12_ASSESSMENT_FINGERPRINT_ADJUDICATION_v1.md`.
-This permits candidate freeze only. Final Deep Independent Audit, Human Novice
-Proof, and AI Personalization remain downstream and are not started here.
+This formerly permitted candidate freeze only. Direct reconciliation of the
+complete original Antigravity, Claude, and Codex packages at `cf0b4c8b` found
+source-reproducible learning debt (notably retention timing, W7 depth/metadata,
+error taxonomy, transfer, and first-table authenticity). See
+`ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. Final Deep Independent Audit,
+Human Novice Proof, and AI Personalization remain downstream and are not
+started here.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
