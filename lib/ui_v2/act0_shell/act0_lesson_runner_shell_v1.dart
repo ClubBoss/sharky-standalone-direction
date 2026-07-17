@@ -2409,6 +2409,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           );
     final showStepIntro =
         isTeaching && runner.teachingStepIndex == 0 && runner.beatIndex > 1;
+    // First Table Guide identity teaching is the learner's initial table
+    // orientation. Its short instruction belongs at the top of the already
+    // allocated shared lower stage, with the navigation rail fixed below it.
+    // Other theory keeps its established intrinsic/bounded-scroll behavior.
+    final usesFirstSessionIdentityRail =
+        isTeaching && runner.lessonId == 'first_table_guide';
     final showTopInstructionCard = !isRefinedDev2;
     final pageX = isRefinedDev2 ? 8.0 : Act0ShellTokensV1.runnerPageX;
     final compactTableStageTopInset = 0.0;
@@ -2682,7 +2688,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         Act0TheoryPresentationRoleV1.recapCheck,
                 // Keep the instruction and its continuation control together
                 // when the shared envelope has spare repair-room below them.
-                fillsAvailableHeight: false,
+                // First-session identity guidance is an orientation state:
+                // its content top-aligns in the shared lower stage while the
+                // navigation footer remains fixed below it. Other theory keeps
+                // the established intrinsic/bounded-scroll contract.
+                fillsAvailableHeight: usesFirstSessionIdentityRail,
               )
             : isTeaching
             ? FilledButton(

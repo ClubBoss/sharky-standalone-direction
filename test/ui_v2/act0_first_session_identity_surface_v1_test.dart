@@ -94,22 +94,30 @@ void main() {
     teachingSteps: teachingSteps,
   );
 
-  Future<void> pumpRunner(WidgetTester tester, Act0RunnerStateV1 runner) {
-    tester.view.physicalSize = const Size(393, 852);
+  Future<void> pumpRunner(
+    WidgetTester tester,
+    Act0RunnerStateV1 runner, {
+    Size size = const Size(393, 852),
+    TextScaler textScaler = TextScaler.noScaling,
+  }) {
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     return tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Act0LessonRunnerShellV1(
-            runner: runner,
-            selectedTaskId: 'what_poker_is_find_hero',
-            onBack: () {},
-            onContinueTheory: () {},
-            onChooseOption: (_) {},
-            onChooseSeat: (_) {},
-            onContinueReview: () {},
+        home: MediaQuery(
+          data: MediaQueryData(size: size, textScaler: textScaler),
+          child: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: 'what_poker_is_find_hero',
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onChooseSeat: (_) {},
+              onContinueReview: () {},
+            ),
           ),
         ),
       ),
@@ -209,6 +217,50 @@ void main() {
       expect(promptRect.height, lessThan(220));
       expect(promptRect.height, lessThan(surfaceRect.height - 48));
       expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'first-session identity rail stays anchored across supported phones and text scale',
+    (tester) async {
+      for (final configuration in <(Size, TextScaler)>[
+        (const Size(393, 852), TextScaler.noScaling),
+        (const Size(430, 932), TextScaler.noScaling),
+        (const Size(430, 932), TextScaler.linear(1.4)),
+      ]) {
+        await pumpRunner(
+          tester,
+          runner(
+            phase: Act0LessonPhaseV1.theory,
+            question: 'Which marker identifies you?',
+            teachingSteps: const <Act0TeachingStepV1>[
+              Act0TeachingStepV1(
+                title: 'You means learner.',
+                body:
+                    'The You badge marks your seat. BTN is the Button position for this hand.',
+              ),
+            ],
+          ),
+          size: configuration.$1,
+          textScaler: configuration.$2,
+        );
+        await tester.pumpAndSettle();
+
+        final surfaceRect = tester.getRect(
+          find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
+        );
+        final laneRect = tester.getRect(
+          find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+        );
+        final footerRect = tester.getRect(
+          find.byKey(const Key('act0_shell_learning_rail_fixed_footer')),
+        );
+
+        expect(laneRect.top - surfaceRect.top, lessThanOrEqualTo(24));
+        expect(footerRect.bottom, closeTo(surfaceRect.bottom, 2));
+        expect(laneRect.bottom, lessThanOrEqualTo(footerRect.top));
+        expect(tester.takeException(), isNull);
+      }
     },
   );
 }
