@@ -98,8 +98,11 @@ unrelated debt.
 **Closure Packet Completion v1 — BLOCKED_BY_PROOF_GAP.** The baseline-pinned
 index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. A current 291-row
 assessment-fingerprint guard fails after `bbce4caf` changed assessed source;
-the expected fingerprint is stale. Final Deep Independent Audit and Human
-Novice Proof remain blocked pending bounded fingerprint re-adjudication.
+the expected fingerprint is stale. The same commit also introduces a confirmed
+first-session identity learning-surface regression: a 147 px rail offset
+violates the 24 px shared lower-surface contract. Final Deep Independent Audit
+and Human Novice Proof remain blocked pending First-Session Identity Surface
+Stability, then bounded fingerprint re-adjudication.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

@@ -88,6 +88,14 @@ closure evidence for the high-risk dispositions.
 - **F19:** historical condition was the one `session_summary.scroll_02_mid`
   capture crop. Current source/evidence review, not a broad absence claim,
   records it as capture artifact; the terminal route is separately guarded.
+- **F20/F21:** Current first-session identity testing is a direct regression
+  check, not historical screenshot inference. At `715d6c6a`,
+  `act0_first_session_identity_surface_v1_test.dart` fails
+  `short identity teaching stays below a stable table with its footer rail
+  anchored`: the learning-rail content begins 147 px below the shared lower
+  surface, exceeding the 24 px contract. The failure follows `bbce4caf`'s
+  identity-teaching source integration. This is confirmed product debt in the
+  learning-surface owner, separate from the stale assessment fingerprint.
 
 ## Closure Packet index
 
@@ -99,16 +107,16 @@ closure evidence for the high-risk dispositions.
 | decision / feedback | `Act0LessonRunnerShellV1`; correct/wrong feedback | grouped content and runner state tests | reachable action controls, claim-safe copy | CLOSED_FULLY_PROVEN |
 | repair / recheck | runner + Review; repair open/result/recheck | `d9ac3ff3`, `5afd43ec`, `288c1e5e`, `70bf1aae` | CTA and negative-path replay evidence | CLOSED_FULLY_PROVEN |
 | Review / recovery | Review owner; empty, repair, handoff, recovery | authoritative recovery replay | Review transition and terminal copy proof | CLOSED_FULLY_PROVEN |
-| learning-surface presentation | shared runner learning scene; theory through recheck | LSCS presentation semantics tests | compact/nominal/large/1.4x geometry and CTA evidence | CLOSED_FULLY_PROVEN |
+| learning-surface presentation | shared runner learning scene; theory through recheck | first-session identity geometry test fails: 147 px versus 24 px limit | compact/nominal/large/1.4x geometry must be revalidated after repair | PRODUCT_DEBT_CONFIRMED |
 | compact / accessibility | shared lower surface; four-option, long content | compact guards and LSCS tests | safe-area, 1.4x, reachable controls | CLOSED_FULLY_PROVEN |
 | persistence / resume | Act0 progress owner; restore/recovery | `f3ab667c`, `8147990c` round-trip authority | interruption/resume transitions | CLOSED_FULLY_PROVEN |
 | telemetry / privacy | `Act0TelemetrySinkV1`; event lifecycle | `eef22eb8`, `fefb7c36`, 52-event JSONL proof | debug-only/local/no-network/release separation | CLOSED_FULLY_PROVEN |
 | release / build / tooling | release gate, manifests, capture contracts | seven current closure/tooling guards | source applicability, generated-drift preflight, default/debug separation | CLOSED_FULLY_PROVEN |
 | end-to-end completion | placement → recommendation → wrong → repair → recheck → payoff → Review/terminal | canonical route/replay and terminal guards | fresh start, negative paths, resume/recovery and W12/no-W13 proof | CLOSED_FULLY_PROVEN |
 
-Implementation Quality is High for each block within the canonical Act0 release
-scope. Proof Coverage and Release Confidence are High except for curriculum /
-content truth, which are Medium until its fingerprint is re-adjudicated. This
+Implementation Quality is High except for learning-surface presentation, which
+has confirmed product debt. Proof Coverage and Release Confidence are High
+except for curriculum/content truth, which are Medium until its fingerprint is re-adjudicated. This
 does not mean Human learning effect, future curriculum depth, tablet support,
 legacy maintenance, or AI Personalization is proven.
 
@@ -116,27 +124,26 @@ legacy maintenance, or AI Personalization is proven.
 
 The packet does **not** satisfy the frozen-candidate prerequisite. The raw
 crosswalk, release/build packet, and end-to-end packet are complete, but the
-curriculum/content block is `IMPLEMENTED_PROOF_INCOMPLETE`. No product defect
-is confirmed: the failure is a stale expected fingerprint after `bbce4caf`
-changed assessed source. The bounded proof-repair family is **W1-W12
-assessment-fingerprint re-adjudication**: inspect the source delta, prove all
-291 rows retain valid order/correctness, then update the guarded expected
-fingerprint only if that proof passes. This mission does not modify code or
-tests.
+curriculum/content block is `IMPLEMENTED_PROOF_INCOMPLETE` and the
+learning-surface block is `PRODUCT_DEBT_CONFIRMED`. The bounded repair family
+is **First-Session Identity Surface Stability**: restore the shared lower
+surface geometry for identity teaching, then revalidate the LSCS device/text
+matrix. A separate W1-W12 assessment-fingerprint re-adjudication must follow.
+This mission does not modify product code or tests.
 
 Final Deep Independent Audit and Human Novice Proof remain blocked. The next
-Top-1 is the bounded assessment-fingerprint re-adjudication, not the audit.
+Top-1 is First-Session Identity Surface Stability, not the audit.
 
 ## Copyable next Goal
 
 ```text
-GOAL: W1-W12 ASSESSMENT-FINGERPRINT RE-ADJUDICATION
+GOAL: FIRST-SESSION IDENTITY SURFACE STABILITY
 
-Verify the current 291 assessed Act0 rows after `bbce4caf`. Do not change
-product behavior. Trace every fingerprint-relevant source delta, prove option
-order, single-correctness, route ownership, and DCA repaired-row contracts,
-then update the expected fingerprint guard only if the resulting corpus is
-fully explained and all focused checks pass. Publish a proof-only closure and
-return to Closure Packet Completion; do not begin the Final Deep Independent
-Audit or Human Novice Proof.
+Repair the `bbce4caf` first-session identity integration without changing its
+learner-facing teaching intent. Reproduce the 147 px learning-rail offset in
+`act0_first_session_identity_surface_v1_test.dart`, restore the shared lower
+surface contract (at most 24 px), and re-run the full LSCS geometry/CTA/device
+matrix plus the identity and compact-decision tests. Do not broaden into
+curriculum, telemetry, Modern Table, Human Novice Proof, or the separate
+assessment-fingerprint re-adjudication.
 ```
