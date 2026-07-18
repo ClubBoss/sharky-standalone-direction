@@ -185,31 +185,39 @@ void main() {
     expect(intent?['reasonCode'], 'same_signal_action_read_no_bet_yet');
   });
 
-  testWidgets('exact replay fallback clears after correct replay completion', (
-    tester,
-  ) async {
-    await _pumpLifecycleHost(
-      tester,
-      state: _stateForFoldCheckCallRaiseTasks(const <String>[
-        'actions_check_drill',
-      ]),
-      taskId: 'actions_check_drill',
-    );
-    await _advanceTeachingToDrill(tester);
-    await _answerWrongly(tester);
+  testWidgets(
+    'check drill source fallback does not clear its mapped repair intent',
+    (tester) async {
+      await _pumpLifecycleHost(
+        tester,
+        state: _stateForFoldCheckCallRaiseTasks(const <String>[
+          'actions_legal_context',
+          'actions_check_drill',
+        ]),
+        taskId: 'actions_check_drill',
+      );
+      await _advanceTeachingToDrill(tester);
+      await _answerWrongly(tester);
 
-    final intent = _openRepairIntentPayload(tester, 'actions_check_drill');
-    expect(intent?['mappingType'], 'exact');
-    expect(intent?['targetTaskId'], 'actions_check_drill');
+      final intent = _openRepairIntentPayload(tester, 'actions_check_drill');
+      expect(intent?['mappingType'], 'repair');
+      expect(intent?['targetTaskId'], 'actions_legal_context');
 
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-    await _answerCorrectly(tester);
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
-
-    expect(_openRepairIntentPayload(tester, 'actions_check_drill'), isNull);
-  });
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(_activeTaskId(tester), 'actions_check_drill');
+      await _answerCorrectly(tester);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      final retained = _openRepairIntentPayload(tester, 'actions_check_drill');
+      expect(retained?['mappingType'], 'repair');
+      expect(retained?['targetTaskId'], 'actions_legal_context');
+    },
+  );
 
   testWidgets(
     'feedback CTA runs the mapped repair before its source-task recheck',

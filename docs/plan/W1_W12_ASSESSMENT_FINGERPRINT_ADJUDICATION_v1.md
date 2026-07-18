@@ -102,6 +102,29 @@ rows and retains fingerprint
 with option distribution 121/165/5 and correct positions 111/116/62/2.
 Accordingly the machine contract and input hash are not regenerated.
 
+## Blinds Action-Order Truth Repair adjudication
+
+`blinds_review` is the one additional changed serialized row. The canonical
+six-max table orders voluntary preflop action from the seat left of BB: UTG,
+HJ, CO, BTN, SB, then BB. The prior review inherited the last-actor runner's
+BB/SB choices while asking who acts first; its hint and feedback already said
+left of BB. The repair changes only this review's authored runner to the
+first-actor UTG/BTN decision, preserving task id, lesson/world, phase, route,
+concept-error id, repair-family identity, and schema/event contracts. Its
+pre-choice caption and hint stay neutral and its table has no highlighted seat;
+the left-of-BB explanation appears only in post-choice feedback.
+
+| World / lesson / task | old row SHA-256 | new row SHA-256 | changed fields | adjudication |
+| --- | --- | --- | --- | --- |
+| W1 / blinds_action_order / `blinds_review` | `8f66ee81bbbd1e521f4f9c9e7aa8993ab9b5dcccd57331fa1a5626d00cdadc35` | `62e5b4073d3ec34c4cf64dd6a14d00d224fd5d79890b42d15c3ba8c9725ce7d2` | caption, hint, correct option `bb` index 1 → `utg` index 0, options `BB/SB` → `UTG/BTN`, option feedback, inherited runner identity, and pre-choice table highlights | Poker-correct first-actor recap; two options retained, one correct UTG choice, neutral pre-choice copy/table, no future knowledge, and no unrelated serialized row changed. |
+
+The new state-input SHA-256 is
+`77a393090fddb28d51b5f1e33b54e42d27763ac690a34145d4a0b1f8b01e383e` and
+the new 291-row content fingerprint is
+`1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91`.
+All other 290 current serialized rows retain their prior payloads. The
+machine contract was updated only after this row-level comparison.
+
 ## Scope boundary and freeze decision
 
 This re-adjudication closes the stale 291-row proof gap and the published

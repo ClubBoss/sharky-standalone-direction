@@ -114,10 +114,9 @@ started here.
 **Concept Error & Repair Integrity v1.** The 291-row/466-incorrect-option
 canonical census now uses 20 source-owned concept-error ids with zero
 unclassified incorrect options. Different same-signal coverage is 277/291;
-13 remaining rows are guarded intentional exact replays and one
-`blinds_review` row is an explicit non-launchable product gap because its
-prompt/feedback conflicts with its marked answer. No unrecorded fallback
-remains. W7 learner-facing metadata leakage is fixed;
+14 remaining rows are guarded intentional exact replays and no product gap or
+unrecorded fallback remains. `blinds_review` now consistently teaches UTG as
+the first voluntary preflop actor. W7 learner-facing metadata leakage is fixed;
 its one-lesson depth remains blocked by absent minimum-depth authority. W1
 first-table tasks now require table-order/identity inference and W4 value copy
 uses a direct positive decision. Decision Discrimination (the 121 binary

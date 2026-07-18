@@ -1,8 +1,7 @@
 # Concept Error & Repair Integrity v1
 
-Status: PUBLISHED CONTRACT; terminal verdict is
-`CONCEPT_ERROR_REPAIR_BLOCKED_BY_PRODUCT_DEBT` because one source-authored
-assessment remains contradictory inside the forbidden copy-repair boundary.
+Status: PUBLISHED CONTRACT; the bounded Blinds Action-Order Truth Repair closes
+the final source-authored contradiction and repair-coverage gap.
 
 Starting baseline: `e5a83a78864741f1671c05b15ef86bd9824768ef`.
 Product contract commit: `d7a8f8d870b5859f07cabacec914f51b711bf0da`.
@@ -79,7 +78,7 @@ recheck, and compatibility fields are machine-owned in
 | 14 | W1/blinds_action_order/`blinds_posts_drill` | INTENTIONAL_EXACT_REPLAY | forced-post identity-specific |
 | 15 | W1/blinds_action_order/`blinds_first_actor` | INTENTIONAL_EXACT_REPLAY | first-actor identity-specific |
 | 16 | W1/blinds_action_order/`blinds_last_actor` | INTENTIONAL_EXACT_REPLAY | last-actor identity-specific |
-| 17 | W1/blinds_action_order/`blinds_review` | UNRESOLVED_PRODUCT_GAP | prompt/feedback say first actor; authored correct option remains BB |
+| 17 | W1/blinds_action_order/`blinds_review` | INTENTIONAL_EXACT_REPLAY | first-actor identity-specific; the only existing W1 drill asks the same exact UTG decision |
 | 18 | W1/positions/`positions_utg` | INTENTIONAL_EXACT_REPLAY | UTG identity-specific |
 | 19 | W1/positions/`positions_cutoff` | INTENTIONAL_EXACT_REPLAY | cutoff identity-specific |
 | 20 | W1/positions/`positions_early_late` | ALTERNATE_SAME_SIGNAL_TARGET | `positions_late_seat` |
@@ -98,11 +97,12 @@ recheck, and compatibility fields are machine-owned in
 | 33 | W3/same_hand_different_seat/`same_hand_different_seat_position_repair_same_hand_different_seat` | ALTERNATE_SAME_SIGNAL_TARGET | `same_hand_different_seat_same_hand_early_fold` |
 | 34 | W8/spr_and_commitment/`what_poker_is_side_pot_intro` | ALTERNATE_SAME_SIGNAL_TARGET | W1/what_poker_is_content/`what_poker_is_matched_chips_transfer` |
 
-Disposition totals: 20 alternate targets, 13 intentional exact replays, zero
-new bounded repair items, and one unresolved product gap. Intentional exact
+Disposition totals: 20 alternate targets, 14 intentional exact replays, zero
+new bounded repair items, and zero unresolved product gaps. Intentional exact
 replay is an explicit allowlist and may launch an assessed theory/review source;
-ordinary alternate repairs remain drill-only. The unresolved row is stored for
-evidence/Review identity but is deliberately not launched as misleading repair.
+ordinary alternate repairs remain drill-only. `blinds_review` is now launchable
+because its question, UTG option, hint, and feedback all teach the same
+first-preflop-actor truth.
 
 ## Before/after deterministic census
 
@@ -114,9 +114,9 @@ evidence/Review identity but is deliberately not launched as misleading repair.
 | incorrect options without repair intent | 22 | 0 |
 | different same-signal targets | 257 (88.3%) | 277 (95.2%) |
 | unrecorded exact fallback | 34 | 0 |
-| intentional exact replay | 0 recorded | 13 |
+| intentional exact replay | 0 recorded | 14 |
 | new bounded repair items | 0 | 0 |
-| unresolved product gaps | 0 recorded | 1 explicit |
+| unresolved product gaps | 0 recorded | 0 |
 
 Post-change mapping coverage is W1 57/70, W2 29/29, W3 41/42, W4 20/20,
 W5 23/23, W6 26/26, W7 5/5, W8 18/18, W9 16/16, W10 15/15,
@@ -126,6 +126,19 @@ The 14 non-alternate rows are the 13 explicit intentional replays and the one
 unresolved source contradiction; no aggregate claim hides them.
 
 ## Compatibility and fingerprint adjudication
+
+### `actions_check_drill` lifecycle fixture adjudication
+
+The published baseline already had a test-layer mismatch: the
+`actions_check_drill` fixture expected an `exact` intent even though its single
+adjudication row is `ALTERNATE_SAME_SIGNAL_TARGET` to
+`actions_legal_context`. The corrected lifecycle guard asserts the persisted
+repair intent's `repair` mapping and legal-context target. When feedback
+launches the source as an in-place fallback, completing that source does not
+falsely clear the still-mapped intent; the existing mapped repair/recheck test
+continues to prove successful target completion returns to the original source.
+This is `TEST_ASSERTS_WRONG_CONTRACT_LAYER`, not a blinds-local regression or a
+change to any repair adjudication.
 
 The persisted progress schema remains 16; repair intent, learning evidence,
 Review mistake history, and resolution receipt schemas remain unchanged.
@@ -138,12 +151,12 @@ emits exactly one `user_choice`, one `decision_made`, and one `task_result`;
 each existing applicable `error_type` field receives the same concept id.
 No historical trace or local evidence is rewritten.
 
-The assessment fingerprint is not affected. Its sole declared authored input
-is `act0_shell_state_v1.dart`, which is unchanged. The serialized payload does
-not include the new taxonomy/adjudication registries or runtime target
-selection. Row count remains 291, option distribution remains 121/165/5,
-correct positions remain 111/116/62/2, and the current fingerprint remains
-`433136896f6d9841e74f123a55ca2e4c8ea388412c824e7f661e1e7afe7a9803`.
+The assessment fingerprint changes only for the corrected `blinds_review`
+authored row. Its sole declared input remains `act0_shell_state_v1.dart`; the
+serialized payload does not include taxonomy/adjudication registries or runtime
+target selection. Row count remains 291, option distribution remains
+121/165/5, correct positions become 112/115/62/2, and the adjudicated
+fingerprint is `1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91`.
 
 ## Finding dispositions and remaining boundary
 
@@ -168,10 +181,9 @@ correct positions remain 111/116/62/2, and the current fingerprint remains
 
 - CL-LRN-F03: `CLOSED_FIXED`. Every incorrect option on the canonical 291-task
   route now resolves to one of 20 stable misconception ids; legacy values load.
-- CL-LRN-F05: `PRODUCT_DEBT_CONFIRMED`. Its inventory and 33 safe dispositions
-  are closed, but `blinds_review` cannot be claimed repaired while the authored
-  correct option contradicts its question and feedback. This mission did not
-  alter already-closed W1 copy.
+- CL-LRN-F05: `CLOSED_FIXED`. All 34 prior fallbacks now have a launchable,
+  explicit disposition; `blinds_review` is the fourteenth intentional exact
+  replay after its UTG source correction.
 - CL-LRN-F01/F02/F06/F08/F11 remain open and unchanged.
 
 ## Next selection

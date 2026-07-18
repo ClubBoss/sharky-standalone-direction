@@ -156,14 +156,19 @@ void main() {
     }
     expect(counts, <Act0RepairGapOutcomeV1, int>{
       Act0RepairGapOutcomeV1.alternateSameSignalTarget: 20,
-      Act0RepairGapOutcomeV1.intentionalExactReplay: 13,
-      Act0RepairGapOutcomeV1.unresolvedProductGap: 1,
+      Act0RepairGapOutcomeV1.intentionalExactReplay: 14,
     });
-    final unresolved = rows.singleWhere(
-      (row) => row.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap,
+    expect(
+      rows.where(
+        (row) => row.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap,
+      ),
+      isEmpty,
     );
-    expect(unresolved.sourceTaskId, 'blinds_review');
-    expect(unresolved.targetTaskId, isNull);
+    final blindsReview = rows.singleWhere(
+      (row) => row.sourceTaskId == 'blinds_review',
+    );
+    expect(blindsReview.outcome, Act0RepairGapOutcomeV1.intentionalExactReplay);
+    expect(blindsReview.targetTaskId, isNull);
   });
 }
 

@@ -322,12 +322,12 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     misconception: 'first preflop actor',
     conceptErrorId: 'misread_position_action_order',
     priorFallback: _priorExact,
-    candidateTargetIds: <String>['blinds_first_actor'],
-    outcome: Act0RepairGapOutcomeV1.unresolvedProductGap,
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.intentionalExactReplay,
     learnerEquivalenceRationale:
-        'authored question and feedback say first actor while marked answer remains big blind',
-    difficultyRelationship: 'unsafe until the source contract is corrected',
-    recheckPath: 'blocked; do not launch misleading replay',
+        'the only earlier first-actor drill asks this exact UTG identity, so a different target would change the precise skill',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: _recheck,
     compatibilityImpact: _compat,
   ),
   Act0RepairGapAdjudicationV1(

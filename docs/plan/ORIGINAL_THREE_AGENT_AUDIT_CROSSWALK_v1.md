@@ -43,7 +43,7 @@ silently converted to a closure; an opportunity is never counted as a defect.
 | CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
 | CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | `act0_concept_error_contract_v1.dart`; 291-task/466-option census | AI personalization dependency | CLOSED_FIXED | Canonical decision evidence now uses 20 source-owned misconception ids across all 466 incorrect options; zero options lack repair intent. Legacy generic string values remain readable without schema change. Full inventory: `CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. |
 | CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | CLOSED_FIXED | Learner-facing title, hint, feedback title, theory title, and focus labels now use intentional beginner copy. `learningPurpose` and `conceptFamilyId` remain internal authored metadata and the deterministic learner-surface guard rejects the leaked family id. |
-| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Complete 34-row registry and repair resolver | Current route loop | PRODUCT_DEBT_CONFIRMED | All 34 prior gaps are explicit: 20 alternate same-signal targets, 13 guarded intentional exact replays, zero new items, and one `UNRESOLVED_PRODUCT_GAP` (`blinds_review`, whose first-actor prompt/feedback contradicts its BB marked answer). Different-target coverage is 277/291 (95.2%); unrecorded fallback is zero. The unresolved row is non-launchable and prevents a false closure. |
+| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Complete 34-row registry and repair resolver | Current route loop | CLOSED_FIXED | All 34 prior gaps are explicit: 20 alternate same-signal targets and 14 guarded intentional exact replays, with zero unresolved or unrecorded fallbacks. `blinds_review` now asks and marks UTG as the first preflop actor; its exact replay is launchable. Different-target coverage remains 277/291 (95.2%). |
 | CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | option inventory; `11715b50` | Assessed-row guard; reproducible | Current route curriculum | PRODUCT_DEBT_CONFIRMED | Complete canonical census: 121/291 (41.6%) two-option, 165/291 (56.7%) three-option, and 5/291 (1.7%) four-option. W1-W6 are 121 two/89 three; W7-W12 are 76 three/5 four. Checkpoints are 12 two/37 three; repair targets 8 two/16 three. Correct positions are 111/116/62/2 at indices 0/1/2/3; longest run is 3. Position balance alone does not establish discrimination. Next family: late-world decision authenticity. |
 | CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; reproducible | Content-depth decision | CLOSED_FALSE_POSITIVE | The canonical W9-W12 census finds 58 assessed rows: 29 table-action decisions and 29 table-clue/range inferences; all require visible table state and none classify as terminology-only recall. This does not prove broad curriculum quality, but it falsifies the asserted recall dominance. |
 | CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement; reproducible | Learning-claim integrity | PRODUCT_DEBT_CONFIRMED | Current algorithm sorts by `createdOrder`, compares first to last only, rejects duplicate order, has no time separation; early miss/success streak and late miss both retain these limitations. `CURRENT_RELEASE_SCOPE`; `transfer verdict policy`. |
@@ -89,8 +89,8 @@ quantitative censuses, 2 Human requirements, and 3 future/risk/opportunity
 rows**. The old `8 / 2 / 2 / 4` aggregate was a count typo. These are
 factual-disposition counts, not mutually exclusive scope classes.
 
-After Concept Error & Repair Integrity v1, the factual Claude disposition is
-**6 current product debts** (F01/F02/F05/F06/F08/F11), **4 CLOSED_FIXED**
+After Blinds Action-Order Truth Repair, the factual Claude disposition is
+**5 current product debts** (F01/F02/F06/F08/F11), **5 CLOSED_FIXED**
 (F03/F04/F09/F10), **1 CLOSED_FALSE_POSITIVE** (F07), **2 Human
 requirements** (F13/F14), and **3 future/risk/opportunity**. The mutually
 exclusive scope classes remain: **6 current-release product-debt rows**
@@ -99,7 +99,7 @@ post-Human technical-risk row** (F12), **2 strategic-opportunity rows**
 (F15/F16), and **5 closed current-source rows** (F03/F04/F07/F09/F10). Human
 uncertainty is not counted as factual source closure.
 
-Current confirmed product debt is CL-LRN-F01/F02/F05/F06/F08/F11. F02
+Current confirmed product debt is CL-LRN-F01/F02/F06/F08/F11. F02
 remains open because no authority supplies a minimum W7 lesson count; this
 wave does not invent one.
 

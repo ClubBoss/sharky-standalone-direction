@@ -129,8 +129,8 @@ void main() {
 
     expect(snapshot['optionCounts'], <String, int>{'2': 121, '3': 165, '4': 5});
     expect(snapshot['correctPositions'], <String, int>{
-      '0': 111,
-      '1': 116,
+      '0': 112,
+      '1': 115,
       '2': 62,
       '3': 2,
     });
@@ -141,11 +141,11 @@ void main() {
     });
     final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
     expect(repairSnapshot['incorrectOptions'], 466);
-    expect(repairSnapshot['exactReplayCovered'], 13);
+    expect(repairSnapshot['exactReplayCovered'], 14);
     expect(repairSnapshot['sameSignalMapped'], 277);
     expect(repairSnapshot['fallbackOnly'], 14);
-    expect(repairSnapshot['intentionalExactReplay'], 13);
-    expect(repairSnapshot['unresolvedProductGap'], 1);
+    expect(repairSnapshot['intentionalExactReplay'], 14);
+    expect(repairSnapshot['unresolvedProductGap'], 0);
     expect(repairSnapshot['unrecordedFallback'], 0);
     expect(repairSnapshot['unmapped'], 0);
     expect(repairSnapshot['currentErrorTypes'], <String, int>{

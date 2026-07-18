@@ -2045,12 +2045,32 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_review',
         title: 'Order recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _blindsOrderRecapRunner.copyWith(
+        runner: _meetTableRunner.copyWith(
+          phase: Act0LessonPhaseV1.review,
+          lessonId: 'blinds_order_recap',
+          caption: 'Lesson learned: blinds post before the first choice.',
+          hint: 'Think about who makes the first voluntary choice.',
+          question: 'Who acts first preflop?',
+          feedbackTitle: 'Order takeaway.',
+          feedbackReason:
+              'Preflop starts left of the big blind. After the flop, action starts left of the Button.',
           options: _act0AuthoredCorrectOptionAtV1(
-            _blindsOrderRecapRunner.options,
-            correctOptionId: 'bb',
-            correctIndex: 1,
+            _firstPreflopActorRunner.options,
+            correctOptionId: 'utg',
+            correctIndex: 0,
           ),
+          table: _meetTableRunner.table.copyWith(
+            highlightedSeatIds: const <String>[],
+            selectableSeatIds: const <String>['utg', 'btn'],
+          ),
+          teachingSteps: const <Act0TeachingStepV1>[
+            Act0TeachingStepV1(
+              title: 'Order recap.',
+              body: 'Blinds post before the first voluntary decision.',
+              focusSeatIds: <String>['sb', 'bb'],
+              focusLabels: <String>['Post first'],
+            ),
+          ],
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
