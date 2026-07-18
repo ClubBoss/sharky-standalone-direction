@@ -1,6 +1,6 @@
 # Active Act0 Route Authority Hardening v1
 
-Status: ADMISSION READY — PR #27 rebased on green baseline.
+Status: FINAL ADMISSION READY — PR #27.
 
 ## Scope and baseline
 
@@ -109,16 +109,15 @@ miss, foundation, and advanced signal calculations.
 
 ## Validation and end state
 
-Passed:
+Final rebased cone:
 
-- focused release-dev-menu policy, AppRoot entry, and active-route guard tests;
-- `test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart` (including both
-  placement completion paths);
-- `./tools/fast_loop_world1_v1.sh --force` (tool lint, analyzer, and selected
-  Act0 route/copy guards);
-- `flutter analyze`;
-- `graphify hook-check`;
-- `git diff --check` and `git diff --cached --check`.
+- focused route cone: 15 assertions;
+- `./tools/fast_loop_world1_v1.sh --force`: PASS (5 selected tests);
+- R5 release gate: PASS;
+- Test Authority Tier A GitHub Linux authority: PASS;
+- Health and Theory Integrity: PASS;
+- `flutter analyze`, `graphify hook-check`, `git diff --check`, and
+  `git diff --cached --check`: PASS.
 
 No Computer Use, visual suite, content expansion, or campaign rewiring was
 run or authorized.
@@ -126,35 +125,20 @@ run or authorized.
 ## CI admission reconciliation
 
 - Draft PR #27 is `https://github.com/ClubBoss/sharky-standalone-direction/pull/27`
-  at head `1b5d4895fc1d8c50a09f28ec7393b675b42ec43d`, based on
-  `5b95cee0493cbb2057f471bad48fa2a73677a3ae`.
-- Clean worktrees reproduced the same R5 World 3 validator failure on both
-  base and head: `w3.s10` has an admitted four-drill checkpoint while the
-  stale guard allowed at most three, and its three existing transfer intents
-  were absent from the validator allowlist. This is baseline CI debt, not a
-  PR #27 regression.
-- Tier A also used a universal 30-second command timeout, which timed out
-  analysis and nested gates in GitHub Actions. The focused repair-intent test
-  was the only deterministic functional failure and is caused by the same
-  stale intent allowlist.
-- `TestSprite Pre-Check` reported the external status `No tests detected` with
-  no target URL. It has no PR #27 code-level failure log.
-- The independent remediation is draft PR #28:
-  `https://github.com/ClubBoss/sharky-standalone-direction/pull/28`, head
-  `fb2b1523`. It changes only the validator cap, World 3 intent allowlist,
-  Tier A timeout, and one stale repair-return expectation. Its CI result
-  is green for R5, Tier A, Health, and Theory Integrity; Tier B/C/D are
-  intentionally skipped. TestSprite remains an external `No tests detected`
-  failure with no target URL.
-- PR #28 was squash-merged as `99ec45cd28c490193602decc04d11d1e91489d75`.
-  PR #27 is rebased on that new `origin/main` base; the rebased route-authority
-  commit chain before this closure update ended at
-  `d2307d9bbb1182845d8c2ec953a565b2a52051aa`.
+  at base `99ec45cd28c490193602decc04d11d1e91489d75` and, before this metadata
+  commit, head `2e8ac9b7a2fac037e5b43cc208f568a001132d36`.
+- PR #28 is resolved through squash merge
+  `99ec45cd28c490193602decc04d11d1e91489d75`; its World 3 validator, intent,
+  and Tier A timeout repairs are present in the current PR #27 base.
+- Repository-owned PR #27 checks are green: R5, Tier A, Health, and Theory
+  Integrity. L2 and Tier B/C/D are intentionally skipped conditional lanes.
 - TestSprite is classified as `EXTERNAL_NON_REQUIRED_CONFIGURATION_FAILURE`:
   `main` has no branch protection, repository rulesets, or required-status
   contexts. Its `No tests detected` status has no target URL or visible creator.
   No integration was removed because available API access cannot safely prove
   its ownership.
+- PR #27 remains unmerged at the time of this metadata edit. No new immutable
+  candidate or next-wave claim is made.
 
 Repository end state: this isolated draft branch contains only this artifact,
 the active-boundary pointer, the AppRoot comment/test reconciliation, and the
