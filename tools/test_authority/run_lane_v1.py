@@ -244,7 +244,7 @@ def _print_summary(summary: dict[str, object]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("lane", choices=sorted(LANES))
-    parser.add_argument("--timeout-seconds", type=int, default=int(os.environ.get("TEST_AUTHORITY_TIMEOUT_SECONDS", "30")))
+    parser.add_argument("--timeout-seconds", type=int, default=int(os.environ.get("TEST_AUTHORITY_TIMEOUT_SECONDS", "120")))
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()

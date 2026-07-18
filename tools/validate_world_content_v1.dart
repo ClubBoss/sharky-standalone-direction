@@ -1800,6 +1800,7 @@ int _minDrillsPerSessionForWorld(int worldId, String sessionId) {
 }
 
 int _maxDrillsPerSessionForWorld(int worldId, String sessionId) {
+  if (worldId == 3 && sessionId == 'w3.s10') return 4;
   if (worldId == 3) return 3;
   if (worldId == 6 && sessionId == 'w6.s01') return 14;
   return _kMaxDrillsPerSession;

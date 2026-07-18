@@ -49,6 +49,9 @@ const Map<int, WorldIntentRuleV1> kWorldIntentRulesV1 =
           'decision_order',
           'street_structure',
           'action_sequence',
+          'world3_transfer_call_button_facing_open',
+          'world3_transfer_fold_big_blind_weak_facing_open',
+          'world3_transfer_raise_button_unopened',
         },
       ),
       4: WorldIntentRuleV1(
