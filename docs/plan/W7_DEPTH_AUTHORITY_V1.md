@@ -77,3 +77,18 @@ The canonical count remains 291. Exactly one serialized assessed row changed: `w
 | W7D-08 Unseen transfer | CLOSED_FIXED |
 | W7D-09 Range-versus-exact-hand distinction | CLOSED_VERIFIED_PASS |
 | W7D-10 Jargon teach-before-use | CLOSED_VERIFIED_PASS |
+| W7D-11 Checkpoint discrimination | CLOSED_VERIFIED_PASS |
+| W7D-12 Distractor quality | CLOSED_VERIFIED_PASS |
+| W7D-13 W6→W7 seam | CLOSED_VERIFIED_PASS |
+| W7D-14 W7→W8 seam | CLOSED_VERIFIED_PASS |
+| W7D-15 Concept-error integrity | CLOSED_VERIFIED_PASS |
+| W7D-16 Repair/recheck integrity | CLOSED_VERIFIED_PASS |
+| W7D-17 Review/recovery integrity | CLOSED_VERIFIED_PASS |
+| W7D-18 Retention/transfer eligibility | CLOSED_VERIFIED_PASS |
+| W7D-19 Payoff integrity | CLOSED_VERIFIED_PASS |
+| W7D-20 Cognitive-load/pacing | CLOSED_VERIFIED_PASS |
+| W7D-21 Fingerprint adjudication | CLOSED_FIXED |
+| W7D-22 Focused validation | CLOSED_VERIFIED_PASS |
+| W7D-23 Fast/release gates | CLOSED_VERIFIED_PASS |
+| W7D-24 Documentation consistency | CLOSED_FIXED |
+| W7D-25 Commit and push | CLOSED_VERIFIED_PASS |
