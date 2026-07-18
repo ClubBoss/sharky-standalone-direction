@@ -68,6 +68,37 @@ silently converted to a closure; an opportunity is never counted as a defect.
 
 ## Duplicate groups and reconciliation corrections
 
+## Final deterministic convergence refresh
+
+Refreshed at published candidate SHA 40babdeb97d1464c1977f2b5470c5aa05d042d80,
+not inherited from prior closures. The original 41 rows above are retained.
+Current selected-route/release tests were rerun after the LSCS, first-session,
+concept-error, schema-17, and W7 owner changes. Human-only rows remain Human
+questions rather than invented source closures.
+
+| IDs | current result | scope and freshness |
+| --- | --- | --- |
+| AG-VUX-F01, F03, F08, F09 | CURRENT_SOURCE_VERIFICATION_REQUIRED | Human QA required; source proves mechanics, not perception |
+| AG-VUX-F02, F04, F05, F07, F10, F12, F14, F15 | CLOSED_INTENTIONAL | future capability, outside scope, or accepted post-Human risk |
+| AG-VUX-F06, F11, F13 | CLOSED_FIXED | placement, payoff, and route tests rerun |
+| CL-LRN-F01, F08, F11 | CLOSED_FIXED | schema-17 retention, due Review, and transfer tests rerun |
+| CL-LRN-F02, F04 | CLOSED_FIXED | W7 outcome/transfer and learner-surface contracts rerun |
+| CL-LRN-F03, F05 | CLOSED_FIXED | 20-id/466-option census and repair resolver rerun |
+| CL-LRN-F06 | CLOSED_INTENTIONAL | 121-row source-valid binary census; guessability stays Human-only |
+| CL-LRN-F07 | CLOSED_FALSE_POSITIVE | current W9-W12 source inventory remains table-signal based |
+| CL-LRN-F09, F10 | CLOSED_FIXED | W4 and W1 source/fingerprint contracts rerun |
+| CL-LRN-F12, F15, F16 | CLOSED_INTENTIONAL | maintenance risk or strategic opportunity |
+| CL-LRN-F13, F14 | CURRENT_SOURCE_VERIFICATION_REQUIRED | Human jargon and recap-value observations |
+| CX-ST-F01, F02, F03, F04, F05, F06 | CLOSED_FIXED | compact, telemetry, persistence, selected-gate contracts rerun |
+| CX-ST-F07, F09 | CLOSED_INTENTIONAL | accepted technical risk or outside scope |
+| CX-ST-F08 | CURRENT_SOURCE_VERIFICATION_REQUIRED | full-shell VoiceOver remains Human-only |
+| CX-ST-F10 | CLOSED_VERIFIED_PASS | canonical cold-start contract rerun |
+
+Candidate factual counts: CLOSED_FIXED 17, CLOSED_VERIFIED_PASS 3,
+CLOSED_FALSE_POSITIVE 1, CLOSED_INTENTIONAL 12, and
+CURRENT_SOURCE_VERIFICATION_REQUIRED 8. The grouped index is only a
+freshness register; no original ID is removed.
+
 `DG-RETENTION` = CL-LRN-F01/F08/F11; `DG-W7-CONTENT` = F02/F04;
 `DG-LEARNING-DISCRIMINATION` = F06/F07/F09/F10; `DG-REPAIR-COVERAGE` = F03/F05;
 `DG-HUMAN` = AG-VUX-F01/F03/F08/F09, CL-LRN-F13/F14, CX-ST-F08; and

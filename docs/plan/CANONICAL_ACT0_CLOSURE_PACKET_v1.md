@@ -1,12 +1,31 @@
 # Canonical Act0 Closure Packet v1
 
-Status: HISTORICAL_CANDIDATE_FREEZE_RECORD — superseded for original-package adjudication
+Status: CURRENT DETERMINISTIC CLOSURE PACKET — candidate evidence index at 40babdeb97d1464c1977f2b5470c5aa05d042d80
 
 > Superseded for original-three-agent freeze adjudication at `cf0b4c8b`:
 > `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md` directly reconciles the 41
 > original findings and identifies unresolved current learning debt. This packet
 > remains evidence for its named historical records; it is not authority to
 > erase claims absent from its 35-record source set.
+
+## Final convergence refresh
+
+Historical raster and JSONL capture is context only if a source owner changed.
+Current proof is rerun source/test evidence. The full matrix and risk register
+are in FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md and the immutable candidate
+pin is in CANDIDATE_FREEZE_MANIFEST_V1.md.
+
+| block | implementation and proof | status |
+| --- | --- | --- |
+| onboarding / placement and first-session route | forward placement, cold start, happy and negative route | CLOSED_FULLY_PROVEN |
+| curriculum, decision, concept error | 291 rows, W1/W4/W7 source, 20 ids/466 options | CLOSED_FULLY_PROVEN |
+| repair, recheck, Review | wrong, recovery, repeat miss, due Review | CLOSED_FULLY_PROVEN |
+| presentation and accessibility | compact/nominal/large/1.4x and CTA geometry | CLOSED_FULLY_PROVEN |
+| persistence and durable retention | schema-16 migration, schema-17 round trip, 24h/72h/7d | CLOSED_FULLY_PROVEN |
+| telemetry, release tooling, completion | lifecycle/cardinality, policy gates, payoff contracts | CLOSED_FULLY_PROVEN |
+
+Full-shell VoiceOver, perception, and real-device clean-install observation
+are Human/release validation, not hidden deterministic product debt.
 
 ## Current convergence addendum — Concept Error & Repair Integrity v1
 

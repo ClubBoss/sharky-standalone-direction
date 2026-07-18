@@ -160,7 +160,12 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   repair-landed states; stable anchors, bounded Dynamic Type, and CTA
   reachability are closed. The corrected terminal verdict is
   `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`.
-- The next bounded convergence wave is **Learning Integrity Foundation v1**.
+- Learning Integrity Foundation v1 and W7 Depth Authority are complete. The
+  Final Deterministic Convergence Packet and immutable candidate manifest are
+  admitted at published SHA `40babdeb97d1464c1977f2b5470c5aa05d042d80`.
+  The next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**. This plan selects but
+  does not begin that audit; Human Novice Proof and AI Personalization remain
+  downstream. Any change requires a new candidate baseline.
   It must begin with a complete repair-coverage and option-count census, then
   address only directly reproducible canonical Act0 learning debt; it must not
   begin Human QA, Final Deep Independent Audit, or AI Personalization. See
