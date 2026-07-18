@@ -1067,6 +1067,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _learningRunOrdinalV1 = 0;
   int _learningRunEventOrderV1 = 0;
   final Set<String> _learningRunOutcomeTelemetryKeysV1 = <String>{};
+  final Set<String> _personalizedNextStepShownTelemetryKeysV1 = <String>{};
   bool _debugReviewEmptyV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
@@ -4628,6 +4629,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
+    final personalizedNextStep = _personalizedNextStepV1();
+    if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
+        !_showPlacement &&
+        !_showWelcome) {
+      _emitPersonalizedNextStepSelectedV1(
+        personalizedNextStep,
+        surface: _tab == Act0ShellTabV1.home ? 'home' : 'review',
+      );
+    }
     final profileState = _profileState(state.profile, progress);
     if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
         reviewState.mistakes.isNotEmpty &&
@@ -4938,7 +4948,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _firstPlayableLesson(selectedWorld),
                         ),
                         personalizedReturnReasonLine:
-                            _homePersonalizedReturnReasonLine(),
+                            personalizedNextStep.copyLine,
                         weeklyFocus: _showHomeChecklistV1()
                             ? _homeWeeklyFocus(
                                 selectedWorld,
@@ -5022,7 +5032,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               })
                             : null,
                         onContinue: () => setState(() {
-                          _startHomeNextAction(selectedWorld);
+                          _openPersonalizedNextStepV1(
+                            personalizedNextStep,
+                            surface: 'home',
+                            selectedWorld: selectedWorld,
+                            reviewState: reviewState,
+                          );
                         }),
                       ),
                       Act0ShellTabV1.learn => Act0LearnPathShellV1(
@@ -5949,6 +5964,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
                           widget.clock.nowUtc(),
                         ),
+                        nextStep: personalizedNextStep,
+                        onOpenRecommendedAction: () => setState(() {
+                          _openPersonalizedNextStepV1(
+                            personalizedNextStep,
+                            surface: 'review',
+                            selectedWorld: selectedWorld,
+                            reviewState: reviewState,
+                          );
+                        }),
                         onStartDueReview: (item) => setState(() {
                           _startDueReviewItemV1(item);
                         }),
@@ -6750,8 +6774,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return renderedLine.isEmpty ? null : renderedLine;
   }
 
-  String? _homePersonalizedReturnReasonLine() {
-    final reason = Act0PersonalizedReturnReasonV1.fromSources(
+  Act0PersonalizedReturnReasonV1 _personalizedNextStepV1() {
+    return Act0PersonalizedReturnReasonV1.fromSources(
       activeRepairIntents: _activeRepairIntentsV1(),
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
       transferMeasurement:
@@ -6759,8 +6783,69 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             _learningEvidenceHistoryV1,
             retentionHistory: _durableRetentionHistoryV1,
           ),
+      dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
+        widget.clock.nowUtc(),
+      ),
     );
-    return reason.copyLine;
+  }
+
+  String? _homePersonalizedReturnReasonLine() =>
+      _personalizedNextStepV1().copyLine;
+
+  void _emitPersonalizedNextStepSelectedV1(
+    Act0PersonalizedReturnReasonV1 nextStep, {
+    required String surface,
+  }) {
+    if (nextStep.reasonType == act0ReturnReasonNoPersonalReasonAvailableV1) {
+      return;
+    }
+    final key = '$surface|${nextStep.reasonType}|${nextStep.recommendedAction}';
+    if (!_personalizedNextStepShownTelemetryKeysV1.add(key)) return;
+    _recordTelemetryEventV1(
+      'personalized_next_step_selected',
+      <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+    );
+  }
+
+  void _openPersonalizedNextStepV1(
+    Act0PersonalizedReturnReasonV1 nextStep, {
+    required String surface,
+    required Act0WorldCardV1 selectedWorld,
+    required Act0ReviewStateV1 reviewState,
+  }) {
+    if (nextStep.reasonType != act0ReturnReasonNoPersonalReasonAvailableV1) {
+      _recordTelemetryEventV1(
+        'personalized_next_step_opened',
+        <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+      );
+    }
+    if (nextStep.recommendedAction == 'spaced_review') {
+      final due = _durableRetentionHistoryV1
+          .dueItemsAt(widget.clock.nowUtc())
+          .cast<Act0DueReviewItemV1?>()
+          .firstWhere(
+            (item) => item?.taskId == nextStep.sourceTaskId,
+            orElse: () => null,
+          );
+      if (due != null) {
+        _startDueReviewItemV1(due);
+        return;
+      }
+    }
+    if (nextStep.recommendedAction == 'repair' ||
+        nextStep.recommendedAction == 'retry_repair') {
+      final mistake = reviewState.mistakes
+          .cast<Act0MistakeCardV1?>()
+          .firstWhere(
+            (item) => item?.taskId == nextStep.sourceTaskId,
+            orElse: () => null,
+          );
+      if (mistake != null) {
+        _startMistakeRepair(selectedWorld, mistake, returnToPlayHub: false);
+        return;
+      }
+    }
+    _tab = Act0ShellTabV1.learn;
   }
 
   String _homeRepairLabel(

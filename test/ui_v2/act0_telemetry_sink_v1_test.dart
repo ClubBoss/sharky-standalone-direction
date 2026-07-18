@@ -72,6 +72,31 @@ void main() {
     );
   }
 
+  testWidgets(
+    'Home generic fallback does not emit personalized-next-step telemetry',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await tester.pumpWidget(previewHost(telemetrySink: sink));
+      await tester.pumpAndSettle();
+
+      expect(
+        sink.events.where(
+          (event) => event.name == 'personalized_next_step_selected',
+        ),
+        isEmpty,
+      );
+
+      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.pumpAndSettle();
+      expect(
+        sink.events.where(
+          (event) => event.name == 'personalized_next_step_opened',
+        ),
+        isEmpty,
+      );
+    },
+  );
+
   Future<void> seedActionCapabilityPreconditionV1() async {
     final decoded =
         jsonDecode(File(_actionPreconditionFixturePathV1).readAsStringSync())
@@ -1071,7 +1096,15 @@ void main() {
           .where((event) => event.name == 'repair_item_completed')
           .toList(growable: false);
       expect(repairItemEvents, hasLength(1));
-      expect(sink.events.last.name, 'repair_item_completed');
+      expect(sink.events.last.name, 'personalized_next_step_selected');
+
+      final nextStep = sink.events.last.fields;
+      expect(nextStep['surface'], 'review');
+      expect(nextStep['reason_type'], isA<String>());
+      expect(nextStep['evidence_kind'], isA<String>());
+      expect(nextStep['priority_class'], isA<int>());
+      expect(nextStep.keys, isNot(contains('conceptFamilyId')));
+      expect(nextStep.keys, isNot(contains('sourceTaskId')));
 
       final repairItem = repairItemEvents.single.fields;
       expect(repairItem['schemaVersion'], 1);

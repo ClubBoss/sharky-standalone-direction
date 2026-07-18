@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
@@ -66,6 +67,39 @@ void main() {
     expect(reason.priorityClass, 1);
     expect(reason.copyLine, 'Your last repair did not land yet. Start there.');
   });
+
+  test(
+    'due review outranks transfer and recent focus with deterministic tie breaking',
+    () {
+      final reason = Act0PersonalizedReturnReasonV1.fromSources(
+        dueReviewItems: <Act0DueReviewItemV1>[
+          _dueItem(taskId: 'later_task', dueAt: DateTime.utc(2026, 7, 2)),
+          _dueItem(taskId: 'first_task', dueAt: DateTime.utc(2026, 7, 1)),
+        ],
+        transferMeasurement: Act0LearningTransferMeasurementV1(
+          signals: <Act0LearningTransferSignalV1>[
+            _transferSignal(verdict: act0LearningTransferImprovedV1),
+          ],
+        ),
+        conceptFamilyStateHistory: Act0ConceptFamilyStateHistoryV1(
+          families: <Act0ConceptFamilyStateV1>[
+            _family(conceptFamilyId: 'recent_focus', lastSeenAt: 9),
+          ],
+        ),
+      );
+
+      expect(reason.reasonType, act0ReturnReasonDueReviewV1);
+      expect(reason.sourceTaskId, 'first_task');
+      expect(reason.evidenceKind, act0ReturnReasonEvidenceDurableRetentionV1);
+      expect(reason.priorityClass, 2);
+      expect(reason.recommendedAction, 'spaced_review');
+      expect(reason.copyLine, contains('spaced check'));
+      expect(
+        reason.toTelemetryPayload().keys,
+        isNot(contains('conceptFamilyId')),
+      );
+    },
+  );
 
   test('improved transfer creates conservative reinforcement reason', () {
     final reason = Act0PersonalizedReturnReasonV1.fromSources(
@@ -182,20 +216,23 @@ void main() {
     expect(reason.toPayload()['rawEvidenceRef'], contains('active_repair'));
   });
 
-  test('source contains no persistence, UI parsing, ranking, or telemetry', () {
-    final source = File(
-      'lib/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart',
-    ).readAsStringSync();
+  test(
+    'source contains no persistence, UI parsing, ranking, or telemetry sink',
+    () {
+      final source = File(
+        'lib/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart',
+      ).readAsStringSync();
 
-    expect(source, isNot(contains('SharedPreferences')));
-    expect(source, isNot(contains('package:flutter/')));
-    expect(source, isNot(contains('Telemetry')));
-    expect(source, isNot(contains('weakest')));
-    expect(source, isNot(contains('rank')));
-    expect(source, isNot(contains('score')));
-    expect(source, isNot(contains('DateTime.now')));
-    expect(source, isNot(contains('Random')));
-  });
+      expect(source, isNot(contains('SharedPreferences')));
+      expect(source, isNot(contains('package:flutter/')));
+      expect(source, isNot(contains('Act0TelemetrySink')));
+      expect(source, isNot(contains('weakest')));
+      expect(source, isNot(contains('rank')));
+      expect(source, isNot(contains('score')));
+      expect(source, isNot(contains('DateTime.now')));
+      expect(source, isNot(contains('Random')));
+    },
+  );
 }
 
 Act0ConceptFamilyStateV1 _family({
@@ -241,6 +278,19 @@ Act0LearningTransferSignalV1 _transferSignal({
     comparisonDecisionTimeBucket: 'under_3s',
   );
 }
+
+Act0DueReviewItemV1 _dueItem({
+  required String taskId,
+  required DateTime dueAt,
+}) => Act0DueReviewItemV1(
+  conceptFamilyId: 'due_focus',
+  worldId: 'world_1',
+  lessonId: 'what_poker_is',
+  taskId: taskId,
+  nextDueAtUtc: dueAt,
+  repeatedMissCount: 1,
+  lapseCount: 0,
+);
 
 Act0RepairIntentV1 _repairIntent() {
   return const Act0RepairIntentV1(
