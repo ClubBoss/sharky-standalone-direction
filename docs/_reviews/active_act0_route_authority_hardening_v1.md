@@ -143,7 +143,12 @@ run or authorized.
   `https://github.com/ClubBoss/sharky-standalone-direction/pull/28`, head
   `fb2b1523`. It changes only the validator cap, World 3 intent allowlist,
   Tier A timeout, and one stale repair-return expectation. Its CI result
-  remains the admission authority.
+  is green for R5, Tier A, Health, and Theory Integrity; Tier B/C/D are
+  intentionally skipped. TestSprite remains an external `No tests detected`
+  failure with no target URL.
+- PR #27 itself remains a draft non-admission candidate: its R5 result is the
+  reproduced baseline content-validator failure until PR #28 is merged and
+  the branch is rebased. It makes no green-CI or immutable-tag claim.
 
 Repository end state: this isolated branch was committed and pushed as
 `1b5d4895fc1d8c50a09f28ec7393b675b42ec43d` for draft PR #27. It contains only
