@@ -25,6 +25,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_causal_feedback_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 
 enum Act0ShellTableVisualVariantV1 { classic, refinedDev2 }
@@ -1438,6 +1439,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             proof: feedbackSignalProof,
             quality: selectedOption?.quality ?? widget.runner.reviewQuality,
           );
+    final causalFeedback = Act0CausalFeedbackV1.fromStructured(
+      quality: selectedOption?.quality ?? widget.runner.reviewQuality,
+      authoredReason: widget.runner.reviewReason,
+      chosenAction: widget.runner.reviewSelectedLabel,
+      preferredAction: widget.runner.reviewPreferredLabel,
+      betterAction: widget.runner.reviewBetterLabel,
+      structuredClue: feedbackSignalProof?.label ?? '',
+    );
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'feedback_viewed',
@@ -1460,6 +1469,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           if (skillReceipt != null) 'nextRepId': skillReceipt.nextRepId,
           if (skillReceipt != null)
             'skillReceiptOutcome': skillReceipt.outcome.telemetryValue,
+          'causal_feedback_shown': true,
+          ...causalFeedback.toTelemetryPayload(),
           'attemptOrdinal': 1,
         },
       ),
@@ -2606,9 +2617,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final hintCompact = compactAnswerListDecision && decisionHint != null;
     final shouldDeemphasizeTableForRepairLearning =
         usesCompactRepairFeedbackDock;
+    final causalFeedback = Act0CausalFeedbackV1.fromStructured(
+      quality: runner.reviewQuality,
+      authoredReason: runner.reviewReason,
+      chosenAction: runner.reviewSelectedLabel,
+      preferredAction: runner.reviewPreferredLabel,
+      betterAction: runner.reviewBetterLabel,
+      structuredClue: feedbackSignalProof?.label ?? '',
+    );
     Widget buildFeedbackShell() => Act0FeedbackShellV1(
       title: runner.reviewTitle,
-      reason: runner.reviewReason,
+      reason: causalFeedback.whyChosen,
+      nextClueLine: causalFeedback.nextHandInstruction,
       quality: runner.reviewQuality,
       sharkyLine: runner.reviewQuality == Act0FeedbackQualityV1.correct
           ? runner.sharky.correctReaction
@@ -6137,6 +6157,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     super.key,
     required this.title,
     required this.reason,
+    this.nextClueLine = '',
     required this.quality,
     required this.sharkyLine,
     required this.sharkyMood,
@@ -6167,6 +6188,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
 
   final String title;
   final String reason;
+  final String nextClueLine;
   final Act0FeedbackQualityV1 quality;
   final String sharkyLine;
   final Act0SharkyMoodV1 sharkyMood;
@@ -6663,6 +6685,22 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                             height: isCompactRefinedFeedback ? 1.08 : 1.16,
                           ),
                         ),
+                      if (!rapidMode && nextClueLine.trim().isNotEmpty) ...[
+                        SizedBox(height: isCompactRefinedFeedback ? 3 : 6),
+                        Text(
+                          nextClueLine.trim(),
+                          key: const Key('act0_shell_feedback_next_clue'),
+                          maxLines: isCompactRefinedFeedback ? 2 : null,
+                          overflow: isCompactRefinedFeedback
+                              ? TextOverflow.fade
+                              : null,
+                          style: Act0ShellTokensV1.label.copyWith(
+                            color: tone.withValues(alpha: 0.9),
+                            fontSize: isCompactRefinedFeedback ? 10.5 : 11.0,
+                            height: 1.1,
+                          ),
+                        ),
+                      ],
                       if (showRepairFocus) ...[
                         SizedBox(height: isCompactRefinedFeedback ? 6 : 10),
                         const _FeedbackVerdictDividerV1(),
