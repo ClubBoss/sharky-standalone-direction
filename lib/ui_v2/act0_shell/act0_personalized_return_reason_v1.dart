@@ -1,10 +1,12 @@
 import 'act0_concept_family_state_foundation_v1.dart';
+import 'act0_durable_retention_contract_v1.dart';
 import 'act0_learning_transfer_measurement_v1.dart';
 import 'act0_repair_intent_contract_v1.dart';
 
 const String act0ReturnReasonContinueUnresolvedRepairV1 =
     'continue_unresolved_repair';
 const String act0ReturnReasonRetryNotYetSucceededV1 = 'retry_not_yet_succeeded';
+const String act0ReturnReasonDueReviewV1 = 'due_review';
 const String act0ReturnReasonReinforceRecentImprovementV1 =
     'reinforce_recent_improvement';
 const String act0ReturnReasonResumeRecentFocusV1 = 'resume_recent_focus';
@@ -16,10 +18,12 @@ const String act0ReturnReasonEvidenceConceptFamilyStateV1 =
     'concept_family_state';
 const String act0ReturnReasonEvidenceTransferMeasurementV1 =
     'transfer_measurement';
+const String act0ReturnReasonEvidenceDurableRetentionV1 = 'durable_retention';
 const String act0ReturnReasonEvidenceFallbackV1 = 'fallback';
 
 const String act0ReturnReasonMessageContinueRepairV1 = 'continue_repair';
 const String act0ReturnReasonMessageRetryRepairV1 = 'retry_repair';
+const String act0ReturnReasonMessageDueReviewV1 = 'due_review';
 const String act0ReturnReasonMessageReinforceTransferV1 = 'reinforce_transfer';
 const String act0ReturnReasonMessageResumeFocusV1 = 'resume_focus';
 const String act0ReturnReasonMessageNoReasonV1 = 'no_reason';
@@ -34,6 +38,10 @@ class Act0PersonalizedReturnReasonV1 {
     required this.evidenceKind,
     required this.messageKey,
     required this.priorityClass,
+    this.recommendedDestination = 'learn',
+    this.recommendedAction = 'continue',
+    this.whyNowMessageKey = 'continue_now',
+    this.learnerSafeFocusLabel = '',
     this.rawEvidenceRef = '',
   });
 
@@ -43,6 +51,7 @@ class Act0PersonalizedReturnReasonV1 {
         const Act0ConceptFamilyStateHistoryV1(),
     Act0LearningTransferMeasurementV1 transferMeasurement =
         const Act0LearningTransferMeasurementV1(signals: []),
+    List<Act0DueReviewItemV1> dueReviewItems = const <Act0DueReviewItemV1>[],
   }) {
     final active = _activeRepairReason(activeRepairIntents);
     if (active != null) {
@@ -51,6 +60,10 @@ class Act0PersonalizedReturnReasonV1 {
     final retry = _retryRepairReason(conceptFamilyStateHistory);
     if (retry != null) {
       return retry;
+    }
+    final due = _dueReviewReason(dueReviewItems);
+    if (due != null) {
+      return due;
     }
     final reinforce = _reinforceTransferReason(transferMeasurement);
     if (reinforce != null) {
@@ -65,7 +78,10 @@ class Act0PersonalizedReturnReasonV1 {
       conceptFamilyId: '',
       evidenceKind: act0ReturnReasonEvidenceFallbackV1,
       messageKey: act0ReturnReasonMessageNoReasonV1,
-      priorityClass: 4,
+      priorityClass: 5,
+      recommendedDestination: 'learn',
+      recommendedAction: 'continue',
+      whyNowMessageKey: 'no_evidence_available',
     );
   }
 
@@ -77,6 +93,10 @@ class Act0PersonalizedReturnReasonV1 {
   final String evidenceKind;
   final String messageKey;
   final int priorityClass;
+  final String recommendedDestination;
+  final String recommendedAction;
+  final String whyNowMessageKey;
+  final String learnerSafeFocusLabel;
   final String rawEvidenceRef;
 
   String? get copyLine {
@@ -85,6 +105,8 @@ class Act0PersonalizedReturnReasonV1 {
         'You missed this clue last time. One more clean rep will keep it visible.',
       act0ReturnReasonMessageRetryRepairV1 =>
         'Your last repair did not land yet. Start there.',
+      act0ReturnReasonMessageDueReviewV1 =>
+        'Review this clue now. It is ready for a spaced check.',
       act0ReturnReasonMessageReinforceTransferV1 =>
         'You handled this clue better on a later hand. Reinforce it once more.',
       act0ReturnReasonMessageResumeFocusV1 =>
@@ -103,6 +125,16 @@ class Act0PersonalizedReturnReasonV1 {
     'messageKey': messageKey,
     'priorityClass': priorityClass,
     if (rawEvidenceRef.isNotEmpty) 'rawEvidenceRef': rawEvidenceRef,
+  };
+
+  /// Bounded projection for telemetry. Internal task and concept references
+  /// deliberately never leave this decision contract.
+  Map<String, Object?> toTelemetryPayload() => <String, Object?>{
+    'reason_type': reasonType,
+    'evidence_kind': evidenceKind,
+    'priority_class': priorityClass,
+    'destination': recommendedDestination,
+    'action': recommendedAction,
   };
 }
 
@@ -131,6 +163,10 @@ Act0PersonalizedReturnReasonV1? _activeRepairReason(
     evidenceKind: act0ReturnReasonEvidenceActiveRepairV1,
     messageKey: act0ReturnReasonMessageContinueRepairV1,
     priorityClass: 0,
+    recommendedDestination: 'review',
+    recommendedAction: 'repair',
+    whyNowMessageKey: 'unfinished_repair',
+    learnerSafeFocusLabel: intent.missedSignalLabel.trim(),
     rawEvidenceRef: 'active_repair:${intent.sourceTaskId.trim()}',
   );
 }
@@ -159,8 +195,49 @@ Act0PersonalizedReturnReasonV1? _retryRepairReason(
     evidenceKind: act0ReturnReasonEvidenceConceptFamilyStateV1,
     messageKey: act0ReturnReasonMessageRetryRepairV1,
     priorityClass: 1,
+    recommendedDestination: 'review',
+    recommendedAction: 'retry_repair',
+    whyNowMessageKey: 'repair_not_landed',
     rawEvidenceRef: 'concept_family:${family.conceptFamilyId}',
   );
+}
+
+Act0PersonalizedReturnReasonV1? _dueReviewReason(
+  List<Act0DueReviewItemV1> dueItems,
+) {
+  final candidates = <Act0DueReviewItemV1>[
+    for (final item in dueItems)
+      if (item.conceptFamilyId.trim().isNotEmpty &&
+          item.taskId.trim().isNotEmpty &&
+          item.worldId.trim().isNotEmpty &&
+          item.lessonId.trim().isNotEmpty)
+        item,
+  ]..sort(_compareDueReviewItems);
+  if (candidates.isEmpty) return null;
+  final item = candidates.first;
+  return Act0PersonalizedReturnReasonV1(
+    reasonType: act0ReturnReasonDueReviewV1,
+    conceptFamilyId: item.conceptFamilyId.trim(),
+    sourceTaskId: item.taskId.trim(),
+    evidenceKind: act0ReturnReasonEvidenceDurableRetentionV1,
+    messageKey: act0ReturnReasonMessageDueReviewV1,
+    priorityClass: 2,
+    recommendedDestination: 'review',
+    recommendedAction: 'spaced_review',
+    whyNowMessageKey: 'due_for_review',
+    rawEvidenceRef: 'due_review:${item.taskId.trim()}',
+  );
+}
+
+int _compareDueReviewItems(Act0DueReviewItemV1 a, Act0DueReviewItemV1 b) {
+  final due = a.nextDueAtUtc.compareTo(b.nextDueAtUtc);
+  if (due != 0) return due;
+  final severity = (b.repeatedMissCount + b.lapseCount).compareTo(
+    a.repeatedMissCount + a.lapseCount,
+  );
+  if (severity != 0) return severity;
+  final family = a.conceptFamilyId.compareTo(b.conceptFamilyId);
+  return family != 0 ? family : a.taskId.compareTo(b.taskId);
 }
 
 Act0PersonalizedReturnReasonV1? _reinforceTransferReason(
@@ -198,7 +275,10 @@ Act0PersonalizedReturnReasonV1? _reinforceTransferReason(
     sourceSessionId: signal.comparisonSessionId,
     evidenceKind: act0ReturnReasonEvidenceTransferMeasurementV1,
     messageKey: act0ReturnReasonMessageReinforceTransferV1,
-    priorityClass: 2,
+    priorityClass: 3,
+    recommendedDestination: 'learn',
+    recommendedAction: 'reinforce',
+    whyNowMessageKey: 'transfer_evidence',
     rawEvidenceRef: 'transfer:${signal.conceptFamilyId}',
   );
 }
@@ -217,7 +297,10 @@ Act0PersonalizedReturnReasonV1? _recentFocusReason(
     sourceSessionId: family.lastSessionId ?? '',
     evidenceKind: act0ReturnReasonEvidenceConceptFamilyStateV1,
     messageKey: act0ReturnReasonMessageResumeFocusV1,
-    priorityClass: 3,
+    priorityClass: 4,
+    recommendedDestination: 'learn',
+    recommendedAction: 'resume_focus',
+    whyNowMessageKey: 'recent_focus',
     rawEvidenceRef: 'concept_family:${family.conceptFamilyId}',
   );
 }

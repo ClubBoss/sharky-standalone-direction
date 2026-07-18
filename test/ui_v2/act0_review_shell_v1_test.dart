@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_cons
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
@@ -17,6 +18,8 @@ void main() {
     List<Act0DueReviewItemV1> dueReviewItems = const <Act0DueReviewItemV1>[],
     ValueChanged<Act0DueReviewItemV1>? onStartDueReview,
     VoidCallback? onOpenLearn,
+    Act0PersonalizedReturnReasonV1? nextStep,
+    VoidCallback? onOpenRecommendedAction,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -30,6 +33,8 @@ void main() {
           dueReviewItems: dueReviewItems,
           onStartDueReview: onStartDueReview,
           onOpenLearn: onOpenLearn,
+          nextStep: nextStep,
+          onOpenRecommendedAction: onOpenRecommendedAction,
         ),
       ),
     );
@@ -116,6 +121,56 @@ void main() {
     orderLabel: 'Most recent',
     patternLine:
         'This table-reading mistake showed up in more than one session.',
+  );
+
+  testWidgets(
+    'Review keeps an unresolved due recommendation explanatory without exposing identifiers',
+    (tester) async {
+      var opened = 0;
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: '',
+            betterLabel: '',
+          ),
+          nextStep: const Act0PersonalizedReturnReasonV1(
+            reasonType: act0ReturnReasonDueReviewV1,
+            conceptFamilyId: 'no_bet_yet',
+            sourceTaskId: 'actions_check_drill',
+            evidenceKind: act0ReturnReasonEvidenceDurableRetentionV1,
+            messageKey: act0ReturnReasonMessageDueReviewV1,
+            priorityClass: 2,
+            recommendedDestination: 'review',
+            recommendedAction: 'spaced_review',
+            whyNowMessageKey: 'due_for_review',
+          ),
+          onOpenRecommendedAction: () => opened += 1,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_next_step_explanation')),
+        findsOneWidget,
+      );
+      expect(find.text('WHY THIS, WHY NOW'), findsOneWidget);
+      expect(find.textContaining('spaced check'), findsOneWidget);
+      expect(find.textContaining('no_bet_yet'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_review_open_recommended_action')),
+        findsNothing,
+      );
+      expect(
+        find.textContaining('recheck the repaired decision'),
+        findsOneWidget,
+      );
+      expect(opened, 0);
+    },
   );
 
   testWidgets(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -42,6 +43,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
     this.mistakeHistoryItems = const <Act0ReviewMistakeHistoryItemV1>[],
     this.dueReviewItems = const <Act0DueReviewItemV1>[],
     this.onStartDueReview,
+    this.nextStep,
+    this.onOpenRecommendedAction,
     this.onOpenLearn,
   });
 
@@ -57,6 +60,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final List<Act0ReviewMistakeHistoryItemV1> mistakeHistoryItems;
   final List<Act0DueReviewItemV1> dueReviewItems;
   final ValueChanged<Act0DueReviewItemV1>? onStartDueReview;
+  final Act0PersonalizedReturnReasonV1? nextStep;
+  final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
 
   @override
@@ -74,6 +79,15 @@ class Act0ReviewShellV1 extends StatelessWidget {
       ),
     ];
     final queueCard = <Widget>[
+      if (nextStep != null) ...[
+        _ReviewNextStepCardV1(
+          nextStep: nextStep!,
+          onOpen: _nextStepNeedsDedicatedCtaV1(nextStep!)
+              ? onOpenRecommendedAction
+              : null,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+      ],
       if (sessionDrillRecheckQueueItems.isNotEmpty &&
           onStartSessionDrillRecheck != null) ...[
         _SessionDrillRecheckQueueCardV1(
@@ -86,7 +100,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
           dueReviewItems.isNotEmpty &&
           onStartDueReview != null) ...[
         _DueReviewCardV1(
-          item: dueReviewItems.first,
+          item:
+              _selectedDueItemV1(nextStep, dueReviewItems) ??
+              dueReviewItems.first,
           onStart: onStartDueReview!,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -290,6 +306,99 @@ class Act0ReviewShellV1 extends StatelessWidget {
         }
         return SingleChildScrollView(child: content);
       },
+    );
+  }
+}
+
+bool _nextStepNeedsDedicatedCtaV1(Act0PersonalizedReturnReasonV1 nextStep) =>
+    nextStep.recommendedAction == 'reinforce' ||
+    nextStep.recommendedAction == 'resume_focus';
+
+Act0DueReviewItemV1? _selectedDueItemV1(
+  Act0PersonalizedReturnReasonV1? nextStep,
+  List<Act0DueReviewItemV1> items,
+) {
+  if (nextStep?.recommendedAction != 'spaced_review') return null;
+  for (final item in items) {
+    if (item.taskId == nextStep!.sourceTaskId) return item;
+  }
+  return null;
+}
+
+class _ReviewNextStepCardV1 extends StatelessWidget {
+  const _ReviewNextStepCardV1({required this.nextStep, this.onOpen});
+
+  final Act0PersonalizedReturnReasonV1 nextStep;
+  final VoidCallback? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final focus = nextStep.learnerSafeFocusLabel.trim();
+    final action = switch (nextStep.recommendedAction) {
+      'spaced_review' => 'Review this clue',
+      'repair' || 'retry_repair' => 'Practice this repair',
+      'reinforce' => 'Reinforce this read',
+      'resume_focus' => 'Resume this focus',
+      _ => 'Continue learning',
+    };
+    final line = focus.isNotEmpty
+        ? '$action: notice $focus.'
+        : switch (nextStep.recommendedAction) {
+            'repair' =>
+              'Practice this repair: notice the decision that slipped.',
+            'retry_repair' => 'Practice this repair: replay the recent repair.',
+            'spaced_review' =>
+              'Review this clue: recheck the repaired decision.',
+            'reinforce' =>
+              'Reinforce this read: compare it with the later hand.',
+            'resume_focus' =>
+              'Resume this focus: return to the latest table-reading focus.',
+            _ => 'Continue learning with one useful table read.',
+          };
+    final whyNow = switch (nextStep.whyNowMessageKey) {
+      'unfinished_repair' => 'It is still waiting for one clear retry.',
+      'repair_not_landed' => 'The last repair attempt did not land yet.',
+      'due_for_review' => 'It is ready for a spaced check now.',
+      'transfer_evidence' =>
+        'A later hand gave you a real signal to reinforce.',
+      'recent_focus' => 'It is the most recent useful focus in your history.',
+      _ => 'Start with one useful table read.',
+    };
+    return Container(
+      key: const Key('act0_shell_review_next_step_explanation'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.info.withOpacity(0.08),
+        borderColor: Act0ShellTokensV1.info.withOpacity(0.22),
+        glow: false,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'WHY THIS, WHY NOW',
+            style: Act0ShellTokensV1.label.copyWith(
+              color: Act0ShellTokensV1.info,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            line,
+            style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(whyNow, style: Act0ShellTokensV1.muted),
+          if (onOpen != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            FilledButton(
+              key: const Key('act0_shell_review_open_recommended_action'),
+              onPressed: onOpen,
+              child: Text(action),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
