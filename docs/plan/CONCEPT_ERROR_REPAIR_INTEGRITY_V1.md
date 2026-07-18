@@ -110,7 +110,7 @@ evidence/Review identity but is deliberately not launched as misleading repair.
 | --- | ---: | ---: |
 | assessed tasks | 291 | 291 |
 | incorrect options | 466 | 466 |
-| distinct active decision error ids | 12 generic values plus unclassified | 20 concept ids |
+| distinct active decision error ids | 11 generic values plus unclassified | 20 concept ids |
 | incorrect options without repair intent | 22 | 0 |
 | different same-signal targets | 257 (88.3%) | 277 (95.2%) |
 | unrecorded exact fallback | 34 | 0 |
