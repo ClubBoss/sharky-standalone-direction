@@ -124,7 +124,7 @@ void main() {
   );
 
   testWidgets(
-    'Review explains the selected next step without exposing source identifiers',
+    'Review keeps an unresolved due recommendation explanatory without exposing identifiers',
     (tester) async {
       var opened = 0;
       await tester.pumpWidget(
@@ -161,10 +161,15 @@ void main() {
       expect(find.text('WHY THIS, WHY NOW'), findsOneWidget);
       expect(find.textContaining('spaced check'), findsOneWidget);
       expect(find.textContaining('no_bet_yet'), findsNothing);
-      await tester.tap(
+      expect(
         find.byKey(const Key('act0_shell_review_open_recommended_action')),
+        findsNothing,
       );
-      expect(opened, 1);
+      expect(
+        find.textContaining('recheck the repaired decision'),
+        findsOneWidget,
+      );
+      expect(opened, 0);
     },
   );
 

@@ -35,21 +35,31 @@ identifiers remain internal; copy receives only a safe label where available.
 
 ## Home, Review, telemetry, and persistence
 
-Home keeps its existing support slot and CTA, and both Home and Review open the
-same canonical recommendation. Review adds a compact `WHY THIS, WHY NOW` card
-in its existing queue slot: action, safe clue, what to notice, and why now.
-It retains existing repair, due-review, and Learn routing.
+Home keeps its existing support slot and CTA. Selection is projected only from
+targets that can resolve now: active/retry repair evidence requires its exact
+current repair card, due evidence requires its selected due item, and otherwise
+the contract deterministically degrades to Learn evidence or ordinary Home
+continuation. Tap recomputes once before routing, so stale repair/due evidence
+cannot emit an opened event for an action that was not opened.
+
+Review adds a compact `WHY THIS, WHY NOW` explanation in its existing queue
+slot. Existing repair and due cards retain the one primary CTA for their
+selected target; the explanation owns a CTA only for Learn destinations.
+Distinct session rechecks remain separate. Empty safe labels use neutral,
+class-specific copy rather than self-repeating `notice the clue` wording.
 
 Message families cover unfinished repair, failed retry, due review, real
 transfer reinforcement, recent focus, and a deliberately non-personal generic
 fallback. Visible copy excludes IDs, system language, mastery, guarantees, and
 unsupported transfer claims.
 
-Evidence-backed recommendations emit `personalized_next_step_selected` once
-per surface/reason/action and `personalized_next_step_opened` on CTA. The safe
+Exposure telemetry is scheduled post-frame, never from `build()`. Its internal
+fingerprint includes the surface and raw evidence reference so a changed due
+item is measurable while ordinary rebuilds are deduped. The external safe
 projection contains only reason type, evidence kind, priority, destination, and
-action: no copy, task IDs, concept IDs, or session payload. Existing learning
-events are unchanged. Generic fallback emits no personalized event.
+action: no copy, task IDs, concept IDs, raw evidence, or session payload.
+Generic fallback emits no personalized event, and sink failure remains
+non-fatal.
 
 No schema migration or duplicate decision persistence was added. Existing
 schema-17 source evidence round-trips; the recommendation recomputes after
@@ -57,8 +67,8 @@ restart and malformed source evidence falls back safely.
 
 ## Focused proof
 
-- 87 focused tests: decision, Review, repair lifecycle, concept state, transfer,
-  durable retention, and compact preview shell.
+- Focused decision, Review, telemetry, repair lifecycle, transfer, due-review,
+  compact, and large-text coverage: PASS.
 - Telemetry sink suite: PASS, including ordinary repair ordering and bounded
   next-step selection.
 - Targeted `flutter analyze`: PASS.
@@ -70,8 +80,8 @@ restart and malformed source evidence falls back safely.
 | File | Change |
 | --- | --- |
 | `act0_personalized_return_reason_v1.dart` | Due class, priority/action/why-now, safe telemetry projection |
-| `act0_review_shell_v1.dart` | Existing-surface explanation and CTA |
-| `act0_shell_preview_screen_v1.dart` | Shared Home/Review owner, routing, telemetry |
+| `act0_review_shell_v1.dart` | Existing-surface explanation, single-CTA rule, safe fallback copy |
+| `act0_shell_preview_screen_v1.dart` | Shared Home/Review owner, truthful routing, post-frame telemetry |
 | focused tests | Priority, copy, CTA, and telemetry regression proof |
 
 ## Explicit non-claims
