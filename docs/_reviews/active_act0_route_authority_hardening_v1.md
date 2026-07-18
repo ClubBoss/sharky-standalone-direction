@@ -1,7 +1,6 @@
 # Active Act0 Route Authority Hardening v1
 
-Status: PUBLISHED FOR ADMISSION — draft PR #27; CI baseline repair is tracked
-separately in draft PR #28.
+Status: ADMISSION READY — PR #27 rebased on green baseline.
 
 ## Scope and baseline
 
@@ -9,7 +8,8 @@ separately in draft PR #28.
 - Immutable audit tag object: `act0-final-deterministic-candidate-v1` ->
   `c73a2371a9351d10f085bbb8fd70298cb6d6913e`, dereferencing to candidate
   commit `5b95cee0493cbb2057f471bad48fa2a73677a3ae`
-- Preflight: `HEAD` and `origin/main` were both that SHA; the tag was not moved.
+- Historical preflight: `HEAD` and `origin/main` were both that SHA; the tag
+  was not moved.
 - Working branch: `codex/act0-route-authority-hardening-v1` in an isolated
   worktree. Pre-existing untracked evidence remains only in the canonical
   checkout and was not touched.
@@ -146,18 +146,18 @@ run or authorized.
   is green for R5, Tier A, Health, and Theory Integrity; Tier B/C/D are
   intentionally skipped. TestSprite remains an external `No tests detected`
   failure with no target URL.
-- PR #27 itself remains a draft non-admission candidate: its R5 result is the
-  reproduced baseline content-validator failure until PR #28 is merged and
-  the branch is rebased. It makes no green-CI or immutable-tag claim.
+- PR #28 was squash-merged as `99ec45cd28c490193602decc04d11d1e91489d75`.
+  PR #27 is rebased on that new `origin/main` base; the rebased route-authority
+  commit chain before this closure update ended at
+  `d2307d9bbb1182845d8c2ec953a565b2a52051aa`.
+- TestSprite is classified as `EXTERNAL_NON_REQUIRED_CONFIGURATION_FAILURE`:
+  `main` has no branch protection, repository rulesets, or required-status
+  contexts. Its `No tests detected` status has no target URL or visible creator.
+  No integration was removed because available API access cannot safely prove
+  its ownership.
 
-Repository end state: this isolated branch was committed and pushed as
-`1b5d4895fc1d8c50a09f28ec7393b675b42ec43d` for draft PR #27. It contains only
-this artifact, the active-boundary pointer, the AppRoot comment/test
-reconciliation, and the two bounded shell changes/tests. PR #27 is not merged,
-no green CI claim is made here, and neither the immutable baseline tag nor the
-canonical-checkout untracked evidence was modified.
-
-Recommended next product layer: first publish a new immutable candidate for
-this release-behavior change, then follow the current Master Plan's admitted
-post-baseline gate. Do not reopen campaign/Map, W7-W12 visibility, or hidden
-owner wiring without a separate live-consumer admission.
+Repository end state: this isolated draft branch contains only this artifact,
+the active-boundary pointer, the AppRoot comment/test reconciliation, and the
+two bounded shell changes/tests. PR #27 is not merged, no new immutable tag is
+claimed, and no next-wave work is claimed. Neither the immutable baseline tag
+nor the canonical-checkout untracked evidence was modified.

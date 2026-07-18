@@ -565,7 +565,7 @@ class _EntryGate extends StatefulWidget {
 }
 
 class _EntryGateState extends State<_EntryGate> {
-  // Production entry is AppRoot -> _EntryGate -> Act0ShellPreviewScreenV1.
+  // Production entry is AppRoot (_EntryGate) -> Act0ShellPreviewScreenV1.
   // See docs/_reviews/active_act0_route_authority_hardening_v1.md before
   // treating campaign or compatibility surfaces as a production entry.
   bool _checked = false;
