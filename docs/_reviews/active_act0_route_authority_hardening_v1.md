@@ -141,8 +141,9 @@ run or authorized.
   no target URL. It has no PR #27 code-level failure log.
 - The independent remediation is draft PR #28:
   `https://github.com/ClubBoss/sharky-standalone-direction/pull/28`, head
-  `288390d6`. It changes only the validator cap, World 3 intent allowlist, and
-  Tier A timeout. Its CI result remains the admission authority.
+  `fb2b1523`. It changes only the validator cap, World 3 intent allowlist,
+  Tier A timeout, and one stale repair-return expectation. Its CI result
+  remains the admission authority.
 
 Repository end state: this isolated branch was committed and pushed as
 `1b5d4895fc1d8c50a09f28ec7393b675b42ec43d` for draft PR #27. It contains only
