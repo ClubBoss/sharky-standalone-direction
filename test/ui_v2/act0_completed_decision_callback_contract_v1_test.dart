@@ -43,7 +43,7 @@ void main() {
     );
     expect(completed!.isCorrect, isFalse);
     expect(completed!.resultKind, 'incorrect');
-    expect(completed!.errorType, startsWith('missed_'));
+    expect(completed!.errorType, 'misread_action_legality');
     expect(completed!.skillAtomId, isNotEmpty);
     expect(completed!.repairFocusId, isNotEmpty);
     expect(completed!.decisionTimeBucket, isNot('unknown'));

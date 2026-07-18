@@ -41,9 +41,9 @@ silently converted to a closure; an opportunity is never counted as a defect.
 | AG-VUX-F15 | STRATEGIC: personalized Day-2 return reason | Retention audit; `11715b50` | Return/personalization owner | AI Personalization later | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no false Day-2 claim is made by the current shell. |
 | CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/repair-memory projections; reproducible | Retention capability | PRODUCT_DEBT_CONFIRMED | `Act0LearningEvidenceRecordV1` has order/session but no event time; no due projection exists; same-session correct can clear active repair. `CURRENT_RELEASE_SCOPE`; repair family `durable retention and due recheck`. |
 | CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
-| CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | Receipt/error type owner; reproducible | AI personalization dependency | PRODUCT_DEBT_CONFIRMED | Current error types remain atom-based and cannot represent late-world misconceptions at needed granularity. `CURRENT_RELEASE_SCOPE`; `concept-specific error taxonomy`. |
+| CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | `act0_concept_error_contract_v1.dart`; 291-task/466-option census | AI personalization dependency | CLOSED_FIXED | Canonical decision evidence now uses 20 source-owned misconception ids across all 466 incorrect options; zero options lack repair intent. Legacy generic string values remain readable without schema change. Full inventory: `CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. |
 | CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | CLOSED_FIXED | Learner-facing title, hint, feedback title, theory title, and focus labels now use intentional beginner copy. `learningPurpose` and `conceptFamilyId` remain internal authored metadata and the deterministic learner-surface guard rejects the leaked family id. |
-| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Repair resolver; reproducible | Current route loop | PRODUCT_DEBT_CONFIRMED | Complete canonical census: all 291 incorrect-capable rows have exact replay; 257 (88.3%) have a different same-signal target and 34 (11.7%) are exact-replay-only; none is unmapped. W1-W6: 177/210 mapped (84.3%); W7-W12: 80/81 (98.8%); checkpoints: 49/49; repair targets: 18/24. Replay is not counted as same-signal repair. Next family: concept error and repair integrity. |
+| CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Complete 34-row registry and repair resolver | Current route loop | PRODUCT_DEBT_CONFIRMED | All 34 prior gaps are explicit: 20 alternate same-signal targets, 13 guarded intentional exact replays, zero new items, and one `UNRESOLVED_PRODUCT_GAP` (`blinds_review`, whose first-actor prompt/feedback contradicts its BB marked answer). Different-target coverage is 277/291 (95.2%); unrecorded fallback is zero. The unresolved row is non-launchable and prevents a false closure. |
 | CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | option inventory; `11715b50` | Assessed-row guard; reproducible | Current route curriculum | PRODUCT_DEBT_CONFIRMED | Complete canonical census: 121/291 (41.6%) two-option, 165/291 (56.7%) three-option, and 5/291 (1.7%) four-option. W1-W6 are 121 two/89 three; W7-W12 are 76 three/5 four. Checkpoints are 12 two/37 three; repair targets 8 two/16 three. Correct positions are 111/116/62/2 at indices 0/1/2/3; longest run is 3. Position balance alone does not establish discrimination. Next family: late-world decision authenticity. |
 | CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; reproducible | Content-depth decision | CLOSED_FALSE_POSITIVE | The canonical W9-W12 census finds 58 assessed rows: 29 table-action decisions and 29 table-clue/range inferences; all require visible table state and none classify as terminology-only recall. This does not prove broad curriculum quality, but it falsifies the asserted recall dominance. |
 | CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement; reproducible | Learning-claim integrity | PRODUCT_DEBT_CONFIRMED | Current algorithm sorts by `createdOrder`, compares first to last only, rejects duplicate order, has no time separation; early miss/success streak and late miss both retain these limitations. `CURRENT_RELEASE_SCOPE`; `transfer verdict policy`. |
@@ -89,17 +89,17 @@ quantitative censuses, 2 Human requirements, and 3 future/risk/opportunity
 rows**. The old `8 / 2 / 2 / 4` aggregate was a count typo. These are
 factual-disposition counts, not mutually exclusive scope classes.
 
-After Learning Content Integrity v1A, the factual Claude disposition is **7
-current product debts** (F01/F02/F03/F05/F06/F08/F11), **3 CLOSED_FIXED**
-(F04/F09/F10), **1 CLOSED_FALSE_POSITIVE** (F07), **2 Human
+After Concept Error & Repair Integrity v1, the factual Claude disposition is
+**6 current product debts** (F01/F02/F05/F06/F08/F11), **4 CLOSED_FIXED**
+(F03/F04/F09/F10), **1 CLOSED_FALSE_POSITIVE** (F07), **2 Human
 requirements** (F13/F14), and **3 future/risk/opportunity**. The mutually
-exclusive scope classes remain: **7 current-release product-debt rows**
-(F01/F02/F03/F05/F06/F08/F11), **2 Human-only rows** (F13/F14), **1
+exclusive scope classes remain: **6 current-release product-debt rows**
+(F01/F02/F05/F06/F08/F11), **2 Human-only rows** (F13/F14), **1
 post-Human technical-risk row** (F12), **2 strategic-opportunity rows**
-(F15/F16), and **4 closed current-source rows** (F04/F07/F09/F10). Human
+(F15/F16), and **5 closed current-source rows** (F03/F04/F07/F09/F10). Human
 uncertainty is not counted as factual source closure.
 
-Current confirmed product debt is CL-LRN-F01/F02/F03/F05/F06/F08/F11. F02
+Current confirmed product debt is CL-LRN-F01/F02/F05/F06/F08/F11. F02
 remains open because no authority supplies a minimum W7 lesson count; this
 wave does not invent one.
 
@@ -122,37 +122,30 @@ wave does not invent one.
 
 ### Next Top-1 selection
 
-1. **Concept Error & Repair Integrity — selected.** It combines F03 with the
-   34 exact-replay-only F05 rows, directly affects recovery after an error,
-   has high AI-personalization prerequisite value, and can be deterministically
-   mapped without changing learner progression.
-2. **Late-World Decision Authenticity — waits.** F06 confirms an elevated
-   two-option share, but F07's asserted recall dominance is false; a broader
-   option redesign has lower immediate EV and higher content-compatibility
-   surface than repair completion.
-3. **Durable Retention & Transfer — waits.** F01/F08/F11 require time,
-   persistence, and transfer-policy architecture, so their compatibility and
-   state-model risk exceeds this next bounded repair family.
+1. **Decision Discrimination — selected.** F06 affects 121 binary assessments,
+   is a direct learning-quality and future-personalization prerequisite, and is
+   deterministically testable without a persistence migration.
+2. **Durable Retention & Transfer — waits.** F01/F08/F11 require time,
+   persistence, selection policy, and learning-claim architecture.
+3. **W7 Depth Authority — waits.** F02 still lacks an authoritative
+   outcome-based minimum-depth contract; no arbitrary lesson count is inferred.
 
 Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
 Novice Proof, or AI Personalization work starts from this record. The selected
-Top-1 is **Learning Integrity Foundation v1**: in one bounded source-truth
-wave, establish the F05/F06 inventories, repair W7 learner authoring/depth and
-first-table/inverted prompt authenticity, then separately admit a retention/
-transfer contract only if its data-model and claims can remain compatible. It
-waits Human QA because H13/H14 and visual felt-quality hypotheses require
-people, and it waits release/identity work because it is outside the canonical
-Act0 learner defect count.
+Top-1 is **Decision Discrimination v1**. It must adjudicate the 121 current
+two-option assessments without mass option inflation or changes to route,
+progression, W7 depth, retention, or telemetry/persistence schemas.
 
 ### Copyable next goal
 
-> GOAL: LEARNING INTEGRITY FOUNDATION V1. Starting from the published original
-> three-agent crosswalk, make no broad refactor and do not start Human QA, Final
-> Deep Audit, or AI Personalization. First produce deterministic complete
-> assessed-task inventories for same-signal repair coverage and 2/3/4+ option
-> distribution. Then fix only source-proven current Act0 learning debt selected
-> from W7 learner authoring/depth, W1/W4 decision authenticity, and generic
-> error/repair coverage. Treat spaced repetition and transfer policy as a
-> separately admitted compatibility contract, not an incidental change. Preserve
-> Human hypotheses and all untracked evidence; validate focused owners, selected
-> route gate, graphify, and diffs before proposing any follow-on work.
+> GOAL: DECISION DISCRIMINATION V1. Starting from the published Concept Error &
+> Repair Integrity contract, census all 121 canonical two-option assessments and
+> classify each as inherently binary, safely enrichable, or authority-blocked.
+> Improve only source-proven discrimination weakness with concept-equivalent,
+> poker-correct distractors; preserve task/correct-answer identities, route,
+> progression, repair/recheck, Review, telemetry event names, persistence
+> schemas, W7 depth, and all unrelated evidence. Do not mass-add options, infer
+> new concepts, start retention/transfer policy, Human QA, Final Deep Audit, or
+> AI Personalization. Re-adjudicate every affected fingerprint row and publish
+> only after focused, census, selected-route, fast, release, analyzer, graph,
+> diff, and repository-hygiene gates pass.

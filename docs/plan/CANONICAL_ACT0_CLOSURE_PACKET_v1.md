@@ -8,6 +8,19 @@ Status: HISTORICAL_CANDIDATE_FREEZE_RECORD — superseded for original-package a
 > remains evidence for its named historical records; it is not authority to
 > erase claims absent from its 35-record source set.
 
+## Current convergence addendum — Concept Error & Repair Integrity v1
+
+The active follow-on contract is
+`docs/plan/CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. Canonical wrong-decision
+evidence now resolves all 466 incorrect options to 20 source-owned concept ids;
+legacy generic values remain readable with no schema or event-name change. All
+34 prior unrecorded exact fallbacks have individual dispositions: 20 alternate
+same-signal targets, 13 intentional exact replays, zero new items, and one
+explicit unresolved product gap. `blinds_review` is non-launchable because its
+first-actor prompt/feedback conflicts with its BB marked answer. Therefore this
+historical packet does not authorize candidate freeze, Final Deep Independent
+Audit, Human Novice Proof, or AI Personalization.
+
 Baseline: `d19ffad4a5bd9b5fb5a97efa1a5af3b1da19ac5a` on `main`.
 
 Learning Content Integrity v1A supersedes this packet's W1-W12 content

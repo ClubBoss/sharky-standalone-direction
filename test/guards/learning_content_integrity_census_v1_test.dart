@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -15,6 +17,11 @@ void main() {
 
     final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
     final repair = repairRows.map(_repairRow).toList(growable: false);
+    final incorrectOptions = <_IncorrectOptionRow>[
+      for (final row in repairRows)
+        for (final option in row.incorrectOptions)
+          _incorrectOptionRow(row, option),
+    ];
     final late = rows
         .where(
           (row) => const <String>{
@@ -29,6 +36,10 @@ void main() {
 
     final snapshot = <String, Object?>{
       'assessedRows': rows.length,
+      'assessedByLesson': _countBy(
+        rows,
+        (row) => '${row.worldId}/${row.lessonId}',
+      ),
       'optionCounts': _countBy(rows, (row) => '${row.optionCount}'),
       'optionCountsByWorld': _nestedCountBy(
         rows,
@@ -56,10 +67,33 @@ void main() {
         rows.map((row) => row.correctIndex).toList(growable: false),
       ),
       'repair': <String, Object?>{
+        'incorrectOptions': incorrectOptions.length,
+        'currentErrorTypes': _countBy(
+          incorrectOptions,
+          (row) => row.currentErrorType,
+        ),
+        'worldsByErrorType': _groupedDistinctCount(
+          incorrectOptions,
+          outer: (row) => row.currentErrorType,
+          value: (row) => row.row.worldId,
+        ),
+        'currentSourceSignals': _countBy(
+          incorrectOptions,
+          (row) => row.intent?.missedSignalId ?? 'UNCLASSIFIED',
+        ),
         'incorrectCapable': repair.length,
         'exactReplayCovered': repair.where((row) => row.exactReplay).length,
         'sameSignalMapped': repair.where((row) => row.sameSignalMapped).length,
         'fallbackOnly': repair.where((row) => row.fallbackOnly).length,
+        'intentionalExactReplay': repair
+            .where((row) => row.mappingType == 'intentional_exact')
+            .length,
+        'unresolvedProductGap': repair
+            .where((row) => row.mappingType == 'unresolved_product_gap')
+            .length,
+        'unrecordedFallback': repair
+            .where((row) => row.mappingType == 'exact')
+            .length,
         'unmapped': repair.where((row) => !row.intentAvailable).length,
         'byWorld': _countBy(repair, (row) => row.worldId),
         'mappedByWorld': _countBy(
@@ -74,6 +108,10 @@ void main() {
             .where((row) => row.isRepairTarget && row.sameSignalMapped)
             .length,
         'repairTargetTotal': repair.where((row) => row.isRepairTarget).length,
+        'fallbackInventory': <Map<String, Object?>>[
+          for (final row in repair.where((row) => row.fallbackOnly))
+            row.toInventoryPayload(),
+        ],
       },
       'lateWorldAuthenticity': _countBy(late, (row) => row.category),
       'lateWorldTableRequired': late.where((row) => row.tableRequired).length,
@@ -102,10 +140,38 @@ void main() {
       'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
     });
     final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
-    expect(repairSnapshot['exactReplayCovered'], 291);
-    expect(repairSnapshot['sameSignalMapped'], 257);
-    expect(repairSnapshot['fallbackOnly'], 34);
+    expect(repairSnapshot['incorrectOptions'], 466);
+    expect(repairSnapshot['exactReplayCovered'], 13);
+    expect(repairSnapshot['sameSignalMapped'], 277);
+    expect(repairSnapshot['fallbackOnly'], 14);
+    expect(repairSnapshot['intentionalExactReplay'], 13);
+    expect(repairSnapshot['unresolvedProductGap'], 1);
+    expect(repairSnapshot['unrecordedFallback'], 0);
     expect(repairSnapshot['unmapped'], 0);
+    expect(repairSnapshot['currentErrorTypes'], <String, int>{
+      'confused_card_rank_suit': 5,
+      'confused_chip_commitment_eligibility': 7,
+      'confused_private_board_cards': 16,
+      'confused_table_identity': 12,
+      'misread_action_legality': 14,
+      'misread_bet_price': 17,
+      'misread_bet_purpose': 8,
+      'misread_board_texture': 14,
+      'misread_draw_outs': 21,
+      'misread_mindset_discipline': 26,
+      'misread_player_adjustment': 30,
+      'misread_poker_win_condition': 8,
+      'misread_position_action_order': 47,
+      'misread_range_card_removal': 67,
+      'misread_real_play_process': 28,
+      'misread_showdown_hand_strength': 25,
+      'misread_stack_depth_risk': 34,
+      'misread_starting_hand_discipline': 37,
+      'misread_table_position': 18,
+      'misread_tournament_pressure': 32,
+    });
+    expect(act0ConceptErrorDefinitionsV1, hasLength(20));
+    expect(act0RepairGapAdjudicationsV1, hasLength(34));
 
     final w7 = Act0ShellStateV1.sample.worldById('world_7');
     final w7Surface = w7.lessons
@@ -174,12 +240,28 @@ _RepairRow _repairRow(_Row row) {
         intent.mappingType != 'exact' && intent.targetTaskId != row.task.taskId,
   );
   return _RepairRow(
+    row,
+    intents,
     row.worldId,
     isCheckpoint: row.isCheckpoint,
     isRepairTarget: row.isRepairTarget,
-    exactReplay: true,
+    exactReplay: intents.any(
+      (intent) => intent.mappingType == 'intentional_exact',
+    ),
     sameSignalMapped: sameSignal,
   );
+}
+
+_IncorrectOptionRow _incorrectOptionRow(_Row row, Act0RunnerOptionV1 option) {
+  final intent = buildAct0RepairIntentV1(
+    sourceWorldId: row.worldId,
+    sourceLessonId: row.lessonId,
+    sourceTaskId: row.task.taskId,
+    runner: row.task.runner,
+    selectedOption: option,
+    mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+  );
+  return _IncorrectOptionRow(row, option, intent);
 }
 
 _LateWorldRow _lateWorldRow(_Row row) {
@@ -234,6 +316,20 @@ Map<String, Map<String, int>> _nestedCountBy<T>(
   );
 }
 
+Map<String, int> _groupedDistinctCount<T>(
+  Iterable<T> values, {
+  required String Function(T) outer,
+  required String Function(T) value,
+}) {
+  final grouped = <String, Set<String>>{};
+  for (final item in values) {
+    grouped.putIfAbsent(outer(item), () => <String>{}).add(value(item));
+  }
+  return Map<String, int>.fromEntries(
+    grouped.entries.map((entry) => MapEntry(entry.key, entry.value.length)),
+  );
+}
+
 int _longestRun(List<int> values) {
   var longest = 0;
   var current = 0;
@@ -273,19 +369,59 @@ class _Row {
 
 class _RepairRow {
   const _RepairRow(
+    this.row,
+    this.intents,
     this.worldId, {
     required this.isCheckpoint,
     required this.isRepairTarget,
     required this.exactReplay,
     required this.sameSignalMapped,
   });
+  final _Row row;
+  final List<Act0RepairIntentV1> intents;
   final String worldId;
   final bool isCheckpoint;
   final bool isRepairTarget;
   final bool exactReplay;
   final bool sameSignalMapped;
   bool get fallbackOnly => !sameSignalMapped;
-  bool get intentAvailable => true;
+  bool get intentAvailable => intents.length == row.incorrectOptions.length;
+  String get mappingType =>
+      intents.isEmpty ? 'unclassified' : intents.first.mappingType;
+
+  Map<String, Object?> toInventoryPayload() => <String, Object?>{
+    'world': row.worldId,
+    'lesson': row.lessonId,
+    'task': row.task.taskId,
+    'taskFamily': row.task.resolvedTaskFamily.name,
+    'incorrectOptions': <Map<String, Object?>>[
+      for (final incorrect in row.incorrectOptions.map(
+        (option) => _incorrectOptionRow(row, option),
+      ))
+        <String, Object?>{
+          'optionId': incorrect.option.id,
+          'result': incorrect.intent?.result ?? 'unclassified',
+          'errorType': incorrect.currentErrorType,
+          'skillAtomId': incorrect.intent?.skillAtomId ?? '',
+          'missedSignalId': incorrect.intent?.missedSignalId ?? '',
+          'repairFocusLabels': incorrect.option.repairFocusLabels,
+        },
+    ],
+    'currentFallback': intents.isEmpty
+        ? 'unclassified'
+        : intents.first.mappingType,
+  };
+}
+
+class _IncorrectOptionRow {
+  const _IncorrectOptionRow(this.row, this.option, this.intent);
+
+  final _Row row;
+  final Act0RunnerOptionV1 option;
+  final Act0RepairIntentV1? intent;
+
+  String get currentErrorType =>
+      intent?.errorType ?? 'UNCLASSIFIED_NO_REPAIR_INTENT';
 }
 
 class _LateWorldRow {

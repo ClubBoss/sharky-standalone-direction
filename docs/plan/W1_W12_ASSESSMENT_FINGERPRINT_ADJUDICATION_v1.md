@@ -90,6 +90,18 @@ BTN wording. This is proof drift, not a current curriculum defect.
 - **Feedback, repeated misses, and recheck:** the W1 recheck keeps identical
   card-id repair targets and correct answer. No feedback/repair mapping moved.
 
+## Concept Error & Repair Integrity v1 — no serialized-row impact
+
+The concept-error and repair-adjudication wave does not edit
+`lib/ui_v2/act0_shell/act0_shell_state_v1.dart`, the contract's sole declared
+authored input. New concept identities, the 34-row repair registry, runtime
+target selection, telemetry projection, and compatibility tests are outside
+the serialized fingerprint payload. The freshness guard still extracts 291
+rows and retains fingerprint
+`433136896f6d9841e74f123a55ca2e4c8ea388412c824e7f661e1e7afe7a9803`
+with option distribution 121/165/5 and correct positions 111/116/62/2.
+Accordingly the machine contract and input hash are not regenerated.
+
 ## Scope boundary and freeze decision
 
 This re-adjudication closes the stale 291-row proof gap and the published

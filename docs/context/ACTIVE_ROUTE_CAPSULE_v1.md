@@ -111,13 +111,17 @@ error taxonomy, transfer, and first-table authenticity). See
 Human Novice Proof, and AI Personalization remain downstream and are not
 started here.
 
-**Learning Content Integrity v1A.** The 291-row canonical census now records
-121 two-option, 165 three-option, and 5 four-option assessments. All rows can
-exactly replay; 257 have an explicit different same-signal target and 34 are
-exact-replay-only product debt. W7 learner-facing metadata leakage is fixed;
+**Concept Error & Repair Integrity v1.** The 291-row/466-incorrect-option
+canonical census now uses 20 source-owned concept-error ids with zero
+unclassified incorrect options. Different same-signal coverage is 277/291;
+13 remaining rows are guarded intentional exact replays and one
+`blinds_review` row is an explicit non-launchable product gap because its
+prompt/feedback conflicts with its marked answer. No unrecorded fallback
+remains. W7 learner-facing metadata leakage is fixed;
 its one-lesson depth remains blocked by absent minimum-depth authority. W1
 first-table tasks now require table-order/identity inference and W4 value copy
-uses a direct positive decision. The next Top-1 selection remains downstream;
+uses a direct positive decision. Decision Discrimination (the 121 binary
+assessments) is the selected next Top-1 but is not started here;
 Human Novice Proof, Final Deep Independent Audit, and AI Personalization are
 still blocked.
 

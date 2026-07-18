@@ -43,7 +43,7 @@ void main() {
     expect(decision?['priorityScore'], 80);
     expect(decision?['choiceId'], 'fold');
     expect(decision?['result'], 'incorrect');
-    expect(decision?['errorType'], 'missed_action_read');
+    expect(decision?['errorType'], 'misread_action_legality');
     expect(decision?['sourceTaskId'], 'actions_legal_context');
     expect(decision?['targetTaskId'], 'actions_check_drill');
     expect(decision?['reasonCode'], 'same_signal_action_read_no_bet_yet');

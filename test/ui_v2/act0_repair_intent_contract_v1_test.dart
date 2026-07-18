@@ -25,7 +25,7 @@ void main() {
     expect(intent?.sourceTaskId, 'actions_legal_context');
     expect(intent?.choiceId, 'bet');
     expect(intent?.result, 'incorrect');
-    expect(intent?.errorType, 'missed_action_read');
+    expect(intent?.errorType, 'misread_action_legality');
     expect(intent?.missedSignalId, 'no_bet_yet');
     expect(intent?.missedSignalLabel, 'No bet yet');
     expect(intent?.skillAtomId, 'action_read');
@@ -67,7 +67,7 @@ void main() {
   });
 
   test(
-    'unavailable mapped target falls back to exact replay deterministically',
+    'previous exact fallback now uses adjudicated alternate deterministically',
     () {
       final runner = _runnerForNoBetActionRead();
       final wrongOption = runner.options.firstWhere(
@@ -86,9 +86,9 @@ void main() {
       expect(intent, isNotNull);
       expect(intent?.targetWorldId, 'world_1');
       expect(intent?.targetLessonId, 'fold_check_call_raise');
-      expect(intent?.targetTaskId, 'actions_check_drill');
-      expect(intent?.mappingType, 'exact');
-      expect(intent?.reasonCode, 'exact_replay_action_read_no_bet_yet');
+      expect(intent?.targetTaskId, 'actions_legal_context');
+      expect(intent?.mappingType, 'repair');
+      expect(intent?.reasonCode, 'same_signal_action_read_no_bet_yet');
     },
   );
 
@@ -109,6 +109,38 @@ void main() {
 
     expect(intent, isNull);
   });
+
+  test(
+    'new and legacy error identities round-trip without a schema change',
+    () {
+      final runner = _runnerForNoBetActionRead();
+      final wrongOption = runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
+      final intent = buildAct0RepairIntentV1(
+        sourceWorldId: 'world_1',
+        sourceLessonId: 'fold_check_call_raise',
+        sourceTaskId: 'actions_legal_context',
+        runner: runner,
+        selectedOption: wrongOption,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+      )!;
+
+      expect(
+        Act0RepairIntentV1.tryParse(intent.toPayload())?.errorType,
+        'misread_action_legality',
+      );
+      final legacy = <String, Object>{
+        ...intent.toPayload(),
+        'errorType': 'missed_action_read',
+      };
+      expect(
+        Act0RepairIntentV1.tryParse(legacy)?.errorType,
+        'missed_action_read',
+      );
+      expect(Act0RepairIntentV1.tryParse(legacy)?.schemaVersion, 1);
+    },
+  );
 
   test('repair intent payload excludes forbidden AI and commerce fields', () {
     final runner = _runnerForNoBetActionRead();

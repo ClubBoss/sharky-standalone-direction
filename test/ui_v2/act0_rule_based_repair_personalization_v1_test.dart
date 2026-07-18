@@ -67,6 +67,21 @@ void main() {
     expect(decision?.reasonCode, 'exact_replay_action_read_no_bet_yet');
   });
 
+  test('intentional exact allowlist retains exact-replay semantics', () {
+    final payload = _exactIntent().toPayload()
+      ..['mappingType'] = 'intentional_exact'
+      ..['reasonCode'] = 'intentional_exact_replay_action_read_no_bet_yet';
+    final decision = buildAct0RuleBasedRepairDecisionV1(
+      openRepairIntent: Act0RepairIntentV1.tryParse(payload),
+      isOpen: true,
+    );
+
+    expect(decision?.actionType, 'exact_replay');
+    expect(decision?.selectionSource, 'repair_intent_exact_replay');
+    expect(decision?.decisionRule, 'exact_replay_fallback_v1');
+    expect(decision?.mappingType, 'intentional_exact');
+  });
+
   test('closed, missing, or correct intent creates no open decision', () {
     expect(
       buildAct0RuleBasedRepairDecisionV1(openRepairIntent: null, isOpen: true),

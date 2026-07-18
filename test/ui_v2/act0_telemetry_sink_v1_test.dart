@@ -37,8 +37,7 @@ void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
           'debug_harness_used': false,
           'starting_progression': <String, Object?>{
             'kind': 'persisted_progression_fixture',
-            'fixture_id':
-                'alpha_action_capability_prerequisite_progression_v1',
+            'fixture_id': 'alpha_action_capability_prerequisite_progression_v1',
             'obtained_by': 'completed prerequisite learner history',
           },
           'events': events
@@ -74,9 +73,9 @@ void main() {
   }
 
   Future<void> seedActionCapabilityPreconditionV1() async {
-    final decoded = jsonDecode(
-      File(_actionPreconditionFixturePathV1).readAsStringSync(),
-    ) as Map<String, dynamic>;
+    final decoded =
+        jsonDecode(File(_actionPreconditionFixturePathV1).readAsStringSync())
+            as Map<String, dynamic>;
     expect(decoded['schema'], 'act0_progression_fixture_v1');
     expect(
       decoded['fixture_id'],
@@ -90,8 +89,7 @@ void main() {
     final world = state.worldById(decoded['world_id'] as String);
     final completedTaskIds = <String>[
       for (final lessonId in completedLessonIds)
-        ...world
-            .lessons
+        ...world.lessons
             .firstWhere((lesson) => lesson.lessonId == lessonId)
             .taskList
             .map((task) => task.taskId),
@@ -745,6 +743,19 @@ void main() {
     await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
     await tester.pumpAndSettle();
 
+    expect(
+      sink.events.where((event) => event.name == 'user_choice'),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where((event) => event.name == 'decision_made'),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where((event) => event.name == 'task_result'),
+      hasLength(1),
+    );
+
     final userChoice = sink.events.firstWhere(
       (event) => event.name == 'user_choice',
     );
@@ -753,8 +764,8 @@ void main() {
     expect(userChoice.fields['expected_action'], 'check');
     expect(userChoice.fields['correct'], isFalse);
     expect(userChoice.fields['result_classification'], 'incorrect');
-    expect(userChoice.fields['error_type'], 'missed_action_read');
-    expect(userChoice.fields['repair_family_id'], 'action_read:no_bet_yet');
+    expect(userChoice.fields['error_type'], 'misread_action_legality');
+    expect(userChoice.fields['repair_family_id'], 'action_legality');
     expect(userChoice.fields['route_source_owner'], 'act0_runner');
     expect(userChoice.fields['drill_kind'], 'decision');
     expect(userChoice.fields['attempt_id'], isA<String>());
@@ -774,11 +785,8 @@ void main() {
     expect(canonicalDecision.fields['is_correct'], isFalse);
     expect(canonicalDecision.fields['result'], 'incorrect');
     expect(canonicalDecision.fields['result_classification'], 'incorrect');
-    expect(canonicalDecision.fields['error_type'], 'missed_action_read');
-    expect(
-      canonicalDecision.fields['repair_family_id'],
-      'action_read:no_bet_yet',
-    );
+    expect(canonicalDecision.fields['error_type'], 'misread_action_legality');
+    expect(canonicalDecision.fields['repair_family_id'], 'action_legality');
     expect(
       canonicalDecision.fields['repair_target_task_id'],
       'repeat_action_read',
@@ -794,10 +802,10 @@ void main() {
     );
     expect(result.fields['choiceId'], 'fold');
     expect(result.fields['result'], 'incorrect');
-    expect(result.fields['errorType'], 'missed_action_read');
-    expect(result.fields['error_type'], 'missed_action_read');
-    expect(result.fields['repairFamilyId'], 'action_read:no_bet_yet');
-    expect(result.fields['repair_family_id'], 'action_read:no_bet_yet');
+    expect(result.fields['errorType'], 'misread_action_legality');
+    expect(result.fields['error_type'], 'misread_action_legality');
+    expect(result.fields['repairFamilyId'], 'action_legality');
+    expect(result.fields['repair_family_id'], 'action_legality');
 
     expectNoForbiddenTelemetryFieldsV1(sink.events);
   });
