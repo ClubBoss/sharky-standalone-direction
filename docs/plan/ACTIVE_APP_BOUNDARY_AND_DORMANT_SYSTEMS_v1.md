@@ -18,6 +18,12 @@ families that should not receive new product work by default.
 
 The current learner-facing app is the Act0 shell route.
 
+Current source-truth and consumer classification, including the release-only
+debug-menu boundary, is recorded in
+`docs/_reviews/active_act0_route_authority_hardening_v1.md`. It does not
+promote campaign, Map, Today Plan, hidden evidence, or compatibility families
+to the production entry.
+
 Use these first for active product work:
 
 1. `lib/ui_v2/act0_shell/*`
