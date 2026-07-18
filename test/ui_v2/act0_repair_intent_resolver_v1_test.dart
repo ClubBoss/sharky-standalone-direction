@@ -542,7 +542,7 @@ void main() {
     );
   });
 
-  testWidgets('successful repair writes personalized return reason for Home', (
+  testWidgets('successful repair writes focused return reason for Home', (
     tester,
   ) async {
     await _pumpResolverHost(
@@ -564,7 +564,7 @@ void main() {
     final line = _homePersonalizedReturnReasonLine(tester);
     expect(
       line,
-      'You handled this clue better on a later hand. Reinforce it once more.',
+      'Resume your most recent table read.',
     );
 
     await _pumpHomeWithPersonalizedReason(tester, line);
