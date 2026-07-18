@@ -119,10 +119,11 @@ unrecorded fallback remains. `blinds_review` now consistently teaches UTG as
 the first voluntary preflop actor. W7 learner-facing metadata leakage is fixed;
 its one-lesson depth remains blocked by absent minimum-depth authority. W1
 first-table tasks now require table-order/identity inference and W4 value copy
-uses a direct positive decision. Decision Discrimination (the 121 binary
-assessments) is the selected next Top-1 but is not started here;
-Human Novice Proof, Final Deep Independent Audit, and AI Personalization are
-still blocked.
+uses a direct positive decision. Decision Discrimination v1 is
+CLOSED_INTENTIONAL: its complete 121-row audit admitted no filler third option
+because every binary row is source-proven two-state at its route point. The
+next Top-1 is Durable Retention & Transfer (CL-LRN-F01/F08/F11); Human Novice
+Proof, Final Deep Independent Audit, and AI Personalization are still blocked.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
