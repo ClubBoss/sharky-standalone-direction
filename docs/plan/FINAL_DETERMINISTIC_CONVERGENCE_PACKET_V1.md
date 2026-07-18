@@ -1,7 +1,10 @@
 # Final Deterministic Convergence Packet v1
 
-Status: ADMITTED candidate packet. Candidate is published SHA
-40babdeb97d1464c1977f2b5470c5aa05d042d80 on main and origin/main.
+Status: ADMITTED deterministic product packet. PRODUCT_SOURCE_BASELINE is
+40babdeb97d1464c1977f2b5470c5aa05d042d80. FREEZE_PUBLICATION_BASELINE and
+AUDIT_START_BASELINE are the docs-only commit resolved by immutable tag
+act0-final-deterministic-candidate-v1, not this product-source baseline or an
+unspecified mutable main.
 
 ## Scope and owner freshness
 
@@ -29,10 +32,16 @@ Graphify hook check; tracked/staged diff checks; focused W7 transfer/repair,
 completion, and completed-decision tests. Full-suite policy was OFF by default;
 no broad suite was substituted for policy.
 
-## Decision
+## Freeze and audit decision
 
 All closure blocks are CLOSED_FULLY_PROVEN deterministically. No current
 product debt or blocking proof debt reproduced. Future capability, outside
 scope work, accepted technical risks, and Human-only uncertainty are preserved
-in the manifest. Next Top-1 is FINAL DEEP INDEPENDENT AUDIT; this packet does
-not begin it, Human Novice Proof, or AI Personalization.
+in the manifest. The docs-only wrapper from PRODUCT_SOURCE_BASELINE to the tag
+target is authorized and must be allowlisted. The clean-room auditor must
+checkout refs/tags/act0-final-deterministic-candidate-v1 and separately verify
+that product-relevant tree state is unchanged from PRODUCT_SOURCE_BASELINE.
+Next Top-1 is FINAL DEEP INDEPENDENT AUDIT; it begins only from that tag target,
+not unspecified main. This packet does not begin it, Human Novice Proof, or AI
+Personalization. Any later commit requires a new audit baseline; the immutable
+tag must never move.

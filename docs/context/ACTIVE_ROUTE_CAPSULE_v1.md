@@ -1,16 +1,18 @@
 # Active Route Capsule v1
 
 Status: ACTIVE route capsule for compact Sharky agent context.
-Current convergence override: published HEAD is
-`40babdeb97d1464c1977f2b5470c5aa05d042d80` on `main` and `origin/main`.
-The Final Deterministic Convergence Packet and immutable Candidate Freeze
-Manifest are admitted at this SHA. The sole next Top-1 is **FINAL DEEP
-INDEPENDENT AUDIT**; do not begin it here, and do not begin Human Novice Proof
-or AI Personalization. Any product, code, test, or documentation change
-invalidates this candidate and requires a new manifest. The canonical route is
-`AppRoot -> _EntryGate -> Act0ShellPreviewScreenV1`. See
-`docs/plan/FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md` and
-`docs/plan/CANDIDATE_FREEZE_MANIFEST_V1.md`.
+Current convergence override: PRODUCT_SOURCE_BASELINE is
+`40babdeb97d1464c1977f2b5470c5aa05d042d80`. It is the exact validated
+product source/content/test/runtime state, not a claim about the current
+mutable `main` tip. FREEZE_PUBLICATION_BASELINE is the corrected docs-only
+publication commit. IMMUTABLE_AUDIT_BASELINE_TAG is
+`act0-final-deterministic-candidate-v1`; the clean-room auditor must checkout
+the exact commit resolved by `refs/tags/act0-final-deterministic-candidate-v1`,
+never an unspecified `main` or the product-source baseline alone. The sole
+next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**, blocked until this correction is
+published and tagged; do not begin it here, Human Novice Proof, or AI
+Personalization. See `docs/plan/FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md`
+and `docs/plan/CANDIDATE_FREEZE_MANIFEST_V1.md`.
 Freshness date: 2026-07-18 (Learning Content Integrity v1A working state;
 published HEAD recorded after its bounded commits).
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped

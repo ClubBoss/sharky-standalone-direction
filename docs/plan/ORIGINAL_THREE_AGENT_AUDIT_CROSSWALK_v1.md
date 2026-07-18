@@ -70,11 +70,16 @@ silently converted to a closure; an opportunity is never counted as a defect.
 
 ## Final deterministic convergence refresh
 
-Refreshed at published candidate SHA 40babdeb97d1464c1977f2b5470c5aa05d042d80,
+Refreshed at PRODUCT_SOURCE_BASELINE 40babdeb97d1464c1977f2b5470c5aa05d042d80,
 not inherited from prior closures. The original 41 rows above are retained.
 Current selected-route/release tests were rerun after the LSCS, first-session,
 concept-error, schema-17, and W7 owner changes. Human-only rows remain Human
 questions rather than invented source closures.
+
+The audit does not start at this source baseline or mutable main. It starts at
+the docs-only audit publication target resolved by immutable tag
+act0-final-deterministic-candidate-v1; the auditor separately verifies the
+allowlisted docs-only wrapper from this product-source baseline.
 
 | IDs | current result | scope and freshness |
 | --- | --- | --- |

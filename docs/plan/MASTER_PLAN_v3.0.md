@@ -161,11 +161,13 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   reachability are closed. The corrected terminal verdict is
   `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`.
 - Learning Integrity Foundation v1 and W7 Depth Authority are complete. The
-  Final Deterministic Convergence Packet and immutable candidate manifest are
-  admitted at published SHA `40babdeb97d1464c1977f2b5470c5aa05d042d80`.
+  Final Deterministic Convergence Packet has PRODUCT_SOURCE_BASELINE
+  `40babdeb97d1464c1977f2b5470c5aa05d042d80`. Its immutable audit checkout is
+  the docs-only FREEZE_PUBLICATION_BASELINE resolved by tag
+  `act0-final-deterministic-candidate-v1`, never unspecified mutable `main`.
   The next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**. This plan selects but
   does not begin that audit; Human Novice Proof and AI Personalization remain
-  downstream. Any change requires a new candidate baseline.
+  downstream. The tag must not move; later commits require a new audit baseline.
   It must begin with a complete repair-coverage and option-count census, then
   address only directly reproducible canonical Act0 learning debt; it must not
   begin Human QA, Final Deep Independent Audit, or AI Personalization. See

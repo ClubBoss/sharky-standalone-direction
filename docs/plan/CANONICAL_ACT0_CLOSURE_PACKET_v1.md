@@ -1,6 +1,9 @@
 # Canonical Act0 Closure Packet v1
 
-Status: CURRENT DETERMINISTIC CLOSURE PACKET — candidate evidence index at 40babdeb97d1464c1977f2b5470c5aa05d042d80
+Status: CURRENT DETERMINISTIC CLOSURE PACKET — PRODUCT_SOURCE_BASELINE
+40babdeb97d1464c1977f2b5470c5aa05d042d80; audit starts only from immutable
+tag act0-final-deterministic-candidate-v1 resolved to its docs-only publication
+target.
 
 > Superseded for original-three-agent freeze adjudication at `cf0b4c8b`:
 > `ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md` directly reconciles the 41
@@ -13,7 +16,8 @@ Status: CURRENT DETERMINISTIC CLOSURE PACKET — candidate evidence index at 40b
 Historical raster and JSONL capture is context only if a source owner changed.
 Current proof is rerun source/test evidence. The full matrix and risk register
 are in FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md and the immutable candidate
-pin is in CANDIDATE_FREEZE_MANIFEST_V1.md.
+pin is in CANDIDATE_FREEZE_MANIFEST_V1.md. The tag target, not mutable main or
+the source baseline alone, is the clean-room audit checkout.
 
 | block | implementation and proof | status |
 | --- | --- | --- |
