@@ -33,6 +33,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_queue_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
@@ -82,6 +83,26 @@ act0FirstValueSameSignalRepMappingV1({
       taskId: taskId,
       mappingType: isRepair ? 'repair' : 'reinforcement',
     );
+  }
+
+  final adjudication = act0RepairGapAdjudicationForSourceTaskV1(sourceTask);
+  if (adjudication != null) {
+    return switch (adjudication.outcome) {
+      Act0RepairGapOutcomeV1.alternateSameSignalTarget ||
+      Act0RepairGapOutcomeV1.newBoundedRepairItem => (
+        worldId: adjudication.targetWorldId!,
+        lessonId: adjudication.targetLessonId!,
+        taskId: adjudication.targetTaskId!,
+        mappingType: adjudication.mappingType,
+      ),
+      Act0RepairGapOutcomeV1.intentionalExactReplay ||
+      Act0RepairGapOutcomeV1.unresolvedProductGap => (
+        worldId: adjudication.sourceWorldId,
+        lessonId: adjudication.sourceLessonId,
+        taskId: adjudication.sourceTaskId,
+        mappingType: adjudication.mappingType,
+      ),
+    };
   }
 
   if (sourceTask == Act0PositionPersonalizationV1.sourceTaskId &&
@@ -7355,9 +7376,26 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!carry.nextRepId.startsWith('repeat_')) {
       return null;
     }
+    final adjudication = act0RepairGapAdjudicationForSourceTaskV1(
+      carry.sourceTaskId,
+    );
+    if (adjudication?.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap) {
+      return null;
+    }
     final worlds = _progressedWorlds(
       state ?? widget.state ?? Act0ShellStateV1.sample,
     );
+    if (adjudication?.outcome ==
+        Act0RepairGapOutcomeV1.intentionalExactReplay) {
+      return _sameSignalRepTargetIfLaunchableV1(
+        worlds,
+        worldId: adjudication!.sourceWorldId,
+        lessonId: adjudication.sourceLessonId,
+        taskId: adjudication.sourceTaskId,
+        sourceTaskId: '',
+        mappingType: adjudication.mappingType,
+      );
+    }
     final mappedTarget = _firstValueMappedDailyRepTargetV1(carry, worlds);
     if (mappedTarget != null) {
       return mappedTarget;
@@ -7444,7 +7482,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       (candidate) => candidate?.taskId == targetTaskId,
       orElse: () => null,
     );
-    if (task == null || task.phase != Act0LessonPhaseV1.drill) {
+    if (task == null ||
+        (task.phase != Act0LessonPhaseV1.drill &&
+            mappingType != 'intentional_exact')) {
       return null;
     }
     return _Act0FirstValueDailyRepTargetV1(
@@ -7484,6 +7524,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (intent == null) {
       return null;
     }
+    if (intent.mappingType == 'unresolved_product_gap') {
+      return null;
+    }
     final worlds = _progressedWorlds(
       state ?? widget.state ?? Act0ShellStateV1.sample,
     );
@@ -7493,20 +7536,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lessonId: intent.targetLessonId,
       taskId: intent.targetTaskId,
       mappingType: intent.mappingType,
-      allowSourceTask: false,
+      allowSourceTask: intent.mappingType == 'intentional_exact',
       sourceTaskId: normalizedSourceTaskId,
     );
     final target =
         mappedTarget ??
-        _repairIntentTargetByIdsIfLaunchableV1(
-          worlds,
-          worldId: intent.sourceWorldId,
-          lessonId: intent.sourceLessonId,
-          taskId: intent.sourceTaskId,
-          mappingType: 'exact',
-          allowSourceTask: true,
-          sourceTaskId: normalizedSourceTaskId,
-        );
+        (intent.mappingType == 'intentional_exact'
+            ? null
+            : _repairIntentTargetByIdsIfLaunchableV1(
+                worlds,
+                worldId: intent.sourceWorldId,
+                lessonId: intent.sourceLessonId,
+                taskId: intent.sourceTaskId,
+                mappingType: 'exact',
+                allowSourceTask: true,
+                sourceTaskId: normalizedSourceTaskId,
+              ));
     if (target == null) {
       return null;
     }
@@ -7549,7 +7594,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       (candidate) => candidate?.taskId == targetTaskId,
       orElse: () => null,
     );
-    if (task == null || task.phase != Act0LessonPhaseV1.drill) {
+    if (task == null ||
+        (task.phase != Act0LessonPhaseV1.drill &&
+            mappingType != 'intentional_exact')) {
       return null;
     }
     return _Act0FirstValueDailyRepTargetV1(
@@ -8402,7 +8449,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     final exactReplay =
-        sourceTaskId == selectedTask.taskId || intent?.mappingType == 'exact';
+        sourceTaskId == selectedTask.taskId ||
+        act0IsExactRepairMappingTypeV1(intent?.mappingType ?? '');
     final clueLabel = intent?.missedSignalLabel ?? '';
     return act0RepairResultReceiptCopyGuardLineV1(
       repaired: option.isCorrect,
@@ -8421,7 +8469,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     final exactReplay =
-        sourceTaskId == selectedTask.taskId || intent?.mappingType == 'exact';
+        sourceTaskId == selectedTask.taskId ||
+        act0IsExactRepairMappingTypeV1(intent?.mappingType ?? '');
     final clueLabel = intent?.missedSignalLabel ?? '';
     return act0RepairSessionSummaryCopyGuardLinesV1(
       repaired: option.isCorrect,
@@ -9858,7 +9907,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     final completedExactReplay =
-        intent.mappingType == 'exact' && completedTaskId == intent.sourceTaskId;
+        act0IsExactRepairMappingTypeV1(intent.mappingType) &&
+        completedTaskId == intent.sourceTaskId;
     final completedMappedTarget = completedTaskId == intent.targetTaskId;
     if (completedExactReplay || completedMappedTarget) {
       final positionCase = Act0PositionPersonalizationV1.fromRepairIntent(
@@ -9930,7 +9980,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final matchingSourceTaskIds = <String>[
       for (final intent in _openRepairIntentBySourceTaskId.values)
         if (intent.targetTaskId == normalizedCompletedTaskId ||
-            (intent.mappingType == 'exact' &&
+            (act0IsExactRepairMappingTypeV1(intent.mappingType) &&
                 intent.sourceTaskId == normalizedCompletedTaskId))
           intent.sourceTaskId,
     ];
@@ -12439,7 +12489,9 @@ class _Act0NextUsefulHandReasonReceiptV1 {
     String? practiceGroupId,
     int repeatedMissCount = 1,
   }) {
-    final isExactReplay = target.target.mappingType == 'exact';
+    final isExactReplay = act0IsExactRepairMappingTypeV1(
+      target.target.mappingType,
+    );
     final reasonCode = isExactReplay
         ? 'exact_replay_${target.intent.skillAtomId}_${target.intent.missedSignalId}'
         : target.intent.reasonCode;

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_solver/poker_solver.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -1579,20 +1580,31 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       Act0FeedbackQualityV1.wrong => 'incorrect',
       Act0FeedbackQualityV1.suboptimal => 'suboptimal',
     };
+    final concept = act0ConceptErrorDefinitionForTaskV1(
+      worldId: widget.selectedWorldId?.trim() ?? '',
+      lessonId: _stableLessonTelemetryId,
+      taskId: _stableTaskTelemetryId,
+    );
     final errorType = option.isCorrect
         ? 'none'
-        : receipt == null
-        ? 'unknown'
         : act0CanonicalErrorTypeForDecisionV1(
             result: option.quality == Act0FeedbackQualityV1.suboptimal
                 ? 'suboptimal'
                 : 'incorrect',
-            skillAtomId: receipt.skillAtomId,
+            skillAtomId:
+                receipt?.skillAtomId ??
+                concept?.eligibleRepairFamily ??
+                'unknown',
             sourceTaskId: _stableTaskTelemetryId,
+            sourceWorldId: widget.selectedWorldId?.trim() ?? '',
+            sourceLessonId: _stableLessonTelemetryId,
           );
-    final repairFamilyId = option.isCorrect || receipt == null
+    final repairFamilyId = option.isCorrect
         ? null
-        : '${receipt.skillAtomId}:${receipt.sourceSignalId}';
+        : concept?.eligibleRepairFamily ??
+              (receipt == null
+                  ? null
+                  : '${receipt.skillAtomId}:${receipt.sourceSignalId}');
     return (
       expectedAction: expectedOption?.id,
       acceptableActionIds: acceptableActionIds,
@@ -1617,10 +1629,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       (candidate) => candidate?.seatId == seatId,
       orElse: () => null,
     );
+    final timeToDecisionMs =
+        option != null && _decisionTelemetryStopwatch.isRunning
+        ? _decisionTelemetryStopwatch.elapsedMilliseconds
+        : null;
+    final decisionTimeBucket = timeToDecisionMs == null
+        ? null
+        : _decisionTimeBucketV1(Duration(milliseconds: timeToDecisionMs));
     if (option != null) {
-      final timeToDecisionMs = _decisionTelemetryStopwatch.isRunning
-          ? _decisionTelemetryStopwatch.elapsedMilliseconds
-          : null;
       _maybeEmitUserChoiceTelemetry(option, timeToDecisionMs: timeToDecisionMs);
       _emitCanonicalDecisionMadeTelemetryV1(
         option: option,
@@ -1629,7 +1645,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     }
     widget.onChooseSeat?.call(seatId);
     if (option != null) {
-      _emitCompletedDecision(option, Act0CompletedDecisionKindV1.seat);
+      _emitCompletedDecision(
+        option,
+        Act0CompletedDecisionKindV1.seat,
+        decisionTimeBucket: decisionTimeBucket,
+      );
     }
   }
 
@@ -1680,14 +1700,24 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       Act0FeedbackQualityV1.wrong => 'incorrect',
       Act0FeedbackQualityV1.suboptimal => 'suboptimal',
     };
-    final errorType = receipt == null || option.isCorrect
-        ? (option.isCorrect ? 'none' : null)
+    final concept = act0ConceptErrorDefinitionForTaskV1(
+      worldId: normalizedWorldId ?? '',
+      lessonId: _stableLessonTelemetryId,
+      taskId: _stableTaskTelemetryId,
+    );
+    final errorType = option.isCorrect
+        ? 'none'
         : act0CanonicalErrorTypeForDecisionV1(
             result: option.quality == Act0FeedbackQualityV1.suboptimal
                 ? 'suboptimal'
                 : 'incorrect',
-            skillAtomId: receipt.skillAtomId,
+            skillAtomId:
+                receipt?.skillAtomId ??
+                concept?.eligibleRepairFamily ??
+                'unknown',
             sourceTaskId: _stableTaskTelemetryId,
+            sourceWorldId: normalizedWorldId ?? '',
+            sourceLessonId: _stableLessonTelemetryId,
           );
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
@@ -1708,9 +1738,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         taskFamily: widget.selectedTaskFamily,
         resultKind: resultKind,
         errorType: errorType,
-        skillAtomId: receipt?.skillAtomId,
-        repairFocusId: receipt?.sourceSignalId,
-        missedSignalId: receipt?.sourceSignalId,
+        skillAtomId: receipt?.skillAtomId ?? concept?.eligibleRepairFamily,
+        repairFocusId: receipt?.sourceSignalId ?? concept?.id,
+        missedSignalId: receipt?.sourceSignalId ?? concept?.id,
       ),
     );
   }

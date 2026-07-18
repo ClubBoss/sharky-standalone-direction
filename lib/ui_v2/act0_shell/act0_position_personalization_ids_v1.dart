@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_ids_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 
 const String act0PositionPersonalizationSequenceIdV1 =
     'w3_btn_position_read_v1';
@@ -17,7 +18,17 @@ String act0CanonicalErrorTypeForDecisionV1({
   required String result,
   required String skillAtomId,
   required String sourceTaskId,
+  String sourceWorldId = '',
+  String sourceLessonId = '',
 }) {
+  final concept = act0ConceptErrorDefinitionForTaskV1(
+    worldId: sourceWorldId,
+    lessonId: sourceLessonId,
+    taskId: sourceTaskId,
+  );
+  if (result != 'correct' && concept != null) {
+    return concept.id;
+  }
   if (result == 'incorrect' &&
       sourceTaskId == act0PositionPersonalizationSourceTaskIdV1) {
     return act0PositionPersonalizationErrorTypeV1;

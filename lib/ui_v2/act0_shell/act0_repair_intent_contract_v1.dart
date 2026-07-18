@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -142,6 +143,10 @@ int? _nonNegativeInt(Object? raw) {
   return value == null || value < 0 ? null : value;
 }
 
+bool act0IsExactRepairMappingTypeV1(String mappingType) {
+  return mappingType == 'exact' || mappingType == 'intentional_exact';
+}
+
 Act0RepairIntentV1? buildAct0RepairIntentV1({
   required String sourceWorldId,
   required String sourceLessonId,
@@ -160,29 +165,36 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     option: selectedOption,
     taskFamily: Act0TaskFamilyV1.decision,
   );
-  if (receipt == null) {
+  final concept = act0ConceptErrorDefinitionForTaskV1(
+    worldId: sourceWorldId,
+    lessonId: sourceLessonId,
+    taskId: sourceTaskId,
+  );
+  if (receipt == null && concept == null) {
     return null;
   }
 
   final result = _resultForQualityV1(selectedOption.quality);
-  final receiptOutcome = _receiptOutcomeIdV1(receipt.outcome);
+  final receiptOutcome = receipt == null
+      ? 'repair_started'
+      : _receiptOutcomeIdV1(receipt.outcome);
   final canonicalPositionSource =
       sourceTaskId == act0PositionPersonalizationSourceTaskIdV1;
   final skillAtomId = canonicalPositionSource
       ? act0PositionPersonalizationSkillIdV1
-      : receipt.skillAtomId;
+      : receipt?.skillAtomId ?? concept!.eligibleRepairFamily;
   final skillLabel = canonicalPositionSource
       ? 'Table position read'
-      : receipt.skillLabel;
+      : receipt?.skillLabel ?? concept!.learnerInterpretation;
   final sourceSignalId = canonicalPositionSource
       ? act0PositionPersonalizationSignalIdV1
-      : receipt.sourceSignalId;
+      : receipt?.sourceSignalId ?? concept!.id;
   final sourceSignalLabel = canonicalPositionSource
       ? 'Button'
-      : receipt.sourceSignalLabel;
+      : receipt?.sourceSignalLabel ?? concept!.learnerInterpretation;
   final nextRepId = canonicalPositionSource
       ? 'repeat_table_position_read'
-      : receipt.nextRepId;
+      : receipt?.nextRepId ?? 'repeat_${concept!.eligibleRepairFamily}';
   final mappedTarget = mapSameSignalRep?.call(
     nextRepId: nextRepId,
     skillAtomId: skillAtomId,
@@ -195,9 +207,14 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
   final targetLessonId = mappedTarget?.lessonId ?? sourceLessonId;
   final targetTaskId = mappedTarget?.taskId ?? sourceTaskId;
   final mappingType = mappedTarget?.mappingType ?? 'exact';
-  final reasonCode = mappedTarget == null
-      ? 'exact_replay_${skillAtomId}_$sourceSignalId'
-      : 'same_signal_${skillAtomId}_$sourceSignalId';
+  final reasonCode = switch (mappingType) {
+    'intentional_exact' =>
+      'intentional_exact_replay_${skillAtomId}_$sourceSignalId',
+    'unresolved_product_gap' =>
+      'unresolved_product_gap_${skillAtomId}_$sourceSignalId',
+    'exact' => 'exact_replay_${skillAtomId}_$sourceSignalId',
+    _ => 'same_signal_${skillAtomId}_$sourceSignalId',
+  };
 
   return Act0RepairIntentV1(
     sourceWorldId: sourceWorldId,
@@ -209,6 +226,8 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
       result: result,
       skillAtomId: skillAtomId,
       sourceTaskId: sourceTaskId,
+      sourceWorldId: sourceWorldId,
+      sourceLessonId: sourceLessonId,
     ),
     missedSignalId: sourceSignalId,
     missedSignalLabel: sourceSignalLabel,

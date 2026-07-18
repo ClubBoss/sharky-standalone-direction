@@ -94,7 +94,7 @@ Act0RuleBasedRepairDecisionV1? buildAct0RuleBasedRepairDecisionV1({
     resolvedReasonCode,
     fallback: intent.reasonCode,
   );
-  final isExactReplay = mappingType == 'exact';
+  final isExactReplay = act0IsExactRepairMappingTypeV1(mappingType);
   final actionType = isExactReplay ? 'exact_replay' : 'same_signal_repair';
   final selectionSource = isExactReplay
       ? 'repair_intent_exact_replay'
